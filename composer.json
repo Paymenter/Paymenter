@@ -10,6 +10,7 @@
         "laravel/framework": "^9.19",
         "laravel/sanctum": "^3.0",
         "laravel/tinker": "^2.7",
+        "qirolab/laravel-themer": "^2.0",
         "stripe/stripe-php": "^9.6"
     },
     "require-dev": {

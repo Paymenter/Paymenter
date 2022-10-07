@@ -10,6 +10,7 @@
         "@popperjs/core": "^2.10.2",
         "@tailwindcss/forms": "^0.5.2",
         "@vitejs/plugin-react": "^2.0.0",
+        "alpinejs": "^3.4.2",
         "autoprefixer": "^10.4.7",
         "axios": "^0.27",
         "bootstrap": "^5.2.1",

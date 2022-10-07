@@ -12,14 +12,14 @@ use Illuminate\Support\Facades\Auth;
 | contains the "web" middleware group. Now create something great!
 |
 */
-
-$theme = 'default';
-
 Route::get('/', function () {
-    $theme = 'default';
-
-    return view($theme . '.welcome');
+    return view('welcome');
 });
 // auth routes;
-
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::get('/home', function () {
+    return view('home');
+})->middleware(['auth'])->name('home');
+// return homecontroller;
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->middleware(['auth'])->name('home');
+require __DIR__.'/auth.php';
+require __DIR__.'/admin.php';
