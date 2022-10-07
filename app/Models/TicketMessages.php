@@ -15,5 +15,9 @@ class TicketMessages extends Model
         'message'
     ];
 
-    
+    function user()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
+
 }

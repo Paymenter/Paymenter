@@ -52,36 +52,33 @@ class TicketsController extends Controller
         return view('admin.tickets.show', compact('ticket'));
     }
 
-    function edit($id)
-    {
-        $ticket = Tickets::find($id);
-        return view('admin.tickets.edit', compact('ticket'));
-    }
-
-    function update(Request $request, $id)
+    function reply(Request $request, $id)
     {
         $request->validate([
-            'title' => 'required',
-            'description' => 'required',
-            'status' => 'required',
-            'client' => 'required'
+            'message' => 'required'
         ]);
 
         $ticket = Tickets::find($id);
-        $ticket->title = $request->get('title');
-        $ticket->description = $request->get('description');
-        $ticket->status = $request->get('status');
-        $ticket->client = $request->get('client');
+        $ticket->status = 'replied';
         $ticket->save();
+        $ticket->messages()->create([
+            'user_id' => auth()->user()->id,
+            'message' => $request->get('message')
+        ]);
 
-        return redirect('/admin/tickets')->with('success', 'Ticket has been updated');
+        return redirect()->back()->with('success', 'Reply has been sent');
     }
 
-    function destroy($id)
+    function status(Request $request, $id)
     {
-        $ticket = Tickets::find($id);
-        $ticket->delete();
+        $request->validate([
+            'status' => 'required'
+        ]);
 
-        return redirect('/admin/tickets')->with('success', 'Ticket has been deleted Successfully');
+        $ticket = Tickets::find($id);
+        $ticket->status = $request->get('status');
+        $ticket->save();
+
+        return redirect()->back()->with('success', 'Status has been changed');
     }
 }

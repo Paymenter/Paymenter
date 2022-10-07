@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::create('services', function (Blueprint $table) {
             $table->id();
             $table->integer('product');
-            $table->string('expiry_date');
+            $table->date('expiry_date');
             $table->string('status');
             $table->integer('client');
             $table->timestamps();

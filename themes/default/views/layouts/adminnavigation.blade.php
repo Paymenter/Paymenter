@@ -5,15 +5,15 @@
             <div class="flex">
                 <!-- Logo -->
                 <div class="flex items-center flex-shrink-0">
-                    <a href="{{ route('home') }}">
+                    <a href="{{ route('admin') }}">
                         <x-application-logo class="block w-auto h-10 text-gray-600 fill-current" />
                     </a>
                 </div>
 
                 <!-- Navigation Links -->
                 <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
-                    <a href="{{ route('home') }}"
-                        class="{{ request()->routeIs('home') ? 'border-indigo-400 text-gray-900 focus:border-indigo-700' : 'border-transparent hover:border-gray-300 focus:text-gray-700 focus:border-gray-300' }} inline-flex items-center px-1 pt-1 border-b-2 focus:outline-none">
+                    <a href="{{ route('admin') }}"
+                        class="{{ request()->routeIs('admin') ? 'border-indigo-400 text-gray-900 focus:border-indigo-700' : 'border-transparent hover:border-gray-300 focus:text-gray-700 focus:border-gray-300' }} inline-flex items-center px-1 pt-1 border-b-2 focus:outline-none">
                         {{ __('Dashboard') }}
                     </a>
                 </div>
@@ -40,21 +40,21 @@
                         role="menu" aria-orientation="vertical" aria-labelledby="menu-button" tabindex="-1">
                         <div class="py-1" role="none">
                             <!-- Active: "bg-gray-100 text-gray-900", Not Active: "text-gray-700" -->
-                            <a href="#" class="text-gray-700 block px-4 py-2 text-sm" role="menuitem"
+                            <a href="/settings" class="text-gray-700 block px-4 py-2 text-sm" role="menuitem"
                                 tabindex="-1" id="menu-item-0">General Settings</a>
                         </div>
                         <div class="py-1" role="none">
-                            <a href="#" class="text-gray-700 block px-4 py-2 text-sm" role="menuitem"
+                            <a href="/products" class="text-gray-700 block px-4 py-2 text-sm" role="menuitem"
                                 tabindex="-1" id="menu-item-2">Products</a>
-                            <a href="#" class="text-gray-700 block px-4 py-2 text-sm" role="menuitem"
-                                tabindex="-1" id="menu-item-3">Services</a>
+                            <a href="/orders" class="text-gray-700 block px-4 py-2 text-sm" role="menuitem"
+                                tabindex="-1" id="menu-item-3">Orders</a>
                         </div>
                         <div class="py-1" role="none">
-                            <a href="#" class="text-gray-700 block px-4 py-2 text-sm" role="menuitem"
+                            <a href="/customers" class="text-gray-700 block px-4 py-2 text-sm" role="menuitem"
                                 tabindex="-1" id="menu-item-4">Customers</a>
                         </div>
                         <div class="py-1" role="none">
-                            <a href="#" class="text-gray-700 block px-4 py-2 text-sm" role="menuitem"
+                            <a href="/tickets" class="text-gray-700 block px-4 py-2 text-sm" role="menuitem"
                                 tabindex="-1" id="menu-item-6">Tickets 
                                 @if(isset(App\Models\Tickets::where('status', 'open')->get()[0]))
                                     <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">

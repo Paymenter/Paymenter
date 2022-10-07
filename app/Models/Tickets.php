@@ -18,7 +18,7 @@ class Tickets extends Model
 
     public function services()
     {
-        return $this->belongsToMany(Services::class);
+        return $this->hasMany(Services::class, 'id', 'service');
     }
 
     public function client()
@@ -28,6 +28,6 @@ class Tickets extends Model
 
     public function messages()
     {
-        return $this->hasMany(TicketMessages::class);
+        return $this->hasMany(TicketMessages::class, 'ticket_id');
     }
 }

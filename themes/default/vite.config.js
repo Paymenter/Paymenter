@@ -8,8 +8,8 @@ export default defineConfig({
     plugins: [
         laravel({
             input: [
-                "themes\default\css/app.css",
-                "themes\default\js/app.js"
+                "themes/default/css/app.css",
+                "themes/default/js/app.js"
             ],
             buildDirectory: "default",
         }),
@@ -29,7 +29,7 @@ export default defineConfig({
     ],
     resolve: {
         alias: {
-            '@': '/themes\default\js',
+            '@': '/themes/default/js',
             
         }
     },
