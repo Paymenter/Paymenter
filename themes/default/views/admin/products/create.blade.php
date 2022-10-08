@@ -10,6 +10,7 @@
                     <div class="mt-8 text-2xl">
                         Create Product
                     </div>
+                    <x-auth-validation-errors class="mb-4" :errors="$errors" />
 
                     <div class="mt-6 text-gray-500">
                         <form method="POST" action="{{ route('admin.products.store') }}">
@@ -40,11 +41,11 @@
                             <div class="mt-4">
                                 <label for="category">{{ __('Category') }}</label>
                                 <select id="category" class="block mt-1 w-full" name="category" required>
-                                    @if($categories->count())
-                                        @foreach($categories as $category)
+                                    @if ($categories->count())
+                                        @foreach ($categories as $category)
                                             <option value="{{ $category->id }}">{{ $category->name }}</option>
                                         @endforeach
-                                    @else 
+                                    @else
                                         <option value="">No categories found</option>
                                     @endif
                                 </select>

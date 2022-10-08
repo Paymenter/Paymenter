@@ -37,5 +37,10 @@ Route::group(['prefix' => 'admin'], function () {
         Route::post('/{id}/edit', [App\Http\Controllers\Admin\CategoryController::class, 'update'])->middleware(['auth.admin'])->name('admin.category.update');
         Route::post('/{id}/delete', [App\Http\Controllers\Admin\CategoryController::class, 'destroy'])->middleware(['auth.admin'])->name('admin.category.delete');
     });
+
+    Route::group(['prefix'=> 'extensions'], function(){
+        Route::get('/', [App\Http\Controllers\Admin\ExtensionsController::class, 'index'])->middleware(['auth.admin'])->name('admin.extensions');
+        Route::get('/edit/{id}', [App\Http\Controllers\Admin\ExtensionsController::class, 'edit'])->middleware(['auth.admin'])->name('admin.extensions.edit');
+    });
 });
    

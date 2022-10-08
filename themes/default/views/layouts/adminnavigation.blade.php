@@ -54,7 +54,7 @@
                                 tabindex="-1" id="menu-item-4">Customers</a>
                         </div>
                         <div class="py-1" role="none">
-                            <a href="/tickets" class="text-gray-700 block px-4 py-2 text-sm" role="menuitem"
+                            <a href="{{ route('admin.tickets')}}" class="text-gray-700 block px-4 py-2 text-sm" role="menuitem"
                                 tabindex="-1" id="menu-item-6">Tickets 
                                 @if(isset(App\Models\Tickets::where('status', 'open')->get()[0]))
                                     <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">

@@ -1,0 +1,118 @@
+{
+    "name": "Pterodactyl",
+    "version": "1.0.0",
+    "description": "A simple API for Pterodactyl",
+    "serverConfig": [
+        {
+            "Name": "host",
+            "FriendlyName": "Pterodactyl panel url",
+            "Type": "text",
+            "Size": "40"
+        },
+        {
+            "Name": "apiKey",
+            "FriendlyName": "API Key",
+            "Type": "text",
+            "Size": "40"
+        }
+    ],
+    "config": [
+        {
+            "Name": "node",
+            "FriendlyName": "Pterodactyl Node",
+            "Type": "text",
+            "Size": "40"
+        },
+        {
+            "Name": "location",
+            "FriendlyName": "Pterodactyl Location",
+            "Type": "text",
+            "Size": "40"
+        },
+        {
+            "Name": "server",
+            "FriendlyName": "Pterodactyl Server",
+            "Type": "text",
+            "Size": "40"
+        },
+        {
+            "Name": "egg",
+            "FriendlyName": "Pterodactyl Egg",
+            "Type": "text",
+            "Size": "40"
+        },
+        {
+            "Name": "memory",
+            "FriendlyName": "Pterodactyl Memory",
+            "Type": "text",
+            "Size": "40"
+        },
+        {
+            "Name": "swap",
+            "FriendlyName": "Pterodactyl Swap",
+            "Type": "text",
+            "Size": "40"
+        },
+        {
+            "Name": "disk",
+            "FriendlyName": "Pterodactyl Disk",
+            "Type": "text",
+            "Size": "40"
+        },
+        {
+            "Name": "io",
+            "FriendlyName": "Pterodactyl IO",
+            "Type": "text",
+            "Size": "40"
+        },
+        {
+            "Name": "cpu",
+            "FriendlyName": "CPU limit",
+            "Type": "text",
+            "Size": "40"
+        },
+        {
+            "Name": "database",
+            "FriendlyName": "Pterodactyl Database",
+            "Type": "text",
+            "Size": "40"
+        },
+        {
+            "Name": "allocation",
+            "FriendlyName": "Pterodactyl Allocation",
+            "Type": "text",
+            "Size": "40"
+        },
+        {
+            "Name": "port",
+            "FriendlyName": "Pterodactyl Port",
+            "Type": "text",
+            "Size": "40"
+        },
+        {
+            "Name": "startup",
+            "FriendlyName": "Pterodactyl Startup",
+            "Type": "text",
+            "Size": "40",
+            "Required": false
+        },
+        {
+            "Name": "image",
+            "FriendlyName": "Image ID",
+            "Type": "text",
+            "Size": "40"
+        },
+        {
+            "Name": "skip_scripts",
+            "FriendlyName": "Pterodactyl Skip Scripts",
+            "Type": "boolean",
+            "Size": "40"
+        },
+        {
+            "Name": "backups",
+            "FriendlyName": "Pterodactyl Backups",
+            "Type": "boolean",
+            "Size": "40"
+        }
+    ]
+}
