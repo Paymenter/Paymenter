@@ -44,7 +44,7 @@
                                 tabindex="-1" id="menu-item-0">General Settings</a>
                         </div>
                         <div class="py-1" role="none">
-                            <a href="/products" class="text-gray-700 block px-4 py-2 text-sm" role="menuitem"
+                            <a href="{{ route('admin.products')}}" class="text-gray-700 block px-4 py-2 text-sm" role="menuitem"
                                 tabindex="-1" id="menu-item-2">Products</a>
                             <a href="/orders" class="text-gray-700 block px-4 py-2 text-sm" role="menuitem"
                                 tabindex="-1" id="menu-item-3">Orders</a>
