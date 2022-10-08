@@ -74,7 +74,9 @@
                     <input id="password-confirm" type="password" class="w-full form-input"
                             name="password_confirmation" required autocomplete="new-password">
                 </div>
-
+                @if(App\Models\Settings::first()->recaptcha == 1)
+                <div class="g-recaptcha" data-sitekey="{{App\Models\Settings::first()->recaptcha_site_key }}"></div>
+                @endif
                 <div class="flex items-center justify-end mt-4">
                     <a class="text-sm text-gray-600 underline hover:text-gray-900" href="{{ route('login') }}">
                         {{ __('Already registered?') }}

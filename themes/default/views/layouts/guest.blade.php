@@ -11,6 +11,7 @@
         <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap">
 
         @vite(['themes\default/css/app.css', 'themes\default/js/app.js'], 'default')
+        <script src="https://www.google.com/recaptcha/api.js" async defer></script>
     </head>
     <body>
         <div id="app" class="font-sans antialiased text-gray-900">

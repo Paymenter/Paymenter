@@ -24,8 +24,8 @@
                     </label>
 
                     <input id="email" type="email"
-                            class="form-input w-full @error('email') border-red-500 @enderror" name="email"
-                            value="{{ old('email') }}" required autocomplete="email">
+                        class="form-input w-full @error('email') border-red-500 @enderror" name="email"
+                        value="{{ old('email') }}" required autocomplete="email">
 
                     @error('email')
                         <p class="mt-1 text-xs italic text-red-500">
@@ -41,8 +41,8 @@
                     </label>
 
                     <input id="password" type="password"
-                            class="form-input w-full @error('password') border-red-500 @enderror" name="password"
-                            required autocomplete="new-password">
+                        class="form-input w-full @error('password') border-red-500 @enderror" name="password" required
+                        autocomplete="new-password">
 
                     @error('password')
                         <p class="mt-1 text-xs italic text-red-500">
@@ -54,19 +54,24 @@
                 <!-- Remember Me -->
                 <div class="block mt-4">
                     <label for="remember_me" class="inline-flex items-center">
-                        <input id="remember_me" type="checkbox" class="text-indigo-600 border-gray-300 rounded shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" name="remember">
+                        <input id="remember_me" type="checkbox"
+                            class="text-indigo-600 border-gray-300 rounded shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                            name="remember">
                         <span class="ml-2 text-sm text-gray-600">{{ __('Remember me') }}</span>
                     </label>
                 </div>
-
+                @if(App\Models\Settings::first()->recaptcha == 1)
+                <div class="g-recaptcha" data-sitekey="{{App\Models\Settings::first()->recaptcha_site_key }}"></div>
+                @endif
                 <div class="flex items-center justify-end mt-4">
                     @if (Route::has('password.request'))
-                        <a class="text-sm text-gray-600 underline hover:text-gray-900" href="{{ route('password.request') }}">
+                        <a class="text-sm text-gray-600 underline hover:text-gray-900"
+                            href="{{ route('password.request') }}">
                             {{ __('Forgot your password?') }}
                         </a>
                     @endif
-
-                    <button type="submit" class="inline-flex items-center px-4 py-2 ml-4 text-xs font-semibold tracking-widest text-white uppercase transition duration-150 ease-in-out bg-gray-800 border border-transparent rounded-md hover:bg-gray-700 active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:ring ring-gray-300 disabled:opacity-25">
+                    <button type="submit"
+                        class="inline-flex items-center px-4 py-2 ml-4 text-xs font-semibold tracking-widest text-white uppercase transition duration-150 ease-in-out bg-gray-800 border border-transparent rounded-md hover:bg-gray-700 active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:ring ring-gray-300 disabled:opacity-25">
                         {{ __('Log in') }}
                     </button>
                 </div>
