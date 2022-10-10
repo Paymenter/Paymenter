@@ -3,6 +3,8 @@
 [![GitHub](https://img.shields.io/github/license/paymenter/paymenter)](https://github.com/Paymenter/paymenter/blob/master/LICENSE)
 [![GitHub release (latest by date)](https://img.shields.io/github/v/release/paymenter/paymenter)](https://github.com/Paymenter/paymenter/releases)
 
+[Discord](https://discord.gg/hggUZYxzdE), [Demo](https://demo.paymenter.org), [Docs](https://docs.paymenter.org), [Website](https://paymenter.org)
+
 Disclaimer: This is a work in progress. It is not ready for production use.
 ## A advanced payment system for your hosting company
 ### About
