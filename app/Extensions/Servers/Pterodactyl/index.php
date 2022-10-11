@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Http;
 // Name should be the same as the folder name
+$config = 
 $name = 'Pterodactyl';
 $author = 'Paymenter';
 $version = '0.0.1';

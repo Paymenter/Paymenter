@@ -40,7 +40,7 @@
                         role="menu" aria-orientation="vertical" aria-labelledby="menu-button" tabindex="-1">
                         <div class="py-1" role="none">
                             <!-- Active: "bg-gray-100 text-gray-900", Not Active: "text-gray-700" -->
-                            <a href="/settings" class="text-gray-700 block px-4 py-2 text-sm" role="menuitem"
+                            <a href="{{ route('admin.settings')}}" class="text-gray-700 block px-4 py-2 text-sm" role="menuitem"
                                 tabindex="-1" id="menu-item-0">General Settings</a>
                         </div>
                         <div class="py-1" role="none">
@@ -48,6 +48,8 @@
                                 tabindex="-1" id="menu-item-2">Products</a>
                             <a href="/orders" class="text-gray-700 block px-4 py-2 text-sm" role="menuitem"
                                 tabindex="-1" id="menu-item-3">Orders</a>
+                            <a href="{{ route('admin.categories')}}" class="text-gray-700 block px-4 py-2 text-sm" role="menuitem"
+                                tabindex="-1" id="menu-item-4">Categories</a>
                         </div>
                         <div class="py-1" role="none">
                             <a href="/customers" class="text-gray-700 block px-4 py-2 text-sm" role="menuitem"

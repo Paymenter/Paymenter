@@ -28,19 +28,24 @@ Route::group(['prefix' => 'admin'], function () {
         Route::post('/{id}/delete', [App\Http\Controllers\Admin\ProductsController::class, 'destroy'])->middleware(['auth.admin'])->name('admin.products.delete');
     });
 
-    Route::group(['prefix'=> 'category'], function(){
-        Route::get('/', [App\Http\Controllers\Admin\CategoryController::class, 'index'])->middleware(['auth.admin'])->name('admin.category');
-        Route::get('/create', [App\Http\Controllers\Admin\CategoryController::class, 'create'])->middleware(['auth.admin'])->name('admin.category.create');
-        Route::post('/create', [App\Http\Controllers\Admin\CategoryController::class, 'store'])->middleware(['auth.admin'])->name('admin.category.store');
-        Route::get('/{id}', [App\Http\Controllers\Admin\CategoryController::class, 'show'])->middleware(['auth.admin'])->name('admin.category.show');
-        Route::get('/{id}/edit', [App\Http\Controllers\Admin\CategoryController::class, 'edit'])->middleware(['auth.admin'])->name('admin.category.edit');
-        Route::post('/{id}/edit', [App\Http\Controllers\Admin\CategoryController::class, 'update'])->middleware(['auth.admin'])->name('admin.category.update');
-        Route::post('/{id}/delete', [App\Http\Controllers\Admin\CategoryController::class, 'destroy'])->middleware(['auth.admin'])->name('admin.category.delete');
+    Route::group(['prefix'=> 'categories'], function(){
+        Route::get('/', [App\Http\Controllers\Admin\CategoriesController::class, 'index'])->middleware(['auth.admin'])->name('admin.categories');
+        Route::get('/create', [App\Http\Controllers\Admin\CategoriesController::class, 'create'])->middleware(['auth.admin'])->name('admin.categories.create');
+        Route::post('/create', [App\Http\Controllers\Admin\CategoriesController::class, 'store'])->middleware(['auth.admin'])->name('admin.categories.store');
+        Route::get('/{id}', [App\Http\Controllers\Admin\CategoriesController::class, 'show'])->middleware(['auth.admin'])->name('admin.categories.show');
+        Route::get('/{id}/edit', [App\Http\Controllers\Admin\CategoriesController::class, 'edit'])->middleware(['auth.admin'])->name('admin.categories.edit');
+        Route::post('/{id}/edit', [App\Http\Controllers\Admin\CategoriesController::class, 'update'])->middleware(['auth.admin'])->name('admin.categories.update');
+        Route::delete('/{id}/delete', [App\Http\Controllers\Admin\CategoriesController::class, 'destroy'])->middleware(['auth.admin'])->name('admin.categories.delete');
     });
 
     Route::group(['prefix'=> 'extensions'], function(){
         Route::get('/', [App\Http\Controllers\Admin\ExtensionsController::class, 'index'])->middleware(['auth.admin'])->name('admin.extensions');
         Route::get('/edit/{id}', [App\Http\Controllers\Admin\ExtensionsController::class, 'edit'])->middleware(['auth.admin'])->name('admin.extensions.edit');
+    });
+
+    Route::group(['prefix'=> 'import'], function(){
+        Route::get('/', [App\Http\Controllers\Admin\ImportController::class, 'index'])->middleware(['auth.admin'])->name('admin.import');
+        Route::post('/', [App\Http\Controllers\Admin\ImportController::class, 'import'])->middleware(['auth.admin'])->name('admin.import.import');
     });
 });
    

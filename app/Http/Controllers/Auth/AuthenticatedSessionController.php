@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
+use App\Models\Settings;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -28,9 +29,11 @@ class AuthenticatedSessionController extends Controller
      */
     public function store(LoginRequest $request)
     {
-        $request->validate([
-            'g-recaptcha-response' => 'required|recaptcha',
-        ]);
+        if(Settings::first()->recaptcha_enabled == 1){
+            $request->validate([
+                'g-recaptcha-response' => 'required|captcha',
+            ]);
+        }
         $request->authenticate();
 
         $request->session()->regenerate();

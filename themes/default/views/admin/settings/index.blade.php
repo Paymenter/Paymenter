@@ -15,6 +15,12 @@
                         {{ __('Here you can change your settings.') }}
                     </div>
                 </div>
+                <!-- check if already submitted -->
+                @if (session('succes'))
+                    <div class="alert alert-success">
+                        {{ session('success') }}
+                    </div>
+                @endif
                 <form action="{{ route('admin.settings.update') }}" method="POST">
                     @csrf
                     <div class="bg-gray-200 bg-opacity-25 grid grid-cols-1">
@@ -99,12 +105,18 @@
                                             });
                                         });
                                     </script>
-                                </div>
 
+                                </div>
+                            </div>
+                            <div class="flex items-center justify-end mt-4">
+                                <button type="submit"
+                                    class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                                    {{ __('Create') }}
+                                </button>
                             </div>
                         </div>
+                    </div>
                 </form>
-
             </div>
         </div>
     </div>

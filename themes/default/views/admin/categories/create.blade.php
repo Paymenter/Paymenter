@@ -14,7 +14,7 @@
                         <x-auth-validation-errors class="mb-4" :errors="$errors" />
 
                         <div class="w-full">
-                            <form method="POST" action="{{ route('admin.category.store') }}">
+                            <form method="POST" action="{{ route('admin.categories.store') }}">
                                 @csrf
                                 <div class="mt-4">
                                     <label class="block text-sm font-medium text-gray-700">
@@ -37,22 +37,21 @@
                                         {{ __('Slug') }}
                                     </label>
                                     <p>
-                                        <span class="text-gray-500" id="test"></span>
+                                        <span class="text-gray-500" id="slugd"></span>
                                     </p>
-
                                     <input id="slug" type="text"
                                         class="form-input w-full @error('slug') border-red-500 @enderror" name="slug"
                                         value="{{ old('slug') }}" required autocomplete="slug" autofocus>
                                 </div>
                                 <script>
-                                    var slug = document.getElementById('slug');
+                                    var slug = document.getElementById('slugd');
                                     var name = document.getElementById('name');
                                     slug.addEventListener('keyup', function () {
-                                        document.getElementById('test').textContent = '/category/' + slug.value;
+                                        document.getElementById('slugd').textContent = '/category/' + slug.value;
                                     });
                                     name.addEventListener('keyup', function () {
                                         slug.value = name.value.toLowerCase().replace(/ /g, '-').replace(/[^\w-]+/g, '');
-                                        document.getElementById('test').textContent = '/category/' + name.value;
+                                        document.getElementById('slugd').textContent = '/category/' + name.value;
                                     });
                                 </script>
                                 <div class="flex items-center justify-end mt-4">
