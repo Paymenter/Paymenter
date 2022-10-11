@@ -16,7 +16,7 @@
                 </div>
                 <div class="p-6 bg-white border-b border-gray-200">
                     <div class="flex flex-wrap">
-                        <table>
+                        <table class="min-w-full divide-y divide-gray-200">
                             @if ($categories->isEmpty())
                                 <!-- not found -->
                                 <div class="ml-10 flex items-baseline ">
@@ -26,27 +26,62 @@
                                 </div>
                             @else
                                 @foreach ($categories as $category)
-                                    <thead>
-                                        <tr>
-                                            <th>{{ $category }}</th>
-                                            <th></th>
-                                            <th></th>
-                                            <th></th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @foreach ($categories->products() as $product)
+                                    @if ($category->products->isNotEmpty())
+                                        <thead class="bg-gray-50">
+
                                             <tr>
-                                                <td>{{ $product->name }}</td>
-                                                <td>{{ $product->price }}</td>
-                                                <td>{{ $product->stock }}</td>
-                                                <td>
-                                                    <a href="{{ route('admin.products.edit', $product->id) }}"
-                                                        class="text-blue-500">Edit</a>
-                                                </td>
+                                                <th scope="col"
+                                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                                    {{ $category->name }}</th>
+                                                <th scope="col"
+                                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                                    {{ $category->description }}</th>
+                                                <th scope="col"
+                                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                                </th>
+                                                <th scope="col"
+                                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                                </th>
                                             </tr>
-                                        @endforeach
-                                    </tbody>
+                                        </thead>
+                                        <tbody class="bg-white divide-y divide-gray-200">
+
+                                            @foreach ($category->products()->get() as $product)
+                                                <tr>
+                                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                                        {{ $product->name }}</td>
+                                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                                        {{ $product->description }}</td>
+                                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                                        <a href="{{ route('admin.products.edit', $product->id) }}">
+                                                            <button
+                                                                class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                                                                {{ __('Edit') }}
+                                                            </button>
+                                                        </a>
+                                                    </td>
+                                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                                        <form method="POST"
+                                                            action="{{ route('admin.products.destroy', $product->id) }}">
+                                                            @csrf
+                                                            @method('DELETE')
+                                                            <button
+                                                                class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
+                                                                {{ __('Delete') }}
+                                                            </button>
+                                                        </form>
+                                                    </td>
+                                                </tr>
+                                            @endforeach
+                                        </tbody>
+                                    @else
+                                        <!-- not found -->
+                                        <div class="ml-10 flex items-baseline ">
+                                            <p class="text-gray-600 px-3 rounded-md text-xl m-4">
+                                                {{ __('No products found on category') }} {{ $category->name }}
+                                            </p>
+                                        </div>
+                                    @endif
                                 @endforeach
                             @endif
                         </table>

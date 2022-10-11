@@ -12,9 +12,7 @@ use Illuminate\Support\Facades\Auth;
 | contains the "web" middleware group. Now create something great!
 |
 */
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', [App\Http\Controllers\BasisController::class, 'index'])->name('index');
 // auth routes;
 Route::get('/home', function () {
     return view('home');

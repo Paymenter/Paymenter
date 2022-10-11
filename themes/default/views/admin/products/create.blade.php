@@ -13,7 +13,7 @@
                     <x-auth-validation-errors class="mb-4" :errors="$errors" />
 
                     <div class="mt-6 text-gray-500">
-                        <form method="POST" action="{{ route('admin.products.store') }}">
+                        <form method="POST" action="{{ route('admin.products.store') }}" enctype="multipart/form-data">
                             @csrf
                             <div>
                                 <label for="name">{{ __('Name') }}</label>
@@ -29,7 +29,7 @@
                             <div class="mt-4">
                                 <label for="price">{{ __('Price') }}</label>
 
-                                <input id="price" class="block mt-1 w-full" type="number" name="price"
+                                <input id="price" class="block mt-1 w-full" type="number" name="price"  min="1" step="any"
                                     value="{{ old('price') }}" required />
                             </div>
                             <div class="mt-4">
@@ -40,7 +40,7 @@
                             </div>
                             <div class="mt-4">
                                 <label for="category">{{ __('Category') }}</label>
-                                <select id="category" class="block mt-1 w-full" name="category" required>
+                                <select id="category" class="block mt-1 w-full" name="category_id" required>
                                     @if ($categories->count())
                                         @foreach ($categories as $category)
                                             <option value="{{ $category->id }}">{{ $category->name }}</option>
@@ -50,7 +50,7 @@
                                     @endif
                                 </select>
                                 <div class="flex items-center justify-end mt-4 text-blue-700">
-                                    <a href="{{ route('admin.category.create') }}">Create Category</a>
+                                    <a href="{{ route('admin.categories.create') }}">Create Category</a>
                                 </div>
 
                             </div>

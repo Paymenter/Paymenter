@@ -9,7 +9,9 @@
         <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
             <div class="overflow-hidden bg-white shadow-sm sm:rounded-lg">
                 <div class="p-6 bg-white border-b border-gray-200">
-                    You're logged in!
+                    <!-- display all categories with products -->
+                    <h1 class="text-2xl font-bold">{{ __('Categories') }}</h1>
+                    
                 </div>
             </div>
         </div>

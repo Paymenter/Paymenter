@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Categories;
+use App\Models\Products;
+
 class ProductsController extends Controller
 {
     public function index()
@@ -22,6 +24,17 @@ class ProductsController extends Controller
 
     public function store(Request $request)
     {
+        $data = request()->validate([
+            'name' => 'required',
+            'description' => 'required|string|min:10',
+            'price' => 'required',
+            'category_id' => 'required|integer',
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:5242',
+        ]);
+        $imageName = time() . '.' . $request->image->extension();
+        $request->image->move(public_path('images'), $imageName);
+        $data['image'] = '/images/' . $imageName;
+        Products::create($data);
         return redirect()->route('admin.products');
     }
 

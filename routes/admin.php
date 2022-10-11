@@ -25,9 +25,10 @@ Route::group(['prefix' => 'admin'], function () {
         Route::get('/{id}', [App\Http\Controllers\Admin\ProductsController::class, 'show'])->middleware(['auth.admin'])->name('admin.products.show');
         Route::get('/{id}/edit', [App\Http\Controllers\Admin\ProductsController::class, 'edit'])->middleware(['auth.admin'])->name('admin.products.edit');
         Route::post('/{id}/edit', [App\Http\Controllers\Admin\ProductsController::class, 'update'])->middleware(['auth.admin'])->name('admin.products.update');
-        Route::post('/{id}/delete', [App\Http\Controllers\Admin\ProductsController::class, 'destroy'])->middleware(['auth.admin'])->name('admin.products.delete');
+        Route::post('/{id}/delete', [App\Http\Controllers\Admin\ProductsController::class, 'destroy'])->middleware(['auth.admin'])->name('admin.products.destroy');
     });
 
+    // Done 
     Route::group(['prefix'=> 'categories'], function(){
         Route::get('/', [App\Http\Controllers\Admin\CategoriesController::class, 'index'])->middleware(['auth.admin'])->name('admin.categories');
         Route::get('/create', [App\Http\Controllers\Admin\CategoriesController::class, 'create'])->middleware(['auth.admin'])->name('admin.categories.create');
@@ -38,11 +39,13 @@ Route::group(['prefix' => 'admin'], function () {
         Route::delete('/{id}/delete', [App\Http\Controllers\Admin\CategoriesController::class, 'destroy'])->middleware(['auth.admin'])->name('admin.categories.delete');
     });
 
+    // W.I.P
     Route::group(['prefix'=> 'extensions'], function(){
         Route::get('/', [App\Http\Controllers\Admin\ExtensionsController::class, 'index'])->middleware(['auth.admin'])->name('admin.extensions');
         Route::get('/edit/{id}', [App\Http\Controllers\Admin\ExtensionsController::class, 'edit'])->middleware(['auth.admin'])->name('admin.extensions.edit');
     });
 
+    // W.I.P
     Route::group(['prefix'=> 'import'], function(){
         Route::get('/', [App\Http\Controllers\Admin\ImportController::class, 'index'])->middleware(['auth.admin'])->name('admin.import');
         Route::post('/', [App\Http\Controllers\Admin\ImportController::class, 'import'])->middleware(['auth.admin'])->name('admin.import.import');
