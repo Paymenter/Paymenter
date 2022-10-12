@@ -5,14 +5,15 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Services extends Model
+class Orders extends Model
 {
     use HasFactory;
-    protected $table = 'services';
+    protected $table = 'orders';
     protected $fillable = [
         'product',
         'expiry_date',
         'status',
+        'user',
     ];
 /*
     public function product()
@@ -22,6 +23,6 @@ class Services extends Model
 
     public function client()
     {
-        return $this->belongsTo(User::class, 'client');
+        return $this->belongsTo(User::class, 'id', 'user');
     }
 }

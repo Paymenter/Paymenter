@@ -1,0 +1,38 @@
+{
+    "name": "Stripe",
+    "description": "Stripe payment gateway",
+    "version": "1.0.0",
+    "author": "Paymenter",
+    "config": [
+        {
+            "name": "stripe_secret_key",
+            "type": "string",
+            "description": "Stripe secret key"
+        },
+        {
+            "name": "stripe_publishable_key",
+            "type": "string",
+            "description": "Stripe publishable key"
+        },
+        {
+            "name": "stripe_webhook_secret",
+            "type": "string",
+            "description": "Stripe webhook secret"
+        },
+        {
+            "name": "stripe_test_mode",
+            "type": "boolean",
+            "description": "Stripe test mode"
+        },
+        {
+            "name": "stripe_test_key",
+            "type": "string",
+            "description": "Stripe test key"
+        },
+        {
+            "name": "stripe_test_publishable_key",
+            "type": "string",
+            "description": "Stripe test publishable key"
+        }
+    ]
+}

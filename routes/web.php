@@ -24,6 +24,7 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->midd
 Route::group(['prefix'=> 'products'], function(){
     Route::get('/', [App\Http\Controllers\ProductsController::class, 'index'])->name('products.index');
     Route::get('/{id}', [App\Http\Controllers\ProductsController::class, 'show'])->name('products.show');
+    Route::get('/{id}/cart', [App\Http\Controllers\ProductsController::class, 'cart'])->name('products.cart');
 });
 require __DIR__.'/auth.php';
 require __DIR__.'/admin.php';

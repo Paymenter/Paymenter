@@ -1,0 +1,21 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+
+class Extensions extends Model
+{
+    use HasFactory;
+    protected $table = 'extensions';
+    protected $fillable = [
+        'name',
+        'enabled',
+    ];
+
+    public function getConfig()
+    {
+        return $this->hasMany(ExtensionSettings::class, 'extension', 'id');
+    }
+}

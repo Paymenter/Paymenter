@@ -81,7 +81,6 @@
             <script>
                 function openMenu() {
                     document.getElementById("myDropDown").classList.toggle("hidden");
-
                 }
             </script>
         </div>

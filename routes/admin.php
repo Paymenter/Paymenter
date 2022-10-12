@@ -42,7 +42,8 @@ Route::group(['prefix' => 'admin'], function () {
     // W.I.P
     Route::group(['prefix'=> 'extensions'], function(){
         Route::get('/', [App\Http\Controllers\Admin\ExtensionsController::class, 'index'])->middleware(['auth.admin'])->name('admin.extensions');
-        Route::get('/edit/{id}', [App\Http\Controllers\Admin\ExtensionsController::class, 'edit'])->middleware(['auth.admin'])->name('admin.extensions.edit');
+        Route::get('/edit/{sort}/{id}', [App\Http\Controllers\Admin\ExtensionsController::class, 'edit'])->middleware(['auth.admin'])->name('admin.extensions.edit');
+        Route::post('/edit/{sort}/{id}', [App\Http\Controllers\Admin\ExtensionsController::class, 'update'])->middleware(['auth.admin'])->name('admin.extensions.update');
     });
 
     // W.I.P

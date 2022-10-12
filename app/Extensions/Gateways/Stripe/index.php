@@ -1,6 +1,8 @@
 <?php
 
-namespace App\Extensions\Gateways\Stripe;
+use Stripe\StripeClient;
+
+include(app_path() . '/Helpers/Extension.php');
 
 $name = 'Stripe';
 $description = 'Stripe Payment Gateway';
@@ -9,16 +11,40 @@ $author = 'CorwinDev';
 $website = 'http://stripe.com';
 $database = 'gateway_stripe';
 
-function stripe_config() {
-    $configarray = array(
-        "secretkey" => array("FriendlyName" => "Secret Key", "Type" => "text", "Size" => "40", ),
-        "publishablekey" => array("FriendlyName" => "Publishable Key", "Type" => "text", "Size" => "40", ),
-        "testmode" => array("FriendlyName" => "Test Mode", "Type" => "boolean", ),
-    );
-    return $configarray;
+function create($request)
+{
+    $client = StripeClient();
+
+    $order = $client->checkout->sessions->create([
+        'line_items' => [
+            [
+                'price_data' => [
+                    'currency' => 'usd',
+                    'product_data' => [
+                        'name' => 'Test Product',
+                        'description' => 'Test Product Description',
+                    ],
+                    'unit_amount_decimal' => 100,
+                ],
+                'quantity' => 1,
+            ]
+        ],
+        'mode' => 'payment',
+        "payment_method_types" => ["card"],
+        'success_url' => url('/success'),
+        'cancel_url' => url('/cancel'),
+    ]);
+    error_log($order->url);
+    // ToDo: make success_url and cancel_url dynamic
+    return $order;
 }
 
-function create ($params) {
-    $gateway = new StripeGateway($params);
-    return $gateway->create();
+function webhook($request)
+{
+    create($request);
+}
+
+function stripeClient()
+{
+    return new \Stripe\StripeClient(Extension::getConfig("Stripe", 'stripe_test_key'));
 }

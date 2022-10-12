@@ -13,9 +13,8 @@
                     <x-auth-validation-errors class="mb-4" :errors="$errors" />
                     <x-success class="mb-4" />
                     <div class="mt-6 text-gray-500">
-                        <form method="POST" action="{{ route('admin.extensions.update')}}">
+                        <form method="POST" action="">
                             @csrf
-                            @method('PUT')
                             @foreach ($extension->serverConfig as $setting)
                                 <div class="mt-4">
                                     <label for="{{ $setting->Name }}">{{ $setting->FriendlyName }}</label>
