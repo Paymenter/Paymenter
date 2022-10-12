@@ -5,22 +5,12 @@
     <div class="py-12">
         <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
             <div class="overflow-hidden bg-white shadow-sm sm:rounded-lg">
-                <!-- show the user tickets and products -->
+                <x-succes class="mb-4" />
                 <div class="p-6 bg-white border-b border-gray-200">
                     <div class="flex flex-col">
                         <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
                             <div class="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
                                 <div class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
-                                    @if (Session::get('success'))
-                                        <div class="px-4 py-5 sm:px-6">
-                                            <h3 class="text-lg leading-6 font-medium text-gray-900">
-                                                {{ __('Succes') }}
-                                            </h3>
-                                            <p class="mt-1 max-w-2xl text-sm text-gray-500">
-                                                {{ Session::get('success') }}
-                                            </p>
-                                        </div>
-                                    @endif
                                     <div class="ml-10 flex items-baseline ">
                                         <h1 class="text-gray-600 px-3 rounded-md font-bold text-xl m-4">Title:
                                             {{ $ticket->title }}</h1>

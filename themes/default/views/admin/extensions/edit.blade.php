@@ -11,7 +11,7 @@
                         Edit {{ $extension->name }}
                     </div>
                     <x-auth-validation-errors class="mb-4" :errors="$errors" />
-
+                    <x-success class="mb-4" />
                     <div class="mt-6 text-gray-500">
                         <form method="POST" action="{{ route('admin.extensions.update')}}">
                             @csrf

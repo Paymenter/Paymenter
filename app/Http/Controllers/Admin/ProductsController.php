@@ -38,23 +38,36 @@ class ProductsController extends Controller
         return redirect()->route('admin.products');
     }
 
-    public function show($id)
-    {
-        return view('admin.products.show');
-    }
-
     public function edit($id)
     {
-        return view('admin.products.edit');
+        $product = Products::find($id);
+        $categories = Categories::all();
+        return view('admin.products.edit', compact('product', 'categories'));
     }
 
     public function update(Request $request, $id)
     {
-        return redirect()->route('admin.products');
+        $data = request()->validate([
+            'name' => 'required',
+            'description' => 'required|string|min:10',
+            'price' => 'required',
+            'category_id' => 'required|integer',
+            'image' => 'image|mimes:jpeg,png,jpg,gif,svg|max:5242',
+        ]);
+        $product = Products::find($id);
+        if ($request->hasFile('image')) {
+            $imageName = time() . '.' . $request->image->extension();
+            $request->image->move(public_path('images'), $imageName);
+            $data['image'] = '/images/' . $imageName;
+        }
+        $product->update($data);
+        return redirect()->route('admin.products.edit', $id)->with('success', 'Product updated successfully');
     }
 
     public function destroy($id)
     {
-        return redirect()->route('admin.products');
+        $product = Products::find($id);
+        $product->delete();
+        return redirect()->route('admin.products')->with('success', 'Product deleted successfully');
     }
 }

@@ -14,6 +14,7 @@
                         </button>
                     </a>
                 </div>
+                <x-success class="mb-4" />
                 <div class="p-6 bg-white border-b border-gray-200">
                     <div class="flex flex-wrap">
                         <table class="min-w-full divide-y divide-gray-200">
