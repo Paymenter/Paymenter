@@ -19,5 +19,11 @@ Route::get('/home', function () {
 })->middleware(['auth'])->name('home');
 // return homecontroller;
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->middleware(['auth'])->name('home');
+
+// Products routes
+Route::group(['prefix'=> 'products'], function(){
+    Route::get('/', [App\Http\Controllers\ProductsController::class, 'index'])->name('products.index');
+    Route::get('/{id}', [App\Http\Controllers\ProductsController::class, 'show'])->name('products.show');
+});
 require __DIR__.'/auth.php';
 require __DIR__.'/admin.php';
