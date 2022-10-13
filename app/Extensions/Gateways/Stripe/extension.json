@@ -6,32 +6,38 @@
     "config": [
         {
             "name": "stripe_secret_key",
-            "type": "string",
+            "friendlyName": "Stripe Secret Key",
+            "type": "text",
             "description": "Stripe secret key"
         },
         {
             "name": "stripe_publishable_key",
-            "type": "string",
+            "friendlyName": "Stripe publishable key",
+            "type": "text",
             "description": "Stripe publishable key"
         },
         {
             "name": "stripe_webhook_secret",
-            "type": "string",
+            "friendlyName": "Stripe webhook secret",
+            "type": "text",
             "description": "Stripe webhook secret"
         },
         {
             "name": "stripe_test_mode",
+            "friendlyName": "Stripe test mode",
             "type": "boolean",
             "description": "Stripe test mode"
         },
         {
             "name": "stripe_test_key",
-            "type": "string",
+            "friendlyName": "Stripe test key",
+            "type": "text",
             "description": "Stripe test key"
         },
         {
             "name": "stripe_test_publishable_key",
-            "type": "string",
+            "friendlyName": "Stripe test publishable key",
+            "type": "text",
             "description": "Stripe test publishable key"
         }
     ]

@@ -41,8 +41,8 @@
                                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                                 {{ $extensio->description }}</td>
                                             <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                                <a href="{{ route('admin.extensions.edit', 'server', $extensio->name ) }}"
-                                                    class="text-blue-500">Edit</a>
+                                                  <a href="{{ route('admin.extensions.edit', ['server', $extensio->name]) }}"
+                                                class="text-indigo-600 hover:text-indigo-900">{{ __('Edit') }}</a>
                                             </td>
                                         </tr>
                                     @endforeach
@@ -78,8 +78,9 @@
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                             {{ $gateway->description }}</td>
                                         <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                            <a href="{{ route('admin.extensions.edit', $gateway->name) }}"
-                                                class="text-blue-500">Edit</a>
+                                            <a href="{{ route('admin.extensions.edit', ['gateway', $gateway->name]) }}"
+                                                class="text-indigo-600 hover:text-indigo-900">{{ __('Edit') }}</a>
+
                                         </td>
                                     </tr>
                                 @endforeach

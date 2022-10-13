@@ -2,117 +2,99 @@
     "name": "Pterodactyl",
     "version": "1.0.0",
     "description": "A simple API for Pterodactyl",
-    "serverConfig": [
-        {
-            "Name": "host",
-            "FriendlyName": "Pterodactyl panel url",
-            "Type": "text",
-            "Size": "40"
-        },
-        {
-            "Name": "apiKey",
-            "FriendlyName": "API Key",
-            "Type": "text",
-            "Size": "40"
-        }
-    ],
     "config": [
         {
-            "Name": "node",
-            "FriendlyName": "Pterodactyl Node",
-            "Type": "text",
-            "Size": "40"
+            "name": "host",
+            "friendlyName": "Pterodactyl panel url",
+            "type": "text"
+        },
+        {
+            "name": "apiKey",
+            "friendlyName": "API Key",
+            "type": "text"
+        }
+    ],
+    "productConfig": [
+        {
+            "name": "node",
+            "friendlyName": "Pterodactyl Node",
+            "type": "text"
         },
         {
             "Name": "location",
-            "FriendlyName": "Pterodactyl Location",
-            "Type": "text",
-            "Size": "40"
-        },
+            "friendlyName": "Pterodactyl Location",
+            "type": "text"
+         },
         {
             "Name": "server",
-            "FriendlyName": "Pterodactyl Server",
-            "Type": "text",
-            "Size": "40"
-        },
+            "friendlyName": "Pterodactyl Server",
+            "type": "text"
+         },
         {
             "Name": "egg",
-            "FriendlyName": "Pterodactyl Egg",
-            "Type": "text",
-            "Size": "40"
-        },
+            "friendlyName": "Pterodactyl Egg",
+            "type": "text"
+         },
         {
-            "Name": "memory",
-            "FriendlyName": "Pterodactyl Memory",
-            "Type": "text",
-            "Size": "40"
-        },
+            "name": "memory",
+            "friendlyName": "Pterodactyl Memory",
+            "type": "text"
+         },
         {
-            "Name": "swap",
-            "FriendlyName": "Pterodactyl Swap",
-            "Type": "text",
-            "Size": "40"
-        },
+            "name": "swap",
+            "friendlyName": "Pterodactyl Swap",
+            "type": "text"
+         },
         {
-            "Name": "disk",
-            "FriendlyName": "Pterodactyl Disk",
-            "Type": "text",
-            "Size": "40"
-        },
+            "name": "disk",
+            "friendlyName": "Pterodactyl Disk",
+            "type": "text"
+         },
         {
-            "Name": "io",
-            "FriendlyName": "Pterodactyl IO",
-            "Type": "text",
-            "Size": "40"
-        },
+            "name": "io",
+            "friendlyName": "Pterodactyl IO",
+            "type": "text"
+         },
         {
-            "Name": "cpu",
-            "FriendlyName": "CPU limit",
-            "Type": "text",
-            "Size": "40"
-        },
+            "name": "cpu",
+            "friendlyName": "CPU limit",
+            "type": "text"
+         },
         {
-            "Name": "database",
-            "FriendlyName": "Pterodactyl Database",
-            "Type": "text",
-            "Size": "40"
-        },
+            "name": "database",
+            "friendlyName": "Pterodactyl Database",
+            "type": "text"
+         },
         {
-            "Name": "allocation",
-            "FriendlyName": "Pterodactyl Allocation",
-            "Type": "text",
-            "Size": "40"
-        },
+            "name": "allocation",
+            "friendlyName": "Pterodactyl Allocation",
+            "type": "text"
+         },
         {
-            "Name": "port",
-            "FriendlyName": "Pterodactyl Port",
-            "Type": "text",
-            "Size": "40"
-        },
+            "name": "port",
+            "friendlyName": "Pterodactyl Port",
+            "type": "text"
+         },
         {
-            "Name": "startup",
-            "FriendlyName": "Pterodactyl Startup",
-            "Type": "text",
-            "Size": "40",
+            "name": "startup",
+            "friendlyName": "Pterodactyl Startup",
+            "type": "text",
             "Required": false
         },
         {
-            "Name": "image",
-            "FriendlyName": "Image ID",
-            "Type": "text",
-            "Size": "40"
+            "name": "image",
+            "friendlyName": "Image ID",
+            "type": "text"
+         },
+        {
+            "name": "skip_scripts",
+            "friendlyName": "Pterodactyl Skip Scripts",
+            "type": "boolean"
         },
         {
-            "Name": "skip_scripts",
-            "FriendlyName": "Pterodactyl Skip Scripts",
-            "Type": "boolean",
-            "Size": "40"
-        },
-        {
-            "Name": "backups",
-            "FriendlyName": "Pterodactyl Backups",
-            "Type": "boolean",
-            "Size": "40"
+            "name": "backups",
+            "friendlyName": "Pterodactyl Backups",
+            "type": "boolean"
         }
     ]
 }

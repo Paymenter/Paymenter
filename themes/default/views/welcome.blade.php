@@ -17,7 +17,7 @@
                             <div class="flex flex-wrap">
                                 @foreach ($category->products as $product)
                                     <div class="w-1/4 p-4">
-                                        <a href="{{ route('products.show', $product->id) }}">
+                                        <a href="{{ route('checkout.add', $product->id) }}">
                                             <img src="{{ $product->image }}" alt="{{ $product->name }}"
                                                 class="w-full h-64 object-cover object-center">
                                             <div class="mt-2">
@@ -26,6 +26,7 @@
                                                 <p class="mt-1 text-sm text-gray-500">${{ $product->price }}</p>
                                             </div>
                                         </a>
+
                                     </div>
                                 @endforeach
                             </div>

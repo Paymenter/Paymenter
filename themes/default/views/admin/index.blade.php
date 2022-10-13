@@ -25,7 +25,7 @@
                                         Open Orders
                                     </p>
                                     <p class="text-lg font-semibold text-gray-700">
-                                        {{ App\Models\Services::where('status', 'open')->count() }}
+                                        {{ App\Models\Orders::where('status', 'open')->count() }}
                                     </p>
                                 </div>
                             </div>

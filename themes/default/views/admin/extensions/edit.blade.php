@@ -15,11 +15,14 @@
                     <div class="mt-6 text-gray-500">
                         <form method="POST" action="">
                             @csrf
-                            @foreach ($extension->serverConfig as $setting)
+                            @foreach ($extension->config as $setting)
                                 <div class="mt-4">
-                                    <label for="{{ $setting->Name }}">{{ $setting->FriendlyName }}</label>
-                                    <input id="{{ $setting->Name }}" class="block mt-1 w-full" type="text"
-                                        name="{{ $setting->Name }}" required />
+                                    <label for="{{ $setting->name }}">{{ $setting->friendlyName  }}</label>
+                                    @if($setting->type == 'text')
+                                        <input type="text" name="{{ $setting->name }}" value="{{ App\Helpers\ExtensionHelper::getConfig($extension->name, $setting->name) }}" />
+                                    @elseif($setting->type == 'boolean')
+                                        <input type="checkbox" name="{{ $setting->name }}" value="1" @if( App\Helpers\ExtensionHelper::getConfig($extension->name, $setting->name) == 1) checked @endif />
+                                    @endif
                                 </div>
                             @endforeach
                             <div class="flex items-center justify-end mt-4">

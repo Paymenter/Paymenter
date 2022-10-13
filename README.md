@@ -14,15 +14,12 @@ This is a advanced payment system for your hosting company. It is written in PHP
 ## Features
 - [✔️] Login System
 - [✔️] Register System
-- [❌] Dashboard
-- [❌] Products
-- [❌] Orders
-- [❌] Support
+- [⚙️] Dashboard
+- [⚙️] Products
+- [⚙️] Orders
 - [⚙️] Tickets
-- [❌] Billing
-- [❌] API
+- [⚙️] Billing
 - [⚙️] Admin Panel
-- [❌] Reseller Panel
 
 ## Installation
 1. Download the code

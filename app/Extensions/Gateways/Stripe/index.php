@@ -1,8 +1,7 @@
 <?php
 
 use Stripe\StripeClient;
-
-include(app_path() . '/Helpers/Extension.php');
+use App\Helpers\ExtensionHelper;
 
 $name = 'Stripe';
 $description = 'Stripe Payment Gateway';
@@ -11,40 +10,88 @@ $author = 'CorwinDev';
 $website = 'http://stripe.com';
 $database = 'gateway_stripe';
 
-function create($request)
+function create()
 {
+    if(!ExtensionHelper::getProducts()){
+        return (object) [
+            'url' => route('checkout.cancel')
+        ];
+    }
     $client = StripeClient();
-
-    $order = $client->checkout->sessions->create([
-        'line_items' => [
-            [
-                'price_data' => [
-                    'currency' => 'usd',
-                    'product_data' => [
-                        'name' => 'Test Product',
-                        'description' => 'Test Product Description',
-                    ],
-                    'unit_amount_decimal' => 100,
+    // Create array with all the products
+    $products = ExtensionHelper::getProducts();
+    $items = [];
+    foreach ($products as $product) {
+        $items[] = [
+            'price_data' => [
+                'currency' => 'eur',
+                'product_data' => [
+                    'name' => $product->name,
                 ],
-                'quantity' => 1,
-            ]
-        ],
+                'unit_amount' => $product->price * 100,
+            ],
+            'quantity' => 1,
+        ];
+    }
+    // Create session
+    $order = $client->checkout->sessions->create([
+        'line_items' => $items,
         'mode' => 'payment',
-        "payment_method_types" => ["card"],
-        'success_url' => url('/success'),
-        'cancel_url' => url('/cancel'),
+        "payment_method_types" => ["card", "ideal"],
+        'success_url' => route('checkout.success'),
+        'cancel_url' => route('checkout.cancel'),
+        'customer_email' => auth()->user()->email,
+        'metadata' => [
+            'user_id' => auth()->user()->id,
+            'order_id' => 1,
+        ],
     ]);
-    error_log($order->url);
-    // ToDo: make success_url and cancel_url dynamic
+
     return $order;
 }
 
 function webhook($request)
 {
-    create($request);
+    $payload = $request->getContent();
+    $sig_header = $request->header('stripe-signature');
+    $endpoint_secret = ExtensionHelper::getConfig('Stripe', 'stripe_webhook_secret');
+    $event = null;
+
+    try {
+        $event = \Stripe\Webhook::constructEvent(
+            $payload,
+            $sig_header,
+            $endpoint_secret
+        );
+    } catch (\UnexpectedValueException $e) {
+        // Invalid payload
+        http_response_code(400);
+        exit();
+    } catch (\Stripe\Exception\SignatureVerificationException $e) {
+        // Invalid signature
+        http_response_code(400);
+        exit();
+    }
+    if ($event->type == 'checkout.session.completed') {
+        $order = $event->data->object;
+        error_log($order);
+        $order_id = $order->client_reference_id;
+        ExtensionHelper::paymentDone($order_id);
+        $order->status = 'paid';
+        $order->save();
+    }
 }
 
 function stripeClient()
 {
-    return new \Stripe\StripeClient(Extension::getConfig("Stripe", 'stripe_test_key'));
+    if (!ExtensionHelper::getConfig('Stripe', 'stripe_test_mode')) {
+        $stripe = new StripeClient(
+            ExtensionHelper::getConfig('Stripe', 'stripe_live_secret_key')
+        );
+    } else {
+        $stripe = new StripeClient(
+            ExtensionHelper::getConfig('Stripe', 'stripe_test_key')
+        );
+    }
+    return $stripe;
 }
