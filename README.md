@@ -25,4 +25,4 @@ This is a advanced payment system for your hosting company. It is written in PHP
 - [❌] Reseller Panel
 
 ## Installation
-[Click here to go to the documentation, where we show you how to install the entire Paymenter system](http://docs.paymenter.org/)
+[Click here](http://docs.paymenter.org/) to go to the documentation, where we show you how to install the entire Paymenter system
