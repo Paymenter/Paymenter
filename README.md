@@ -21,8 +21,6 @@ This is a advanced payment system for your hosting company. It is written in PHP
 - [⚙️] Billing
 - [⚙️] Admin Panel
 
-## Installation
-1. Download the code
-2. Install the database
-3. Edit the config file
-4. Enjoy!
+## Installation & Documentation
+For a detailed explanation of how to install and configure Paymenter, take a look at our [documentation here](http://docs.paymenter.org/)!
+- Or, get additional help via [Community Discord](https://discord.gg/xB4UUT3XQg).
