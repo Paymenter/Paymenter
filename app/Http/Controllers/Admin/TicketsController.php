@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Tickets;
+use App\Models\Statistics;
 
 class TicketsController extends Controller
 {
@@ -40,6 +41,11 @@ class TicketsController extends Controller
             'client' => $request->get('client')
         ]);
         $ticket->save();
+        Statistics::createOrUpdate([
+            'name' => 'tickets',
+            'date' => date('Y-m-d'),
+            'value' => 1
+        ]);
         return redirect('/admin/tickets')->with('success', 'Ticket has been added');
     }
 
@@ -78,6 +84,15 @@ class TicketsController extends Controller
         $ticket = Tickets::find($id);
         $ticket->status = $request->get('status');
         $ticket->save();
+        if($request->get('status') == 'closed') {
+            Statistics::updateOrCreate(
+                ['name' => 'ticketsClosed'],
+                [
+                'name' => 'ticketsClosed',
+                'date' => date('Y-m-d'),
+                'value' => 1
+            ]);
+        }
 
         return redirect()->back()->with('success', 'Status has been changed');
     }

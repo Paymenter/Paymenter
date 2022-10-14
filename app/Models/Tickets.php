@@ -16,9 +16,9 @@ class Tickets extends Model
         'client'
     ];
 
-    public function services()
+    public function orders()
     {
-        return $this->hasMany(Services::class, 'id', 'service');
+        return $this->hasMany(Orders::class, 'id', 'service');
     }
 
     public function client()

@@ -5,7 +5,7 @@
     <div class="py-12">
         <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
             <div class="overflow-hidden bg-white shadow-sm sm:rounded-lg">
-                <x-succes class="mb-4" />
+                <x-success class="mb-4" />
                 <div class="p-6 bg-white border-b border-gray-200">
                     <div class="flex flex-col">
                         <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
@@ -24,7 +24,7 @@
                                             {{ $ticket->client()->get()[0]->name }}
                                         </p>
                                         <p class="text-gray-600 px-3 rounded-md text-xl m-4">Product(s):
-                                            @foreach ($ticket->services()->get() as $product)
+                                            @foreach ($ticket->orders()->get() as $product)
                                                 {{ $product->name }}
                                             @endforeach
                                         </p>
