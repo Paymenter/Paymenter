@@ -25,7 +25,7 @@ This is a advanced payment system for your hosting company. It is written in PHP
 The requirements for Paymenter are the following:
 - PHP (8 or higher)
 - Composer
-- NodeJS (Recommended: v16/17)
+- NodeJS (version 16 or higher)
 
 ## Installation & Documentation
 For a detailed explanation of how to install and configure Paymenter, take a look at our [documentation here](http://docs.paymenter.org/)!
