@@ -34,6 +34,15 @@ Route::group(['prefix'=>'checkout'], function(){
     Route::get('/cancel', [App\Http\Controllers\CheckoutController::class, 'cancel'])->name('checkout.cancel');
 });
 
+Route::group(['prefix'=>'tickets'], function(){
+    Route::get('/', [App\Http\Controllers\TicketsController::class, 'index'])->name('tickets.index');
+    Route::get('/create', [App\Http\Controllers\TicketsController::class, 'create'])->name('tickets.create');
+    Route::post('/store', [App\Http\Controllers\TicketsController::class, 'store'])->name('tickets.store');
+    Route::get('/{id}', [App\Http\Controllers\TicketsController::class, 'show'])->name('tickets.show');
+    Route::post('/{id}/update', [App\Http\Controllers\TicketsController::class, 'update'])->name('tickets.update');
+    Route::delete('/{id}/delete', [App\Http\Controllers\TicketsController::class, 'delete'])->name('tickets.delete');
+});
+
 require __DIR__.'/auth.php';
 require __DIR__.'/admin.php';
 require __DIR__.'/extensions.php';

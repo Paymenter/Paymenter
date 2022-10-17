@@ -1,17 +1,14 @@
 <nav class="bg-white border-b border-gray-100">
-    <div class="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8 ">
-        <div class="flex justify-between h-16 text-gray-500 hover:text-gray-700 text-sm font-medium leading-5 flex-wrap">
+    <div class="px-4 max-w-7xl sm:px-6 lg:px-8">
+        <div class="flex  h-16 text-gray-500 hover:text-gray-700 text-sm font-medium leading-5 items-center">
             <div class="flex">
                 <div class="flex items-center flex-shrink-0">
-                    <a href="{{ route('home') }}">
+                    <a href="{{ route('admin') }}">
                         <x-application-logo class="block w-auto h-10 text-gray-600 fill-current" />
                     </a>
-                </div>
-                <div class="hidden space-x-8 md:-my-px md:ml-10 md:flex">
-                    <a href="{{ route('home') }}"
-                        class="{{ request()->routeIs('home') ? 'border-indigo-400 text-gray-900 focus:border-indigo-700' : 'border-transparent hover:border-gray-300 focus:text-gray-700 focus:border-gray-300' }} inline-flex items-center px-1 pt-1 border-b-2 focus:outline-none">
-                        {{ __('Dashboard') }}
-                    </a>
+                    <p class="p-2 text-xl font-bold">
+                        {{ env('APP_NAME') }}
+                    </p>
                 </div>
             </div>
             <button data-collapse-toggle="mobile-menu" type="button"
@@ -26,51 +23,167 @@
                         clip-rule="evenodd"></path>
                 </svg>
             </button>
-            <div class="hidden md:flex md:items-center md:ml-6" id="settings">
+            <div class="hidden sm:flex sm:items-center sm:w-auto justify-center place-items-center text-center text-lg"
+                id="menu">
+                <div class="relative inline-block text-left ">
+                    <!-- ticket -->
+                    <div>
+                        <button type="button"
+                            class="inline-flex w-full justify-center bg-white pl-4 py-2 text-base font-medium text-gray-700 @if (request()->routeIs('tickets*')) bg-gray-200 @endif"
+                            id="menu-button" aria-expanded="true" aria-haspopup="true" onclick="openMenu('tickets')">
+                            <i class="ri-shopping-cart-2-line pr-1"
+                                @if (request()->routeIs('tickets*')) style="color: #5270FD" @endif></i>Tickets
+                            <svg class="-mr-1 ml-1 h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
+                                fill="currentColor" aria-hidden="true">
+                                <path fill-rule="evenodd"
+                                    d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"
+                                    clip-rule="evenodd" />
+                            </svg>
+                        </button>
+
+                        <div class="absolute right-0 w-56 mt-2 origin-top-right rounded-md shadow-lg hidden"
+                            id="tickets">
+                            <div class="py-1 rounded-md bg-white shadow-xs" role="menu" aria-orientation="vertical"
+                                aria-labelledby="options-menu">
+                                <a href="{{ route('tickets.index') }}"
+                                    class="block px-4 py-2 text-sm leading-5 text-gray-700 hover:bg-gray-100 hover:text-gray-900"
+                                    role="menuitem">List</a>
+                                <a href="{{ route('tickets.create') }}"
+                                    class="block px-4 py-2 text-sm leading-5 text-gray-700 hover:bg-gray-100 hover:text-gray-900"
+                                    role="menuitem">Create</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="relative inline-block text-left">
+                    <button type="button"
+                        class="inline-flex w-full justify-center bg-white pl-4 py-2 text-base font-medium text-gray-700 @if (request()->routeIs('admin.orders*')) bg-gray-200 @endif"
+                        id="menu-button" aria-expanded="true" aria-haspopup="true" onclick="openMenu('orders')">
+                        <i class="ri-shopping-cart-2-line pr-1"
+                            @if (request()->routeIs('products*')) style="color: #5270FD" @endif></i> Products
+                        <svg class="-mr-1 ml-1 h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
+                            fill="currentColor" aria-hidden="true">
+                            <path fill-rule="evenodd"
+                                d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"
+                                clip-rule="evenodd" />
+                        </svg>
+                    </button>
+                    <div class="origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 hidden"
+                        role="menu" aria-orientation="vertical" aria-labelledby="menu-button" tabindex="-1"
+                        id="orders">
+                        <div class="py-1" role="none">
+                            <a href="{{ route('products.index') }}"
+                                class="text-gray-700 block px-4 py-2 text-base hover:bg-gray-100 hover:text-gray-900"
+                                role="menuitem" tabindex="-1" id="menu-item-0">All Products</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="hidden sm:flex sm:items-center w-full sm:w-auto absolute right-0 " id="menu">
                 @auth
-                    <div>{{ Auth::user()->name }}</div>
+                    <div class="relative inline-block text-left">
+                        <button type="button"
+                            class="inline-flex w-full justify-center items-center bg-white pl-4 py-2 text-base font-medium text-gray-700"
+                            aria-label="User menu" aria-haspopup="true" onclick="openMenu('user-menu')">
+                            <!-- use gravatar -->
+                            <img class="h-8 w-8 rounded-md"
+                                src="https://www.gravatar.com/avatar/{{ md5(Auth::user()->email) }}?s=200&d=mp"
+                                alt="{{ Auth::user()->name }}" />
+                            <p class="p-2 font-bold">
+                                {{ Auth::user()->name }}
+                            </p>
+                        </button>
+                        <div class="origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 hidden"
+                            id="user-menu">
+                            <div class="py-1 rounded-md bg-white shadow-xs" role="menu" aria-orientation="vertical"
+                                aria-labelledby="user-menu">
+                                <a href="" class="block px-4 py-2 text-base text-gray-700 hover:bg-gray-100"
+                                    role="menuitem">Your Profile</a>
+                                <a href="{{ route('admin.settings') }}"
+                                    class="block px-4 py-2 text-base text-gray-700 hover:bg-gray-100"
+                                    role="menuitem">Settings</a>
+                                <a href="{{ route('logout') }}"
+                                    onclick="event.preventDefault();
+                                                document.getElementById('logout-form').submit();"
+                                    class="block px-4 py-2 text-base text-gray-700 hover:bg-gray-100" role="menuitem">Sign
+                                    out</a>
+                            </div>
+                        </div>
+                    </div>
+                    <form id="logout-form" action="{{ route('logout') }}" method="POST" class="hidden">
+                        @csrf
+                    </form>
+                @else
+                    <a href="{{ route('login') }}" class="text-sm text-gray-700 underline">Log in</a>
+                @endauth
+            </div>
+
+            <script>
+                var usermenu = document.getElementById('user-menu');
+                var settings = document.getElementById('settings');
+                var orders = document.getElementById('orders');
+                var clients = document.getElementById('clients');
+                var tickets = document.getElementById('tickets');
+
+                function openMenu(id) {
+                    if (id == 'user-menu') {
+                        usermenu.classList.toggle('hidden');
+                        settings.classList.add('hidden');
+                        orders.classList.add('hidden');
+                        clients.classList.add('hidden');
+                        tickets.classList.add('hidden');
+                    } else if (id == 'settings') {
+                        settings.classList.toggle('hidden');
+                        usermenu.classList.add('hidden');
+                        orders.classList.add('hidden');
+                        clients.classList.add('hidden');
+                        tickets.classList.add('hidden');
+                    } else if (id == 'orders') {
+                        orders.classList.toggle('hidden');
+                        usermenu.classList.add('hidden');
+                        settings.classList.add('hidden');
+                        clients.classList.add('hidden');
+                        tickets.classList.add('hidden');
+                    } else if (id == 'clients') {
+                        clients.classList.toggle('hidden');
+                        usermenu.classList.add('hidden');
+                        settings.classList.add('hidden');
+                        orders.classList.add('hidden');
+                        tickets.classList.add('hidden');
+                    } else if (id == 'tickets') {
+                        tickets.classList.toggle('hidden');
+                        usermenu.classList.add('hidden');
+                        settings.classList.add('hidden');
+                        orders.classList.add('hidden');
+                        clients.classList.add('hidden');
+                    }
+                }
+
+                function openUserMenu() {
+                    document.getElementById("user-menu").classList.toggle("hidden");
+                }
+            </script>
+        </div>
+        <div class="hidden md:hidden" id="mobile-menu">
+            <div class="space-y-1 px-2 pt-2 pb-3">
+                <a href="#"
+                    class="text-black hover:bg-gray-100 block px-3 py-2 rounded-md text-base font-medium @if (request()->routeIs('index')) bg-gray-400 @endif"
+                    aria-current="page">Dashboard</a>
+                <a href="#"
+                    class="text-black hover:bg-gray-100 block px-3 py-2 rounded-md text-base font-medium @if (request()->routeIs('products.*')) bg-gray-400 @endif">Products</a>
+
+                @auth
                     <a href="{{ route('logout') }}"
-                        class="h-16 ml-4 border-transparent hover:border-gray-300 focus:text-gray-700 focus:border-gray-300 inline-flex items-center px-1 pt-1 border-b-2 focus:outline-none"
+                        class="text-black hover:bg-gray-100 block px-3 py-2 rounded-md text-base font-medium"
                         onclick="event.preventDefault();
-                        document.getElementById('logout-form').submit();">
+                document.getElementById('logout-form').submit();">
                         {{ __('Logout') }}
                     </a>
                     <form id="logout-form" action="{{ route('logout') }}" method="POST" class="hidden">
                         @csrf
                     </form>
-                @else
-                    <a href="{{ route('login') }}"
-                        class="h-16 ml-4 border-transparent hover:border-gray-300 focus:text-gray-700 focus:border-gray-300 inline-flex items-center px-1 pt-1 border-b-2 focus:outline-none">
-                        {{ __('Login') }}
-                    </a>
-                    <a href="{{ route('register') }}"
-                        class="h-16 ml-4 border-transparent hover:border-gray-300 focus:text-gray-700 focus:border-gray-300 inline-flex items-center px-1 pt-1 border-b-2 focus:outline-none">
-                        {{ __('Register') }}
-                    </a>
                 @endauth
-                </ul>
             </div>
-        </div>
-    </div>
-    <div class="hidden md:hidden" id="mobile-menu">
-        <div class="space-y-1 px-2 pt-2 pb-3">
-            <a href="#" class="text-black hover:bg-gray-100 block px-3 py-2 rounded-md text-base font-medium @if(request()->routeIs('index')) bg-gray-400 @endif" aria-current="page">Dashboard</a>
-            <a href="#"
-                class="text-black hover:bg-gray-100 block px-3 py-2 rounded-md text-base font-medium @if(request()->routeIs('products.*')) bg-gray-400 @endif">Products</a>
-
-            <a href="#"
-                class="text-black hover:bg-gray-100 block px-3 py-2 rounded-md text-base font-medium @if(request()->routeIs('tickets.*')) bg-gray-400 @endif">Projects</a>
-            @auth
-                <a href="{{ route('logout') }}"
-                    class="text-black hover:bg-gray-100 block px-3 py-2 rounded-md text-base font-medium"
-                    onclick="event.preventDefault();
-                document.getElementById('logout-form').submit();">
-                    {{ __('Logout') }}
-                </a>
-                <form id="logout-form" action="{{ route('logout') }}" method="POST" class="hidden">
-                    @csrf
-                </form>
-            @endauth
         </div>
     </div>
 </nav>
