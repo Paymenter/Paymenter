@@ -21,6 +21,12 @@
                 <div class="mt-4">
                     <label class="block text-sm font-medium text-gray-700">
                         {{ __('Email') }}
+                        @if (Route::has('register'))
+                        <a style="float: right; margin-bottom: 1px;" class="text-sm text-gray-600 underline hover:text-gray-900"
+                            href="{{ route('register') }}">
+                            {{ __('New here?') }} <b>{{ __('Create an account.') }}</b>
+                        </a>
+                    @endif
                     </label>
 
                     <input id="email" type="email"
