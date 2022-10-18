@@ -17,6 +17,7 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->boolean('enabled')->default(false);
+            $table->string('type');
             $table->timestamps();
         });
     }

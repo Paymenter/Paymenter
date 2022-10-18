@@ -12,6 +12,7 @@ class Extensions extends Model
     protected $fillable = [
         'name',
         'enabled',
+        'type'
     ];
 
     public function getConfig()

@@ -40,6 +40,7 @@ class ExtensionHelper
             Extensions::create([
                 'name' => $name,
                 'enabled' => false,
+                'type' => 'notset'
             ]);
             $extension = Extensions::where('name', $name)->first();
         }
@@ -58,6 +59,7 @@ class ExtensionHelper
             Extensions::create([
                 'name' => $name,
                 'enabled' => false,
+                'type' => 'notset'
             ]);
             $extension = Extensions::where('name', $name)->first();
         }

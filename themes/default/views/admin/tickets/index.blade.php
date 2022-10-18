@@ -22,7 +22,7 @@
                                             </p>
                                         </div>
                                     @else
-                                        <table class="min-w-full divide-y divide-gray-200">
+                                        <table class="min-w-full divide-y divide-gray-200" id="tickets">
                                             <thead class="bg-gray-50">
                                                 <tr>
                                                     <th scope="col"
@@ -50,12 +50,12 @@
                                                 @foreach ($tickets as $service)
                                                     <tr>
                                                         <td class="px-6 py-4 whitespace-nowrap">
-                                                             <div class="text-sm text-gray-900">
+                                                            <div class="text-sm text-gray-900">
                                                                 {{ $service->title }}
                                                             </div>
                                                         </td>
                                                         <td class="px-6 py-4 whitespace-nowrap">
-                                                            @if($service->priority == 'low')
+                                                            @if ($service->priority == 'low')
                                                                 <span
                                                                     class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
                                                                     {{ $service->priority }}
@@ -96,4 +96,11 @@
             </div>
         </div>
     </div>
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.12.1/css/jquery.dataTables.css">
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('#tickets').DataTable();
+        });
+    </script>
 </x-admin-layout>
