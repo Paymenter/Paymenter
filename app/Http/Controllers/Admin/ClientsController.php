@@ -20,11 +20,13 @@ class ClientsController extends Controller
 
     public function store(Request $request)
     {
-        $user = new User();
-        $user->name = $request->name;
-        $user->email = $request->email;
-        $user->save();
-        return redirect()->route('admin.clients.index');
+        $request->validate([
+            'name' => 'required',
+            'email' => 'required|email|unique:users',
+            'password' => 'required|min:8',
+        ]);
+        $user = User::create($request->all());
+        return redirect()->route('admin.clients.edit', $user->id);
     }
 
     public function edit($id)
@@ -39,13 +41,13 @@ class ClientsController extends Controller
         $user->name = $request->name;
         $user->email = $request->email;
         $user->save();
-        return redirect()->route('admin.clients.index');
+        return redirect()->route('admin.clients.edit', $id)->with('success', 'User updated successfully');
     }
 
     public function destroy($id)
     {
         $user = User::find($id);
         $user->delete();
-        return redirect()->route('admin.clients.index');
+        return redirect()->route('admin.clients');
     }
 }

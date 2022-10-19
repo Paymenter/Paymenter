@@ -20,7 +20,7 @@ class DatabaseSeeder extends Seeder
              'name' => 'Corwin van Velthuizen',
              'email' => 'info@corwindev.nl',
              'password' => bcrypt('Req@r4837dXgy.U'),
-             'admin' => 1,
+             'is_admin' => 1,
          ]);
     }
 }

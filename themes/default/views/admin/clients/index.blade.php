@@ -72,12 +72,17 @@
                                                         {{ $user->created_at }}
                                                     </td>
                                                     <td class="px-6 py-4 text-center">
-                                                        <a href="#"
+                                                        <a href="{{ route('admin.clients.edit', $user->id) }}"
                                                             class="px-4 py-1 text-sm text-blue-600 bg-blue-200 rounded-full">Edit</a>
                                                     </td>
                                                     <td class="px-6 py-4 text-center">
-                                                        <a href="#"
-                                                            class="px-4 py-1 text-sm text-red-400 bg-red-200 rounded-full">Delete</a>
+                                                        <form action="{{ route('admin.clients.delete', $user->id) }}"
+                                                            method="POST" class="delete">
+                                                            @csrf
+                                                            @method('DELETE')
+                                                            <button type="submit"
+                                                                class="px-4 py-1 text-sm text-red-600 bg-red-200 rounded-full">Delete</button>
+                                                        </form>
                                                     </td>
                                                 </tr>
                                             @endforeach
@@ -97,5 +102,14 @@
         $(document).ready(function() {
             $('#clientdatatable').DataTable();
         });
+
+        var form = document.getElementsByClassName('delete');
+        var confirmIt = function(e) {
+            if (!confirm('Are you sure you want to delete this client?\nThis will remove all data!')) e.preventDefault();
+        };
+        for (var i = 0, l = form.length; i < l; i++) {
+            form[i].addEventListener('submit', confirmIt, false);
+        }
+
     </script>
 </x-admin-layout>

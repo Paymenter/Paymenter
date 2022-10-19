@@ -15,12 +15,7 @@
                         {{ __('Here you can change your settings.') }}
                     </div>
                 </div>
-                <!-- check if already submitted -->
-                @if (session('succes'))
-                    <div class="alert alert-success">
-                        {{ session('success') }}
-                    </div>
-                @endif
+                <x-success class="mb-4"/>
                 <form action="{{ route('admin.settings.update') }}" method="POST">
                     @csrf
                     <div class="bg-gray-200 bg-opacity-25 grid grid-cols-1">

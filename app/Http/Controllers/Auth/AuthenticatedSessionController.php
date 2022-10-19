@@ -29,11 +29,10 @@ class AuthenticatedSessionController extends Controller
      */
     public function store(LoginRequest $request)
     {
-        if(Settings::first()->recaptcha_enabled == 1){
-            $request->validate([
-                'g-recaptcha-response' => 'required|captcha',
-            ]);
-        }
+        $request->validate([
+            'g-recaptcha-response' => 'required|captcha',
+        ]);
+
         $request->authenticate();
 
         $request->session()->regenerate();
