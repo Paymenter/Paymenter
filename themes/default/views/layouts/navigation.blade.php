@@ -1,6 +1,6 @@
-<nav class="bg-white border-b border-gray-100">
-    <div class="px-4 max-w-7xl sm:px-6 lg:px-8">
-        <div class="flex  h-16 text-gray-500 hover:text-gray-700 text-sm font-medium leading-5 items-center">
+<nav class="dark bg-white">
+    <div class="dark:bg-darkmode px-4 max-w-7xl sm:px-6 lg:px-8">
+        <div class="flex dark:bg-darkmode h-16 text-gray-500 hover:text-gray-700 text-sm font-medium leading-5 items-center">
             <div class="flex">
                 <div class="flex items-center flex-shrink-0">
                     <a href="{{ route('admin') }}">
@@ -23,13 +23,13 @@
                         clip-rule="evenodd"></path>
                 </svg>
             </button>
-            <div class="hidden sm:flex sm:items-center sm:w-auto justify-center place-items-center text-center text-lg"
+            <div class="hidden sm:flex sm:items-center sm:w-auto justify-center place-items-center text-center text-lg dark:text-white dark:bg-darkmode dark:hover:bg-darkbutton"
                 id="menu">
-                <div class="relative inline-block text-left ">
+                <div class="relative inline-block text-left">
                     <!-- ticket -->
-                    <div>
-                        <button type="button"
-                            class="inline-flex w-full justify-center bg-white pl-4 py-2 text-base font-medium text-gray-700 @if (request()->routeIs('tickets*')) bg-gray-200 @endif"
+                    <div class="">
+                        <button type="button" 
+                            class="dark:text-white dark:bg-darkmode dark:hover:bg-darkbutton inline-flex w-full justify-center bg-white pl-4 py-2 text-base font-medium text-gray-700 @if (request()->routeIs('tickets*')) bg-gray-200 @endif"
                             id="menu-button" aria-expanded="true" aria-haspopup="true" onclick="openMenu('tickets')">
                             <i class="ri-shopping-cart-2-line pr-1"
                                 @if (request()->routeIs('tickets*')) style="color: #5270FD" @endif></i>Tickets
@@ -41,15 +41,15 @@
                             </svg>
                         </button>
 
-                        <div class="absolute right-0 w-56 mt-2 origin-top-right rounded-md shadow-lg hidden"
+                        <div class="dark:text-white dark:bg-darkmode dark:hover:bg-darkbutton absolute right-0 w-56 mt-2 origin-top-right rounded-md shadow-lg hidden dark:bg-darkmode"
                             id="tickets">
-                            <div class="py-1 rounded-md bg-white shadow-xs" role="menu" aria-orientation="vertical"
+                            <div class="dark:bg-darkmode py-1 rounded-md bg-white shadow-xs" role="menu" aria-orientation="vertical"
                                 aria-labelledby="options-menu">
                                 <a href="{{ route('tickets.index') }}"
-                                    class="block px-4 py-2 text-sm leading-5 text-gray-700 hover:bg-gray-100 hover:text-gray-900"
+                                    class="dark:text-white dark:bg-darkmode dark:hover:bg-darkbutton block px-4 py-2 text-sm leading-5 text-gray-700 hover:bg-gray-100 hover:text-gray-900 dark:"
                                     role="menuitem">List</a>
                                 <a href="{{ route('tickets.create') }}"
-                                    class="block px-4 py-2 text-sm leading-5 text-gray-700 hover:bg-gray-100 hover:text-gray-900"
+                                    class="dark:text-white dark:bg-darkmode dark:hover:bg-darkbutton block px-4 py-2 text-sm leading-5 text-gray-700 hover:bg-gray-100 hover:text-gray-900"
                                     role="menuitem">Create</a>
                             </div>
                         </div>
@@ -57,7 +57,7 @@
                 </div>
                 <div class="relative inline-block text-left">
                     <button type="button"
-                        class="inline-flex w-full justify-center bg-white pl-4 py-2 text-base font-medium text-gray-700 @if (request()->routeIs('admin.orders*')) bg-gray-200 @endif"
+                        class="dark:text-white dark:bg-darkmode dark:hover:bg-darkbutton inline-flex w-full justify-center bg-white pl-4 py-2 text-base font-medium text-gray-700 @if (request()->routeIs('admin.orders*')) bg-gray-200 @endif"
                         id="menu-button" aria-expanded="true" aria-haspopup="true" onclick="openMenu('orders')">
                         <i class="ri-shopping-cart-2-line pr-1"
                             @if (request()->routeIs('products*')) style="color: #5270FD" @endif></i> Products
@@ -71,9 +71,9 @@
                     <div class="origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 hidden"
                         role="menu" aria-orientation="vertical" aria-labelledby="menu-button" tabindex="-1"
                         id="orders">
-                        <div class="py-1" role="none">
+                        <div class="py-1 dark:bg-darkmode rounded" role="none">
                             <a href="{{ route('products.index') }}"
-                                class="text-gray-700 block px-4 py-2 text-base hover:bg-gray-100 hover:text-gray-900"
+                                class="dark:text-white dark:hover:bg-darkbutton text-gray-700 block px-4 py-2 text-base hover:bg-gray-100 hover:text-gray-900"
                                 role="menuitem" tabindex="-1" id="menu-item-0">All Products</a>
                         </div>
                     </div>
@@ -114,7 +114,8 @@
                         @csrf
                     </form>
                 @else
-                    <a href="{{ route('login') }}" class="text-sm text-gray-700 transition duration-400 mr-4 p-3 rounded hover:bg-logo hover:transition duration-400">Log in</a>
+                <!-- login and register links -->
+                    <a href="{{ route('login') }}" class="dark:text-white text-sm text-gray-700 transition duration-400 mr-4 p-3 rounded hover:bg-button hover:dark:bg-darkbutton hover:transition duration-400">Log in</a>
                 @endauth
             </div>
 
@@ -165,12 +166,12 @@
             </script>
         </div>
         <div class="hidden md:hidden" id="mobile-menu">
-            <div class="space-y-1 px-2 pt-2 pb-3">
+            <div class="space-y-1 px-2 pt-2 pb-3 ">
                 <a href="#"
-                    class="text-black hover:bg-gray-100 block px-3 py-2 rounded-md text-base font-medium @if (request()->routeIs('index')) bg-gray-400 @endif"
+                    class="dark:text-white dark:bg-darkmode dark:hover:bg-darkbutton text-black hover:bg-gray-100 block px-3 py-2 rounded-md text-base font-medium @if (request()->routeIs('index')) bg-gray-400 @endif"
                     aria-current="page">Dashboard</a>
                 <a href="#"
-                    class="text-black hover:bg-gray-100 block px-3 py-2 rounded-md text-base font-medium @if (request()->routeIs('products.*')) bg-gray-400 @endif">Products</a>
+                    class="dark:text-white dark:bg-darkmode dark:hover:bg-darkbutton text-black hover:bg-gray-100 block px-3 py-2 rounded-md text-base font-medium @if (request()->routeIs('products.*')) bg-gray-400 @endif">Products</a>
 
                 @auth
                     <a href="{{ route('logout') }}"

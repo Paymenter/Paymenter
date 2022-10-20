@@ -20,7 +20,7 @@
 </head>
 
 <body>
-    <div id="app" class="font-sans antialiased text-gray-900">
+    <div id="app" class="dark font-sans antialiased text-gray-900">
         {{ $slot }}
     </div>
 </body>

@@ -27,7 +27,7 @@
                                             <thead class="bg-gray-50">
                                                 <tr>
                                                     <th scope="col"
-                                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                                        class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
                                                         Name
                                                     </th>
                                                     <th scope="col"
@@ -52,8 +52,8 @@
                                                     <tr>
                                                         <td class="px-6 py-4 whitespace-nowrap">
                                                             <div class="flex items-center">
-                                                                <div class="flex-shrink-0 h-10 w-10">
-                                                                    <img class="h-10 w-10 rounded-full"
+                                                                <div class="float-left flex-shrink-0 h-10 w-10">
+                                                                    <img class=" h-10 w-10 rounded-full"
                                                                         src="{{ $service->image }}" alt="">
                                                                 </div>
                                                                 <div class="ml-4">

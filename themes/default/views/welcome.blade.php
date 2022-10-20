@@ -3,10 +3,10 @@
         {{ __('Home') }}
     </x-slot>
 
-    <div class="py-12">
+    <div class="dark:bg-darkmode dark:text-white py-12">
         <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
-            <div class="overflow-hidden bg-white shadow-sm sm:rounded-lg">
-                <div class="p-6 bg-white border-b border-gray-200">
+            <div class="dark:bg-darkmode2 overflow-hidden bg-white rounded-lg">
+                <div class="dark:bg-darkmode2 p-6 bg-white">
                     <!-- display all categories with products -->
                     <h1 class="text-2xl font-bold">{{ __('Categories') }}</h1>
                     @foreach ($categories as $category)

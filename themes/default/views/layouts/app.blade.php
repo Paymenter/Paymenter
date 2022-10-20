@@ -26,7 +26,7 @@
 </head>
 
 <body class="font-sans antialiased">
-    <div id="app" class="min-h-screen bg-gray-100">
+    <div id="app" class="dark min-h-screen bg-gray-100">
         @include('layouts.navigation')
         <!-- Page Content -->
         <main>
