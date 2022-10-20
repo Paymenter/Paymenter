@@ -114,7 +114,7 @@
                         @csrf
                     </form>
                 @else
-                    <a href="{{ route('login') }}" class="text-sm text-gray-700 underline">Log in</a>
+                    <a href="{{ route('login') }}" class="text-sm text-gray-700 underline text-login">Log in</a>
                 @endauth
             </div>
 
