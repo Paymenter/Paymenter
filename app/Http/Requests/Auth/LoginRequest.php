@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Auth;
 
+use App\Models\Settings;
 use Illuminate\Auth\Events\Lockout;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
@@ -28,10 +29,18 @@ class LoginRequest extends FormRequest
      */
     public function rules()
     {
-        return [
-            'email' => 'required|string|email',
-            'password' => 'required|string',
-        ];
+        if(Settings::first()->recaptcha == 1) {
+            return [
+                'email' => 'required|string|email',
+                'password' => 'required|string',
+                'g-recaptcha-response' => 'required|recaptcha',
+            ];
+        } else {
+            return [
+                'email' => 'required|string|email',
+                'password' => 'required|string',
+            ];
+        }
     }
 
     /**

@@ -8,9 +8,6 @@ class ReCaptcha
 {
     public function validate($attribute, $value, $parameters, $validator)
     {
-        if(Settings::first()->recaptcha == 0) {
-            return true;
-        }
         $client = new Client;
         $response = $client->post(
             'https://www.google.com/recaptcha/api/siteverify',

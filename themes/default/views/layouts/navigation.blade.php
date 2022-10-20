@@ -1,6 +1,7 @@
 <nav class="dark:bg-darkmode bg-white">
     <div class="dark:bg-darkmode px-4 max-w-7xl sm:px-6 lg:px-8">
-        <div class="flex dark:bg-darkmode h-16 text-gray-500 hover:text-gray-700 text-sm font-medium leading-5 items-center">
+        <div
+            class="flex dark:bg-darkmode h-16 text-gray-500 hover:text-gray-700 text-sm font-medium leading-5 items-center">
             <div class="flex">
                 <div class="flex items-center flex-shrink-0">
                     <a href="{{ route('admin') }}">
@@ -28,7 +29,7 @@
                 <div class="dark:bg-darkmode relative inline-block text-left">
                     <!-- ticket -->
                     <div class="dark:bg-darkmode">
-                        <button type="button" 
+                        <button type="button"
                             class="dark:text-darkmodetext dark:bg-darkmode dark:hover:bg-darkbutton inline-flex w-full justify-center bg-white pl-4 py-2 text-base font-medium text-gray-700 @if (request()->routeIs('tickets*')) bg-gray-200 @endif"
                             id="menu-button" aria-expanded="true" aria-haspopup="true" onclick="openMenu('tickets')">
                             <i class="ri-shopping-cart-2-line pr-1"
@@ -43,8 +44,8 @@
 
                         <div class="dark:text-darkmodetext dark:bg-darkmode dark:hover:bg-darkbutton absolute right-0 w-56 mt-2 origin-top-right rounded-md shadow-lg hidden dark:bg-darkmode"
                             id="tickets">
-                            <div class="dark:bg-darkmode py-1 rounded-md bg-white shadow-xs" role="menu" aria-orientation="vertical"
-                                aria-labelledby="options-menu">
+                            <div class="dark:bg-darkmode py-1 rounded-md bg-white shadow-xs" role="menu"
+                                aria-orientation="vertical" aria-labelledby="options-menu">
                                 <a href="{{ route('tickets.index') }}"
                                     class="dark:text-darkmodetext dark:bg-darkmode dark:hover:bg-darkbutton block px-4 py-2 text-sm leading-5 text-gray-700 hover:bg-gray-100 hover:text-gray-900 dark:"
                                     role="menuitem">List</a>
@@ -79,11 +80,12 @@
                     </div>
                 </div>
             </div>
-            <div class="dark:bg-darkmode hidden sm:flex sm:items-center w-full sm:w-auto absolute right-0" id="menu">
+            <div class="dark:bg-darkmode hidden sm:flex sm:items-center w-full sm:w-auto absolute right-0"
+                id="menu">
                 @auth
                     <div class="relative inline-block text-left">
                         <button type="button"
-                            class="inline-flex w-full justify-center items-center bg-white pl-4 py-2 text-base font-medium text-gray-700"
+                            class="inline-flex w-full justify-center items-center bg-white pl-4 py-2 text-base font-medium text-gray-700 dark:text-darkmodetext dark:bg-darkmode"
                             aria-label="User menu" aria-haspopup="true" onclick="openMenu('user-menu')">
                             <!-- use gravatar -->
                             <img class="h-8 w-8 rounded-md"
@@ -114,9 +116,69 @@
                         @csrf
                     </form>
                 @else
-                <!-- login and register links -->
-                    <a href="{{ route('login') }}" class="dark:text-darkmodetext dark:bg-darkmode text-sm text-gray-700 transition duration-400 mr-4 p-3 rounded hover:bg-button dark:hover:bg-darkbutton hover:transition duration-400">Log in</a>
+                    <!-- login and register links -->
+                    <a href="{{ route('login') }}"
+                        class="dark:text-darkmodetext dark:bg-darkmode text-sm text-gray-700 transition duration-400 mr-4 p-3 rounded hover:bg-button dark:hover:bg-darkbutton hover:transition duration-400">Log
+                        in</a>
                 @endauth
+                <div class="flex col-span-1 justify-end pl-1">
+                    <button id="theme-toggle" type="button"
+                        class="text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 rounded-lg text-sm p-2.5">
+                        <svg id="theme-toggle-dark-icon" class="hidden w-5 h-5" fill="currentColor"
+                            viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path>
+                        </svg>
+                        <svg id="theme-toggle-light-icon" class="hidden w-5 h-5" fill="currentColor"
+                            viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                            <path
+                                d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z"
+                                fill-rule="evenodd" clip-rule="evenodd"></path>
+                        </svg>
+                    </button>
+                </div>
+                <script>
+                    var themeToggleDarkIcon = document.getElementById('theme-toggle-dark-icon');
+                    var themeToggleLightIcon = document.getElementById('theme-toggle-light-icon');
+
+                    // Change the icons inside the button based on previous settings
+                    if (localStorage.getItem('color-theme') === 'dark' || (!('color-theme' in localStorage) && window.matchMedia(
+                            '(prefers-color-scheme: dark)').matches)) {
+                        themeToggleLightIcon.classList.remove('hidden');
+                    } else {
+                        themeToggleDarkIcon.classList.remove('hidden');
+                    }
+
+                    var themeToggleBtn = document.getElementById('theme-toggle');
+
+                    themeToggleBtn.addEventListener('click', function() {
+
+                        // toggle icons inside button
+                        themeToggleDarkIcon.classList.toggle('hidden');
+                        themeToggleLightIcon.classList.toggle('hidden');
+
+                        // if set via local storage previously
+                        if (localStorage.getItem('color-theme')) {
+                            if (localStorage.getItem('color-theme') === 'light') {
+                                document.documentElement.classList.add('dark');
+                                localStorage.setItem('color-theme', 'dark');
+                            } else {
+                                document.documentElement.classList.remove('dark');
+                                localStorage.setItem('color-theme', 'light');
+                            }
+
+                            // if NOT set via local storage previously
+                        } else {
+                            if (document.documentElement.classList.contains('dark')) {
+                                document.documentElement.classList.remove('dark');
+                                localStorage.setItem('color-theme', 'light');
+                            } else {
+                                document.documentElement.classList.add('dark');
+                                localStorage.setItem('color-theme', 'dark');
+                            }
+                        }
+
+                    });
+                </script>
             </div>
 
             <script>

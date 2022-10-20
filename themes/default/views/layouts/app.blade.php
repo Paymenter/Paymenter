@@ -7,10 +7,10 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     @isset($title)
-    <title>{{ config('app.name', 'Paymenter') . ' - ' . $title}}</title>
+        <title>{{ config('app.name', 'Paymenter') . ' - ' . $title }}</title>
     @else
-    <title>{{ config('app.name', 'Paymenter') }}</title>
-    @endif
+        <title>{{ config('app.name', 'Paymenter') }}</title>
+    @endisset
 
     <!-- Fonts -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap">
@@ -23,9 +23,19 @@
     <link rel="icon" type="image/png" sizes="32x32" href="/img/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="/img/favicon-16x16.png">
     <link rel="manifest" href="/site.webmanifest">
+    <script>
+        if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia(
+                '(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark')
+        } else {
+            document.documentElement.classList.remove('dark')
+        }
+        if(!localStorage.theme) localStorage.theme = 'light'
+    </script>
+
 </head>
 
-<body class="dark:bg-darkmode font-sans antialiased">
+<body class="dark:bg-darkmode font-sans antialiased bg-gray-100">
     <div id="app" class="dark:text-white min-h-screen dark:bg-darkmode">
         @include('layouts.navigation')
         <!-- Page Content -->
