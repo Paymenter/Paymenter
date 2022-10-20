@@ -3,21 +3,21 @@
         {{ __('Home') }}
     </x-slot>
 
-    <div class="py-12">
+    <div class="dark:bg-darkmode py-12">
         <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
             <div class="overflow-hidden bg-white shadow-sm sm:rounded-lg">
                 <!-- show the user services and products -->
-                <div class="p-6 bg-white border-b border-gray-200">
+                <div class="dark:bg-darkmode2 p-6 bg-white border-b border-gray-200">
                     <div class="flex flex-col">
                         <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
                             <div class="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
-                                <div class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
+                                <div class="dark:bg-white shadow overflow-hidden  sm:rounded-lg">
                                     @if (!empty($services))
                                         <div class="px-4 py-5 sm:px-6">
-                                            <h3 class="text-lg leading-6 font-medium text-gray-900">
+                                            <h3 class="dark:text-darkmodetext text-lg leading-6 font-medium text-gray-900">
                                                 {{ __('Services') }}
                                             </h3>
-                                            <p class="mt-1 max-w-2xl text-sm text-gray-500">
+                                            <p class="dark:text-darkmodetext mt-1 max-w-2xl text-sm text-gray-500">
                                                 {{ __('You have no services yet.') }} <a href=""
                                                     class="font-medium text-indigo-600 hover:text-indigo-500">{{ __('Create one') }}</a>
                                             </p>

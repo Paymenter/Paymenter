@@ -1,5 +1,5 @@
 <x-guest-layout>
-    <div class="flex flex-col items-center min-h-screen pt-6 bg-gray-100 sm:justify-center sm:pt-0">
+    <div class="dark:bg-darkmode flex flex-col items-center min-h-screen pt-6 bg-gray-100 sm:justify-center sm:pt-0">
         <div>
             <a href="/">
                 <x-application-logo class="w-20 h-20 text-gray-500 fill-current" />
@@ -20,7 +20,7 @@
                         {{ __('Name') }}
                     </label>
 
-                    <input id="name" type="text" class="form-input w-full @error('name')  border-red-500 @enderror"
+                    <input id="name" type="text" class="dark:bg-darkmode rounded-lg form-input w-full @error('name')  border-red-500 @enderror"
                             name="name" value="{{ old('name') }}" required autocomplete="name" autofocus>
 
                     @error('name')
@@ -37,7 +37,7 @@
                     </label>
 
                     <input id="email" type="email"
-                            class="form-input w-full @error('email') border-red-500 @enderror" name="email"
+                            class="dark:bg-darkmode rounded-lg form-input w-full @error('email') border-red-500 @enderror" name="email"
                             value="{{ old('email') }}" required autocomplete="email">
 
                     @error('email')
@@ -55,7 +55,7 @@
                     </label>
 
                     <input id="password" type="password"
-                            class="form-input w-full @error('password') border-red-500 @enderror" name="password"
+                            class="dark:bg-darkmode rounded-lg form-input w-full @error('password') border-red-500 @enderror" name="password"
                             required autocomplete="new-password">
 
                     @error('password')
@@ -71,7 +71,7 @@
                         {{ __('Confirm Password') }}
                     </label>
 
-                    <input id="password-confirm" type="password" class="w-full form-input"
+                    <input id="password-confirm" type="password" class="dark:bg-darkmode rounded-lg w-full form-input"
                             name="password_confirmation" required autocomplete="new-password">
                 </div>
                 @if(App\Models\Settings::first()->recaptcha == 1)
