@@ -16,7 +16,7 @@
                                 @foreach ($category->products as $product)
                                     <div class="w-1/4 p-4">
                                         <a href="{{ route('checkout.add', $product->id) }}">
-                                            <img src="{{ $product->image }}" alt="{{ $product->name }}"
+                                            <img class="rounded-lg" src="{{ $product->image }}" alt="{{ $product->name }}"
                                                 class="w-full h-64 object-cover object-center">
                                             <div class="mt-2">
                                                 <h3 class="text-lg font-medium text-gray-900">{{ $product->name }}</h3>

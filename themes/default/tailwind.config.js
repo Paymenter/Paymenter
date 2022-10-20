@@ -13,11 +13,12 @@ module.exports = {
         // Colors
         extend: {
             colors: {
-                white: "#ffffff",
+                white: "#636B77",
                 accent: '#CFE2FD',
                 normal: '#E7F0FE',
                 button: '#5270fd',
                 darkbutton: '#2f3949',
+                darkmodetext: "#cbd5e1",
                 darkmode: '#1A202C',
                 darkmode2: '#252D3B',
                 logo: '#5270fd',

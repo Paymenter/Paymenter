@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<html class="dark" lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 
 <head>
     <meta charset="utf-8">
@@ -25,8 +25,8 @@
     <link rel="manifest" href="/site.webmanifest">
 </head>
 
-<body class="font-sans antialiased">
-    <div id="app" class="dark min-h-screen bg-gray-100">
+<body class="dark:bg-darkmode font-sans antialiased">
+    <div id="app" class="dark:text-white min-h-screen dark:bg-darkmode">
         @include('layouts.navigation')
         <!-- Page Content -->
         <main>
