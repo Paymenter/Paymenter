@@ -20,6 +20,7 @@ module.exports = {
                 darkbutton: '#2f3949',
                 darkmode: '#1A202C',
                 darkmode2: '#252D3B',
+                logo: '#5270fd',
             },
             fontFamily: {
                 sans: ["Nunito", ...defaultTheme.fontFamily.sans],
