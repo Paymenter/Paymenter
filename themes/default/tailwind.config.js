@@ -13,7 +13,7 @@ module.exports = {
         // Colors
         extend: {
             colors: {
-                white: "#636B77",
+                //white: "#636B77",
                 accent: '#CFE2FD',
                 normal: '#E7F0FE',
                 button: '#5270fd',
