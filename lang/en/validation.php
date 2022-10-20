@@ -156,6 +156,10 @@ return [
         'attribute-name' => [
             'rule-name' => 'custom-message',
         ],
+        'g-recaptcha-response' => [
+            'required' => 'The recaptcha field is required.',
+            'recaptcha' => 'The recaptcha response field is invalid.',
+        ]
     ],
 
     /*

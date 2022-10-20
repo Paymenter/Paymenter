@@ -22,6 +22,7 @@ class TicketsController extends Controller
 
     function create()
     {
+        error_log('create');
         return view('admin.tickets.create');
     }
 

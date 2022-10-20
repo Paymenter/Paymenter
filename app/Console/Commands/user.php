@@ -27,11 +27,37 @@ class user extends Command
      */
     public function handle()
     {
-        $first = $this->option('1') ?? $this->confirm(trans('user.first'));
+        $email = $this->ask('Create a user. What is his/her email?');
 
-        // $user = $this->creationService->handle(compact('first'));
-        echo $this->table(['Field', 'Value'], [
-            ['1', $first ? 'Yes' : 'No'],
+        $password = $this->secret('Password for this new user?');
+
+        $name = $this->ask('What is his/her name?');
+
+
+        $admin = $this->choice('User is an administrator?', ['no', 'yes'], 'no');
+
+        if ($admin == 'yes') {
+            $admin = 1;
+        } else {
+            $admin = 0;
+        }
+
+        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            exit($this->error('Invalid email address stublifer.'));
+        }
+
+        if (\App\Models\User::where('email', $email)->exists()) {
+            exit($this->error('user already exists.'));
+        }
+
+
+        $user = \App\Models\User::create([
+            'email' => $email,
+            'name' => $name,
+            'password' => \Hash::make($password),
+            'is_admin' => $admin
         ]);
+        $this->info('Account created successfully!');
+        echo $this->table(['name', 'email'], [[$user->name, $user->email]]);
     }
 }
