@@ -1,17 +1,3 @@
 @import 'tailwindcss/base';
 @import 'tailwindcss/components';
 @import 'tailwindcss/utilities';
-
-.text-login {
-    transition: 0.4s;
-    text-decoration: none;
-    border-radius: 5px;
-    font-size: larger;
-    margin-right: 1em;
-    padding: 0.6em;
-}
-
-.text-login:hover {
-    transition: 0.4s;
-    background-color: #5270fd;
-}

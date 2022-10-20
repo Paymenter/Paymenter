@@ -14,6 +14,7 @@ module.exports = {
             colors: {
                 accent: '#CFE2FD',
                 normal: '#E7F0FE',
+                logo: '#5270fd',
             },
             fontFamily: {
                 sans: ["Nunito", ...defaultTheme.fontFamily.sans],
