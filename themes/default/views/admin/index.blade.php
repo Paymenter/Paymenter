@@ -2,7 +2,7 @@
     <x-slot name="title">
         {{ __('General') }}
     </x-slot>
-    <div class="py-10">
+    <div class="dark:bg-darkmode py-10">
         <div class="mx-auto sm:px-6 lg:px-8">
             <div class="overflow-hidden bg-white shadow-sm sm:rounded-lg p-4 grid md:grid-cols-3">
                 <!-- show ticketclosed, tickets, orders -->
