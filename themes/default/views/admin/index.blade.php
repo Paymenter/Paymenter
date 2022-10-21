@@ -10,7 +10,7 @@
                     <div class="grid grid-cols-3 p-2 pb-10">
                         <div class="dark:bg-darkmode2 bg-normal rounded-md mr-3 p-2">
                             <h1 class="dark:text-darkmodetext text-xl text-gray-500">Revenue today</h1>
-                            <p class="dark:text-darkmodetext text-black font-bold text-2xl">€20</p>
+                            <p class="dark:text-darkmodetext text-black font-bold text-2xl">20€</p>
                         </div>
                         <div class="dark:bg-darkmode2 bg-normal rounded-md mr-3 p-2">
                             <h1 class="dark:text-darkmodetext text-xl text-gray-500">Tickets today</h1>
@@ -18,7 +18,7 @@
                         </div>
                         <div class="dark:bg-darkmode2 bg-normal rounded-md p-2">
                             <h1 class="dark:text-darkmodetext text-xl text-gray-500">Revenue Total</h1>
-                            <p class="dark:text-darkmodetext text-black font-bold text-2xl">$500</p>
+                            <p class="dark:text-darkmodetext text-black font-bold text-2xl">500$</p>
                         </div>
                     </div>
                     <canvas id="myChart" style="width:100%;max-height:400px;"></canvas>
@@ -32,7 +32,6 @@
                             <p class="dark:text-darkmodetext text-black font-bold text-2xl">{{ $ticket->title }}</p>
                         </div>
                     @endforeach
-
                     </div>
                 </div>
             </div>
