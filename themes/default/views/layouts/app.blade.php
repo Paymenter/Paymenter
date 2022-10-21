@@ -35,7 +35,7 @@
 
 </head>
 
-<body class="dark:bg-darkmode font-sans antialiased bg-gray-100">
+<body class="font-sans antialiased bg-gray-100">
     <div id="app" class="dark:text-white min-h-screen dark:bg-darkmode">
         @include('layouts.navigation')
         <!-- Page Content -->

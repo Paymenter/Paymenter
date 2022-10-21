@@ -1,5 +1,5 @@
-<nav class="bg-white border-b border-gray-100">
-    <div class="px-4 max-w-7xl sm:px-6 lg:px-8">
+<nav class="dark:bg-darkmode dark:text-darkmodetext bg-white">
+    <div class="dark:bg-darkmode px-4 max-w-7xl sm:px-6 lg:px-8">
         <div class="flex  h-16 text-gray-500 hover:text-gray-700 text-sm font-medium leading-5 items-center">
             <div class="flex">
                 <div class="flex items-center flex-shrink-0">
@@ -25,12 +25,12 @@
             </button>
             <div class="hidden sm:flex sm:items-center sm:w-auto justify-center place-items-center text-center text-lg"
                 id="menu">
-                <a href="{{ route('admin') }}" class="p-2 text-gray-500 hover:text-gray-700 inline-flex justify-center @if (request()->routeIs('admin')) bg-gray-200 @endif">
+                <a href="{{ route('admin') }}" class="dark:bg-darkmode dark:text-darkmodetext dark:hover:bg-darkmode2 p-2 text-gray-500 hover:text-gray-700 inline-flex justify-center @if (request()->routeIs('admin')) bg-gray-200 @endif">
                     <i class="ri-dashboard-line" @if (request()->routeIs('admin')) style="color: #5270FD" @endif ></i> {{ __('Dashboard') }}
                 </a>
                 <div class="relative inline-block text-left ">
                     <button type="button"
-                        class="inline-flex w-full justify-center bg-white pl-4 py-2 text-base font-medium text-gray-700  @if (request()->routeIs('admin.clients*')) bg-gray-200 @endif"
+                        class="dark:bg-darkmode dark:text-darkmodetext dark:hover:bg-darkmode2 inline-flex w-full justify-center bg-white pl-4 py-2 text-base font-medium text-gray-700  @if (request()->routeIs('admin.clients*')) bg-gray-200 @endif"
                         id="menu-button" aria-expanded="true" aria-haspopup="true" onclick="openMenu('clients')">
                         <i class="ri-group-line pr-1" @if (request()->routeIs('admin.clients*')) style="color: #5270FD" @endif ></i> Clients
                         <svg class="-mr-1 ml-1 h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
@@ -43,19 +43,19 @@
                     <div class="origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 hidden"
                         role="menu" aria-orientation="vertical" aria-labelledby="menu-button" tabindex="-1"
                         id="clients">
-                        <div class="py-1" role="none">
+                        <div class="dark:bg-darkmode py-1" role="none">
                             <a href="{{ route('admin.clients') }}"
-                                class="text-gray-700 block px-4 py-2 text-base hover:bg-gray-100 hover:text-gray-900"
+                                class="dark:text-darkmodetext dark:hover:bg-darkmode2 text-gray-700 block px-4 py-2 text-base hover:bg-gray-100 hover:text-gray-900"
                                 role="menuitem" tabindex="-1" id="menu-item-0">All Clients</a>
                             <a href="{{ route('admin.clients.create') }}"
-                                class="text-gray-700 block px-4 py-2 text-base hover:bg-gray-100 hover:text-gray-900"
+                                class="dark:text-darkmodetext dark:hover:bg-darkmode2 text-gray-700 block px-4 py-2 text-base hover:bg-gray-100 hover:text-gray-900"
                                 role="menuitem" tabindex="-1" id="menu-item-1">Create Client</a>
                         </div>
                     </div>
                 </div>
                 <div class="relative inline-block text-left">
                     <button type="button"
-                        class="inline-flex w-full justify-center bg-white pl-4 py-2 text-base font-medium text-gray-700 @if (request()->routeIs('admin.orders*')) bg-gray-200 @endif"
+                        class="dark:bg-darkmode dark:text-darkmodetext dark:hover:bg-darkmode2 inline-flex w-full justify-center bg-white pl-4 py-2 text-base font-medium text-gray-700 @if (request()->routeIs('admin.orders*')) bg-gray-200 @endif"
                         id="menu-button" aria-expanded="true" aria-haspopup="true" onclick="openMenu('orders')">
                         <i class="ri-shopping-cart-2-line pr-1" @if (request()->routeIs('admin.orders')) style="color: #5270FD" @endif></i> Orders
                         <svg class="-mr-1 ml-1 h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
@@ -65,22 +65,22 @@
                                 clip-rule="evenodd" />
                         </svg>
                     </button>
-                    <div class="origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 hidden"
+                    <div class="dark:bg-darkmode origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 hidden"
                         role="menu" aria-orientation="vertical" aria-labelledby="menu-button" tabindex="-1"
                         id="orders">
                         <div class="py-1" role="none">
                             <a href="{{ route('admin.orders') }}"
-                                class="text-gray-700 block px-4 py-2 text-base hover:bg-gray-100 hover:text-gray-900"
+                                class="dark:text-darkmodetext dark:hover:bg-darkmode2 text-gray-700 block px-4 py-2 text-base hover:bg-gray-100 hover:text-gray-900"
                                 role="menuitem" tabindex="-1" id="menu-item-0">All Orders</a>
                             <a href="{{ route('admin.orders.create') }}"
-                                class="text-gray-700 block px-4 py-2 text-base hover:bg-gray-100 hover:text-gray-900"
+                                class="dark:text-darkmodetext dark:hover:bg-darkmode2 text-gray-700 block px-4 py-2 text-base hover:bg-gray-100 hover:text-gray-900"
                                 role="menuitem" tabindex="-1" id="menu-item-1">Create Order</a>
                         </div>
                     </div>
                 </div>
                 <div class="relative inline-block text-left pl-4" >
                     <button type="button"
-                        class="inline-flex w-full justify-center bg-white py-2 text-base font-medium text-gray-700 @if (request()->routeIs('admin.tickets*')) bg-gray-200 @endif"
+                        class="dark:bg-darkmode dark:text-darkmodetext dark:hover:bg-darkmode2 inline-flex w-full justify-center bg-white py-2 text-base font-medium text-gray-700 @if (request()->routeIs('admin.tickets*')) bg-gray-200 @endif"
                         id="menu-button" aria-expanded="true" aria-haspopup="true" onclick="openMenu('tickets')">
                         <i class="ri-question-answer-line pr-1" @if (request()->routeIs('admin.tickets')) style="color: #5270FD" @endif></i> Support 
                         @if (isset(App\Models\Tickets::where('status', 'open')->get()[0]))
@@ -96,12 +96,12 @@
                                 clip-rule="evenodd" />
                         </svg>
                     </button>
-                    <div class="origin-top-right absolute right-0 mt-2 w-56 shadow-lg bg-white ring-1 ring-black ring-opacity-5 hidden"
+                    <div class="dark:bg-darkmode origin-top-right absolute right-0 mt-2 w-56 shadow-lg bg-white ring-1 ring-black ring-opacity-5 hidden rounded-lg"
                         role="menu" aria-orientation="vertical" aria-labelledby="menu-button" tabindex="-1"
                         id="support">
                         <div class="py-1" role="none">
                             <a href="{{ route('admin.tickets') }}"
-                                class="text-gray-700 block px-4 py-2 text-base hover:bg-gray-100 hover:text-gray-900"
+                                class="dark:text-darkmodetext dark:hover:bg-darkmode2 text-gray-700 block px-4 py-2 text-base hover:bg-gray-100 hover:text-gray-900"
                                 role="menuitem" tabindex="-1" id="menu-item-0">All Support
                                 @if (isset(App\Models\Tickets::where('status', 'open')->get()[0]))
                                     <span
@@ -111,14 +111,14 @@
                                 @endif
                             </a>
                             <a href="{{ route('admin.tickets') }}"
-                                class="text-gray-700 block px-4 py-2 text-base hover:bg-gray-100 hover:text-gray-900"
+                                class="dark:text-darkmodetext dark:hover:bg-darkmode2 text-gray-700 block px-4 py-2 text-base hover:bg-gray-100 hover:text-gray-900"
                                 role="menuitem" tabindex="-1" id="menu-item-1">Create Ticket</a>
                         </div>
                     </div>
                 </div>
                 <div class="relative inline-block text-left pl-4">
                     <button type="button"
-                        class="inline-flex w-full justify-center bg-white py-2 text-base font-medium text-gray-700 @if (request()->routeIs('admin.settings') || request()->routeIs('admin.extensions*')) bg-gray-200 @endif"
+                        class="dark:bg-darkmode dark:text-darkmodetext dark:hover:bg-darkmode2 inline-flex w-full justify-center bg-white py-2 text-base font-medium text-gray-700 @if (request()->routeIs('admin.settings') || request()->routeIs('admin.extensions*')) bg-gray-200 @endif"
                         id="menu-button" aria-expanded="true" aria-haspopup="true" onclick="openMenu('settings')">
                         <i class="ri-settings-2-line pr-1"></i> Settings
                         <svg class="-mr-1 ml-1 h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
@@ -128,15 +128,15 @@
                                 clip-rule="evenodd" />
                         </svg>
                     </button>
-                    <div class="origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 hidden"
+                    <div class="dark:bg-darkmode origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 hidden"
                         role="menu" aria-orientation="vertical" aria-labelledby="menu-button" tabindex="-1"
                         id="settings">
                         <div class="py-1" role="none">
                             <a href="{{ route('admin.settings') }}"
-                                class="text-gray-700 block px-4 py-2 text-base hover:bg-gray-100 hover:text-gray-900"
+                                class="dark:text-darkmodetext dark:hover:bg-darkmode2 text-gray-700 block px-4 py-2 text-base hover:bg-gray-100 hover:text-gray-900"
                                 role="menuitem" tabindex="-1" id="menu-item-0">Settings</a>
                             <a href="{{ route('admin.extensions') }}"
-                                class="text-gray-700 block px-4 py-2 text-base hover:bg-gray-100 hover:text-gray-900"
+                                class="dark:text-darkmodetext dark:hover:bg-darkmode2 text-gray-700 block px-4 py-2 text-base hover:bg-gray-100 hover:text-gray-900"
                                 role="menuitem" tabindex="-1" id="menu-item-1">Extension Settings</a>
                         </div>
                     </div>
@@ -146,7 +146,7 @@
             <div class="hidden sm:flex sm:items-center w-full sm:w-auto absolute right-0 " id="menu">
                 <div class="relative inline-block text-left">
                     <button type="button"
-                        class="inline-flex w-full justify-center items-center bg-white pl-4 py-2 text-base font-medium text-gray-700"
+                        class="dark:bg-darkmode dark:text-darkmodetext inline-flex w-full justify-center items-center bg-white pl-4 py-2 text-base font-medium text-gray-700"
                         aria-label="User menu" aria-haspopup="true" onclick="openMenu('user-menu')">
                         <!-- use gravatar -->
                         <img class="h-8 w-8 rounded-md"

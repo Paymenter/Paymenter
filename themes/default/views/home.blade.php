@@ -5,15 +5,15 @@
 
     <div class="dark:bg-darkmode py-12">
         <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
-            <div class="overflow-hidden bg-white shadow-sm sm:rounded-lg">
+            <div class="overflow-hidden bg-white rounded-lg">
                 <!-- show the user services and products -->
-                <div class="dark:bg-darkmode2 p-6 bg-white border-b border-gray-200">
+                <div class="dark:bg-darkmode2 p-6 bg-white">
                     <div class="flex flex-col">
                         <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
                             <div class="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
-                                <div class="dark:bg-white shadow overflow-hidden  sm:rounded-lg">
+                                <div class="dark:bg-white overflow-hidden  rounded-lg">
                                     @if (!empty($services))
-                                        <div class="px-4 py-5 sm:px-6">
+                                        <div class="dark:bg-darkmode px-4 py-5 sm:px-6">
                                             <h3 class="dark:text-darkmodetext text-lg leading-6 font-medium text-gray-900">
                                                 {{ __('Services') }}
                                             </h3>

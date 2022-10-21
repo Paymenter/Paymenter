@@ -8,23 +8,22 @@
             <div class="dark:bg-darkmode2 overflow-hidden bg-white rounded-lg">
                 <div class="dark:bg-darkmode2 p-6 bg-white">
                     <!-- display all categories with products -->
-                    <h1 class="text-2xl font-bold">{{ __('Categories') }}</h1>
+                    <h1 class="text-center text-2xl font-bold">{{ __('Categories') }}</h1>
                     @foreach ($categories as $category)
                         <div class="mt-4">
-                            <h2 class="text-xl font-bold">{{ $category->name }}</h2>
-                            <div class="flex flex-wrap">
+                            <h2 class="text-center text-xl font-bold">{{ $category->name }}</h2>
+                            <div class="flex flex-nowrap gap-4">
                                 @foreach ($category->products as $product)
-                                    <div class="w-1/4 p-4">
+                                    <div class="transition delay-400 hover:shadow-lg dark:bg-darkmode rounded-lg w-1/4 p-4">
                                         <a href="{{ route('checkout.add', $product->id) }}">
                                             <img class="rounded-lg" src="{{ $product->image }}" alt="{{ $product->name }}"
                                                 class="w-full h-64 object-cover object-center">
                                             <div class="mt-2">
-                                                <h3 class="dark:text-darkmodetext text-lg font-medium text-gray-900">{{ $product->name }}</h3>
-                                                <p class="dark:text-darkmodetext mt-1 text-sm text-gray-500">{{ $product->description }}</p>
-                                                <p class="dark:text-darkmodetext mt-1 text-sm text-gray-500">${{ $product->price }}</p>
+                                                <h3 class="text-center dark:text-darkmodetext text-lg font-medium text-gray-900">{{ $product->name }}</h3>
+                                                <p class="text-center dark:text-darkmodetext mt-1 text-sm text-gray-500">{{ $product->description }}</p>
+                                                <p class="text-center dark:text-darkmodetext mt-1 text-sm text-gray-500">${{ $product->price }}</p>
                                             </div>
                                         </a>
-
                                     </div>
                                 @endforeach
                             </div>
