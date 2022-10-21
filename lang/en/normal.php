@@ -11,6 +11,12 @@ return [
     'settings' => 'Settings',
     'general' => 'General',
 
+    'id' => 'ID',
     'description' => 'Description',
     'name' => 'Name',
+    'email' => 'Email',
+    'password' => 'Password',
+    'confirm_password' => 'Confirm Password',
+    'created_at' => 'Created At',
+    'user' => 'User',
 ];

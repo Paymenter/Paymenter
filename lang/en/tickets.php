@@ -8,4 +8,7 @@ return [
     'message' => 'Ticket Message',
     'status' => 'Ticket Status',
     'priority' => 'Ticket Priority',
+    'priority_low' => 'Low',
+    'priority_medium' => 'Medium',
+    'priority_high' => 'High',
 ];

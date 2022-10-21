@@ -60,7 +60,7 @@
                                     @method('PUT')
                                     <div class="mt-4">
                                         <label for="name" class="dark:text-darkmodetext block text-sm font-medium text-gray-700">
-                                            {{ __('Name') }}
+                                            {{ __('normal.name') }}
                                         </label>
                                         <div class="mt-1">
                                             <input type="text" name="name" id="name" autocomplete="name"

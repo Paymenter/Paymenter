@@ -30,34 +30,36 @@
                     <div class="dark:text-darkmodetext dark:bg-darkmode2 bg-gray-200 bg-opacity-25 grid grid-cols-1">
                         <div class="p-6">
                             <div class="dark:bg-darkmode p-2 rounded-lg flex items-center">
-                                <div class="ml-4 text-lg text-gray-600 leading-7 font-semibold w-full">
-                                    <table class="dark:text-darkmodetext divide-y divide-gray-300 w-full" id="clientdatatable">
+                                <div class="ml-4 text-lg text-gray-600 leading-7 font-semibold w-full dark:text-darkmodetext" style="color: white !important;" id="testing">
+                                    <table class="dark:text-darkmodetext divide-y divide-gray-300 w-full"
+                                        id="clientdatatable">
                                         <thead class="dark:bg-darkmode bg-gray-100">
                                             <tr>
                                                 <th class="dark:text-darkmodetext px-6 py-2 text-xs text-gray-500">
-                                                    ID
+                                                    {{ __('normal.id')}}
                                                 </th>
                                                 <th class="dark:text-darkmodetext px-6 py-2 text-xs text-gray-500">
-                                                    Name
+                                                    {{ __('normal.name')}}
                                                 </th>
                                                 <th class="dark:text-darkmodetext px-6 py-2 text-xs text-gray-500">
-                                                    Email
+                                                    {{ __('normal.email')}}
                                                 </th>
                                                 <th class="dark:text-darkmodetext px-6 py-2 text-xs text-gray-500">
-                                                    Created_at
+                                                    {{ __('normal.created_at')}}
                                                 </th>
                                                 <th class="dark:text-darkmodetext px-6 py-2 text-xs text-gray-500">
-                                                    Edit
+                                                    {{ __('normal.edit')}}
                                                 </th>
                                                 <th class="dark:text-darkmodetext px-6 py-2 text-xs text-gray-500">
-                                                    Delete
+                                                    {{ __('normal.delete')}}
                                                 </th>
                                             </tr>
                                         </thead>
                                         <tbody class="dark:bg-darkmode bg-white divide-y divide-gray-500">
                                             @foreach ($users as $user)
                                                 <tr class="whitespace-nowrap">
-                                                    <td class="dark:text-darkmodetext px-6 py-4 text-sm text-center text-gray-500">
+                                                    <td
+                                                        class="dark:text-darkmodetext px-6 py-4 text-sm text-center text-gray-500">
                                                         {{ $user->id }}
                                                     </td>
                                                     <td class="px-6 py-4 text-center">
@@ -66,14 +68,16 @@
                                                         </div>
                                                     </td>
                                                     <td class="px-6 py-4 text-center">
-                                                        <div class="dark:text-darkmodetext text-sm text-gray-500">{{ $user->email }}</div>
+                                                        <div class="dark:text-darkmodetext text-sm text-gray-500">
+                                                            {{ $user->email }}</div>
                                                     </td>
-                                                    <td class="dark:text-darkmodetext px-6 py-4 text-sm text-center text-gray-500">
+                                                    <td
+                                                        class="dark:text-darkmodetext px-6 py-4 text-sm text-center text-gray-500">
                                                         {{ $user->created_at }}
                                                     </td>
                                                     <td class="px-6 py-4 text-center">
                                                         <a href="{{ route('admin.clients.edit', $user->id) }}"
-                                                            class="px-4 py-1 text-sm text-blue-600 bg-blue-200 rounded-full">Edit</a>
+                                                            class="px-4 py-1 text-sm text-blue-600 bg-blue-200 rounded-full">{{ __('normal.edit') }}</a>
                                                     </td>
                                                     <td class="px-6 py-4 text-center">
                                                         <form action="{{ route('admin.clients.delete', $user->id) }}"
@@ -81,7 +85,7 @@
                                                             @csrf
                                                             @method('DELETE')
                                                             <button type="submit"
-                                                                class="px-4 py-1 text-sm text-red-600 bg-red-200 rounded-full">Delete</button>
+                                                                class="px-4 py-1 text-sm text-red-600 bg-red-200 rounded-full">{{ __('normal.delete')}}</button>
                                                         </form>
                                                     </td>
                                                 </tr>
@@ -96,20 +100,33 @@
             </div>
         </div>
     </div>
-    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.12.1/css/jquery.dataTables.css">
-    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.js"></script>
+    <link rel="stylesheet" type="text/css"
+        href="https://cdn.datatables.net/v/dt/jszip-2.5.0/dt-1.12.1/b-2.2.3/b-colvis-2.2.3/b-html5-2.2.3/b-print-2.2.3/datatables.min.css" />
+
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/pdfmake.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/vfs_fonts.js"></script>
+    <script type="text/javascript"
+        src="https://cdn.datatables.net/v/dt/jszip-2.5.0/dt-1.12.1/b-2.2.3/b-colvis-2.2.3/b-html5-2.2.3/b-print-2.2.3/datatables.min.js">
+    </script>
     <script>
         $(document).ready(function() {
-            $('#clientdatatable').DataTable();
+            var table = $('#clientdatatable').DataTable({
+                dom: 'Bfrtip',
+                buttons: [
+                    'copy', 'csv', 'excel', 'pdf', 'print'
+                ]
+            });
+            $('.dt-button').addClass('dark:text-darkmodetext');
+            $('.dataTables_filter label').addClass('dark:text-darkmodetext');
         });
 
         var form = document.getElementsByClassName('delete');
         var confirmIt = function(e) {
-            if (!confirm('Are you sure you want to delete this client?\nThis will remove all data!')) e.preventDefault();
+            if (!confirm('Are you sure you want to delete this client?\nThis will remove all data!')) e
+                .preventDefault();
         };
         for (var i = 0, l = form.length; i < l; i++) {
             form[i].addEventListener('submit', confirmIt, false);
         }
-
     </script>
 </x-admin-layout>

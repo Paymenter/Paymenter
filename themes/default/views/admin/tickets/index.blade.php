@@ -96,7 +96,14 @@
     <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.js"></script>
     <script>
         $(document).ready(function() {
-            $('#tickets').DataTable();
+            var table = $('tickets').DataTable({
+                dom: 'Bfrtip',
+                buttons: [
+                    'copy', 'csv', 'excel', 'pdf', 'print'
+                ]
+            });
+            $('.dt-button').addClass('dark:text-darkmodetext');
+            $('.dataTables_filter label').addClass('dark:text-darkmodetext');
         });
     </script>
 </x-admin-layout>

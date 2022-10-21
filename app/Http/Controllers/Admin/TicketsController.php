@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Tickets;
 use App\Models\Statistics;
+use App\Models\User;
 
 class TicketsController extends Controller
 {
@@ -22,8 +23,8 @@ class TicketsController extends Controller
 
     function create()
     {
-        error_log('create');
-        return view('admin.tickets.create');
+        $users = User::all();
+        return view('admin.tickets.create', compact('users'));
     }
 
     function store(Request $request)
@@ -31,23 +32,25 @@ class TicketsController extends Controller
         $request->validate([
             'title' => 'required',
             'description' => 'required',
-            'status' => 'required',
-            'client' => 'required'
+            'user' => 'required',
+            'priority' => 'required',
         ]);
+        error_log($request->priority);
 
         $ticket = new Tickets([
             'title' => $request->get('title'),
             'description' => $request->get('description'),
-            'status' => $request->get('status'),
-            'client' => $request->get('client')
+            'status' => 'open',
+            'priority' => $request->priority,
+            'client' => $request->get('user')
         ]);
         $ticket->save();
-        Statistics::createOrUpdate([
+        Statistics::updateOrCreate([
             'name' => 'tickets',
             'date' => date('Y-m-d'),
             'value' => 1
         ]);
-        return redirect('/admin/tickets')->with('success', 'Ticket has been added');
+        return redirect()->back()->with('success', 'Ticket has been added');
     }
 
     function show($id)

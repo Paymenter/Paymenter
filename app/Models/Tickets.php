@@ -13,12 +13,14 @@ class Tickets extends Model
         'title',
         'description',
         'status',
-        'client'
+        'client',
+        'priority',
+        'order_id',
     ];
 
     public function orders()
     {
-        return $this->hasMany(Orders::class, 'id', 'service');
+        return $this->hasMany(Orders::class, 'id', 'order_id');
     }
 
     public function client()

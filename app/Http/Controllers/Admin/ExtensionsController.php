@@ -31,13 +31,13 @@ class ExtensionsController extends Controller
             foreach ($extension->config as $config) {
                 ExtensionHelper::setConfig($extension->name, $config->name, $request->input($config->name));
             }
-            return redirect()->route('admin.extensions');
+            return redirect()->route('admin.extensions.edit', ['sort' => $sort, 'name' => $name])->with('success', 'Extension updated successfully');
         }elseif($sort == 'gateway'){
             $extension = json_decode(file_get_contents(base_path('app/Extensions/Gateways/' . $name . '/extension.json')));
             foreach($extension->config as $config){
                 ExtensionHelper::setConfig($extension->name, $config->name, $request->input($config->name));
             }
-            return redirect()->route('admin.extensions');
+            return redirect()->route('admin.extensions.edit', ['sort' => $sort, 'name' => $name])->with('success', 'Extension updated successfully');
         }
     }
     function servers()
@@ -47,7 +47,6 @@ class ExtensionsController extends Controller
         foreach ($folders as $folder) {
             if ($folder != '.' && $folder != '..') {
                 $extensions[$folder] = json_decode(file_get_contents(base_path('app/Extensions/Servers/' . $folder . '/extension.json')));
-                error_log($extensions[$folder]->name);
             }
 
         }
@@ -61,7 +60,6 @@ class ExtensionsController extends Controller
         foreach ($folders as $folder) {
             if ($folder != '.' && $folder != '..') {
                 $extensions[$folder] = json_decode(file_get_contents(base_path('app/Extensions/Gateways/' . $folder . '/extension.json')));
-                error_log($extensions[$folder]->name);
             }
         }
         return $extensions;

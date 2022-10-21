@@ -35,10 +35,11 @@ class SettingsController extends Controller
         $theme = request('theme');
         $settings = Settings::first();
         $settings->theme = $theme;
+        $settings->recaptcha = request('recaptcha') == 'on' ? 1 : 0;
+        $settings->recaptcha_site_key = request('recaptcha_site_key');
+        $settings->recaptcha_secret_key = request('recaptcha_secret_key');
         $settings->save();
-
         Theme::set($theme);
-        
-        return redirect('/admin/settings')->with('success', 'Theme has been updated');
+        return redirect('/admin/settings')->with('success', 'Settings updated successfully');
     }
 }

@@ -20,8 +20,8 @@ return new class extends Migration
             $table->string('status');
             $table->string('priority');
             $table->string('client');
-            $table->string('service');
-            $table->string('assigned_to');
+            $table->string('order_id')->nullable();
+            $table->string('assigned_to')->nullable();
             $table->timestamps();
         });
     }

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html class="dark" lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 
 <head>
     <meta charset="utf-8">
@@ -30,7 +30,6 @@
         } else {
             document.documentElement.classList.remove('dark')
         }
-        if(!localStorage.theme) localStorage.theme = 'light'
     </script>
 
 </head>
