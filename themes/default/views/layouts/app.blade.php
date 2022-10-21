@@ -35,7 +35,7 @@
     <meta content="@isset($seo->seo_title){{ $seo->seo_title }}@endisset" property="og:title">
     <meta content="@isset($seo->seo_description){{ $seo->seo_description }}@endisset" property="og:description">
     <meta content='@isset ($seo->seo_image){{ $seo->seo_image }}@endisset' property="og:image">
-    <link type="application/json+oembed" href="{{ url('/') }}/manifest.json?title={{ urlencode('Paymenter') }}&author_url={{ urlencode('https://discord.gg/xB4UUT3XQg') }}&author_name=demo"/>
+    <link type="application/json+oembed" href="{{ url('/') }}/manifest.json?title={{ urldecode('Paymenter') }}&author_url={{ urldecode('https://discord.gg/xB4UUT3XQg') }}&author_name=demo"/>
     <meta name="twitter:card" content="@isset($seo->seo_twitter_card)summary_large_image @endisset">
     <meta name="theme-color" content="#5270FD">
 </head>
