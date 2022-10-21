@@ -72,5 +72,4 @@
             </div>
         </div>
     </div>
-    </div>
 </x-admin-layout>

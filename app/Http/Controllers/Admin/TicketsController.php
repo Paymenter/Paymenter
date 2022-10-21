@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\Tickets;
 use App\Models\Statistics;
 use App\Models\User;
+use App\Models\TicketMessages;
 
 class TicketsController extends Controller
 {
@@ -35,28 +36,35 @@ class TicketsController extends Controller
             'user' => 'required',
             'priority' => 'required',
         ]);
-        error_log($request->priority);
 
         $ticket = new Tickets([
             'title' => $request->get('title'),
-            'description' => $request->get('description'),
             'status' => 'open',
             'priority' => $request->priority,
             'client' => $request->get('user')
         ]);
         $ticket->save();
-        Statistics::updateOrCreate([
-            'name' => 'tickets',
-            'date' => date('Y-m-d'),
-            'value' => 1
+        Statistics::updateOrCreate(
+            [
+                'name' => 'tickets',
+                'date' => date('Y-m-d'),
+            ]
+        )->increment('value');
+
+
+        TicketMessages::create([
+            'ticket_id' => $ticket->id,
+            'message' => $request->get('description'),
+            'user_id' => auth()->user()->id
         ]);
-        return redirect()->back()->with('success', 'Ticket has been added');
+
+        return redirect()->back()->with('success', 'Ticket created successfully');
     }
 
     function show($id)
     {
         $ticket = Tickets::find($id);
-        if(!$ticket) {
+        if (!$ticket) {
             return abort(404);
         }
         return view('admin.tickets.show', compact('ticket'));
@@ -88,14 +96,13 @@ class TicketsController extends Controller
         $ticket = Tickets::find($id);
         $ticket->status = $request->get('status');
         $ticket->save();
-        if($request->get('status') == 'closed') {
+        if ($request->get('status') == 'closed') {
             Statistics::updateOrCreate(
-                ['name' => 'ticketsClosed'],
                 [
-                'name' => 'ticketsClosed',
-                'date' => date('Y-m-d'),
-                'value' => 1
-            ]);
+                    'name' => 'ticketsClosed',
+                    'date' => date('Y-m-d'),
+                ]
+            )->increment('value');
         }
 
         return redirect()->back()->with('success', 'Status has been changed');
