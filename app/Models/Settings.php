@@ -14,7 +14,12 @@ class Settings extends Model
         'theme',
         'recaptcha',
         'recaptcha_site_key',
-        'recaptcha_secret_key'
+        'recaptcha_secret_key',
+        'seo_title',
+        'seo_description',
+        'seo_keywords',
+        'seo_twitter_card',
+        'seo_image'
     ];
 
 

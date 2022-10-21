@@ -19,6 +19,7 @@ Route::get('/home', function () {
 })->middleware(['auth'])->name('home');
 // return homecontroller;
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->middleware(['auth'])->name('home');
+Route::get('/manifest.json', [App\Http\Controllers\HomeController::class, 'manifest'])->name('manifest');
 
 // Products routes
 Route::group(['prefix'=> 'products'], function(){

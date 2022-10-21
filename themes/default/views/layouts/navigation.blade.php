@@ -4,7 +4,7 @@
             class="flex dark:bg-darkmode h-16 text-gray-500 hover:text-gray-700 text-sm font-medium leading-5 items-center">
             <div class="flex">
                 <div class="flex items-center flex-shrink-0">
-                    <a href="{{ route('admin') }}">
+                    <a href="@if(Auth::user()->is_admin) {{ route('admin')}} @else {{ route('index')}} @endif">
                         <x-application-logo class="block w-auto h-10 text-gray-600 fill-current" />
                     </a>
                     <p class="p-2 text-xl font-bold">

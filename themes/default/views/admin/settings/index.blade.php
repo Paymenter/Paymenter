@@ -21,7 +21,7 @@
                     <div class="bg-gray-200 bg-opacity-25 grid grid-cols-1">
                         <div class="p-6">
                             <div class="flex items-center">
-                                <div class="ml-4 text-lg text-gray-600 leading-7 font-semibold">
+                                <div class="ml-4 text-lg text-gray-600 leading-7 font-semibold w-full">
                                     <div class="mt-4">
                                         <label for="theme" class="block text-sm font-medium text-gray-700">
                                             {{ __('Theme') }}
@@ -42,7 +42,7 @@
                             </div>
                             <!-- security -->
                             <div class="flex items-center">
-                                <div class="ml-4 text-lg text-gray-600 leading-7 font-semibold">
+                                <div class="ml-4 text-lg text-gray-600 leading-7 font-semibold w-full">
                                     <div class="mt-4">
                                         <label for="recaptcha" class="block text-sm font-medium text-gray-700">
                                             {{ __('Google Recaptcha') }}
@@ -83,6 +83,7 @@
                                                 value="{{ $settings->recaptcha_secret_key }}">
                                         </div>
                                     </div>
+                                    
                                     <script>
                                         $(document).ready(function() {
                                             if ($('#recaptcha').is(':checked')) {
@@ -103,6 +104,70 @@
 
                                 </div>
                             </div>
+                            <br><br>
+                            <div class="flex items-center">
+                                <div class="ml-4 text-lg text-gray-600 leading-7 font-semibold w-full">
+                                    <div class="mt-4" id="seo_title">
+                                        <label for="seo_title" class="block text-sm font-medium text-gray-700">
+                                            {{ __('SEO Title') }}
+                                        </label>
+                                        <div class="mt-1">
+                                            <input id="seo_title" name="seo_title" type="text"
+                                                autocomplete="seo_title"
+                                                class="form-input rounded-md shadow-sm mt-1 block w-full"
+                                                value="{{ $settings->seo_title }}">
+                                        </div>
+                                    </div>
+                                    <div class="mt-4" id="seo_description">
+                                        <label for="seo_description" class="block text-sm font-medium text-gray-700">
+                                            {{ __('SEO Description') }}
+                                        </label>
+                                        <div class="mt-1">
+                                            <input id="seo_description" name="seo_description" type="text"
+                                                autocomplete="seo_description"
+                                                class="form-input rounded-md shadow-sm mt-1 block w-full"
+                                                value="{{ $settings->seo_description }}">
+                                        </div>
+                                    </div>
+                                    <div class="mt-4" id="seo_keywords">
+                                        <label for="seo_keywords" class="block text-sm font-medium text-gray-700">
+                                            {{ __('SEO Keywords') }}
+                                        </label>
+                                        <div class="mt-1">
+                                            <input id="seo_keywords" name="seo_keywords" type="text"
+                                                autocomplete="seo_keywords"
+                                                class="form-input rounded-md shadow-sm mt-1 block w-full"
+                                                value="{{ $settings->seo_keywords }}">
+                                        </div>
+                                    </div>
+                                    <div class="mt-4">
+                                        <label for="seo_twitter_card" class="block text-sm font-medium text-gray-700">
+                                            {{ __('Twitter Card') }}
+                                        </label>
+                                        <div class="mt-1">
+                                            <div class="flex items-center">
+                                                <input id="seo_twitter_card" name="seo_twitter_card" type="checkbox"
+                                                    class="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 rounded"
+                                                    {{ $settings->seo_twitter_card ? 'checked' : '' }}>
+                                                <label for="seo_twitter_card"
+                                                    class="ml-3 block text-sm font-medium text-gray-700">
+                                                    {{ __('Enable') }}
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="mt-4">
+                                        <label for="seo_image" class="block text-sm font-medium text-gray-700">
+                                            {{ __('SEO Image') }}
+                                        </label>
+                                        <div class="mt-1">
+                                            <input id="seo_image" name="seo_image" type="text"
+                                                autocomplete="seo_image"
+                                                class="form-input rounded-md shadow-sm mt-1 block w-full"
+                                                value="{{ $settings->seo_image }}">
+                                        </div>
+                                    </div>
+
                             <div class="flex items-center justify-end mt-4">
                                 <button type="submit"
                                     class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
