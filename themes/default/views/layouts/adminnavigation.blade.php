@@ -3,7 +3,7 @@
         <div class="flex  h-16 text-gray-500 hover:text-gray-700 text-sm font-medium leading-5 items-center">
             <div class="flex">
                 <div class="flex items-center flex-shrink-0">
-                    <a href="{{ route('admin') }}">
+                    <a href="{{ route('index') }}">
                         <x-application-logo class="block w-auto h-10 text-gray-600 fill-current" />
                     </a>
                     <a href="{{ route('index')}}" class="p-2 text-xl font-bold">

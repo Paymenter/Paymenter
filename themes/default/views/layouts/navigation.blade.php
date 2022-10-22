@@ -8,14 +8,18 @@
                     <a href="@if(Auth::user()->is_admin) {{ route('admin')}} @else {{ route('index')}} @endif">
                         <x-application-logo class="block w-auto h-10 text-gray-600 fill-current" />
                     </a>
+                    <a href="@if(Auth::user()->is_admin) {{ route('admin')}} @else {{ route('index')}} @endif" class="p-2 text-xl font-bold">
+                        {{ env('APP_NAME') }}
+                    </a>
                     @else
                     <a href="{{ route('index')}}">
                         <x-application-logo class="block w-auto h-10 text-gray-600 fill-current" />
                     </a>
-                    @endif
                     <a href="{{ route('index')}}" class="p-2 text-xl font-bold">
                         {{ env('APP_NAME') }}
                     </a>
+                    @endif
+
                 </div>
             </div>
             <button data-collapse-toggle="mobile-menu" type="button"
