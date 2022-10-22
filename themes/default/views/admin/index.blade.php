@@ -27,19 +27,21 @@
                     <h1 class="dark:text-darkmodetext text-xl text-gray-500">Recent tickets</h1>
                     <div class="grid grid-cols-1 gap-4">
                     @foreach(App\Models\Tickets::all()->take(3) as $ticket)
-                        <div class="dark:bg-darkmode2 bg-normal rounded-md p-2">
-                            <h1 class="dark:text-darkmodetext text-xl text-gray-500">Ticket #{{$ticket->id}}</h1>
-                            <p class="dark:text-darkmodetext text-black font-bold text-2xl">{{ $ticket->title }} 
-                                @if($ticket->priority == 'high')
-                                    <span class="bg-red-500 text-white rounded-full p-1 text-base">High</span>
-                                @elseif($ticket->priority == 'medium')
-                                    <span class="bg-yellow-500 text-white rounded-full p-1 text-base" >Medium</span>
-                                @elseif($ticket->priority == 'low')
-                                    <span class="bg-green-500 text-white rounded-full p-1 text-base">Low</span>
-                                @endif
+                    <a href="/admin/tickets/{{$ticket->id}}">   
+                        <div class="dark:hover:bg-darkbutton dark:bg-darkmode2 bg-normal rounded-md p-2">
+                                <h1 class="dark:text-darkmodetext text-xl text-gray-500">Ticket #{{$ticket->id}}</h1>
+                                <p class="dark:text-darkmodetext text-black font-bold text-2xl">{{ $ticket->title }} 
+                                    @if($ticket->priority == 'high')
+                                        <span class="bg-red-500 text-white rounded-full p-1 text-base">High</span>
+                                    @elseif($ticket->priority == 'medium')
+                                        <span class="bg-yellow-500 text-white rounded-full p-1 text-base" >Medium</span>
+                                    @elseif($ticket->priority == 'low')
+                                        <span class="bg-green-500 text-white rounded-full p-1 text-base">Low</span>
+                                    @endif
 
-                            </p>
-                        </div>
+                                </p>
+                            </div>
+                        </a> 
                     @endforeach
                     </div>
                 </div>
