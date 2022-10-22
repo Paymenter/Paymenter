@@ -6,9 +6,9 @@
                     <a href="{{ route('admin') }}">
                         <x-application-logo class="block w-auto h-10 text-gray-600 fill-current" />
                     </a>
-                    <p class="p-2 text-xl font-bold">
+                    <a href="{{ route('index')}}" class="p-2 text-xl font-bold">
                         {{ env('APP_NAME') }}
-                    </p>
+                    </a>
                 </div>
             </div>
             <button data-collapse-toggle="mobile-menu" type="button"
