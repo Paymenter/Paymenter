@@ -89,7 +89,7 @@
                         <i class="ri-question-answer-line pr-1"
                             @if (request()->routeIs('admin.tickets')) style="color: #5270FD" @endif></i> Support
                         @if (isset(App\Models\Tickets::where('status', 'open')->get()[0]))
-                            <span class="px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-200 text-red-800">
+                            <span  class="inline-flex items-center px-2.5 ml-1 mt-0.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
                                 {{ App\Models\Tickets::where('status', 'open')->get()->count() }}
                             </span>
                         @endif

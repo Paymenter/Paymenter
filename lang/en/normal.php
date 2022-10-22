@@ -13,10 +13,13 @@ return [
 
     'id' => 'ID',
     'description' => 'Description',
+    'title' => 'Title',
     'name' => 'Name',
     'email' => 'Email',
     'password' => 'Password',
     'confirm_password' => 'Confirm Password',
     'created_at' => 'Created At',
     'user' => 'User',
+
+    'actions' => 'Actions',
 ];
