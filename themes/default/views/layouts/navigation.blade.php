@@ -110,6 +110,11 @@
                                 <a href="{{ route('admin.settings') }}"
                                     class="block px-4 py-2 text-base text-gray-700 hover:bg-gray-100"
                                     role="menuitem">Settings</a>
+                                @if (Route::has('admin'))
+                                <a href="{{ route('admin') }}"
+                                    class="block px-4 py-2 text-base text-gray-700 hover:bg-gray-100"
+                                    role="menuitem">Admin Panel</a>
+                                @endif
                                 <a href="{{ route('logout') }}"
                                     onclick="event.preventDefault();
                                                 document.getElementById('logout-form').submit();"
