@@ -46,7 +46,7 @@
                                                 </th>
                                             </tr>
                                         </thead>
-                                        <tbody class="dark:bbg-darkmode bg-white divide-y divide-gray-200">
+                                        <tbody class="dark:bg-darkmode bg-white divide-y divide-gray-200">
                                             @foreach ($tickets as $service)
                                                 <tr>
                                                     <td class="px-6 py-4 whitespace-nowrap">
@@ -57,17 +57,17 @@
                                                     <td class="px-6 py-4 whitespace-nowrap">
                                                         @if ($service->priority == 'low')
                                                             <span
-                                                                class="dark:text-darkmodetext px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                                                                class="dark:text-darkmodetext px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-600 text-green-800">
                                                                 {{ $service->priority }}
                                                             </span>
                                                         @elseif($service->priority == 'medium')
                                                             <span
-                                                                class="dark:text-darkmodetext px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">
+                                                                class="dark:text-darkmodetext px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-600 text-yellow-800">
                                                                 {{ $service->priority }}
                                                             </span>
                                                         @elseif($service->priority == 'high')
                                                             <span
-                                                                class="dark:text-darkmodetext px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">
+                                                                class="dark:text-darkmodetext px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-600 text-red-800">
                                                                 {{ $service->priority }}
                                                             </span>
                                                         @endif
