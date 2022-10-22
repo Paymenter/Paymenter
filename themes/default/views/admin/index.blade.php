@@ -27,13 +27,16 @@
                     <h1 class="dark:text-darkmodetext text-xl text-gray-500">Recent tickets</h1>
                     <div class="grid grid-cols-1 gap-4">
                     @foreach(App\Models\Tickets::all()->take(3) as $ticket)
-                        <div class="bg-normal rounded-md p-2">
+                        <div class="dark:bg-darkmode2 bg-normal rounded-md p-2">
                             <h1 class="dark:text-darkmodetext text-xl text-gray-500">Ticket #{{$ticket->id}}</h1>
                             <p class="dark:text-darkmodetext text-black font-bold text-2xl">{{ $ticket->title }}</p>
                         </div>
                     @endforeach
                     </div>
                 </div>
+            </div>
+            <div class="dark:text-darkmodetext">
+                
             </div>
         </div>
     </div>
