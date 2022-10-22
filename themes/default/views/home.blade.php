@@ -5,9 +5,10 @@
 
     <div class="dark:bg-darkmode py-12">
         <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
-            <div class="dark:bg-darkmode2 mr-96 overflow-hidden bg-white rounded-lg">
+            <div class="grid md:grid-cols-3 p-4 dark:bg-darkmode2 overflow-hidden bg-white rounded-lg">
+
                 <!-- show the user services and products -->
-                <div class="dark:bg-darkmode2 p-6 bg-white">
+                <div class="dark:bg-darkmode2 p-6 bg-white col-span-2">
                     <div class="flex flex-col">
                         <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
                             <div class="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
@@ -96,12 +97,12 @@
                     </div>
                 </div>
                 <!-- show the user tickets and more -->
-                <div class="grid md:grid-cols-3 dark:bg-darkmode dark:border-darkmode p-10 bg-white border-2 rounded-xl border-grey-600 ml-4">
-                    <h1 class="dark:text-darkmodetext text-xl text-gray-500">Recent tickets</h1>
+                <div class="dark:bg-darkmode dark:border-darkmode p-10 bg-white border-2 rounded-xl border-grey-600 ml-4">
+                    <h1 class="dark:text-darkmodetext text-xl text-gray-500">Created tickets</h1>
                     <div class="grid grid-cols-1 gap-4">
                     @foreach(App\Models\Tickets::all()->take(3) as $ticket)
-                    @if ($ticket->user == Auth::user()->name)
-                    <a href="/admin/tickets/{{$ticket->id}}">   
+                        @if ($ticket->client == Auth::user()->id)
+                        <a href="tickets/{{$ticket->id}}">   
                         <div class="dark:hover:bg-darkbutton dark:bg-darkmode2 bg-normal rounded-md p-2">
                                 <h1 class="dark:text-darkmodetext text-xl text-gray-500">Ticket #{{$ticket->id}}</h1>
                                 <p class="dark:text-darkmodetext text-black font-bold text-2xl">{{ $ticket->title }} 
