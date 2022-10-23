@@ -89,16 +89,17 @@
                         </div>
                     </div>
                 </div>
+                <!-- Showing the Current Users Credit in USD (I dont currently know how to switch it based on location and its like 1:37 am) -->
+                <div class="dark:bg-darkmode2 rounded-lg hidden sm:flex sm:items-center w-full sm:w-auto absolute right-40">
+                    <a class="dark:bg-darkmode2 m-2" href="">
+                    <?php    
+                        setlocale(LC_MONETARY,"de_DE");
+                        echo "$ ",number_format(Auth::user()->credit, 2);
+                    ?>
+                    </a>
+                </div>
             </div>
-            <!-- Showing the Current Users Credit in USD (I dont currently know how to switch it based on location and its like 1:37 am) -->
-            <div class="dark:bg-darkmode2 rounded-lg hidden sm:flex sm:items-center w-full sm:w-auto absolute right-40">
-                <a class="dark:bg-darkmode2 m-2" href="">
-                <?php    
-                    setlocale(LC_MONETARY,"de_DE");
-                    echo "$ ",number_format(Auth::user()->credit, 2);
-                ?>
-                </a>
-            </div>
+            
             <div class="dark:bg-darkmode hidden sm:flex sm:items-center w-full sm:w-auto absolute right-0"
                 id="menu">
                 @auth

@@ -102,6 +102,7 @@
                     <div class="grid grid-cols-1 gap-4">
                     @foreach(App\Models\Tickets::all()->take(3) as $ticket)
                         @if ($ticket->client == Auth::user()->id)
+                        @if ($ticket->status == 'open')
                         <a href="tickets/{{$ticket->id}}">   
                         <div class="dark:hover:bg-darkbutton dark:bg-darkmode2 bg-normal rounded-md p-2">
                                 <h1 class="dark:text-darkmodetext text-xl text-gray-500">Ticket #{{$ticket->id}}</h1>
@@ -116,6 +117,7 @@
                                 </p>
                             </div>
                         </a> 
+                        @endif
                         @endif
                     @endforeach
                     </div>
