@@ -1,22 +1,22 @@
 <nav class="dark:bg-darkmode bg-white">
     <div class="dark:bg-darkmode px-4 max-w-7xl sm:px-6 lg:px-8">
         <div
-            class="flex dark:bg-darkmode h-16 text-gray-500 hover:text-gray-700 text-sm font-medium leading-5 items-center">
+            class="flex dark:bg-darkmode h-16 dark:text-darkmodetext dark:hover:text text-gray-500 hover:text-gray-700 text-sm font-medium leading-5 items-center">
             <div class="flex">
                 <div class="flex items-center flex-shrink-0">
                     @if(Auth::user())
-                    <a href="@if(Auth::user()->is_admin) {{ route('admin')}} @else {{ route('index')}} @endif">
+                    <a href="{{ route('index')}}">
                         <x-application-logo class="block w-auto h-10 text-gray-600 fill-current" />
                     </a>
-                    <a href="@if(Auth::user()->is_admin) {{ route('admin')}} @else {{ route('index')}} @endif" class="p-2 text-xl font-bold">
-                        {{ env('APP_NAME') }}
+                    <a href="{{ route('index')}}" class="p-2 text-xl font-bold">
+                        {{config('app.name', 'Paymenter')}}
                     </a>
                     @else
                     <a href="{{ route('index')}}">
                         <x-application-logo class="block w-auto h-10 text-gray-600 fill-current" />
                     </a>
                     <a href="{{ route('index')}}" class="p-2 text-xl font-bold">
-                        {{ env('APP_NAME') }}
+                        {{config('app.name', 'Paymenter')}}
                     </a>
                     @endif
 
@@ -90,14 +90,16 @@
                     </div>
                 </div>
                 <!-- Showing the Current Users Credit in USD (I dont currently know how to switch it based on location and its like 1:37 am) -->
+                @if (Auth::user() == !null)
                 <div class="dark:bg-darkmode2 rounded-lg hidden sm:flex sm:items-center w-full sm:w-auto absolute right-40">
                     <a class="dark:bg-darkmode2 m-2" href="">
                     <?php    
-                        setlocale(LC_MONETARY,"de_DE");
+                        setlocale(LC_MONETARY,"en_EN");
                         echo "$ ",number_format(Auth::user()->credit, 2);
                     ?>
                     </a>
                 </div>
+                @endif
             </div>
             
             <div class="dark:bg-darkmode hidden sm:flex sm:items-center w-full sm:w-auto absolute right-0"
