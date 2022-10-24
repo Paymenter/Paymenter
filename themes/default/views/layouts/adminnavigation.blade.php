@@ -3,12 +3,12 @@
         <div class="flex  h-16 text-gray-500 hover:text-gray-700 text-sm font-medium leading-5 items-center">
             <div class="flex">
                 <div class="flex items-center flex-shrink-0">
-                    <a href="{{ route('admin') }}">
+                    <a href="{{ route('index') }}">
                         <x-application-logo class="block w-auto h-10 text-gray-600 fill-current" />
                     </a>
-                    <p class="p-2 text-xl font-bold">
+                    <a href="{{ route('index')}}" class="p-2 text-xl font-bold">
                         {{ env('APP_NAME') }}
-                    </p>
+                    </a>
                 </div>
             </div>
             <button data-collapse-toggle="mobile-menu" type="button"
@@ -160,19 +160,22 @@
                             {{ Auth::user()->name }}
                         </p>
                     </button>
-                    <div class="origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 hidden"
+                    <div class="dark:bg-darkmode origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 hidden"
                         id="user-menu">
-                        <div class="py-1 rounded-md bg-white shadow-xs" role="menu" aria-orientation="vertical"
+                        <div class="dark:bg-darkmode py-1 rounded-md bg-white shadow-xs" role="menu" aria-orientation="vertical"
                             aria-labelledby="user-menu">
-                            <a href="" class="block px-4 py-2 text-base text-gray-700 hover:bg-gray-100"
+                            <a href="" class="dark:hover:bg-darkbutton dark:text-darkmodetext block px-4 py-2 text-base text-gray-700 hover:bg-gray-100"
                                 role="menuitem">Your Profile</a>
                             <a href="{{ route('admin.settings') }}"
-                                class="block px-4 py-2 text-base text-gray-700 hover:bg-gray-100"
+                                class="dark:hover:bg-darkbutton dark:text-darkmodetext block px-4 py-2 text-base text-gray-700 hover:bg-gray-100"
                                 role="menuitem">Settings</a>
+                            <a href="{{ route('home') }}"
+                                class="dark:hover:bg-darkbutton dark:text-darkmodetext block px-4 py-2 text-base text-gray-700 hover:bg-gray-100"
+                                role="menuitem">User Dashboard</a>
                             <a href="{{ route('logout') }}"
                                 onclick="event.preventDefault();
                                                 document.getElementById('logout-form').submit();"
-                                class="block px-4 py-2 text-base text-gray-700 hover:bg-gray-100" role="menuitem">Sign
+                                class="dark:hover:bg-darkbutton dark:text-darkmodetext block px-4 py-2 text-base text-gray-700 hover:bg-gray-100" role="menuitem">Sign
                                 out</a>
                         </div>
                     </div>

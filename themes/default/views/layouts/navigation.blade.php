@@ -8,14 +8,18 @@
                     <a href="@if(Auth::user()->is_admin) {{ route('admin')}} @else {{ route('index')}} @endif">
                         <x-application-logo class="block w-auto h-10 text-gray-600 fill-current" />
                     </a>
+                    <a href="@if(Auth::user()->is_admin) {{ route('admin')}} @else {{ route('index')}} @endif" class="p-2 text-xl font-bold">
+                        {{ env('APP_NAME') }}
+                    </a>
                     @else
                     <a href="{{ route('index')}}">
                         <x-application-logo class="block w-auto h-10 text-gray-600 fill-current" />
                     </a>
-                    @endif
-                    <p class="p-2 text-xl font-bold">
+                    <a href="{{ route('index')}}" class="p-2 text-xl font-bold">
                         {{ env('APP_NAME') }}
-                    </p>
+                    </a>
+                    @endif
+
                 </div>
             </div>
             <button data-collapse-toggle="mobile-menu" type="button"
@@ -85,7 +89,17 @@
                         </div>
                     </div>
                 </div>
+                <!-- Showing the Current Users Credit in USD (I dont currently know how to switch it based on location and its like 1:37 am) -->
+                <div class="dark:bg-darkmode2 rounded-lg hidden sm:flex sm:items-center w-full sm:w-auto absolute right-40">
+                    <a class="dark:bg-darkmode2 m-2" href="">
+                    <?php    
+                        setlocale(LC_MONETARY,"de_DE");
+                        echo "$ ",number_format(Auth::user()->credit, 2);
+                    ?>
+                    </a>
+                </div>
             </div>
+            
             <div class="dark:bg-darkmode hidden sm:flex sm:items-center w-full sm:w-auto absolute right-0"
                 id="menu">
                 @auth
@@ -101,20 +115,34 @@
                                 {{ Auth::user()->name }}
                             </p>
                         </button>
-                        <div class="origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 hidden"
+                        <div class="dark:bg-darkmode origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 hidden"
                             id="user-menu">
-                            <div class="py-1 rounded-md bg-white shadow-xs" role="menu" aria-orientation="vertical"
+                            <div class="dark:bg-darkmode py-1 rounded-md bg-white shadow-xs" role="menu" aria-orientation="vertical"
                                 aria-labelledby="user-menu">
-                                <a href="" class="block px-4 py-2 text-base text-gray-700 hover:bg-gray-100"
+                                <a href="" class="dark:hover:bg-darkbutton dark:text-darkmodetext block px-4 py-2 text-base text-gray-700 hover:bg-gray-100"
                                     role="menuitem">Your Profile</a>
+                                @if (Auth::user()->is_admin)
                                 <a href="{{ route('admin.settings') }}"
-                                    class="block px-4 py-2 text-base text-gray-700 hover:bg-gray-100"
+                                    class="dark:hover:bg-darkbutton dark:text-darkmodetext block px-4 py-2 text-base text-gray-700 hover:bg-gray-100"
                                     role="menuitem">Settings</a>
+                                <div>
+                                    <a href="{{ route('admin') }}"
+                                    class="dark:hover:bg-darkbutton dark:text-darkmodetext block px-4 py-2 text-base text-gray-700 hover:bg-gray-100"
+                                    role="menuitem">Admin Panel</a>
+                                </div>
+                                @endif
+                                @if (!Auth::user()->is_admin)
+                                <div>
+                                    <a href="{{ route('home') }}"
+                                    class="dark:hover:bg-darkbutton dark:text-darkmodetext block px-4 py-2 text-base text-gray-700 hover:bg-gray-100"
+                                    role="menuitem">Dashboard</a>
+                                </div>
+                                @endif
                                 <a href="{{ route('logout') }}"
-                                    onclick="event.preventDefault();
-                                                document.getElementById('logout-form').submit();"
-                                    class="block px-4 py-2 text-base text-gray-700 hover:bg-gray-100" role="menuitem">Sign
-                                    out</a>
+                                onclick="event.preventDefault();
+                                            document.getElementById('logout-form').submit();"
+                                class="dark:hover:bg-darkbutton dark:text-darkmodetext block px-4 py-2 text-base text-gray-700 hover:bg-gray-100" role="menuitem">Sign
+                                out</a>
                             </div>
                         </div>
                     </div>
