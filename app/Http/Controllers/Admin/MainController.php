@@ -20,8 +20,6 @@ class MainController extends Controller
         $tickets = Statistics::where('name', 'tickets')->where('created_at', '<', now())->orderBy('date', 'desc')->limit(7)->count();
         $ticketsClosed = Statistics::where('name', 'ticketsClosed')->where('created_at', '<', now())->orderBy('date', 'desc')->count();
         $orders = Statistics::where('name', 'orders')->where('created_at', '<', now())->orderBy('date', 'desc')->count();
-        error_log($tickets);
-        error_log(date('Y-m-d'));
         return view('admin.index', compact('orders', 'tickets', 'ticketsClosed'));
     }
 }

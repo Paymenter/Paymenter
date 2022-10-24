@@ -52,4 +52,9 @@ class CheckoutController extends Controller
         session()->push('cart', $product);
         return redirect()->route('checkout.index');
     }
+
+    public function pay(Request $request)
+    {
+        
+    }
 }

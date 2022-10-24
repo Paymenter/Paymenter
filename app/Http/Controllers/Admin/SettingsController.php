@@ -34,16 +34,7 @@ class SettingsController extends Controller
         ]);
         $theme = request('theme');
         $settings = Settings::first();
-        $settings->theme = $theme;
-        $settings->recaptcha = request('recaptcha') == 'on' ? 1 : 0;
-        $settings->recaptcha_site_key = request('recaptcha_site_key');
-        $settings->recaptcha_secret_key = request('recaptcha_secret_key');
-        $settings->seo_title = request('seo_title');
-        $settings->seo_description = request('seo_description');
-        $settings->seo_keywords = request('seo_keywords');
-        $settings->seo_twitter_card = request('seo_twitter_card') == 'on' ? 1 : 0;
-        $settings->seo_image = request('seo_image');
-        $settings->save();
+        $settings->update($request->all());
         Theme::set($theme);
         return redirect('/admin/settings')->with('success', 'Settings updated successfully');
     }

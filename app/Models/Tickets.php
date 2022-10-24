@@ -25,7 +25,7 @@ class Tickets extends Model
 
     public function client()
     {
-        return $this->belongsTo(User::class, 'client');
+        return $this->hasOne(User::class, 'id', 'client');
     }
 
     public function messages()

@@ -30,6 +30,12 @@ return new class extends Migration
      */
     public function down()
     {
-        //
+        Schema::table('settings', function (Blueprint $table) {
+            $table->dropColumn('seo_title');
+            $table->dropColumn('seo_description');
+            $table->dropColumn('seo_keywords');
+            $table->dropColumn('seo_twitter_card');
+            $table->dropColumn('seo_image');
+        });
     }
 };

@@ -82,6 +82,33 @@
                         </div>
                     </div>
                 </div>
+                <!-- products -->
+                <div class="relative inline-block text-left">
+                    <button type="button"
+                        class="dark:bg-darkmode dark:text-darkmodetext dark:hover:bg-darkmode2 inline-flex w-full justify-center bg-white pl-4 py-2 text-base font-medium text-gray-700 @if (request()->routeIs('admin.products*')) bg-gray-200 @endif"
+                        id="menu-button" aria-expanded="true" aria-haspopup="true" onclick="openMenu('products')">
+                        <i class="ri-shopping-bag-2-line pr-1"
+                            @if (request()->routeIs('admin.products*')) style="color: #5270FD" @endif></i> Products
+                        <svg class="-mr-1 ml-1 h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
+                            fill="currentColor" aria-hidden="true">
+                            <path fill-rule="evenodd"
+                                d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"
+                                clip-rule="evenodd" />
+                        </svg>
+                    </button>
+                    <div class="dark:bg-darkmode origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 hidden"
+                        role="menu" aria-orientation="vertical" aria-labelledby="menu-button" tabindex="-1"
+                        id="products">
+                        <div class="py-1" role="none">
+                            <a href="{{ route('admin.products') }}"
+                                class="dark:text-darkmodetext dark:hover:bg-darkmode2 text-gray-700 block px-4 py-2 text-base hover:bg-gray-100 hover:text-gray-900"
+                                role="menuitem" tabindex="-1" id="menu-item-0">All Products</a>
+                            <a href="{{ route('admin.products.create') }}"
+                                class="dark:text-darkmodetext dark:hover:bg-darkmode2 text-gray-700 block px-4 py-2 text-base hover:bg-gray-100 hover:text-gray-900"
+                                role="menuitem" tabindex="-1" id="menu-item-1">Create Product</a>
+                        </div>
+                    </div>
+                </div>
                 <div class="relative inline-block text-left pl-4">
                     <button type="button"
                         class="dark:bg-darkmode dark:text-darkmodetext dark:hover:bg-darkmode2 inline-flex w-full justify-center bg-white py-2 text-base font-medium text-gray-700 @if (request()->routeIs('admin.tickets*')) bg-gray-200 @endif"
@@ -249,6 +276,7 @@
                 var orders = document.getElementById('orders');
                 var clients = document.getElementById('clients');
                 var tickets = document.getElementById('support');
+                var products = document.getElementById('products');
 
                 function openMenu(id) {
                     if (id == 'user-menu') {
@@ -281,6 +309,13 @@
                         settings.classList.add('hidden');
                         orders.classList.add('hidden');
                         clients.classList.add('hidden');
+                    } else if (id == 'products') {
+                        products.classList.toggle('hidden');
+                        usermenu.classList.add('hidden');
+                        settings.classList.add('hidden');
+                        orders.classList.add('hidden');
+                        clients.classList.add('hidden');
+                        tickets.classList.add('hidden');
                     }
                 }
 

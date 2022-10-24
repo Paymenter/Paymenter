@@ -15,10 +15,16 @@ class Products extends Model
         'price', 
         'category_id', 
         'image', 
+        'server_id',
     ];
 
     public function category()
     {
         return $this->belongsTo(Categories::class);
+    }
+
+    public function server()
+    {
+        return $this->belongsTo(Extensions::class, 'server_id');
     }
 }

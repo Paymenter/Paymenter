@@ -81,4 +81,30 @@ class ExtensionHelper
         // cast to array
         return $products;
     }
+
+    public static function getProductConfig($name, $key, $id)
+    {
+        $extension = Extensions::where('name', $name)->first();
+        if (!$extension) {
+            Extensions::create([
+                'name' => $name,
+                'enabled' => false,
+                'type' => 'server'
+            ]);
+            $extension = Extensions::where('name', $name)->first();
+        }
+        
+        $config = $extension->getServer()->where('name', $key)->first();
+        if(!$config){
+            $extension->getServer()->create([
+                'name' => $key,
+                'value' => '',
+                'product_id' => $id,
+                'extension' => $extension->id
+            ]);
+            $config = $extension->getServer()->where('name', $key)->first();
+        }
+
+        return $config->value;
+    }
 }

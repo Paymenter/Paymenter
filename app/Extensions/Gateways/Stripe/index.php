@@ -2,6 +2,7 @@
 
 use Stripe\StripeClient;
 use App\Helpers\ExtensionHelper;
+use App\Models\Products;
 
 $name = 'Stripe';
 $description = 'Stripe Payment Gateway';
@@ -10,13 +11,8 @@ $author = 'CorwinDev';
 $website = 'http://stripe.com';
 $database = 'gateway_stripe';
 
-function create()
+function create($products)
 {
-    if(!ExtensionHelper::getProducts()){
-        return (object) [
-            'url' => route('checkout.cancel')
-        ];
-    }
     $client = StripeClient();
     // Create array with all the products
     $products = ExtensionHelper::getProducts();

@@ -13,14 +13,12 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('tickets', function (Blueprint $table) {
+        Schema::create('product_settings', function (Blueprint $table) {
             $table->id();
-            $table->string('title');
-            $table->string('status');
-            $table->string('priority');
-            $table->foreign('client')->references('id')->on('users')->onDelete('cascade');
-            $table->string('order_id')->nullable();
-            $table->string('assigned_to')->nullable();
+            $table->foreign('product_id')->references('id')->on('products')->onDelete('cascade');
+            $table->string('name');
+            $table->string('value')->nullable();
+            $table->foreign('extension')->references('id')->on('extensions')->onDelete('cascade');
             $table->timestamps();
         });
     }
@@ -32,6 +30,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('tickets');
+        Schema::dropIfExists('product_settings');
     }
 };

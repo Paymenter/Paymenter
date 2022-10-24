@@ -19,4 +19,9 @@ class Extensions extends Model
     {
         return $this->hasMany(ExtensionSettings::class, 'extension', 'id');
     }
+
+    public function getServer()
+    {
+        return $this->hasMany(ProductSettings::class, 'extension', 'id');
+    }
 }

@@ -20,6 +20,7 @@
                         {{ __('Here you can create a new client.') }}
                     </div>
                 </div>
+                <x-success class="mb-4" />
                 <div class="dark:bg-darkmode2 bg-gray-200 bg-opacity-25 grid grid-cols-1">
                     <div class="p-6">
                         <div class="flex items-center">

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Helpers\ExtensionHelper;
 use App\Http\Controllers\Controller;
+use App\Models\Extensions;
 use Illuminate\Http\Request;
 
 class ExtensionsController extends Controller
@@ -18,9 +19,15 @@ class ExtensionsController extends Controller
     public function edit($sort, $name){
         if($sort == 'server'){
             $extension = json_decode(file_get_contents(base_path('app/Extensions/Servers/' . $name . '/extension.json')));
+            $db = Extensions::where('name', $name)->first();
+            $extension->enabled = $db->enabled;
+            $extension->id = $db->id;
             return view('admin.extensions.edit', compact('extension'));
         }elseif($sort == 'gateway'){
             $extension = json_decode(file_get_contents(base_path('app/Extensions/Gateways/' . $name . '/extension.json')));
+            $db = Extensions::where('name', $name)->first();
+            $extension->enabled = $db->enabled;
+            $extension->id = $db->id;
             return view('admin.extensions.edit', compact('extension'));
         }
     }
@@ -31,12 +38,14 @@ class ExtensionsController extends Controller
             foreach ($extension->config as $config) {
                 ExtensionHelper::setConfig($extension->name, $config->name, $request->input($config->name));
             }
+            Extensions::where('name', $extension->name)->update(['enabled' => $request->input('enabled')]);
             return redirect()->route('admin.extensions.edit', ['sort' => $sort, 'name' => $name])->with('success', 'Extension updated successfully');
         }elseif($sort == 'gateway'){
             $extension = json_decode(file_get_contents(base_path('app/Extensions/Gateways/' . $name . '/extension.json')));
             foreach($extension->config as $config){
                 ExtensionHelper::setConfig($extension->name, $config->name, $request->input($config->name));
             }
+            Extensions::where('name', $extension->name)->update(['enabled' => $request->input('enabled')]);
             return redirect()->route('admin.extensions.edit', ['sort' => $sort, 'name' => $name])->with('success', 'Extension updated successfully');
         }
     }

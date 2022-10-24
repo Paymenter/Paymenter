@@ -26,14 +26,12 @@
                 <div class="dark:bg-darkmode dark:border-darkmode p-10 bg-white border-2 rounded-xl border-grey-600 ml-4">
                     <h1 class="dark:text-darkmodetext text-xl text-gray-500">Recent tickets</h1>
                     <div class="grid grid-cols-1 gap-4">
-                    @foreach(App\Models\Tickets::all()->take(3) as $ticket)
+                    @foreach(App\Models\Tickets::orderByRaw('updated_at - created_at DESC')->get()->take(5) as $ticket)
                     <a href="/admin/tickets/{{$ticket->id}}">   
                         <div class="dark:hover:bg-darkbutton dark:bg-darkmode2 bg-normal rounded-md p-2">
                         <h1 class="dark:text-darkmodetext text-xl text-gray-500">Ticket #{{$ticket->id}} by 
                                 <span class="dark:text-darkmodetext">
-                                     <?php
-                                        echo App\Models\User::where('id', $ticket->client)->first()->name;
-                                    ?>
+                                     {{ $ticket->client()->get()->first()->name }}
                                 </span> 
                             </h1>
                             <p class="dark:text-darkmodetext text-black font-bold text-2xl">{{ $ticket->title }} 

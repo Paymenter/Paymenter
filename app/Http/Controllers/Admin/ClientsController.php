@@ -29,24 +29,22 @@ class ClientsController extends Controller
         return redirect()->route('admin.clients.edit', $user->id);
     }
 
-    public function edit($id)
+    public function edit(User $id)
     {
-        $user = User::find($id);
+        $user = $id;
         return view('admin.clients.edit', compact('user'));
     }
 
-    public function update(Request $request, $id)
+    public function update(Request $request, User $id)
     {
-        $user = User::find($id);
-        $user->name = $request->name;
-        $user->email = $request->email;
-        $user->save();
+        $user = $id;
+        $user->update($request->all());
         return redirect()->route('admin.clients.edit', $id)->with('success', 'User updated successfully');
     }
 
-    public function destroy($id)
+    public function destroy(User $id)
     {
-        $user = User::find($id);
+        $user = $id;
         $user->delete();
         return redirect()->route('admin.clients');
     }

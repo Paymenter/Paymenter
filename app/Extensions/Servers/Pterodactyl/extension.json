@@ -21,17 +21,17 @@
             "type": "text"
         },
         {
-            "Name": "location",
+            "name": "location",
             "friendlyName": "Pterodactyl Location",
             "type": "text"
          },
         {
-            "Name": "server",
+            "name": "server",
             "friendlyName": "Pterodactyl Server",
             "type": "text"
          },
         {
-            "Name": "egg",
+            "name": "egg",
             "friendlyName": "Pterodactyl Egg",
             "type": "text"
          },
