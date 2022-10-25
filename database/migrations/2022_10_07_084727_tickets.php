@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('title');
             $table->string('status');
             $table->string('priority');
+            $table->unsignedBigInteger('client');
             $table->foreign('client')->references('id')->on('users')->onDelete('cascade');
             $table->string('order_id')->nullable();
             $table->string('assigned_to')->nullable();

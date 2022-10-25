@@ -10,10 +10,14 @@ class Orders extends Model
     use HasFactory;
     protected $table = 'orders';
     protected $fillable = [
-        'product',
+        'products',
         'expiry_date',
         'status',
-        'user',
+        'client',
+        'total'
+    ];
+    protected $casts = [
+        'products' => 'array',
     ];
 /*
     public function product()
@@ -23,6 +27,6 @@ class Orders extends Model
 
     public function client()
     {
-        return $this->belongsTo(User::class, 'id', 'user');
+        return $this->belongsTo(User::class, 'id', 'client');
     }
 }

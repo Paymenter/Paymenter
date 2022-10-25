@@ -33,7 +33,7 @@
                             <div class="flex flex-nowrap gap-4">
                                 @foreach ($category->products as $product)
                                     <div class="transition delay-400 hover:shadow-lg dark:bg-darkmode rounded-lg w-1/4 p-4">
-                                        <a href="{{ route('checkout.add', $product->id) }}">
+                                        <a href="{{ route('checkout.add') }}?id={{  $product->id }}">
                                             <img class="rounded-lg" src="{{ $product->image }}" alt="{{ $product->name }}"
                                                 class="w-full h-64 object-cover object-center">
                                             <div class="mt-2">

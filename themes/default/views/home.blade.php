@@ -13,7 +13,7 @@
                         <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
                             <div class="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
                                 <div class="dark:bg-white overflow-hidden rounded-lg">
-                                    @if (!empty($services))
+                                    @empty($services->count())
                                         <div class="dark:bg-darkmode px-4 py-5 sm:px-6">
                                             <h3 class="dark:text-darkmodetext text-lg leading-6 font-medium text-gray-900">
                                                 {{ __('Services') }}
@@ -27,14 +27,6 @@
                                         <table class="min-w-full divide-y divide-gray-200">
                                             <thead class="bg-gray-50">
                                                 <tr>
-                                                    <th scope="col"
-                                                        class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                                        Name
-                                                    </th>
-                                                    <th scope="col"
-                                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                                        Description
-                                                    </th>
                                                     <th scope="col"
                                                         class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                                         Price
@@ -53,10 +45,6 @@
                                                     <tr>
                                                         <td class="px-6 py-4 whitespace-nowrap">
                                                             <div class="flex items-center">
-                                                                <div class="float-left flex-shrink-0 h-10 w-10">
-                                                                    <img class=" h-10 w-10 rounded-full"
-                                                                        src="{{ $service->image }}" alt="">
-                                                                </div>
                                                                 <div class="ml-4">
                                                                     <div class="text-sm font-medium text-gray-900">
                                                                         {{ $service->name }}
@@ -74,14 +62,14 @@
 
                                                         </td>
                                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                                            {{ $service->price }}
+                                                            {{ $service->total }}
                                                         </td>
                                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                                             {{ $service->status }}
                                                         </td>
                                                         <td
                                                             class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                                            <a href="{{ route('services.edit', $service->id) }}"
+                                                            <a href=""
                                                                 class="text-indigo-600 hover:text-indigo-900">Edit</a>
                                                         </td>
                                                     </tr>
@@ -90,7 +78,7 @@
                                             </tbody>
                                         </table>
 
-                                    @endif
+                                    @endempty
                                 </div>
                             </div>
                         </div>

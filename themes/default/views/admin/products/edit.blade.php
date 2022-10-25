@@ -33,7 +33,7 @@
                             <div class="mt-4">
                                 <label for="price">{{ __('Price') }}</label>
 
-                                <input id="price" class="block mt-1 w-full dark:bg-darkmode" type="number" name="price"
+                                {{ App\Models\Settings::first()->currency_sign }}<input id="price" class="block mt-1 w-full dark:bg-darkmode" type="number" name="price"
                                     min="1" step="any" value="{{ $product->price }}" required />
                             </div>
                             <div class="mt-4">

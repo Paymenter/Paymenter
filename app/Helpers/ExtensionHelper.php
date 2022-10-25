@@ -14,6 +14,7 @@ class ExtensionHelper
      */
     static function paymentDone($id)
     {
+        error_log("Payment done for order $id");
         $order = Orders::findOrFail($id);
         $order->status = 'paid';
         $order->save();
@@ -106,5 +107,18 @@ class ExtensionHelper
         }
 
         return $config->value;
+    }
+
+    public static function getPaymentMethod($id, $total, $products, $orderId)
+    {
+        $extension = Extensions::where('id', $id)->first();
+        error_log($extension);
+        if (!$extension) {
+           return false;
+        }
+        // Get the payment method
+        include_once(app_path() . '/Extensions/Gateways/' . $extension->name . '/index.php');
+        $pay = pay($total, $products, $orderId);
+        return $pay->url;
     }
 }

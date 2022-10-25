@@ -14,7 +14,14 @@ class CheckoutController extends Controller
     public function index(Request $request)
     {
         $products = session('cart');
-        return view('checkout.index', compact('products'));
+        $total = 0;
+        if($products){
+            foreach ($products as $product) {
+                error_log($product);
+                $total += $product->price * $product->quantity;
+            }
+        }
+        return view('checkout.index', compact('products', 'total'));	
     }
 
     public function checkout(Request $request)
@@ -47,14 +54,61 @@ class CheckoutController extends Controller
 
     public function add(Request $request)
     {
+
         $product = Products::find($request->id);
+        if(!$product) {
+            return redirect()->back()->with('error', 'Product not found');
+        }
+        if(!session()->has('cart')) {
             session()->put('cart', []);
-        session()->push('cart', $product);
+        }
+        if(session() && session()->has('cart')) {
+            $cart = session()->get('cart');
+            if(array_key_exists($product->id, $cart)) {
+                $cart[$product->id]->quantity = $cart[$product->id]->quantity  + 1;
+                session()->push('cart', $cart);
+            } else {
+                $product->quantity = 1;
+                session()->push('cart', $product);
+            }
+        }
+
         return redirect()->route('checkout.index');
     }
 
     public function pay(Request $request)
     {
-        
+        $products = session('cart');
+        $total = 0;
+        if(!$products) {
+            return redirect()->back()->with('error', 'No products in cart');
+        }
+        if ($products) {
+            foreach ($products as $product) {
+                $total += $product->price * $product->quantity;
+            }
+        }
+        $productsids = [];
+        foreach ($products as $product) {
+            $productsids[] = $product->id;
+        }
+        $user = User::find(auth()->user()->id);
+        $order = new Orders();
+        $order->client = $user->id;
+        $order->total = $total;
+        $order->products = $productsids;
+        $order->expiry_date = date('Y-m-d H:i:s', strtotime('+1 month'));
+        $order->status = 'pending';
+        $order->save();
+
+        if($request->get('payment_method')){
+            $payment_method = $request->get('payment_method');
+            $payment_method = ExtensionHelper::getPaymentMethod($payment_method, $total, $products, $order->id);
+            if($payment_method){
+                return redirect($payment_method);
+            }else{
+                return redirect()->back()->with('error', 'Payment method not found');
+            }
+        }
     }
 }

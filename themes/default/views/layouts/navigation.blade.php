@@ -42,7 +42,7 @@
                         <a type="button" href="{{ route('tickets.index') }}"
                             class="dark:text-darkmodetext dark:bg-darkmode dark:hover:bg-darkbutton inline-flex w-full justify-center bg-white pl-4 py-2 text-base font-medium text-gray-700 @if (request()->routeIs('tickets*')) bg-gray-200 @endif"
                             id="menu-button" aria-expanded="true" aria-haspopup="true" onclick="openMenu('tickets')">
-                            <i class="ri-shopping-cart-2-line pr-1"
+                            <i class="ri-question-answer-line pr-1"
                                 @if (request()->routeIs('tickets*')) style="color: #5270FD" @endif></i>Tickets
                         </a>
                     </div>

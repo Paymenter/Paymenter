@@ -11,7 +11,7 @@ $author = 'CorwinDev';
 $website = 'http://stripe.com';
 $database = 'gateway_stripe';
 
-function create($products)
+function create($products, $order)
 {
     $client = StripeClient();
     // Create array with all the products
@@ -39,7 +39,7 @@ function create($products)
         'customer_email' => auth()->user()->email,
         'metadata' => [
             'user_id' => auth()->user()->id,
-            'order_id' => 1,
+            'order_id' => $order,
         ],
     ]);
 
@@ -71,10 +71,8 @@ function webhook($request)
     if ($event->type == 'checkout.session.completed') {
         $order = $event->data->object;
         error_log($order);
-        $order_id = $order->client_reference_id;
+        $order_id = $order->metadata->order_id;
         ExtensionHelper::paymentDone($order_id);
-        $order->status = 'paid';
-        $order->save();
     }
 }
 
@@ -90,4 +88,12 @@ function stripeClient()
         );
     }
     return $stripe;
+}
+
+
+function pay($total, $products, $orderId)
+{
+    $stripe = stripeClient();
+    $order = create($products, $orderId);
+    return $stripe->checkout->sessions->retrieve($order->id, []);
 }
