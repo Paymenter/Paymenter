@@ -67,17 +67,31 @@ class TicketsController extends Controller
         return redirect('/tickets')->with('success', 'Ticket created successfully');
     }
 
-    function show($id)
+    function show(Tickets $id)
     {
-        $ticket = Tickets::find($id);
-        return view('tickets.show', compact('ticket'));
+        $ticket = $id;
+        $messages = TicketMessages::where('ticket_id', $id->id)->get();
+        return view('tickets.show', compact('ticket', 'messages'));
     }
 
-    function close($id)
+    function close(Tickets $id)
     {
-        $ticket = Tickets::find($id);
+        $ticket = $id;
         $ticket->status = 'closed';
         $ticket->save();
         return redirect('/tickets')->with('success', 'Ticket closed successfully');
+    }
+
+    function reply(Request $request, Tickets $id)
+    {
+        $request->validate([
+            'message' => 'required',
+        ]);
+        TicketMessages::create([
+            'ticket_id' => $id->id,
+            'message' => request('message'),
+            'user_id' => auth()->user()->id
+        ]);
+        return redirect()->back()->with('success', 'Message sent successfully');
     }
 }

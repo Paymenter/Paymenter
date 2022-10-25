@@ -39,31 +39,12 @@
                 <div class="dark:bg-darkmode relative inline-block text-left">
                     <!-- ticket -->
                     <div class="dark:bg-darkmode">
-                        <button type="button"
+                        <a type="button" href="{{ route('tickets.index') }}"
                             class="dark:text-darkmodetext dark:bg-darkmode dark:hover:bg-darkbutton inline-flex w-full justify-center bg-white pl-4 py-2 text-base font-medium text-gray-700 @if (request()->routeIs('tickets*')) bg-gray-200 @endif"
                             id="menu-button" aria-expanded="true" aria-haspopup="true" onclick="openMenu('tickets')">
                             <i class="ri-shopping-cart-2-line pr-1"
                                 @if (request()->routeIs('tickets*')) style="color: #5270FD" @endif></i>Tickets
-                            <svg class="-mr-1 ml-1 h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
-                                fill="currentColor" aria-hidden="true">
-                                <path fill-rule="evenodd"
-                                    d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"
-                                    clip-rule="evenodd" />
-                            </svg>
-                        </button>
-
-                        <div class="dark:text-darkmodetext dark:bg-darkmode dark:hover:bg-darkbutton absolute right-0 w-56 mt-2 origin-top-right rounded-md shadow-lg hidden dark:bg-darkmode"
-                            id="tickets">
-                            <div class="dark:bg-darkmode py-1 rounded-md bg-white shadow-xs" role="menu"
-                                aria-orientation="vertical" aria-labelledby="options-menu">
-                                <a href="{{ route('tickets.index') }}"
-                                    class="dark:text-darkmodetext dark:bg-darkmode dark:hover:bg-darkbutton block px-4 py-2 text-sm leading-5 text-gray-700 hover:bg-gray-100 hover:text-gray-900 dark:"
-                                    role="menuitem">List</a>
-                                <a href="{{ route('tickets.create') }}"
-                                    class="dark:text-darkmodetext dark:bg-darkmode dark:hover:bg-darkbutton block px-4 py-2 text-sm leading-5 text-gray-700 hover:bg-gray-100 hover:text-gray-900"
-                                    role="menuitem">Create</a>
-                            </div>
-                        </div>
+                        </a>
                     </div>
                 </div>
                 <div class="relative inline-block text-left">
@@ -86,6 +67,14 @@
                             <a href="{{ route('products.index') }}"
                                 class="dark:text-darkmodetext dark:hover:bg-darkbutton text-gray-700 block px-4 py-2 text-base hover:bg-gray-100 hover:text-gray-900"
                                 role="menuitem" tabindex="-1" id="menu-item-0">All Products</a>
+                            @foreach(App\Models\Categories::all() as $category) 
+                            @if($category->products->count() > 0)
+
+                            <a href="{{ route('products.index', ['category' => $category->id]) }}"
+                                class="dark:text-darkmodetext dark:hover:bg-darkbutton text-gray-700 block px-4 py-2 text-base hover:bg-gray-100 hover:text-gray-900"
+                                role="menuitem" tabindex="-1" id="menu-item-0">{{ $category->name }}</a>
+                            @endif
+                            @endforeach
                         </div>
                     </div>
                 </div>

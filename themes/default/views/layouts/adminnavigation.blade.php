@@ -172,7 +172,6 @@
                         </div>
                     </div>
                 </div>
-
             </div>
             <div class="hidden sm:flex sm:items-center w-full sm:w-auto absolute right-0 " id="menu">
                 <div class="relative inline-block text-left">
@@ -191,7 +190,7 @@
                         id="user-menu">
                         <div class="dark:bg-darkmode py-1 rounded-md bg-white shadow-xs" role="menu" aria-orientation="vertical"
                             aria-labelledby="user-menu">
-                            <a href="" class="dark:hover:bg-darkbutton dark:text-darkmodetext block px-4 py-2 text-base text-gray-700 hover:bg-gray-100"
+                            <a href="{{ route('profile') }}" class="dark:hover:bg-darkbutton dark:text-darkmodetext block px-4 py-2 text-base text-gray-700 hover:bg-gray-100"
                                 role="menuitem">Your Profile</a>
                             <a href="{{ route('admin.settings') }}"
                                 class="dark:hover:bg-darkbutton dark:text-darkmodetext block px-4 py-2 text-base text-gray-700 hover:bg-gray-100"

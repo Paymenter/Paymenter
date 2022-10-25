@@ -27,7 +27,8 @@ class SettingsController extends Controller
     {   
 
         $request->validate([
-            'theme' => 'required'
+            'theme' => 'required',
+            'currency_sign' => 'required',
         ]);
         $request->merge([
             'recaptcha' => $request->recaptcha == 'on' ? 1 : 0,

@@ -16,8 +16,8 @@ Route::group(['prefix' => 'admin'], function () {
     });
 
     Route::group(['prefix' => 'settings'], function () {
-        Route::get('/', [App\Http\Controllers\Admin\SettingsController::class, 'index'])->middleware(['auth.admin'])->name('admin.settings');
-        Route::post('/', [App\Http\Controllers\Admin\SettingsController::class, 'update'])->middleware(['auth.admin'])->name('admin.settings.update');
+        Route::get('/', [App\Http\Controllers\Admin\SettingsController::class, 'index'])->middleware(['auth.admin', 'password.confirm'])->name('admin.settings');
+        Route::post('/', [App\Http\Controllers\Admin\SettingsController::class, 'update'])->middleware(['auth.admin', 'password.confirm'])->name('admin.settings.update');
     });
 
     Route::group(['prefix' => 'products'], function () {
@@ -42,14 +42,14 @@ Route::group(['prefix' => 'admin'], function () {
     });
 
     Route::group(['prefix' => 'extensions'], function () {
-        Route::get('/', [App\Http\Controllers\Admin\ExtensionsController::class, 'index'])->middleware(['auth.admin'])->name('admin.extensions');
-        Route::get('/edit/{sort}/{name}', [App\Http\Controllers\Admin\ExtensionsController::class, 'edit'])->middleware(['auth.admin'])->name('admin.extensions.edit');
-        Route::post('/edit/{sort}/{name}', [App\Http\Controllers\Admin\ExtensionsController::class, 'update'])->middleware(['auth.admin'])->name('admin.extensions.update');
+        Route::get('/', [App\Http\Controllers\Admin\ExtensionsController::class, 'index'])->middleware(['auth.admin', 'password.confirm'])->name('admin.extensions');
+        Route::get('/edit/{sort}/{name}', [App\Http\Controllers\Admin\ExtensionsController::class, 'edit'])->middleware(['auth.admin', 'password.confirm'])->name('admin.extensions.edit');
+        Route::post('/edit/{sort}/{name}', [App\Http\Controllers\Admin\ExtensionsController::class, 'update'])->middleware(['auth.admin', 'password.confirm'])->name('admin.extensions.update');
     });
 
     Route::group(['prefix' => 'import'], function () {
-        Route::get('/', [App\Http\Controllers\Admin\ImportController::class, 'index'])->middleware(['auth.admin'])->name('admin.import');
-        Route::post('/', [App\Http\Controllers\Admin\ImportController::class, 'import'])->middleware(['auth.admin'])->name('admin.import.import');
+        Route::get('/', [App\Http\Controllers\Admin\ImportController::class, 'index'])->middleware(['auth.admin', 'password.confirm'])->name('admin.import');
+        Route::post('/', [App\Http\Controllers\Admin\ImportController::class, 'import'])->middleware(['auth.admin', 'password.confirm'])->name('admin.import.import');
     });
 
     Route::group(['prefix' => 'clients'], function () {

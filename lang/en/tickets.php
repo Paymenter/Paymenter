@@ -11,8 +11,12 @@ return [
     'priority_low' => 'Low',
     'priority_medium' => 'Medium',
     'priority_high' => 'High',
+    'status_open' => 'Open',
+    'status_closed' => 'Closed',
+    'status_replied' => 'Replied',
     'no_open_tickets' => 'No open tickets',
     'open_tickets' => 'Open Tickets',
     'open_tickets_description' => 'Open tickets are tickets that are not closed yet',
     'last_message' => 'Last Message',
+    'you' => 'You',
 ];

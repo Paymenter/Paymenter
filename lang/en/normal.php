@@ -20,6 +20,12 @@ return [
     'confirm_password' => 'Confirm Password',
     'created_at' => 'Created At',
     'user' => 'User',
+    'address' => 'Address',
+    'city' => 'City',
+    'state' => 'State',
+    'zip' => 'Zip',
+    'phone' => 'Phone',
+    'country' => 'Country',
 
     'actions' => 'Actions',
 ];

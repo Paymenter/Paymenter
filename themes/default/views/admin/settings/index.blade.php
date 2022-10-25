@@ -167,6 +167,20 @@
                                                 value="{{ $settings->seo_image }}">
                                         </div>
                                     </div>
+                                    <br><br>
+                                    <div class="mt-4">
+                                        <label for="currency" class="dark:text-darkmodetext block text-sm font-medium text-gray-700">
+                                            {{ __('Currency') }}
+                                        </label>
+                                        <div class="mt-1">
+                                            <input id="currency" name="currency_sign" type="text"
+                                                autocomplete="currency"
+                                                class="dark:text-darkmodetext dark:bg-darkmode form-input rounded-md shadow-sm mt-1 block w-full"
+                                                value="{{ $settings->currency_sign }}">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
 
                             <div class="flex items-center justify-end mt-4">
                                 <button type="submit"

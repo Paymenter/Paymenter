@@ -29,11 +29,11 @@
                                         <div class="ml-12">
                                             <div class="mt-2 text-sm text-gray-500 dark:text-darkmodetext">
                                                 {{ __('tickets.priority') }}:
-                                                @if ($ticket->priority == 1)
+                                                @if ($ticket->priority == 'low')
                                                     {{ __('tickets.priority_low') }}
-                                                @elseif ($ticket->priority == 2)
+                                                @elseif ($ticket->priority == 'medium')
                                                     {{ __('tickets.priority_medium') }}
-                                                @elseif ($ticket->priority == 3)
+                                                @elseif ($ticket->priority == 'high')
                                                     {{ __('tickets.priority_high') }}
                                                 @endif
                                             </div>
@@ -41,11 +41,11 @@
                                         <div class="ml-12">
                                             <div class="mt-2 text-sm text-gray-500 dark:text-darkmodetext">
                                                 {{ __('tickets.status') }}:
-                                                @if ($ticket->status == 1)
+                                                @if ($ticket->status == 'open')
                                                     {{ __('tickets.status_open') }}
-                                                @elseif ($ticket->status == 2)
+                                                @elseif ($ticket->status == 'replied')
                                                     {{ __('tickets.status_in_progress') }}
-                                                @elseif ($ticket->status == 3)
+                                                @elseif ($ticket->status == 'closed')
                                                     {{ __('tickets.status_closed') }}
                                                 @endif
                                             </div>
