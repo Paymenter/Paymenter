@@ -27,11 +27,13 @@ class SettingsController extends Controller
     {   
 
         $request->validate([
-            'theme' => 'required',
-            'recaptcha' => 'required',
-            'recaptcha_site_key' => 'required',
-            'recaptcha_secret_key' => 'required',
+            'theme' => 'required'
         ]);
+        $request->merge([
+            'recaptcha' => $request->recaptcha == 'on' ? 1 : 0,
+            'seo_twitter_card' => $request->seo_twitter_card == 'on' ? 1 : 0
+        ]);
+
         $theme = request('theme');
         $settings = Settings::first();
         $settings->update($request->all());
