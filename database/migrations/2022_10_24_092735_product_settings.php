@@ -15,9 +15,11 @@ return new class extends Migration
     {
         Schema::create('product_settings', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('product_id');
             $table->foreign('product_id')->references('id')->on('products')->onDelete('cascade');
             $table->string('name');
             $table->string('value')->nullable();
+            $table->unsignedBigInteger('extension');
             $table->foreign('extension')->references('id')->on('extensions')->onDelete('cascade');
             $table->timestamps();
         });
