@@ -13,7 +13,10 @@ return new class extends Migration
      */
     public function up()
     {
-        //
+        // add trnaslations field to users table
+        Schema::table('users', function (Blueprint $table) {
+            $table->string('translations')->nullable();
+        });
     }
 
     /**
@@ -23,6 +26,9 @@ return new class extends Migration
      */
     public function down()
     {
-        //
+        // remove translations field from users table
+        Schema::table('users', function (Blueprint $table) {
+            $table->dropColumn('translations');
+        });
     }
 };
