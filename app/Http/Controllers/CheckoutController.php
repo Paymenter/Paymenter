@@ -15,9 +15,9 @@ class CheckoutController extends Controller
     {
         $products = session('cart');
         $total = 0;
+
         if($products){
             foreach ($products as $product) {
-                error_log($product);
                 $total += $product->price * $product->quantity;
             }
         }
@@ -55,25 +55,27 @@ class CheckoutController extends Controller
     public function add(Request $request)
     {
 
-        $product = Products::find($request->id);
+        $product = json_decode(Products::find($request->id)->toJson());
         if(!$product) {
             return redirect()->back()->with('error', 'Product not found');
         }
-        if(!session()->has('cart')) {
-            session()->put('cart', []);
-        }
-        if(session() && session()->has('cart')) {
-            $cart = session()->get('cart');
-            if(array_key_exists($product->id, $cart)) {
-                $cart[$product->id]->quantity = $cart[$product->id]->quantity  + 1;
-                session()->push('cart', $cart);
-            } else {
-                $product->quantity = 1;
-                session()->push('cart', $product);
-            }
+
+        $product->quantity = 1;
+        $cart = session()->get('cart');
+        if(\Illuminate\Support\Arr::has($cart, $product->id)) {
+            $cart[$product->id]->quantity++;
+            session()->put('cart', $cart);
+            return redirect()->back()->with('success', 'Product added to cart successfully!');
+        } else {
+            $cart[$product->id] = $product;
+            session()->put('cart', $cart);
+            return redirect()->back()->with('success', 'Product added to cart successfully!');
         }
 
-        return redirect()->route('checkout.index');
+
+
+
+        //return redirect()->route('checkout.index');
     }
 
     public function pay(Request $request)
@@ -109,6 +111,8 @@ class CheckoutController extends Controller
             }else{
                 return redirect()->back()->with('error', 'Payment method not found');
             }
+        }else{
+            return redirect()->back()->with('error', 'Payment method not found');
         }
     }
 }

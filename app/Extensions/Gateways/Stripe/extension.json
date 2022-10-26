@@ -39,6 +39,24 @@
             "friendlyName": "Stripe test publishable key",
             "type": "text",
             "description": "Stripe test publishable key"
+        },
+        {
+            "name": "pay_options",
+            "friendlyName": "Pay options",
+            "type": "dropdown",
+            "options":[
+                "ideal",
+                "sofort",
+                "bancontact",
+                "giropay",
+                "sepa_debit",
+                "eps",
+                "p24",
+                "alipay",
+                "wechat",
+                "card"
+            ],
+            "description": "Pay options"
         }
     ]
 }

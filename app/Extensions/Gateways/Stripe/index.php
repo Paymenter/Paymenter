@@ -26,7 +26,7 @@ function create($products, $order)
                 ],
                 'unit_amount' => $product->price * 100,
             ],
-            'quantity' => 1,
+            'quantity' => $product->quantity,
         ];
     }
     // Create session

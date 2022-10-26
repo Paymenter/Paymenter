@@ -12,7 +12,7 @@
                     </div>
                     <x-success class="mb-4" />
                     <div class="mt-6 text-gray-500 dark:text-darkmodetext dark:bg-darkmode2">
-                        <form method="POST" action="{{ route('admin.extensions.update', $extension->id) }}">
+                        <form method="POST" action="{{ route('admin.extensions.update', [$extension->type, $extension->name ]) }}">
                             @csrf
                             <!-- disable or enable extension -->
                             <div class="mt-4">
@@ -34,6 +34,14 @@
                                         <input type="text" name="{{ $setting->name }}" value="{{ App\Helpers\ExtensionHelper::getConfig($extension->name, $setting->name) }}" class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm dark:bg-darkmode rounded-md" />
                                     @elseif($setting->type == 'boolean')
                                         <input type="checkbox" name="{{ $setting->name }}" value="1" @if( App\Helpers\ExtensionHelper::getConfig($extension->name, $setting->name) == 1) checked @endif class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm dark:bg-darkmode rounded-md" />
+                                    @elseif($setting->type == 'dropdown')
+                                        <select name="{{ $setting->name }}[]" multiple class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm dark:bg-darkmode rounded-md">
+                                            @foreach($setting->options as $option)
+                                                <option value="{{ $option }}" @if( in_array($option, array(App\Helpers\ExtensionHelper::getConfig($extension->name, $setting->name))) ) selected @endif>{{ $option }}</option>
+                                            @endforeach
+                                        </select>
+                                                                                    @dump(App\Helpers\ExtensionHelper::getConfig($extension->name, $setting->name))
+
                                     @endif
                                 </div>
                             @endforeach

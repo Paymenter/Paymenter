@@ -22,12 +22,14 @@ class ExtensionsController extends Controller
             $db = Extensions::where('name', $name)->first();
             $extension->enabled = $db->enabled;
             $extension->id = $db->id;
+            $extension->type = 'server';
             return view('admin.extensions.edit', compact('extension'));
         }elseif($sort == 'gateway'){
             $extension = json_decode(file_get_contents(base_path('app/Extensions/Gateways/' . $name . '/extension.json')));
             $db = Extensions::where('name', $name)->first();
             $extension->enabled = $db->enabled;
             $extension->id = $db->id;
+            $extension->type = 'gateway';
             return view('admin.extensions.edit', compact('extension'));
         }
     }

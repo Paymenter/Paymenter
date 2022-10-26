@@ -11,7 +11,7 @@ class user extends Command
      *
      * @var string
      */
-    protected $signature = 'user:create {--1=}';
+    protected $signature = 'p:user:create {--1=}';
 
     /**
      * The console command description.
@@ -36,7 +36,7 @@ class user extends Command
 
         $admin = $this->choice('User is an administrator?', ['no', 'yes'], 'no');
 
-        if ($admin == 'yes') {
+        if ($admin == 'yes' || $admin == 'y' || $admin == '1') {
             $admin = 1;
         } else {
             $admin = 0;

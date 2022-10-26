@@ -4,7 +4,8 @@ namespace App\Console;
 
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
-
+use Illuminate\Support\Facades\DB;
+use App\Models\Orders;
 class Kernel extends ConsoleKernel
 {
     /**
@@ -16,6 +17,15 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         // $schedule->command('inspire')->hourly();
+        $schedule->call(function () {
+            $orders = Orders::where('expiry_date', '<', date('Y-m-d'))->get();
+            foreach ($orders as $order) {
+                $order->status = 'expired';
+                $order->save();
+            }
+
+        })->daily()->at('00:00')->name('expire_orders');
+
     }
 
     /**

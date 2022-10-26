@@ -31,7 +31,7 @@ Route::group(['prefix'=> 'products'], function(){
 
 Route::group(['prefix'=>'checkout'], function(){
     Route::get('/', [App\Http\Controllers\CheckoutController::class, 'index'])->name('checkout.index');
-    Route::post('/', [App\Http\Controllers\CheckoutController::class, 'pay'])->name('checkout.pay');
+    Route::post('/', [App\Http\Controllers\CheckoutController::class, 'pay'])->name('checkout.pay')->middleware('auth');
     Route::get('/add', [App\Http\Controllers\CheckoutController::class, 'add'])->name('checkout.add');
     Route::get('/success', [App\Http\Controllers\CheckoutController::class, 'success'])->name('checkout.success');
     Route::get('/cancel', [App\Http\Controllers\CheckoutController::class, 'cancel'])->name('checkout.cancel');
