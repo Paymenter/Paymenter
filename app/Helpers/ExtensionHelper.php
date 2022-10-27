@@ -3,6 +3,7 @@ namespace App\Helpers;
 use App\Models\Orders;
 use App\Models\Products;
 use App\Models\User;
+use App\Models\Invoices;
 use App\Models\Extensions;
 use Illuminate\Http\Request;
 
@@ -14,8 +15,11 @@ class ExtensionHelper
      */
     static function paymentDone($id)
     {
-        error_log("Payment done for order $id");
-        $order = Orders::findOrFail($id);
+        $invoice = Invoices::findOrFail($id);
+        $invoice->status = 'paid';
+        $invoice->paid_at = now();
+        $invoice->save();
+        $order = Orders::findOrFail($invoice->order_id);
         $order->status = 'paid';
         $order->save();
     }

@@ -5,6 +5,7 @@ use App\Helpers\ExtensionHelper;
 use App\Models\Orders;
 use App\Models\Products;
 use App\Models\User;
+use App\Models\Invoices;
 use Illuminate\Contracts\Session\Session;
 use Illuminate\Http\Request;
 
@@ -92,7 +93,10 @@ class CheckoutController extends Controller
         }
         $productsids = [];
         foreach ($products as $product) {
-            $productsids[] = $product->id;
+            $productJson = [
+                'quantity' => $product->quantity,
+            ];
+            $productsids[$product->id] = $productJson;
         }
         $user = User::find(auth()->user()->id);
         $order = new Orders();
@@ -103,16 +107,35 @@ class CheckoutController extends Controller
         $order->status = 'pending';
         $order->save();
 
-        if($request->get('payment_method')){
-            $payment_method = $request->get('payment_method');
-            $payment_method = ExtensionHelper::getPaymentMethod($payment_method, $total, $products, $order->id);
-            if($payment_method){
-                return redirect($payment_method);
-            }else{
-                return redirect()->back()->with('error', 'Payment method not found');
-            }
-        }else{
-            return redirect()->back()->with('error', 'Payment method not found');
+        $invoice = new Invoices();
+        $invoice->user_id = $user->id;
+        $invoice->order_id = $order->id;
+        $invoice->status = 'pending';
+        $invoice->save();
+
+        return redirect()->route('invoice.show', ['id' => $invoice->id]);
+    }
+
+    public function remove(Request $request, $id)
+    {
+        $cart = session()->get('cart');
+        if(isset($cart[$id])) {
+            unset($cart[$id]);
+            session()->put('cart', $cart);
         }
+        return redirect()->back()->with('success', 'Product removed successfully');
+    }
+
+    /*
+    * Update product quantity in cart
+    */
+    public function update(Request $request, $id)
+    {
+        $cart = session()->get('cart');
+        if(isset($cart[$id])) {
+            $cart[$id]->quantity = $request->quantity;
+            session()->put('cart', $cart);
+        }
+        return redirect()->back()->with('success', 'Product updated successfully');
     }
 }

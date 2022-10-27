@@ -4,20 +4,20 @@
             class="flex dark:bg-darkmode h-16 dark:text-darkmodetext dark:hover:text text-gray-500 hover:text-gray-700 text-sm font-medium leading-5 items-center">
             <div class="flex">
                 <div class="flex items-center flex-shrink-0">
-                    @if(Auth::user())
-                    <a href="{{ route('index')}}">
-                        <x-application-logo class="block w-auto h-10 text-gray-600 fill-current" />
-                    </a>
-                    <a href="{{ route('index')}}" class="p-2 text-xl font-bold">
-                        {{config('app.name', 'Paymenter')}}
-                    </a>
+                    @if (Auth::user())
+                        <a href="{{ route('index') }}">
+                            <x-application-logo class="block w-auto h-10 text-gray-600 fill-current" />
+                        </a>
+                        <a href="{{ route('index') }}" class="p-2 text-xl font-bold">
+                            {{ config('app.name', 'Paymenter') }}
+                        </a>
                     @else
-                    <a href="{{ route('index')}}">
-                        <x-application-logo class="block w-auto h-10 text-gray-600 fill-current" />
-                    </a>
-                    <a href="{{ route('index')}}" class="p-2 text-xl font-bold">
-                        {{config('app.name', 'Paymenter')}}
-                    </a>
+                        <a href="{{ route('index') }}">
+                            <x-application-logo class="block w-auto h-10 text-gray-600 fill-current" />
+                        </a>
+                        <a href="{{ route('index') }}" class="p-2 text-xl font-bold">
+                            {{ config('app.name', 'Paymenter') }}
+                        </a>
                     @endif
 
                 </div>
@@ -51,7 +51,7 @@
                     <button type="button"
                         class="dark:text-darkmodetext dark:bg-darkmode dark:hover:bg-darkbutton inline-flex w-full justify-center bg-white pl-4 py-2 text-base font-medium text-gray-700 @if (request()->routeIs('admin.orders*')) bg-gray-200 @endif"
                         id="menu-button" aria-expanded="true" aria-haspopup="true" onclick="openMenu('orders')">
-                        <i class="ri-shopping-cart-2-line pr-1"
+                        <i class="ri-shopping-bag-2-line pr-1"
                             @if (request()->routeIs('products*')) style="color: #5270FD" @endif></i> Products
                         <svg class="-mr-1 ml-1 h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
                             fill="currentColor" aria-hidden="true">
@@ -67,30 +67,27 @@
                             <a href="{{ route('products.index') }}"
                                 class="dark:text-darkmodetext dark:hover:bg-darkbutton text-gray-700 block px-4 py-2 text-base hover:bg-gray-100 hover:text-gray-900"
                                 role="menuitem" tabindex="-1" id="menu-item-0">All Products</a>
-                            @foreach(App\Models\Categories::all() as $category) 
-                            @if($category->products->count() > 0)
-
-                            <a href="{{ route('products.index', ['category' => $category->id]) }}"
-                                class="dark:text-darkmodetext dark:hover:bg-darkbutton text-gray-700 block px-4 py-2 text-base hover:bg-gray-100 hover:text-gray-900"
-                                role="menuitem" tabindex="-1" id="menu-item-0">{{ $category->name }}</a>
-                            @endif
+                            @foreach (App\Models\Categories::all() as $category)
+                                @if ($category->products->count() > 0)
+                                    <a href="{{ route('products.index', ['category' => $category->id]) }}"
+                                        class="dark:text-darkmodetext dark:hover:bg-darkbutton text-gray-700 block px-4 py-2 text-base hover:bg-gray-100 hover:text-gray-900"
+                                        role="menuitem" tabindex="-1" id="menu-item-0">{{ $category->name }}</a>
+                                @endif
                             @endforeach
                         </div>
                     </div>
                 </div>
                 <!-- Showing the Current Users Credit in USD (I dont currently know how to switch it based on location and its like 1:37 am) -->
                 @if (Auth::user() == !null)
-                <div class="dark:bg-darkmode2 rounded-lg hidden sm:flex sm:items-center w-full sm:w-auto absolute right-40">
-                    <a class="dark:bg-darkmode2 m-2" href="">
-                    <?php    
-                        setlocale(LC_MONETARY,"en_EN");
-                        echo "$ ",number_format(Auth::user()->credit, 2);
-                    ?>
-                    </a>
-                </div>
+                    <div
+                        class="dark:bg-darkmode2 rounded-lg hidden sm:flex sm:items-center w-full sm:w-auto absolute right-40">
+                        <a class="dark:bg-darkmode2 m-2" href="">
+                            {{ number_format(Auth::user()->credit, 2) }}
+                        </a>
+                    </div>
                 @endif
             </div>
-            
+
             <div class="dark:bg-darkmode hidden sm:flex sm:items-center w-full sm:w-auto absolute right-0"
                 id="menu">
                 @auth
@@ -108,32 +105,34 @@
                         </button>
                         <div class="dark:bg-darkmode origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 hidden"
                             id="user-menu">
-                            <div class="dark:bg-darkmode py-1 rounded-md bg-white shadow-xs" role="menu" aria-orientation="vertical"
-                                aria-labelledby="user-menu">
-                                <a href="" class="dark:hover:bg-darkbutton dark:text-darkmodetext block px-4 py-2 text-base text-gray-700 hover:bg-gray-100"
+                            <div class="dark:bg-darkmode py-1 rounded-md bg-white shadow-xs" role="menu"
+                                aria-orientation="vertical" aria-labelledby="user-menu">
+                                <a href=""
+                                    class="dark:hover:bg-darkbutton dark:text-darkmodetext block px-4 py-2 text-base text-gray-700 hover:bg-gray-100"
                                     role="menuitem">Your Profile</a>
                                 @if (Auth::user()->is_admin)
-                                <a href="{{ route('admin.settings') }}"
-                                    class="dark:hover:bg-darkbutton dark:text-darkmodetext block px-4 py-2 text-base text-gray-700 hover:bg-gray-100"
-                                    role="menuitem">Settings</a>
-                                <div>
-                                    <a href="{{ route('admin') }}"
-                                    class="dark:hover:bg-darkbutton dark:text-darkmodetext block px-4 py-2 text-base text-gray-700 hover:bg-gray-100"
-                                    role="menuitem">Admin Panel</a>
-                                </div>
+                                    <a href="{{ route('admin.settings') }}"
+                                        class="dark:hover:bg-darkbutton dark:text-darkmodetext block px-4 py-2 text-base text-gray-700 hover:bg-gray-100"
+                                        role="menuitem">Settings</a>
+                                    <div>
+                                        <a href="{{ route('admin') }}"
+                                            class="dark:hover:bg-darkbutton dark:text-darkmodetext block px-4 py-2 text-base text-gray-700 hover:bg-gray-100"
+                                            role="menuitem">Admin Panel</a>
+                                    </div>
                                 @endif
                                 @if (!Auth::user()->is_admin)
-                                <div>
-                                    <a href="{{ route('home') }}"
-                                    class="dark:hover:bg-darkbutton dark:text-darkmodetext block px-4 py-2 text-base text-gray-700 hover:bg-gray-100"
-                                    role="menuitem">Dashboard</a>
-                                </div>
+                                    <div>
+                                        <a href="{{ route('home') }}"
+                                            class="dark:hover:bg-darkbutton dark:text-darkmodetext block px-4 py-2 text-base text-gray-700 hover:bg-gray-100"
+                                            role="menuitem">Dashboard</a>
+                                    </div>
                                 @endif
                                 <a href="{{ route('logout') }}"
-                                onclick="event.preventDefault();
+                                    onclick="event.preventDefault();
                                             document.getElementById('logout-form').submit();"
-                                class="dark:hover:bg-darkbutton dark:text-darkmodetext block px-4 py-2 text-base text-gray-700 hover:bg-gray-100" role="menuitem">Sign
-                                out</a>
+                                    class="dark:hover:bg-darkbutton dark:text-darkmodetext block px-4 py-2 text-base text-gray-700 hover:bg-gray-100"
+                                    role="menuitem">Sign
+                                    out</a>
                             </div>
                         </div>
                     </div>
@@ -146,6 +145,14 @@
                         class="dark:text-darkmodetext dark:bg-darkmode text-sm text-gray-700 transition duration-400 mr-4 p-3 rounded hover:bg-button dark:hover:bg-darkbutton hover:transition duration-400">Log
                         in</a>
                 @endauth
+                <a href="{{ route('checkout.index') }}"
+                    class="dark:text-darkmodetext dark:bg-darkmode text-sm text-gray-700 transition duration-400 mr-4 p-3 rounded hover:bg-button dark:hover:bg-darkbutton hover:transition duration-400 flex text-center">
+                    <i class="ri-shopping-basket-2-line p-1 text-xl">
+                    </i>
+                    @if(session()->has('cart'))
+                        <span  class="inline-flex items-center px-2.5 rounded-full text-xs font-medium bg-red-100 text-red-800">{{ count(session()->get('cart')) }}</span>
+                    @endif
+                </a>
                 <div class="flex col-span-1 justify-end pl-1">
                     <button id="theme-toggle" type="button"
                         class="mr-4 text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 rounded-lg text-sm p-2.5">

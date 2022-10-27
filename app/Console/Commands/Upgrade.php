@@ -4,7 +4,7 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 use Symfony\Component\Process\Process;
-
+use App\Console\Kernel;
 class Upgrade extends Command
 {
     protected const DEFAULT_URL = 'https://github.com/paymenter/paymenter/releases/%s/paymenter.tar.gz';
@@ -100,6 +100,43 @@ class Upgrade extends Command
         $process->run(function ($type, $buffer) {
             $this->{$type === Process::ERR ? 'error' : 'line'}($buffer);
         });
+
+        // Run the composer install command.
+        $this->line('$upgrader> composer install --no-dev --optimize-autoloader');
+        $process = new Process(['composer', 'install', '--no-dev', '--optimize-autoloader']);
+        $process->run(function ($type, $buffer) {
+            $this->{$type === Process::ERR ? 'error' : 'line'}($buffer);
+        });
+
+        $app = require __DIR__ . '/../../../bootstrap/app.php';
+        $kernel = $app->make(Kernel::class);
+        $kernel->bootstrap();
+        $this->setLaravel($app);
+
+
+        // Run the database migrations.
+        $this->line('$upgrader> php artisan migrate --force');
+        $this->call('migrate', ['--force' => true]);
+
+        // Clear config and view caches.
+        $this->line('$upgrader> php artisan config:clear');
+        $this->call('config:clear');
+
+        $this->line('$upgrader> php artisan view:clear');
+        $this->call('view:clear');
+
+        // Setup correct permissions on the new files.
+        $this->line('$upgrader> chown -R ' . $user . ':' . $group . ' .');
+        $process = new Process(['chown', '-R', $user . ':' . $group, '.']);
+        $process->run(function ($type, $buffer) {
+            $this->{$type === Process::ERR ? 'error' : 'line'}($buffer);
+        });
+
+        // Set application back up.
+        $this->line('$upgrader> php artisan up');
+        $this->call('up');
+
+        $this->info('Upgrade process completed successfully!');
         return Command::SUCCESS;
     }
 
