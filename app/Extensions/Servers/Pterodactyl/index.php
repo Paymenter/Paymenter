@@ -1,63 +1,61 @@
 <?php
 
 use Illuminate\Support\Facades\Http;
-// Name should be the same as the folder name
-$config = 
-$name = 'Pterodactyl';
-$author = 'Paymenter';
-$version = '0.0.1';
-$description = 'Pterodactyl Server Management';
-$website = 'https://pterodactyl.io/';
+use App\Helpers\ExtensionHelper;
 
-
-function testConnection()
+function config($key)
 {
-    $response = Http::withToken(config('pterodactyl.apiKey'))->get(config('pterodactyl.host') . '/api/application/servers');
-
-    if ($response->successful()) {
-        return true;
+    $config = ExtensionHelper::getConfig('Pterodactyl', $key);
+    if ($config) {
+        return $config->value;
     }
-
-    return false;
+    return null;
 }
-function create($parmas)
+
+function postRequest($url, $data)
 {
-    Http::post(config('pterodactyl.host') . '/api/application/servers', [
-        'name' => $params['domain'],
-        'user' => $params['username'],
-        'external_id' => $params['serviceid'],
-        'description' => $params['description'],
-        'nest' => $params['configoption1'],
-        'egg' => $params['configoption2'],
-        'docker_image' => $params['configoption3'],
-        'startup' => $params['configoption4'],
+    $response = Http::withHeaders([
+        'Authorization' => 'Bearer ' . config('api_key'),
+        'Accept' => 'Application/vnd.pterodactyl.v1+json',
+        'Content-Type' => 'application/json'
+    ])->post($url, $data);
+    return $response;
+}
+
+function createServer($parmas)
+{   
+
+    $url = config('url') . '/api/application/servers';
+    $json = [
+        'name' => $parmas['name'],
+        'user' => $parmas['user'],
+        'external_id' => $parmas['external_id'],
+        'description' => $parmas['description'],
+        'nest' => $parmas['nest'],
+        'egg' => $parmas['egg'],
+        'docker_image' => $parmas['docker_image'],
+        'startup' => $parmas['startup'],
         'limits' => [
-            'memory' => $params['configoption5'],
-            'swap' => $params['configoption6'],
-            'disk' => $params['configoption7'],
-            'io' => $params['configoption8'],
-            'cpu' => $params['configoption9'],
+            'memory' => $parmas['memory'],
+            'swap' => $parmas['swap'],
+            'disk' => $parmas['disk'],
+            'io' => $parmas['io'],
+            'cpu' => $parmas['cpu']
         ],
         'feature_limits' => [
-            'databases' => $params['configoption10'],
-            'allocations' => $params['configoption11'],
+            'databases' => $parmas['databases'],
+            'allocations' => $parmas['allocations']
         ],
-        'environment' => [
-            'SERVER_MEMORY' => $params['configoption5'],
-            'SERVER_PORT' => $params['configoption12'],
-            'SERVER_IP' => $params['configoption13'],
-        ],
+        'environment' => $parmas['environment'],
         'deploy' => [
-            'locations' => [
-                $params['configoption14'],
-            ],
-            'dedicated_ip' => true,
-            'port_range' => [
-                $params['configoption12'],
-            ],
+            'locations' => $parmas['locations'],
+            'dedicated_ip' => $parmas['dedicated_ip'],
+            'port_range' => $parmas['port_range']
         ],
-        'start_on_completion' => true,
-        'skip_scripts' => $params['configoption15'],
-        'backups' => $params['configoption16'],
-    ]);
+        'start_on_completion' => $parmas['start_on_completion'],
+        'skip_scripts' => $parmas['skip_scripts']
+    ];
+
+    $response = postRequest($url, $parmas);
+    return $response;
 }

@@ -4,6 +4,7 @@
     </x-slot>
 
     <div class="py-12">
+        <x-success class="mt-4" />
         <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
             <div class="grid md:grid-cols-3 p-4 dark:bg-darkmode2 overflow-hidden bg-white rounded-lg">
 

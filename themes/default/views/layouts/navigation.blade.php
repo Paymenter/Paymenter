@@ -145,14 +145,16 @@
                         class="dark:text-darkmodetext dark:bg-darkmode text-sm text-gray-700 transition duration-400 mr-4 p-3 rounded hover:bg-button dark:hover:bg-darkbutton hover:transition duration-400">Log
                         in</a>
                 @endauth
-                <a href="{{ route('checkout.index') }}"
-                    class="dark:text-darkmodetext dark:bg-darkmode text-sm text-gray-700 transition duration-400 mr-4 p-3 rounded hover:bg-button dark:hover:bg-darkbutton hover:transition duration-400 flex text-center">
-                    <i class="ri-shopping-basket-2-line p-1 text-xl">
-                    </i>
-                    @if(session()->has('cart'))
-                        <span  class="inline-flex items-center px-2.5 rounded-full text-xs font-medium bg-red-100 text-red-800">{{ count(session()->get('cart')) }}</span>
-                    @endif
-                </a>
+                @if (count(session()->get('cart', [])) > 0)
+                    <a href="{{ route('checkout.index') }}"
+                        class="dark:text-darkmodetext dark:bg-darkmode text-sm text-gray-700 transition duration-400 mr-4 p-3 rounded hover:bg-button dark:hover:bg-darkbutton hover:transition duration-400 flex text-center">
+                        <i class="ri-shopping-basket-2-line p-1 text-xl">
+                        </i>
+                        <span
+                            class="inline-flex items-center px-2.5 rounded-full text-xs font-medium bg-red-100 text-red-800">{{ count(session()->get('cart')) }}</span>
+
+                    </a>
+                @endif
                 <div class="flex col-span-1 justify-end pl-1">
                     <button id="theme-toggle" type="button"
                         class="mr-4 text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 rounded-lg text-sm p-2.5">

@@ -28,6 +28,7 @@ class InvoiceController extends Controller
         $products = [];
         foreach($order->products as $product) {
             $test = Products::find($product)->first();
+            error_log($test);
             $test->quantity = $product['quantity'];
             $products[] = $test;
         }

@@ -27,4 +27,9 @@ class Products extends Model
     {
         return $this->belongsTo(Extensions::class, 'server_id');
     }
+
+    public function settings()
+    {
+        return $this->hasMany(ProductSettings::class);
+    }
 }

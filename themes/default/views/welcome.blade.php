@@ -3,6 +3,8 @@
         {{ __('Home') }}
     </x-slot>
 <!-- dispaly company name in full width -->
+        <x-success class="mt-4" />
+
     <div class="max-w-7xl mx-auto py-10 sm:px-6 lg:px-8">
         <div class="dark:bg-darkmode2 bg-white overflow-hidden shadow-xl rounded-lg">
             <div class="dark:bg-darkmode2 p-6 sm:px-20 bg-white">

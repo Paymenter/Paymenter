@@ -22,6 +22,8 @@ class ExtensionHelper
         $order = Orders::findOrFail($invoice->order_id);
         $order->status = 'paid';
         $order->save();
+
+        createServer($order->id);
     }
 
     function paymentFailed($id)
@@ -124,5 +126,27 @@ class ExtensionHelper
         include_once(app_path() . '/Extensions/Gateways/' . $extension->name . '/index.php');
         $pay = pay($total, $products, $orderId);
         return $pay->url;
+    }
+
+    private function createServer(Orders $order)
+    {
+        foreach($order->products as $product){
+            $product = Products::findOrFail($product['id']);
+            $extension = Extensions::where('id', $product->extension)->first();
+            if (!$extension) {
+                return false;
+            }
+            // Get the payment method
+            include_once(app_path() . '/Extensions/Servers/' . $extension->name . '/index.php');
+            $settings = $product->settings()->get();
+            $user = User::findOrFail($order->client);
+            $server = createServer($user, $settings);
+            if($server){
+                $order->server = $server->id;
+                $order->save();
+            }else {
+                return false;
+            }
+        }
     }
 }
