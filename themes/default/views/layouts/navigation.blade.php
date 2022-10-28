@@ -107,7 +107,7 @@
                             id="user-menu">
                             <div class="dark:bg-darkmode py-1 rounded-md bg-white shadow-xs" role="menu"
                                 aria-orientation="vertical" aria-labelledby="user-menu">
-                                <a href=""
+                                <a href="{{ route('profile') }}"
                                     class="dark:hover:bg-darkbutton dark:text-darkmodetext block px-4 py-2 text-base text-gray-700 hover:bg-gray-100"
                                     role="menuitem">Your Profile</a>
                                 @if (Auth::user()->is_admin)

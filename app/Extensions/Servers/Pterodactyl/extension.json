@@ -24,76 +24,60 @@
             "name": "location",
             "friendlyName": "Pterodactyl Location",
             "type": "text"
-         },
+        },
         {
             "name": "server",
             "friendlyName": "Pterodactyl Server",
             "type": "text"
-         },
+        },
         {
             "name": "egg",
-            "friendlyName": "Pterodactyl Egg",
+            "friendlyName": "Pterodactyl Egg ID",
             "type": "text"
-         },
+        },
+        {
+            "name": "nest",
+            "friendlyName": "Pterodactyl Nest ID",
+            "type": "text"
+        },
         {
             "name": "memory",
             "friendlyName": "Pterodactyl Memory",
             "type": "text"
-         },
+        },
         {
             "name": "swap",
             "friendlyName": "Pterodactyl Swap",
             "type": "text"
-         },
+        },
         {
             "name": "disk",
             "friendlyName": "Pterodactyl Disk",
             "type": "text"
-         },
+        },
         {
             "name": "io",
             "friendlyName": "Pterodactyl IO",
             "type": "text"
-         },
+        },
         {
             "name": "cpu",
             "friendlyName": "CPU limit",
             "type": "text"
-         },
-        {
-            "name": "database",
-            "friendlyName": "Pterodactyl Database",
-            "type": "text"
-         },
-        {
-            "name": "allocation",
-            "friendlyName": "Pterodactyl Allocation",
-            "type": "text"
-         },
-        {
-            "name": "port",
-            "friendlyName": "Pterodactyl Port",
-            "type": "text"
-         },
-        {
-            "name": "startup",
-            "friendlyName": "Pterodactyl Startup",
-            "type": "text",
-            "Required": false
         },
         {
-            "name": "image",
-            "friendlyName": "Image ID",
+            "name": "databases",
+            "friendlyName": "Pterodactyl Database",
             "type": "text"
-         },
-        {
-            "name": "skip_scripts",
-            "friendlyName": "Pterodactyl Skip Scripts",
-            "type": "boolean"
         },
         {
             "name": "backups",
             "friendlyName": "Pterodactyl Backups",
+            "type": "text"
+        },
+        {
+            "name": "skip_scripts",
+            "friendlyName": "Pterodactyl Skip Scripts",
             "type": "boolean"
         }
     ]

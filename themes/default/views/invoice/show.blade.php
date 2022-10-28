@@ -47,7 +47,6 @@
                                     <div class="text-sm font-light text-slate-500">
                                         <p class="text-sm font-normal text-slate-700">Due</p>
                                         <p>{{ $order->expiry_date }}</p>
-
                                         <p class="mt-2 text-xl font-normal text-slate-700">
                                             Pay
                                         </p>
@@ -114,7 +113,8 @@
                                                     {{ $product->name }}
                                                 </div>
                                                 <div class="mt-0.5 text-slate-500 sm:hidden">
-                                                    1 unit at {{ $currency_sign }}{{ number_format((float) $product->price, 2, '.', '') }}
+                                                    1 unit at
+                                                    {{ $currency_sign }}{{ number_format((float) $product->price, 2, '.', '') }}
                                                 </div>
                                             </td>
                                             <td
@@ -146,8 +146,8 @@
                                         <td class="pt-6 pl-3 pr-4 text-sm text-right text-slate-500 sm:pr-6 md:pr-0">
                                             @php $subtotal = 0; @endphp
                                             @foreach ($products as $product)
-                                                @php $subtotal += $product->price * $product->quantity; @endphp
-                                            @endforeach
+@php $subtotal += $product->price * $product->quantity; @endphp
+@endforeach
                                             {{ $currency_sign }}{{ number_format((float) $subtotal, 2, '.', '') }}
                                         </td>
                                     </tr>

@@ -2,20 +2,11 @@
 
 use Stripe\StripeClient;
 use App\Helpers\ExtensionHelper;
-use App\Models\Products;
 
-$name = 'Stripe';
-$description = 'Stripe Payment Gateway';
-$version = '1.0';
-$author = 'CorwinDev';
-$website = 'http://stripe.com';
-$database = 'gateway_stripe';
-
-function getUrl($products, $order)
+function getUrl($products, $orderId)
 {
     $client = StripeClient();
     // Create array with all the products
-    $products = ExtensionHelper::getProducts();
     $items = [];
     foreach ($products as $product) {
         $items[] = [
@@ -34,12 +25,12 @@ function getUrl($products, $order)
         'line_items' => $items,
         'mode' => 'payment',
         "payment_method_types" => ["card", "ideal"],
-        'success_url' => route('checkout.success'),
-        'cancel_url' => route('checkout.cancel'),
+        'success_url' => route('invoice.show', $orderId),
+        'cancel_url' => route('invoice.show', $orderId),
         'customer_email' => auth()->user()->email,
         'metadata' => [
             'user_id' => auth()->user()->id,
-            'order_id' => $order,
+            'order_id' => $orderId,
         ],
     ]);
 
@@ -70,7 +61,6 @@ function webhook($request)
     }
     if ($event->type == 'checkout.session.completed') {
         $order = $event->data->object;
-        error_log($order);
         $order_id = $order->metadata->order_id;
         ExtensionHelper::paymentDone($order_id);
     }

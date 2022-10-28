@@ -20,11 +20,11 @@ class InvoiceController extends Controller
 
     public function show(Request $request, Invoices $id)
     {
+        $order = Orders::findOrFail($id->order_id);
         $invoice = $id;
         if($invoice->user_id != auth()->user()->id) {
             return redirect()->route('invoice.index');
         }
-        $order = Orders::find($invoice->order_id);
         $products = [];
         foreach($order->products as $product) {
             $test = Products::find($product)->first();
@@ -42,11 +42,11 @@ class InvoiceController extends Controller
         if($invoice->user_id != auth()->user()->id) {
             return redirect()->route('invoice.index');
         }
-        $order = Orders::find($invoice->order_id);
-        $total =0;
+        $order = Orders::findOrFail($invoice->order_id);
+        $total = 0;
         $products = [];
         foreach($order->products as $product) {
-            $test = Products::find($product)->first();
+            $test = json_decode(Products::find($product['id'])->first());
             $test->quantity = $product['quantity'];
             $products[] = $test;
             $total += $test->price * $test->quantity;

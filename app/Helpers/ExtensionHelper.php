@@ -13,7 +13,7 @@ class ExtensionHelper
      * Called when a new order is accepted
      * @return void
      */
-    static function paymentDone($id)
+    public static function paymentDone($id)
     {
         $invoice = Invoices::findOrFail($id);
         $invoice->status = 'paid';
@@ -22,8 +22,7 @@ class ExtensionHelper
         $order = Orders::findOrFail($invoice->order_id);
         $order->status = 'paid';
         $order->save();
-
-        createServer($order->id);
+        ExtensionHelper::createServer($order);
     }
 
     function paymentFailed($id)
@@ -128,25 +127,67 @@ class ExtensionHelper
         return $pay->url;
     }
 
-    private function createServer(Orders $order)
+    public static function createServer(Orders $order)
     {
+        error_log('Creating server');
         foreach($order->products as $product){
             $product = Products::findOrFail($product['id']);
-            $extension = Extensions::where('id', $product->extension)->first();
+            $extension = Extensions::where('id', $product->server_id)->first();
             if (!$extension) {
                 return false;
             }
-            // Get the payment method
             include_once(app_path() . '/Extensions/Servers/' . $extension->name . '/index.php');
             $settings = $product->settings()->get();
-            $user = User::findOrFail($order->client);
-            $server = createServer($user, $settings);
-            if($server){
-                $order->server = $server->id;
-                $order->save();
-            }else {
-                return false;
+            $config = [];
+            foreach($settings as $setting){
+                $config[$setting->name] = $setting->value;
             }
+            $user = User::findOrFail($order->client);
+            createServer($user, $config, $order);
+            return true;
         }
     }
+
+    public static function suspendServer(Orders $order)
+    {
+        foreach($order->products as $product){
+            $product = Products::findOrFail($product['id']);
+            $extension = Extensions::where('id', $product->server_id)->first();
+            if (!$extension) {
+                return false;
+            }
+            include_once(app_path() . '/Extensions/Servers/' . $extension->name . '/index.php');
+            suspendServer($order);
+            return true;
+        }
+    }
+
+    public static function unsuspendServer(Orders $order)
+    {
+        foreach($order->products as $product){
+            $product = Products::findOrFail($product['id']);
+            $extension = Extensions::where('id', $product->server_id)->first();
+            if (!$extension) {
+                return false;
+            }
+            include_once(app_path() . '/Extensions/Servers/' . $extension->name . '/index.php');
+            unsuspendServer($order);
+            return true;
+        }
+    }
+
+    public static function terminateServer(Orders $order)
+    {
+        foreach($order->products as $product){
+            $product = Products::findOrFail($product['id']);
+            $extension = Extensions::where('id', $product->server_id)->first();
+            if (!$extension) {
+                return false;
+            }
+            include_once(app_path() . '/Extensions/Servers/' . $extension->name . '/index.php');
+            terminateServer($order);
+            return true;
+        }
+    }
+
 }

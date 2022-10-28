@@ -98,7 +98,7 @@ class ProductsController extends Controller
             ProductSettings::updateOrCreate([
                 'product_id' => $product->id,
                 'name' => $config->name,
-                'extension' => $product->server()->get()->first()->name,
+                'extension' => $product->server()->get()->first()->id,
             ],
             [
                 'product_id' => $product->id,

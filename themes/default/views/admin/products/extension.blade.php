@@ -41,7 +41,6 @@
                                 @foreach ($extension->productConfig as $setting)
                                     <div class="mt-4">
                                         <label for="{{ $setting->name }}">{{ $setting->friendlyName  }}</label>
-                                        {{ App\Helpers\ExtensionHelper::getProductConfig($extension->name, $setting->name, $product->id) }}
                                         @if($setting->type == 'text')
                                             <input type="text" name="{{ $setting->name }}"
                                                 value="{{ App\Helpers\ExtensionHelper::getProductConfig($extension->name, $setting->name, $product->id) }}"
