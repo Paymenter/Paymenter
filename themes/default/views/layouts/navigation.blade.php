@@ -34,13 +34,13 @@
                         clip-rule="evenodd"></path>
                 </svg>
             </button>
-            <div class="dark:bg-darkmode hidden sm:flex sm:items-center sm:w-auto justify-center place-items-center text-center text-lg dark:text-darkmodetext dark:bg-darkmode dark:hover:bg-darkbutton"
+            <div class="dark:bg-darkmode hidden sm:flex sm:items-center sm:w-auto justify-center place-items-center text-center text-lg dark:text-darkmodetext dark:hover:bg-darkbutton"
                 id="menu">
                 <div class="dark:bg-darkmode relative inline-block text-left">
                     <!-- ticket -->
                     <div class="dark:bg-darkmode">
                         <a type="button" href="{{ route('tickets.index') }}"
-                            class="dark:text-darkmodetext dark:bg-darkmode dark:hover:bg-darkbutton inline-flex w-full justify-center bg-white pl-4 py-2 text-base font-medium text-gray-700 @if (request()->routeIs('tickets*')) bg-gray-200 @endif"
+                            class="dark:text-darkmodetext dark:bg-darkmode dark:hover:bg-darkbutton inline-flex w-full justify-center bg-white px-2 py-2 text-base font-medium rounded-md text-gray-700 @if (request()->routeIs('tickets*')) bg-gray-200 @endif"
                             id="menu-button" aria-expanded="true" aria-haspopup="true" onclick="openMenu('tickets')">
                             <i class="ri-question-answer-line pr-1"
                                 @if (request()->routeIs('tickets*')) style="color: #5270FD" @endif></i>Tickets
@@ -49,10 +49,10 @@
                 </div>
                 <div class="relative inline-block text-left">
                     <button type="button"
-                        class="dark:text-darkmodetext dark:bg-darkmode dark:hover:bg-darkbutton inline-flex w-full justify-center bg-white pl-4 py-2 text-base font-medium text-gray-700 @if (request()->routeIs('admin.orders*')) bg-gray-200 @endif"
+                        class="dark:text-darkmodetext dark:bg-darkmode dark:hover:bg-darkbutton inline-flex w-full justify-center bg-white px-2 py-2 text-base font-medium rounded-md text-gray-700 @if (request()->routeIs('products*')) bg-gray-200 @endif"
                         id="menu-button" aria-expanded="true" aria-haspopup="true" onclick="openMenu('orders')">
                         <i class="ri-shopping-bag-2-line pr-1"
-                            @if (request()->routeIs('products*')) style="color: #5270FD" @endif></i> Products
+                            @if (request()->routeIs('products')) style="color: #5270FD" @endif></i> Products
                         <svg class="-mr-1 ml-1 h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
                             fill="currentColor" aria-hidden="true">
                             <path fill-rule="evenodd"

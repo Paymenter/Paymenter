@@ -1,13 +1,14 @@
 <nav class="dark:bg-darkmode dark:text-darkmodetext bg-white">
     <div class="dark:bg-darkmode px-4 max-w-7xl sm:px-6 lg:px-8">
-        <div class="flex dark:text-darkmodetext h-16 text-gray-500 hover:text-gray-700 text-sm font-medium leading-5 items-center">
+        <div
+            class="flex dark:text-darkmodetext h-16 text-gray-500 hover:text-gray-700 text-sm font-medium leading-5 items-center">
             <div class="flex">
                 <div class="flex items-center flex-shrink-0">
                     <a href="{{ route('index') }}">
                         <x-application-logo class="block w-auto h-10 text-gray-600 fill-current" />
                     </a>
-                    <a href="{{ route('index')}}" class="p-2 text-xl font-bold">
-                        {{config('app.name', 'Paymenter')}}
+                    <a href="{{ route('index') }}" class="p-2 text-xl font-bold">
+                        {{ config('app.name', 'Paymenter') }}
                     </a>
                 </div>
             </div>
@@ -26,13 +27,13 @@
             <div class="hidden sm:flex sm:items-center sm:w-auto justify-center place-items-center text-center text-lg"
                 id="menu">
                 <a href="{{ route('admin') }}"
-                    class="dark:bg-darkmode dark:text-darkmodetext dark:hover:bg-darkmode2 p-2 text-gray-500 hover:text-gray-700 inline-flex justify-center @if (request()->routeIs('admin')) bg-gray-200 @endif">
+                    class="dark:bg-darkmode dark:text-darkmodetext dark:hover:bg-darkmode2 p-2 rounded-md text-gray-500 hover:text-gray-700 inline-flex justify-center @if (request()->routeIs('admin')) bg-gray-200 @endif">
                     <i class="ri-dashboard-line" @if (request()->routeIs('admin')) style="color: #5270FD" @endif></i>
                     {{ __('Dashboard') }}
                 </a>
                 <div class="relative inline-block text-left ">
                     <button type="button"
-                        class="dark:bg-darkmode dark:text-darkmodetext dark:hover:bg-darkmode2 inline-flex w-full justify-center bg-white pl-4 py-2 text-base font-medium text-gray-700  @if (request()->routeIs('admin.clients*')) bg-gray-200 @endif"
+                        class="dark:bg-darkmode dark:text-darkmodetext dark:hover:bg-darkmode2 inline-flex w-full justify-center bg-white px-2 py-2 text-base font-medium rounded-md text-gray-700  @if (request()->routeIs('admin.clients*')) bg-gray-200 @endif"
                         id="menu-button" aria-expanded="true" aria-haspopup="true" onclick="openMenu('clients')">
                         <i class="ri-group-line pr-1"
                             @if (request()->routeIs('admin.clients*')) style="color: #5270FD" @endif></i> Clients
@@ -58,7 +59,7 @@
                 </div>
                 <div class="relative inline-block text-left">
                     <button type="button"
-                        class="dark:bg-darkmode dark:text-darkmodetext dark:hover:bg-darkmode2 inline-flex w-full justify-center bg-white pl-4 py-2 text-base font-medium text-gray-700 @if (request()->routeIs('admin.orders*')) bg-gray-200 @endif"
+                        class="dark:bg-darkmode dark:text-darkmodetext dark:hover:bg-darkmode2 inline-flex w-full justify-center bg-white px-2 py-2 text-base font-medium rounded-md text-gray-700 @if (request()->routeIs('admin.orders*')) bg-gray-200 @endif"
                         id="menu-button" aria-expanded="true" aria-haspopup="true" onclick="openMenu('orders')">
                         <i class="ri-shopping-cart-2-line pr-1"
                             @if (request()->routeIs('admin.orders')) style="color: #5270FD" @endif></i> Orders
@@ -82,7 +83,7 @@
                 <!-- products -->
                 <div class="relative inline-block text-left">
                     <button type="button"
-                        class="dark:bg-darkmode dark:text-darkmodetext dark:hover:bg-darkmode2 inline-flex w-full justify-center bg-white pl-4 py-2 text-base font-medium text-gray-700 @if (request()->routeIs('admin.products*')) bg-gray-200 @endif"
+                        class="dark:bg-darkmode dark:text-darkmodetext dark:hover:bg-darkmode2 inline-flex w-full justify-center bg-white px-2 py-2 text-base font-medium rounded-md text-gray-700 @if (request()->routeIs('admin.products*')) bg-gray-200 @endif"
                         id="menu-button" aria-expanded="true" aria-haspopup="true" onclick="openMenu('products')">
                         <i class="ri-shopping-bag-2-line pr-1"
                             @if (request()->routeIs('admin.products*')) style="color: #5270FD" @endif></i> Products
@@ -106,14 +107,15 @@
                         </div>
                     </div>
                 </div>
-                <div class="relative inline-block text-left pl-4">
+                <div class="relative inline-block text-left">
                     <button type="button"
-                        class="dark:bg-darkmode dark:text-darkmodetext dark:hover:bg-darkmode2 inline-flex w-full justify-center bg-white py-2 text-base font-medium text-gray-700 @if (request()->routeIs('admin.tickets*')) bg-gray-200 @endif"
+                        class="dark:bg-darkmode dark:text-darkmodetext dark:hover:bg-darkmode2 inline-flex w-full justify-center bg-white px-2 py-2 text-base font-medium rounded-md text-gray-700 @if (request()->routeIs('admin.tickets*')) bg-gray-200 @endif"
                         id="menu-button" aria-expanded="true" aria-haspopup="true" onclick="openMenu('tickets')">
                         <i class="ri-question-answer-line pr-1"
                             @if (request()->routeIs('admin.tickets')) style="color: #5270FD" @endif></i> Support
                         @if (isset(App\Models\Tickets::where('status', 'open')->get()[0]))
-                            <span  class="inline-flex items-center px-2.5 ml-1 mt-0.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
+                            <span
+                                class="inline-flex items-center px-2.5 ml-1 mt-0.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
                                 {{ App\Models\Tickets::where('status', 'open')->get()->count() }}
                             </span>
                         @endif
@@ -144,9 +146,9 @@
                         </div>
                     </div>
                 </div>
-                <div class="relative inline-block text-left pl-4">
+                <div class="relative inline-block text-left">
                     <button type="button"
-                        class="dark:bg-darkmode dark:text-darkmodetext dark:hover:bg-darkmode2 inline-flex w-full justify-center bg-white py-2 text-base font-medium text-gray-700 @if (request()->routeIs('admin.settings') || request()->routeIs('admin.extensions*')) bg-gray-200 @endif"
+                        class="dark:bg-darkmode dark:text-darkmodetext dark:hover:bg-darkmode2 inline-flex w-full justify-center bg-white px-2 py-2 text-base font-medium rounded-md text-gray-700 @if (request()->routeIs('admin.settings') || request()->routeIs('admin.extensions*')) bg-gray-200 @endif"
                         id="menu-button" aria-expanded="true" aria-haspopup="true" onclick="openMenu('settings')">
                         <i class="ri-settings-2-line pr-1"></i> Settings
                         <svg class="-mr-1 ml-1 h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
@@ -173,7 +175,7 @@
             <div class="hidden sm:flex sm:items-center w-full sm:w-auto absolute right-0 " id="menu">
                 <div class="relative inline-block text-left">
                     <button type="button"
-                        class="dark:bg-darkmode dark:text-darkmodetext inline-flex w-full justify-center items-center bg-white pl-4 py-2 text-base font-medium text-gray-700"
+                        class="dark:bg-darkmode dark:text-darkmodetext inline-flex w-full justify-center items-center bg-white px-2 py-2 text-base font-medium text-gray-700"
                         aria-label="User menu" aria-haspopup="true" onclick="openMenu('user-menu')">
                         <!-- use gravatar -->
                         <img class="h-8 w-8 rounded-md"
@@ -185,9 +187,10 @@
                     </button>
                     <div class="dark:bg-darkmode origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 hidden"
                         id="user-menu">
-                        <div class="dark:bg-darkmode py-1 rounded-md bg-white shadow-xs" role="menu" aria-orientation="vertical"
-                            aria-labelledby="user-menu">
-                            <a href="{{ route('profile') }}" class="dark:hover:bg-darkbutton dark:text-darkmodetext block px-4 py-2 text-base text-gray-700 hover:bg-gray-100"
+                        <div class="dark:bg-darkmode py-1 rounded-md bg-white shadow-xs" role="menu"
+                            aria-orientation="vertical" aria-labelledby="user-menu">
+                            <a href="{{ route('profile') }}"
+                                class="dark:hover:bg-darkbutton dark:text-darkmodetext block px-4 py-2 text-base text-gray-700 hover:bg-gray-100"
                                 role="menuitem">Your Profile</a>
                             <a href="{{ route('admin.settings') }}"
                                 class="dark:hover:bg-darkbutton dark:text-darkmodetext block px-4 py-2 text-base text-gray-700 hover:bg-gray-100"
@@ -198,7 +201,8 @@
                             <a href="{{ route('logout') }}"
                                 onclick="event.preventDefault();
                                                 document.getElementById('logout-form').submit();"
-                                class="dark:hover:bg-darkbutton dark:text-darkmodetext block px-4 py-2 text-base text-gray-700 hover:bg-gray-100" role="menuitem">Sign
+                                class="dark:hover:bg-darkbutton dark:text-darkmodetext block px-4 py-2 text-base text-gray-700 hover:bg-gray-100"
+                                role="menuitem">Sign
                                 out</a>
                         </div>
                     </div>

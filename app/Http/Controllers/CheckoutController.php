@@ -80,7 +80,6 @@ class CheckoutController extends Controller
             ];
             array_push($productsids, $productJson);
         }
-     //   dd($productsids);
         $user = User::find(auth()->user()->id);
         $order = new Orders();
         $order->client = $user->id;
@@ -122,6 +121,9 @@ class CheckoutController extends Controller
     */
     public function update(Request $request, $id)
     {
+        $request->validate([
+            'quantity' => 'required|numeric|min:1'
+        ]);
         $cart = session()->get('cart');
         if(isset($cart[$id])) {
             $cart[$id]->quantity = $request->quantity;
