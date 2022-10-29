@@ -76,9 +76,6 @@
                             <a href="{{ route('admin.orders') }}"
                                 class="dark:text-darkmodetext dark:hover:bg-darkmode2 text-gray-700 block px-4 py-2 text-base hover:bg-gray-100 hover:text-gray-900"
                                 role="menuitem" tabindex="-1" id="menu-item-0">All Orders</a>
-                            <a href="{{ route('admin.orders.create') }}"
-                                class="dark:text-darkmodetext dark:hover:bg-darkmode2 text-gray-700 block px-4 py-2 text-base hover:bg-gray-100 hover:text-gray-900"
-                                role="menuitem" tabindex="-1" id="menu-item-1">Create Order</a>
                         </div>
                     </div>
                 </div>
