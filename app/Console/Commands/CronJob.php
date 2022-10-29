@@ -48,10 +48,6 @@ class CronJob extends Command
                 }
             }
         }
-        $invoices = Orders::where('expiry_date', '<', strtotime('-7 days'))->get();
-        foreach ($invoices as $invoice) {
-            
-        }
         $this->info('Cron Job Finished');
         return Command::SUCCESS;
     }

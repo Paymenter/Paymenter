@@ -40,8 +40,6 @@
                                                 <option value="{{ $option }}" @if( in_array($option, array(App\Helpers\ExtensionHelper::getConfig($extension->name, $setting->name))) ) selected @endif>{{ $option }}</option>
                                             @endforeach
                                         </select>
-                                                                                    @dump(App\Helpers\ExtensionHelper::getConfig($extension->name, $setting->name))
-
                                     @endif
                                 </div>
                             @endforeach

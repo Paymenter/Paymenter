@@ -26,47 +26,36 @@
                                         </div>
                                     @else
                                         <table class="min-w-full divide-y divide-gray-200">
-                                            <thead class="bg-gray-50">
+                                            <thead class="bg-gray-50 dark:bg-darkmode2">
                                                 <tr>
                                                     <th scope="col"
-                                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider dark:text-darkmodetext">
                                                         Price
                                                     </th>
                                                     <th scope="col"
-                                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider dark:text-darkmodetext">
                                                         Status
                                                     </th>
-                                                    <th scope="col" class="relative px-6 py-3">
+                                                    <th scope="col"
+                                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider dark:text-darkmodetext">
+                                                        Next Invoice
+                                                    </th>
+                                                    <th scope="col" class="relative px-6 py-3 dark:text-darkmodetext">
                                                         <span class="sr-only">Edit</span>
                                                     </th>
                                                 </tr>
                                             </thead>
-                                            <tbody class="bg-white divide-y divide-gray-200">
+                                            <tbody class="bg-white divide-y divide-gray-200 dark:bg-darkmode2">
                                                 @foreach ($services as $service)
                                                     <tr>
-                                                        <td class="px-6 py-4 whitespace-nowrap">
-                                                            <div class="flex items-center">
-                                                                <div class="ml-4">
-                                                                    <div class="text-sm font-medium text-gray-900">
-                                                                        {{ $service->name }}
-                                                                    </div>
-                                                                    <div class="text-sm text-gray-500">
-                                                                        {{ $service->description }}
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </td>
-                                                        <td class="px-6 py-4 whitespace-nowrap">
-                                                            <div class="text-sm text-gray-900">
-                                                                {{ $service->description }}
-                                                            </div>
-
-                                                        </td>
-                                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-darkmodetext">
                                                             {{ $service->total }}
                                                         </td>
-                                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-darkmodetext">
                                                             {{ $service->status }}
+                                                        </td>
+                                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-darkmodetext">
+                                                            {{ $service->expiry_date }}
                                                         </td>
                                                         <td
                                                             class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">

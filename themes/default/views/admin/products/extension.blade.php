@@ -35,31 +35,33 @@
                                     @endif
                                 </select>
                             </div>
-                    </div>
-                    @isset($extension)
-                        <div class="mt-6 text-gray-500 dark:text-darkmodetext dark:bg-darkmode2">
-                                @foreach ($extension->productConfig as $setting)
-                                    <div class="mt-4">
-                                        <label for="{{ $setting->name }}">{{ $setting->friendlyName  }}</label>
-                                        @if($setting->type == 'text')
-                                            <input type="text" name="{{ $setting->name }}"
-                                                value="{{ App\Helpers\ExtensionHelper::getProductConfig($extension->name, $setting->name, $product->id) }}"
-                                                class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm dark:bg-darkmode rounded-md" />
-                                        @elseif($setting->type == 'boolean')
-                                            <input type="checkbox" name="{{ $setting->name }}" value="1"
-                                                @if( App\Helpers\ExtensionHelper::getProductConfig($extension->name, $setting->name, $product->id) == 1) checked @endif
-                                                class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block sm:text-sm dark:bg-darkmode rounded-md" />
-                                        @endif
-                                    </div>
-                                @endforeach
-                                <div class="flex items-center justify-end mt-4">
-                                    <button class="ml-4">
-                                        {{ __('Update') }}
-                                    </button>
+                            @isset($extension)
+                                <div class="mt-6 text-gray-500 dark:text-darkmodetext dark:bg-darkmode2">
+                                    @foreach ($extension->productConfig as $setting)
+                                        <div class="mt-4">
+                                            <label for="{{ $setting->name }}">{{ $setting->friendlyName }}</label>
+                                            @if ($setting->type == 'text')
+                                                <input type="text" name="{{ $setting->name }}"
+                                                    value="{{ App\Helpers\ExtensionHelper::getProductConfig($extension->name, $setting->name, $product->id) }}"
+                                                    class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm dark:bg-darkmode rounded-md" />
+                                            @elseif($setting->type == 'boolean')
+                                                <input type="checkbox" name="{{ $setting->name }}" value="1"
+                                                    @if (App\Helpers\ExtensionHelper::getProductConfig($extension->name, $setting->name, $product->id) == 1) checked @endif
+                                                    class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block sm:text-sm dark:bg-darkmode rounded-md" />
+                                            @endif
+                                        </div>
+                                    @endforeach
                                 </div>
-                            </form>
+                            @endisset
+                        </form>
+
+                        <div class="flex items-center justify-end mt-4">
+                            <button
+                                class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded dark:text-darkmodetext">
+                                {{ __('Update') }}
+                            </button>
                         </div>
-                    @endisset
+                    </div>
                 </div>
             </div>
         </div>

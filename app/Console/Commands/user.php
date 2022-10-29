@@ -36,11 +36,7 @@ class user extends Command
 
         $admin = $this->choice('User is an administrator?', ['no', 'yes'], 'no');
 
-        if ($admin == 'yes' || $admin == 'y' || $admin == '1') {
-            $admin = 1;
-        } else {
-            $admin = 0;
-        }
+        $admin = $admin === 'yes' ? 1 : 0;
 
         if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
             exit($this->error('Invalid email address stublifer.'));

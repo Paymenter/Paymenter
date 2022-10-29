@@ -64,12 +64,12 @@
                         role="menu" aria-orientation="vertical" aria-labelledby="menu-button" tabindex="-1"
                         id="orders">
                         <div class="py-1 dark:bg-darkmode" role="none">
-                            <a href="{{ route('products.index') }}"
+                            <a href="{{ route('products') }}"
                                 class="dark:text-darkmodetext dark:hover:bg-darkbutton text-gray-700 block px-4 py-2 text-base hover:bg-gray-100 hover:text-gray-900"
                                 role="menuitem" tabindex="-1" id="menu-item-0">All Products</a>
                             @foreach (App\Models\Categories::all() as $category)
                                 @if ($category->products->count() > 0)
-                                    <a href="{{ route('products.index', ['category' => $category->id]) }}"
+                                    <a href="{{ route('products', ['category' => $category->id]) }}"
                                         class="dark:text-darkmodetext dark:hover:bg-darkbutton text-gray-700 block px-4 py-2 text-base hover:bg-gray-100 hover:text-gray-900"
                                         role="menuitem" tabindex="-1" id="menu-item-0">{{ $category->name }}</a>
                                 @endif

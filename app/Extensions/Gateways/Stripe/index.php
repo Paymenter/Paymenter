@@ -20,11 +20,18 @@ function getUrl($products, $orderId)
             'quantity' => $product->quantity,
         ];
     }
+    $array = ExtensionHelper::getConfig('Stripe', 'pay_options');
+    $options = [];
+    foreach ($array as $key => $value) {
+        $options[$key] = $value;
+        error_log($value);
+    }
+    
     // Create session
     $order = $client->checkout->sessions->create([
         'line_items' => $items,
         'mode' => 'payment',
-        "payment_method_types" => ["card", "ideal"],
+        "payment_method_types" => [ExtensionHelper::getConfig('Stripe', 'pay_options') ],
         'success_url' => route('invoice.show', $orderId),
         'cancel_url' => route('invoice.show', $orderId),
         'customer_email' => auth()->user()->email,

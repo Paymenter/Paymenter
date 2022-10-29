@@ -64,11 +64,6 @@ Route::group(['prefix' => 'admin'], function () {
 
     Route::group(['prefix'=> 'orders'], function(){
         Route::get('/', [App\Http\Controllers\Admin\OrdersController::class, 'index'])->middleware(['auth.admin'])->name('admin.orders');
-        Route::get('/create', [App\Http\Controllers\Admin\OrdersController::class, 'create'])->middleware(['auth.admin'])->name('admin.orders.create');
-        Route::post('/create', [App\Http\Controllers\Admin\OrdersController::class, 'store'])->middleware(['auth.admin'])->name('admin.orders.store');
-        Route::get('/{id}', [App\Http\Controllers\Admin\OrdersController::class, 'show'])->middleware(['auth.admin'])->name('admin.orders.show');
-        Route::get('/{id}/edit', [App\Http\Controllers\Admin\OrdersController::class, 'edit'])->middleware(['auth.admin'])->name('admin.orders.edit');
-        Route::post('/{id}/edit', [App\Http\Controllers\Admin\OrdersController::class, 'update'])->middleware(['auth.admin'])->name('admin.orders.update');
         Route::delete('/{id}/delete', [App\Http\Controllers\Admin\OrdersController::class, 'destroy'])->middleware(['auth.admin'])->name('admin.orders.delete');        
     });
 });

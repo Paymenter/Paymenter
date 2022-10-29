@@ -20,6 +20,14 @@ class ExtensionsController extends Controller
         if($sort == 'server'){
             $extension = json_decode(file_get_contents(base_path('app/Extensions/Servers/' . $name . '/extension.json')));
             $db = Extensions::where('name', $name)->first();
+            if(!$db){
+                Extensions::create([
+                    'name' => $name,
+                    'enabled' => false,
+                    'type' => 'server'
+                ]);
+                $db = Extensions::where('name', $name)->first();
+            }
             $extension->enabled = $db->enabled;
             $extension->id = $db->id;
             $extension->type = 'server';
@@ -27,6 +35,14 @@ class ExtensionsController extends Controller
         }elseif($sort == 'gateway'){
             $extension = json_decode(file_get_contents(base_path('app/Extensions/Gateways/' . $name . '/extension.json')));
             $db = Extensions::where('name', $name)->first();
+            if(!$db){
+                Extensions::create([
+                    'name' => $name,
+                    'enabled' => false,
+                    'type' => 'gateway'
+                ]);
+                $db = Extensions::where('name', $name)->first();
+            }
             $extension->enabled = $db->enabled;
             $extension->id = $db->id;
             $extension->type = 'gateway';

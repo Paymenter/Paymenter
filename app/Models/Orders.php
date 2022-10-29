@@ -27,6 +27,6 @@ class Orders extends Model
 
     public function client()
     {
-        return $this->belongsTo(User::class, 'id', 'client');
+        return $this->belongsTo(User::class, 'client', 'id');
     }
 }

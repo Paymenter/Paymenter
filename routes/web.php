@@ -22,12 +22,7 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->midd
 Route::get('/manifest.json', [App\Http\Controllers\HomeController::class, 'manifest'])->name('manifest');
 Route::get('/profile', [App\Http\Controllers\HomeController::class, 'profile'])->name('profile')->middleware(['auth', 'password.confirm']);
 Route::post('/profile', [App\Http\Controllers\HomeController::class, 'update'])->name('profile.update')->middleware(['auth', 'password.confirm']);
-// Products routes
-Route::group(['prefix'=> 'products'], function(){
-    Route::get('/', [App\Http\Controllers\ProductsController::class, 'index'])->name('products.index');
-    Route::get('/{id}', [App\Http\Controllers\ProductsController::class, 'show'])->name('products.show');
-    Route::get('/{id}/cart', [App\Http\Controllers\ProductsController::class, 'cart'])->name('products.cart');
-});
+Route::get('/products', [App\Http\Controllers\BasisController::class, 'products'])->name('products');
 
 Route::group(['prefix'=>'checkout'], function(){
     Route::get('/', [App\Http\Controllers\CheckoutController::class, 'index'])->name('checkout.index');
