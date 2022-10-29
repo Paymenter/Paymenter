@@ -14,12 +14,12 @@ This is a advanced payment system for your hosting company. It is written in PHP
 ## Features
 - [✔️] Login System
 - [✔️] Register System
-- [⚙️] Dashboard
-- [⚙️] Products
-- [⚙️] Orders
-- [⚙️] Tickets
-- [⚙️] Billing
-- [⚙️] Admin Panel
+- [✔️] Dashboard
+- [✔️] Products
+- [✔️] Orders
+- [✔️] Tickets
+- [✔️] Billing
+- [✔️] Admin Panel
 
 ## Requirements
 The requirements for Paymenter are the following:
@@ -28,5 +28,5 @@ The requirements for Paymenter are the following:
 - NodeJS (version 16 or higher)
 
 ## Installation & Documentation
-For a detailed explanation of how to install and configure Paymenter, take a look at our [documentation here](http://docs.paymenter.org/)!
+For a detailed explanation of how to install and configure Paymenter, take a look at our [documentation here](https://paymenter.org/docs/intro)!
 - Or, get additional help via [Community Discord](https://discord.gg/xB4UUT3XQg).
