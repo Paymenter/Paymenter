@@ -123,7 +123,11 @@ class ExtensionHelper
         }
         // Get the payment method
         include_once(app_path() . '/Extensions/Gateways/' . $extension->name . '/index.php');
-        $pay = pay($total, $products, $orderId);
+        // Set funciton name
+        $function = $extension->name . '_pay';
+        // Call the function
+        $pay = $function($total, $products, $orderId);
+
         return $pay->url;
     }
 

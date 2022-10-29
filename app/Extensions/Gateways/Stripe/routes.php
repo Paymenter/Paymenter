@@ -6,5 +6,5 @@ include(__DIR__ . '/index.php');
 
 
 Route::post('/stripe/webhook', function () {
-    webhook(request());
+    Stripe_webhook(request());
 });

@@ -40,11 +40,11 @@ class CronJob extends Command
                 $order->status = 'cancelled';
                 $order->save();
             } else if ($order->status == 'suspended') {
-                if ($order->expiry_date < strtotime('+7 days')) {
+                // Check if expiry_date is 7 days before now with strtotime
+                if (strtotime($order->expiry_date) < strtotime('-1 week')) {
                     ExtensionHelper::terminateServer($order);
                     $order->status = 'cancelled';
                     $order->save();
-                    ExtensionHelper::terminateServer($order);
                 }
             }
         }

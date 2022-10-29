@@ -3,7 +3,7 @@
 use Stripe\StripeClient;
 use App\Helpers\ExtensionHelper;
 
-function getUrl($products, $orderId)
+function Stripe_getUrl($products, $orderId)
 {
     $client = StripeClient();
     // Create array with all the products
@@ -20,18 +20,9 @@ function getUrl($products, $orderId)
             'quantity' => $product->quantity,
         ];
     }
-    $array = ExtensionHelper::getConfig('Stripe', 'pay_options');
-    $options = [];
-    foreach ($array as $key => $value) {
-        $options[$key] = $value;
-        error_log($value);
-    }
-    
-    // Create session
     $order = $client->checkout->sessions->create([
         'line_items' => $items,
         'mode' => 'payment',
-        "payment_method_types" => [ExtensionHelper::getConfig('Stripe', 'pay_options') ],
         'success_url' => route('invoice.show', $orderId),
         'cancel_url' => route('invoice.show', $orderId),
         'customer_email' => auth()->user()->email,
@@ -44,7 +35,7 @@ function getUrl($products, $orderId)
     return $order;
 }
 
-function webhook($request)
+function Stripe_webhook($request)
 {
     $payload = $request->getContent();
     $sig_header = $request->header('stripe-signature');
@@ -88,9 +79,9 @@ function stripeClient()
 }
 
 
-function pay($total, $products, $orderId)
+function Stripe_pay($total, $products, $orderId)
 {
     $stripe = stripeClient();
-    $order = getUrl($products, $orderId);
+    $order = Stripe_getUrl($products, $orderId);
     return $stripe->checkout->sessions->retrieve($order->id, []);
 }
