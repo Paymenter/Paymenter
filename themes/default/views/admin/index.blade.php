@@ -53,37 +53,106 @@
                     @endforeach
                     </div>
                 </div>
+                <div class="pt-5">
+                    <div class="dark:bg-darkmode shadow-lg rounded-lg overflow-hidden">
+                        <div class="dark:bg-darkmode dark:text-darkmodetext py-3 text-center bg-gray-50">Users</div>
+                        <canvas id="chartBar"></canvas>
+                    </div>
+                    <!-- Required chart.js -->
+                    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+                    <!-- Chart bar -->
+                </div>
             </div>
         </div>
     </div>
-    <script>
-        var ctx = document.getElementById('myChart').getContext('2d');
-        var myChart = new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: ['Revenue', 'Tickets', 'Orders', 
-                ], 
+    
+    
+    <!-- Script for User statistic -->
+    <div>
+        <script>
+            const labelsBarChart = [
+                "January",
+                "February",
+                "March",
+                "April",
+                "May",
+                "June",
+                "July",
+                "August",
+                "September",
+                "October",
+                "November",
+                "December",
+            ];
+            const dataBarChart = {
+                labels: labelsBarChart,
+
+                //create a dataset for the creation dates of the users
                 datasets: [{
-                        label: "Yesterday",
-                        backgroundColor: "#CFE2FD",
-                        data: [3, 7, 4]
-                    },
-                    {
-                        label: "Today",
-                        backgroundColor: "#5270FD",
-                        data: [4, 3, 5]
-                    },
-                ]
+                    label: "Users",
+                    backgroundColor: "#f87979",
+                    data: [
+                        {{App\Models\User::whereMonth('created_at', '=', '1')->count()}},
+                        {{App\Models\User::whereMonth('created_at', '=', '2')->count()}},
+                        {{App\Models\User::whereMonth('created_at', '=', '3')->count()}},
+                        {{App\Models\User::whereMonth('created_at', '=', '4')->count()}},
+                        {{App\Models\User::whereMonth('created_at', '=', '5')->count()}},
+                        {{App\Models\User::whereMonth('created_at', '=', '6')->count()}},
+                        {{App\Models\User::whereMonth('created_at', '=', '7')->count()}},
+                        {{App\Models\User::whereMonth('created_at', '=', '8')->count()}},
+                        {{App\Models\User::whereMonth('created_at', '=', '9')->count()}},
+                        {{App\Models\User::whereMonth('created_at', '=', '10')->count()}},
+                        {{App\Models\User::whereMonth('created_at', '=', '11')->count()}},
+                        {{App\Models\User::whereMonth('created_at', '=', '12')->count()}},
+                    ],
+                }],
+            };
+
+            const configBarChart = {
+                type: "bar",
+                data: dataBarChart,
+                options: {},
+            };
+
+            var chartBar = new Chart(
+                document.getElementById("chartBar"),
+                configBarChart
+            );
+        </script>
+    </div>
+    <!-- Script for Short Overview -->
+    <div>
+        <script>
+            var ctx = document.getElementById('myChart').getContext('2d');
+            var myChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Revenue', 'Tickets', 'Orders', 
+                    ], 
+                    datasets: [{
+                            label: "Yesterday",
+                            backgroundColor: "#CFE2FD",
+                            data: [3, 7, 4]
+                        },
+                        {
+                            label: "Today",
+                            backgroundColor: "#5270FD",
+                            data: [4, 3, 5]
+                        },
+                    ]
 
 
-            },
-            options: {
-                scales: {
-                    y: {
-                        beginAtZero: true
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
                     }
                 }
-            }
-        });
-    </script>
+            });
+        </script>
+    </div>
+
+
 </x-admin-layout>
