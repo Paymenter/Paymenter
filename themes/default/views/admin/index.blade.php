@@ -86,8 +86,6 @@
             ];
             const dataBarChart = {
                 labels: labelsBarChart,
-
-                //create a dataset for the creation dates of the users
                 datasets: [{
                     label: "Users",
                     backgroundColor: "#f87979",
@@ -130,18 +128,43 @@
                     labels: ['Revenue', 'Tickets', 'Orders', 
                     ], 
                     datasets: [{
-                            label: "Yesterday",
-                            backgroundColor: "#CFE2FD",
-                            data: [3, 7, 4]
-                        },
-                        {
-                            label: "Today",
-                            backgroundColor: "#5270FD",
-                            data: [4, 3, 5]
-                        },
-                    ]
-
-
+                        label: 'Yesterday',
+                        data: [
+                            {{App\Models\Orders::whereDate('created_at', '=', date('Y-m-d', strtotime('-1 days')))->sum('total')}}, 
+                            {{App\Models\Tickets::whereDate('created_at', '=', date('Y-m-d', strtotime('-1 days')))->count()}}, 
+                            {{App\Models\Orders::whereDate('created_at', '=', date('Y-m-d', strtotime('-1 days')))->count()}}, 
+                        ],
+                        backgroundColor: [
+                            'rgba(255, 99, 132, 0.2)',
+                            'rgba(54, 162, 235, 0.2)',
+                            'rgba(255, 206, 86, 0.2)',
+                        ],
+                        borderColor: [
+                            'rgba(255, 99, 132, 1)',
+                            'rgba(54, 162, 235, 1)',
+                            'rgba(255, 206, 86, 1)',
+                        ],
+                        borderWidth: 1
+                    },
+                    {
+                        label: 'Today',
+                        data: [
+                            {{App\Models\Orders::whereDate('created_at', '=', date('Y-m-d'))->sum('total')}}, 
+                            {{App\Models\Tickets::whereDate('created_at', '=', date('Y-m-d'))->count()}}, 
+                            {{App\Models\Orders::whereDate('created_at', '=', date('Y-m-d'))->count()}}, 
+                        ],
+                        backgroundColor: [
+                            'rgba(255, 99, 132, 0.2)',
+                            'rgba(54, 162, 235, 0.2)',
+                            'rgba(255, 206, 86, 0.2)',
+                        ],
+                        borderColor: [
+                            'rgba(255, 99, 132, 1)',
+                            'rgba(54, 162, 235, 1)',
+                            'rgba(255, 206, 86, 1)',
+                        ],
+                        borderWidth: 1
+                    }],
                 },
                 options: {
                     scales: {
