@@ -14,10 +14,10 @@
                         @if (count($tickets) > 0)
                             <!-- show card per open ticket -->
                             @foreach ($tickets as $ticket)
-                                <div class="bg-gray-200 bg-opacity-25 grid grid-cols-1 dark:bg-darkmode rounded-lg m-2 cursor-pointer" onclick="location.href='{{ route('tickets.show', $ticket->id) }}'">
+                                <div class="dark:hover:shadow-lg dark:hover:bg-darkmodehover dark:transition dark:hover:transition bg-gray-200 bg-opacity-25 grid grid-cols-1 dark:bg-darkmode rounded-lg m-2 cursor-pointer" onclick="location.href='{{ route('tickets.show', $ticket->id) }}'">
                                     <div class="p-6">
                                         <div class="flex items-center">
-                                            <div class="ml-4 text-lg text-gray-600 leading-7 font-semibold">
+                                            <div class="dark:text-darkmodetext ml-4 text-lg text-gray-600 leading-7 font-semibold">
                                                 {{ $ticket->title }}
                                             </div>
                                         </div>

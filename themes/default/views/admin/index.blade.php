@@ -10,15 +10,15 @@
                     <div class="grid grid-cols-3 p-2 pb-10">
                         <div class="dark:bg-darkmode2 bg-normal rounded-md mr-3 p-2">
                             <h1 class="dark:text-darkmodetext text-xl text-gray-500">Revenue today</h1>
-                            <p class="dark:text-darkmodetext text-black font-bold text-2xl">20€</p>
+                            <p class="dark:text-darkmodetext text-black font-bold text-2xl">{{App\Models\Orders::whereDate('created_at', '=', date('Y-m-d'))->count()}}</p>
                         </div>
                         <div class="dark:bg-darkmode2 bg-normal rounded-md mr-3 p-2">
                             <h1 class="dark:text-darkmodetext text-xl text-gray-500">Tickets today</h1>
-                            <p class="dark:text-darkmodetext text-black font-bold text-2xl">5</p>
+                            <p class="dark:text-darkmodetext text-black font-bold text-2xl">{{App\Models\Tickets::whereDate('created_at', '=', date('Y-m-d'))->count()}}</p>
                         </div>
                         <div class="dark:bg-darkmode2 bg-normal rounded-md p-2">
                             <h1 class="dark:text-darkmodetext text-xl text-gray-500">Revenue Total</h1>
-                            <p class="dark:text-darkmodetext text-black font-bold text-2xl">500$</p>
+                            <p class="dark:text-darkmodetext text-black font-bold text-2xl">{{App\Models\Orders::sum('total')}}</p>
                         </div>
                     </div>
                     <canvas id="myChart" style="width:100%;max-height:400px;"></canvas>
@@ -53,37 +53,129 @@
                     @endforeach
                     </div>
                 </div>
+                <div class="pt-5">
+                    <div class="dark:bg-darkmode shadow-lg rounded-lg overflow-hidden">
+                        <div class="dark:bg-darkmode dark:text-darkmodetext py-3 text-center bg-gray-50">Users</div>
+                        <canvas id="chartBar"></canvas>
+                    </div>
+                    <!-- Required chart.js -->
+                    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+                    <!-- Chart bar -->
+                </div>
             </div>
         </div>
     </div>
-    <script>
-        var ctx = document.getElementById('myChart').getContext('2d');
-        var myChart = new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: ['Revenue', 'Tickets', 'Orders', 
-                ], 
+    
+    
+    <!-- Script for User statistic -->
+    <div>
+        <script>
+            const labelsBarChart = [
+                "January",
+                "February",
+                "March",
+                "April",
+                "May",
+                "June",
+                "July",
+                "August",
+                "September",
+                "October",
+                "November",
+                "December",
+            ];
+            const dataBarChart = {
+                labels: labelsBarChart,
                 datasets: [{
-                        label: "Yesterday",
-                        backgroundColor: "#CFE2FD",
-                        data: [3, 7, 4]
+                    label: "Users",
+                    backgroundColor: "#f87979",
+                    data: [
+                        {{App\Models\User::whereMonth('created_at', '=', '1')->count()}},
+                        {{App\Models\User::whereMonth('created_at', '=', '2')->count()}},
+                        {{App\Models\User::whereMonth('created_at', '=', '3')->count()}},
+                        {{App\Models\User::whereMonth('created_at', '=', '4')->count()}},
+                        {{App\Models\User::whereMonth('created_at', '=', '5')->count()}},
+                        {{App\Models\User::whereMonth('created_at', '=', '6')->count()}},
+                        {{App\Models\User::whereMonth('created_at', '=', '7')->count()}},
+                        {{App\Models\User::whereMonth('created_at', '=', '8')->count()}},
+                        {{App\Models\User::whereMonth('created_at', '=', '9')->count()}},
+                        {{App\Models\User::whereMonth('created_at', '=', '10')->count()}},
+                        {{App\Models\User::whereMonth('created_at', '=', '11')->count()}},
+                        {{App\Models\User::whereMonth('created_at', '=', '12')->count()}},
+                    ],
+                }],
+            };
+
+            const configBarChart = {
+                type: "bar",
+                data: dataBarChart,
+                options: {},
+            };
+
+            var chartBar = new Chart(
+                document.getElementById("chartBar"),
+                configBarChart
+            );
+        </script>
+    </div>
+    <!-- Script for Short Overview -->
+    <div>
+        <script>
+            var ctx = document.getElementById('myChart').getContext('2d');
+            var myChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Revenue', 'Tickets', 'Orders', 
+                    ], 
+                    datasets: [{
+                        label: 'Yesterday',
+                        data: [
+                            {{App\Models\Orders::whereDate('created_at', '=', date('Y-m-d', strtotime('-1 days')))->sum('total')}}, 
+                            {{App\Models\Tickets::whereDate('created_at', '=', date('Y-m-d', strtotime('-1 days')))->count()}}, 
+                            {{App\Models\Orders::whereDate('created_at', '=', date('Y-m-d', strtotime('-1 days')))->count()}}, 
+                        ],
+                        backgroundColor: [
+                            'rgba(255, 99, 132, 0.2)',
+                            'rgba(54, 162, 235, 0.2)',
+                            'rgba(255, 206, 86, 0.2)',
+                        ],
+                        borderColor: [
+                            'rgba(255, 99, 132, 1)',
+                            'rgba(54, 162, 235, 1)',
+                            'rgba(255, 206, 86, 1)',
+                        ],
+                        borderWidth: 1
                     },
                     {
-                        label: "Today",
-                        backgroundColor: "#5270FD",
-                        data: [4, 3, 5]
-                    },
-                ]
-
-
-            },
-            options: {
-                scales: {
-                    y: {
-                        beginAtZero: true
+                        label: 'Today',
+                        data: [
+                            {{App\Models\Orders::whereDate('created_at', '=', date('Y-m-d'))->sum('total')}}, 
+                            {{App\Models\Tickets::whereDate('created_at', '=', date('Y-m-d'))->count()}}, 
+                            {{App\Models\Orders::whereDate('created_at', '=', date('Y-m-d'))->count()}}, 
+                        ],
+                        backgroundColor: [
+                            'rgba(255, 99, 132, 0.2)',
+                            'rgba(54, 162, 235, 0.2)',
+                            'rgba(255, 206, 86, 0.2)',
+                        ],
+                        borderColor: [
+                            'rgba(255, 99, 132, 1)',
+                            'rgba(54, 162, 235, 1)',
+                            'rgba(255, 206, 86, 1)',
+                        ],
+                        borderWidth: 1
+                    }],
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
                     }
                 }
-            }
-        });
-    </script>
+            });
+        </script>
+    </div>
+
+
 </x-admin-layout>
