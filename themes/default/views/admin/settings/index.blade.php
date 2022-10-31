@@ -179,6 +179,18 @@
                                                 value="{{ $settings->currency_sign }}">
                                         </div>
                                     </div>
+                                    <br><br>
+                                    <div class="mt-4" id="homepage_text">
+                                        <label for="homepage_text" class="dark:text-darkmodetext block text-sm font-medium text-gray-700">
+                                            {{ __('Homepage Text') }}
+                                        </label>
+                                        <div class="mt-1">
+                                            <textarea id="home_page_text" name="home_page_text" type="text"
+                                                autocomplete="homepage_text"
+                                                class="dark:text-darkmodetext dark:bg-darkmode form-input rounded-md shadow-sm mt-1 block w-full"
+                                                rows="5">{{ $settings->home_page_text }}</textarea>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
 

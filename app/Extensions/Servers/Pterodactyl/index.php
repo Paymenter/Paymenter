@@ -107,7 +107,7 @@ function pterodactyl_getUser($user)
         $url = pteroConfig('host') . '/api/application/users';
         $json = [
             'username' => pterodactyl_random_string(8),
-            'email' => $user,
+            'email' => $user->email,
             'first_name' => $user->name,
             'last_name' => 'User',
             'language' => 'en',

@@ -51,7 +51,7 @@
                                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-darkmodetext">
                                                     {{ $product->name }}</td>
                                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-darkmodetext">
-                                                    {{ $product->description }}</td>
+                                                    {{ Str::limit($product->description, 50) }}</td>
                                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-darkmodetext">
                                                     <a href="{{ route('admin.products.edit', $product->id) }}">
                                                         <button

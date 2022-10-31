@@ -21,6 +21,7 @@ class Settings extends Model
         'seo_twitter_card',
         'seo_image',
         'currency_sign',
+        'home_page_text',
     ];
 
 

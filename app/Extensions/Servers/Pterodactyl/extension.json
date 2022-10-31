@@ -79,6 +79,11 @@
             "name": "skip_scripts",
             "friendlyName": "Pterodactyl Skip Scripts",
             "type": "boolean"
+        },
+        {
+            "name": "allocation",
+            "friendlyName": "Pterodactyl Allocation",
+            "type": "text"
         }
     ]
 }

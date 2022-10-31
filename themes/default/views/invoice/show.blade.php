@@ -29,10 +29,7 @@
                                 </div>
                                 <div class="text-sm font-light text-slate-500">
                                     <p class="text-sm font-normal text-slate-700">Billed To</p>
-                                    <p>Paymenter</p>
-                                    <p>I Love Paymenter</p>
-                                    <p>paymenter.org</p>
-                                    <p>PAY 1234</p>
+                                    <p>{{ config('app.name', 'Paymenter') }}</p>
                                 </div>
                                 <div class="text-sm font-light text-slate-500">
                                     <p class="text-sm font-normal text-slate-700">Invoice Number</p>

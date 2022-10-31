@@ -77,13 +77,14 @@
                         </div>
                     </div>
                 </div>
-                <!-- Showing the Current Users Credit in USD (I dont currently know how to switch it based on location and its like 1:37 am) -->
                 @if (Auth::user() == !null)
-                    <div
-                        class="dark:bg-darkmode2 rounded-lg hidden sm:flex sm:items-center w-full sm:w-auto absolute right-40">
-                        <a class="dark:bg-darkmode2 m-2" href="">
-                            {{ number_format(Auth::user()->credit, 2) }}
-                        </a>
+                    <div class="hidden">
+                        <div
+                            class="dark:bg-darkmode2 rounded-lg hidden sm:flex sm:items-center w-full sm:w-auto absolute right-40 ">
+                            <a class="dark:bg-darkmode2 m-2" href="">
+                                {{ number_format(Auth::user()->credit, 2) }}
+                            </a>
+                        </div>
                     </div>
                 @endif
             </div>
