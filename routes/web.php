@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Auth;
 | contains the "web" middleware group. Now create something great!
 |
 */
+
 Route::get('/', [App\Http\Controllers\BasisController::class, 'index'])->name('index');
 // auth routes;
 Route::get('/home', function () {
@@ -24,7 +25,7 @@ Route::get('/profile', [App\Http\Controllers\HomeController::class, 'profile'])-
 Route::post('/profile', [App\Http\Controllers\HomeController::class, 'update'])->name('profile.update')->middleware(['auth', 'password.confirm']);
 Route::get('/products', [App\Http\Controllers\BasisController::class, 'products'])->name('products');
 
-Route::group(['prefix'=>'checkout'], function(){
+Route::group(['prefix' => 'checkout'], function () {
     Route::get('/', [App\Http\Controllers\CheckoutController::class, 'index'])->name('checkout.index');
     Route::post('/', [App\Http\Controllers\CheckoutController::class, 'pay'])->name('checkout.pay')->middleware('auth');
     Route::post('/{id}', [App\Http\Controllers\CheckoutController::class, 'remove'])->name('checkout.remove');
@@ -34,7 +35,7 @@ Route::group(['prefix'=>'checkout'], function(){
     Route::get('/cancel', [App\Http\Controllers\CheckoutController::class, 'cancel'])->name('checkout.cancel');
 });
 
-Route::group(['prefix'=>'tickets'], function(){
+Route::group(['prefix' => 'tickets', 'middleware' => 'auth'], function () {
     Route::get('/', [App\Http\Controllers\TicketsController::class, 'index'])->name('tickets.index');
     Route::get('/create', [App\Http\Controllers\TicketsController::class, 'create'])->name('tickets.create');
     Route::post('/store', [App\Http\Controllers\TicketsController::class, 'store'])->name('tickets.store');
@@ -44,13 +45,13 @@ Route::group(['prefix'=>'tickets'], function(){
     Route::delete('/{id}/delete', [App\Http\Controllers\TicketsController::class, 'delete'])->name('tickets.delete');
 });
 
-Route::group(['prefix' => 'invoices'], function(){
+Route::group(['prefix' =>'invoices', 'middleware' => 'auth'], function () {
     Route::get('/', [App\Http\Controllers\InvoiceController::class, 'index'])->name('invoice.index');
     Route::get('/{id}', [App\Http\Controllers\InvoiceController::class, 'show'])->name('invoice.show');
     Route::post('/{id}/pay', [App\Http\Controllers\InvoiceController::class, 'pay'])->name('invoice.pay');
     Route::get('/{id}/download', [App\Http\Controllers\InvoiceController::class, 'download'])->name('invoice.download');
 });
 
-require __DIR__.'/auth.php';
-require __DIR__.'/admin.php';
-require __DIR__.'/extensions.php';
+require __DIR__ . '/auth.php';
+require __DIR__ . '/admin.php';
+require __DIR__ . '/extensions.php';
