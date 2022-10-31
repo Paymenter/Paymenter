@@ -19,4 +19,6 @@ return [
     'open_tickets_description' => 'Open tickets are tickets that are not closed yet',
     'last_message' => 'Last Message',
     'you' => 'You',
+    'reply' => 'Reply',
+    'create_ticket' => 'Create Ticket',
 ];

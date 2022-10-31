@@ -40,14 +40,16 @@
                             @foreach ($messages as $message)
                                 <div class="mt-4 dark:bg-darkmode p-4 rounded-md">
                                     <label for="message">{{ $message->message }}</label>
-                                    <p class="text-xs text-gray-500 dark:text-darkmodetext z-10 -top-2 relative float-right">{{ $message->created_at }}</p>
+                                    <p
+                                        class="text-xs text-gray-500 dark:text-darkmodetext z-10 -top-2 relative float-right">
+                                        {{ $message->created_at }}</p>
                                     <p class="text-xs text-gray-500 dark:text-darkmodetext text-end">
-                                        @if($message->user_id == Auth::user()->id)
+                                        @if ($message->user_id == Auth::user()->id)
                                             {{ __('tickets.you') }}
                                         @else
                                             {{ $message->user->name }}
                                         @endif
-                                       </p>
+                                    </p>
                                 </div>
                             @endforeach
                         </div>
@@ -67,9 +69,15 @@
                                         class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm dark:bg-darkmode rounded-md"
                                         name="message" required></textarea>
                                 </div>
+                                <br>
+                                @if (App\Models\Settings::first()->recaptcha == 1)
+                                    <div class="g-recaptcha"
+                                        data-sitekey="{{ App\Models\Settings::first()->recaptcha_site_key }}"></div>
+                                @endif
                                 <div class="mt-4">
-                                    <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                                        {{ __('normal.reply') }}
+                                    <button
+                                        class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                                        {{ __('tickets.reply') }}
                                     </button>
                                 </div>
                             </div>

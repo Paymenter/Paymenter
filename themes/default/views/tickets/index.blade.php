@@ -10,6 +10,13 @@
                     <div class="mt-6 text-gray-500 dark:text-darkmodetext">
                         {{ __('tickets.open_tickets_description') }}
                     </div>
+                    <!-- display create ticket button -->
+                    <div class="flex items-center justify-end mt-6">
+                        <a href="{{ route('tickets.create') }}"
+                            class="bg-indigo-500 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded">
+                            {{ __('tickets.create_ticket') }}
+                        </a>
+                    </div>
                     <div class="mt-6 text-gray-500 dark:text-darkmodetext grid sm:grid-cols-1 md:grid-cols-2">
                         @if (count($tickets) > 0)
                             <!-- show card per open ticket -->

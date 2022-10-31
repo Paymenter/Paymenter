@@ -84,9 +84,16 @@ class TicketsController extends Controller
 
     function reply(Request $request, Tickets $id)
     {
-        $request->validate([
-            'message' => 'required',
-        ]);
+        if (Settings::first()->recaptcha == 1) {
+            $request->validate([
+                'g-recaptcha-response' => 'required|recaptcha',
+                'message' => 'required',
+            ]);
+        } else {
+            $request->validate([
+                'message' => 'required',
+            ]);
+        }
         TicketMessages::create([
             'ticket_id' => $id->id,
             'message' => request('message'),

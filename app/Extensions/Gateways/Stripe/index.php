@@ -68,7 +68,7 @@ function stripeClient()
 {
     if (!ExtensionHelper::getConfig('Stripe', 'stripe_test_mode')) {
         $stripe = new StripeClient(
-            ExtensionHelper::getConfig('Stripe', 'stripe_live_secret_key')
+            ExtensionHelper::getConfig('Stripe', 'stripe_secret_key')
         );
     } else {
         $stripe = new StripeClient(

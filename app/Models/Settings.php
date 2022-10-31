@@ -19,7 +19,8 @@ class Settings extends Model
         'seo_description',
         'seo_keywords',
         'seo_twitter_card',
-        'seo_image'
+        'seo_image',
+        'currency_sign',
     ];
 
 

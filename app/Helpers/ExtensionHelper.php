@@ -81,13 +81,6 @@ class ExtensionHelper
         }
     }
 
-    public static function getProducts(){
-
-        $products = session()->get('cart');
-        // cast to array
-        return $products;
-    }
-
     public static function getProductConfig($name, $key, $id)
     {
         $extension = Extensions::where('name', $name)->first();
@@ -100,7 +93,7 @@ class ExtensionHelper
             $extension = Extensions::where('name', $name)->first();
         }
         
-        $config = $extension->getServer()->where('name', $key)->first();
+        $config = $extension->getServer()->where('product_id', $id)->where('extension', $extension->id)->where('name', $key)->first();
         if(!$config){
             $extension->getServer()->create([
                 'name' => $key,
@@ -108,9 +101,8 @@ class ExtensionHelper
                 'product_id' => $id,
                 'extension' => $extension->id
             ]);
-            $config = $extension->getServer()->where('name', $key)->first();
+            $config = $extension->getServer()->where('product_id', $id)->where('extension', $extension->id)->where('name', $key)->first();
         }
-
         return $config->value;
     }
 

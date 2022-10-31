@@ -53,14 +53,14 @@
                                     @endforeach
                                 </div>
                             @endisset
-                        </form>
 
-                        <div class="flex items-center justify-end mt-4">
-                            <button
-                                class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded dark:text-darkmodetext">
-                                {{ __('Update') }}
-                            </button>
-                        </div>
+                            <div class="flex items-center justify-end mt-4" type="submit">
+                                <button
+                                    class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded dark:text-darkmodetext">
+                                    {{ __('Update') }}
+                                </button>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>
