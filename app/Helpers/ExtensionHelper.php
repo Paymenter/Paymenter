@@ -16,6 +16,9 @@ class ExtensionHelper
     public static function paymentDone($id)
     {
         $invoice = Invoices::findOrFail($id);
+        if($invoice->status == 'paid') {
+            return;
+        }
         $invoice->status = 'paid';
         $invoice->paid_at = now();
         $invoice->save();
@@ -119,7 +122,7 @@ class ExtensionHelper
         // Call the function
         $pay = $function($total, $products, $orderId);
 
-        return $pay->url;
+        return $pay;
     }
 
     public static function createServer(Orders $order)

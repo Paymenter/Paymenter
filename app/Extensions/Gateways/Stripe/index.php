@@ -32,7 +32,7 @@ function Stripe_getUrl($products, $orderId)
         ],
     ]);
 
-    return $order;
+    return $order->url;
 }
 
 function Stripe_webhook($request)

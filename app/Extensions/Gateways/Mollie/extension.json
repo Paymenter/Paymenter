@@ -1,0 +1,15 @@
+{
+    "name": "Mollie",
+    "description": "Mollie payment gateway",
+    "version": "1.0.0",
+    "author": "Paymenter",
+    "config":[
+        {
+            "name": "api_key",
+            "friendlyName": "API Key",
+            "type": "text",
+            "required": true
+        }
+    ]
+}
+    
