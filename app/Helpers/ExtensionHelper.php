@@ -109,7 +109,6 @@ class ExtensionHelper
     public static function getPaymentMethod($id, $total, $products, $orderId)
     {
         $extension = Extensions::where('id', $id)->first();
-        error_log($extension);
         if (!$extension) {
            return false;
         }
