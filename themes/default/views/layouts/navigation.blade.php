@@ -186,8 +186,6 @@
                     var themeToggleBtn = document.getElementById('theme-toggle');
 
                     themeToggleBtn.addEventListener('click', function() {
-
-                        // toggle icons inside button
                         themeToggleDarkIcon.classList.toggle('hidden');
                         themeToggleLightIcon.classList.toggle('hidden');
 
@@ -264,15 +262,21 @@
         </div>
         <div class="hidden md:hidden" id="mobile-menu">
             <div class="space-y-1 px-2 pt-2 pb-3 ">
-                <a href="#"
+                <a href="{{ route('index') }}"
                     class="dark:text-darkmodetext dark:bg-darkmode dark:hover:bg-darkbutton text-black hover:bg-gray-100 block px-3 py-2 rounded-md text-base font-medium @if (request()->routeIs('index')) bg-gray-400 @endif"
                     aria-current="page">Dashboard</a>
-                <a href="#"
+                <a href="{{ route('products') }}"
                     class="dark:text-darkmodetext dark:bg-darkmode dark:hover:bg-darkbutton text-black hover:bg-gray-100 block px-3 py-2 rounded-md text-base font-medium @if (request()->routeIs('products.*')) bg-gray-400 @endif">Products</a>
 
+
                 @auth
+                    @if (Auth::user()->is_admin)
+                        <a href="{{ route('admin') }}"
+                            class="dark:text-darkmodetext dark:bg-darkmode dark:hover:bg-darkbutton text-black hover:bg-gray-100 block px-3 py-2 rounded-md text-base font-medium @if (request()->routeIs('admin.*')) bg-gray-400 @endif">Admin</a>
+                    @endif
+
                     <a href="{{ route('logout') }}"
-                        class="text-black hover:bg-gray-100 block px-3 py-2 rounded-md text-base font-medium"
+                        class="text-black hover:bg-gray-100 block px-3 py-2 rounded-md text-base font-medium dark:text-white"
                         onclick="event.preventDefault();
                 document.getElementById('logout-form').submit();">
                         {{ __('Logout') }}
