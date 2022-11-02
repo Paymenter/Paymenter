@@ -9,7 +9,7 @@
                 <div class="dark:bg-darkmode dark:border-darkmode p-10 bg-white border-2 rounded-xl border-grey-600 col-span-2">
                     <div class="grid grid-cols-3 p-2 pb-10">
                         <div class="dark:bg-darkmode2 bg-normal rounded-md mr-3 p-2">
-                            <h1 class="dark:text-darkmodetext text-xl text-gray-500">Revenue today</h1>
+                            <h1 class="dark:text-darkmodetext text-xl text-gray-500">Orders today</h1>
                             <p class="dark:text-darkmodetext text-black font-bold text-2xl">{{App\Models\Orders::whereDate('created_at', '=', date('Y-m-d'))->count()}}</p>
                         </div>
                         <div class="dark:bg-darkmode2 bg-normal rounded-md mr-3 p-2">
@@ -18,7 +18,7 @@
                         </div>
                         <div class="dark:bg-darkmode2 bg-normal rounded-md p-2">
                             <h1 class="dark:text-darkmodetext text-xl text-gray-500">Revenue Total</h1>
-                            <p class="dark:text-darkmodetext text-black font-bold text-2xl">{{App\Models\Orders::sum('total')}}</p>
+                            <p class="dark:text-darkmodetext text-black font-bold text-2xl">{{App\Models\Orders::sum('total')}} {{App\Models\Settings::first()->currency_sign}}</p>
                         </div>
                     </div>
                     <canvas id="myChart" style="width:100%;max-height:400px;"></canvas>
@@ -64,7 +64,16 @@
                 </div>
             </div>
         </div>
+        <!-- checks if the given Payment methode is accepted -->
+        <div>
+            @if(json_decode(App\Models\ExtensionSettings::where('key', 'pay_options')->first()->value))
+                <span class="bg-green-500 text-white rounded-full p-1 text-base">Payment Methode is accepted</span>
+            @else
+                <span class="bg-red-500 text-white rounded-full p-1 text-base">Payment Methode is not accepted</span>
+            @endif
+        </div>
     </div>
+
     
     
     <!-- Script for User statistic -->
