@@ -253,7 +253,7 @@ migrate() {
 
 create_initial_user() {
     # Create user account
-    php artisan make:user || true
+    php artisan p:make:user || true
 }
 
 set_permissions() {
@@ -290,7 +290,7 @@ EOF
 }
 
 configure_nginx() {
-    cat <<'EOF' >>/etc/nginx/sites-available/dashboard.conf
+    cat <<'EOF' >>/etc/nginx/sites-available/paymenter.conf
 server {
         listen 80;
         root /var/www/paymenter/public;
