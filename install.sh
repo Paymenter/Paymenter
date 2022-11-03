@@ -248,8 +248,7 @@ configure() {
 }
 
 migrate() {
-    php artisan migrate --seed --force
-    php artisan db:seed --class=ExampleItemsSeeder --force # we add some exaample products
+    php artisan migrate 
 }
 
 create_initial_user() {
