@@ -29,8 +29,12 @@
 
 <body class="font-sans antialiased">
     <div id="app" class="dark:bg-darkmode min-h-screen bg-gray-100">
-        @include('layouts.adminnavigation')
-        <main>
+    @if (App\Models\Settings::first()->navbar == '1')
+            @include('layouts.adminnavigation')
+        @else
+            @include('layouts.adminsidenavigation')
+        @endif
+        <main class="grow">
             {{ $slot }}
         </main>
     </div>

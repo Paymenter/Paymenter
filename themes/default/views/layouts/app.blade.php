@@ -42,9 +42,13 @@
 
 <body class="font-sans antialiased bg-gray-100">
     <div id="app" class="dark:text-white min-h-screen dark:bg-darkmode">
-        @include('layouts.navigation')
+        @if (App\Models\Settings::first()->navbar == '1')
+            @include('layouts.navigation')
+        @else
+            @include('layouts.sidenavigation')
+        @endif
         <!-- Page Content -->
-        <main>
+        <main class="grow">
             {{ $slot }}
         </main>
     </div>
