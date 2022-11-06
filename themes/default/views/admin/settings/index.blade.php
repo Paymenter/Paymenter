@@ -106,21 +106,16 @@
                                             </div>
                                             
                                             <script>
-                                                $(document).ready(function() {
-                                                    if ($('#recaptcha').is(':checked')) {
-                                                        $('#sitekey').removeClass('hidden');
-                                                        $('#secretkey').removeClass('hidden');
-                                                    }
-                                                    $('#recaptcha').click(function() {
-                                                        if ($(this).is(':checked')) {
-                                                            $('#sitekey').removeClass('hidden');
-                                                            $('#secretkey').removeClass('hidden');
-                                                        } else {
-                                                            $('#sitekey').addClass('hidden');
-                                                            $('#secretkey').addClass('hidden');
-                                                        }
-                                                    });
+                                            $(document).ready(function() {
+                                                if ($('#recaptcha').is(':checked')) {
+                                                    $('#sitekey').removeClass('hidden');
+                                                    $('#secretkey').removeClass('hidden');
+                                                }
+                                                $('#recaptcha').click(function() {
+                                                    $('#sitekey').toggleClass('hidden');
+                                                    $('#secretkey').toggleClass('hidden');
                                                 });
+                                            });
                                             </script>
 
                                         </div>
