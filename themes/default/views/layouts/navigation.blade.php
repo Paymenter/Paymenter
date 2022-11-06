@@ -186,6 +186,8 @@
                     var themeToggleBtn = document.getElementById('theme-toggle');
 
                     themeToggleBtn.addEventListener('click', function() {
+
+                        // toggle icons inside button
                         themeToggleDarkIcon.classList.toggle('hidden');
                         themeToggleLightIcon.classList.toggle('hidden');
 
@@ -221,38 +223,55 @@
                 var clients = document.getElementById('clients');
                 var tickets = document.getElementById('tickets');
 
+                // function openMenu(id) {
+                //     if (id == 'user-menu') {
+                //         usermenu.classList.toggle('hidden');
+                //         settings.classList.add('hidden');
+                //         orders.classList.add('hidden');
+                //         clients.classList.add('hidden');
+                //         tickets.classList.add('hidden');
+                //     } else if (id == 'settings') {
+                //         settings.classList.toggle('hidden');
+                //         usermenu.classList.add('hidden');
+                //         orders.classList.add('hidden');
+                //         clients.classList.add('hidden');
+                //         tickets.classList.add('hidden');
+                //     } else if (id == 'orders') {
+                //         orders.classList.toggle('hidden');
+                //         usermenu.classList.add('hidden');
+                //         settings.classList.add('hidden');
+                //         clients.classList.add('hidden');
+                //         tickets.classList.add('hidden');
+                //     } else if (id == 'clients') {
+                //         clients.classList.toggle('hidden');
+                //         usermenu.classList.add('hidden');
+                //         settings.classList.add('hidden');
+                //         orders.classList.add('hidden');
+                //         tickets.classList.add('hidden');
+                //     } else if (id == 'tickets') {
+                //         tickets.classList.toggle('hidden');
+                //         usermenu.classList.add('hidden');
+                //         settings.classList.add('hidden');
+                //         orders.classList.add('hidden');
+                //         clients.classList.add('hidden');
+                //     }
+                // }
+
                 function openMenu(id) {
-                    if (id == 'user-menu') {
-                        usermenu.classList.toggle('hidden');
-                        settings.classList.add('hidden');
-                        orders.classList.add('hidden');
-                        clients.classList.add('hidden');
-                        tickets.classList.add('hidden');
-                    } else if (id == 'settings') {
-                        settings.classList.toggle('hidden');
-                        usermenu.classList.add('hidden');
-                        orders.classList.add('hidden');
-                        clients.classList.add('hidden');
-                        tickets.classList.add('hidden');
-                    } else if (id == 'orders') {
-                        orders.classList.toggle('hidden');
-                        usermenu.classList.add('hidden');
-                        settings.classList.add('hidden');
-                        clients.classList.add('hidden');
-                        tickets.classList.add('hidden');
-                    } else if (id == 'clients') {
-                        clients.classList.toggle('hidden');
-                        usermenu.classList.add('hidden');
-                        settings.classList.add('hidden');
-                        orders.classList.add('hidden');
-                        tickets.classList.add('hidden');
-                    } else if (id == 'tickets') {
-                        tickets.classList.toggle('hidden');
-                        usermenu.classList.add('hidden');
-                        settings.classList.add('hidden');
-                        orders.classList.add('hidden');
-                        clients.classList.add('hidden');
+                    var menu = document.getElementById(id);
+                    menu.classList.toggle('hidden');
+
+                    var menus = document.getElementsByClassName('dropdown-menu');
+                    for (var i = 0; i < menus.length; i++) {
+                        if (menus[i] != menu) {
+                            menus[i].classList.add('hidden');
+                        }
                     }
+                    document.addEventListener('click', function(e) {
+                        if (e.target != menu && e.target != menu.previousElementSibling) {
+                            menu.classList.add('hidden');
+                        }
+                    });
                 }
 
                 function openUserMenu() {
