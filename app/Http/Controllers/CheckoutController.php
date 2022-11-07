@@ -2,11 +2,7 @@
 namespace App\Http\Controllers;
 
 use App\Helpers\ExtensionHelper;
-use App\Models\Orders;
-use App\Models\Products;
-use App\Models\User;
-use App\Models\Invoices;
-use App\Models\Statistics;
+use App\Models\{Orders, Products, User, Invoices, Extensions, Statistics};
 use Illuminate\Contracts\Session\Session;
 use Illuminate\Http\Request;
 
@@ -43,7 +39,14 @@ class CheckoutController extends Controller
         if(!$product) {
             return redirect()->back()->with('error', 'Product not found');
         }
-
+        // Get extension config
+        $server = Extensions::find($product->server_id);
+        $extension = json_decode(file_get_contents(base_path('app/Extensions/Servers/' . $server->name . '/extension.json')));
+        
+        if($extension->userConfig){
+            return redirect()->route('checkout.config', $product->id);
+        }
+        
         $product->quantity = 1;
         $cart = session()->get('cart');
         if(\Illuminate\Support\Arr::has($cart, $product->id)) {
@@ -54,6 +57,37 @@ class CheckoutController extends Controller
             $cart[$product->id] = $product;
             session()->put('cart', $cart);
             return redirect()->back()->with('success', 'Product added to cart successfully!');
+        }
+    }
+
+    public function config(Request $request, Products $id)
+    {
+        $product = $id;
+        $server = Extensions::find($product->server_id);
+        $extension = json_decode(file_get_contents(base_path('app/Extensions/Servers/' . $server->name . '/extension.json')));
+        return view('checkout.config', compact('product', 'extension'));
+    }
+
+    public function configPost(Request $request, Products $id)
+    {
+        $product = $id;
+        $server = Extensions::find($product->server_id);
+        $extension = json_decode(file_get_contents(base_path('app/Extensions/Servers/' . $server->name . '/extension.json')));
+        $config = [];
+        foreach ($extension->userConfig as $configItem) {
+            $config[$configItem->name] = $request->input($configItem->name);
+        }
+        $product->config = $config;
+        $product->quantity = 1;
+        $cart = session()->get('cart');
+        if(\Illuminate\Support\Arr::has($cart, $product->id)) {
+            $cart[$product->id]->quantity++;
+            session()->put('cart', $cart);
+            return redirect()->route('checkout.index')->with('success', 'Product added to cart successfully!');
+        } else {
+            $cart[$product->id] = $product;
+            session()->put('cart', $cart);
+            return redirect()->route('checkout.index')->with('success', 'Product added to cart successfully!');
         }
     }
 
@@ -74,9 +108,11 @@ class CheckoutController extends Controller
         }
         $productsids = array();
         foreach ($products as $product) {
+            error_log(print_r($product, true));
             $productJson = [
                 'id' => $product->id,
-                'quantity' => $product->quantity
+                'quantity' => $product->quantity,
+                'config' => $product->config
             ];
             array_push($productsids, $productJson);
         }

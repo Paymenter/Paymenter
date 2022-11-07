@@ -6,9 +6,9 @@
 
     <!-- edit extension settings -->
     <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg dark:bg-darkmode2 dark:shadow-gray-700">
-                <div class="p-6 sm:px-20 bg-white dark:bg-darkmode2">
+        <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
+            <div class="overflow-hidden bg-white shadow-xl sm:rounded-lg dark:bg-darkmode2 dark:shadow-gray-700">
+                <div class="p-6 bg-white sm:px-20 dark:bg-darkmode2">
                     <div class="mt-8 text-2xl dark:text-darkmodetext">
                         Update product server: {{ $product->name }}
                     </div>
@@ -19,7 +19,7 @@
                             @csrf
                             <div>
                                 <label for="server">{{ __('Server') }}</label>
-                                <select id="server" class="block mt-1 w-full dark:bg-darkmode" name="server_id"
+                                <select id="server" class="block w-full mt-1 dark:bg-darkmode" name="server_id"
                                     required>
                                     @if ($extensions->count())
                                         @foreach ($extensions as $server)
@@ -43,11 +43,20 @@
                                             @if ($setting->type == 'text')
                                                 <input type="text" name="{{ $setting->name }}"
                                                     value="{{ App\Helpers\ExtensionHelper::getProductConfig($extension->name, $setting->name, $product->id) }}"
-                                                    class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm dark:bg-darkmode rounded-md" />
+                                                    class="block w-full rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm dark:bg-darkmode" />
                                             @elseif($setting->type == 'boolean')
                                                 <input type="checkbox" name="{{ $setting->name }}" value="1"
                                                     @if (App\Helpers\ExtensionHelper::getProductConfig($extension->name, $setting->name, $product->id) == 1) checked @endif
-                                                    class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block sm:text-sm dark:bg-darkmode rounded-md" />
+                                                    class="block rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm dark:bg-darkmode" />
+                                            @elseif($setting->type == 'dropdown')
+                                                <select name="{{ $setting->name }}"
+                                                    class="block w-full rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm dark:bg-darkmode">
+                                                    @foreach ($setting->options as $option)
+                                                        <option value="{{ $option->value }}"
+                                                            @if (App\Helpers\ExtensionHelper::getProductConfig($extension->name, $setting->name, $product->id) == $option->value) selected @endif>
+                                                            {{ $option->name }}</option>
+                                                    @endforeach
+                                                </select>
                                             @endif
                                         </div>
                                     @endforeach
@@ -56,7 +65,7 @@
 
                             <div class="flex items-center justify-end mt-4" type="submit">
                                 <button
-                                    class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded dark:text-darkmodetext">
+                                    class="px-4 py-2 font-bold text-white bg-blue-500 rounded hover:bg-blue-700 dark:text-darkmodetext">
                                     {{ __('Update') }}
                                 </button>
                             </div>

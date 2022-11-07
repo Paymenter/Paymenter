@@ -34,6 +34,12 @@ class ClientsController extends Controller
         $user = $id;
         return view('admin.clients.edit', compact('user'));
     }
+    public function loginasClient(User $id)
+    {
+        $user = $id;
+        auth()->login($user);
+        return redirect()->route('home');
+    }
 
     public function update(Request $request, User $id)
     {

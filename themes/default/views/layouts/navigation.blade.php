@@ -1,7 +1,7 @@
-<nav class="dark:bg-darkmode bg-white">
-    <div class="dark:bg-darkmode px-4 max-w-7xl sm:px-6 lg:px-8">
+<nav class="bg-white dark:bg-darkmode">
+    <div class="px-4 dark:bg-darkmode max-w-7xl sm:px-6 lg:px-8">
         <div
-            class="flex dark:bg-darkmode h-16 dark:text-darkmodetext dark:hover:text text-gray-500 hover:text-gray-700 text-sm font-medium leading-5 items-center">
+            class="flex items-center h-16 text-sm font-medium leading-5 text-gray-500 dark:bg-darkmode dark:text-darkmodetext dark:hover:text hover:text-gray-700">
             <div class="flex">
                 <div class="flex items-center flex-shrink-0">
                     @if (Auth::user())
@@ -23,7 +23,7 @@
                 </div>
             </div>
             <button data-collapse-toggle="mobile-menu" type="button"
-                class="inline-flex justify-center items-center ml-3 text-gray-400 rounded-lg md:hidden"
+                class="inline-flex items-center justify-center ml-3 text-gray-400 rounded-lg md:hidden"
                 aria-controls="mobile-menu-2" aria-expanded="false"
                 onclick="document.getElementById('mobile-menu').classList.toggle('hidden')">
                 <span class="sr-only">Open main menu</span>
@@ -34,15 +34,15 @@
                         clip-rule="evenodd"></path>
                 </svg>
             </button>
-            <div class="dark:bg-darkmode hidden sm:flex sm:items-center sm:w-auto justify-center place-items-center text-center text-lg dark:text-darkmodetext dark:hover:bg-darkbutton"
+            <div class="justify-center hidden text-lg text-center dark:bg-darkmode sm:flex sm:items-center sm:w-auto place-items-center dark:text-darkmodetext dark:hover:bg-darkbutton"
                 id="menu">
-                <div class="dark:bg-darkmode relative inline-block text-left">
+                <div class="relative inline-block text-left dark:bg-darkmode">
                     <!-- ticket -->
                     <div class="dark:bg-darkmode">
                         <a type="button" href="{{ route('tickets.index') }}"
                             class="dark:text-darkmodetext dark:bg-darkmode dark:hover:bg-darkbutton inline-flex w-full justify-center bg-white px-2 py-2 text-base font-medium rounded-md text-gray-700 @if (request()->routeIs('tickets*')) bg-gray-200 @endif"
                             id="menu-button" aria-expanded="true" aria-haspopup="true" onclick="openMenu('tickets')">
-                            <i class="ri-question-answer-line pr-1"
+                            <i class="pr-1 ri-question-answer-line"
                                 @if (request()->routeIs('tickets*')) style="color: #5270FD" @endif></i>Tickets
                         </a>
                     </div>
@@ -51,26 +51,26 @@
                     <button type="button"
                         class="dark:text-darkmodetext dark:bg-darkmode dark:hover:bg-darkbutton inline-flex w-full justify-center bg-white px-2 py-2 text-base font-medium rounded-md text-gray-700 @if (request()->routeIs('products*')) bg-gray-200 @endif"
                         id="menu-button" aria-expanded="true" aria-haspopup="true" onclick="openMenu('orders')">
-                        <i class="ri-shopping-bag-2-line pr-1"
+                        <i class="pr-1 ri-shopping-bag-2-line"
                             @if (request()->routeIs('products')) style="color: #5270FD" @endif></i> Products
-                        <svg class="-mr-1 ml-1 h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
+                        <svg class="w-5 h-5 ml-1 -mr-1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
                             fill="currentColor" aria-hidden="true">
                             <path fill-rule="evenodd"
                                 d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"
                                 clip-rule="evenodd" />
                         </svg>
                     </button>
-                    <div class="origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 hidden"
+                    <div class="absolute right-0 hidden w-56 mt-2 origin-top-right bg-white rounded-md shadow-lg ring-1 ring-black ring-opacity-5"
                         role="menu" aria-orientation="vertical" aria-labelledby="menu-button" tabindex="-1"
                         id="orders">
                         <div class="py-1 dark:bg-darkmode" role="none">
                             <a href="{{ route('products') }}"
-                                class="dark:text-darkmodetext dark:hover:bg-darkbutton text-gray-700 block px-4 py-2 text-base hover:bg-gray-100 hover:text-gray-900"
+                                class="block px-4 py-2 text-base text-gray-700 dark:text-darkmodetext dark:hover:bg-darkbutton hover:bg-gray-100 hover:text-gray-900"
                                 role="menuitem" tabindex="-1" id="menu-item-0">All Products</a>
                             @foreach (App\Models\Categories::all() as $category)
                                 @if ($category->products->count() > 0)
                                     <a href="{{ route('products', ['category' => $category->id]) }}"
-                                        class="dark:text-darkmodetext dark:hover:bg-darkbutton text-gray-700 block px-4 py-2 text-base hover:bg-gray-100 hover:text-gray-900"
+                                        class="block px-4 py-2 text-base text-gray-700 dark:text-darkmodetext dark:hover:bg-darkbutton hover:bg-gray-100 hover:text-gray-900"
                                         role="menuitem" tabindex="-1" id="menu-item-0">{{ $category->name }}</a>
                                 @endif
                             @endforeach
@@ -80,8 +80,8 @@
                 @if (Auth::user() == !null)
                     <div class="hidden">
                         <div
-                            class="dark:bg-darkmode2 rounded-lg hidden sm:flex sm:items-center w-full sm:w-auto absolute right-40 ">
-                            <a class="dark:bg-darkmode2 m-2" href="">
+                            class="absolute hidden w-full rounded-lg dark:bg-darkmode2 sm:flex sm:items-center sm:w-auto right-40 ">
+                            <a class="m-2 dark:bg-darkmode2" href="">
                                 {{ number_format(Auth::user()->credit, 2) }}
                             </a>
                         </div>
@@ -89,49 +89,49 @@
                 @endif
             </div>
 
-            <div class="dark:bg-darkmode hidden sm:flex sm:items-center w-full sm:w-auto absolute right-0"
+            <div class="absolute right-0 hidden w-full dark:bg-darkmode sm:flex sm:items-center sm:w-auto"
                 id="menu">
                 @auth
                     <div class="relative inline-block text-left">
                         <button type="button"
-                            class="inline-flex w-full justify-center items-center bg-white pl-4 py-2 text-base font-medium text-gray-700 dark:text-darkmodetext dark:bg-darkmode"
+                            class="inline-flex items-center justify-center w-full py-2 pl-4 text-base font-medium text-gray-700 bg-white dark:text-darkmodetext dark:bg-darkmode"
                             aria-label="User menu" aria-haspopup="true" onclick="openMenu('user-menu')">
                             <!-- use gravatar -->
-                            <img class="h-8 w-8 rounded-md"
+                            <img class="w-8 h-8 rounded-md"
                                 src="https://www.gravatar.com/avatar/{{ md5(Auth::user()->email) }}?s=200&d=mp"
                                 alt="{{ Auth::user()->name }}" />
                             <p class="p-2 font-bold">
                                 {{ Auth::user()->name }}
                             </p>
                         </button>
-                        <div class="dark:bg-darkmode origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 hidden"
+                        <div class="absolute right-0 hidden w-56 mt-2 origin-top-right bg-white rounded-md shadow-lg dark:bg-darkmode ring-1 ring-black ring-opacity-5"
                             id="user-menu">
-                            <div class="dark:bg-darkmode py-1 rounded-md bg-white shadow-xs" role="menu"
+                            <div class="py-1 bg-white rounded-md shadow-xs dark:bg-darkmode" role="menu"
                                 aria-orientation="vertical" aria-labelledby="user-menu">
                                 <a href="{{ route('profile') }}"
-                                    class="dark:hover:bg-darkbutton dark:text-darkmodetext block px-4 py-2 text-base text-gray-700 hover:bg-gray-100"
+                                    class="block px-4 py-2 text-base text-gray-700 dark:hover:bg-darkbutton dark:text-darkmodetext hover:bg-gray-100"
                                     role="menuitem">Your Profile</a>
                                 @if (Auth::user()->is_admin)
                                     <a href="{{ route('admin.settings') }}"
-                                        class="dark:hover:bg-darkbutton dark:text-darkmodetext block px-4 py-2 text-base text-gray-700 hover:bg-gray-100"
+                                        class="block px-4 py-2 text-base text-gray-700 dark:hover:bg-darkbutton dark:text-darkmodetext hover:bg-gray-100"
                                         role="menuitem">Settings</a>
                                     <div>
                                         <a href="{{ route('admin') }}"
-                                            class="dark:hover:bg-darkbutton dark:text-darkmodetext block px-4 py-2 text-base text-gray-700 hover:bg-gray-100"
+                                            class="block px-4 py-2 text-base text-gray-700 dark:hover:bg-darkbutton dark:text-darkmodetext hover:bg-gray-100"
                                             role="menuitem">Admin Panel</a>
                                     </div>
                                 @endif
                                 @if (!Auth::user()->is_admin)
                                     <div>
                                         <a href="{{ route('home') }}"
-                                            class="dark:hover:bg-darkbutton dark:text-darkmodetext block px-4 py-2 text-base text-gray-700 hover:bg-gray-100"
+                                            class="block px-4 py-2 text-base text-gray-700 dark:hover:bg-darkbutton dark:text-darkmodetext hover:bg-gray-100"
                                             role="menuitem">Dashboard</a>
                                     </div>
                                 @endif
                                 <a href="{{ route('logout') }}"
                                     onclick="event.preventDefault();
                                             document.getElementById('logout-form').submit();"
-                                    class="dark:hover:bg-darkbutton dark:text-darkmodetext block px-4 py-2 text-base text-gray-700 hover:bg-gray-100"
+                                    class="block px-4 py-2 text-base text-gray-700 dark:hover:bg-darkbutton dark:text-darkmodetext hover:bg-gray-100"
                                     role="menuitem">Sign
                                     out</a>
                             </div>
@@ -143,20 +143,20 @@
                 @else
                     <!-- login and register links -->
                     <a href="{{ route('login') }}"
-                        class="dark:text-darkmodetext dark:bg-darkmode text-sm text-gray-700 transition duration-400 mr-4 p-3 rounded hover:bg-button dark:hover:bg-darkbutton hover:transition duration-400">Log
+                        class="p-3 mr-4 text-sm text-gray-700 transition rounded dark:text-darkmodetext dark:bg-darkmode duration-400 hover:bg-button dark:hover:bg-darkbutton hover:transition">Log
                         in</a>
                 @endauth
                 @if (count(session()->get('cart', [])) > 0)
                     <a href="{{ route('checkout.index') }}"
-                        class="dark:text-darkmodetext dark:bg-darkmode text-sm text-gray-700 transition duration-400 mr-4 p-3 rounded hover:bg-button dark:hover:bg-darkbutton hover:transition duration-400 flex text-center">
-                        <i class="ri-shopping-basket-2-line p-1 text-xl">
+                        class="flex p-3 mr-4 text-sm text-center text-gray-700 transition rounded dark:text-darkmodetext dark:bg-darkmode duration-400 hover:bg-button dark:hover:bg-darkbutton hover:transition">
+                        <i class="p-1 text-xl ri-shopping-basket-2-line">
                         </i>
                         <span
                             class="inline-flex items-center px-2.5 rounded-full text-xs font-medium bg-red-100 text-red-800">{{ count(session()->get('cart')) }}</span>
 
                     </a>
                 @endif
-                <div class="flex col-span-1 justify-end pl-1">
+                <div class="flex justify-end col-span-1 pl-1">
                     <button id="theme-toggle" type="button"
                         class="mr-4 text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 rounded-lg text-sm p-2.5">
                         <svg id="theme-toggle-dark-icon" class="hidden w-5 h-5" fill="currentColor"
@@ -220,7 +220,8 @@
                 function openMenu(id) {
                     var menu = document.getElementById(id);
                     menu.classList.toggle('hidden');
-
+                    var menuBtn = document.getElementById(id + '-btn');
+                    menuBtn.classList.toggle('active'); 
                     var menus = document.getElementsByClassName('dropdown-menu');
                     for (var i = 0; i < menus.length; i++) {
                         if (menus[i] != menu) {
@@ -240,7 +241,7 @@
             </script>
         </div>
         <div class="hidden md:hidden" id="mobile-menu">
-            <div class="space-y-1 px-2 pt-2 pb-3 ">
+            <div class="px-2 pt-2 pb-3 space-y-1 ">
                 <a href="{{ route('index') }}"
                     class="dark:text-darkmodetext dark:bg-darkmode dark:hover:bg-darkbutton text-black hover:bg-gray-100 block px-3 py-2 rounded-md text-base font-medium @if (request()->routeIs('index')) bg-gray-400 @endif"
                     aria-current="page">Dashboard</a>
@@ -255,7 +256,7 @@
                     @endif
 
                     <a href="{{ route('logout') }}"
-                        class="text-black hover:bg-gray-100 block px-3 py-2 rounded-md text-base font-medium dark:text-white"
+                        class="block px-3 py-2 text-base font-medium text-black rounded-md hover:bg-gray-100 dark:text-white"
                         onclick="event.preventDefault();
                 document.getElementById('logout-form').submit();">
                         {{ __('Logout') }}

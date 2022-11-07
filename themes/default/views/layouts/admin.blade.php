@@ -28,8 +28,8 @@
 </head>
 
 <body class="font-sans antialiased">
-    <div id="app" class="dark:bg-darkmode min-h-screen bg-gray-100">
-    @if (App\Models\Settings::first()->navbar == '1')
+    <div id="app" class="min-h-screen bg-gray-100 dark:bg-darkmode">
+        @if (App\Models\Settings::first()->sidebar == 1)
             @include('layouts.adminnavigation')
         @else
             @include('layouts.adminsidenavigation')

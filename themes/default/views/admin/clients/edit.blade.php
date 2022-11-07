@@ -18,6 +18,13 @@
                     <div class="dark:text-darkmodetext mt-6 text-gray-500">
                         {{ __('Here you can edit a client.') }}
                     </div>
+                    <!-- login as client -->
+                    <div class="flex justify-end mt-4 mr-4">
+                        <a href="{{ route('admin.clients.loginasclient', $user->id) }}"
+                           class="transition delay-400 dark:text-darkmodetext dark:bg-darkbutton dark:hover:bg-logo bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                            {{ __('Login as client') }}
+                        </a>
+                    </div>
                     <div class="flex justify-end mt-4 mr-4">
                         <form action="{{ route('admin.clients.delete', $user->id) }}" method="POST" id="delete">
                             @csrf

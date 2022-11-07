@@ -25,6 +25,7 @@ class Settings extends Model
         'currency_position',
         'home_page_text',
         'app_name',
+        'sidebar'    
     ];
 
 

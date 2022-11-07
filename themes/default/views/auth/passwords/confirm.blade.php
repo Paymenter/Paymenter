@@ -1,13 +1,13 @@
 <x-guest-layout>
-    <div class="dark:bg-darkmode flex flex-col items-center min-h-screen pt-6 bg-gray-100 sm:justify-center sm:pt-0">
+    <div class="flex flex-col items-center min-h-screen pt-6 bg-gray-100 dark:bg-darkmode sm:justify-center sm:pt-0">
         <div>
             <a href="/">
                 <x-application-logo class="w-20 h-20 text-gray-500 fill-current" />
             </a>
         </div>
 
-        <div class="dark:bg-darkmode2 w-full px-6 py-4 mt-6 overflow-hidden bg-white shadow-md sm:max-w-md sm:rounded-lg">
-            <div class="dark:text-darkmodetext mb-4 text-sm text-gray-600">
+        <div class="w-full px-6 py-4 mt-6 overflow-hidden bg-white shadow-md dark:bg-darkmode2 sm:max-w-md sm:rounded-lg">
+            <div class="mb-4 text-sm text-gray-600 dark:text-darkmodetext">
                 {{ __('This is a secure area of the application. Please confirm your password before continuing.') }}
             </div>
 
@@ -19,7 +19,7 @@
 
                 <!-- Password -->
                 <div class="mt-4">
-                    <label class="dark:text-darkmodetext block text-sm font-medium text-gray-700">
+                    <label class="block text-sm font-medium text-gray-700 dark:text-darkmodetext">
                         {{ __('Password') }}
                     </label>
 

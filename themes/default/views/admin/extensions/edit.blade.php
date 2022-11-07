@@ -4,9 +4,9 @@
     </x-slot>
 
     <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg dark:bg-darkmode2">
-                <div class="p-6 sm:px-20 bg-white border-b border-gray-200 dark:bg-darkmode2">
+        <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
+            <div class="overflow-hidden bg-white shadow-xl sm:rounded-lg dark:bg-darkmode2">
+                <div class="p-6 bg-white border-b border-gray-200 sm:px-20 dark:bg-darkmode2">
                     <div class="mt-8 text-2xl dark:text-darkmodetext">
                         Edit {{ $extension->name }}
                     </div>
@@ -17,7 +17,7 @@
                             <!-- disable or enable extension -->
                             <div class="mt-4">
                                 <label for="enabled">{{ __('Enabled') }}</label>
-                                <select id="enabled" class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm dark:bg-darkmode rounded-md" name="enabled" required>
+                                <select id="enabled" class="block w-full rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm dark:bg-darkmode" name="enabled" required>
                                     @if ($extension->enabled == 1)
                                         <option value="1" selected>True</option>
                                         <option value="0">False</option>
@@ -31,11 +31,11 @@
                                 <div class="mt-4">
                                     <label for="{{ $setting->name }}">{{ $setting->friendlyName  }}</label>
                                     @if($setting->type == 'text')
-                                        <input type="text" name="{{ $setting->name }}" value="{{ App\Helpers\ExtensionHelper::getConfig($extension->name, $setting->name) }}" class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm dark:bg-darkmode rounded-md" />
+                                        <input type="text" name="{{ $setting->name }}" value="{{ App\Helpers\ExtensionHelper::getConfig($extension->name, $setting->name) }}" class="block w-full rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm dark:bg-darkmode" @if($setting->required) required @endif />
                                     @elseif($setting->type == 'boolean')
-                                        <input type="checkbox" name="{{ $setting->name }}" value="1" @if( App\Helpers\ExtensionHelper::getConfig($extension->name, $setting->name) == 1) checked @endif class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm dark:bg-darkmode rounded-md" />
+                                        <input type="checkbox" name="{{ $setting->name }}" value="1" @if( App\Helpers\ExtensionHelper::getConfig($extension->name, $setting->name) == 1) checked @endif class="block w-full rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm dark:bg-darkmode" @if($setting->required) required @endif />
                                     @elseif($setting->type == 'dropdown')
-                                        <select name="{{ $setting->name }}[]" multiple class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm dark:bg-darkmode rounded-md">
+                                        <select name="{{ $setting->name }}[]" multiple class="block w-full rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm dark:bg-darkmode" @if($setting->required) required @endif>
                                             @foreach($setting->options as $option)
                                                 <option value="{{ $option }}" @if( in_array($option, array(App\Helpers\ExtensionHelper::getConfig($extension->name, $setting->name))) ) selected @endif>{{ $option }}</option>
                                             @endforeach
@@ -45,7 +45,7 @@
                             @endforeach
                             <div class="flex items-center justify-end mt-4">
                                 <button type="submit"
-                                    class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                                    class="px-4 py-2 font-bold text-white bg-blue-500 rounded hover:bg-blue-700">
                                     {{ __('Update') }}
                                 </button>
                             </div>

@@ -42,6 +42,13 @@ class ExtensionHelper
         $order->save();
     }
 
+    /**
+     * Called when a new order is accepted
+     * ```php
+     * ExtensionHelper::getConfig('paymenter', 'paymenter');
+     * ```
+     * @return String
+     */
     public static function getConfig($name, $key)
     {
         $extension = Extensions::where('name', $name)->first();
@@ -127,9 +134,8 @@ class ExtensionHelper
 
     public static function createServer(Orders $order)
     {
-        error_log('Creating server');
-        foreach($order->products as $product){
-            $product = Products::findOrFail($product['id']);
+        foreach($order->products as $product2){
+            $product = Products::findOrFail($product2['id']);
             $extension = Extensions::where('id', $product->server_id)->first();
             if (!$extension) {
                 return false;
@@ -140,6 +146,7 @@ class ExtensionHelper
             foreach($settings as $setting){
                 $config[$setting->name] = $setting->value;
             }
+            $config['config'] = json_encode($product2["config"]);
             $user = User::findOrFail($order->client);
             createServer($user, $config, $order);
             return true;

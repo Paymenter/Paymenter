@@ -32,7 +32,8 @@ class SettingsController extends Controller
         ]);
         $request->merge([
             'recaptcha' => $request->recaptcha == 'on' ? 1 : 0,
-            'seo_twitter_card' => $request->seo_twitter_card == 'on' ? 1 : 0
+            'seo_twitter_card' => $request->seo_twitter_card == 'on' ? 1 : 0,
+            'sidebar' => $request->navbar
         ]);
 
         $theme = request('theme');

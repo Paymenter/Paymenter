@@ -74,7 +74,7 @@ class ProductsController extends Controller
     public function extension(Products $product)
     {
         $extensions = Extensions::where("type", "server")->where('enabled', true)->get();
-        if($product->server_id != null) {
+        if ($product->server_id != null) {
             $server = Extensions::find($product->server_id);
             $extension = json_decode(file_get_contents(base_path('app/Extensions/Servers/' . $server->name . '/extension.json')));
         } else {
@@ -94,7 +94,6 @@ class ProductsController extends Controller
 
         $extension = json_decode(file_get_contents(base_path('app/Extensions/Servers/' . $product->server()->get()->first()->name . '/extension.json')));
         foreach ($extension->productConfig as $config) {
-            error_log($request->input($config->name));
             ProductSettings::updateOrCreate([
                 'product_id' => $product->id,
                 'name' => $config->name,

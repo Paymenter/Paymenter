@@ -1,0 +1,110 @@
+{
+    "name": "Virtualizor",
+    "description": "Virtualizor Server",
+    "version": "1.0.0",
+    "author": "Paymenter",
+    "config": [
+        {
+            "name": "host",
+            "friendlyName": "Virtualizor Host IP",
+            "type": "text",
+            "required": true
+        },
+        {
+            "name": "key",
+            "friendlyName": "API Key",
+            "type": "text",
+            "required": true
+        },
+        {
+            "name": "pass",
+            "friendlyName": "API Pass",
+            "type": "text",
+            "required": true
+        },
+        {
+            "name": "ssl",
+            "friendlyName": "SSL",
+            "type": "boolean",
+            "required": false
+        }
+    ],
+    "productConfig": [
+        {
+            "name": "virt",
+            "friendlyName": "Virtualizon Type",
+            "type": "dropdown",
+            "required": true,
+            "options":[
+                {
+                    "name": "OpenVZ",
+                    "value": "openvz"
+                },
+                {
+                    "name": "Xen",
+                    "value": "xen"
+                },
+                {
+                    "name": "KVM",
+                    "value": "kvm"
+                }
+            ]
+        },
+        {
+            "name": "planid",
+            "friendlyName": "Plan ID",
+            "type": "text",
+            "required": true
+        }
+    ],
+    "userConfig": [
+        {
+            "name": "hostname",
+            "friendlyName": "Hostname",
+            "type": "text",
+            "required": true
+        },
+        {
+            "name": "password",
+            "friendlyName": "Password",
+            "type": "text",
+            "required": true
+        },
+        {
+            "name": "os",
+            "friendlyName": "Operating System ID",
+            "type": "dropdown",
+            "required": true,
+            "options": [
+                {
+                    "name": "CentOS 7.9 x86_64",
+                    "value": "centos-7.9-x86_64"
+                },
+                {
+                    "name": "CentOS 8.3 x86_64",
+                    "value": "centos-8.3-x86_64"
+                },
+                {
+                    "name": "Debian 10 x86_64",
+                    "value": "debian-10-x86_64"
+                },
+                {
+                    "name": "Debian 9 x86_64",
+                    "value": "debian-9-x86_64"
+                },
+                {
+                    "name": "Ubuntu 20.04 x86_64",
+                    "value": "ubuntu-20.04-x86_64"
+                },
+                {
+                    "name": "Ubuntu 18.04 x86_64",
+                    "value": "ubuntu-18.04-x86_64"
+                },
+                {
+                    "name": "Ubuntu 16.04 x86_64",
+                    "value": "ubuntu-16.04-x86_64"
+                }
+            ]
+        }
+    ]
+}

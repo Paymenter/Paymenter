@@ -3,50 +3,50 @@
         {{ __('General') }}
     </x-slot>
     <div class="grow">
-        <div class="dark:bg-darkmode py-10">
+        <div class="py-10 dark:bg-darkmode">
             <div class="mx-auto sm:px-6 lg:px-8">
-                <div class="dark:bg-darkmode2 overflow-hidden bg-white shadow-sm sm:rounded-lg p-4 grid md:grid-cols-3">
+                <div class="grid p-4 overflow-hidden bg-white shadow-sm dark:bg-darkmode2 sm:rounded-lg md:grid-cols-3">
                     <!-- show ticketclosed, tickets, orders -->
-                    <div class="dark:bg-darkmode dark:border-darkmode p-10 bg-white border-2 rounded-xl border-grey-600 col-span-2">
+                    <div class="col-span-2 p-10 bg-white border-2 dark:bg-darkmode dark:border-darkmode rounded-xl border-grey-600">
                         <div class="grid grid-cols-3 p-2 pb-10">
-                            <div class="dark:bg-darkmode2 bg-normal rounded-md mr-3 p-2">
-                                <h1 class="dark:text-darkmodetext text-xl text-gray-500">Orders today</h1>
-                                <p class="dark:text-darkmodetext text-black font-bold text-2xl">{{App\Models\Orders::whereDate('created_at', '=', date('Y-m-d'))->count()}}</p>
+                            <div class="p-2 mr-3 rounded-md dark:bg-darkmode2 bg-normal">
+                                <h1 class="text-xl text-gray-500 dark:text-darkmodetext">Orders today</h1>
+                                <p class="text-2xl font-bold text-black dark:text-darkmodetext">{{App\Models\Orders::whereDate('created_at', '=', date('Y-m-d'))->count()}}</p>
                             </div>
-                            <div class="dark:bg-darkmode2 bg-normal rounded-md mr-3 p-2">
-                                <h1 class="dark:text-darkmodetext text-xl text-gray-500">Tickets today</h1>
-                                <p class="dark:text-darkmodetext text-black font-bold text-2xl">{{App\Models\Tickets::whereDate('created_at', '=', date('Y-m-d'))->count()}}</p>
+                            <div class="p-2 mr-3 rounded-md dark:bg-darkmode2 bg-normal">
+                                <h1 class="text-xl text-gray-500 dark:text-darkmodetext">Tickets today</h1>
+                                <p class="text-2xl font-bold text-black dark:text-darkmodetext">{{App\Models\Tickets::whereDate('created_at', '=', date('Y-m-d'))->count()}}</p>
                             </div>
-                            <div class="dark:bg-darkmode2 bg-normal rounded-md p-2">
-                                <h1 class="dark:text-darkmodetext text-xl text-gray-500">Revenue Total</h1>
-                                <p class="dark:text-darkmodetext text-black font-bold text-2xl">{{App\Models\Orders::sum('total')}} {{App\Models\Settings::first()->currency_sign}}</p>
+                            <div class="p-2 rounded-md dark:bg-darkmode2 bg-normal">
+                                <h1 class="text-xl text-gray-500 dark:text-darkmodetext">Revenue Total</h1>
+                                <p class="text-2xl font-bold text-black dark:text-darkmodetext">{{App\Models\Orders::sum('total')}} {{App\Models\Settings::first()->currency_sign}}</p>
                             </div>
                         </div>
                         <canvas id="myChart" style="width:100%;max-height:400px;"></canvas>
                     </div>
-                    <div class="dark:bg-darkmode dark:border-darkmode p-10 bg-white border-2 rounded-xl border-grey-600 ml-4">
-                        <h1 class="dark:text-darkmodetext text-xl text-gray-500">Recent tickets</h1>
+                    <div class="p-10 ml-4 bg-white border-2 dark:bg-darkmode dark:border-darkmode rounded-xl border-grey-600">
+                        <h1 class="text-xl text-gray-500 dark:text-darkmodetext">Recent tickets</h1>
                         <div class="grid grid-cols-1 gap-4">
                         @foreach(App\Models\Tickets::orderByRaw('updated_at - created_at DESC')->get()->take(5) as $ticket)
                         <a href="/admin/tickets/{{$ticket->id}}">   
-                            <div class="dark:hover:bg-darkbutton dark:bg-darkmode2 bg-normal rounded-md p-2">
-                            <h1 class="dark:text-darkmodetext text-xl text-gray-500">Ticket #{{$ticket->id}} by 
+                            <div class="p-2 rounded-md dark:hover:bg-darkbutton dark:bg-darkmode2 bg-normal">
+                            <h1 class="text-xl text-gray-500 dark:text-darkmodetext">Ticket #{{$ticket->id}} by 
                                     <span class="dark:text-darkmodetext">
                                         {{ $ticket->client()->get()->first()->name }}
                                     </span> 
                                 </h1>
-                                <p class="dark:text-darkmodetext text-black font-bold text-2xl">{{ $ticket->title }} 
+                                <p class="text-2xl font-bold text-black dark:text-darkmodetext">{{ $ticket->title }} 
                                 @if($ticket->priority == 'high')
-                                    <span class="bg-red-500 text-white rounded-full p-1 text-base">High</span>
+                                    <span class="p-1 text-base text-white bg-red-500 rounded-full">High</span>
                                 @elseif($ticket->priority == 'medium')
-                                    <span class="bg-yellow-500 text-white rounded-full p-1 text-base" >Medium</span>
+                                    <span class="p-1 text-base text-white bg-yellow-500 rounded-full" >Medium</span>
                                 @elseif($ticket->priority == 'low')
-                                    <span class="bg-green-500 text-white rounded-full p-1 text-base">Low</span>
+                                    <span class="p-1 text-base text-white bg-green-500 rounded-full">Low</span>
                                 @endif
                                 @if($ticket->status == 'closed')
-                                    <span class="bg-red-500 text-white rounded-full p-1 text-base">closed</span>
+                                    <span class="p-1 text-base text-white bg-red-500 rounded-full">closed</span>
                                 @elseif($ticket->status == 'replied')
-                                    <span class="bg-yellow-500 text-white rounded-full p-1 text-base" >replied</span>
+                                    <span class="p-1 text-base text-white bg-yellow-500 rounded-full" >replied</span>
                                 @endif
                                 </p>                          
                             </div>
@@ -55,8 +55,8 @@
                         </div>
                     </div>
                     <div class="pt-5">
-                        <div class="dark:bg-darkmode shadow-lg rounded-lg overflow-hidden">
-                            <div class="dark:bg-darkmode dark:text-darkmodetext py-3 text-center bg-gray-50">Users</div>
+                        <div class="overflow-hidden rounded-lg shadow-lg dark:bg-darkmode">
+                            <div class="py-3 text-center dark:bg-darkmode dark:text-darkmodetext bg-gray-50">Users</div>
                             <canvas id="chartBar"></canvas>
                         </div>
                         <!-- Required chart.js -->

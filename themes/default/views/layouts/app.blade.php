@@ -41,8 +41,8 @@
 </head>
 
 <body class="font-sans antialiased bg-gray-100">
-    <div id="app" class="dark:text-white min-h-screen dark:bg-darkmode">
-        @if (App\Models\Settings::first()->navbar == '1')
+    <div id="app" class="min-h-screen dark:text-white dark:bg-darkmode">
+        @if (App\Models\Settings::first()->sidebar == 1)
             @include('layouts.navigation')
         @else
             @include('layouts.sidenavigation')

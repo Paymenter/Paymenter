@@ -32,7 +32,7 @@ function Stripe_getUrl($products, $orderId)
         ],
     ]);
 
-    return $order->url;
+    return $order;
 }
 
 function Stripe_webhook($request)
@@ -83,5 +83,5 @@ function Stripe_pay($total, $products, $orderId)
 {
     $stripe = stripeClient();
     $order = Stripe_getUrl($products, $orderId);
-    return $stripe->checkout->sessions->retrieve($order->id, []);
+    return $stripe->checkout->sessions->retrieve($order->id, [])->url;
 }

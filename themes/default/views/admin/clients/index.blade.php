@@ -30,28 +30,29 @@
                     <div class="dark:text-darkmodetext dark:bg-darkmode2 bg-gray-200 bg-opacity-25 grid grid-cols-1">
                         <div class="p-6">
                             <div class="dark:bg-darkmode p-2 rounded-lg flex items-center">
-                                <div class="ml-4 text-lg text-gray-600 leading-7 font-semibold w-full dark:text-darkmodetext" style="color: white !important;" id="testing">
+                                <div class="ml-4 text-lg text-gray-600 leading-7 font-semibold w-full dark:text-darkmodetext"
+                                    style="color: white !important;" id="testing">
                                     <table class="dark:text-darkmodetext divide-y divide-gray-300 w-full"
                                         id="clientdatatable">
                                         <thead class="dark:bg-darkmode bg-gray-100">
                                             <tr>
                                                 <th class="dark:text-darkmodetext px-6 py-2 text-xs text-gray-500">
-                                                    {{ __('normal.id')}}
+                                                    {{ __('normal.id') }}
                                                 </th>
                                                 <th class="dark:text-darkmodetext px-6 py-2 text-xs text-gray-500">
-                                                    {{ __('normal.name')}}
+                                                    {{ __('normal.name') }}
                                                 </th>
                                                 <th class="dark:text-darkmodetext px-6 py-2 text-xs text-gray-500">
-                                                    {{ __('normal.email')}}
+                                                    {{ __('normal.email') }}
                                                 </th>
                                                 <th class="dark:text-darkmodetext px-6 py-2 text-xs text-gray-500">
-                                                    {{ __('normal.created_at')}}
+                                                    {{ __('normal.created_at') }}
                                                 </th>
                                                 <th class="dark:text-darkmodetext px-6 py-2 text-xs text-gray-500">
-                                                    {{ __('normal.edit')}}
+                                                    {{ __('normal.edit') }}
                                                 </th>
                                                 <th class="dark:text-darkmodetext px-6 py-2 text-xs text-gray-500">
-                                                    {{ __('normal.delete')}}
+                                                    {{ __('normal.delete') }}
                                                 </th>
                                             </tr>
                                         </thead>
@@ -85,7 +86,7 @@
                                                             @csrf
                                                             @method('DELETE')
                                                             <button type="submit"
-                                                                class="px-4 py-1 text-sm text-red-600 bg-red-200 rounded-full">{{ __('normal.delete')}}</button>
+                                                                class="px-4 py-1 text-sm text-red-600 bg-red-200 rounded-full">{{ __('normal.delete') }}</button>
                                                         </form>
                                                     </td>
                                                 </tr>
@@ -101,12 +102,12 @@
         </div>
     </div>
     <link rel="stylesheet" type="text/css"
-        href="https://cdn.datatables.net/v/dt/jszip-2.5.0/dt-1.12.1/b-2.2.3/b-colvis-2.2.3/b-html5-2.2.3/b-print-2.2.3/datatables.min.css" />
+        href="https://cdn.datatables.net/v/dt/jszip-2.5.0/dt-1.12.1/b-2.2.3/b-colvis-2.2.3/b-html5-2.2.3/b-print-2.2.3/r-2.3.0/rr-1.2.8/datatables.min.css" />
 
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/pdfmake.min.js"></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/vfs_fonts.js"></script>
     <script type="text/javascript"
-        src="https://cdn.datatables.net/v/dt/jszip-2.5.0/dt-1.12.1/b-2.2.3/b-colvis-2.2.3/b-html5-2.2.3/b-print-2.2.3/datatables.min.js">
+        src="https://cdn.datatables.net/v/dt/jszip-2.5.0/dt-1.12.1/b-2.2.3/b-colvis-2.2.3/b-html5-2.2.3/b-print-2.2.3/r-2.3.0/rr-1.2.8/datatables.min.js">
     </script>
     <script>
         $(document).ready(function() {
@@ -114,7 +115,11 @@
                 dom: 'Bfrtip',
                 buttons: [
                     'copy', 'csv', 'excel', 'pdf', 'print'
-                ]
+                ],
+                rowReorder: {
+                    selector: 'td:nth-child(2)'
+                },
+                responsive: true
             });
             $('.dt-button').addClass('dark:text-darkmodetext');
             $('.dataTables_filter label').addClass('dark:text-darkmodetext');

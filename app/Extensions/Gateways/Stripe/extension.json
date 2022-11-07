@@ -8,55 +8,43 @@
             "name": "stripe_secret_key",
             "friendlyName": "Stripe Secret Key",
             "type": "text",
-            "description": "Stripe secret key"
+            "description": "Stripe secret key",
+            "required": true
         },
         {
             "name": "stripe_publishable_key",
             "friendlyName": "Stripe publishable key",
             "type": "text",
-            "description": "Stripe publishable key"
+            "description": "Stripe publishable key",
+            "required": true
         },
         {
             "name": "stripe_webhook_secret",
             "friendlyName": "Stripe webhook secret",
             "type": "text",
-            "description": "Stripe webhook secret"
+            "description": "Stripe webhook secret",
+            "required": true
         },
         {
             "name": "stripe_test_mode",
             "friendlyName": "Stripe test mode",
             "type": "boolean",
-            "description": "Stripe test mode"
+            "description": "Stripe test mode",
+            "required": false
         },
         {
             "name": "stripe_test_key",
             "friendlyName": "Stripe test key",
             "type": "text",
-            "description": "Stripe test key"
+            "description": "Stripe test key",
+            "required": false
         },
         {
             "name": "stripe_test_publishable_key",
             "friendlyName": "Stripe test publishable key",
             "type": "text",
-            "description": "Stripe test publishable key"
-        },
-        {
-            "name": "pay_options",
-            "friendlyName": "Pay options",
-            "type": "dropdown",
-            "options":[
-                "ideal",
-                "sofort",
-                "bancontact",
-                "giropay",
-                "sepa_debit",
-                "eps",
-                "p24",
-                "alipay",
-                "wechat",
-                "card"
-            ],
-            "description": "Pay options"
+            "description": "Stripe test publishable key",
+            "required": false
         }
     ]
 }

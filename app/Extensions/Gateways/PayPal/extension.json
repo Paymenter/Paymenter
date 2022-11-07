@@ -20,7 +20,7 @@
             "name": "live",
             "type": "boolean",
             "friendlyName": "Live mode",
-            "required": true
+            "required": false
         }
     ]
 }
