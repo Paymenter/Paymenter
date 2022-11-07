@@ -1,112 +1,91 @@
+<style>
+<?php include '../themes/default/css/home.css'; ?>	
+</style>
+
 <x-app-layout>
-    <x-slot name="title">
-        {{ __('Home') }}
-    </x-slot>
+	<x-slot name="title">
+		{{ __('Home') }}
+	</x-slot>
+	<div class="py-12">
+		<x-success class="mt-4" />
+		<div class="mx-auto max-w-7xl sm:px-6 lg:px-8" style="padding-bottom: 20px;">
+			<div class="bg-white dark:bg-darkmode2 overflow-hidden shadow-xl sm:rounded-lg">
+				<div class="p-6 dark:bg-darkmode2 border-gray-200">
+					<div class="flex items-center">
+						<div class="flex-shrink-0 h-12 w-12" style="display: flex;">
+							<img class="h-8 w-8 rounded-md" style="align-self: center; width: 3rem; height: 3rem;" src="https://www.gravatar.com/avatar/{{ md5(Auth::user()->email) }}?s=200&d=mp" />
+						</div>
+						<div class="ml-4 text-lg leading-7 font-semibold">
+							{{ __('Welcome back') }}, {{ Auth::user()->name }}
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div>
+			<div class="mx-auto max-w-7xl sm:px-6 lg:px-8" style="width: 53.5%; margin-right: 16.6%; float: right; padding-bottom: 1rem;">
+				<div class="bg-white dark:text-white dark:bg-darkmode2 overflow-hidden shadow-xl sm:rounded-lg" style="height: 5%;">
+					<div class="p-6 dark:text-white dark:bg-darkmode2 border-b border-gray-200" style="padding: 1%;--tw-border-opacity: 0;">
+						<div class="flex items-center">
+							<div class="ml-4 text-lg leading-7 font-semibold">
+								<a style="font-size: 0.8em;">Showing 1 to 2 of 2 entries</a>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+	    	<table id="tableServicesList" class="table table-list" style="margin-right: 18.3% !important;">
+	    	    <thead>
+	    	        <tr>
+	    	            <th class="dark:text-white sorting_asc dark:bg-darkmode2">Product/Service</th>
+	    	            <th class="dark:text-white sorting_asc dark:bg-darkmode2">Pricing</th>
+	    	            <th class="dark:text-white sorting_asc dark:bg-darkmode2">Next Due Date</th>
+	    	            <th class="dark:text-white sorting_asc dark:bg-darkmode2">Status</th>
+	    	        </tr>
+	    	    </thead>
+	    	    <tbody>
+					@if(Auth::user()->is_admin == '1') <!-- If the user is an admin, show temporary data -->
+						<tr>
+							<td colspan="4" class="dark:text-white dark:bg-darkmode2" style="text-align: center;">No services found.</td>
+						</tr>
+					@elseif(Auth::user()->is_admin == '0') <!-- If the user is not an admin, show their services -->
+						@if (count($services) > 0) <!-- If the array is empty, then we don't want to show the table -->
+							@foreach($services as $service)
+								@foreach($service->products as $product)
+									@php $product = App\Models\Products::where("id", $product["id"])->get()->first() @endphp
+									@if(substr_count($product->price, ".") == 1) <!-- If the price has a decimal point and only has one decimal point -->
+										@php $product->price = $product->price . "0" @endphp <!-- Add a zero to the end of the price -->
+										@php $service->expiry_date = date("l jS F Y", strtotime($service->expiry_date)) @endphp <!-- Format the expiry date to be more readable -->
+									@elseif(substr_count($product->price, ".") == 0) <!-- If the price has no decimal point -->
+										@php $product->price = $product->price . ".00" @endphp <!-- Add a decimal point and two zeros -->
+									@endif 
+	    	    					<tr onclick="window.location.href = '/products';">
+	    	        				    <td class="dark:text-white dark:bg-darkmode2"><strong>{{ ucfirst($product->name) }}</strong></td>
+	    	        				    <td class="text-center dark:text-white dark:bg-darkmode2" data-order="0.00">£{{ $product->price }} GBP<br />Free Account</td>
+	    	        				    <td class="text-center dark:text-white dark:bg-darkmode2">{{ $service->expiry_date }}</td>
+	    	        				    <!-- <td class="text-center dark:text-white dark:bg-darkmode2"><span class="label status status-active dark:bg-darkmode2">{{ ucfirst($service->status) }}</span></td> -->
+										<td class="text-center dark:text-white dark:bg-darkmode2">
+											@if($service->status === 'paid')
+												<span class="label status status-active dark:bg-darkmode2">Active</span>
+											@elseif($service->status === 'pending')
+												<span class="label status status-active dark:bg-darkmode2">Pending</span>
+											@elseif($service->status === 'cancelled')
+												<span class="label status status-active dark:bg-darkmode2">Expired</span>
+											@endif
+										</td>
+	    	        				</tr>
+	    	        			@endforeach
+							@endforeach
+						@elseif (count($services) < 0) <!-- If the array is empty, then don't show any data -->
+							<tr>
+								<td colspan="4" class="dark:text-white dark:bg-darkmode2" style="text-align: center;">No services found.</td>
+							</tr>
+						@endif
+					@endif
+	    	    </tbody>
+	    	</table>
+		</div>
+	</div>
+</div>
 
-    <div class="py-12">
-        <x-success class="mt-4" />
-        <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
-            <div class="grid md:grid-cols-3 p-4 dark:bg-darkmode2 overflow-hidden bg-white rounded-lg">
-
-                <!-- show the user services and products -->
-                <div class="dark:bg-darkmode2 p-6 bg-white col-span-2">
-                    <div class="flex flex-col">
-                        <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
-                            <div class="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
-                                <div class="dark:bg-white overflow-hidden rounded-lg">
-                                    @empty($services->count())
-                                        <div class="dark:bg-darkmode px-4 py-5 sm:px-6">
-                                            <h3 class="dark:text-darkmodetext text-lg leading-6 font-medium text-gray-900">
-                                                {{ __('Services') }}
-                                            </h3>
-                                            <p class="dark:text-darkmodetext mt-1 max-w-2xl text-sm text-gray-500">
-                                                {{ __('You have no services yet.') }} <a href=""
-                                                    class="font-medium text-indigo-600 hover:text-indigo-500">{{ __('Create one') }}</a>
-                                            </p>
-                                        </div>
-                                    @else
-                                        <table class="min-w-full divide-y divide-gray-200">
-                                            <thead class="bg-gray-50 dark:bg-darkmode2">
-                                                <tr>
-                                                    <th scope="col"
-                                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider dark:text-darkmodetext">
-                                                        Price
-                                                    </th>
-                                                    <th scope="col"
-                                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider dark:text-darkmodetext">
-                                                        Status
-                                                    </th>
-                                                    <th scope="col"
-                                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider dark:text-darkmodetext">
-                                                        Next Invoice
-                                                    </th>
-                                                    <th scope="col" class="relative px-6 py-3 dark:text-darkmodetext">
-                                                        <span class="sr-only">Edit</span>
-                                                    </th>
-                                                </tr>
-                                            </thead>
-                                            <tbody class="bg-white divide-y divide-gray-200 dark:bg-darkmode2">
-                                                @foreach ($services as $service)
-                                                    <tr>
-                                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-darkmodetext">
-                                                            {{ $service->total }}
-                                                        </td>
-                                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-darkmodetext">
-                                                            {{ $service->status }}
-                                                        </td>
-                                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-darkmodetext">
-                                                            {{ $service->expiry_date }}
-                                                        </td>
-                                                        <td
-                                                            class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                                            <a href=""
-                                                                class="text-indigo-600 hover:text-indigo-900">Edit</a>
-                                                        </td>
-                                                    </tr>
-                                                @endforeach
-                                                <!-- More items... -->
-                                            </tbody>
-                                        </table>
-
-                                    @endempty
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- show the user tickets and more -->
-                <div class="dark:bg-darkmode dark:border-darkmode p-10 bg-white border-2 rounded-xl border-grey-600 ml-4">
-                    <h1 class="dark:text-darkmodetext text-xl text-gray-500">Created tickets</h1>
-                    <div class="grid grid-cols-1 gap-4">
-                    <?php 
-                        $counter = 0;
-                    ?>
-                    @if ($counter < 3)
-                        @foreach(App\Models\Tickets::all() as $ticket)
-                            @if ($ticket->client == Auth::user()->id)
-                                <a href="tickets/{{$ticket->id}}">   
-                                    <div class="dark:hover:bg-darkmodehover dark:bg-darkmode2 bg-normal rounded-md p-2">
-                                        <h1 class="dark:text-darkmodetext text-xl text-gray-500">Ticket #{{$ticket->id}}</h1>
-                                        <p class="dark:text-darkmodetext text-black font-bold text-2xl">{{ $ticket->title }} 
-                                            @if($ticket->priority == 'high')
-                                                <span class="bg-red-500 text-white rounded-full p-1 text-base">High</span>
-                                            @elseif($ticket->priority == 'medium')
-                                                <span class="bg-yellow-500 text-white rounded-full p-1 text-base" >Medium</span>
-                                            @elseif($ticket->priority == 'low')
-                                                <span class="bg-green-500 text-white rounded-full p-1 text-base">Low</span>
-                                            @endif
-                                        </p>
-                                    </div>
-                                </a> 
-                                <?php
-                                    $counter++;
-                                ?>
-                            @endif
-                        @endforeach
-                    @endif
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
 </x-app-layout>
