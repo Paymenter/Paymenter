@@ -73,18 +73,9 @@
         <div>
             <script>
                 const labelsBarChart = [
-                    "January",
-                    "February",
-                    "March",
-                    "April",
-                    "May",
-                    "June",
-                    "July",
-                    "August",
-                    "September",
-                    "October",
-                    "November",
-                    "December",
+                    @for($i = 1; $i <= 12; $i++)
+                        "{{ date('F', mktime(0, 0, 0, $i, 1)) }}",
+                    @endfor
                 ];
                 const dataBarChart = {
                     labels: labelsBarChart,
@@ -92,18 +83,9 @@
                         label: "Users",
                         backgroundColor: "#f87979",
                         data: [
-                            {{App\Models\User::whereMonth('created_at', '=', '1')->count()}},
-                            {{App\Models\User::whereMonth('created_at', '=', '2')->count()}},
-                            {{App\Models\User::whereMonth('created_at', '=', '3')->count()}},
-                            {{App\Models\User::whereMonth('created_at', '=', '4')->count()}},
-                            {{App\Models\User::whereMonth('created_at', '=', '5')->count()}},
-                            {{App\Models\User::whereMonth('created_at', '=', '6')->count()}},
-                            {{App\Models\User::whereMonth('created_at', '=', '7')->count()}},
-                            {{App\Models\User::whereMonth('created_at', '=', '8')->count()}},
-                            {{App\Models\User::whereMonth('created_at', '=', '9')->count()}},
-                            {{App\Models\User::whereMonth('created_at', '=', '10')->count()}},
-                            {{App\Models\User::whereMonth('created_at', '=', '11')->count()}},
-                            {{App\Models\User::whereMonth('created_at', '=', '12')->count()}},
+                            @for($i = 1; $i <= 12; $i++)
+                                {{App\Models\User::whereMonth('created_at', '=', $i)->count()}},
+                            @endfor
                         ],
                     }],
                 };
