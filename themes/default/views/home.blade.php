@@ -1,7 +1,3 @@
-<style>
-<?php include '../themes/default/css/home.css'; ?>	
-</style>
-
 <x-app-layout>
 	<x-slot name="title">
 		{{ __('Home') }}
