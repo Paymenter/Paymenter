@@ -85,7 +85,7 @@ return [
     ],
     'mac_address' => 'Het :attribute moet be a valid MAC address.',
     'max' => [
-        'array' => 'Het :attribute moet not have more than :max items.',
+        'array' => 'Het :attribute moet niet meer dan :max items hebben.',
         'file' => 'Het :attribute moet not be greater than :max kilobytes.',
         'numeric' => 'Het :attribute moet not be greater than :max.',
         'string' => 'Het :attribute moet not be greater than :max characters.',
