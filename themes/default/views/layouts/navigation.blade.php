@@ -217,46 +217,6 @@
             </div>
 
             <script>
-                var usermenu = document.getElementById('user-menu');
-                var settings = document.getElementById('settings');
-                var orders = document.getElementById('orders');
-                var clients = document.getElementById('clients');
-                var tickets = document.getElementById('tickets');
-
-                // function openMenu(id) {
-                //     if (id == 'user-menu') {
-                //         usermenu.classList.toggle('hidden');
-                //         settings.classList.add('hidden');
-                //         orders.classList.add('hidden');
-                //         clients.classList.add('hidden');
-                //         tickets.classList.add('hidden');
-                //     } else if (id == 'settings') {
-                //         settings.classList.toggle('hidden');
-                //         usermenu.classList.add('hidden');
-                //         orders.classList.add('hidden');
-                //         clients.classList.add('hidden');
-                //         tickets.classList.add('hidden');
-                //     } else if (id == 'orders') {
-                //         orders.classList.toggle('hidden');
-                //         usermenu.classList.add('hidden');
-                //         settings.classList.add('hidden');
-                //         clients.classList.add('hidden');
-                //         tickets.classList.add('hidden');
-                //     } else if (id == 'clients') {
-                //         clients.classList.toggle('hidden');
-                //         usermenu.classList.add('hidden');
-                //         settings.classList.add('hidden');
-                //         orders.classList.add('hidden');
-                //         tickets.classList.add('hidden');
-                //     } else if (id == 'tickets') {
-                //         tickets.classList.toggle('hidden');
-                //         usermenu.classList.add('hidden');
-                //         settings.classList.add('hidden');
-                //         orders.classList.add('hidden');
-                //         clients.classList.add('hidden');
-                //     }
-                // }
-
                 function openMenu(id) {
                     var menu = document.getElementById(id);
                     menu.classList.toggle('hidden');
