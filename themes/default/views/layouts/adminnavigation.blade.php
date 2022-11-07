@@ -24,6 +24,7 @@
                         clip-rule="evenodd"></path>
                 </svg>
             </button>
+            <!-- clients -->
             <div class="hidden sm:flex sm:items-center sm:w-auto justify-center place-items-center text-center text-lg"
                 id="menu">
                 <a href="{{ route('admin') }}"
@@ -57,6 +58,7 @@
                         </div>
                     </div>
                 </div>
+                <!-- orders -->
                 <div class="relative inline-block text-left">
                     <button type="button"
                         class="dark:bg-darkmode dark:text-darkmodetext dark:hover:bg-darkmode2 inline-flex w-full justify-center bg-white px-2 py-2 text-base font-medium rounded-md text-gray-700 @if (request()->routeIs('admin.orders*')) bg-gray-200 @endif"
@@ -110,7 +112,7 @@
                 <div class="relative inline-block text-left">
                     <button type="button"
                         class="dark:bg-darkmode dark:text-darkmodetext dark:hover:bg-darkmode2 inline-flex w-full justify-center bg-white px-2 py-2 text-base font-medium rounded-md text-gray-700 @if (request()->routeIs('admin.tickets*')) bg-gray-200 @endif"
-                        id="menu-button" aria-expanded="true" aria-haspopup="true" onclick="openMenu('tickets')">
+                        id="menu-button" aria-expanded="true" aria-haspopup="true" onclick="openMenu('support')">
                         <i class="ri-question-answer-line pr-1"
                             @if (request()->routeIs('admin.tickets')) style="color: #5270FD" @endif></i> Support
                         @if (isset(App\Models\Tickets::where('status', 'open')->get()[0]))
@@ -271,52 +273,21 @@
             </div>
 
             <script>
-                var usermenu = document.getElementById('user-menu');
-                var settings = document.getElementById('settings');
-                var orders = document.getElementById('orders');
-                var clients = document.getElementById('clients');
-                var tickets = document.getElementById('support');
-                var products = document.getElementById('products');
-
                 function openMenu(id) {
-                    if (id == 'user-menu') {
-                        usermenu.classList.toggle('hidden');
-                        settings.classList.add('hidden');
-                        orders.classList.add('hidden');
-                        clients.classList.add('hidden');
-                        tickets.classList.add('hidden');
-                    } else if (id == 'settings') {
-                        settings.classList.toggle('hidden');
-                        usermenu.classList.add('hidden');
-                        orders.classList.add('hidden');
-                        clients.classList.add('hidden');
-                        tickets.classList.add('hidden');
-                    } else if (id == 'orders') {
-                        orders.classList.toggle('hidden');
-                        usermenu.classList.add('hidden');
-                        settings.classList.add('hidden');
-                        clients.classList.add('hidden');
-                        tickets.classList.add('hidden');
-                    } else if (id == 'clients') {
-                        clients.classList.toggle('hidden');
-                        usermenu.classList.add('hidden');
-                        settings.classList.add('hidden');
-                        orders.classList.add('hidden');
-                        tickets.classList.add('hidden');
-                    } else if (id == 'tickets') {
-                        tickets.classList.toggle('hidden');
-                        usermenu.classList.add('hidden');
-                        settings.classList.add('hidden');
-                        orders.classList.add('hidden');
-                        clients.classList.add('hidden');
-                    } else if (id == 'products') {
-                        products.classList.toggle('hidden');
-                        usermenu.classList.add('hidden');
-                        settings.classList.add('hidden');
-                        orders.classList.add('hidden');
-                        clients.classList.add('hidden');
-                        tickets.classList.add('hidden');
+                    var menu = document.getElementById(id);
+                    menu.classList.toggle('hidden');
+
+                    var menus = document.getElementsByClassName('dropdown-menu');
+                    for (var i = 0; i < menus.length; i++) {
+                        if (menus[i] != menu) {
+                            menus[i].classList.add('hidden');
+                        }
                     }
+                    document.addEventListener('click', function(e) {
+                        if (e.target != menu && e.target != menu.previousElementSibling) {
+                            menu.classList.add('hidden');
+                        }
+                    });
                 }
 
                 function openUserMenu() {
