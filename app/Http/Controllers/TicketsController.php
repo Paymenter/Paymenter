@@ -24,7 +24,8 @@ class TicketsController extends Controller
 
     function create()
     {
-        return view('tickets.create');
+        $services = Orders::where('client', auth()->user()->id)->get();
+        return view('tickets.create', compact('services'));
     }
 
     function store(Request $request)
