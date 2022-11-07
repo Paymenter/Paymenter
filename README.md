@@ -9,7 +9,7 @@ Disclaimer: This is a work in progress. It is not ready for production use.
 ## A advanced payment system for your hosting company
 ### About
 
-This is a advanced payment system for your hosting company. It is written in PHP and uses MySQL as database. It is designed to be easy to use and easy to install. It is also designed to be easy to customize and to be easy to add new features.
+This is a advanced payment system for your hosting company. It is written in PHP and uses MySQL as database. It is designed to be easy to use and easy to install. You can easily install addons/themes, we also provide a marketplace for developers/designers to make and create amazing themes/addons!
 
 ## Features
 - [✔️] Login System
