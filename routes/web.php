@@ -54,18 +54,6 @@ Route::group(['prefix' =>'invoices', 'middleware' => 'auth'], function () {
     Route::get('/{id}/download', [App\Http\Controllers\InvoiceController::class, 'download'])->name('invoice.download');
 });
 
-Route::redirect('/', '/en');
-
-Route::group(['prefix' => '{locale}'], function() {
-    Route::get('/', function() {
-        return view('welcome');
-    });
-
-    Auth::routes();
-
-    Route::get('/home', 'HomeController@index')->name('home');
-});
-
 require __DIR__ . '/auth.php';
 require __DIR__ . '/admin.php';
 require __DIR__ . '/extensions.php';
