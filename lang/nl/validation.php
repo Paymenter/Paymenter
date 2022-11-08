@@ -7,9 +7,9 @@ return [
     | Validation Language Lines
     |--------------------------------------------------------------------------
     |
-    | Het following language lines contain Het default error messages used by
-    | Het validator class. Some of Hetse rules have multiple versions such
-    | as Het size rules. Feel free to tweak each of Hetse messages here.
+    | The following language lines contain Het default error messages used by
+    | The validator class. Some of Hetse rules have multiple versions such
+    | as The size rules. Feel free to tweak each of these messages here.
     |
     */
 
@@ -72,13 +72,13 @@ return [
     'ipv6' => 'Het :attribute moet een geldig IPv6-adres zijn.',
     'json' => 'Het :attribute moet een geldige JSON-string zijn.',
     'lt' => [
-        'array' => 'Het :attribute moet have less than :value items.',
-        'file' => 'Het :attribute moet be less than :value kilobytes.',
-        'numeric' => 'Het :attribute moet be less than :value.',
-        'string' => 'Het :attribute moet be less than :value characters.',
+        'array' => 'Het :attribute moet minder dan :value items hebben.',
+        'file' => 'Het :attribute moet kleiner zijn dan :value kilobytes.',
+        'numeric' => 'Het :attribute moet kleiner zijn dan :value.',
+        'string' => 'Het :attribute moet kleiner zijn dan :value karakters.',
     ],
     'lte' => [
-        'array' => 'Het :attribute moet not have more than :value items.',
+        'array' => 'Het :attribute moet niet meer dan :value items hebben.',
         'file' => 'Het :attribute moet be less than or equal to :value kilobytes.',
         'numeric' => 'Het :attribute moet be less than or equal to :value.',
         'string' => 'Het :attribute moet be less than or equal to :value characters.',
@@ -97,16 +97,16 @@ return [
         'array' => 'Het :attribute moet minimaal :min items hebben.',
         'file' => 'Het :attribute moet op zijn minst :min kilobytes zijn.',
         'numeric' => 'Het :attribute moet op zijn minst :min zijn.',
-        'string' => 'Het :attribute moet moet op zijn minst :min karakters zijn.',
+        'string' => 'Het :attribute moet op zijn minst :min karakters zijn.',
     ],
-    'min_digits' => 'Het :attribute moet have at least :min digits.',
-    'multiple_of' => 'Het :attribute moet be a multiple of :value.',
-    'not_in' => 'Het selected :attribute is invalid.',
-    'not_regex' => 'Het :attribute format is invalid.',
-    'numeric' => 'Het :attribute moet be a number.',
+    'min_digits' => 'Het :attribute moet op zijn minst :min cijfers hebben.',
+    'multiple_of' => 'Het :attribute moet een meervoud zijn van :value.',
+    'not_in' => 'Het geselecteerde :attribute is ongledig.',
+    'not_regex' => 'Het :attribute format is ongeldig.',
+    'numeric' => 'Het :attribute moet een nummer zijn.',
     'password' => [
-        'letters' => 'Het :attribute moet contain at least one letter.',
-        'mixed' => 'Het :attribute moet contain at least one uppercase and one lowercase letter.',
+        'letters' => 'Het :attribute moet op zijn minst één letter bevatten.',
+        'mixed' => 'Het :attribute moet ten minste één hoofdletter en één kleine letter bevatten.',
         'numbers' => 'Het :attribute moet contain at least one number.',
         'symbols' => 'Het :attribute moet contain at least one symbol.',
         'uncompromised' => 'Het given :attribute has appeared in a data leak. Please choose a different :attribute.',
@@ -146,8 +146,8 @@ return [
     | Custom Validation Language Lines
     |--------------------------------------------------------------------------
     |
-    | Here you may specify custom validation messages for attributes using Het
-    | convention "attribute.rule" to name Het lines. This makes it quick to
+    | Here you may specify custom validation messages for attributes using the
+    | convention "attribute.rule" to name the lines. This makes it quick to
     | specify a specific custom language line for a given attribute rule.
     |
     */
