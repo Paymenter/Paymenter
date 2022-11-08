@@ -21,4 +21,9 @@ return [
     'you' => 'You',
     'reply' => 'Reply',
     'create_ticket' => 'Create Ticket',
+    'category' => 'Category',
+    'category_support' => 'Support',
+    'category_sales' => 'Sales',
+    'category_other' => 'Other',
+    'none' => 'None',
 ];
