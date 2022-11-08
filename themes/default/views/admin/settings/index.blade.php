@@ -219,7 +219,7 @@
                                                                     value="{{ $settings->currency_sign }}">
                                                             </div>
                                                         </div>
-                                                        <div class="mt-4">
+                                                        <div class="mt-4">1
                                                             <label for="currency_position" class="block text-sm font-medium text-gray-700 dark:text-darkmodetext">
                                                                 {{ __('Currency Position') }}
                                                             </label>
