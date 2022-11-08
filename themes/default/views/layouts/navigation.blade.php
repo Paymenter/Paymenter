@@ -115,6 +115,9 @@
                                     <a href="{{ route('admin.settings') }}"
                                         class="block px-4 py-2 text-base text-gray-700 dark:hover:bg-darkbutton dark:text-darkmodetext hover:bg-gray-100"
                                         role="menuitem">Settings</a>
+                                    <a href="{{ route('admin.settings') }}"
+                                        class="block px-4 py-2 text-base text-gray-700 dark:hover:bg-darkbutton dark:text-darkmodetext hover:bg-gray-100"
+                                        role="menuitem">Change Password</a>
                                     <div>
                                         <a href="{{ route('admin') }}"
                                             class="block px-4 py-2 text-base text-gray-700 dark:hover:bg-darkbutton dark:text-darkmodetext hover:bg-gray-100"
@@ -126,6 +129,11 @@
                                         <a href="{{ route('home') }}"
                                             class="block px-4 py-2 text-base text-gray-700 dark:hover:bg-darkbutton dark:text-darkmodetext hover:bg-gray-100"
                                             role="menuitem">Dashboard</a>
+                                    </div>
+                                    <div> <!-- Temp route to profile as this hasn't been added yet -->
+                                        <a href="{{ route('profile') }}"
+                                            class="block px-4 py-2 text-base text-gray-700 dark:hover:bg-darkbutton dark:text-darkmodetext hover:bg-gray-100"
+                                            role="menuitem">Change Password</a>
                                     </div>
                                 @endif
                                 <a href="{{ route('logout') }}"
