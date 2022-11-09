@@ -1,8 +1,11 @@
 <?php
 namespace App\Http\Controllers;
+
 use App\Models\Orders;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Models\User;
+
 class HomeController extends Controller
 {
     function index()
@@ -18,9 +21,15 @@ class HomeController extends Controller
         return;
     }
 
-    function profile()
+    function profile(Request $request)
     {
-        return view('profile');
+        $users = User::all();
+        return view('profile', compact('users', $request));
+    }
+
+    function password()
+    {
+        return view('auth.passwords.change-password');
     }
 
     function update(Request $request)
