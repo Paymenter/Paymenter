@@ -1,5 +1,6 @@
 <?php
 namespace App\Http\Controllers;
+
 use App\Models\Orders;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -28,7 +29,7 @@ class HomeController extends Controller
 
     function password()
     {
-        return view('layouts.password');
+        return view('auth.passwords.change-password');
     }
 
     function update(Request $request)
