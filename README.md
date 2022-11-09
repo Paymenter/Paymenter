@@ -12,14 +12,16 @@ Disclaimer: This is a work in progress. It is not ready for production use.
 This is a advanced payment system for your hosting company. It is written in PHP and uses MySQL as database. It is designed to be easy to use and easy to install. You can easily install addons/themes, we also provide a marketplace for developers/designers to make and create amazing themes/addons!
 
 ## Features
-- [✔️] Login System
-- [✔️] Register System
-- [✔️] Dashboard
-- [✔️] Products
-- [✔️] Orders
-- [✔️] Tickets
-- [✔️] Billing
-- [✔️] Admin Panel
+- Free and open-source
+- User-Friendly client and admin area
+- Easily customizable
+- Pay intergration with: Stripe, PayPal, Mollie and more
+- Server intergration with: Pterodactyl, Virtualizor, Virtfusion and more
+- Automatticly bill your customers
+- Built in support center
+
+## Wanna take a look?
+Visit our demo at: https://demo.paymenter.org with credentials: ```admin@paymenter.org``` and password ```paymenter```
 
 ## Requirements
 The requirements for Paymenter are the following:
