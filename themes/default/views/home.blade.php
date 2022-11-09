@@ -44,8 +44,6 @@
                         </tr>
                     </thead>
                     <tbody>
-
-                        <!-- If the user is not an admin, show their services -->
                         @if (count($services) > 0)
                             <!-- If the array is empty, then we don't want to show the table -->
                             @foreach ($services as $service)
@@ -65,8 +63,7 @@
                                             <strong>{{ ucfirst($product->name) }}</strong>
                                         </td>
                                         <td class="text-center dark:text-white dark:bg-darkmode2" data-order="0.00">
-                                            £{{ number_format((float) $product->price, 2, '.', '') }} GBP<br />Free
-                                            Account</td>
+                                            {{ App\Models\Settings::first()->currency_sign }}{{ number_format((float) $product->price, 2, '.', '') }}</td>
                                         <td class="text-center dark:text-white dark:bg-darkmode2">
                                             {{ $service->expiry_date }}</td>
                                         <!-- <td class="text-center dark:text-white dark:bg-darkmode2"><span class="label status status-active dark:bg-darkmode2">{{ ucfirst($service->status) }}</span></td> -->
@@ -84,7 +81,7 @@
                                     </tr>
                                 @endforeach
                             @endforeach
-                        @elseif (count($services) < 0)
+                        @elseif (count($services) <= 0)
                             <!-- If the array is empty, then don't show any data -->
                             <tr>
                                 <td colspan="4" class="dark:text-white dark:bg-darkmode2"
