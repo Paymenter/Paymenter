@@ -20,7 +20,6 @@ return new class extends Migration
             $table->string('seo_twitter_card')->nullable();
             $table->string('advanced_mode')->default('false');
             $table->string('seo_image')->nullable();
-            $table->string('currency_sign')->default('$');
             $table->string('currency_position')->default('left');
             $table->string('home_page_text')->nullable();
             $table->string('app_name')->nullable();
