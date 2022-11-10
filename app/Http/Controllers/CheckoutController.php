@@ -43,7 +43,7 @@ class CheckoutController extends Controller
         $server = Extensions::find($product->server_id);
         $extension = json_decode(file_get_contents(base_path('app/Extensions/Servers/' . $server->name . '/extension.json')));
         
-        if($extension->userConfig){
+        if(isset($extension->userConfig)){
             return redirect()->route('checkout.config', $product->id);
         }
         
@@ -65,6 +65,9 @@ class CheckoutController extends Controller
         $product = $id;
         $server = Extensions::find($product->server_id);
         $extension = json_decode(file_get_contents(base_path('app/Extensions/Servers/' . $server->name . '/extension.json')));
+        if(!isset($extension->userConfig)){
+            return redirect()->route('checkout.index');
+        }
         return view('checkout.config', compact('product', 'extension'));
     }
 
@@ -112,8 +115,10 @@ class CheckoutController extends Controller
             $productJson = [
                 'id' => $product->id,
                 'quantity' => $product->quantity,
-                'config' => $product->config
             ];
+            if(isset($product->config)){
+                $productJson['config'] = $product->config;
+            }
             array_push($productsids, $productJson);
         }
         $user = User::find(auth()->user()->id);

@@ -8,3 +8,6 @@ include_once(__DIR__ . '/index.php');
 Route::post('/paypal/webhook', function () {
     PayPal_webhook(request());
 });
+
+Route::get('/paypal/webhook', function () {
+});

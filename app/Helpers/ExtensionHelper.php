@@ -1,5 +1,7 @@
 <?php
+
 namespace App\Helpers;
+
 use App\Models\Orders;
 use App\Models\Products;
 use App\Models\User;
@@ -16,7 +18,7 @@ class ExtensionHelper
     public static function paymentDone($id)
     {
         $invoice = Invoices::findOrFail($id);
-        if($invoice->status == 'paid') {
+        if ($invoice->status == 'paid') {
             return;
         }
         $invoice->status = 'paid';
@@ -61,7 +63,7 @@ class ExtensionHelper
             $extension = Extensions::where('name', $name)->first();
         }
         $config = $extension->getConfig()->where('key', $key)->first();
-        if(!$config){
+        if (!$config) {
             return;
         }
 
@@ -80,12 +82,12 @@ class ExtensionHelper
             $extension = Extensions::where('name', $name)->first();
         }
         $config = $extension->getConfig()->where('key', $key)->first();
-        if(!$config){
+        if (!$config) {
             $extension->getConfig()->create([
                 'key' => $key,
                 'value' => $value,
             ]);
-        }else{
+        } else {
             $config->value = $value;
             $config->save();
         }
@@ -102,9 +104,9 @@ class ExtensionHelper
             ]);
             $extension = Extensions::where('name', $name)->first();
         }
-        
+
         $config = $extension->getServer()->where('product_id', $id)->where('extension', $extension->id)->where('name', $key)->first();
-        if(!$config){
+        if (!$config) {
             $extension->getServer()->create([
                 'name' => $key,
                 'value' => '',
@@ -120,7 +122,7 @@ class ExtensionHelper
     {
         $extension = Extensions::where('id', $id)->first();
         if (!$extension) {
-           return false;
+            return false;
         }
         // Get the payment method
         include_once(app_path() . '/Extensions/Gateways/' . $extension->name . '/index.php');
@@ -134,7 +136,7 @@ class ExtensionHelper
 
     public static function createServer(Orders $order)
     {
-        foreach($order->products as $product2){
+        foreach ($order->products as $product2) {
             $product = Products::findOrFail($product2['id']);
             $extension = Extensions::where('id', $product->server_id)->first();
             if (!$extension) {
@@ -143,10 +145,12 @@ class ExtensionHelper
             include_once(app_path() . '/Extensions/Servers/' . $extension->name . '/index.php');
             $settings = $product->settings()->get();
             $config = [];
-            foreach($settings as $setting){
+            foreach ($settings as $setting) {
                 $config[$setting->name] = $setting->value;
             }
-            $config['config'] = json_encode($product2["config"]);
+            if (isset($product2["config"])) {
+                $config['config'] = json_encode($product2["config"]);
+            }
             $user = User::findOrFail($order->client);
             createServer($user, $config, $order);
             return true;
@@ -155,7 +159,7 @@ class ExtensionHelper
 
     public static function suspendServer(Orders $order)
     {
-        foreach($order->products as $product){
+        foreach ($order->products as $product) {
             $product = Products::findOrFail($product['id']);
             $extension = Extensions::where('id', $product->server_id)->first();
             if (!$extension) {
@@ -169,7 +173,7 @@ class ExtensionHelper
 
     public static function unsuspendServer(Orders $order)
     {
-        foreach($order->products as $product){
+        foreach ($order->products as $product) {
             $product = Products::findOrFail($product['id']);
             $extension = Extensions::where('id', $product->server_id)->first();
             if (!$extension) {
@@ -183,7 +187,7 @@ class ExtensionHelper
 
     public static function terminateServer(Orders $order)
     {
-        foreach($order->products as $product){
+        foreach ($order->products as $product) {
             $product = Products::findOrFail($product['id']);
             $extension = Extensions::where('id', $product->server_id)->first();
             if (!$extension) {
@@ -194,5 +198,4 @@ class ExtensionHelper
             return true;
         }
     }
-
 }
