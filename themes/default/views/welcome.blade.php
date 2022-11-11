@@ -14,7 +14,7 @@
                         </div>
                     </div>
                     <div class="dark:bg-darkmode dark:text-darkmodetext py-12">
-                        <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
+                        <div class="mx-auto max-w-7xl px-0">
                             <div class="dark:bg-darkmode2 overflow-hidden bg-white rounded-lg">
                                 <div class="dark:bg-darkmode2 p-6 bg-white">
                                     <!-- display all categories with products -->
