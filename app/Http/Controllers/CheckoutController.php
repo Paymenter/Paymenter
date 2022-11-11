@@ -6,7 +6,6 @@ use App\Models\{Orders, Products, User, Invoices, Extensions, Statistics};
 use Illuminate\Contracts\Session\Session;
 use Illuminate\Http\Request;
 
-
 class CheckoutController extends Controller
 {
     public function index(Request $request)
@@ -127,21 +126,23 @@ class CheckoutController extends Controller
         $order->total = $total;
         $order->products = $productsids;
         $order->expiry_date = date('Y-m-d H:i:s', strtotime('+1 month'));
-        $order->status = 'pending';
+        if($total == 0){
+            $order->status = 'paid';
+            ExtensionHelper::createServer($order);
+        } else {
+            $order->status = 'pending';
+        }
         $order->save();
 
         $invoice = new Invoices();
         $invoice->user_id = $user->id;
         $invoice->order_id = $order->id;
-        $invoice->status = 'pending';
+        if($total == 0){
+            $invoice->status = 'paid';
+        } else {
+            $invoice->status = 'pending';
+        }
         $invoice->save();
-
-        Statistics::updateOrCreate(
-            [
-                'name' => 'orders',
-                'date' => date('Y-m-d'),
-            ]
-        )->increment('value');
 
         session()->forget('cart');
         return redirect()->route('invoice.show', ['id' => $invoice->id]);
