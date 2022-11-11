@@ -18,9 +18,9 @@
                             </div>
                         </div>
                         <div class="flex">
-                            <form method="POST" action="{{ route('tickets.store') }}" style="width: 100%">
+                            <form method="POST" action="{{ route('tickets.store') }}" class="w-full">
                                 @csrf
-                                <div style="width: 50%; float: left;">
+                                <div class="w-6/12 float-left">
                                     <div class="mt-4">
                                         <label class="block text-sm font-medium text-gray-700 dark:text-darkmodetext"
                                             for="title">
@@ -93,7 +93,7 @@
                                         </select>
                                     </div>
                                 </div>
-                                <div style="width: 50%; float: right; padding-left: 2rem;">
+                                <div class="w-1/2 float-right pl-8">
                                     @if (App\Models\Settings::first()->recaptcha == 1)
                                     <div class="g-recaptcha"
                                         data-sitekey="{{ App\Models\Settings::first()->recaptcha_site_key }}"></div>
