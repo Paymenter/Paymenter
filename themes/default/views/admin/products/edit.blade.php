@@ -4,15 +4,15 @@
     </x-slot>
 
     <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg dark:bg-darkmode2 dark:shadow-gray-700">
-                <div class="p-6 sm:px-20 bg-white dark:bg-darkmode2">
+        <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
+            <div class="overflow-hidden bg-white shadow-xl sm:rounded-lg dark:bg-darkmode2 dark:shadow-gray-700">
+                <div class="p-6 bg-white sm:px-20 dark:bg-darkmode2">
                     <div class="mt-8 text-2xl dark:text-darkmodetext">
                         Update product {{ $product->name }}
                     </div>
                     <!-- extension a href -->
                     <div class="mt-6 text-gray-500 dark:text-darkmodetext ">
-                        <a href="{{ route('admin.products.extension', $product->id) }}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded dark:text-darkmodetext">Server settings</a>
+                        <a href="{{ route('admin.products.extension', $product->id) }}" class="px-4 py-2 font-bold text-white bg-blue-500 rounded hover:bg-blue-700 dark:text-darkmodetext">Server settings</a>
                     </div>
                     <x-success class="mb-4" />
                     <div class="mt-6 text-gray-500 dark:text-darkmodetext dark:bg-darkmode2">
@@ -22,28 +22,28 @@
                             <div>
                                 <label for="name">{{ __('Name') }}</label>
 
-                                <input id="name" class="block mt-1 w-full dark:bg-darkmode" type="text" name="name"
+                                <input id="name" class="block w-full mt-1 dark:bg-darkmode" type="text" name="name"
                                     value="{{ $product->name }} " required autofocus />
                             </div>
                             <div class="mt-4 ">
                                 <label for="description">{{ __('Description') }}</label>
 
-                                <textarea id="description" class="block mt-1 w-full dark:bg-darkmode" name="description" required>{{ $product->description }}</textarea>
+                                <textarea id="description" class="block w-full mt-1 dark:bg-darkmode" name="description" required>{{ $product->description }}</textarea>
                             </div>
                             <div class="mt-4">
                                 <label for="price">{{ __('Price') }}</label>
 
-                                {{ App\Models\Settings::first()->currency_sign }}<input id="price" class="block mt-1 w-full dark:bg-darkmode" type="number" name="price"
-                                    min="1" step="0.01" value="{{ number_format($product->price, 2) }}" required />
+                                {{ App\Models\Settings::first()->currency_sign }}<input id="price" class="block w-full mt-1 dark:bg-darkmode" type="number" name="price"
+                                    min="0" step="0.01" value="{{ number_format($product->price, 2) }}" required />
                             </div>
                             <div class="mt-4">
                                 <label for="image">{{ __('Image') }}</label>
                                 <p>Only upload a new image if you want to replace the existing one</p>
-                                <input id="image" class="block mt-1 w-full dark:bg-darkmode" type="file" name="image" />
+                                <input id="image" class="block w-full mt-1 dark:bg-darkmode" type="file" name="image" />
                             </div>
                             <div class="mt-4">
                                 <label for="category">{{ __('Category') }}</label>
-                                <select id="category" class="block mt-1 w-full dark:bg-darkmode" name="category_id" required>
+                                <select id="category" class="block w-full mt-1 dark:bg-darkmode" name="category_id" required>
                                     @if ($categories->count())
                                         @foreach ($categories as $category)
                                             @if ($category->id == $product->category_id)
@@ -64,7 +64,7 @@
                             </div>
                             <div class="flex items-center justify-end mt-4">
                                 <button type="submit"
-                                    class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded dark:text-darkmodetext">
+                                    class="px-4 py-2 font-bold text-white bg-blue-500 rounded hover:bg-blue-700 dark:text-darkmodetext">
                                     {{ __('Update') }}
                                 </button>
                             </div>
