@@ -93,12 +93,6 @@
                                         <div class="g-recaptcha"
                                             data-sitekey="{{ App\Models\Settings::first()->recaptcha_site_key }}"></div>
                                     @endif
-                                    <div class="flex items-center justify-end mt-4">
-                                        <button
-                                            class="px-4 py-2 font-bold text-white bg-blue-500 rounded hover:bg-blue-700">
-                                            {{ __('Create') }}
-                                        </button>
-                                    </div>
                                 </form>
                                 <form method="POST" action="{{ route('tickets.store') }}" style="padding-left: 20px; width: 50%">
                                     @csrf
@@ -107,8 +101,14 @@
                                             for="description">
                                             {{ __('Description') }}
                                         </label>
-                                        <textarea class="block w-full mt-1 rounded-md shadow-sm form-input dark:text-darkmodetext dark:bg-darkmode" style="height: 300px"
+                                        <textarea class="block w-full mt-1 rounded-md shadow-sm form-input dark:text-darkmodetext dark:bg-darkmode" style="height: 288px"
                                             id="description" name="description" required>{{ old('description') }}</textarea>
+                                    </div>
+                                    <div class="flex items-center justify-end mt-4">
+                                        <button
+                                            class="px-4 py-2 font-bold text-white bg-blue-500 rounded hover:bg-blue-700">
+                                            {{ __('Create') }}
+                                        </button>
                                     </div>
                                 </form>
                             </div>
