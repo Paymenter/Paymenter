@@ -49,6 +49,9 @@ function createServer($user, $parmas, $order)
     }
     $url = pteroConfig('host') . '/api/application/servers';
     $eggData = pterodactyl_getRequest(pteroConfig('host') . '/api/application/nests/' . $parmas['nest'] . '/eggs/' . $parmas['egg'] . '?include=variables')->json();
+    if(!$eggData) {
+        return;
+    }
     foreach ($eggData['attributes']['relationships']['variables']['data'] as $key => $val) {
         $attr = $val['attributes'];
         $var = $attr['env_variable'];

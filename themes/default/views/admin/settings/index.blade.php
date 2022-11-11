@@ -242,15 +242,15 @@
                                                 <div class="flex flex-row items-center grow">
                                                     <div class="flex items-center grow">
                                                         <div class="w-full ml-4 text-lg font-semibold leading-7 text-gray-600">
-                                                            <div class="mt-4 " id="homepage_text">
-                                                                <label for="homepage_text" class="block text-sm font-medium text-gray-700 dark:text-darkmodetext">
+                                                            <div class="mt-4 " id="app_name">
+                                                                <label for="app_name" class="block text-sm font-medium text-gray-700 dark:text-darkmodetext">
                                                                     {{ __('App Name') }}
                                                                 </label>
                                                                 <div class="mt-1">
-                                                                    <textarea id="home_page_text" name="home_page_text" type="text"
-                                                                        autocomplete="homepage_text"
+                                                                    <input id="app_name" name="app_name" type="text"
+                                                                        autocomplete="app_name"
                                                                         class="block w-full mt-1 text-center rounded-md shadow-sm dark:text-darkmodetext dark:bg-darkmode form-input"
-                                                                        rows="1">{{ $settings->app_name }}</textarea>
+                                                                        value="{{ $settings->app_name }}">
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -278,7 +278,7 @@
                                     <div class="flex items-center justify-end mt-4">
                                         <button type="submit"
                                             class="px-4 py-2 font-bold text-white bg-blue-500 rounded hover:bg-blue-700">
-                                            {{ __('normal.edit') }}
+                                            {{ __('Update') }}
                                         </button>
                                     </div>
                                 </div>

@@ -21,13 +21,13 @@ class InvoiceController extends Controller
     public function show(Request $request, Invoices $id)
     {
         $order = Orders::findOrFail($id->order_id);
-        $invoice = $id;
+
         if($invoice->user_id != auth()->user()->id) {
             return redirect()->route('invoice.index');
         }
         $products = [];
         foreach($order->products as $product) {
-            $test = Products::find($product['id'])->first();
+            $test = Products::where('id', $product['id'])->first();
             $test->quantity = $product['quantity'];
             $products[] = $test;
         }

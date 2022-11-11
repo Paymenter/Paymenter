@@ -138,6 +138,9 @@ class ExtensionHelper
     {
         foreach ($order->products as $product2) {
             $product = Products::findOrFail($product2['id']);
+            if(!isset($product->server_id)) {
+                return;
+            }
             $extension = Extensions::where('id', $product->server_id)->first();
             if (!$extension) {
                 return false;

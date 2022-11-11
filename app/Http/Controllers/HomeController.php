@@ -21,10 +21,9 @@ class HomeController extends Controller
         return;
     }
 
-    function profile(Request $request)
+    function profile()
     {
-        $users = User::all();
-        return view('profile', compact('users', $request));
+        return view('profile');
     }
 
     function password()
