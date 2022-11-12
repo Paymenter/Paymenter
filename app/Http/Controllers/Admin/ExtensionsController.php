@@ -6,6 +6,7 @@ use App\Helpers\ExtensionHelper;
 use App\Http\Controllers\Controller;
 use App\Models\Extensions;
 use Illuminate\Http\Request;
+use stdClass;
 
 class ExtensionsController extends Controller
 {
@@ -18,7 +19,12 @@ class ExtensionsController extends Controller
 
     public function edit($sort, $name){
         if($sort == 'server'){
-            $extension = json_decode(file_get_contents(base_path('app/Extensions/Servers/' . $name . '/extension.json')));
+            include_once base_path('app/Extensions/Servers/' . $name . '/index.php');
+            $extension = new stdClass;
+            $function = $name . '_getConfig';
+            $extension2 = json_decode(json_encode($function()));
+            $extension->config = $extension2;
+            $extension->name = $name;
             $db = Extensions::where('name', $name)->first();
             if(!$db){
                 Extensions::create([

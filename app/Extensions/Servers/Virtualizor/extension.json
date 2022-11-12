@@ -5,7 +5,7 @@
     "author": "Paymenter",
     "config": [
         {
-            "name": "host",
+            "name": "ip",
             "friendlyName": "Virtualizor Host IP",
             "type": "text",
             "required": true
@@ -23,10 +23,10 @@
             "required": true
         },
         {
-            "name": "ssl",
-            "friendlyName": "SSL",
-            "type": "boolean",
-            "required": false
+            "name": "port",
+            "friendlyName": "Port",
+            "type": "text",
+            "required": true
         }
     ],
     "productConfig": [
@@ -51,8 +51,8 @@
             ]
         },
         {
-            "name": "planid",
-            "friendlyName": "Plan ID",
+            "name": "planname",
+            "friendlyName": "Plan Name",
             "type": "text",
             "required": true
         }

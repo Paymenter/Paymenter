@@ -45,6 +45,15 @@ class ExtensionHelper
     }
 
     /**
+     * Called when you got a error
+     * @return void
+     */
+    public static function error($extension, $message)
+    {
+        return;
+    }
+
+    /**
      * Called when a new order is accepted
      * ```php
      * ExtensionHelper::getConfig('paymenter', 'paymenter');
@@ -124,11 +133,8 @@ class ExtensionHelper
         if (!$extension) {
             return false;
         }
-        // Get the payment method
         include_once(app_path() . '/Extensions/Gateways/' . $extension->name . '/index.php');
-        // Set funciton name
         $function = $extension->name . '_pay';
-        // Call the function
         $pay = $function($total, $products, $orderId);
 
         return $pay;
@@ -155,50 +161,101 @@ class ExtensionHelper
                 $config['config'] = json_encode($product2["config"]);
             }
             $user = User::findOrFail($order->client);
-            createServer($user, $config, $order);
+            $function = $extension->name . '_createServer';
+            $function($user, $config, $order);
             return true;
         }
     }
 
     public static function suspendServer(Orders $order)
     {
-        foreach ($order->products as $product) {
-            $product = Products::findOrFail($product['id']);
+        foreach ($order->products as $product2) {
+            $product = Products::findOrFail($product2['id']);
             $extension = Extensions::where('id', $product->server_id)->first();
             if (!$extension) {
                 return false;
             }
             include_once(app_path() . '/Extensions/Servers/' . $extension->name . '/index.php');
-            suspendServer($order);
+            $settings = $product->settings()->get();
+            $config = [];
+            foreach ($settings as $setting) {
+                $config[$setting->name] = $setting->value;
+            }
+            if (isset($product2["external_id"])) {
+                $config['external_id'] = $product2["external_id"];
+            }
+            if (isset($product2["config"])) {
+                $config['config'] = json_encode($product2["config"]);
+            }
+            $user = User::findOrFail($order->client);
+            $function = $extension->name . '_suspendServer';
+            $function($user, $config, $order);
             return true;
         }
     }
 
     public static function unsuspendServer(Orders $order)
     {
-        foreach ($order->products as $product) {
-            $product = Products::findOrFail($product['id']);
+        foreach ($order->products as $product2) {
+            $product = Products::findOrFail($product2['id']);
             $extension = Extensions::where('id', $product->server_id)->first();
             if (!$extension) {
                 return false;
             }
             include_once(app_path() . '/Extensions/Servers/' . $extension->name . '/index.php');
-            unsuspendServer($order);
+            $settings = $product->settings()->get();
+            $config = [];
+            foreach ($settings as $setting) {
+                $config[$setting->name] = $setting->value;
+            }
+            if (isset($product2["external_id"])) {
+                $config['external_id'] = $product2["external_id"];
+            }
+            if (isset($product2["config"])) {
+                $config['config'] = json_encode($product2["config"]);
+            }
+            $user = User::findOrFail($order->client);
+            $function = $extension->name . '_unsuspendServer';
+            $function($user, $config, $order);
             return true;
         }
     }
 
     public static function terminateServer(Orders $order)
     {
-        foreach ($order->products as $product) {
-            $product = Products::findOrFail($product['id']);
+        foreach ($order->products as $product2) {
+            $product = Products::findOrFail($product2['id']);
             $extension = Extensions::where('id', $product->server_id)->first();
             if (!$extension) {
                 return false;
             }
             include_once(app_path() . '/Extensions/Servers/' . $extension->name . '/index.php');
-            terminateServer($order);
+            $settings = $product->settings()->get();
+            $config = [];
+            foreach ($settings as $setting) {
+                $config[$setting->name] = $setting->value;
+            }
+            if (isset($product2["external_id"])) {
+                $config['external_id'] = $product2["external_id"];
+            }
+            if (isset($product2["config"])) {
+                $config['config'] = json_encode($product2["config"]);
+            }
+            $user = User::findOrFail($order->client);
+            $function = $extension->name . '_terminateServer';
+            $function($user, $config, $order);
             return true;
         }
+    }
+
+    public static function setExternalId(Orders $order, $externalId)
+    {   
+        $products = [];
+        foreach ($order->products as $product) {
+            $product['external_id'] = $externalId;
+            $products[] = $product;
+        }
+        $order->products = $products;
+        $order->save();
     }
 }

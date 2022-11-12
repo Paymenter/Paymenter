@@ -17,15 +17,7 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         // $schedule->command('inspire')->hourly();
-        $schedule->call(function () {
-            $orders = Orders::where('expiry_date', '<', date('Y-m-d'))->get();
-            foreach ($orders as $order) {
-                $order->status = 'expired';
-                $order->save();
-            }
-
-        })->daily()->at('00:00')->name('expire_orders');
-
+        $schedule->command('CronJob:run')->everyMinute();
     }
 
     /**

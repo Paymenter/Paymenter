@@ -12,44 +12,62 @@ function pteroConfig($key)
     return null;
 }
 
-function pterodactyl_postRequest($url, $data)
+function Pterodactyl_getConfig()
+{
+    return [
+        [
+            "name" => "host",
+            "friendlyName" => "Pterodactyl panel url",
+            "type" => "text",
+            "required" => true
+        ],
+        [
+            "name" => "apiKey",
+            "friendlyName" => "API Key",
+            "type" => "text",
+            "required" => true
+        ]
+    ];
+}
+
+function Pterodactyl_postRequest($url, $data)
 {
     $response = Http::withHeaders([
         'Authorization' => 'Bearer ' . pteroConfig('apiKey'),
-        'Accept' => 'Application/vnd.pterodactyl.v1+json',
+        'Accept' => 'Application/vnd.Pterodactyl.v1+json',
         'Content-Type' => 'application/json'
     ])->post($url, $data);
     return $response;
 }
 
-function pterodactyl_getRequest($url)
+function Pterodactyl_getRequest($url)
 {
     $response = Http::withHeaders([
         'Authorization' => 'Bearer ' . pteroConfig('apiKey'),
-        'Accept' => 'Application/vnd.pterodactyl.v1+json',
+        'Accept' => 'Application/vnd.Pterodactyl.v1+json',
         'Content-Type' => 'application/json'
     ])->get($url);
     return $response;
 }
 
-function pterodactyl_deleteRequest($url)
+function Pterodactyl_deleteRequest($url)
 {
     $response = Http::withHeaders([
         'Authorization' => 'Bearer ' . pteroConfig('apiKey'),
-        'Accept' => 'Application/vnd.pterodactyl.v1+json',
+        'Accept' => 'Application/vnd.Pterodactyl.v1+json',
         'Content-Type' => 'application/json'
     ])->delete($url);
     return $response;
 }
 
-function createServer($user, $parmas, $order)
+function Pterodactyl_createServer($user, $parmas, $order)
 {
-    if(pterodactyl_serverExists($order->id)) {
+    if (Pterodactyl_serverExists($order->id)) {
         return;
     }
     $url = pteroConfig('host') . '/api/application/servers';
-    $eggData = pterodactyl_getRequest(pteroConfig('host') . '/api/application/nests/' . $parmas['nest'] . '/eggs/' . $parmas['egg'] . '?include=variables')->json();
-    if(!$eggData) {
+    $eggData = Pterodactyl_getRequest(pteroConfig('host') . '/api/application/nests/' . $parmas['nest'] . '/eggs/' . $parmas['egg'] . '?include=variables')->json();
+    if (!isset($eggData['attributes'])) {
         return;
     }
     foreach ($eggData['attributes']['relationships']['variables']['data'] as $key => $val) {
@@ -59,8 +77,8 @@ function createServer($user, $parmas, $order)
         $environment[$var] = $default;
     }
     $json = [
-        'name' => pterodactyl_random_string(8) . '-' . $order->id,
-        'user' => (int) pterodactyl_getUser($user),
+        'name' => Pterodactyl_random_string(8) . '-' . $order->id,
+        'user' => (int) Pterodactyl_getUser($user),
         'egg' => (int) $parmas['egg'],
         'docker_image' => $eggData['attributes']['docker_image'],
         'startup' => $eggData['attributes']['startup'],
@@ -77,18 +95,18 @@ function createServer($user, $parmas, $order)
             'backups' => $parmas['backups']
         ],
         'deploy' => [
-            'locations' => [ $parmas['location'] ],
+            'locations' => [$parmas['location']],
             'dedicated_ip' => false,
-            'port_range' => [ ]
+            'port_range' => []
         ],
         'environment' => $environment,
         'external_id' => (string) $order->id,
     ];
-    pterodactyl_postRequest($url, $json);
+    Pterodactyl_postRequest($url, $json);
     return true;
 }
 
-function pterodactyl_random_string($length = 10)
+function Pterodactyl_random_string($length = 10)
 {
     $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
     $charactersLength = strlen($characters);
@@ -99,35 +117,35 @@ function pterodactyl_random_string($length = 10)
     return $randomString;
 }
 
-function pterodactyl_getUser($user)
+function Pterodactyl_getUser($user)
 {
     $url = pteroConfig('host') . '/api/application/users?filter%5Bemail%5D=' . $user->email;
-    $response = pterodactyl_getRequest($url);
+    $response = Pterodactyl_getRequest($url);
     $users = $response->json();
     if (count($users['data']) > 0) {
         return $users['data'][0]['attributes']['id'];
-    }else{
+    } else {
         $url = pteroConfig('host') . '/api/application/users';
         $json = [
-            'username' => pterodactyl_random_string(8),
+            'username' => Pterodactyl_random_string(8),
             'email' => $user->email,
             'first_name' => $user->name,
             'last_name' => 'User',
             'language' => 'en',
             'root_admin' => false,
-            'password' => pterodactyl_random_string(8),
-            'password_confirmation' => pterodactyl_random_string(8)
+            'password' => Pterodactyl_random_string(8),
+            'password_confirmation' => Pterodactyl_random_string(8)
         ];
-        $response = pterodactyl_postRequest($url, $json);
+        $response = Pterodactyl_postRequest($url, $json);
         $user = $response->json();
         return $user['attributes']['id'];
     }
 }
 
-function pterodactyl_serverExists($order)
+function Pterodactyl_serverExists($order)
 {
     $url = pteroConfig('host') . '/api/application/servers/external/' . $order;
-    $response = pterodactyl_getRequest($url);
+    $response = Pterodactyl_getRequest($url);
     $code = $response->status();
     if ($code == 200) {
         return $response->json()['attributes']['id'];
@@ -135,38 +153,34 @@ function pterodactyl_serverExists($order)
     return false;
 }
 
-function suspendServer($order)
+function Pterodactyl_suspendServer($user, $params, $order)
 {
-    $server = pterodactyl_serverExists($order->id);
+    $server = Pterodactyl_serverExists($order->id);
     if ($server) {
         $url = pteroConfig('host') . '/api/application/servers/' . $server . '/suspend';
-        $response = pterodactyl_postRequest($url, []);
-        error_log($response->status());
+        Pterodactyl_postRequest($url, []);
         return true;
     }
     return false;
-
 }
 
-function unsuspendServer($order)
+function Pterodactyl_unsuspendServer($user, $params, $order)
 {
-    $server = pterodactyl_serverExists($order->id);
+    $server = Pterodactyl_serverExists($order->id);
     if ($server) {
         $url = pteroConfig('host') . '/api/application/servers/' . $server . '/unsuspend';
-        $response = pterodactyl_postRequest($url, []);
-        error_log($response->status());
+        Pterodactyl_postRequest($url, []);
         return true;
     }
     return false;
 }
 
-function terminateServer($order)
+function Pterodactyl_terminateServer($user, $params, $order)
 {
-    $server = pterodactyl_serverExists($order->id);
+    $server = Pterodactyl_serverExists($order->id);
     if ($server) {
         $url = pteroConfig('host') . '/api/application/servers/' . $server;
-        $response = pterodactyl_deleteRequest($url);
-        error_log($response->status());
+        Pterodactyl_deleteRequest($url);
         return true;
     }
     return false;

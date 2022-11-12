@@ -13,10 +13,10 @@
                         @csrf
                         <div
                             class="items-center px-6 py-4 text-sm text-gray-500 whitespace-nowrap dark:text-darkmodetext">
-                            @foreach ($extension->userConfig as $config)
+                            @foreach ($userConfig as $config)
                                 @if ($config->type == 'text')
                                     <div class="flex flex-col w-full">
-                                        <label class="font-medium" for="{{ $config->name }}">{{ $config->name }}</label>
+                                        <label class="font-medium" for="{{ $config->name }}">{{ ucfirst($config->name) }}</label>
                                         <input
                                             class="w-full mt-1 rounded-md shadow-sm form-input dark:text-darkmodetext dark:bg-darkmode"
                                             id="{{ $config->name }}" type="text" name="{{ $config->name }}"
@@ -24,14 +24,14 @@
                                     </div>
                                 @elseif($config->type == 'textarea')
                                     <div class="flex flex-col w-full">
-                                        <label class="font-medium" for="{{ $config->name }}">{{ $config->name }}</label>
+                                        <label class="font-medium" for="{{ $config->name }}">{{ ucfirst($config->name) }}</label>
                                         <textarea class="w-full mt-1 rounded-md shadow-sm form-input dark:text-darkmodetext dark:bg-darkmode"
                                             id="{{ $config->name }}" name="{{ $config->name }}" required>{{ old($config->name) }}</textarea>
                                     </div>
                                 @elseif($config->type == 'dropdown')
                                     <div class="flex flex-col w-full">
                                         <label class="font-medium"
-                                            for="{{ $config->name }}">{{ $config->name }}</label>
+                                            for="{{ $config->name }}">{{ ucfirst($config->name) }}</label>
                                         <select id="{{ $config->name }}" name="{{ $config->name }}"
                                             class="w-full mt-1 rounded-md shadow-sm form-input dark:text-darkmodetext dark:bg-darkmode">
                                             @foreach ($config->options as $option)

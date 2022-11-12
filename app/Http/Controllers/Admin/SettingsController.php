@@ -10,11 +10,6 @@ use App\Models\Settings;
 
 class SettingsController extends Controller
 {
-    function __construct()
-    {
-        $this->middleware('auth.admin');
-    }
-
     function index()
     {
         $themes = array_diff(scandir(base_path('themes')), array('..', '.'));
