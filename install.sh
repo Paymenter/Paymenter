@@ -336,8 +336,8 @@ main() {
     info "Paymenter installation script"
     
     # pre-checks
-    detect_distro
-    check_os_comp
+    #detect_distro
+    #check_os_comp
     check_dashboard_present
     
     # ask questions about configuration details
