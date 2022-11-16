@@ -1,4 +1,4 @@
-<nav class="bg-white dark:bg-darkmode">
+<nav class="bg-white dark:bg-darkmode absolute w-full">
     <div class="px-4 dark:bg-darkmode max-w-7xl sm:px-6 lg:px-8">
         <div class="flex items-center h-16 text-sm font-medium leading-5 text-gray-500 dark:bg-darkmode dark:text-darkmodetext dark:hover:text hover:text-gray-700">
             <div class="flex">
