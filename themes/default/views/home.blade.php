@@ -2,7 +2,7 @@
     <x-slot name="title">
         {{ __('Home') }}
     </x-slot>
-    <div class="py-12">
+    <div class="py-12 mx-auto max-w-7xl sm:px-6 lg:px-8">
         <x-success class="mt-4" />
         <div class="mx-auto max-w-7xl sm:px-6 lg:px-8" style="padding-bottom: 20px;">
             <div class="overflow-hidden bg-white shadow-xl dark:bg-darkmode2 sm:rounded-lg">
@@ -21,20 +21,18 @@
         </div>
         <div class="grid grid-cols-1 lg:grid-cols-3">
             <div class="items-center col-span-1 mx-auto max-w-7xl sm:px-6 lg:px-8">
-                <div class="overflow-hidden bg-white shadow-xl dark:text-white dark:bg-darkmode2 sm:rounded-lg"
-                    style="height: 5%;">
-                    <div class="p-6 border-b border-gray-200 dark:text-white dark:bg-darkmode2"
-                        style="padding: 1%;--tw-border-opacity: 0;">
+                <div class="h-8 overflow-hidden bg-white shadow-xl dark:text-white dark:bg-darkmode2 sm:rounded-lg">
+                    <div class="p-6 border-b border-gray-200 dark:text-white dark:bg-darkmode2">
                         <div class="flex items-center">
-                            <div class="ml-4 text-lg font-semibold leading-7">
-                                <a style="font-size: 0.8em;">Showing 1 to 2 of 2 entries</a>
+                            <div class="ml-4 font-semibold leading-7">
+                                <a  class="text-sm">Showing 1 to 2 of 2 entries</a>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="items-center mx-auto max-w-7xl sm:px-6 lg:px-8 column-2">
-                <table id="tableServicesList" class="items-center table table-list">
+                <table id="tableServicesList" class="items-center table">
                     <thead>
                         <tr>
                             <th class="dark:text-white sorting_asc dark:bg-darkmode2">Product/Service</th>
@@ -63,7 +61,7 @@
                                             <strong>{{ ucfirst($product->name) }}</strong>
                                         </td>
                                         <td class="text-center dark:text-white dark:bg-darkmode2" data-order="0.00">
-                                            {{ App\Models\Settings::first()->currency_sign }}{{ number_format((float) $product->price, 2, '.', '') }}</td>
+                                            {{ config('settings::currency_sign') }}{{ number_format((float) $product->price, 2, '.', '') }}</td>
                                         <td class="text-center dark:text-white dark:bg-darkmode2">
                                             {{ $service->expiry_date }}</td>
                                         <!-- <td class="text-center dark:text-white dark:bg-darkmode2"><span class="label status status-active dark:bg-darkmode2">{{ ucfirst($service->status) }}</span></td> -->

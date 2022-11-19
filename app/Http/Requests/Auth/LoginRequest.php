@@ -29,7 +29,7 @@ class LoginRequest extends FormRequest
      */
     public function rules()
     {
-        if(Settings::first()->recaptcha == 1) {
+        if (config('settings::recaptcha') == 1) {
             return [
                 'email' => 'required|string|email',
                 'password' => 'required|string',

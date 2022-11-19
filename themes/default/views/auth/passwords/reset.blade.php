@@ -26,8 +26,8 @@
                     </label>
 
                     <input id="email" type="email"
-                            class="form-input w-full @error('email') border-red-500 @enderror" name="email"
-                            value="{{ old('email',  $request->email) }}" required autocomplete="email">
+                        class="form-input w-full @error('email') border-red-500 @enderror" name="email"
+                        value="{{ old('email', $request->email) }}" required autocomplete="email">
 
                     @error('email')
                         <p class="mt-1 text-xs italic text-red-500">
@@ -43,8 +43,8 @@
                     </label>
 
                     <input id="password" type="password"
-                            class="form-input w-full @error('password') border-red-500 @enderror" name="password"
-                            required autocomplete="new-password">
+                        class="form-input w-full @error('password') border-red-500 @enderror" name="password" required
+                        autocomplete="new-password">
 
                     @error('password')
                         <p class="mt-1 text-xs italic text-red-500">
@@ -59,14 +59,15 @@
                         {{ __('Confirm Password') }}
                     </label>
 
-                    <input id="password-confirm" type="password" class="w-full form-input"
-                            name="password_confirmation" required autocomplete="new-password">
+                    <input id="password-confirm" type="password" class="w-full form-input" name="password_confirmation"
+                        required autocomplete="new-password">
                 </div>
-                @if(App\Models\Settings::first()->recaptcha == 1)
-                <div class="g-recaptcha" data-sitekey="{{App\Models\Settings::first()->recaptcha_site_key }}"></div>
+                @if (config('settings::recaptcha') == 1)
+                    <div class="g-recaptcha" data-sitekey="{{ config('settings::recaptcha_site_key') }}"></div>
                 @endif
                 <div class="flex items-center justify-end mt-4">
-                    <button type="submit" class="inline-flex items-center px-4 py-2 ml-4 text-xs font-semibold tracking-widest text-white uppercase transition duration-150 ease-in-out bg-gray-800 border border-transparent rounded-md hover:bg-gray-700 active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:ring ring-gray-300 disabled:opacity-25">
+                    <button type="submit"
+                        class="inline-flex items-center px-4 py-2 ml-4 text-xs font-semibold tracking-widest text-white uppercase transition duration-150 ease-in-out bg-gray-800 border border-transparent rounded-md hover:bg-gray-700 active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:ring ring-gray-300 disabled:opacity-25">
                         {{ __('Reset Password') }}
                     </button>
                 </div>

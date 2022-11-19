@@ -6,7 +6,8 @@
             </a>
         </div>
 
-        <div class="w-full px-6 py-4 mt-6 overflow-hidden bg-white shadow-md dark:bg-darkmode2 sm:max-w-md sm:rounded-lg">
+        <div
+            class="w-full px-6 py-4 mt-6 overflow-hidden bg-white shadow-md dark:bg-darkmode2 sm:max-w-md sm:rounded-lg">
             <div class="mb-4 text-sm text-gray-600 dark:text-darkmodetext">
                 {{ __('This is a secure area of the application. Please confirm your password before continuing.') }}
             </div>
@@ -24,8 +25,8 @@
                     </label>
 
                     <input id="password" type="password"
-                            class="dark:bg-darkmode rounded-lg border-indigo-600 form-input w-full @error('password') border-red-500 @enderror" name="password"
-                            required autocomplete="new-password">
+                        class="dark:bg-darkmode rounded-lg border-indigo-600 form-input w-full @error('password') border-red-500 @enderror"
+                        name="password" required autocomplete="new-password">
 
                     @error('password')
                         <p class="mt-1 text-xs italic text-red-500">
@@ -33,11 +34,12 @@
                         </p>
                     @enderror
                 </div>
-                @if(App\Models\Settings::first()->recaptcha == 1)
-                <div class="g-recaptcha" data-sitekey="{{App\Models\Settings::first()->recaptcha_site_key }}"></div>
+                @if (config('settings::recaptcha') == 1)
+                    <div class="g-recaptcha" data-sitekey="{{ config('settings::recaptcha_site_key') }}"></div>
                 @endif
                 <div class="flex justify-end mt-4 dark:hover:bg-darkmodebutton">
-                    <button type="submit" class="inline-flex items-center px-4 py-2 ml-4 text-xs font-semibold tracking-widest text-white uppercase transition duration-150 ease-in-out bg-gray-800 border border-transparent rounded-md hover:bg-gray-700 active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:ring ring-gray-300 disabled:opacity-25">
+                    <button type="submit"
+                        class="inline-flex items-center px-4 py-2 ml-4 text-xs font-semibold tracking-widest text-white uppercase transition duration-150 ease-in-out bg-gray-800 border border-transparent rounded-md hover:bg-gray-700 active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:ring ring-gray-300 disabled:opacity-25">
                         {{ __('Confirm') }}
                     </button>
                 </div>

@@ -3,49 +3,49 @@
         {{ __('Home') }}
     </x-slot>
     <x-success class="mt-4" />   
-        <div class="container mx-auto py-10 h-64 md:w-4/5 h-full w-11/12 px-6">
+        <div class="container w-11/12 h-64 h-full px-6 py-10 mx-auto md:w-4/5">
             <div class="w-full h-full rounded">
-                <div class="max-w-7xl mx-auto py-10 sm:px-6 lg:px-8">
-                    <div class="dark:bg-darkmode2 bg-white overflow-hidden shadow-xl rounded-lg">
-                        <div class="dark:bg-darkmode2 p-6 sm:px-20 bg-white">
+                <div class="py-10 mx-auto max-w-7xl sm:px-6 lg:px-8">
+                    <div class="overflow-hidden bg-white rounded-lg shadow-xl dark:bg-darkmode2">
+                        <div class="p-6 bg-white dark:bg-darkmode2 sm:px-20">
                             <div class="prose dark:prose-invert">
-                                {{ \Illuminate\Mail\Markdown::parse(\App\Models\Settings::first()->home_page_text) }}
+                                {{ \Illuminate\Mail\Markdown::parse(config('settings::home_page_text')) }}
                             </div>
                         </div>
                     </div>
-                    <div class="dark:bg-darkmode dark:text-darkmodetext py-12">
-                        <div class="mx-auto max-w-7xl px-0">
-                            <div class="dark:bg-darkmode2 overflow-hidden bg-white rounded-lg">
-                                <div class="dark:bg-darkmode2 p-6 bg-white">
+                    <div class="py-12 dark:bg-darkmode dark:text-darkmodetext">
+                        <div class="px-0 mx-auto max-w-7xl">
+                            <div class="overflow-hidden bg-white rounded-lg dark:bg-darkmode2">
+                                <div class="p-6 bg-white dark:bg-darkmode2">
                                     <!-- display all categories with products -->
-                                    <h1 class="text-center text-2xl font-bold">{{ __('Categories') }}</h1>
+                                    <h1 class="text-2xl font-bold text-center">{{ __('Categories') }}</h1>
                                     @foreach ($categories as $category)
                                         <div class="mt-4">
-                                            <h2 class="text-center text-xl font-bold">{{ $category->name }}</h2>
-                                            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                                            <h2 class="text-xl font-bold text-center">{{ $category->name }}</h2>
+                                            <div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
                                                 @foreach ($category->products as $product)
                                                     <div
-                                                        class="transition delay-400 hover:shadow-lg dark:bg-darkmode rounded-lg p-4">
+                                                        class="p-4 transition rounded-lg delay-400 hover:shadow-lg dark:bg-darkmode">
                                                         <a href="{{ route('checkout.add') }}?id={{ $product->id }}">
                                                             <img class="rounded-lg" src="{{ $product->image }}"
                                                                 alt="{{ $product->name }}"
-                                                                class="w-full h-64 object-cover object-center">
+                                                                class="object-cover object-center w-full h-64">
                                                             <div class="mt-2">
                                                                 <h3
-                                                                    class="text-center dark:text-darkmodetext text-lg font-medium text-gray-900">
+                                                                    class="text-lg font-medium text-center text-gray-900 dark:text-darkmodetext">
                                                                     {{ $product->name }}</h3>
                                                                 <p
-                                                                    class="text-center dark:text-darkmodetext mt-1 text-sm text-gray-500">
+                                                                    class="mt-1 text-sm text-center text-gray-500 dark:text-darkmodetext">
                                                                 <div class="prose dark:prose-invert">
                                                                     {{ \Illuminate\Mail\Markdown::parse($product->description) }}
                                                                 </div>
                                                                 </p>
                                                                 <p
-                                                                    class="text-center dark:text-darkmodetext mt-1 text-sm text-gray-500">
-                                                                    @if( App\Models\Settings::first()->currency_position == '1' )
-                                                                        {{ App\Models\Settings::first()->currency_sign }} {{ number_format($product->price, 2) }}
-                                                                    @elseif( App\Models\Settings::first()->currency_position == '0' )
-                                                                        {{ number_format($product->price, 2) }} {{ App\Models\Settings::first()->currency_sign }}
+                                                                    class="mt-1 text-sm text-center text-gray-500 dark:text-darkmodetext">
+                                                                    @if( config('settings::currency_position') == '1' )
+                                                                        {{ config('settings::currency_sign') }} {{ number_format($product->price, 2) }}
+                                                                    @elseif( config('settings::->currency_position') == '0' )
+                                                                        {{ number_format($product->price, 2) }} {{ config('settings::currency_sign') }}
                                                                     @endif
                                                                 </p>
                                                             </div>

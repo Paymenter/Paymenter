@@ -32,7 +32,7 @@ class InvoiceController extends Controller
             $test->quantity = $product['quantity'];
             $products[] = $test;
         }
-        $currency_sign = Settings::first()->currency_sign;
+        $currency_sign = config('settings::currency_sign');
         return view('invoice.show', compact('invoice', 'order', 'products', 'currency_sign'));
     }
 

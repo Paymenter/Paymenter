@@ -4,7 +4,7 @@
             <div
             class="sidebar fixed top-0 bottom-0 lg:left-0 p-2 w-[300px] overflow-y-auto text-center bg-gray-900"
             >
-            <div class="text-gray-100 text-xl">
+            <div class="text-xl text-gray-100">
                 <a href="{{ route('index') }}">
                     <div class="p-2.5 mt-1 flex items-center duration-300 cursor-pointer hover:bg-blue-900 rounded-md">
                         <img
@@ -12,7 +12,7 @@
                             alt="logo"
                             class="w-10 h-10 rounded-full"
                         />
-                        <h1 class="font-bold text-gray-200 text-[15px] ml-3">{{App\Models\Settings::first()->app_name}}</h1>
+                        <h1 class="font-bold text-gray-200 text-[15px] ml-3">{{ config('app_name')}}</h1>
                     </div>
                 </a>
                 <div class="border dark:border-blue-800 my-2 bg-gray-600 h-[1px]"></div>
@@ -21,7 +21,7 @@
                 <div
                     class="border dark:border-blue-800 p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-blue-600 text-white"
                     onclick="dropdownprof()">
-                    <div class="flex justify-between w-full items-center">
+                    <div class="flex items-center justify-between w-full">
                         <div class="flex flex-row">
                             <img class="h-8 rounded-md"
                             src="https://www.gravatar.com/avatar/{{ md5(Auth::user()->email) }}?s=200&d=mp"
@@ -35,11 +35,11 @@
                         <svg id="arrowprof" sidebar-toggle-item class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
                     </div>
                 </div>
-                <div class="text-sm mt-2 w-4/5 mx-auto text-gray-200 font-bold" id="submenuprof">
-                    <h1 class="border dark:border-blue-800 cursor-pointer p-2 hover:bg-blue-600 rounded-md mt-1">
+                <div class="w-4/5 mx-auto mt-2 text-sm font-bold text-gray-200" id="submenuprof">
+                    <h1 class="p-2 mt-1 border rounded-md cursor-pointer dark:border-blue-800 hover:bg-blue-600">
                     Profile Settings
                     </h1>
-                    <h1 class="border dark:border-blue-800 cursor-pointer p-2 hover:bg-blue-600 rounded-md mt-1">
+                    <h1 class="p-2 mt-1 border rounded-md cursor-pointer dark:border-blue-800 hover:bg-blue-600">
                         <a href="{{ route('logout') }}"
                             onclick="event.preventDefault();
                             document.getElementById('logout-form').submit();"
@@ -53,7 +53,7 @@
             @endauth
             @if (Auth::user() == null)
                 <div class="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-blue-600 text-white">
-                    <div class="flex justify-between w-full items-center">
+                    <div class="flex items-center justify-between w-full">
                         <a href="{{ route('login') }}" class="text-[15px] ml-4 text-gray-200 font-bold">Login</a>
                     </div>
                 </div>   
@@ -69,16 +69,16 @@
                 class="border dark:border-blue-800 p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-blue-600 text-white"
                 onclick="dropdown()">
                 <i class="bi bi-chat-left-text-fill"></i>
-                <div class="flex justify-between w-full items-center">
+                <div class="flex items-center justify-between w-full">
                     <span class="text-[15px] ml-4 text-gray-200 font-bold">Tickets</span>
                     <svg id="arrow" sidebar-toggle-item class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
                 </div>
             </div>
-            <div class="border dark:border-blue-800 text-sm mt-2 w-4/5 mx-auto text-gray-200 font-bold" id="submenu">
-                <h1 class="cursor-pointer p-2 hover:bg-blue-600 rounded-md mt-1">
+            <div class="w-4/5 mx-auto mt-2 text-sm font-bold text-gray-200 border dark:border-blue-800" id="submenu">
+                <h1 class="p-2 mt-1 rounded-md cursor-pointer hover:bg-blue-600">
                     <a href="{{ route('tickets.create') }}">Create</a>
                 </h1>
-                <h1 class="cursor-pointer p-2 hover:bg-blue-600 rounded-md mt-1">
+                <h1 class="p-2 mt-1 rounded-md cursor-pointer hover:bg-blue-600">
                     <a href="{{ route('tickets.index') }}">View</a>
                 </h1>
             </div>
@@ -93,16 +93,16 @@
                 class="border dark:border-blue-800 p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-blue-600 text-white"
                 onclick="dropdowntickets()">
                 <i class="bi bi-chat-left-text-fill"></i>
-                <div class="flex justify-between w-full items-center">
+                <div class="flex items-center justify-between w-full">
                     <span class="text-[15px] ml-4 text-gray-200 font-bold">Tickets</span>
                     <svg id="arrowtickets" sidebar-toggle-item class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
                 </div>
             </div>
-            <div class="text-sm mt-2 w-4/5 mx-auto text-gray-200 font-bold" id="submenutickets">
-                <h1 class="border dark:border-blue-800 cursor-pointer p-2 hover:bg-blue-600 rounded-md mt-1">
+            <div class="w-4/5 mx-auto mt-2 text-sm font-bold text-gray-200" id="submenutickets">
+                <h1 class="p-2 mt-1 border rounded-md cursor-pointer dark:border-blue-800 hover:bg-blue-600">
                     <a href="{{ route('admin.tickets.create') }}">Create</a>
                 </h1>
-                <h1 class="border dark:border-blue-800 cursor-pointer p-2 hover:bg-blue-600 rounded-md mt-1">
+                <h1 class="p-2 mt-1 border rounded-md cursor-pointer dark:border-blue-800 hover:bg-blue-600">
                     <a href="{{ route('admin.tickets') }}">View</a>
                 </h1>
             </div>

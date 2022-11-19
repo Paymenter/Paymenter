@@ -32,7 +32,7 @@ class NewPasswordController extends Controller
      */
     public function store(Request $request)
     {
-        if(Settings::first()->recaptcha_enabled == 1){
+        if (config('settings::recaptcha') == 1) {
             $request->validate([
                 'token' => 'required',
                 'email' => 'required|email',

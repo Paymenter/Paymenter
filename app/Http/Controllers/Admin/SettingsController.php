@@ -12,10 +12,23 @@ class SettingsController extends Controller
 {
     function index()
     {
+        error_log(config('settings::sidebar'));
+        $tabs = [];
+        // Get current theme     
+        error_log(print_r(Theme::getViewPaths()[0], true)); 
+        foreach (glob(Theme::getViewPaths()[0] . '/admin/settings/settings/*.blade.php') as $filename) {
+            error_log(print_r($filename, true));
+            $tabs[] = 'admin.settings.settings.' . basename($filename, '.blade.php');
+        }
+
+        return view('admin.settings.index', [
+            'tabs' => $tabs
+        ]);
+        /*
         $themes = array_diff(scandir(base_path('themes')), array('..', '.'));
         $currentTheme = Config::get('theme.active');
         $settings = Settings::first();
-        return view('admin.settings.index', compact('themes', 'currentTheme', 'settings'));
+        return view('admin.settings.index2', compact('themes', 'currentTheme', 'settings'));*/
     }
 
     function update(Request $request)

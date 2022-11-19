@@ -27,8 +27,8 @@
                     </label>
 
                     <input id="email" type="email"
-                            class="form-input w-full @error('email') border-red-500 @enderror" name="email"
-                            value="{{ old('email') }}" required autocomplete="email">
+                        class="form-input w-full @error('email') border-red-500 @enderror" name="email"
+                        value="{{ old('email') }}" required autocomplete="email">
 
                     @error('email')
                         <p class="mt-1 text-xs italic text-red-500">
@@ -36,11 +36,12 @@
                         </p>
                     @enderror
                 </div>
-                @if(App\Models\Settings::first()->recaptcha == 1)
-                <div class="g-recaptcha" data-sitekey="{{App\Models\Settings::first()->recaptcha_site_key }}"></div>
+                @if (config('settings::recaptcha') == 1)
+                    <div class="g-recaptcha" data-sitekey="{{ config('settings::recaptcha_site_key') }}"></div>
                 @endif
                 <div class="flex items-center justify-end mt-4">
-                    <button type="submit" class="inline-flex items-center px-4 py-2 ml-4 text-xs font-semibold tracking-widest text-white uppercase transition duration-150 ease-in-out bg-gray-800 border border-transparent rounded-md hover:bg-gray-700 active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:ring ring-gray-300 disabled:opacity-25">
+                    <button type="submit"
+                        class="inline-flex items-center px-4 py-2 ml-4 text-xs font-semibold tracking-widest text-white uppercase transition duration-150 ease-in-out bg-gray-800 border border-transparent rounded-md hover:bg-gray-700 active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:ring ring-gray-300 disabled:opacity-25">
                         {{ __('Email Password Reset Link') }}
                     </button>
                 </div>

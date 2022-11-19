@@ -31,18 +31,17 @@
             document.documentElement.classList.remove('dark')
         }
     </script>
-    @php $seo = App\Models\Settings::first() @endphp
-    <meta content="@isset($seo->seo_title){{ $seo->seo_title }}@endisset" property="og:title">
-    <meta content="@isset($seo->seo_description){{ $seo->seo_description }}@endisset" property="og:description">
-    <meta content='@isset ($seo->seo_image){{ $seo->seo_image }}@endisset' property="og:image">
+    <meta content="{{ config('settings::seo_title') }}" property="og:title">
+    <meta content="{{ config('settings::seo_description') }}" property="og:description">
+    <meta content='{{ config('settings::seo_image') }}' property="og:image">
     <link type="application/json+oembed" href="{{ url('/') }}/manifest.json?title={{ urldecode('Paymenter') }}&author_url={{ urldecode('https://discord.gg/xB4UUT3XQg') }}&author_name=demo"/>
-    <meta name="twitter:card" content="@isset($seo->seo_twitter_card)summary_large_image @endisset">
+    <meta name="twitter:card" content="@if(config('settings::seo_twitter_card'))summary_large_image @endif">
     <meta name="theme-color" content="#5270FD">
 </head>
 
 <body class="font-sans antialiased bg-gray-100">
     <div id="app" class="min-h-screen dark:text-white dark:bg-darkmode">
-        @if (App\Models\Settings::first()->sidebar == 1)
+        @if (config('settings::sidebar') == 1)
             @include('layouts.navigation')
         @else
             @include('layouts.sidenavigation')

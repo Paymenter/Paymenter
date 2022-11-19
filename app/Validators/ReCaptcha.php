@@ -14,7 +14,7 @@ class ReCaptcha
             [
                 'form_params' =>
                 [
-                    'secret' => Settings::first()->recaptcha_secret_key,
+                    'secret' => config('settings::recaptcha_secret_key'),
                     'response' => $value
                 ]
             ]

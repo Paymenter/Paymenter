@@ -30,7 +30,7 @@ class TicketsController extends Controller
 
     function store(Request $request)
     {
-        if (Settings::first()->recaptcha == 1) {
+        if (config('settings::recaptcha') == 1) {
             $request->validate([
                 'g-recaptcha-response' => 'required|recaptcha',
                 'title' => 'required',
@@ -85,7 +85,7 @@ class TicketsController extends Controller
 
     function reply(Request $request, Tickets $id)
     {
-        if (Settings::first()->recaptcha == 1) {
+        if (config('settings::recaptcha') == 1) {
             $request->validate([
                 'g-recaptcha-response' => 'required|recaptcha',
                 'message' => 'required',

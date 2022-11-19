@@ -29,7 +29,7 @@
 
 <body class="font-sans antialiased">
     <div id="app" class="min-h-screen bg-gray-100 dark:bg-darkmode">
-        @if (App\Models\Settings::first()->sidebar == 1)
+        @if (config('settings::sidebar') == 1)
             @include('layouts.adminnavigation')
         @else
             @include('layouts.adminsidenavigation')

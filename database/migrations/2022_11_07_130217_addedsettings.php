@@ -31,7 +31,6 @@ return new class extends Migration
     {
         Schema::table('settings', function (Blueprint $table) {
             $table->dropColumn('advanced_mode');
-            $table->dropColumn('currency_sign');
             $table->dropColumn('currency_position');
             $table->dropColumn('home_page_text');
             $table->dropColumn('app_name');

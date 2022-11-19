@@ -1,8 +1,8 @@
 <x-guest-layout>
     <div id="app"
-        class="dark:text-darkmodetext dark:bg-darkmode flex flex-col items-center min-h-screen pt-6 bg-gray-100 sm:justify-center sm:pt-0">
+        class="flex flex-col items-center min-h-screen pt-6 bg-gray-100 dark:text-darkmodetext dark:bg-darkmode sm:justify-center sm:pt-0">
         <div
-            class="dark:bg-darkmode2 w-full px-6 py-4 mt-6 overflow-hidden bg-white shadow-md sm:max-w-md sm:rounded-lg">
+            class="w-full px-6 py-4 mt-6 overflow-hidden bg-white shadow-md dark:bg-darkmode2 sm:max-w-md sm:rounded-lg">
             <div class="text-center">
                 <h2 class="text-2xl font-bold">{{ __('Reset Password') }}</h2>
             </div>
@@ -16,7 +16,7 @@
                 @csrf
                 <!-- Current Password -->
                 <div class="mt-4">
-                    <label class="dark:text-white dark:bg-darkmode2 bg-white block text-sm font-medium text-gray-700">
+                    <label class="block text-sm font-medium text-gray-700 bg-white dark:text-white dark:bg-darkmode2">
                         {{ __('Current Password') }}
                     </label>
 
@@ -28,7 +28,7 @@
 
                 <!-- New Password -->
                 <div class="mt-4">
-                    <label class="dark:text-white dark:bg-darkmode2 bg-white block text-sm font-medium text-gray-700">
+                    <label class="block text-sm font-medium text-gray-700 bg-white dark:text-white dark:bg-darkmode2">
                         {{ __('New Password') }}
                     </label>
 
@@ -39,7 +39,7 @@
 
                 <!-- Confirm Password -->
                 <div class="mt-4">
-                    <label class="dark:text-white dark:bg-darkmode2 bg-white block text-sm font-medium text-gray-700">
+                    <label class="block text-sm font-medium text-gray-700 bg-white dark:text-white dark:bg-darkmode2">
                         {{ __('Confirm New Password') }}
                     </label>
 
@@ -50,20 +50,20 @@
 
                 <!-- Save button and Cancel button -->
                 <div class="flex items-center justify-end mt-4">
-                    <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                    <button class="px-4 py-2 font-bold text-white bg-blue-500 rounded hover:bg-blue-700">
                         {{ __('Save Changes') }}
                     </button>
-                    <button class="text-white font-bold py-2 px-4 rounded ml-4 bg-gray-500 hover:bg-gray-600">
+                    <button class="px-4 py-2 ml-4 font-bold text-white bg-gray-500 rounded hover:bg-gray-600">
                         @if (url()->previous() == url()->current())
-                        <a href="{{ url('/') }}">{{ __('Cancel') }}</a>
+                            <a href="{{ url('/') }}">{{ __('Cancel') }}</a>
                         @else
-                        <a href="{{ url()->previous() }}">{{ __('Cancel') }}</a>
+                            <a href="{{ url()->previous() }}">{{ __('Cancel') }}</a>
                         @endif
                     </button>
                 </div>
 
-                @if(App\Models\Settings::first()->recaptcha == 1)
-                <div class="g-recaptcha" data-sitekey="{{App\Models\Settings::first()->recaptcha_site_key }}"></div>
+                @if (config('settings::recaptcha') == 1)
+                    <div class="g-recaptcha" data-sitekey="{{ config('settings::recaptcha_site_key') }}"></div>
                 @endif
             </form>
         </div>
