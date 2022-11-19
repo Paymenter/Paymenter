@@ -106,7 +106,6 @@ class TicketsController extends Controller
                 'message' => 'required',
             ]);
         }
-        
         TicketMessages::create([
             'ticket_id' => $id->id,
             'message' => request('message'),
