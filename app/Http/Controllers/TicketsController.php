@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Models\Tickets;
 use App\Models\Statistics;
 use App\Models\TicketMessages;
+use App\Models\User;
 
 class TicketsController extends Controller
 {
@@ -16,10 +17,21 @@ class TicketsController extends Controller
         $this->middleware('auth');
     }
 
-    function index()
+    function index(Request $request)
     {
         $tickets = Tickets::where('client', auth()->user()->id)->get();
-        return view('tickets.index', compact('tickets'));
+        $users = User::where('id', auth()->user()->id)->get();
+        $ticketMessages = TicketMessages::all();
+        $sort = $request->get('sort');
+        return view(
+            'tickets.index',
+            compact(
+                'tickets',
+                'users',
+                'ticketMessages',
+                'sort'
+            )
+        );
     }
 
     function create()
