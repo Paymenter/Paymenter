@@ -30,7 +30,7 @@ return new class extends Migration
                 'value' => $value
             ]);
         }
-        $settings->delete();
+        \App\Models\Settings::first()->delete();
         // drop old settings
         Schema::table('settings', function (Blueprint $table) {
             $table->dropColumn('advanced_mode');
