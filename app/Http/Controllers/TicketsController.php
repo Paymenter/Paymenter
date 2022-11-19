@@ -107,8 +107,6 @@ class TicketsController extends Controller
             ]);
         }
         
-        Tickets::where('id', $id->id)->update(['last_message' => request('message')]);
-        
         TicketMessages::create([
             'ticket_id' => $id->id,
             'message' => request('message'),
