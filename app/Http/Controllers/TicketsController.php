@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Models\Tickets;
 use App\Models\Statistics;
 use App\Models\TicketMessages;
+use App\Models\User;
 
 class TicketsController extends Controller
 {
