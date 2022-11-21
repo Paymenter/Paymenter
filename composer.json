@@ -10,8 +10,10 @@
         "guzzlehttp/guzzle": "^7.2",
         "laravel/framework": "^9.19",
         "laravel/sanctum": "^3.0",
+        "laravel/socialite": "^5.5",
         "laravel/tinker": "^2.7",
         "qirolab/laravel-themer": "^2.0",
+        "socialiteproviders/discord": "^4.1",
         "stripe/stripe-php": "^9.6"
     },
     "require-dev": {

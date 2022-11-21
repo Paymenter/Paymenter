@@ -13,6 +13,7 @@
 
     @vite(['themes/default/css/app.css', 'themes/default/js/app.js'], 'default')
     <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@2.5.0/fonts/remixicon.css" rel="stylesheet">
     <link rel="apple-touch-icon" sizes="180x180" href="/img/apple-touch-icon.png">
     <link rel="icon" type="image/png" sizes="32x32" href="/img/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="/img/favicon-16x16.png">
@@ -28,7 +29,7 @@
 </head>
 
 <body>
-    <div id="app" class="dark font-sans antialiased text-gray-900">
+    <div id="app" class="font-sans antialiased text-gray-900 dark">
         {{ $slot }}
     </div>
 </body>

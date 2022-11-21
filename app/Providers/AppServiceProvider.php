@@ -6,6 +6,7 @@ use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Schema;
 use App\Models\Settings;
+use Illuminate\Support\Facades\Artisan;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -56,6 +57,34 @@ class AppServiceProvider extends ServiceProvider
             }
             if(config('settings::mail_from_name') !== config('mail.from.name')) {
                 config(['mail.from.name' => config('settings::mail_from_name')]);
+            }
+            if (
+                config('mail.mailers.smtp.host') != config('settings::mail_host') ||
+                config('mail.mailers.smtp.port') != config('settings::mail_port') ||
+                config('mail.mailers.smtp.username') != config('SETTINGS:MAIL:USERNAME') ||
+                config('mail.mailers.smtp.password') != config('SETTINGS:MAIL:PASSWORD') ||
+                config('mail.mailers.smtp.encryption') != config('SETTINGS:MAIL:ENCRYPTION') ||
+                config('mail.from.address') != config('SETTINGS:MAIL:FROM_ADDRESS') ||
+                config('mail.from.name') != config('SETTINGS:MAIL:FROM_NAME')
+            ) {
+                config(['mail.mailers.smtp' => [
+                    'transport' => 'smtp',
+                    'host' => config('settings::mail_host'),
+                    'port' => config('settings::mail_port'),
+                    'encryption' => config('settings::mail_encryption') ? 'SSL' : 'TLS', 
+                    'username' => config('settings::mail_username'),
+                    'password' => config('SETTINGS::MAIL:PASSWORD'),
+                    'timeout' => null,
+                    'auth_mode' => null,
+                ]]);
+                config(['mail.from' => ['address' => config('SETTINGS::MAIL:FROM_ADDRESS'), 'name' => config('SETTINGS::MAIL:FROM_NAME')]]);
+
+                Artisan::call('queue:restart');
+            }
+            if(config('settings::discord_enabled')){
+                config(['services.discord.client_id' => config('settings::discord_client_id')]);
+                config(['services.discord.client_secret' => config('settings::discord_client_secret')]);
+                config(['services.discord.redirect' => url('/login/discord/callback')]);
             }
         } catch (\Exception $e) {
             // do nothing
