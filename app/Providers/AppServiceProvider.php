@@ -6,6 +6,7 @@ use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Schema;
 use App\Models\Settings;
+
 class AppServiceProvider extends ServiceProvider
 {
     /**
@@ -27,12 +28,16 @@ class AppServiceProvider extends ServiceProvider
     {
         Validator::extend('recaptcha', 'App\\Validators\\ReCaptcha@validate');
         Schema::defaultStringLength(191);
-        $settings = Settings::all();
-        foreach ($settings as $setting) {
-            config(['settings::' . $setting->key => $setting->value]);
-        }
-        if(config('settings::app_name') !== config('app.name')) {
-            config(['app.name' => config('settings::app_name')]);
+        try {
+            $settings = Settings::all();
+            foreach ($settings as $setting) {
+                config(['settings::' . $setting->key => $setting->value]);
+            }
+            if (config('settings::app_name') !== config('app.name')) {
+                config(['app.name' => config('settings::app_name')]);
+            }
+        } catch (\Exception $e) {
+            // do nothing
         }
     }
 }
