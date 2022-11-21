@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Config;
 use Qirolab\Theme\Theme;
 use App\Models\Settings;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 
 class SettingsController extends Controller
 {
@@ -15,39 +17,76 @@ class SettingsController extends Controller
         error_log(config('settings::sidebar'));
         $tabs = [];
         // Get current theme     
-        error_log(print_r(Theme::getViewPaths()[0], true)); 
         foreach (glob(Theme::getViewPaths()[0] . '/admin/settings/settings/*.blade.php') as $filename) {
-            error_log(print_r($filename, true));
             $tabs[] = 'admin.settings.settings.' . basename($filename, '.blade.php');
         }
+        $themes = array_diff(scandir(base_path('themes')), array('..', '.'));
 
         return view('admin.settings.index', [
-            'tabs' => $tabs
+            'tabs' => $tabs,
+            'themes' => $themes,
         ]);
-        /*
-        $themes = array_diff(scandir(base_path('themes')), array('..', '.'));
-        $currentTheme = Config::get('theme.active');
-        $settings = Settings::first();
-        return view('admin.settings.index2', compact('themes', 'currentTheme', 'settings'));*/
     }
 
-    function update(Request $request)
-    {   
-
+    function general(Request $request)
+    {
         $request->validate([
-            'theme' => 'required',
-            'currency_sign' => 'required',
+            'app_name' => 'required|max:255',
+            'seo_title' => 'required|max:255',
+            'seo_description' => 'required|max:255',
+            'seo_keywords' => 'required|max:255',
+            'seo_twitter_card' => 'boolean',
+            'app_logo' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
-        $request->merge([
-            'recaptcha' => $request->recaptcha == 'on' ? 1 : 0,
-            'seo_twitter_card' => $request->seo_twitter_card == 'on' ? 1 : 0,
-            'sidebar' => $request->navbar
-        ]);
+        if ($request->hasFile('app_logo')) {
+            $imageName = time() . '.' . $request->app_logo->extension();
+            $request->app_logo->move(public_path('images'), $imageName);
+            $path = '/images/' . $imageName;
+            Settings::updateOrCreate(['key' => 'app_logo'], ['value' => $path]);
+        } else {
+            $fileNameToStore = 'noimage.jpg';
+        }
 
         $theme = request('theme');
-        $settings = Settings::first();
-        $settings->update($request->all());
         Theme::set($theme);
-        return redirect('/admin/settings')->with('success', 'Settings updated successfully');
+        // Loop through all settings
+        foreach ($request->except(['_token', 'theme', 'app_logo', 'app_favicon']) as $key => $value) {
+            Settings::updateOrCreate(['key' => $key], ['value' => $value]);
+        }
+        return redirect('/admin/settings#general')->with('success', 'Settings updated successfully');
+    }
+
+    function email(Request $request)
+    {
+        $request->validate([
+            'mail_host' => 'required',
+            'mail_port' => 'required',
+            'mail_username' => 'required',
+            'mail_password' => 'required',
+            'mail_encryption' => 'required',
+            'mail_from_address' => 'required',
+            'mail_from_name' => 'required',
+        ]);
+        // Loop through all settings
+        foreach ($request->except(['_token']) as $key => $value) {
+            Settings::updateOrCreate(['key' => $key], ['value' => $value]);
+        }
+        return redirect('/admin/settings#mail')->with('success', 'Settings updated successfully');
+    }
+
+    function testEmail(Request $request)
+    {
+        $email = Auth::user()->email;
+        try {
+            Mail::raw('This is a test email', function ($message) use ($email) {
+                $message->to($email);
+                $message->subject('Test Email');
+            });
+        } catch (\Exception $e) {
+            // Return json response
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+
+        return response()->json(['success' => 'Email sent successfully'], 200);
     }
 }

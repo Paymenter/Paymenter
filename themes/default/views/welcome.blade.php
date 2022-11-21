@@ -3,13 +3,15 @@
         {{ __('Home') }}
     </x-slot>
     <x-success class="mt-4" />   
-        <div class="container w-11/12 h-64 h-full px-6 py-10 mx-auto md:w-4/5">
+        <div class="container w-11/12 h-full px-6 py-10 mx-auto md:w-4/5">
             <div class="w-full h-full rounded">
                 <div class="py-10 mx-auto max-w-7xl sm:px-6 lg:px-8">
                     <div class="overflow-hidden bg-white rounded-lg shadow-xl dark:bg-darkmode2">
                         <div class="p-6 bg-white dark:bg-darkmode2 sm:px-20">
                             <div class="prose dark:prose-invert">
+                                @if(config('settings::home_page_text'))
                                 {{ \Illuminate\Mail\Markdown::parse(config('settings::home_page_text')) }}
+                                @endif
                             </div>
                         </div>
                     </div>

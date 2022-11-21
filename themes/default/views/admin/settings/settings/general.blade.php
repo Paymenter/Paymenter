@@ -1,24 +1,63 @@
 <div class="hidden mt-3" id="tab-general">
-    <form method="POST" enctype="multipart/form-data" class="mb-3" action="">
+    <form method="POST" enctype="multipart/form-data" class="mb-3" action="{{ route('admin.settings.general') }}">
         @csrf
-        @method('PATCH')
         <div class="grid grid-cols-1 md:grid-cols-2">
             <div class="relative m-4 group">
-                <input type="text" class="form-input peer" placeholder=" " name="username" />
-                <label class="form-label">Mail Username</label>
+                <input type="text" class="form-input peer @error('app_name') is-invalid @enderror" placeholder=" "
+                    name="app_name" required value="{{ config('settings::app_name') }}" />
+                <label class="form-label">{{ __('Name') }}</label>
+            </div>
+            <!-- App Logo -->
+            <div class="relative m-4 group">
+                <input type="file" class="form-input peer @error('app_logo') is-invalid @enderror" placeholder=" "
+                    name="app_logo" accept="image/*" />
+                <label class="form-label">{{ __('Logo') }}</label>
             </div>
             <div class="relative m-4 group">
-                <input type="text" class="form-input peer" placeholder=" " name="password" />
-                <label class="form-label">Mail Password</label>
+                <select name="theme" class="form-input peer @error('theme') is-invalid @enderror" placeholder=" "
+                    name="theme" required>
+                    @foreach ($themes as $theme)
+                        <option value="{{ $theme }}" {{ $theme == config('settings::theme') ? 'selected' : '' }}>
+                            {{ $theme }}</option>
+                    @endforeach
+                </select>
+                <label class="form-label">{{ __('Theme') }}</label>
             </div>
             <div class="relative m-4 group">
-                <input type="text" class="form-input peer" placeholder=" " name="host" />
-                <label class="form-label">Mail Host</label>
+                <!-- sidebar -->
+                <select name="sidebar" class="form-input peer @error('sidebar') is-invalid @enderror" placeholder=" "
+                    name="sidebar" required>
+                    <option value="1" {{ config('settings::sidebar') == 1 ? 'selected' : '' }}>
+                        {{ __('Sidebar') }}</option>
+                    <option value="0" {{ config('settings::sidebar') == 0 ? 'selected' : '' }}>
+                        {{ __('Topbar') }}</option>
+                </select>
+            </div>
+            <h2 class="col-span-2 text-xl text-gray-900 dark:text-darkmodetext ">SEO: </h2>
+            <div class="relative m-4 group">
+                <input type="text" class="form-input peer @error('seo_title') is-invalid @enderror" placeholder=" "
+                    name="seo_title" required value="{{ config('settings::seo_title') }}" />
+                <label class="form-label">{{ __('Seo Title') }}</label>
+            </div>
+            <div class="relative m-4 group">
+                <input type="text" class="form-input peer @error('seo_description') is-invalid @enderror"
+                    placeholder=" " name="seo_description" required
+                    value="{{ config('settings::seo_description') }}" />
+                <label class="form-label">{{ __('Seo Description') }}</label>
+            </div>
+            <div class="relative m-4 group">
+                <input type="text" class="form-input peer @error('seo_keywords') is-invalid @enderror"
+                    placeholder=" " name="seo_keywords" required value="{{ config('settings::seo_keywords') }}" />
+                <label class="form-label">{{ __('Seo Keywords (separate with comma)') }}</label>
+            </div>
+            <div class="relative m-4 group">
+                <input type="checkbox" class="form-input peer @error('seo_twitter_card') is-invalid @enderror"
+                    placeholder=" " name="seo_twitter_card" value="1"
+                    {{ config('settings::seo_twitter_card') ? 'checked' : '' }} />
+                <label class="form-label">{{ __('Seo Twitter Card') }}</label>
             </div>
 
         </div>
-        
-            <button class="float-right form-submit">{{ __('Submit') }}</button>
-            <button type="button" class="float-right form-submit">{{ __('Test') }}</button>
+        <button class="float-right form-submit">{{ __('Submit') }}</button>
     </form>
 </div>
