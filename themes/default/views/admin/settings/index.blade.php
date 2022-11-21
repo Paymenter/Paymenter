@@ -8,8 +8,6 @@
         <div class="w-full h-full rounded ">
             <div class="p-6 mx-auto bg-white border-b border-gray-200 shadow-xl max-w-7xl sm:px-6 lg:px-8 dark:bg-darkmode2 dark:border-darkmode"
                 id="tabs">
-                <h1 class="text-xl text-gray-500 dark:text-darkmodetext">W.I.P.!</h1>
-                <br>
                 <div class="flex flex-row overflow-x-auto lg:flex-wrap lg:space-x-1">
                     @foreach ($tabs as $tab)
                         <div class="flex-none tabs">
