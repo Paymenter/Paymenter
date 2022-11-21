@@ -299,7 +299,7 @@
                                                 fill="rgba(149,164,166,1)" />
                                         </svg>
                                         <div class="ml-1.5 text-black dark:text-darkmodetext">
-                                            {{ $ticket-> attachment_count}}
+                                            {!! $ticket->attachment_count == null ? 0 : $ticket->attachment_count !!}
                                         </div>
                                     </div>
                                     <div class="text-sm font-semibold flex">
