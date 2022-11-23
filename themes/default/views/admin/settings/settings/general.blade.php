@@ -28,12 +28,12 @@
                 <select name="sidebar" class="form-input peer @error('sidebar') is-invalid @enderror" placeholder=" "
                     name="sidebar" required>
                     <option value="1" {{ config('settings::sidebar') == 1 ? 'selected' : '' }}>
-                        {{ __('Sidebar') }}</option>
-                    <option value="0" {{ config('settings::sidebar') == 0 ? 'selected' : '' }}>
                         {{ __('Topbar') }}</option>
+                    <option value="0" {{ config('settings::sidebar') == 0 ? 'selected' : '' }}>
+                        {{ __('Sidebar') }}</option>
                 </select>
             </div>
-            <h2 class="col-span-2 text-xl text-gray-900 dark:text-darkmodetext ">SEO: </h2>
+            <h2 class="col-span-1 md:col-span-2 text-xl text-gray-900 dark:text-darkmodetext ">SEO: </h2>
             <div class="relative m-4 group">
                 <input type="text" class="form-input peer @error('seo_title') is-invalid @enderror" placeholder=" "
                     name="seo_title" required value="{{ config('settings::seo_title') }}" />
