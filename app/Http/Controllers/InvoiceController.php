@@ -22,13 +22,15 @@ class InvoiceController extends Controller
     {
         $order = Orders::findOrFail($id->order_id);
         $invoice = $id;
+        ExtensionHelper::setOrderProductConfig('external_id', 1, 7);
+        ExtensionHelper::terminateServer($order);
 
         if($invoice->user_id != auth()->user()->id) {
             return redirect()->route('invoice.index');
         }
         $products = [];
-        foreach($order->products as $product) {
-            $test = Products::where('id', $product['id'])->first();
+        foreach($order->products()->get() as $product) {
+            $test = Products::where('id', $product->product_id)->first();
             $test->quantity = $product['quantity'];
             $products[] = $test;
         }
@@ -43,10 +45,10 @@ class InvoiceController extends Controller
             return redirect()->route('invoice.index');
         }
         $order = Orders::findOrFail($invoice->order_id);
-        $total = 0;
+        $total = $invoice->total;
         $products = [];
-        foreach($order->products as $product) {
-            $test = json_decode(Products::find($product['id'])->first());
+        foreach($order->products()->get() as $product) {
+            $test = json_decode(Products::where('id', $product->product_id)->first());
             $test->quantity = $product['quantity'];
             if(isset($product['config'])) {
                 $test->config = $product['config'];

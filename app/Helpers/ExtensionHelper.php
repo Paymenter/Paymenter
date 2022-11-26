@@ -7,6 +7,7 @@ use App\Models\Products;
 use App\Models\User;
 use App\Models\Invoices;
 use App\Models\Extensions;
+use App\Models\OrderProductsConfig;
 use Illuminate\Http\Request;
 
 class ExtensionHelper
@@ -127,6 +128,25 @@ class ExtensionHelper
         return $config->value;
     }
 
+    /**
+     * Creates or updates a Product Config
+     * @return void
+     */
+    public static function setOrderProductConfig($key, $value, $id)
+    {
+        $config = OrderProductsConfig::where('order_product_id', $id)->where('key', $key)->first();
+        if (!$config) {
+            OrderProductsConfig::create([
+                'order_product_id' => $id,
+                'key' => $key,
+                'value' => $value
+            ]);
+        } else {
+            $config->value = $value;
+            $config->save();
+        }
+    }
+
     public static function getPaymentMethod($id, $total, $products, $orderId)
     {
         $extension = Extensions::where('id', $id)->first();
@@ -142,9 +162,9 @@ class ExtensionHelper
 
     public static function createServer(Orders $order)
     {
-        foreach ($order->products as $product2) {
-            $product = Products::findOrFail($product2['id']);
-            if(!isset($product->server_id)) {
+        foreach ($order->products()->get() as $product2) {
+            $product = Products::findOrFail($product2->product_id);
+            if (!isset($product->server_id)) {
                 return;
             }
             $extension = Extensions::where('id', $product->server_id)->first();
@@ -157,8 +177,9 @@ class ExtensionHelper
             foreach ($settings as $setting) {
                 $config[$setting->name] = $setting->value;
             }
-            if (isset($product2["config"])) {
-                $config['config'] = json_encode($product2["config"]);
+            $config['config_id'] = $product->id;
+            foreach ($product2->config()->get() as $config2) {
+                $config["config"][$config2->key] = $config2->value;
             }
             $user = User::findOrFail($order->client);
             $function = $extension->name . '_createServer';
@@ -169,8 +190,11 @@ class ExtensionHelper
 
     public static function suspendServer(Orders $order)
     {
-        foreach ($order->products as $product2) {
-            $product = Products::findOrFail($product2['id']);
+        foreach ($order->products()->get() as $product2) {
+            $product = Products::findOrFail($product2->product_id);
+            if (!isset($product->server_id)) {
+                return;
+            }
             $extension = Extensions::where('id', $product->server_id)->first();
             if (!$extension) {
                 return false;
@@ -181,11 +205,9 @@ class ExtensionHelper
             foreach ($settings as $setting) {
                 $config[$setting->name] = $setting->value;
             }
-            if (isset($product2["external_id"])) {
-                $config['external_id'] = $product2["external_id"];
-            }
-            if (isset($product2["config"])) {
-                $config['config'] = json_encode($product2["config"]);
+            $config['config_id'] = $product->id;
+            foreach ($product2->config()->get() as $config2) {
+                $config["config"][$config2->key] = $config2->value;
             }
             $user = User::findOrFail($order->client);
             $function = $extension->name . '_suspendServer';
@@ -196,8 +218,11 @@ class ExtensionHelper
 
     public static function unsuspendServer(Orders $order)
     {
-        foreach ($order->products as $product2) {
-            $product = Products::findOrFail($product2['id']);
+        foreach ($order->products()->get() as $product2) {
+            $product = Products::findOrFail($product2->product_id);
+            if (!isset($product->server_id)) {
+                return;
+            }
             $extension = Extensions::where('id', $product->server_id)->first();
             if (!$extension) {
                 return false;
@@ -208,11 +233,9 @@ class ExtensionHelper
             foreach ($settings as $setting) {
                 $config[$setting->name] = $setting->value;
             }
-            if (isset($product2["external_id"])) {
-                $config['external_id'] = $product2["external_id"];
-            }
-            if (isset($product2["config"])) {
-                $config['config'] = json_encode($product2["config"]);
+            $config['config_id'] = $product->id;
+            foreach ($product2->config()->get() as $config2) {
+                $config["config"][$config2->key] = $config2->value;
             }
             $user = User::findOrFail($order->client);
             $function = $extension->name . '_unsuspendServer';
@@ -223,8 +246,11 @@ class ExtensionHelper
 
     public static function terminateServer(Orders $order)
     {
-        foreach ($order->products as $product2) {
-            $product = Products::findOrFail($product2['id']);
+        foreach ($order->products()->get() as $product2) {
+            $product = Products::findOrFail($product2->product_id);
+            if (!isset($product->server_id)) {
+                return;
+            }
             $extension = Extensions::where('id', $product->server_id)->first();
             if (!$extension) {
                 return false;
@@ -235,27 +261,14 @@ class ExtensionHelper
             foreach ($settings as $setting) {
                 $config[$setting->name] = $setting->value;
             }
-            if (isset($product2["external_id"])) {
-                $config['external_id'] = $product2["external_id"];
-            }
-            if (isset($product2["config"])) {
-                $config['config'] = json_encode($product2["config"]);
+            $config['config_id'] = $product->id;
+            foreach ($product2->config()->get() as $config2) {
+                $config["config"][$config2->key] = $config2->value;
             }
             $user = User::findOrFail($order->client);
             $function = $extension->name . '_terminateServer';
             $function($user, $config, $order);
             return true;
         }
-    }
-
-    public static function setExternalId(Orders $order, $externalId)
-    {   
-        $products = [];
-        foreach ($order->products as $product) {
-            $product['external_id'] = $externalId;
-            $products[] = $product;
-        }
-        $order->products = $products;
-        $order->save();
     }
 }

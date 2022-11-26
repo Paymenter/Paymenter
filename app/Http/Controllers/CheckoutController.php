@@ -3,9 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Helpers\ExtensionHelper;
-use App\Models\{Orders, Products, User, Invoices, Extensions, Statistics};
+use App\Models\{Orders, Products, User, Invoices, Extensions, Statistics, OrderProducts, OrderProductsConfig};
 use Illuminate\Contracts\Session\Session;
 use Illuminate\Http\Request;
+use stdClass;
 
 class CheckoutController extends Controller
 {
@@ -42,9 +43,9 @@ class CheckoutController extends Controller
         // Get extension config
         if (isset($product->server_id)) {
             $server = Extensions::find($product->server_id);
-            $extension = json_decode(file_get_contents(base_path('app/Extensions/Servers/' . $server->name . '/extension.json')));
-
-            if (isset($extension->userConfig)) {
+            include_once base_path('app/Extensions/Servers/' . $server->name . '/index.php');
+            $function = $server->name . '_getUserConfig';
+            if (function_exists($function)) {
                 return redirect()->route('checkout.config', $product->id);
             }
         }
@@ -67,6 +68,9 @@ class CheckoutController extends Controller
         $server = Extensions::find($product->server_id);
         include_once(base_path('app/Extensions/Servers/' . $server->name . '/index.php'));
         $function = $server->name . '_getUserConfig';
+        if (!function_exists($function)) {
+            return redirect()->back()->with('error', 'Config Not Found');
+        }
         $userConfig = json_decode(json_encode($function($product)));
         if (!isset($userConfig)) {
             return redirect()->route('checkout.index');
@@ -78,9 +82,14 @@ class CheckoutController extends Controller
     {
         $product = $id;
         $server = Extensions::find($product->server_id);
-        $extension = json_decode(file_get_contents(base_path('app/Extensions/Servers/' . $server->name . '/extension.json')));
+        include_once(base_path('app/Extensions/Servers/' . $server->name . '/index.php'));
+        $function = $server->name . '_getUserConfig';
+        if (!function_exists($function)) {
+            return redirect()->back()->with('error', 'Config Not Found');
+        }
+        $userConfig = json_decode(json_encode($function($product)));
         $config = [];
-        foreach ($extension->userConfig as $configItem) {
+        foreach ($userConfig as $configItem) {
             $config[$configItem->name] = $request->input($configItem->name);
         }
         $product->config = $config;
@@ -104,30 +113,16 @@ class CheckoutController extends Controller
             return redirect()->back()->with('error', 'Cart is empty');
         }
         $total = 0;
-        if (!$products) {
-            return redirect()->back()->with('error', 'No products in cart');
-        }
         if ($products) {
             foreach ($products as $product) {
                 $total += $product->price * $product->quantity;
             }
         }
-        $productsids = array();
-        foreach ($products as $product) {
-            $productJson = [
-                'id' => $product->id,
-                'quantity' => $product->quantity,
-            ];
-            if (isset($product->config)) {
-                $productJson['config'] = $product->config;
-            }
-            array_push($productsids, $productJson);
-        }
+
         $user = User::find(auth()->user()->id);
         $order = new Orders();
         $order->client = $user->id;
         $order->total = $total;
-        $order->products = $productsids;
         $order->expiry_date = date('Y-m-d H:i:s', strtotime('+1 month'));
         if ($total == 0) {
             $order->status = 'paid';
@@ -136,6 +131,22 @@ class CheckoutController extends Controller
             $order->status = 'pending';
         }
         $order->save();
+        foreach ($products as $product) {
+            $orderProduct = new OrderProducts();
+            $orderProduct->order_id = $order->id;
+            $orderProduct->product_id = $product->id;
+            $orderProduct->quantity = $product->quantity;
+            $orderProduct->save();
+            if (isset($product->config)) {
+                foreach ($product->config as $key => $value) {
+                    $orderProductConfig = new OrderProductsConfig();
+                    $orderProductConfig->order_id = $orderProduct->id;
+                    $orderProductConfig->key = $key;
+                    $orderProductConfig->value = $value;
+                    $orderProductConfig->save();
+                }
+            }
+        }
 
         $invoice = new Invoices();
         $invoice->user_id = $user->id;

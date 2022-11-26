@@ -8,7 +8,7 @@ function PayPal_pay($total, $products, $orderId)
     $client_id = ExtensionHelper::getConfig('PayPal', 'client_id');
     $client_secret = ExtensionHelper::getConfig('PayPal', 'client_secret');
     $live = ExtensionHelper::getConfig('PayPal', 'live');
-    if($live) {
+    if ($live) {
         $url = 'https://api-m.paypal.com';
     } else {
         $url = 'https://api-m.sandbox.paypal.com';
@@ -59,7 +59,8 @@ function PayPal_pay($total, $products, $orderId)
     return $response->json();
 }
 
-function PayPal_webhook($request){
+function PayPal_webhook($request)
+{
     // Verify the webhook signature
     $client_id = ExtensionHelper::getConfig('PayPal', 'client_id');
     $client_secret = ExtensionHelper::getConfig('PayPal', 'client_secret');
@@ -91,5 +92,28 @@ function PayPal_webhook($request){
         'webhook_event' => $request->all()
     ]);
     error_log(print_r($response->body(), true));
+}
 
+function PayPal_getConfig()
+{
+    return [
+        [
+            "name" => "client_id",
+            "type" => "text",
+            "friendlyName" => "Client ID",
+            "required" => true
+        ],
+        [
+            "name" => "client_secret",
+            "type" => "text",
+            "friendlyName" => "Client Secret",
+            "required" => true
+        ],
+        [
+            "name" => "live",
+            "type" => "boolean",
+            "friendlyName" => "Live mode",
+            "required" => false
+        ]
+    ];
 }

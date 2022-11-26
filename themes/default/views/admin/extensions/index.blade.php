@@ -9,14 +9,17 @@
                 <div class="dark:bg-darkmode2 p-6 bg-white">
                     <div class="w-full">
                         <table class="min-w-full divide-y divide-gray-200 w-full" id="table">
+                            <div class="m-10 flex items-baseline ">
+                                <h2 class="text-2xl font-semibold leading-tight text-gray-800 dark:text-darkmodetext">
+                                    {{ __('Extensions and Gateways') }}
+                                </h2>
+                            </div>
                             @if (!$servers)
                                 <!-- not found -->
-                                <div class="ml-10 flex items-baseline ">
                                     <p
                                         class="dark:bg-darkmode2 dark:text-darkmodetext text-gray-600 px-3 rounded-md text-xl m-4">
                                         {{ __('No extensions found') }}
                                     </p>
-                                </div>
                             @else
                                 <thead class="dark:bg-darkmode bg-gray-50">
                                     <tr>
@@ -25,56 +28,77 @@
                                             {{ __('Name') }}</th>
                                         <th scope="col"
                                             class="dark:text-darkmodetext px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                            {{ __('Version') }}</th>
+                                            {{ __('Enabled?') }}</th>
                                         <th scope="col"
                                             class="dark:text-darkmodetext px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                            {{ __('Description') }}</th>
-                                            <th scope="col"
-                                            class="dark:text-darkmodetext px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                            {{ __('Type') }}</th>
-                                        <th></th>
+                                            {{ __('Edit') }}</th>
                                     </tr>
                                 </thead>
                                 <tbody class="dark:bg-darkmode bg-white divide-y divide-gray-200">
+                                    <tr class="dark:bg-darkmode">
+                                        <td
+                                            class="dark:text-darkmodetext px-6 py-4 whitespace-nowrap text-md text-gray-500 font-bold">
+                                            Servers:</td>
+                                        <td
+                                            class="dark:text-darkmodetext px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                            -------------------</td>
+                                        <td
+                                            class="dark:text-darkmodetext px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                            -------------------</td>
+
+                                    </tr>
                                     @foreach ($servers as $extensio)
+                                        @if ($extensio == '.' || $extensio == '..')
+                                            @continue
+                                        @endif
                                         <tr class="dark:bg-darkmode">
                                             <td
                                                 class="dark:text-darkmodetext px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                                {{ $extensio->name }}</td>
+                                                {{ $extensio }}</td>
                                             <td
                                                 class="dark:text-darkmodetext px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                                {{ $extensio->version }}</td>
-                                            <td
-                                                class="dark:text-darkmodetext px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                                {{ $extensio->description }}</td>
-                                            <td
-                                                class="dark:text-darkmodetext px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                                Server</td>
-
-                                            <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                                <a href="{{ route('admin.extensions.edit', ['server', $extensio->name]) }}"
+                                                @if (App\Models\Extensions::where('name', $extensio)->first()->enabled == 1)
+                                                    {{ __('Yes') }}
+                                                @else
+                                                    {{ __('No') }}
+                                                @endif
+                                            </td>
+                                            <td class="dark:text-darkmodetext px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                                <a href="{{ route('admin.extensions.edit', ['server', $extensio]) }}"
                                                     class="text-indigo-600 hover:text-indigo-900 hover:bg-button p-2 rounded-lg">{{ __('Edit') }}</a>
                                             </td>
                                         </tr>
                                     @endforeach
+                                    <tr class="dark:bg-darkmode">
+                                        <td
+                                            class="dark:text-darkmodetext px-6 py-4 whitespace-nowrap text-md text-gray-500 font-bold">
+                                            Gateways:</td>
+                                        <td
+                                            class="dark:text-darkmodetext px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                            -------------------</td>
+                                        <td
+                                            class="dark:text-darkmodetext px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                            -------------------</td>
+                                    </tr>
                                     @foreach ($gateways as $gateway)
+                                        @if ($gateway == '.' || $gateway == '..')
+                                            @continue
+                                        @endif
                                         <tr>
                                             <td
                                                 class="dark:text-darkmodetext px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                                {{ $gateway->name }}</td>
+                                                {{ $gateway }}</td>
                                             <td
                                                 class="dark:text-darkmodetext px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                                {{ $gateway->version }}</td>
-                                            <td
-                                                class="dark:text-darkmodetext px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                                {{ $gateway->description }}</td>
-                                            <td
-                                                class="dark:text-darkmodetext px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                                Gateway</td>
-                                            <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                                <a href="{{ route('admin.extensions.edit', ['gateway', $gateway->name]) }}"
+                                                @if (App\Models\Extensions::where('name', $extensio)->first()->enabled == 1)
+                                                    {{ __('Yes') }}
+                                                @else
+                                                    {{ __('No') }}
+                                                @endif
+                                            </td>
+                                            <td class="dark:text-darkmodetext px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                                <a href="{{ route('admin.extensions.edit', ['gateway', $gateway]) }}"
                                                     class="dark:bg-darkmodebutton text-indigo-600 hover:text-indigo-900 hover:bg-button p-2 rounded-lg">{{ __('Edit') }}</a>
-
                                             </td>
                                         </tr>
                                     @endforeach
@@ -85,24 +109,4 @@
                 </div>
             </div>
         </div>
-        <link rel="stylesheet" type="text/css"
-            href="https://cdn.datatables.net/v/dt/jszip-2.5.0/dt-1.12.1/b-2.2.3/b-colvis-2.2.3/b-html5-2.2.3/b-print-2.2.3/datatables.min.css" />
-
-        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/pdfmake.min.js"></script>
-        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/vfs_fonts.js"></script>
-        <script type="text/javascript"
-            src="https://cdn.datatables.net/v/dt/jszip-2.5.0/dt-1.12.1/b-2.2.3/b-colvis-2.2.3/b-html5-2.2.3/b-print-2.2.3/datatables.min.js">
-        </script>
-        <script>
-            $(document).ready(function() {
-                var table = $('#table').DataTable({
-                    dom: 'Bfrtip',
-                    buttons: [
-                        'copy', 'csv', 'excel', 'pdf', 'print'
-                    ]
-                });
-                $('.dt-button').addClass('dark:text-darkmodetext');
-                $('.dataTables_filter label').addClass('dark:text-darkmodetext');
-            });
-        </script>
 </x-admin-layout>

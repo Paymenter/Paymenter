@@ -16,17 +16,14 @@ class Orders extends Model
         'client',
         'total'
     ];
-    protected $casts = [
-        'products' => 'array',
-    ];
-/*
-    public function product()
-    {
-        return $this->belongsTo(Products::class, 'product');
-    }*/
 
     public function client()
     {
         return $this->belongsTo(User::class, 'client', 'id');
+    }
+
+    public function products()
+    {
+        return $this->hasMany(OrderProducts::class, 'order_id', 'id');
     }
 }

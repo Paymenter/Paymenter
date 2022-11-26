@@ -85,3 +85,51 @@ function Stripe_pay($total, $products, $orderId)
     $order = Stripe_getUrl($products, $orderId);
     return $stripe->checkout->sessions->retrieve($order->id, [])->url;
 }
+
+function Stripe_getConfig()
+{
+    return [
+        [
+            "name" => "stripe_secret_key",
+            "friendlyName" => "Stripe Secret Key",
+            "type" => "text",
+            "description" => "Stripe secret key",
+            "required" => true
+        ],
+        [
+            "name" => "stripe_publishable_key",
+            "friendlyName" => "Stripe publishable key",
+            "type" => "text",
+            "description" => "Stripe publishable key",
+            "required" => true
+        ],
+        [
+            "name" => "stripe_webhook_secret",
+            "friendlyName" => "Stripe webhook secret",
+            "type" => "text",
+            "description" => "Stripe webhook secret",
+            "required" => true
+        ],
+        [
+            "name" => "stripe_test_mode",
+            "friendlyName" => "Stripe test mode",
+            "type" => "boolean",
+            "description" => "Stripe test mode",
+            "required" => false
+        ],
+        [
+            "name" => "stripe_test_key",
+            "friendlyName" => "Stripe test key",
+            "type" => "text",
+            "description" => "Stripe test key",
+            "required" => false
+        ],
+        [
+            "name" => "stripe_test_publishable_key",
+            "friendlyName" => "Stripe test publishable key",
+            "type" => "text",
+            "description" => "Stripe test publishable key",
+            "required" => false
+        ]
+    ];
+}

@@ -29,7 +29,7 @@
                             <div class="mt-4">
                                 <label for="price">{{ __('Price') }}</label>
 
-                                <input id="price" class="block w-full mt-1 rounded-lg dark:bg-darkmode" type="number" name="price"  min="1" step="any"
+                                <input id="price" class="block w-full mt-1 rounded-lg dark:bg-darkmode" type="number" name="price"  min="0" step="any"
                                     value="{{ old('price') }}" required min="0" />
                             </div>
                             <div class="mt-4">

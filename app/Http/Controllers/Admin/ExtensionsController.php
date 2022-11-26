@@ -12,8 +12,8 @@ class ExtensionsController extends Controller
 {
     public function index()
     {
-        $servers = $this->servers();
-        $gateways = $this->gateways();
+        $servers = scandir(base_path('app/Extensions/Servers/'));
+        $gateways = scandir(base_path('app/Extensions/Gateways/'));
         return view('admin.extensions.index', compact('servers', 'gateways'));
     }
 
@@ -39,7 +39,12 @@ class ExtensionsController extends Controller
             $extension->type = 'server';
             return view('admin.extensions.edit', compact('extension'));
         }elseif($sort == 'gateway'){
-            $extension = json_decode(file_get_contents(base_path('app/Extensions/Gateways/' . $name . '/extension.json')));
+            include_once base_path('app/Extensions/Gateways/' . $name . '/index.php');
+            $extension = new stdClass;
+            $function = $name . '_getConfig';
+            $extension2 = json_decode(json_encode($function()));
+            $extension->config = $extension2;
+            $extension->name = $name;            
             $db = Extensions::where('name', $name)->first();
             if(!$db){
                 Extensions::create([
@@ -58,43 +63,29 @@ class ExtensionsController extends Controller
 
     public function update(Request $request, $sort, $name){
         if($sort == 'server'){
-            $extension = json_decode(file_get_contents(base_path('app/Extensions/Servers/' . $name . '/extension.json')));
+            include_once base_path('app/Extensions/Servers/' . $name . '/index.php');
+            $extension = new stdClass;
+            $function = $name . '_getConfig';
+            $extension2 = json_decode(json_encode($function()));
+            $extension->config = $extension2;
+            $extension->name = $name;
             foreach ($extension->config as $config) {
                 ExtensionHelper::setConfig($extension->name, $config->name, $request->input($config->name));
             }
             Extensions::where('name', $extension->name)->update(['enabled' => $request->input('enabled')]);
             return redirect()->route('admin.extensions.edit', ['sort' => $sort, 'name' => $name])->with('success', 'Extension updated successfully');
         }elseif($sort == 'gateway'){
-            $extension = json_decode(file_get_contents(base_path('app/Extensions/Gateways/' . $name . '/extension.json')));
+            include_once base_path('app/Extensions/Gateways/' . $name . '/index.php');
+            $extension = new stdClass;
+            $function = $name . '_getConfig';
+            $extension2 = json_decode(json_encode($function()));
+            $extension->config = $extension2;
+            $extension->name = $name;            
             foreach($extension->config as $config){
                 ExtensionHelper::setConfig($extension->name, $config->name, $request->input($config->name));
             }
             Extensions::where('name', $extension->name)->update(['enabled' => $request->input('enabled')]);
             return redirect()->route('admin.extensions.edit', ['sort' => $sort, 'name' => $name])->with('success', 'Extension updated successfully');
         }
-    }
-    function servers()
-    {
-        $extensions = [];
-        $folders = scandir(base_path('app/Extensions/Servers/'));
-        foreach ($folders as $folder) {
-            if ($folder != '.' && $folder != '..') {
-                $extensions[$folder] = json_decode(file_get_contents(base_path('app/Extensions/Servers/' . $folder . '/extension.json')));
-            }
-
-        }
-        return $extensions;
-    }
-
-    function gateways()
-    {
-        $extensions = [];
-        $folders = scandir(base_path('app/Extensions/Gateways/'));
-        foreach ($folders as $folder) {
-            if ($folder != '.' && $folder != '..') {
-                $extensions[$folder] = json_decode(file_get_contents(base_path('app/Extensions/Gateways/' . $folder . '/extension.json')));
-            }
-        }
-        return $extensions;
     }
 }

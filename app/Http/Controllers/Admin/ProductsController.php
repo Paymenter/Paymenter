@@ -8,7 +8,7 @@ use App\Models\Categories;
 use App\Models\Products;
 use App\Models\Extensions;
 use App\Models\ProductSettings;
-
+use stdClass;
 class ProductsController extends Controller
 {
     public function index()
@@ -75,8 +75,13 @@ class ProductsController extends Controller
     {
         $extensions = Extensions::where("type", "server")->where('enabled', true)->get();
         if ($product->server_id != null) {
-            $server = Extensions::find($product->server_id);
-            $extension = json_decode(file_get_contents(base_path('app/Extensions/Servers/' . $server->name . '/extension.json')));
+            $server = Extensions::findOrFail($product->server_id);
+            include_once base_path('app/Extensions/Servers/' . $server->name . '/index.php');
+            $extension = new stdClass;
+            $function = $server->name . '_getProductConfig';
+            $extension2 = json_decode(json_encode($function()));
+            $extension->productConfig = $extension2;
+            $extension->name = $server->name;
         } else {
             $server = null;
             $extension = null;
@@ -92,7 +97,11 @@ class ProductsController extends Controller
         ]);
         $product->update($data);
 
-        $extension = json_decode(file_get_contents(base_path('app/Extensions/Servers/' . $product->server()->get()->first()->name . '/extension.json')));
+        include_once base_path('app/Extensions/Servers/' . $product->server()->get()->first()->name . '/index.php');
+        $extension = new stdClass;
+        $function = $product->server()->get()->first()->name . '_getProductConfig';
+        $extension2 = json_decode(json_encode($function()));
+        $extension->productConfig = $extension2;
         foreach ($extension->productConfig as $config) {
             ProductSettings::updateOrCreate([
                 'product_id' => $product->id,
