@@ -33,8 +33,20 @@ class HomeController extends Controller
 
     function update(Request $request)
     {
-        $user = Auth::user();
-        $user->update($request->all());
+        $request->validate([
+            'name' => 'required',
+            'address' => 'required',
+            'city' => 'required',
+            'country' => 'required',
+            'phone' => 'required'
+        ]);
+        $user = User::find(auth()->user()->id);
+        $user->name = $request->name;
+        $user->address = $request->address;
+        $user->city = $request->city;
+        $user->country = $request->country;
+        $user->phone = $request->phone;
+        $user->save();
         return redirect()->back()->with('success', 'Profile updated successfully');
     }
 }

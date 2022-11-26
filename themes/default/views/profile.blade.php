@@ -17,7 +17,7 @@
                                     <label for="name">{{ __('Name') }}</label>
                                     <input id="name"
                                         class="block w-full rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm dark:bg-darkmode"
-                                        name="enabled" required type="text" value="{{ Auth::user()->name }}">
+                                        name="name" required type="text" value="{{ Auth::user()->name }}">
                                 </div>
                                 <div class="mt-4">
                                     <label for="address">{{ __('Address') }}</label>
