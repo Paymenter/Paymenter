@@ -45,9 +45,9 @@
                         @if (count($services) > 0)
                             <!-- If the array is empty, then we don't want to show the table -->
                             @foreach ($services as $service)
-                                @foreach ($service->products as $product)
+                                @foreach ($service->products()->get() as $product)
                                     @php
-                                        $product = App\Models\Products::where('id', $product['id'])
+                                        $product = App\Models\Products::where('id', $product->product_id)
                                             ->get()
                                             ->first();
                                     @endphp
