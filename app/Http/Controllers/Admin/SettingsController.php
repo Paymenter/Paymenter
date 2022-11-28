@@ -43,8 +43,6 @@ class SettingsController extends Controller
             $request->app_logo->move(public_path('images'), $imageName);
             $path = '/images/' . $imageName;
             Settings::updateOrCreate(['key' => 'app_logo'], ['value' => $path]);
-        } else {
-            $fileNameToStore = 'noimage.jpg';
         }
 
         $theme = request('theme');
@@ -88,5 +86,17 @@ class SettingsController extends Controller
         }
 
         return response()->json(['success' => 'Email sent successfully'], 200);
+    }
+
+    function login(Request $request)
+    {
+        $request->validate([
+            'discord_client_id' => 'required',
+            'discord_client_secret' => 'required',
+        ]);
+        Settings::updateOrCreate(['key' => 'discord_client_id'], ['value' => $request->discord_client_id]);
+        Settings::updateOrCreate(['key' => 'discord_client_secret'], ['value' => $request->discord_client_secret]);
+
+        return redirect('/admin/settings#login')->with('success', 'Settings updated successfully');
     }
 }

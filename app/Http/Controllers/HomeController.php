@@ -16,7 +16,11 @@ class HomeController extends Controller
 
     function manifest(Request $request)
     {
-        $json = json_encode($request->input(), JSON_UNESCAPED_SLASHES);
+        foreach($request->all() as $key => $value){
+            $value = htmlentities($value);
+            $request->merge([$key => $value]);
+        }
+        $json = json_encode($request->all(), JSON_UNESCAPED_SLASHES);
         echo $json;
         return;
     }

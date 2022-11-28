@@ -36,7 +36,7 @@ class CheckoutController extends Controller
     public function add(Request $request)
     {
 
-        $product = json_decode(Products::find($request->id)->toJson());
+        $product = json_decode(Products::findOrFail($request->id)->toJson());
         if (!$product) {
             return redirect()->back()->with('error', 'Product not found');
         }

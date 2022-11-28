@@ -22,6 +22,7 @@
                 <label class="form-label">{{ __('Discord Client Secret') }}</label>
             </div>
         </div>
+        <button class="form-submit float-right">{{ __('Submit') }}</button>
     </form>
 </div>
 
