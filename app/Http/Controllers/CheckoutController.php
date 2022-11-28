@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Helpers\ExtensionHelper;
-use App\Models\{Orders, Products, User, Invoices, Extensions, Statistics, OrderProducts, OrderProductsConfig};
+use App\Models\{Orders, Products, User, Invoices, Extensions, OrderProducts, OrderProductsConfig};
 use Illuminate\Contracts\Session\Session;
 use Illuminate\Http\Request;
 use stdClass;

@@ -6,9 +6,9 @@ use App\Models\Orders;
 use App\Models\Settings;
 use Illuminate\Http\Request;
 use App\Models\Tickets;
-use App\Models\Statistics;
 use App\Models\TicketMessages;
 use App\Models\User;
+use Illuminate\Support\Facades\RateLimiter;
 
 class TicketsController extends Controller
 {
@@ -56,19 +56,22 @@ class TicketsController extends Controller
                 'priority' => 'required',
             ]);
         }
+        $executed = RateLimiter::attempt(
+            'create-ticket:' . $id->id,
+            $perMinute = 1,
+            function () {
+                return true;
+            }
+        );
+        if (!$executed) {
+            return redirect()->back()->with('error', 'You are sending too many messages. Please wait a few minutes and try again.');
+        }
         $ticket = new Tickets();
         $ticket->title = request('title');
         $ticket->status = 'open';
         $ticket->client = auth()->user()->id;
         $ticket->priority = request('priority');
         $ticket->save();
-
-        Statistics::updateOrCreate(
-            [
-                'name' => 'tickets',
-                'date' => date('Y-m-d'),
-            ]
-        )->increment('value');
 
         TicketMessages::create([
             'ticket_id' => $ticket->id,
@@ -106,6 +109,16 @@ class TicketsController extends Controller
             $request->validate([
                 'message' => 'required',
             ]);
+        }
+        $executed = RateLimiter::attempt(
+            'send-message:' . $id->id,
+            $perMinute = 3,
+            function () {
+                return true;
+            }
+        );
+        if (!$executed) {
+            return redirect()->back()->with('error', 'You are sending too many messages. Please wait a few minutes and try again.');
         }
         TicketMessages::create([
             'ticket_id' => $id->id,

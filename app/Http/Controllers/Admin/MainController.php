@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Orders;
 use App\Models\Tickets;
-use App\Models\Statistics;
 
 class MainController extends Controller
 {
@@ -17,9 +16,6 @@ class MainController extends Controller
 
     function index()
     {
-        $tickets = Statistics::where('name', 'tickets')->where('created_at', '<', now())->orderBy('date', 'desc')->limit(7)->count();
-        $ticketsClosed = Statistics::where('name', 'ticketsClosed')->where('created_at', '<', now())->orderBy('date', 'desc')->count();
-        $orders = Statistics::where('name', 'orders')->where('created_at', '<', now())->orderBy('date', 'desc')->count();
-        return view('admin.index', compact('orders', 'tickets', 'ticketsClosed'));
+        return view('admin.index');
     }
 }

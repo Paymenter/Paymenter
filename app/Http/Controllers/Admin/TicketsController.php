@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Tickets;
-use App\Models\Statistics;
 use App\Models\User;
 use App\Models\TicketMessages;
 
@@ -44,13 +43,6 @@ class TicketsController extends Controller
             'client' => $request->get('user')
         ]);
         $ticket->save();
-        Statistics::updateOrCreate(
-            [
-                'name' => 'tickets',
-                'date' => date('Y-m-d'),
-            ]
-        )->increment('value');
-
 
         TicketMessages::create([
             'ticket_id' => $ticket->id,
@@ -96,14 +88,6 @@ class TicketsController extends Controller
         $ticket = Tickets::find($id);
         $ticket->status = $request->get('status');
         $ticket->save();
-        if ($request->get('status') == 'closed') {
-            Statistics::updateOrCreate(
-                [
-                    'name' => 'ticketsClosed',
-                    'date' => date('Y-m-d'),
-                ]
-            )->increment('value');
-        }
 
         return redirect()->back()->with('success', 'Status has been changed');
     }
