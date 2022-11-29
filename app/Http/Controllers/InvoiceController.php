@@ -22,8 +22,6 @@ class InvoiceController extends Controller
     {
         $order = Orders::findOrFail($id->order_id);
         $invoice = $id;
-        ExtensionHelper::setOrderProductConfig('external_id', 1, 7);
-        ExtensionHelper::terminateServer($order);
 
         if($invoice->user_id != auth()->user()->id) {
             return redirect()->route('invoice.index');
