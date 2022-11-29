@@ -14,6 +14,30 @@ class ExtensionsController extends Controller
     {
         $servers = scandir(base_path('app/Extensions/Servers/'));
         $gateways = scandir(base_path('app/Extensions/Gateways/'));
+        foreach ($servers as $key => $server) {
+            if ($server == '.' || $server == '..') continue;
+            // Check if the extension is enabled
+            $extension = Extensions::where('name', $server)->first();
+            if(!$extension) {
+                $extension = new Extensions();
+                $extension->name = $server;
+                $extension->type = 'server';
+                $extension->enabled = 0;
+                $extension->save();
+            }
+        }
+        foreach ($gateways as $key => $gateway) {
+            if ($gateway == '.' || $gateway == '..') continue;
+            // Check if the extension is enabled
+            $extension = Extensions::where('name', $gateway)->first();
+            if(!$extension) {
+                $extension = new Extensions();
+                $extension->name = $gateway;
+                $extension->type = 'gateway';
+                $extension->enabled = 0;
+                $extension->save();
+            }
+        }
         return view('admin.extensions.index', compact('servers', 'gateways'));
     }
 

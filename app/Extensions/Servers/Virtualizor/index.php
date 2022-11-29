@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Http;
 use App\Helpers\ExtensionHelper;
 use App\Models\Products;
+
 require_once(__DIR__ . '/sdk.php');
 
 function Virtualizor_getConfig()
@@ -77,8 +78,40 @@ function Virtualizor_getUserConfig(Products $product)
     ];
 }
 
+function Virtualizor_getProductConfig()
+{
+    return [
+        [
+            "name" => "virt",
+            "friendlyName" => "Virtualizon Type",
+            "type" => "dropdown",
+            "required" => true,
+            "options" => [
+                [
+                    "name" => "OpenVZ",
+                    "value" => "openvz"
+                ],
+                [
+                    "name" => "Xen",
+                    "value" => "xen"
+                ],
+                [
+                    "name" => "KVM",
+                    "value" => "kvm"
+                ]
+            ]
+        ],
+        [
+            "name" => "planname",
+            "friendlyName" => "Plan Name",
+            "type" => "text",
+            "required" => true
+        ]
+    ];
+}
 
-function Virtualizor_createServer($user, $params, $order){
+function Virtualizor_createServer($user, $params, $order)
+{
 
     $config = json_decode($params["config"]);
     $key = ExtensionHelper::getConfig('virtualizor', 'key');
@@ -94,7 +127,7 @@ function Virtualizor_createServer($user, $params, $order){
     $post['planname'] = $params["planname"];
     $post['ptype'] = $params["virt"];
     $plans = $admin->plans($page, $reslen, $post);
-    if(!isset($plans["plans"][1])){
+    if (!isset($plans["plans"][1])) {
         ExtensionHelper::error("Virtualizor", "Plan not found");
         return;
     }
@@ -131,14 +164,15 @@ function Virtualizor_createServer($user, $params, $order){
 
 
     $output = $admin->addvs_v2($post);
- 
+
     // Set server ID
     $server = $output["vs_info"]['vpsid'];
-    ExtensionHelper::setOrderProductConfig('external_id', $server, $order->id);
+    ExtensionHelper::setOrderProductConfig('external_id', $server, $params["config_id"]);
     return true;
 }
 
-function Virtualizor_suspendServer($user, $params, $order){
+function Virtualizor_suspendServer($user, $params, $order)
+{
     $key = ExtensionHelper::getConfig('virtualizor', 'key');
     $pass = ExtensionHelper::getConfig('virtualizor', 'pass');
     $ip = ExtensionHelper::getConfig('virtualizor', 'ip');
@@ -149,7 +183,8 @@ function Virtualizor_suspendServer($user, $params, $order){
     return true;
 }
 
-function Virtualizor_unsuspendServer($user, $params, $order){
+function Virtualizor_unsuspendServer($user, $params, $order)
+{
     $key = ExtensionHelper::getConfig('virtualizor', 'key');
     $pass = ExtensionHelper::getConfig('virtualizor', 'pass');
     $ip = ExtensionHelper::getConfig('virtualizor', 'ip');
@@ -160,7 +195,8 @@ function Virtualizor_unsuspendServer($user, $params, $order){
     return true;
 }
 
-function Virtualizor_terminateServer($user, $params, $order){
+function Virtualizor_terminateServer($user, $params, $order)
+{
     $key = ExtensionHelper::getConfig('virtualizor', 'key');
     $pass = ExtensionHelper::getConfig('virtualizor', 'pass');
     $ip = ExtensionHelper::getConfig('virtualizor', 'ip');

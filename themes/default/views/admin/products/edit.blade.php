@@ -2,6 +2,7 @@
     <x-slot name="title">
         {{ __('Products') }}
     </x-slot>
+    <x-success class="mb-4" />
 
     <div class="py-12">
         <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
@@ -14,7 +15,6 @@
                     <div class="mt-6 text-gray-500 dark:text-darkmodetext ">
                         <a href="{{ route('admin.products.extension', $product->id) }}" class="px-4 py-2 font-bold text-white bg-blue-500 rounded hover:bg-blue-700 dark:text-darkmodetext">Server settings</a>
                     </div>
-                    <x-success class="mb-4" />
                     <div class="mt-6 text-gray-500 dark:text-darkmodetext dark:bg-darkmode2">
                         <form method="POST" action="{{ route('admin.products.update', $product->id) }}"
                             enctype="multipart/form-data">

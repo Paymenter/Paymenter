@@ -12,22 +12,27 @@
                     <div class="grid grid-cols-1 gap-4">
                         <div class="mt-6 text-gray-500 dark:text-darkmodetext dark:bg-darkmode2">
                             <div class="mt-4">
-                                <label for="subject">{{ __('tickets.subject') }}</label>
+                                <label for="subject">{{ __('Subject') }}</label>
                                 <input id="subject"
                                     class="block w-full rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm dark:bg-darkmode"
                                     name="subject" required type="text" value="{{ $ticket->title }}" disabled>
                             </div>
                             <div class="mt-4">
-                                <label for="priority">{{ __('tickets.priority') }}</label>
+                                <label for="priority">{{ __('Priority') }}</label>
                                 <input id="priority"
                                     class="block w-full rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm dark:bg-darkmode"
                                     name="priority" required type="text" value="{{ $ticket->priority }}" disabled>
                             </div>
                             <div class="mt-4">
-                                <label for="status">{{ __('tickets.status') }}</label>
+                                <label for="status">{{ __('Status') }}</label>
                                 <input id="status"
                                     class="block w-full rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm dark:bg-darkmode"
                                     name="status" required type="text" value="{{ $ticket->status }}" disabled>
+                                <br>
+                                <form action="{{ route('tickets.close', $ticket->id) }} " method="POST">
+                                    @csrf
+                                    <button class="form-submit bg-red-600 float-right">Close Ticket</button>
+                                </form>
                             </div>
                         </div>
                     </div>
@@ -45,7 +50,7 @@
                                         {{ $message->created_at }}</p>
                                     <p class="text-xs text-gray-500 dark:text-darkmodetext text-end">
                                         @if ($message->user_id == Auth::user()->id)
-                                            {{ __('tickets.you') }}
+                                            {{ __('You') }}
                                         @else
                                             {{ $message->user->name }}
                                         @endif
@@ -64,7 +69,7 @@
                             <x-success class="mt-4" />
                             <div class="mt-6 text-gray-500 dark:text-darkmodetext dark:bg-darkmode2">
                                 <div class="mt-4">
-                                    <label for="message">{{ __('tickets.message') }}</label>
+                                    <label for="message">{{ __('Message') }}</label>
                                     <textarea id="message"
                                         class="block w-full rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm dark:bg-darkmode"
                                         name="message" required></textarea>
@@ -75,9 +80,8 @@
                                         data-sitekey="{{ config('settings::recaptcha_site_key') }}"></div>
                                 @endif
                                 <div class="mt-4">
-                                    <button
-                                        class="px-4 py-2 font-bold text-white bg-blue-500 rounded hover:bg-blue-700">
-                                        {{ __('tickets.reply') }}
+                                    <button class="form-submit float-right">
+                                        {{ __('Reply') }}
                                     </button>
                                 </div>
                             </div>

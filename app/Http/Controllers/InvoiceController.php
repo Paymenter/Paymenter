@@ -1,13 +1,9 @@
 <?php
+
 namespace App\Http\Controllers;
 
 use App\Helpers\ExtensionHelper;
-use App\Models\Orders;
-use App\Models\Products;
-use App\Models\User;
-use App\Models\Invoices;
-use App\Models\Settings;
-use Illuminate\Contracts\Session\Session;
+use App\Models\{Products, Invoices, Orders};
 use Illuminate\Http\Request;
 
 class InvoiceController extends Controller
@@ -22,12 +18,13 @@ class InvoiceController extends Controller
     {
         $order = Orders::findOrFail($id->order_id);
         $invoice = $id;
+        ExtensionHelper::terminateServer($order);
 
-        if($invoice->user_id != auth()->user()->id) {
+        if ($invoice->user_id != auth()->user()->id) {
             return redirect()->route('invoice.index');
         }
         $products = [];
-        foreach($order->products()->get() as $product) {
+        foreach ($order->products()->get() as $product) {
             $test = Products::where('id', $product->product_id)->first();
             $test->quantity = $product['quantity'];
             $products[] = $test;
@@ -39,22 +36,22 @@ class InvoiceController extends Controller
     public function pay(Request $request, Invoices $id)
     {
         $invoice = $id;
-        if($invoice->user_id != auth()->user()->id) {
+        if ($invoice->user_id != auth()->user()->id) {
             return redirect()->route('invoice.index');
         }
         $order = Orders::findOrFail($invoice->order_id);
         $total = $invoice->total;
         $products = [];
-        foreach($order->products()->get() as $product) {
+        foreach ($order->products()->get() as $product) {
             $test = json_decode(Products::where('id', $product->product_id)->first());
             $test->quantity = $product['quantity'];
-            if(isset($product['config'])) {
+            if (isset($product['config'])) {
                 $test->config = $product['config'];
             }
             $products[] = $test;
             $total += $test->price * $test->quantity;
         }
-        
+
         if ($request->get('payment_method')) {
             $payment_method = $request->get('payment_method');
             $payment_method = ExtensionHelper::getPaymentMethod($payment_method, $total, $products, $invoice->id);

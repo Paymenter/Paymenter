@@ -110,6 +110,9 @@ class TicketsController extends Controller
                 'message' => 'required',
             ]);
         }
+        if($id->status == 'closed'){
+            return redirect()->back()->with('error', 'You can not reply to a closed ticket.');
+        }
         $executed = RateLimiter::attempt(
             'send-message:' . $id->id,
             $perMinute = 3,

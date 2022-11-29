@@ -43,9 +43,8 @@ Route::group(['prefix' => 'tickets', 'middleware' => 'auth'], function () {
     Route::get('/create', [App\Http\Controllers\TicketsController::class, 'create'])->name('tickets.create');
     Route::post('/store', [App\Http\Controllers\TicketsController::class, 'store'])->name('tickets.store');
     Route::get('/{id}', [App\Http\Controllers\TicketsController::class, 'show'])->name('tickets.show');
-    Route::post('/{id}/update', [App\Http\Controllers\TicketsController::class, 'update'])->name('tickets.update');
     Route::post('{id}/reply', [App\Http\Controllers\TicketsController::class, 'reply'])->name('tickets.reply');
-    Route::delete('/{id}/delete', [App\Http\Controllers\TicketsController::class, 'delete'])->name('tickets.delete');
+    Route::post('{id}/close', [App\Http\Controllers\TicketsController::class, 'close'])->name('tickets.close');	
 });
 
 Route::group(['prefix' =>'invoices', 'middleware' => 'auth'], function () {
