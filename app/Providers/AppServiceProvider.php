@@ -61,11 +61,10 @@ class AppServiceProvider extends ServiceProvider
             if (
                 config('mail.mailers.smtp.host') != config('settings::mail_host') ||
                 config('mail.mailers.smtp.port') != config('settings::mail_port') ||
-                config('mail.mailers.smtp.username') != config('SETTINGS:MAIL:USERNAME') ||
-                config('mail.mailers.smtp.password') != config('SETTINGS:MAIL:PASSWORD') ||
-                config('mail.mailers.smtp.encryption') != config('SETTINGS:MAIL:ENCRYPTION') ||
-                config('mail.from.address') != config('SETTINGS:MAIL:FROM_ADDRESS') ||
-                config('mail.from.name') != config('SETTINGS:MAIL:FROM_NAME')
+                config('mail.mailers.smtp.username') != config('settings::mail_username') ||
+                config('mail.mailers.smtp.password') != config('settings::mail_password') ||
+                config('mail.from.address') != config('settings::mail_from_address') ||
+                config('mail.from.name') != config('settings::mail_from_name')
             ) {
                 config(['mail.mailers.smtp' => [
                     'transport' => 'smtp',
@@ -73,11 +72,11 @@ class AppServiceProvider extends ServiceProvider
                     'port' => config('settings::mail_port'),
                     'encryption' => config('settings::mail_encryption') ? 'SSL' : 'TLS', 
                     'username' => config('settings::mail_username'),
-                    'password' => config('SETTINGS::MAIL:PASSWORD'),
+                    'password' => config('settings::mail_password'),
                     'timeout' => null,
                     'auth_mode' => null,
                 ]]);
-                config(['mail.from' => ['address' => config('SETTINGS::MAIL:FROM_ADDRESS'), 'name' => config('SETTINGS::MAIL:FROM_NAME')]]);
+                config(['mail.from' => ['address' => config('settings::mail_from_address'), 'name' => config('settings::mail_from_name')]]);
 
                 Artisan::call('queue:restart');
             }

@@ -19,29 +19,32 @@
                 </div>
             </div>
         </div>
-        <div class="grid grid-cols-1 lg:grid-cols-3">
-            <div class="items-center col-span-1 mx-auto max-w-7xl sm:px-6 lg:px-8">
+        <div class="grid grid-cols-1 lg:grid-cols-4">
+            <div class="">
+            </div>
+            <div class="items-center col-span-1 sm:px-6 lg:px-8 lg:col-span-3">
                 <div class="h-8 overflow-hidden bg-white shadow-xl dark:text-white dark:bg-darkmode2 sm:rounded-lg">
-                    <div class="p-6 border-b border-gray-200 dark:text-white dark:bg-darkmode2">
+                    <div class="border-b border-gray-200 dark:text-white dark:bg-darkmode2">
                         <div class="flex items-center">
-                            <div class="ml-4 font-semibold leading-7">
-                                <a  class="text-sm">Showing 1 to 2 of 2 entries</a>
+                            <div class="mx-2 font-semibold leading-7 h-10">
+                                <a class="text-sm">Showing 1 to 2 of 2 entries</a>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="items-center mx-auto max-w-7xl sm:px-6 lg:px-8 column-2">
-                <table id="tableServicesList" class="items-center table">
-                    <thead>
+                <br>
+                <table id="tableServicesList"
+                    class="items-center table bg-white shadow-xl dark:text-white dark:bg-darkmode2 sm:rounded-lg w-full p-1">
+                    <thead class="border-b border-gray-200">
                         <tr>
-                            <th class="dark:text-white sorting_asc dark:bg-darkmode2">Product/Service</th>
-                            <th class="dark:text-white sorting_asc dark:bg-darkmode2">Pricing</th>
-                            <th class="dark:text-white sorting_asc dark:bg-darkmode2">Next Due Date</th>
-                            <th class="dark:text-white sorting_asc dark:bg-darkmode2">Status</th>
+                            <th class="dark:text-white sorting_asc dark:bg-darkmode2 p-2">{{ __('Product/Service') }}
+                            </th>
+                            <th class="dark:text-white sorting_asc dark:bg-darkmode2 p-2">{{ __('Pricing') }}</th>
+                            <th class="dark:text-white sorting_asc dark:bg-darkmode2 p-2">{{ __('Next Due Date') }}</th>
+                            <th class="dark:text-white sorting_asc dark:bg-darkmode2 p-2">{{ __('Status') }}</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody class="w-full">
                         @if (count($services) > 0)
                             <!-- If the array is empty, then we don't want to show the table -->
                             @foreach ($services as $service)
@@ -51,30 +54,32 @@
                                             ->get()
                                             ->first();
                                     @endphp
-                                    @php $product->price = $product->price . "0" @endphp
-                                    <!-- Add a zero to the end of the price -->
-                                    @php $service->expiry_date = date("l jS F Y", strtotime($service->expiry_date)) @endphp
-                                    <!-- Format the expiry date to be more readable -->
-
-                                    <tr onclick="window.location.href = '/products';">
-                                        <td class="dark:text-white dark:bg-darkmode2">
+                                    <tr>
+                                        <td class="dark:text-white dark:bg-darkmode2 p-3">
                                             <strong>{{ ucfirst($product->name) }}</strong>
                                         </td>
-                                        <td class="text-center dark:text-white dark:bg-darkmode2" data-order="0.00">
-                                            {{ config('settings::currency_sign') }}{{ number_format((float) $product->price, 2, '.', '') }}</td>
-                                        <td class="text-center dark:text-white dark:bg-darkmode2">
-                                            {{ $service->expiry_date }}</td>
-                                        <!-- <td class="text-center dark:text-white dark:bg-darkmode2"><span class="label status status-active dark:bg-darkmode2">{{ ucfirst($service->status) }}</span></td> -->
-                                        <td class="text-center dark:text-white dark:bg-darkmode2">
-                                            @if ($service->status === 'paid')
-                                                <span class="label status status-active dark:bg-darkmode2">Active</span>
-                                            @elseif($service->status === 'pending')
-                                                <span
-                                                    class="label status status-active dark:bg-darkmode2">Pending</span>
-                                            @elseif($service->status === 'cancelled')
-                                                <span
-                                                    class="label status status-active dark:bg-darkmode2">Expired</span>
+                                        <td class="text-center dark:text-white dark:bg-darkmode2 p-3" data-order="0.00">
+                                            @if ($product->price == 0)
+                                                {{ __('Free') }}
+                                            @else
+                                                {{ config('settings::currency_sign') }}{{ number_format((float) $product->price . '0', 2, '.', '') }}
                                             @endif
+                                        </td>
+                                        <td class="text-center dark:text-white dark:bg-darkmode2 p-3">
+                                            {{ date('l jS F Y', strtotime($service->expiry_date)) }}</td>
+                                        <td class="text-center dark:text-white dark:bg-darkmode2 p-3">
+                                            <div class="border border-gray-200">
+                                                @if ($service->status === 'paid')
+                                                    <span
+                                                        class="label status status-active dark:bg-darkmode2 text-green-500">Active</span>
+                                                @elseif($service->status === 'pending')
+                                                    <span
+                                                        class="label status status-active dark:bg-darkmode2 text-orange-400">Pending</span>
+                                                @elseif($service->status === 'cancelled')
+                                                    <span
+                                                        class="label status status-active dark:bg-darkmode2 text-red-600">Expired</span>
+                                                @endif
+                                            </div>
                                         </td>
                                     </tr>
                                 @endforeach
