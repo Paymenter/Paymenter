@@ -66,8 +66,17 @@ Route::group(['prefix' => 'admin'], function () {
         Route::delete('/{id}/delete', [App\Http\Controllers\Admin\ClientsController::class, 'destroy'])->middleware(['auth.admin'])->name('admin.clients.delete');
     });
 
-    Route::group(['prefix'=> 'orders'], function(){
+    Route::group(['prefix' => 'orders'], function(){
         Route::get('/', [App\Http\Controllers\Admin\OrdersController::class, 'index'])->middleware(['auth.admin'])->name('admin.orders');
-        Route::delete('/{id}/delete', [App\Http\Controllers\Admin\OrdersController::class, 'destroy'])->middleware(['auth.admin'])->name('admin.orders.delete');        
-    });
+        Route::delete('/{id}/delete', [App\Http\Controllers\Admin\OrdersController::class, 'destroy'])->middleware(['auth.admin'])->name('admin.orders.delete');
+    }
+    );
+
+    Route::group(['prefix' => 'migrate'], function () {
+        Route::get('/', [App\Http\Controllers\Admin\MigrateController::class, 'index'])->middleware(['auth.admin'])->name('admin.migrate.index');
+        Route::get('/whmcs', [App\Http\Controllers\Admin\MigrateController::class, 'whmcs'])->middleware(['auth.admin'])->name('admin.migrate.whmcs');
+        Route::post('/whmcs', [App\Http\Controllers\Admin\MigrateController::class, 'whmcsImport'])->middleware(['auth.admin'])->name('admin.migrate.whmcs.import');
+        Route::get('/blesta', [App\Http\Controllers\Admin\MigrateController::class, 'blesta'])->middleware(['auth.admin'])->name('admin.migrate.blesta');
+    }
+    );
 });
