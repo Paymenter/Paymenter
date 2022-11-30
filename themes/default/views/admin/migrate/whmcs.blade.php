@@ -115,19 +115,19 @@ $('select[name="chosenOption"]').change(function() {
 	}
 });
 
-// If anyone knows a better way to do this, please let me know! - Leon
 
 </script>
 
-<?php 
+<?php
+	//validate the GET variables
 	if(isset($_GET) && !empty($_GET)) {
-		if (!filter_var($_GET['host'])) return false;
+		if (!filter_var($_GET['host'], FILTER_VALIDATE_IP)) return false;
 		if (!filter_var($_GET['dbUsername'])) return false;
 		if (!filter_var($_GET['dbPassword'])) return false;
 		if (!filter_var($_GET['chosenOption'])) return false;
 		if (!filter_var($_GET['currency'])) return false;
 		if (!filter_var($_GET['replace'])) return false;
 	}
-
 ?>
+
 </x-admin-layout>

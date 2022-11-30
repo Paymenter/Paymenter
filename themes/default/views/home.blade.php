@@ -19,15 +19,48 @@
                 </div>
             </div>
         </div>
+        <style>
+            .yourInfo {
+                display: flex;
+                place-items: center;
+                padding-left: 20px;
+                padding-top: 15px;
+            }
+            .panel-body {
+                padding-bottom: 20px;
+            }
+        </style>
         <div class="grid grid-cols-1 lg:grid-cols-4">
-            <div class="">
+            <div class="dark:bg-darkmode2 bg-white rounded-md" style="margin-left: 2rem;">
+                <div class="yourInfo">
+                    <img class="w-8 h-8 rounded-md" style="align-self: center; width: 2rem; height: 2rem;"
+                        src="https://www.gravatar.com/avatar/{{ md5(Auth::user()->email) }}?s=200&d=mp" />
+                    <div class="ml-4 text-lg font-semibold leading-7">
+                        Your Info
+                    </div>
+                </div>
+                <div class="yourInfo panel-body" style="border-bottom: none !important; display: block;">
+                    <strong>{{ Auth::user()->name }}</strong><br>
+                    @if (Auth::user()->address || Auth::user()->city || Auth::user()->state || Auth::user()->zip || Auth::user()->country)
+                        <em>
+                            {{ Auth::user()->address }}<br>
+                            {{ Auth::user()->city }}<br>
+                            {{ Auth::user()->state }}, {{ Auth::user()->zip }}<br>
+                            {{ Auth::user()->country }}
+                        </em>
+                    @else
+                        <em>
+                            {{ __('No address information has been provided.') }}
+                        </em>
+                    @endif
+                </div>
             </div>
             <div class="items-center col-span-1 sm:px-6 lg:px-8 lg:col-span-3">
                 <div class="h-8 overflow-hidden bg-white shadow-xl dark:text-white dark:bg-darkmode2 sm:rounded-lg">
                     <div class="border-b border-gray-200 dark:text-white dark:bg-darkmode2">
                         <div class="flex items-center">
                             <div class="mx-2 font-semibold leading-7 h-10">
-                                <a class="text-sm">Showing 1 to 2 of 2 entries</a>
+                                <a class="text-sm">Showing {{ count($services) }} of {{ count($services) }} services</a>
                             </div>
                         </div>
                     </div>
@@ -46,50 +79,63 @@
                     </thead>
                     <tbody class="w-full">
                         @if (count($services) > 0)
-                            <!-- If the array is empty, then we don't want to show the table -->
-                            @foreach ($services as $service)
-                                @foreach ($service->products()->get() as $product)
-                                    @php
-                                        $product = App\Models\Products::where('id', $product->product_id)
-                                            ->get()
-                                            ->first();
-                                    @endphp
-                                    <tr>
-                                        <td class="dark:text-white dark:bg-darkmode2 p-3">
-                                            <strong>{{ ucfirst($product->name) }}</strong>
-                                        </td>
-                                        <td class="text-center dark:text-white dark:bg-darkmode2 p-3" data-order="0.00">
-                                            @if ($product->price == 0)
-                                                {{ __('Free') }}
-                                            @else
-                                                {{ config('settings::currency_sign') }}{{ number_format((float) $product->price . '0', 2, '.', '') }}
-                                            @endif
-                                        </td>
-                                        <td class="text-center dark:text-white dark:bg-darkmode2 p-3">
-                                            {{ date('l jS F Y', strtotime($service->expiry_date)) }}</td>
-                                        <td class="text-center dark:text-white dark:bg-darkmode2 p-3">
-                                            <div class="border border-gray-200">
-                                                @if ($service->status === 'paid')
-                                                    <span
-                                                        class="label status status-active dark:bg-darkmode2 text-green-500">Active</span>
-                                                @elseif($service->status === 'pending')
-                                                    <span
-                                                        class="label status status-active dark:bg-darkmode2 text-orange-400">Pending</span>
-                                                @elseif($service->status === 'cancelled')
-                                                    <span
-                                                        class="label status status-active dark:bg-darkmode2 text-red-600">Expired</span>
-                                                @endif
+                            @if ($product->name ?? ' ') <!-- Check for null product -->
+                                <div class="h-8 overflow-hidden bg-white shadow-xl dark:text-white dark:bg-darkmode2 sm:rounded-lg"
+                                    style="border-color: red; border-width: 1px; border-radius: 10px;">
+                                    <div class="border-b border-gray-200 dark:text-white dark:bg-darkmode2">
+                                        <div class="flex items-center">
+                                            <div class="mx-2 font-semibold leading-7 h-10">
+                                                <a class="text-sm">
+                                                    Something went wrong with getting the product name. Please contact support if
+                                                    this issue persists.
+                                                </a>
                                             </div>
-                                        </td>
-                                    </tr>
+                                        </div>
+                                    </div>
+                                </div>
+                                <br>
+                            @else
+                                @foreach ($services as $service)
+                                    @foreach ($service->products()->get() as $product)
+                                        @php
+                                            $product = App\Models\Products::where('id', $product->product_id)
+                                                ->get()
+                                                ->first();
+                                        @endphp
+                                        <tr>
+                                            <td class="dark:text-white dark:bg-darkmode2 p-3">
+                                                <strong>{{ ucfirst($product->name) }}</strong>
+                                            </td>
+                                            <td class="text-center dark:text-white dark:bg-darkmode2 p-3" data-order="0.00">
+                                                @if ($product->price == 0)
+                                                    {{ __('Free') }}
+                                                @else
+                                                    {{ config('settings::currency_sign') }}{{ number_format((float) $product->price . '0', 2, '.', '') }}
+                                                @endif
+                                            </td>
+                                            <td class="text-center dark:text-white dark:bg-darkmode2 p-3">
+                                                {{ date('l jS F Y', strtotime($service->expiry_date)) }}</td>
+                                            <td class="text-center dark:text-white dark:bg-darkmode2 p-3">
+                                                <div class="border border-gray-200">
+                                                    @if ($service->status === 'paid')
+                                                        <span
+                                                            class="label status status-active dark:bg-darkmode2 text-green-500">Active</span>
+                                                    @elseif($service->status === 'pending')
+                                                        <span
+                                                            class="label status status-active dark:bg-darkmode2 text-orange-400">Pending</span>
+                                                    @elseif($service->status === 'cancelled')
+                                                        <span
+                                                            class="label status status-active dark:bg-darkmode2 text-red-600">Expired</span>
+                                                    @endif
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    @endforeach
                                 @endforeach
-                            @endforeach
+                            @endif
                         @elseif (count($services) <= 0)
-                            <!-- If the array is empty, then don't show any data -->
                             <tr>
-                                <td colspan="4" class="dark:text-white dark:bg-darkmode2"
-                                    style="text-align: center;">No
-                                    services found.</td>
+                                <td colspan="4" class="dark:text-white dark:bg-darkmode2" style="text-align: center;">No services found.</td>
                             </tr>
                         @endif
                     </tbody>
