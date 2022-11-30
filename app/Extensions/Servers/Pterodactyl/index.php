@@ -30,6 +30,96 @@ function Pterodactyl_getConfig()
     ];
 }
 
+function Pterodactyl_getProductConfig()
+{
+    return [
+        [
+            "name" => "node",
+            "friendlyName" => "Pterodactyl Node",
+            "type" => "text",
+            "required" => true
+        ],
+        [
+            "name" => "location",
+            "friendlyName" => "Pterodactyl Location",
+            "type" => "text",
+            "required" => true
+        ],
+        [
+            "name" => "server",
+            "friendlyName" => "Pterodactyl Server",
+            "type" => "text",
+            "required" => true
+        ],
+        [
+            "name" => "egg",
+            "friendlyName" => "Pterodactyl Egg ID",
+            "type" => "text",
+            "required" => true
+        ],
+        [
+            "name" => "nest",
+            "friendlyName" => "Pterodactyl Nest ID",
+            "type" => "text",
+            "required" => true
+        ],
+        [
+            "name" => "memory",
+            "friendlyName" => "Pterodactyl Memory",
+            "type" => "text",
+            "required" => true
+        ],
+        [
+            "name" => "swap",
+            "friendlyName" => "Pterodactyl Swap",
+            "type" => "text",
+            "required" => true
+        ],
+        [
+            "name" => "disk",
+            "friendlyName" => "Pterodactyl Disk",
+            "type" => "text",
+            "required" => true
+        ],
+        [
+            "name" => "io",
+            "friendlyName" => "Pterodactyl IO",
+            "type" => "text",
+            "required" => true
+        ],
+        [
+            "name" => "cpu",
+            "friendlyName" => "CPU limit",
+            "type" => "text",
+            "required" => true
+        ],
+        [
+            "name" => "databases",
+            "friendlyName" => "Pterodactyl Database",
+            "type" => "text",
+            "required" => true
+        ],
+        [
+            "name" => "backups",
+            "friendlyName" => "Pterodactyl Backups",
+            "type" => "text",
+            "required" => true
+        ],
+        [
+            "name" => "skip_scripts",
+            "friendlyName" => "Pterodactyl Skip Scripts",
+            "type" => "boolean",
+            "required" => true
+        ],
+        [
+            "name" => "allocation",
+            "friendlyName" => "Pterodactyl Allocation",
+            "type" => "text",
+            "required" => true
+        ]
+    ];
+}
+
 function Pterodactyl_postRequest($url, $data)
 {
     $response = Http::withHeaders([
