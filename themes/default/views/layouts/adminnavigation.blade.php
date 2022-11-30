@@ -102,6 +102,7 @@
                         <div class="py-1" role="none">
                             <a href="{{ route('admin.settings') }}" class="block px-4 py-2 text-base text-gray-700 dark:text-darkmodetext dark:hover:bg-darkmode2 hover:bg-gray-100 hover:text-gray-900" role="menuitem" tabindex="-1" id="menu-item-0">Settings</a>
                             <a href="{{ route('admin.extensions') }}" class="block px-4 py-2 text-base text-gray-700 dark:text-darkmodetext dark:hover:bg-darkmode2 hover:bg-gray-100 hover:text-gray-900" role="menuitem" tabindex="-1" id="menu-item-1">Extension Settings</a>
+                            <a href="{{ route('admin.migrate.index') }}" class="block px-4 py-2 text-base text-gray-700 dark:text-darkmodetext dark:hover:bg-darkmode2 hover:bg-gray-100 hover:text-gray-900" role="menuitem" tabindex="-1" id="menu-item-2">Migrate</a>
                         </div>
                     </div>
                 </div>
