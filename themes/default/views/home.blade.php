@@ -36,23 +36,15 @@
                     <img class="w-8 h-8 rounded-md" style="align-self: center; width: 2rem; height: 2rem;"
                         src="https://www.gravatar.com/avatar/{{ md5(Auth::user()->email) }}?s=200&d=mp" />
                     <div class="ml-4 text-lg font-semibold leading-7">
-                        Your Info
+                        Invoices
                     </div>
                 </div>
-                <div class="yourInfo panel-body" style="border-bottom: none !important; display: block;">
-                    <strong>{{ Auth::user()->name }}</strong><br>
-                    @if (Auth::user()->address || Auth::user()->city || Auth::user()->state || Auth::user()->zip || Auth::user()->country)
-                        <em>
-                            {{ Auth::user()->address }}<br>
-                            {{ Auth::user()->city }}<br>
-                            {{ Auth::user()->state }}, {{ Auth::user()->zip }}<br>
-                            {{ Auth::user()->country }}
-                        </em>
-                    @else
-                        <em>
-                            {{ __('No address information has been provided.') }}
-                        </em>
-                    @endif
+                <div class="yourInfo panel-body" style="border-bottom: none !important; display: block; text-align: center; line-height: 10%">
+                    @foreach ($invoices as $invoice)
+                        <a href='{{ route("invoice.show", $invoice->id) }}' class="text-blue-500 hover:text-blue-700">
+                            Invoice ID: {{$invoice->order()->get()->first()->id}}<br>
+                        </a>
+                    @endforeach
                 </div>
             </div>
             <div class="items-center col-span-1 sm:px-6 lg:px-8 lg:col-span-3">
