@@ -2,6 +2,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Orders;
+use App\Models\Invoices;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
@@ -11,7 +12,9 @@ class HomeController extends Controller
     function index()
     {
         $services = Orders::where('client', auth()->user()->id)->get();
-        return view('home', compact('services'));
+        $invoices = Invoices::where('user_id', auth()->user()->id)->where('status', 'pending')->get();
+        
+        return view('home', compact('services', 'invoices'));
     }
 
     function manifest(Request $request)

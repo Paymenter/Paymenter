@@ -3,11 +3,13 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use App\Models\Products;
 use App\Models\Extensions;
+use App\Models\OrderProducts;
+use App\Models\OrderProductsConfig;
 use App\Models\Orders;
+use App\Models\Products;
 use App\Models\User;
+use Illuminate\Http\Request;
 
 class MigrateController extends Controller
 {
@@ -33,7 +35,7 @@ class MigrateController extends Controller
 		$dbPassword = $_POST['dbPassword'];
 		$chosenOption = $_POST['chosenOption'];
 
-		if ($chosenOption == 'clients') {
+		if ($chosenOption == 'clients' || $chosenOption == 'orders') {
 			$currency = null;
 		} else {
 			$currency = $_POST['currency'];
@@ -81,16 +83,25 @@ class MigrateController extends Controller
 		
 		if ($newChosenOption == 'GetProducts') {
 			foreach ($output['products']['product'] as $product) {
+				$newProdcut = new Products();
+				$newProductConfig = new OrderProductsConfig();
 				if ($replace) {
-					$existingProduct = Products::where('name', $product['name'])->first();
+					$existingProduct = Products::where('id', $product['pid'])->first();
 					if ($existingProduct) {
 						$existingProduct->delete();
+						$newProdcut->id = $product['pid'];
+						$newProductConfig->id = $product['pid'];
 					}
 				}
-				if (Products::where('name', $product['name'])->exists()) {
-					array_push($outboundProducts, $product['name']);
+				if (Products::where('id', $product['pid'])->exists()) {
+					array_push($outboundProducts, $product['pid']);
 				} else {
-					$newProdcut = new Products();
+					$newProductConfig->id = $product['pid'];
+					$newProductConfig->value = $product['name'];
+					$newProductConfig->order_id = 0;
+					$newProductConfig->key = 0;
+
+					$newProdcut->id = $product['pid'];
 					$newProdcut->name = $product['name'];
 					$newProdcut->description = $product['description'];
 					if ($product['pricing'][$currency]['monthly'] == -1.00 || $product['pricing'][$currency]['monthly'] == -1.0 || $product['pricing'][$currency]['monthly'] == -1) {
@@ -103,59 +114,67 @@ class MigrateController extends Controller
 					if($extension) {
 						$newProdcut->server_id = $extension->id;
 					} else {
-						$newProdcut->server_id = 0;
+						$newProdcut->server_id = null;
 					}
 					$newProdcut->image = 'null';
 					$newProdcut->save();
+					$newProductConfig->save();
 				}
 			}
-			// dd($outboundProducts); // Testing Only
 		}
 		if ($newChosenOption == 'GetOrders') {
 			foreach ($output['orders']['order'] as $order) {
-				if ($replace == 'yes') {
-					$existingOrder = Orders::where('id', $order['id'])->first();
-					if ($existingOrder) {
-						$existingOrder->delete();
-					}
-				}
-				if (Orders::where('id', $order['id'])->exists()) {
-					array_push($outboundOrders, $order['id']);
+				$user = User::where('id', $order['userid'])->first();
+				if ($user == null) {
 				} else {
-					$newOrder = new Orders();
-					$newOrder->id = $order['id'];
-					foreach ($order['lineitems'] as $lineitemf) {
-						foreach ($lineitemf as $lineitem) {
-							$newOrder->products = $lineitem['product'];
+					if ($replace) {
+						$existingOrder = Orders::where('id', $order['id'])->first();
+						if ($existingOrder) {
+							$existingOrder->delete();
 						}
 					}
-					$newOrder->products = 'test';
-					$newOrder->expiry_date = $order['date'];
-					$newOrder->status = $order['status'];
-					$newOrder->client = 9;
-					if ($order['amount'] == 0.00 || $order['amount'] == 0.0 || $order['amount'] == 0) {
-						$newOrder->total = 'Free';
+					if (Orders::where('id', $order['id'])->exists()) {
+						array_push($outboundOrders, $order['id']);
 					} else {
+						$newOrder = new Orders();
+						$newOrder->id = $order['id'];
+						$newOrder->expiry_date = '1970-01-01 01:00:00';
+						$newOrder->updated_at = '1970-01-01 01:00:00';
+						$newOrder->status = $order['status'];
+						$newOrder->client = $order['userid'];
 						$newOrder->total = $order['amount'];
+						$newOrder->save();
 					}
-					$newOrder->created_at = $order['date'];
-					$newOrder->updated_at = null;
-					$newOrder->save();
 				}
 			}
-			// dd($outboundOrders); // Testing Only
+			foreach ($output['orders']['order'] as $order) {
+				$newOrderProduct = new OrderProducts();
+				$newOrderProduct->order_id = $order['id'];
+				if ($order['lineitems']) {
+					if (count($order['lineitems']['lineitem']) > 1) {
+						foreach ($order['lineitems']['lineitem'] as $lineitem) {
+							$newOrderProduct->product_id = $lineitem['relid'];
+						}
+						$newOrderProduct->quantity = count($order['lineitems']['lineitem']);
+					} else {
+						$newOrderProduct->product_id = 1;
+						$newOrderProduct->quantity = 1;
+					}
+				} else {
+					$newOrderProduct->product_id = 1;
+					$newOrderProduct->quantity = 1;
+				}
+				$newOrderProduct->save();
+			}
 		}
-		if ($newChosenOption == 'GetClients') { // Working as expected, do not change.
+		if ($newChosenOption == 'GetClients') {
 			foreach ($output['clients']['client'] as $client) {
-				// This code deletes the user if that user already exists in the database.
-				// This code is used to prevent duplicate entries.
 				if ($replace == 'yes') {
 					$existingClient = User::where('id', $client['id'])->first();
 					if ($existingClient) {
 						$existingClient->delete();
 					}
 				}
-				// Checks if the client is in the database using the WHMCS ID
 				if (User::where('id', $client['id'])->exists()) {
 					array_push($outboundClients, $client['id']);
 				} else {
@@ -169,14 +188,12 @@ class MigrateController extends Controller
 					$newClient->save();
 				}
 			}
-			// dd($outboundClients); // Testing Only
 			if ($replace == 'yes') {
 				return redirect()->route('admin.migrate.index')->with('success', ucfirst($chosenOption) . ' imported successfully! Any duplicate data has been replaced. (Due to the nature of the API, passwords have not been imported.)');
 			} else {
 				return redirect()->route('admin.migrate.index')->with('success', ucfirst($chosenOption) . ' imported successfully! (Due to the nature of the API, passwords have not been imported.)');
 			}
 		}
-		// return; // Testing only
 		if ($replace == 'yes') {
 			return redirect()->route('admin.migrate.index')->with('success', ucfirst($chosenOption) . ' imported successfully! All previous data has been replaced.');
 		} else {
