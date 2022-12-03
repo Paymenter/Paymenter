@@ -27,17 +27,17 @@
 							<div class="grid">
 								<div class="relative m-4 group">
             					    <input type="text" class="form-input peer @error('host') border-red-500 @enderror" placeholder=" "
-										name="host" value="https://clients.platinumhost.io" required>
+										name="host" value="" required>
             					    <label class="form-label">WHMCS URL</label>
             					</div>
 								<div class="relative m-4 group">
 								    <input type="password" class="form-input peer @error('dbUsername') border-red-500 @enderror" placeholder=" "
-										name="dbUsername" value="RPFUm5hI8pTuAAx6YkCj21oLlAnGbzo0" required/>
+										name="dbUsername" value="" required/>
 									<label class="form-label">WHMCS API Identifier</label>
 								</div>
 								<div class="relative m-4 group">
 									<input type="password" class="form-input peer @error('dbPassword') border-red-500 @enderror" placeholder=" "
-										name="dbPassword" value="OX3gceAypeCey3Pjxxlbm2SZAWARSWta" required/>
+										name="dbPassword" value="" required/>
 									<label class="form-label">WHMCS API Secret</label>
 								</div>
 								<div class="relative m-4 group">
