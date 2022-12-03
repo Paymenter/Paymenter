@@ -56,23 +56,28 @@
                                         <select id="service" name="service"
                                             class="block w-full mt-1 rounded-md shadow-sm form-input dark:text-darkmodetext dark:bg-darkmode">
                                             @if (count($services) > 0)
-                                            <option value="low" @if (old('service')==1) selected @endif>
-                                                {{ __('None') }}
-                                            </option>
-                                            @foreach($services as $service)
-                                            @foreach($service->products as $product)
-                                            @php $product = App\Models\Products::where("id",
-                                            $product["id"])->get()->first()
-                                            @endphp
-                                            <option value="low" @if (old('service')==1) selected @endif>
-                                                {{ ucfirst($product->name) }} - ({{ ucfirst($service->status) }})
-                                            </option>
-                                            </option>
-                                            @endforeach
-                                            @endforeach
+                                                <option value="low" @if (old('service')==1) selected @endif>
+                                                    {{ __('None') }}
+                                                </option>
+                                                @foreach($services as $service)
+                                                    @foreach($service->products as $product)
+                                                        @php $product = App\Models\Products::where("id",
+                                                            $product["id"])->get()->first()
+                                                        @endphp
+                                                        <option value="low" @if (old('service')==1) selected @endif>
+                                                            <!-- Check if $product->name exists without calling it -->
+                                                            @if (isset($product->name))
+                                                                {{ ucfirst($product->name) }} - ({{ ucfirst($service->status) }})
+                                                            @else
+                                                            Unknown - ({{ ucfirst($service->status) }})
+                                                            @endif
+                                                        </option>
+                                                    @endforeach
+                                                @endforeach
                                             @else
-                                            <option value="low" @if (old('service')==1) selected @endif>
-                                                {{ __('None') }}</option>
+                                                <option value="low" @if (old('service')==1) selected @endif>
+                                                    {{ __('None') }}
+                                                </option>
                                             @endif
                                         </select>
                                     </div>

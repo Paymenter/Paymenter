@@ -57,7 +57,7 @@ class TicketsController extends Controller
             ]);
         }
         $executed = RateLimiter::attempt(
-            'create-ticket:' . $id->id,
+            'create-ticket:' . auth()->user()->id,
             $perMinute = 1,
             function () {
                 return true;

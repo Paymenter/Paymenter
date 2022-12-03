@@ -9,6 +9,7 @@ use App\Models\OrderProductsConfig;
 use App\Models\Orders;
 use App\Models\Products;
 use App\Models\User;
+use Hamcrest\Core\HasToString;
 use Illuminate\Http\Request;
 
 class MigrateController extends Controller
@@ -34,15 +35,15 @@ class MigrateController extends Controller
 		$dbUsername = $_POST['dbUsername'];
 		$dbPassword = $_POST['dbPassword'];
 		$chosenOption = $_POST['chosenOption'];
+		$replace = $_POST['replace'];
+		$newChosenOption = 'Get' . ucFirst($chosenOption);
 
 		if ($chosenOption == 'clients' || $chosenOption == 'orders') {
 			$currency = null;
 		} else {
 			$currency = $_POST['currency'];
 		}
-		$replace = $_POST['replace'];
 		
-		$newChosenOption = 'Get' . ucFirst($chosenOption);
 
 		if (!filter_var($request->host, FILTER_VALIDATE_URL)) {
 			return back()->withErrors(['host' =>  'Invalid URL']);
@@ -77,30 +78,24 @@ class MigrateController extends Controller
 			return back()->withErrors(['No data found']);
 		}
 
-		$outboundProducts = array();
-		$outboundOrders = array();
-		$outboundClients = array();
+		if (array_key_exists('message', $output)) {
+			return back()->withErrors([$output['message']]);
+		}
 		
 		if ($newChosenOption == 'GetProducts') {
 			foreach ($output['products']['product'] as $product) {
 				$newProdcut = new Products();
-				$newProductConfig = new OrderProductsConfig();
+
 				if ($replace) {
 					$existingProduct = Products::where('id', $product['pid'])->first();
 					if ($existingProduct) {
 						$existingProduct->delete();
 						$newProdcut->id = $product['pid'];
-						$newProductConfig->id = $product['pid'];
 					}
 				}
 				if (Products::where('id', $product['pid'])->exists()) {
-					array_push($outboundProducts, $product['pid']);
-				} else {
-					$newProductConfig->id = $product['pid'];
-					$newProductConfig->value = $product['name'];
-					$newProductConfig->order_id = 0;
-					$newProductConfig->key = 0;
 
+				} else {
 					$newProdcut->id = $product['pid'];
 					$newProdcut->name = $product['name'];
 					$newProdcut->description = $product['description'];
@@ -109,7 +104,7 @@ class MigrateController extends Controller
 					} else {
 						$newProdcut->price = $product['pricing'][$currency]['monthly'];
 					}
-					$newProdcut->category_id = 1;
+					$newProdcut->category_id = 2;
 					$extension = Extensions::where('name', $product['module'])->first();
 					if($extension) {
 						$newProdcut->server_id = $extension->id;
@@ -118,54 +113,74 @@ class MigrateController extends Controller
 					}
 					$newProdcut->image = 'null';
 					$newProdcut->save();
-					$newProductConfig->save();
 				}
 			}
 		}
 		if ($newChosenOption == 'GetOrders') {
 			foreach ($output['orders']['order'] as $order) {
-				$user = User::where('id', $order['userid'])->first();
-				if ($user == null) {
+				if ($order['status'] == 'Pending') {
+					$status = 'pending';
 				} else {
-					if ($replace) {
-						$existingOrder = Orders::where('id', $order['id'])->first();
-						if ($existingOrder) {
-							$existingOrder->delete();
-						}
+					$status = strtolower($order['status']);
+				}
+
+				if ($replace == 'yes') {
+					$existingOrder = Orders::where('id', $order['id'])->first();
+					$existingOrderProduct = OrderProducts::where('order_id', $order['id'])->first();
+					if ($existingOrder) {
+						$existingOrder->delete();
 					}
-					if (Orders::where('id', $order['id'])->exists()) {
-						array_push($outboundOrders, $order['id']);
-					} else {
-						$newOrder = new Orders();
-						$newOrder->id = $order['id'];
-						$newOrder->expiry_date = '1970-01-01 01:00:00';
-						$newOrder->updated_at = '1970-01-01 01:00:00';
-						$newOrder->status = $order['status'];
-						$newOrder->client = $order['userid'];
-						$newOrder->total = $order['amount'];
-						$newOrder->save();
+					if ($existingOrderProduct) {
+						$existingOrderProduct->delete();
 					}
 				}
-			}
-			foreach ($output['orders']['order'] as $order) {
+
+				$newOrder = new Orders();
+				$newOrder->id = $order['id'];
+				$newOrder->expiry_date = '1970-01-01 01:00:00';
+				$newOrder->updated_at = '1970-01-01 01:00:00';
+				$newOrder->status = $status;
+				$newOrder->client = '67';
+				$newOrder->total = $order['amount'];
+				$newOrder->save();
+
+				$che = curl_init();
+				curl_setopt($che, CURLOPT_URL, $host . '/includes/api.php');
+				curl_setopt($che, CURLOPT_POST, 1);
+				curl_setopt(
+					$che,
+					CURLOPT_POSTFIELDS,
+					http_build_query(
+						array(
+				            'action' => 'GetClientsProducts',
+							'identifier' => $dbUsername,
+							'secret' => $dbPassword,
+				            'clientid' => $order['userid'],
+				            'responsetype' => 'json',
+				        )
+				    )
+				);
+				curl_setopt($che, CURLOPT_RETURNTRANSFER, 1);
+				$responseClientProducts = curl_exec($che);
+				curl_close($che);
+				$outputClientProducts = json_decode($responseClientProducts, true);
+				
+				if ($replace == 'yes') {
+					$existingOrderProduct = OrderProducts::where('order_id', $order['id'])->first();
+					if ($existingOrderProduct) {
+						$existingOrderProduct->delete();
+					}
+				}
+
 				$newOrderProduct = new OrderProducts();
+				$productID = $outputClientProducts['products']['product'][0]['pid'];
+				$newOrderProduct->product_id = $productID;
+				$newOrderProduct->id = $order['id'];
+				$newOrderProduct->quantity = '1';
 				$newOrderProduct->order_id = $order['id'];
-				if ($order['lineitems']) {
-					if (count($order['lineitems']['lineitem']) > 1) {
-						foreach ($order['lineitems']['lineitem'] as $lineitem) {
-							$newOrderProduct->product_id = $lineitem['relid'];
-						}
-						$newOrderProduct->quantity = count($order['lineitems']['lineitem']);
-					} else {
-						$newOrderProduct->product_id = 1;
-						$newOrderProduct->quantity = 1;
-					}
-				} else {
-					$newOrderProduct->product_id = 1;
-					$newOrderProduct->quantity = 1;
-				}
 				$newOrderProduct->save();
 			}
+
 		}
 		if ($newChosenOption == 'GetClients') {
 			foreach ($output['clients']['client'] as $client) {
@@ -176,7 +191,7 @@ class MigrateController extends Controller
 					}
 				}
 				if (User::where('id', $client['id'])->exists()) {
-					array_push($outboundClients, $client['id']);
+
 				} else {
 					$newClient = new User();
 					$newClient->id = $client['id'];
