@@ -47,7 +47,7 @@
     <div class="py-12">
         <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
             <div class="overflow-hidden bg-white shadow-xl sm:rounded-lg dark:bg-darkmode2">
-                <div class="p-6 bg-white border-gray-200 sm:px-20 dark:bg-darkmode2 dark:text-darkmodetext pb-2">
+                <div class="p-6 bg-white border-gray-200 sm:pr-20 sm:pl-12 dark:bg-darkmode2 dark:text-darkmodetext pb-2">
                     <div class="flex flex-row justify-between">
                         <div class="flex flex-row overflow-x-auto lg:flex-wrap lg:space-x-1">
                             <div class="flex-none">
@@ -102,7 +102,7 @@
                 </div>
                 <div class="w-full mb-3 pt-3 pb-2">
                     <div class="flex flex-row items-center justify-between ml-4 ">
-                        <div class="flex-none" style="margin-left: 64px;">
+                        <div class="flex-none" style="margin-left: 32px;">
                             <button onclick="window.location.href='{{ route('tickets.create') }}'"
                                 class="dark:text-darkmodetext dark:bg-darkbutton dark:hover:bg-gray-600 bg-gray-100 hover:bg-gray-600
                                         inline-flex w-full justify-center px-4 py-2 text-base font-medium rounded-md text-gray-700">
@@ -132,9 +132,10 @@
                                     <option value="oldest" {{ $sort == 'oldest' ? 'selected' : '' }}>Oldest</option>
                                 </select>
                                 <script>
-                                    document.querySelector('select').addEventListener('change', function (e) {
-                                        window.location.href = "{{ route('tickets.index') }}?sort=" + e.target.value;
-                                    });                                    
+                                    function updateSort(event) {
+                                        window.location.href = "{{ route('tickets.index') }}?sort=" + event.target.value;
+                                    }
+                                    document.querySelector('select').addEventListener('change', updateSort);                                    
                                 </script>
                                 <button
                                     class="flex text-base text-gray-700 dark:bg-darkbutton dark:text-darkmodetext dark:hover:bg-gray-600 bg-gray-100 hover:bg-gray-200 rounded-md p-1"
@@ -229,7 +230,7 @@
 
                     
                     @foreach ($tickets as $ticket)
-                    <div class="ticketBlock mb-3 pt-3 bg-gray-100 dark:bg-darkbutton sm:rounded-lg ml-12 pb-3" style="cursor: pointer" onclick="window.location.href = '{{ route('tickets.show', $ticket->id) }}'">
+                    <div id="ticket-main" class="ticketBlock mb-3 pt-3 bg-gray-100 dark:bg-darkbutton sm:rounded-lg ml-12 pb-3" style="cursor: pointer" onclick="window.location.href = '{{ route('tickets.show', $ticket->id) }}'">
                         <div class="flex flex-row items-center justify-between ml-4">
                             <div class="flex flex-row items-start justify-start">
                                 <div class="flex flex-col flex-grow w-full space-y-0 self-center">
@@ -241,13 +242,16 @@
                             <div class="flex flex-row items-center justify-end mr-6">
                                 <div class="flex flex-row items-center justify-end space-x-2">
                                     <div class="text-sm font-semibold text-black dark:text-darkmodetext">Last Updated: {{
-                                        $ticket->updated_at->diffForHumans() }} </div>
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
-                                        <path fill="none" d="M0 0h24v24H0z" />
-                                        <path
-                                            d="M4.5 10.5c-.825 0-1.5.675-1.5 1.5s.675 1.5 1.5 1.5S6 12.825 6 12s-.675-1.5-1.5-1.5zm15 0c-.825 0-1.5.675-1.5 1.5s.675 1.5 1.5 1.5S21 12.825 21 12s-.675-1.5-1.5-1.5zm-7.5 0c-.825 0-1.5.675-1.5 1.5s.675 1.5 1.5 1.5 1.5-.675 1.5-1.5-.675-1.5-1.5-1.5z"
-                                            fill="rgba(149,164,166,1)" />
-                                    </svg>
+                                        $ticket->updated_at->diffForHumans() }}
+                                    </div>
+                                        <button class="dropbtn" type="button" aria-label="More options" aria-haspopup="true">
+                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+                                                <path fill="none" d="M0 0h24v24H0z" />
+                                                <path
+                                                    d="M4.5 10.5c-.825 0-1.5.675-1.5 1.5s.675 1.5 1.5 1.5S6 12.825 6 12s-.675-1.5-1.5-1.5zm15 0c-.825 0-1.5.675-1.5 1.5s.675 1.5 1.5 1.5S21 12.825 21 12s-.675-1.5-1.5-1.5zm-7.5 0c-.825 0-1.5.675-1.5 1.5s.675 1.5 1.5 1.5 1.5-.675 1.5-1.5-.675-1.5-1.5-1.5z"
+                                                    fill="rgba(149,164,166,1)" />
+                                            </svg>
+                                        </button>
                                 </div>
                             </div>
                         </div>
@@ -260,10 +264,7 @@
                                         <div id='showmore{{$ticket->id}}'
                                             style='{!! count(explode("<br />", nl2br($ticket->last_message))) > 4 ? "-webkit-mask-image: linear-gradient(black 35%, transparent 100%);" : "" !!}'>
                                             {{ $ticket->last_message == null ? 'No messages...' : '' }}
-                                            {{
-                                            \Illuminate\Mail\Markdown::parse(nl2br(implode(array_slice(explode("<br />",
-                                            nl2br($ticket->last_message)), 0, 4))))
-                                            }}
+                                            {{ \Illuminate\Mail\Markdown::parse(nl2br(implode(array_slice(explode("<br />", nl2br($ticket->last_message)), 0, 4)))) }}
                                         </div>
                                     </div>
                                 </div>
@@ -311,15 +312,7 @@
                                                 fill="rgba(149,164,166,1)" />
                                         </svg>
                                         <div class="ml-1.5 text-black dark:text-darkmodetext">
-                                            @php
-                                            $count = 0;
-                                            foreach ($ticket->messages as $message) {
-                                                if($message->ticket_id == $ticket->id) {
-                                                    $count++;
-                                                }
-                                            }
-                                            @endphp
-                                            {{ $count }}
+                                            {{ $ticket->messages->where('ticket_id', $ticket->id)->count() }}
                                         </div>
                                     </div>
                                 </div>

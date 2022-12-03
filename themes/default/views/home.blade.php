@@ -89,7 +89,7 @@
                                                     @if ($product->price == 0)
                                                         {{ __('Free') }}
                                                     @else
-                                                        {{ config('settings::currency_sign') }}{{ number_format((float) $product->price . '0', 2, '.', '') }}
+                                                        {{ config('settings::currency_sign') }}{{ number_format((float) $product->price . '', 2, '.', '') }}
                                                     @endif
                                                 </td>
                                                 <td class="text-center dark:text-white dark:bg-darkmode2 p-3">
