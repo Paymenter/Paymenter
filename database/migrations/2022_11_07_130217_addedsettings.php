@@ -13,10 +13,14 @@ return new class extends Migration
      */
     public function up()
     {
+        if(!Schema::hasColumn('settings', 'home_page_text')){
+            Schema::table('settings', function (Blueprint $table) {
+                $table->string('home_page_text')->nullable()->default('Welcome to Paymenter');
+            });
+        }
         Schema::table('settings', function (Blueprint $table) {
             $table->string('advanced_mode')->default('false');
             $table->string('currency_position')->default('left');
-            $table->string('home_page_text')->nullable();
             $table->string('app_name')->nullable();
             $table->boolean('sidebar')->default(false);
         });
