@@ -6,6 +6,7 @@
     "license": "MIT",
     "require": {
         "php": "^8.0.2",
+        "doctrine/dbal": "^3.5",
         "fakerphp/faker": "^1.20",
         "guzzlehttp/guzzle": "^7.2",
         "laravel/framework": "^9.19",
