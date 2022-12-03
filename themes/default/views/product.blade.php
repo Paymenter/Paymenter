@@ -21,14 +21,20 @@
                     @foreach ($categories as $category)
                         <div class="mt-4">
                             <h2 class="text-center text-xl font-bold">{{ $category->name }}</h2>
-                            <div class="flex flex-nowrap gap-4">
+                            <div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
                                 @foreach ($category->products as $product)
-                                    <div
-                                        class="transition delay-400 hover:shadow-lg dark:bg-darkmode rounded-lg w-1/4 p-4">
+                                    <div class="p-4 transition rounded-lg delay-400 hover:shadow-lg dark:bg-darkmode">
                                         <a href="{{ route('checkout.add') }}?id={{ $product->id }}">
                                             <img class="rounded-lg" src="{{ $product->image }}"
                                                 alt="{{ $product->name }}"
-                                                class="w-full h-64 object-cover object-center">
+                                                class="object-cover object-center w-full h-64"
+                                                onerror="removeElement(this);" >
+                                            <script>
+                                                function removeElement(element) {
+                                                    element.remove();
+                                                    this.error = true;
+                                                }
+                                            </script>
                                             <div class="mt-2">
                                                 <h3
                                                     class="text-center dark:text-darkmodetext text-lg font-medium text-gray-900">

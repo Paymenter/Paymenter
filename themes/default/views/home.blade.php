@@ -39,11 +39,12 @@
                         Invoices
                     </div>
                 </div>
-                <div class="yourInfo panel-body" style="border-bottom: none !important; display: block; text-align: center; line-height: 10%">
+                <div class="flex flex-col text-center">
                     @foreach ($invoices as $invoice)
                         <a href='{{ route("invoice.show", $invoice->id) }}' class="text-blue-500 hover:text-blue-700">
-                            Invoice ID: {{$invoice->order()->get()->first()->id}}<br>
+                            Invoice ID: {{$invoice->order()->get()->first()->id}}
                         </a>
+                        <br>
                     @endforeach
                 </div>
             </div>

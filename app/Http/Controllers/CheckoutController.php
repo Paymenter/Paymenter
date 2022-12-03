@@ -140,7 +140,7 @@ class CheckoutController extends Controller
             if (isset($product->config)) {
                 foreach ($product->config as $key => $value) {
                     $orderProductConfig = new OrderProductsConfig();
-                    $orderProductConfig->order_id = $orderProduct->id;
+                    $orderProductConfig->order_product_id = $orderProduct->id;
                     $orderProductConfig->key = $key;
                     $orderProductConfig->value = $value;
                     $orderProductConfig->save();

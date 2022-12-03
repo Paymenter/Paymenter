@@ -31,7 +31,12 @@
                                                     <a href="{{ route('checkout.add') }}?id={{ $product->id }}">
                                                         <img class="rounded-lg" src="{{ $product->image }}"
                                                             alt="{{ $product->name }}"
-                                                            class="object-cover object-center w-full h-64">
+                                                            class="object-cover object-center w-full h-64" onerror="removeElement(this);">
+                                                            <script>
+                                                                function removeElement(element) {
+                                                                    element.remove();
+                                                                }
+                                                            </script>
                                                         <div class="mt-2">
                                                             <h3
                                                                 class="text-lg font-medium text-center text-gray-900 dark:text-darkmodetext">

@@ -50,11 +50,6 @@ Route::group(['prefix' => 'admin'], function () {
         Route::post('/edit/{sort}/{name}', [App\Http\Controllers\Admin\ExtensionsController::class, 'update'])->middleware(['auth.admin', 'password.confirm'])->name('admin.extensions.update');
     });
 
-    Route::group(['prefix' => 'import'], function () {
-        Route::get('/', [App\Http\Controllers\Admin\ImportController::class, 'index'])->middleware(['auth.admin', 'password.confirm'])->name('admin.import');
-        Route::post('/', [App\Http\Controllers\Admin\ImportController::class, 'import'])->middleware(['auth.admin', 'password.confirm'])->name('admin.import.import');
-    });
-
     Route::group(['prefix' => 'clients'], function () {
         Route::get('/', [App\Http\Controllers\Admin\ClientsController::class, 'index'])->middleware(['auth.admin'])->name('admin.clients');
         Route::get('/create', [App\Http\Controllers\Admin\ClientsController::class, 'create'])->middleware(['auth.admin'])->name('admin.clients.create');
@@ -69,8 +64,7 @@ Route::group(['prefix' => 'admin'], function () {
     Route::group(['prefix' => 'orders'], function(){
         Route::get('/', [App\Http\Controllers\Admin\OrdersController::class, 'index'])->middleware(['auth.admin'])->name('admin.orders');
         Route::delete('/{id}/delete', [App\Http\Controllers\Admin\OrdersController::class, 'destroy'])->middleware(['auth.admin'])->name('admin.orders.delete');
-    }
-    );
+    });
 
     Route::group(['prefix' => 'migrate'], function () {
         Route::get('/', [App\Http\Controllers\Admin\MigrateController::class, 'index'])->middleware(['auth.admin'])->name('admin.migrate.index');

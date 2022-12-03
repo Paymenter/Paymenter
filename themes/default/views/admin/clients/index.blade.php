@@ -37,22 +37,22 @@
                                         <thead class="bg-gray-100 dark:bg-darkmode">
                                             <tr>
                                                 <th class="px-6 py-2 text-xs text-gray-500 dark:text-darkmodetext">
-                                                    {{ __('normal.id') }}
+                                                    {{ __('ID') }}
                                                 </th>
                                                 <th class="px-6 py-2 text-xs text-gray-500 dark:text-darkmodetext">
-                                                    {{ __('normal.name') }}
+                                                    {{ __('Name') }}
                                                 </th>
                                                 <th class="px-6 py-2 text-xs text-gray-500 dark:text-darkmodetext">
-                                                    {{ __('normal.email') }}
+                                                    {{ __('Email') }}
                                                 </th>
                                                 <th class="px-6 py-2 text-xs text-gray-500 dark:text-darkmodetext">
-                                                    {{ __('normal.created_at') }}
+                                                    {{ __('Created At') }}
                                                 </th>
                                                 <th class="px-6 py-2 text-xs text-gray-500 dark:text-darkmodetext">
-                                                    {{ __('normal.edit') }}
+                                                    {{ __('Edit') }}
                                                 </th>
                                                 <th class="px-6 py-2 text-xs text-gray-500 dark:text-darkmodetext">
-                                                    {{ __('normal.delete') }}
+                                                    {{ __('Delete') }}
                                                 </th>
                                             </tr>
                                         </thead>
@@ -78,7 +78,7 @@
                                                     </td>
                                                     <td class="px-6 py-4 text-center">
                                                         <a href="{{ route('admin.clients.edit', $user->id) }}"
-                                                            class="px-4 py-1 text-sm text-blue-600 bg-blue-200 rounded-full">{{ __('normal.edit') }}</a>
+                                                            class="px-4 py-1 text-sm text-blue-600 bg-blue-200 rounded-full">{{ __('Edit/View') }}</a>
                                                     </td>
                                                     <td class="px-6 py-4 text-center">
                                                         <form action="{{ route('admin.clients.delete', $user->id) }}"
@@ -86,7 +86,7 @@
                                                             @csrf
                                                             @method('DELETE')
                                                             <button type="submit"
-                                                                class="px-4 py-1 text-sm text-red-600 bg-red-200 rounded-full">{{ __('normal.delete') }}</button>
+                                                                class="px-4 py-1 text-sm text-red-600 bg-red-200 rounded-full">{{ __('Delete') }}</button>
                                                         </form>
                                                     </td>
                                                 </tr>
