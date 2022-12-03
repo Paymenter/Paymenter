@@ -124,13 +124,13 @@ class CheckoutController extends Controller
         $order->client = $user->id;
         $order->total = $total;
         $order->expiry_date = date('Y-m-d H:i:s', strtotime('+1 month'));
+        $order->status = 'pending';
+        $order->save();
         if ($total == 0) {
             $order->status = 'paid';
+            $order->save();
             ExtensionHelper::createServer($order);
-        } else {
-            $order->status = 'pending';
-        }
-        $order->save();
+        } 
         foreach ($products as $product) {
             $orderProduct = new OrderProducts();
             $orderProduct->order_id = $order->id;
