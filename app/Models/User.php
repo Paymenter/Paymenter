@@ -30,6 +30,8 @@ class User extends Authenticatable implements MustVerifyEmail
         'country',
         'phone',
         'companyname',
+        'permissions',
+        'is_admin'
     ];
 
     /**
@@ -40,8 +42,6 @@ class User extends Authenticatable implements MustVerifyEmail
     protected $hidden = [
         'password',
         'remember_token',
-        'is_admin',
-        'permissions',
     ];
 
     /**
@@ -51,10 +51,22 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
+        'permissions' => 'array'
     ];
 
     public function orders()
     {
         return $this->hasMany(Orders::class, 'user', 'id');
+    }
+
+    public function hasPermissionTo($permission)
+    {
+        if(!$this->is_admin) {
+            return false;
+        }
+        if (in_array($permission, $this->permissions)) {
+            return true;
+        }
+        return $this->permissions[$permission] ?? false;
     }
 }
