@@ -118,32 +118,6 @@ class MigrateController extends Controller
 		}
 		if ($newChosenOption == 'GetOrders') {
 			foreach ($output['orders']['order'] as $order) {
-				if ($order['status'] == 'Pending') {
-					$status = 'pending';
-				} else {
-					$status = strtolower($order['status']);
-				}
-
-				if ($replace == 'yes') {
-					$existingOrder = Orders::where('id', $order['id'])->first();
-					$existingOrderProduct = OrderProducts::where('order_id', $order['id'])->first();
-					if ($existingOrder) {
-						$existingOrder->delete();
-					}
-					if ($existingOrderProduct) {
-						$existingOrderProduct->delete();
-					}
-				}
-
-				$newOrder = new Orders();
-				$newOrder->id = $order['id'];
-				$newOrder->expiry_date = '1970-01-01 01:00:00';
-				$newOrder->updated_at = '1970-01-01 01:00:00';
-				$newOrder->status = $status;
-				$newOrder->client = '67';
-				$newOrder->total = $order['amount'];
-				$newOrder->save();
-
 				$che = curl_init();
 				curl_setopt($che, CURLOPT_URL, $host . '/includes/api.php');
 				curl_setopt($che, CURLOPT_POST, 1);
@@ -164,6 +138,50 @@ class MigrateController extends Controller
 				$responseClientProducts = curl_exec($che);
 				curl_close($che);
 				$outputClientProducts = json_decode($responseClientProducts, true);
+
+
+
+
+
+
+
+
+
+
+				if ($order['status'] == 'Pending') {
+					$status = 'pending';
+				} if ($order['status'] == 'Active') {
+					$status = 'paid';
+				} else {
+					$status = strtolower($order['status']);
+				}
+
+				if ($replace == 'yes') {
+					$existingOrder = Orders::where('id', $order['id'])->first();
+					$existingOrderProduct = OrderProducts::where('order_id', $order['id'])->first();
+					if ($existingOrder) {
+						$existingOrder->delete();
+					}
+					if ($existingOrderProduct) {
+						$existingOrderProduct->delete();
+					}
+				}
+
+				$newOrder = new Orders();
+				$newOrder->id = $order['id'];
+				$expiry_date = $outputClientProducts['products']['product'][0]['nextduedate'] . ' 01:00:00';
+				if ($expiry_date == '0000-00-00 01:00:00') {
+					$expiry_date = '1970-01-01 01:00:00';
+				}
+				$newOrder->expiry_date = $expiry_date;
+				$newOrder->created_at = $outputClientProducts['products']['product'][0]['regdate'] . ' 01:00:00';
+				$newOrder->updated_at = '1970-01-01 01:00:00';
+				$newOrder->status = $status;
+				$newOrder->client = '67';
+				$newOrder->total = $order['amount'];
+				$newOrder->save();
+
+
 				
 				if ($replace == 'yes') {
 					$existingOrderProduct = OrderProducts::where('order_id', $order['id'])->first();
