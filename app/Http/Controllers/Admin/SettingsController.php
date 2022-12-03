@@ -96,6 +96,7 @@ class SettingsController extends Controller
         ]);
         Settings::updateOrCreate(['key' => 'discord_client_id'], ['value' => $request->discord_client_id]);
         Settings::updateOrCreate(['key' => 'discord_client_secret'], ['value' => $request->discord_client_secret]);
+        Settings::updateOrCreate(['key' => 'discord_enabled'], ['value' => $request->discord_enabled]);
 
         return redirect('/admin/settings#login')->with('success', 'Settings updated successfully');
     }
