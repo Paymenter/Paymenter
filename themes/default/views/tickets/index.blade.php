@@ -262,9 +262,12 @@
                                     <div
                                         class="text-sm font-medium text-gray-700 dark:text-darkmodetext pt-2 max-w-screen-lg w-full">
                                         <div id='showmore{{$ticket->id}}'
-                                            style='{!! count(explode("<br />", nl2br($ticket->last_message))) > 4 ? "-webkit-mask-image: linear-gradient(black 35%, transparent 100%);" : "" !!}'>
-                                            {{ $ticket->last_message == null ? 'No messages...' : '' }}
-                                            {{ \Illuminate\Mail\Markdown::parse(nl2br(implode(array_slice(explode("<br />", nl2br($ticket->last_message)), 0, 4)))) }}
+                                            style='{!! count(explode("<br />", nl2br($ticketMessages->where("ticket_id", $ticket->id)->last()->message))) > 3 ? "-webkit-mask-image: linear-gradient(black 35%, transparent 100%);" : "" !!}'>
+                                            @if (count($ticketMessages) > 0)
+                                                {{ \Illuminate\Mail\Markdown::parse(nl2br(implode(array_slice(explode("<br />", nl2br($ticketMessages->where('ticket_id', $ticket->id)->last()->message)), 0, 4)))) }}
+                                            @else
+                                                No messages...
+                                            @endif
                                         </div>
                                     </div>
                                 </div>
