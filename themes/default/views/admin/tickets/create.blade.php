@@ -19,22 +19,22 @@
                         <form method="POST" action="{{ route('admin.tickets.store') }}">
                             @csrf
                             <div class="mt-4">
-                                <label class="dark:text-darkmodetext block font-medium text-sm text-gray-700" for="title">
+                                <label class="dark:text-darkmodetext block font-medium text-sm text-gray-700" for="title" id="textareaId">
                                     {{ __('Title') }}
                                 </label>
                                 <input class="dark:bg-darkmode dark:text-darkmodetext form-input rounded-md shadow-sm mt-1 block w-full" id="title"
                                     type="text" name="title" value="{{ old('title') }}" required autofocus />
                             </div>
                             <div class="mt-4">
-                                <label class="dark:text-darkmodetext block font-medium text-sm text-gray-700" for="description">
-                                    {{ __('normal.description') }}
+                                <label class="dark:text-darkmodetext block font-medium text-sm text-gray-700" for="description"  id="textareaId">
+                                    {{ __('Description') }}
                                 </label>
                                 <textarea class="dark:text-darkmodetext dark:bg-darkmode form-input rounded-md shadow-sm mt-1 block w-full" id="description" name="description" required>{{ old('description') }}</textarea>
                             </div>
                             <!-- user -->
                             <div class="mt-4">
                                 <label class="dark:text-darkmodetext block font-medium text-sm text-gray-700" for="user">
-                                    {{ __('normal.user') }}
+                                    {{ __('Uuser') }}
                                 </label>
                                 <select id="user" name="user"
                                     class="dark:text-darkmodetext dark:bg-darkmode form-input rounded-md shadow-sm mt-1 block w-full">
@@ -62,7 +62,7 @@
                             </div>
 
                             <div class="flex items-center justify-end mt-4">
-                                <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                                <button id="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
                                     {{ __('normal.create') }}
                                 </button>
                             </div>

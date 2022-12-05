@@ -5,11 +5,9 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Extensions;
 use App\Models\OrderProducts;
-use App\Models\OrderProductsConfig;
 use App\Models\Orders;
 use App\Models\Products;
 use App\Models\User;
-use Hamcrest\Core\HasToString;
 use Illuminate\Http\Request;
 
 class MigrateController extends Controller
@@ -139,15 +137,6 @@ class MigrateController extends Controller
 				curl_close($che);
 				$outputClientProducts = json_decode($responseClientProducts, true);
 
-
-
-
-
-
-
-
-
-
 				if ($order['status'] == 'Pending') {
 					$status = 'pending';
 				} if ($order['status'] == 'Active') {
@@ -181,8 +170,6 @@ class MigrateController extends Controller
 				$newOrder->total = $order['amount'];
 				$newOrder->save();
 
-
-				
 				if ($replace == 'yes') {
 					$existingOrderProduct = OrderProducts::where('order_id', $order['id'])->first();
 					if ($existingOrderProduct) {
@@ -198,8 +185,9 @@ class MigrateController extends Controller
 				$newOrderProduct->order_id = $order['id'];
 				$newOrderProduct->save();
 			}
-
 		}
+		$clientErrorArray = array();
+
 		if ($newChosenOption == 'GetClients') {
 			foreach ($output['clients']['client'] as $client) {
 				if ($replace == 'yes') {
@@ -209,7 +197,7 @@ class MigrateController extends Controller
 					}
 				}
 				if (User::where('id', $client['id'])->exists()) {
-
+					$clientErrorArray[] = $client['firstname'] . ' ' . $client['lastname'] . ' - ' . $client['email'];
 				} else {
 					$newClient = new User();
 					$newClient->id = $client['id'];
@@ -221,10 +209,17 @@ class MigrateController extends Controller
 					$newClient->save();
 				}
 			}
-			if ($replace == 'yes') {
-				return redirect()->route('admin.migrate.index')->with('success', ucfirst($chosenOption) . ' imported successfully! Any duplicate data has been replaced. (Due to the nature of the API, passwords have not been imported.)');
+			if (isset($clientErrorArray)) {
+				$clientError = implode(', ', $clientErrorArray);
+				$clientsAdded = count($output['clients']['client']) - count($clientErrorArray);
+				$clientsAddedMessage = ($clientsAdded == 1) ? '1 client has' : $clientsAdded . ' clients have';
+				return redirect()->route('admin.migrate.index')->with('error', $clientsAddedMessage . ' been added. The following clients already exist and have not been added: ' . $clientError);
 			} else {
-				return redirect()->route('admin.migrate.index')->with('success', ucfirst($chosenOption) . ' imported successfully! (Due to the nature of the API, passwords have not been imported.)');
+				if ($replace == 'yes') {
+					return redirect()->route('admin.migrate.index')->with('success', ucfirst($chosenOption) . ' imported successfully! Any duplicate data has been replaced. (Due to the nature of the API, passwords have not been imported.)');
+				} else {
+					return redirect()->route('admin.migrate.index')->with('success', ucfirst($chosenOption) . ' imported successfully! (Due to the nature of the API, passwords have not been imported.)');
+				}
 			}
 		}
 		if ($replace == 'yes') {

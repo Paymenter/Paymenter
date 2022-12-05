@@ -24,6 +24,23 @@
         } else {
             document.documentElement.classList.remove('dark')
         }
+        window.addEventListener('keydown', function (e) {
+        	var ctrlDown = true;
+        	var ctrlKey = 17, enterKey = 13;
+        	$(document).keydown(function(e) {
+        	    if (e.keyCode == ctrlKey) ctrlDown = true;
+        	    if (e.keyCode == enterKey && ctrlDown) {
+					if ($('#submit').length) {
+						$('#submit').click();
+					} else {
+						console.log("Doesn't exist");
+					}
+        	        return false;
+        	    }
+        	}).keyup(function(e) {
+			    if (e.keyCode == ctrlKey) ctrlDown = false;
+			});
+		});
     </script>
 </head>
 
