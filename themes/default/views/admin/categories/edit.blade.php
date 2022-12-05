@@ -4,16 +4,16 @@
     </x-slot>
     <div class="py-12">
         <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
-            <div class="overflow-hidden bg-white shadow-sm sm:rounded-lg">
-                <div class="p-6 bg-white border-b border-gray-200">
-                    <h1 class="text-2xl font-bold">{{ __('Categories Edit') }}</h1>
+            <div class="overflow-hidden bg-white dark:bg-darkmode2 shadow-sm sm:rounded-lg">
+                <div class="p-6 bg-white dark:bg-darkmode2 border-b border-gray-200 dark:border-gray-800">
+                    <h1 class="text-2xl font-bold dark:text-darkmodetext">{{ __('Categories Edit') }}</h1>
                     <x-auth-validation-errors class="mb-4" :errors="$errors" />
                     <x-success class="mb-4" />
 
                     <form action="{{ route('admin.categories.update', $category->id) }}" method="POST">
                         @csrf
                         <div class="mt-4">
-                            <label class="block text-sm font-medium text-gray-700">
+                            <label class="dark:text-darkmodetext block text-sm font-medium text-gray-700">
                                 {{ __('Name') }}
                             </label>
                             <input id="name" type="text"
@@ -21,7 +21,7 @@
                                 value="{{ old('name', $category->name) }}" required autocomplete="name" autofocus>
                         </div>
                         <div class="mt-4">
-                            <label class="block text-sm font-medium text-gray-700">
+                            <label class="dark:text-darkmodetext block text-sm font-medium text-gray-700">
                                 {{ __('Description') }}
                             </label>
                             <textarea id="description" type="text" class="form-input w-full @error('description') border-red-500 @enderror"
@@ -30,7 +30,7 @@
                         </div>
                         <!-- slug -->
                         <div class="mt-4">
-                            <label class="block text-sm font-medium text-gray-700">
+                            <label class="dark:text-darkmodetext block text-sm font-medium text-gray-700">
                                 {{ __('Slug') }}
                             </label>
                             <p>
