@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Config;
 use Qirolab\Theme\Theme;
 use App\Models\Settings;
 use Illuminate\Support\Facades\Auth;
@@ -98,23 +99,5 @@ class SettingsController extends Controller
         Settings::updateOrCreate(['key' => 'discord_enabled'], ['value' => $request->discord_enabled]);
 
         return redirect('/admin/settings#login')->with('success', 'Settings updated successfully');
-    }
-
-    function customization(Request $request)
-    {
-        $request->validate([
-            'app_favicon' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-        ]);
-        if ($request->hasFile('app_favicon')) {
-            $imageName = time() . '.' . $request->app_favicon->extension();
-            $request->app_favicon->move(public_path('images'), $imageName);
-            $path = '/images/' . $imageName;
-            Settings::updateOrCreate(['key' => 'app_favicon'], ['value' => $path]);
-        }
-        // Loop through all settings
-        foreach ($request->except(['_token', 'app_favicon']) as $key => $value) {
-            Settings::updateOrCreate(['key' => $key], ['value' => $value]);
-        }
-        return redirect('/admin/settings#customization')->with('success', 'Customization updated successfully');
     }
 }
