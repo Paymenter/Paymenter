@@ -26,7 +26,7 @@
                                     {{ App\Models\Orders::sum('total') }} {{ config('settings::currency_sign') }}</p>
                             </div>
                         </div>
-                        <canvas id="myChart" class="max-w-400 w-full"></canvas>
+                        <canvas id="myChart" class="w-full max-h-[400px]"></canvas>
                     </div>
                     <div
                         class="p-10 ml-4 bg-white border-2 dark:bg-darkmode dark:border-darkmode rounded-xl border-grey-600">
