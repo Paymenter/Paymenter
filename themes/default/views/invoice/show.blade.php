@@ -69,10 +69,10 @@
                                 @else
                                     <div class="text-sm font-light text-slate-500">
 
-                                        <p class="text-xl font-normal text-slate-700">
+                                        <p class="dark:text-darkmodetext text-xl font-normal text-slate-700">
                                             Paid
                                         </p>
-                                        <p>{{ $invoice->paid_at }}</p>
+                                        <p class="dark:text-darkmodetext">{{ $invoice->paid_at }}</p>
                                     </div>
                                 @endif
                             </div>
