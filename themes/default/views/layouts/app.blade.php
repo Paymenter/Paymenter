@@ -46,15 +46,15 @@
 					ctx.stroke();
 					ctx.fill();
 				}
-            	function drawSnowflake(obj) {
-            	    var snowflake = new Image();
-					if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-            	    	snowflake.src = 'https://raw.githubusercontent.com/Jaishreebala/snowfall-animation-website/09e70c24c024dc0f5578664f83a1406786e2eb17/snowflake.svg';
-					} else {
-						snowflake.src = 'https://svgur.com/i/o_R.svg';
-					}
-            	    ctx.drawImage(snowflake, obj.x, obj.y * Math.PI, obj.vs, obj.vs);
-				}
+                function drawSnowflake(obj) {
+                    var snowflake = new Image();
+                    if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                        snowflake.src = 'https://www.platinumhost.io/snowflake.svg';
+                    } else {
+                        snowflake.src = 'https://www.platinumhost.io/snowflake_dark.svg';
+                    }
+                    ctx.drawImage(snowflake, obj.x, obj.y * Math.PI, obj.vs, obj.vs);
+                }
 				function update(obj) {
 					obj.x += obj.vx;
 					obj.y += obj.vy;

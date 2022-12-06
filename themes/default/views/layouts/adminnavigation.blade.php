@@ -214,11 +214,38 @@
         </div>
         <div class="hidden md:hidden" id="mobile-menu">
             <div class="px-2 pt-2 pb-3 space-y-1">
-                <a href="#" class="text-black hover:bg-gray-100 block px-3 py-2 rounded-md text-base font-medium @if (request()->routeIs('index')) bg-gray-400 @endif" aria-current="page">Dashboard</a>
-                <a href="#" class="text-black hover:bg-gray-100 block px-3 py-2 rounded-md text-base font-medium @if (request()->routeIs('products.*')) bg-gray-400 @endif">Products</a>
+                <a href="{{ route('admin') }}" class="text-black hover:bg-gray-100 block px-3 py-2 rounded-md text-base font-medium dark:text-darkmodetext @if (request()->routeIs('admin')) bg-gray-400 @endif" aria-current="page">Dashboard</a>
+                <button class="text-black hover:bg-gray-100 block px-3 py-2 rounded-md text-base font-medium dark:text-darkmodetext @if (request()->routeIs('admin.products.*')) bg-gray-400 @endif" onclick="openMenu('products-menu')">Products</button>
+                <div class="dropdown-menu hidden ml-2" id="products-menu">
+                    <a href="{{ route('admin.products') }}" class="text-black hover:bg-gray-100 block px-3 py-2 rounded-md text-base font-medium dark:text-darkmodetext @if (request()->routeIs('admin.products')) bg-gray-400 @endif">All Products</a>
+                    <a href="{{ route('admin.products.create') }}" class="text-black hover:bg-gray-100 block px-3 py-2 rounded-md text-base font-medium dark:text-darkmodetext @if (request()->routeIs('admin.products.create')) bg-gray-400 @endif">Add Product</a>
+                </div>
+            <!-- orders -->
+                <button class="text-black hover:bg-gray-100 block px-3 py-2 rounded-md text-base font-medium dark:text-darkmodetext @if (request()->routeIs('admin.orders.*')) bg-gray-400 @endif" onclick="openMenu('orders-menu')">Orders</button>
+                <div class="dropdown-menu hidden ml-2" id="orders-menu">
+                    <a href="{{ route('admin.orders') }}" class="text-black hover:bg-gray-100 block px-3 py-2 rounded-md text-base font-medium dark:text-darkmodetext @if (request()->routeIs('admin.orders')) bg-gray-400 @endif">All Orders</a>
+                </div>
+                <!-- clients -->
+                <button class="text-black hover:bg-gray-100 block px-3 py-2 rounded-md text-base font-medium dark:text-darkmodetext @if (request()->routeIs('admin.clients.*')) bg-gray-400 @endif" onclick="openMenu('clients-menu')">Clients</button>
+                <div class="dropdown-menu hidden ml-2" id="clients-menu">
+                    <a href="{{ route('admin.clients') }}" class="text-black hover:bg-gray-100 block px-3 py-2 rounded-md text-base font-medium dark:text-darkmodetext @if (request()->routeIs('admin.clients')) bg-gray-400 @endif">All Clients</a>
+                    <a href="{{ route('admin.clients.create') }}" class="text-black hover:bg-gray-100 block px-3 py-2 rounded-md text-base font-medium dark:text-darkmodetext @if (request()->routeIs('admin.clients.create')) bg-gray-400 @endif">Add Client</a>
+                </div>
+                <!-- support -->
+                <button class="text-black hover:bg-gray-100 block px-3 py-2 rounded-md text-base font-medium dark:text-darkmodetext @if (request()->routeIs('admin.tickets.*')) bg-gray-400 @endif" onclick="openMenu('support-menu')">Support</button>
+                <div class="dropdown-menu hidden ml-2" id="support-menu">
+                    <a href="{{ route('admin.tickets') }}" class="text-black hover:bg-gray-100 block px-3 py-2 rounded-md text-base font-medium dark:text-darkmodetext @if (request()->routeIs('admin.tickets')) bg-gray-400 @endif">All Tickets</a>
+                    <a href="{{ route('admin.tickets.create') }}" class="text-black hover:bg-gray-100 block px-3 py-2 rounded-md text-base font-medium dark:text-darkmodetext @if (request()->routeIs('admin.tickets.create')) bg-gray-400 @endif">Add Ticket</a>
+                </div>
+                <!-- settings -->
+                <button class="text-black hover:bg-gray-100 block px-3 py-2 rounded-md text-base font-medium dark:text-darkmodetext @if (request()->routeIs('admin.settings.*')) bg-gray-400 @endif" onclick="openMenu('settings-menu')">Settings</button>
+                <div class="dropdown-menu hidden ml-2" id="settings-menu">
+                    <a href="{{ route('admin.settings') }}" class="text-black hover:bg-gray-100 block px-3 py-2 rounded-md text-base font-medium dark:text-darkmodetext @if (request()->routeIs('admin.settings')) bg-gray-400 @endif">Settings</a>
+                    <a href="{{ route('admin.extensions') }}" class="text-black hover:bg-gray-100 block px-3 py-2 rounded-md text-base font-medium dark:text-darkmodetext @if (request()->routeIs('admin.extensions')) bg-gray-400 @endif">Extension Settings</a>
+                </div>
 
                 @auth
-                <a href="{{ route('logout') }}" class="block px-3 py-2 text-base font-medium text-black rounded-md hover:bg-gray-100" onclick="event.preventDefault();
+                <a href="{{ route('logout') }}" class="block px-3 py-2 text-base font-medium text-black rounded-md hover:bg-gray-100 dark:text-darkmodetext" onclick="event.preventDefault();
                 document.getElementById('logout-form').submit();">
                     {{ __('Logout') }}
                 </a>
