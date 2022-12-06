@@ -114,7 +114,7 @@
                                             required>{{ old('description') }}</textarea>
                                     </div>
                                     <div class="flex items-center justify-end mt-4">
-                                        <button
+                                        <button id="submit"
                                             class="px-4 py-2 font-bold text-white bg-blue-500 rounded hover:bg-blue-700">
                                             {{ __('Create') }}
                                         </button>
