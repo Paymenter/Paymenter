@@ -1,6 +1,6 @@
 <x-admin-layout>
     <x-slot name="title">
-        {{ __('tickets.tickets') }}
+        {{ __('Tickets') }}
     </x-slot>
     <div class="py-12">
         <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
@@ -10,7 +10,7 @@
                 <div class="flex items-center justify-end mt-4">
                     <a href="{{ route('admin.tickets.create') }}"
                         class="mr-4 bg-logo hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                        {{ __('normal.create') }}
+                        {{ __('Create') }}
                     </a>
                 </div>
                 <div class="dark:bg-darkmode2 p-6 bg-white ">
@@ -23,23 +23,23 @@
                                             <tr>
                                                 <th scope="col"
                                                     class="dark:text-darkmodetext px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                                    {{ __('tickets.subject') }}
+                                                    {{ __('Subject') }}
                                                 </th>
                                                 <th scope="col"
                                                     class="dark:text-darkmodetext px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                                    {{ __('tickets.priority') }}
+                                                    {{ __('Priority') }}
                                                 </th>
                                                 <th scope="col"
                                                     class="dark:text-darkmodetext px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                                    {{ __('normal.client') }}
+                                                    {{ __('Client') }}
                                                 </th>
                                                 <th scope="col"
                                                     class="dark:text-darkmodetext px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                                    {{ __('tickets.status') }}
+                                                    {{ __('Status') }}
                                                 </th>
                                                 <th scope="col"
                                                     class="dark:text-darkmodetext px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                                    {{ __('normal.created_at') }}
+                                                    {{ __('Created at') }}
                                                 </th>
                                                 <th scope="col" class="relative px-6 py-3">
                                                     <span class="dark:text-darkmodetext sr-only">Reply</span>
@@ -58,17 +58,17 @@
                                                         @if ($service->priority == 'low')
                                                             <span
                                                                 class="dark:text-darkmodetext px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-600 text-green-800">
-                                                                {{ $service->priority }}
+                                                                {{ __('Low') }}
                                                             </span>
                                                         @elseif($service->priority == 'medium')
                                                             <span
                                                                 class="dark:text-darkmodetext px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-600 text-yellow-800">
-                                                                {{ $service->priority }}
+                                                                {{ __('medium') }}
                                                             </span>
                                                         @elseif($service->priority == 'high')
                                                             <span
                                                                 class="dark:text-darkmodetext px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-600 text-red-800">
-                                                                {{ $service->priority }}
+                                                                {{ __('High') }}
                                                             </span>
                                                         @endif
                                                     </td>
@@ -84,7 +84,7 @@
                                                     <td
                                                         class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                                                         <a href="{{ route('admin.tickets.show', $service->id) }}"
-                                                            class="text-indigo-600 hover:text-indigo-900">{{ __('normal.view') }}</a>
+                                                            class="text-indigo-600 hover:text-indigo-900">{{ __('View') }}</a>
                                                     </td>
                                                 </tr>
                                             @endforeach

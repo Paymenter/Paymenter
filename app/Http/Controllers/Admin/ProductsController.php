@@ -33,6 +33,9 @@ class ProductsController extends Controller
             'category_id' => 'required|integer',
             'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:5242',
         ]);
+        if($request->get('no_image')){
+            $request->merge(['image' => null]);
+        }
         $imageName = time() . '.' . $request->image->extension();
         $request->image->move(public_path('images'), $imageName);
         $data['image'] = '/images/' . $imageName;
@@ -55,6 +58,10 @@ class ProductsController extends Controller
             'category_id' => 'required|integer',
             'image' => 'image|mimes:jpeg,png,jpg,gif,svg|max:5242',
         ]);
+        if($request->get('no_image')){
+            $request->merge(['image' => null]);
+        }
+        
         if ($request->hasFile('image')) {
             $imageName = time() . '.' . $request->image->extension();
             $request->image->move(public_path('images'), $imageName);

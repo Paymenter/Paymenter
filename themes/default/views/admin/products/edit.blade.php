@@ -39,7 +39,29 @@
                             <div class="mt-4">
                                 <label for="image">{{ __('Image') }}</label>
                                 <p>Only upload a new image if you want to replace the existing one</p>
-                                <input id="image" class="block w-full mt-1 dark:bg-darkmode" type="file" name="image" />
+                                <input id="image" class="block w-full mt-1 dark:bg-darkmode" type="file" name="image" @if($product->image == "null") disabled @endif/>
+                                <div class="mt-2">
+                                    <label for="no_image">No Image</label>
+                                    <input type="checkbox" name="no_image" id="no_image" value="1" class="form-input w-4 h-4" @if($product->image == "null") checked @endif>
+                                    <img src="{{ $product->image }}" alt="{{ $product->name }}" class="w-32 h-32 mt-4" id="prodctimg" onerror="removeElement(this)">
+                                    <script>
+                                        function removeElement(element) {
+                                            element.classList.add('hidden');
+                                        }
+                                        document.getElementById('no_image').addEventListener('change', function() {
+                                            document.getElementById('image').disabled = this.checked;
+                                            document.getElementById('prodctimg').classList.toggle('hidden');
+                                        });
+                                        // Listen for file uploads then display the image
+                                        document.getElementById('image').addEventListener('change', function() {
+                                            if (this.files && this.files[0]) {
+                                                var img = document.getElementById('prodctimg');
+                                                img.classList.remove('hidden');
+                                                img.src = URL.createObjectURL(this.files[0]);
+                                            }
+                                        });
+                                    </script>
+                                </div>
                             </div>
                             <div class="mt-4">
                                 <label for="category">{{ __('Category') }}</label>

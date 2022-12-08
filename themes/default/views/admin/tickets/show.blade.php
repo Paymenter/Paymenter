@@ -12,18 +12,18 @@
                             <div class="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
                                 <div class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
                                     <div class="ml-10 flex items-baseline ">
-                                        <h1 class="dark:text-darkmodetext text-gray-600 px-3 rounded-md font-bold text-xl m-4">Title:
+                                        <h1 class="dark:text-darkmodetext text-gray-600 px-3 rounded-md font-bold text-xl m-4">{{ __('Title:') }}
                                             {{ $ticket->title }}</h1>
-                                        <p class="dark:text-darkmodetext text-gray-600 px-3 rounded-md text-xl m-4">Priority:
+                                        <p class="dark:text-darkmodetext text-gray-600 px-3 rounded-md text-xl m-4">{{ __('Priority:') }}
                                             {{ $ticket->priority }}</p>
-                                        <p class="dark:text-darkmodetext text-gray-600 px-3  rounded-md text-xl m-4">Status:
+                                        <p class="dark:text-darkmodetext text-gray-600 px-3  rounded-md text-xl m-4">{{ __('Status:') }}
                                             {{ $ticket->status }}</p>
                                     </div>
                                     <div class="ml-10 flex items-baseline ">
-                                        <p class="dark:text-darkmodetext text-gray-600 px-3 rounded-md text-xl m-4">Client:
+                                        <p class="dark:text-darkmodetext text-gray-600 px-3 rounded-md text-xl m-4">{{ __('Client:') }}
                                             {{ $ticket->client()->get()[0]->name }}
                                         </p>
-                                        <p class="dark:text-darkmodetext text-gray-600 px-3 rounded-md text-xl m-4">Product(s):
+                                        <p class="dark:text-darkmodetext text-gray-600 px-3 rounded-md text-xl m-4">{{ __('Product(s):') }}
                                             @foreach ($ticket->orders()->get() as $product)
                                                 {{ $product->name }}
                                             @endforeach
@@ -33,12 +33,12 @@
                                             <div class="ml-10 flex items-baseline p-2">
                                                 <select name="status" id="status"
                                                     class="dark:bg-darkmode form-input rounded-md shadow-sm mt-1 block">
-                                                    <option value="open">Open</option>
-                                                    <option value="closed">Closed</option>
+                                                    <option value="open">{{ __('Open') }}</option>
+                                                    <option value="closed">{{ __('Closed') }}</option>
                                                 </select>
                                                 <button type="submit"
                                                     class="ml-12 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                                                    Change status
+                                                    {{ __('Change status') }}
                                                 </button>
                                             </div>
                                         </form>
@@ -46,7 +46,7 @@
                                     @if (empty($ticket->messages()->get()[0]))
                                         <div class="ml-10 flex items-baseline ">
                                             <p class="dark:text-darkmodetext text-gray-600 px-3 rounded-md text-xl m-4">
-                                                No messages yet
+                                                {{ __('No messages yet') }}
                                             </p>
                                         </div>
                                     @endif
@@ -71,7 +71,7 @@
                                         <div class="ml-10 flex items-baseline p-2">
                                             <button type="submit"
                                                 class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                                                Reply
+                                                {{ __('Reply') }}
                                             </button>
                                         </div>
                                     </form>

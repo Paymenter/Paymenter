@@ -153,9 +153,9 @@
     <canvas class="snow" id="snow" width="1920" height="1080"></canvas>
     <div id="app" class="min-h-screen dark:text-white dark:bg-darkmode">
         @if (config('settings::sidebar') == 1)
-            @include('layouts.navigation')
-        @else
             @include('layouts.sidenavigation')
+        @else
+            @include('layouts.navigation')
         @endif
         <!-- Page Content -->
         <main class="grow">

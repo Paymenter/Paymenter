@@ -37,6 +37,16 @@
 
                                 <input id="image" class="block w-full mt-1 rounded-lg dark:bg-darkmode" type="file" name="image"
                                     required />
+                                <div class="mt-2">
+                                    <label for="no_image">No Image</label>
+                                    <input type="checkbox" name="no_image" id="no_image" value="1" {{ old('no_image') ? 'checked' : '' }} class="form-input w-4 h-4">
+                                    
+                                    <script>
+                                        document.getElementById('no_image').addEventListener('change', function() {
+                                            document.getElementById('image').disabled = this.checked;
+                                        });
+                                    </script>
+                                </div>
                             </div>
                             <div class="mt-4">
                                 <label for="category">{{ __('Category') }}</label>
