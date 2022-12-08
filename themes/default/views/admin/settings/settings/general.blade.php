@@ -64,10 +64,10 @@
                 <label class="form-label">{{ __('Seo Keywords (separate with comma)') }}</label>
             </div>
             <div class="relative m-4 group">
-                <input type="checkbox" class="form-input peer @error('seo_twitter_card') is-invalid @enderror"
+                <input type="checkbox" class="form-input w-fit peer @error('seo_twitter_card') is-invalid @enderror"
                     placeholder=" " name="seo_twitter_card" value="1"
                     {{ config('settings::seo_twitter_card') ? 'checked' : '' }} />
-                <label class="form-label">{{ __('Seo Twitter Card') }}</label>
+                <label class="form-label" style="position: unset;">{{ __('Seo Twitter Card') }}</label>
             </div>
             <div class="relative m-4 group">
                 <select name="snow" class="form-input peer @error('snow') is-invalid @enderror" placeholder=" "
