@@ -7,7 +7,7 @@
                     <img src="{{ asset('img/logo.png') }}" alt="logo" class="w-10 h-10 rounded-full" />
                     <h1 class="font-bold text-[15px] ml-3">{{ config('settings::app_name') }}</h1>
                 </a>
-                <hr class="my-2 border-b-1 border-gray-300 dark:border-gray-600"></hr>
+                <hr class="my-2 border-b-1 border-gray-300 dark:border-gray-600">
             </div>
             <div class="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-blue-600 text-gray-700 dark:text-darkmodetext hover:text-white" onclick="dropdownprof()">
                 <div class="flex items-center justify-between w-full">
@@ -43,7 +43,7 @@
                     @csrf
                 </form>
             </div>
-            <hr class="my-2 border-b-1 border-gray-300 dark:border-gray-600"></hr>
+            <hr class="my-2 border-b-1 border-gray-300 dark:border-gray-600">
             <x-sidebar-navigation-item route="admin.settings" icon="ri-settings-2-line">
                 Paymenter Settings
             </x-sidebar-navigation-item>
