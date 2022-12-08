@@ -31,14 +31,14 @@
                         </div>
                     </div>
                     <div class="w-4/5 mx-auto" id="submenuprof">
-                        <x-sidebar-navigation-item route="home" icon="bi bi-speedometer" dropdown="true">
+                        <x-sidebar-navigation-item route="home" icon="ri-settings-2-line" dropdown="true">
                             Profile Settings
                         </x-sidebar-navigation-item>
                         <a
                             href="{{ route('logout') }}" 
                             onclick="event.preventDefault(); document.getElementById('logout-form').submit();" 
-                            class="p-2.5 mt-2 flex items-center rounded-md px-2 duration-300 cursor-pointer hover:bg-blue-600 text-red-500 hover:text-white font-bold text-sm" role="menuitem">
-                            <i class="bi bi-box-arrow-in-left ml-2 mr-4 w-4"></i>Sign Out
+                            class="p-2.5 mt-2 h-10 flex items-center rounded-md px-2 duration-300 cursor-pointer hover:bg-blue-600 text-red-500 hover:text-white font-bold text-sm" role="menuitem">
+                            <i class="ri-logout-box-line ml-2 mr-4 w-4"></i>Sign Out
                         </a>
                         <form id="logout-form" action="{{ route('logout') }}" method="POST" class="hidden">
                             @csrf
@@ -47,27 +47,27 @@
                     <hr class="my-2 border-b-1 border-gray-300 dark:border-gray-600"></hr>
                 @endauth
                 @if (Auth::user() == null)
-                    <x-sidebar-navigation-item route="login" icon="bi bi-box-arrow-in-left">
+                    <x-sidebar-navigation-item route="login" icon="ri-login-box-line">
                         Login
                     </x-sidebar-navigation-item>
                 @endif
                 @if (Auth::user() != null)
-                    <x-sidebar-navigation-item route="home" icon="bi bi-speedometer">
+                    <x-sidebar-navigation-item route="home" icon="ri-dashboard-3-line">
                         Dashboard
                     </x-sidebar-navigation-item>
                     @if (Auth::user()->is_admin == '1')
-                        <x-sidebar-navigation-item route="admin" icon="bi bi-person-badge">
+                        <x-sidebar-navigation-item route="admin" icon="ri-admin-line">
                             Admin
                         </x-sidebar-navigation-item>
                     @endif
                 @endif
                 <hr class="my-2 border-b-1 border-gray-300 dark:border-gray-600"></hr>
-                <x-sidebar-navigation-item route="products" icon="bi bi-shop">
+                <x-sidebar-navigation-item route="products" icon="ri-store-2-line">
                     Products
                 </x-sidebar-navigation-item>
-                <div class="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-blue-600 text-gray-700 dark:text-darkmodetext hover:text-white"
+                <div class="p-2.5 mt-3 flex h-10 items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-blue-600 text-gray-700 dark:text-darkmodetext hover:text-white"
                     onclick="dropdown()">
-                    <i class="bi bi-ticket-detailed"></i>
+                    <i class="ri-coupon-line text-lg"></i>
                     <div class="flex items-center justify-between w-full">
                         <span class="text-[15px] ml-4 font-bold">Tickets</span>
                         <svg id="arrow" sidebar-toggle-item class="w-6 h-6 transition-all duration-300" fill="currentColor" viewBox="0 0 20 20"
@@ -79,10 +79,10 @@
                     </div>
                 </div>
                 <div class="w-4/5 mx-auto" id="submenu">
-                    <x-sidebar-navigation-item route="tickets.create" icon="bi bi-plus-circle" dropdown="true">
+                    <x-sidebar-navigation-item route="tickets.create" icon="ri-add-circle-line" dropdown="true">
                         Create Ticket
                     </x-sidebar-navigation-item>
-                    <x-sidebar-navigation-item route="tickets.index" icon="bi bi-ticket-detailed" dropdown="true">
+                    <x-sidebar-navigation-item route="tickets.index" icon="ri-coupon-line" dropdown="true">
                         View Tickets
                     </x-sidebar-navigation-item>
                 </div>

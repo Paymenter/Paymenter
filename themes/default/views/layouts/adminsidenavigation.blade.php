@@ -30,45 +30,45 @@
                 </div>
             </div>
             <div class="w-4/5 mx-auto" id="submenuprof">
-                <x-sidebar-navigation-item route="home" icon="bi bi-speedometer" dropdown="true">
+                <x-sidebar-navigation-item route="home" icon="ri-settings-2-line" dropdown="true">
                     Profile Settings
                 </x-sidebar-navigation-item>
                 <a
                     href="{{ route('logout') }}" 
                     onclick="event.preventDefault(); document.getElementById('logout-form').submit();" 
                     class="p-2.5 mt-2 flex items-center rounded-md px-2 duration-300 cursor-pointer hover:bg-blue-600 text-red-500 hover:text-white font-bold text-sm" role="menuitem">
-                    <i class="bi bi-box-arrow-in-left ml-2 mr-4 w-4"></i>Sign Out
+                    <i class="ri-logout-box-line ml-2 mr-4 w-4"></i>Sign Out
                 </a>
                 <form id="logout-form" action="{{ route('logout') }}" method="POST" class="hidden">
                     @csrf
                 </form>
             </div>
             <hr class="my-2 border-b-1 border-gray-300 dark:border-gray-600"></hr>
-            <x-sidebar-navigation-item route="admin.settings" icon="bi bi-gear">
+            <x-sidebar-navigation-item route="admin.settings" icon="ri-settings-2-line">
                 Paymenter Settings
             </x-sidebar-navigation-item>
-            <div class="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-blue-600 text-gray-700 dark:text-darkmodetext hover:text-white" onclick="dropdowntickets()">
-                <i class="bi bi-ticket-detailed"></i>
+            <div class="p-2.5 mt-3 flex items-center rounded-md h-10 px-4 duration-300 cursor-pointer hover:bg-blue-600 text-gray-700 dark:text-darkmodetext hover:text-white" onclick="dropdowntickets()">
+                <i class="ri-coupon-line"></i>
                 <div class="flex items-center justify-between w-full">
                     <span class="text-[15px] ml-4 font-bold">Tickets</span>
                     <svg id="arrowtickets" sidebar-toggle-item class="w-6 h-6 transition-all duration-300" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
                 </div>
             </div>
             <div class="w-4/5 mx-auto" id="submenutickets">
-                <x-sidebar-navigation-item route="admin.tickets.create" icon="bi bi-plus-circle" dropdown="true">
+                <x-sidebar-navigation-item route="admin.tickets.create" icon="ri-add-circle-line" dropdown="true">
                     Create Ticket
                 </x-sidebar-navigation-item>
-                <x-sidebar-navigation-item route="admin.tickets" icon="bi bi-ticket-detailed" dropdown="true">
+                <x-sidebar-navigation-item route="admin.tickets" icon="ri-coupon-line" dropdown="true">
                     View Ticket
                 </x-sidebar-navigation-item>
             </div>
-            <x-sidebar-navigation-item route="admin.products" icon="bi bi-box-seam">
+            <x-sidebar-navigation-item route="admin.products" icon="ri-shopping-basket-2-fill">
                 Products
             </x-sidebar-navigation-item>
-            <x-sidebar-navigation-item route="admin.categories" icon="bi bi-bookshelf">
+            <x-sidebar-navigation-item route="admin.categories" icon="ri-folders-line">
                 Categories
             </x-sidebar-navigation-item>
-            <x-sidebar-navigation-item route="admin.orders" icon="bi bi-receipt">
+            <x-sidebar-navigation-item route="admin.orders" icon="ri-file-text-line">
                 Orders
             </x-sidebar-navigation-item>
             <script type="text/javascript">
