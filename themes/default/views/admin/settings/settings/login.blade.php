@@ -6,10 +6,10 @@
             <h2 class="m-4 ml-6 text-xl text-gray-900 dark:text-darkmodetext ">{{ __('Discord:')}}</h2>
             <!-- enable discord -->
             <div class="relative m-4 group">
-                <input type="checkbox" class="form-input peer @error('discord_enabled') is-invalid @enderror"
+                <input type="checkbox" class="form-input w-fit peer @error('seo_twitter_card') is-invalid @enderror"
                     placeholder=" " name="discord_enabled" value="1"
                     {{ config('settings::discord_enabled') ? 'checked' : '' }} />
-                <label class="form-label">{{ __('Enable Discord') }}</label>
+                <label class="form-label" style="position: unset;">{{ __('Enable Discord') }}</label>
             </div>
             <div class="relative m-4 group">
                 <input type="text" class="form-input peer @error('discord_client_id') is-invalid @enderror" placeholder=" "
