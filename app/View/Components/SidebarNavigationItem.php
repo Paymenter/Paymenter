@@ -4,7 +4,7 @@ namespace App\View\Components;
 
 use Illuminate\View\Component;
 
-class NavigationItem extends Component
+class SidebarNavigationItem extends Component
 {
     /**
      * The route which the user gets directed to.
@@ -47,6 +47,6 @@ class NavigationItem extends Component
      */
     public function render()
     {
-        return view('components.navigation-item');
+        return view('components.sidebar-navigation-item');
     }
 }
