@@ -5,7 +5,7 @@
     <div class="py-12 mx-auto max-w-7xl sm:px-6 lg:px-8">
         <x-success class="mt-4" />
         <div class="mx-auto max-w-7xl sm:px-6 lg:px-8" style="padding-bottom: 20px;">
-            <div class="overflow-hidden bg-white shadow-xl dark:bg-darkmode2 sm:rounded-lg">
+            <div class="overflow-hidden bg-white shadow-lg dark:bg-darkmode2 sm:rounded-lg">
                 <div class="p-6 border-gray-200 dark:bg-darkmode2">
                     <div class="flex items-center">
                         <div class="flex-shrink-0 w-12 h-12" style="display: flex;">
@@ -31,7 +31,7 @@
             }
         </style>
         <div class="grid grid-cols-1 lg:grid-cols-4">
-            <div class="dark:bg-darkmode2 bg-white rounded-md" style="margin-left: 2rem;">
+            <div class="dark:bg-darkmode2 bg-white rounded-md shadow-lg" style="margin-left: 2rem;">
                 <div class="yourInfo">
                     <img class="w-8 h-8 rounded-md" style="align-self: center; width: 2rem; height: 2rem;"
                         src="https://www.gravatar.com/avatar/{{ md5(Auth::user()->email) }}?s=200&d=mp" />
@@ -49,18 +49,8 @@
                 </div>
             </div>
             <div class="items-center col-span-1 sm:px-6 lg:px-8 lg:col-span-3">
-                <div class="h-8 overflow-hidden bg-white shadow-xl dark:text-white dark:bg-darkmode2 sm:rounded-lg">
-                    <div class="border-b border-gray-200 dark:text-white dark:bg-darkmode2">
-                        <div class="flex items-center">
-                            <div class="mx-2 font-semibold leading-7 h-10">
-                                <a class="text-sm">Showing {{ count($services) }} of {{ count($services) }} services</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <br>
                 <table id="tableServicesList"
-                    class="items-center table bg-white shadow-xl dark:text-white dark:bg-darkmode2 sm:rounded-lg w-full p-1">
+                    class="items-center table bg-white shadow-lg dark:text-white dark:bg-darkmode2 sm:rounded-lg w-full p-1">
                     <thead class="border-b border-gray-200">
                         <tr>
                             <th class="dark:text-white sorting_asc dark:bg-darkmode2 p-2">{{ __('Product/Service') }}
