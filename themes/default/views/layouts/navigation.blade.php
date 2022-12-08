@@ -15,15 +15,22 @@
             </button>
             <div class="justify-center hidden text-lg text-center dark:bg-darkmode sm:flex sm:items-center sm:w-auto place-items-center dark:text-darkmodetext dark:hover:bg-darkbutton" id="menu">
                 <div class="relative inline-block text-left dark:bg-darkmode">
+                    <div class="dark:bg-darkmode">
+                        <a type="button" href="{{ route('home') }}" class="dark:text-darkmodetext dark:bg-darkmode dark:hover:bg-darkbutton inline-flex w-full justify-center bg-white px-2 py-2 text-base font-medium rounded-md text-gray-700 @if (request()->routeIs('tickets*')) @endif" id="menu-button" aria-expanded="true" aria-haspopup="true" onclick="openMenu('tickets')">
+                            <i class="pr-1 ri-dashboard-3-line" @if (request()->routeIs('home*')) style="color: #5270FD" @endif></i>Dashboard
+                        </a>
+                    </div>
+                </div>    
+                <div class="relative inline-block text-left dark:bg-darkmode">
                     <!-- ticket -->
                     <div class="dark:bg-darkmode">
-                        <a type="button" href="{{ route('tickets.index') }}" class="dark:text-darkmodetext dark:bg-darkmode dark:hover:bg-darkbutton inline-flex w-full justify-center bg-white px-2 py-2 text-base font-medium rounded-md text-gray-700 @if (request()->routeIs('tickets*')) bg-gray-200 @endif" id="menu-button" aria-expanded="true" aria-haspopup="true" onclick="openMenu('tickets')">
+                        <a type="button" href="{{ route('tickets.index') }}" class="dark:text-darkmodetext dark:bg-darkmode dark:hover:bg-darkbutton inline-flex w-full justify-center bg-white px-2 py-2 text-base font-medium rounded-md text-gray-700 @if (request()->routeIs('tickets*')) @endif" id="menu-button" aria-expanded="true" aria-haspopup="true" onclick="openMenu('tickets')">
                             <i class="pr-1 ri-question-answer-line" @if (request()->routeIs('tickets*')) style="color: #5270FD" @endif></i>Tickets
                         </a>
                     </div>
                 </div>
                 <div class="relative inline-block text-left">
-                    <button type="button" class="dark:text-darkmodetext dark:bg-darkmode dark:hover:bg-darkbutton inline-flex w-full justify-center bg-white px-2 py-2 text-base font-medium rounded-md text-gray-700 @if (request()->routeIs('products*')) bg-gray-200 @endif" id="menu-button" aria-expanded="true" aria-haspopup="true" onclick="openMenu('orders')">
+                    <button type="button" class="dark:text-darkmodetext dark:bg-darkmode dark:hover:bg-darkbutton inline-flex w-full justify-center bg-white px-2 py-2 text-base font-medium rounded-md text-gray-700 @if (request()->routeIs('products*')) @endif" id="menu-button" aria-expanded="true" aria-haspopup="true" onclick="openMenu('orders')">
                         <i class="pr-1 ri-shopping-bag-2-line" @if (request()->routeIs('products')) style="color: #5270FD" @endif></i> Products
                         <svg class="w-5 h-5 ml-1 -mr-1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
                             <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clip-rule="evenodd" />
