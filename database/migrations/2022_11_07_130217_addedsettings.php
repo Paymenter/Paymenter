@@ -21,7 +21,7 @@ return new class extends Migration
         Schema::table('settings', function (Blueprint $table) {
             $table->string('advanced_mode')->default('false');
             $table->string('currency_position')->default('left');
-            $table->string('app_name')->nullable();
+            $table->string('app_name')->default('Paymenter');
             $table->boolean('sidebar')->default(false);
         });
     }

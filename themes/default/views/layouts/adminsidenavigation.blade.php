@@ -1,133 +1,77 @@
 <div class="flex flex-no-wrap">
     <div class="w-2/12">
         <aside>
-            <div
-            class="sidebar fixed top-0 bottom-0 lg:left-0 p-2 w-[300px] overflow-y-auto text-center bg-gray-900"
-            >
-            <div class="text-xl text-gray-100">
-                <a href="{{ route('index') }}">
-                    <div class="p-2.5 mt-1 flex items-center duration-300 cursor-pointer hover:bg-blue-900 rounded-md">
-                        <img
-                            src="{{ asset('img/logo.png') }}"
-                            alt="logo"
-                            class="w-10 h-10 rounded-full"
-                        />
-                        <h1 class="font-bold text-gray-200 text-[15px] ml-3">{{ config('app_name')}}</h1>
-                    </div>
+        <div class="sidebar fixed top-0 bottom-0 lg:left-0 p-2 w-[300px] overflow-y-auto text-center bg-white dark:bg-gray-900">
+            <div class="text-xl text-gray-700 dark:text-darkmodetext hover:text-white">
+                <a href="{{ route('index') }}" class="p-2.5 items-center mt-1 flex mx-auto duration-300 cursor-pointer hover:bg-blue-900 rounded-md">
+                    <img src="{{ asset('img/logo.png') }}" alt="logo" class="w-10 h-10 rounded-full" />
+                    <h1 class="font-bold text-[15px] ml-3">{{ config('settings::app_name') }}</h1>
                 </a>
-                <div class="border dark:border-blue-800 my-2 bg-gray-600 h-[1px]"></div>
+                <hr class="my-2 border-b-1 border-gray-300 dark:border-gray-600"></hr>
             </div>
-            @auth
-                <div
-                    class="border dark:border-blue-800 p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-blue-600 text-white"
-                    onclick="dropdownprof()">
-                    <div class="flex items-center justify-between w-full">
-                        <div class="flex flex-row">
-                            <img class="h-8 rounded-md"
+            <div class="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-blue-600 text-gray-700 dark:text-darkmodetext hover:text-white" onclick="dropdownprof()">
+                <div class="flex items-center justify-between w-full">
+                    <div class="flex flex-row">
+                        <img class="h-8 rounded-md mr-2"
                             src="https://www.gravatar.com/avatar/{{ md5(Auth::user()->email) }}?s=200&d=mp"
-                            alt="{{ App\Models\User::first()->name }}"/>
-                            <div class="flex flex-row">
-                                <h1 class="p-1 font-bold">{{ App\Models\User::first()->name }}
-                                </h1><!-- create a space between the name and the credit -->
-                            </div>
+                            alt="{{ App\Models\User::first()->name }}" />
+                        <div class="flex flex-row">
+                            <h1 class="p-1 font-bold">{{ App\Models\User::first()->name }}
+                            </h1><!-- create a space between the name and the credit -->
                         </div>
-
-                        <svg id="arrowprof" sidebar-toggle-item class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
                     </div>
+
+                    <svg id="arrowprof" sidebar-toggle-item class="w-6 h-6 transition-all duration-300" fill="currentColor" viewBox="0 0 20 20"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <path fill-rule="evenodd"
+                            d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                            clip-rule="evenodd"></path>
+                    </svg>
                 </div>
-                <div class="w-4/5 mx-auto mt-2 text-sm font-bold text-gray-200" id="submenuprof">
-                    <h1 class="p-2 mt-1 border rounded-md cursor-pointer dark:border-blue-800 hover:bg-blue-600">
+            </div>
+            <div class="w-4/5 mx-auto" id="submenuprof">
+                <x-sidebar-navigation-item route="home" icon="ri-settings-2-line" dropdown="true">
                     Profile Settings
-                    </h1>
-                    <h1 class="p-2 mt-1 border rounded-md cursor-pointer dark:border-blue-800 hover:bg-blue-600">
-                        <a href="{{ route('logout') }}"
-                            onclick="event.preventDefault();
-                            document.getElementById('logout-form').submit();"
-                            class="text-[15px] text-gray-200 font-bold"
-                        role="menuitem">Sign Out</a>
-                        <form id="logout-form" action="{{ route('logout') }}" method="POST" class="hidden">
-                            @csrf
-                        </form>
-                    </h1>
-                </div>
-            @endauth
-            @if (Auth::user() == null)
-                <div class="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-blue-600 text-white">
-                    <div class="flex items-center justify-between w-full">
-                        <a href="{{ route('login') }}" class="text-[15px] ml-4 text-gray-200 font-bold">Login</a>
-                    </div>
-                </div>   
-            @endif
-            <div class="border dark:border-blue-800 my-2 bg-gray-600 h-[1px]"></div> 
-            <div
-                class="border dark:border-blue-800 p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-blue-600 text-white"
-            >
-                <i class="bi bi-bookmark-fill"></i>
-                <a href="{{ route('products') }}" class="text-[15px] ml-4 text-gray-200 font-bold">Products</a>
+                </x-sidebar-navigation-item>
+                <a
+                    href="{{ route('logout') }}" 
+                    onclick="event.preventDefault(); document.getElementById('logout-form').submit();" 
+                    class="p-2.5 mt-2 flex items-center rounded-md px-2 duration-300 cursor-pointer hover:bg-blue-600 text-red-500 hover:text-white font-bold text-sm" role="menuitem">
+                    <i class="ri-logout-box-line ml-2 mr-4 w-4"></i>Sign Out
+                </a>
+                <form id="logout-form" action="{{ route('logout') }}" method="POST" class="hidden">
+                    @csrf
+                </form>
             </div>
-            <div
-                class="border dark:border-blue-800 p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-blue-600 text-white"
-                onclick="dropdown()">
-                <i class="bi bi-chat-left-text-fill"></i>
+            <hr class="my-2 border-b-1 border-gray-300 dark:border-gray-600"></hr>
+            <x-sidebar-navigation-item route="admin.settings" icon="ri-settings-2-line">
+                Paymenter Settings
+            </x-sidebar-navigation-item>
+            <div class="p-2.5 mt-3 flex items-center rounded-md h-10 px-4 duration-300 cursor-pointer hover:bg-blue-600 text-gray-700 dark:text-darkmodetext hover:text-white" onclick="dropdowntickets()">
+                <i class="ri-coupon-line"></i>
                 <div class="flex items-center justify-between w-full">
-                    <span class="text-[15px] ml-4 text-gray-200 font-bold">Tickets</span>
-                    <svg id="arrow" sidebar-toggle-item class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
+                    <span class="text-[15px] ml-4 font-bold">Tickets</span>
+                    <svg id="arrowtickets" sidebar-toggle-item class="w-6 h-6 transition-all duration-300" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
                 </div>
             </div>
-            <div class="w-4/5 mx-auto mt-2 text-sm font-bold text-gray-200 border dark:border-blue-800" id="submenu">
-                <h1 class="p-2 mt-1 rounded-md cursor-pointer hover:bg-blue-600">
-                    <a href="{{ route('tickets.create') }}">Create</a>
-                </h1>
-                <h1 class="p-2 mt-1 rounded-md cursor-pointer hover:bg-blue-600">
-                    <a href="{{ route('tickets.index') }}">View</a>
-                </h1>
+            <div class="w-4/5 mx-auto" id="submenutickets">
+                <x-sidebar-navigation-item route="admin.tickets.create" icon="ri-add-circle-line" dropdown="true">
+                    Create Ticket
+                </x-sidebar-navigation-item>
+                <x-sidebar-navigation-item route="admin.tickets" icon="ri-coupon-line" dropdown="true">
+                    View Ticket
+                </x-sidebar-navigation-item>
             </div>
-            <div class="border dark:border-blue-800 my-2 bg-gray-600 h-[1px]"></div>
-            <div class="text-[15px] text-gray-200 font-bold mb-4">Admin Area</div>
-            <div
-                class="border dark:border-blue-800 p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-blue-600 text-white"
-            >
-                <a href="{{ route('admin.settings') }}" class="text-[15px] ml-4 text-gray-200 font-bold">Application Settings</a>
-            </div>
-            <div
-                class="border dark:border-blue-800 p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-blue-600 text-white"
-                onclick="dropdowntickets()">
-                <i class="bi bi-chat-left-text-fill"></i>
-                <div class="flex items-center justify-between w-full">
-                    <span class="text-[15px] ml-4 text-gray-200 font-bold">Tickets</span>
-                    <svg id="arrowtickets" sidebar-toggle-item class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
-                </div>
-            </div>
-            <div class="w-4/5 mx-auto mt-2 text-sm font-bold text-gray-200" id="submenutickets">
-                <h1 class="p-2 mt-1 border rounded-md cursor-pointer dark:border-blue-800 hover:bg-blue-600">
-                    <a href="{{ route('admin.tickets.create') }}">Create</a>
-                </h1>
-                <h1 class="p-2 mt-1 border rounded-md cursor-pointer dark:border-blue-800 hover:bg-blue-600">
-                    <a href="{{ route('admin.tickets') }}">View</a>
-                </h1>
-            </div>
-            <div
-                class="border dark:border-blue-800 p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-blue-600 text-white"
-            >
-                <a href="{{ route('admin.products') }}" class="text-[15px] ml-4 text-gray-200 font-bold">Products</a>
-            </div>
-            <div
-                class="border dark:border-blue-800 p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-blue-600 text-white"
-            >
-                <a href="{{ route('admin.categories') }}" class="text-[15px] ml-4 text-gray-200 font-bold">Categories</a>
-            </div>
-            <div
-                class="border dark:border-blue-800 p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-blue-600 text-white"
-            >
-                <a href="{{ route('admin.orders') }}" class="text-[15px] ml-4 text-gray-200 font-bold">Orders</a>
-            </div>
+            <x-sidebar-navigation-item route="admin.products" icon="ri-shopping-basket-2-fill">
+                Products
+            </x-sidebar-navigation-item>
+            <x-sidebar-navigation-item route="admin.categories" icon="ri-folders-line">
+                Categories
+            </x-sidebar-navigation-item>
+            <x-sidebar-navigation-item route="admin.orders" icon="ri-file-text-line">
+                Orders
+            </x-sidebar-navigation-item>
             <script type="text/javascript">
-            function dropdown() {
-                document.querySelector("#submenu").classList.toggle("hidden");
-                document.querySelector("#arrow").classList.toggle("rotate-180");
-            }
-            dropdown();
-
             function dropdownprof() {
                 document.querySelector("#submenuprof").classList.toggle("hidden");
                 document.querySelector("#arrowprof").classList.toggle("rotate-180");

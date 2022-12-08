@@ -1,32 +1,28 @@
 <div class="flex flex-no-wrap">
     <div class="w-1/5">
         <aside>
-            <div class="sidebar fixed top-0 bottom-0 lg:left-0 p-2 w-[300px] overflow-y-auto text-center bg-gray-900">
-                <div class="text-xl text-gray-100">
-                    <a href="{{ route('index') }}">
-                        <div
-                            class="p-2.5 mt-1 flex items-center duration-300 cursor-pointer hover:bg-blue-900 rounded-md">
-                            <img src="{{ asset('img/logo.png') }}" alt="logo" class="w-10 h-10 rounded-full" />
-                            <h1 class="font-bold text-gray-200 text-[15px] ml-3">{{ config('settings::app_name') }}</h1>
-                        </div>
+            <div class="sidebar fixed top-0 bottom-0 lg:left-0 p-2 w-[300px] overflow-y-auto text-center shadow-lg bg-white dark:bg-gray-900">
+                <div class="text-xl text-gray-700 dark:text-darkmodetext hover:text-white">
+                    <a href="{{ route('index') }}" class="p-2.5 items-center mt-1 flex mx-auto duration-300 cursor-pointer hover:bg-blue-900 rounded-md">
+                        <img src="{{ asset('img/logo.png') }}" alt="logo" class="w-10 h-10 rounded-full" />
+                        <h1 class="font-bold text-[15px] ml-3">{{ config('settings::app_name') }}</h1>
                     </a>
-                    <div class="my-2 bg-gray-600 h-[1px]"></div>
+                    <hr class="my-2 border-b-1 border-gray-300 dark:border-gray-600"></hr>
                 </div>
                 @auth
-                    <div class="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-blue-600 text-white"
-                        onclick="dropdownprof()">
+                    <div class="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-blue-600 text-gray-700 dark:text-darkmodetext hover:text-white" onclick="dropdownprof()">
                         <div class="flex items-center justify-between w-full">
-                            <div class="flex flex-row">
-                                <img class="h-8 rounded-md"
+                            <div class="flex flex-row group">
+                                <img class="h-8 rounded-md mr-2"
                                     src="https://www.gravatar.com/avatar/{{ md5(Auth::user()->email) }}?s=200&d=mp"
-                                    alt="{{ App\Models\User::first()->name }}" />
+                                    alt="{{ App\Models\User::first()->name }}'s avatar" />
                                 <div class="flex flex-row">
-                                    <h1 class="p-1 font-bold">{{ App\Models\User::first()->name }}
+                                    <h1 class="p-1 font-bold text-inherit">{{ App\Models\User::first()->name }}
                                     </h1><!-- create a space between the name and the credit -->
                                 </div>
                             </div>
 
-                            <svg id="arrowprof" sidebar-toggle-item class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20"
+                            <svg id="arrowprof" sidebar-toggle-item class="w-6 h-6 transition-all duration-300" fill="currentColor" viewBox="0 0 20 20"
                                 xmlns="http://www.w3.org/2000/svg">
                                 <path fill-rule="evenodd"
                                     d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
@@ -34,58 +30,47 @@
                             </svg>
                         </div>
                     </div>
-                    <div class="w-4/5 mx-auto mt-2 text-sm font-bold text-gray-200" id="submenuprof">
-                        <h1 class="p-2 mt-1 rounded-md cursor-pointer hover:bg-blue-600">
+                    <div class="w-4/5 mx-auto" id="submenuprof">
+                        <x-sidebar-navigation-item route="home" icon="ri-settings-2-line" dropdown="true">
                             Profile Settings
-                        </h1>
-                        <h1 class="p-2 mt-1 rounded-md cursor-pointer hover:bg-blue-600">
-                            <a href="{{ route('logout') }}"
-                                onclick="event.preventDefault();
-                            document.getElementById('logout-form').submit();"
-                                class="text-[15px] text-gray-200 font-bold" role="menuitem">Sign Out</a>
-                            <form id="logout-form" action="{{ route('logout') }}" method="POST" class="hidden">
-                                @csrf
-                            </form>
-                        </h1>
+                        </x-sidebar-navigation-item>
+                        <a
+                            href="{{ route('logout') }}" 
+                            onclick="event.preventDefault(); document.getElementById('logout-form').submit();" 
+                            class="p-2.5 mt-2 h-10 flex items-center rounded-md px-2 duration-300 cursor-pointer hover:bg-blue-600 text-red-500 hover:text-white font-bold text-sm" role="menuitem">
+                            <i class="ri-logout-box-line ml-2 mr-4 w-4"></i>Sign Out
+                        </a>
+                        <form id="logout-form" action="{{ route('logout') }}" method="POST" class="hidden">
+                            @csrf
+                        </form>
                     </div>
+                    <hr class="my-2 border-b-1 border-gray-300 dark:border-gray-600"></hr>
                 @endauth
                 @if (Auth::user() == null)
-                    <div
-                        class="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-blue-600 text-white">
-                        <div class="flex items-center justify-between w-full">
-                            <a href="{{ route('login') }}" class="text-[15px] ml-4 text-gray-200 font-bold">Login</a>
-                        </div>
-                    </div>
+                    <x-sidebar-navigation-item route="login" icon="ri-login-box-line">
+                        Login
+                    </x-sidebar-navigation-item>
                 @endif
                 @if (Auth::user() != null)
-                    <div
-                        class="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-blue-600 text-white">
-                        <div class="flex items-center justify-between w-full">
-                            <a href="{{ route('home') }}" class="text-[15px] ml-4 text-gray-200 font-bold">Dashboard</a>
-                        </div>
-                    </div>
+                    <x-sidebar-navigation-item route="home" icon="ri-dashboard-3-line">
+                        Dashboard
+                    </x-sidebar-navigation-item>
                     @if (Auth::user()->is_admin == '1')
-                        <div
-                            class="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-blue-600 text-white">
-                            <div class="flex items-center justify-between w-full">
-                                <a href="{{ route('admin') }}" class="text-[15px] ml-4 text-gray-200 font-bold">Admin
-                                    Panel</a>
-                            </div>
-                        </div>
+                        <x-sidebar-navigation-item route="admin" icon="ri-admin-line">
+                            Admin
+                        </x-sidebar-navigation-item>
                     @endif
                 @endif
-                <div class="my-2 bg-gray-600 h-[1px]"></div>
-                <div
-                    class="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-blue-600 text-white">
-                    <i class="bi bi-bookmark-fill"></i>
-                    <a href="{{ route('products') }}" class="text-[15px] ml-4 text-gray-200 font-bold">Products</a>
-                </div>
-                <div class="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-blue-600 text-white"
+                <hr class="my-2 border-b-1 border-gray-300 dark:border-gray-600"></hr>
+                <x-sidebar-navigation-item route="products" icon="ri-store-2-line">
+                    Products
+                </x-sidebar-navigation-item>
+                <div class="p-2.5 mt-3 flex h-10 items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-blue-600 text-gray-700 dark:text-darkmodetext hover:text-white"
                     onclick="dropdown()">
-                    <i class="bi bi-chat-left-text-fill"></i>
+                    <i class="ri-coupon-line text-lg"></i>
                     <div class="flex items-center justify-between w-full">
-                        <span class="text-[15px] ml-4 text-gray-200 font-bold">Tickets</span>
-                        <svg id="arrow" sidebar-toggle-item class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20"
+                        <span class="text-[15px] ml-4 font-bold">Tickets</span>
+                        <svg id="arrow" sidebar-toggle-item class="w-6 h-6 transition-all duration-300" fill="currentColor" viewBox="0 0 20 20"
                             xmlns="http://www.w3.org/2000/svg">
                             <path fill-rule="evenodd"
                                 d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
@@ -93,13 +78,13 @@
                         </svg>
                     </div>
                 </div>
-                <div class="w-4/5 mx-auto mt-2 text-sm font-bold text-gray-200 " id="submenu">
-                    <h1 class="p-2 mt-1 rounded-md cursor-pointer hover:bg-blue-600">
-                        <a href="{{ route('tickets.create') }}">Create</a>
-                    </h1>
-                    <h1 class="p-2 mt-1 rounded-md cursor-pointer hover:bg-blue-600">
-                        <a href="{{ route('tickets.index') }}">View</a>
-                    </h1>
+                <div class="w-4/5 mx-auto" id="submenu">
+                    <x-sidebar-navigation-item route="tickets.create" icon="ri-add-circle-line" dropdown="true">
+                        Create Ticket
+                    </x-sidebar-navigation-item>
+                    <x-sidebar-navigation-item route="tickets.index" icon="ri-coupon-line" dropdown="true">
+                        View Tickets
+                    </x-sidebar-navigation-item>
                 </div>
                 <script type="text/javascript">
                     function dropdown() {

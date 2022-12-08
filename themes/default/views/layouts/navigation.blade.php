@@ -1,26 +1,12 @@
 <nav class="bg-white dark:bg-darkmode">
     <div class="px-4 dark:bg-darkmode max-w-7xl sm:px-6 lg:px-8">
         <div class="flex items-center h-16 text-sm font-medium leading-5 text-gray-500 dark:bg-darkmode dark:text-darkmodetext dark:hover:text hover:text-gray-700">
-            <div class="flex">
-                <div class="flex items-center flex-shrink-0">
-                    @if (Auth::user())
-                    <a href="{{ route('index') }}">
-                        <x-application-logo class="block w-auto h-10 text-gray-600 fill-current" />
-                    </a>
-                    <a href="{{ route('index') }}" class="p-2 text-xl font-bold">
-                        {{ config('app.name', 'Paymenter') }}
-                    </a>
-                    @else
-                    <a href="{{ route('index') }}">
-                        <x-application-logo class="block w-auto h-10 text-gray-600 fill-current" />
-                    </a>
-                    <a href="{{ route('index') }}" class="p-2 text-xl font-bold">
-                        {{ config('app.name', 'Paymenter') }}
-                    </a>
-                    @endif
-
-                </div>
-            </div>
+            <a href="{{ route('index') }}">
+                <x-application-logo class="block w-auto h-10 text-gray-600 fill-current" />
+            </a>
+            <a href="{{ route('index') }}" class="p-2 text-xl font-bold">
+                {{ config('app.name', 'Paymenter') }}
+            </a>
             <button data-collapse-toggle="mobile-menu" type="button" class="inline-flex items-center justify-center ml-3 text-gray-400 rounded-lg md:hidden" aria-controls="mobile-menu-2" aria-expanded="false" onclick="document.getElementById('mobile-menu').classList.toggle('hidden')">
                 <span class="sr-only">Open main menu</span>
                 <svg class="w-6 h-6" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
