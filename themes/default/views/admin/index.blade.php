@@ -12,9 +12,9 @@
                 <div class="grid gap-6 overflow-hidden grid-cols-1 lg:grid-cols-3">
                     <!-- show ticketclosed, tickets, orders -->
                     <div
-                        class="lg:col-span-2 p-7 bg-white border-2 dark:bg-darkmode dark:border-darkmode rounded-xl">
+                        class="lg:col-span-2 p-7 bg-white border-2 dark:bg-darkmode2 dark:border-darkmodehover rounded-xl">
                         <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 pb-10">
-                            <div class="p-4 rounded-md dark:bg-darkmode2 bg-normal flex">
+                            <div class="p-4 rounded-md dark:bg-darkmode bg-normal flex">
                                 <i class="ri-shopping-cart-2-line pl-2 pr-4 my-auto text-blue-600 text-4xl"></i>
                                 <div class="flex flex-col">    
                                     <h1 class="text-lg text-gray-500 dark:text-darkmodetext">Orders today</h1>
@@ -23,7 +23,7 @@
                                     </p>
                                 </div>
                             </div>
-                            <div class="p-4 rounded-md dark:bg-darkmode2 bg-normal flex">
+                            <div class="p-4 rounded-md dark:bg-darkmode bg-normal flex">
                                 <i class="ri-coupon-line pl-2 pr-4 my-auto text-blue-600 text-4xl"></i>
                                 <div class="flex flex-col">
                                     <h1 class="text-lg text-gray-500 dark:text-darkmodetext">Tickets today</h1>
@@ -32,7 +32,7 @@
                                     </p>
                                 </div>
                             </div>
-                            <div class="p-4 rounded-md dark:bg-darkmode2 bg-normal flex">
+                            <div class="p-4 rounded-md dark:bg-darkmode bg-normal flex">
                                 <i class="ri-coins-line pl-2 pr-4 my-auto text-blue-600 text-4xl"></i>
                                 <div class="flex flex-col">
                                     <h1 class="text-lg text-gray-500 dark:text-darkmodetext">Revenue Total</h1>
@@ -44,11 +44,11 @@
                         </div>
                         <canvas id="myChart" class="w-full max-h-[400px]"></canvas>
                     </div>
-                    <div class="p-7 bg-white border-2 dark:bg-darkmode dark:border-darkmode rounded-xl">
+                    <div class="p-7 bg-white border-2 dark:bg-darkmode2 dark:border-darkmodehover rounded-xl">
                         <h2 class="text-xl font-bold mb-2 dark:text-darkmodetext">Support</h2>
                         <div class="grid grid-cols-1 xl:grid-cols-3 gap-4">
                             <div class="flex">
-                                <i class="ri-coupon-line p-4 text-blue-600 bg-normal dark:bg-darkmode2 text-2xl items-center text-center h-16 w-16 rounded-lg mr-4"></i>
+                                <i class="ri-coupon-line p-4 text-blue-600 bg-normal dark:bg-darkmode text-2xl items-center text-center h-16 w-16 rounded-lg mr-4"></i>
                                 <div class="flex flex-col my-auto">
                                     <h3 class="text-gray-700 dark:text-darkmodetext">Open Tickets</h3>
                                     <span class="font-bold text-xl dark:text-darkmodetext">{{ App\Models\Tickets::where('status', '!=', 'closed')->count() }}</span>
@@ -56,7 +56,7 @@
                             </div>
                             
                             <div class="flex">
-                                <i class="ri-coupon-line p-4 text-blue-600 bg-normal dark:bg-darkmode2 text-2xl items-center text-center h-16 w-16 rounded-lg mr-4"></i>
+                                <i class="ri-coupon-line p-4 text-blue-600 bg-normal dark:bg-darkmode text-2xl items-center text-center h-16 w-16 rounded-lg mr-4"></i>
                                 <div class="flex flex-col my-auto">
                                     <h3 class="text-gray-700 dark:text-darkmodetext">Closed Tickets</h3>
                                     <span class="font-bold text-xl dark:text-darkmodetext">{{ App\Models\Tickets::where('status', 'closed')->count() }}</span>
@@ -64,7 +64,7 @@
                             </div>
                             
                             <div class="flex">
-                                <i class="ri-coupon-line p-4 text-blue-600 bg-normal dark:bg-darkmode2 text-2xl items-center text-center h-16 w-16 rounded-lg mr-4"></i>
+                                <i class="ri-coupon-line p-4 text-blue-600 bg-normal dark:bg-darkmode text-2xl items-center text-center h-16 w-16 rounded-lg mr-4"></i>
                                 <div class="flex flex-col my-auto">
                                     <h3 class="text-gray-700 dark:text-darkmodetext">Total Tickets</h3>
                                     <span class="font-bold text-xl dark:text-darkmodetext">{{ App\Models\Tickets::count() }}</span>
@@ -76,7 +76,7 @@
                         <div class="grid grid-cols-1 gap-4">
                             @foreach (App\Models\Tickets::orderByRaw('updated_at - created_at DESC')->get()->take(5) as $ticket)
                                 <a href="/admin/tickets/{{ $ticket->id }}">
-                                    <div class="px-4 py-2 rounded-md flex dark:hover:bg-darkbutton dark:bg-darkmode2 bg-normal hover:bg-blue-100">
+                                    <div class="px-4 py-2 rounded-md flex dark:hover:bg-darkmode/50 dark:bg-darkmode bg-normal hover:bg-blue-100">
                                         <div class="flex flex-col">
                                             <h1 class="text-xl text-gray-500 dark:text-darkmodetext">Ticket
                                                 #{{ $ticket->id }} by
@@ -114,7 +114,7 @@
                             @endforeach
                         </div>
                     </div>
-                    <div class="p-7 bg-white border-2 dark:bg-darkmode dark:border-darkmode rounded-xl">
+                    <div class="p-7 bg-white border-2 dark:bg-darkmode2 dark:border-darkmodehover rounded-xl">
                         <h2 class="text-xl font-bold dark:text-darkmodetext">New Users</h2>
                         <canvas id="chartBar"></canvas>
                         <!-- Required chart.js -->

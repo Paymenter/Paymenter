@@ -47,9 +47,9 @@
 <body class="font-sans antialiased">
     <div id="app" class="min-h-screen bg-gray-100 dark:bg-darkmode">
         @if (config('settings::sidebar') == 1)
-            @include('layouts.adminnavigation')
-        @else
             @include('layouts.adminsidenavigation')
+        @else
+            @include('layouts.adminnavigation')
         @endif
         <main class="grow">
             {{ $slot }}

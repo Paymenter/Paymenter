@@ -53,17 +53,17 @@
                                 <select id="priority" name="priority"
                                     class="dark:text-darkmodetext dark:bg-darkmode form-input rounded-md shadow-sm mt-1 block w-full">
                                     <option value="low" @if (old('priority') == 1) selected @endif>
-                                        {{ __('tickets.priority_low') }}</option>
+                                        {{ __('Low') }}</option>
                                     <option value="medium" @if (old('priority') == 2) selected @endif>
-                                        {{ __('tickets.priority_medium') }}</option>
+                                        {{ __('Medium') }}</option>
                                     <option value="high" @if (old('priority') == 3) selected @endif>
-                                        {{ __('tickets.priority_high') }}</option>
+                                        {{ __('High') }}</option>
                                 </select>
                             </div>
 
                             <div class="flex items-center justify-end mt-4">
                                 <button id="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                                    {{ __('normal.create') }}
+                                    {{ __('Create') }}
                                 </button>
                             </div>
                         </form>

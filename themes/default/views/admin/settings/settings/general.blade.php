@@ -27,12 +27,25 @@
                 <!-- sidebar -->
                 <select name="sidebar" class="form-input peer @error('sidebar') is-invalid @enderror" placeholder=" "
                     name="sidebar" required>
-                    <option value="1" {{ config('settings::sidebar') == 1 ? 'selected' : '' }}>
-                        {{ __('Topbar') }}</option>
                     <option value="0" {{ config('settings::sidebar') == 0 ? 'selected' : '' }}>
+                        {{ __('Topbar') }}</option>
+                    <option value="1" {{ config('settings::sidebar') == 1 ? 'selected' : '' }}>
                         {{ __('Sidebar') }}</option>
                 </select>
             </div>
+            <link rel="stylesheet" href="https://unpkg.com/easymde/dist/easymde.min.css">
+            <script src="https://unpkg.com/easymde/dist/easymde.min.js"></script>
+            <div class="relative m-4 group md:col-span-2 col-span-1">
+                <textarea name="home_page_text" class="form-input peer @error('home_page_text') is-invalid @enderror" placeholder=" "
+                    name="home_page_text" id="home_page_text"></textarea>
+            </div>
+            <script>
+                var easyMDE = new EasyMDE({
+                    element: document.getElementById("home_page_text"),
+                });
+                easyMDE.value(`{{ config('settings::home_page_text') }}`);
+            </script>
+
             <h2 class="col-span-1 md:col-span-2 text-xl text-gray-900 dark:text-darkmodetext ">SEO: </h2>
             <div class="relative m-4 group">
                 <input type="text" class="form-input peer @error('seo_title') is-invalid @enderror" placeholder=" "
