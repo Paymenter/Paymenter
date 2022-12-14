@@ -59,6 +59,11 @@
                     @enderror
                 </div>
                 <br>
+                @if (config('settings::recaptcha') == 1)
+                    <div class="flex items-center justify-center">
+                        <div class="g-recaptcha" data-sitekey="{{ config('settings::recaptcha_site_key') }}"></div>
+                    </div>
+                @endif
                 <!-- Social Login -->
                 @if (config('settings::discord_enabled') == 1 ||
                     config('settings::apple_enabled') == 1 ||
@@ -155,7 +160,6 @@
                         @endif
                     </div>
                 @endif
-                
                 <!-- Remember Me -->
                 <div class="block mt-4">
                     <label for="remember_me" class="inline-flex items-center dark:text-darkmodetext">
@@ -165,9 +169,6 @@
                         <span class="ml-2 text-sm text-gray-600 dark:text-darkmodetext">{{ __('Remember me') }}</span>
                     </label>
                 </div>
-                @if (config('settings::recaptcha') == 1)
-                    <div class="g-recaptcha" data-sitekey="{{ config('settings::recaptcha_site_key') }}"></div>
-                @endif
                 <div class="flex items-center justify-end mt-4">
                     @if (Route::has('password.request'))
                         <a class="text-sm text-gray-600 underline dark:text-darkmodetext hover:text-gray-900"

@@ -46,12 +46,6 @@ function Pterodactyl_getProductConfig()
             "required" => true
         ],
         [
-            "name" => "server",
-            "friendlyName" => "Pterodactyl Server",
-            "type" => "text",
-            "required" => true
-        ],
-        [
             "name" => "egg",
             "friendlyName" => "Pterodactyl Egg ID",
             "type" => "text",

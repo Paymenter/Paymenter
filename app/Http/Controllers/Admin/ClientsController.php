@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
+use App\Models\{Invoices, Orders, Tickets};
 
 class ClientsController extends Controller
 {
@@ -51,6 +52,19 @@ class ClientsController extends Controller
     public function destroy(User $id)
     {
         $user = $id;
+        // Delete tickets, orders, etc.
+        $tickets = Tickets::where('user_id', $user->id)->get();
+        foreach ($tickets as $ticket) {
+            $ticket->delete();
+        }
+        $orders = Orders::where('user_id', $user->id)->get();
+        foreach ($orders as $order) {
+            $order->delete();
+        }
+        $invoices = Invoices::where('user_id', $user->id)->get();
+        foreach ($invoices as $invoice) {
+            $invoice->delete();
+        }
         $user->delete();
         return redirect()->route('admin.clients');
     }
