@@ -36,16 +36,7 @@
                                 </thead>
                                 <tbody class="dark:bg-darkmode bg-white divide-y divide-gray-200">
                                     <tr class="dark:bg-darkmode">
-                                        <td
-                                            class="dark:text-darkmodetext px-6 py-4 whitespace-nowrap text-md text-gray-500 font-bold">
-                                            Servers:</td>
-                                        <td
-                                            class="dark:text-darkmodetext px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                            -------------------</td>
-                                        <td
-                                            class="dark:text-darkmodetext px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                            -------------------</td>
-
+                                        <td colspan="3" class="dark:text-darkmodetext px-6 py-4 whitespace-nowrap text-gray-500 font-bold text-lg text-center">Servers</td>
                                     </tr>
                                     @foreach ($servers as $extensio)
                                         @if ($extensio == '.' || $extensio == '..')
@@ -70,15 +61,7 @@
                                         </tr>
                                     @endforeach
                                     <tr class="dark:bg-darkmode">
-                                        <td
-                                            class="dark:text-darkmodetext px-6 py-4 whitespace-nowrap text-md text-gray-500 font-bold">
-                                            Gateways:</td>
-                                        <td
-                                            class="dark:text-darkmodetext px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                            -------------------</td>
-                                        <td
-                                            class="dark:text-darkmodetext px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                            -------------------</td>
+                                        <td colspan="3" class="dark:text-darkmodetext px-6 py-4 whitespace-nowrap text-gray-500 font-bold text-lg text-center">Gateways</td>
                                     </tr>
                                     @foreach ($gateways as $gateway)
                                         @if ($gateway == '.' || $gateway == '..')
