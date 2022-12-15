@@ -1,6 +1,8 @@
 <?php
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Clients;
 
+
+use App\Http\Controllers\Controller;
 use App\Models\Orders;
 use App\Models\Invoices;
 use Illuminate\Http\Request;
@@ -17,20 +19,9 @@ class HomeController extends Controller
         return view('clients.home', compact('services', 'invoices'));
     }
 
-    function manifest(Request $request)
-    {
-        foreach($request->all() as $key => $value){
-            $value = htmlentities($value);
-            $request->merge([$key => $value]);
-        }
-        $json = json_encode($request->all(), JSON_UNESCAPED_SLASHES);
-        echo $json;
-        return;
-    }
-
     function profile()
     {
-        return view('profile');
+        return view('clients.profile');
     }
 
     function password()

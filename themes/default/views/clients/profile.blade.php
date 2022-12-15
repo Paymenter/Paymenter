@@ -11,7 +11,7 @@
                     <div class="grid grid-cols-1 gap-4">
                         <x-success class="mt-4" />
                         <div class="mt-6 text-gray-500 dark:text-darkmodetext dark:bg-darkmode2">
-                            <form method="POST" action="{{ route('profile.update') }}">
+                            <form method="POST" action="{{ route('clients.profile.update') }}">
                                 @csrf
                                 <div class="mt-4">
                                     <label for="name">{{ __('Name') }}</label>

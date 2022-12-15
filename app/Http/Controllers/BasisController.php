@@ -25,4 +25,14 @@ class BasisController extends Controller
         }
         return view('product', compact('categories'));
     }
+
+    function manifest(Request $request)
+    {
+        foreach ($request->all() as $key => $value) {
+            $value = htmlentities($value);
+            $request->merge([$key => $value]);
+        }
+        $json = json_encode($request->all(), JSON_UNESCAPED_SLASHES);
+        echo $json;
+    }
 }
