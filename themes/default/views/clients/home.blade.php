@@ -41,7 +41,7 @@
                 </div>
                 <div class="flex flex-col text-center">
                     @foreach ($invoices as $invoice)
-                        <a href='{{ route("invoice.show", $invoice->id) }}' class="text-blue-500 hover:text-blue-700">
+                        <a href='{{ route("clients.invoice.show", $invoice->id) }}' class="text-blue-500 hover:text-blue-700">
                             Invoice ID: {{$invoice->order()->get()->first()->id}}
                         </a>
                         <br>

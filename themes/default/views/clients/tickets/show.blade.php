@@ -29,7 +29,7 @@
                                     class="block w-full rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm dark:bg-darkmode"
                                     name="status" required type="text" value="{{ $ticket->status }}" disabled>
                                 <br>
-                                <form action="{{ route('tickets.close', $ticket->id) }} " method="POST">
+                                <form action="{{ route('clients.tickets.close', $ticket->id) }} " method="POST">
                                     @csrf
                                     <button class="form-submit bg-red-600 float-right">Close Ticket</button>
                                 </form>
@@ -61,7 +61,7 @@
                     </div>
                 </div>
 
-                <form method="POST" action="{{ route('tickets.reply', $ticket->id) }}">
+                <form method="POST" action="{{ route('clients.tickets.reply', $ticket->id) }}">
                     @csrf
                     <div class="p-6 bg-white border-b border-gray-200 sm:px-20 dark:bg-darkmode2 dark:border-black">
                         <h1 class="text-xl text-gray-500 dark:text-darkmodetext">Reply</h1>

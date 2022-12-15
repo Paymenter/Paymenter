@@ -23,8 +23,8 @@ function Stripe_getUrl($products, $orderId)
     $order = $client->checkout->sessions->create([
         'line_items' => $items,
         'mode' => 'payment',
-        'success_url' => route('invoice.show', $orderId),
-        'cancel_url' => route('invoice.show', $orderId),
+        'success_url' => route('clients.invoice.show', $orderId),
+        'cancel_url' => route('clients.invoice.show', $orderId),
         'customer_email' => auth()->user()->email,
         'metadata' => [
             'user_id' => auth()->user()->id,

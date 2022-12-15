@@ -8,7 +8,7 @@
                 <!-- show the user tickets and products -->
                 <!-- create button -->
                 <div class="flex items-center justify-end mt-4">
-                    <a href="{{ route('admin.tickets.create') }}"
+                    <a href="{{ route('admin.clients.tickets.create') }}"
                         class="mr-4 bg-logo hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
                         {{ __('Create') }}
                     </a>
@@ -83,7 +83,7 @@
                                                     </td>
                                                     <td
                                                         class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                                        <a href="{{ route('admin.tickets.show', $service->id) }}"
+                                                        <a href="{{ route('admin.clients.tickets.show', $service->id) }}"
                                                             class="text-indigo-600 hover:text-indigo-900">{{ __('View') }}</a>
                                                     </td>
                                                 </tr>

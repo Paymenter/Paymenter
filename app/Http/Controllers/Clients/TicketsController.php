@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Clients;
 
 use App\Models\Orders;
-use App\Models\Settings;
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Tickets;
 use App\Models\TicketMessages;
@@ -24,7 +24,7 @@ class TicketsController extends Controller
         $ticketMessages = TicketMessages::all();
         $sort = $request->get('sort');
         return view(
-            'tickets.index',
+            'clients.tickets.index',
             compact(
                 'tickets',
                 'users',
@@ -37,7 +37,7 @@ class TicketsController extends Controller
     function create()
     {
         $services = Orders::where('client', auth()->user()->id)->get();
-        return view('tickets.create', compact('services'));
+        return view('clients.tickets.create', compact('services'));
     }
 
     function store(Request $request)
@@ -87,7 +87,7 @@ class TicketsController extends Controller
     {
         $ticket = $id;
         $messages = TicketMessages::where('ticket_id', $id->id)->get();
-        return view('tickets.show', compact('ticket', 'messages'));
+        return view('clients.tickets.show', compact('ticket', 'messages'));
     }
 
     function close(Tickets $id)

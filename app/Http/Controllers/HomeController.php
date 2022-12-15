@@ -14,7 +14,7 @@ class HomeController extends Controller
         $services = Orders::where('client', auth()->user()->id)->get();
         $invoices = Invoices::where('user_id', auth()->user()->id)->where('status', 'pending')->get();
         
-        return view('home', compact('services', 'invoices'));
+        return view('clients.home', compact('services', 'invoices'));
     }
 
     function manifest(Request $request)

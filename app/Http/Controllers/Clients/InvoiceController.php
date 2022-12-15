@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Clients;
 
 use App\Helpers\ExtensionHelper;
+use App\Http\Controllers\Controller;
 use App\Models\{Products, Invoices, Orders};
 use Illuminate\Http\Request;
 
@@ -11,7 +12,7 @@ class InvoiceController extends Controller
     public function index(Request $request)
     {
         $invoices = Invoices::where('user_id', auth()->user()->id)->get();
-        return view('invoice.index', compact('invoices'));
+        return view('clients.invoice.index', compact('invoices'));
     }
 
     public function show(Request $request, Invoices $id)
@@ -20,7 +21,7 @@ class InvoiceController extends Controller
         $invoice = $id;
 
         if ($invoice->user_id != auth()->user()->id) {
-            return redirect()->route('invoice.index');
+            return redirect()->route('clients.invoice.index');
         }
         $products = [];
         foreach ($order->products()->get() as $product) {
@@ -29,14 +30,14 @@ class InvoiceController extends Controller
             $products[] = $test;
         }
         $currency_sign = config('settings::currency_sign');
-        return view('invoice.show', compact('invoice', 'order', 'products', 'currency_sign'));
+        return view('clients.invoice.show', compact('invoice', 'order', 'products', 'currency_sign'));
     }
 
     public function pay(Request $request, Invoices $id)
     {
         $invoice = $id;
         if ($invoice->user_id != auth()->user()->id) {
-            return redirect()->route('invoice.index');
+            return redirect()->route('clients.invoice.index');
         }
         $order = Orders::findOrFail($invoice->order_id);
         $total = $invoice->total;

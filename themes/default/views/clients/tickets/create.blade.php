@@ -18,7 +18,7 @@
                             </div>
                         </div>
                         <div class="flex">
-                            <form method="POST" action="{{ route('tickets.store') }}" class="w-full">
+                            <form method="POST" action="{{ route('clients.tickets.store') }}" class="w-full">
                                 @csrf
                                 <div class="float-left w-6/12">
                                     <div class="mt-4">

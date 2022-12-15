@@ -14,12 +14,7 @@ use Illuminate\Support\Facades\Auth;
 */
 
 Route::get('/', [App\Http\Controllers\BasisController::class, 'index'])->name('index');
-// auth routes;
-Route::get('/home', function () {
-    return view('home');
-})->middleware(['auth'])->name('home');
-// return homecontroller;
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->middleware(['auth'])->name('home');
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->middleware(['auth'])->name('clients.home');
 Route::get('/manifest.json', [App\Http\Controllers\HomeController::class, 'manifest'])->name('manifest');
 Route::get('/profile', [App\Http\Controllers\HomeController::class, 'profile'])->name('profile')->middleware(['auth', 'password.confirm']);
 Route::post('/profile', [App\Http\Controllers\HomeController::class, 'update'])->name('profile.update')->middleware(['auth', 'password.confirm']);
@@ -39,19 +34,19 @@ Route::group(['prefix' => 'checkout'], function () {
 });
 
 Route::group(['prefix' => 'tickets', 'middleware' => 'auth'], function () {
-    Route::get('/', [App\Http\Controllers\TicketsController::class, 'index'])->name('tickets.index');
-    Route::get('/create', [App\Http\Controllers\TicketsController::class, 'create'])->name('tickets.create');
-    Route::post('/store', [App\Http\Controllers\TicketsController::class, 'store'])->name('tickets.store');
-    Route::get('/{id}', [App\Http\Controllers\TicketsController::class, 'show'])->name('tickets.show');
-    Route::post('{id}/reply', [App\Http\Controllers\TicketsController::class, 'reply'])->name('tickets.reply');
-    Route::post('{id}/close', [App\Http\Controllers\TicketsController::class, 'close'])->name('tickets.close');	
+    Route::get('/', [App\Http\Controllers\Clients\TicketsController::class, 'index'])->name('clients.tickets.index');
+    Route::get('/create', [App\Http\Controllers\Clients\TicketsController::class, 'create'])->name('clients.tickets.create');
+    Route::post('/store', [App\Http\Controllers\Clients\TicketsController::class, 'store'])->name('clients.tickets.store');
+    Route::get('/{id}', [App\Http\Controllers\Clients\TicketsController::class, 'show'])->name('clients.tickets.show');
+    Route::post('{id}/reply', [App\Http\Controllers\Clients\TicketsController::class, 'reply'])->name('clients.tickets.reply');
+    Route::post('{id}/close', [App\Http\Controllers\Clients\TicketsController::class, 'close'])->name('clients.tickets.close');	
 });
 
 Route::group(['prefix' =>'invoices', 'middleware' => 'auth'], function () {
-    Route::get('/', [App\Http\Controllers\InvoiceController::class, 'index'])->name('invoice.index');
-    Route::get('/{id}', [App\Http\Controllers\InvoiceController::class, 'show'])->name('invoice.show');
-    Route::post('/{id}/pay', [App\Http\Controllers\InvoiceController::class, 'pay'])->name('invoice.pay');
-    Route::get('/{id}/download', [App\Http\Controllers\InvoiceController::class, 'download'])->name('invoice.download');
+    Route::get('/', [App\Http\Controllers\Clients\InvoiceController::class, 'index'])->name('clients.invoice.index');
+    Route::get('/{id}', [App\Http\Controllers\Clients\InvoiceController::class, 'show'])->name('clients.invoice.show');
+    Route::post('/{id}/pay', [App\Http\Controllers\Clients\InvoiceController::class, 'pay'])->name('clients.invoice.pay');
+    Route::get('/{id}/download', [App\Http\Controllers\Clients\InvoiceController::class, 'download'])->name('clients.invoice.download');
 });
 
 require __DIR__ . '/auth.php';

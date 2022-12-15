@@ -16,15 +16,15 @@
             <div class="justify-center hidden text-lg text-center dark:bg-darkmode sm:flex sm:items-center sm:w-auto place-items-center dark:text-darkmodetext dark:hover:bg-darkbutton" id="menu">
                 <div class="relative inline-block text-left dark:bg-darkmode">
                     <div class="dark:bg-darkmode">
-                        <a type="button" href="{{ route('home') }}" class="dark:text-darkmodetext dark:bg-darkmode dark:hover:bg-darkbutton inline-flex w-full justify-center bg-white px-2 py-2 text-base font-medium rounded-md text-gray-700 @if (request()->routeIs('tickets*')) @endif" id="menu-button" aria-expanded="true" aria-haspopup="true" onclick="openMenu('tickets')">
-                            <i class="pr-1 ri-dashboard-3-line" @if (request()->routeIs('home*')) style="color: #5270FD" @endif></i>Dashboard
+                        <a type="button" href="{{ route('clients.home') }}" class="dark:text-darkmodetext dark:bg-darkmode dark:hover:bg-darkbutton inline-flex w-full justify-center bg-white px-2 py-2 text-base font-medium rounded-md text-gray-700 @if (request()->routeIs('tickets*')) @endif" id="menu-button" aria-expanded="true" aria-haspopup="true" onclick="openMenu('tickets')">
+                            <i class="pr-1 ri-dashboard-3-line" @if (request()->routeIs('clients.home*')) style="color: #5270FD" @endif></i>Dashboard
                         </a>
                     </div>
                 </div>    
                 <div class="relative inline-block text-left dark:bg-darkmode">
                     <!-- ticket -->
                     <div class="dark:bg-darkmode">
-                        <a type="button" href="{{ route('tickets.index') }}" class="dark:text-darkmodetext dark:bg-darkmode dark:hover:bg-darkbutton inline-flex w-full justify-center bg-white px-2 py-2 text-base font-medium rounded-md text-gray-700 @if (request()->routeIs('tickets*')) @endif" id="menu-button" aria-expanded="true" aria-haspopup="true" onclick="openMenu('tickets')">
+                        <a type="button" href="{{ route('clients.tickets.index') }}" class="dark:text-darkmodetext dark:bg-darkmode dark:hover:bg-darkbutton inline-flex w-full justify-center bg-white px-2 py-2 text-base font-medium rounded-md text-gray-700 @if (request()->routeIs('tickets*')) @endif" id="menu-button" aria-expanded="true" aria-haspopup="true" onclick="openMenu('tickets')">
                             <i class="pr-1 ri-question-answer-line" @if (request()->routeIs('tickets*')) style="color: #5270FD" @endif></i>Tickets
                         </a>
                     </div>
@@ -80,7 +80,7 @@
                             @endif
                             @if (!Auth::user()->is_admin)
                             <div>
-                                <a href="{{ route('home') }}" class="block px-4 py-2 text-base text-gray-700 dark:hover:bg-darkbutton dark:text-darkmodetext hover:bg-gray-100" role="menuitem">Dashboard</a>
+                                <a href="{{ route('clients.home') }}" class="block px-4 py-2 text-base text-gray-700 dark:hover:bg-darkbutton dark:text-darkmodetext hover:bg-gray-100" role="menuitem">Dashboard</a>
                             </div>
                             <div>
                                 <a href="{{ route('password.change-password') }}" class="block px-4 py-2 text-base text-gray-700 dark:hover:bg-darkbutton dark:text-darkmodetext hover:bg-gray-100" role="menuitem">Change Password</a>

@@ -31,7 +31,7 @@
                         </div>
                     </div>
                     <div class="w-4/5 mx-auto" id="submenuprof">
-                        <x-sidebar-navigation-item route="home" icon="ri-settings-2-line" dropdown="true">
+                        <x-sidebar-navigation-item route="clients.home" icon="ri-settings-2-line" dropdown="true">
                             Profile Settings
                         </x-sidebar-navigation-item>
                         <a
@@ -52,7 +52,7 @@
                     </x-sidebar-navigation-item>
                 @endif
                 @if (Auth::user() != null)
-                    <x-sidebar-navigation-item route="home" icon="ri-dashboard-3-line">
+                    <x-sidebar-navigation-item route="clients.home" icon="ri-dashboard-3-line">
                         Dashboard
                     </x-sidebar-navigation-item>
                     @if (Auth::user()->is_admin == '1')
@@ -79,10 +79,10 @@
                     </div>
                 </div>
                 <div class="w-4/5 mx-auto" id="submenu">
-                    <x-sidebar-navigation-item route="tickets.create" icon="ri-add-circle-line" dropdown="true">
+                    <x-sidebar-navigation-item route="clients.tickets.create" icon="ri-add-circle-line" dropdown="true">
                         Create Ticket
                     </x-sidebar-navigation-item>
-                    <x-sidebar-navigation-item route="tickets.index" icon="ri-coupon-line" dropdown="true">
+                    <x-sidebar-navigation-item route="clients.tickets.index" icon="ri-coupon-line" dropdown="true">
                         View Tickets
                     </x-sidebar-navigation-item>
                 </div>

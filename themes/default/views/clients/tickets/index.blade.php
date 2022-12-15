@@ -103,7 +103,7 @@
                 <div class="w-full mb-3 pt-3 pb-2">
                     <div class="flex flex-row items-center justify-between ml-4 ">
                         <div class="flex-none" style="margin-left: 32px;">
-                            <button onclick="window.location.href='{{ route('tickets.create') }}'"
+                            <button onclick="window.location.href='{{ route('clients.tickets.create') }}'"
                                 class="dark:text-darkmodetext dark:bg-darkbutton dark:hover:bg-gray-600 bg-gray-100 hover:bg-gray-600
                                         inline-flex w-full justify-center px-4 py-2 text-base font-medium rounded-md text-gray-700">
                                 <div class="mr-1.5">
@@ -133,7 +133,7 @@
                                 </select>
                                 <script>
                                     function updateSort(event) {
-                                        window.location.href = "{{ route('tickets.index') }}?sort=" + event.target.value;
+                                        window.location.href = "{{ route('clients.tickets.index') }}?sort=" + event.target.value;
                                     }
                                     document.querySelector('select').addEventListener('change', updateSort);                                    
                                 </script>
@@ -230,7 +230,7 @@
 
                     
                     @foreach ($tickets as $ticket)
-                    <div id="ticket-main" class="ticketBlock mb-3 pt-3 bg-gray-100 dark:bg-darkbutton sm:rounded-lg ml-12 pb-3" style="cursor: pointer" onclick="window.location.href = '{{ route('tickets.show', $ticket->id) }}'">
+                    <div id="ticket-main" class="ticketBlock mb-3 pt-3 bg-gray-100 dark:bg-darkbutton sm:rounded-lg ml-12 pb-3" style="cursor: pointer" onclick="window.location.href = '{{ route('clients.tickets.show', $ticket->id) }}'">
                         <div class="flex flex-row items-center justify-between ml-4">
                             <div class="flex flex-row items-start justify-start">
                                 <div class="flex flex-col flex-grow w-full space-y-0 self-center">

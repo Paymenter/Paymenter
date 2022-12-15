@@ -16,7 +16,7 @@
                                 {{ __('Create a new ticket.') }}
                             </div>
                         </div>
-                        <form method="POST" action="{{ route('admin.tickets.store') }}">
+                        <form method="POST" action="{{ route('admin.clients.tickets.store') }}">
                             @csrf
                             <div class="mt-4">
                                 <label class="dark:text-darkmodetext block font-medium text-sm text-gray-700" for="title" id="textareaId">
@@ -48,7 +48,7 @@
                             <!-- priority high/medium/low -->
                             <div class="mt-4">
                                 <label class="dark:text-darkmodetext block font-medium text-sm text-gray-700" for="priority">
-                                    {{ __('tickets.priority') }}
+                                    {{ __('clients.tickets.priority') }}
                                 </label>
                                 <select id="priority" name="priority"
                                     class="dark:text-darkmodetext dark:bg-darkmode form-input rounded-md shadow-sm mt-1 block w-full">

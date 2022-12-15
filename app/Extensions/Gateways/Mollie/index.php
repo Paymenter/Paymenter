@@ -21,7 +21,7 @@ function Mollie_pay($total, $products, $orderId)
             'value' => number_format($total, 2, '.', '')
         ],
         'description' => $description,
-        'redirectUrl' => route('invoice.show', ['id' => $orderId]),
+        'redirectUrl' => route('clients.invoice.show', ['id' => $orderId]),
         'webhookUrl' => url('/extensions/mollie/webhook'),
         'metadata' => [
             'order_id' => $orderId

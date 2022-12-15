@@ -37,8 +37,8 @@ function PayPal_pay($total, $products, $orderId)
             ]
         ],
         'application_context' => [
-            'cancel_url' => route('invoice.show', ['id' => $orderId]),
-            'return_url' => route('invoice.show', ['id' => $orderId])
+            'cancel_url' => route('clients.invoice.show', ['id' => $orderId]),
+            'return_url' => route('clients.invoice.show', ['id' => $orderId])
         ]
     ]);
     return $response->json()['links'][1]['href'];

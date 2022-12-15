@@ -30,7 +30,7 @@
                 </div>
             </div>
             <div class="w-4/5 mx-auto" id="submenuprof">
-                <x-sidebar-navigation-item route="home" icon="ri-settings-2-line" dropdown="true">
+                <x-sidebar-navigation-item route="clients.home" icon="ri-settings-2-line" dropdown="true">
                     Profile Settings
                 </x-sidebar-navigation-item>
                 <a
@@ -55,7 +55,7 @@
                 </div>
             </div>
             <div class="w-4/5 mx-auto" id="submenutickets">
-                <x-sidebar-navigation-item route="admin.tickets.create" icon="ri-add-circle-line" dropdown="true">
+                <x-sidebar-navigation-item route="admin.clients.tickets.create" icon="ri-add-circle-line" dropdown="true">
                     Create Ticket
                 </x-sidebar-navigation-item>
                 <x-sidebar-navigation-item route="admin.tickets" icon="ri-coupon-line" dropdown="true">

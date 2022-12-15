@@ -119,7 +119,7 @@
                             <a href="{{ route('profile') }}" class="block px-4 py-2 text-base text-gray-700 dark:hover:bg-darkbutton dark:text-darkmodetext hover:bg-gray-100" role="menuitem">Your Profile</a>
                             <a href="{{ route('admin.settings') }}" class="block px-4 py-2 text-base text-gray-700 dark:hover:bg-darkbutton dark:text-darkmodetext hover:bg-gray-100" role="menuitem">Settings</a>
                             <a href="{{ route('password.change-password') }}" class="block px-4 py-2 text-base text-gray-700 dark:hover:bg-darkbutton dark:text-darkmodetext hover:bg-gray-100" role="menuitem">Change Password</a> <!-- Temporary -->
-                            <a href="{{ route('home') }}" class="block px-4 py-2 text-base text-gray-700 dark:hover:bg-darkbutton dark:text-darkmodetext hover:bg-gray-100" role="menuitem">User Dashboard</a>
+                            <a href="{{ route('clients.home') }}" class="block px-4 py-2 text-base text-gray-700 dark:hover:bg-darkbutton dark:text-darkmodetext hover:bg-gray-100" role="menuitem">User Dashboard</a>
                             <a href="{{ route('logout') }}" onclick="event.preventDefault();
                                                 document.getElementById('logout-form').submit();" class="block px-4 py-2 text-base text-gray-700 dark:hover:bg-darkbutton dark:text-darkmodetext hover:bg-gray-100" role="menuitem">Sign
                                 out</a>
@@ -230,10 +230,10 @@
                     <a href="{{ route('admin.clients.create') }}" class="text-black hover:bg-gray-100 block px-3 py-2 rounded-md text-base font-medium dark:text-darkmodetext @if (request()->routeIs('admin.clients.create')) bg-gray-400 @endif">Add Client</a>
                 </div>
                 <!-- support -->
-                <button class="text-black hover:bg-gray-100 block px-3 py-2 rounded-md text-base font-medium dark:text-darkmodetext @if (request()->routeIs('admin.tickets.*')) bg-gray-400 @endif" onclick="openMenu('support-menu')">Support</button>
+                <button class="text-black hover:bg-gray-100 block px-3 py-2 rounded-md text-base font-medium dark:text-darkmodetext @if (request()->routeIs('admin.clients.tickets.*')) bg-gray-400 @endif" onclick="openMenu('support-menu')">Support</button>
                 <div class="dropdown-menu hidden ml-2" id="support-menu">
                     <a href="{{ route('admin.tickets') }}" class="text-black hover:bg-gray-100 block px-3 py-2 rounded-md text-base font-medium dark:text-darkmodetext @if (request()->routeIs('admin.tickets')) bg-gray-400 @endif">All Tickets</a>
-                    <a href="{{ route('admin.tickets.create') }}" class="text-black hover:bg-gray-100 block px-3 py-2 rounded-md text-base font-medium dark:text-darkmodetext @if (request()->routeIs('admin.tickets.create')) bg-gray-400 @endif">Add Ticket</a>
+                    <a href="{{ route('admin.clients.tickets.create') }}" class="text-black hover:bg-gray-100 block px-3 py-2 rounded-md text-base font-medium dark:text-darkmodetext @if (request()->routeIs('admin.clients.tickets.create')) bg-gray-400 @endif">Add Ticket</a>
                 </div>
                 <!-- settings -->
                 <button class="text-black hover:bg-gray-100 block px-3 py-2 rounded-md text-base font-medium dark:text-darkmodetext @if (request()->routeIs('admin.settings.*')) bg-gray-400 @endif" onclick="openMenu('settings-menu')">Settings</button>

@@ -159,7 +159,7 @@ class CheckoutController extends Controller
         $invoice->save();
 
         session()->forget('cart');
-        return redirect()->route('invoice.show', ['id' => $invoice->id]);
+        return redirect()->route('clients.invoice.show', ['id' => $invoice->id]);
     }
 
     public function remove(Request $request, $id)

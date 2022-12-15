@@ -48,7 +48,7 @@
                                             Pay
                                         </p>
                                         <p>
-                                        <form action="{{ route('invoice.pay', $invoice->id) }}" method="post">
+                                        <form action="{{ route('clients.invoice.pay', $invoice->id) }}" method="post">
                                             @csrf
                                             <label for="payment_method"
                                                 class="dark:text-darkmodetext block text-sm font-medium text-gray-700">Payment method</label>
