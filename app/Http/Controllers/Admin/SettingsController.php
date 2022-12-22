@@ -90,14 +90,19 @@ class SettingsController extends Controller
 
     function login(Request $request)
     {
-        $request->validate([
-            'discord_client_id' => 'required',
-            'discord_client_secret' => 'required',
-        ]);
         Settings::updateOrCreate(['key' => 'discord_client_id'], ['value' => $request->discord_client_id]);
         Settings::updateOrCreate(['key' => 'discord_client_secret'], ['value' => $request->discord_client_secret]);
         Settings::updateOrCreate(['key' => 'discord_enabled'], ['value' => $request->discord_enabled]);
 
         return redirect('/admin/settings#login')->with('success', 'Settings updated successfully');
+    }
+
+    function security(Request $request)
+    {
+        Settings::updateOrCreate(['key' => 'recaptcha_site_key'], ['value' => $request->recaptcha_site_key]);
+        Settings::updateOrCreate(['key' => 'recaptcha_secret_key'], ['value' => $request->recaptcha_secret_key]);
+        Settings::updateOrCreate(['key' => 'recaptcha_enabled'], ['value' => $request->recaptcha_enabled]);
+
+        return redirect('/admin/settings#security')->with('success', 'Settings updated successfully');
     }
 }

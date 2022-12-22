@@ -21,6 +21,7 @@ Route::group(['prefix' => 'admin'], function () {
         Route::post('/email', [App\Http\Controllers\Admin\SettingsController::class, 'email'])->middleware(['auth.admin', 'password.confirm'])->name('admin.settings.email');
         Route::post('/email/test', [App\Http\Controllers\Admin\SettingsController::class, 'testEmail'])->middleware(['auth.admin', 'password.confirm'])->name('admin.settings.email.test');
         Route::post('/login', [App\Http\Controllers\Admin\SettingsController::class, 'login'])->middleware(['auth.admin', 'password.confirm'])->name('admin.settings.login');
+        Route::post('/security', [App\Http\Controllers\Admin\SettingsController::class, 'security'])->middleware(['auth.admin', 'password.confirm'])->name('admin.settings.security');
     });
 
     Route::group(['prefix' => 'products'], function () {

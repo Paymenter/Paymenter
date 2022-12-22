@@ -269,3 +269,15 @@ function Pterodactyl_terminateServer($user, $params, $order)
     }
     return false;
 }
+
+function Pterodactyl_getLink($user, $params, $order)
+{
+    $server = Pterodactyl_serverExists($order->id);
+    if ($server) {
+        $url = pteroConfig('host') . '/api/application/servers/' . $server;
+        $response = Pterodactyl_getRequest($url);
+        $server = $response->json();
+        return pteroConfig('host') . '/server/' . $server['attributes']['identifier'];
+    }
+    return false;
+}

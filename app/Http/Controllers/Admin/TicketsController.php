@@ -18,13 +18,13 @@ class TicketsController extends Controller
     function index()
     {
         $tickets = Tickets::where('status', '!=', 'closed')->get();
-        return view('admin.clients.tickets.index', compact('tickets'));
+        return view('admin.tickets.index', compact('tickets'));
     }
 
     function create()
     {
         $users = User::all();
-        return view('admin.clients.tickets.create', compact('users'));
+        return view('admin.tickets.create', compact('users'));
     }
 
     function store(Request $request)
@@ -59,7 +59,7 @@ class TicketsController extends Controller
         if (!$ticket) {
             return abort(404);
         }
-        return view('admin.clients.tickets.show', compact('ticket'));
+        return view('admin.tickets.show', compact('ticket'));
     }
 
     function reply(Request $request, $id)

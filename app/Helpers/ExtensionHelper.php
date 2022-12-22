@@ -7,6 +7,7 @@ use App\Models\Products;
 use App\Models\User;
 use App\Models\Invoices;
 use App\Models\Extensions;
+use App\Models\OrderProducts;
 use App\Models\OrderProductsConfig;
 use Illuminate\Http\Request;
 
@@ -270,5 +271,27 @@ class ExtensionHelper
             $function($user, $config, $order);
             return true;
         }
+    }
+
+    public static function getLink(OrderProducts $product)
+    {
+        $extension = Extensions::where('id', $product->product()->get()->first()->server_id)->first();
+        if (!$extension) {
+            return false;
+        }
+        include_once(app_path() . '/Extensions/Servers/' . $extension->name . '/index.php');
+        $settings = $product->product->settings()->get();
+        $config = [];
+        foreach ($settings as $setting) {
+            $config[$setting->name] = $setting->value;
+        }
+        $config['config_id'] = $product->product->id;
+        foreach ($product->config()->get() as $config2) {
+            $config["config"][$config2->key] = $config2->value;
+        }
+        $user = User::findOrFail($product->order->client);
+        $function = $extension->name . '_getLink';
+        $link = $function($user, $config, $product->order()->get()->first());
+        return $link;
     }
 }

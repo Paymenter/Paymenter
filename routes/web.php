@@ -49,6 +49,11 @@ Route::group(['prefix' =>'invoices', 'middleware' => 'auth'], function () {
     Route::get('/{id}/download', [App\Http\Controllers\Clients\InvoiceController::class, 'download'])->name('clients.invoice.download');
 });
 
+Route::group(['prefix'=>'client/products', 'middleware'=>'auth'], function (){
+    Route::get('/', [App\Http\Controllers\Clients\ProductsController::class, 'index'])->name('clients.active-products.index');
+    Route::get('/{product}', [App\Http\Controllers\Clients\ProductsController::class, 'index'])->name('clients.active-products.show');
+});
+
 require __DIR__ . '/auth.php';
 require __DIR__ . '/admin.php';
 require __DIR__ . '/extensions.php';
