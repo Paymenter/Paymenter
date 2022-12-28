@@ -53,11 +53,11 @@ class ClientsController extends Controller
     {
         $user = $id;
         // Delete tickets, orders, etc.
-        $tickets = Tickets::where('user_id', $user->id)->get();
+        $tickets = Tickets::where('client', $user->id)->get();
         foreach ($tickets as $ticket) {
             $ticket->delete();
         }
-        $orders = Orders::where('user_id', $user->id)->get();
+        $orders = Orders::where('client', $user->id)->get();
         foreach ($orders as $order) {
             $order->delete();
         }

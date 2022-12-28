@@ -13,7 +13,7 @@
                     <path fill-rule="evenodd" d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 15a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clip-rule="evenodd"></path>
                 </svg>
             </button>
-            <div class="justify-center hidden text-lg text-center dark:bg-darkmode sm:flex sm:items-center sm:w-auto place-items-center dark:text-darkmodetext dark:hover:bg-darkbutton" id="menu">
+            <div class="justify-center hidden text-lg text-center dark:bg-darkmode sm:flex sm:items-center sm:w-auto place-items-center dark:text-darkmodetext id="menu">
                 <div class="relative inline-block text-left dark:bg-darkmode">
                     <div class="dark:bg-darkmode">
                         <a type="button" href="{{ route('clients.home') }}" class="dark:text-darkmodetext dark:bg-darkmode dark:hover:bg-darkbutton inline-flex w-full justify-center bg-white px-2 py-2 text-base font-medium rounded-md text-gray-700 @if (request()->routeIs('tickets*')) @endif" id="menu-button" aria-expanded="true" aria-haspopup="true" onclick="openMenu('tickets')">

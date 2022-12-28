@@ -19,31 +19,21 @@
                 </div>
             </div>
         </div>
-        <style>
-            .yourInfo {
-                display: flex;
-                place-items: center;
-                padding-left: 20px;
-                padding-top: 15px;
-            }
-            .panel-body {
-                padding-bottom: 20px;
-            }
-        </style>
         <div class="grid grid-cols-1 lg:grid-cols-4">
             <div class="dark:bg-darkmode2 bg-white rounded-md shadow-lg" style="margin-left: 2rem;">
-                <div class="yourInfo">
+                <div class=" flex items-center pl-5 pt-4">
                     <img class="w-8 h-8 rounded-md" style="align-self: center; width: 2rem; height: 2rem;"
                         src="https://www.gravatar.com/avatar/{{ md5(Auth::user()->email) }}?s=200&d=mp" />
                     <div class="ml-4 text-lg font-semibold leading-7">
                         Invoices
                     </div>
                 </div>
-                <div class="flex flex-col text-center">
+                <div class="flex flex-col text-center items-center">
                     @foreach ($invoices as $invoice)
                         <a href='{{ route("clients.invoice.show", $invoice->id) }}' class="text-blue-500 hover:text-blue-700">
                             Invoice ID: {{$invoice->order()->get()->first()->id}}
                         </a>
+                        <hr class="w-1/2">
                         <br>
                     @endforeach
                 </div>

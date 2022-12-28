@@ -15,7 +15,6 @@
                     <path fill-rule="evenodd" d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 15a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clip-rule="evenodd"></path>
                 </svg>
             </button>
-            <!-- clients -->
             <div class="justify-center hidden text-lg text-center sm:flex sm:items-center sm:w-auto place-items-center" id="menu">
                 <a href="{{ route('admin') }}" class="dark:bg-darkmode dark:text-darkmodetext dark:hover:bg-darkmode2 p-2 rounded-md text-gray-500 hover:text-gray-700 inline-flex justify-center @if (request()->routeIs('admin')) bg-gray-200 @endif">
                     <i class="ri-dashboard-line" @if (request()->routeIs('admin')) style="color: #5270FD" @endif></i>
@@ -35,7 +34,6 @@
                         </div>
                     </div>
                 </div>
-                <!-- orders -->
                 <div class="relative inline-block text-left">
                     <button type="button" class="dark:bg-darkmode dark:text-darkmodetext dark:hover:bg-darkmode2 inline-flex w-full justify-center bg-white px-2 py-2 text-base font-medium rounded-md text-gray-700 @if (request()->routeIs('admin.orders*')) bg-gray-200 @endif" id="menu-button" aria-expanded="true" aria-haspopup="true" onclick="openMenu('orders')">
                         <i class="pr-1 ri-shopping-cart-2-line" @if (request()->routeIs('admin.orders')) style="color: #5270FD" @endif></i> Orders
@@ -49,7 +47,6 @@
                         </div>
                     </div>
                 </div>
-                <!-- products -->
                 <div class="relative inline-block text-left">
                     <button type="button" class="dark:bg-darkmode dark:text-darkmodetext dark:hover:bg-darkmode2 inline-flex w-full justify-center bg-white px-2 py-2 text-base font-medium rounded-md text-gray-700 @if (request()->routeIs('admin.products*')) bg-gray-200 @endif" id="menu-button" aria-expanded="true" aria-haspopup="true" onclick="openMenu('products')">
                         <i class="pr-1 ri-shopping-bag-2-line" @if (request()->routeIs('admin.products*')) style="color: #5270FD" @endif></i> Products
@@ -100,7 +97,6 @@
                         <div class="py-1" role="none">
                             <a href="{{ route('admin.settings') }}" class="block px-4 py-2 text-base text-gray-700 dark:text-darkmodetext dark:hover:bg-darkmode2 hover:bg-gray-100 hover:text-gray-900" role="menuitem" tabindex="-1" id="menu-item-0">Settings</a>
                             <a href="{{ route('admin.extensions') }}" class="block px-4 py-2 text-base text-gray-700 dark:text-darkmodetext dark:hover:bg-darkmode2 hover:bg-gray-100 hover:text-gray-900" role="menuitem" tabindex="-1" id="menu-item-1">Extension Settings</a>
-                            <!-- <a href="{{ route('admin.migrate.index') }}" class="block px-4 py-2 text-base text-gray-700 dark:text-darkmodetext dark:hover:bg-darkmode2 hover:bg-gray-100 hover:text-gray-900" role="menuitem" tabindex="-1" id="menu-item-2">Migrate</a>-->
                         </div>
                     </div>
                 </div>
@@ -189,17 +185,18 @@
                 function openMenu(id) {
                     var menu = document.getElementById(id);
                     menu.classList.toggle('hidden');
-                    var menuBtn = document.getElementById(id + '-btn');
-                    menuBtn.classList.toggle('active');
                     var menus = document.getElementsByClassName('dropdown-menu');
                     for (var i = 0; i < menus.length; i++) {
                         if (menus[i] != menu) {
                             menus[i].classList.add('hidden');
                         }
                     }
-                    document.addEventListener('click', function(e) {
+                    var event = document.addEventListener('click', function(e) {
                         if (e.target != menu && e.target != menu.previousElementSibling) {
-                            menu.classList.add('hidden');
+                            if (e.target.parentElement != menu.previousElementSibling) {
+                                menu.classList.add('hidden');
+                                e.stopPropagation();
+                            }
                         }
                     });
                 }
