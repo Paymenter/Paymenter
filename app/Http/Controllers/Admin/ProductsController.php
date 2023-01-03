@@ -58,14 +58,15 @@ class ProductsController extends Controller
             'category_id' => 'required|integer',
             'image' => 'image|mimes:jpeg,png,jpg,gif,svg|max:5242',
         ]);
-        if($request->get('no_image')){
-            $request->merge(['image' => null]);
-        }
         
-        if ($request->hasFile('image')) {
+        if ($request->hasFile('image') && !$request->get('no_image')) {
             $imageName = time() . '.' . $request->image->extension();
             $request->image->move(public_path('images'), $imageName);
             $data['image'] = '/images/' . $imageName;
+        }
+
+        if($request->get('no_image')){
+            $data['image'] = "null";
         }
         $product->update($data);
         return redirect()->route('admin.products.edit', $product->id)->with('success', 'Product updated successfully');

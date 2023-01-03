@@ -17,7 +17,7 @@ This is a advanced payment system for your hosting company. It is written in PHP
 - Easily customizable
 - Pay intergration with: Stripe, PayPal, Mollie and more
 - Server intergration with: Pterodactyl, Virtualizor, Virtfusion and more
-- Automatticly bill your customers
+- Automatically bill your customers
 - Built in support center
 
 ## Wanna take a look?
