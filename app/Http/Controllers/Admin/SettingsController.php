@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Config;
 use Qirolab\Theme\Theme;
 use App\Models\Settings;
 use Illuminate\Support\Facades\Auth;
@@ -47,8 +46,12 @@ class SettingsController extends Controller
 
         $theme = request('theme');
         Theme::set($theme);
-        // Loop through all settings
-        foreach ($request->except(['_token', 'theme', 'app_logo', 'app_favicon']) as $key => $value) {
+        try{
+            $theme = Theme::set($theme);
+        }catch(\Exception $e){
+            $theme = 'default';
+        }
+        foreach ($request->except(['_token', 'app_logo', 'app_favicon']) as $key => $value) {
             Settings::updateOrCreate(['key' => $key], ['value' => $value]);
         }
         return redirect('/admin/settings#general')->with('success', 'Settings updated successfully');
@@ -74,11 +77,25 @@ class SettingsController extends Controller
 
     function testEmail(Request $request)
     {
+        config(['mail.mailers.smtp' => [
+            'transport' => 'smtp',
+            'host' => $request->mail_host,
+            'port' => $request->mail_port,
+            'encryption' => $request->mail_encryption,
+            'username' => $request->mail_username,
+            'password' => $request->mail_password,
+            'timeout' => null,
+            'auth_mode' => null,
+        ]]);
+        config(['mail.from.address' => $request->mail_from_address]);
+        config(['mail.from.name' => $request->mail_from_name]);
+
         $email = Auth::user()->email;
         try {
-            Mail::raw('This is a test email', function ($message) use ($email) {
+            Mail::raw('If you read this, your email is working! 🎊', function ($message) use ($email) {
                 $message->to($email);
                 $message->subject('Test Email');
+                $message->from(config('mail.username'), config('mail.from.name'));
             });
         } catch (\Exception $e) {
             // Return json response
@@ -101,7 +118,7 @@ class SettingsController extends Controller
     {
         Settings::updateOrCreate(['key' => 'recaptcha_site_key'], ['value' => $request->recaptcha_site_key]);
         Settings::updateOrCreate(['key' => 'recaptcha_secret_key'], ['value' => $request->recaptcha_secret_key]);
-        Settings::updateOrCreate(['key' => 'recaptcha_enabled'], ['value' => $request->recaptcha_enabled]);
+        Settings::updateOrCreate(['key' => 'recaptcha'], ['value' => $request->recaptcha]);
 
         return redirect('/admin/settings#security')->with('success', 'Settings updated successfully');
     }

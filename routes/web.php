@@ -39,17 +39,17 @@ Route::group(['prefix' => 'tickets', 'middleware' => 'auth'], function () {
     Route::post('/store', [App\Http\Controllers\Clients\TicketsController::class, 'store'])->name('clients.tickets.store');
     Route::get('/{id}', [App\Http\Controllers\Clients\TicketsController::class, 'show'])->name('clients.tickets.show');
     Route::post('{id}/reply', [App\Http\Controllers\Clients\TicketsController::class, 'reply'])->name('clients.tickets.reply');
-    Route::post('{id}/close', [App\Http\Controllers\Clients\TicketsController::class, 'close'])->name('clients.tickets.close');	
+    Route::post('{id}/close', [App\Http\Controllers\Clients\TicketsController::class, 'close'])->name('clients.tickets.close');
 });
 
-Route::group(['prefix' =>'invoices', 'middleware' => 'auth'], function () {
+Route::group(['prefix' => 'invoices', 'middleware' => 'auth'], function () {
     Route::get('/', [App\Http\Controllers\Clients\InvoiceController::class, 'index'])->name('clients.invoice.index');
     Route::get('/{id}', [App\Http\Controllers\Clients\InvoiceController::class, 'show'])->name('clients.invoice.show');
     Route::post('/{id}/pay', [App\Http\Controllers\Clients\InvoiceController::class, 'pay'])->name('clients.invoice.pay');
     Route::get('/{id}/download', [App\Http\Controllers\Clients\InvoiceController::class, 'download'])->name('clients.invoice.download');
 });
 
-Route::group(['prefix'=>'client/products', 'middleware'=>'auth'], function (){
+Route::group(['prefix' => 'client/products', 'middleware' => 'auth'], function () {
     Route::get('/', [App\Http\Controllers\Clients\ProductsController::class, 'index'])->name('clients.active-products.index');
     Route::get('/{product}', [App\Http\Controllers\Clients\ProductsController::class, 'index'])->name('clients.active-products.show');
 });

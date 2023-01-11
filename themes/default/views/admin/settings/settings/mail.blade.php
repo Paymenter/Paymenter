@@ -61,11 +61,13 @@
                     success: function(data) {
                         console.log(data);
                         if (data.success) {
-                            alert('Mail sent successfully');
+                            Swal.fire('Email send succesfully!')
                         } else {
-                            alert('Mail not sent');
+                            Swal.fire('Something went wrong!\n' + data.message);
                         }
                     }
+                }).catch(function(error) {
+                    Swal.fire('Something went wrong!\n' + error);
                 });
             });
         </script>

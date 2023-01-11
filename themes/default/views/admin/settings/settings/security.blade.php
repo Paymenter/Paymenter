@@ -7,8 +7,8 @@
             <!-- enable discord -->
             <div class="relative m-4 group">
                 <input type="checkbox" class="form-input w-fit peer @error('seo_twitter_card') is-invalid @enderror"
-                    placeholder=" " name="recaptcha_enabled" value="1"
-                    {{ config('settings::recaptcha_enabled') ? 'checked' : '' }} />
+                    placeholder=" " name="recaptcha" value="1"
+                    {{ config('settings::recaptcha') ? 'checked' : '' }} />
                 <label class="form-label" style="position: unset;">{{ __('Enable Recaptcha') }}</label>
             </div>
             <div class="relative m-4 group">

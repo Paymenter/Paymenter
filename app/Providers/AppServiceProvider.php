@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Schema;
 use App\Models\Settings;
 use Illuminate\Support\Facades\Artisan;
+use Qirolab\Theme\Theme;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -85,6 +86,13 @@ class AppServiceProvider extends ServiceProvider
                 config(['services.discord.client_secret' => config('settings::discord_client_secret')]);
                 config(['services.discord.redirect' => url('/login/discord/callback')]);
             }
+            if(config('settings::theme') !== config('themes.active')){
+                Theme::set(config('settings::theme'));
+            }
+            \Illuminate\Support\Facades\Mail::send(auth()->user())->send(new \app\Mail\OrderShipped());
+
+
+
         } catch (\Exception $e) {
             // do nothing
         }
