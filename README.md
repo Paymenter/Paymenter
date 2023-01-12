@@ -21,13 +21,12 @@ This is a advanced payment system for your hosting company. It is written in PHP
 - Built in support center
 
 ## Wanna take a look?
-Visit our demo at: https://demo.paymenter.org with credentials: ```admin@paymenter.org``` and password ```paymenter```
+Visit our demo at: https://demo.paymenter.org
 
 ## Requirements
 The requirements for Paymenter are the following:
 - PHP (8 or higher)
 - Composer
-- NodeJS (version 16 or higher)
 
 ## Installation & Documentation
 For a detailed explanation of how to install and configure Paymenter, take a look at our [documentation here](https://paymenter.org/docs/intro)!
