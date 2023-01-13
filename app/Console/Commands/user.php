@@ -4,7 +4,7 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 
-class user extends Command
+class User extends Command
 {
     /**
      * The name and signature of the console command.

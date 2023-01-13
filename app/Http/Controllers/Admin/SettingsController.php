@@ -13,10 +13,9 @@ class SettingsController extends Controller
 {
     function index()
     {
-        error_log(config('settings::sidebar'));
         $tabs = [];
         // Get current theme     
-        foreach (glob(Theme::getViewPaths()[0] . '/admin/settings/settings/*.blade.php') as $filename) {
+        foreach (glob(Theme::getViewPaths()[1] . '/admin/settings/settings/*.blade.php') as $filename) {
             $tabs[] = 'admin.settings.settings.' . basename($filename, '.blade.php');
         }
         $themes = array_diff(scandir(base_path('themes')), array('..', '.'));
@@ -45,7 +44,6 @@ class SettingsController extends Controller
         }
 
         $theme = request('theme');
-        Theme::set($theme);
         try{
             $theme = Theme::set($theme);
         }catch(\Exception $e){

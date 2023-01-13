@@ -146,7 +146,7 @@ class CheckoutController extends Controller
             $order->status = 'paid';
             $order->save();
             ExtensionHelper::createServer($order);
-        } 
+        }
 
         $invoice = new Invoices();
         $invoice->user_id = $user->id;
@@ -159,6 +159,18 @@ class CheckoutController extends Controller
         $invoice->save();
 
         session()->forget('cart');
+        try {
+            \Illuminate\Support\Facades\Mail::to(auth()->user())->send(new \App\Mail\Orders\NewOrder($order));
+        } catch (\Exception $e) {
+            error_log($e);
+        }
+        if ($total == 0) {
+            try {
+                \Illuminate\Support\Facades\Mail::to(auth()->user())->send(new \App\Mail\Invoices\NewInvoice($invoice));
+            } catch (\Exception $e) {
+                error_log($e);
+            }
+        }
         return redirect()->route('clients.invoice.show', ['id' => $invoice->id]);
     }
 

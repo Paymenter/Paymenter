@@ -45,6 +45,8 @@
         </div>
         <script>
             $('#test').click(function() {
+                $('#test').attr('disabled', true)
+                $('#test').html('Sending...')
                 $.ajax({
                     url: "{{ route('admin.settings.email.test') }}",
                     type: "POST",
@@ -59,15 +61,18 @@
                         mail_encryption: $('input[name="mail_encryption"]').val(),
                     },
                     success: function(data) {
-                        console.log(data);
                         if (data.success) {
                             Swal.fire('Email send succesfully!')
                         } else {
                             Swal.fire('Something went wrong!\n' + data.message);
                         }
+                        $('#test').attr('disabled', false)
+                        $('#test').html('Test')
                     }
                 }).catch(function(error) {
                     Swal.fire('Something went wrong!\n' + error);
+                    $('#test').attr('disabled', false)
+                    $('#test').html('Test')
                 });
             });
         </script>

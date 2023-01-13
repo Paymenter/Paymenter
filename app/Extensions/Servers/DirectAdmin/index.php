@@ -76,11 +76,9 @@ function DirectAdmin_suspendServer($user, $params, $order)
     );
     $result = $sock->fetch_parsed_body();
     if ($result['error'] != "0") {
-        echo "<b>Error Suspending user $username on server $ip:<br>\n";
-        echo $result['text'] . "<br>\n";
-        echo $result['details'] . "<br></b>\n";
+        return;
     }
-    return $response;
+    return;
 }
 
 function DirectAdmin_unsuspendServer($user, $params, $order)
@@ -106,9 +104,7 @@ function DirectAdmin_unsuspendServer($user, $params, $order)
     );
     $result = $sock->fetch_parsed_body();
     if ($result['error'] != "0") {
-        echo "<b>Error Unsuspending user $username on server $ip:<br>\n";
-        echo $result['text'] . "<br>\n";
-        echo $result['details'] . "<br></b>\n";
+        return;
     }
     return $response;
 }
@@ -136,9 +132,8 @@ function DirectAdmin_terminateServer($user, $params, $order)
     );
     $result = $sock->fetch_parsed_body();
     if ($result['error'] != "0") {
-        echo "<b>Error Deleting user $username on server:<br>\n";
-        echo $result['text'] . "<br>\n";
-        echo $result['details'] . "<br></b>\n";
+        return;
+        // TODO: Handle error
     }
     return $response;
 }

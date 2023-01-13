@@ -29,7 +29,7 @@
 </head>
 
 <body>
-    <div id="app" class="font-sans antialiased text-gray-900 dark">
+    <div id="app" class="font-sans antialiased text-gray-900 bg-white dark:bg-gray-900">
         {{ $slot }}
     </div>
 </body>

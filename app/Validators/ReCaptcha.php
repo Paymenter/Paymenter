@@ -3,7 +3,7 @@
 namespace App\Validators;
 
 use GuzzleHttp\Client;
-use App\Models\Settings;
+
 class ReCaptcha
 {
     public function validate($attribute, $value, $parameters, $validator)

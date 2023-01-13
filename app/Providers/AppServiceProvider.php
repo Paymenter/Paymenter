@@ -87,11 +87,8 @@ class AppServiceProvider extends ServiceProvider
                 config(['services.discord.redirect' => url('/login/discord/callback')]);
             }
             if(config('settings::theme') !== config('themes.active')){
-                Theme::set(config('settings::theme'));
+                Theme::set(config('settings::theme'), 'default');
             }
-            \Illuminate\Support\Facades\Mail::send(auth()->user())->send(new \app\Mail\OrderShipped());
-
-
 
         } catch (\Exception $e) {
             // do nothing

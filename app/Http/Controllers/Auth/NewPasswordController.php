@@ -37,7 +37,7 @@ class NewPasswordController extends Controller
                 'token' => 'required',
                 'email' => 'required|email',
                 'password' => 'required|string|confirmed|min:8',
-                'g-recaptcha-response' => 'required|captcha',
+                'g-recaptcha-response' => 'required|recaptcha',
             ]);
         } else {
             $request->validate([
