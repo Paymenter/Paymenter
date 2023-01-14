@@ -8,7 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 class Tickets extends Model
 {
     use HasFactory;
+
     protected $table = 'tickets';
+
     protected $fillable = [
         'title',
         'description',
@@ -16,6 +18,10 @@ class Tickets extends Model
         'client',
         'priority',
         'order_id',
+    ];
+
+    protected $hidden = [
+        'client',
     ];
 
     public function orders()
