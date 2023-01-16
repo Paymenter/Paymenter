@@ -1,4 +1,5 @@
-# PAYMENTER
+![Paymenter Logo](https://cdn.discordapp.com/attachments/935234707015229511/1028031007573680318/unknown.png)
+
 [![Discord](https://img.shields.io/discord/882318291014651924.svg?logo=discord)](https://discord.gg/xB4UUT3XQg)
 [![GitHub](https://img.shields.io/github/license/paymenter/paymenter)](https://github.com/Paymenter/paymenter/blob/master/LICENSE)
 [![GitHub release (latest by date)](https://img.shields.io/github/v/release/paymenter/paymenter)](https://github.com/Paymenter/paymenter/releases)
