@@ -45,7 +45,17 @@
                 });
                 easyMDE.value(`{{ config('settings::home_page_text') }}`);
             </script>
-
+            <h2 class="col-span-1 md:col-span-2 text-xl text-gray-900 dark:text-darkmodetext ">Currency</h2>
+            <div class="relative m-4 group">
+                <input type="text" class="form-input peer @error('currency_sign') is-invalid @enderror"
+                    placeholder=" " name="currency_sign" value="{{ config('settings::currency_sign') }}" />
+                <label class="form-label">{{ __('Currency Sign') }}</label>
+            </div>
+            <div class="relative m-4 group">
+                <input type="text" class="form-input peer @error('currency') is-invalid @enderror"
+                    placeholder=" " name="currency" value="{{ config('settings::currency') }}" />
+                <label class="form-label">{{ __('Currency Code') }}</label>
+            </div>
             <h2 class="col-span-1 md:col-span-2 text-xl text-gray-900 dark:text-darkmodetext ">SEO: </h2>
             <div class="relative m-4 group">
                 <input type="text" class="form-input peer @error('seo_title') is-invalid @enderror" placeholder=" "
@@ -60,7 +70,7 @@
             </div>
             <div class="relative m-4 group">
                 <input type="text" class="form-input peer @error('seo_keywords') is-invalid @enderror"
-                    placeholder=" " name="seo_keywords" required value="{{ config('settings::seo_keywords') }}" />
+                    placeholder=" " name="seo_keywords" value="{{ config('settings::seo_keywords') }}" />
                 <label class="form-label">{{ __('Seo Keywords (separate with comma)') }}</label>
             </div>
             <div class="relative m-4 group">
@@ -71,7 +81,7 @@
             </div>
             <div class="relative m-4 group">
                 <select name="snow" class="form-input peer @error('snow') is-invalid @enderror" placeholder=" "
-                    name="snow" required>
+                    name="snow">
                     <option value="1" {{ config('settings::snow') == 1 ? 'selected' : '' }}>
                         {{ __('Enabled') }}</option>
                     <option value="0" {{ config('settings::snow') == 0 ? 'selected' : '' }}>

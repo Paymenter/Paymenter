@@ -44,9 +44,8 @@ function DirectAdmin_createServer($user, $params, $order)
     $result = $sock->fetch_parsed_body();
     error_log(print_r($result, true));
     if ($result['error'] != "0") {
-        echo "<b>Error Creating user $username on server $ip:<br>\n";
-        echo $result['text'] . "<br>\n";
-        echo $result['details'] . "<br></b>\n";
+        error_log(print_r($result, true));
+        return;
     } else {
         ExtensionHelper::setOrderProductConfig('username', $username, $params["config_id"]);
     }
@@ -76,6 +75,7 @@ function DirectAdmin_suspendServer($user, $params, $order)
     );
     $result = $sock->fetch_parsed_body();
     if ($result['error'] != "0") {
+        error_log(print_r($result, true));
         return;
     }
     return;
@@ -104,6 +104,7 @@ function DirectAdmin_unsuspendServer($user, $params, $order)
     );
     $result = $sock->fetch_parsed_body();
     if ($result['error'] != "0") {
+        error_log(print_r($result, true));
         return;
     }
     return $response;
@@ -132,6 +133,7 @@ function DirectAdmin_terminateServer($user, $params, $order)
     );
     $result = $sock->fetch_parsed_body();
     if ($result['error'] != "0") {
+        error_log(print_r($result, true));
         return;
         // TODO: Handle error
     }

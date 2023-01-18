@@ -147,11 +147,13 @@ function Pterodactyl_deleteRequest($url)
 function Pterodactyl_createServer($user, $parmas, $order)
 {
     if (Pterodactyl_serverExists($order->id)) {
+        error_log("Server already exists for order " . $order->id);
         return;
     }
     $url = pteroConfig('host') . '/api/application/servers';
     $eggData = Pterodactyl_getRequest(pteroConfig('host') . '/api/application/nests/' . $parmas['nest'] . '/eggs/' . $parmas['egg'] . '?include=variables')->json();
     if (!isset($eggData['attributes'])) {
+        error_log("No egg data found for " . $parmas['egg']);
         return;
     }
     foreach ($eggData['attributes']['relationships']['variables']['data'] as $key => $val) {

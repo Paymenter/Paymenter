@@ -32,9 +32,10 @@ class SettingsController extends Controller
             'app_name' => 'required|max:255',
             'seo_title' => 'required|max:255',
             'seo_description' => 'required|max:255',
-            'seo_keywords' => 'required|max:255',
             'seo_twitter_card' => 'boolean',
             'app_logo' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'currency' => 'required|max:10',
+            'currency_sign' => 'required|max:1',
         ]);
         if ($request->hasFile('app_logo')) {
             $imageName = time() . '.' . $request->app_logo->extension();

@@ -30,6 +30,8 @@ function Xendit_pay($total, $products, $orderId)
 
 function Xendit_webhook($request)
 {
+    response()->json(['message' => 'Webhook received'], 200);
+    error_log('Webhook received');
     error_log(print_r($request->json(), true));
     error_log(print_r($request->header('x-callback-token'), true));
     error_log(print_r(ExtensionHelper::getConfig('Xendit', 'callback'), true));

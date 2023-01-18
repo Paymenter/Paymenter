@@ -11,7 +11,7 @@ function Stripe_getUrl($products, $orderId)
     foreach ($products as $product) {
         $items[] = [
             'price_data' => [
-                'currency' => 'eur',
+                'currency' => ExtensionHelper::getCurrency(),
                 'product_data' => [
                     'name' => $product->name,
                 ],

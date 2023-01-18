@@ -9,12 +9,14 @@ use App\Models\Invoices;
 use App\Models\Extensions;
 use App\Models\OrderProducts;
 use App\Models\OrderProductsConfig;
+use App\Models\Settings;
 use Illuminate\Http\Request;
 
 class ExtensionHelper
 {
     /**
      * Called when a new order is accepted
+     * @param Integer $id ID of the order
      * @return void
      */
     public static function paymentDone($id)
@@ -32,6 +34,11 @@ class ExtensionHelper
         ExtensionHelper::createServer($order);
     }
 
+    /**
+     * Called when a payment is failed
+     * @param Integer $id ID of the order
+     * @return void
+     */
     function paymentFailed($id)
     {
         $order = Orders::findOrFail($id);
@@ -39,6 +46,11 @@ class ExtensionHelper
         $order->save();
     }
 
+    /**
+     * Called when a payment is cancelled
+     * @param Integer $id ID of the order
+     * @return void
+     */
     function paymentCancelled($id)
     {
         $order = Orders::find($id);
@@ -60,6 +72,8 @@ class ExtensionHelper
      * ```php
      * ExtensionHelper::getConfig('paymenter', 'paymenter');
      * ```
+     * @param String $name Name of the extension
+     * @param String $key Name of the config
      * @return String
      */
     public static function getConfig($name, $key)
@@ -81,6 +95,16 @@ class ExtensionHelper
         return $config->value;
     }
 
+    /**
+     * Sets the config of an extension
+     * ```php
+     * ExtensionHelper::setConfig('paymenter', 'paymenter', 'paypal');
+     * ```
+     * @param String $name Name of the extension
+     * @param String $key Name of the config
+     * @param String $value Value of the config
+     * @return void
+     */
     public static function setConfig($name, $key, $value)
     {
         $extension = Extensions::where('name', $name)->first();
@@ -102,6 +126,10 @@ class ExtensionHelper
             $config->value = $value;
             $config->save();
         }
+    }
+
+    public static function getCurrency(){
+        return Settings::where('key', 'currency')->first()->value;
     }
 
     public static function getProductConfig($name, $key, $id)

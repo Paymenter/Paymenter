@@ -16,3 +16,4 @@ yarn-error.log
 /.idea
 /.vscode
 app/Extensions/Servers/Minecraft/*
+themes/theme-clear/*
