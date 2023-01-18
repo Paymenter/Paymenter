@@ -17,7 +17,7 @@ function Mollie_pay($total, $products, $orderId)
         'Authorization' => 'Bearer ' . $client_id
     ])->post($url, [
         'amount' => [
-            'currency' => 'EUR',
+            'currency' => ExtensionHelper::getCurrency(),
             'value' => number_format($total, 2, '.', '')
         ],
         'description' => $description,

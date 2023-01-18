@@ -31,7 +31,7 @@ function PayPal_pay($total, $products, $orderId)
             [
                 'reference_id' => $orderId,
                 'amount' => [
-                    'currency_code' => 'eur',
+                    'currency_code' => ExtensionHelper::getCurrency(),
                     'value' => $total,
                 ]
             ]
