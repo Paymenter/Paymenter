@@ -35,7 +35,7 @@ class SettingsController extends Controller
             'seo_twitter_card' => 'boolean',
             'app_logo' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'currency' => 'required|max:10',
-            'currency_sign' => 'required|max:1',
+            'currency_sign' => 'required|max:4',
         ]);
         if ($request->hasFile('app_logo')) {
             $imageName = time() . '.' . $request->app_logo->extension();
