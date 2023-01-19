@@ -33,22 +33,7 @@ return new class extends Migration
         \App\Models\Settings::first()->delete();
         // drop old settings
         Schema::table('settings', function (Blueprint $table) {
-            $table->dropColumn('advanced_mode');
-            $table->dropColumn('currency_sign');
-            $table->dropColumn('currency_position');
-            $table->dropColumn('home_page_text');
-            $table->dropColumn('app_name');
-            $table->dropColumn('sidebar');
-            $table->dropColumn('seo_title');
-            $table->dropColumn('seo_description');
-            $table->dropColumn('seo_keywords');
-            $table->dropColumn('seo_twitter_card');
-            $table->dropColumn('seo_image');
-            $table->dropColumn('maintenance');
-            $table->dropColumn('theme');
-            $table->dropColumn('recaptcha');
-            $table->dropColumn('recaptcha_site_key');
-            $table->dropColumn('recaptcha_secret_key');
+            $table->dropColumn(['advanced_mode', 'currency_sign', 'currency_position', 'home_page_text', 'app_name', 'sidebar', 'seo_title', 'seo_description', 'seo_keywords', 'seo_twitter_card', 'seo_image', 'maintenance', 'theme', 'recaptcha', 'recaptcha_site_key', 'recaptcha_secret_key']);
         });
         
     }
@@ -88,8 +73,7 @@ return new class extends Migration
         }
         // drop old settings
         Schema::table('settings', function (Blueprint $table) {
-            $table->dropColumn('key');
-            $table->dropColumn('value');
+            $table->dropColumn(['key', 'value']);
         });
     }
 };

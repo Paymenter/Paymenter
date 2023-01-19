@@ -34,11 +34,7 @@ return new class extends Migration
     public function down()
     {
         Schema::table('settings', function (Blueprint $table) {
-            $table->dropColumn('advanced_mode');
-            $table->dropColumn('currency_position');
-            $table->dropColumn('home_page_text');
-            $table->dropColumn('app_name');
-            $table->dropColumn('sidebar');
+            $table->dropColumn(['advanced_mode', 'currency_position', 'home_page_text', 'app_name', 'sidebar']);
         });
     }
 };

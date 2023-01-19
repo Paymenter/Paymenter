@@ -10,7 +10,7 @@ use App\Providers\RouteServiceProvider;
 
 class AdminTest extends TestCase
 {
-    
+    use RefreshDatabase;
     protected $user;
 
     public function setUp(): void

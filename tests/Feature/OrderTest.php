@@ -9,6 +9,7 @@ use App\Models\{User, Order, Products, Categories, Invoices};
 
 class OrderTest extends TestCase
 {
+    use RefreshDatabase;
 
     protected $user;
     protected $categorie;
