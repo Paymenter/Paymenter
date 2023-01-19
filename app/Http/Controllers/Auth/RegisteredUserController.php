@@ -55,6 +55,10 @@ class RegisteredUserController extends Controller
             'password' => Hash::make($request->password),
             'api_token' => Str::random(60),
         ]));
+        // Send email to user
+        if (config('settings::email_verification') == 1) {
+            $user->sendEmailVerificationNotification();
+        }
 
         event(new Registered($user));
 

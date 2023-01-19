@@ -43,10 +43,12 @@ class CheckoutController extends Controller
         // Get extension config
         if (isset($product->server_id)) {
             $server = Extensions::find($product->server_id);
-            include_once base_path('app/Extensions/Servers/' . $server->name . '/index.php');
-            $function = $server->name . '_getUserConfig';
-            if (function_exists($function)) {
-                return redirect()->route('checkout.config', $product->id);
+            if ($server) {
+                include_once base_path('app/Extensions/Servers/' . $server->name . '/index.php');
+                $function = $server->name . '_getUserConfig';
+                if (function_exists($function)) {
+                    return redirect()->route('checkout.config', $product->id);
+                }
             }
         }
         $product->quantity = 1;
@@ -162,13 +164,13 @@ class CheckoutController extends Controller
         try {
             \Illuminate\Support\Facades\Mail::to(auth()->user())->send(new \App\Mail\Orders\NewOrder($order));
         } catch (\Exception $e) {
-            error_log($e);
+            
         }
-        if ($total == 0) {
+        if ($total != 0) {
             try {
                 \Illuminate\Support\Facades\Mail::to(auth()->user())->send(new \App\Mail\Invoices\NewInvoice($invoice));
             } catch (\Exception $e) {
-                error_log($e);
+                
             }
         }
         return redirect()->route('clients.invoice.show', ['id' => $invoice->id]);
