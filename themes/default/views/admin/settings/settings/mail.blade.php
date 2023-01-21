@@ -64,13 +64,14 @@
                         if (data.success) {
                             Swal.fire('Email send succesfully!')
                         } else {
-                            Swal.fire('Something went wrong!\n' + data.message);
+                            Swal.fire('Something went wrong!\n' + data.error);
                         }
                         $('#test').attr('disabled', false)
                         $('#test').html('Test')
                     }
                 }).catch(function(error) {
-                    Swal.fire('Something went wrong!\n' + error);
+                    console.log(error)
+                    Swal.fire('Something went wrong!\n\n' + error.responseJSON.error);
                     $('#test').attr('disabled', false)
                     $('#test').html('Test')
                 });

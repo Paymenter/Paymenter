@@ -5,6 +5,9 @@ namespace App\Console\Commands;
 use Illuminate\Console\Command;
 use App\Models\Orders;
 use App\Helpers\ExtensionHelper;
+use App\Mail\Invoices\NewInvoice;
+use Illuminate\Support\Facades\Mail;
+
 
 class CronJob extends Command
 {
@@ -45,6 +48,22 @@ class CronJob extends Command
                     ExtensionHelper::terminateServer($order);
                     $order->status = 'cancelled';
                     $order->save();
+                }
+            }
+        }
+        $orders = Orders::where('expiry_date', '<', now()->addDays(7))->get();
+        foreach ($orders as $order) {
+            // Check if there is a pending invoice
+            if ($order->invoices()->where('status', 'pending')->count() == 0) {
+                $invoice = new \App\Models\Invoices();
+                $invoice->order_id = $order->id;
+                $invoice->status = 'pending';
+                $invoice->user_id = $order->client;
+                $invoice->save();
+                try{
+                    Mail::to($order->client()->get())->send(new NewInvoice($invoice));
+                }catch(\Exception $e){
+                    error_log($e->getMessage());
                 }
             }
         }

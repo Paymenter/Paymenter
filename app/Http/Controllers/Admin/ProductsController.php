@@ -83,6 +83,11 @@ class ProductsController extends Controller
         $extensions = Extensions::where("type", "server")->where('enabled', true)->get();
         if ($product->server_id != null) {
             $server = Extensions::findOrFail($product->server_id);
+            if(!file_exists(base_path('app/Extensions/Servers/' . $server->name . '/index.php'))) {
+                $server = null;
+                $extension = null;
+                return view('admin.products.extension', compact('product', 'extensions', 'server', 'extension'))->with('error', 'Extension not found');
+            }
             include_once base_path('app/Extensions/Servers/' . $server->name . '/index.php');
             $extension = new stdClass;
             $function = $server->name . '_getProductConfig';

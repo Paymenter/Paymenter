@@ -29,9 +29,17 @@ class ExtensionHelper
         $invoice->paid_at = now();
         $invoice->save();
         $order = Orders::findOrFail($invoice->order_id);
+        if($order->status == 'paid') {
+            return;
+        }
+        if($order->status == 'suspended') {
+            ExtensionHelper::unsuspendServer($order);
+        }
+        if($order->status == 'pending') {
+            ExtensionHelper::createServer($order);
+        }
         $order->status = 'paid';
         $order->save();
-        ExtensionHelper::createServer($order);
     }
 
     /**

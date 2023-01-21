@@ -26,4 +26,9 @@ class Orders extends Model
     {
         return $this->hasMany(OrderProducts::class, 'order_id', 'id');
     }
+
+    public function invoices()
+    {
+        return $this->hasMany(Invoices::class, 'order_id', 'id');
+    }
 }
