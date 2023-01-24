@@ -54,6 +54,7 @@ jobs:
           SUM=`sha256sum paymenter.tar.gz`
           echo -e "\n#### SHA256 Checksum\n\n\`\`\`\n$SUM\n\`\`\`\n" >> ./RELEASE_CHANGELOG
           echo $SUM > checksum.txt
+          cat ./RELEASE_CHANGELOG
 
       - name: Create release
         id: create_release
