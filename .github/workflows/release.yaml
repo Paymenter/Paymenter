@@ -64,7 +64,7 @@ jobs:
         with:
           draft: true
           prerelease: ${{ contains(github.ref, 'rc') || contains(github.ref, 'beta') || contains(github.ref, 'alpha') }}
-          body_path: ./RELEASE_CHANGELOG
+          body_path: ${{ github.workspace }}/RELEASE_CHANGELOG
 
       - name: Upload release archive
         id: upload-release-archive
