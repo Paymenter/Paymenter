@@ -55,7 +55,9 @@ jobs:
           echo -e "\n#### SHA256 Checksum\n\n\`\`\`\n$SUM\n\`\`\`\n" >> ./RELEASE_CHANGELOG
           echo $SUM > checksum.txt
           cat ./RELEASE_CHANGELOG
-
+      - name: Generate Changelog
+        run: echo "# Good things have arrived" > ${{ github.workspace }}-CHANGELOG.txt
+        
       - name: Create release
         id: create_release
         uses: softprops/action-gh-release@v1
@@ -64,7 +66,7 @@ jobs:
         with:
           draft: true
           prerelease: ${{ contains(github.ref, 'rc') || contains(github.ref, 'beta') || contains(github.ref, 'alpha') }}
-          body_path: ${{ github.workspace }}/RELEASE_CHANGELOG
+          body_path: ${{ github.workspace }}-CHANGELOG.txt
 
       - name: Upload release archive
         id: upload-release-archive
