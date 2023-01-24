@@ -30,7 +30,7 @@ class SocialLoginController extends Controller
                 return redirect()->route('register')->with('error', 'You are not registered on this site.');
             } else {
                 Auth::login($user, true);
-                return redirect()->route('home');
+                return redirect()->route('index');
             }
         }else {
             return redirect()->route('login');
