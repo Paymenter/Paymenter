@@ -51,7 +51,7 @@ jobs:
 
       - name: Create checksum and add to changelog
         run: |
-          SUM=`sha256sum panel.tar.gz`
+          SUM=`sha256sum paymenter.tar.gz`
           echo -e "\n#### SHA256 Checksum\n\n\`\`\`\n$SUM\n\`\`\`\n" >> ./RELEASE_CHANGELOG
           echo $SUM > checksum.txt
 
