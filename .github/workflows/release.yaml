@@ -29,11 +29,11 @@ jobs:
           REF: ${{ github.ref }}
         run: |
           BRANCH=release/${REF:10}
-          git config --local user.email "ci@pterodactyl.io"
-          git config --local user.name "Pterodactyl CI"
+          git config --local user.email "ci@paymenter.org"
+          git config --local user.name "Paymenter CI"
           git checkout -b $BRANCH
           git push -u origin $BRANCH
-          sed -i "s/    'version' => 'beta',/    'version' => '${REF:11}',/" config/app.php
+          sed -i "s/    'version' => 'development',/    'version' => '${REF:11}',/" config/app.php
           git add config/app.php
           git commit -m "ci(release): bump version"
           git push
@@ -72,8 +72,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: panel.tar.gz
-          asset_name: panel.tar.gz
+          asset_path: paymenter.tar.gz
+          asset_name: paymenter.tar.gz
           asset_content_type: application/gzip
 
       - name: Upload release checksum
