@@ -3,7 +3,7 @@ This file is a running track of new features and fixes to each version of the pa
 
 This project follows [Semantic Versioning](http://semver.org) guidelines.
 
-## v1.11.2
+## v1.11.3
 ### Changed
 * Telemetry no longer sends a map of Egg and Nest UUIDs to the number of servers using them.
 * Increased the timeout for the decompress files endpoint in the client API from 15 seconds to 15 minutes.
