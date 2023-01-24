@@ -41,7 +41,7 @@ jobs:
       - name: Create release archive
         run: |
           rm -rf node_modules tests CODE_OF_CONDUCT.md CONTRIBUTING.md flake.lock flake.nix phpstan.neon phpunit.xml shell.nix
-          tar -czf panel.tar.gz * .editorconfig .env.example .eslintignore .eslintrc.js .gitignore .prettierrc.json
+          tar -czf panel.tar.gz * .env.example .gitignore
 
       - name: Extract changelog
         env:
