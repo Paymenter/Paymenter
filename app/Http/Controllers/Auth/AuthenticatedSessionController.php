@@ -52,7 +52,7 @@ class AuthenticatedSessionController extends Controller
                 $user = Auth::user();
                 $user->password = bcrypt($request->new_password);
                 DB::table('users')->where('id', $user->id)->update(['password' => $user->password]);
-                return redirect()->route('home')->with('success', 'Password changed successfully!');
+                return redirect()->route('clients.home')->with('success', 'Password changed successfully!');
             } else {
                 return back()->withErrors(['current_password' => 'The current password you entered is incorrect.']);
             }

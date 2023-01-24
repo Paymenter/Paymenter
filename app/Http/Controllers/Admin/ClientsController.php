@@ -39,7 +39,7 @@ class ClientsController extends Controller
     {
         $user = $id;
         auth()->login($user);
-        return redirect()->route('home');
+        return redirect()->route('index');
     }
 
     public function update(Request $request, User $id)

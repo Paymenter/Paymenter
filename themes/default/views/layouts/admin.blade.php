@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html class="dark" lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-
+<!-- Software build by https://paymenter.org -->
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -55,6 +55,12 @@
         <main class="grow">
             {{ $slot }}
         </main>
+        <footer>
+			<div class="flex flex-col justify-center items-center dark:text-white dark:bg-darkmode">
+                <!-- Please do not remove the credits. -->
+				<a class="text-gray-500 dark:text-gray-400 text-sm" href="https://paymenter.org">Paymenter &copy; 2022 - {{ date('Y') }}</a>
+			</div>
+		</footer>
     </div>
 </body>
 
