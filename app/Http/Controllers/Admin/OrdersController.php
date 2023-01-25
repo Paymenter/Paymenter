@@ -16,7 +16,14 @@ class OrdersController extends Controller
     public function show(Orders $id)
     {
         $order = $id;
-        return view('admin.orders.show', compact('order'));
+        $products;
+        // Loop through products
+        foreach($order->products as $product){
+            $link = ExtensionHelper::getLink($product);
+            $product->link = $link;
+            $products[] = $product;
+        }
+        return view('admin.orders.show', compact('order', 'products'));
     }
 
     public function destroy(Orders $id)
@@ -26,6 +33,42 @@ class OrdersController extends Controller
         }
         $order = $id;
         $order->delete();
-        return redirect()->route('admin.orders');
+        return redirect()->route('admin.orders')->with('success', 'Order deleted');
+    }
+
+    public function suspend(Orders $id)
+    {
+        $order = $id;
+        $order->status = 'suspended';
+        $order->save();
+        ExtensionHelper::suspendServer($order);
+        return redirect()->route('admin.orders.show', $order);
+    }
+
+    public function unsuspend(Orders $id)
+    {
+        $order = $id;
+        $order->status = 'paid';
+        $order->save();
+        ExtensionHelper::unsuspendServer($order);
+        return redirect()->route('admin.orders.show', $order);
+    }
+
+    public function create(Orders $id)
+    {
+        $order = $id;
+        $order->status = 'paid';
+        $order->save();
+        ExtensionHelper::createServer($order);
+        return redirect()->route('admin.orders.show', $order);
+    }
+
+    public function paid(Orders $id)
+    {
+        $order = $id;
+        $order->status = 'paid';
+        $order->save();
+        ExtensionHelper::createServer($order);
+        return redirect()->route('admin.orders.show', $order);
     }
 }

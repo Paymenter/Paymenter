@@ -65,6 +65,11 @@ Route::group(['prefix' => 'admin'], function () {
     Route::group(['prefix' => 'orders'], function(){
         Route::get('/', [App\Http\Controllers\Admin\OrdersController::class, 'index'])->middleware(['auth.admin'])->name('admin.orders');
         Route::delete('/{id}/delete', [App\Http\Controllers\Admin\OrdersController::class, 'destroy'])->middleware(['auth.admin'])->name('admin.orders.delete');
+        Route::get('/{id}', [App\Http\Controllers\Admin\OrdersController::class, 'show'])->middleware(['auth.admin'])->name('admin.orders.show');
+        Route::post('/{id}/unsuspend', [App\Http\Controllers\Admin\OrdersController::class, 'unsuspend'])->middleware(['auth.admin'])->name('admin.orders.unsuspend');
+        Route::post('/{id}/suspend', [App\Http\Controllers\Admin\OrdersController::class, 'suspend'])->middleware(['auth.admin'])->name('admin.orders.suspend');
+        Route::post('/{id}/create', [App\Http\Controllers\Admin\OrdersController::class, 'create'])->middleware(['auth.admin'])->name('admin.orders.create');
+        Route::post('/{id}/paid', [App\Http\Controllers\Admin\OrdersController::class, 'paid'])->middleware(['auth.admin'])->name('admin.orders.paid');
     });
 
     Route::group(['prefix' => 'migrate'], function () {

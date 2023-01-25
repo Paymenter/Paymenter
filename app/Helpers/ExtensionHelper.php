@@ -190,6 +190,9 @@ class ExtensionHelper
         if (!$extension) {
             return false;
         }
+        if (!file_exists(app_path() . '/Extensions/Gateways/' . $extension->name . '/index.php')) {
+            return false;
+        }
         include_once(app_path() . '/Extensions/Gateways/' . $extension->name . '/index.php');
         $function = $extension->name . '_pay';
         $pay = $function($total, $products, $orderId);
@@ -206,6 +209,9 @@ class ExtensionHelper
             }
             $extension = Extensions::where('id', $product->server_id)->first();
             if (!$extension) {
+                return false;
+            }
+            if (!file_exists(app_path() . '/Extensions/Servers/' . $extension->name . '/index.php')) {
                 return false;
             }
             include_once(app_path() . '/Extensions/Servers/' . $extension->name . '/index.php');
@@ -236,6 +242,9 @@ class ExtensionHelper
             if (!$extension) {
                 return false;
             }
+            if (!file_exists(app_path() . '/Extensions/Servers/' . $extension->name . '/index.php')) {
+                return false;
+            }
             include_once(app_path() . '/Extensions/Servers/' . $extension->name . '/index.php');
             $settings = $product->settings()->get();
             $config = [];
@@ -262,6 +271,9 @@ class ExtensionHelper
             }
             $extension = Extensions::where('id', $product->server_id)->first();
             if (!$extension) {
+                return false;
+            }
+            if (!file_exists(app_path() . '/Extensions/Servers/' . $extension->name . '/index.php')) {
                 return false;
             }
             include_once(app_path() . '/Extensions/Servers/' . $extension->name . '/index.php');
@@ -292,6 +304,9 @@ class ExtensionHelper
             if (!$extension) {
                 return false;
             }
+            if (!file_exists(app_path() . '/Extensions/Servers/' . $extension->name . '/index.php')) {
+                return false;
+            }
             include_once(app_path() . '/Extensions/Servers/' . $extension->name . '/index.php');
             $settings = $product->settings()->get();
             $config = [];
@@ -315,6 +330,10 @@ class ExtensionHelper
         if (!$extension) {
             return false;
         }
+        // Check if file exists
+        if (!file_exists(app_path() . '/Extensions/Servers/' . $extension->name . '/index.php')) {
+            return false;
+        }
         include_once(app_path() . '/Extensions/Servers/' . $extension->name . '/index.php');
         $settings = $product->product->settings()->get();
         $config = [];
@@ -327,6 +346,9 @@ class ExtensionHelper
         }
         $user = User::findOrFail($product->order->client);
         $function = $extension->name . '_getLink';
+        if(!function_exists($function)) {
+            return false;
+        }
         $link = $function($user, $config, $product->order()->get()->first());
         return $link;
     }
