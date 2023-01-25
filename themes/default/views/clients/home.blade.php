@@ -52,14 +52,9 @@
                     </thead>
                     <tbody class="w-full">
                         @if (count($services) > 0)
-
                                 @foreach ($services as $service)
                                     @foreach ($service->products()->get() as $product)
-                                        @php
-                                            $product = App\Models\Products::where('id', $product->product_id)
-                                                ->get()
-                                                ->first();
-                                        @endphp
+                                        @php $product = $product->product()->get()->first(); @endphp
                                         @if ($product)
                                             <tr>
                                                 <td class="dark:text-white dark:bg-darkmode2 p-3">
@@ -78,13 +73,19 @@
                                                     <div class="border border-gray-200">
                                                         @if ($service->status === 'paid')
                                                             <span
-                                                                class="label status status-active dark:bg-darkmode2 text-green-500">Active</span>
+                                                                class="label status status-active dark:bg-darkmode2 text-green-500">{{ __('Active') }}</span>
                                                         @elseif($service->status === 'pending')
                                                             <span
-                                                                class="label status status-active dark:bg-darkmode2 text-orange-400">Pending</span>
+                                                                class="label status status-active dark:bg-darkmode2 text-orange-400">{{ __('Pending') }}</span>
                                                         @elseif($service->status === 'cancelled')
                                                             <span
-                                                                class="label status status-active dark:bg-darkmode2 text-red-600">Expired</span>
+                                                                class="label status status-active dark:bg-darkmode2 text-red-600">{{ __('Expired') }}</span>
+                                                        @elseif($service->status === 'suspended')
+                                                            <span
+                                                                class="label status status-active dark:bg-darkmode2 text-red-600">{{ __('Suspended') }}</span>
+                                                        @else 
+                                                            <span
+                                                                class="label status status-active dark:bg-darkmode2 text-red-600">{{ $service->status }}</span>
                                                         @endif
                                                     </div>
                                                 </td>

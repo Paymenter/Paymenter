@@ -35,7 +35,7 @@ function Pterodactyl_getProductConfig()
     return [
         [
             "name" => "node",
-            "friendlyName" => "Pterodactyl Node",
+            "friendlyName" => "Pterodactyl Node (leave empty for node assigned to location)",
             "type" => "text",
             "required" => true
         ],
@@ -162,32 +162,68 @@ function Pterodactyl_createServer($user, $parmas, $order)
         $default = $attr['default_value'];
         $environment[$var] = $default;
     }
-    $json = [
-        'name' => Pterodactyl_random_string(8) . '-' . $order->id,
-        'user' => (int) Pterodactyl_getUser($user),
-        'egg' => (int) $parmas['egg'],
-        'docker_image' => $eggData['attributes']['docker_image'],
-        'startup' => $eggData['attributes']['startup'],
-        'limits' => [
-            'memory' => (int) $parmas['memory'],
-            'swap' => (int) $parmas['swap'],
-            'disk' => (int) $parmas['disk'],
-            'io' => (int) $parmas['io'],
-            'cpu' => (int) $parmas['cpu']
-        ],
-        'feature_limits' => [
-            'databases' => $parmas['databases'] ? (int) $parmas['databases'] : null,
-            'allocations' => $parmas['allocation'],
-            'backups' => $parmas['backups']
-        ],
-        'deploy' => [
-            'locations' => [$parmas['location']],
-            'dedicated_ip' => false,
-            'port_range' => []
-        ],
-        'environment' => $environment,
-        'external_id' => (string) $order->id,
-    ];
+    $json;
+    if ($parmas['node']) {
+        $allocation = Pterodactyl_getRequest(pteroConfig('host') . '/api/application/nodes/' . $parmas['node'] . '/allocations');
+        $allocation = $allocation->json();
+        foreach ($allocation['data'] as $key => $val) {
+            if ($val['attributes']['assigned'] == false) {
+                $allocation = $val['attributes']['id'];
+                break;
+            }
+        }
+        $json = [
+            'name' => Pterodactyl_random_string(8) . '-' . $order->id,
+            'user' => (int) Pterodactyl_getUser($user),
+            'egg' => (int) $parmas['egg'],
+            'docker_image' => $eggData['attributes']['docker_image'],
+            'startup' => $eggData['attributes']['startup'],
+            'limits' => [
+                'memory' => (int) $parmas['memory'],
+                'swap' => (int) $parmas['swap'],
+                'disk' => (int) $parmas['disk'],
+                'io' => (int) $parmas['io'],
+                'cpu' => (int) $parmas['cpu']
+            ],
+            'feature_limits' => [
+                'databases' => $parmas['databases'] ? (int) $parmas['databases'] : null,
+                'allocations' => $parmas['allocation'],
+                'backups' => $parmas['backups']
+            ],
+            'allocation' => [
+                'default' => (int) $allocation,
+            ],
+            'environment' => $environment,
+            'external_id' => (string) $order->id,
+        ];
+    } else {
+        $json = [
+            'name' => Pterodactyl_random_string(8) . '-' . $order->id,
+            'user' => (int) Pterodactyl_getUser($user),
+            'egg' => (int) $parmas['egg'],
+            'docker_image' => $eggData['attributes']['docker_image'],
+            'startup' => $eggData['attributes']['startup'],
+            'limits' => [
+                'memory' => (int) $parmas['memory'],
+                'swap' => (int) $parmas['swap'],
+                'disk' => (int) $parmas['disk'],
+                'io' => (int) $parmas['io'],
+                'cpu' => (int) $parmas['cpu']
+            ],
+            'feature_limits' => [
+                'databases' => $parmas['databases'] ? (int) $parmas['databases'] : null,
+                'allocations' => $parmas['allocation'],
+                'backups' => $parmas['backups']
+            ],
+            'deploy' => [
+                'locations' => [$parmas['location']],
+                'dedicated_ip' => false,
+                'port_range' => []
+            ],
+            'environment' => $environment,
+            'external_id' => (string) $order->id,
+        ];
+    }
     Pterodactyl_postRequest($url, $json);
     return true;
 }

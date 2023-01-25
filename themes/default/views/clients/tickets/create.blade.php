@@ -28,8 +28,8 @@
                                         </label>
                                         <input
                                             class="block w-full mt-1 rounded-md shadow-sm form-input dark:text-darkmodetext dark:bg-darkmode"
-                                            id="title" type="text" name="title" value="{{ old('title') }}" required
-                                            autofocus />
+                                            id="title" type="text" name="title" value="{{ old('title') }}"
+                                            required autofocus />
                                     </div>
                                     <!-- Category -->
                                     <div class="mt-4">
@@ -39,11 +39,11 @@
                                         </label>
                                         <select id="priority" name="priority"
                                             class="block w-full mt-1 rounded-md shadow-sm form-input dark:text-darkmodetext dark:bg-darkmode">
-                                            <option value="low" @if (old('priority')==1) selected @endif>
+                                            <option value="low" @if (old('priority') == 1) selected @endif>
                                                 {{ __('Support') }}</option>
-                                            <option value="medium" @if (old('priority')==2) selected @endif>
+                                            <option value="medium" @if (old('priority') == 2) selected @endif>
                                                 {{ __('Sales') }}</option>
-                                            <option value="high" @if (old('priority')==3) selected @endif>
+                                            <option value="high" @if (old('priority') == 3) selected @endif>
                                                 {{ __('Other') }}</option>
                                         </select>
                                     </div>
@@ -56,26 +56,29 @@
                                         <select id="service" name="service"
                                             class="block w-full mt-1 rounded-md shadow-sm form-input dark:text-darkmodetext dark:bg-darkmode">
                                             @if (count($services) > 0)
-                                                <option value="low" @if (old('service')==1) selected @endif>
+                                                <option value="low"
+                                                    @if (old('service') == 1) selected @endif>
                                                     {{ __('None') }}
                                                 </option>
-                                                @foreach($services as $service)
-                                                    @foreach($service->products as $product)
-                                                        @php $product = App\Models\Products::where("id",
-                                                            $product["id"])->get()->first()
-                                                        @endphp
-                                                        <option value="low" @if (old('service')==1) selected @endif>
+                                                @foreach ($services as $service)
+                                                    @foreach ($service->products as $product)
+                                                        @php $product = $product->product()->get()->first() @endphp
+                                                        {{ $product }}
+                                                        <option value="low"
+                                                            @if (old('service') == 1) selected @endif>
                                                             <!-- Check if $product->name exists without calling it -->
                                                             @if (isset($product->name))
-                                                                {{ ucfirst($product->name) }} - ({{ ucfirst($service->status) }})
+                                                                {{ ucfirst($product->name) }} -
+                                                                ({{ ucfirst($service->status) }})
                                                             @else
-                                                            Unknown - ({{ ucfirst($service->status) }})
+                                                                Unknown - ({{ ucfirst($service->status) }})
                                                             @endif
                                                         </option>
                                                     @endforeach
                                                 @endforeach
                                             @else
-                                                <option value="low" @if (old('service')==1) selected @endif>
+                                                <option value="low"
+                                                    @if (old('service') == 1) selected @endif>
                                                     {{ __('None') }}
                                                 </option>
                                             @endif
@@ -89,33 +92,31 @@
                                         </label>
                                         <select id="priority" name="priority"
                                             class="block w-full mt-1 rounded-md shadow-sm form-input dark:text-darkmodetext dark:bg-darkmode">
-                                            <option value="low" @if (old('priority')==1) selected @endif>
+                                            <option value="low" @if (old('priority') == 1) selected @endif>
                                                 {{ __('Low Priority') }}</option>
-                                            <option value="medium" @if (old('priority')==2) selected @endif>
+                                            <option value="medium" @if (old('priority') == 2) selected @endif>
                                                 {{ __('Normal Priority') }}</option>
-                                            <option value="high" @if (old('priority')==3) selected @endif>
+                                            <option value="high" @if (old('priority') == 3) selected @endif>
                                                 {{ __('High Priority') }}</option>
                                         </select>
                                     </div>
                                 </div>
                                 <div class="float-right w-1/2 pl-8">
-                                    @if (config('settings::recaptcha') == 1)
-                                    <div class="g-recaptcha"
-                                        data-sitekey="{{ config('settings::recaptcha_site_key') }}"></div>
-                                    @endif
                                     <div class="mt-4">
                                         <label class="block text-sm font-medium text-gray-700 dark:text-darkmodetext"
                                             for="description">
                                             {{ __('Description') }}
                                         </label>
-                                        <textarea
-                                            class="block w-full mt-1 rounded-md shadow-sm form-input dark:text-darkmodetext dark:bg-darkmode"
-                                            style="height: 288px" id="description" name="description"
-                                            required>{{ old('description') }}</textarea>
+                                        <textarea class="block w-full mt-1 rounded-md shadow-sm form-input dark:text-darkmodetext dark:bg-darkmode"
+                                            style="height: 288px" id="description" name="description" required>{{ old('description') }}</textarea>
                                     </div>
+                                    @if (config('settings::recaptcha') == 1)
+                                        <div class="g-recaptcha mt-4"
+                                            data-sitekey="{{ config('settings::recaptcha_site_key') }}"></div>
+                                    @endif
                                     <div class="flex items-center justify-end mt-4">
                                         <button id="submit"
-                                            class="px-4 py-2 font-bold text-white bg-blue-500 rounded hover:bg-blue-700">
+                                            class="form-submit">
                                             {{ __('Create') }}
                                         </button>
                                     </div>

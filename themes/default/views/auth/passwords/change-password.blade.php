@@ -47,13 +47,15 @@
                         class="mt-1.5 dark:bg-darkmode rounded-lg form-input w-full " name="new_password_confirmation"
                         autocomplete="new_password_confirmation">
                 </div>
-
+                @if (config('settings::recaptcha') == 1)
+                    <div class="g-recaptcha mt-2" data-sitekey="{{ config('settings::recaptcha_site_key') }}"></div>
+                @endif
                 <!-- Save button and Cancel button -->
                 <div class="flex items-center justify-end mt-4">
-                    <button class="px-4 py-2 font-bold text-white bg-blue-500 rounded hover:bg-blue-700">
+                    <button class="form-submit">
                         {{ __('Save Changes') }}
                     </button>
-                    <button class="px-4 py-2 ml-4 font-bold text-white bg-gray-500 rounded hover:bg-gray-600">
+                    <button class="form-submit bg-gray-500 hover:bg-gray-600 ml-4">
                         @if (url()->previous() == url()->current())
                             <a href="{{ url('/') }}">{{ __('Cancel') }}</a>
                         @else
@@ -61,10 +63,6 @@
                         @endif
                     </button>
                 </div>
-
-                @if (config('settings::recaptcha') == 1)
-                    <div class="g-recaptcha" data-sitekey="{{ config('settings::recaptcha_site_key') }}"></div>
-                @endif
             </form>
         </div>
     </div>

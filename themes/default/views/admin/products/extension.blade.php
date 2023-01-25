@@ -19,7 +19,7 @@
                             @csrf
                             <div>
                                 <label for="server">{{ __('Server') }}</label>
-                                <select id="server" class="block w-full mt-1 dark:bg-darkmode" name="server_id"
+                                <select id="server" class="block w-full mt-1 dark:bg-darkmode rounded-md" name="server_id"
                                     required>
                                     @if ($extensions->count())
                                         @foreach ($extensions as $server)
@@ -36,7 +36,7 @@
                                 </select>
                             </div>
                             @isset($extension)
-                                <div class="mt-6 text-gray-500 dark:text-darkmodetext dark:bg-darkmode2">
+                                <div class="mt-6 text-gray-500 dark:text-darkmodetext dark:bg-darkmode2 grid grid-cols-2 gap-x-2">
                                     @foreach ($extension->productConfig as $setting)
                                         <div class="mt-4">
                                             <label for="{{ $setting->name }}">{{ $setting->friendlyName }}</label>
@@ -65,7 +65,7 @@
 
                             <div class="flex items-center justify-end mt-4" type="submit">
                                 <button
-                                    class="px-4 py-2 font-bold text-white bg-blue-500 rounded hover:bg-blue-700 dark:text-darkmodetext">
+                                    class="form-submit">
                                     {{ __('Update') }}
                                 </button>
                             </div>
