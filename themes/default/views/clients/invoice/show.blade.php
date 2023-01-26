@@ -20,7 +20,7 @@
                             <div class="grid grid-cols-4 gap-12">
                                 <div class="dark:text-darkmodetext text-sm font-light text-slate-500">
                                     <p class="dark:text-darkmodetext text-sm font-normal text-slate-700">
-                                        Invoice Detail:
+                                        {{ __('Invoice Detail:') }}
                                     </p>
                                     <p>{{ auth()->user()->name }}</p>
                                     <p>{{ auth()->user()->address }}</p>
@@ -28,30 +28,30 @@
                                     <p>{{ auth()->user()->zip }}</p>
                                 </div>
                                 <div class="dark:text-darkmodetext text-sm font-light text-slate-500">
-                                    <p class="dark:text-darkmodetext text-sm font-normal text-slate-700">Billed To</p>
+                                    <p class="dark:text-darkmodetext text-sm font-normal text-slate-700">{{ __('Billed To') }}</p>
                                     <p>{{ config('app.name', 'Paymenter') }}</p>
                                 </div>
                                 <div class="dark:text-darkmodetext text-sm font-light text-slate-500">
-                                    <p class="dark:text-darkmodetext text-sm font-normal text-slate-700">Invoice Number</p>
+                                    <p class="dark:text-darkmodetext text-sm font-normal text-slate-700">{{ __('Invoice Number') }}</p>
                                     <p>{{ $invoice->id }}</p>
 
                                     <p class="dark:text-darkmodetext mt-2 text-sm font-normal text-slate-700">
-                                        Date of Issue
+                                        {{ __('Date of Issue') }}
                                     </p>
                                     <p>{{ $invoice->created_at }}</p>
                                 </div>
                                 @if ($invoice->status == 'pending')
                                     <div class="text-sm font-light text-slate-500">
-                                        <p class="dark:text-darkmodetext text-sm font-normal text-slate-700">Due</p>
+                                        <p class="dark:text-darkmodetext text-sm font-normal text-slate-700">{{ __('Due') }}</p>
                                         <p class="dark:text-darkmodetext">{{ $order->expiry_date }}</p>
                                         <p class="dark:text-darkmodetext mt-2 text-xl font-normal text-slate-700">
-                                            Pay
+                                            {{ __('Pay') }}
                                         </p>
                                         <p>
                                         <form action="{{ route('clients.invoice.pay', $invoice->id) }}" method="post">
                                             @csrf
                                             <label for="payment_method"
-                                                class="dark:text-darkmodetext block text-sm font-medium text-gray-700">Payment method</label>
+                                                class="dark:text-darkmodetext block text-sm font-medium text-gray-700">{{ __('Payment method') }}</label>
                                             <select id="payment_method" name="payment_method"
                                                 autocomplete="payment_method"
                                                 class="dark:bg-darkmode dark:text-darkmodetext dark:border-indigo-600 mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
@@ -61,7 +61,7 @@
                                             </select>
                                             <button type="submit"
                                                 class="mt-4 inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                                                Pay
+                                                {{ __('Pay') }}
                                             </button>
                                         </form>
                                         </p>
@@ -70,7 +70,7 @@
                                     <div class="text-sm font-light text-slate-500">
 
                                         <p class="dark:text-darkmodetext text-xl font-normal text-slate-700">
-                                            Paid
+                                            {{ __('Paid') }}
                                         </p>
                                         <p class="dark:text-darkmodetext">{{ $invoice->paid_at }}</p>
                                     </div>
@@ -86,19 +86,19 @@
                                     <tr>
                                         <th scope="col"
                                             class="dark:text-darkmodetext py-3.5 pl-4 pr-3 text-left text-sm font-normal text-slate-700 sm:pl-6 md:pl-0">
-                                            Description
+                                            {{ __('Description') }}
                                         </th>
                                         <th scope="col"
                                             class="dark:text-darkmodetext hidden py-3.5 px-3 text-right text-sm font-normal text-slate-700 sm:table-cell">
-                                            Quantity
+                                            {{ __('Quantity') }}
                                         </th>
                                         <th scope="col"
                                             class="dark:text-darkmodetext hidden py-3.5 px-3 text-right text-sm font-normal text-slate-700 sm:table-cell">
-                                            Rate
+                                            {{ __('Rate') }}
                                         </th>
                                         <th scope="col"
                                             class="dark:text-darkmodetext py-3.5 pl-3 pr-4 text-right text-sm font-normal text-slate-700 sm:pr-6 md:pr-0">
-                                            Amount
+                                            {{ __('Amount') }}
                                         </th>
                                     </tr>
                                 </thead>
@@ -110,7 +110,7 @@
                                                     {{ $product->name }}
                                                 </div>
                                                 <div class="dark:text-darkmodetext mt-0.5 text-slate-500 sm:hidden">
-                                                    1 unit at
+                                                    {{ __('1 unit at') }}
                                                     {{ $currency_sign }}{{ number_format((float) $product->price, 2, '.', '') }}
                                                 </div>
                                             </td>
@@ -179,11 +179,11 @@
                                     <tr>
                                         <th scope="row" colspan="3"
                                             class="dark:text-darkmodetext hidden pt-4 pl-6 pr-3 text-sm font-normal text-right text-slate-700 sm:table-cell md:pl-0">
-                                            Total
+                                            {{ __('Total') }}
                                         </th>
                                         <th scope="row"
                                             class="dark:text-darkmodetext pt-4 pl-4 pr-3 text-sm font-normal text-left text-slate-700 sm:hidden">
-                                            Total
+                                            {{ __('Total') }}
                                         </th>
                                         <td
                                             class="dark:text-darkmodetext pt-4 pl-3 pr-4 text-sm font-normal text-right text-slate-700 sm:pr-6 md:pr-0">
@@ -199,7 +199,7 @@
                         <div class="border-t pt-9 border-slate-200">
                             <div class="dark:text-darkmodetext text-center text-sm font-light text-slate-700">
                                 <p>
-                                    Thanks for choosing us. We hope you enjoy your purchase.
+                                    {{ __('Thanks for choosing us. We hope you enjoy your purchase.') }}
                                 </p>
                             </div>
                         </div>

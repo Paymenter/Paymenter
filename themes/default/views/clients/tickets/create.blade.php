@@ -71,7 +71,7 @@
                                                                 {{ ucfirst($product->name) }} -
                                                                 ({{ ucfirst($service->status) }})
                                                             @else
-                                                                Unknown - ({{ ucfirst($service->status) }})
+                                                                {{ __('Unknown -') }} ({{ ucfirst($service->status) }})
                                                             @endif
                                                         </option>
                                                     @endforeach

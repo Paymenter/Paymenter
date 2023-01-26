@@ -93,7 +93,7 @@
                                         @else
                                             <tr>
                                             <td class="dark:text-white dark:bg-darkmode2 p-3">
-                                                    <strong>Something went wrong</strong>
+                                                    <strong>{{ __('Something went wrong') }}</strong>
                                                 </td>
                                             </tr>
                                         @endif
@@ -101,7 +101,7 @@
                                 @endforeach
                         @elseif (count($services) <= 0)
                             <tr>
-                                <td colspan="4" class="dark:text-white dark:bg-darkmode2" style="text-align: center;">No services found.</td>
+                                <td colspan="4" class="dark:text-white dark:bg-darkmode2" style="text-align: center;">{{ __('No services found.') }}</td>
                             </tr>
                         @endif
                     </tbody>

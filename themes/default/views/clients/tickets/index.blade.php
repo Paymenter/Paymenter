@@ -52,7 +52,7 @@
                             <div class="flex-none">
                                 <button
                                     class="inline-flex justify-center w-full p-4 px-2 py-2 text-xs font-bold text-gray-900 uppercase border-b-2 dark:text-darkmodetext dark:hover:bg-darkbutton border-logo hover:border-logo hover:text-logo">
-                                    All Tickets
+                                    {{ __('All Tickets') }}
                                     <span class="w-6 h-6 bg-red-600 rounded-full ml-1 mb-1 text-white" style="margin-top: -3px;">
                                         <div style="padding-top: 3px">
                                             {{ $tickets->count() }}
@@ -63,7 +63,7 @@
                             <div class="flex-none">
                                 <button
                                     class="dark:text-darkmodetext dark:hover:bg-darkbutton inline-flex w-full justify-center px-2 py-2 font-bold uppercase text-xs p-4 border-b-2 hover:border-violet-300 border-y-transparent text-gray-900 hover:text-violet-300">
-                                    On Hold
+                                    {{ __('On Hold') }}
                                     <div style="margin-left:2px">
                                         ({{ $tickets->where('status', 'on-hold')->count() }})
                                     </div>
@@ -72,7 +72,7 @@
                             <div class="flex-none">
                                 <button
                                     class="dark:text-darkmodetext dark:hover:bg-darkbutton inline-flex w-full justify-center px-2 py-2 font-bold uppercase text-xs p-4 border-b-2 hover:border-violet-300 border-y-transparent text-gray-900 hover:text-violet-300">
-                                    Awaiting Reply
+                                    {{ __('Awaiting Reply') }}
                                     <div style="margin-left:2px">
                                         ({{ $tickets->where('status', 'awaiting-reply')->count() }})
                                     </div>
@@ -81,7 +81,7 @@
                             <div class="flex-none">
                                 <button
                                     class="dark:text-darkmodetext dark:hover:bg-darkbutton inline-flex w-full justify-center px-2 py-2 font-bold uppercase text-xs p-4 border-b-2 hover:border-violet-300 border-y-transparent text-gray-900 hover:text-violet-300">
-                                    Deleted
+                                    {{ __('Deleted') }} 
                                     <div style="margin-left:2px">
                                         ({{ $tickets->where('status', 'deleted')->count() }})
                                     </div>
@@ -90,7 +90,7 @@
                             <div class="flex-none">
                                 <button
                                     class="dark:text-darkmodetext dark:hover:bg-darkbutton inline-flex w-full justify-center px-2 py-2 font-bold uppercase text-xs p-4 border-b-2 hover:border-violet-300 border-y-transparent text-gray-900 hover:text-violet-300">
-                                    Closed
+                                    {{ __('Closed') }}
                                     <div style="margin-left:2px">
                                         ({{ $tickets->where('status', 'closed')->count() }})
                                     </div>
@@ -113,22 +113,22 @@
                                             fill="rgba(165,153,228,1)" />
                                     </svg>
                                 </div>
-                                New Ticket
+                                {{ __('New Ticket') }}
                             </button>
                         </div>
                         <div class="flex-none mr-12">
                             <div class="flex flex-row items-center justify-end space-x-2">
                                 <label
                                     class="hidden text-sm font-medium text-gray-700 lg:block whitespace-nowrap dark:text-darkmodetext">
-                                    Sort by:
+                                    {{ __('Sort by:') }}
                                 </label>
                                 <select name="select"
                                     class="bg-gray-100 dark:bg-darkbutton dark:hover:bg-gray-600 dark:text-darkmodetext text-gray-900 w-28 block form-select rounded-md"
                                     style="outline:none; border:none; box-shadow:none;">
-                                    <option value="a-z" {{ $sort == 'a-z' ? 'selected' : '' }}>A-Z</option>
-                                    <option value="z-a" {{ $sort == 'z-a' ? 'selected' : '' }}>Z-A</option>
-                                    <option value="newest" {{ $sort == 'newest' ? 'selected' : '' }}>Newest</option>
-                                    <option value="oldest" {{ $sort == 'oldest' ? 'selected' : '' }}>Oldest</option>
+                                    <option value="a-z" {{ $sort == 'a-z' ? 'selected' : '' }}>{{ __('A-Z') }}</option>
+                                    <option value="z-a" {{ $sort == 'z-a' ? 'selected' : '' }}>{{ __('Z-A') }}</option>
+                                    <option value="newest" {{ $sort == 'newest' ? 'selected' : '' }}>{{ __('Newest') }}</option>
+                                    <option value="oldest" {{ $sort == 'oldest' ? 'selected' : '' }}>{{ __('Oldest') }}</option>
                                 </select>
                                 <script>
                                     function updateSort(event) {
@@ -234,7 +234,7 @@
                             <div class="flex flex-row items-start justify-start">
                                 <div class="flex flex-col flex-grow w-full space-y-0 self-center">
                                     <div class="text-sm font-semibold text-black dark:text-darkmodetext">
-                                        Ticket #{{ $ticket->id }}
+                                        {{ __('Ticket #') }}{{ $ticket->id }}
                                     </div>
                                 </div>
                             </div>
@@ -265,7 +265,7 @@
                                             @if (count($ticketMessages) > 0)
                                                 {{ \Illuminate\Mail\Markdown::parse(nl2br(implode(array_slice(explode("<br />", nl2br($ticketMessages->where('ticket_id', $ticket->id)->last()->message)), 0, 4)))) }}
                                             @else
-                                                No messages...
+                                                {{ __('No messages...') }}
                                             @endif
                                         </div>
                                     </div>
@@ -325,7 +325,7 @@
                     @else
                     <div class="flex flex-row items-center justify-center">
                         <div class="text-sm font-semibold pt-1">
-                            No tickets found.
+                            {{ __('No tickets found.') }}
                         </div>
                     </div>
                     @endif

@@ -39,7 +39,7 @@
                 </div>
 
                 <div class="p-6 bg-white border-b border-gray-200 sm:px-20 dark:bg-darkmode2 dark:border-black">
-                    <h1 class="text-xl text-gray-500 dark:text-darkmodetext">Messages</h1>
+                    <h1 class="text-xl text-gray-500 dark:text-darkmodetext">{{ __('Messages') }}</h1>
                     <div class="grid grid-cols-1 gap-4">
                         <div class="mt-6 text-gray-500 dark:text-darkmodetext dark:bg-darkmode2">
                             @foreach ($messages as $message)
@@ -64,7 +64,7 @@
                 <form method="POST" action="{{ route('clients.tickets.reply', $ticket->id) }}">
                     @csrf
                     <div class="p-6 bg-white border-b border-gray-200 sm:px-20 dark:bg-darkmode2 dark:border-black">
-                        <h1 class="text-xl text-gray-500 dark:text-darkmodetext">Reply</h1>
+                        <h1 class="text-xl text-gray-500 dark:text-darkmodetext">{{ __('Reply') }}</h1>
                         <div class="grid grid-cols-1 gap-4">
                             <x-success class="mt-4" />
                             <div class="mt-6 text-gray-500 dark:text-darkmodetext dark:bg-darkmode2">
