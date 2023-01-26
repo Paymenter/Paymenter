@@ -6,7 +6,6 @@ use App\Helpers\ExtensionHelper;
 
 function Xendit_pay($total, $products, $orderId)
 {
-    Xendit_setWebhookURL();
     $url = 'https://api.xendit.co/v2/invoices';
     $apiKey = ExtensionHelper::getConfig('Xendit', 'api_key');
     // Encode to base64
@@ -30,17 +29,13 @@ function Xendit_pay($total, $products, $orderId)
 
 function Xendit_webhook($request)
 {
-    response()->json(['message' => 'Webhook received'], 200);
-    error_log('Webhook received');
-    error_log(print_r($request->json(), true));
-    error_log(print_r($request->header('x-callback-token'), true));
-    error_log(print_r(ExtensionHelper::getConfig('Xendit', 'callback'), true));
-    // Check if header x-callback-token is equal to the callback token in the config
     if($request->header('x-callback-token') != ExtensionHelper::getConfig('Xendit', 'callback')){
         return response()->json(['message' => 'Invalid callback token'], 403);
     }
-    error_log($request->json()->external_id);
-    ExtensionHelper::paymentDone($request->json()['external_id']);
+    $json = $request->getContent();
+    $json = json_decode($json, true);
+    ExtensionHelper::paymentDone($json['external_id']);
+    response()->json(['message' => 'Webhook received'], 200);
 };
 
 function Xendit_getConfig()
@@ -59,17 +54,4 @@ function Xendit_getConfig()
             "required" => true
         ]
     ];
-}
-
-function Xendit_setWebhookURL(){
-    $url = 'https://api.xendit.co/callback_urls/invoice';
-    $apiKey = ExtensionHelper::getConfig('Xendit', 'api_key');
-    $apiKey = base64_encode($apiKey . ':');
-    $data = [
-        'url' => 'http://vps.coreware.nl:8000/extensions/xendit/webhook'
-    ];
-    Http::withHeaders([
-        'Content-Type' => 'application/json',
-        'Authorization' => 'Basic ' . $apiKey
-    ])->post($url, $data);
 }

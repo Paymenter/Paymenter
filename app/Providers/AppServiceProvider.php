@@ -86,6 +86,9 @@ class AppServiceProvider extends ServiceProvider
                 config(['services.discord.client_secret' => config('settings::discord_client_secret')]);
                 config(['services.discord.redirect' => url('/login/discord/callback')]);
             }
+            if(!config('setings::currency')){
+                config(['settings::currency' => 'USD']);
+            }
             if(config('settings::theme') !== config('themes.active')){
                 Theme::set(config('settings::theme'), 'default');
             }
