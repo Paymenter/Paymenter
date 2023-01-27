@@ -5,6 +5,7 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
 use App\Models\{Invoices, Orders, Tickets};
+use Illuminate\Support\Facades\Route;
 
 class ClientsController extends Controller
 {
@@ -33,7 +34,15 @@ class ClientsController extends Controller
     public function edit(User $id)
     {
         $user = $id;
-        return view('admin.clients.edit', compact('user'));
+        $routeCollection = Route::getRoutes();
+        $permissions = [];
+        foreach ($routeCollection as $value) {
+            // If route is admin route, add to permissions array
+            if(strpos($value->getName(), 'admin.') !== false) {
+                $permissions[] = $value->getName();
+            }
+        }
+        return view('admin.clients.edit', compact('user', 'permissions'));
     }
     public function loginasClient(User $id)
     {
@@ -44,8 +53,18 @@ class ClientsController extends Controller
 
     public function update(Request $request, User $id)
     {
+        if(auth()->user()->id == $id->id) {
+            return redirect()->back()->with('error', 'You cannot edit your own account');
+        }
         $user = $id;
         $user->update($request->all());
+        if($request->admin){
+            $user->is_admin = 1;
+            if($request->permissions){
+                $user->permissions = $request->permissions;
+            }
+            $user->save();
+        }
         return redirect()->route('admin.clients.edit', $id)->with('success', 'User updated successfully');
     }
 

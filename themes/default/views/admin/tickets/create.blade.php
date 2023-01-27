@@ -16,7 +16,7 @@
                                 {{ __('Create a new ticket.') }}
                             </div>
                         </div>
-                        <form method="POST" action="{{ route('admin.clients.tickets.store') }}">
+                        <form method="POST" action="{{ route('admin.tickets.store') }}">
                             @csrf
                             <div class="mt-4">
                                 <label class="dark:text-darkmodetext block font-medium text-sm text-gray-700" for="title" id="textareaId">

@@ -64,7 +64,7 @@
                     </div>
                 </div>
                 <div class="w-4/5 mx-auto" id="submenutickets">
-                    <x-sidebar-navigation-item route="admin.clients.tickets.create" icon="ri-add-circle-line"
+                    <x-sidebar-navigation-item route="admin.tickets.create" icon="ri-add-circle-line"
                         dropdown="true">
                         Create Ticket
                     </x-sidebar-navigation-item>

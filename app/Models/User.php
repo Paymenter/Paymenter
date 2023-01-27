@@ -71,14 +71,15 @@ class User extends Authenticatable
         return $this->hasMany(Invoices::class, 'user_id', 'id');
     }
 
-    public function hasPermissionTo($permission)
+    public function has($permission)
     {
-        if(!$this->is_admin) {
-            return false;
+        if(!$this->permissions && $this->is_admin == 1) {
+            return true;
         }
+        // Check if array contains permission
         if (in_array($permission, $this->permissions)) {
             return true;
         }
-        return $this->permissions[$permission] ?? false;
+        return false;
     }
 }

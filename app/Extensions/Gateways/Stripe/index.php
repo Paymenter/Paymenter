@@ -3,7 +3,7 @@
 use Stripe\StripeClient;
 use App\Helpers\ExtensionHelper;
 
-function Stripe_getUrl($products, $orderId)
+function Stripe_getUrl($total, $products, $orderId)
 {
     $client = StripeClient();
     // Create array with all the products

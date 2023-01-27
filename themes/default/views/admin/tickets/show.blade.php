@@ -28,7 +28,7 @@
                                                 {{ $product->name }}
                                             @endforeach
                                         </p>
-                                        <form action="{{ route('admin.clients.tickets.status', $ticket->id) }}" method="POST">
+                                        <form action="{{ route('admin.tickets.status', $ticket->id) }}" method="POST">
                                             @csrf
                                             <div class="ml-10 flex items-baseline p-2">
                                                 <select name="status" id="status"
@@ -62,7 +62,7 @@
                                             </p>
                                         </div>
                                     @endforeach
-                                    <form action="{{ route('admin.clients.tickets.reply', $ticket->id) }}" method="POST">
+                                    <form action="{{ route('admin.tickets.reply', $ticket->id) }}" method="POST">
                                         @csrf
                                         <div class="ml-10 flex items-baseline ">
                                             <textarea name="message" id="message" cols="30" rows="10"
