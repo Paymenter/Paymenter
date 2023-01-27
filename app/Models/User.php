@@ -73,7 +73,7 @@ class User extends Authenticatable
 
     public function has($permission)
     {
-        if(!$this->permissions && $this->is_admin == 1) {
+        if(!$this->permissions && $this->is_admin == 1 && $this->permissions == null) {
             return true;
         }
         // Check if array contains permission
