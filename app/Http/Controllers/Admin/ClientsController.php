@@ -56,13 +56,22 @@ class ClientsController extends Controller
         if(auth()->user()->id == $id->id) {
             return redirect()->back()->with('error', 'You cannot edit your own account');
         }
+        if(auth()->user()->permissions){
+            return redirect()->back()->with('error', 'Only Admins with full permissions can edit users');
+        }
         $user = $id;
         $user->update($request->all());
         if($request->admin){
             $user->is_admin = 1;
             if($request->permissions){
                 $user->permissions = $request->permissions;
+            } else {
+                $user->permissions = [];
             }
+            $user->save();
+        }else{
+            $user->is_admin = 0;
+            $user->permissions = [];
             $user->save();
         }
         return redirect()->route('admin.clients.edit', $id)->with('success', 'User updated successfully');

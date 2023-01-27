@@ -179,19 +179,61 @@
 
                                     <hr class="my-6 border-b-1 border-gray-300 dark:border-gray-600" />
 
-                                    <div class="grid grid-cols-3 gap-4">
-                                        <!-- Admin toggle -->
-                                        <div class="relative">
-                                            <input type="checkbox" class="form-input w-fit peer " placeholder=" "
-                                                name="admin" id="admin" {{ $user->is_admin ? 'checked' : '' }}>
+                                    <!-- Admin toggle -->
+                                    <div class="mb-3">
+                                        <input type="checkbox" class="form-input w-fit peer " placeholder=" "
+                                            name="admin" id="admin" {{ $user->is_admin ? 'checked' : '' }} onclick="toggleAdmin()">
 
-                                            <label for="admin" class="form-label" style="position: unset;">
-                                                {{ __('Admin') }}
-                                            </label>
-                                        </div>
-                                        <!-- Admin permissions -->
+                                        <label for="admin" class="form-label" style="position: unset;">
+                                            {{ __('Admin') }}
+                                        </label>
+                                        <h3 class="text-lg text-gray-500 dark:text-darkmodetext">
+                                            {{ __('Give this user admin permissions') }}
+                                        </h3>
+                                        <p class="text-sm text-gray-500 dark:text-darkmodetext">
+                                            {{ __('Admins have access to all areas of the application or can be restricted to specific areas.') }}
+                                            <br>
+                                            {{ __('If you leave the permissions blank, the user will have access to all areas.') }}
+                                        </p>
+                                    </div>
+                                    <p class="text-lg text-gray-500 dark:text-darkmodetext bg-logo col-span-3 rounded-sm p-1 items-center"
+                                        onclick="openPermissions()" id="openPerms">
+                                        {{ __('Permissions') }}
+                                        <svg class="w-7 h-7 float-right" fill="none" stroke-linecap="round"
+                                            stroke-linejoin="round" stroke-width="2" stroke="currentColor"
+                                            id="permissionsToggleSVG" viewBox="0 0 24 24">
+                                            <path d="M19 9l-7 7-7-7">
+                                            </path>
+                                        </svg>
+                                    </p>
+                                    <script>
+                                        function toggleAdmin(){
+                                            if(document.getElementById("admin").checked){
+                                                document.getElementById("openPerms").style.display = "block";
+                                            } else {
+                                                document.getElementById("openPerms").style.display = "none";
+                                                console.log(document.querySelectorAll(".permissions"));
+                                                document.querySelectorAll(".permissions").forEach(function(element){
+                                                    element.checked = false;
+                                                });
+                                                openPermissions();
+                                            }
+                                        }
+                                        function openPermissions() {
+                                            var x = document.getElementById("permissionsToggle");
+                                            if (x.style.display === "none") {
+                                                x.style.display = "grid";
+                                                // Rotate the arrow
+                                                document.getElementById("permissionsToggleSVG").style.transform = "rotate(180deg)";
+                                            } else {
+                                                x.style.display = "none";
+                                                document.getElementById("permissionsToggleSVG").style.transform = "rotate(0deg)";
+                                            }
+                                        }
+                                    </script>
+                                    <div class="grid grid-cols-3 gap-4" id="permissionsToggle" style="display: none;">
                                         @php
-                                            $idk = 'ticket';
+                                            $idk = '';
                                         @endphp
                                         @foreach ($permissions as $permission)
                                             @if ($idk != explode('.', $permission)[1])
@@ -202,12 +244,11 @@
                                                 </h3>
                                             @endif
                                             <div class="relative">
-                                                <input type="checkbox" class="form-input w-fit peer " placeholder=" "
-                                                    name="permissions[]" id="permissions"
+                                                <input type="checkbox" class="form-input w-fit peer permissions" placeholder=" "
+                                                    name="permissions[]" id="{{ $permission }}"
                                                     value="{{ $permission }}"
                                                     {{ $user->has($permission) ? 'checked' : '' }}>
-                                                <label for="permissions" class="form-label" style="position: unset;">
-                                                    <!-- Remove admin. and replace . with space -->
+                                                <label for="{{ $permission }}" class="form-label" style="position: unset;">
                                                     {{ str_replace('.', ' ', str_replace('admin.', '', $permission)) }}
                                                 </label>
                                             </div>
