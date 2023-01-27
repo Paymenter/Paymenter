@@ -76,6 +76,9 @@ class User extends Authenticatable
         if($this->is_admin == 1 && $this->permissions == null) {
             return true;
         }
+        if($this->permissions == null) {
+            return false;
+        }
         // Check if array contains permission
         if (in_array($permission, $this->permissions)) {
             return true;
