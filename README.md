@@ -6,7 +6,6 @@
 
 [Discord](https://discord.gg/xB4UUT3XQg), [Demo](https://demo.paymenter.org), [Docs](https://paymenter.org/docs/intro), [Website](https://paymenter.org)
 
-Disclaimer: This is a work in progress. It is not ready for production use.
 ## A advanced payment system for your hosting company
 ### About
 
