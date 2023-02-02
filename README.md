@@ -23,7 +23,7 @@ This is a advanced payment system for your hosting company. It is written in PHP
 ## Wanna take a look?
 Visit our demo at: https://demo.paymenter.org
 
-## Requirements
+## Requirement
 The requirements for Paymenter are the following:
 - PHP (8.1 or higher)
 - Composer
