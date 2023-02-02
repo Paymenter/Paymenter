@@ -18,7 +18,6 @@ Route::get('/manifest.json', [App\Http\Controllers\BasisController::class, 'mani
 Route::get('/profile', [App\Http\Controllers\Clients\HomeController::class, 'profile'])->name('clients.profile')->middleware(['auth', 'password.confirm']);
 Route::post('/profile', [App\Http\Controllers\Clients\HomeController::class, 'update'])->name('clients.profile.update')->middleware(['auth', 'password.confirm']);
 Route::get('/change-password', [App\Http\Controllers\Clients\HomeController::class, 'password'])->name('clients.password.change-password')->middleware(['auth']);
-Route::get('/products', [App\Http\Controllers\BasisController::class, 'products'])->name('products');
 
 Route::group(['prefix' => 'checkout'], function () {
     Route::get('/', [App\Http\Controllers\CheckoutController::class, 'index'])->name('checkout.index');
@@ -36,16 +35,15 @@ Route::group(['prefix' => 'tickets', 'middleware' => 'auth'], function () {
     Route::get('/', [App\Http\Controllers\Clients\TicketsController::class, 'index'])->name('clients.tickets.index');
     Route::get('/create', [App\Http\Controllers\Clients\TicketsController::class, 'create'])->name('clients.tickets.create');
     Route::post('/store', [App\Http\Controllers\Clients\TicketsController::class, 'store'])->name('clients.tickets.store');
-    Route::get('/{id}', [App\Http\Controllers\Clients\TicketsController::class, 'show'])->name('clients.tickets.show');
-    Route::post('{id}/reply', [App\Http\Controllers\Clients\TicketsController::class, 'reply'])->name('clients.tickets.reply');
-    Route::post('{id}/close', [App\Http\Controllers\Clients\TicketsController::class, 'close'])->name('clients.tickets.close');
+    Route::get('/{ticket}', [App\Http\Controllers\Clients\TicketsController::class, 'show'])->name('clients.tickets.show');
+    Route::post('{ticket}/reply', [App\Http\Controllers\Clients\TicketsController::class, 'reply'])->name('clients.tickets.reply');
+    Route::post('{ticket}/close', [App\Http\Controllers\Clients\TicketsController::class, 'close'])->name('clients.tickets.close');
 });
 
 Route::group(['prefix' => 'invoices', 'middleware' => 'auth'], function () {
     Route::get('/', [App\Http\Controllers\Clients\InvoiceController::class, 'index'])->name('clients.invoice.index');
-    Route::get('/{id}', [App\Http\Controllers\Clients\InvoiceController::class, 'show'])->name('clients.invoice.show');
-    Route::post('/{id}/pay', [App\Http\Controllers\Clients\InvoiceController::class, 'pay'])->name('clients.invoice.pay');
-    Route::get('/{id}/download', [App\Http\Controllers\Clients\InvoiceController::class, 'download'])->name('clients.invoice.download');
+    Route::get('/{invoice}', [App\Http\Controllers\Clients\InvoiceController::class, 'show'])->name('clients.invoice.show');
+    Route::post('/{invoice}/pay', [App\Http\Controllers\Clients\InvoiceController::class, 'pay'])->name('clients.invoice.pay');
 });
 
 Route::group(['prefix' => 'client/products', 'middleware' => 'auth'], function () {
@@ -56,3 +54,5 @@ Route::group(['prefix' => 'client/products', 'middleware' => 'auth'], function (
 require __DIR__ . '/auth.php';
 require __DIR__ . '/admin.php';
 require __DIR__ . '/extensions.php';
+
+Route::get('/{slug?}/{product?}', [App\Http\Controllers\BasisController::class, 'products'])->name('products');

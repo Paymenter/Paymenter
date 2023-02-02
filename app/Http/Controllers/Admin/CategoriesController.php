@@ -32,13 +32,12 @@ class CategoriesController extends Controller
         return redirect()->route('admin.categories');
     }
 
-    public function edit($id)
+    public function edit(Categories $category)
     {
-        $category = Categories::find($id);
         return view('admin.categories.edit', compact('category'));
     }
 
-    public function update($id)
+    public function update(Categories $category)
     {
         $data = request()->validate([
             'name' => 'required',
@@ -46,16 +45,13 @@ class CategoriesController extends Controller
             'slug' => 'required',
         ]);
 
-        $category = Categories::find($id);
         $category->update($data);
-
 
         return redirect()->route('admin.categories');
     }
 
-    public function destroy($id)
+    public function destroy(Categories $category)
     {
-        $category = Categories::find($id);
         $category->delete();
 
         return redirect()->route('admin.categories');

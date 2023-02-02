@@ -173,7 +173,7 @@ class CheckoutController extends Controller
                 
             }
         }
-        return redirect()->route('clients.invoice.show', ['id' => $invoice->id]);
+        return redirect()->route('clients.invoice.show', $invoice->id);
     }
 
     public function remove(Request $request, $id)

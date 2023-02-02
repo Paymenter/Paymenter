@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Categories;
+use App\Models\Products;
 use Illuminate\Http\Request;
 
 class BasisController extends Controller
@@ -14,16 +15,21 @@ class BasisController extends Controller
         return view('welcome', compact('categories'));
     }
 
-    function products(Request $request)
-    {   
-
-        if($request->has('category')){
-            $category = $request->input('category');
-            $categories = Categories::where('id', $category)->get();
-        }else{
-            $categories = Categories::all();
+    function products(String $slug = null, Products $product = null)
+    {
+        if ($product) {
+            return view('checkout', compact('product'));
+        } else {
+            if($slug == null)
+                $categories = Categories::all();
+            else if($slug == 'products')
+                $categories = Categories::all();
+            else
+                $categories = Categories::where('slug', $slug)->get();
+            if($categories->count() == 0)
+                return abort(404);
+            return view('product', compact('categories'));
         }
-        return view('product', compact('categories'));
     }
 
     function manifest(Request $request)

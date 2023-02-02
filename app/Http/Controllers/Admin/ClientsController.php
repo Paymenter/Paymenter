@@ -31,9 +31,8 @@ class ClientsController extends Controller
         return redirect()->route('admin.clients.edit', $user->id);
     }
 
-    public function edit(User $id)
+    public function edit(User $user)
     {
-        $user = $id;
         $routeCollection = Route::getRoutes();
         $permissions = [];
         foreach ($routeCollection as $value) {
@@ -44,22 +43,20 @@ class ClientsController extends Controller
         }
         return view('admin.clients.edit', compact('user', 'permissions'));
     }
-    public function loginasClient(User $id)
+    public function loginasClient(User $user)
     {
-        $user = $id;
         auth()->login($user);
         return redirect()->route('index');
     }
 
-    public function update(Request $request, User $id)
+    public function update(Request $request, User $user)
     {
-        if(auth()->user()->id == $id->id) {
+        if(auth()->user()->id == $user->id) {
             return redirect()->back()->with('error', 'You cannot edit your own account');
         }
         if(auth()->user()->permissions){
             return redirect()->back()->with('error', 'Only Admins with full permissions can edit users');
         }
-        $user = $id;
         $user->update($request->all());
         if($request->admin){
             $user->is_admin = 1;
@@ -77,9 +74,8 @@ class ClientsController extends Controller
         return redirect()->route('admin.clients.edit', $id)->with('success', 'User updated successfully');
     }
 
-    public function destroy(User $id)
+    public function destroy(User $user)
     {
-        $user = $id;
         // Delete tickets, orders, etc.
         $tickets = Tickets::where('client', $user->id)->get();
         foreach ($tickets as $ticket) {

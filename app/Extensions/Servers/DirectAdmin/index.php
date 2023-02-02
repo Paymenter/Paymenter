@@ -3,12 +3,12 @@
 use App\Helpers\ExtensionHelper;
 use App\Models\Products;
 
-include 'HTTPSocket.php';
+include_once 'HTTPSocket.php';
 
 function DirectAdmin_createServer($user, $params, $order)
 {
     $host = ExtensionHelper::getConfig('DirectAdmin', 'host');
-    $sock = new HTTPSocket;
+    $sock = new DAHTTPSocket;
     if (ExtensionHelper::getConfig('DirectAdmin', 'ssl')) {
         $sock->connect("ssl://" . $host, '2222');
     } else {
@@ -55,7 +55,7 @@ function DirectAdmin_createServer($user, $params, $order)
 function DirectAdmin_suspendServer($user, $params, $order)
 {
     $host = ExtensionHelper::getConfig('DirectAdmin', 'host');
-    $sock = new HTTPSocket;
+    $sock = new DAHTTPSocket;
     if (ExtensionHelper::getConfig('DirectAdmin', 'ssl')) {
         $sock->connect("ssl://" . $host, '2222');
     } else {
@@ -84,7 +84,7 @@ function DirectAdmin_suspendServer($user, $params, $order)
 function DirectAdmin_unsuspendServer($user, $params, $order)
 {
     $host = ExtensionHelper::getConfig('DirectAdmin', 'host');
-    $sock = new HTTPSocket;
+    $sock = new DAHTTPSocket;
     if (ExtensionHelper::getConfig('DirectAdmin', 'ssl')) {
         $sock->connect("ssl://" . $host, '2222');
     } else {
@@ -113,7 +113,7 @@ function DirectAdmin_unsuspendServer($user, $params, $order)
 function DirectAdmin_terminateServer($user, $params, $order)
 {
     $host = ExtensionHelper::getConfig('DirectAdmin', 'host');
-    $sock = new HTTPSocket;
+    $sock = new DAHTTPSocket;
     if (ExtensionHelper::getConfig('DirectAdmin', 'ssl')) {
         $sock->connect("ssl://" . $host, '2222');
     } else {

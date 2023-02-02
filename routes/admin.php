@@ -10,9 +10,9 @@ Route::group(['prefix' => 'admin'], function () {
         Route::get('/', [App\Http\Controllers\Admin\TicketsController::class, 'index'])->middleware(['auth.admin'])->name('admin.tickets');
         Route::get('/create', [App\Http\Controllers\Admin\TicketsController::class, 'create'])->middleware(['auth.admin'])->name('admin.tickets.create');
         Route::post('/create', [App\Http\Controllers\Admin\TicketsController::class, 'store'])->middleware(['auth.admin'])->name('admin.tickets.store');
-        Route::get('/{id}', [App\Http\Controllers\Admin\TicketsController::class, 'show'])->middleware(['auth.admin'])->name('admin.tickets.show');
-        Route::post('/{id}/status', [App\Http\Controllers\Admin\TicketsController::class, 'status'])->middleware(['auth.admin'])->name('admin.tickets.status');
-        Route::post('/{id}/reply', [App\Http\Controllers\Admin\TicketsController::class, 'reply'])->middleware(['auth.admin'])->name('admin.tickets.reply');
+        Route::get('/{ticket}', [App\Http\Controllers\Admin\TicketsController::class, 'show'])->middleware(['auth.admin'])->name('admin.tickets.show');
+        Route::post('/{ticket}/status', [App\Http\Controllers\Admin\TicketsController::class, 'status'])->middleware(['auth.admin'])->name('admin.tickets.status');
+        Route::post('/{ticket}/reply', [App\Http\Controllers\Admin\TicketsController::class, 'reply'])->middleware(['auth.admin'])->name('admin.tickets.reply');
     });
 
     Route::group(['prefix' => 'settings'], function () {
@@ -39,10 +39,10 @@ Route::group(['prefix' => 'admin'], function () {
         Route::get('/', [App\Http\Controllers\Admin\CategoriesController::class, 'index'])->middleware(['auth.admin'])->name('admin.categories');
         Route::get('/create', [App\Http\Controllers\Admin\CategoriesController::class, 'create'])->middleware(['auth.admin'])->name('admin.categories.create');
         Route::post('/create', [App\Http\Controllers\Admin\CategoriesController::class, 'store'])->middleware(['auth.admin'])->name('admin.categories.store');
-        Route::get('/{id}', [App\Http\Controllers\Admin\CategoriesController::class, 'show'])->middleware(['auth.admin'])->name('admin.categories.show');
-        Route::get('/{id}/edit', [App\Http\Controllers\Admin\CategoriesController::class, 'edit'])->middleware(['auth.admin'])->name('admin.categories.edit');
-        Route::post('/{id}/edit', [App\Http\Controllers\Admin\CategoriesController::class, 'update'])->middleware(['auth.admin'])->name('admin.categories.update');
-        Route::delete('/{id}/delete', [App\Http\Controllers\Admin\CategoriesController::class, 'destroy'])->middleware(['auth.admin'])->name('admin.categories.delete');
+        Route::get('/{category}', [App\Http\Controllers\Admin\CategoriesController::class, 'show'])->middleware(['auth.admin'])->name('admin.categories.show');
+        Route::get('/{category}/edit', [App\Http\Controllers\Admin\CategoriesController::class, 'edit'])->middleware(['auth.admin'])->name('admin.categories.edit');
+        Route::post('/{category}/edit', [App\Http\Controllers\Admin\CategoriesController::class, 'update'])->middleware(['auth.admin'])->name('admin.categories.update');
+        Route::delete('/{category}/delete', [App\Http\Controllers\Admin\CategoriesController::class, 'destroy'])->middleware(['auth.admin'])->name('admin.categories.delete');
     });
 
     Route::group(['prefix' => 'extensions'], function () {
@@ -55,21 +55,21 @@ Route::group(['prefix' => 'admin'], function () {
         Route::get('/', [App\Http\Controllers\Admin\ClientsController::class, 'index'])->middleware(['auth.admin'])->name('admin.clients');
         Route::get('/create', [App\Http\Controllers\Admin\ClientsController::class, 'create'])->middleware(['auth.admin'])->name('admin.clients.create');
         Route::post('/create', [App\Http\Controllers\Admin\ClientsController::class, 'store'])->middleware(['auth.admin'])->name('admin.clients.store');
-        Route::get('/{id}', [App\Http\Controllers\Admin\ClientsController::class, 'show'])->middleware(['auth.admin'])->name('admin.clients.show');
-        Route::get('/{id}/login', [App\Http\Controllers\Admin\ClientsController::class, 'loginasClient'])->middleware(['auth.admin'])->name('admin.clients.loginasclient');
-        Route::get('/{id}/edit', [App\Http\Controllers\Admin\ClientsController::class, 'edit'])->middleware(['auth.admin'])->name('admin.clients.edit');
-        Route::put('/{id}/edit', [App\Http\Controllers\Admin\ClientsController::class, 'update'])->middleware(['auth.admin'])->name('admin.clients.update');
-        Route::delete('/{id}/delete', [App\Http\Controllers\Admin\ClientsController::class, 'destroy'])->middleware(['auth.admin'])->name('admin.clients.delete');
+        Route::get('/{user}', [App\Http\Controllers\Admin\ClientsController::class, 'show'])->middleware(['auth.admin'])->name('admin.clients.show');
+        Route::get('/{user}/login', [App\Http\Controllers\Admin\ClientsController::class, 'loginasClient'])->middleware(['auth.admin'])->name('admin.clients.loginasclient');
+        Route::get('/{user}/edit', [App\Http\Controllers\Admin\ClientsController::class, 'edit'])->middleware(['auth.admin'])->name('admin.clients.edit');
+        Route::put('/{user}/edit', [App\Http\Controllers\Admin\ClientsController::class, 'update'])->middleware(['auth.admin'])->name('admin.clients.update');
+        Route::delete('/{user}/delete', [App\Http\Controllers\Admin\ClientsController::class, 'destroy'])->middleware(['auth.admin'])->name('admin.clients.delete');
     });
 
     Route::group(['prefix' => 'orders'], function(){
         Route::get('/', [App\Http\Controllers\Admin\OrdersController::class, 'index'])->middleware(['auth.admin'])->name('admin.orders');
-        Route::delete('/{id}/delete', [App\Http\Controllers\Admin\OrdersController::class, 'destroy'])->middleware(['auth.admin'])->name('admin.orders.delete');
-        Route::get('/{id}', [App\Http\Controllers\Admin\OrdersController::class, 'show'])->middleware(['auth.admin'])->name('admin.orders.show');
-        Route::post('/{id}/unsuspend', [App\Http\Controllers\Admin\OrdersController::class, 'unsuspend'])->middleware(['auth.admin'])->name('admin.orders.unsuspend');
-        Route::post('/{id}/suspend', [App\Http\Controllers\Admin\OrdersController::class, 'suspend'])->middleware(['auth.admin'])->name('admin.orders.suspend');
-        Route::post('/{id}/create', [App\Http\Controllers\Admin\OrdersController::class, 'create'])->middleware(['auth.admin'])->name('admin.orders.create');
-        Route::post('/{id}/paid', [App\Http\Controllers\Admin\OrdersController::class, 'paid'])->middleware(['auth.admin'])->name('admin.orders.paid');
+        Route::delete('/{order}/delete', [App\Http\Controllers\Admin\OrdersController::class, 'destroy'])->middleware(['auth.admin'])->name('admin.orders.delete');
+        Route::get('/{order}', [App\Http\Controllers\Admin\OrdersController::class, 'show'])->middleware(['auth.admin'])->name('admin.orders.show');
+        Route::post('/{order}/unsuspend', [App\Http\Controllers\Admin\OrdersController::class, 'unsuspend'])->middleware(['auth.admin'])->name('admin.orders.unsuspend');
+        Route::post('/{order}/suspend', [App\Http\Controllers\Admin\OrdersController::class, 'suspend'])->middleware(['auth.admin'])->name('admin.orders.suspend');
+        Route::post('/{order}/create', [App\Http\Controllers\Admin\OrdersController::class, 'create'])->middleware(['auth.admin'])->name('admin.orders.create');
+        Route::post('/{order}/paid', [App\Http\Controllers\Admin\OrdersController::class, 'paid'])->middleware(['auth.admin'])->name('admin.orders.paid');
     });
 
     // Route::group(['prefix' => 'migrate'], function () {

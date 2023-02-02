@@ -38,7 +38,7 @@
  * added isset to headers['location'], line 306
 
  */
-class HTTPSocket {
+class DAHTTPSocket {
 
 	var $version = '3.0.4';
 

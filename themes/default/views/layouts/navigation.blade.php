@@ -41,7 +41,7 @@
                             <a href="{{ route('products') }}" class="block px-4 py-2 text-base text-gray-700 dark:text-darkmodetext dark:hover:bg-darkbutton hover:bg-gray-100 hover:text-gray-900" role="menuitem" tabindex="-1" id="menu-item-0">{{ __('All Products') }}</a>
                             @foreach (App\Models\Categories::all() as $category)
                             @if ($category->products->count() > 0)
-                            <a href="{{ route('products', ['category' => $category->id]) }}" class="block px-4 py-2 text-base text-gray-700 dark:text-darkmodetext dark:hover:bg-darkbutton hover:bg-gray-100 hover:text-gray-900" role="menuitem" tabindex="-1" id="menu-item-0">{{ $category->name }}</a>
+                            <a href="{{ route('products', $category->slug) }}" class="block px-4 py-2 text-base text-gray-700 dark:text-darkmodetext dark:hover:bg-darkbutton hover:bg-gray-100 hover:text-gray-900" role="menuitem" tabindex="-1" id="menu-item-0">{{ $category->name }}</a>
                             @endif
                             @endforeach
                         </div>

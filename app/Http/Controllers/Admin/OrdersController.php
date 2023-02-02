@@ -13,10 +13,9 @@ class OrdersController extends Controller
         return view('admin.orders.index', compact('orders'));
     }
 
-    public function show(Orders $id)
+    public function show(Orders $order)
     {
-        $order = $id;
-        $products;
+        $products = array();
         // Loop through products
         foreach($order->products as $product){
             $link = ExtensionHelper::getLink($product);
@@ -26,46 +25,41 @@ class OrdersController extends Controller
         return view('admin.orders.show', compact('order', 'products'));
     }
 
-    public function destroy(Orders $id)
+    public function destroy(Orders $order)
     {
-        if($id->status == 'paid' || $id->status == 'suspended'){
+        if($order->status == 'paid' || $order->status == 'suspended'){
             ExtensionHelper::terminateServer($id);
         }
-        $order = $id;
         $order->delete();
         return redirect()->route('admin.orders')->with('success', 'Order deleted');
     }
 
-    public function suspend(Orders $id)
+    public function suspend(Orders $order)
     {
-        $order = $id;
         $order->status = 'suspended';
         $order->save();
         ExtensionHelper::suspendServer($order);
         return redirect()->route('admin.orders.show', $order);
     }
 
-    public function unsuspend(Orders $id)
+    public function unsuspend(Orders $order)
     {
-        $order = $id;
         $order->status = 'paid';
         $order->save();
         ExtensionHelper::unsuspendServer($order);
         return redirect()->route('admin.orders.show', $order);
     }
 
-    public function create(Orders $id)
+    public function create(Orders $order)
     {
-        $order = $id;
         $order->status = 'paid';
         $order->save();
         ExtensionHelper::createServer($order);
         return redirect()->route('admin.orders.show', $order);
     }
 
-    public function paid(Orders $id)
+    public function paid(Orders $order)
     {
-        $order = $id;
         $order->status = 'paid';
         $order->save();
         ExtensionHelper::createServer($order);

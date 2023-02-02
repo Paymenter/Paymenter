@@ -15,10 +15,9 @@ class InvoiceController extends Controller
         return view('clients.invoice.index', compact('invoices'));
     }
 
-    public function show(Request $request, Invoices $id)
+    public function show(Request $request, Invoices $invoice)
     {
-        $order = Orders::findOrFail($id->order_id);
-        $invoice = $id;
+        $order = Orders::findOrFail($invoice->order_id);
 
         if ($invoice->user_id != auth()->user()->id) {
             return redirect()->route('clients.invoice.index');
@@ -33,9 +32,8 @@ class InvoiceController extends Controller
         return view('clients.invoice.show', compact('invoice', 'order', 'products', 'currency_sign'));
     }
 
-    public function pay(Request $request, Invoices $id)
+    public function pay(Request $request, Invoices $invoice)
     {
-        $invoice = $id;
         if ($invoice->user_id != auth()->user()->id) {
             return redirect()->route('clients.invoice.index');
         }

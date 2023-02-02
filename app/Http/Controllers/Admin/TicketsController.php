@@ -53,7 +53,7 @@ class TicketsController extends Controller
         return redirect()->back()->with('success', 'Ticket created successfully');
     }
 
-    function show($id)
+    function show(Tickets $ticket)
     {
         $ticket = Tickets::find($id);
         if (!$ticket) {
@@ -62,13 +62,12 @@ class TicketsController extends Controller
         return view('admin.tickets.show', compact('ticket'));
     }
 
-    function reply(Request $request, $id)
+    function reply(Request $request, Tickets $ticket)
     {
         $request->validate([
             'message' => 'required'
         ]);
 
-        $ticket = Tickets::find($id);
         $ticket->status = 'replied';
         $ticket->save();
         $ticket->messages()->create([
@@ -79,13 +78,12 @@ class TicketsController extends Controller
         return redirect()->back()->with('success', 'Reply has been sent');
     }
 
-    function status(Request $request, $id)
+    function status(Request $request, Tickets $ticket)
     {
         $request->validate([
             'status' => 'required'
         ]);
 
-        $ticket = Tickets::find($id);
         $ticket->status = $request->get('status');
         $ticket->save();
 

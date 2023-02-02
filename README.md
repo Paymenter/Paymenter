@@ -25,7 +25,7 @@ Visit our demo at: https://demo.paymenter.org
 
 ## Requirements
 The requirements for Paymenter are the following:
-- PHP (8 or higher)
+- PHP (8.1 or higher)
 - Composer
 
 ## Installation & Documentation

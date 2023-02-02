@@ -53,8 +53,10 @@ class OrderTest extends TestCase
         $response->assertStatus(302);
 
         // Get generated invoice id
-        $invoice_id = Invoices::where('user_id', $this->user->id)->first()->id;
+        $invoice = Invoices::where('user_id', $this->user->id)->first();
 
-        $response->assertRedirect(route('clients.invoice.show', $invoice_id));
+        $this->assertNotNull($invoice);
+
+        $response->assertRedirect(route('clients.invoice.show', $invoice));
     }
 }

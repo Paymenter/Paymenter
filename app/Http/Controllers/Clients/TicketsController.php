@@ -83,22 +83,20 @@ class TicketsController extends Controller
         return redirect('/tickets')->with('success', 'Ticket created successfully');
     }
 
-    function show(Tickets $id)
+    function show(Tickets $ticket)
     {
-        $ticket = $id;
         $messages = TicketMessages::where('ticket_id', $id->id)->get();
         return view('clients.tickets.show', compact('ticket', 'messages'));
     }
 
-    function close(Tickets $id)
+    function close(Tickets $ticket)
     {
-        $ticket = $id;
         $ticket->status = 'closed';
         $ticket->save();
         return redirect('/tickets')->with('success', 'Ticket closed successfully');
     }
 
-    function reply(Request $request, Tickets $id)
+    function reply(Request $request, Tickets $ticket)
     {
         if (config('settings::recaptcha') == 1) {
             $request->validate([
@@ -110,11 +108,11 @@ class TicketsController extends Controller
                 'message' => 'required',
             ]);
         }
-        if($id->status == 'closed'){
+        if($ticket->status == 'closed'){
             return redirect()->back()->with('error', 'You can not reply to a closed ticket.');
         }
         $executed = RateLimiter::attempt(
-            'send-message:' . $id->id,
+            'send-message:' . $ticket->id,
             $perMinute = 3,
             function () {
                 return true;
@@ -124,7 +122,7 @@ class TicketsController extends Controller
             return redirect()->back()->with('error', 'You are sending too many messages. Please wait a few minutes and try again.');
         }
         TicketMessages::create([
-            'ticket_id' => $id->id,
+            'ticket_id' => $ticket->id,
             'message' => request('message'),
             'user_id' => auth()->user()->id
         ]);
