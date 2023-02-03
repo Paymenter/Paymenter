@@ -55,7 +55,11 @@ class RegisteredUserController extends Controller
         ]));
         // Send email to user
         if (!config('settings::mail_disabled')) {
-            $user->sendEmailVerificationNotification();
+            try {
+                $user->sendEmailVerificationNotification();
+            } catch (\Exception $e) {
+                error_log('Failed to send email to user');
+            }
         }
 
         event(new Registered($user));

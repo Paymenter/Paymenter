@@ -92,7 +92,7 @@ class AppServiceProvider extends ServiceProvider
                 Theme::set(config('settings::theme'), 'default');
             }
         } catch (\Exception $e) {
-            // do nothing
+            error_log($e->getMessage());
         }
     }
 }
