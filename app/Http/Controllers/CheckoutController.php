@@ -2,11 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Helpers\ExtensionHelper;
-use App\Models\{Orders, Products, User, Invoices, Extensions, OrderProducts, OrderProductsConfig};
-use Illuminate\Contracts\Session\Session;
 use Illuminate\Http\Request;
-use stdClass;
+use App\Helpers\ExtensionHelper;
+use App\Models\{Extensions, Invoices, OrderProducts, OrderProductsConfig, Orders, Products, User};
 
 class CheckoutController extends Controller
 {
@@ -20,6 +18,7 @@ class CheckoutController extends Controller
                 $total += $product->price * $product->quantity;
             }
         }
+
         return view('checkout.index', compact('products', 'total'));
     }
 
@@ -35,7 +34,6 @@ class CheckoutController extends Controller
 
     public function add(Request $request)
     {
-
         $product = json_decode(Products::findOrFail($request->id)->toJson());
         if (!$product) {
             return redirect()->back()->with('error', 'Product not found');
@@ -54,12 +52,14 @@ class CheckoutController extends Controller
         $product->quantity = 1;
         $cart = session()->get('cart');
         if (\Illuminate\Support\Arr::has($cart, $product->id)) {
-            $cart[$product->id]->quantity++;
+            ++$cart[$product->id]->quantity;
             session()->put('cart', $cart);
+
             return redirect()->back()->with('success', 'Product added to cart successfully!');
         } else {
             $cart[$product->id] = $product;
             session()->put('cart', $cart);
+
             return redirect()->back()->with('success', 'Product added to cart successfully!');
         }
     }
@@ -68,7 +68,7 @@ class CheckoutController extends Controller
     {
         $product = $id;
         $server = Extensions::find($product->server_id);
-        include_once(base_path('app/Extensions/Servers/' . $server->name . '/index.php'));
+        include_once base_path('app/Extensions/Servers/' . $server->name . '/index.php');
         $function = $server->name . '_getUserConfig';
         if (!function_exists($function)) {
             return redirect()->back()->with('error', 'Config Not Found');
@@ -77,6 +77,7 @@ class CheckoutController extends Controller
         if (!isset($userConfig)) {
             return redirect()->route('checkout.index');
         }
+
         return view('checkout.config', compact('product', 'userConfig'));
     }
 
@@ -84,7 +85,7 @@ class CheckoutController extends Controller
     {
         $product = $id;
         $server = Extensions::find($product->server_id);
-        include_once(base_path('app/Extensions/Servers/' . $server->name . '/index.php'));
+        include_once base_path('app/Extensions/Servers/' . $server->name . '/index.php');
         $function = $server->name . '_getUserConfig';
         if (!function_exists($function)) {
             return redirect()->back()->with('error', 'Config Not Found');
@@ -98,12 +99,14 @@ class CheckoutController extends Controller
         $product->quantity = 1;
         $cart = session()->get('cart');
         if (\Illuminate\Support\Arr::has($cart, $product->id)) {
-            $cart[$product->id]->quantity++;
+            ++$cart[$product->id]->quantity;
             session()->put('cart', $cart);
+
             return redirect()->route('checkout.index')->with('success', 'Product added to cart successfully!');
         } else {
             $cart[$product->id] = $product;
             session()->put('cart', $cart);
+
             return redirect()->route('checkout.index')->with('success', 'Product added to cart successfully!');
         }
     }
@@ -161,18 +164,19 @@ class CheckoutController extends Controller
         $invoice->save();
 
         session()->forget('cart');
-        try {
-            \Illuminate\Support\Facades\Mail::to(auth()->user())->send(new \App\Mail\Orders\NewOrder($order));
-        } catch (\Exception $e) {
-            
-        }
-        if ($total != 0) {
+        if (!config('settings::mail_disabled')) {
             try {
-                \Illuminate\Support\Facades\Mail::to(auth()->user())->send(new \App\Mail\Invoices\NewInvoice($invoice));
+                \Illuminate\Support\Facades\Mail::to(auth()->user())->send(new \App\Mail\Orders\NewOrder($order));
             } catch (\Exception $e) {
-                
+            }
+            if ($total != 0) {
+                try {
+                    \Illuminate\Support\Facades\Mail::to(auth()->user())->send(new \App\Mail\Invoices\NewInvoice($invoice));
+                } catch (\Exception $e) {
+                }
             }
         }
+
         return redirect()->route('clients.invoice.show', $invoice->id);
     }
 
@@ -183,22 +187,24 @@ class CheckoutController extends Controller
             unset($cart[$id]);
             session()->put('cart', $cart);
         }
+
         return redirect()->back()->with('success', 'Product removed successfully');
     }
 
     /*
-    * Update product quantity in cart
-    */
+     * Update product quantity in cart
+     */
     public function update(Request $request, $id)
     {
         $request->validate([
-            'quantity' => 'required|numeric|min:1'
+            'quantity' => 'required|numeric|min:1',
         ]);
         $cart = session()->get('cart');
         if (isset($cart[$id])) {
             $cart[$id]->quantity = $request->quantity;
             session()->put('cart', $cart);
         }
+
         return redirect()->back()->with('success', 'Product updated successfully');
     }
 }

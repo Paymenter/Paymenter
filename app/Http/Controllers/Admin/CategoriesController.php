@@ -2,15 +2,15 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use App\Models\Categories;
+use App\Http\Controllers\Controller;
 
 class CategoriesController extends Controller
 {
     public function index()
     {
         $categories = Categories::all();
+
         return view('admin.categories.index', compact('categories'));
     }
 

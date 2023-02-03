@@ -2,11 +2,10 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Models\User;
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Laravel\Socialite\Facades\Socialite;
-use App\Models\User;
 
 class SocialLoginController extends Controller
 {
@@ -14,7 +13,7 @@ class SocialLoginController extends Controller
     {
         if ($provider == 'discord') {
             return Socialite::driver($provider)->scopes(['email'])->redirect();
-        } else if ($provider == 'github') {
+        } elseif ($provider == 'github') {
             return Socialite::driver($provider)->scopes(['user:email'])->redirect();
         } else {
             return redirect()->route('login');
@@ -30,9 +29,10 @@ class SocialLoginController extends Controller
                 return redirect()->route('register')->with('error', 'You are not registered on this site.');
             } else {
                 Auth::login($user, true);
+
                 return redirect()->route('index');
             }
-        }else {
+        } else {
             return redirect()->route('login');
         }
     }

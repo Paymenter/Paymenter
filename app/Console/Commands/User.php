@@ -33,7 +33,6 @@ class User extends Command
 
         $name = $this->ask('What is his/her name?');
 
-
         $admin = $this->choice('User is an administrator?', ['no', 'yes'], 'no');
 
         $admin = $admin === 'yes' ? 1 : 0;
@@ -43,17 +42,18 @@ class User extends Command
         }
 
         if (\App\Models\User::where('email', $email)->exists()) {
-            exit($this->error('user already exists.'));
+            exit($this->error('User already exists.'));
         }
-
 
         $user = \App\Models\User::create([
             'email' => $email,
             'name' => $name,
             'password' => \Hash::make($password),
-            'is_admin' => $admin
+            'is_admin' => $admin,
         ]);
         $this->info('Account created successfully!');
-        echo $this->table(['name', 'email'], [[$user->name, $user->email]]);
+        echo $this->table(['name', 'email', 'admin'], [
+            [$user->name, $user->email, $user->is_admin ? 'yes' : 'no'],
+        ]);
     }
 }

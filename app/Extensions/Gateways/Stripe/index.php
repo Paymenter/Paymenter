@@ -51,11 +51,11 @@ function Stripe_webhook($request)
     } catch (\UnexpectedValueException $e) {
         // Invalid payload
         http_response_code(400);
-        exit();
+        exit;
     } catch (\Stripe\Exception\SignatureVerificationException $e) {
         // Invalid signature
         http_response_code(400);
-        exit();
+        exit;
     }
     if ($event->type == 'checkout.session.completed') {
         $order = $event->data->object;
@@ -75,14 +75,15 @@ function stripeClient()
             ExtensionHelper::getConfig('Stripe', 'stripe_test_key')
         );
     }
+
     return $stripe;
 }
-
 
 function Stripe_pay($total, $products, $orderId)
 {
     $stripe = stripeClient();
-    $order = Stripe_getUrl($products, $orderId);
+    $order = Stripe_getUrl($total, $products, $orderId);
+
     return $stripe->checkout->sessions->retrieve($order->id, [])->url;
 }
 
@@ -90,46 +91,46 @@ function Stripe_getConfig()
 {
     return [
         [
-            "name" => "stripe_secret_key",
-            "friendlyName" => "Stripe Secret Key",
-            "type" => "text",
-            "description" => "Stripe secret key",
-            "required" => true
+            'name' => 'stripe_secret_key',
+            'friendlyName' => 'Stripe Secret Key',
+            'type' => 'text',
+            'description' => 'Stripe secret key',
+            'required' => true,
         ],
         [
-            "name" => "stripe_publishable_key",
-            "friendlyName" => "Stripe publishable key",
-            "type" => "text",
-            "description" => "Stripe publishable key",
-            "required" => true
+            'name' => 'stripe_publishable_key',
+            'friendlyName' => 'Stripe publishable key',
+            'type' => 'text',
+            'description' => 'Stripe publishable key',
+            'required' => true,
         ],
         [
-            "name" => "stripe_webhook_secret",
-            "friendlyName" => "Stripe webhook secret",
-            "type" => "text",
-            "description" => "Stripe webhook secret",
-            "required" => true
+            'name' => 'stripe_webhook_secret',
+            'friendlyName' => 'Stripe webhook secret',
+            'type' => 'text',
+            'description' => 'Stripe webhook secret',
+            'required' => true,
         ],
         [
-            "name" => "stripe_test_mode",
-            "friendlyName" => "Stripe test mode",
-            "type" => "boolean",
-            "description" => "Stripe test mode",
-            "required" => false
+            'name' => 'stripe_test_mode',
+            'friendlyName' => 'Stripe test mode',
+            'type' => 'boolean',
+            'description' => 'Stripe test mode',
+            'required' => false,
         ],
         [
-            "name" => "stripe_test_key",
-            "friendlyName" => "Stripe test key",
-            "type" => "text",
-            "description" => "Stripe test key",
-            "required" => false
+            'name' => 'stripe_test_key',
+            'friendlyName' => 'Stripe test key',
+            'type' => 'text',
+            'description' => 'Stripe test key',
+            'required' => false,
         ],
         [
-            "name" => "stripe_test_publishable_key",
-            "friendlyName" => "Stripe test publishable key",
-            "type" => "text",
-            "description" => "Stripe test publishable key",
-            "required" => false
-        ]
+            'name' => 'stripe_test_publishable_key',
+            'friendlyName' => 'Stripe test publishable key',
+            'type' => 'text',
+            'description' => 'Stripe test publishable key',
+            'required' => false,
+        ],
     ];
 }

@@ -1,9 +1,9 @@
 <?php
 
-use App\Http\Controllers\API\Clients\InvoiceController;
-use App\Http\Controllers\API\Clients\TicketController;
-use App\Http\Controllers\API\Clients\UserController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\API\Clients\UserController;
+use App\Http\Controllers\API\Clients\TicketController;
+use App\Http\Controllers\API\Clients\InvoiceController;
 
 // Users
 Route::group(['prefix' => 'v1/users', 'middleware' => 'auth'], function () {

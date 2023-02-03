@@ -107,8 +107,6 @@
                 },
                 responsive: true
             });
-            $('.dt-button').addClass('dark:text-darkmodetext');
-            $('.dataTables_filter label').addClass('dark:text-darkmodetext');
         });
 
         var form = document.getElementsByClassName('delete');

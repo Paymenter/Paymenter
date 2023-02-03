@@ -2,11 +2,10 @@
 
 namespace Tests\Feature\Admin;
 
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 use App\Models\User;
 use App\Providers\RouteServiceProvider;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class AdminTest extends TestCase
 {
@@ -24,20 +23,19 @@ class AdminTest extends TestCase
      *
      * @return void
      */
-    public function test_non_admin_redirect()
+    public function testNonAdminRedirect()
     {
         $response = $this->get('/admin');
 
         $response->assertStatus(302);
     }
 
-
     /**
-     * Login as admin
-     * 
+     * Login as admin.
+     *
      * @return void
      */
-    public function test_can_login_as_admin()
+    public function testCanLoginAsAdmin()
     {
         $user = User::factory()->create(['is_admin' => 1]);
         $response = $this->post('/login', [
@@ -48,12 +46,13 @@ class AdminTest extends TestCase
         $this->assertAuthenticated();
         $response->assertRedirect(RouteServiceProvider::HOME);
     }
+
     /**
-     * Tests admin page
-     * 
+     * Tests admin page.
+     *
      * @return void
      */
-    public function test_authentiacted_as_admin_can_access_admin()
+    public function testAuthentiactedAsAdminCanAccessAdmin()
     {
         $response = $this->actingAs($this->user)->get('/admin');
 
@@ -61,11 +60,11 @@ class AdminTest extends TestCase
     }
 
     /**
-     * Tests admin page
-     * 
+     * Tests admin page.
+     *
      * @return void
      */
-    public function test_authentiacted_as_admin_can_access_admin_users()
+    public function testAuthentiactedAsAdminCanAccessAdminUsers()
     {
         $response = $this->actingAs($this->user)->get('/admin/clients');
 
@@ -73,11 +72,11 @@ class AdminTest extends TestCase
     }
 
     /**
-     * Tests admin page
-     * 
+     * Tests admin page.
+     *
      * @return void
      */
-    public function test_authentiacted_as_admin_can_access_admin_settings()
+    public function testAuthentiactedAsAdminCanAccessAdminSettings()
     {
         $response = $this->actingAs($this->user)->get('/admin/settings');
 
@@ -95,11 +94,11 @@ class AdminTest extends TestCase
     }
 
     /**
-     * Tests admin page
-     * 
+     * Tests admin page.
+     *
      * @return void
      */
-    public function test_authentiacted_as_admin_can_access_admin_orders()
+    public function testAuthentiactedAsAdminCanAccessAdminOrders()
     {
         $response = $this->actingAs($this->user)->get('/admin/orders');
 
@@ -107,15 +106,14 @@ class AdminTest extends TestCase
     }
 
     /**
-     * Tests admin page
-     * 
+     * Tests admin page.
+     *
      * @return void
      */
-    public function test_authentiacted_as_admin_can_access_admin_products()
+    public function testAuthentiactedAsAdminCanAccessAdminProducts()
     {
         $response = $this->actingAs($this->user)->get('/admin/products');
 
         $response->assertStatus(200);
     }
-
 }

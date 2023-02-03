@@ -15,11 +15,10 @@
                                 </h2>
                             </div>
                             @if (!$servers)
-                                <!-- not found -->
-                                    <p
-                                        class="dark:bg-darkmode2 dark:text-darkmodetext text-gray-600 px-3 rounded-md text-xl m-4">
-                                        {{ __('No extensions found') }}
-                                    </p>
+                                <p
+                                    class="dark:bg-darkmode2 dark:text-darkmodetext text-gray-600 px-3 rounded-md text-xl m-4">
+                                    {{ __('No extensions found') }}
+                                </p>
                             @else
                                 <thead class="dark:bg-darkmode bg-gray-50">
                                     <tr>
@@ -36,7 +35,9 @@
                                 </thead>
                                 <tbody class="dark:bg-darkmode bg-white divide-y divide-gray-200">
                                     <tr class="dark:bg-darkmode">
-                                        <td colspan="3" class="dark:text-darkmodetext px-6 py-4 whitespace-nowrap text-gray-500 font-bold text-lg text-center">Servers</td>
+                                        <td colspan="3"
+                                            class="dark:text-darkmodetext px-6 py-4 whitespace-nowrap text-gray-500 font-bold text-lg text-center">
+                                            Servers</td>
                                     </tr>
                                     @foreach ($servers as $extensio)
                                         @if ($extensio == '.' || $extensio == '..')
@@ -48,20 +49,23 @@
                                                 {{ $extensio }}</td>
                                             <td
                                                 class="dark:text-darkmodetext px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                                @if (App\Models\Extensions::where('name', $extensio)->first()->enabled == 1)
+                                                @if (App\Models\Extensions::where('name', $extensio)->get()->first()->enabled)
                                                     {{ __('Yes') }}
                                                 @else
                                                     {{ __('No') }}
                                                 @endif
                                             </td>
-                                            <td class="dark:text-darkmodetext px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                            <td
+                                                class="dark:text-darkmodetext px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                                 <a href="{{ route('admin.extensions.edit', ['server', $extensio]) }}"
                                                     class="text-indigo-600 hover:text-indigo-900 hover:bg-button p-2 rounded-lg">{{ __('Edit') }}</a>
                                             </td>
                                         </tr>
                                     @endforeach
                                     <tr class="dark:bg-darkmode">
-                                        <td colspan="3" class="dark:text-darkmodetext px-6 py-4 whitespace-nowrap text-gray-500 font-bold text-lg text-center">Gateways</td>
+                                        <td colspan="3"
+                                            class="dark:text-darkmodetext px-6 py-4 whitespace-nowrap text-gray-500 font-bold text-lg text-center">
+                                            Gateways</td>
                                     </tr>
                                     @foreach ($gateways as $gateway)
                                         @if ($gateway == '.' || $gateway == '..')
@@ -73,13 +77,14 @@
                                                 {{ $gateway }}</td>
                                             <td
                                                 class="dark:text-darkmodetext px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                                @if (App\Models\Extensions::where('name', $extensio)->first()->enabled == 1)
+                                                @if (App\Models\Extensions::where('name', $gateway)->get()->first()->enabled)
                                                     {{ __('Yes') }}
                                                 @else
                                                     {{ __('No') }}
                                                 @endif
                                             </td>
-                                            <td class="dark:text-darkmodetext px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                            <td
+                                                class="dark:text-darkmodetext px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                                 <a href="{{ route('admin.extensions.edit', ['gateway', $gateway]) }}"
                                                     class="dark:bg-darkmodebutton text-indigo-600 hover:text-indigo-900 hover:bg-button p-2 rounded-lg">{{ __('Edit') }}</a>
                                             </td>

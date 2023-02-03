@@ -3,6 +3,12 @@
         @csrf
         <div class="grid grid-cols-1 md:grid-cols-2">
             <div class="relative m-4 group">
+                <input type="checkbox" class="w-fit form-input peer @error('mail_encryption') is-invalid @enderror"
+                    placeholder=" " name="mail_disabled" value="1"
+                    {{ config('settings::mail_disabled') == 1 ? 'checked' : '' }} />
+                <label class="form-label" style="position: unset">{{ __('Disable all mails') }}</label>
+            </div>
+            <div class="relative m-4 group">
                 <input type="text" class="form-input peer @error('mail_username') is-invalid @enderror" placeholder=" "
                     name="mail_username" value="{{ config('mail.username') }}" />
                 <label class="form-label">{{ __('Mail Username') }}</label>

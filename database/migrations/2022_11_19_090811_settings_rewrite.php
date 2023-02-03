@@ -1,11 +1,10 @@
 <?php
 
-use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Database\Migrations\Migration;
 
-return new class extends Migration
-{
+return new class () extends Migration {
     /**
      * Run the migrations.
      *
@@ -22,12 +21,12 @@ return new class extends Migration
         $settings = \App\Models\Settings::first();
         $settings = $settings->toArray();
         foreach ($settings as $key => $value) {
-            if($key == 'created_at' || $key == 'updated_at' || $key == 'id' || $key == 'key' || $key == 'value') {
+            if ($key == 'created_at' || $key == 'updated_at' || $key == 'id' || $key == 'key' || $key == 'value') {
                 continue;
             }
             \App\Models\Settings::create([
                 'key' => $key,
-                'value' => $value
+                'value' => $value,
             ]);
         }
         \App\Models\Settings::first()->delete();
@@ -35,7 +34,6 @@ return new class extends Migration
         Schema::table('settings', function (Blueprint $table) {
             $table->dropColumn(['advanced_mode', 'currency_sign', 'currency_position', 'home_page_text', 'app_name', 'sidebar', 'seo_title', 'seo_description', 'seo_keywords', 'seo_twitter_card', 'seo_image', 'maintenance', 'theme', 'recaptcha', 'recaptcha_site_key', 'recaptcha_secret_key']);
         });
-        
     }
 
     /**
@@ -68,7 +66,7 @@ return new class extends Migration
         $settings = $settings->toArray();
         foreach ($settings as $key => $value) {
             \App\Models\Settings::create([
-                $value['key'] => $value['value']
+                $value['key'] => $value['value'],
             ]);
         }
         // drop old settings

@@ -2,9 +2,12 @@
 
 namespace App\Classes;
 
-class API {
-    public static function repaginate(mixed $data) {
+class API
+{
+    public static function repaginate(mixed $data)
+    {
         $data = $data->toArray();
+
         return [
             'metadata' => [
                 'total_items' => $data['total'],

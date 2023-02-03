@@ -2,12 +2,12 @@
 
 namespace App\Providers;
 
+use App\Models\Settings;
+use Qirolab\Theme\Theme;
+use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\Schema;
-use App\Models\Settings;
-use Illuminate\Support\Facades\Artisan;
-use Qirolab\Theme\Theme;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -18,7 +18,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        //
     }
 
     /**
@@ -38,25 +37,25 @@ class AppServiceProvider extends ServiceProvider
             if (config('settings::app_name') !== config('app.name')) {
                 config(['app.name' => config('settings::app_name')]);
             }
-            if(config('settings::mail_host') !== config('mail.host')) {
+            if (config('settings::mail_host') !== config('mail.host')) {
                 config(['mail.host' => config('settings::mail_host')]);
             }
-            if(config('settings::mail_port') !== config('mail.port')) {
+            if (config('settings::mail_port') !== config('mail.port')) {
                 config(['mail.port' => config('settings::mail_port')]);
             }
-            if(config('settings::mail_username') !== config('mail.username')) {
+            if (config('settings::mail_username') !== config('mail.username')) {
                 config(['mail.username' => config('settings::mail_username')]);
             }
-            if(config('settings::mail_password') !== config('mail.password')) {
+            if (config('settings::mail_password') !== config('mail.password')) {
                 config(['mail.password' => config('settings::mail_password')]);
             }
-            if(config('settings::mail_encryption') !== config('mail.encryption')) {
+            if (config('settings::mail_encryption') !== config('mail.encryption')) {
                 config(['mail.encryption' => config('settings::mail_encryption')]);
             }
-            if(config('settings::mail_from_address') !== config('mail.from.address')) {
+            if (config('settings::mail_from_address') !== config('mail.from.address')) {
                 config(['mail.from.address' => config('settings::mail_from_address')]);
             }
-            if(config('settings::mail_from_name') !== config('mail.from.name')) {
+            if (config('settings::mail_from_name') !== config('mail.from.name')) {
                 config(['mail.from.name' => config('settings::mail_from_name')]);
             }
             if (
@@ -71,7 +70,7 @@ class AppServiceProvider extends ServiceProvider
                     'transport' => 'smtp',
                     'host' => config('settings::mail_host'),
                     'port' => config('settings::mail_port'),
-                    'encryption' => config('settings::mail_encryption') ? 'SSL' : 'TLS', 
+                    'encryption' => config('settings::mail_encryption') ? 'SSL' : 'TLS',
                     'username' => config('settings::mail_username'),
                     'password' => config('settings::mail_password'),
                     'timeout' => null,
@@ -81,18 +80,17 @@ class AppServiceProvider extends ServiceProvider
 
                 Artisan::call('queue:restart');
             }
-            if(config('settings::discord_enabled')){
+            if (config('settings::discord_enabled')) {
                 config(['services.discord.client_id' => config('settings::discord_client_id')]);
                 config(['services.discord.client_secret' => config('settings::discord_client_secret')]);
                 config(['services.discord.redirect' => url('/login/discord/callback')]);
             }
-            if(config('settings::currency') == null){
+            if (config('settings::currency') == null) {
                 config(['settings::currency' => 'USD']);
             }
-            if(config('settings::theme') !== config('themes.active')){
+            if (config('settings::theme') !== config('themes.active')) {
                 Theme::set(config('settings::theme'), 'default');
             }
-
         } catch (\Exception $e) {
             // do nothing
         }

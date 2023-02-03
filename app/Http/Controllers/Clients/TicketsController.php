@@ -2,27 +2,28 @@
 
 namespace App\Http\Controllers\Clients;
 
-use App\Models\Orders;
-use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use App\Models\Tickets;
-use App\Models\TicketMessages;
 use App\Models\User;
+use App\Models\Orders;
+use App\Models\Tickets;
+use Illuminate\Http\Request;
+use App\Models\TicketMessages;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\RateLimiter;
 
 class TicketsController extends Controller
 {
-    function __construct()
+    public function __construct()
     {
         $this->middleware('auth');
     }
 
-    function index(Request $request)
+    public function index(Request $request)
     {
         $tickets = Tickets::where('client', auth()->user()->id)->get();
         $users = User::where('id', auth()->user()->id)->get();
         $ticketMessages = TicketMessages::all();
         $sort = $request->get('sort');
+
         return view(
             'clients.tickets.index',
             compact(
@@ -34,13 +35,14 @@ class TicketsController extends Controller
         );
     }
 
-    function create()
+    public function create()
     {
         $services = Orders::where('client', auth()->user()->id)->get();
+
         return view('clients.tickets.create', compact('services'));
     }
 
-    function store(Request $request)
+    public function store(Request $request)
     {
         if (config('settings::recaptcha') == 1) {
             $request->validate([
@@ -76,27 +78,28 @@ class TicketsController extends Controller
         TicketMessages::create([
             'ticket_id' => $ticket->id,
             'message' => request('description'),
-            'user_id' => auth()->user()->id
+            'user_id' => auth()->user()->id,
         ]);
-
 
         return redirect('/tickets')->with('success', 'Ticket created successfully');
     }
 
-    function show(Tickets $ticket)
+    public function show(Tickets $ticket)
     {
         $messages = TicketMessages::where('ticket_id', $id->id)->get();
+
         return view('clients.tickets.show', compact('ticket', 'messages'));
     }
 
-    function close(Tickets $ticket)
+    public function close(Tickets $ticket)
     {
         $ticket->status = 'closed';
         $ticket->save();
+
         return redirect('/tickets')->with('success', 'Ticket closed successfully');
     }
 
-    function reply(Request $request, Tickets $ticket)
+    public function reply(Request $request, Tickets $ticket)
     {
         if (config('settings::recaptcha') == 1) {
             $request->validate([
@@ -108,7 +111,7 @@ class TicketsController extends Controller
                 'message' => 'required',
             ]);
         }
-        if($ticket->status == 'closed'){
+        if ($ticket->status == 'closed') {
             return redirect()->back()->with('error', 'You can not reply to a closed ticket.');
         }
         $executed = RateLimiter::attempt(
@@ -124,8 +127,9 @@ class TicketsController extends Controller
         TicketMessages::create([
             'ticket_id' => $ticket->id,
             'message' => request('message'),
-            'user_id' => auth()->user()->id
+            'user_id' => auth()->user()->id,
         ]);
+
         return redirect()->back()->with('success', 'Message sent successfully');
     }
 }

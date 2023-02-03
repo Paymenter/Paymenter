@@ -11,4 +11,3 @@ Route::group(['prefix' => 'extensions'], function () {
         }
     }
 });
-

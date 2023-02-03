@@ -2,23 +2,23 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use Qirolab\Theme\Theme;
 use App\Models\Settings;
+use Qirolab\Theme\Theme;
+use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 
 class SettingsController extends Controller
 {
-    function index()
+    public function index()
     {
         $tabs = [];
-        // Get current theme     
+        // Get current theme
         foreach (glob(Theme::getViewPaths()[1] . '/admin/settings/settings/*.blade.php') as $filename) {
             $tabs[] = 'admin.settings.settings.' . basename($filename, '.blade.php');
         }
-        $themes = array_diff(scandir(base_path('themes')), array('..', '.'));
+        $themes = array_diff(scandir(base_path('themes')), ['..', '.']);
 
         return view('admin.settings.index', [
             'tabs' => $tabs,
@@ -26,7 +26,7 @@ class SettingsController extends Controller
         ]);
     }
 
-    function general(Request $request)
+    public function general(Request $request)
     {
         $request->validate([
             'app_name' => 'required|max:255',
@@ -45,18 +45,19 @@ class SettingsController extends Controller
         }
 
         $theme = request('theme');
-        try{
+        try {
             $theme = Theme::set($theme);
-        }catch(\Exception $e){
+        } catch (\Exception $e) {
             $theme = 'default';
         }
         foreach ($request->except(['_token', 'app_logo', 'app_favicon']) as $key => $value) {
             Settings::updateOrCreate(['key' => $key], ['value' => $value]);
         }
+
         return redirect('/admin/settings#general')->with('success', 'Settings updated successfully');
     }
 
-    function email(Request $request)
+    public function email(Request $request)
     {
         $request->validate([
             'mail_host' => 'required',
@@ -71,10 +72,11 @@ class SettingsController extends Controller
         foreach ($request->except(['_token']) as $key => $value) {
             Settings::updateOrCreate(['key' => $key], ['value' => $value]);
         }
+
         return redirect('/admin/settings#mail')->with('success', 'Settings updated successfully');
     }
 
-    function testEmail(Request $request)
+    public function testEmail(Request $request)
     {
         config(['mail.mailers.smtp' => [
             'transport' => 'smtp',
@@ -104,7 +106,7 @@ class SettingsController extends Controller
         return response()->json(['success' => 'Email sent successfully'], 200);
     }
 
-    function login(Request $request)
+    public function login(Request $request)
     {
         Settings::updateOrCreate(['key' => 'discord_client_id'], ['value' => $request->discord_client_id]);
         Settings::updateOrCreate(['key' => 'discord_client_secret'], ['value' => $request->discord_client_secret]);
@@ -113,7 +115,7 @@ class SettingsController extends Controller
         return redirect('/admin/settings#login')->with('success', 'Settings updated successfully');
     }
 
-    function security(Request $request)
+    public function security(Request $request)
     {
         Settings::updateOrCreate(['key' => 'recaptcha_site_key'], ['value' => $request->recaptcha_site_key]);
         Settings::updateOrCreate(['key' => 'recaptcha_secret_key'], ['value' => $request->recaptcha_secret_key]);

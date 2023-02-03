@@ -22,6 +22,7 @@
                                 <select id="server" class="block w-full mt-1 dark:bg-darkmode rounded-md" name="server_id"
                                     required>
                                     @if ($extensions->count())
+                                        <option value="" disabled selected>None</option>
                                         @foreach ($extensions as $server)
                                             @if ($server->id == $product->server_id)
                                                 <option value="{{ $server->id }}" selected>{{ $server->name }}

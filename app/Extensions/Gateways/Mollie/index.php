@@ -1,8 +1,7 @@
 <?php
 
-use Illuminate\Support\Facades\Http;
 use App\Helpers\ExtensionHelper;
-
+use Illuminate\Support\Facades\Http;
 
 function Mollie_pay($total, $products, $orderId)
 {
@@ -14,21 +13,22 @@ function Mollie_pay($total, $products, $orderId)
     }
     $response = Http::withHeaders([
         'Content-Type' => 'application/json',
-        'Authorization' => 'Bearer ' . $client_id
+        'Authorization' => 'Bearer ' . $client_id,
     ])->post($url, [
         'amount' => [
             'currency' => ExtensionHelper::getCurrency(),
-            'value' => number_format($total, 2, '.', '')
+            'value' => number_format($total, 2, '.', ''),
         ],
         'description' => $description,
-        'redirectUrl' => route('clients.invoice.show', ['id' => $orderId]),
+        'redirectUrl' => route('clients.invoice.show', $orderId),
         'webhookUrl' => url('/extensions/mollie/webhook'),
         'metadata' => [
-            'order_id' => $orderId
-        ]
+            'order_id' => $orderId,
+        ],
     ]);
+
     return $response->json()['_links']['checkout']['href'];
-};
+}
 
 function Mollie_webhook($request)
 {
@@ -36,23 +36,24 @@ function Mollie_webhook($request)
     $client_id = ExtensionHelper::getConfig('Mollie', 'api_key');
     $response = Http::withHeaders([
         'Content-Type' => 'application/json',
-        'Authorization' => 'Bearer ' . $client_id
+        'Authorization' => 'Bearer ' . $client_id,
     ])->get($url);
     if ($response->json()['status'] == 'paid') {
         $orderId = $response->json()['metadata']['order_id'];
         ExtensionHelper::paymentDone($orderId);
     }
+
     return $response->json();
-};
+}
 
 function Mollie_getConfig()
 {
     return [
         [
-            "name" => "api_key",
-            "friendlyName" => "API Key",
-            "type" => "text",
-            "required" => true
-        ]
+            'name' => 'api_key',
+            'friendlyName' => 'API Key',
+            'type' => 'text',
+            'required' => true,
+        ],
     ];
 }

@@ -2,16 +2,17 @@
 
 namespace App\Http\Controllers\Clients;
 
+use Illuminate\Http\Request;
 use App\Helpers\ExtensionHelper;
 use App\Http\Controllers\Controller;
-use App\Models\{Products, Invoices, Orders};
-use Illuminate\Http\Request;
+use App\Models\{Invoices, Orders, Products};
 
 class InvoiceController extends Controller
 {
     public function index(Request $request)
     {
         $invoices = Invoices::where('user_id', auth()->user()->id)->get();
+
         return view('clients.invoice.index', compact('invoices'));
     }
 
@@ -29,6 +30,7 @@ class InvoiceController extends Controller
             $products[] = $test;
         }
         $currency_sign = config('settings::currency_sign');
+
         return view('clients.invoice.show', compact('invoice', 'order', 'products', 'currency_sign'));
     }
 

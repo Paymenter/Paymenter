@@ -2,8 +2,8 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Invoices extends Model
 {
@@ -13,7 +13,7 @@ class Invoices extends Model
         'user_id',
         'order_id',
         'status',
-        'paid_at'
+        'paid_at',
     ];
 
     public function order()

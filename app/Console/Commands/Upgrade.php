@@ -2,9 +2,10 @@
 
 namespace App\Console\Commands;
 
+use App\Console\Kernel;
 use Illuminate\Console\Command;
 use Symfony\Component\Process\Process;
-use App\Console\Kernel;
+
 class Upgrade extends Command
 {
     protected const DEFAULT_URL = 'https://github.com/paymenter/paymenter/releases/%s/paymenter.tar.gz';
@@ -112,7 +113,6 @@ class Upgrade extends Command
         $kernel->bootstrap();
         $this->setLaravel($app);
 
-
         // Run the database migrations.
         $this->line('$upgrader> php artisan migrate --force');
         $this->call('migrate', ['--force' => true]);
@@ -136,6 +136,7 @@ class Upgrade extends Command
         $this->call('up');
 
         $this->info('Upgrade process completed successfully!');
+
         return Command::SUCCESS;
     }
 

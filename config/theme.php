@@ -30,5 +30,5 @@ return [
     |
     | The base path where all the themes are located.
     */
-    'base_path' => base_path('themes')
+    'base_path' => base_path('themes'),
 ];

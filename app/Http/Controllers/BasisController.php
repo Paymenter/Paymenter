@@ -2,37 +2,41 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Categories;
 use App\Models\Products;
+use App\Models\Categories;
 use Illuminate\Http\Request;
 
 class BasisController extends Controller
 {
-    function index()
+    public function index()
     {
-        //$services = Services::where('client', auth()->user()->id)->get();
+        // $services = Services::where('client', auth()->user()->id)->get();
         $categories = Categories::all();
+
         return view('welcome', compact('categories'));
     }
 
-    function products(String $slug = null, Products $product = null)
+    public function products(string $slug = null, Products $product = null)
     {
         if ($product) {
             return view('checkout', compact('product'));
         } else {
-            if($slug == null)
+            if ($slug == null) {
                 $categories = Categories::all();
-            else if($slug == 'products')
+            } elseif ($slug == 'products') {
                 $categories = Categories::all();
-            else
+            } else {
                 $categories = Categories::where('slug', $slug)->get();
-            if($categories->count() == 0)
+            }
+            if ($categories->count() == 0) {
                 return abort(404);
+            }
+
             return view('product', compact('categories'));
         }
     }
 
-    function manifest(Request $request)
+    public function manifest(Request $request)
     {
         foreach ($request->all() as $key => $value) {
             $value = htmlentities($value);

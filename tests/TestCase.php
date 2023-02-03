@@ -12,6 +12,6 @@ abstract class TestCase extends BaseTestCase
     {
         parent::setUp();
 
-        $this->withoutVite(); //Fixes it :D
+        $this->withoutVite(); // Fixes it :D
     }
 }

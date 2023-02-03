@@ -2,8 +2,8 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class OrderProductsConfig extends Model
 {
@@ -12,12 +12,11 @@ class OrderProductsConfig extends Model
     protected $fillable = [
         'order_product_id',
         'key',
-        'value'
+        'value',
     ];
 
     public function product()
     {
         return $this->belongsTo(OrderProducts::class, 'order_id', 'product_id');
     }
-
 }

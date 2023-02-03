@@ -1,42 +1,41 @@
 <?php
+
 namespace App\Http\Controllers\Clients;
 
-
-use App\Http\Controllers\Controller;
+use App\Models\User;
 use App\Models\Orders;
 use App\Models\Invoices;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use App\Models\User;
+use App\Http\Controllers\Controller;
 
 class HomeController extends Controller
 {
-    function index()
+    public function index()
     {
         $services = Orders::where('client', auth()->user()->id)->get();
         $invoices = Invoices::where('user_id', auth()->user()->id)->where('status', 'pending')->get();
-        
+
         return view('clients.home', compact('services', 'invoices'));
     }
 
-    function profile()
+    public function profile()
     {
         return view('clients.profile');
     }
 
-    function password()
+    public function password()
     {
         return view('auth.passwords.change-password');
     }
 
-    function update(Request $request)
+    public function update(Request $request)
     {
         $request->validate([
             'name' => 'required',
             'address' => 'required',
             'city' => 'required',
             'country' => 'required',
-            'phone' => 'required'
+            'phone' => 'required',
         ]);
         $user = User::find(auth()->user()->id);
         $user->name = $request->name;
@@ -45,6 +44,7 @@ class HomeController extends Controller
         $user->country = $request->country;
         $user->phone = $request->phone;
         $user->save();
+
         return redirect()->back()->with('success', 'Profile updated successfully');
     }
 }

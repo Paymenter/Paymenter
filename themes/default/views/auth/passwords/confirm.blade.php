@@ -35,7 +35,7 @@
                     @enderror
                 </div>
                 @if (config('settings::recaptcha') == 1)
-                    <div class="g-recaptcha" data-sitekey="{{ config('settings::recaptcha_site_key') }}"></div>
+                    <div class="g-recaptcha mt-1" data-sitekey="{{ config('settings::recaptcha_site_key') }}"></div>
                 @endif
                 <div class="flex justify-end mt-4 dark:hover:bg-darkmodebutton">
                     <button type="submit"

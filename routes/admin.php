@@ -62,7 +62,7 @@ Route::group(['prefix' => 'admin'], function () {
         Route::delete('/{user}/delete', [App\Http\Controllers\Admin\ClientsController::class, 'destroy'])->middleware(['auth.admin'])->name('admin.clients.delete');
     });
 
-    Route::group(['prefix' => 'orders'], function(){
+    Route::group(['prefix' => 'orders'], function () {
         Route::get('/', [App\Http\Controllers\Admin\OrdersController::class, 'index'])->middleware(['auth.admin'])->name('admin.orders');
         Route::delete('/{order}/delete', [App\Http\Controllers\Admin\OrdersController::class, 'destroy'])->middleware(['auth.admin'])->name('admin.orders.delete');
         Route::get('/{order}', [App\Http\Controllers\Admin\OrdersController::class, 'show'])->middleware(['auth.admin'])->name('admin.orders.show');

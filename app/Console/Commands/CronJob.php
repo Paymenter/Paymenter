@@ -2,12 +2,11 @@
 
 namespace App\Console\Commands;
 
-use Illuminate\Console\Command;
 use App\Models\Orders;
+use Illuminate\Console\Command;
 use App\Helpers\ExtensionHelper;
 use App\Mail\Invoices\NewInvoice;
 use Illuminate\Support\Facades\Mail;
-
 
 class CronJob extends Command
 {
@@ -39,10 +38,10 @@ class CronJob extends Command
                 $order->status = 'suspended';
                 $order->save();
                 ExtensionHelper::suspendServer($order);
-            } else if ($order->status == 'pending') {
+            } elseif ($order->status == 'pending') {
                 $order->status = 'cancelled';
                 $order->save();
-            } else if ($order->status == 'suspended') {
+            } elseif ($order->status == 'suspended') {
                 // Check if expiry_date is 7 days before now with strtotime
                 if (strtotime($order->expiry_date) < strtotime('-1 week')) {
                     ExtensionHelper::terminateServer($order);
@@ -60,14 +59,17 @@ class CronJob extends Command
                 $invoice->status = 'pending';
                 $invoice->user_id = $order->client;
                 $invoice->save();
-                try{
-                    Mail::to($order->client()->get())->send(new NewInvoice($invoice));
-                }catch(\Exception $e){
-                    error_log($e->getMessage());
+                if (!config('settings::mail_disabled')) {
+                    try {
+                        Mail::to($order->client()->get())->send(new NewInvoice($invoice));
+                    } catch (\Exception $e) {
+                        error_log($e->getMessage());
+                    }
                 }
             }
         }
         $this->info('Cron Job Finished');
+
         return Command::SUCCESS;
     }
 }

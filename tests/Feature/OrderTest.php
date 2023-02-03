@@ -2,10 +2,9 @@
 
 namespace Tests\Feature;
 
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
-use App\Models\{User, Order, Products, Categories, Invoices};
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use App\Models\{Categories, Invoices, Order, Products, User};
 
 class OrderTest extends TestCase
 {
@@ -30,7 +29,7 @@ class OrderTest extends TestCase
      *
      * @return void
      */
-    public function test_can_place_product_in_cart()
+    public function testCanPlaceProductInCart()
     {
         $response = $this->actingAs($this->user)->get(route('checkout.add') . '?id=' . $this->product->id);
 
@@ -42,7 +41,7 @@ class OrderTest extends TestCase
      *
      * @return void
      */
-    public function test_can_continue_to_invoice()
+    public function testCanContinueToInvoice()
     {
         $response = $this->actingAs($this->user)->get(route('checkout.add') . '?id=' . $this->product->id);
 

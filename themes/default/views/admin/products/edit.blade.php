@@ -46,7 +46,7 @@
                                     <img src="{{ $product->image }}" alt="{{ $product->name }}" class="w-32 h-32 mt-4" id="prodctimg" onerror="removeElement(this)">
                                     <script>
                                         function removeElement(element) {
-                                            element.classList.add('hidden');
+                                            element.onerror = "";
                                         }
                                         document.getElementById('no_image').addEventListener('change', function() {
                                             document.getElementById('image').disabled = this.checked;
@@ -60,6 +60,10 @@
                                                 img.src = URL.createObjectURL(this.files[0]);
                                             }
                                         });
+                                        if(document.getElementById('no_image').checked) {
+                                            document.getElementById('image').disabled = true;
+                                            document.getElementById('prodctimg').classList.add('hidden');
+                                        }
                                     </script>
                                 </div>
                             </div>
@@ -82,7 +86,6 @@
                                 <div class="flex items-center justify-end mt-4 text-blue-700">
                                     <a href="{{ route('admin.categories.create') }}">Create Category</a>
                                 </div>
-
                             </div>
                             <div class="flex items-center justify-end mt-4">
                                 <button type="submit"

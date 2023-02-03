@@ -1,7 +1,7 @@
 <?php
 
-use App\Http\Controllers\API\Website\ProductController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\API\Website\ProductController;
 
 // Products
 Route::group(['prefix' => 'v1/products'], function () {

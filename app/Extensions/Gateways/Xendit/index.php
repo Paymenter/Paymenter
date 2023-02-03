@@ -1,8 +1,7 @@
 <?php
 
-use Illuminate\Support\Facades\Http;
 use App\Helpers\ExtensionHelper;
-
+use Illuminate\Support\Facades\Http;
 
 function Xendit_pay($total, $products, $orderId)
 {
@@ -16,42 +15,43 @@ function Xendit_pay($total, $products, $orderId)
     }
     $response = Http::withHeaders([
         'Content-Type' => 'application/json',
-        'Authorization' => 'Basic ' . $apiKey
+        'Authorization' => 'Basic ' . $apiKey,
     ])->post($url, [
         'amount' => number_format($total, 2, '.', ''),
         'description' => $description,
-        'success_redirect_url' => route('clients.invoice.show', ['id' => $orderId]),
-        'failure_redirect_url' => route('clients.invoice.show', ['id' => $orderId]),
-        'external_id' => (string) $orderId
+        'success_redirect_url' => route('clients.invoice.show', $orderId),
+        'failure_redirect_url' => route('clients.invoice.show', $orderId),
+        'external_id' => (string) $orderId,
     ]);
+
     return $response->json()['invoice_url'];
-};
+}
 
 function Xendit_webhook($request)
 {
-    if($request->header('x-callback-token') != ExtensionHelper::getConfig('Xendit', 'callback')){
+    if ($request->header('x-callback-token') != ExtensionHelper::getConfig('Xendit', 'callback')) {
         return response()->json(['message' => 'Invalid callback token'], 403);
     }
     $json = $request->getContent();
     $json = json_decode($json, true);
     ExtensionHelper::paymentDone($json['external_id']);
     response()->json(['message' => 'Webhook received'], 200);
-};
+}
 
 function Xendit_getConfig()
 {
     return [
         [
-            "name" => "api_key",
-            "friendlyName" => "API Key",
-            "type" => "text",
-            "required" => true
+            'name' => 'api_key',
+            'friendlyName' => 'API Key',
+            'type' => 'text',
+            'required' => true,
         ],
         [
-            "name"=> "callback",
-            "friendlyName" => "Callback verification token",
-            "type" => "text",
-            "required" => true
-        ]
+            'name' => 'callback',
+            'friendlyName' => 'Callback verification token',
+            'type' => 'text',
+            'required' => true,
+        ],
     ];
 }

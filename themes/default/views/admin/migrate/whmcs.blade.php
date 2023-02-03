@@ -119,15 +119,27 @@ $('select[name="chosenOption"]').change(function() {
 </script>
 
 <?php
-	//validate the GET variables
-	if(isset($_GET) && !empty($_GET)) {
-		if (!filter_var($_GET['host'], FILTER_VALIDATE_IP)) return false;
-		if (!filter_var($_GET['dbUsername'])) return false;
-		if (!filter_var($_GET['dbPassword'])) return false;
-		if (!filter_var($_GET['chosenOption'])) return false;
-		if (!filter_var($_GET['currency'])) return false;
-		if (!filter_var($_GET['replace'])) return false;
-	}
+    // validate the GET variables
+    if (isset($_GET) && !empty($_GET)) {
+        if (!filter_var($_GET['host'], FILTER_VALIDATE_IP)) {
+            return false;
+        }
+        if (!filter_var($_GET['dbUsername'])) {
+            return false;
+        }
+        if (!filter_var($_GET['dbPassword'])) {
+            return false;
+        }
+        if (!filter_var($_GET['chosenOption'])) {
+            return false;
+        }
+        if (!filter_var($_GET['currency'])) {
+            return false;
+        }
+        if (!filter_var($_GET['replace'])) {
+            return false;
+        }
+    }
 ?>
 
 </x-admin-layout>

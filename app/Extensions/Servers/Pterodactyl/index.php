@@ -1,7 +1,7 @@
 <?php
 
-use Illuminate\Support\Facades\Http;
 use App\Helpers\ExtensionHelper;
+use Illuminate\Support\Facades\Http;
 
 function pteroConfig($key)
 {
@@ -9,6 +9,7 @@ function pteroConfig($key)
     if ($config) {
         return $config;
     }
+
     return null;
 }
 
@@ -16,17 +17,17 @@ function Pterodactyl_getConfig()
 {
     return [
         [
-            "name" => "host",
-            "friendlyName" => "Pterodactyl panel url",
-            "type" => "text",
-            "required" => true
+            'name' => 'host',
+            'friendlyName' => 'Pterodactyl panel url',
+            'type' => 'text',
+            'required' => true,
         ],
         [
-            "name" => "apiKey",
-            "friendlyName" => "API Key",
-            "type" => "text",
-            "required" => true
-        ]
+            'name' => 'apiKey',
+            'friendlyName' => 'API Key',
+            'type' => 'text',
+            'required' => true,
+        ],
     ];
 }
 
@@ -34,83 +35,83 @@ function Pterodactyl_getProductConfig()
 {
     return [
         [
-            "name" => "node",
-            "friendlyName" => "Pterodactyl Node (leave empty for node assigned to location)",
-            "type" => "text",
-            "required" => true
+            'name' => 'node',
+            'friendlyName' => 'Pterodactyl Node (leave empty for node assigned to location)',
+            'type' => 'text',
+            'required' => true,
         ],
         [
-            "name" => "location",
-            "friendlyName" => "Pterodactyl Location",
-            "type" => "text",
-            "required" => true
+            'name' => 'location',
+            'friendlyName' => 'Pterodactyl Location',
+            'type' => 'text',
+            'required' => true,
         ],
         [
-            "name" => "egg",
-            "friendlyName" => "Pterodactyl Egg ID",
-            "type" => "text",
-            "required" => true
+            'name' => 'egg',
+            'friendlyName' => 'Pterodactyl Egg ID',
+            'type' => 'text',
+            'required' => true,
         ],
         [
-            "name" => "nest",
-            "friendlyName" => "Pterodactyl Nest ID",
-            "type" => "text",
-            "required" => true
+            'name' => 'nest',
+            'friendlyName' => 'Pterodactyl Nest ID',
+            'type' => 'text',
+            'required' => true,
         ],
         [
-            "name" => "memory",
-            "friendlyName" => "Pterodactyl Memory",
-            "type" => "text",
-            "required" => true
+            'name' => 'memory',
+            'friendlyName' => 'Pterodactyl Memory',
+            'type' => 'text',
+            'required' => true,
         ],
         [
-            "name" => "swap",
-            "friendlyName" => "Pterodactyl Swap",
-            "type" => "text",
-            "required" => true
+            'name' => 'swap',
+            'friendlyName' => 'Pterodactyl Swap',
+            'type' => 'text',
+            'required' => true,
         ],
         [
-            "name" => "disk",
-            "friendlyName" => "Pterodactyl Disk",
-            "type" => "text",
-            "required" => true
+            'name' => 'disk',
+            'friendlyName' => 'Pterodactyl Disk',
+            'type' => 'text',
+            'required' => true,
         ],
         [
-            "name" => "io",
-            "friendlyName" => "Pterodactyl IO",
-            "type" => "text",
-            "required" => true
+            'name' => 'io',
+            'friendlyName' => 'Pterodactyl IO',
+            'type' => 'text',
+            'required' => true,
         ],
         [
-            "name" => "cpu",
-            "friendlyName" => "CPU limit",
-            "type" => "text",
-            "required" => true
+            'name' => 'cpu',
+            'friendlyName' => 'CPU limit',
+            'type' => 'text',
+            'required' => true,
         ],
         [
-            "name" => "databases",
-            "friendlyName" => "Pterodactyl Database",
-            "type" => "text",
-            "required" => true
+            'name' => 'databases',
+            'friendlyName' => 'Pterodactyl Database',
+            'type' => 'text',
+            'required' => true,
         ],
         [
-            "name" => "backups",
-            "friendlyName" => "Pterodactyl Backups",
-            "type" => "text",
-            "required" => true
+            'name' => 'backups',
+            'friendlyName' => 'Pterodactyl Backups',
+            'type' => 'text',
+            'required' => true,
         ],
         [
-            "name" => "skip_scripts",
-            "friendlyName" => "Pterodactyl Skip Scripts",
-            "type" => "boolean",
-            "required" => true
+            'name' => 'skip_scripts',
+            'friendlyName' => 'Pterodactyl Skip Scripts',
+            'type' => 'boolean',
+            'required' => true,
         ],
         [
-            "name" => "allocation",
-            "friendlyName" => "Pterodactyl Allocation",
-            "type" => "text",
-            "required" => true
-        ]
+            'name' => 'allocation',
+            'friendlyName' => 'Pterodactyl Allocation',
+            'type' => 'text',
+            'required' => true,
+        ],
     ];
 }
 
@@ -119,8 +120,9 @@ function Pterodactyl_postRequest($url, $data)
     $response = Http::withHeaders([
         'Authorization' => 'Bearer ' . pteroConfig('apiKey'),
         'Accept' => 'Application/vnd.Pterodactyl.v1+json',
-        'Content-Type' => 'application/json'
+        'Content-Type' => 'application/json',
     ])->post($url, $data);
+
     return $response;
 }
 
@@ -129,8 +131,9 @@ function Pterodactyl_getRequest($url)
     $response = Http::withHeaders([
         'Authorization' => 'Bearer ' . pteroConfig('apiKey'),
         'Accept' => 'Application/vnd.Pterodactyl.v1+json',
-        'Content-Type' => 'application/json'
+        'Content-Type' => 'application/json',
     ])->get($url);
+
     return $response;
 }
 
@@ -139,21 +142,24 @@ function Pterodactyl_deleteRequest($url)
     $response = Http::withHeaders([
         'Authorization' => 'Bearer ' . pteroConfig('apiKey'),
         'Accept' => 'Application/vnd.Pterodactyl.v1+json',
-        'Content-Type' => 'application/json'
+        'Content-Type' => 'application/json',
     ])->delete($url);
+
     return $response;
 }
 
 function Pterodactyl_createServer($user, $parmas, $order)
 {
     if (Pterodactyl_serverExists($order->id)) {
-        error_log("Server already exists for order " . $order->id);
+        error_log('Server already exists for order ' . $order->id);
+
         return;
     }
     $url = pteroConfig('host') . '/api/application/servers';
     $eggData = Pterodactyl_getRequest(pteroConfig('host') . '/api/application/nests/' . $parmas['nest'] . '/eggs/' . $parmas['egg'] . '?include=variables')->json();
     if (!isset($eggData['attributes'])) {
-        error_log("No egg data found for " . $parmas['egg']);
+        error_log('No egg data found for ' . $parmas['egg']);
+
         return;
     }
     foreach ($eggData['attributes']['relationships']['variables']['data'] as $key => $val) {
@@ -162,7 +168,7 @@ function Pterodactyl_createServer($user, $parmas, $order)
         $default = $attr['default_value'];
         $environment[$var] = $default;
     }
-    $json;
+
     if ($parmas['node']) {
         $allocation = Pterodactyl_getRequest(pteroConfig('host') . '/api/application/nodes/' . $parmas['node'] . '/allocations');
         $allocation = $allocation->json();
@@ -183,12 +189,12 @@ function Pterodactyl_createServer($user, $parmas, $order)
                 'swap' => (int) $parmas['swap'],
                 'disk' => (int) $parmas['disk'],
                 'io' => (int) $parmas['io'],
-                'cpu' => (int) $parmas['cpu']
+                'cpu' => (int) $parmas['cpu'],
             ],
             'feature_limits' => [
                 'databases' => $parmas['databases'] ? (int) $parmas['databases'] : null,
                 'allocations' => $parmas['allocation'],
-                'backups' => $parmas['backups']
+                'backups' => $parmas['backups'],
             ],
             'allocation' => [
                 'default' => (int) $allocation,
@@ -208,23 +214,24 @@ function Pterodactyl_createServer($user, $parmas, $order)
                 'swap' => (int) $parmas['swap'],
                 'disk' => (int) $parmas['disk'],
                 'io' => (int) $parmas['io'],
-                'cpu' => (int) $parmas['cpu']
+                'cpu' => (int) $parmas['cpu'],
             ],
             'feature_limits' => [
                 'databases' => $parmas['databases'] ? (int) $parmas['databases'] : null,
                 'allocations' => $parmas['allocation'],
-                'backups' => $parmas['backups']
+                'backups' => $parmas['backups'],
             ],
             'deploy' => [
                 'locations' => [$parmas['location']],
                 'dedicated_ip' => false,
-                'port_range' => []
+                'port_range' => [],
             ],
             'environment' => $environment,
             'external_id' => (string) $order->id,
         ];
     }
     Pterodactyl_postRequest($url, $json);
+
     return true;
 }
 
@@ -233,9 +240,10 @@ function Pterodactyl_random_string($length = 10)
     $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
     $charactersLength = strlen($characters);
     $randomString = '';
-    for ($i = 0; $i < $length; $i++) {
-        $randomString .= $characters[rand(0, $charactersLength - 1)];
+    for ($i = 0; $i < $length; ++$i) {
+        $randomString .= $characters[mt_rand(0, $charactersLength - 1)];
     }
+
     return $randomString;
 }
 
@@ -256,10 +264,11 @@ function Pterodactyl_getUser($user)
             'language' => 'en',
             'root_admin' => false,
             'password' => Pterodactyl_random_string(8),
-            'password_confirmation' => Pterodactyl_random_string(8)
+            'password_confirmation' => Pterodactyl_random_string(8),
         ];
         $response = Pterodactyl_postRequest($url, $json);
         $user = $response->json();
+
         return $user['attributes']['id'];
     }
 }
@@ -272,6 +281,7 @@ function Pterodactyl_serverExists($order)
     if ($code == 200) {
         return $response->json()['attributes']['id'];
     }
+
     return false;
 }
 
@@ -281,8 +291,10 @@ function Pterodactyl_suspendServer($user, $params, $order)
     if ($server) {
         $url = pteroConfig('host') . '/api/application/servers/' . $server . '/suspend';
         Pterodactyl_postRequest($url, []);
+
         return true;
     }
+
     return false;
 }
 
@@ -292,8 +304,10 @@ function Pterodactyl_unsuspendServer($user, $params, $order)
     if ($server) {
         $url = pteroConfig('host') . '/api/application/servers/' . $server . '/unsuspend';
         Pterodactyl_postRequest($url, []);
+
         return true;
     }
+
     return false;
 }
 
@@ -303,8 +317,10 @@ function Pterodactyl_terminateServer($user, $params, $order)
     if ($server) {
         $url = pteroConfig('host') . '/api/application/servers/' . $server;
         Pterodactyl_deleteRequest($url);
+
         return true;
     }
+
     return false;
 }
 
@@ -315,7 +331,9 @@ function Pterodactyl_getLink($user, $params, $order)
         $url = pteroConfig('host') . '/api/application/servers/' . $server;
         $response = Pterodactyl_getRequest($url);
         $server = $response->json();
+
         return pteroConfig('host') . '/server/' . $server['attributes']['identifier'];
     }
+
     return false;
 }

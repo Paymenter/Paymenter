@@ -2,8 +2,8 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Extensions extends Model
 {
@@ -12,7 +12,7 @@ class Extensions extends Model
     protected $fillable = [
         'name',
         'enabled',
-        'type'
+        'type',
     ];
 
     public function getConfig()

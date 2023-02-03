@@ -2,16 +2,16 @@
 
 namespace App\Mail\Invoices;
 
-use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Mail\Mailable;
-use Illuminate\Queue\SerializesModels;
 use App\Models\Invoices;
+use Illuminate\Bus\Queueable;
+use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
+use Illuminate\Queue\SerializesModels;
 
 class NewInvoice extends Mailable
 {
-    use Queueable, SerializesModels;
+    use Queueable;
+    use SerializesModels;
 
     /**
      * The order instance.
@@ -20,11 +20,9 @@ class NewInvoice extends Mailable
      */
     protected $invoice;
 
-
     /**
      * Create a new message instance.
      *
-     * @param  \App\Models\Invoices  $invoice
      * @return void
      */
     public function __construct(Invoices $invoice)
@@ -32,7 +30,6 @@ class NewInvoice extends Mailable
         $this->invoice = $invoice;
     }
 
- 
     /**
      * Get the message content definition.
      *
@@ -47,5 +44,4 @@ class NewInvoice extends Mailable
             ]
         );
     }
-
 }

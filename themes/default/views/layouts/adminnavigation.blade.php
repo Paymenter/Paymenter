@@ -58,6 +58,8 @@
                         <div class="py-1" role="none">
                             <a href="{{ route('admin.products') }}" class="block px-4 py-2 text-base text-gray-700 dark:text-darkmodetext dark:hover:bg-darkmode2 hover:bg-gray-100 hover:text-gray-900" role="menuitem" tabindex="-1" id="menu-item-0">All Products</a>
                             <a href="{{ route('admin.products.create') }}" class="block px-4 py-2 text-base text-gray-700 dark:text-darkmodetext dark:hover:bg-darkmode2 hover:bg-gray-100 hover:text-gray-900" role="menuitem" tabindex="-1" id="menu-item-1">Create Product</a>
+                            <hr class="w-full my-1">
+                            <a href="{{ route('admin.categories') }}" class="block px-4 py-2 text-base text-gray-700 dark:text-darkmodetext dark:hover:bg-darkmode2 hover:bg-gray-100 hover:text-gray-900" role="menuitem" tabindex="-1" id="menu-item-2">Categories</a>
                         </div>
                     </div>
                 </div>

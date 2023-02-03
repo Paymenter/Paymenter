@@ -14,14 +14,14 @@ class SidebarNavigationItem extends Component
     public $route;
 
     /**
-     * Bootstrap icon
+     * Bootstrap icon.
      *
      * @var string
      */
     public $icon;
 
     /**
-     * Item is a dropdown item
+     * Item is a dropdown item.
      *
      * @var bool
      */
@@ -30,7 +30,6 @@ class SidebarNavigationItem extends Component
     /**
      * Create a new component instance.
      *
-     * @param  string  $route
      * @return void
      */
     public function __construct(string $route, string $icon, bool $dropdown = false)

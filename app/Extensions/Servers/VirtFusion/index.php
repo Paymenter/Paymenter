@@ -1,8 +1,7 @@
 <?php
 
-use Illuminate\Support\Facades\Http;
 use App\Helpers\ExtensionHelper;
-use App\Models\Products;
+use Illuminate\Support\Facades\Http;
 
 function VirtFusion_getConfig()
 {
@@ -42,7 +41,7 @@ function VirtFusion_getProductConfig()
             'type' => 'text',
             'friendlyName' => 'Number IPs',
             'required' => true,
-        ]
+        ],
     ];
 }
 
@@ -56,17 +55,18 @@ function VirtFusion_createServer($user, $params, $order)
     $response = Http::withHeaders([
         'Authorization' => 'Bearer ' . $apikey,
         'Accept' => 'Application/json',
-        'Content-Type' => 'application/json'
+        'Content-Type' => 'application/json',
     ])->post(
         $host . '/api/v1/servers',
         [
-            "packageId" => $package,
-            "userId" => $user,
-            "hypervisorId" => $params['hypervisor'],
-            "ipv4" => $params['ips'],
+            'packageId' => $package,
+            'userId' => $user,
+            'hypervisorId' => $params['hypervisor'],
+            'ipv4' => $params['ips'],
         ]
     );
-    ExtensionHelper::setOrderProductConfig('server_id', $response->json()['data']['id'], $params["config_id"]);
+    ExtensionHelper::setOrderProductConfig('server_id', $response->json()['data']['id'], $params['config_id']);
+
     return true;
 }
 
@@ -78,7 +78,7 @@ function VirtFusion_getUser($user)
     $response = Http::withHeaders([
         'Authorization' => 'Bearer ' . $apikey,
         'Accept' => 'Application/json',
-        'Content-Type' => 'application/json'
+        'Content-Type' => 'application/json',
     ])->get(
         $host . '/api/v1/users/' . $user->id . '/byExtRelation'
     );
@@ -89,45 +89,46 @@ function VirtFusion_getUser($user)
         $response = Http::withHeaders([
             'Authorization' => 'Bearer ' . $apikey,
             'Accept' => 'Application/json',
-            'Content-Type' => 'application/json'
+            'Content-Type' => 'application/json',
         ])->post(
             $host . '/api/v1/users',
             [
-                "name" => $user->name,
-                "email" => $user->email,
-                "extRelationId" => $user->id,
+                'name' => $user->name,
+                'email' => $user->email,
+                'extRelationId' => $user->id,
             ]
         );
         if ($response->status() == 200) {
             return $response->json()['data']['id'];
         } else {
-            error_log("Failed to create user | VirtFusion");
+            error_log('Failed to create user | VirtFusion');
+
             return;
         }
     }
 }
 
-
-
 function VirtFusion_suspendServer($user, $params, $order)
 {
     $apikey = ExtensionHelper::getConfig('VirtFusion', 'apikey');
     $host = ExtensionHelper::getConfig('VirtFusion', 'host');
-    $server = $params["config"]["server_id"];
+    $server = $params['config']['server_id'];
 
     $response = Http::withHeaders([
             'Authorization' => 'Bearer ' . $apikey,
             'Accept' => 'Application/json',
-            'Content-Type' => 'application/json'
-        ])->post( 
+            'Content-Type' => 'application/json',
+        ])->post(
             $host . '/api/v1/servers/' . $server . '/suspend'
         );
     if ($response->status() == 204) {
         return true;
     } else {
-        error_log("Failed to suspend server | VirtFusion");
+        error_log('Failed to suspend server | VirtFusion');
+
         return;
     }
+
     return true;
 }
 
@@ -135,21 +136,23 @@ function VirtFusion_unsuspendServer($user, $params, $order)
 {
     $apikey = ExtensionHelper::getConfig('VirtFusion', 'apikey');
     $host = ExtensionHelper::getConfig('VirtFusion', 'host');
-    $server = $params["config"]["server_id"];
+    $server = $params['config']['server_id'];
 
     $response = Http::withHeaders([
         'Authorization' => 'Bearer ' . $apikey,
         'Accept' => 'Application/json',
-        'Content-Type' => 'application/json'
+        'Content-Type' => 'application/json',
     ])->post(
         $host . '/api/v1/servers/' . $server . '/unsuspend'
     );
     if ($response->status() == 204) {
         return true;
     } else {
-        error_log("Failed to unsuspend server | VirtFusion");
+        error_log('Failed to unsuspend server | VirtFusion');
+
         return;
     }
+
     return true;
 }
 
@@ -157,20 +160,22 @@ function VirtFusion_terminateServer($user, $params, $order)
 {
     $apikey = ExtensionHelper::getConfig('VirtFusion', 'apikey');
     $host = ExtensionHelper::getConfig('VirtFusion', 'host');
-    $server = $params["config"]["server_id"];
+    $server = $params['config']['server_id'];
 
     $response = Http::withHeaders([
         'Authorization' => 'Bearer ' . $apikey,
         'Accept' => 'Application/json',
-        'Content-Type' => 'application/json'
+        'Content-Type' => 'application/json',
     ])->delete(
         $host . '/api/v1/servers/' . $server . '?delay=5'
     );
     if ($response->status() == 204) {
         return true;
     } else {
-        error_log("Failed to terminate server | VirtFusion");
+        error_log('Failed to terminate server | VirtFusion');
+
         return;
     }
+
     return true;
 }

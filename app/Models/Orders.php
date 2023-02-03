@@ -2,8 +2,8 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Orders extends Model
 {
@@ -14,7 +14,7 @@ class Orders extends Model
         'expiry_date',
         'status',
         'client',
-        'total'
+        'total',
     ];
 
     public function client()
