@@ -25,11 +25,10 @@ Route::group(['prefix' => 'checkout'], function () {
     Route::get('/config/{id}', [App\Http\Controllers\CheckoutController::class, 'config'])->name('checkout.config');
     Route::post('/config/{id}', [App\Http\Controllers\CheckoutController::class, 'configPost'])->name('checkout.config.post');
     Route::post('/', [App\Http\Controllers\CheckoutController::class, 'pay'])->name('checkout.pay')->middleware('auth');
+    Route::post('/coupon', [App\Http\Controllers\CheckoutController::class, 'coupon'])->name('checkout.coupon');
     Route::post('/{id}', [App\Http\Controllers\CheckoutController::class, 'remove'])->name('checkout.remove');
     Route::post('/{id}/update', [App\Http\Controllers\CheckoutController::class, 'update'])->name('checkout.update');
     Route::get('/add', [App\Http\Controllers\CheckoutController::class, 'add'])->name('checkout.add');
-    Route::get('/success', [App\Http\Controllers\CheckoutController::class, 'success'])->name('checkout.success');
-    Route::get('/cancel', [App\Http\Controllers\CheckoutController::class, 'cancel'])->name('checkout.cancel');
 });
 
 Route::group(['prefix' => 'tickets', 'middleware' => 'auth'], function () {

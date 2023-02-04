@@ -72,6 +72,15 @@ Route::group(['prefix' => 'admin'], function () {
         Route::post('/{order}/paid', [App\Http\Controllers\Admin\OrdersController::class, 'paid'])->middleware(['auth.admin'])->name('admin.orders.paid');
     });
 
+    Route::group(['prefix' => 'coupon'], function() {
+        Route::get('/', [App\Http\Controllers\Admin\CouponController::class, 'index'])->middleware(['auth.admin'])->name('admin.coupon');
+        Route::get('/create', [App\Http\Controllers\Admin\CouponController::class, 'create'])->middleware(['auth.admin'])->name('admin.coupon.create');
+        Route::post('/create', [App\Http\Controllers\Admin\CouponController::class, 'store'])->middleware(['auth.admin'])->name('admin.coupon.store');
+        Route::get('/{coupon}/edit', [App\Http\Controllers\Admin\CouponController::class, 'edit'])->middleware(['auth.admin'])->name('admin.coupon.edit');
+        Route::put('/{coupon}/edit', [App\Http\Controllers\Admin\CouponController::class, 'update'])->middleware(['auth.admin'])->name('admin.coupon.update');
+        Route::delete('/{coupon}/delete', [App\Http\Controllers\Admin\CouponController::class, 'destroy'])->middleware(['auth.admin'])->name('admin.coupon.delete');
+    });
+
     // Route::group(['prefix' => 'migrate'], function () {
     //     Route::get('/', [App\Http\Controllers\Admin\MigrateController::class, 'index'])->middleware(['auth.admin'])->name('admin.migrate.index');
     //     Route::get('/whmcs', [App\Http\Controllers\Admin\MigrateController::class, 'whmcs'])->middleware(['auth.admin'])->name('admin.migrate.whmcs');

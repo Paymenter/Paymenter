@@ -160,7 +160,7 @@
                 );
             </script>
         </div>
-        <!-- Script for Short Overview -->
+
         <div>
             <script>
                 var ctx = document.getElementById('myChart').getContext('2d');

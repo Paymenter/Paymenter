@@ -13,6 +13,7 @@ class OrderProducts extends Model
         'order_id',
         'product_id',
         'quantity',
+        'price',
     ];
 
     public function config()

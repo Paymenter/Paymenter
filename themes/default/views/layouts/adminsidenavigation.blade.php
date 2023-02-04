@@ -81,6 +81,9 @@
                 <x-sidebar-navigation-item route="admin.orders" icon="ri-file-text-line">
                     Orders
                 </x-sidebar-navigation-item>
+                <x-sidebar-navigation-item route="admin.users" icon="ri-user-3-line">
+                    Coupons
+                </x-sidebar-navigation-item>
                 <script type="text/javascript">
                     function dropdownprof() {
                         document.querySelector("#submenuprof").classList.toggle("hidden");

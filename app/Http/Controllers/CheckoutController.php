@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Helpers\ExtensionHelper;
-use App\Models\{Extensions, Invoices, OrderProducts, OrderProductsConfig, Orders, Products, User};
+use App\Models\{Extensions, Invoices, OrderProducts, OrderProductsConfig, Orders, Products, User, Coupons};
 
 class CheckoutController extends Controller
 {
@@ -12,14 +12,36 @@ class CheckoutController extends Controller
     {
         $products = session('cart');
         $total = 0;
+        $discount = 0;
+        $couponId = session('coupon');
+        if($couponId){
+            $coupon = Coupons::where('id', $couponId)->first();
+        } else {
+            $coupon = null;
+        }
 
         if ($products) {
             foreach ($products as $product) {
                 $total += $product->price * $product->quantity;
+                if ($coupon) {
+                    if (!in_array($product->id, $coupon->products) && $coupon->type != 'all') {
+                        $product->discount = 0;
+                        continue;
+                    }
+                    if ($coupon->type == 'percent') {
+                        $product->discount = $product->price * $coupon->value / 100;
+                        $discount += $product->discount * $product->quantity;
+                    } else {
+                        $product->discount = $coupon->value;
+                        $discount += $product->discount * $product->quantity;
+                    }
+                } else {
+                    $product->discount = 0;
+                }
             }
         }
 
-        return view('checkout.index', compact('products', 'total'));
+        return view('checkout.index', compact('products', 'total', 'discount', 'coupon'));
     }
 
     public function success()
@@ -164,6 +186,7 @@ class CheckoutController extends Controller
         $invoice->save();
 
         session()->forget('cart');
+        session()->forget('coupon');
         if (!config('settings::mail_disabled')) {
             try {
                 \Illuminate\Support\Facades\Mail::to(auth()->user())->send(new \App\Mail\Orders\NewOrder($order));
@@ -176,6 +199,31 @@ class CheckoutController extends Controller
                 }
             }
         }
+        if ($total != 0) {
+            $total = $invoice->total;
+            $products = [];
+            foreach ($order->products()->get() as $product) {
+                $test = json_decode(Products::where('id', $product->product_id)->first());
+                $test->quantity = $product['quantity'];
+                if (isset($product['config'])) {
+                    $test->config = $product['config'];
+                }
+                $products[] = $test;
+                $total += $test->price * $test->quantity;
+            }
+
+            if ($request->get('payment_method')) {
+                $payment_method = $request->get('payment_method');
+                $payment_method = ExtensionHelper::getPaymentMethod($payment_method, $total, $products, $invoice->id);
+                if ($payment_method) {
+                    return redirect($payment_method);
+                } else {
+                    return redirect()->back()->with('error', 'Payment method not found');
+                }
+            } else {
+                return redirect()->route('clients.invoice.show', $invoice->id);
+            }
+        }
 
         return redirect()->route('clients.invoice.show', $invoice->id);
     }
@@ -186,6 +234,11 @@ class CheckoutController extends Controller
         if (isset($cart[$id])) {
             unset($cart[$id]);
             session()->put('cart', $cart);
+        }
+
+        if(count($cart) == 0){
+            session()->forget('cart');
+            session()->forget('coupon');
         }
 
         return redirect()->back()->with('success', 'Product removed successfully');
@@ -206,5 +259,33 @@ class CheckoutController extends Controller
         }
 
         return redirect()->back()->with('success', 'Product updated successfully');
+    }
+
+    public function coupon(Request $request)
+    {
+        if($request->get('remove')){
+            session()->forget('coupon');
+            return redirect()->back()->with('success', 'Coupon removed successfully');
+        }
+        $request->validate([
+            'coupon' => 'required',
+        ]);
+        $coupon = Coupons::where('code', $request->coupon)->first();
+        if (!$coupon) {
+            return redirect()->back()->with('error', 'Coupon not found');
+        }
+        if ($coupon->expiry_date) {
+            if ($coupon->expiry_date < date('Y-m-d H:i:s')) {
+                return redirect()->back()->with('error', 'Coupon expired');
+            }
+        }
+        if ($coupon->max_uses) {
+            if ($coupon->uses >= $coupon->max_uses) {
+                return redirect()->back()->with('error', 'Coupon max uses reached');
+            }
+        }
+        session()->put('coupon', $coupon->id);
+
+        return redirect()->back()->with('success', 'Coupon applied successfully');
     }
 }
