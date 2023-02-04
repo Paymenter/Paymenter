@@ -7,13 +7,13 @@
             <a href="{{ route('index') }}" class="p-2 text-xl font-bold">
                 {{ config('app.name', 'Paymenter') }}
             </a>
-            <button data-collapse-toggle="mobile-menu" type="button" class="inline-flex items-center justify-center ml-3 text-gray-400 rounded-lg md:hidden" aria-controls="mobile-menu-2" aria-expanded="false" onclick="document.getElementById('mobile-menu').classList.toggle('hidden')">
+            <button data-collapse-toggle="mobile-menu" type="button" class="inline-flex items-center justify-center mr-3 text-gray-400 rounded-lg md:hidden absolute right-0" aria-controls="mobile-menu-2" aria-expanded="false" onclick="document.getElementById('mobile-menu').classList.toggle('hidden')">
                 <span class="sr-only">Open main menu</span>
                 <svg class="w-6 h-6" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
                     <path fill-rule="evenodd" d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 15a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clip-rule="evenodd"></path>
                 </svg>
             </button>
-            <div class="justify-center hidden text-lg text-center dark:bg-darkmode sm:flex sm:items-center sm:w-auto place-items-center dark:text-darkmodetext" id="menu">
+            <div class="justify-center hidden text-lg text-center dark:bg-darkmode md:flex md:items-center md:w-auto place-items-center dark:text-darkmodetext" id="menu">
                 <div class="relative inline-block text-left dark:bg-darkmode">
                     <div class="dark:bg-darkmode">
                         <a type="button" href="{{ route('clients.home') }}" class="dark:text-darkmodetext dark:bg-darkmode dark:hover:bg-darkbutton inline-flex w-full justify-center bg-white px-2 py-2 text-base font-medium rounded-md text-gray-700 @if (request()->routeIs('tickets*')) @endif" id="menu-button" aria-expanded="true" aria-haspopup="true" onclick="openMenu('tickets')">
@@ -58,7 +58,7 @@
                 @endif
             </div>
 
-            <div class="absolute right-0 hidden w-full dark:bg-darkmode sm:flex sm:items-center sm:w-auto" id="menu">
+            <div class="absolute right-0 hidden w-full dark:bg-darkmode md:flex md:items-center md:w-auto" id="menu">
                 @auth
                 <div class="relative inline-block text-left">
                     <button type="button" class="inline-flex items-center justify-center w-full py-2 pl-4 text-base font-medium text-gray-700 bg-white dark:text-darkmodetext dark:bg-darkmode" aria-label="User menu" aria-haspopup="true" onclick="openMenu('user-menu')">
@@ -99,11 +99,10 @@
                 <a href="{{ route('login') }}" class="p-3 mr-4 text-sm text-gray-700 transition rounded dark:text-darkmodetext dark:bg-darkmode duration-400 hover:bg-button dark:hover:bg-darkbutton hover:transition">{{ __('Log in') }}</a>
                 @endauth
                 @if (count(session()->get('cart', [])) > 0)
-                <a href="{{ route('checkout.index') }}" class="flex p-3 mr-4 text-sm text-center text-gray-700 transition rounded dark:text-darkmodetext dark:bg-darkmode duration-400 hover:bg-button dark:hover:bg-darkbutton hover:transition">
+                <a href="{{ route('checkout.index') }}" class="relative inline-flex items-center text-gray-700 transition rounded dark:text-darkmodetext dark:bg-darkmode duration-400 hover:bg-button dark:hover:bg-darkbutton hover:transition p-2 mr-4">
                     <i class="p-1 text-xl ri-shopping-basket-2-line">
                     </i>
-                    <span class="inline-flex items-center px-2.5 rounded-full text-xs font-medium bg-red-100 text-red-800">{{ count(session()->get('cart')) }}</span>
-
+                   <div class="absolute inline-flex items-center justify-center w-6 h-6 text-xs font-bold bg-red-100 text-red-800 border-2 border-white rounded-full top-0 right-0 dark:border-gray-900">{{ count(session()->get('cart')) }}</div>
                 </a>
                 @endif
                 <div class="flex justify-end col-span-1 pl-1">
@@ -191,21 +190,29 @@
             <div class="px-2 pt-2 pb-3 space-y-1 ">
                 <a href="{{ route('index') }}" class="dark:text-darkmodetext dark:bg-darkmode dark:hover:bg-darkbutton text-black hover:bg-gray-100 block px-3 py-2 rounded-md text-base font-medium @if (request()->routeIs('index')) bg-gray-400 @endif" aria-current="page">{{ __('Dashboard') }}</a>
                 <a href="{{ route('products') }}" class="dark:text-darkmodetext dark:bg-darkmode dark:hover:bg-darkbutton text-black hover:bg-gray-100 block px-3 py-2 rounded-md text-base font-medium @if (request()->routeIs('products.*')) bg-gray-400 @endif">{{ __('Products') }}</a>
+                                @if (count(session()->get('cart', [])) > 0)
+                <a href="{{ route('checkout.index') }}" class="relative inline-flex items-center text-gray-700 transition rounded dark:text-darkmodetext dark:bg-darkmode duration-400 hover:bg-button dark:hover:bg-darkbutton hover:transition p-2 mr-4 w-full">
+                    Checkout
+                    <span class="absolute right-0 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-white bg-red-500 rounded-full mr-2">{{ count(session()->get('cart', [])) }}</span>
+                </a>
+                @endif
                 <hr class="dark:border-darkmodeborder">
-                <a href="{{ route('login') }}" class="dark:text-darkmodetext dark:bg-darkmode dark:hover:bg-darkbutton text-black hover:bg-gray-100 block px-3 py-2 rounded-md text-base font-medium @if (request()->routeIs('login')) bg-gray-400 @endif">{{ __('Login') }}</a>
 
                 @auth
-                @if (Auth::user()->is_admin)
-                <a href="{{ route('admin') }}" class="dark:text-darkmodetext dark:bg-darkmode dark:hover:bg-darkbutton text-black hover:bg-gray-100 block px-3 py-2 rounded-md text-base font-medium @if (request()->routeIs('admin.*')) bg-gray-400 @endif">{{ __('Admin') }}</a>
-                @endif
+                    @if (Auth::user()->is_admin)
+                        <a href="{{ route('admin') }}" class="dark:text-darkmodetext dark:bg-darkmode dark:hover:bg-darkbutton text-black hover:bg-gray-100 block px-3 py-2 rounded-md text-base font-medium @if (request()->routeIs('admin.*')) bg-gray-400 @endif">{{ __('Admin') }}</a>
+                    @endif
 
-                <a href="{{ route('logout') }}" class="block px-3 py-2 text-base font-medium text-black rounded-md hover:bg-gray-100 dark:text-white" onclick="event.preventDefault();
-                document.getElementById('logout-form').submit();">
-                    {{ __('Logout') }}
-                </a>
-                <form id="logout-form" action="{{ route('logout') }}" method="POST" class="hidden">
-                    @csrf
-                </form>
+                    <a href="{{ route('logout') }}" class="dark:text-darkmodetext dark:bg-darkmode dark:hover:bg-red-500 text-black hover:bg-gray-100 block px-3 py-2 rounded-md text-base font-medium" onclick="event.preventDefault();
+                        document.getElementById('logout-form').submit();">
+                            {{ __('Logout') }}
+                    </a>
+                    <form id="logout-form" action="{{ route('logout') }}" method="POST" class="hidden">
+                        @csrf
+                    </form>
+                @else 
+                    <a href="{{ route('login') }}" class="dark:text-darkmodetext dark:bg-darkmode dark:hover:bg-darkbutton text-black hover:bg-gray-100 block px-3 py-2 rounded-md text-base font-medium @if (request()->routeIs('login')) bg-gray-400 @endif">{{ __('Login') }}</a>
+                    <a href="{{ route('register') }}" class="dark:text-darkmodetext dark:bg-darkmode dark:hover:bg-darkbutton text-black hover:bg-gray-100 block px-3 py-2 rounded-md text-base font-medium @if (request()->routeIs('register')) bg-gray-400 @endif">{{ __('Register') }}</a>
                 @endauth
             </div>
         </div>

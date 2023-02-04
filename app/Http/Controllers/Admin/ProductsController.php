@@ -32,10 +32,10 @@ class ProductsController extends Controller
             'description' => 'required|string|min:10',
             'price' => 'required',
             'category_id' => 'required|integer',
-            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:5242',
+            'image' => 'image|mimes:jpeg,png,jpg,gif,svg|max:5242',
         ]);
         if ($request->get('no_image')) {
-            $request->merge(['image' => null]);
+            $data['image'] = 'null';
         } else {
             $imageName = time() . $request->get('category_id') . '.' . $request->image->extension();
             $request->image->move(public_path('images'), $imageName);
