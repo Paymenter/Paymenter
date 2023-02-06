@@ -57,11 +57,6 @@ class TicketsController extends Controller
 
     public function show(Tickets $ticket)
     {
-        $ticket = Tickets::find($id);
-        if (!$ticket) {
-            return abort(404);
-        }
-
         return view('admin.tickets.show', compact('ticket'));
     }
 
