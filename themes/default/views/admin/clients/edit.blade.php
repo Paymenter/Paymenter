@@ -64,7 +64,6 @@
                             <div class="ml-4 text-lg text-gray-600 leading-7 font-semibold w-full">
                                 <form method="POST" action="{{ route('admin.clients.update', $user->id) }}">
                                     @csrf
-                                    @method('PUT')
                                     <div class="grid grid-cols-2 gap-4 mt-4">
                                         <div>
                                             <label for="name"
@@ -182,7 +181,8 @@
                                     <!-- Admin toggle -->
                                     <div class="mb-3">
                                         <input type="checkbox" class="form-input w-fit peer " placeholder=" "
-                                            name="admin" id="admin" {{ $user->is_admin ? 'checked' : '' }} onclick="toggleAdmin()">
+                                            name="admin" id="admin" {{ $user->is_admin ? 'checked' : '' }}
+                                            onclick="toggleAdmin()">
 
                                         <label for="admin" class="form-label" style="position: unset;">
                                             {{ __('Admin') }}
@@ -207,18 +207,23 @@
                                         </svg>
                                     </p>
                                     <script>
-                                        function toggleAdmin(){
-                                            if(document.getElementById("admin").checked){
+                                        if (!{{ $user->is_admin }}) {
+                                            document.getElementById("openPerms").style.display = "none";
+                                        }
+
+                                        function toggleAdmin() {
+                                            if (document.getElementById("admin").checked) {
                                                 document.getElementById("openPerms").style.display = "block";
                                             } else {
                                                 document.getElementById("openPerms").style.display = "none";
-                                                console.log(document.querySelectorAll(".permissions"));
-                                                document.querySelectorAll(".permissions").forEach(function(element){
+                                                document.querySelectorAll(".permissions").forEach(function(element) {
                                                     element.checked = false;
                                                 });
-                                                openPermissions();
+                                                document.getElementById("permissionsToggle").style.display = "none";
+                                                document.getElementById("permissionsToggleSVG").style.transform = "rotate(0deg)";
                                             }
                                         }
+
                                         function openPermissions() {
                                             var x = document.getElementById("permissionsToggle");
                                             if (x.style.display === "none") {
@@ -231,7 +236,8 @@
                                             }
                                         }
                                     </script>
-                                    <div class="grid grid-cols-3 gap-4" id="permissionsToggle" style="display: none;">
+                                    <div class="grid grid-cols-3 gap-4" id="permissionsToggle"
+                                        style="display: none;">
                                         @php
                                             $idk = '';
                                         @endphp
@@ -244,11 +250,12 @@
                                                 </h3>
                                             @endif
                                             <div class="relative">
-                                                <input type="checkbox" class="form-input w-fit peer permissions" placeholder=" "
-                                                    name="permissions[]" id="{{ $permission }}"
+                                                <input type="checkbox" class="form-input w-fit peer permissions"
+                                                    placeholder=" " name="permissions[]" id="{{ $permission }}"
                                                     value="{{ $permission }}"
                                                     {{ $user->has($permission) ? 'checked' : '' }}>
-                                                <label for="{{ $permission }}" class="form-label" style="position: unset;">
+                                                <label for="{{ $permission }}" class="form-label"
+                                                    style="position: unset;">
                                                     {{ str_replace('.', ' ', str_replace('admin.', '', $permission)) }}
                                                 </label>
                                             </div>

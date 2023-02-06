@@ -78,7 +78,7 @@ class ClientsController extends Controller
             $user->save();
         }
 
-        return redirect()->route('admin.clients.edit', $ticket->id)->with('success', 'User updated successfully');
+        return redirect()->route('admin.clients.edit', $user->id)->with('success', 'User updated successfully');
     }
 
     public function destroy(User $user)
