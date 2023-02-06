@@ -155,7 +155,7 @@ class ExtensionHelper
 
     public static function getCurrency()
     {
-        return Settings::where('key', 'currency')->first()->value;
+        return config('settings::currency');
     }
 
     public static function getProductConfig($name, $key, $id)
