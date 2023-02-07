@@ -5,7 +5,7 @@
     <div class="py-12">
         <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
             <div class="dark:bg-darkmode2 overflow-hidden bg-white shadow-sm sm:rounded-lg">
-                <x-success class="mb-4" />
+                
                 <div class="dark:bg-darkmode2 p-6 bg-white border-b border-gray-200">
                     <div class="flex flex-col">
                         <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">

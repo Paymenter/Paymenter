@@ -2,7 +2,7 @@
     <x-slot name="title">
         {{ __('Settings') }}
     </x-slot>
-    <x-success class="mb-4" />
+    
 
     <div class="container h-full px-6 py-10 mx-auto">
         <div class="w-full h-full rounded ">

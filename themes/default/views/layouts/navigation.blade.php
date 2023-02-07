@@ -75,7 +75,7 @@
                             <a href="{{ route('admin.settings') }}" class="block px-4 py-2 text-base text-gray-700 dark:hover:bg-darkbutton dark:text-darkmodetext hover:bg-gray-100" role="menuitem">{{ __('Settings') }}</a>
                             <a href="{{ route('clients.password.change-password') }}" class="block px-4 py-2 text-base text-gray-700 dark:hover:bg-darkbutton dark:text-darkmodetext hover:bg-gray-100" role="menuitem">{{ __('Change Password') }}</a>
                             <div>
-                                <a href="{{ route('admin') }}" class="block px-4 py-2 text-base text-gray-700 dark:hover:bg-darkbutton dark:text-darkmodetext hover:bg-gray-100" role="menuitem">{{ __('Admin Panel') }}</a>
+                                <a href="{{ route('admin.index') }}" class="block px-4 py-2 text-base text-gray-700 dark:hover:bg-darkbutton dark:text-darkmodetext hover:bg-gray-100" role="menuitem">{{ __('Admin Panel') }}</a>
                             </div>
                             @endif
                             @if (!Auth::user()->is_admin)
@@ -200,7 +200,7 @@
 
                 @auth
                     @if (Auth::user()->is_admin)
-                        <a href="{{ route('admin') }}" class="dark:text-darkmodetext dark:bg-darkmode dark:hover:bg-darkbutton text-black hover:bg-gray-100 block px-3 py-2 rounded-md text-base font-medium @if (request()->routeIs('admin.*')) bg-gray-400 @endif">{{ __('Admin') }}</a>
+                        <a href="{{ route('admin.index') }}" class="dark:text-darkmodetext dark:bg-darkmode dark:hover:bg-darkbutton text-black hover:bg-gray-100 block px-3 py-2 rounded-md text-base font-medium @if (request()->routeIs('admin.*')) bg-gray-400 @endif">{{ __('Admin') }}</a>
                     @endif
 
                     <a href="{{ route('logout') }}" class="dark:text-darkmodetext dark:bg-darkmode dark:hover:bg-red-500 text-black hover:bg-gray-100 block px-3 py-2 rounded-md text-base font-medium" onclick="event.preventDefault();

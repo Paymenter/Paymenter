@@ -7,7 +7,7 @@
         <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
             <div class="overflow-hidden dark:bg-darkmode2 bg-white shadow-sm sm:rounded-lg">
                 <div class="p-6 dark:bg-darkmode2 bg-white text-gray-600 dark:text-darkmodetext">
-                    <x-success class="mb-4" />
+                    
                     <h1 class="text-2xl font-bold dark:text-darkmodetext">{{ __('Create Coupon') }}</h1>
                     <form action="{{ route('admin.coupon.store') }}" method="POST">
                         @csrf

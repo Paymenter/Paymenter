@@ -31,7 +31,7 @@ class OrdersController extends Controller
     public function destroy(Orders $order)
     {
         if ($order->status == 'paid' || $order->status == 'suspended') {
-            ExtensionHelper::terminateServer($id);
+            ExtensionHelper::terminateServer($order);
         }
         $order->delete();
 

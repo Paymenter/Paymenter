@@ -16,8 +16,8 @@
                 </svg>
             </button>
             <div class="justify-center hidden text-lg text-center sm:flex sm:items-center sm:w-auto place-items-center" id="menu">
-                <a href="{{ route('admin') }}" class="dark:bg-darkmode dark:text-darkmodetext dark:hover:bg-darkmode2 p-2 rounded-md text-gray-500 hover:text-gray-700 inline-flex justify-center @if (request()->routeIs('admin')) bg-gray-200 @endif">
-                    <i class="ri-dashboard-line mr-1" @if (request()->routeIs('admin')) style="color: #5270FD" @endif></i>
+                <a href="{{ route('admin.index') }}" class="dark:bg-darkmode dark:text-darkmodetext dark:hover:bg-darkmode2 p-2 rounded-md text-gray-500 hover:text-gray-700 inline-flex justify-center @if (request()->routeIs('admin.index')) bg-gray-200 @endif">
+                    <i class="ri-dashboard-line mr-1" @if (request()->routeIs('admin.index')) style="color: #5270FD" @endif></i>
                     {{ __('Dashboard') }}
                 </a>
                 <div class="relative inline-block text-left ">
@@ -202,7 +202,7 @@
         </div>
         <div class="hidden md:hidden" id="mobile-menu">
             <div class="px-2 pt-2 pb-3 space-y-1">
-                <a href="{{ route('admin') }}" class="text-black hover:bg-gray-100 block px-3 py-2 rounded-md text-base font-medium dark:text-darkmodetext @if (request()->routeIs('admin')) bg-gray-400 @endif" aria-current="page">Dashboard</a>
+                <a href="{{ route('admin.index') }}" class="text-black hover:bg-gray-100 block px-3 py-2 rounded-md text-base font-medium dark:text-darkmodetext @if (request()->routeIs('admin.index')) bg-gray-400 @endif" aria-current="page">Dashboard</a>
                 <button class="text-black hover:bg-gray-100 block px-3 py-2 rounded-md text-base font-medium dark:text-darkmodetext @if (request()->routeIs('admin.products.*')) bg-gray-400 @endif" onclick="openMenu('products-menu')">Products</button>
                 <div class="dropdown-menu hidden ml-2" id="products-menu">
                     <a href="{{ route('admin.products') }}" class="text-black hover:bg-gray-100 block px-3 py-2 rounded-md text-base font-medium dark:text-darkmodetext @if (request()->routeIs('admin.products')) bg-gray-400 @endif">All Products</a>
@@ -245,3 +245,4 @@
         </div>
     </div>
 </nav>
+<x-success class="mb-4" />

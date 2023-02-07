@@ -12,7 +12,7 @@
                     <div class="mt-8 text-2xl dark:text-darkmodetext">
                         Update product server: {{ $product->name }}
                     </div>
-                    <x-success class="mb-4" />
+                    
                     <div class="mt-6 text-gray-500 dark:text-darkmodetext dark:bg-darkmode2">
                         <form method="POST" action="{{ route('admin.products.extension.update', $product->id) }}"
                             enctype="multipart/form-data">

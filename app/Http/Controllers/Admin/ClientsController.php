@@ -39,7 +39,6 @@ class ClientsController extends Controller
         $routeCollection = Route::getRoutes();
         $permissions = [];
         foreach ($routeCollection as $value) {
-            // If route is admin route, add to permissions array
             if (strpos($value->getName(), 'admin.') !== false) {
                 $permissions[] = $value->getName();
             }

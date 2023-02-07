@@ -14,7 +14,7 @@
                         </button>
                     </a>
                 </div>
-                <x-success class="mb-4" />
+                
                 <div class="p-6 bg-white border-b border-gray-200 dark:bg-darkmode2">
                     @if ($categories->isEmpty())
                         <!-- not found -->

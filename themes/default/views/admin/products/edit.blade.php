@@ -2,7 +2,7 @@
     <x-slot name="title">
         {{ __('Products') }}
     </x-slot>
-    <x-success class="mb-4" />
+    
 
     <div class="py-12">
         <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">

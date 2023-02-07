@@ -8,7 +8,7 @@
                 <div class="p-6 bg-white dark:bg-darkmode2 border-b border-gray-200 dark:border-gray-800">
                     <h1 class="text-2xl font-bold dark:text-darkmodetext">{{ __('Categories Edit') }}</h1>
                     <x-auth-validation-errors class="mb-4" :errors="$errors" />
-                    <x-success class="mb-4" />
+                    
 
                     <form action="{{ route('admin.categories.update', $category->id) }}" method="POST">
                         @csrf

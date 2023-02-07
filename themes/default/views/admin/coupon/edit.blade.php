@@ -8,7 +8,7 @@
             <div class="overflow-hidden dark:bg-darkmode2 bg-white shadow-sm sm:rounded-lg">
                 <div class="p-6 dark:bg-darkmode2 bg-white border-b border-gray-200 dark:border-gray-800">
                     <h1 class="text-2xl font-bold dark:text-darkmodetext">{{ __('Edit Coupon') }}</h1>
-                    <x-success class="mb-4" />
+                    
                     <form action="{{ route('admin.coupon.update', $coupon->id) }}" method="POST">
                         @csrf
                         @method('PUT')

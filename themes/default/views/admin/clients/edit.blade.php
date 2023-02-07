@@ -11,7 +11,7 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-xl rounded-lg">
                 <div class="dark:bg-darkmode2 p-6 sm:px-20 bg-white">
-                    <x-success class="mb-4" />
+                    
                     <div class="dark:text-darkmodetext mt-8 text-2xl">
                         {{ __('Edit client') }}
                     </div>
@@ -196,7 +196,7 @@
                                             {{ __('If you leave the permissions blank, the user will have access to all areas.') }}
                                         </p>
                                     </div>
-                                    <p class="text-lg text-gray-500 dark:text-darkmodetext bg-logo col-span-3 rounded-sm p-1 items-center"
+                                    <p class="text-lg text-darkmodetext bg-logo col-span-3 rounded-sm p-1 items-center"
                                         onclick="openPermissions()" id="openPerms">
                                         {{ __('Permissions') }}
                                         <svg class="w-7 h-7 float-right" fill="none" stroke-linecap="round"
@@ -264,7 +264,7 @@
                                     <hr class="my-6 border-b-1 border-gray-300 dark:border-gray-600" />
                                     <div class="flex items-end justify-end mt-4">
                                         <button type="submit"
-                                            class="dark:text-darkmodetext inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                                            class="form-submit">
                                             {{ __('Update') }}
                                         </button>
                                     </div>
