@@ -115,6 +115,9 @@ class CheckoutController extends Controller
         $userConfig = json_decode(json_encode($function($product)));
         $config = [];
         foreach ($userConfig as $configItem) {
+            if (!$request->input($configItem->name)) {
+                return redirect()->back()->with('error', $configItem->name . ' is required');
+            }
             $config[$configItem->name] = $request->input($configItem->name);
         }
         $product->config = $config;

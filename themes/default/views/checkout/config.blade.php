@@ -18,14 +18,14 @@
                                     <div class="flex flex-col w-full">
                                         <label class="font-medium" for="{{ $config->name }}">{{ ucfirst($config->name) }}</label>
                                         <input
-                                            class="w-full mt-1 rounded-md shadow-sm form-input dark:text-darkmodetext dark:bg-darkmode"
+                                            class="block w-full rounded-md shadow-sm focus:ring-logo focus:border-logo sm:text-sm dark:bg-darkmode"
                                             id="{{ $config->name }}" type="text" name="{{ $config->name }}"
                                             value="{{ old($config->name) }}" required />
                                     </div>
                                 @elseif($config->type == 'textarea')
                                     <div class="flex flex-col w-full">
                                         <label class="font-medium" for="{{ $config->name }}">{{ ucfirst($config->name) }}</label>
-                                        <textarea class="w-full mt-1 rounded-md shadow-sm form-input dark:text-darkmodetext dark:bg-darkmode"
+                                        <textarea class="block w-full rounded-md shadow-sm focus:ring-logo focus:border-logo sm:text-sm dark:bg-darkmode"
                                             id="{{ $config->name }}" name="{{ $config->name }}" required>{{ old($config->name) }}</textarea>
                                     </div>
                                 @elseif($config->type == 'dropdown')
@@ -33,7 +33,7 @@
                                         <label class="font-medium"
                                             for="{{ $config->name }}">{{ ucfirst($config->name) }}</label>
                                         <select id="{{ $config->name }}" name="{{ $config->name }}"
-                                            class="w-full mt-1 rounded-md shadow-sm form-input dark:text-darkmodetext dark:bg-darkmode">
+                                            class="block w-full rounded-md shadow-sm focus:ring-logo focus:border-logo sm:text-sm dark:bg-darkmode">
                                             @foreach ($config->options as $option)
                                                 <option value="{{ $option->value }}"
                                                     @if (old($config->name) == $option) selected @endif>
@@ -45,7 +45,7 @@
                                 @endif
                             @endforeach
                             <button type="submit"
-                                class="w-full px-4 py-2 mt-4 font-semibold text-white bg-blue-500 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75">
+                                class="form-submit float-right my-2">
                                 {{ __('Continue') }}
                             </button>
                         </div>
