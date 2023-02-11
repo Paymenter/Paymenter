@@ -168,14 +168,14 @@ function DirectAdmin_getConfig()
             'friendlyName' => 'Password',
             'type' => 'text',
             'required' => true,
-            'description' => 'The API key for the DirectAdmin server',
+            'description' => 'The password of the DirectAdmin server',
         ],
         [
             'name' => 'ssl',
             'friendlyName' => 'SSL',
             'type' => 'boolean',
             'required' => true,
-            'description' => 'Use SSL to connect to the DirectAdmin server',
+            'description' => 'Whether to use SSL to connect to the DirectAdmin server',
         ],
     ];
 }
