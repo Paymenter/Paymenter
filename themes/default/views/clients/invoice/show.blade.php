@@ -28,11 +28,13 @@
                                     <p>{{ auth()->user()->zip }}</p>
                                 </div>
                                 <div class="dark:text-darkmodetext text-sm font-light text-slate-500">
-                                    <p class="dark:text-darkmodetext text-sm font-normal text-slate-700">{{ __('Billed To') }}</p>
+                                    <p class="dark:text-darkmodetext text-sm font-normal text-slate-700">
+                                        {{ __('Billed To') }}</p>
                                     <p>{{ config('app.name', 'Paymenter') }}</p>
                                 </div>
                                 <div class="dark:text-darkmodetext text-sm font-light text-slate-500">
-                                    <p class="dark:text-darkmodetext text-sm font-normal text-slate-700">{{ __('Invoice Number') }}</p>
+                                    <p class="dark:text-darkmodetext text-sm font-normal text-slate-700">
+                                        {{ __('Invoice Number') }}</p>
                                     <p>{{ $invoice->id }}</p>
 
                                     <p class="dark:text-darkmodetext mt-2 text-sm font-normal text-slate-700">
@@ -42,7 +44,8 @@
                                 </div>
                                 @if ($invoice->status == 'pending')
                                     <div class="text-sm font-light text-slate-500">
-                                        <p class="dark:text-darkmodetext text-sm font-normal text-slate-700">{{ __('Due') }}</p>
+                                        <p class="dark:text-darkmodetext text-sm font-normal text-slate-700">
+                                            {{ __('Due') }}</p>
                                         <p class="dark:text-darkmodetext">{{ $order->expiry_date }}</p>
                                         <p class="dark:text-darkmodetext mt-2 text-xl font-normal text-slate-700">
                                             {{ __('Pay') }}
@@ -56,7 +59,8 @@
                                                 autocomplete="payment_method"
                                                 class="dark:bg-darkmode dark:text-darkmodetext dark:border-indigo-600 mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
                                                 @foreach (App\Models\Extensions::where('type', 'gateway')->where('enabled', true)->get() as $gateway)
-                                                    <option class="dark:bg-darkmode dark:text-darkmodetext" value="{{ $gateway->id }}">{{ $gateway->name }}</option>
+                                                    <option class="dark:bg-darkmode dark:text-darkmodetext"
+                                                        value="{{ $gateway->id }}">{{ $gateway->name }}</option>
                                                 @endforeach
                                             </select>
                                             <button type="submit"
@@ -120,7 +124,14 @@
                                             </td>
                                             <td
                                                 class="dark:text-darkmodetext hidden px-3 py-4 text-sm text-right text-slate-500 sm:table-cell">
-                                                {{ $currency_sign }}{{ number_format((float) $product->price, 2, '.', '') }}
+                                                @if ($product->discount)
+                                                    <span class="text-red-500 line-through">
+                                                        {{ $currency_sign }}{{ number_format((float) $product->price, 2, '.', '') }}
+                                                    </span>
+                                                    {{ $currency_sign }}{{ number_format((float) ($product->price - $product->discount), 2, '.', '') }}
+                                                @else
+                                                    {{ $currency_sign }}{{ number_format((float) $product->price, 2, '.', '') }}
+                                                @endif
                                             </td>
                                             <td
                                                 class="dark:text-darkmodetext py-4 pl-3 pr-4 text-sm text-right text-slate-500 sm:pr-6 md:pr-0">

@@ -17,6 +17,9 @@ class ProductsController extends Controller
 
         $link = ExtensionHelper::getLink($product);
 
+        $product = $product->product()->get()->first();
+
+
         return view('clients.products.view', compact('product', 'link'));
     }
 }

@@ -25,7 +25,7 @@
                             <div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
                                 @foreach ($category->products as $product)
                                     <a href="{{ route('checkout.add') }}?id={{ $product->id }}"
-                                        class="p-4 transition rounded-lg delay-400 border dark:border-darkmode hover:shadow-md flex flex-col bg-gray-100 dark:bg-darkmode">
+                                        class="p-4 transition rounded-lg delay-400 border dark:border-darkmode hover:shadow-md flex flex-col bg-gray-100 dark:bg-darkmode break-all">
                                         <img class="rounded-lg" src="{{ $product->image }}" alt="{{ $product->name }}"
                                             onerror="removeElement(this);">
                                         <div class="mt-2 h-full flex flex-col relative">

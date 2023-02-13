@@ -24,6 +24,7 @@ class CouponController extends Controller
             'code' => 'required|unique:coupons',
             'value' => 'required|numeric',
             'type' => 'required|in:percent,fixed',
+            'time' => 'required|in:lifetime,onetime',
         ]);
 
         $coupon = Coupons::create($request->all());
@@ -43,6 +44,7 @@ class CouponController extends Controller
             'code' => 'required|unique:coupons,code,'.$coupon->id,
             'value' => 'required|numeric',
             'type' => 'required|in:percent,fixed',
+            'time' => 'required|in:lifetime,onetime',
         ]);
 
         $coupon->update($request->all());

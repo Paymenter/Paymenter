@@ -18,6 +18,7 @@ class Coupons extends Model {
         'end_date',
         'status',
         'products',
+        'time'
     ];
 
     protected $casts = [

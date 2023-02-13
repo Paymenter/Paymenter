@@ -9,7 +9,7 @@
             </div>
             <!-- App Logo -->
             <div class="relative m-4 group">
-                <input type="file" class="form-input peer @error('app_logo') is-invalid @enderror" placeholder=" "
+                <input type="file" class="form-input p-0 peer @error('app_logo') is-invalid @enderror" placeholder=" "
                     name="app_logo" accept="image/*" />
                 <label class="form-label">{{ __('Logo') }}</label>
             </div>

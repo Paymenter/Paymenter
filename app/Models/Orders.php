@@ -15,6 +15,7 @@ class Orders extends Model
         'status',
         'client',
         'total',
+        'coupon',
     ];
 
     public function client()
@@ -30,5 +31,10 @@ class Orders extends Model
     public function invoices()
     {
         return $this->hasMany(Invoices::class, 'order_id', 'id');
+    }
+
+    public function coupon()
+    {
+        return $this->belongsTo(Coupons::class, 'coupon', 'id');
     }
 }

@@ -12,7 +12,7 @@
                     <form action="{{ route('admin.coupon.update', $coupon->id) }}" method="POST">
                         @csrf
                         @method('PUT')
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 dark:text-darkmodetext">
 
                             <div class="mt-4">
                                 <label for="code" class="block dark:text-darkmodetext">
@@ -38,8 +38,23 @@
                                 </select>
                             </div>
                             <div class="mt-4">
+                                <label for="time" class="block dark:text-darkmodetext">
+                                    {{ __('Time') }}
+                                </label>
+                                <select name="time" id="time"
+                                    class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm dark:bg-darkmode rounded-md"
+                                    required>
+                                    <option value="lifetime" {{ $coupon->time == 'lifetime' ? 'selected' : '' }}>
+                                        {{ __('Lifetime') }}
+                                    </option>
+                                    <option value="onetime" {{ $coupon->time == 'onetime' ? 'selected' : '' }}>
+                                        {{ __('One Time') }}
+                                    </option>
+                                </select>
+                            </div>
+                            <div class="mt-4">
                                 <label for="value" class="block dark:text-darkmodetext">
-                                    {{ __('Value') }}
+                                    {{ __('Value') }} {{ config('settings::currency_sign')}}
                                 </label>
                                 <input type="number" name="value" id="value" value="{{ $coupon->value }}"
                                     class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm dark:bg-darkmode rounded-md"

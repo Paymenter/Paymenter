@@ -31,9 +31,24 @@
                                     <option value="fixed">{{ __('Fixed') }}</option>
                                 </select>
                             </div>
+                            <div class="mt-4">
+                                <label for="time" class="block dark:text-darkmodetext">
+                                    {{ __('Time') }}
+                                </label>
+                                <select name="time" id="type"
+                                    class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm dark:bg-darkmode rounded-md"
+                                    required>
+                                    <option value="lifetime">
+                                        {{ __('Lifetime') }}
+                                    </option>
+                                    <option value="onetime">
+                                        {{ __('One Time') }}
+                                    </option>
+                                </select>
+                            </div>
                             <div class="w-full">
                                 <label class="block dark:text-darkmodetext" for="value">
-                                    {{ __('Value') }}
+                                    {{ __('Value') }} {{ config('settings::currency_sign')}}
                                 </label>
                                 <input
                                     class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm dark:bg-darkmode rounded-md"

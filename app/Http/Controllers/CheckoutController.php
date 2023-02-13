@@ -14,7 +14,7 @@ class CheckoutController extends Controller
         $total = 0;
         $discount = 0;
         $couponId = session('coupon');
-        if($couponId){
+        if ($couponId) {
             $coupon = Coupons::where('id', $couponId)->first();
         } else {
             $coupon = null;
@@ -42,16 +42,6 @@ class CheckoutController extends Controller
         }
 
         return view('checkout.index', compact('products', 'total', 'discount', 'coupon'));
-    }
-
-    public function success()
-    {
-        return view('checkout.success');
-    }
-
-    public function cancel()
-    {
-        return view('checkout.cancel');
     }
 
     public function add(Request $request)
@@ -142,19 +132,24 @@ class CheckoutController extends Controller
         if (!$products) {
             return redirect()->back()->with('error', 'Cart is empty');
         }
+        $couponId = session('coupon');
+        if ($couponId) {
+            $coupon = Coupons::where('id', $couponId)->first();
+        } else {
+            $coupon = null;
+        }
         $total = 0;
-        if ($products) {
-            foreach ($products as $product) {
-                $total += $product->price * $product->quantity;
-            }
+        foreach ($products as $product) {
+            $total += $product->price * $product->quantity;
         }
 
-        $user = User::find(auth()->user()->id);
+        $user = User::findOrFail(auth()->user()->id);
         $order = new Orders();
         $order->client = $user->id;
         $order->total = $total;
         $order->expiry_date = date('Y-m-d H:i:s', strtotime('+1 month'));
         $order->status = 'pending';
+        $order->coupon = session('coupon');
         $order->save();
         foreach ($products as $product) {
             $orderProduct = new OrderProducts();
@@ -206,13 +201,27 @@ class CheckoutController extends Controller
             $total = $invoice->total;
             $products = [];
             foreach ($order->products()->get() as $product) {
-                $test = json_decode(Products::where('id', $product->product_id)->first());
-                $test->quantity = $product['quantity'];
+                $iproduct = Products::where('id', $product->product_id)->first();
+                $iproduct->quantity = $product['quantity'];
                 if (isset($product['config'])) {
-                    $test->config = $product['config'];
+                    $iproduct->config = $product['config'];
                 }
-                $products[] = $test;
-                $total += $test->price * $test->quantity;
+                if ($coupon) {
+                    if (!in_array($iproduct->id, $coupon->products) && $coupon->type != 'all') {
+                        $iproduct->discount = 0;
+                    } else {
+                        if ($coupon->type == 'percent') {
+                            $iproduct->discount = $iproduct->price * $coupon->value / 100;
+                        } else {
+                            $iproduct->discount = $coupon->value;
+                        }
+                    }
+                } else {
+                    $iproduct->discount = 0;
+                }
+                $iproduct->price = $iproduct->price - $iproduct->discount;
+                $products[] = $iproduct;
+                $total += $iproduct->price * $iproduct->quantity;
             }
 
             if ($request->get('payment_method')) {
@@ -239,7 +248,7 @@ class CheckoutController extends Controller
             session()->put('cart', $cart);
         }
 
-        if(count($cart) == 0){
+        if (count($cart) == 0) {
             session()->forget('cart');
             session()->forget('coupon');
         }
@@ -266,7 +275,7 @@ class CheckoutController extends Controller
 
     public function coupon(Request $request)
     {
-        if($request->get('remove')){
+        if ($request->get('remove')) {
             session()->forget('coupon');
             return redirect()->back()->with('success', 'Coupon removed successfully');
         }
