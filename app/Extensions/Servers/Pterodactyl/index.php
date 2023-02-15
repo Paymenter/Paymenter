@@ -38,7 +38,6 @@ function Pterodactyl_getProductConfig()
             'name' => 'node',
             'friendlyName' => 'Pterodactyl Node (leave empty for node assigned to location)',
             'type' => 'text',
-            'required' => true,
         ],
         [
             'name' => 'location',
@@ -81,6 +80,7 @@ function Pterodactyl_getProductConfig()
             'friendlyName' => 'Pterodactyl IO',
             'type' => 'text',
             'required' => true,
+            'description' => 'IO is a number between 10 and 1000. 500 is the default value.',
         ],
         [
             'name' => 'cpu',
@@ -104,7 +104,6 @@ function Pterodactyl_getProductConfig()
             'name' => 'skip_scripts',
             'friendlyName' => 'Pterodactyl Skip Scripts',
             'type' => 'boolean',
-            'required' => true,
         ],
         [
             'name' => 'allocation',

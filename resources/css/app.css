@@ -94,3 +94,37 @@
         @apply relative mb-20;
     }
 }
+
+
+* {
+    scrollbar-width: thin;
+    scrollbar-color: #1A202C #5270fd;
+}
+
+
+/* Works on Chrome, Edge, and Safari */
+
+*::-webkit-scrollbar {
+    width: 15px;
+    box-shadow: 0 0 0 1px #1A202C;
+}
+
+.dark *::-webkit-scrollbar-track {
+    background: #1A202C;
+}
+
+.dark *::-webkit-scrollbar-thumb {
+    background-color: #5270fd;
+    border-radius: 20px;
+    border: 3px solid #1A202C;
+}
+
+*::-webkit-scrollbar-track {
+    background: white;
+}
+
+*::-webkit-scrollbar-thumb {
+    background-color: #5270fd;
+    border-radius: 20px;
+    border: 3px solid #ffffff;
+}

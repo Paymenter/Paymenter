@@ -98,13 +98,6 @@ function Stripe_getConfig()
             'required' => true,
         ],
         [
-            'name' => 'stripe_publishable_key',
-            'friendlyName' => 'Stripe publishable key',
-            'type' => 'text',
-            'description' => 'Stripe publishable key',
-            'required' => true,
-        ],
-        [
             'name' => 'stripe_webhook_secret',
             'friendlyName' => 'Stripe webhook secret',
             'type' => 'text',
@@ -123,13 +116,6 @@ function Stripe_getConfig()
             'friendlyName' => 'Stripe test key',
             'type' => 'text',
             'description' => 'Stripe test key',
-            'required' => false,
-        ],
-        [
-            'name' => 'stripe_test_publishable_key',
-            'friendlyName' => 'Stripe test publishable key',
-            'type' => 'text',
-            'description' => 'Stripe test publishable key',
             'required' => false,
         ],
     ];

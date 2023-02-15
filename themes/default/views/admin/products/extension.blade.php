@@ -39,19 +39,24 @@
                             @isset($extension)
                                 <div class="mt-6 text-gray-500 dark:text-darkmodetext dark:bg-darkmode2 grid grid-cols-2 gap-x-2">
                                     @foreach ($extension->productConfig as $setting)
+                                         @if(!isset($setting->required))
+                                            @php
+                                                $setting->required = false;
+                                            @endphp
+                                        @endif
                                         <div class="mt-4">
                                             <label for="{{ $setting->name }}">{{ $setting->friendlyName }}</label>
                                             @if ($setting->type == 'text')
                                                 <input type="text" name="{{ $setting->name }}"
-                                                    value="{{ App\Helpers\ExtensionHelper::getProductConfig($extension->name, $setting->name, $product->id) }}"
-                                                    class="block w-full rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm dark:bg-darkmode" />
+                                                    value="{{ App\Helpers\ExtensionHelper::getProductConfig($extension->name, $setting->name, $product->id) }}" @if ($setting->required) required @endif
+                                                    class="block w-full rounded-md shadow-sm focus:ring-logo focus:border-logo sm:text-sm dark:bg-darkmode" />
                                             @elseif($setting->type == 'boolean')
-                                                <input type="checkbox" name="{{ $setting->name }}" value="1"
+                                                <input type="checkbox" name="{{ $setting->name }}" value="1" @if ($setting->required) required @endif
                                                     @if (App\Helpers\ExtensionHelper::getProductConfig($extension->name, $setting->name, $product->id) == 1) checked @endif
-                                                    class="block rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm dark:bg-darkmode" />
+                                                    class="block rounded-md shadow-sm focus:ring-logo focus:border-logo sm:text-sm dark:bg-darkmode" />
                                             @elseif($setting->type == 'dropdown')
-                                                <select name="{{ $setting->name }}"
-                                                    class="block w-full rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm dark:bg-darkmode">
+                                                <select name="{{ $setting->name }}" @if ($setting->required) required @endif
+                                                    class="block w-full rounded-md shadow-sm focus:ring-logo focus:border-logo sm:text-sm dark:bg-darkmode">
                                                     @foreach ($setting->options as $option)
                                                         <option value="{{ $option->value }}"
                                                             @if (App\Helpers\ExtensionHelper::getProductConfig($extension->name, $setting->name, $product->id) == $option->value) selected @endif>
