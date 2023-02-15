@@ -19,20 +19,21 @@ class InvoiceController extends Controller
     public function show(Request $request, Invoices $invoice)
     {
         $order = Orders::findOrFail($invoice->order_id);
-        $coupon;
+        $coupon = $order->coupon()->get()->first();
 
         // Check if the coupon is lifetime or not
-        if ($order->coupon()->get()->first()->time == 'onetime') {
-            $invoices = $order->invoices()->get();
-            if ($invoices->count() == 1) {
-                $coupon = $order->coupon()->get()->first();
+        if ($coupon) {
+            if ($coupon->time == 'onetime') {
+                $invoices = $order->invoices()->get();
+                if ($invoices->count() == 1) {
+                    $coupon = $order->coupon()->get()->first();
+                } else {
+                    $coupon = null;
+                }
             } else {
-                $coupon = null;
+                $coupon = $order->coupon()->get()->first();
             }
-        } else {
-            $coupon = $order->coupon()->get()->first();
         }
-
 
         if ($invoice->user_id != auth()->user()->id) {
             return redirect()->route('clients.invoice.index');
@@ -69,16 +70,20 @@ class InvoiceController extends Controller
         $order = Orders::findOrFail($invoice->order_id);
         $total = $invoice->total;
         $products = [];
+        $coupon = $order->coupon()->get()->first();
 
-        if ($order->coupon()->get()->first()->time == 'onetime') {
-            $invoices = $order->invoices()->get();
-            if ($invoices->count() == 1) {
-                $coupon = $order->coupon()->get()->first();
+        // Check if the coupon is lifetime or not
+        if ($coupon) {
+            if ($coupon->time == 'onetime') {
+                $invoices = $order->invoices()->get();
+                if ($invoices->count() == 1) {
+                    $coupon = $order->coupon()->get()->first();
+                } else {
+                    $coupon = null;
+                }
             } else {
-                $coupon = null;
+                $coupon = $order->coupon()->get()->first();
             }
-        } else {
-            $coupon = $order->coupon()->get()->first();
         }
 
         foreach ($order->products()->get() as $product) {

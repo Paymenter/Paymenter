@@ -6,7 +6,7 @@
                 <div class="text-xl text-gray-700 dark:text-darkmodetext hover:text-white">
                     <a href="{{ route('index') }}"
                         class="p-2.5 items-center mt-1 flex mx-auto duration-300 cursor-pointer hover:bg-blue-900 rounded-md">
-                        <img src="{{ asset('img/logo.png') }}" alt="logo" class="w-10 h-10 rounded-full" />
+                        <x-application-logo />
                         <h1 class="font-bold text-[15px] ml-3">{{ config('settings::app_name') }}</h1>
                     </a>
                     <hr class="my-2 border-b-1 border-gray-300 dark:border-gray-600">
@@ -81,8 +81,8 @@
                 <x-sidebar-navigation-item route="admin.orders" icon="ri-file-text-line">
                     Orders
                 </x-sidebar-navigation-item>
-                <x-sidebar-navigation-item route="admin.users" icon="ri-user-3-line">
-                    Coupons
+                <x-sidebar-navigation-item route="admin.clients" icon="ri-user-3-line">
+                    Clients
                 </x-sidebar-navigation-item>
                 <script type="text/javascript">
                     function dropdownprof() {

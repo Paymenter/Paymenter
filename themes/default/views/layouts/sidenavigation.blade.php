@@ -56,7 +56,7 @@
                         Dashboard
                     </x-sidebar-navigation-item>
                     @if (Auth::user()->is_admin == '1')
-                        <x-sidebar-navigation-item route="admin" icon="ri-admin-line">
+                        <x-sidebar-navigation-item route="admin.index" icon="ri-admin-line">
                             Admin
                         </x-sidebar-navigation-item>
                     @endif

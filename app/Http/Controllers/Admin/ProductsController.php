@@ -120,7 +120,13 @@ class ProductsController extends Controller
         $data = request()->validate([
             'server_id' => 'required|integer',
         ]);
-        $product->update($data);
+        // Check if only the server has been changed
+        if ($product->server_id != $request->input('server_id')) {
+            // Delete all product settings
+            ProductSettings::where('product_id', $product->id)->delete();
+            $product->update($data);
+            return redirect()->route('admin.products.extension', $product->id)->with('success', 'Server changed successfully');
+        }
 
         include_once base_path('app/Extensions/Servers/' . $product->server()->get()->first()->name . '/index.php');
         $extension = new \stdClass();
