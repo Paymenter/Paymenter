@@ -10,8 +10,6 @@
                     <div class="mt-8 text-2xl dark:text-darkmodetext">
                         Create Product
                     </div>
-                    <x-auth-validation-errors class="mb-4" :errors="$errors" />
-
                     <div class="mt-6 text-gray-500 dark:text-darkmodetext">
                         <form method="POST" action="{{ route('admin.products.store') }}" enctype="multipart/form-data">
                             @csrf

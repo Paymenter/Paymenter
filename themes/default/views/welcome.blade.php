@@ -39,7 +39,7 @@
                                                             class="my-2 border-b-1 border-gray-300 dark:border-gray-600">
                                                         <p
                                                             class="mt-1 prose dark:prose-invert text-sm text-center text-gray-500 dark:text-darkmodetext">
-                                                            {{ \Illuminate\Mail\Markdown::parse($product->description) }}
+                                                            {{ \Illuminate\Mail\Markdown::parse(str_replace("\n", '<br>', $product->description)) }}
                                                         </p>
                                                         <br>
                                                         <p

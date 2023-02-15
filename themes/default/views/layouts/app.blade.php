@@ -153,7 +153,7 @@
     <meta content="{{ config('settings::seo_description') }}" property="og:description">
     <meta content='{{ config('settings::seo_image') }}' property="og:image">
     <link type="application/json+oembed"
-        href="{{ url('/') }}/manifest.json?title={{ urldecode('Paymenter') }}&author_url={{ urldecode('https://paymenter.org') }}&author_name=Paymenter" />
+        href="{{ url('/') }}/manifest.json?title={{ config('app.name', 'Paymenter') }}&author_url={{ url('/') }}&author_name={{ config('app.name', 'Paymenter') }}" />
     <meta name="twitter:card" content="@if (config('settings::seo_twitter_card')) summary_large_image @endif">
     <meta name="theme-color" content="#5270FD">
 </head>

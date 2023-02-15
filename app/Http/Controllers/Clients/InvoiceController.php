@@ -67,6 +67,9 @@ class InvoiceController extends Controller
         if ($invoice->user_id != auth()->user()->id) {
             return redirect()->route('clients.invoice.index');
         }
+        if ($invoice->status == 'paid') {
+            return redirect()->route('clients.invoice.show', $invoice)->with('error', 'Invoice already paid');
+        }
         $order = Orders::findOrFail($invoice->order_id);
         $total = $invoice->total;
         $products = [];
