@@ -275,8 +275,8 @@
                         <div class="flex flex-row items-center justify-between ml-4 pt-4">
                             <div class="flex flex-row items-start justify-start">
                                 <div class="shrink-0 w-8 mt-1 mr-4">
-                                    <img src="https://d33wubrfki0l68.cloudfront.net/c0e8a3c6172bd5bebfe787d49974adcff1ec4d3a/ca6a2/img/people/joseph-jolton.png"
-                                        class="h-8 w-full shadow-lg rounded-full ring">
+                                    <img src="https://www.gravatar.com/avatar/{{ md5(Auth::user()->email) }}?s=200&d=mp"
+                                        class="h-8 w-full shadow-lg rounded-full ring" onerror='this.error=null;this.src="https://d33wubrfki0l68.cloudfront.net/c0e8a3c6172bd5bebfe787d49974adcff1ec4d3a/ca6a2/img/people/joseph-jolton.png";'>
                                 </div>
                                 <div class="flex flex-col flex-grow w-full space-y-0 self-center">
                                     <div class="text-sm font-semibold pt-1 text-black dark:text-darkmodetext">

@@ -12,11 +12,6 @@ use Illuminate\Support\Facades\RateLimiter;
 
 class TicketsController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware('auth');
-    }
-
     public function index(Request $request)
     {
         $tickets = Tickets::where('client', auth()->user()->id)->get();
@@ -86,7 +81,7 @@ class TicketsController extends Controller
 
     public function show(Tickets $ticket)
     {
-        $messages = TicketMessages::where('ticket_id', $id->id)->get();
+        $messages = TicketMessages::where('ticket_id', $ticket->id)->get();
 
         return view('clients.tickets.show', compact('ticket', 'messages'));
     }
