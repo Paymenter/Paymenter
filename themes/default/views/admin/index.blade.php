@@ -37,7 +37,8 @@
                                 <div class="flex flex-col">
                                     <h1 class="text-lg text-gray-500 dark:text-darkmodetext">Revenue Total</h1>
                                     <p class="text-xl font-bold text-black dark:text-darkmodetext">
-                                        {{ App\Models\Orders::sum('total') }} {{ config('settings::currency_sign') }}
+                                        {{ $revenueTotal }}
+                                        {{ config('settings::currency_sign') }}
                                     </p>
                                 </div>
                             </div>

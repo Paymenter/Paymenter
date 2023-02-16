@@ -10,16 +10,12 @@ use App\Http\Controllers\Controller;
 
 class TicketsController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware('auth.admin');
-    }
-
     public function index()
     {
         $tickets = Tickets::where('status', '!=', 'closed')->get();
+        $closed = Tickets::where('status', 'closed')->get();
 
-        return view('admin.tickets.index', compact('tickets'));
+        return view('admin.tickets.index', compact('tickets', 'closed'));
     }
 
     public function create()
