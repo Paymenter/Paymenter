@@ -39,6 +39,8 @@ function PayPal_pay($total, $products, $orderId)
         'application_context' => [
             'cancel_url' => route('clients.invoice.show', $orderId),
             'return_url' => route('clients.invoice.show', $orderId),
+            'brand_name' =>  config('app.name', 'Paymenter'),
+            'shipping_preference'  => 'NO_SHIPPING',
         ],
     ]);
 
