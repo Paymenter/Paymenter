@@ -3,7 +3,8 @@
 [![Discord](https://img.shields.io/discord/882318291014651924.svg?logo=discord)](https://discord.gg/xB4UUT3XQg)
 [![GitHub](https://img.shields.io/github/license/paymenter/paymenter)](https://github.com/Paymenter/paymenter/blob/master/LICENSE)
 [![GitHub release (latest by date)](https://img.shields.io/github/v/release/paymenter/paymenter)](https://github.com/Paymenter/paymenter/releases)
-[![Downloads](https://img.shields.io/github/downloads/paymenter/paymenter/total)
+![Downloads](https://img.shields.io/github/downloads/paymenter/paymenter/total)
+
 [Discord](https://discord.gg/xB4UUT3XQg), [Demo](https://demo.paymenter.org), [Docs](https://paymenter.org/docs/intro), [Website](https://paymenter.org)
 
 ## A advanced payment system for your hosting company
