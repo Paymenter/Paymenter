@@ -147,10 +147,10 @@ function Pterodactyl_deleteRequest($url)
     return $response;
 }
 
-function Pterodactyl_createServer($user, $parmas, $order)
+function Pterodactyl_createServer($user, $parmas, $order, $product)
 {
-    if (Pterodactyl_serverExists($order->id)) {
-        error_log('Server already exists for order ' . $order->id);
+    if (Pterodactyl_serverExists($product->id)) {
+        error_log('Server already exists for order ' . $product->id);
 
         return;
     }
@@ -178,7 +178,7 @@ function Pterodactyl_createServer($user, $parmas, $order)
             }
         }
         $json = [
-            'name' => Pterodactyl_random_string(8) . '-' . $order->id,
+            'name' => Pterodactyl_random_string(8) . '-' . $product->id,
             'user' => (int) Pterodactyl_getUser($user),
             'egg' => (int) $parmas['egg'],
             'docker_image' => $eggData['attributes']['docker_image'],
@@ -199,11 +199,11 @@ function Pterodactyl_createServer($user, $parmas, $order)
                 'default' => (int) $allocation,
             ],
             'environment' => $environment,
-            'external_id' => (string) $order->id,
+            'external_id' => (string) $product->id,
         ];
     } else {
         $json = [
-            'name' => Pterodactyl_random_string(8) . '-' . $order->id,
+            'name' => Pterodactyl_random_string(8) . '-' . $product->id,
             'user' => (int) Pterodactyl_getUser($user),
             'egg' => (int) $parmas['egg'],
             'docker_image' => $eggData['attributes']['docker_image'],
@@ -226,7 +226,7 @@ function Pterodactyl_createServer($user, $parmas, $order)
                 'port_range' => [],
             ],
             'environment' => $environment,
-            'external_id' => (string) $order->id,
+            'external_id' => (string) $product->id,
         ];
     }
     Pterodactyl_postRequest($url, $json);
@@ -284,9 +284,9 @@ function Pterodactyl_serverExists($order)
     return false;
 }
 
-function Pterodactyl_suspendServer($user, $params, $order)
+function Pterodactyl_suspendServer($user, $params, $order, $product)
 {
-    $server = Pterodactyl_serverExists($order->id);
+    $server = Pterodactyl_serverExists($product->id);
     if ($server) {
         $url = pteroConfig('host') . '/api/application/servers/' . $server . '/suspend';
         Pterodactyl_postRequest($url, []);
@@ -297,9 +297,9 @@ function Pterodactyl_suspendServer($user, $params, $order)
     return false;
 }
 
-function Pterodactyl_unsuspendServer($user, $params, $order)
+function Pterodactyl_unsuspendServer($user, $params, $order, $product)
 {
-    $server = Pterodactyl_serverExists($order->id);
+    $server = Pterodactyl_serverExists($product->id);
     if ($server) {
         $url = pteroConfig('host') . '/api/application/servers/' . $server . '/unsuspend';
         Pterodactyl_postRequest($url, []);
@@ -310,9 +310,9 @@ function Pterodactyl_unsuspendServer($user, $params, $order)
     return false;
 }
 
-function Pterodactyl_terminateServer($user, $params, $order)
+function Pterodactyl_terminateServer($user, $params,$order, $product)
 {
-    $server = Pterodactyl_serverExists($order->id);
+    $server = Pterodactyl_serverExists($product->id);
     if ($server) {
         $url = pteroConfig('host') . '/api/application/servers/' . $server;
         Pterodactyl_deleteRequest($url);

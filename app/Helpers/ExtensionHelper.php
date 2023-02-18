@@ -155,7 +155,7 @@ class ExtensionHelper
 
     public static function getCurrency()
     {
-        return config('settings::currency');
+        return config('settings::currency') ?? 'USD';
     }
 
     public static function getProductConfig($name, $key, $id)

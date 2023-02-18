@@ -33,10 +33,10 @@
                                                 class="text-lg font-medium text-center text-gray-900 dark:text-darkmodetext">
                                                 {{ $product->name }}</h3>
                                             <hr class="my-2 border-b-1 border-gray-300 dark:border-gray-600">
-                                            <p
-                                                class="mt-1 prose dark:prose-invert text-sm text-center text-gray-500 dark:text-darkmodetext">
+                                            <div
+                                                class="mt-1 prose dark:prose-invert text-gray-500 dark:text-darkmodetext">
                                                 {{ \Illuminate\Mail\Markdown::parse(str_replace("\n", '<br>', $product->description)) }}
-                                            </p>
+                                            </div>
                                             <br>
                                             <p
                                                 class="mt-1 text-md text-center text-gray-500 dark:text-darkmodetext mx-auto  w-full bottom-0 absolute">
