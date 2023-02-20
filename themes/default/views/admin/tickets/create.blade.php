@@ -34,7 +34,7 @@
                             <!-- user -->
                             <div class="mt-4">
                                 <label class="dark:text-darkmodetext block font-medium text-sm text-gray-700" for="user">
-                                    {{ __('Uuser') }}
+                                    {{ __('User') }}
                                 </label>
                                 <select id="user" name="user"
                                     class="dark:text-darkmodetext dark:bg-darkmode form-input rounded-md shadow-sm mt-1 block w-full">
@@ -48,7 +48,7 @@
                             <!-- priority high/medium/low -->
                             <div class="mt-4">
                                 <label class="dark:text-darkmodetext block font-medium text-sm text-gray-700" for="priority">
-                                    {{ __('clients.tickets.priority') }}
+                                    {{ __('Priority') }}
                                 </label>
                                 <select id="priority" name="priority"
                                     class="dark:text-darkmodetext dark:bg-darkmode form-input rounded-md shadow-sm mt-1 block w-full">
