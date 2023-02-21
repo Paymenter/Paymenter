@@ -80,7 +80,7 @@
                                                     class="h-8 w-8 shadow-lg rounded-full ml-1 inline-block"
                                                     onerror='this.error=null;this.src="https://d33wubrfki0l68.cloudfront.net/c0e8a3c6172bd5bebfe787d49974adcff1ec4d3a/ca6a2/img/people/joseph-jolton.png";'>
                                             @else
-                                                <img src="https://www.gravatar.com/avatar/{{ md5($message->uesr->email) }}?s=200&d=mp"
+                                                <img src="https://www.gravatar.com/avatar/{{ md5($message->user->email) }}?s=200&d=mp"
                                                     class="h-8 w-8 shadow-lg rounded-full ml-1 inline-block"
                                                     onerror='this.error=null;this.src="https://d33wubrfki0l68.cloudfront.net/c0e8a3c6172bd5bebfe787d49974adcff1ec4d3a/ca6a2/img/people/joseph-jolton.png";'>
                                                 {{ $message->user->name }}
