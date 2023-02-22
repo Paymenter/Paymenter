@@ -34,6 +34,7 @@ Route::group(['prefix' => 'admin'], function () {
         Route::post('/{product}/extension', [App\Http\Controllers\Admin\ProductsController::class, 'extensionUpdate'])->middleware(['auth.admin'])->name('admin.products.extension.update');
         Route::get('/{product}/extension/export', [App\Http\Controllers\Admin\ProductsController::class, 'extensionExport'])->middleware(['auth.admin'])->name('admin.products.extension.export');
         Route::post('/{product}/extension/import', [App\Http\Controllers\Admin\ProductsController::class, 'extensionImport'])->middleware(['auth.admin'])->name('admin.products.extension.import');
+        Route::post('/{product}/duplicate', [App\Http\Controllers\Admin\ProductsController::class, 'duplicate'])->middleware(['auth.admin'])->name('admin.products.duplicate');
         Route::delete('/{product}/delete', [App\Http\Controllers\Admin\ProductsController::class, 'destroy'])->middleware(['auth.admin'])->name('admin.products.destroy');
     });
 

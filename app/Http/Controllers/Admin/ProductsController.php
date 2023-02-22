@@ -281,4 +281,20 @@ class ProductsController extends Controller
 
         return redirect()->route('admin.products.extension', $product->id)->with('success', 'Product updated successfully');
     }
+
+    public function duplicate(Products $product)
+    {
+        $newProduct = $product->replicate();
+        $newProduct->name = $newProduct->name . ' (copy)';
+        $newProduct->save();
+
+        $productSettings = ProductSettings::where('product_id', $product->id)->get();
+        foreach ($productSettings as $productSetting) {
+            $newProductSetting = $productSetting->replicate();
+            $newProductSetting->product_id = $newProduct->id;
+            $newProductSetting->save();
+        }
+
+        return redirect()->route('admin.products.edit', $newProduct->id)->with('success', 'Product duplicated successfully');
+    }
 }

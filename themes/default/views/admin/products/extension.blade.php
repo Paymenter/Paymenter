@@ -35,10 +35,10 @@
                                         {{ __('Export') }}
                                     </a>
                                     <form method="post" action="{{ route('admin.products.extension.import', $product->id) }}" enctype="multipart/form-data" accept="application/json"
-                                        class="block px-4 py-2 text-base text-gray-700 dark:text-darkmodetext dark:hover:bg-darkmode2 hover:bg-gray-100 hover:text-red-900 dark:hover:text-red-300"
-                                        role="menuitem" tabindex="-1" id="menu-item-0">
+                                        class="block px-4 py-2 text-base text-gray-700 dark:text-darkmodetext dark:hover:bg-darkmode2 hover:bg-gray-100 cursor-pointer"
+                                        role="menuitem" tabindex="-1" id="menu-item-0"  onclick="document.getElementById('importFile').click();"    >
                                         @csrf
-                                        <label for="json" class="cursor-pointer" onclick="document.getElementById('importFile').click();">
+                                        <label for="json">
                                             {{ __('Import') }}
                                         </label>
                                         <input type="file" name="json" class="hidden" onchange="this.form.submit()" id="importFile">

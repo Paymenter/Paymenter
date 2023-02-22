@@ -32,6 +32,12 @@
                                         class="block px-4 py-2 text-base text-gray-700 dark:text-darkmodetext dark:hover:bg-darkmode2 hover:bg-gray-100 hover:text-gray-900"
                                         role="menuitem" tabindex="-1" id="menu-item-0">Extension Settings</a>
                                     <button
+                                        class="block px-4 py-2 text-base text-gray-700 dark:text-darkmodetext dark:hover:bg-darkmode2 hover:bg-gray-100"
+                                        role="menuitem" tabindex="-1" id="menu-item-0"
+                                        onclick="document.getElementById('duplicate').submit()">
+                                        {{ __('Duplicate') }}
+                                    </button>
+                                    <button
                                         class="block px-4 py-2 text-base text-gray-700 dark:text-darkmodetext dark:hover:bg-darkmode2 hover:bg-gray-100 hover:text-red-900 dark:hover:text-red-300"
                                         role="menuitem" tabindex="-1" id="menu-item-0"
                                         onclick="document.getElementById('delete').submit()">
@@ -43,6 +49,10 @@
                                 id="delete">
                                 @csrf
                                 @method('DELETE')
+                            </form>
+                            <form method="POST" action="{{ route('admin.products.duplicate', $product->id) }}"
+                                id="duplicate">
+                                @csrf
                             </form>
                         </div>
                     </div>
