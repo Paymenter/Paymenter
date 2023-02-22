@@ -5,7 +5,7 @@
 
     <div class="py-12">
         <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
-            <div class="overflow-hidden bg-white shadow-xl dark:bg-darkmode2 sm:rounded-lg">
+            <div class="overflow-hidden bg-white shadow-md dark:bg-darkmode2 sm:rounded-lg">
                 <div class="p-6 bg-white dark:bg-darkmode2 sm:px-20">
                     <div class="mt-8 text-2xl dark:text-darkmodetext">
                         Create Product

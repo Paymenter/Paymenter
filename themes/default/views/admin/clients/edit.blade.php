@@ -75,7 +75,7 @@
                             <div class="ml-4 text-lg text-gray-600 leading-7 font-semibold w-full">
                                 <form method="POST" action="{{ route('admin.clients.update', $user->id) }}">
                                     @csrf
-                                    <div class="grid grid-cols-2 gap-4 mt-4">
+                                    <div class="grid grid-cols-2 gap-4 mt-4 dark:text-white">
                                         <div>
                                             <label for="name"
                                                 class="dark:text-darkmodetext block text-sm font-medium text-gray-700">
@@ -281,9 +281,73 @@
                                 </form>
                             </div>
                         </div>
+                        <br /> <br />
+                        <!-- His/her orders -->
+                            <div class="rounded-t mb-0 px-4 py-3 border-0">
+                                <div class="flex flex-wrap items-center">
+                                    <div class="relative w-full px-4 max-w-full flex-grow flex-1">
+                                        <h3 class="font-semibold text-lg text-gray-800 dark:text-darkmodetext">
+                                            {{ __('Orders') }}
+                                        </h3>
+                                    </div>
+                                </div>
+                            </div>
+                                <table id="orders"  class="table-auto w-full">
+                                    <thead>
+                                        <tr>
+                                            <th>
+                                                {{ __('ID') }}
+                                            </th>
+                                            <th>
+                                                {{ __('Price') }}
+                                            </th>
+                                            <th>
+                                                {{ __('Total') }}
+                                            </th>
+                                            <th>
+                                                {{ __('Created At') }}
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach ($user->orders as $order)
+                                            <tr onclick="window.location.href = '{{ route('admin.orders.show', $order->id) }}';" class="cursor-pointer">
+                                                <td>
+                                                    {{ $order->id }}
+                                                </td>
+                                                <td>
+                                                    {{ $order->status }}
+                                                </td>
+                                                <td>
+                                                    {{ $order->total }}
+                                                </td>
+                                                <td>
+                                                    {{ $order->created_at }}
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                            <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/pdfmake.min.js"></script>
+                            <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/vfs_fonts.js"></script>
+                            <script type="text/javascript"
+                                src="https://cdn.datatables.net/v/dt/jszip-2.5.0/dt-1.12.1/b-2.2.3/b-colvis-2.2.3/b-html5-2.2.3/b-print-2.2.3/datatables.min.js">
+                            </script>
+                            <script>
+                                $(document).ready(function() {
+                                    var table = $('#orders').DataTable({
+                                        dom: 'Bfrtip',
+                                        buttons: [
+                                            'copy', 'csv', 'excel', 'pdf', 'print'
+                                        ]
+                                    });
+                                });
+                            </script>
                     </div>
                 </div>
             </div>
         </div>
+    </div>
     </div>
 </x-admin-layout>

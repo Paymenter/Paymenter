@@ -4,7 +4,7 @@
     </x-slot>
     <div class="py-12">
         <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
-            <div class="overflow-hidden bg-white shadow-xl dark:bg-darkmode2 sm:rounded-lg">
+            <div class="overflow-hidden bg-white shadow-md dark:shadow-gray-700 dark:bg-darkmode2 sm:rounded-lg">
                 <div class="p-6 bg-white dark:bg-darkmode2 sm:px-20">
                     <div class="mt-8 text-2xl dark:text-darkmodetext">
                         {{ __('Order: ') }} {{ $order->id }}
@@ -31,6 +31,12 @@
                                 <div class="flex flex-col">
                                     <span class="font-bold">{{ __('Status') }}:</span>
                                     <span>{{ $order->status }}</span>
+                                </div>
+                            </div>
+                            <div class="flex flex-row justify-between">
+                                <div class="flex flex-col">
+                                    <span class="font-bold">{{ __('Next Due Date') }}:</span>
+                                    <span>{{ $order->expiry_date }}</span>
                                 </div>
                             </div>
                         </div>

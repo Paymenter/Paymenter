@@ -60,7 +60,7 @@ class User extends Authenticatable
 
     public function orders()
     {
-        return $this->hasMany(Orders::class, 'user', 'id');
+        return $this->hasMany(Orders::class, 'client', 'id');
     }
 
     public function tickets()

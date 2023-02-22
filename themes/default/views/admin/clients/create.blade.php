@@ -11,7 +11,7 @@
     <!-- create client -->
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
+            <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg dark:bg-darkmode2">
                 <div class="dark:bg-darkmode2 p-6 sm:px-20 bg-white">
                     <div class="dark:text-darkmodetext mt-8 text-2xl">
                         {{ __('Create client') }}

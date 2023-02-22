@@ -25,7 +25,7 @@
                             <div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
                                 @foreach ($category->products as $product)
                                     <a href="{{ route('checkout.add') }}?id={{ $product->id }}"
-                                        class="p-4 transition rounded-lg delay-400 border dark:border-darkmode hover:shadow-md flex flex-col bg-gray-100 dark:bg-darkmode break-all">
+                                        class="p-4 transition rounded-lg delay-400 border dark:border-darkmode hover:shadow-md dark:hover:shadow-gray-500 flex flex-col bg-gray-100 dark:bg-darkmode break-all">
                                         <img class="rounded-lg" src="{{ $product->image }}" alt="{{ $product->name }}"
                                             onerror="removeElement(this);">
                                         <div class="mt-2 h-full flex flex-col relative">
@@ -37,9 +37,9 @@
                                                 class="mt-1 prose dark:prose-invert text-gray-500 dark:text-darkmodetext">
                                                 {{ \Illuminate\Mail\Markdown::parse(str_replace("\n", '<br>', $product->description)) }}
                                             </div>
-                                            <br>
+                                            <br><br>
                                             <p
-                                                class="mt-1 text-md text-center text-gray-500 dark:text-darkmodetext mx-auto  w-full bottom-0 absolute">
+                                                class="mt-1 text-base text-center text-gray-500 dark:text-darkmodetext mx-auto w-full bottom-0 absolute font-black">
                                                 @if ($product->price == 0)
                                                     {{ __('Free') }}
                                                 @else
