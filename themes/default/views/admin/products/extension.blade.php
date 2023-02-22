@@ -9,10 +9,44 @@
         <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
             <div class="overflow-hidden bg-white shadow-xl sm:rounded-lg dark:bg-darkmode2 dark:shadow-gray-700">
                 <div class="p-6 bg-white sm:px-20 dark:bg-darkmode2">
-                    <div class="mt-8 text-2xl dark:text-darkmodetext">
-                        Update product server: {{ $product->name }}
+                    <div class="grid grid-cols-1 md:grid-cols-2 mt-4">
+                        <div class="text-2xl dark:text-darkmodetext">
+                            Update product server: {{ $product->name }}
+                        </div>
+                        <div class="relative inline-block text-left justify-end">
+                            <button type="button"
+                                class="dark:hover:bg-darkmode absolute top-0 right-0 dark:text-darkmodetext dark:bg-darkmode2 inline-flex w-max justify-end bg-white px-2 py-2 text-base font-medium rounded-md text-gray-700 mr-4"
+                                id="menu-button" aria-expanded="true" aria-haspopup="true"
+                                data-dropdown-toggle="moreOptions">
+                                <svg class="w-6 h-6" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20"
+                                    xmlns="http://www.w3.org/2000/svg">
+                                    <path
+                                        d="M6 10a2 2 0 11-4 0 2 2 0 014 0zM12 10a2 2 0 11-4 0 2 2 0 014 0zM16 12a2 2 0 100-4 2 2 0 000 4z">
+                                    </path>
+                                </svg>
+                            </button>
+                            <div class="absolute hidden w-max origin-top-right bg-white rounded-md shadow-lg dark:bg-darkmode ring-1 ring-black ring-opacity-5 z-[1]"
+                                role="menu" aria-orientation="vertical" aria-labelledby="menu-button" tabindex="-1"
+                                id="moreOptions">
+                                <div class="py-1 grid grid-cols-1" role="none">
+                                    <a href="{{ route('admin.products.extension.export', $product->id) }}"
+                                        class="block px-4 py-2 text-base text-gray-700 dark:text-darkmodetext dark:hover:bg-darkmode2 hover:bg-gray-100 hover:text-gray-900"
+                                        role="menuitem" tabindex="-1" id="menu-item-0">
+                                        {{ __('Export') }}
+                                    </a>
+                                    <form method="post" action="{{ route('admin.products.extension.import', $product->id) }}" enctype="multipart/form-data" accept="application/json"
+                                        class="block px-4 py-2 text-base text-gray-700 dark:text-darkmodetext dark:hover:bg-darkmode2 hover:bg-gray-100 hover:text-red-900 dark:hover:text-red-300"
+                                        role="menuitem" tabindex="-1" id="menu-item-0">
+                                        @csrf
+                                        <label for="json" class="cursor-pointer" onclick="document.getElementById('importFile').click();">
+                                            {{ __('Import') }}
+                                        </label>
+                                        <input type="file" name="json" class="hidden" onchange="this.form.submit()" id="importFile">
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-
                     <div class="mt-6 text-gray-500 dark:text-darkmodetext dark:bg-darkmode2">
                         <form method="POST" action="{{ route('admin.products.extension.update', $product->id) }}"
                             enctype="multipart/form-data" id="formu">

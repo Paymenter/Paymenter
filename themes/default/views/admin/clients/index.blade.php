@@ -26,65 +26,51 @@
                             </a>
                         </div>
                     </div>
-                    <!-- align right a button to create a new client -->
-                    <div class="grid grid-cols-1 bg-gray-200 bg-opacity-25 dark:text-darkmodetext dark:bg-darkmode2">
-                        <div class="p-6">
-                            <table id="clientdatatable" class="table-auto w-full">
-                                <thead>
+                    <div class=" p-6">
+                        <!-- align right a button to create a new client -->
+                        <table id="clientdatatable" class="table-auto w-full">
+                            <thead>
+                                <tr>
+                                    <th>
+                                        {{ __('ID') }}
+                                    </th>
+                                    <th>
+                                        {{ __('Name') }}
+                                    </th>
+                                    <th>
+                                        {{ __('Email') }}
+                                    </th>
+                                    <th>
+                                        {{ __('Created At') }}
+                                    </th>
+                                    <th>
+                                        {{ __('Edit') }}
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($users as $user)
                                     <tr>
-                                        <th>
-                                            {{ __('ID') }}
-                                        </th>
-                                        <th>
-                                            {{ __('Name') }}
-                                        </th>
-                                        <th>
-                                            {{ __('Email') }}
-                                        </th>
-                                        <th>
-                                            {{ __('Created At') }}
-                                        </th>
-                                        <th>
-                                            {{ __('Edit') }}
-                                        </th>
-                                        <th>
-                                            {{ __('Delete') }}
-                                        </th>
+                                        <td>
+                                            {{ $user->id }}
+                                        </td>
+                                        <td>
+                                            {{ $user->name }}
+                                        </td>
+                                        <td>
+                                            {{ $user->email }}
+                                        </td>
+                                        <td>
+                                            {{ $user->created_at }}
+                                        </td>
+                                        <td>
+                                            <a href="{{ route('admin.clients.edit', $user->id) }}"
+                                                class="form-submit">{{ __('Edit/View') }}</a>
+                                        </td>
                                     </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach ($users as $user)
-                                        <tr>
-                                            <td>
-                                                {{ $user->id }}
-                                            </td>
-                                            <td>
-                                                {{ $user->name }}
-                                            </td>
-                                            <td>
-                                                {{ $user->email }}
-                                            </td>
-                                            <td>
-                                                {{ $user->created_at }}
-                                            </td>
-                                            <td>
-                                                <a href="{{ route('admin.clients.edit', $user->id) }}"
-                                                    class="px-4 py-1 text-sm text-blue-600 bg-blue-200 rounded-full">{{ __('Edit/View') }}</a>
-                                            </td>
-                                            <td>
-                                                <form action="{{ route('admin.clients.delete', $user->id) }}"
-                                                    method="POST" class="delete">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <button type="submit"
-                                                        class="px-4 py-1 text-sm text-red-600 bg-red-200 rounded-full">{{ __('Delete') }}</button>
-                                                </form>
-                                            </td>
-                                        </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
-                        </div>
+                                @endforeach
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
@@ -108,14 +94,5 @@
                 responsive: true
             });
         });
-
-        var form = document.getElementsByClassName('delete');
-        var confirmIt = function(e) {
-            if (!confirm('Are you sure you want to delete this client?\nThis will remove all data!')) e
-                .preventDefault();
-        };
-        for (var i = 0, l = form.length; i < l; i++) {
-            form[i].addEventListener('submit', confirmIt, false);
-        }
     </script>
 </x-admin-layout>

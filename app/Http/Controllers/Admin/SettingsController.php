@@ -84,7 +84,7 @@ class SettingsController extends Controller
             'port' => $request->mail_port,
             'encryption' => $request->mail_encryption,
             'username' => $request->mail_username,
-            'password' => $request->mail_password,
+            'password' => $request->mail_password ? $request->mail_password : config('mail.password', ''),
             'timeout' => null,
             'auth_mode' => null,
         ]]);

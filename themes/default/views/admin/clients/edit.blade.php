@@ -9,30 +9,41 @@
     </x-slot>
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white overflow-hidden shadow-xl rounded-lg">
-                <div class="dark:bg-darkmode2 p-6 sm:px-20 bg-white">
-                    
-                    <div class="dark:text-darkmodetext mt-8 text-2xl">
+            <div class="bg-white dark:bg-darkmode2 overflow-hidden shadow-xl rounded-lg">
+                <div class="dark:bg-darkmode2 p-6 sm:px-20 bg-whitegrid grid-cols-1 md:grid-cols-2 grid mt-8 ">
+                    <div class="dark:text-darkmodetext text-2xl">
                         {{ __('Edit client') }}
                     </div>
-                    <div class="dark:text-darkmodetext mt-6 text-gray-500">
-                        {{ __('Here you can edit a client.') }}
-                    </div>
-                    <!-- login as client -->
-                    <div class="flex justify-end mt-4 mr-4">
-                        <a href="{{ route('admin.clients.loginasclient', $user->id) }}"
-                            class="transition delay-400 dark:text-darkmodetext dark:bg-darkbutton dark:hover:bg-logo bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                            {{ __('Login as client') }}
-                        </a>
-                    </div>
-                    <div class="flex justify-end mt-4 mr-4">
+                    <div class="relative inline-block text-left justify-end">
+                        <button type="button"
+                            class="dark:hover:bg-darkmode absolute top-0 right-0 dark:text-darkmodetext dark:bg-darkmode2 inline-flex w-max justify-end bg-white px-2 py-2 text-base font-medium rounded-md text-gray-700 mr-4"
+                            id="menu-button" aria-expanded="true" aria-haspopup="true"
+                            data-dropdown-toggle="moreOptions">
+                            <svg class="w-6 h-6" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path
+                                    d="M6 10a2 2 0 11-4 0 2 2 0 014 0zM12 10a2 2 0 11-4 0 2 2 0 014 0zM16 12a2 2 0 100-4 2 2 0 000 4z">
+                                </path>
+                            </svg>
+                        </button>
+                        <div class="absolute hidden w-max origin-top-right bg-white rounded-md shadow-lg dark:bg-darkmode ring-1 ring-black ring-opacity-5 z-[1]"
+                            role="menu" aria-orientation="vertical" aria-labelledby="menu-button" tabindex="-1"
+                            id="moreOptions">
+                            <div class="py-1 grid grid-cols-1" role="none">
+                                <a href="{{ route('admin.clients.loginasclient', $user->id) }}"
+                                    class="block px-4 py-2 text-base text-gray-700 dark:text-darkmodetext dark:hover:bg-darkmode2 hover:bg-gray-100 hover:text-gray-900"
+                                    role="menuitem" tabindex="-1" id="menu-item-0">{{ __('Login as client') }}</a>
+                                <button
+                                    class="block px-4 py-2 text-base text-gray-700 dark:text-darkmodetext dark:hover:bg-darkmode2 hover:bg-gray-100 hover:text-red-900 dark:hover:text-red-300"
+                                    role="menuitem" tabindex="-1" id="menu-item-0"
+                                    onclick="document.getElementById('delete').submit()">
+                                    {{ __('Delete') }}
+                                </button>
+                            </div>
+                        </div>
                         <form action="{{ route('admin.clients.delete', $user->id) }}" method="POST" id="delete">
                             @csrf
                             @method('DELETE')
-                            <button type="submit"
-                                class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
-                                {{ __('Delete client') }}
-                            </button>
                         </form>
                     </div>
                     <script>
@@ -263,8 +274,7 @@
                                     </div>
                                     <hr class="my-6 border-b-1 border-gray-300 dark:border-gray-600" />
                                     <div class="flex items-end justify-end mt-4">
-                                        <button type="submit"
-                                            class="form-submit">
+                                        <button type="submit" class="form-submit">
                                             {{ __('Update') }}
                                         </button>
                                     </div>

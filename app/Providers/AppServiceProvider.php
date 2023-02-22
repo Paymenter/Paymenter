@@ -70,7 +70,7 @@ class AppServiceProvider extends ServiceProvider
                     'transport' => 'smtp',
                     'host' => config('settings::mail_host'),
                     'port' => config('settings::mail_port'),
-                    'encryption' => config('settings::mail_encryption') ? 'SSL' : 'TLS',
+                    'encryption' => config('settings::mail_encryption'),
                     'username' => config('settings::mail_username'),
                     'password' => config('settings::mail_password'),
                     'timeout' => null,

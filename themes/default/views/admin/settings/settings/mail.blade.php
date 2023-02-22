@@ -39,10 +39,12 @@
                 <label class="form-label">{{ __('Mail From Name') }}</label>
             </div>
             <div class="relative m-4 group">
-                <input type="checkbox" class="w-fit form-input peer @error('mail_encryption') is-invalid @enderror"
-                    placeholder=" " name="mail_encryption" value="1"
-                    {{ config('mail.encryption') == 1 ? 'checked' : '' }} />
-                <label class="form-label" style="position: unset">{{ __('Mail Encryption(ssl)') }}</label>
+                <select class="form-input peer @error('mail_encryption') is-invalid @enderror" name="mail_encryption">
+                    <option value="tls" {{ config('mail.encryption') == 'tls' ? 'selected' : '' }}>TLS</option>
+                    <option value="ssl" {{ config('mail.encryption') == 'ssl' ? 'selected' : '' }}>SSL</option>
+                    <option value="" {{ config('mail.encryption') == '' ? 'selected' : '' }}>None</option>
+                </select>
+                <label class="form-label">{{ __('Mail Encryption') }}</label>
             </div>
         </div>
         <div class="float-right">

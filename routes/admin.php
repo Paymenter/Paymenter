@@ -32,6 +32,8 @@ Route::group(['prefix' => 'admin'], function () {
         Route::post('/{product}/edit', [App\Http\Controllers\Admin\ProductsController::class, 'update'])->middleware(['auth.admin'])->name('admin.products.update');
         Route::get('/{product}/extension', [App\Http\Controllers\Admin\ProductsController::class, 'extension'])->middleware(['auth.admin'])->name('admin.products.extension');
         Route::post('/{product}/extension', [App\Http\Controllers\Admin\ProductsController::class, 'extensionUpdate'])->middleware(['auth.admin'])->name('admin.products.extension.update');
+        Route::get('/{product}/extension/export', [App\Http\Controllers\Admin\ProductsController::class, 'extensionExport'])->middleware(['auth.admin'])->name('admin.products.extension.export');
+        Route::post('/{product}/extension/import', [App\Http\Controllers\Admin\ProductsController::class, 'extensionImport'])->middleware(['auth.admin'])->name('admin.products.extension.import');
         Route::delete('/{product}/delete', [App\Http\Controllers\Admin\ProductsController::class, 'destroy'])->middleware(['auth.admin'])->name('admin.products.destroy');
     });
 

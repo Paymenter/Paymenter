@@ -350,6 +350,9 @@ class ExtensionHelper
 
     public static function getLink(OrderProducts $product)
     {
+        if(!isset($product->product()->get()->first()->server_id)) {
+            return false;
+        }
         $extension = Extensions::where('id', $product->product()->get()->first()->server_id)->first();
         if (!$extension) {
             return false;
