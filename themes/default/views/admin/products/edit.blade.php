@@ -63,26 +63,26 @@
                             <div>
                                 <label for="name">{{ __('Name') }}</label>
 
-                                <input id="name" class="block w-full mt-1 dark:bg-darkmode" type="text"
+                                <input id="name" class="block w-full mt-1 rounded-lg dark:bg-darkmode" type="text"
                                     name="name" value="{{ $product->name }} " required autofocus />
                             </div>
                             <div class="mt-4 ">
                                 <label for="description">{{ __('Description') }}</label>
 
-                                <textarea id="description" class="block w-full mt-1 dark:bg-darkmode" name="description" required rows="4">{{ $product->description }}</textarea>
+                                <textarea id="description" class="block w-full mt-1 rounded-lg dark:bg-darkmode" name="description" required rows="4">{{ $product->description }}</textarea>
                             </div>
                             <div class="mt-4">
                                 <label for="price">{{ __('Price') }}</label>
 
                                 {{ config('settings::currency_sign') }}<input id="price"
-                                    class="block w-full mt-1 dark:bg-darkmode" type="number" name="price"
+                                    class="block w-full mt-1 rounded-lg dark:bg-darkmode" type="number" name="price"
                                     min="0" step="0.01" value="{{ number_format($product->price, 2) }}"
                                     required />
                             </div>
                             <div class="mt-4">
                                 <label for="image">{{ __('Image') }}</label>
                                 <p>Only upload a new image if you want to replace the existing one</p>
-                                <input id="image" class="block w-full mt-1 dark:bg-darkmode" type="file"
+                                <input id="image" class="block w-full mt-1 rounded-lg dark:bg-darkmode" type="file"
                                     name="image" @if ($product->image == 'null') disabled @endif />
                                 <div class="mt-2">
                                     <label for="no_image">No Image</label>
@@ -115,7 +115,7 @@
                             </div>
                             <div class="mt-4">
                                 <label for="category">{{ __('Category') }}</label>
-                                <select id="category" class="block w-full mt-1 dark:bg-darkmode" name="category_id"
+                                <select id="category" class="block w-full mt-1 rounded-lg dark:bg-darkmode" name="category_id"
                                     required>
                                     @if ($categories->count())
                                         @foreach ($categories as $category)
