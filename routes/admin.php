@@ -83,12 +83,4 @@ Route::group(['prefix' => 'admin'], function () {
         Route::put('/{coupon}/edit', [App\Http\Controllers\Admin\CouponController::class, 'update'])->middleware(['auth.admin'])->name('admin.coupon.update');
         Route::delete('/{coupon}/delete', [App\Http\Controllers\Admin\CouponController::class, 'destroy'])->middleware(['auth.admin'])->name('admin.coupon.delete');
     });
-
-    // Route::group(['prefix' => 'migrate'], function () {
-    //     Route::get('/', [App\Http\Controllers\Admin\MigrateController::class, 'index'])->middleware(['auth.admin'])->name('admin.migrate.index');
-    //     Route::get('/whmcs', [App\Http\Controllers\Admin\MigrateController::class, 'whmcs'])->middleware(['auth.admin'])->name('admin.migrate.whmcs');
-    //     Route::post('/whmcs', [App\Http\Controllers\Admin\MigrateController::class, 'whmcsImport'])->middleware(['auth.admin'])->name('admin.migrate.whmcs.import');
-    //     Route::get('/blesta', [App\Http\Controllers\Admin\MigrateController::class, 'blesta'])->middleware(['auth.admin'])->name('admin.migrate.blesta');
-    // }
-    // );
 });

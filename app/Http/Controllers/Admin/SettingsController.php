@@ -64,10 +64,13 @@ class SettingsController extends Controller
             'mail_port' => 'required',
             'mail_username' => 'required',
             'mail_password' => 'required',
-            'mail_encryption' => 'required',
+            'mail_encryption' => 'required|in:tls,ssl,none',
             'mail_from_address' => 'required',
             'mail_from_name' => 'required',
         ]);
+        if($request->mail_encryption == 'none') {
+            $request->merge(['mail_encryption' => null]);
+        }
         // Loop through all settings
         foreach ($request->except(['_token']) as $key => $value) {
             Settings::updateOrCreate(['key' => $key], ['value' => $value]);
