@@ -31,7 +31,7 @@ class OrderTest extends TestCase
      */
     public function testCanPlaceProductInCart()
     {
-        $response = $this->actingAs($this->user)->get(route('checkout.add') . '?id=' . $this->product->id);
+        $response = $this->actingAs($this->user)->get(route('checkout.add', $this->product->id));
 
         $response->assertStatus(302);
     }
@@ -43,7 +43,7 @@ class OrderTest extends TestCase
      */
     public function testCanContinueToInvoice()
     {
-        $response = $this->actingAs($this->user)->get(route('checkout.add') . '?id=' . $this->product->id);
+        $response = $this->actingAs($this->user)->get(route( 'checkout.add', $this->product->id));
 
         $response->assertStatus(302);
 
