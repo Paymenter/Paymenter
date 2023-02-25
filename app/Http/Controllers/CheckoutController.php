@@ -44,13 +44,8 @@ class CheckoutController extends Controller
         return view('checkout.index', compact('products', 'total', 'discount', 'coupon'));
     }
 
-    public function add(Request $request)
+    public function add(Products $product)
     {
-        $product = json_decode(Products::findOrFail($request->id)->toJson());
-        if (!$product) {
-            return redirect()->back()->with('error', 'Product not found');
-        }
-        // Get extension config
         if (isset($product->server_id)) {
             $server = Extensions::find($product->server_id);
             if ($server) {

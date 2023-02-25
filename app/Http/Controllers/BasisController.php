@@ -10,7 +10,6 @@ class BasisController extends Controller
 {
     public function index()
     {
-        // $services = Services::where('client', auth()->user()->id)->get();
         $categories = Categories::all();
 
         return view('welcome', compact('categories'));
@@ -19,21 +18,18 @@ class BasisController extends Controller
     public function products(string $slug = null, Products $product = null)
     {
         if ($product) {
-            return view('checkout', compact('product'));
-        } else {
-            if ($slug == null) {
-                $categories = Categories::all();
-            } elseif ($slug == 'products') {
-                $categories = Categories::all();
-            } else {
-                $categories = Categories::where('slug', $slug)->get();
-            }
-            if ($categories->count() == 0) {
-                return abort(404);
-            }
-
-            return view('product', compact('categories'));
+            return redirect()->route('checkout.add', $product->id);
         }
+        if ($slug == null) {
+            $categories = Categories::all();
+        } else {
+            $categories = Categories::where('slug', $slug)->get();
+        }
+        if ($categories->count() == 0) {
+            return abort(404);
+        }
+
+        return view('product', compact('categories'));
     }
 
     public function manifest(Request $request)
