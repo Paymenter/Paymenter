@@ -18,8 +18,14 @@ class InvoiceController extends Controller
     public function getInvoices(Request $request)
     {
         $user = $request->user();
-        $invoices = $user->invoices()->paginate(25);
 
+        if (!$user->tokenCan('invoice:read')) {
+            return response()->json([
+                'error' => 'You do not have permission to read invoices.',
+            ], 403);
+        }
+
+        $invoices = $user->invoices()->paginate(25);
         return response()->json([
             'invoices' => API::repaginate($invoices),
         ], 200);
@@ -31,6 +37,13 @@ class InvoiceController extends Controller
     public function getInvoice(Request $request, int $invoiceId)
     {
         $user = $request->user();
+
+        if (!$user->tokenCan('invoice:read')) {
+            return response()->json([
+                'error' => 'You do not have permission to read invoices.',
+            ], 403);
+        }
+
         $invoice = Invoices::where('id', $invoiceId)->where('user_id', $user->id)->firstOrFail();
         $order = Orders::findOrFail($invoice->order_id);
 
@@ -53,6 +66,13 @@ class InvoiceController extends Controller
     public function payInvoice(Request $request, int $invoiceId)
     {
         $user = $request->user();
+
+        if (!$user->tokenCan('invoice:update')) {
+            return response()->json([
+                'error' => 'You do not have permission to update invoices.',
+            ], 403);
+        }
+
         $invoice = Invoices::where('id', $invoiceId)->where('user_id', $user->id)->firstOrFail();
         $order = Orders::findOrFail($invoice->order_id);
 
