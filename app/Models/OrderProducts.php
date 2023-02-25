@@ -18,7 +18,7 @@ class OrderProducts extends Model
 
     public function config()
     {
-        return $this->hasMany(OrderProductsConfig::class, 'order_product_id', 'order_id');
+        return $this->hasMany(OrderProductsConfig::class, 'order_product_id', 'id');
     }
 
     public function order()
