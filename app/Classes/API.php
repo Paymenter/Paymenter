@@ -4,6 +4,29 @@ namespace App\Classes;
 
 class API
 {
+    /**
+     * All available API permissions.
+     * 
+     * @return array
+     */
+    public static $permissions = [
+        'invoice:read',
+        'invoice:create',
+        'invoice:delete',
+        'invoice:update',
+        'ticket:read',
+        'ticket:create',
+        'ticket:delete',
+        'ticket:update',
+        'api:read',
+        'api:create',
+        'api:delete',
+        'api:update',
+    ];
+    
+    /**
+     * Repaginate the data for API.
+     */
     public static function repaginate(mixed $data)
     {
         $data = $data->toArray();

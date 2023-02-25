@@ -17,6 +17,13 @@ class TicketController extends Controller
     public function getTickets(Request $request)
     {
         $user = $request->user();
+
+        if (!$user->tokenCan('ticket:read')) {
+            return response()->json([
+                'error' => 'You do not have permission to read tickets.',
+            ], 403);
+        }
+
         $tickets = $user->tickets()->paginate(25);
 
         return response()->json([
@@ -38,6 +45,12 @@ class TicketController extends Controller
         ]);
 
         $body = json_decode($request->getContent());
+
+        if (!$user->tokenCan('ticket:create')) {
+            return response()->json([
+                'error' => 'You do not have permission to create tickets.',
+            ], 403);
+        }
 
         $executed = RateLimiter::attempt(
             'create-ticket:' . $user->id,
@@ -78,6 +91,13 @@ class TicketController extends Controller
     public function getTicket(Request $request, int $ticketId)
     {
         $user = $request->user();
+
+        if (!$user->tokenCan('ticket:read')) {
+            return response()->json([
+                'error' => 'You do not have permission to read tickets.',
+            ], 403);
+        }
+
         $ticket = Tickets::where('client', $user->id)->where('id', $ticketId)->firstOrFail();
 
         return response()->json([
@@ -91,6 +111,13 @@ class TicketController extends Controller
     public function closeTicket(Request $request, int $ticketId)
     {
         $user = $request->user();
+        
+        if (!$user->tokenCan('ticket:update')) {
+            return response()->json([
+                'error' => 'You do not have permission to update tickets.',
+            ], 403);
+        }
+
         $ticket = Tickets::where('client', $user->id)->where('id', $ticketId)->firstOrFail();
 
         $ticket->status = 'closed';
@@ -107,6 +134,13 @@ class TicketController extends Controller
     public function replyTicket(Request $request, int $ticketId)
     {
         $user = $request->user();
+        
+        if (!$user->tokenCan('ticket:update')) {
+            return response()->json([
+                'error' => 'You do not have permission to update tickets.',
+            ], 403);
+        }
+
         $ticket = Tickets::where('client', $user->id)->where('id', $ticketId)->firstOrFail();
 
         $request->validate([

@@ -51,6 +51,12 @@ Route::group(['prefix' => 'client/products', 'middleware' => 'auth'], function (
     Route::get('/{product}', [App\Http\Controllers\Clients\ProductsController::class, 'index'])->name('clients.active-products.show');
 });
 
+Route::group(['prefix' => 'api', 'middleware' => 'auth'], function () {
+    Route::get('/', [App\Http\Controllers\Clients\APIController::class, 'index'])->name('clients.api.index');
+    Route::post('/', [App\Http\Controllers\Clients\APIController::class, 'create'])->name('clients.api.create');
+    Route::delete('/{id}', [App\Http\Controllers\Clients\APIController::class, 'delete'])->name('clients.api.delete');
+});
+
 require __DIR__ . '/auth.php';
 require __DIR__ . '/admin.php';
 require __DIR__ . '/extensions.php';
