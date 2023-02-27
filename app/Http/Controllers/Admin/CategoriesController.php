@@ -2,14 +2,14 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Models\Categories;
+use App\Models\Category;
 use App\Http\Controllers\Controller;
 
 class CategoriesController extends Controller
 {
     public function index()
     {
-        $categories = Categories::all();
+        $categories = Category::all();
 
         return view('admin.categories.index', compact('categories'));
     }
@@ -27,17 +27,17 @@ class CategoriesController extends Controller
             'slug' => 'required',
         ]);
 
-        Categories::create($data);
+        Category::create($data);
 
         return redirect()->route('admin.categories');
     }
 
-    public function edit(Categories $category)
+    public function edit(Category $category)
     {
         return view('admin.categories.edit', compact('category'));
     }
 
-    public function update(Categories $category)
+    public function update(Category $category)
     {
         $data = request()->validate([
             'name' => 'required',
@@ -50,7 +50,7 @@ class CategoriesController extends Controller
         return redirect()->route('admin.categories');
     }
 
-    public function destroy(Categories $category)
+    public function destroy(Category $category)
     {
         $category->delete();
 

@@ -3,14 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Models\Products;
-use App\Models\Categories;
+use App\Models\Category;
 use Illuminate\Http\Request;
 
 class BasisController extends Controller
 {
     public function index()
     {
-        $categories = Categories::all();
+        $categories = Category::all();
 
         return view('welcome', compact('categories'));
     }
@@ -21,9 +21,9 @@ class BasisController extends Controller
             return redirect()->route('checkout.add', $product->id);
         }
         if ($slug == null) {
-            $categories = Categories::all();
+            $categories = Category::all();
         } else {
-            $categories = Categories::where('slug', $slug)->get();
+            $categories = Category::where('slug', $slug)->get();
         }
         if ($categories->count() == 0) {
             return abort(404);

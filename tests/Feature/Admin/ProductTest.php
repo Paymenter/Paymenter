@@ -5,7 +5,7 @@ namespace Tests\Feature\Admin;
 use Tests\TestCase;
 use App\Models\User;
 use App\Models\Products;
-use App\Models\Categories;
+use App\Models\Category;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
@@ -20,7 +20,7 @@ class ProductTest extends TestCase
     {
         parent::setUp();
         $this->user = User::factory()->create(['is_admin' => 1]);
-        $this->category = Categories::factory()->create();
+        $this->category = Category::factory()->create();
         $this->product = Products::factory()->create([
             'category_id' => $this->category->id,
         ]);

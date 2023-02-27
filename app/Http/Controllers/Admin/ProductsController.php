@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Models\Products;
-use App\Models\Categories;
+use App\Models\Category;
 use App\Models\Extensions;
 use Illuminate\Http\Request;
 use App\Models\ProductSettings;
@@ -13,14 +13,14 @@ class ProductsController extends Controller
 {
     public function index()
     {
-        $categories = Categories::all();
+        $categories = Category::all();
 
         return view('admin.products.index', compact('categories'));
     }
 
     public function create()
     {
-        $categories = Categories::all();
+        $categories = Category::all();
 
         return view('admin.products.create', compact('categories'));
     }
@@ -48,7 +48,7 @@ class ProductsController extends Controller
 
     public function edit(Products $product)
     {
-        $categories = Categories::all();
+        $categories = Category::all();
 
         return view('admin.products.edit', compact('product', 'categories'));
     }

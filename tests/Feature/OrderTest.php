@@ -4,7 +4,7 @@ namespace Tests\Feature;
 
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use App\Models\{Categories, Invoices, Order, Products, User};
+use App\Models\{Category, Invoices, Order, Products, User};
 
 class OrderTest extends TestCase
 {
@@ -18,7 +18,7 @@ class OrderTest extends TestCase
     {
         parent::setUp();
         $this->user = User::factory()->create();
-        $this->categorie = Categories::factory()->create();
+        $this->categorie = Category::factory()->create();
         $this->product = Products::factory()->create([
             'price' => 0,
             'category_id' => $this->categorie->id,

@@ -4,7 +4,7 @@ namespace Tests\Feature;
 
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use App\Models\{Categories, Invoices, Order, Products, User, Tickets};
+use App\Models\{User, Tickets};
 
 class TicketTest extends TestCase
 {
