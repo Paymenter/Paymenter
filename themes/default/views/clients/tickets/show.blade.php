@@ -30,23 +30,20 @@
                             <h1 class="text-xl text-gray-500 dark:text-darkmodetext">{{ __('Messages') }}</h1>
 
                             @foreach ($messages as $message)
-                                <div class="p-4 mt-4 rounded-md dark:bg-darkmode bg-gray-100">
-                                    <label for="message">{{ $message->message }}</label>
-                                    <p
-                                        class="relative z-10 float-right text-xs text-gray-500 dark:text-darkmodetext -top-2">
-                                        {{ $message->created_at }}</p>
+                                <div class="p-4 mt-4 rounded-md dark:bg-darkmode bg-gray-100 grid grid-cols-1 md:grid-cols-2">
+                                    <label for="message" class="prose dark:prose-invert">{{ \Illuminate\Mail\Markdown::parse(str_replace("\n", '<br>', $message->message)) }}</label>
                                     <p class="text-xs text-gray-500 dark:text-darkmodetext text-end"
                                         style="align-items:flex-end">
                                         @if ($message->user_id == Auth::user()->id)
                                             {{ __('You') }}
                                             <img src="https://www.gravatar.com/avatar/{{ md5(Auth::user()->email) }}?s=200&d=mp"
                                                 class="h-8 w-8 shadow-lg rounded-full ml-1 inline-block"
-                                                onerror='this.error=null;this.src="https://d33wubrfki0l68.cloudfront.net/c0e8a3c6172bd5bebfe787d49974adcff1ec4d3a/ca6a2/img/people/joseph-jolton.png";'>
+                                                onerror='this.error=null;this.src="https://d33wubrfki0l68.cloudfront.net/c0e8a3c6172bd5bebfe787d49974adcff1ec4d3a/ca6a2/img/people/joseph-jolton.png";'><br>{{ $message->created_at }}
                                         @else
-                                            <img src="https://www.gravatar.com/avatar/{{ md5($message->uesr->email) }}?s=200&d=mp"
-                                                class="h-8 w-8 shadow-lg rounded-full ml-1 inline-block"
-                                                onerror='this.error=null;this.src="https://d33wubrfki0l68.cloudfront.net/c0e8a3c6172bd5bebfe787d49974adcff1ec4d3a/ca6a2/img/people/joseph-jolton.png";'>
                                             {{ $message->user->name }}
+                                            <img src="https://www.gravatar.com/avatar/{{ md5($message->user->email) }}?s=200&d=mp"
+                                                class="h-8 w-8 shadow-lg rounded-full ml-1 inline-block"
+                                                onerror='this.error=null;this.src="https://d33wubrfki0l68.cloudfront.net/c0e8a3c6172bd5bebfe787d49974adcff1ec4d3a/ca6a2/img/people/joseph-jolton.png";'><br>{{ $message->created_at }}
                                         @endif
                                     </p>
                                 </div>
