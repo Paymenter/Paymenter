@@ -32,12 +32,12 @@ Route::group(['prefix' => 'checkout'], function () {
 });
 
 Route::group(['prefix' => 'tickets', 'middleware' => 'auth'], function () {
-    Route::get('/', [App\Http\Controllers\Clients\TicketsController::class, 'index'])->name('clients.tickets.index');
-    Route::get('/create', [App\Http\Controllers\Clients\TicketsController::class, 'create'])->name('clients.tickets.create');
-    Route::post('/store', [App\Http\Controllers\Clients\TicketsController::class, 'store'])->name('clients.tickets.store');
-    Route::get('/{ticket}', [App\Http\Controllers\Clients\TicketsController::class, 'show'])->name('clients.tickets.show');
-    Route::post('{ticket}/reply', [App\Http\Controllers\Clients\TicketsController::class, 'reply'])->name('clients.tickets.reply');
-    Route::post('{ticket}/close', [App\Http\Controllers\Clients\TicketsController::class, 'close'])->name('clients.tickets.close');
+    Route::get('/', [App\Http\Controllers\Clients\TicketController::class, 'index'])->name('clients.tickets.index');
+    Route::get('/create', [App\Http\Controllers\Clients\TicketController::class, 'create'])->name('clients.tickets.create');
+    Route::post('/store', [App\Http\Controllers\Clients\TicketController::class, 'store'])->name('clients.tickets.store');
+    Route::get('/{ticket}', [App\Http\Controllers\Clients\TicketController::class, 'show'])->name('clients.tickets.show');
+    Route::post('{ticket}/reply', [App\Http\Controllers\Clients\TicketController::class, 'reply'])->name('clients.tickets.reply');
+    Route::post('{ticket}/close', [App\Http\Controllers\Clients\TicketController::class, 'close'])->name('clients.tickets.close');
 });
 
 Route::group(['prefix' => 'invoices', 'middleware' => 'auth'], function () {
@@ -47,8 +47,8 @@ Route::group(['prefix' => 'invoices', 'middleware' => 'auth'], function () {
 });
 
 Route::group(['prefix' => 'client/products', 'middleware' => 'auth'], function () {
-    Route::get('/', [App\Http\Controllers\Clients\ProductsController::class, 'index'])->name('clients.active-products.index');
-    Route::get('/{product}', [App\Http\Controllers\Clients\ProductsController::class, 'index'])->name('clients.active-products.show');
+    Route::get('/', [App\Http\Controllers\Clients\ProductController::class, 'index'])->name('clients.active-products.index');
+    Route::get('/{product}', [App\Http\Controllers\Clients\ProductController::class, 'index'])->name('clients.active-products.show');
 });
 
 Route::group(['prefix' => 'api', 'middleware' => 'auth'], function () {

@@ -8,7 +8,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Route;
 use App\Models\{Invoice, Order, Ticket};
 
-class ClientsController extends Controller
+class ClientController extends Controller
 {
     public function index()
     {

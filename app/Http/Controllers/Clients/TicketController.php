@@ -10,7 +10,7 @@ use App\Models\TicketMessage;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\RateLimiter;
 
-class TicketsController extends Controller
+class TicketController extends Controller
 {
     public function index(Request $request)
     {

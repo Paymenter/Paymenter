@@ -7,7 +7,7 @@ use App\Helpers\ExtensionHelper;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 
-class ProductsController extends Controller
+class ProductController extends Controller
 {
     public function index(OrderProduct $product)
     {

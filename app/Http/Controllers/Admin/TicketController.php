@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 use App\Models\TicketMessage;
 use App\Http\Controllers\Controller;
 
-class TicketsController extends Controller
+class TicketController extends Controller
 {
     public function index()
     {

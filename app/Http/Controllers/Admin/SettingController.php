@@ -9,7 +9,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 
-class SettingsController extends Controller
+class SettingController extends Controller
 {
     public function index()
     {

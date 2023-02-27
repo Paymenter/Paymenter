@@ -9,7 +9,7 @@ use Illuminate\Http\Request;
 use App\Models\ProductSetting;
 use App\Http\Controllers\Controller;
 
-class ProductsController extends Controller
+class ProductController extends Controller
 {
     public function index()
     {

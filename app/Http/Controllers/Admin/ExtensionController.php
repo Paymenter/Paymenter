@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use App\Helpers\ExtensionHelper;
 use App\Http\Controllers\Controller;
 
-class ExtensionsController extends Controller
+class ExtensionController extends Controller
 {
     public function index()
     {
