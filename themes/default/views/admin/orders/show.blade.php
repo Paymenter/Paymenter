@@ -6,8 +6,39 @@
         <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
             <div class="overflow-hidden bg-white shadow-md dark:shadow-gray-700 dark:bg-darkmode2 sm:rounded-lg">
                 <div class="p-6 bg-white dark:bg-darkmode2 sm:px-20">
-                    <div class="mt-8 text-2xl dark:text-darkmodetext">
-                        {{ __('Order: ') }} {{ $order->id }}
+                    <div class="grid grid-cols-1 md:grid-cols-2 mt-4">
+                        <div class="text-2xl dark:text-darkmodetext">
+                            {{ __('Order: ') }} {{ $order->id }}
+                        </div>
+                        <div class="relative inline-block text-left justify-end">
+                            <button type="button"
+                                class="dark:hover:bg-darkmode absolute top-0 right-0 dark:text-darkmodetext dark:bg-darkmode2 inline-flex w-max justify-end bg-white px-2 py-2 text-base font-medium rounded-md text-gray-700 mr-4"
+                                id="menu-button" aria-expanded="true" aria-haspopup="true"
+                                data-dropdown-toggle="moreOptions">
+                                <svg class="w-6 h-6" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20"
+                                    xmlns="http://www.w3.org/2000/svg">
+                                    <path
+                                        d="M6 10a2 2 0 11-4 0 2 2 0 014 0zM12 10a2 2 0 11-4 0 2 2 0 014 0zM16 12a2 2 0 100-4 2 2 0 000 4z">
+                                    </path>
+                                </svg>
+                            </button>
+                            <div class="absolute hidden w-max origin-top-right bg-white rounded-md shadow-lg dark:bg-darkmode ring-1 ring-black ring-opacity-5 z-[1]"
+                                role="menu" aria-orientation="vertical" aria-labelledby="menu-button" tabindex="-1"
+                                id="moreOptions">
+                                <div class="py-1 grid grid-cols-1" role="none">
+                                    <button
+                                        class="block px-4 py-2 text-base text-gray-700 dark:text-darkmodetext dark:hover:bg-darkmode2 hover:bg-gray-100 hover:text-red-900 dark:hover:text-red-300"
+                                        role="menuitem" tabindex="-1" id="menu-item-0"
+                                        onclick="document.getElementById('delete').submit()">
+                                        {{ __('Delete') }}
+                                    </button>
+                                </div>
+                            </div>
+                            <form method="POST" action="{{ route('admin.orders.delete', $order->id) }}" id="delete">
+                                @csrf
+                                @method('DELETE')
+                            </form>
+                        </div>
                     </div>
                     <div class="mt-6 text-gray-500 dark:text-darkmodetext">
                         <div class="flex flex-col">
@@ -47,10 +78,10 @@
                                     <span class="flex flex-row justify-between border-b dark:text-darkmodetext">
                                         <span>{{ $product->product()->get()->first()->name }}</span>
                                         <span>{{ $product->quantity }}</span>
-                                        @if($product->link)
-                                        <span
-                                            class="hover:underline hover:text-blue-600 text-blue-800 dark:text-blue-400"><a
-                                                href="{{ $product->link }}">{{ __('View') }}</a></span>
+                                        @if ($product->link)
+                                            <span
+                                                class="hover:underline hover:text-blue-600 text-blue-800 dark:text-blue-400"><a
+                                                    href="{{ $product->link }}">{{ __('View') }}</a></span>
                                         @endif
                                     </span>
                                 @endforeach
@@ -79,8 +110,7 @@
                                 </form>
                             @endif
                         </div>
-                        <div class="flex
-                                    flex-row">
+                        <div class="flex flex-row">
                             @if ($order->status == 'paid')
                                 <form method="POST" action="{{ route('admin.orders.suspend', $order->id) }}">
                                     @csrf
