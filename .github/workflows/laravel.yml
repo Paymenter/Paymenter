@@ -37,6 +37,8 @@ jobs:
       uses: actions/setup-node@v2
       with:
         node-version: '14'
+    - name: Install NPM dependencies
+      run: npm install
     - name: Build Vite
       run: npm run build
     - name: Execute tests (Unit and Feature tests) via PHPUnit
