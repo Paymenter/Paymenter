@@ -52,7 +52,7 @@ class AdminTest extends TestCase
      *
      * @return void
      */
-    public function testAuthentiactedAsAdminCanAccessAdmin()
+    public function testAuthenticatedAsAdminCanAccessAdmin()
     {
         $response = $this->actingAs($this->user)->get('/admin');
 
@@ -64,7 +64,7 @@ class AdminTest extends TestCase
      *
      * @return void
      */
-    public function testAuthentiactedAsAdminCanAccessAdminUsers()
+    public function testAuthenticatedAsAdminCanAccessAdminUsers()
     {
         $response = $this->actingAs($this->user)->get('/admin/clients');
 
@@ -76,7 +76,7 @@ class AdminTest extends TestCase
      *
      * @return void
      */
-    public function testAuthentiactedAsAdminCanAccessAdminSettings()
+    public function testAuthenticatedAsAdminCanAccessAdminSettings()
     {
         $response = $this->actingAs($this->user)->get('/admin/settings');
 
@@ -98,7 +98,7 @@ class AdminTest extends TestCase
      *
      * @return void
      */
-    public function testAuthentiactedAsAdminCanAccessAdminOrders()
+    public function testAuthenticatedAsAdminCanAccessAdminOrders()
     {
         $response = $this->actingAs($this->user)->get('/admin/orders');
 
@@ -110,7 +110,7 @@ class AdminTest extends TestCase
      *
      * @return void
      */
-    public function testAuthentiactedAsAdminCanAccessAdminProducts()
+    public function testAuthenticatedAsAdminCanAccessAdminProducts()
     {
         $response = $this->actingAs($this->user)->get('/admin/products');
 
