@@ -4,9 +4,9 @@ namespace App\Http\Controllers\Clients;
 
 use App\Models\User;
 use App\Models\Orders;
-use App\Models\;
+use App\Models\Ticket;
 use Illuminate\Http\Request;
-use App\Models\TicketMessages;
+use App\Models\TicketMessage;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\RateLimiter;
 
@@ -16,7 +16,7 @@ class TicketsController extends Controller
     {
         $tickets = Ticket::where('client', auth()->user()->id)->get();
         $users = User::where('id', auth()->user()->id)->get();
-        $ticketMessages = TicketMessages::all();
+        $ticketMessages = TicketMessage::all();
         $sort = $request->get('sort');
 
         return view(
@@ -70,7 +70,7 @@ class TicketsController extends Controller
         $ticket->priority = request('priority');
         $ticket->save();
 
-        TicketMessages::create([
+        TicketMessage::create([
             'ticket_id' => $ticket->id,
             'message' => request('description'),
             'user_id' => auth()->user()->id,
@@ -81,7 +81,7 @@ class TicketsController extends Controller
 
     public function show(Ticket $ticket)
     {
-        $messages = TicketMessages::where('ticket_id', $ticket->id)->get();
+        $messages = TicketMessage::where('ticket_id', $ticket->id)->get();
 
         return view('clients.tickets.show', compact('ticket', 'messages'));
     }
@@ -119,7 +119,7 @@ class TicketsController extends Controller
         if (!$executed) {
             return redirect()->back()->with('error', 'You are sending too many messages. Please wait a few minutes and try again.');
         }
-        TicketMessages::create([
+        TicketMessage::create([
             'ticket_id' => $ticket->id,
             'message' => request('message'),
             'user_id' => auth()->user()->id,

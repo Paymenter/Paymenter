@@ -5,7 +5,7 @@ namespace App\Http\Controllers\API\Clients;
 use App\Classes\API;
 use App\Models\Ticket;
 use Illuminate\Http\Request;
-use App\Models\TicketMessages;
+use App\Models\TicketMessage;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\RateLimiter;
 
@@ -73,7 +73,7 @@ class TicketController extends Controller
         $ticket->priority = $body->priority;
         $ticket->save();
 
-        TicketMessages::create([
+        TicketMessage::create([
             'ticket_id' => $ticket->id,
             'message' => $body->message,
             'user_id' => $user->id,
@@ -169,7 +169,7 @@ class TicketController extends Controller
             ], 429);
         }
 
-        TicketMessages::create([
+        TicketMessage::create([
             'ticket_id' => $ticket->id,
             'message' => $message,
             'user_id' => $user->id,

@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Models\User;
 use App\Models\Ticket;
 use Illuminate\Http\Request;
-use App\Models\TicketMessages;
+use App\Models\TicketMessage;
 use App\Http\Controllers\Controller;
 
 class TicketsController extends Controller
@@ -42,7 +42,7 @@ class TicketsController extends Controller
         ]);
         $ticket->save();
 
-        TicketMessages::create([
+        TicketMessage::create([
             'ticket_id' => $ticket->id,
             'message' => $request->get('description'),
             'user_id' => auth()->user()->id,
