@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Models\Extensions;
+use App\Models\Extension;
 use Illuminate\Http\Request;
 use App\Helpers\ExtensionHelper;
 use App\Http\Controllers\Controller;
@@ -18,9 +18,9 @@ class ExtensionsController extends Controller
                 continue;
             }
             // Check if the extension is enabled
-            $extension = Extensions::where('name', $server)->first();
+            $extension = Extension::where('name', $server)->first();
             if (!$extension) {
-                $extension = new Extensions();
+                $extension = new Extension();
                 $extension->name = $server;
                 $extension->type = 'server';
                 $extension->enabled = 0;
@@ -32,9 +32,9 @@ class ExtensionsController extends Controller
                 continue;
             }
             // Check if the extension is enabled
-            $extension = Extensions::where('name', $gateway)->first();
+            $extension = Extension::where('name', $gateway)->first();
             if (!$extension) {
-                $extension = new Extensions();
+                $extension = new Extension();
                 $extension->name = $gateway;
                 $extension->type = 'gateway';
                 $extension->enabled = 0;
@@ -54,14 +54,14 @@ class ExtensionsController extends Controller
             $extension2 = json_decode(json_encode($function()));
             $extension->config = $extension2;
             $extension->name = $name;
-            $db = Extensions::where('name', $name)->first();
+            $db = Extension::where('name', $name)->first();
             if (!$db) {
-                Extensions::create([
+                Extension::create([
                     'name' => $name,
                     'enabled' => false,
                     'type' => 'server',
                 ]);
-                $db = Extensions::where('name', $name)->first();
+                $db = Extension::where('name', $name)->first();
             }
             $extension->enabled = $db->enabled;
             $extension->id = $db->id;
@@ -75,14 +75,14 @@ class ExtensionsController extends Controller
             $extension2 = json_decode(json_encode($function()));
             $extension->config = $extension2;
             $extension->name = $name;
-            $db = Extensions::where('name', $name)->first();
+            $db = Extension::where('name', $name)->first();
             if (!$db) {
-                Extensions::create([
+                Extension::create([
                     'name' => $name,
                     'enabled' => false,
                     'type' => 'gateway',
                 ]);
-                $db = Extensions::where('name', $name)->first();
+                $db = Extension::where('name', $name)->first();
             }
             $extension->enabled = $db->enabled;
             $extension->id = $db->id;
@@ -107,7 +107,7 @@ class ExtensionsController extends Controller
                 }
                 ExtensionHelper::setConfig($extension->name, $config->name, $request->input($config->name));
             }
-            Extensions::where('name', $extension->name)->update(['enabled' => $request->input('enabled')]);
+            Extension::where('name', $extension->name)->update(['enabled' => $request->input('enabled')]);
 
             return redirect()->route('admin.extensions.edit', ['sort' => $sort, 'name' => $name])->with('success', 'Extension updated successfully');
         } elseif ($sort == 'gateway') {
@@ -123,7 +123,7 @@ class ExtensionsController extends Controller
                 }
                 ExtensionHelper::setConfig($extension->name, $config->name, $request->input($config->name));
             }
-            Extensions::where('name', $extension->name)->update(['enabled' => $request->input('enabled')]);
+            Extension::where('name', $extension->name)->update(['enabled' => $request->input('enabled')]);
 
             return redirect()->route('admin.extensions.edit', ['sort' => $sort, 'name' => $name])->with('success', 'Extension updated successfully');
         }

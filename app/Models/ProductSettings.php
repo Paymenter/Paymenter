@@ -18,6 +18,6 @@ class ProductSettings extends Model
 
     public function getExtension()
     {
-        return $this->belongsTo(Extensions::class, 'extension');
+        return $this->belongsTo(Extension::class, 'extension');
     }
 }

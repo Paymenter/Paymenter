@@ -49,7 +49,7 @@
                                                 {{ $extensio }}</td>
                                             <td
                                                 class="dark:text-darkmodetext px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                                @if (App\Models\Extensions::where('name', $extensio)->get()->first()->enabled)
+                                                @if (App\Models\Extension::where('name', $extensio)->get()->first()->enabled)
                                                     {{ __('Yes') }}
                                                 @else
                                                     {{ __('No') }}
@@ -77,7 +77,7 @@
                                                 {{ $gateway }}</td>
                                             <td
                                                 class="dark:text-darkmodetext px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                                @if (App\Models\Extensions::where('name', $gateway)->get()->first()->enabled)
+                                                @if (App\Models\Extension::where('name', $gateway)->get()->first()->enabled)
                                                     {{ __('Yes') }}
                                                 @else
                                                     {{ __('No') }}

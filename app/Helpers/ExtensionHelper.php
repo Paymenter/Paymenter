@@ -6,7 +6,7 @@ use App\Models\User;
 use App\Models\Orders;
 use App\Models\Invoices;
 use App\Models\Products;
-use App\Models\Extensions;
+use App\Models\Extension;
 use App\Models\OrderProducts;
 use App\Models\OrderProductsConfig;
 use Illuminate\Support\Facades\Crypt;
@@ -94,14 +94,14 @@ class ExtensionHelper
      */
     public static function getConfig($name, $key)
     {
-        $extension = Extensions::where('name', $name)->first();
+        $extension = Extension::where('name', $name)->first();
         if (!$extension) {
-            Extensions::create([
+            Extension::create([
                 'name' => $name,
                 'enabled' => false,
                 'type' => 'notset',
             ]);
-            $extension = Extensions::where('name', $name)->first();
+            $extension = Extension::where('name', $name)->first();
         }
         $config = $extension->getConfig()->where('key', $key)->first();
         if (!$config) {
@@ -128,14 +128,14 @@ class ExtensionHelper
      */
     public static function setConfig($name, $key, $value)
     {
-        $extension = Extensions::where('name', $name)->first();
+        $extension = Extension::where('name', $name)->first();
         if (!$extension) {
-            Extensions::create([
+            Extension::create([
                 'name' => $name,
                 'enabled' => false,
                 'type' => 'notset',
             ]);
-            $extension = Extensions::where('name', $name)->first();
+            $extension = Extension::where('name', $name)->first();
         }
         $config = $extension->getConfig()->where('key', $key)->first();
 
@@ -159,14 +159,14 @@ class ExtensionHelper
 
     public static function getProductConfig($name, $key, $id)
     {
-        $extension = Extensions::where('name', $name)->first();
+        $extension = Extension::where('name', $name)->first();
         if (!$extension) {
-            Extensions::create([
+            Extension::create([
                 'name' => $name,
                 'enabled' => false,
                 'type' => 'server',
             ]);
-            $extension = Extensions::where('name', $name)->first();
+            $extension = Extension::where('name', $name)->first();
         }
 
         $config = $extension->getServer()->where('product_id', $id)->where('extension', $extension->id)->where('name', $key)->first();
@@ -205,7 +205,7 @@ class ExtensionHelper
 
     public static function getPaymentMethod($id, $total, $products, $orderId)
     {
-        $extension = Extensions::where('id', $id)->first();
+        $extension = Extension::where('id', $id)->first();
         if (!$extension) {
             return false;
         }
@@ -226,7 +226,7 @@ class ExtensionHelper
             if (!isset($product->server_id)) {
                 return;
             }
-            $extension = Extensions::where('id', $product->server_id)->first();
+            $extension = Extension::where('id', $product->server_id)->first();
             if (!$extension) {
                 return false;
             }
@@ -258,7 +258,7 @@ class ExtensionHelper
             if (!isset($product->server_id)) {
                 return;
             }
-            $extension = Extensions::where('id', $product->server_id)->first();
+            $extension = Extension::where('id', $product->server_id)->first();
             if (!$extension) {
                 return false;
             }
@@ -290,7 +290,7 @@ class ExtensionHelper
             if (!isset($product->server_id)) {
                 return;
             }
-            $extension = Extensions::where('id', $product->server_id)->first();
+            $extension = Extension::where('id', $product->server_id)->first();
             if (!$extension) {
                 return false;
             }
@@ -322,7 +322,7 @@ class ExtensionHelper
             if (!isset($product->server_id)) {
                 return;
             }
-            $extension = Extensions::where('id', $product->server_id)->first();
+            $extension = Extension::where('id', $product->server_id)->first();
             if (!$extension) {
                 return false;
             }
@@ -352,7 +352,7 @@ class ExtensionHelper
         if(!isset($product->product()->get()->first()->server_id)) {
             return false;
         }
-        $extension = Extensions::where('id', $product->product()->get()->first()->server_id)->first();
+        $extension = Extension::where('id', $product->product()->get()->first()->server_id)->first();
         if (!$extension) {
             return false;
         }

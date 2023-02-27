@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Helpers\ExtensionHelper;
-use App\Models\{Extensions, Invoices, OrderProducts, OrderProductsConfig, Orders, Products, User, Coupon};
+use App\Models\{Extension, Invoices, OrderProducts, OrderProductsConfig, Orders, Products, User, Coupon};
 
 class CheckoutController extends Controller
 {
@@ -47,7 +47,7 @@ class CheckoutController extends Controller
     public function add(Products $product)
     {
         if (isset($product->server_id)) {
-            $server = Extensions::find($product->server_id);
+            $server = Extension::find($product->server_id);
             if ($server) {
                 include_once base_path('app/Extensions/Servers/' . $server->name . '/index.php');
                 $function = $server->name . '_getUserConfig';
@@ -73,7 +73,7 @@ class CheckoutController extends Controller
 
     public function config(Request $request, Products $product)
     {
-        $server = Extensions::find($product->server_id);
+        $server = Extension::find($product->server_id);
         include_once base_path('app/Extensions/Servers/' . $server->name . '/index.php');
         $function = $server->name . '_getUserConfig';
         if (!function_exists($function)) {
@@ -89,7 +89,7 @@ class CheckoutController extends Controller
 
     public function configPost(Request $request, Products $product)
     {
-        $server = Extensions::find($product->server_id);
+        $server = Extension::find($product->server_id);
         include_once base_path('app/Extensions/Servers/' . $server->name . '/index.php');
         $function = $server->name . '_getUserConfig';
         if (!function_exists($function)) {

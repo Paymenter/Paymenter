@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Models\Products;
 use App\Models\Category;
-use App\Models\Extensions;
+use App\Models\Extension;
 use Illuminate\Http\Request;
 use App\Models\ProductSettings;
 use App\Http\Controllers\Controller;
@@ -92,9 +92,9 @@ class ProductsController extends Controller
 
     public function extension(Products $product)
     {
-        $extensions = Extensions::where('type', 'server')->where('enabled', true)->get();
+        $extensions = Extension::where('type', 'server')->where('enabled', true)->get();
         if ($product->server_id != null) {
-            $server = Extensions::findOrFail($product->server_id);
+            $server = Extension::findOrFail($product->server_id);
             if (!file_exists(base_path('app/Extensions/Servers/' . $server->name . '/index.php'))) {
                 $server = null;
                 $extension = null;
@@ -230,7 +230,7 @@ class ProductsController extends Controller
         $json = json_decode(file_get_contents(storage_path('app/temp/' . $file->getClientOriginalName())));
         // Delete the file
         unlink(storage_path('app/temp/' . $file->getClientOriginalName()));
-        $server = Extensions::where('name', $json->server)->first();
+        $server = Extension::where('name', $json->server)->first();
         if(!$server)
             return redirect()->route('admin.products.extension', $product->id)->with('error', 'Invalid server');
         if (!file_exists(base_path('app/Extensions/Servers/' . $server->name . '/index.php'))) {

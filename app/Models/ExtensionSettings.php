@@ -17,6 +17,6 @@ class ExtensionSettings extends Model
 
     public function extension()
     {
-        return $this->belongsTo(Extensions::class, 'id', 'extension');
+        return $this->belongsTo(Extension::class, 'id', 'extension');
     }
 }

@@ -58,7 +58,7 @@
                                             <select id="payment_method" name="payment_method"
                                                 autocomplete="payment_method"
                                                 class="dark:bg-darkmode dark:text-darkmodetext dark:border-indigo-600 mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-                                                @foreach (App\Models\Extensions::where('type', 'gateway')->where('enabled', true)->get() as $gateway)
+                                                @foreach (App\Models\Extension::where('type', 'gateway')->where('enabled', true)->get() as $gateway)
                                                     <option class="dark:bg-darkmode dark:text-darkmodetext"
                                                         value="{{ $gateway->id }}">{{ $gateway->name }}</option>
                                                 @endforeach

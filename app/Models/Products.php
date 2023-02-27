@@ -25,7 +25,7 @@ class Products extends Model
 
     public function server()
     {
-        return $this->belongsTo(Extensions::class, 'server_id');
+        return $this->belongsTo(Extension::class, 'server_id');
     }
 
     public function settings()
