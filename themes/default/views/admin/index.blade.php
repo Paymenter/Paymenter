@@ -28,7 +28,7 @@
                                 <div class="flex flex-col">
                                     <h1 class="text-lg text-gray-500 dark:text-darkmodetext">Tickets today</h1>
                                     <p class="text-xl font-bold text-black dark:text-darkmodetext">
-                                        {{ App\Models\Tickets::whereDate('created_at', '=', date('Y-m-d'))->count() }}
+                                        {{ App\Models\Ticket::whereDate('created_at', '=', date('Y-m-d'))->count() }}
                                     </p>
                                 </div>
                             </div>
@@ -52,7 +52,7 @@
                                 <i class="ri-coupon-line p-4 text-blue-600 bg-normal dark:bg-darkmode text-2xl items-center text-center h-16 w-16 rounded-lg mr-4"></i>
                                 <div class="flex flex-col my-auto">
                                     <h3 class="text-gray-700 dark:text-darkmodetext">Open Tickets</h3>
-                                    <span class="font-bold text-xl dark:text-darkmodetext">{{ App\Models\Tickets::where('status', '!=', 'closed')->count() }}</span>
+                                    <span class="font-bold text-xl dark:text-darkmodetext">{{ App\Models\Ticket::where('status', '!=', 'closed')->count() }}</span>
                                 </div>
                             </div>
                             
@@ -60,7 +60,7 @@
                                 <i class="ri-coupon-line p-4 text-blue-600 bg-normal dark:bg-darkmode text-2xl items-center text-center h-16 w-16 rounded-lg mr-4"></i>
                                 <div class="flex flex-col my-auto">
                                     <h3 class="text-gray-700 dark:text-darkmodetext">Closed Tickets</h3>
-                                    <span class="font-bold text-xl dark:text-darkmodetext">{{ App\Models\Tickets::where('status', 'closed')->count() }}</span>
+                                    <span class="font-bold text-xl dark:text-darkmodetext">{{ App\Models\Ticket::where('status', 'closed')->count() }}</span>
                                 </div>
                             </div>
                             
@@ -68,14 +68,14 @@
                                 <i class="ri-coupon-line p-4 text-blue-600 bg-normal dark:bg-darkmode text-2xl items-center text-center h-16 w-16 rounded-lg mr-4"></i>
                                 <div class="flex flex-col my-auto">
                                     <h3 class="text-gray-700 dark:text-darkmodetext">Total Tickets</h3>
-                                    <span class="font-bold text-xl dark:text-darkmodetext">{{ App\Models\Tickets::count() }}</span>
+                                    <span class="font-bold text-xl dark:text-darkmodetext">{{ App\Models\Ticket::count() }}</span>
                                 </div>
                             </div>
                         </div>
 
                         <h2 class="text-xl font-bold mt-4 mb-2 dark:text-darkmodetext">Recent Open Tickets</h2>
                         <div class="grid grid-cols-1 gap-4">
-                            @foreach (App\Models\Tickets::orderByRaw('updated_at - created_at DESC')->get()->take(5) as $ticket)
+                            @foreach (App\Models\Ticket::orderByRaw('updated_at - created_at DESC')->get()->take(5) as $ticket)
                                 <a href="/admin/tickets/{{ $ticket->id }}">
                                     <div class="px-4 py-2 rounded-md flex dark:hover:bg-darkmode/50 dark:bg-darkmode bg-normal hover:bg-blue-100">
                                         <div class="flex flex-col">
@@ -173,7 +173,7 @@
                                 label: 'Yesterday',
                                 data: [
                                     {{ App\Models\Orders::whereDate('created_at', '=', date('Y-m-d', strtotime('-1 days')))->sum('total') }},
-                                    {{ App\Models\Tickets::whereDate('created_at', '=', date('Y-m-d', strtotime('-1 days')))->count() }},
+                                    {{ App\Models\Ticket::whereDate('created_at', '=', date('Y-m-d', strtotime('-1 days')))->count() }},
                                     {{ App\Models\Orders::whereDate('created_at', '=', date('Y-m-d', strtotime('-1 days')))->count() }},
                                 ],
                                 backgroundColor: [
@@ -192,7 +192,7 @@
                                 label: 'Today',
                                 data: [
                                     {{ App\Models\Orders::whereDate('created_at', '=', date('Y-m-d'))->sum('total') }},
-                                    {{ App\Models\Tickets::whereDate('created_at', '=', date('Y-m-d'))->count() }},
+                                    {{ App\Models\Ticket::whereDate('created_at', '=', date('Y-m-d'))->count() }},
                                     {{ App\Models\Orders::whereDate('created_at', '=', date('Y-m-d'))->count() }},
                                 ],
                                 backgroundColor: [

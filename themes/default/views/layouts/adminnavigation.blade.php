@@ -58,9 +58,9 @@
                 <div class="relative inline-block text-left z-[1]">
                     <button type="button" class="dark:bg-darkmode dark:text-darkmodetext dark:hover:bg-darkmode2 inline-flex w-full justify-center bg-white px-2 py-2 text-base font-medium rounded-md text-gray-700 @if (request()->routeIs('admin.tickets*')) bg-gray-200 @endif" id="menu-button" aria-expanded="true" aria-haspopup="true" onclick="openMenu('support')">
                         <i class="pr-1 ri-question-answer-line mr-1" @if (request()->routeIs('admin.tickets')) style="color: #5270FD" @endif></i> Support
-                        @if (isset(App\Models\Tickets::where('status', 'open')->get()[0]))
+                        @if (isset(App\Models\Ticket::where('status', 'open')->get()[0]))
                         <span class="inline-flex items-center px-2.5 ml-1 mt-0.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
-                            {{ App\Models\Tickets::where('status', 'open')->get()->count() }}
+                            {{ App\Models\Ticket::where('status', 'open')->get()->count() }}
                         </span>
                         @endif
                         <svg class="w-5 h-5 ml-1 -mr-1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
@@ -70,9 +70,9 @@
                     <div class="absolute right-0 hidden w-56 mt-2 origin-top-right bg-white rounded-lg shadow-lg dark:bg-darkmode ring-1 ring-black ring-opacity-5" role="menu" aria-orientation="vertical" aria-labelledby="menu-button" tabindex="-1" id="support">
                         <div class="py-1" role="none">
                             <a href="{{ route('admin.tickets') }}" class="block px-4 py-2 text-base text-gray-700 dark:text-darkmodetext dark:hover:bg-darkmode2 hover:bg-gray-100 hover:text-gray-900" role="menuitem" tabindex="-1" id="menu-item-0">All Support
-                                @if (isset(App\Models\Tickets::where('status', 'open')->get()[0]))
+                                @if (isset(App\Models\Ticket::where('status', 'open')->get()[0]))
                                 <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
-                                    {{ App\Models\Tickets::where('status', 'open')->get()->count() }}
+                                    {{ App\Models\Ticket::where('status', 'open')->get()->count() }}
                                 </span>
                                 @endif
                             </a>

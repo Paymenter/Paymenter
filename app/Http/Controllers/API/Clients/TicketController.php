@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\API\Clients;
 
 use App\Classes\API;
-use App\Models\Tickets;
+use App\Models\Ticket;
 use Illuminate\Http\Request;
 use App\Models\TicketMessages;
 use App\Http\Controllers\Controller;
@@ -66,7 +66,7 @@ class TicketController extends Controller
             ], 429);
         }
 
-        $ticket = new Tickets();
+        $ticket = new Ticket();
         $ticket->title = $body->title;
         $ticket->status = 'open';
         $ticket->client = $user->id;
@@ -98,7 +98,7 @@ class TicketController extends Controller
             ], 403);
         }
 
-        $ticket = Tickets::where('client', $user->id)->where('id', $ticketId)->firstOrFail();
+        $ticket = Ticket::where('client', $user->id)->where('id', $ticketId)->firstOrFail();
 
         return response()->json([
             'ticket' => $ticket,
@@ -118,7 +118,7 @@ class TicketController extends Controller
             ], 403);
         }
 
-        $ticket = Tickets::where('client', $user->id)->where('id', $ticketId)->firstOrFail();
+        $ticket = Ticket::where('client', $user->id)->where('id', $ticketId)->firstOrFail();
 
         $ticket->status = 'closed';
         $ticket->save();
@@ -141,7 +141,7 @@ class TicketController extends Controller
             ], 403);
         }
 
-        $ticket = Tickets::where('client', $user->id)->where('id', $ticketId)->firstOrFail();
+        $ticket = Ticket::where('client', $user->id)->where('id', $ticketId)->firstOrFail();
 
         $request->validate([
             'message' => 'required',

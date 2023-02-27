@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Models\User;
-use App\Models\Tickets;
+use App\Models\Ticket;
 use Illuminate\Http\Request;
 use App\Models\TicketMessages;
 use App\Http\Controllers\Controller;
@@ -12,8 +12,8 @@ class TicketsController extends Controller
 {
     public function index()
     {
-        $tickets = Tickets::where('status', '!=', 'closed')->get();
-        $closed = Tickets::where('status', 'closed')->get();
+        $tickets = Ticket::where('status', '!=', 'closed')->get();
+        $closed = Ticket::where('status', 'closed')->get();
 
         return view('admin.tickets.index', compact('tickets', 'closed'));
     }
@@ -34,7 +34,7 @@ class TicketsController extends Controller
             'priority' => 'required',
         ]);
 
-        $ticket = new Tickets([
+        $ticket = new Ticket([
             'title' => $request->get('title'),
             'status' => 'open',
             'priority' => $request->priority,
@@ -51,12 +51,12 @@ class TicketsController extends Controller
         return redirect()->route('admin.tickets.show', $ticket)->with('success', 'Ticket has been created');
     }
 
-    public function show(Tickets $ticket)
+    public function show(Ticket $ticket)
     {
         return view('admin.tickets.show', compact('ticket'));
     }
 
-    public function reply(Request $request, Tickets $ticket)
+    public function reply(Request $request, Ticket $ticket)
     {
         $request->validate([
             'message' => 'required',
@@ -72,7 +72,7 @@ class TicketsController extends Controller
         return redirect()->route('admin.tickets.show', $ticket)->with('success', 'Message has been sent');
     }
 
-    public function status(Request $request, Tickets $ticket)
+    public function status(Request $request, Ticket $ticket)
     {
         $request->validate([
             'status' => 'required|in:open,closed',

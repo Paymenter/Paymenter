@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Clients;
 
 use App\Models\User;
 use App\Models\Orders;
-use App\Models\Tickets;
+use App\Models\;
 use Illuminate\Http\Request;
 use App\Models\TicketMessages;
 use App\Http\Controllers\Controller;
@@ -14,7 +14,7 @@ class TicketsController extends Controller
 {
     public function index(Request $request)
     {
-        $tickets = Tickets::where('client', auth()->user()->id)->get();
+        $tickets = Ticket::where('client', auth()->user()->id)->get();
         $users = User::where('id', auth()->user()->id)->get();
         $ticketMessages = TicketMessages::all();
         $sort = $request->get('sort');
@@ -63,7 +63,7 @@ class TicketsController extends Controller
         if (!$executed) {
             return redirect()->back()->with('error', 'You are sending too many messages. Please wait a few minutes and try again.');
         }
-        $ticket = new Tickets();
+        $ticket = new Ticket();
         $ticket->title = request('title');
         $ticket->status = 'open';
         $ticket->client = auth()->user()->id;
@@ -79,14 +79,14 @@ class TicketsController extends Controller
         return redirect('/tickets')->with('success', 'Ticket created successfully');
     }
 
-    public function show(Tickets $ticket)
+    public function show(Ticket $ticket)
     {
         $messages = TicketMessages::where('ticket_id', $ticket->id)->get();
 
         return view('clients.tickets.show', compact('ticket', 'messages'));
     }
 
-    public function close(Tickets $ticket)
+    public function close(Ticket $ticket)
     {
         $ticket->status = 'closed';
         $ticket->save();
@@ -94,7 +94,7 @@ class TicketsController extends Controller
         return redirect('/tickets')->with('success', 'Ticket closed successfully');
     }
 
-    public function reply(Request $request, Tickets $ticket)
+    public function reply(Request $request, Ticket $ticket)
     {
         if (config('settings::recaptcha') == 1) {
             $request->validate([

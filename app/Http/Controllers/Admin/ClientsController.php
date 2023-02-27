@@ -6,7 +6,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Route;
-use App\Models\{Invoices, Orders, Tickets};
+use App\Models\{Invoices, Orders, Ticket};
 
 class ClientsController extends Controller
 {
@@ -83,7 +83,7 @@ class ClientsController extends Controller
     public function destroy(User $user)
     {
         // Delete tickets, orders, etc.
-        $tickets = Tickets::where('client', $user->id)->get();
+        $tickets = Ticket::where('client', $user->id)->get();
         foreach ($tickets as $ticket) {
             $ticket->delete();
         }

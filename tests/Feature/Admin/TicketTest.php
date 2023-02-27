@@ -4,7 +4,7 @@ namespace Tests\Feature\Admin;
 
 use Tests\TestCase;
 use App\Models\User;
-use App\Models\Tickets;
+use App\Models\Ticket;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
@@ -35,7 +35,7 @@ class TicketTest extends TestCase
         $response = $this->actingAs($this->user)->get(route('admin.tickets.create'));
         $response->assertStatus(200);
 
-        $ticket = Tickets::factory()->create([
+        $ticket = Ticket::factory()->create([
             'title' => 'TEST',
             'status' => 'open',
             'priority' => 'low',
@@ -81,7 +81,7 @@ class TicketTest extends TestCase
      */
     public function testIfAdminCanChangeStatus()
     {
-        $ticket = Tickets::factory()->create([
+        $ticket = Ticket::factory()->create([
             'title' => 'TEST',
             'status' => 'open',
             'priority' => 'low',
@@ -110,7 +110,7 @@ class TicketTest extends TestCase
      */
     public function testIfAdminCanReplyToATicket()
     {
-        $ticket = Tickets::factory()->create([
+        $ticket = Ticket::factory()->create([
             'title' => 'TEST',
             'status' => 'open',
             'priority' => 'low',

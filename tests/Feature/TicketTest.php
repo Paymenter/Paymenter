@@ -4,7 +4,7 @@ namespace Tests\Feature;
 
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use App\Models\{User, Tickets};
+use App\Models\{User, Ticket};
 
 class TicketTest extends TestCase
 {
@@ -35,7 +35,7 @@ class TicketTest extends TestCase
 
         $response->assertStatus(302);
 
-        $ticket = Tickets::where('client', $this->user->id)->first();
+        $ticket = Ticket::where('client', $this->user->id)->first();
 
         $this->assertNotNull($ticket);
     }
@@ -59,7 +59,7 @@ class TicketTest extends TestCase
      */
     public function testCanViewTicket()
     {
-        $ticket = Tickets::factory()->create([
+        $ticket = Ticket::factory()->create([
             'title' => 'TEST',
             'status' => 'open',
             'priority' => 'low',
@@ -78,7 +78,7 @@ class TicketTest extends TestCase
      */
     public function testCanReplyToTicket()
     {
-        $ticket = Tickets::factory()->create([
+        $ticket = Ticket::factory()->create([
             'title' => 'TEST',
             'status' => 'open',
             'priority' => 'low',
@@ -105,7 +105,7 @@ class TicketTest extends TestCase
      */
     public function testCanCloseTicket()
     {
-        $ticket = Tickets::factory()->create([
+        $ticket = Ticket::factory()->create([
             'title' => 'TEST',
             'status' => 'open',
             'priority' => 'low',

@@ -65,7 +65,7 @@ class User extends Authenticatable
 
     public function tickets()
     {
-        return $this->hasMany(Tickets::class, 'client', 'id');
+        return $this->hasMany(Ticket::class, 'client', 'id');
     }
 
     public function invoices()
