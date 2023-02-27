@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Products;
+use App\Models\;
 use App\Models\Category;
 use Illuminate\Http\Request;
 
@@ -15,7 +15,7 @@ class BasisController extends Controller
         return view('welcome', compact('categories'));
     }
 
-    public function products(string $slug = null, Products $product = null)
+    public function products(string $slug = null, Product $product = null)
     {
         if ($product) {
             return redirect()->route('checkout.add', $product->id);

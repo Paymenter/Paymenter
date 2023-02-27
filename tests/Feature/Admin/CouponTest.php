@@ -4,9 +4,7 @@ namespace Tests\Feature\Admin;
 
 use Tests\TestCase;
 use App\Models\User;
-use App\Models\Products;
 use App\Models\Coupon;
-use Illuminate\Http\UploadedFile;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class CouponTest extends TestCase

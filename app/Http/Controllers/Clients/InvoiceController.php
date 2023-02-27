@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Clients;
 use Illuminate\Http\Request;
 use App\Helpers\ExtensionHelper;
 use App\Http\Controllers\Controller;
-use App\Models\{Invoices, Orders, Products};
+use App\Models\{Invoices, Orders, Product};
 
 class InvoiceController extends Controller
 {
@@ -40,7 +40,7 @@ class InvoiceController extends Controller
         }
         $products = [];
         foreach ($order->products()->get() as $product) {
-            $iproduct = Products::where('id', $product->product_id)->first();
+            $iproduct = Product::where('id', $product->product_id)->first();
             $iproduct->quantity = $product['quantity'];
             if ($coupon) {
                 if (!in_array($iproduct->id, $coupon->products) && $coupon->type != 'all') {
@@ -90,7 +90,7 @@ class InvoiceController extends Controller
         }
 
         foreach ($order->products()->get() as $product) {
-            $iproduct = Products::where('id', $product->product_id)->first();
+            $iproduct = Product::where('id', $product->product_id)->first();
             $iproduct->quantity = $product['quantity'];
             if ($coupon) {
                 if (!in_array($iproduct->id, $coupon->products) && $coupon->type != 'all') {

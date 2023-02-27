@@ -4,7 +4,7 @@ namespace Tests\Feature\Admin;
 
 use Tests\TestCase;
 use App\Models\User;
-use App\Models\Products;
+use App\Models\Product;
 use App\Models\Category;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -21,7 +21,7 @@ class ProductTest extends TestCase
         parent::setUp();
         $this->user = User::factory()->create(['is_admin' => 1]);
         $this->category = Category::factory()->create();
-        $this->product = Products::factory()->create([
+        $this->product = Product::factory()->create([
             'category_id' => $this->category->id,
         ]);
     }
@@ -39,7 +39,7 @@ class ProductTest extends TestCase
         $response = $this->actingAs($this->user)->get(route('admin.products.create'));
         $response->assertStatus(200);
 
-        $product = Products::factory()->create([
+        $product = Product::factory()->create([
             'category_id' => $this->category->id,
         ]);
 

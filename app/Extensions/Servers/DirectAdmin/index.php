@@ -1,6 +1,6 @@
 <?php
 
-use App\Models\Products;
+use App\Models\Product;
 use App\Helpers\ExtensionHelper;
 
 include_once 'httpsocket.php';
@@ -180,7 +180,7 @@ function DirectAdmin_getConfig()
     ];
 }
 
-function DirectAdmin_getUserConfig(Products $product)
+function DirectAdmin_getUserConfig(Product $product)
 {
     return [
         [

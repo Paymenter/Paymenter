@@ -5,7 +5,7 @@ namespace App\Helpers;
 use App\Models\User;
 use App\Models\Orders;
 use App\Models\Invoices;
-use App\Models\Products;
+use App\Models\Product;
 use App\Models\Extension;
 use App\Models\OrderProducts;
 use App\Models\OrderProductsConfig;
@@ -222,7 +222,7 @@ class ExtensionHelper
     public static function createServer(Orders $order)
     {
         foreach ($order->products()->get() as $product2) {
-            $product = Products::findOrFail($product2->product_id);
+            $product = Product::findOrFail($product2->product_id);
             if (!isset($product->server_id)) {
                 return;
             }
@@ -254,7 +254,7 @@ class ExtensionHelper
     public static function suspendServer(Orders $order)
     {
         foreach ($order->products()->get() as $product2) {
-            $product = Products::findOrFail($product2->product_id);
+            $product = Product::findOrFail($product2->product_id);
             if (!isset($product->server_id)) {
                 return;
             }
@@ -286,7 +286,7 @@ class ExtensionHelper
     public static function unsuspendServer(Orders $order)
     {
         foreach ($order->products()->get() as $product2) {
-            $product = Products::findOrFail($product2->product_id);
+            $product = Product::findOrFail($product2->product_id);
             if (!isset($product->server_id)) {
                 return;
             }
@@ -318,7 +318,7 @@ class ExtensionHelper
     public static function terminateServer(Orders $order)
     {
         foreach ($order->products()->get() as $product2) {
-            $product = Products::findOrFail($product2->product_id);
+            $product = Product::findOrFail($product2->product_id);
             if (!isset($product->server_id)) {
                 return;
             }

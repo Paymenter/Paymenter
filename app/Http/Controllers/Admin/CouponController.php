@@ -5,7 +5,7 @@ use App\Models\Coupon;
 use Illuminate\Http\Request;
 use App\Helpers\ExtensionHelper;
 use App\Http\Controllers\Controller;
-use App\Models\Products;
+use App\Models\Product;
 
 class CouponController extends Controller
 {
@@ -15,7 +15,7 @@ class CouponController extends Controller
     }
     
     public function create(){
-        $products = Products::all();
+        $products = Product::all();
         return view('admin.coupons.create', compact('products'));
     }
 
@@ -33,7 +33,7 @@ class CouponController extends Controller
     }
 
     public function edit(Coupon $coupon){
-        $products = Products::all();
+        $products = Product::all();
 
 
         return view('admin.coupons.edit', compact('coupon', 'products'));

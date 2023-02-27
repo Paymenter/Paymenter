@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Helpers\ExtensionHelper;
-use App\Models\{Extension, Invoices, OrderProducts, OrderProductsConfig, Orders, Products, User, Coupon};
+use App\Models\{Extension, Invoices, OrderProducts, OrderProductsConfig, Orders, Product, User, Coupon};
 
 class CheckoutController extends Controller
 {
@@ -44,7 +44,7 @@ class CheckoutController extends Controller
         return view('checkout.index', compact('products', 'total', 'discount', 'coupon'));
     }
 
-    public function add(Products $product)
+    public function add(Product $product)
     {
         if (isset($product->server_id)) {
             $server = Extension::find($product->server_id);
@@ -71,7 +71,7 @@ class CheckoutController extends Controller
         }
     }
 
-    public function config(Request $request, Products $product)
+    public function config(Request $request, Product $product)
     {
         $server = Extension::find($product->server_id);
         include_once base_path('app/Extensions/Servers/' . $server->name . '/index.php');
@@ -87,7 +87,7 @@ class CheckoutController extends Controller
         return view('checkout.config', compact('product', 'userConfig'));
     }
 
-    public function configPost(Request $request, Products $product)
+    public function configPost(Request $request, Product $product)
     {
         $server = Extension::find($product->server_id);
         include_once base_path('app/Extensions/Servers/' . $server->name . '/index.php');
@@ -194,7 +194,7 @@ class CheckoutController extends Controller
             $total = $invoice->total;
             $products = [];
             foreach ($order->products()->get() as $product) {
-                $iproduct = Products::where('id', $product->product_id)->first();
+                $iproduct = Product::where('id', $product->product_id)->first();
                 $iproduct->quantity = $product['quantity'];
                 if (isset($product['config'])) {
                     $iproduct->config = $product['config'];
@@ -233,7 +233,7 @@ class CheckoutController extends Controller
         return redirect()->route('clients.invoice.show', $invoice->id);
     }
 
-    public function remove(Request $request, Products $product)
+    public function remove(Request $request, Product $product)
     {
         $cart = session()->get('cart');
         if (isset($cart[$product->id])) {
@@ -252,7 +252,7 @@ class CheckoutController extends Controller
     /*
      * Update product quantity in cart
      */
-    public function update(Request $request, Products $product)
+    public function update(Request $request, Product $product)
     {
         $request->validate([
             'quantity' => 'required|numeric|min:1',

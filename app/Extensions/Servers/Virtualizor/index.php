@@ -1,6 +1,6 @@
 <?php
 
-use App\Models\Products;
+use App\Models\Product;
 use App\Helpers\ExtensionHelper;
 
 require_once __DIR__ . '/sdk.php';
@@ -35,7 +35,7 @@ function Virtualizor_getConfig()
     ];
 }
 
-function Virtualizor_getUserConfig(Products $product)
+function Virtualizor_getUserConfig(Product $product)
 {
     $key = ExtensionHelper::getConfig('virtualizor', 'key');
     $pass = ExtensionHelper::getConfig('virtualizor', 'pass');

@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Models\Products;
+use App\Models\Product;
 use App\Models\Category;
 use App\Models\Extension;
 use Illuminate\Http\Request;
@@ -41,19 +41,19 @@ class ProductsController extends Controller
             $request->image->move(public_path('images'), $imageName);
             $data['image'] = '/images/' . $imageName;
         }
-        $product = Products::create($data);
+        $product = Product::create($data);
 
         return redirect()->route('admin.products.edit', $product->id)->with('success', 'Product created successfully');
     }
 
-    public function edit(Products $product)
+    public function edit(Product $product)
     {
         $categories = Category::all();
 
         return view('admin.products.edit', compact('product', 'categories'));
     }
 
-    public function update(Request $request, Products $product)
+    public function update(Request $request, Product $product)
     {
         $data = request()->validate([
             'name' => 'required',
@@ -83,14 +83,14 @@ class ProductsController extends Controller
         return redirect()->route('admin.products.edit', $product->id)->with('success', 'Product updated successfully');
     }
 
-    public function destroy(Products $product)
+    public function destroy(Product $product)
     {
         $product->delete();
 
         return redirect()->route('admin.products')->with('success', 'Product deleted successfully');
     }
 
-    public function extension(Products $product)
+    public function extension(Product $product)
     {
         $extensions = Extension::where('type', 'server')->where('enabled', true)->get();
         if ($product->server_id != null) {
@@ -115,7 +115,7 @@ class ProductsController extends Controller
         return view('admin.products.extension', compact('product', 'extensions', 'server', 'extension'));
     }
 
-    public function extensionUpdate(Request $request, Products $product)
+    public function extensionUpdate(Request $request, Product $product)
     {
         $data = request()->validate([
             'server_id' => 'required|integer',
@@ -156,7 +156,7 @@ class ProductsController extends Controller
         return redirect()->route('admin.products.extension', $product->id)->with('success', 'Product updated successfully');
     }
 
-    public function extensionExport(Products $product)
+    public function extensionExport(Product $product)
     {
         $server = Extension::findOrFail($product->server_id);
         if (!file_exists(base_path('app/Extensions/Servers/' . $server->name . '/index.php'))) {
@@ -217,7 +217,7 @@ class ProductsController extends Controller
         );
     }
 
-    public function extensionImport(Request $request, Products $product)
+    public function extensionImport(Request $request, Product $product)
     {
         $request->validate([
             'json' => 'required|file|mimes:json',
@@ -282,7 +282,7 @@ class ProductsController extends Controller
         return redirect()->route('admin.products.extension', $product->id)->with('success', 'Product updated successfully');
     }
 
-    public function duplicate(Products $product)
+    public function duplicate(Product $product)
     {
         $newProduct = $product->replicate();
         $newProduct->name = $newProduct->name . ' (copy)';

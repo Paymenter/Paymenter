@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\API\Website;
 
 use App\Classes\API;
-use App\Models\Products;
+use App\Models\Product;
 use App\Http\Controllers\Controller;
 
 class ProductController extends Controller
@@ -13,7 +13,7 @@ class ProductController extends Controller
      */
     public function getProducts()
     {
-        $products = Products::paginate(25);
+        $products = Product::paginate(25);
 
         return response()->json([
             'products' => API::repaginate($products),

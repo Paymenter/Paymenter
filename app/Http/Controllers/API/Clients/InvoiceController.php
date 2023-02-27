@@ -5,7 +5,7 @@ namespace App\Http\Controllers\API\Clients;
 use App\Classes\API;
 use App\Models\Orders;
 use App\Models\Invoices;
-use App\Models\Products;
+use App\Models\Product;
 use Illuminate\Http\Request;
 use App\Helpers\ExtensionHelper;
 use App\Http\Controllers\Controller;
@@ -49,7 +49,7 @@ class InvoiceController extends Controller
 
         $products = [];
         foreach ($order->products()->get() as $product) {
-            $item = Products::where('id', $product->product_id)->first();
+            $item = Product::where('id', $product->product_id)->first();
             $item->quantity = $product['quantity'];
             $products[] = $item;
         }
@@ -85,7 +85,7 @@ class InvoiceController extends Controller
         $products = [];
         $total = $invoice->total;
         foreach ($order->products()->get() as $product) {
-            $item = json_decode(Products::where('id', $product->product_id)->first());
+            $item = json_decode(Product::where('id', $product->product_id)->first());
             $item->quantity = $product['quantity'];
             if (isset($product['config'])) {
                 $item->config = $product['config'];
