@@ -20,6 +20,7 @@ class OrderTest extends TestCase
         $this->user = User::factory()->create();
         $this->categorie = Categories::factory()->create();
         $this->product = Products::factory()->create([
+            'price' => 0,
             'category_id' => $this->categorie->id,
         ]);
     }
@@ -43,7 +44,7 @@ class OrderTest extends TestCase
      */
     public function testCanContinueToInvoice()
     {
-        $response = $this->actingAs($this->user)->get(route( 'checkout.add', $this->product->id));
+        $response = $this->actingAs($this->user)->get(route('checkout.add', $this->product->id));
 
         $response->assertStatus(302);
 
@@ -51,7 +52,6 @@ class OrderTest extends TestCase
 
         $response->assertStatus(302);
 
-        // Get generated invoice id
         $invoice = Invoices::where('user_id', $this->user->id)->first();
 
         $this->assertNotNull($invoice);
