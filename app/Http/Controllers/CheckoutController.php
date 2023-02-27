@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Helpers\ExtensionHelper;
-use App\Models\{Extension, Invoices, OrderProducts, OrderProductsConfig, Orders, Product, User, Coupon};
+use App\Models\{Extension, Invoices, OrderProducts, OrderProductsConfig, Order, Product, User, Coupon};
 
 class CheckoutController extends Controller
 {
@@ -137,7 +137,7 @@ class CheckoutController extends Controller
         }
 
         $user = User::findOrFail(auth()->user()->id);
-        $order = new Orders();
+        $order = new Order();
         $order->client = $user->id;
         $order->total = $total;
         $order->expiry_date = date('Y-m-d H:i:s', strtotime('+1 month'));

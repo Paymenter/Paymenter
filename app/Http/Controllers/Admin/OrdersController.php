@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Models\Orders;
+use App\Models\Order;
 use App\Helpers\ExtensionHelper;
 use App\Http\Controllers\Controller;
 
@@ -10,12 +10,12 @@ class OrdersController extends Controller
 {
     public function index()
     {
-        $orders = Orders::all();
+        $orders = Order::all();
 
         return view('admin.orders.index', compact('orders'));
     }
 
-    public function show(Orders $order)
+    public function show(Order $order)
     {
         $products = [];
         // Loop through products
@@ -28,7 +28,7 @@ class OrdersController extends Controller
         return view('admin.orders.show', compact('order', 'products'));
     }
 
-    public function destroy(Orders $order)
+    public function destroy(Order $order)
     {
         if ($order->status == 'paid' || $order->status == 'suspended') {
             ExtensionHelper::terminateServer($order);
@@ -38,7 +38,7 @@ class OrdersController extends Controller
         return redirect()->route('admin.orders')->with('success', 'Order deleted');
     }
 
-    public function suspend(Orders $order)
+    public function suspend(Order $order)
     {
         $order->status = 'suspended';
         $order->save();
@@ -47,7 +47,7 @@ class OrdersController extends Controller
         return redirect()->route('admin.orders.show', $order);
     }
 
-    public function unsuspend(Orders $order)
+    public function unsuspend(Order $order)
     {
         $order->status = 'paid';
         $order->save();
@@ -56,7 +56,7 @@ class OrdersController extends Controller
         return redirect()->route('admin.orders.show', $order);
     }
 
-    public function create(Orders $order)
+    public function create(Order $order)
     {
         $order->status = 'paid';
         $order->save();
@@ -65,7 +65,7 @@ class OrdersController extends Controller
         return redirect()->route('admin.orders.show', $order);
     }
 
-    public function paid(Orders $order)
+    public function paid(Order $order)
     {
         $order->status = 'paid';
         $order->save();

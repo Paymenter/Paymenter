@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\API\Clients;
 
 use App\Classes\API;
-use App\Models\Orders;
+use App\Models\Order;
 use App\Models\Invoices;
 use App\Models\Product;
 use Illuminate\Http\Request;
@@ -45,7 +45,7 @@ class InvoiceController extends Controller
         }
 
         $invoice = Invoices::where('id', $invoiceId)->where('user_id', $user->id)->firstOrFail();
-        $order = Orders::findOrFail($invoice->order_id);
+        $order = Order::findOrFail($invoice->order_id);
 
         $products = [];
         foreach ($order->products()->get() as $product) {
@@ -74,7 +74,7 @@ class InvoiceController extends Controller
         }
 
         $invoice = Invoices::where('id', $invoiceId)->where('user_id', $user->id)->firstOrFail();
-        $order = Orders::findOrFail($invoice->order_id);
+        $order = Order::findOrFail($invoice->order_id);
 
         if ($invoice->status != 'unpaid') {
             return response()->json([

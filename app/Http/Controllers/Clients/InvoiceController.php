@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Clients;
 use Illuminate\Http\Request;
 use App\Helpers\ExtensionHelper;
 use App\Http\Controllers\Controller;
-use App\Models\{Invoices, Orders, Product};
+use App\Models\{Invoices, Order, Product};
 
 class InvoiceController extends Controller
 {
@@ -18,7 +18,7 @@ class InvoiceController extends Controller
 
     public function show(Request $request, Invoices $invoice)
     {
-        $order = Orders::findOrFail($invoice->order_id);
+        $order = Order::findOrFail($invoice->order_id);
         $coupon = $order->coupon()->get()->first();
 
         // Check if the coupon is lifetime or not
@@ -70,7 +70,7 @@ class InvoiceController extends Controller
         if ($invoice->status == 'paid') {
             return redirect()->route('clients.invoice.show', $invoice)->with('error', 'Invoice already paid');
         }
-        $order = Orders::findOrFail($invoice->order_id);
+        $order = Order::findOrFail($invoice->order_id);
         $total = $invoice->total;
         $products = [];
         $coupon = $order->coupon()->get()->first();

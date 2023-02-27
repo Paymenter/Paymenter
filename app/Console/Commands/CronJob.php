@@ -2,7 +2,7 @@
 
 namespace App\Console\Commands;
 
-use App\Models\Orders;
+use App\Models\Order;
 use Illuminate\Console\Command;
 use App\Helpers\ExtensionHelper;
 use App\Mail\Invoices\NewInvoice;
@@ -32,7 +32,7 @@ class CronJob extends Command
     public function handle()
     {
         $this->info('Cron Job Started');
-        $orders = Orders::where('expiry_date', '<', now())->get();
+        $orders = Order::where('expiry_date', '<', now())->get();
         foreach ($orders as $order) {
             if ($order->status == 'paid') {
                 $order->status = 'suspended';
@@ -50,7 +50,7 @@ class CronJob extends Command
                 }
             }
         }
-        $orders = Orders::where('expiry_date', '<', now()->addDays(7))->get();
+        $orders = Order::where('expiry_date', '<', now()->addDays(7))->get();
         foreach ($orders as $order) {
             // Check if there is a pending invoice
             if ($order->invoices()->where('status', 'pending')->count() == 0) {

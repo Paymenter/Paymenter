@@ -26,7 +26,7 @@ class Ticket extends Model
 
     public function orders()
     {
-        return $this->hasMany(Orders::class, 'id', 'order_id');
+        return $this->hasMany(Order::class, 'id', 'order_id');
     }
 
     public function client()

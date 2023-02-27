@@ -19,7 +19,7 @@
                                 <div class="flex flex-col">    
                                     <h1 class="text-lg text-gray-500 dark:text-darkmodetext">Orders today</h1>
                                     <p class="text-xl font-bold text-black dark:text-darkmodetext">
-                                        {{ App\Models\Orders::whereDate('created_at', '=', date('Y-m-d'))->count() }}
+                                        {{ App\Models\Order::whereDate('created_at', '=', date('Y-m-d'))->count() }}
                                     </p>
                                 </div>
                             </div>
@@ -172,9 +172,9 @@
                         datasets: [{
                                 label: 'Yesterday',
                                 data: [
-                                    {{ App\Models\Orders::whereDate('created_at', '=', date('Y-m-d', strtotime('-1 days')))->sum('total') }},
+                                    {{ App\Models\Order::whereDate('created_at', '=', date('Y-m-d', strtotime('-1 days')))->sum('total') }},
                                     {{ App\Models\Ticket::whereDate('created_at', '=', date('Y-m-d', strtotime('-1 days')))->count() }},
-                                    {{ App\Models\Orders::whereDate('created_at', '=', date('Y-m-d', strtotime('-1 days')))->count() }},
+                                    {{ App\Models\Order::whereDate('created_at', '=', date('Y-m-d', strtotime('-1 days')))->count() }},
                                 ],
                                 backgroundColor: [
                                     'rgba(255, 99, 132, 0.2)',
@@ -191,9 +191,9 @@
                             {
                                 label: 'Today',
                                 data: [
-                                    {{ App\Models\Orders::whereDate('created_at', '=', date('Y-m-d'))->sum('total') }},
+                                    {{ App\Models\Order::whereDate('created_at', '=', date('Y-m-d'))->sum('total') }},
                                     {{ App\Models\Ticket::whereDate('created_at', '=', date('Y-m-d'))->count() }},
-                                    {{ App\Models\Orders::whereDate('created_at', '=', date('Y-m-d'))->count() }},
+                                    {{ App\Models\Order::whereDate('created_at', '=', date('Y-m-d'))->count() }},
                                 ],
                                 backgroundColor: [
                                     'rgba(255, 99, 132, 0.2)',

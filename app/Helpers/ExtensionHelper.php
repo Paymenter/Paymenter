@@ -3,7 +3,7 @@
 namespace App\Helpers;
 
 use App\Models\User;
-use App\Models\Orders;
+use App\Models\Order;
 use App\Models\Invoices;
 use App\Models\Product;
 use App\Models\Extension;
@@ -30,7 +30,7 @@ class ExtensionHelper
         $invoice->status = 'paid';
         $invoice->paid_at = now();
         $invoice->save();
-        $order = Orders::findOrFail($invoice->order_id);
+        $order = Order::findOrFail($invoice->order_id);
         if ($order->status == 'paid') {
             return;
         }
@@ -53,7 +53,7 @@ class ExtensionHelper
      */
     public function paymentFailed($id)
     {
-        $order = Orders::findOrFail($id);
+        $order = Order::findOrFail($id);
         $order->status = 'failed';
         $order->save();
     }
@@ -67,7 +67,7 @@ class ExtensionHelper
      */
     public function paymentCancelled($id)
     {
-        $order = Orders::find($id);
+        $order = Order::find($id);
         $order->status = 'cancelled';
         $order->save();
     }
@@ -219,7 +219,7 @@ class ExtensionHelper
         return $pay;
     }
 
-    public static function createServer(Orders $order)
+    public static function createServer(Order $order)
     {
         foreach ($order->products()->get() as $product2) {
             $product = Product::findOrFail($product2->product_id);
@@ -251,7 +251,7 @@ class ExtensionHelper
         }
     }
 
-    public static function suspendServer(Orders $order)
+    public static function suspendServer(Order $order)
     {
         foreach ($order->products()->get() as $product2) {
             $product = Product::findOrFail($product2->product_id);
@@ -283,7 +283,7 @@ class ExtensionHelper
         }
     }
 
-    public static function unsuspendServer(Orders $order)
+    public static function unsuspendServer(Order $order)
     {
         foreach ($order->products()->get() as $product2) {
             $product = Product::findOrFail($product2->product_id);
@@ -315,7 +315,7 @@ class ExtensionHelper
         }
     }
 
-    public static function terminateServer(Orders $order)
+    public static function terminateServer(Order $order)
     {
         foreach ($order->products()->get() as $product2) {
             $product = Product::findOrFail($product2->product_id);

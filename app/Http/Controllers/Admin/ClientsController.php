@@ -6,7 +6,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Route;
-use App\Models\{Invoices, Orders, Ticket};
+use App\Models\{Invoices, Order, Ticket};
 
 class ClientsController extends Controller
 {
@@ -87,7 +87,7 @@ class ClientsController extends Controller
         foreach ($tickets as $ticket) {
             $ticket->delete();
         }
-        $orders = Orders::where('client', $user->id)->get();
+        $orders = Order::where('client', $user->id)->get();
         foreach ($orders as $order) {
             $order->delete();
         }

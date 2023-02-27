@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Clients;
 
 use App\Models\User;
-use App\Models\Orders;
+use App\Models\Order;
 use App\Models\Invoices;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -12,7 +12,7 @@ class HomeController extends Controller
 {
     public function index()
     {
-        $services = Orders::where('client', auth()->user()->id)->get();
+        $services = Order::where('client', auth()->user()->id)->get();
         $invoices = Invoices::where('user_id', auth()->user()->id)->where('status', 'pending')->get();
 
         return view('clients.home', compact('services', 'invoices'));
