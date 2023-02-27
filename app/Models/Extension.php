@@ -22,6 +22,6 @@ class Extension extends Model
 
     public function getServer()
     {
-        return $this->hasMany(ProductSettings::class, 'extension', 'id');
+        return $this->hasMany(ProductSetting::class, 'extension', 'id');
     }
 }

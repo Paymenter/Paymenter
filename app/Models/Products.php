@@ -30,6 +30,6 @@ class Products extends Model
 
     public function settings()
     {
-        return $this->hasMany(ProductSettings::class, 'product_id');
+        return $this->hasMany(ProductSetting::class, 'product_id');
     }
 }
