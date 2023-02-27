@@ -10,7 +10,7 @@
                     <div class="p-6 bg-white dark:bg-darkmode2 sm:px-20">
                         <div class="prose dark:prose-invert">
                             @if (config('settings::home_page_text'))
-                                {{ \Illuminate\Mail\Markdown::parse(config('settings::home_page_text')) }}
+                                {{ \Illuminate\Mail\Markdown::parse(str_replace("\n", '<br>', config('settings::home_page_text'))) }}
                             @endif
                         </div>
                     </div>
