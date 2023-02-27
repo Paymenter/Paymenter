@@ -22,7 +22,7 @@ return new class () extends Migration {
             $table->timestamps();
         });
         // Insert default settings
-        \App\Models\Settings::create();
+        \App\Models\Setting::create();
     }
 
     /**

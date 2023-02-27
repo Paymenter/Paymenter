@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Models\Settings;
+use App\Models\Setting;
 use Qirolab\Theme\Theme;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -41,7 +41,7 @@ class SettingsController extends Controller
             $imageName = time() . '.' . $request->app_logo->extension();
             $request->app_logo->move(public_path('images'), $imageName);
             $path = '/images/' . $imageName;
-            Settings::updateOrCreate(['key' => 'app_logo'], ['value' => $path]);
+            Setting::updateOrCreate(['key' => 'app_logo'], ['value' => $path]);
         }
 
         $theme = request('theme');
@@ -51,7 +51,7 @@ class SettingsController extends Controller
             $theme = 'default';
         }
         foreach ($request->except(['_token', 'app_logo', 'app_favicon']) as $key => $value) {
-            Settings::updateOrCreate(['key' => $key], ['value' => $value]);
+            Setting::updateOrCreate(['key' => $key], ['value' => $value]);
         }
 
         return redirect('/admin/settings#general')->with('success', 'Settings updated successfully');
@@ -73,7 +73,7 @@ class SettingsController extends Controller
         }
         // Loop through all settings
         foreach ($request->except(['_token']) as $key => $value) {
-            Settings::updateOrCreate(['key' => $key], ['value' => $value]);
+            Setting::updateOrCreate(['key' => $key], ['value' => $value]);
         }
 
         return redirect('/admin/settings#mail')->with('success', 'Settings updated successfully');
@@ -111,18 +111,18 @@ class SettingsController extends Controller
 
     public function login(Request $request)
     {
-        Settings::updateOrCreate(['key' => 'discord_client_id'], ['value' => $request->discord_client_id]);
-        Settings::updateOrCreate(['key' => 'discord_client_secret'], ['value' => $request->discord_client_secret]);
-        Settings::updateOrCreate(['key' => 'discord_enabled'], ['value' => $request->discord_enabled]);
+        Setting::updateOrCreate(['key' => 'discord_client_id'], ['value' => $request->discord_client_id]);
+        Setting::updateOrCreate(['key' => 'discord_client_secret'], ['value' => $request->discord_client_secret]);
+        Setting::updateOrCreate(['key' => 'discord_enabled'], ['value' => $request->discord_enabled]);
 
         return redirect('/admin/settings#login')->with('success', 'Settings updated successfully');
     }
 
     public function security(Request $request)
     {
-        Settings::updateOrCreate(['key' => 'recaptcha_site_key'], ['value' => $request->recaptcha_site_key]);
-        Settings::updateOrCreate(['key' => 'recaptcha_secret_key'], ['value' => $request->recaptcha_secret_key]);
-        Settings::updateOrCreate(['key' => 'recaptcha'], ['value' => $request->recaptcha]);
+        Setting::updateOrCreate(['key' => 'recaptcha_site_key'], ['value' => $request->recaptcha_site_key]);
+        Setting::updateOrCreate(['key' => 'recaptcha_secret_key'], ['value' => $request->recaptcha_secret_key]);
+        Setting::updateOrCreate(['key' => 'recaptcha'], ['value' => $request->recaptcha]);
 
         return redirect('/admin/settings#security')->with('success', 'Settings updated successfully');
     }

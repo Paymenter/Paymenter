@@ -2,7 +2,7 @@
 
 namespace App\Providers;
 
-use App\Models\Settings;
+use App\Models\Setting;
 use Qirolab\Theme\Theme;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Artisan;
@@ -30,7 +30,7 @@ class AppServiceProvider extends ServiceProvider
         Validator::extend('recaptcha', 'App\\Validators\\ReCaptcha@validate');
         Schema::defaultStringLength(191);
         try {
-            $settings = Settings::all();
+            $settings = Setting::all();
             foreach ($settings as $setting) {
                 config(['settings::' . $setting->key => $setting->value]);
             }

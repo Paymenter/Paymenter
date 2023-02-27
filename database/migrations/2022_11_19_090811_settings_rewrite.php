@@ -18,18 +18,18 @@ return new class () extends Migration {
             $table->string('value')->nullable();
         });
         // migrate old settings
-        $settings = \App\Models\Settings::first();
+        $settings = \App\Models\Setting::first();
         $settings = $settings->toArray();
         foreach ($settings as $key => $value) {
             if ($key == 'created_at' || $key == 'updated_at' || $key == 'id' || $key == 'key' || $key == 'value') {
                 continue;
             }
-            \App\Models\Settings::create([
+            \App\Models\Setting::create([
                 'key' => $key,
                 'value' => $value,
             ]);
         }
-        \App\Models\Settings::first()->delete();
+        \App\Models\Setting::first()->delete();
         // drop old settings
         Schema::table('settings', function (Blueprint $table) {
             $table->dropColumn(['advanced_mode', 'currency_sign', 'currency_position', 'home_page_text', 'app_name', 'sidebar', 'seo_title', 'seo_description', 'seo_keywords', 'seo_twitter_card', 'seo_image', 'maintenance', 'theme', 'recaptcha', 'recaptcha_site_key', 'recaptcha_secret_key']);
@@ -62,10 +62,10 @@ return new class () extends Migration {
             $table->string('recaptcha_secret_key')->nullable();
         });
         // migrate old settings
-        $settings = \App\Models\Settings::all();
+        $settings = \App\Models\Setting::all();
         $settings = $settings->toArray();
         foreach ($settings as $key => $value) {
-            \App\Models\Settings::create([
+            \App\Models\Setting::create([
                 $value['key'] => $value['value'],
             ]);
         }

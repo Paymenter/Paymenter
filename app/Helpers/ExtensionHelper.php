@@ -6,7 +6,6 @@ use App\Models\User;
 use App\Models\Orders;
 use App\Models\Invoices;
 use App\Models\Products;
-use App\Models\Settings;
 use App\Models\Extensions;
 use App\Models\OrderProducts;
 use App\Models\OrderProductsConfig;
