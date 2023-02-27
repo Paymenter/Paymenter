@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Helpers\ExtensionHelper;
-use App\Models\{Extensions, Invoices, OrderProducts, OrderProductsConfig, Orders, Products, User, Coupons};
+use App\Models\{Extensions, Invoices, OrderProducts, OrderProductsConfig, Orders, Products, User, Coupon};
 
 class CheckoutController extends Controller
 {
@@ -15,7 +15,7 @@ class CheckoutController extends Controller
         $discount = 0;
         $couponId = session('coupon');
         if ($couponId) {
-            $coupon = Coupons::where('id', $couponId)->first();
+            $coupon = Coupon::where('id', $couponId)->first();
         } else {
             $coupon = null;
         }
@@ -127,7 +127,7 @@ class CheckoutController extends Controller
         }
         $couponId = session('coupon');
         if ($couponId) {
-            $coupon = Coupons::where('id', $couponId)->first();
+            $coupon = Coupon::where('id', $couponId)->first();
         } else {
             $coupon = null;
         }
@@ -275,7 +275,7 @@ class CheckoutController extends Controller
         $request->validate([
             'coupon' => 'required',
         ]);
-        $coupon = Coupons::where('code', $request->coupon)->first();
+        $coupon = Coupon::where('code', $request->coupon)->first();
         if (!$coupon) {
             return redirect()->back()->with('error', 'Coupon not found');
         }

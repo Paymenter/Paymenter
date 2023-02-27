@@ -35,6 +35,6 @@ class Orders extends Model
 
     public function coupon()
     {
-        return $this->belongsTo(Coupons::class, 'coupon', 'id');
+        return $this->belongsTo(Coupon::class, 'coupon', 'id');
     }
 }

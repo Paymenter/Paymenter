@@ -5,7 +5,7 @@ namespace Tests\Feature\Admin;
 use Tests\TestCase;
 use App\Models\User;
 use App\Models\Products;
-use App\Models\Coupons;
+use App\Models\Coupon;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
@@ -32,7 +32,7 @@ class CouponTest extends TestCase
         $response = $this->actingAs($this->user)->get(route('admin.coupons.create'));
         $response->assertStatus(200);
 
-        $coupon = Coupons::factory()->create([
+        $coupon = Coupon::factory()->create([
             'code' => 'TEST',
             'type' => 'fixed',
             'value' => 100,
@@ -77,7 +77,7 @@ class CouponTest extends TestCase
      */
     public function testIfAdminCanUpdateACoupon()
     {
-        $coupon = Coupons::factory()->create([
+        $coupon = Coupon::factory()->create([
             'code' => 'TEST',
             'type' => 'fixed',
             'value' => 100,
@@ -114,7 +114,7 @@ class CouponTest extends TestCase
      */
     public function testIfAdminCanDeleteACoupon()
     {
-        $coupon = Coupons::factory()->create([
+        $coupon = Coupon::factory()->create([
             'code' => 'TEST',
             'type' => 'fixed',
             'value' => 100,

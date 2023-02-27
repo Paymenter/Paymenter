@@ -1,7 +1,7 @@
 <?php
 namespace App\Http\Controllers\Admin;
 
-use App\Models\Coupons;
+use App\Models\Coupon;
 use Illuminate\Http\Request;
 use App\Helpers\ExtensionHelper;
 use App\Http\Controllers\Controller;
@@ -10,7 +10,7 @@ use App\Models\Products;
 class CouponController extends Controller
 {
     public function index(){
-        $coupons = Coupons::all();
+        $coupons = Coupon::all();
         return view('admin.coupons.index', compact('coupons'));
     }
     
@@ -27,19 +27,19 @@ class CouponController extends Controller
             'time' => 'required|in:lifetime,onetime',
         ]);
 
-        $coupon = Coupons::create($request->all());
+        $coupon = Coupon::create($request->all());
 
         return redirect()->route('admin.coupons.edit', $coupon->id)->with('success', 'Coupon created successfully!');
     }
 
-    public function edit(Coupons $coupon){
+    public function edit(Coupon $coupon){
         $products = Products::all();
 
 
         return view('admin.coupons.edit', compact('coupon', 'products'));
     }
 
-    public function update(Request $request, Coupons $coupon){
+    public function update(Request $request, Coupon $coupon){
         $request->validate([
             'code' => 'required|unique:coupons,code,'.$coupon->id,
             'value' => 'required|numeric',
@@ -52,7 +52,7 @@ class CouponController extends Controller
         return redirect()->route('admin.coupons.edit', $coupon->id)->with('success', 'Coupon updated successfully!');
     }
 
-    public function destroy(Coupons $coupon){
+    public function destroy(Coupon $coupon){
         $coupon->delete();
         return redirect()->route('admin.coupons')->with('success', 'Coupon deleted successfully!');
     }
