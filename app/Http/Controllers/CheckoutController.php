@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Helpers\ExtensionHelper;
-use App\Models\{Extension, Invoices, OrderProducts, OrderProductsConfig, Order, Product, User, Coupon};
+use App\Models\{Extension, Invoice, OrderProducts, OrderProductsConfig, Order, Product, User, Coupon};
 
 class CheckoutController extends Controller
 {
@@ -166,7 +166,7 @@ class CheckoutController extends Controller
             ExtensionHelper::createServer($order);
         }
 
-        $invoice = new Invoices();
+        $invoice = new Invoice();
         $invoice->user_id = $user->id;
         $invoice->order_id = $order->id;
         if ($total == 0) {

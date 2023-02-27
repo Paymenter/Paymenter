@@ -70,7 +70,7 @@ class User extends Authenticatable
 
     public function invoices()
     {
-        return $this->hasMany(Invoices::class, 'user_id', 'id');
+        return $this->hasMany(Invoice::class, 'user_id', 'id');
     }
 
     public function has($permission)

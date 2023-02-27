@@ -4,7 +4,7 @@ namespace Tests\Feature;
 
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use App\Models\{Category, Invoices, Order, Product, User};
+use App\Models\{Category, Invoice, Order, Product, User};
 
 class OrderTest extends TestCase
 {
@@ -52,7 +52,7 @@ class OrderTest extends TestCase
 
         $response->assertStatus(302);
 
-        $invoice = Invoices::where('user_id', $this->user->id)->first();
+        $invoice = Invoice::where('user_id', $this->user->id)->first();
 
         $this->assertNotNull($invoice);
 

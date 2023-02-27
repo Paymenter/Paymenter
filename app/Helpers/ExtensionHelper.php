@@ -4,7 +4,7 @@ namespace App\Helpers;
 
 use App\Models\User;
 use App\Models\Order;
-use App\Models\Invoices;
+use App\Models\Invoice;
 use App\Models\Product;
 use App\Models\Extension;
 use App\Models\OrderProducts;
@@ -23,7 +23,7 @@ class ExtensionHelper
      */
     public static function paymentDone($id)
     {
-        $invoice = Invoices::findOrFail($id);
+        $invoice = Invoice::findOrFail($id);
         if ($invoice->status == 'paid') {
             return;
         }

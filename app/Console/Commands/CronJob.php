@@ -54,7 +54,7 @@ class CronJob extends Command
         foreach ($orders as $order) {
             // Check if there is a pending invoice
             if ($order->invoices()->where('status', 'pending')->count() == 0) {
-                $invoice = new \App\Models\Invoices();
+                $invoice = new \App\Models\Invoice();
                 $invoice->order_id = $order->id;
                 $invoice->status = 'pending';
                 $invoice->user_id = $order->client;

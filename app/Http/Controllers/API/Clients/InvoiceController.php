@@ -4,7 +4,7 @@ namespace App\Http\Controllers\API\Clients;
 
 use App\Classes\API;
 use App\Models\Order;
-use App\Models\Invoices;
+use App\Models\Invoice;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use App\Helpers\ExtensionHelper;
@@ -44,7 +44,7 @@ class InvoiceController extends Controller
             ], 403);
         }
 
-        $invoice = Invoices::where('id', $invoiceId)->where('user_id', $user->id)->firstOrFail();
+        $invoice = Invoice::where('id', $invoiceId)->where('user_id', $user->id)->firstOrFail();
         $order = Order::findOrFail($invoice->order_id);
 
         $products = [];
@@ -73,7 +73,7 @@ class InvoiceController extends Controller
             ], 403);
         }
 
-        $invoice = Invoices::where('id', $invoiceId)->where('user_id', $user->id)->firstOrFail();
+        $invoice = Invoice::where('id', $invoiceId)->where('user_id', $user->id)->firstOrFail();
         $order = Order::findOrFail($invoice->order_id);
 
         if ($invoice->status != 'unpaid') {

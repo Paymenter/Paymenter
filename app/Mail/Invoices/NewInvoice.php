@@ -2,7 +2,7 @@
 
 namespace App\Mail\Invoices;
 
-use App\Models\Invoices;
+use App\Models\Invoice;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
@@ -25,7 +25,7 @@ class NewInvoice extends Mailable
      *
      * @return void
      */
-    public function __construct(Invoices $invoice)
+    public function __construct(Invoice $invoice)
     {
         $this->invoice = $invoice;
     }

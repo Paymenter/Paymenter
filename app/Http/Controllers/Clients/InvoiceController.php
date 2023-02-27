@@ -5,18 +5,18 @@ namespace App\Http\Controllers\Clients;
 use Illuminate\Http\Request;
 use App\Helpers\ExtensionHelper;
 use App\Http\Controllers\Controller;
-use App\Models\{Invoices, Order, Product};
+use App\Models\{Invoice, Order, Product};
 
 class InvoiceController extends Controller
 {
     public function index(Request $request)
     {
-        $invoices = Invoices::where('user_id', auth()->user()->id)->get();
+        $invoices = Invoice::where('user_id', auth()->user()->id)->get();
 
         return view('clients.invoice.index', compact('invoices'));
     }
 
-    public function show(Request $request, Invoices $invoice)
+    public function show(Request $request, Invoice $invoice)
     {
         $order = Order::findOrFail($invoice->order_id);
         $coupon = $order->coupon()->get()->first();
@@ -62,7 +62,7 @@ class InvoiceController extends Controller
         return view('clients.invoice.show', compact('invoice', 'order', 'products', 'currency_sign'));
     }
 
-    public function pay(Request $request, Invoices $invoice)
+    public function pay(Request $request, Invoice $invoice)
     {
         if ($invoice->user_id != auth()->user()->id) {
             return redirect()->route('clients.invoice.index');
