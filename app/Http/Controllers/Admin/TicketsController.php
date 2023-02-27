@@ -48,7 +48,7 @@ class TicketsController extends Controller
             'user_id' => auth()->user()->id,
         ]);
 
-        return redirect()->back()->with('success', 'Ticket created successfully');
+        return redirect()->route('admin.tickets.show', $ticket)->with('success', 'Ticket has been created');
     }
 
     public function show(Tickets $ticket)
@@ -69,18 +69,18 @@ class TicketsController extends Controller
             'message' => $request->get('message'),
         ]);
 
-        return redirect()->back()->with('success', 'Reply has been sent');
+        return redirect()->route('admin.tickets.show', $ticket)->with('success', 'Message has been sent');
     }
 
     public function status(Request $request, Tickets $ticket)
     {
         $request->validate([
-            'status' => 'required',
+            'status' => 'required|in:open,closed',
         ]);
 
         $ticket->status = $request->get('status');
         $ticket->save();
 
-        return redirect()->back()->with('success', 'Status has been changed');
+        return redirect()->route('admin.tickets.show', $ticket)->with('success', 'Ticket status has been updated');
     }
 }

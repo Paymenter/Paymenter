@@ -12,11 +12,13 @@ class TicketTest extends TestCase
 {
     use RefreshDatabase;
     protected $user;
+    protected $client;
 
     public function setUp(): void
     {
         parent::setUp();
         $this->user = User::factory()->create(['is_admin' => 1]);
+        $this->client = User::factory()->create();
     }
 
 
@@ -35,17 +37,97 @@ class TicketTest extends TestCase
 
         $ticket = Tickets::factory()->create([
             'title' => 'TEST',
-            'description' => 'TEST',
             'status' => 'open',
             'priority' => 'low',
-            'user_id' => $this->user->id,
+            'client' => $this->user->id,
         ]);
 
-        $response = $this->actingAs($this->user)->get(route('admin.tickets.edit', $ticket));
+        $response = $this->actingAs($this->user)->get(route('admin.tickets.show', $ticket));
         $response->assertStatus(200);
 
         $response = $this->actingAs($this->user)->get(route('admin.tickets'));
         $response->assertStatus(200);
     }
 
+    /**
+     * Test if admin can create a ticket
+     *
+     * @return void
+     */
+    public function testIfAdminCanCreateATicket()
+    {
+        $response = $this->actingAs($this->user)->post(route('admin.tickets.store'), [
+            'title' => 'TEST',
+            'description' => 'Testing Message',
+            'status' => 'open',
+            'priority' => 'low',
+            'user' => $this->client->id,
+        ]);
+
+        $response->assertStatus(302);
+
+        $this->assertDatabaseHas('tickets', [
+            'title' => 'TEST',
+            'status' => 'open',
+            'priority' => 'low',
+            'client' => $this->client->id,
+        ]);
+    }
+
+    /**
+     * Test if admin can update a ticket
+     *
+     * @return void
+     */
+    public function testIfAdminCanChangeStatus()
+    {
+        $ticket = Tickets::factory()->create([
+            'title' => 'TEST',
+            'status' => 'open',
+            'priority' => 'low',
+            'client' => $this->user->id,
+        ]);
+
+        $response = $this->actingAs($this->user)->post(route('admin.tickets.status', $ticket), [
+            'status' => 'closed',
+        ]);
+
+        $response->assertStatus(302);
+        $response->assertRedirect(route('admin.tickets.show', $ticket));
+        
+        $this->assertDatabaseHas('tickets', [
+            'title' => 'TEST',
+            'status' => 'closed',
+            'priority' => 'low',
+            'client' => $this->user->id,
+        ]);
+    }
+
+    /**
+     * Test if admin can reply to a ticket
+     * 
+     * @return void
+     */
+    public function testIfAdminCanReplyToATicket()
+    {
+        $ticket = Tickets::factory()->create([
+            'title' => 'TEST',
+            'status' => 'open',
+            'priority' => 'low',
+            'client' => $this->user->id,
+        ]);
+
+        $response = $this->actingAs($this->user)->post(route('admin.tickets.reply', $ticket), [
+            'message' => 'Test Message',
+        ]);
+
+        $response->assertStatus(302);
+        $response->assertRedirect(route('admin.tickets.show', $ticket));
+        
+        $this->assertDatabaseHas('ticketmessages', [
+            'message' => 'Test Message',
+            'ticket_id' => $ticket->id,
+            'user_id' => $this->user->id,
+        ]);
+    }
 }
