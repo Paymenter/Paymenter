@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-class OrderProductsConfig extends Model
+class OrderProductConfig extends Model
 {
     use HasFactory;
     protected $table = 'order_products_config';
@@ -17,6 +17,6 @@ class OrderProductsConfig extends Model
 
     public function product()
     {
-        return $this->belongsTo(OrderProducts::class, 'order_id', 'product_id');
+        return $this->belongsTo(OrderProduct::class, 'order_id', 'product_id');
     }
 }

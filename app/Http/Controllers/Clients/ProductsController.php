@@ -2,14 +2,14 @@
 
 namespace App\Http\Controllers\Clients;
 
-use App\Models\OrderProducts;
+use App\Models\OrderProduct;
 use App\Helpers\ExtensionHelper;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 
 class ProductsController extends Controller
 {
-    public function index(OrderProducts $product)
+    public function index(OrderProduct $product)
     {
         if ($product->order()->get()->first()->client != Auth::user()->id) {
             return abort(404);

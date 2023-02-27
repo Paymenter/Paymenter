@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-class OrderProducts extends Model
+class OrderProduct extends Model
 {
     use HasFactory;
     protected $table = 'order_products';
@@ -18,7 +18,7 @@ class OrderProducts extends Model
 
     public function config()
     {
-        return $this->hasMany(OrderProductsConfig::class, 'order_product_id', 'id');
+        return $this->hasMany(OrderProductConfig::class, 'order_product_id', 'id');
     }
 
     public function order()

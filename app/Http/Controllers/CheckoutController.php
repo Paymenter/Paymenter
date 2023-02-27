@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Helpers\ExtensionHelper;
-use App\Models\{Extension, Invoice, OrderProducts, OrderProductsConfig, Order, Product, User, Coupon};
+use App\Models\{Extension, Invoice, OrderProduct, OrderProductConfig, Order, Product, User, Coupon};
 
 class CheckoutController extends Controller
 {
@@ -145,14 +145,14 @@ class CheckoutController extends Controller
         $order->coupon = session('coupon');
         $order->save();
         foreach ($products as $product) {
-            $orderProduct = new OrderProducts();
+            $orderProduct = new OrderProduct();
             $orderProduct->order_id = $order->id;
             $orderProduct->product_id = $product->id;
             $orderProduct->quantity = $product->quantity;
             $orderProduct->save();
             if (isset($product->config)) {
                 foreach ($product->config as $key => $value) {
-                    $orderProductConfig = new OrderProductsConfig();
+                    $orderProductConfig = new OrderProductConfig();
                     $orderProductConfig->order_product_id = $orderProduct->id;
                     $orderProductConfig->key = $key;
                     $orderProductConfig->value = $value;

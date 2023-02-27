@@ -7,8 +7,8 @@ use App\Models\Order;
 use App\Models\Invoice;
 use App\Models\Product;
 use App\Models\Extension;
-use App\Models\OrderProducts;
-use App\Models\OrderProductsConfig;
+use App\Models\OrderProduct;
+use App\Models\OrderProductConfig;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Contracts\Encryption\DecryptException;
 
@@ -190,9 +190,9 @@ class ExtensionHelper
      */
     public static function setOrderProductConfig($key, $value, $id)
     {
-        $config = OrderProductsConfig::where('order_product_id', $id)->where('key', $key)->first();
+        $config = OrderProductConfig::where('order_product_id', $id)->where('key', $key)->first();
         if (!$config) {
-            OrderProductsConfig::create([
+            OrderProductConfig::create([
                 'order_product_id' => $id,
                 'key' => $key,
                 'value' => $value,
@@ -347,7 +347,7 @@ class ExtensionHelper
         }
     }
 
-    public static function getLink(OrderProducts $product)
+    public static function getLink(OrderProduct $product)
     {
         if(!isset($product->product()->get()->first()->server_id)) {
             return false;
