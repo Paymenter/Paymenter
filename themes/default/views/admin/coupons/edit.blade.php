@@ -9,7 +9,7 @@
                 <div class="p-6 dark:bg-darkmode2 bg-white border-b border-gray-200 dark:border-gray-800">
                     <h1 class="text-2xl font-bold dark:text-darkmodetext">{{ __('Edit Coupon') }}</h1>
                     
-                    <form action="{{ route('admin.coupon.update', $coupon->id) }}" method="POST">
+                    <form action="{{ route('admin.coupons.update', $coupon->id) }}" method="POST">
                         @csrf
                         @method('PUT')
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 dark:text-darkmodetext">

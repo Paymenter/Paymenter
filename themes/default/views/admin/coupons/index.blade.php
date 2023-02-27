@@ -9,7 +9,7 @@
                 <div class="p-6 dark:bg-darkmode2 bg-white border-b border-gray-200 dark:border-gray-800">
                     <h1 class="text-2xl font-bold dark:text-darkmodetext">{{ __('Coupons') }}</h1>
                     <div class="flex justify-end pr-3 pt-3">
-                        <a href="{{ route('admin.coupon.store') }}">
+                        <a href="{{ route('admin.coupons.store') }}">
                             <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
                                 {{ __('Create') }}
                             </button>
@@ -36,12 +36,12 @@
                                             <td>{{ $coupon->value }}</td>
                                             <td>
                                                 <div class="flex flew-wrap">
-                                                    <a href="{{ route('admin.coupon.edit', $coupon->id) }}"
+                                                    <a href="{{ route('admin.coupons.edit', $coupon->id) }}"
                                                         class="mr-4 bg-blue-500 hover:bg-blue-700 form-submit">
                                                         {{ __('Edit') }}
                                                     </a>
                                                     <form
-                                                        action="{{ route('admin.coupon.delete', $coupon->id) }}"
+                                                        action="{{ route('admin.coupons.delete', $coupon->id) }}"
                                                         method="POST">
                                                         @csrf
                                                         @method('DELETE')

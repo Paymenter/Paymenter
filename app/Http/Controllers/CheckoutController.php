@@ -71,9 +71,8 @@ class CheckoutController extends Controller
         }
     }
 
-    public function config(Request $request, Products $id)
+    public function config(Request $request, Products $product)
     {
-        $product = $id;
         $server = Extensions::find($product->server_id);
         include_once base_path('app/Extensions/Servers/' . $server->name . '/index.php');
         $function = $server->name . '_getUserConfig';
@@ -88,9 +87,8 @@ class CheckoutController extends Controller
         return view('checkout.config', compact('product', 'userConfig'));
     }
 
-    public function configPost(Request $request, Products $id)
+    public function configPost(Request $request, Products $product)
     {
-        $product = $id;
         $server = Extensions::find($product->server_id);
         include_once base_path('app/Extensions/Servers/' . $server->name . '/index.php');
         $function = $server->name . '_getUserConfig';
@@ -235,11 +233,11 @@ class CheckoutController extends Controller
         return redirect()->route('clients.invoice.show', $invoice->id);
     }
 
-    public function remove(Request $request, $id)
+    public function remove(Request $request, Products $product)
     {
         $cart = session()->get('cart');
-        if (isset($cart[$id])) {
-            unset($cart[$id]);
+        if (isset($cart[$product->id])) {
+            unset($cart[$product->id]);
             session()->put('cart', $cart);
         }
 
@@ -254,14 +252,14 @@ class CheckoutController extends Controller
     /*
      * Update product quantity in cart
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Products $product)
     {
         $request->validate([
             'quantity' => 'required|numeric|min:1',
         ]);
         $cart = session()->get('cart');
-        if (isset($cart[$id])) {
-            $cart[$id]->quantity = $request->quantity;
+        if (isset($cart[$product->id])) {
+            $cart[$product->id]->quantity = $request->quantity;
             session()->put('cart', $cart);
         }
 

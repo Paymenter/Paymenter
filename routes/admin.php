@@ -76,11 +76,11 @@ Route::group(['prefix' => 'admin'], function () {
     });
 
     Route::group(['prefix' => 'coupon'], function() {
-        Route::get('/', [App\Http\Controllers\Admin\CouponController::class, 'index'])->middleware(['auth.admin'])->name('admin.coupon');
-        Route::get('/create', [App\Http\Controllers\Admin\CouponController::class, 'create'])->middleware(['auth.admin'])->name('admin.coupon.create');
-        Route::post('/create', [App\Http\Controllers\Admin\CouponController::class, 'store'])->middleware(['auth.admin'])->name('admin.coupon.store');
-        Route::get('/{coupon}/edit', [App\Http\Controllers\Admin\CouponController::class, 'edit'])->middleware(['auth.admin'])->name('admin.coupon.edit');
-        Route::put('/{coupon}/edit', [App\Http\Controllers\Admin\CouponController::class, 'update'])->middleware(['auth.admin'])->name('admin.coupon.update');
-        Route::delete('/{coupon}/delete', [App\Http\Controllers\Admin\CouponController::class, 'destroy'])->middleware(['auth.admin'])->name('admin.coupon.delete');
+        Route::get('/', [App\Http\Controllers\Admin\CouponController::class, 'index'])->middleware(['auth.admin'])->name('admin.coupons');
+        Route::get('/create', [App\Http\Controllers\Admin\CouponController::class, 'create'])->middleware(['auth.admin'])->name('admin.coupons.create');
+        Route::post('/create', [App\Http\Controllers\Admin\CouponController::class, 'store'])->middleware(['auth.admin'])->name('admin.coupons.store');
+        Route::get('/{coupon}/edit', [App\Http\Controllers\Admin\CouponController::class, 'edit'])->middleware(['auth.admin'])->name('admin.coupons.edit');
+        Route::put('/{coupon}/edit', [App\Http\Controllers\Admin\CouponController::class, 'update'])->middleware(['auth.admin'])->name('admin.coupons.update');
+        Route::delete('/{coupon}/delete', [App\Http\Controllers\Admin\CouponController::class, 'destroy'])->middleware(['auth.admin'])->name('admin.coupons.delete');
     });
 });

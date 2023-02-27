@@ -3,16 +3,15 @@
     "type": "project",
     "description": "Paymenter is a payment platform for webshops",
     "keywords": ["payment", "platform", "webshop", "laravel"],
-    "license": "MIT",    
-    "authors": [
-        {
+    "license": "MIT",
+    "authors": [{
             "name": "Corwin van Velthuizen",
             "email": "corwin@paymenter.org",
             "homepage": "https://github.com/CorwinDev",
             "role": "Lead Developer"
         },
         {
-            "name": "Paymenter Community",	
+            "name": "Paymenter Community",
             "homepage": "https://github.com/paymenter/paymenter/contributors"
         }
     ],

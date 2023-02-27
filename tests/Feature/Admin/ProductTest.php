@@ -9,7 +9,7 @@ use App\Models\Categories;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
-class ProductsTest extends TestCase
+class ProductTest extends TestCase
 {
     use RefreshDatabase;
     protected $user;
@@ -24,6 +24,30 @@ class ProductsTest extends TestCase
         $this->product = Products::factory()->create([
             'category_id' => $this->category->id,
         ]);
+    }
+
+    /**
+     * Test if admin can view all the product pages.
+     * 
+     * @return void
+     */
+    public function testIfAdminCanViewAllTheProductPages()
+    {
+        $response = $this->actingAs($this->user)->get(route('admin.products'));
+        $response->assertStatus(200);
+
+        $response = $this->actingAs($this->user)->get(route('admin.products.create'));
+        $response->assertStatus(200);
+
+        $product = Products::factory()->create([
+            'category_id' => $this->category->id,
+        ]);
+
+        $response = $this->actingAs($this->user)->get(route('admin.products.edit', $product));
+        $response->assertStatus(200);
+
+        $response = $this->actingAs($this->user)->get(route('admin.products'));
+        $response->assertStatus(200);
     }
 
     /**

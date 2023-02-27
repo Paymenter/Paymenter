@@ -11,12 +11,12 @@ class CouponController extends Controller
 {
     public function index(){
         $coupons = Coupons::all();
-        return view('admin.coupon.index', compact('coupons'));
+        return view('admin.coupons.index', compact('coupons'));
     }
     
     public function create(){
         $products = Products::all();
-        return view('admin.coupon.create', compact('products'));
+        return view('admin.coupons.create', compact('products'));
     }
 
     public function store(Request $request){
@@ -29,14 +29,14 @@ class CouponController extends Controller
 
         $coupon = Coupons::create($request->all());
 
-        return redirect()->route('admin.coupon.edit', $coupon->id)->with('success', 'Coupon created successfully!');
+        return redirect()->route('admin.coupons.edit', $coupon->id)->with('success', 'Coupon created successfully!');
     }
 
     public function edit(Coupons $coupon){
         $products = Products::all();
 
 
-        return view('admin.coupon.edit', compact('coupon', 'products'));
+        return view('admin.coupons.edit', compact('coupon', 'products'));
     }
 
     public function update(Request $request, Coupons $coupon){
@@ -49,11 +49,11 @@ class CouponController extends Controller
 
         $coupon->update($request->all());
 
-        return redirect()->route('admin.coupon.edit', $coupon->id)->with('success', 'Coupon updated successfully!');
+        return redirect()->route('admin.coupons.edit', $coupon->id)->with('success', 'Coupon updated successfully!');
     }
 
     public function destroy(Coupons $coupon){
         $coupon->delete();
-        return redirect()->route('admin.coupon.index')->with('success', 'Coupon deleted successfully!');
+        return redirect()->route('admin.coupons')->with('success', 'Coupon deleted successfully!');
     }
 }

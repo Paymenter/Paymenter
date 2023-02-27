@@ -9,7 +9,7 @@
                 <div class="p-6 dark:bg-darkmode2 bg-white text-gray-600 dark:text-darkmodetext">
                     
                     <h1 class="text-2xl font-bold dark:text-darkmodetext">{{ __('Create Coupon') }}</h1>
-                    <form action="{{ route('admin.coupon.store') }}" method="POST">
+                    <form action="{{ route('admin.coupons.store') }}" method="POST">
                         @csrf
                         <div class="grid grid-cols-2 gap-4 mt-4">
                             <div class="w-full">

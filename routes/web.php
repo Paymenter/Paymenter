@@ -22,12 +22,12 @@ Route::get('/change-password', [App\Http\Controllers\Clients\HomeController::cla
 
 Route::group(['prefix' => 'checkout'], function () {
     Route::get('/', [App\Http\Controllers\CheckoutController::class, 'index'])->name('checkout.index');
-    Route::get('/config/{id}', [App\Http\Controllers\CheckoutController::class, 'config'])->name('checkout.config');
-    Route::post('/config/{id}', [App\Http\Controllers\CheckoutController::class, 'configPost'])->name('checkout.config.post');
+    Route::get('/config/{product}', [App\Http\Controllers\CheckoutController::class, 'config'])->name('checkout.config');
+    Route::post('/config/{product}', [App\Http\Controllers\CheckoutController::class, 'configPost'])->name('checkout.config.post');
     Route::post('/', [App\Http\Controllers\CheckoutController::class, 'pay'])->name('checkout.pay')->middleware('auth');
     Route::post('/coupon', [App\Http\Controllers\CheckoutController::class, 'coupon'])->name('checkout.coupon');
     Route::post('/{id}', [App\Http\Controllers\CheckoutController::class, 'remove'])->name('checkout.remove');
-    Route::post('/{id}/update', [App\Http\Controllers\CheckoutController::class, 'update'])->name('checkout.update');
+    Route::post('/{product}/update', [App\Http\Controllers\CheckoutController::class, 'update'])->name('checkout.update');
     Route::get('/add/{product}', [App\Http\Controllers\CheckoutController::class, 'add'])->name('checkout.add');
 });
 
