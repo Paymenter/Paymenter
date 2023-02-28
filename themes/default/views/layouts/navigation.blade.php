@@ -16,7 +16,7 @@
             <div class="justify-center hidden text-lg text-center dark:bg-darkmode md:flex md:items-center md:w-auto place-items-center dark:text-darkmodetext" id="menu">
                 <div class="relative inline-block text-left dark:bg-darkmode">
                     <div class="dark:bg-darkmode">
-                        <a type="button" href="{{ route('clients.home') }}" class="dark:text-darkmodetext dark:bg-darkmode dark:hover:bg-darkbutton inline-flex w-full justify-center bg-white px-2 py-2 text-base font-medium rounded-md text-gray-700 @if (request()->routeIs('tickets*')) @endif" id="menu-button" aria-expanded="true" aria-haspopup="true" onclick="openMenu('tickets')">
+                        <a type="button" href="{{ route('clients.home') }}" class="dark:text-darkmodetext dark:bg-darkmode dark:hover:bg-darkbutton inline-flex w-full justify-center bg-white px-2 py-2 text-base font-medium rounded-md text-gray-700 @if (request()->routeIs('clients.home')) @endif" id="menu-button" aria-expanded="true" aria-haspopup="true" onclick="openMenu('tickets')">
                             <i class="pr-1 ri-dashboard-3-line" @if (request()->routeIs('clients.home*')) style="color: #5270FD" @endif></i>{{ __('Dashboard') }}
                         </a>
                     </div>
@@ -24,7 +24,7 @@
                 <div class="relative inline-block text-left dark:bg-darkmode">
                     <!-- ticket -->
                     <div class="dark:bg-darkmode">
-                        <a type="button" href="{{ route('clients.tickets.index') }}" class="dark:text-darkmodetext dark:bg-darkmode dark:hover:bg-darkbutton inline-flex w-full justify-center bg-white px-2 py-2 text-base font-medium rounded-md text-gray-700 @if (request()->routeIs('tickets*')) @endif" id="menu-button" aria-expanded="true" aria-haspopup="true" onclick="openMenu('tickets')">
+                        <a type="button" href="{{ route('clients.tickets.index') }}" class="dark:text-darkmodetext dark:bg-darkmode dark:hover:bg-darkbutton inline-flex w-full justify-center bg-white px-2 py-2 text-base font-medium rounded-md text-gray-700 @if (request()->routeIs('clients.tickets*')) @endif" id="menu-button" aria-expanded="true" aria-haspopup="true" onclick="openMenu('tickets')">
                             <i class="pr-1 ri-question-answer-line" @if (request()->routeIs('tickets*')) style="color: #5270FD" @endif></i>{{ __('Tickets') }}
                         </a>
                     </div>
@@ -190,7 +190,8 @@
             <div class="px-2 pt-2 pb-3 space-y-1 ">
                 <a href="{{ route('index') }}" class="dark:text-darkmodetext dark:bg-darkmode dark:hover:bg-darkbutton text-black hover:bg-gray-100 block px-3 py-2 rounded-md text-base font-medium @if (request()->routeIs('index')) bg-gray-400 @endif" aria-current="page">{{ __('Dashboard') }}</a>
                 <a href="{{ route('products') }}" class="dark:text-darkmodetext dark:bg-darkmode dark:hover:bg-darkbutton text-black hover:bg-gray-100 block px-3 py-2 rounded-md text-base font-medium @if (request()->routeIs('products.*')) bg-gray-400 @endif">{{ __('Products') }}</a>
-                                @if (count(session()->get('cart', [])) > 0)
+                <a href="{{ route('clients.tickets.index') }}" class="dark:text-darkmodetext dark:bg-darkmode dark:hover:bg-darkbutton text-black hover:bg-gray-100 block px-3 py-2 rounded-md text-base font-medium @if (request()->routeIs('clients.tickets.*')) bg-gray-400 @endif">{{ __('Tickets') }}</a>
+                @if (count(session()->get('cart', [])) > 0)
                 <a href="{{ route('checkout.index') }}" class="relative inline-flex items-center text-gray-700 transition rounded dark:text-darkmodetext dark:bg-darkmode duration-400 hover:bg-button dark:hover:bg-darkbutton hover:transition p-2 mr-4 w-full">
                     Checkout
                     <span class="absolute right-0 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-white bg-red-500 rounded-full mr-2">{{ count(session()->get('cart', [])) }}</span>

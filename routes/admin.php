@@ -50,6 +50,7 @@ Route::group(['prefix' => 'admin'], function () {
 
     Route::group(['prefix' => 'extensions'], function () {
         Route::get('/', [App\Http\Controllers\Admin\ExtensionController::class, 'index'])->middleware(['auth.admin', 'password.confirm'])->name('admin.extensions');
+        Route::post('/download', [App\Http\Controllers\Admin\ExtensionController::class, 'download'])->middleware(['auth.admin', 'password.confirm'])->name('admin.extensions.download');
         Route::get('/edit/{sort}/{name}', [App\Http\Controllers\Admin\ExtensionController::class, 'edit'])->middleware(['auth.admin', 'password.confirm'])->name('admin.extensions.edit');
         Route::post('/edit/{sort}/{name}', [App\Http\Controllers\Admin\ExtensionController::class, 'update'])->middleware(['auth.admin', 'password.confirm'])->name('admin.extensions.update');
     });

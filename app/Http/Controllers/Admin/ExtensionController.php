@@ -6,6 +6,7 @@ use App\Models\Extension;
 use Illuminate\Http\Request;
 use App\Helpers\ExtensionHelper;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Http;
 
 class ExtensionController extends Controller
 {
@@ -43,6 +44,51 @@ class ExtensionController extends Controller
         }
 
         return view('admin.extensions.index', compact('servers', 'gateways'));
+    }
+
+    public function download(Request $request){
+        $request->validate([
+            'name' => 'required',
+        ]);
+        $rqname = $request->input('name');
+        $name = explode('-', $rqname)[0];
+        $type = explode('-', $rqname)[1];
+
+        $extension = Extension::where('name', $name)->first();
+        if (!$extension) {
+            $extension = new Extension();
+            $extension->name = $name;
+            $extension->type = $type;
+            $extension->enabled = 0;
+            $extension->save();
+        }
+        $url = 'https://api.github.com/repos/Paymenter/Extensions/contents/'.$type.'/'.$name;
+        $response = Http::get($url);
+        $response = json_decode($response);
+        if(isset($response->message)){
+            return redirect()->route('admin.extensions')->with('error', 'Extension not found');
+        }
+        
+        $path = base_path('app/Extensions/'.$type.'/'.$name);
+        if(!file_exists($path)){
+            mkdir($path, 0777, true);
+        } else {
+            if(!$request->get('verify')){
+                return redirect()->route('admin.extensions')->withInput()->with('verify', true);
+            }
+        }
+
+        foreach($response as $file){
+            $file->name = strtolower($file->name);
+            if($file->name !== 'readme.md'){
+                $fileurl = $file->download_url;
+                $filecontent = Http::get($fileurl);
+                $filecontent = $filecontent->body();
+                $path = base_path('app/Extensions/'.$type.'/'.$name.'/'.$file->name);
+                file_put_contents($path, $filecontent);
+            }
+        }
+        return redirect()->route('admin.extensions')->with('success', 'Extension downloaded successfully');
     }
 
     public function edit($sort, $name)
