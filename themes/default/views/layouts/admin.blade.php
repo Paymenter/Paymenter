@@ -32,10 +32,7 @@
         	    if (e.keyCode == enterKey && ctrlDown) {
 					if ($('#submit').length) {
 						$('#submit').click();
-					} else {
-						console.log("Doesn't exist");
 					}
-        	        return false;
         	    }
         	}).keyup(function(e) {
 			    if (e.keyCode == ctrlKey) ctrlDown = false;
