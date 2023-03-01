@@ -135,7 +135,7 @@ class ProductController extends Controller
         $extension->productConfig = $extension2;
         foreach ($extension->productConfig as $config) {
             $config->required = isset($config->required) ? $config->required : false;
-            if ($config->required && !$request->input($config->name)) {
+            if ($config->required && $request->input($config->name) == null) {
                 return redirect()->route('admin.products.extension', $product->id)->with('error', 'Please fill in all required fields');
             }
             ProductSetting::updateOrCreate(
