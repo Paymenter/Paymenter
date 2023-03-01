@@ -20,10 +20,17 @@ class SettingController extends Controller
             $tabs[] = 'admin.settings.settings.' . basename($filename, '.blade.php');
         }
         $themes = array_diff(scandir(base_path('themes')), ['..', '.']);
+        $languages = array_diff(scandir(base_path('lang')), ['..', '.']);
+        foreach ($languages as $key => $language) {
+            if (strpos($language, '.json') !== false) {
+                unset($languages[$key]);
+            }
+        } 
 
         return view('admin.settings.index', [
             'tabs' => $tabs,
             'themes' => $themes,
+            'languages' => $languages,
         ]);
     }
 
@@ -37,6 +44,7 @@ class SettingController extends Controller
             'app_logo' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'currency' => 'required|max:10',
             'currency_sign' => 'required|max:4',
+            'language' => 'required'
         ]);
         if ($request->hasFile('app_logo')) {
             $imageName = time() . '.' . $request->app_logo->extension();

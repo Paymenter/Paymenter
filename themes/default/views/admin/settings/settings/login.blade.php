@@ -15,9 +15,9 @@
                 </svg>
                 <div id="discord" role="tooltip" data-popover
                     class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
-                    Discord OAuth2 is a service that allows users to log in to your site using their Discord account.
+                    {{ __('Discord OAuth2 is a service that allows users to log in to your site using their Discord account.') }}
                     <br />
-                    You need to set your redirect url to 
+                    {{ __('You need to set your redirect url to') }}
                     <span class="text-blue-500 hover:cursor-pointer	" onclick="copyToClipboard('{{ route('social.login', 'discord') }}')">
                         {{ route('social.login', 'discord') }}</span>
                     <div data-popper-arrow></div>

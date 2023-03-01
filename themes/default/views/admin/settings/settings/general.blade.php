@@ -9,8 +9,8 @@
             </div>
             <!-- App Logo -->
             <div class="relative m-4 group">
-                <input type="file" class="form-input p-0 peer @error('app_logo') is-invalid @enderror" placeholder=" "
-                    name="app_logo" accept="image/*" />
+                <input type="file" class="form-input p-0 peer @error('app_logo') is-invalid @enderror"
+                    placeholder=" " name="app_logo" accept="image/*" />
                 <label class="form-label">{{ __('Logo') }}</label>
             </div>
             <div class="relative m-4 group">
@@ -45,18 +45,41 @@
                 });
                 easyMDE.value(`{{ config('settings::home_page_text') }}`);
             </script>
-            <h2 class="col-span-1 md:col-span-2 text-xl text-gray-900 dark:text-darkmodetext ">Currency</h2>
+            <h2 class="col-span-1 md:col-span-2 text-xl text-gray-900 dark:text-darkmodetext ">{{ __('Currency') }}
+            </h2>
             <div class="relative m-4 group">
                 <input type="text" class="form-input peer @error('currency_sign') is-invalid @enderror"
                     placeholder=" " name="currency_sign" value="{{ config('settings::currency_sign') }}" />
                 <label class="form-label">{{ __('Currency Sign') }}</label>
             </div>
             <div class="relative m-4 group">
-                <input type="text" class="form-input peer @error('currency') is-invalid @enderror"
-                    placeholder=" " name="currency" value="{{ config('settings::currency') }}" />
+                <input type="text" class="form-input peer @error('currency') is-invalid @enderror" placeholder=" "
+                    name="currency" value="{{ config('settings::currency') }}" />
                 <label class="form-label">{{ __('Currency Code') }}</label>
             </div>
-            <h2 class="col-span-1 md:col-span-2 text-xl text-gray-900 dark:text-darkmodetext ">SEO: </h2>
+            <h2 class="col-span-1 md:col-span-2 text-xl text-gray-900 dark:text-darkmodetext ">{{ __('Language') }}
+            </h2>
+            <div class="relative m-4 group">
+                <select class="form-input peer @error('language') is-invalid @enderror" placeholder=" "
+                    name="language" required>
+                    @foreach ($languages as $language)
+                        <option value="{{ $language }}" {{ $language == config('settings::language') ? 'selected' : '' }}>
+                            {{ $language }}</option>
+                    @endforeach
+                </select>
+            </div>
+            <div class="relative m-4 group">
+                <input type="checkbox" class="form-input w-fit peer @error('allow_auto_lang') is-invalid @enderror"
+                    placeholder=" " name="allow_auto_lang" value="1" 
+                    {{ config('settings::allow_auto_lang') ? 'checked' : '' }} data-popover-target="discord"/>
+                <label class="form-label" style="position: unset;"  >{{ __('Allow Auto Language') }}</label>
+                <div id="discord" role="tooltip" data-popover
+                    class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
+                    {{ __('If enabled, the language will be automatically set to the language of the browser.') }}
+                    <div data-popper-arrow></div>
+                </div>
+            </div>
+            <h2 class="col-span-1 md:col-span-2 text-xl text-gray-900 dark:text-darkmodetext ">{{ __('SEO') }}</h2>
             <div class="relative m-4 group">
                 <input type="text" class="form-input peer @error('seo_title') is-invalid @enderror" placeholder=" "
                     name="seo_title" required value="{{ config('settings::seo_title') }}" />
