@@ -153,7 +153,7 @@ class ExtensionController extends Controller
                 }
                 ExtensionHelper::setConfig($extension->name, $config->name, $request->input($config->name));
             }
-            Extension::where('name', $extension->name)->update(['enabled' => $request->input('enabled')]);
+            Extension::where('name', $extension->name)->update(['enabled' => $request->input('enabled'), 'display_name' => $request->input('display_name')]);
 
             return redirect()->route('admin.extensions.edit', ['sort' => $sort, 'name' => $name])->with('success', 'Extension updated successfully');
         } elseif ($sort == 'gateway') {
@@ -169,7 +169,7 @@ class ExtensionController extends Controller
                 }
                 ExtensionHelper::setConfig($extension->name, $config->name, $request->input($config->name));
             }
-            Extension::where('name', $extension->name)->update(['enabled' => $request->input('enabled')]);
+            Extension::where('name', $extension->name)->update(['enabled' => $request->input('enabled'), 'display_name' => $request->input('display_name')]);
 
             return redirect()->route('admin.extensions.edit', ['sort' => $sort, 'name' => $name])->with('success', 'Extension updated successfully');
         }

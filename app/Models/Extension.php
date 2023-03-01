@@ -13,6 +13,7 @@ class Extension extends Model
         'name',
         'enabled',
         'type',
+        'display_name',
     ];
 
     public function getConfig()

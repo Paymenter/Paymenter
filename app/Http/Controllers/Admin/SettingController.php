@@ -62,6 +62,13 @@ class SettingController extends Controller
         foreach ($request->except(['_token', 'app_logo', 'app_favicon']) as $key => $value) {
             Setting::updateOrCreate(['key' => $key], ['value' => $value]);
         }
+        // Needs to manually do this because otherwise it isn't sended
+        if (!$request->get('allow_auto_lang')){
+            Setting::updateOrCreate(['key' => 'allow_auto_lang'], ['value' => 0]);
+        }
+        if(!$request->get('seo_twitter_card')){
+            Setting::updateOrCreate(['key' => 'seo_twitter_card'], ['value' => 0]);
+        }
 
         return redirect('/admin/settings#general')->with('success', 'Settings updated successfully');
     }

@@ -8,7 +8,7 @@
             <div class="overflow-hidden bg-white shadow-xl sm:rounded-lg dark:bg-darkmode2">
                 <div class="p-6 bg-white border-b border-gray-200 sm:px-20 dark:bg-darkmode2">
                     <div class="mt-8 text-2xl dark:text-darkmodetext">
-                        Edit {{ $extension->name }}
+                        {{ __('Edit') }} {{ $extension->name }}
                     </div>
                     
                     <div class="mt-6 text-gray-500 dark:text-darkmodetext dark:bg-darkmode2">
@@ -26,6 +26,10 @@
                                         <option value="0" selected>False</option>
                                     @endif
                                 </select>
+                            </div>
+                            <div class="mt-4">
+                                <label for="display_name">{{ __('Display Name') }}</label>
+                                <input id="display_name" type="text" class="block w-full rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm dark:bg-darkmode" name="display_name" value="{{ isset($extension->display_name) ? $extension->display_name : $extension->name }}" required />
                             </div>
                             @foreach ($extension->config as $setting)
                                 <div class="mt-4">
