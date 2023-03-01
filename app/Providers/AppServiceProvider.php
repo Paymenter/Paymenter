@@ -3,11 +3,13 @@
 namespace App\Providers;
 
 use App\Models\Setting;
+use Illuminate\Contracts\Encryption\DecryptException;
 use Qirolab\Theme\Theme;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Crypt;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -47,7 +49,12 @@ class AppServiceProvider extends ServiceProvider
                 config(['mail.username' => config('settings::mail_username')]);
             }
             if (config('settings::mail_password') !== config('mail.password')) {
-                config(['mail.password' => config('settings::mail_password')]);
+                try {
+                    $passwordDecrypt = Crypt::decryptString(config('settings::mail_password'));
+                    config(['mail.password' => $passwordDecrypt]);
+                } catch (DecryptException $e) {
+                    config(['mail.password' => config('settings::mail_password')]);
+                }
             }
             if (config('settings::mail_encryption') !== config('mail.encryption')) {
                 config(['mail.encryption' => config('settings::mail_encryption')]);

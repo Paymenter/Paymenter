@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Crypt;
 
 class SettingController extends Controller
 {
@@ -68,11 +69,14 @@ class SettingController extends Controller
             'mail_from_address' => 'required',
             'mail_from_name' => 'required',
         ]);
-        if($request->mail_encryption == 'none') {
+        if ($request->mail_encryption == 'none') {
             $request->merge(['mail_encryption' => null]);
         }
         // Loop through all settings
         foreach ($request->except(['_token']) as $key => $value) {
+            if ($key == 'mail_password') {
+                $value = Crypt::encryptString($value);
+            }
             Setting::updateOrCreate(['key' => $key], ['value' => $value]);
         }
 
