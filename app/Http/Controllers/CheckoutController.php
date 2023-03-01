@@ -233,11 +233,11 @@ class CheckoutController extends Controller
         return redirect()->route('clients.invoice.show', $invoice->id);
     }
 
-    public function remove(Request $request, Product $product)
+    public function remove(Request $request, $product)
     {
         $cart = session()->get('cart');
-        if (isset($cart[$product->id])) {
-            unset($cart[$product->id]);
+        if (isset($cart[$product])) {
+            unset($cart[$product]);
             session()->put('cart', $cart);
         }
 
