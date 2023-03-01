@@ -17,7 +17,7 @@
                             <div class="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
                                 <div class="shadow overflow-hidden sm:rounded-lg">
                                     @if ($tickets->count())
-                                        <h3 class="dark:text-darkmodetext text-center my-4 text-xl"> Open Tickets </h3>
+                                        <h3 class="dark:text-darkmodetext text-center my-4 text-xl"> {{ __('Open Tickets') }} </h3>
                                         <table class="min-w-full divide-y divide-gray-200" id="tickets">
                                             <thead class="dark:bg-darkmode">
                                                 <tr>

@@ -7,7 +7,7 @@
             <div class="overflow-hidden bg-white shadow-xl sm:rounded-lg dark:bg-darkmode2">
 
                 <div class="p-6 bg-white sm:px-20 dark:bg-darkmode2">
-                    <h1 class="text-2xl font-bold text-gray-500 dark:text-darkmodetext">View Ticket #{{ $ticket->id }}
+                    <h1 class="text-2xl font-bold text-gray-500 dark:text-darkmodetext">{{ __('View Ticket #') }}{{ $ticket->id }}
                     </h1>
                 </div>
                 <div class="ml-10 flex flex-col md:flex-row items-baseline">

@@ -7,7 +7,7 @@
         <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
             <div class="overflow-hidden bg-white shadow-xl sm:rounded-lg dark:bg-darkmode2">
                 <div class="p-6 bg-white border-b border-gray-200 sm:px-20 dark:bg-darkmode2 dark:border-black">
-                    <h1 class="text-xl text-gray-500 dark:text-darkmodetext">Edit profile</h1>
+                    <h1 class="text-xl text-gray-500 dark:text-darkmodetext">{{ __('Edit profile') }}</h1>
                     <div class="grid grid-cols-1 gap-4">
                         <x-success class="mt-4" />
                         <div class="mt-6 text-gray-500 dark:text-darkmodetext dark:bg-darkmode2">

@@ -240,7 +240,7 @@
                             </div>
                             <div class="flex flex-row items-center justify-end mr-6">
                                 <div class="flex flex-row items-center justify-end space-x-2">
-                                    <div class="text-sm font-semibold text-black dark:text-darkmodetext">Last Updated: {{
+                                    <div class="text-sm font-semibold text-black dark:text-darkmodetext">{{ __('Last Updated:') }} {{
                                         $ticket->updated_at->diffForHumans() }}
                                     </div>
                                         <button class="dropbtn" type="button" aria-label="More options" aria-haspopup="true">
