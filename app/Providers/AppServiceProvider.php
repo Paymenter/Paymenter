@@ -79,7 +79,7 @@ class AppServiceProvider extends ServiceProvider
                     'port' => config('settings::mail_port'),
                     'encryption' => config('settings::mail_encryption'),
                     'username' => config('settings::mail_username'),
-                    'password' => config('settings::mail_password'),
+                    'password' => config('mail.password'),
                     'timeout' => null,
                     'auth_mode' => null,
                 ]]);
