@@ -15,7 +15,7 @@
             <!-- Validation Errors -->
             <x-auth-validation-errors class="mb-4" :errors="$errors" />
 
-            <form method="POST" action="{{ route('login') }}">
+            <form method="POST" action="{{ route('login') }}" id="login">
                 @csrf
 
                 <!-- Email Address -->
@@ -59,16 +59,15 @@
                     @enderror
                 </div>
                 <br>
-                @if (config('settings::recaptcha') == 1)
-                    <div class="flex items-center justify-center">
-                        <div class="g-recaptcha" data-sitekey="{{ config('settings::recaptcha_site_key') }}"></div>
-                    </div>
-                @endif
+                <div class="flex items-center justify-center">
+                    <!-- Recaptcha, also send the form id -->
+                    <x-recaptcha form="login" />
+                </div>
                 <!-- Social Login -->
                 @if (config('settings::discord_enabled') == 1 ||
-                    config('settings::apple_enabled') == 1 ||
-                    config('settings::google_enabled') == 1 ||
-                    config('settings::github_enabled') == 1)
+                        config('settings::apple_enabled') == 1 ||
+                        config('settings::google_enabled') == 1 ||
+                        config('settings::github_enabled') == 1)
                     <div class="flex items-center">
                         <div class="w-full h-0.5 bg-gray-200 dark:bg-gray-700"></div>
                         <div class="px-5 text-center text-gray-500 dark:text-gray-400">or</div>

@@ -55,7 +55,7 @@
             <br>
             <div class="overflow-hidden bg-white shadow-xl sm:rounded-lg dark:bg-darkmode2">
 
-                <form method="POST" action="{{ route('clients.tickets.reply', $ticket->id) }}" class="mt-10">
+                <form method="POST" action="{{ route('clients.tickets.reply', $ticket->id) }}" class="mt-10" id="reply">
                     @csrf
                     <div
                         class="p-6 bg-white border-b border-gray-200 sm:px-20 dark:bg-darkmode2 dark:border-black mt-10">
@@ -68,10 +68,7 @@
                                     class="block w-full rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm dark:bg-darkmode"
                                     rows="4" name="message" required></textarea>
                                 <br>
-                                @if (config('settings::recaptcha') == 1)
-                                    <div class="g-recaptcha"
-                                        data-sitekey="{{ config('settings::recaptcha_site_key') }}"></div>
-                                @endif
+                                <x-recaptcha form="reply" />
                                 <div class="mt-4">
                                     <button class="form-submit float-right">
                                         {{ __('Reply') }}

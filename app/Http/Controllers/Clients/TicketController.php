@@ -39,20 +39,14 @@ class TicketController extends Controller
 
     public function store(Request $request)
     {
-        if (config('settings::recaptcha') == 1) {
-            $request->validate([
-                'g-recaptcha-response' => 'required|recaptcha',
-                'title' => 'required',
-                'description' => 'required',
-                'priority' => 'required',
-            ]);
-        } else {
-            $request->validate([
-                'title' => 'required',
-                'description' => 'required',
-                'priority' => 'required',
-            ]);
-        }
+        $request->validate([
+            'g-recaptcha-response' => 'recaptcha',
+            'cf-turnstile-response' => 'recaptcha',
+            'title' => 'required',
+            'description' => 'required',
+            'priority' => 'required',
+            'h-captcha-response' => 'recaptcha',
+        ]);
         $executed = RateLimiter::attempt(
             'create-ticket:' . auth()->user()->id,
             $perMinute = 1,
@@ -96,16 +90,12 @@ class TicketController extends Controller
 
     public function reply(Request $request, Ticket $ticket)
     {
-        if (config('settings::recaptcha') == 1) {
-            $request->validate([
-                'g-recaptcha-response' => 'required|recaptcha',
-                'message' => 'required',
-            ]);
-        } else {
-            $request->validate([
-                'message' => 'required',
-            ]);
-        }
+        $request->validate([
+            'g-recaptcha-response' => 'recaptcha',
+            'cf-turnstile-response' => 'recaptcha',
+            'h-captcha-response' => 'recaptcha',
+            'message' => 'required',
+        ]);
         if ($ticket->status == 'closed') {
             return redirect()->back()->with('error', 'You can not reply to a closed ticket.');
         }
