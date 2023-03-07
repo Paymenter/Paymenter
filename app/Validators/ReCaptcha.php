@@ -12,7 +12,7 @@ class ReCaptcha
         if (!config('settings::recaptcha')) {
             return true;
         }
-        if (config('settings::recaptcha_type') == 'v2' || config('settings::recaptcha_type') == 'v2_invisible' || config('settings::recaptcha_type') == 'v3') {
+        if (config('settings::recaptcha_type') == 'v2' || config('settings::recaptcha_type') == 'v2_invisible' || config('settings::recaptcha_type') == 'v3' || !config('settings::recaptcha_type')) {
             if (!$value) {
                 return false;
             }
