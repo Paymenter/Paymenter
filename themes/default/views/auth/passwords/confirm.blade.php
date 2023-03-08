@@ -15,7 +15,7 @@
             <!-- Validation Errors -->
             <x-auth-validation-errors class="mb-4" :errors="$errors" />
 
-            <form method="POST" action="{{ route('password.confirm') }}">
+            <form method="POST" action="{{ route('password.confirm') }}" id="pw-confirm">
                 @csrf
 
                 <!-- Password -->
@@ -34,7 +34,7 @@
                         </p>
                     @enderror
                 </div>
-                <x-recaptcha />
+                <x-recaptcha form="pw-confirm" />
                 <div class="flex justify-end mt-4 dark:hover:bg-darkmodebutton">
                     <button type="submit"
                         class="inline-flex items-center px-4 py-2 ml-4 text-xs font-semibold tracking-widest text-white uppercase transition duration-150 ease-in-out bg-gray-800 border border-transparent rounded-md hover:bg-gray-700 active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:ring ring-gray-300 disabled:opacity-25">
