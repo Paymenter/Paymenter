@@ -43,7 +43,7 @@
                                         @csrf
                                         <div
                                             class="flex flex-row items-center px-6 py-4 text-sm text-gray-500 whitespace-nowrap dark:text-darkmodetext">
-                                            <input type="number" name="quantity" value="{{ $product->quantity }}"
+                                            <input type="number" name="quantity" value="{{ $product->quantity }}" min="1" max="{{ $product->stock_enabled ? $product->stock : '' }}"
                                                 class="w-20 h-10 text-center rounded-md dark:bg-darkmode2 dark:text-darkmodetext"
                                                 min="1">
                                             <button type="submit" class="ml-4">
