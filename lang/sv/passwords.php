@@ -14,7 +14,7 @@ return [
 
     'reset' => 'Ditt lösenord har återställts!',
     'sent' => 'Vi har skickat ett mail med en länk för att återställa ditt lösenord!',
-    'throttled' => 'Vönligen vänta innan du försöker igen.',
+    'throttled' => 'Vänligen vänta innan du försöker igen.',
     // For lack of a better word I decided on going with "nyckel", meaning "key" as I can't come up with a better word for "token" in Swedish.
     'token' => 'Denna lösenordsåterställningsnyckel är ogiltig.',
     'user' => "Vi kan inte hitta en användare med den e-postadressen.",
