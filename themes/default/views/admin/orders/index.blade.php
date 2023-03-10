@@ -34,7 +34,7 @@
                                 <tr>
                                     <td>{{ $order->id }}</td>
                                     <td>{{ $order->client()->get()->first()->name }}</td>
-                                    <td>{{ $order->total }}</td>
+                                    <td>{{ $order->total() }}</td>
                                     <td>{{ $order->status }}</td>
                                     <td>{{ $order->created_at }}</td>
                                     <td>{{ $order->updated_at }}</td>

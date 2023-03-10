@@ -150,7 +150,6 @@ class CheckoutController extends Controller
         $user = User::findOrFail(auth()->user()->id);
         $order = new Order();
         $order->client = $user->id;
-        $order->total = $total;
         $order->expiry_date = date('Y-m-d H:i:s', strtotime('+1 month'));
         $order->status = 'pending';
         $order->coupon = session('coupon');
@@ -160,6 +159,7 @@ class CheckoutController extends Controller
             $orderProduct->order_id = $order->id;
             $orderProduct->product_id = $product->id;
             $orderProduct->quantity = $product->quantity;
+            $orderProduct->price = $product->price;
             $orderProduct->save();
             if (isset($product->config)) {
                 foreach ($product->config as $key => $value) {
@@ -207,6 +207,7 @@ class CheckoutController extends Controller
             foreach ($order->products()->get() as $product) {
                 $iproduct = Product::where('id', $product->product_id)->first();
                 $iproduct->quantity = $product['quantity'];
+                $iproduct->price = $product['price'];
                 if (isset($product['config'])) {
                     $iproduct->config = $product['config'];
                 }

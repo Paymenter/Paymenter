@@ -319,7 +319,7 @@
                                                     {{ $order->status }}
                                                 </td>
                                                 <td>
-                                                    {{ $order->total }}
+                                                    {{ $order->total() }}
                                                 </td>
                                                 <td>
                                                     {{ $order->created_at }}

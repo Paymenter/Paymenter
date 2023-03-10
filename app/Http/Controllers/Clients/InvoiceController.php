@@ -42,6 +42,7 @@ class InvoiceController extends Controller
         foreach ($order->products()->get() as $product) {
             $iproduct = Product::where('id', $product->product_id)->first();
             $iproduct->quantity = $product['quantity'];
+            $iproduct->price = $product['price'] ?? $iproduct->price;
             if ($coupon) {
                 if (!in_array($iproduct->id, $coupon->products) && $coupon->type != 'all') {
                     $iproduct->discount = 0;
@@ -92,6 +93,7 @@ class InvoiceController extends Controller
         foreach ($order->products()->get() as $product) {
             $iproduct = Product::where('id', $product->product_id)->first();
             $iproduct->quantity = $product['quantity'];
+            $iproduct->price = $product['price'];
             if ($coupon) {
                 if (!in_array($iproduct->id, $coupon->products) && $coupon->type != 'all') {
                     $iproduct->discount = 0;

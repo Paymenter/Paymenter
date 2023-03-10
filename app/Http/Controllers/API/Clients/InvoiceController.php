@@ -87,6 +87,7 @@ class InvoiceController extends Controller
         foreach ($order->products()->get() as $product) {
             $item = json_decode(Product::where('id', $product->product_id)->first());
             $item->quantity = $product['quantity'];
+            $item->price = $product['price'];
             if (isset($product['config'])) {
                 $item->config = $product['config'];
             }

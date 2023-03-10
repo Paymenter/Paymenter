@@ -69,6 +69,7 @@ Route::group(['prefix' => 'admin'], function () {
         Route::get('/', [App\Http\Controllers\Admin\OrderController::class, 'index'])->middleware(['auth.admin'])->name('admin.orders');
         Route::delete('/{order}/delete', [App\Http\Controllers\Admin\OrderController::class, 'destroy'])->middleware(['auth.admin'])->name('admin.orders.delete');
         Route::get('/{order}', [App\Http\Controllers\Admin\OrderController::class, 'show'])->middleware(['auth.admin'])->name('admin.orders.show');
+        Route::post('/{order}/{product}/change', [App\Http\Controllers\Admin\OrderController::class, 'changeProduct'])->middleware(['auth.admin'])->name('admin.orders.changeProduct');
         Route::post('/{order}/unsuspend', [App\Http\Controllers\Admin\OrderController::class, 'unsuspend'])->middleware(['auth.admin'])->name('admin.orders.unsuspend');
         Route::post('/{order}/suspend', [App\Http\Controllers\Admin\OrderController::class, 'suspend'])->middleware(['auth.admin'])->name('admin.orders.suspend');
         Route::post('/{order}/create', [App\Http\Controllers\Admin\OrderController::class, 'create'])->middleware(['auth.admin'])->name('admin.orders.create');

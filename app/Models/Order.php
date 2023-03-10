@@ -14,9 +14,19 @@ class Order extends Model
         'expiry_date',
         'status',
         'client',
-        'total',
         'coupon',
     ];
+
+    public function total()
+    {
+        $total = 0;
+        foreach ($this->products as $product) {
+            $product->price = $product->price ?? $product->product()->get()->first()->price;
+            $total += $product->price * $product->quantity;
+        }
+
+        return $total;
+    }
 
     public function client()
     {

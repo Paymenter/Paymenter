@@ -21,7 +21,7 @@
                     {{ __('Dashboard') }}
                 </a>
                 <div class="relative inline-block text-left">
-                    <button type="button" class="dark:bg-darkmode dark:text-darkmodetext dark:hover:bg-darkmode2 inline-flex w-full justify-center bg-white px-2 py-2 text-base font-medium rounded-md text-gray-700  @if (request()->routeIs('admin.clients*')) bg-gray-200 @endif" id="menu-button" aria-expanded="true" aria-haspopup="true" onclick="openMenu('clients')">
+                    <button type="button" class="dark:bg-darkmode dark:text-darkmodetext dark:hover:bg-darkmode2 inline-flex w-full justify-center bg-white px-2 py-2 text-base font-medium rounded-md text-gray-700  @if (request()->routeIs('admin.clients*')) bg-gray-200 @endif" id="menu-button" aria-expanded="true" aria-haspopup="true" data-dropdown-toggle="clients">
                         <i class="pr-1 ri-group-line mr-1" @if (request()->routeIs('admin.clients*')) style="color: #5270FD" @endif></i> Clients
                         <svg class="w-5 h-5 ml-1 -mr-1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
                             <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clip-rule="evenodd" />
@@ -35,12 +35,12 @@
                     </div>
                 </div>
                 <div class="relative inline-block text-left">
-                    <a href="{{ route('admin.orders') }}" class="dark:bg-darkmode dark:text-darkmodetext dark:hover:bg-darkmode2 inline-flex w-full justify-center bg-white px-2 py-2 text-base font-medium rounded-md text-gray-700 @if (request()->routeIs('admin.orders*')) bg-gray-200 @endif" id="menu-button" aria-expanded="true" aria-haspopup="true" onclick="openMenu('orders')">
+                    <a href="{{ route('admin.orders') }}" class="dark:bg-darkmode dark:text-darkmodetext dark:hover:bg-darkmode2 inline-flex w-full justify-center bg-white px-2 py-2 text-base font-medium rounded-md text-gray-700 @if (request()->routeIs('admin.orders*')) bg-gray-200 @endif" id="menu-button" aria-expanded="true" aria-haspopup="true">
                         <i class="pr-1 ri-shopping-cart-2-line mr-1" @if (request()->routeIs('admin.orders')) style="color: #5270FD" @endif></i> Orders
                     </a>
                 </div>
                 <div class="relative inline-block text-left">
-                    <button type="button" class="dark:bg-darkmode dark:text-darkmodetext dark:hover:bg-darkmode2 inline-flex w-full justify-center bg-white px-2 py-2 text-base font-medium rounded-md text-gray-700 @if (request()->routeIs('admin.products*')) bg-gray-200 @endif" id="menu-button" aria-expanded="true" aria-haspopup="true" onclick="openMenu('products')">
+                    <button type="button" class="dark:bg-darkmode dark:text-darkmodetext dark:hover:bg-darkmode2 inline-flex w-full justify-center bg-white px-2 py-2 text-base font-medium rounded-md text-gray-700 @if (request()->routeIs('admin.products*')) bg-gray-200 @endif" id="menu-button" aria-expanded="true" aria-haspopup="true" data-dropdown-toggle="products">
                         <i class="pr-1 ri-shopping-bag-2-line mr-1" @if (request()->routeIs('admin.products*')) style="color: #5270FD" @endif></i> Products
                         <svg class="w-5 h-5 ml-1 -mr-1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
                             <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clip-rule="evenodd" />
@@ -56,7 +56,7 @@
                     </div>
                 </div>
                 <div class="relative inline-block text-left z-[1]">
-                    <button type="button" class="dark:bg-darkmode dark:text-darkmodetext dark:hover:bg-darkmode2 inline-flex w-full justify-center bg-white px-2 py-2 text-base font-medium rounded-md text-gray-700 @if (request()->routeIs('admin.tickets*')) bg-gray-200 @endif" id="menu-button" aria-expanded="true" aria-haspopup="true" onclick="openMenu('support')">
+                    <button type="button" class="dark:bg-darkmode dark:text-darkmodetext dark:hover:bg-darkmode2 inline-flex w-full justify-center bg-white px-2 py-2 text-base font-medium rounded-md text-gray-700 @if (request()->routeIs('admin.tickets*')) bg-gray-200 @endif" id="menu-button" aria-expanded="true" aria-haspopup="true" data-dropdown-toggle="support">
                         <i class="pr-1 ri-question-answer-line mr-1" @if (request()->routeIs('admin.tickets')) style="color: #5270FD" @endif></i> Support
                         @if (isset(App\Models\Ticket::where('status', 'open')->get()[0]))
                         <span class="inline-flex items-center px-2.5 ml-1 mt-0.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
@@ -82,21 +82,21 @@
                 </div>
 
                 <div class="relative inline-block text-left">
-                    <button type="button" class="dark:bg-darkmode dark:text-darkmodetext dark:hover:bg-darkmode2 inline-flex w-full justify-center bg-white px-2 py-2 text-base font-medium rounded-md text-gray-700 mr-4 @if (request()->routeIs('admin.settings') || request()->routeIs('admin.extensions*')) bg-gray-200 @endif" id="menu-button" aria-expanded="true" aria-haspopup="true" onclick="openMenu('other')">
+                    <button type="button" class="dark:bg-darkmode dark:text-darkmodetext dark:hover:bg-darkmode2 inline-flex w-full justify-center bg-white px-2 py-2 text-base font-medium rounded-md text-gray-700 mr-4 @if (request()->routeIs('admin.settings') || request()->routeIs('admin.extensions*')) bg-gray-200 @endif" id="menu-button" aria-expanded="true" aria-haspopup="true" data-dropdown-toggle="other">
                           <svg class="w-6 h-6" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M6 10a2 2 0 11-4 0 2 2 0 014 0zM12 10a2 2 0 11-4 0 2 2 0 014 0zM16 12a2 2 0 100-4 2 2 0 000 4z"></path></svg>
                     </button>
                     <div class="absolute right-0 hidden w-96 mt-2 origin-top-right bg-white rounded-md shadow-lg dark:bg-darkmode ring-1 ring-black ring-opacity-5 z-[1]" role="menu" aria-orientation="vertical" aria-labelledby="menu-button" tabindex="-1" id="other">
                         <div class="py-1 grid grid-cols-3" role="none">
                             <a href="{{ route('admin.settings') }}" class="block px-4 py-2 text-base text-gray-700 dark:text-darkmodetext dark:hover:bg-darkmode2 hover:bg-gray-100 hover:text-gray-900" role="menuitem" tabindex="-1" id="menu-item-0">Settings</a>
                             <a href="{{ route('admin.extensions') }}" class="block px-4 py-2 text-base text-gray-700 dark:text-darkmodetext dark:hover:bg-darkmode2 hover:bg-gray-100 hover:text-gray-900" role="menuitem" tabindex="-1" id="menu-item-1">Extensions</a>
-                            <a href="{{ route('admin.coupons') }}" class="block px-4 py-2 text-base text-gray-700 dark:text-darkmodetext dark:hover:bg-darkmode2 hover:bg-gray-100 hover:text-gray-900" role="menuitem" tabindex="-1" id="menu-item-0">coupons</a>
+                            <a href="{{ route('admin.coupons') }}" class="block px-4 py-2 text-base text-gray-700 dark:text-darkmodetext dark:hover:bg-darkmode2 hover:bg-gray-100 hover:text-gray-900" role="menuitem" tabindex="-1" id="menu-item-0">Coupons</a>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="absolute right-0 hidden w-full lg:flex lg:items-center lg:w-auto" id="menu">
                 <div class="relative inline-block text-left">
-                    <button type="button" class="inline-flex items-center justify-center w-full px-2 py-2 text-base font-medium text-gray-700 bg-white dark:bg-darkmode dark:text-darkmodetext" aria-label="User menu" aria-haspopup="true" onclick="openMenu('user-menu')">
+                    <button type="button" class="inline-flex items-center justify-center w-full px-2 py-2 text-base font-medium text-gray-700 bg-white dark:bg-darkmode dark:text-darkmodetext" aria-label="User menu" aria-haspopup="true" data-dropdown-toggle="user-menu">
                         <!-- use gravatar -->
                         <img class="w-8 h-8 rounded-md" src="https://www.gravatar.com/avatar/{{ md5(Auth::user()->email) }}?s=200&d=mp" alt="{{ Auth::user()->name }}" />
                         <p class="p-2 font-bold">
@@ -173,54 +173,28 @@
 
                 </script>
             </div>
-
-            <script>
-                function openMenu(id) {
-                    var menu = document.getElementById(id);
-                    menu.classList.toggle('hidden');
-                    var menus = document.getElementsByClassName('dropdown-menu');
-                    for (var i = 0; i < menus.length; i++) {
-                        if (menus[i] != menu) {
-                            menus[i].classList.add('hidden');
-                        }
-                    }
-                    var event = document.addEventListener('click', function(e) {
-                        if (e.target != menu && e.target != menu.previousElementSibling) {
-                            if (e.target.parentElement != menu.previousElementSibling) {
-                                menu.classList.add('hidden');
-                                e.stopPropagation();
-                            }
-                        }
-                    });
-                }
-
-                function openUserMenu() {
-                    document.getElementById("user-menu").classList.toggle("hidden");
-                }
-
-            </script>
         </div>
         <div class="hidden lg:hidden" id="mobile-menu">
             <div class="px-2 pt-2 pb-3 space-y-1">
                 <a href="{{ route('admin.index') }}" class="text-black hover:bg-gray-100 block px-3 py-2 rounded-md text-base font-medium dark:text-darkmodetext @if (request()->routeIs('admin.index')) bg-gray-400 @endif" aria-current="page">Dashboard</a>
-                <a class="text-black hover:bg-gray-100 block px-3 py-2 rounded-md text-base font-medium dark:text-darkmodetext hover:cursor-pointer @if (request()->routeIs('admin.products.*')) bg-gray-400 @endif" onclick="openMenu('products-menu')">Products</a>
+                <a class="text-black hover:bg-gray-100 block px-3 py-2 rounded-md text-base font-medium dark:text-darkmodetext hover:cursor-pointer @if (request()->routeIs('admin.products.*')) bg-gray-400 @endif" data-dropdown-toggle="products-menu">Products</a>
                 <div class="dropdown-menu hidden ml-2" id="products-menu">
                     <a href="{{ route('admin.products') }}" class="text-black hover:bg-gray-100 block px-3 py-2 rounded-md text-base font-medium dark:text-darkmodetext @if (request()->routeIs('admin.products')) bg-gray-400 @endif">All Products</a>
                     <a href="{{ route('admin.products.create') }}" class="text-black hover:bg-gray-100 block px-3 py-2 rounded-md text-base font-medium dark:text-darkmodetext @if (request()->routeIs('admin.products.create')) bg-gray-400 @endif">Add Product</a>
                 </div>
             <!-- orders -->
-                <a class="text-black hover:bg-gray-100 block px-3 py-2 rounded-md text-base font-medium dark:text-darkmodetext hover:cursor-pointer @if (request()->routeIs('admin.orders.*')) bg-gray-400 @endif" onclick="openMenu('orders-menu')">Orders</a>
+                <a class="text-black hover:bg-gray-100 block px-3 py-2 rounded-md text-base font-medium dark:text-darkmodetext hover:cursor-pointer @if (request()->routeIs('admin.orders.*')) bg-gray-400 @endif" data-dropdown-toggle="orders-menu">Orders</a>
                 <div class="dropdown-menu hidden ml-2" id="orders-menu">
                     <a href="{{ route('admin.orders') }}" class="text-black hover:bg-gray-100 block px-3 py-2 rounded-md text-base font-medium dark:text-darkmodetext @if (request()->routeIs('admin.orders')) bg-gray-400 @endif">All Orders</a>
                 </div>
                 <!-- clients -->
-                <a class="text-black hover:bg-gray-100 block px-3 py-2 rounded-md text-base font-medium dark:text-darkmodetext hover:cursor-pointer @if (request()->routeIs('admin.clients.*')) bg-gray-400 @endif" onclick="openMenu('clients-menu')">Clients</a>
+                <a class="text-black hover:bg-gray-100 block px-3 py-2 rounded-md text-base font-medium dark:text-darkmodetext hover:cursor-pointer @if (request()->routeIs('admin.clients.*')) bg-gray-400 @endif" data-dropdown-toggle="clients-menu">Clients</a>
                 <div class="dropdown-menu hidden ml-2" id="clients-menu">
                     <a href="{{ route('admin.clients') }}" class="text-black hover:bg-gray-100 block px-3 py-2 rounded-md text-base font-medium dark:text-darkmodetext @if (request()->routeIs('admin.clients')) bg-gray-400 @endif">All Clients</a>
                     <a href="{{ route('admin.clients.create') }}" class="text-black hover:bg-gray-100 block px-3 py-2 rounded-md text-base font-medium dark:text-darkmodetext @if (request()->routeIs('admin.clients.create')) bg-gray-400 @endif">Add Client</a>
                 </div>
                 <!-- support -->
-                <a class="text-black hover:bg-gray-100 block px-3 py-2 rounded-md text-base font-medium dark:text-darkmodetext hover:cursor-pointer @if (request()->routeIs('admin.tickets.*')) bg-gray-400 @endif" onclick="openMenu('support-menu')">Support</a>
+                <a class="text-black hover:bg-gray-100 block px-3 py-2 rounded-md text-base font-medium dark:text-darkmodetext hover:cursor-pointer @if (request()->routeIs('admin.tickets.*')) bg-gray-400 @endif" data-dropdown-toggle="support-menu">Support</a>
                 <div class="dropdown-menu hidden ml-2" id="support-menu">
                     <a href="{{ route('admin.tickets') }}" class="text-black hover:bg-gray-100 block px-3 py-2 rounded-md text-base font-medium dark:text-darkmodetext @if (request()->routeIs('admin.tickets')) bg-gray-400 @endif">All Tickets</a>
                     <a href="{{ route('admin.tickets.create') }}" class="text-black hover:bg-gray-100 block px-3 py-2 rounded-md text-base font-medium dark:text-darkmodetext @if (request()->routeIs('admin.tickets.create')) bg-gray-400 @endif">Add Ticket</a>
@@ -228,7 +202,7 @@
                 <!-- coupons -->
                 <a class="text-black hover:bg-gray-100 block px-3 py-2 rounded-md text-base font-medium dark:text-darkmodetext hover:cursor-pointer @if (request()->routeIs('admin.tickets.*')) bg-gray-400 @endif" href="{{ route('admin.coupons') }}">Coupons</a>
                 <!-- settings -->
-                <a class="text-black hover:bg-gray-100 block px-3 py-2 rounded-md text-base font-medium dark:text-darkmodetext hover:cursor-pointer @if (request()->routeIs('admin.settings.*')) bg-gray-400 @endif" onclick="openMenu('settings-menu')">Settings</a>
+                <a class="text-black hover:bg-gray-100 block px-3 py-2 rounded-md text-base font-medium dark:text-darkmodetext hover:cursor-pointer @if (request()->routeIs('admin.settings.*')) bg-gray-400 @endif" data-dropdown-toggle="settings-menu">Settings</a>
                 <div class="dropdown-menu hidden ml-2" id="settings-menu">
                     <a href="{{ route('admin.settings') }}" class="text-black hover:bg-gray-100 block px-3 py-2 rounded-md text-base font-medium dark:text-darkmodetext @if (request()->routeIs('admin.settings')) bg-gray-400 @endif">Settings</a>
                     <a href="{{ route('admin.extensions') }}" class="text-black hover:bg-gray-100 block px-3 py-2 rounded-md text-base font-medium dark:text-darkmodetext @if (request()->routeIs('admin.extensions')) bg-gray-400 @endif">Extension Settings</a>

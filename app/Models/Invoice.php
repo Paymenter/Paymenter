@@ -16,6 +16,14 @@ class Invoice extends Model
         'paid_at',
     ];
 
+    public function setStatusAttribute($value)
+    {
+        if ($value == 'paid') {
+            $this->attributes['paid_at'] = now();
+        }
+        $this->attributes['status'] = $value;
+    }
+
     public function order()
     {
         return $this->belongsTo(Order::class, 'order_id', 'id');
