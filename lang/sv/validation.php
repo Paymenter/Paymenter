@@ -19,7 +19,6 @@ return [
     'alpha' => ':attribute kan enbart bestå av bokstäver.',
     'alpha_dash' => ':attribute kan enbart bestå av bokstäver, siffror, bindestreck och understreck.',
     'alpha_num' => ':attribute kan enbart bestå av bokstäver och siffror.',
-    // While there are translations for "array" in Swedish a huge majority of us just use the english word for it as Swedish programming terms tend to be silly...
     'array' => ':attribute måste vara en array.',
     'before' => ':attribute måste vara ett datum innan :date.',
     'before_or_equal' => ':attribute måste vara ett datum efter eller under :date.',
@@ -27,17 +26,15 @@ return [
         'numeric' => ':attribute måste vara mellan :min och :max.',
         'file' => ':attribute måste vara mellan :min och :max kilobyte.',
         'string' => ':attribute måste vara mellan :min och :max tecken.',
-        // Not sure if "artiklar" would be the best translation for items, but, it's the best one I can come up with.
         'array' => ':attribute måste vara mellan :min och :max artiklar.',
     ],
     'boolean' => ':attribute måste vara sant eller falskt.',
     // ...
-    'confirmed' => ':attribute confirmation does not match.',
+    'confirmed' => 'din bekräftelse av :attribute stämde inte överens.',
     'date' => ':attribute är inte ett giltigt datum.',
     'date_equals' => ':attribute måste vara följande datum: :date.',
     'date_format' => ':attribute stämmer inte överens med formatet :format.',
     'different' => ':attribute och :other måste vara olika.',
-    // Need to have a look at the context for this one before I can be sure that this fits well.
     'digits' => ':attribute måste vara :digits siffror.',
     'digits_between' => ':attribute måste vara mellan :min och :max siffror.',
     'dimensions' => ':attribute har ogiltiga bilddimensioner/bildmått.',
@@ -51,18 +48,15 @@ return [
         'numeric' => ':attribute måste vara större än :value.',
         'file' => ':attribute måste vara större än :value kilobytes.',
         'string' => ':attribute måste vara större än :value tecken.',
-        // Again with the items...
         'array' => ':attribute måste vara större än :value artiklar.',
     ],
     'gte' => [
         'numeric' => ':attribute måste vara större än eller lika med :value.',
         'file' => ':attribute måste vara större än eller lika med :value kilobyte.',
         'string' => ':attribute måste vara större än eller lika med :value tecken.',
-        // Again with items...
         'array' => ':attribute måste :value artiklar eller fler.',
     ],
     'image' => ':attribute måste vara en bild.',
-    // Need context for this to make sense
     'in' => 'Den/det valda :attribute är ogiltigt.',
     'in_array' => ':attribute fältet finns inte i :other.',
     'integer' => ':attribute måste vara en integer.',
@@ -74,21 +68,18 @@ return [
         'numeric' => ':attribute måste vara mindre än :value.',
         'file' => ':attribute måste vara mindre än :value kilobyte.',
         'string' => ':attribute måste vara mindre än :value tecken.',
-        // Again with the items...
         'array' => ':attribute måste vara mindre än :value artiklar.',
     ],
     'lte' => [
         'numeric' => ':attribute måste vara mindre än eller lika med :value.',
         'file' => ':attribute måste vara mindre än eller lika med :value kilobyte.',
         'string' => ':attribute måste vara mindre än eller lika med :value tecken.',
-        // Again with the items...
         'array' => ':attribute måste vara mindre än eller lika med :value artiklar.',
     ],
     'max' => [
         'numeric' => ':attribute kan inte var större än :max.',
         'file' => ':attribute kan inte var större än :max kilobyte.',
         'string' => ':attribute kan inte var större än :max tecken.',
-        // Again with the items...
         'array' => ':attribute kan inte ha mer än :max artiklar.',
     ],
     'mimes' => ':attribute måste vara en fil av typen: :values.',
@@ -100,20 +91,16 @@ return [
         // Again with the items...
         'array' => ':attribute must have at least :min artiklar.',
     ],
-    // Context?
-    'multiple_of' => ':attribute must be a multiple of :value.',
-    // Context? Might need to change this translation...
+    'multiple_of' => ':attribute måste vara en multipel av :value.',
     'not_in' => 'valt :attribute är ogiltigt.',
     'not_regex' => ':attribute formatet är ogiltigt.',
     'numeric' => ':attribute måste vara ett nummer.',
     'password' => 'lösenordet är inkorrekt.',
-    // Context? Should probably be translated to "ifyllt" or similar instead.
     'present' => ':attribute fältet måste vara närvarande.',
     'regex' => ':attribute formatet är ogiltigt.',
     'required' => ':attribute fältet är obligatoriskt.',
     'required_if' => ':attribute fältet är obligatoriskt när :other är :value.',
     'required_unless' => ':attribute fältet är obligatoriskt såvida :other inte är :values.',
-    // Context?
     'required_with' => ':attribute fältet är obligatoriskt när :values är närvarande.',
     'required_with_all' => ':attribute fältet är obligatoriskt när :values är närvarande.',
     'required_without' => ':attribute fältet är obligatoriskt när :values inte är närvarande.',
@@ -123,7 +110,6 @@ return [
         'numeric' => ':attribute måste vara :size.',
         'file' => ':attribute måste vara :size kilobyte.',
         'string' => ':attribute måste vara :size tecken.',
-        // Again with items...
         'array' => ':attribute måste innehålla :size artiklar.',
     ],
     'starts_with' => ':attribute måste börja med en av följande värden: :values.',

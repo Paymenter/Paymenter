@@ -12,8 +12,7 @@ return [
     |
     */
 
-    // Not a very direct translate but the message is roughly the same. -> Could probably be improved though.
-    'failed' => 'Inloggning misslyckades. Dessa kontouppgifter stämmer inte överens.',
+    'failed' => 'Inloggning misslyckades då dessa kontouppgifter icke stämmer överens.',
     'password' => 'Fel lösenord.',
-    'throttle' => 'Du har försökt logga in för många gånger i rad. Vänligen försök igen om :seconds sekunder.',
+    'throttle' => 'Du har försökt logga in för många gånger i rad, vänligen försök igen om :seconds sekunder.',
 ];
