@@ -8,7 +8,7 @@
                 <div class="dark:bg-darkmode2 bg-[white] rounded-b-md">
                     <div class="p-9">
                         <div class="space-y-6 text-slate-700">
-                            <img class="object-cover h-12" src="/img/logo.png" />
+                            <x-application-logo />
 
                             <p class="dark:text-darkmodetext text-xl font-extrabold tracking-tight uppercase font-body">
                                 {{ config('app.name', 'Paymenter') }}
