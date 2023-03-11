@@ -41,23 +41,23 @@
                 </div>
                 <div class="relative inline-block text-left">
                     <button type="button" class="dark:bg-darkmode dark:text-darkmodetext dark:hover:bg-darkmode2 inline-flex w-full justify-center bg-white px-2 py-2 text-base font-medium rounded-md text-gray-700 @if (request()->routeIs('admin.products*')) bg-gray-200 @endif" id="menu-button" aria-expanded="true" aria-haspopup="true" data-dropdown-toggle="products">
-                        <i class="pr-1 ri-shopping-bag-2-line mr-1" @if (request()->routeIs('admin.products*')) style="color: #5270FD" @endif></i> Products
+                        <i class="pr-1 ri-shopping-bag-2-line mr-1" @if (request()->routeIs('admin.products*')) style="color: #5270FD" @endif></i> {{ __('Products') }}
                         <svg class="w-5 h-5 ml-1 -mr-1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
                             <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clip-rule="evenodd" />
                         </svg>
                     </button>
                     <div class="absolute right-0 hidden w-56 mt-2 origin-top-right bg-white rounded-md shadow-lg dark:bg-darkmode ring-1 ring-black ring-opacity-5 z-[1]" role="menu" aria-orientation="vertical" aria-labelledby="menu-button" tabindex="-1" id="products">
                         <div class="py-1" role="none">
-                            <a href="{{ route('admin.products') }}" class="block px-4 py-2 text-base text-gray-700 dark:text-darkmodetext dark:hover:bg-darkmode2 hover:bg-gray-100 hover:text-gray-900" role="menuitem" tabindex="-1" id="menu-item-0">All Products</a>
-                            <a href="{{ route('admin.products.create') }}" class="block px-4 py-2 text-base text-gray-700 dark:text-darkmodetext dark:hover:bg-darkmode2 hover:bg-gray-100 hover:text-gray-900" role="menuitem" tabindex="-1" id="menu-item-1">Create Product</a>
+                            <a href="{{ route('admin.products') }}" class="block px-4 py-2 text-base text-gray-700 dark:text-darkmodetext dark:hover:bg-darkmode2 hover:bg-gray-100 hover:text-gray-900" role="menuitem" tabindex="-1" id="menu-item-0">{{ __('All Products') }}</a>
+                            <a href="{{ route('admin.products.create') }}" class="block px-4 py-2 text-base text-gray-700 dark:text-darkmodetext dark:hover:bg-darkmode2 hover:bg-gray-100 hover:text-gray-900" role="menuitem" tabindex="-1" id="menu-item-1">{{ __('Create Product') }}</a>
                             <hr class="w-full my-1">
-                            <a href="{{ route('admin.categories') }}" class="block px-4 py-2 text-base text-gray-700 dark:text-darkmodetext dark:hover:bg-darkmode2 hover:bg-gray-100 hover:text-gray-900" role="menuitem" tabindex="-1" id="menu-item-2">Categories</a>
+                            <a href="{{ route('admin.categories') }}" class="block px-4 py-2 text-base text-gray-700 dark:text-darkmodetext dark:hover:bg-darkmode2 hover:bg-gray-100 hover:text-gray-900" role="menuitem" tabindex="-1" id="menu-item-2">{{ __('Categories') }}</a>
                         </div>
                     </div>
                 </div>
                 <div class="relative inline-block text-left z-[1]">
                     <button type="button" class="dark:bg-darkmode dark:text-darkmodetext dark:hover:bg-darkmode2 inline-flex w-full justify-center bg-white px-2 py-2 text-base font-medium rounded-md text-gray-700 @if (request()->routeIs('admin.tickets*')) bg-gray-200 @endif" id="menu-button" aria-expanded="true" aria-haspopup="true" data-dropdown-toggle="support">
-                        <i class="pr-1 ri-question-answer-line mr-1" @if (request()->routeIs('admin.tickets')) style="color: #5270FD" @endif></i> Support
+                        <i class="pr-1 ri-question-answer-line mr-1" @if (request()->routeIs('admin.tickets')) style="color: #5270FD" @endif></i> {{ __('Support') }}
                         @if (isset(App\Models\Ticket::where('status', 'open')->get()[0]))
                         <span class="inline-flex items-center px-2.5 ml-1 mt-0.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
                             {{ App\Models\Ticket::where('status', 'open')->get()->count() }}
@@ -69,14 +69,14 @@
                     </button>
                     <div class="absolute right-0 hidden w-56 mt-2 origin-top-right bg-white rounded-lg shadow-lg dark:bg-darkmode ring-1 ring-black ring-opacity-5" role="menu" aria-orientation="vertical" aria-labelledby="menu-button" tabindex="-1" id="support">
                         <div class="py-1" role="none">
-                            <a href="{{ route('admin.tickets') }}" class="block px-4 py-2 text-base text-gray-700 dark:text-darkmodetext dark:hover:bg-darkmode2 hover:bg-gray-100 hover:text-gray-900" role="menuitem" tabindex="-1" id="menu-item-0">All Support
+                            <a href="{{ route('admin.tickets') }}" class="block px-4 py-2 text-base text-gray-700 dark:text-darkmodetext dark:hover:bg-darkmode2 hover:bg-gray-100 hover:text-gray-900" role="menuitem" tabindex="-1" id="menu-item-0">{{ __('All Support') }}
                                 @if (isset(App\Models\Ticket::where('status', 'open')->get()[0]))
                                 <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
                                     {{ App\Models\Ticket::where('status', 'open')->get()->count() }}
                                 </span>
                                 @endif
                             </a>
-                            <a href="{{ route('admin.tickets') }}" class="block px-4 py-2 text-base text-gray-700 dark:text-darkmodetext dark:hover:bg-darkmode2 hover:bg-gray-100 hover:text-gray-900" role="menuitem" tabindex="-1" id="menu-item-1">Create Ticket</a>
+                            <a href="{{ route('admin.tickets') }}" class="block px-4 py-2 text-base text-gray-700 dark:text-darkmodetext dark:hover:bg-darkmode2 hover:bg-gray-100 hover:text-gray-900" role="menuitem" tabindex="-1" id="menu-item-1">{{ __('Create Ticket') }}</a>
                         </div>
                     </div>
                 </div>
@@ -87,9 +87,9 @@
                     </button>
                     <div class="absolute right-0 hidden w-96 mt-2 origin-top-right bg-white rounded-md shadow-lg dark:bg-darkmode ring-1 ring-black ring-opacity-5 z-[1]" role="menu" aria-orientation="vertical" aria-labelledby="menu-button" tabindex="-1" id="other">
                         <div class="py-1 grid grid-cols-3" role="none">
-                            <a href="{{ route('admin.settings') }}" class="block px-4 py-2 text-base text-gray-700 dark:text-darkmodetext dark:hover:bg-darkmode2 hover:bg-gray-100 hover:text-gray-900" role="menuitem" tabindex="-1" id="menu-item-0">Settings</a>
-                            <a href="{{ route('admin.extensions') }}" class="block px-4 py-2 text-base text-gray-700 dark:text-darkmodetext dark:hover:bg-darkmode2 hover:bg-gray-100 hover:text-gray-900" role="menuitem" tabindex="-1" id="menu-item-1">Extensions</a>
-                            <a href="{{ route('admin.coupons') }}" class="block px-4 py-2 text-base text-gray-700 dark:text-darkmodetext dark:hover:bg-darkmode2 hover:bg-gray-100 hover:text-gray-900" role="menuitem" tabindex="-1" id="menu-item-0">Coupons</a>
+                            <a href="{{ route('admin.settings') }}" class="block px-4 py-2 text-base text-gray-700 dark:text-darkmodetext dark:hover:bg-darkmode2 hover:bg-gray-100 hover:text-gray-900" role="menuitem" tabindex="-1" id="menu-item-0">{{ __('Settings') }}</a>
+                            <a href="{{ route('admin.extensions') }}" class="block px-4 py-2 text-base text-gray-700 dark:text-darkmodetext dark:hover:bg-darkmode2 hover:bg-gray-100 hover:text-gray-900" role="menuitem" tabindex="-1" id="menu-item-1">{{ __('Extensions') }}</a>
+                            <a href="{{ route('admin.coupons') }}" class="block px-4 py-2 text-base text-gray-700 dark:text-darkmodetext dark:hover:bg-darkmode2 hover:bg-gray-100 hover:text-gray-900" role="menuitem" tabindex="-1" id="menu-item-0">{{ __('Coupons') }}</a>
                         </div>
                     </div>
                 </div>
@@ -105,13 +105,12 @@
                     </button>
                     <div class="absolute right-0 hidden w-56 mt-2 origin-top-right bg-white rounded-md shadow-lg dark:bg-darkmode ring-1 ring-black ring-opacity-5 z-[1]" id="user-menu">
                         <div class="py-1 bg-white rounded-md shadow-xs dark:bg-darkmode" role="menu" aria-orientation="vertical" aria-labelledby="user-menu">
-                            <a href="{{ route('clients.profile') }}" class="block px-4 py-2 text-base text-gray-700 dark:hover:bg-darkbutton dark:text-darkmodetext hover:bg-gray-100" role="menuitem">Your Profile</a>
-                            <a href="{{ route('admin.settings') }}" class="block px-4 py-2 text-base text-gray-700 dark:hover:bg-darkbutton dark:text-darkmodetext hover:bg-gray-100" role="menuitem">Settings</a>
-                            <a href="{{ route('clients.password.change-password') }}" class="block px-4 py-2 text-base text-gray-700 dark:hover:bg-darkbutton dark:text-darkmodetext hover:bg-gray-100" role="menuitem">Change Password</a> <!-- Temporary -->
-                            <a href="{{ route('clients.home') }}" class="block px-4 py-2 text-base text-gray-700 dark:hover:bg-darkbutton dark:text-darkmodetext hover:bg-gray-100" role="menuitem">User Dashboard</a>
+                            <a href="{{ route('clients.profile') }}" class="block px-4 py-2 text-base text-gray-700 dark:hover:bg-darkbutton dark:text-darkmodetext hover:bg-gray-100" role="menuitem">{{ __('Your Profile') }}</a>
+                            <a href="{{ route('admin.settings') }}" class="block px-4 py-2 text-base text-gray-700 dark:hover:bg-darkbutton dark:text-darkmodetext hover:bg-gray-100" role="menuitem">{{ __('Settings') }}</a>
+                            <a href="{{ route('clients.password.change-password') }}" class="block px-4 py-2 text-base text-gray-700 dark:hover:bg-darkbutton dark:text-darkmodetext hover:bg-gray-100" role="menuitem">{{ __('Change Password') }}</a> <!-- Temporary -->
+                            <a href="{{ route('clients.home') }}" class="block px-4 py-2 text-base text-gray-700 dark:hover:bg-darkbutton dark:text-darkmodetext hover:bg-gray-100" role="menuitem">{{ __('User Dashboard') }}</a>
                             <a href="{{ route('logout') }}" onclick="event.preventDefault();
-                                                document.getElementById('logout-form').submit();" class="block px-4 py-2 text-base text-gray-700 dark:hover:bg-darkbutton dark:text-darkmodetext hover:bg-gray-100" role="menuitem">Sign
-                                out</a>
+                                                document.getElementById('logout-form').submit();" class="block px-4 py-2 text-base text-gray-700 dark:hover:bg-darkbutton dark:text-darkmodetext hover:bg-gray-100" role="menuitem">{{ __('Sign out') }}</a>
                         </div>
                     </div>
                 </div>
@@ -176,36 +175,36 @@
         </div>
         <div class="hidden lg:hidden" id="mobile-menu">
             <div class="px-2 pt-2 pb-3 space-y-1">
-                <a href="{{ route('admin.index') }}" class="text-black hover:bg-gray-100 block px-3 py-2 rounded-md text-base font-medium dark:text-darkmodetext @if (request()->routeIs('admin.index')) bg-gray-400 @endif" aria-current="page">Dashboard</a>
-                <a class="text-black hover:bg-gray-100 block px-3 py-2 rounded-md text-base font-medium dark:text-darkmodetext hover:cursor-pointer @if (request()->routeIs('admin.products.*')) bg-gray-400 @endif" data-dropdown-toggle="products-menu">Products</a>
+                <a href="{{ route('admin.index') }}" class="text-black hover:bg-gray-100 block px-3 py-2 rounded-md text-base font-medium dark:text-darkmodetext @if (request()->routeIs('admin.index')) bg-gray-400 @endif" aria-current="page">{{ __('Dashboard') }}</a>
+                <a class="text-black hover:bg-gray-100 block px-3 py-2 rounded-md text-base font-medium dark:text-darkmodetext hover:cursor-pointer @if (request()->routeIs('admin.products.*')) bg-gray-400 @endif" data-dropdown-toggle="products-menu">{{ __('Products') }}</a>
                 <div class="dropdown-menu hidden ml-2" id="products-menu">
-                    <a href="{{ route('admin.products') }}" class="text-black hover:bg-gray-100 block px-3 py-2 rounded-md text-base font-medium dark:text-darkmodetext @if (request()->routeIs('admin.products')) bg-gray-400 @endif">All Products</a>
-                    <a href="{{ route('admin.products.create') }}" class="text-black hover:bg-gray-100 block px-3 py-2 rounded-md text-base font-medium dark:text-darkmodetext @if (request()->routeIs('admin.products.create')) bg-gray-400 @endif">Add Product</a>
+                    <a href="{{ route('admin.products') }}" class="text-black hover:bg-gray-100 block px-3 py-2 rounded-md text-base font-medium dark:text-darkmodetext @if (request()->routeIs('admin.products')) bg-gray-400 @endif">{{ __('All Products') }}</a>
+                    <a href="{{ route('admin.products.create') }}" class="text-black hover:bg-gray-100 block px-3 py-2 rounded-md text-base font-medium dark:text-darkmodetext @if (request()->routeIs('admin.products.create')) bg-gray-400 @endif">{{ __('Add Product') }}</a>
                 </div>
             <!-- orders -->
-                <a class="text-black hover:bg-gray-100 block px-3 py-2 rounded-md text-base font-medium dark:text-darkmodetext hover:cursor-pointer @if (request()->routeIs('admin.orders.*')) bg-gray-400 @endif" data-dropdown-toggle="orders-menu">Orders</a>
+                <a class="text-black hover:bg-gray-100 block px-3 py-2 rounded-md text-base font-medium dark:text-darkmodetext hover:cursor-pointer @if (request()->routeIs('admin.orders.*')) bg-gray-400 @endif" data-dropdown-toggle="orders-menu">{{ __('Orders') }}</a>
                 <div class="dropdown-menu hidden ml-2" id="orders-menu">
-                    <a href="{{ route('admin.orders') }}" class="text-black hover:bg-gray-100 block px-3 py-2 rounded-md text-base font-medium dark:text-darkmodetext @if (request()->routeIs('admin.orders')) bg-gray-400 @endif">All Orders</a>
+                    <a href="{{ route('admin.orders') }}" class="text-black hover:bg-gray-100 block px-3 py-2 rounded-md text-base font-medium dark:text-darkmodetext @if (request()->routeIs('admin.orders')) bg-gray-400 @endif">{{ __('All Orders') }}</a>
                 </div>
                 <!-- clients -->
-                <a class="text-black hover:bg-gray-100 block px-3 py-2 rounded-md text-base font-medium dark:text-darkmodetext hover:cursor-pointer @if (request()->routeIs('admin.clients.*')) bg-gray-400 @endif" data-dropdown-toggle="clients-menu">Clients</a>
+                <a class="text-black hover:bg-gray-100 block px-3 py-2 rounded-md text-base font-medium dark:text-darkmodetext hover:cursor-pointer @if (request()->routeIs('admin.clients.*')) bg-gray-400 @endif" data-dropdown-toggle="clients-menu">{{ __('Clients') }}</a>
                 <div class="dropdown-menu hidden ml-2" id="clients-menu">
-                    <a href="{{ route('admin.clients') }}" class="text-black hover:bg-gray-100 block px-3 py-2 rounded-md text-base font-medium dark:text-darkmodetext @if (request()->routeIs('admin.clients')) bg-gray-400 @endif">All Clients</a>
-                    <a href="{{ route('admin.clients.create') }}" class="text-black hover:bg-gray-100 block px-3 py-2 rounded-md text-base font-medium dark:text-darkmodetext @if (request()->routeIs('admin.clients.create')) bg-gray-400 @endif">Add Client</a>
+                    <a href="{{ route('admin.clients') }}" class="text-black hover:bg-gray-100 block px-3 py-2 rounded-md text-base font-medium dark:text-darkmodetext @if (request()->routeIs('admin.clients')) bg-gray-400 @endif">{{ __('All Clients') }}</a>
+                    <a href="{{ route('admin.clients.create') }}" class="text-black hover:bg-gray-100 block px-3 py-2 rounded-md text-base font-medium dark:text-darkmodetext @if (request()->routeIs('admin.clients.create')) bg-gray-400 @endif">{{ __('Add Client') }}</a>
                 </div>
                 <!-- support -->
-                <a class="text-black hover:bg-gray-100 block px-3 py-2 rounded-md text-base font-medium dark:text-darkmodetext hover:cursor-pointer @if (request()->routeIs('admin.tickets.*')) bg-gray-400 @endif" data-dropdown-toggle="support-menu">Support</a>
+                <a class="text-black hover:bg-gray-100 block px-3 py-2 rounded-md text-base font-medium dark:text-darkmodetext hover:cursor-pointer @if (request()->routeIs('admin.tickets.*')) bg-gray-400 @endif" data-dropdown-toggle="support-menu">{{ __('Support') }}</a>
                 <div class="dropdown-menu hidden ml-2" id="support-menu">
-                    <a href="{{ route('admin.tickets') }}" class="text-black hover:bg-gray-100 block px-3 py-2 rounded-md text-base font-medium dark:text-darkmodetext @if (request()->routeIs('admin.tickets')) bg-gray-400 @endif">All Tickets</a>
-                    <a href="{{ route('admin.tickets.create') }}" class="text-black hover:bg-gray-100 block px-3 py-2 rounded-md text-base font-medium dark:text-darkmodetext @if (request()->routeIs('admin.tickets.create')) bg-gray-400 @endif">Add Ticket</a>
+                    <a href="{{ route('admin.tickets') }}" class="text-black hover:bg-gray-100 block px-3 py-2 rounded-md text-base font-medium dark:text-darkmodetext @if (request()->routeIs('admin.tickets')) bg-gray-400 @endif">{{ __('All Tickets') }}</a>
+                    <a href="{{ route('admin.tickets.create') }}" class="text-black hover:bg-gray-100 block px-3 py-2 rounded-md text-base font-medium dark:text-darkmodetext @if (request()->routeIs('admin.tickets.create')) bg-gray-400 @endif">{{ __('Add Ticket') }}</a>
                 </div>
                 <!-- coupons -->
-                <a class="text-black hover:bg-gray-100 block px-3 py-2 rounded-md text-base font-medium dark:text-darkmodetext hover:cursor-pointer @if (request()->routeIs('admin.tickets.*')) bg-gray-400 @endif" href="{{ route('admin.coupons') }}">Coupons</a>
+                <a class="text-black hover:bg-gray-100 block px-3 py-2 rounded-md text-base font-medium dark:text-darkmodetext hover:cursor-pointer @if (request()->routeIs('admin.tickets.*')) bg-gray-400 @endif" href="{{ route('admin.coupons') }}">{{ __('Coupons') }}</a>
                 <!-- settings -->
-                <a class="text-black hover:bg-gray-100 block px-3 py-2 rounded-md text-base font-medium dark:text-darkmodetext hover:cursor-pointer @if (request()->routeIs('admin.settings.*')) bg-gray-400 @endif" data-dropdown-toggle="settings-menu">Settings</a>
+                <a class="text-black hover:bg-gray-100 block px-3 py-2 rounded-md text-base font-medium dark:text-darkmodetext hover:cursor-pointer @if (request()->routeIs('admin.settings.*')) bg-gray-400 @endif" data-dropdown-toggle="settings-menu">{{ __('Settings') }}</a>
                 <div class="dropdown-menu hidden ml-2" id="settings-menu">
-                    <a href="{{ route('admin.settings') }}" class="text-black hover:bg-gray-100 block px-3 py-2 rounded-md text-base font-medium dark:text-darkmodetext @if (request()->routeIs('admin.settings')) bg-gray-400 @endif">Settings</a>
-                    <a href="{{ route('admin.extensions') }}" class="text-black hover:bg-gray-100 block px-3 py-2 rounded-md text-base font-medium dark:text-darkmodetext @if (request()->routeIs('admin.extensions')) bg-gray-400 @endif">Extension Settings</a>
+                    <a href="{{ route('admin.settings') }}" class="text-black hover:bg-gray-100 block px-3 py-2 rounded-md text-base font-medium dark:text-darkmodetext @if (request()->routeIs('admin.settings')) bg-gray-400 @endif">{{ __('Settings') }}</a>
+                    <a href="{{ route('admin.extensions') }}" class="text-black hover:bg-gray-100 block px-3 py-2 rounded-md text-base font-medium dark:text-darkmodetext @if (request()->routeIs('admin.extensions')) bg-gray-400 @endif">{{ __('Extension Settings') }}</a>
                 </div>
 
                 @auth
