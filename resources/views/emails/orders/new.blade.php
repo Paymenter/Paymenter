@@ -7,11 +7,11 @@ Thanks for your order. We will process it as soon as possible.
 | Product | Quantity | Price |
 |:--------|:---------|:------|
 @foreach ($products as $product)
-| {{ $product->product()->get()->first()->name }} | {{ $product->quantity }} | {{ config('settings::currency_sign') }} {{ $order->total }} |
+| {{ $product->product()->get()->first()->name }} | {{ $product->quantity }} | {{ config('settings::currency_sign') }} {{ $order->total() }} |
 @endforeach
 @endcomponent
 
-Total: {{ config('settings::currency_sign') }} {{ $order->total }}
+Total: {{ config('settings::currency_sign') }} {{ $order->total() }}
 
 @component('mail::button', ['url' => route('clients.home')])
 View order

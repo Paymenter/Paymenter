@@ -45,7 +45,7 @@
                             <div class="flex flex-row justify-between">
                                 <div class="flex flex-col">
                                     <span class="font-bold">{{ __('Total') }}:</span>
-                                    <span>{{ $order->total }}</span>
+                                    <span>{{ config('settings::currency_sign') }}{{ $order->total() }}</span>
                                 </div>
                             </div>
                             <div class="flex flex-row justify-between">
@@ -73,21 +73,91 @@
                         </div>
                         <div class="flex flex-col mt-4">
                             <span class="font-bold">{{ __('Products') }}:</span>
-                            @if ($order->products->count())
-                                @foreach ($products as $product)
-                                    <span class="flex flex-row justify-between border-b dark:text-darkmodetext">
-                                        <span>{{ $product->product()->get()->first()->name }}</span>
-                                        <span>{{ $product->quantity }}</span>
-                                        @if ($product->link)
+                            <div class="flex flex-col">
+                                @foreach ($order->products as $product)
+                                    <div class="flex flex-row justify-between border-b">
+                                        <div class="flex flex-col">
                                             <span
-                                                class="hover:underline hover:text-blue-600 text-blue-800 dark:text-blue-400"><a
-                                                    href="{{ $product->link }}">{{ __('View') }}</a></span>
-                                        @endif
-                                    </span>
+                                                class="font-bold">{{ $product->product()->get()->first()->name }}</span>
+                                            <span class="text-sm">
+                                                <button
+                                                    class="text-blue-500 hover:text-blue-700 dark:text-blue-300 dark:hover:text-blue-500"
+                                                    data-modal-show="changePriceQuantity{{ $product->id }}"
+                                                    data-modal-target="changePriceQuantity{{ $product->id }}">
+                                                    {{ __('Change Price/Quantity') }}
+                                                </button>
+                                                <div id="changePriceQuantity{{ $product->id }}" tabindex="-1"
+                                                    aria-hidden="true"
+                                                    class="fixed top-0 left-0 right-0 z-50 hidden w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] md:h-full">
+                                                    <div class="relative w-full h-full max-w-2xl md:h-auto">
+                                                        <div
+                                                            class="relative bg-white rounded-lg shadow dark:bg-gray-700">
+                                                            <div
+                                                                class="flex items-start justify-between p-4 border-b rounded-t dark:border-gray-600">
+                                                                <h3
+                                                                    class="text-xl font-semibold text-gray-900 dark:text-white">
+                                                                    {{ __('Change Price/Quantity') }}
+                                                                </h3>
+                                                                <button type="button"
+                                                                    class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white"
+                                                                    data-modal-hide="changePriceQuantity{{ $product->id }}">
+                                                                    <svg aria-hidden="true" class="w-5 h-5"
+                                                                        fill="currentColor" viewBox="0 0 20 20"
+                                                                        xmlns="http://www.w3.org/2000/svg">
+                                                                        <path fill-rule="evenodd"
+                                                                            d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                                                                            clip-rule="evenodd"></path>
+                                                                    </svg>
+                                                                    <span class="sr-only">Close modal</span>
+                                                                </button>
+                                                            </div>
+                                                            <div class="p-6 space-y-6">
+                                                                <form method="POST"
+                                                                    action="{{ route('admin.orders.changeProduct', ['order' => $order->id, 'product' => $product->id]) }}">
+                                                                    @csrf
+                                                                    <div class="flex flex-col">
+                                                                        <span
+                                                                            class="font-bold">{{ __('Price') }}:</span>
+                                                                        <input class="form-input" type="text"
+                                                                            name="price"
+                                                                            value="{{ $product->price ?? $product->product->price }}"
+                                                                            placeholder="{{ config('settings::currency_sign') }}{{ __('Price') }}" />
+                                                                    </div>
+                                                                    <div class="flex flex-col mt-4">
+                                                                        <span
+                                                                            class="font-bold">{{ __('Quantity') }}:</span>
+                                                                        <input class="form-input" type="text"
+                                                                            name="quantity"
+                                                                            value="{{ $product->quantity }}"
+                                                                            placeholder="{{ __('Quantity') }}" />
+                                                                    </div>
+                                                                    <div class="flex flex-row justify-end mt-4">
+                                                                        <button class="form-submit" type="submit">
+                                                                            {{ __('Change') }}
+                                                                        </button>
+                                                                    </div>
+                                                                </form>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </span>
+                                        </div>
+                                        <div class="flex flex-col">
+                                            <span class="font-bold">{{ __('Price') }}:</span>
+                                            <span>{{ config('settings::currency_sign') }}{{ $product->price ?? $product->product->price }}</span>
+                                        </div>
+                                        <div class="flex flex-col">
+                                            <span class="font-bold">{{ __('Quantity') }}:</span>
+                                            <span>{{ $product->quantity }}</span>
+                                        </div>
+                                        <div class="flex flex-col">
+                                            <span class="font-bold">{{ __('Link') }}:</span>
+                                            <span>{{ $product->link ? $product->link : 'N/A' }}</span>
+                                        </div>
+                                    </div>
                                 @endforeach
-                            @else
-                                <span>{{ __('No products found.') }}</span>
-                            @endif
+                            </div>
                         </div>
                     </div>
                     <!-- Buttons to edit/delete/suspend/unsuspend the user -->
@@ -133,6 +203,37 @@
                                     </button>
                                 </form>
                             @endif
+                        </div>
+                    </div>
+
+                    <!-- Show all invoices -->
+                    <div class="flex flex-col mt-8">
+                        <div class="flex flex-row justify-between">
+                            <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
+                                {{ __('Invoices') }}
+                            </h3>
+                        </div>
+                        <div class="flex flex-col mt-4 dark:text-white">
+                            <table class="w-full text-left">
+                                <thead>
+                                    <tr>
+                                        <th class="px-4 py-2">{{ __('ID') }}</th>
+                                        <th class="px-4 py-2">{{ __('Status') }}</th>
+                                        <th class="px-4 py-2">{{ __('Created at') }}</th>
+                                        <th class="px-4 py-2">{{ __('Paid at') }}</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach ($order->invoices as $invoice)
+                                        <tr class="border-b">
+                                            <td class="px-4 py-2">{{ $invoice->id }}</td>
+                                            <td class="px-4 py-2">{{ $invoice->status }}</td>
+                                            <td class="px-4 py-2">{{ $invoice->created_at }}</td>
+                                            <td class="px-4 py-2">{{ $invoice->paid_at }}</td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>

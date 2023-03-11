@@ -46,6 +46,9 @@ class CheckoutController extends Controller
 
     public function add(Product $product)
     {
+        if ($product->stock_enabled && $product->stock <= 0) {
+            return redirect()->back()->with('error', 'Product is out of stock');
+        }
         if (isset($product->server_id)) {
             $server = Extension::find($product->server_id);
             if ($server) {
@@ -59,6 +62,9 @@ class CheckoutController extends Controller
         $product->quantity = 1;
         $cart = session()->get('cart');
         if (\Illuminate\Support\Arr::has($cart, $product->id)) {
+            if ($product->stock_enabled && $product->stock <= $cart[$product->id]->quantity) {
+                return redirect()->back()->with('error', 'Product is out of stock');
+            }
             ++$cart[$product->id]->quantity;
             session()->put('cart', $cart);
 
@@ -133,13 +139,17 @@ class CheckoutController extends Controller
         }
         $total = 0;
         foreach ($products as $product) {
+            if ($product->stock_enabled && $product->stock <= 0) {
+                return redirect()->back()->with('error', 'Product is out of stock');
+            } elseif ($product->stock_enabled && $product->stock < $product->quantity) {
+                return redirect()->back()->with('error', 'Product is out of stock');
+            }
             $total += $product->price * $product->quantity;
         }
 
         $user = User::findOrFail(auth()->user()->id);
         $order = new Order();
         $order->client = $user->id;
-        $order->total = $total;
         $order->expiry_date = date('Y-m-d H:i:s', strtotime('+1 month'));
         $order->status = 'pending';
         $order->coupon = session('coupon');
@@ -149,6 +159,7 @@ class CheckoutController extends Controller
             $orderProduct->order_id = $order->id;
             $orderProduct->product_id = $product->id;
             $orderProduct->quantity = $product->quantity;
+            $orderProduct->price = $product->price;
             $orderProduct->save();
             if (isset($product->config)) {
                 foreach ($product->config as $key => $value) {
@@ -196,6 +207,7 @@ class CheckoutController extends Controller
             foreach ($order->products()->get() as $product) {
                 $iproduct = Product::where('id', $product->product_id)->first();
                 $iproduct->quantity = $product['quantity'];
+                $iproduct->price = $product['price'];
                 if (isset($product['config'])) {
                     $iproduct->config = $product['config'];
                 }
@@ -259,6 +271,9 @@ class CheckoutController extends Controller
         ]);
         $cart = session()->get('cart');
         if (isset($cart[$product->id])) {
+            if ($product->stock_enabled && $product->stock < $request->quantity) {
+                return redirect()->back()->with('error', 'Product is out of stock');
+            }
             $cart[$product->id]->quantity = $request->quantity;
             session()->put('cart', $cart);
         }

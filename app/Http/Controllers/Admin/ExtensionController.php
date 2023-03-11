@@ -58,7 +58,7 @@ class ExtensionController extends Controller
         if (!$extension) {
             $extension = new Extension();
             $extension->name = $name;
-            $extension->type = $type;
+            $extension->type = $type == 'Servers' ? 'server' : 'gateway';
             $extension->enabled = 0;
             $extension->save();
         }

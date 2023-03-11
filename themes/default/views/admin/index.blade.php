@@ -172,7 +172,7 @@
                         datasets: [{
                                 label: 'Yesterday',
                                 data: [
-                                    {{ App\Models\Order::whereDate('created_at', '=', date('Y-m-d', strtotime('-1 days')))->sum('total') }},
+                                    {{ App\Models\OrderProduct::whereDate('created_at', '=', date('Y-m-d', strtotime('-1 days')))->sum('price') }},
                                     {{ App\Models\Ticket::whereDate('created_at', '=', date('Y-m-d', strtotime('-1 days')))->count() }},
                                     {{ App\Models\Order::whereDate('created_at', '=', date('Y-m-d', strtotime('-1 days')))->count() }},
                                 ],
@@ -191,7 +191,7 @@
                             {
                                 label: 'Today',
                                 data: [
-                                    {{ App\Models\Order::whereDate('created_at', '=', date('Y-m-d'))->sum('total') }},
+                                    {{ App\Models\OrderProduct::whereDate('created_at', '=', date('Y-m-d'))->sum('price') }},
                                     {{ App\Models\Ticket::whereDate('created_at', '=', date('Y-m-d'))->count() }},
                                     {{ App\Models\Order::whereDate('created_at', '=', date('Y-m-d'))->count() }},
                                 ],

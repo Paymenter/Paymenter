@@ -12,7 +12,7 @@
             <!-- Validation Errors -->
             <x-auth-validation-errors class="mb-4" :errors="$errors" />
 
-            <form method="POST" action="{{ route('register') }}">
+            <form method="POST" action="{{ route('register') }}" id="register">
                 @csrf
 
                 <!-- Name -->
@@ -77,9 +77,7 @@
                         class="w-full rounded-lg dark:text-darkmodetext dark:bg-darkmode form-input"
                         name="password_confirmation" required autocomplete="new-password">
                 </div>
-                @if (config('settings::recaptcha') == 1)
-                    <div class="g-recaptcha" data-sitekey="{{ config('settings::recaptcha_site_key') }}"></div>
-                @endif
+                <x-recaptcha form="register" />
                 <div class="flex items-center justify-end mt-4">
                     <a class="text-sm text-gray-600 underline dark:text-darkmodetext hover:text-gray-900"
                         href="{{ route('login') }}">

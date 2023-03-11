@@ -61,6 +61,8 @@ class ProductController extends Controller
             'price' => 'required',
             'category_id' => 'required|integer',
             'image' => 'image|mimes:jpeg,png,jpg,gif,svg|max:5242',
+            'stock' => 'integer|required_if:stock_enabled,true',
+            'stock_enabled' => 'boolean',
         ]);
 
         if ($request->hasFile('image') && !$request->get('no_image')) {

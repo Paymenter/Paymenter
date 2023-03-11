@@ -115,7 +115,7 @@ class SettingController extends Controller
 
         $email = Auth::user()->email;
         try {
-            Mail::raw('If you read this, your email is working! 🎊', function ($message) use ($email) {
+            Mail::raw('If you read this, your email is working!', function ($message) use ($email) {
                 $message->to($email);
                 $message->subject('Test Email');
                 $message->from(config('mail.username'), config('mail.from.name'));
@@ -142,6 +142,7 @@ class SettingController extends Controller
         Setting::updateOrCreate(['key' => 'recaptcha_site_key'], ['value' => $request->recaptcha_site_key]);
         Setting::updateOrCreate(['key' => 'recaptcha_secret_key'], ['value' => $request->recaptcha_secret_key]);
         Setting::updateOrCreate(['key' => 'recaptcha'], ['value' => $request->recaptcha]);
+        Setting::updateOrCreate(['key' => 'recaptcha_type'], ['value' => $request->recaptcha_type]);
 
         return redirect('/admin/settings#security')->with('success', 'Settings updated successfully');
     }

@@ -28,18 +28,14 @@ class LoginRequest extends FormRequest
      */
     public function rules()
     {
-        if (config('settings::recaptcha') == 1) {
-            return [
-                'email' => 'required|string|email',
-                'password' => 'required|string',
-                'g-recaptcha-response' => 'required|recaptcha',
-            ];
-        } else {
-            return [
-                'email' => 'required|string|email',
-                'password' => 'required|string',
-            ];
-        }
+        return [
+            'email' => 'required|string|email',
+            'password' => 'required|string',
+            'g-recaptcha-response' => 'recaptcha',
+            'cf-turnstile-response' => 'recaptcha',
+            'h-captcha-response' => 'recaptcha',
+
+        ];
     }
 
     /**

@@ -30,20 +30,14 @@ class NewPasswordController extends Controller
      */
     public function store(Request $request)
     {
-        if (config('settings::recaptcha') == 1) {
-            $request->validate([
-                'token' => 'required',
-                'email' => 'required|email',
-                'password' => 'required|string|confirmed|min:8',
-                'g-recaptcha-response' => 'required|recaptcha',
-            ]);
-        } else {
-            $request->validate([
-                'token' => 'required',
-                'email' => 'required|email',
-                'password' => 'required|string|confirmed|min:8',
-            ]);
-        }
+        $request->validate([
+            'token' => 'required',
+            'email' => 'required|email',
+            'password' => 'required|string|confirmed|min:8',
+            'g-recaptcha-response' => 'recaptcha',
+            'cf-turnstile-response' => 'recaptcha',
+            'h-captcha-response' => 'recaptcha',
+        ]);
 
         // Here we will attempt to reset the user's password. If it is successful we
         // will update the password on an actual user model and persist it to the
@@ -64,8 +58,8 @@ class NewPasswordController extends Controller
         // the application's home authenticated view. If there is an error we can
         // redirect them back to where they came from with their error message.
         return $status == Password::PASSWORD_RESET
-                    ? redirect()->route('login')->with('status', __($status))
-                    : back()->withInput($request->only('email'))
-                            ->withErrors(['email' => __($status)]);
+            ? redirect()->route('login')->with('status', __($status))
+            : back()->withInput($request->only('email'))
+            ->withErrors(['email' => __($status)]);
     }
 }

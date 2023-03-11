@@ -47,9 +47,7 @@
                         class="mt-1.5 dark:bg-darkmode rounded-lg form-input w-full " name="new_password_confirmation"
                         autocomplete="new_password_confirmation">
                 </div>
-                @if (config('settings::recaptcha') == 1)
-                    <div class="g-recaptcha mt-2" data-sitekey="{{ config('settings::recaptcha_site_key') }}"></div>
-                @endif
+                <x-recaptcha />
                 <!-- Save button and Cancel button -->
                 <div class="flex items-center justify-end mt-4">
                     <button class="form-submit">

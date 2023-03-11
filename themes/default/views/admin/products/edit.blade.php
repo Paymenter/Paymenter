@@ -80,6 +80,16 @@
                                     required />
                             </div>
                             <div class="mt-4">
+                                <label for="stock_enabled">{{ __('Enable Stock') }}</label>
+                                <input type="checkbox" name="stock_enabled" id="stock_enabled" value="1" onchange="if(this.checked) { document.getElementById('stock').classList.remove('hidden'); document.getElementById('image').disabled = false; } else { document.getElementById('stock').classList.add('hidden'); document.getElementById('image').disabled = true; }"
+                                    class="form-input w-4 h-4" @if ($product->stock_enabled) checked @endif />
+                            </div>
+                            <div class="mt-4 @if (!$product->stock_enabled) hidden @endif" id="stock">
+                                <label for="stocki">{{ __('Stock') }}</label>
+                                <input id="stocki" class="block w-full mt-1 rounded-lg dark:bg-darkmode" type="number"
+                                    name="stock" min="0" value="{{ $product->stock }}" required />
+                            </div>
+                            <div class="mt-4">
                                 <label for="image">{{ __('Image') }}</label>
                                 <p>Only upload a new image if you want to replace the existing one</p>
                                 <input id="image" class="block w-full mt-1 rounded-lg dark:bg-darkmode" type="file"

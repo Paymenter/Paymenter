@@ -27,25 +27,18 @@ class ConfirmablePasswordController extends Controller
      */
     public function store(Request $request)
     {
-        if (config('settings::recaptcha') == 1) {
-            $request->validate([
-                'password' => 'required|string',
-                'g-recaptcha-response' => 'required|recaptcha',
-            ]);
-            if (!Auth::guard('web')->validate([
-                'email' => $request->user()->email,
-                'password' => $request->password,
-            ])) {
-                throw ValidationException::withMessages(['password' => __('auth.password')]);
-            }
-        } else {
-            if (!Auth::guard('web')->validate([
-                'email' => $request->user()->email,
-                'password' => $request->password,
-            ])) {
-                throw ValidationException::withMessages(['password' => __('auth.password')]);
-            }
+        $request->validate([
+            'g-recaptcha-response' => 'recaptcha',
+            'cf-turnstile-response' => 'recaptcha',
+            'h-captcha-response' => 'recaptcha',
+        ]);
+        if (!Auth::guard('web')->validate([
+            'email' => $request->user()->email,
+            'password' => $request->password,
+        ])) {
+            throw ValidationException::withMessages(['password' => __('auth.password')]);
         }
+
 
         $request->session()->put('auth.password_confirmed_at', time());
 

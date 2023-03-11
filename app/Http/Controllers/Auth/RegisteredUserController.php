@@ -32,20 +32,15 @@ class RegisteredUserController extends Controller
      */
     public function store(Request $request)
     {
-        if (config('settings::recaptcha') == 1) {
-            $request->validate([
-                'name' => 'required|string|max:255',
-                'email' => 'required|string|email|max:255|unique:users',
-                'password' => 'required|string|confirmed|min:8',
-                'g-recaptcha-response' => 'required|recaptcha',
-            ]);
-        } else {
-            $request->validate([
-                'name' => 'required|string|max:255',
-                'email' => 'required|string|email|max:255|unique:users',
-                'password' => 'required|string|confirmed|min:8',
-            ]);
-        }
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users',
+            'password' => 'required|string|confirmed|min:8',
+            'g-recaptcha-response' => 'recaptcha',
+            'cf-turnstile-response' => 'recaptcha',
+            'h-captcha-response' => 'recaptcha',
+        ]);
+
 
         Auth::login($user = User::create([
             'name' => $request->name,

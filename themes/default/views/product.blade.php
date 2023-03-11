@@ -28,7 +28,7 @@
                                         class="p-4 transition rounded-lg delay-400 border dark:border-darkmode hover:shadow-md dark:hover:shadow-gray-500 flex flex-col bg-gray-100 dark:bg-darkmode break-all">
                                         <img class="rounded-lg" src="{{ $product->image }}" alt="{{ $product->name }}"
                                             onerror="removeElement(this);">
-                                        <div class="mt-2 h-full flex flex-col relative">
+                                        <div class="mt-2 h-full relative">
                                             <h3
                                                 class="text-lg font-medium text-center text-gray-900 dark:text-darkmodetext">
                                                 {{ $product->name }}</h3>
