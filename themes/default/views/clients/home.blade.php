@@ -25,7 +25,7 @@
                     <img class="w-8 h-8 rounded-md" style="align-self: center; width: 2rem; height: 2rem;"
                         src="https://www.gravatar.com/avatar/{{ md5(Auth::user()->email) }}?s=200&d=mp" />
                     <div class="ml-4 text-lg font-semibold leading-7">
-                        Invoices
+                        {{ __('Invoices')}}
                     </div>
                 </div>
                 <div class="flex flex-col text-center items-center">
