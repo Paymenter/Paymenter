@@ -120,7 +120,7 @@
                                         </clipPath>
                                     </defs>
                                 </svg>
-                                Sign in with Apple
+                                {{ __('Sign in with Apple')}}
                             </a>
                         @endif
                         @if (config('settings::discord_enabled'))
