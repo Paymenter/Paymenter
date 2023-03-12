@@ -70,7 +70,7 @@
                         config('settings::github_enabled') == 1)
                     <div class="flex items-center">
                         <div class="w-full h-0.5 bg-gray-200 dark:bg-gray-700"></div>
-                        <div class="px-5 text-center text-gray-500 dark:text-gray-400">or</div>
+                        <div class="px-5 text-center text-gray-500 dark:text-gray-400">{{ __('or')}}</div>
                         <div class="w-full h-0.5 bg-gray-200 dark:bg-gray-700"></div>
                     </div>
                     <div class="space-y-3">
