@@ -74,7 +74,7 @@
     "Disabled": "Zablkovoaná",
     "Discord Client ID": "Discord klientová identifikátor",
     "Discord Client Secret": "Discord klientová tajný-šifrovací kód",
-    "Discord OAuth2 is a service that allows users to log in to your site using their Discord account.": "Discord OAuth2 is a service that allows users to log in to your site using their Discord account.",
+    "Discord OAuth2 is a service that allows users to log in to your site using their Discord account.": "Discord OAuth2 je služba, ktorá umožňuje používateľom prihlásiť sa na váš web pomocou konta Discord."
     "Discord:": "Discord:",
     "Discount": "Zlava",
     "Display Name": "Display Name",
@@ -273,7 +273,7 @@
     "Updated At": "Aktualizovaná",
     "Upgrade": "Aktualizovať",
     "User": "Používaťel",
-    "User Dashboard": "User Dashboard",
+    "User Dashboard": "Stránka klientov",
     "Uses": "Používatelia",
     "Value": "Hodnota",
     "View": "Zobrazenie",
@@ -285,8 +285,8 @@
     "You are running a development version": "Používate vývojovú verziu",
     "You are running version": "Váš košík je prázdny",
     "You need to set your redirect url to": "You need to set your redirect url to",
-    "Your cart is empty": "A kosarad üres",
+    "Your cart is empty": "Váš nákupný košík je prázdny",
     "Your Profile": "Tvoje konto",
     "Z-A": "Z-A",
-    "Zip": "PSC"
+    "Zip": "PŠC"
 }
