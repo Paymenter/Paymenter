@@ -1,10 +1,12 @@
 # Tech STACK
 * **Front-end**: TailwindCSS & Flowbite
 * **Back-end**: Laravel
+* **Database**: MySQL
 
 # How to run
 `npm run dev`
 Runs the front-end.
+`php artisan serve` Runs the back-end.
 
 # How to build
 `npm run build`
