@@ -25,7 +25,7 @@
                     <!-- ticket -->
                     <div class="dark:bg-darkmode">
                         <a type="button" href="{{ route('clients.tickets.index') }}" class="dark:text-darkmodetext dark:bg-darkmode dark:hover:bg-darkbutton inline-flex w-full justify-center bg-white px-2 py-2 text-base font-medium rounded-md text-gray-700 @if (request()->routeIs('clients.tickets*')) @endif" id="menu-button" aria-expanded="true" aria-haspopup="true" onclick="openMenu('tickets')">
-                            <i class="pr-1 ri-question-answer-line" @if (request()->routeIs('tickets*')) style="color: #5270FD" @endif></i>{{ __('Tickets') }}
+                            <i class="pr-1 ri-question-answer-line" @if (request()->routeIs('clients.tickets*')) style="color: #5270FD" @endif></i>{{ __('Tickets') }}
                         </a>
                     </div>
                 </div>
