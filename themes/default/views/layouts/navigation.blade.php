@@ -20,7 +20,7 @@
                             <i class="pr-1 ri-dashboard-3-line" @if (request()->routeIs('clients.home*')) style="color: #5270FD" @endif></i>{{ __('Dashboard') }}
                         </a>
                     </div>
-                </div>    
+                </div>
                 <div class="relative inline-block text-left dark:bg-darkmode">
                     <!-- ticket -->
                     <div class="dark:bg-darkmode">
@@ -193,7 +193,7 @@
                 <a href="{{ route('clients.tickets.index') }}" class="dark:text-darkmodetext dark:bg-darkmode dark:hover:bg-darkbutton text-black hover:bg-gray-100 block px-3 py-2 rounded-md text-base font-medium @if (request()->routeIs('clients.tickets.*')) bg-gray-400 @endif">{{ __('Tickets') }}</a>
                 @if (count(session()->get('cart', [])) > 0)
                 <a href="{{ route('checkout.index') }}" class="relative inline-flex items-center text-gray-700 transition rounded dark:text-darkmodetext dark:bg-darkmode duration-400 hover:bg-button dark:hover:bg-darkbutton hover:transition p-2 mr-4 w-full">
-                    Checkout
+                    {{ __('Checkout') }}
                     <span class="absolute right-0 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-white bg-red-500 rounded-full mr-2">{{ count(session()->get('cart', [])) }}</span>
                 </a>
                 @endif
@@ -211,7 +211,7 @@
                     <form id="logout-form" action="{{ route('logout') }}" method="POST" class="hidden">
                         @csrf
                     </form>
-                @else 
+                @else
                     <a href="{{ route('login') }}" class="dark:text-darkmodetext dark:bg-darkmode dark:hover:bg-darkbutton text-black hover:bg-gray-100 block px-3 py-2 rounded-md text-base font-medium @if (request()->routeIs('login')) bg-gray-400 @endif">{{ __('Login') }}</a>
                     <a href="{{ route('register') }}" class="dark:text-darkmodetext dark:bg-darkmode dark:hover:bg-darkbutton text-black hover:bg-gray-100 block px-3 py-2 rounded-md text-base font-medium @if (request()->routeIs('register')) bg-gray-400 @endif">{{ __('Register') }}</a>
                 @endauth
