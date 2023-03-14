@@ -16,7 +16,7 @@
             <div class="justify-center hidden text-lg text-center dark:bg-darkmode md:flex md:items-center md:w-auto place-items-center dark:text-darkmodetext" id="menu">
                 <div class="relative inline-block text-left dark:bg-darkmode">
                     <div class="dark:bg-darkmode">
-                        <a type="button" href="{{ route('clients.home') }}" class="dark:text-darkmodetext dark:bg-darkmode dark:hover:bg-darkbutton inline-flex w-full justify-center bg-white px-2 py-2 text-base font-medium rounded-md text-gray-700 @if (request()->routeIs('clients.home')) @endif" id="menu-button" aria-expanded="true" aria-haspopup="true" onclick="openMenu('tickets')">
+                        <a type="button" href="{{ route('clients.home') }}" class="dark:text-darkmodetext dark:bg-darkmode dark:hover:bg-darkbutton inline-flex w-full justify-center bg-white px-2 py-2 text-base font-medium rounded-md text-gray-700 @if (request()->routeIs('clients.home')) @endif" id="home" aria-expanded="true" aria-haspopup="true">
                             <i class="pr-1 ri-dashboard-3-line" @if (request()->routeIs('clients.home*')) style="color: #5270FD" @endif></i>{{ __('Dashboard') }}
                         </a>
                     </div>
@@ -24,19 +24,19 @@
                 <div class="relative inline-block text-left dark:bg-darkmode">
                     <!-- ticket -->
                     <div class="dark:bg-darkmode">
-                        <a type="button" href="{{ route('clients.tickets.index') }}" class="dark:text-darkmodetext dark:bg-darkmode dark:hover:bg-darkbutton inline-flex w-full justify-center bg-white px-2 py-2 text-base font-medium rounded-md text-gray-700 @if (request()->routeIs('clients.tickets*')) @endif" id="menu-button" aria-expanded="true" aria-haspopup="true" onclick="openMenu('tickets')">
+                        <a type="button" href="{{ route('clients.tickets.index') }}" class="dark:text-darkmodetext dark:bg-darkmode dark:hover:bg-darkbutton inline-flex w-full justify-center bg-white px-2 py-2 text-base font-medium rounded-md text-gray-700 @if (request()->routeIs('clients.tickets*')) @endif" id="tickets" aria-expanded="true" aria-haspopup="true">
                             <i class="pr-1 ri-question-answer-line" @if (request()->routeIs('clients.tickets*')) style="color: #5270FD" @endif></i>{{ __('Tickets') }}
                         </a>
                     </div>
                 </div>
                 <div class="relative inline-block text-left">
-                    <button type="button" class="dark:text-darkmodetext dark:bg-darkmode dark:hover:bg-darkbutton inline-flex w-full justify-center bg-white px-2 py-2 text-base font-medium rounded-md text-gray-700 @if (request()->routeIs('products*')) @endif" id="menu-button" aria-expanded="true" aria-haspopup="true" onclick="openMenu('orders')">
+                    <button type="button" class="dark:text-darkmodetext dark:bg-darkmode dark:hover:bg-darkbutton inline-flex w-full justify-center bg-white px-2 py-2 text-base font-medium rounded-md text-gray-700 @if (request()->routeIs('products*')) @endif" id="product" aria-expanded="true" aria-haspopup="true" data-dropdown-toggle="orders">
                         <i class="pr-1 ri-shopping-bag-2-line" @if (request()->routeIs('products')) style="color: #5270FD" @endif></i> {{ __('Products') }}
                         <svg class="w-5 h-5 ml-1 -mr-1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
                             <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clip-rule="evenodd" />
                         </svg>
                     </button>
-                    <div class="absolute right-0 hidden w-56 mt-2 origin-top-right bg-white rounded-md shadow-lg ring-1 ring-black ring-opacity-5" role="menu" aria-orientation="vertical" aria-labelledby="menu-button" tabindex="-1" id="orders">
+                    <div class="absolute right-0 hidden w-56 mt-2 origin-top-right bg-white rounded-md shadow-lg ring-1 ring-black ring-opacity-5" role="menu" aria-orientation="vertical" aria-labelledby="product" tabindex="-1" id="orders">
                         <div class="py-1 dark:bg-darkmode" role="none">
                             <a href="{{ route('products') }}" class="block px-4 py-2 text-base text-gray-700 dark:text-darkmodetext dark:hover:bg-darkbutton hover:bg-gray-100 hover:text-gray-900" role="menuitem" tabindex="-1" id="menu-item-0">{{ __('All Products') }}</a>
                             @foreach (App\Models\Category::all() as $category)
@@ -50,7 +50,7 @@
                 @if (Auth::user() == !null)
                 <div class="hidden">
                     <div class="absolute hidden w-full rounded-lg dark:bg-darkmode2 sm:flex sm:items-center sm:w-auto right-40 ">
-                        <a class="m-2 dark:bg-darkmode2" href="">
+                        <a class="m-2 dark:bg-darkmode2" href="/home">
                             {{ number_format(Auth::user()->credit, 2) }}
                         </a>
                     </div>
@@ -61,7 +61,7 @@
             <div class="absolute right-0 hidden w-full dark:bg-darkmode md:flex md:items-center md:w-auto" id="menu">
                 @auth
                 <div class="relative inline-block text-left">
-                    <button type="button" class="inline-flex items-center justify-center w-full py-2 pl-4 text-base font-medium text-gray-700 bg-white dark:text-darkmodetext dark:bg-darkmode" aria-label="User menu" aria-haspopup="true" onclick="openMenu('user-menu')">
+                    <button type="button" class="inline-flex items-center justify-center w-full py-2 pl-4 text-base font-medium text-gray-700 bg-white dark:text-darkmodetext dark:bg-darkmode" aria-label="User menu" aria-haspopup="true" data-dropdown-toggle="user-menu">
                         <!-- use gravatar -->
                         <img class="w-8 h-8 rounded-md" src="https://www.gravatar.com/avatar/{{ md5(Auth::user()->email) }}?s=200&d=mp" alt="{{ Auth::user()->name }}" />
                         <p class="p-2 font-bold">
@@ -106,7 +106,7 @@
                 </a>
                 @endif
                 <div class="flex justify-end col-span-1 pl-1">
-                    <button id="theme-toggle" type="button" class="mr-4 text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 rounded-lg text-sm p-2.5">
+                    <button id="theme-toggle" type="button" class="mr-4 text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 rounded-lg text-sm p-2.5" aria-label="DarkMode toggle">
                         <svg id="theme-toggle-dark-icon" class="hidden w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
                             <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path>
                         </svg>
@@ -160,31 +160,6 @@
 
                 </script>
             </div>
-
-            <script>
-                function openMenu(id) {
-                    var menu = document.getElementById(id);
-                    menu.classList.toggle('hidden');
-                    var menuBtn = document.getElementById(id + '-btn');
-                    menuBtn.classList.toggle('active');
-                    var menus = document.getElementsByClassName('dropdown-menu');
-                    for (var i = 0; i < menus.length; i++) {
-                        if (menus[i] != menu) {
-                            menus[i].classList.add('hidden');
-                        }
-                    }
-                    document.addEventListener('click', function(e) {
-                        if (e.target != menu && e.target != menu.previousElementSibling) {
-                            menu.classList.add('hidden');
-                        }
-                    });
-                }
-
-                function openUserMenu() {
-                    document.getElementById("user-menu").classList.toggle("hidden");
-                }
-
-            </script>
         </div>
         <div class="hidden md:hidden" id="mobile-menu">
             <div class="px-2 pt-2 pb-3 space-y-1 ">
@@ -193,7 +168,7 @@
                 <a href="{{ route('clients.tickets.index') }}" class="dark:text-darkmodetext dark:bg-darkmode dark:hover:bg-darkbutton text-black hover:bg-gray-100 block px-3 py-2 rounded-md text-base font-medium @if (request()->routeIs('clients.tickets.*')) bg-gray-400 @endif">{{ __('Tickets') }}</a>
                 @if (count(session()->get('cart', [])) > 0)
                 <a href="{{ route('checkout.index') }}" class="relative inline-flex items-center text-gray-700 transition rounded dark:text-darkmodetext dark:bg-darkmode duration-400 hover:bg-button dark:hover:bg-darkbutton hover:transition p-2 mr-4 w-full">
-                    Checkout
+                    {{ __('Checkout') }}
                     <span class="absolute right-0 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-white bg-red-500 rounded-full mr-2">{{ count(session()->get('cart', [])) }}</span>
                 </a>
                 @endif

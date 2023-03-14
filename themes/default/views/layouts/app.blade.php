@@ -147,6 +147,7 @@
     <link rel="manifest" href="/site.webmanifest">
     <meta content="{{ config('settings::seo_title') }}" property="og:title">
     <meta content="{{ config('settings::seo_description') }}" property="og:description">
+    <meta content="{{ config('settings::seo_description') }}" name="description">
     <meta content='{{ config('settings::seo_image') }}' property="og:image">
     <link type="application/json+oembed"
         href="{{ url('/') }}/manifest.json?title={{ config('app.name', 'Paymenter') }}&author_url={{ url('/') }}&author_name={{ config('app.name', 'Paymenter') }}" />
@@ -174,6 +175,7 @@
             </div>
         </footer>
     </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.6.4/flowbite.min.js"></script>
 </body>
 
 </html>
