@@ -36,7 +36,7 @@
                 </div>
                 <div class="relative inline-block text-left">
                     <a href="{{ route('admin.orders') }}" class="dark:bg-darkmode dark:text-darkmodetext dark:hover:bg-darkmode2 inline-flex w-full justify-center bg-white px-2 py-2 text-base font-medium rounded-md text-gray-700 @if (request()->routeIs('admin.orders*')) bg-gray-200 @endif" id="menu-button" aria-expanded="true" aria-haspopup="true">
-                        <i class="pr-1 ri-shopping-cart-2-line mr-1" @if (request()->routeIs('admin.orders')) style="color: #5270FD" @endif></i> Orders
+                        <i class="pr-1 ri-shopping-cart-2-line mr-1" @if (request()->routeIs('admin.orders*')) style="color: #5270FD" @endif></i> Orders
                     </a>
                 </div>
                 <div class="relative inline-block text-left">

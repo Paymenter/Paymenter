@@ -29,7 +29,6 @@
             </div>
         </div>
     </div>
-    </div>
     <script>
         $(document).ready(function() {
             var hash = $(window.location.hash);

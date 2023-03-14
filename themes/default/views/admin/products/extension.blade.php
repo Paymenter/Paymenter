@@ -1,14 +1,7 @@
 <x-admin-layout>
-    <!-- edit extension settings -->
     <x-slot name="title">
-        {{ __('Products') }}
+        {{ __('Editing') . $product->name }}
     </x-slot>
-
-    <!-- edit extension settings -->
-    <div class="py-12">
-        <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
-            <div class="overflow-hidden bg-white shadow-xl sm:rounded-lg dark:bg-darkmode2 dark:shadow-gray-700">
-                <div class="p-6 bg-white sm:px-20 dark:bg-darkmode2">
                     <div class="grid grid-cols-1 md:grid-cols-2 mt-4">
                         <div class="text-2xl dark:text-darkmodetext">
                             Update product server: {{ $product->name }}
