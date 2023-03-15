@@ -4,7 +4,7 @@
     </x-slot>
                     <div class="grid grid-cols-1 md:grid-cols-2 mt-4">
                         <div class="text-2xl dark:text-darkmodetext">
-                            Update product server: {{ $product->name }}
+                            {{ __('Update product server') }}: {{ $product->name }}
                         </div>
                         <div class="relative inline-block text-left justify-end">
                             <button type="button"
@@ -62,7 +62,7 @@
                                                 @endif
                                             @endforeach
                                         @else
-                                            <option value="">No servers found</option>
+                                            <option value="">{{ __('No servers found') }}</option>
                                         @endif
                                     </select>
                                     <button type="button"

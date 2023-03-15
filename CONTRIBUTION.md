@@ -30,5 +30,5 @@ cp lang/en.json lang/LANGUAGE.json
 1. Update the blade file missing the translation(s).
 2. Update the lang files to reflect the new translation key(s) by running the lang script.
 ```bash
-npm run lang
+npx laravel-language-extractor --theme default 
 ```
