@@ -46,6 +46,11 @@ Route::group(['prefix' => 'invoices', 'middleware' => 'auth'], function () {
     Route::post('/{invoice}/pay', [App\Http\Controllers\Clients\InvoiceController::class, 'pay'])->name('clients.invoice.pay');
 });
 
+Route::group(['prefix' => 'announcements', 'middleware' => 'auth'], function () {
+    Route::get('/', [App\Http\Controllers\AnnouncementController::class, 'index'])->name('announcements.index');
+    Route::get('/{announcement}', [App\Http\Controllers\AnnouncementController::class, 'view'])->name('announcements.view');
+});
+
 Route::group(['prefix' => 'client/products', 'middleware' => 'auth'], function () {
     Route::get('/', [App\Http\Controllers\Clients\ProductController::class, 'index'])->name('clients.active-products.index');
     Route::get('/{product}', [App\Http\Controllers\Clients\ProductController::class, 'index'])->name('clients.active-products.show');

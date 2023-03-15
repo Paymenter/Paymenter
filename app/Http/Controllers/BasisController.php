@@ -2,8 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Product;
-use App\Models\Category;
+use App\Models\{Announcement, Category, Product};
 use Illuminate\Http\Request;
 
 class BasisController extends Controller
@@ -11,8 +10,9 @@ class BasisController extends Controller
     public function index()
     {
         $categories = Category::all();
+        $announcements = Announcement::where('published', 1)->get();
 
-        return view('welcome', compact('categories'));
+        return view('welcome', compact('categories', 'announcements'));
     }
 
     public function products(string $slug = null, Product $product = null)

@@ -84,4 +84,13 @@ Route::group(['prefix' => 'admin'], function () {
         Route::put('/{coupon}/edit', [App\Http\Controllers\Admin\CouponController::class, 'update'])->middleware(['auth.admin'])->name('admin.coupons.update');
         Route::delete('/{coupon}/delete', [App\Http\Controllers\Admin\CouponController::class, 'destroy'])->middleware(['auth.admin'])->name('admin.coupons.delete');
     });
+
+    Route::group(['prefix' => 'announcements'], function() {
+        Route::get('/', [App\Http\Controllers\Admin\AnnouncementController::class, 'index'])->middleware(['auth.admin'])->name('admin.announcements');
+        Route::get('/create', [App\Http\Controllers\Admin\AnnouncementController::class, 'create'])->middleware(['auth.admin'])->name('admin.announcements.create');
+        Route::post('/create', [App\Http\Controllers\Admin\AnnouncementController::class, 'store'])->middleware(['auth.admin'])->name('admin.announcements.store');
+        Route::get('/{announcement}/edit', [App\Http\Controllers\Admin\AnnouncementController::class, 'edit'])->middleware(['auth.admin'])->name('admin.announcements.edit');
+        Route::post('/{announcement}/edit', [App\Http\Controllers\Admin\AnnouncementController::class, 'update'])->middleware(['auth.admin'])->name('admin.announcements.update');
+        Route::delete('/{announcement}/delete', [App\Http\Controllers\Admin\AnnouncementController::class, 'destroy'])->middleware(['auth.admin'])->name('admin.announcements.delete');
+    });
 });
