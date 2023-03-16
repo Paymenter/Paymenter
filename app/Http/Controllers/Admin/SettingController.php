@@ -25,7 +25,7 @@ class SettingController extends Controller
             if (strpos($language, '.json') !== false) {
                 unset($languages[$key]);
             }
-        } 
+        }
 
         return view('admin.settings.index', [
             'tabs' => $tabs,
@@ -63,10 +63,10 @@ class SettingController extends Controller
             Setting::updateOrCreate(['key' => $key], ['value' => $value]);
         }
         // Needs to manually do this because otherwise it isn't sended
-        if (!$request->get('allow_auto_lang')){
+        if (!$request->get('allow_auto_lang')) {
             Setting::updateOrCreate(['key' => 'allow_auto_lang'], ['value' => 0]);
         }
-        if(!$request->get('seo_twitter_card')){
+        if (!$request->get('seo_twitter_card')) {
             Setting::updateOrCreate(['key' => 'seo_twitter_card'], ['value' => 0]);
         }
 
@@ -93,6 +93,9 @@ class SettingController extends Controller
                 $value = Crypt::encryptString($value);
             }
             Setting::updateOrCreate(['key' => $key], ['value' => $value]);
+        }
+        if (!$request->get('mail_disabled')) {
+            Setting::updateOrCreate(['key' => 'mail_disabled'], ['value' => 0]);
         }
 
         return redirect('/admin/settings#mail')->with('success', 'Settings updated successfully');
