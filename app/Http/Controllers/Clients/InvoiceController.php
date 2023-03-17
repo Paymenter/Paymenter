@@ -19,6 +19,7 @@ class InvoiceController extends Controller
     public function show(Request $request, Invoice $invoice)
     {
         $order = Order::findOrFail($invoice->order_id);
+        ExtensionHelper::createServer($order);
         $coupon = $order->coupon()->get()->first();
 
         // Check if the coupon is lifetime or not

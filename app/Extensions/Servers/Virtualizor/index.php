@@ -158,7 +158,7 @@ function Virtualizor_createServer($user, $params, $order)
     $post['lname'] = $user->name;
     $post['osid'] = 909;
     $post['server_group'] = 0;
-    $post['hostname '] = $config['hostname'];
+    $post['hostname'] = $config['hostname'];
     $post['rootpass'] = $config['password'];
     $post['num_ips6'] = $plan['ips6'];
     $post['num_ips6_subnet'] = $plan['ips6_subnet'];

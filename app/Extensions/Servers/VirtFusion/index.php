@@ -101,7 +101,7 @@ function VirtFusion_getUser($user)
         if ($response->status() == 200) {
             return $response->json()['data']['id'];
         } else {
-            error_log('Failed to create user | VirtFusion');
+            ExtensionHelper::error('VirtFusion', 'Failed to create user');
 
             return;
         }
@@ -124,7 +124,7 @@ function VirtFusion_suspendServer($user, $params, $order)
     if ($response->status() == 204) {
         return true;
     } else {
-        error_log('Failed to suspend server | VirtFusion');
+        ExtensionHelper::error('VirtFusion', 'Failed to suspend server');
 
         return;
     }
@@ -148,7 +148,7 @@ function VirtFusion_unsuspendServer($user, $params, $order)
     if ($response->status() == 204) {
         return true;
     } else {
-        error_log('Failed to unsuspend server | VirtFusion');
+        ExtensionHelper::error('VirtFusion', 'Failed to unsuspend server');
 
         return;
     }
@@ -172,7 +172,7 @@ function VirtFusion_terminateServer($user, $params, $order)
     if ($response->status() == 204) {
         return true;
     } else {
-        error_log('Failed to terminate server | VirtFusion');
+        ExtensionHelper::error('VirtFusion', 'Failed to terminate server');
 
         return;
     }
