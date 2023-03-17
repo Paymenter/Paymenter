@@ -12,6 +12,7 @@ use Illuminate\Support\Str;
 use RobThree\Auth\TwoFactorAuth;
 use App\Models\User;
 use App\Providers\RouteServiceProvider;
+use Illuminate\Support\Facades\Crypt;
 
 class AuthenticatedSessionController extends Controller
 {
@@ -34,7 +35,7 @@ class AuthenticatedSessionController extends Controller
     {
         $request->authenticate();
 
-        if(Auth::user()->tfa_secret){
+        if (Auth::user()->tfa_secret) {
             $request->session()->put('auth_confirmation_token', [
                 'user_id' => Auth::user()->id,
                 'token_value' => $token = Str::random(64),
@@ -58,7 +59,7 @@ class AuthenticatedSessionController extends Controller
     public function twoFactorChallenge()
     {
         // Check if auth_confirmation_token exists
-        if(!session()->has('auth_confirmation_token')){
+        if (!session()->has('auth_confirmation_token')) {
             return redirect()->route('login');
         }
         return view('auth.tfa');
@@ -75,16 +76,25 @@ class AuthenticatedSessionController extends Controller
 
         $token = $request->session()->get('auth_confirmation_token');
 
+        if (!$token) {
+            return redirect()->route('login');
+        }
+
+        if (CarbonImmutable::now()->greaterThan($token['expires_at'])) {
+            $request->session()->forget('auth_confirmation_token');
+            return redirect()->route('login')->withErrors(['code' => 'The 2FA code you entered has expired.']);
+        }
+
         $user = User::findOrFail($token['user_id']);
 
-        if($tfa->verifyCode($user->tfa_secret, $request->code, 2)){
+        if ($tfa->verifyCode(Crypt::decrypt($user->tfa_secret), $request->code, 2)) {
             Auth::loginUsingId($token['user_id']);
             $request->session()->regenerate();
+            $request->session()->forget('auth_confirmation_token');
             return redirect()->route('clients.home');
         } else {
             return back()->withErrors(['code' => 'The 2FA code you entered is incorrect.']);
         }
-
     }
 
     public function changePassword(Request $request)
