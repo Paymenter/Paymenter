@@ -9,6 +9,7 @@ use App\Models\Product;
 use App\Models\Extension;
 use App\Models\OrderProduct;
 use App\Models\OrderProductConfig;
+use Error;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Contracts\Encryption\DecryptException;
 
@@ -79,6 +80,7 @@ class ExtensionHelper
      */
     public static function error($extension, $message)
     {
+        error_log($extension . ': ' . $message);
     }
 
     /**

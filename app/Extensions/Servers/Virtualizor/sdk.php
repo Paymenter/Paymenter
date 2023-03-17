@@ -337,7 +337,7 @@ class Virtualizor_Admin_API
             'error' => @empty($ret['error']) ? [] : $ret['error'],
             'vs_info' => $ret['newvs'],
             'globals' => $ret['globals'],
-            'done' => $ret['done'] || 0,
+            'done' => $ret['done'] ?? 0,
         ];
     }
 
