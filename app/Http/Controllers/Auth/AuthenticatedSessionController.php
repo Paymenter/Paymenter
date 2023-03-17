@@ -11,6 +11,7 @@ use Carbon\CarbonImmutable;
 use Illuminate\Support\Str;
 use RobThree\Auth\TwoFactorAuth;
 use App\Models\User;
+use App\Providers\RouteServiceProvider;
 
 class AuthenticatedSessionController extends Controller
 {
@@ -46,6 +47,7 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
+        return redirect(RouteServiceProvider::HOME);
     }
 
     /** 
