@@ -7,6 +7,7 @@ use App\Models\Order;
 use App\Models\Invoice;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use RobThree\Auth\TwoFactorAuth;
 
 class HomeController extends Controller
 {
@@ -20,7 +21,45 @@ class HomeController extends Controller
 
     public function profile()
     {
+        $tfa = new TwoFactorAuth();
+        if(!auth()->user()->tfa_secret) {
+            $secret = $tfa->createSecret();
+            $qr = $tfa->getQRCodeImageAsDataUri(config('app.name', 'Paymenter') . '-' . auth()->user()->email, $secret);
+            return view('clients.profile', compact('secret', 'qr'));
+        }
         return view('clients.profile');
+    }
+
+    public function tfa(Request $request)
+    {
+        if($request->has('disable')) {
+            $user = User::find(auth()->user()->id);
+            if(!\Hash::check($request->password, $user->password)) {
+                return redirect()->back()->with('error', 'Invalid password');
+            }
+            $user->tfa_secret = null;
+            $user->save();
+            return redirect()->back()->with('success', 'Two factor authentication disabled');
+        }
+        $request->validate([
+            'secret' => 'required',
+            'code' => 'required',
+            'password' => 'required',
+        ]);
+        $user = User::find(auth()->user()->id);
+        if(!\Hash::check($request->password, $user->password)) {
+            return redirect()->back()->with('error', 'Invalid password');
+        }
+        $tfa = new TwoFactorAuth();
+        $secret = $request->secret;
+        $code = $request->code;
+        $valid = $tfa->verifyCode($secret, $code);
+        if($valid) {
+            $user->tfa_secret = $secret;
+            $user->save();
+            return redirect()->back()->with('success', 'Two factor authentication enabled');
+        }
+        return redirect()->back()->with('error', 'Invalid code');
     }
 
     public function password()

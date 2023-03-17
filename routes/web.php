@@ -18,6 +18,7 @@ Route::get('/home', [App\Http\Controllers\Clients\HomeController::class, 'index'
 Route::get('/manifest.json', [App\Http\Controllers\BasisController::class, 'manifest'])->name('manifest');
 Route::get('/profile', [App\Http\Controllers\Clients\HomeController::class, 'profile'])->name('clients.profile')->middleware(['auth', 'password.confirm']);
 Route::post('/profile', [App\Http\Controllers\Clients\HomeController::class, 'update'])->name('clients.profile.update')->middleware(['auth', 'password.confirm']);
+Route::post('/profile/tfa', [App\Http\Controllers\Clients\HomeController::class, 'tfa'])->name('clients.profile.tfa')->middleware(['auth', 'password.confirm']);
 Route::get('/change-password', [App\Http\Controllers\Clients\HomeController::class, 'password'])->name('clients.password.change-password')->middleware(['auth']);
 
 Route::group(['prefix' => 'checkout'], function () {
