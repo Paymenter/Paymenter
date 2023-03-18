@@ -2,6 +2,12 @@
     <x-slot name="title">
         {{ __('Products') }}
     </x-slot>
+    <script>
+        function removeElement(element) {
+            element.remove();
+            this.error = true;
+        }
+    </script>
     <div class="dark:bg-darkmode dark:text-darkmodetext py-12">
         <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
             <div class="dark:bg-darkmode2 overflow-hidden bg-white rounded-lg shadow-lg">
@@ -57,11 +63,3 @@
         </div>
     </div>
 </x-app-layout>
-
-
-<script>
-    function removeElement(element) {
-        element.remove();
-        this.error = true;
-    }
-</script>

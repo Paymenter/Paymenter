@@ -2,6 +2,11 @@
     <x-slot name="title">
         {{ __('Home') }}
     </x-slot>
+    <script>
+        function removeElement(element) {
+            element.remove();
+        }
+    </script>
     <x-success class="mt-4" />
     <div class="container w-11/12 h-full px-6 py-10 mx-auto md:w-4/5">
         <div class="w-full h-full rounded">
@@ -99,11 +104,4 @@
             </div>
         </div>
     </div>
-    </div>
 </x-app-layout>
-
-<script>
-    function removeElement(element) {
-        element.remove();
-    }
-</script>

@@ -7,7 +7,7 @@ use App\Http\Controllers\API\Clients\TicketController;
 use App\Http\Controllers\API\Clients\InvoiceController;
 
 Route::group(['middleware' => 'auth:sanctum'], function () {
-// Users
+    // Users
     Route::group(['prefix' => 'v1/users', 'middleware' => 'auth'], function () {
         Route::get('/', [UserController::class, 'getUser'])->name('api.client.v1.users.getUser');
     });
