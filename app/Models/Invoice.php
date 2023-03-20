@@ -14,6 +14,8 @@ class Invoice extends Model
         'order_id',
         'status',
         'paid_at',
+        'due_date',
+        'total',
     ];
 
     public function setStatusAttribute($value)

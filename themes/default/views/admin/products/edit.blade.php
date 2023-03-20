@@ -3,7 +3,30 @@
         {{ __('Products') }}
     </x-slot>
 
-
+    <div class="container h-full mx-auto">
+        <div class="p-6 mx-auto bg-white max-w-7xl pl-0 dark:bg-darkmode2 dark:border-darkmode">
+            <div class="flex flex-row overflow-x-auto lg:flex-wrap lg:space-x-1">
+                <div class="flex-none">
+                    <a href="{{ route('admin.products.edit', $product->id) }}"
+                        class="inline-flex justify-center w-full p-4 px-2 py-2 text-xs font-bold uppercase border-b-2 dark:text-darkmodetext dark:hover:bg-darkbutton border-logo text-logo">
+                        {{ __('Details') }}
+                    </a>
+                </div>
+                <div class="flex-none">
+                    <a href="{{ route('admin.products.pricing', $product->id) }}"
+                        class="inline-flex justify-center w-full p-4 px-2 py-2 text-xs font-bold text-gray-900 uppercase border-b-2 dark:text-darkmodetext dark:hover:bg-darkbutton border-y-transparent hover:border-logo hover:text-logo">
+                        {{ __('Pricing') }}
+                    </a>
+                </div>
+                <div class="flex-none">
+                    <a href="{{ route('admin.products.extension', $product->id) }}"
+                        class="inline-flex justify-center w-full p-4 px-2 py-2 text-xs font-bold text-gray-900 uppercase border-b-2 dark:text-darkmodetext dark:hover:bg-darkbutton border-y-transparent hover:border-logo hover:text-logo">
+                        {{ __('Extension') }}
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
     <div class="grid grid-cols-1 md:grid-cols-2 mt-4">
         <div class="text-2xl dark:text-darkmodetext">
             {{ __('Update product') }} {{ $product->name }}
@@ -23,9 +46,6 @@
                 role="menu" aria-orientation="vertical" aria-labelledby="menu-button" tabindex="-1"
                 id="moreOptions">
                 <div class="py-1 grid grid-cols-1" role="none">
-                    <a href="{{ route('admin.products.extension', $product->id) }}"
-                        class="block px-4 py-2 text-base text-gray-700 dark:text-darkmodetext dark:hover:bg-darkmode2 hover:bg-gray-100 hover:text-gray-900"
-                        role="menuitem" tabindex="-1" id="menu-item-0">Extension Settings</a>
                     <button
                         class="block px-4 py-2 text-base text-gray-700 dark:text-darkmodetext dark:hover:bg-darkmode2 hover:bg-gray-100"
                         role="menuitem" tabindex="-1" id="menu-item-0"
@@ -63,13 +83,6 @@
 
                 <textarea id="description" class="block w-full mt-1 rounded-lg dark:bg-darkmode" name="description" required
                     rows="4">{{ $product->description }}</textarea>
-            </div>
-            <div class="mt-4">
-                <label for="price">{{ __('Price') }}</label>
-
-                {{ config('settings::currency_sign') }}<input id="price"
-                    class="block w-full mt-1 rounded-lg dark:bg-darkmode" type="number" name="price" min="0"
-                    step="0.01" value="{{ number_format($product->price, 2) }}" required />
             </div>
             <div class="mt-4">
                 <label for="stock_enabled">{{ __('Enable Stock') }}</label>

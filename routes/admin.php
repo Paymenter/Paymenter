@@ -30,6 +30,8 @@ Route::group(['prefix' => 'admin'], function () {
         Route::post('/create', [App\Http\Controllers\Admin\ProductController::class, 'store'])->middleware(['auth.admin'])->name('admin.products.store');
         Route::get('/{product}/edit', [App\Http\Controllers\Admin\ProductController::class, 'edit'])->middleware(['auth.admin'])->name('admin.products.edit');
         Route::post('/{product}/edit', [App\Http\Controllers\Admin\ProductController::class, 'update'])->middleware(['auth.admin'])->name('admin.products.update');
+        Route::get('/{product}/pricing', [App\Http\Controllers\Admin\ProductController::class, 'pricing'])->middleware(['auth.admin'])->name('admin.products.pricing');
+        Route::post('/{product}/pricing', [App\Http\Controllers\Admin\ProductController::class, 'pricingUpdate'])->middleware(['auth.admin'])->name('admin.products.pricing.update');
         Route::get('/{product}/extension', [App\Http\Controllers\Admin\ProductController::class, 'extension'])->middleware(['auth.admin'])->name('admin.products.extension');
         Route::post('/{product}/extension', [App\Http\Controllers\Admin\ProductController::class, 'extensionUpdate'])->middleware(['auth.admin'])->name('admin.products.extension.update');
         Route::get('/{product}/extension/export', [App\Http\Controllers\Admin\ProductController::class, 'extensionExport'])->middleware(['auth.admin'])->name('admin.products.extension.export');

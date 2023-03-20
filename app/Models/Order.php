@@ -15,6 +15,7 @@ class Order extends Model
         'status',
         'client',
         'coupon',
+        'billing_cycle',
     ];
 
     public function total()

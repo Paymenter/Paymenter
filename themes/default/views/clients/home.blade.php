@@ -56,10 +56,7 @@
                             @foreach ($services as $service)
                                 @foreach ($service->products()->get() as $product)
                                     @php
-                                        $product = $product
-                                            ->product()
-                                            ->get()
-                                            ->first();
+                                        $product = $product->product()->get()->first();
                                     @endphp
                                     @if ($product)
                                         <tr>
@@ -68,11 +65,7 @@
                                             </td>
                                             <td class="text-center dark:text-white dark:bg-darkmode2 p-3"
                                                 data-order="0.00">
-                                                @if ($product->price == 0)
-                                                    {{ __('Free') }}
-                                                @else
-                                                    {{ config('settings::currency_sign') }}{{ number_format((float) $product->price . '', 2, '.', '') }}
-                                                @endif
+                                                {{ $product->price() ? config('settings::currency_sign') . $product->price() : __('Free') }}
                                             </td>
                                             <td class="text-center dark:text-white dark:bg-darkmode2 p-3">
                                                 {{ date('l jS F Y', strtotime($service->expiry_date)) }}</td>

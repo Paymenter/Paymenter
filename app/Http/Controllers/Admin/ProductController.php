@@ -8,6 +8,7 @@ use App\Models\Extension;
 use Illuminate\Http\Request;
 use App\Models\ProductSetting;
 use App\Http\Controllers\Controller;
+use App\Models\ProductPrice;
 
 class ProductController extends Controller
 {
@@ -90,6 +91,45 @@ class ProductController extends Controller
         $product->delete();
 
         return redirect()->route('admin.products')->with('success', 'Product deleted successfully');
+    }
+
+    public function pricing(Product $product)
+    {
+        $pricing = ProductPrice::where('product_id', $product->id)->first();
+        return view('admin.products.pricing', compact('product', 'pricing'));
+    }
+
+    public function pricingUpdate(Request $request, Product $product)
+    {
+        if($request->get('pricing') !== $product->prices()->get()->first()->type){
+            $request->validate([
+                'pricing' => 'required|in:recurring,free,one-time'
+            ]);
+            // Update it
+            $product->prices()->update([
+                'type' => $request->get('pricing')
+            ]);
+
+            return redirect()->route('admin.products.pricing', $product->id)->with('success', 'Product pricing updated successfully');
+        }
+        $product->prices()->update(
+            [
+                'monthly' => $request->get('monthly'),
+                'quarterly' => $request->get('quarterly'),
+                'semi_annually' => $request->get('semi_annually'),
+                'annually' => $request->get('annually'),
+                'biennially' => $request->get('biennially'),
+                'triennially' => $request->get('triennially'),
+                'monthly_setup' => $request->get('monthly_setup'),
+                'quarterly_setup' => $request->get('quarterly_setup'),
+                'semi_annually_setup' => $request->get('semi_annually_setup'),
+                'annually_setup' => $request->get('annually_setup'),
+                'biennially_setup' => $request->get('biennially_setup'),
+                'triennially_setup' => $request->get('triennially_setup'),
+            ]
+        );
+
+        return redirect()->route('admin.products.pricing', $product->id)->with('success', 'Product pricing updated successfully');
     }
 
     public function extension(Product $product)
