@@ -19,7 +19,6 @@ class CheckoutController extends Controller
         } else {
             $coupon = null;
         }
-
         if ($products) {
             foreach ($products as $product) {
                 $total += $product->price * $product->quantity;
@@ -59,6 +58,9 @@ class CheckoutController extends Controller
                 }
             }
         }
+        if ($product->prices()->get()->first()->type == 'recurring') {
+            return redirect()->route('checkout.config', $product->id);
+        }
         $product->quantity = 1;
         $cart = session()->get('cart');
         if (\Illuminate\Support\Arr::has($cart, $product->id)) {
@@ -71,6 +73,7 @@ class CheckoutController extends Controller
             return redirect()->back()->with('success', 'Product added to cart successfully!');
         } else {
             $cart[$product->id] = $product;
+            $product->price = $product->prices()->get()->first()->type == 'one-time' ? $product->prices()->get()->first()->monthly : 0;
             session()->put('cart', $cart);
 
             return redirect()->back()->with('success', 'Product added to cart successfully!');
@@ -82,15 +85,17 @@ class CheckoutController extends Controller
         $server = Extension::find($product->server_id);
         include_once base_path('app/Extensions/Servers/' . $server->name . '/index.php');
         $function = $server->name . '_getUserConfig';
-        if (!function_exists($function)) {
+        if (!function_exists($function) && $product->prices()->get()->first()->type != 'recurring') {
             return redirect()->back()->with('error', 'Config Not Found');
         }
-        $userConfig = json_decode(json_encode($function($product)));
-        if (!isset($userConfig)) {
-            return redirect()->route('checkout.index');
+        if (function_exists($function)) {
+            $userConfig = json_decode(json_encode($function($product)));
+        } else {
+            $userConfig = array();
         }
+        $prices = $product->prices()->get()->first();
 
-        return view('checkout.config', compact('product', 'userConfig'));
+        return view('checkout.config', compact('product', 'userConfig', 'prices'));
     }
 
     public function configPost(Request $request, Product $product)
@@ -98,9 +103,12 @@ class CheckoutController extends Controller
         $server = Extension::find($product->server_id);
         include_once base_path('app/Extensions/Servers/' . $server->name . '/index.php');
         $function = $server->name . '_getUserConfig';
-        if (!function_exists($function)) {
+        if (!function_exists($function) && $product->prices()->get()->first()->type != 'recurring') {
             return redirect()->back()->with('error', 'Config Not Found');
         }
+
+        $product->price = $product->prices()->get()->first()->{$request->input('billingcycle')} ?? $product->price; 
+
         $userConfig = json_decode(json_encode($function($product)));
         $config = [];
         foreach ($userConfig as $configItem) {

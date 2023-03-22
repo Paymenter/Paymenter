@@ -64,7 +64,7 @@
                         </div>
                     </div>
                 @elseif($pricing->type == 'recurring')
-                    <div class="flex flex-row text-sm gap-3 mt-2">
+                    <div class="flex flex-row text-sm gap-4 mt-2">
                         <div class="flex flex-col">
                             <label class="text-gray-700 dark:text-darkmodetext" for="monthly">
                                 {{ __('Monthly') }}
@@ -127,6 +127,25 @@
                         </div>
                     </div>
                 @endif
+                <!-- Quantity -->
+                <div class="flex flex-row text-sm mt-4">
+                    <div class="flex flex-col">
+                        <label class="text-gray-700 dark:text-darkmodetext" for="allow_quantity">
+                            {{ __('Allow multiple quantities') }}
+                        </label>
+                        <select name="allow_quantity" id="allow_quantity" class="form-input">
+                            <option value="0" @if ($product->allow_quantity == 0) selected @endif>
+                                {{ __('No') }}
+                            </option>
+                            <option value="1" @if ($product->allow_quantity == 1) selected @endif>
+                                {{ __('Yes, Multiple Services (Each represents a own individual service instance)') }}
+                            </option>
+                            <option value="2" @if ($product->allow_quantity == 2) selected @endif>
+                                {{ __('Yes, Single Service (One service instance with multiple quantity)') }}
+                            </option>
+                        </select>
+                    </div>
+                </div>
                 <button type="submit"
                     class="inline-flex justify-center w-max float-right px-4 py-2 mt-4 mb-4 text-sm font-medium text-white uppercase transition-all duration-150 ease-linear bg-logo rounded shadow outline-none active:bg-logo hover:shadow-lg focus:outline-none">
                     {{ __('Save') }}

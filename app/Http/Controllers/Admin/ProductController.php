@@ -101,6 +101,10 @@ class ProductController extends Controller
 
     public function pricingUpdate(Request $request, Product $product)
     {
+        $request->validate([
+            'pricing' => 'required|in:recurring,free,one-time',
+            'allow_quantity' => 'in:0,1,2'
+        ]);
         if($request->get('pricing') !== $product->prices()->get()->first()->type){
             $request->validate([
                 'pricing' => 'required|in:recurring,free,one-time'
@@ -128,6 +132,9 @@ class ProductController extends Controller
                 'triennially_setup' => $request->get('triennially_setup'),
             ]
         );
+        $product->update([
+            'allow_quantity' => $request->get('allow_quantity'),
+        ]);
 
         return redirect()->route('admin.products.pricing', $product->id)->with('success', 'Product pricing updated successfully');
     }

@@ -14,6 +14,7 @@ class OrderProduct extends Model
         'product_id',
         'quantity',
         'price',
+        'billing_cycle',
     ];
 
     public function config()

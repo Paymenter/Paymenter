@@ -17,6 +17,7 @@ class Product extends Model
         'server_id',
         'stock',
         'stock_enabled',
+        'allow_quantity',
     ];
 
     public function category()

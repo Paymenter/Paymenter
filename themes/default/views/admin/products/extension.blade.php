@@ -1,6 +1,6 @@
 <x-admin-layout>
     <x-slot name="title">
-        {{ __('Editing') . $product->name }}
+        {{ __('Editing ') . $product->name }}
     </x-slot>
     <div class="container h-full mx-auto">
         <div class="p-6 mx-auto bg-white max-w-7xl pl-0 dark:bg-darkmode2 dark:border-darkmode">

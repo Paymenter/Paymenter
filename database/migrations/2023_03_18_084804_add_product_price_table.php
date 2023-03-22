@@ -31,8 +31,8 @@ return new class extends Migration
             $table->foreignId('product_id')->constrained('products');
             $table->timestamps();
         });
-        Schema::table('orders', function (Blueprint $table) {
-            $table->string('billing_cycle')->nullable();
+        Schema::table('order_products', function (Blueprint $table) {
+            $table->string('billing_cycle')->after('price')->nullable();
         });
         $products = \App\Models\Product::all();
         foreach ($products as $product) {
@@ -49,6 +49,7 @@ return new class extends Migration
         }
         Schema::table('products', function (Blueprint $table) {
             $table->dropColumn('price');
+            $table->string('allow_quantity')->after('image')->nullable();
         });
     }
 
@@ -59,11 +60,12 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::table('orders', function (Blueprint $table) {
+        Schema::table('order_products', function (Blueprint $table) {
             $table->dropColumn('billing_cycle');
         });
         Schema::table('products', function (Blueprint $table) {
             $table->decimal('price', 10, 2)->nullable();
+            $table->dropColumn('allow_quantity');
         });
         $productPrices = \App\Models\ProductPrice::all();
         foreach ($productPrices as $productPrice) {
