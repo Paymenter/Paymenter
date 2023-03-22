@@ -106,18 +106,25 @@ class CheckoutController extends Controller
         if (!function_exists($function) && $product->prices()->get()->first()->type != 'recurring') {
             return redirect()->back()->with('error', 'Config Not Found');
         }
-
-        $product->price = $product->prices()->get()->first()->{$request->input('billingcycle')} ?? $product->price; 
-
-        $userConfig = json_decode(json_encode($function($product)));
-        $config = [];
-        foreach ($userConfig as $configItem) {
-            if (!$request->input($configItem->name)) {
-                return redirect()->back()->with('error', $configItem->name . ' is required');
+        $prices = $product->prices()->get()->first();
+        if (function_exists($function)) {
+            $userConfig = json_decode(json_encode($function($product)));
+            $config = [];
+            foreach ($userConfig as $configItem) {
+                if (!$request->input($configItem->name)) {
+                    return redirect()->back()->with('error', $configItem->name . ' is required');
+                }
+                $config[$configItem->name] = $request->input($configItem->name);
             }
-            $config[$configItem->name] = $request->input($configItem->name);
+            $product->config = $config;
         }
-        $product->config = $config;
+        if ($prices->type == 'recurring') {
+            $product->price = $product->prices()->get()->first()->{$request->input('billingcycle')} ? $product->prices()->get()->first()->{$request->input('billingcycle')} : $product->prices()->get()->first()->monthly;
+        } else if ($prices->type == 'one-time') {
+            $product->price = $product->prices()->get()->first()->monthly;
+        } else {
+            $product->price = 0;
+        }
         $product->quantity = 1;
         $cart = session()->get('cart');
         if (\Illuminate\Support\Arr::has($cart, $product->id)) {
