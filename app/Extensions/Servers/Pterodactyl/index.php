@@ -229,7 +229,13 @@ function Pterodactyl_createServer($user, $parmas, $order, $product)
             'external_id' => (string) $product->id,
         ];
     }
-    Pterodactyl_postRequest($url, $json);
+    $response = Pterodactyl_postRequest($url, $json);
+
+    if (!$response->successful()) {
+        ExtensionHelper::error('Pterodactyl', 'Failed to create server for order ' . $product->id . ' with error ' . $response->body());
+
+        return;
+    }
 
     return true;
 }

@@ -252,8 +252,6 @@ class ExtensionHelper
             $user = User::findOrFail($order->client);
             $function = $extension->name . '_createServer';
             $function($user, $config, $order, $product2);
-
-            return true;
         }
     }
 
@@ -284,8 +282,6 @@ class ExtensionHelper
             $user = User::findOrFail($order->client);
             $function = $extension->name . '_suspendServer';
             $function($user, $config, $order, $product2);
-
-            return true;
         }
     }
 
@@ -316,8 +312,6 @@ class ExtensionHelper
             $user = User::findOrFail($order->client);
             $function = $extension->name . '_unsuspendServer';
             $function($user, $config, $order, $product2);
-
-            return true;
         }
     }
 
@@ -348,8 +342,6 @@ class ExtensionHelper
             $user = User::findOrFail($order->client);
             $function = $extension->name . '_terminateServer';
             $function($user, $config, $order, $product2);
-
-            return true;
         }
     }
 
