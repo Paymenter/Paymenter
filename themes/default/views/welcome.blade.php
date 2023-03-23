@@ -63,6 +63,9 @@
                                 <!-- display all categories with products -->
                                 <h1 class="text-2xl font-bold text-center">{{ __('Categories') }}</h1>
                                 @foreach ($categories as $category)
+                                    @if($category->products->count() == 0)
+                                        @continue
+                                    @endif
                                     <div class="mt-4">
                                         <h2 class="text-xl font-bold text-left">{{ $category->name }}</h2>
                                         <hr class="mb-4 mt-1 border-b-1 border-gray-300 dark:border-gray-600">
