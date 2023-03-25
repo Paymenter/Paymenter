@@ -10,7 +10,7 @@
 ## A advanced payment system for your hosting company
 ### About
 
-Introducing an advanced payment system for your hosting company, Paymenter! Built using PHP and MySQL, Paymenter is designed to be easy to use and install, with a user-friendly client and admin area. It's also highly customizable, with the ability to install a range of addons and themes from our marketplace created by talented developers and designers.
+Introducing an advanced payment system for your hosting company, Paymenter!  Paymenter is designed to be easy to use and install, with a user-friendly client and admin area. It's also highly customizable, with the ability to install a range of addons and themes from our marketplace created by talented developers and designers.
 
 ## Features
 - Free and open-source
