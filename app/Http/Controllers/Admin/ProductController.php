@@ -45,8 +45,8 @@ class ProductController extends Controller
         $product = Product::create($data);
         ProductPrice::create([
             'product_id' => $product->id,
-            'monthly' => $product->price,
-            'billing_cycle' => 'recurring',
+            'monthly' => $data['price'],
+            'type' => $data['price'] > 0 ? 'monthly' : 'free',
         ]);
 
         return redirect()->route('admin.products.edit', $product->id)->with('success', 'Product created successfully');
@@ -64,7 +64,6 @@ class ProductController extends Controller
         $data = request()->validate([
             'name' => 'required',
             'description' => 'required|string|min:10',
-            'price' => 'required',
             'category_id' => 'required|integer',
             'image' => 'image|mimes:jpeg,png,jpg,gif,svg|max:5242',
             'stock' => 'integer|required_if:stock_enabled,true',
@@ -93,6 +92,7 @@ class ProductController extends Controller
 
     public function destroy(Product $product)
     {
+        $product->prices()->delete();
         $product->delete();
 
         return redirect()->route('admin.products')->with('success', 'Product deleted successfully');

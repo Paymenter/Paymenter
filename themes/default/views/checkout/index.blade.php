@@ -39,6 +39,7 @@
                                     </div>
                                 </td>
                                 <td>
+                                    @if($product->allow_quantity == 1 || $product->allow_quantity == 2)
                                     <form method="POST" action="{{ route('checkout.update', $product->id) }}">
                                         @csrf
                                         <div
@@ -54,6 +55,7 @@
                                             </button>
                                         </div>
                                     </form>
+                                    @endif
                                 </td>
                                 <td class="px-6 py-4 text-lg text-gray-500 whitespace-nowrap dark:text-darkmodetext">
                                     <span class="text-lg font-bold">{{ config('settings::currency_sign') }}

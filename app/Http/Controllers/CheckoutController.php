@@ -67,8 +67,12 @@ class CheckoutController extends Controller
             if ($product->stock_enabled && $product->stock <= $cart[$product->id]->quantity) {
                 return redirect()->back()->with('error', 'Product is out of stock');
             }
-            ++$cart[$product->id]->quantity;
-            session()->put('cart', $cart);
+            if ($product->quantity != 0) {
+                ++$cart[$product->id]->quantity;
+                session()->put('cart', $cart);
+            } else {
+                session()->put('cart', $cart);
+            }
 
             return redirect()->back()->with('success', 'Product added to cart successfully!');
         } else {
@@ -96,7 +100,7 @@ class CheckoutController extends Controller
                 $userConfig = json_decode(json_encode($function($product)));
             }
         }
-        if(!isset($userConfig)) $userConfig = array();
+        if (!isset($userConfig)) $userConfig = array();
         $prices = $product->prices()->get()->first();
 
         return view('checkout.config', compact('product', 'userConfig', 'prices'));
@@ -254,7 +258,7 @@ class CheckoutController extends Controller
             }
         }
 
-        return redirect()->route('clients.invoice.show', $invoice->id);
+        return redirect()->route('clients.home')->with('success', 'Order created successfully');
     }
 
     private function createOrderProduct(Order $order, Product $product, Invoice $invoice, $setQuantity = true)
@@ -296,7 +300,7 @@ class CheckoutController extends Controller
         if ($product->price == 0) {
             $orderProduct->status = 'paid';
             $orderProduct->save();
-            ExtensionHelper::createServer($product);
+            ExtensionHelper::createServer($orderProduct);
         } else {
             $orderProduct->status = 'pending';
             $orderProduct->save();
@@ -339,8 +343,12 @@ class CheckoutController extends Controller
             if ($product->stock_enabled && $product->stock < $request->quantity) {
                 return redirect()->back()->with('error', 'Product is out of stock');
             }
-            $cart[$product->id]->quantity = $request->quantity;
-            session()->put('cart', $cart);
+            if ($product->quantity != 0) {
+                $cart[$product->id]->quantity = $request->quantity;
+                session()->put('cart', $cart);
+            } else {
+                session()->put('cart', $cart);
+            }
         }
 
         return redirect()->back()->with('success', 'Product updated successfully');

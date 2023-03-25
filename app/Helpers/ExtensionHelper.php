@@ -36,10 +36,14 @@ class ExtensionHelper
             return;
         }
         if ($order->status == 'suspended') {
-            ExtensionHelper::unsuspendServer($order);
+            foreach($order->products() as $product) {
+                ExtensionHelper::unsuspendServer($product);
+            }
         }
         if ($order->status == 'pending') {
-            ExtensionHelper::createServer($order);
+            foreach($order->products() as $product) {
+                ExtensionHelper::createServer($product);
+            }
         }
         $order->status = 'paid';
         $order->save();
@@ -225,137 +229,128 @@ class ExtensionHelper
         return $pay;
     }
 
-    public static function createServer(Order $order)
+    public static function createServer(OrderProduct $product2)
     {
-        foreach ($order->products()->get() as $product2) {
-            $product = Product::findOrFail($product2->product_id);
-            if (!isset($product->server_id)) {
-                return;
-            }
-            $extension = Extension::where('id', $product->server_id)->first();
-            if (!$extension) {
-                return false;
-            }
-            if (!file_exists(app_path() . '/Extensions/Servers/' . $extension->name . '/index.php')) {
-                return false;
-            }
-            include_once app_path() . '/Extensions/Servers/' . $extension->name . '/index.php';
-            $settings = $product->settings()->get();
-            $config = [];
-            foreach ($settings as $setting) {
-                $config[$setting->name] = $setting->value;
-            }
-            $config['config_id'] = $product->id;
-            foreach ($product2->config()->get() as $config2) {
-                $config['config'][$config2->key] = $config2->value;
-            }
-            $user = User::findOrFail($order->client);
-            $function = $extension->name . '_createServer';
-            $function($user, $config, $order, $product2);
-
-            return true;
+        $order = $product2->order()->first();
+        $product = Product::findOrFail($product2->product_id);
+        if (!isset($product->server_id)) {
+            return;
         }
+        $extension = Extension::where('id', $product->server_id)->first();
+        if (!$extension) {
+            return false;
+        }
+        if (!file_exists(app_path() . '/Extensions/Servers/' . $extension->name . '/index.php')) {
+            return false;
+        }
+        include_once app_path() . '/Extensions/Servers/' . $extension->name . '/index.php';
+        $settings = $product->settings()->get();
+        $config = [];
+        foreach ($settings as $setting) {
+            $config[$setting->name] = $setting->value;
+        }
+        $config['config_id'] = $product->id;
+        foreach ($product2->config()->get() as $config2) {
+            $config['config'][$config2->key] = $config2->value;
+        }
+        $user = User::findOrFail($order->client);
+        $function = $extension->name . '_createServer';
+        $function($user, $config, $order, $product2);
     }
 
-    public static function suspendServer(Order $order)
+    public static function suspendServer(OrderProduct $product2)
     {
-        foreach ($order->products()->get() as $product2) {
-            $product = Product::findOrFail($product2->product_id);
-            if (!isset($product->server_id)) {
-                return;
-            }
-            $extension = Extension::where('id', $product->server_id)->first();
-            if (!$extension) {
-                return false;
-            }
-            if (!file_exists(app_path() . '/Extensions/Servers/' . $extension->name . '/index.php')) {
-                return false;
-            }
-            include_once app_path() . '/Extensions/Servers/' . $extension->name . '/index.php';
-            $settings = $product->settings()->get();
-            $config = [];
-            foreach ($settings as $setting) {
-                $config[$setting->name] = $setting->value;
-            }
-            $config['config_id'] = $product->id;
-            foreach ($product2->config()->get() as $config2) {
-                $config['config'][$config2->key] = $config2->value;
-            }
-            $user = User::findOrFail($order->client);
-            $function = $extension->name . '_suspendServer';
-            $function($user, $config, $order, $product2);
+        $order = $product2->order()->first();
 
-            return true;
+        $product = Product::findOrFail($product2->product_id);
+        if (!isset($product->server_id)) {
+            return;
         }
+        $extension = Extension::where('id', $product->server_id)->first();
+        if (!$extension) {
+            return false;
+        }
+        if (!file_exists(app_path() . '/Extensions/Servers/' . $extension->name . '/index.php')) {
+            return false;
+        }
+        include_once app_path() . '/Extensions/Servers/' . $extension->name . '/index.php';
+        $settings = $product->settings()->get();
+        $config = [];
+        foreach ($settings as $setting) {
+            $config[$setting->name] = $setting->value;
+        }
+        $config['config_id'] = $product->id;
+        foreach ($product2->config()->get() as $config2) {
+            $config['config'][$config2->key] = $config2->value;
+        }
+        $user = User::findOrFail($order->client);
+        $function = $extension->name . '_suspendServer';
+        $function($user, $config, $order, $product2);
     }
 
-    public static function unsuspendServer(Order $order)
+    public static function unsuspendServer(OrderProduct $product2)
     {
-        foreach ($order->products()->get() as $product2) {
-            $product = Product::findOrFail($product2->product_id);
-            if (!isset($product->server_id)) {
-                return;
-            }
-            $extension = Extension::where('id', $product->server_id)->first();
-            if (!$extension) {
-                return false;
-            }
-            if (!file_exists(app_path() . '/Extensions/Servers/' . $extension->name . '/index.php')) {
-                return false;
-            }
-            include_once app_path() . '/Extensions/Servers/' . $extension->name . '/index.php';
-            $settings = $product->settings()->get();
-            $config = [];
-            foreach ($settings as $setting) {
-                $config[$setting->name] = $setting->value;
-            }
-            $config['config_id'] = $product->id;
-            foreach ($product2->config()->get() as $config2) {
-                $config['config'][$config2->key] = $config2->value;
-            }
-            $user = User::findOrFail($order->client);
-            $function = $extension->name . '_unsuspendServer';
-            $function($user, $config, $order, $product2);
+        $order = $product2->order()->first();
 
-            return true;
+        $product = Product::findOrFail($product2->product_id);
+        if (!isset($product->server_id)) {
+            return;
         }
+        $extension = Extension::where('id', $product->server_id)->first();
+        if (!$extension) {
+            return false;
+        }
+        if (!file_exists(app_path() . '/Extensions/Servers/' . $extension->name . '/index.php')) {
+            return false;
+        }
+        include_once app_path() . '/Extensions/Servers/' . $extension->name . '/index.php';
+        $settings = $product->settings()->get();
+        $config = [];
+        foreach ($settings as $setting) {
+            $config[$setting->name] = $setting->value;
+        }
+        $config['config_id'] = $product->id;
+        foreach ($product2->config()->get() as $config2) {
+            $config['config'][$config2->key] = $config2->value;
+        }
+        $user = User::findOrFail($order->client);
+        $function = $extension->name . '_unsuspendServer';
+        $function($user, $config, $order, $product2);
     }
 
-    public static function terminateServer(Order $order)
+    public static function terminateServer(OrderProduct $product2)
     {
-        foreach ($order->products()->get() as $product2) {
-            $product = Product::findOrFail($product2->product_id);
-            if (!isset($product->server_id)) {
-                return;
-            }
-            $extension = Extension::where('id', $product->server_id)->first();
-            if (!$extension) {
-                return false;
-            }
-            if (!file_exists(app_path() . '/Extensions/Servers/' . $extension->name . '/index.php')) {
-                return false;
-            }
-            include_once app_path() . '/Extensions/Servers/' . $extension->name . '/index.php';
-            $settings = $product->settings()->get();
-            $config = [];
-            foreach ($settings as $setting) {
-                $config[$setting->name] = $setting->value;
-            }
-            $config['config_id'] = $product->id;
-            foreach ($product2->config()->get() as $config2) {
-                $config['config'][$config2->key] = $config2->value;
-            }
-            $user = User::findOrFail($order->client);
-            $function = $extension->name . '_terminateServer';
-            $function($user, $config, $order, $product2);
+        $order = $product2->order()->first();
 
-            return true;
+        $product = Product::findOrFail($product2->product_id);
+        if (!isset($product->server_id)) {
+            return;
         }
+        $extension = Extension::where('id', $product->server_id)->first();
+        if (!$extension) {
+            return false;
+        }
+        if (!file_exists(app_path() . '/Extensions/Servers/' . $extension->name . '/index.php')) {
+            return false;
+        }
+        include_once app_path() . '/Extensions/Servers/' . $extension->name . '/index.php';
+        $settings = $product->settings()->get();
+        $config = [];
+        foreach ($settings as $setting) {
+            $config[$setting->name] = $setting->value;
+        }
+        $config['config_id'] = $product->id;
+        foreach ($product2->config()->get() as $config2) {
+            $config['config'][$config2->key] = $config2->value;
+        }
+        $user = User::findOrFail($order->client);
+        $function = $extension->name . '_terminateServer';
+        $function($user, $config, $order, $product2);
     }
 
     public static function getLink(OrderProduct $product)
     {
-        if(!isset($product->product()->get()->first()->server_id)) {
+        if (!isset($product->product()->get()->first()->server_id)) {
             return false;
         }
         $extension = Extension::where('id', $product->product()->get()->first()->server_id)->first();
