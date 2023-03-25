@@ -37,8 +37,9 @@ jobs:
     - name: Run migrations
       run: php artisan migrate
       env:
-        DB_CONNECTION: sqlite
-        DB_DATABASE: database/database.sqlite
+        DB_CONNECTION: mysql
+        DB_DATABASE: paymenter_test
+        DB_PORT: ${{ job.services.mysql.ports[3306] }}
     - name: Install Node.js
       uses: actions/setup-node@v2
       with:
