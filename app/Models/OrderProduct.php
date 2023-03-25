@@ -15,6 +15,8 @@ class OrderProduct extends Model
         'quantity',
         'price',
         'billing_cycle',
+        'expiry_date',
+        'status',
     ];
 
     public function config()

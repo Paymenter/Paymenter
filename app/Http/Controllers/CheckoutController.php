@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Helpers\ExtensionHelper;
-use App\Models\{Extension, Invoice, OrderProduct, OrderProductConfig, Order, Product, User, Coupon};
+use App\Models\{Extension, Invoice, OrderProduct, OrderProductConfig, Order, Product, User, Coupon, InvoiceItem};
 
 class CheckoutController extends Controller
 {
@@ -119,7 +119,8 @@ class CheckoutController extends Controller
             $product->config = $config;
         }
         if ($prices->type == 'recurring') {
-            $product->price = $product->prices()->get()->first()->{$request->input('billingcycle')} ? $product->prices()->get()->first()->{$request->input('billingcycle')} : $product->prices()->get()->first()->monthly;
+            $product->price = $product->prices()->get()->first()->{$request->input('billing_cycle')} ?? $product->prices()->get()->first()->monthly;
+            $product->billing_cycle = $request->input('billing_cycle');
         } else if ($prices->type == 'one-time') {
             $product->price = $product->prices()->get()->first()->monthly;
         } else {
@@ -165,32 +166,8 @@ class CheckoutController extends Controller
         $user = User::findOrFail(auth()->user()->id);
         $order = new Order();
         $order->client = $user->id;
-        $order->expiry_date = date('Y-m-d H:i:s', strtotime('+1 month'));
-        $order->status = 'pending';
         $order->coupon = session('coupon');
         $order->save();
-        foreach ($products as $product) {
-            $orderProduct = new OrderProduct();
-            $orderProduct->order_id = $order->id;
-            $orderProduct->product_id = $product->id;
-            $orderProduct->quantity = $product->quantity;
-            $orderProduct->price = $product->price;
-            $orderProduct->save();
-            if (isset($product->config)) {
-                foreach ($product->config as $key => $value) {
-                    $orderProductConfig = new OrderProductConfig();
-                    $orderProductConfig->order_product_id = $orderProduct->id;
-                    $orderProductConfig->key = $key;
-                    $orderProductConfig->value = $value;
-                    $orderProductConfig->save();
-                }
-            }
-        }
-        if ($total == 0) {
-            $order->status = 'paid';
-            $order->save();
-            ExtensionHelper::createServer($order);
-        }
 
         $invoice = new Invoice();
         $invoice->user_id = $user->id;
@@ -201,6 +178,17 @@ class CheckoutController extends Controller
             $invoice->status = 'pending';
         }
         $invoice->save();
+        foreach ($products as $product) {
+            // If quantity is more than 1, create multiple order products
+            if ($product->allow_quantity == 1)
+                for ($i = 0; $i < $product->quantity; ++$i) {
+                    $this->createOrderProduct($order, $product, $invoice, false);
+                }
+            else if ($product->allow_quantity == 2)
+                $this->createOrderProduct($order, $product, $invoice);
+            else
+                $this->createOrderProduct($order, $product, $invoice);
+        }
 
         session()->forget('cart');
         session()->forget('coupon');
@@ -258,6 +246,59 @@ class CheckoutController extends Controller
         }
 
         return redirect()->route('clients.invoice.show', $invoice->id);
+    }
+
+    private function createOrderProduct(Order $order, Product $product, Invoice $invoice, $setQuantity = true)
+    {
+        $orderProduct = new OrderProduct();
+        $orderProduct->order_id = $order->id;
+        $orderProduct->product_id = $product->id;
+        $orderProduct->quantity = $product->quantity;
+        $orderProduct->price = $product->price;
+        if ($product->billing_cycle) {
+            $orderProduct->billing_cycle = $product->billing_cycle;
+            if ($product->billing_cycle == 'monthly') {
+                $orderProduct->expiry_date = date('Y-m-d H:i:s', strtotime('+1 month'));
+            } elseif ($product->billing_cycle == 'quarterly') {
+                $orderProduct->expiry_date = date('Y-m-d H:i:s', strtotime('+3 months'));
+            } elseif ($product->billing_cycle == 'semi_annually') {
+                $orderProduct->expiry_date = date('Y-m-d H:i:s', strtotime('+6 months'));
+            } elseif ($product->billing_cycle == 'annually') {
+                $orderProduct->expiry_date = date('Y-m-d H:i:s', strtotime('+1 year'));
+            } elseif ($product->billing_cycle == 'biennially') {
+                $orderProduct->expiry_date = date('Y-m-d H:i:s', strtotime('+2 years'));
+            } elseif ($product->billing_cycle == 'triennially') {
+                $orderProduct->expiry_date = date('Y-m-d H:i:s', strtotime('+3 years'));
+            }
+            $orderProduct->save();
+        }
+        if ($setQuantity) $orderProduct->quantity = $product->quantity ?? 1;
+        else $orderProduct->quantity = 1;
+        $orderProduct->save();
+        if (isset($product->config)) {
+            foreach ($product->config as $key => $value) {
+                $orderProductConfig = new OrderProductConfig();
+                $orderProductConfig->order_product_id = $orderProduct->id;
+                $orderProductConfig->key = $key;
+                $orderProductConfig->value = $value;
+                $orderProductConfig->save();
+            }
+        }
+        if ($product->price == 0) {
+            $orderProduct->status = 'paid';
+            $orderProduct->save();
+            ExtensionHelper::createServer($product);
+        } else {
+            $orderProduct->status = 'pending';
+            $orderProduct->save();
+        }
+        $invoiceProduct = new InvoiceItem();
+        $invoiceProduct->invoice_id = $invoice->id;
+        $invoiceProduct->product_id = $orderProduct->id;
+        $invoiceProduct->total = $orderProduct->price * $orderProduct->quantity;
+        $description = $orderProduct->billing_cycle ? '(' . now()->format('Y-m-d') . ' - ' . date('Y-m-d', strtotime($orderProduct->expiry_date)) . ')' : '';
+        $invoiceProduct->description = $product->name . ' ' . $description;
+        $invoiceProduct->save();
     }
 
     public function remove(Request $request, $product)

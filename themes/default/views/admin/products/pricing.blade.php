@@ -90,6 +90,18 @@
                                 value="{{ $pricing->quarterly_setup }}" class="form-input">
                         </div>
                         <div class="flex flex-col">
+                            <label class="text-gray-700 dark:text-darkmodetext" for="semiannually">
+                                {{ __('Semiannually') }}
+                            </label>
+                            <input type="text" name="semi_annually" id="semi_annually" value="{{ $pricing->semi_annually }}"
+                                class="form-input">
+                            <label class="text-gray-700 dark:text-darkmodetext" for="semi_annually_setup">
+                                {{ __('Semiannually Setup Fee') }}
+                            </label>
+                            <input type="text" name="semi_annually_setup" id="semi_annually_setup_fee"
+                                value="{{ $pricing->semi_annually_setup }}" class="form-input">
+                        </div>
+                        <div class="flex flex-col">
                             <label class="text-gray-700 dark:text-darkmodetext" for="annually">
                                 {{ __('Annually') }}
                             </label>

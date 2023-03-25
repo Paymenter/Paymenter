@@ -33,6 +33,12 @@ return new class extends Migration
         });
         Schema::table('order_products', function (Blueprint $table) {
             $table->string('billing_cycle')->after('price')->nullable();
+            $table->date('expiry_date')->after('billing_cycle')->nullable();
+            $table->string('status')->after('expiry_date')->nullable();
+        });
+        Schema::table('orders', function (Blueprint $table) {
+            $table->dropColumn('expiry_date');
+            $table->dropColumn('status');
         });
         $products = \App\Models\Product::all();
         foreach ($products as $product) {
@@ -62,6 +68,12 @@ return new class extends Migration
     {
         Schema::table('order_products', function (Blueprint $table) {
             $table->dropColumn('billing_cycle');
+            $table->dropColumn('expiry_date');
+            $table->dropColumn('status');
+        });
+        Schema::table('orders', function (Blueprint $table) {
+            $table->date('expiry_date')->nullable();
+            $table->string('status')->after('expiry_date')->nullable();
         });
         Schema::table('products', function (Blueprint $table) {
             $table->decimal('price', 10, 2)->nullable();
