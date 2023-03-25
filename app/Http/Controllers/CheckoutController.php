@@ -83,16 +83,20 @@ class CheckoutController extends Controller
     public function config(Request $request, Product $product)
     {
         $server = Extension::find($product->server_id);
-        include_once base_path('app/Extensions/Servers/' . $server->name . '/index.php');
-        $function = $server->name . '_getUserConfig';
-        if (!function_exists($function) && $product->prices()->get()->first()->type != 'recurring') {
+        if (!$server && $product->prices()->get()->first()->type != 'recurring') {
             return redirect()->back()->with('error', 'Config Not Found');
         }
-        if (function_exists($function)) {
-            $userConfig = json_decode(json_encode($function($product)));
-        } else {
-            $userConfig = array();
+        if ($server) {
+            include_once base_path('app/Extensions/Servers/' . $server->name . '/index.php');
+            $function = $server->name . '_getUserConfig';
+            if (!function_exists($function) && $product->prices()->get()->first()->type != 'recurring') {
+                return redirect()->back()->with('error', 'Config Not Found');
+            }
+            if (function_exists($function)) {
+                $userConfig = json_decode(json_encode($function($product)));
+            }
         }
+        if(!isset($userConfig)) $userConfig = array();
         $prices = $product->prices()->get()->first();
 
         return view('checkout.config', compact('product', 'userConfig', 'prices'));
@@ -101,22 +105,27 @@ class CheckoutController extends Controller
     public function configPost(Request $request, Product $product)
     {
         $server = Extension::find($product->server_id);
-        include_once base_path('app/Extensions/Servers/' . $server->name . '/index.php');
-        $function = $server->name . '_getUserConfig';
-        if (!function_exists($function) && $product->prices()->get()->first()->type != 'recurring') {
+        $prices = $product->prices()->get()->first();
+        if (!$server && $prices->type != 'recurring') {
             return redirect()->back()->with('error', 'Config Not Found');
         }
-        $prices = $product->prices()->get()->first();
-        if (function_exists($function)) {
-            $userConfig = json_decode(json_encode($function($product)));
-            $config = [];
-            foreach ($userConfig as $configItem) {
-                if (!$request->input($configItem->name)) {
-                    return redirect()->back()->with('error', $configItem->name . ' is required');
-                }
-                $config[$configItem->name] = $request->input($configItem->name);
+        if ($server) {
+            include_once base_path('app/Extensions/Servers/' . $server->name . '/index.php');
+            $function = $server->name . '_getUserConfig';
+            if (!function_exists($function) && $prices->type != 'recurring') {
+                return redirect()->back()->with('error', 'Config Not Found');
             }
-            $product->config = $config;
+            if (function_exists($function)) {
+                $userConfig = json_decode(json_encode($function($product)));
+                $config = [];
+                foreach ($userConfig as $configItem) {
+                    if (!$request->input($configItem->name)) {
+                        return redirect()->back()->with('error', $configItem->name . ' is required');
+                    }
+                    $config[$configItem->name] = $request->input($configItem->name);
+                }
+                $product->config = $config;
+            }
         }
         if ($prices->type == 'recurring') {
             $product->price = $product->prices()->get()->first()->{$request->input('billing_cycle')} ?? $product->prices()->get()->first()->monthly;

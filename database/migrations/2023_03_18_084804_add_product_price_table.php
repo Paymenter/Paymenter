@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\Order;
+use App\Models\OrderProduct;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -36,6 +38,15 @@ return new class extends Migration
             $table->date('expiry_date')->after('billing_cycle')->nullable();
             $table->string('status')->after('expiry_date')->nullable();
         });
+        foreach (Order::all() as $order) {
+            foreach ($order->products()->get() as $orderProduct) {
+                OrderProduct::where('id', $orderProduct->id)->update([
+                    'billing_cycle' => $order->billing_cycle,
+                    'expiry_date' => $order->expiry_date,
+                    'status' => $order->status,
+                ]);
+            };
+        }
         Schema::table('orders', function (Blueprint $table) {
             $table->dropColumn('expiry_date');
             $table->dropColumn('status');

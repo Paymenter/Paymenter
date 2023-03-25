@@ -43,6 +43,11 @@ class ProductController extends Controller
             $data['image'] = '/images/' . $imageName;
         }
         $product = Product::create($data);
+        ProductPrice::create([
+            'product_id' => $product->id,
+            'monthly' => $product->price,
+            'billing_cycle' => 'recurring',
+        ]);
 
         return redirect()->route('admin.products.edit', $product->id)->with('success', 'Product created successfully');
     }
