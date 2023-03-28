@@ -23,9 +23,11 @@ class CheckoutController extends Controller
             foreach ($products as $product) {
                 $total += $product->price * $product->quantity;
                 if ($coupon) {
-                    if (!in_array($product->id, $coupon->products) && $coupon->type != 'all') {
-                        $product->discount = 0;
-                        continue;
+                    if (isset($coupon->products)) {
+                        if (!in_array($product->id, $coupon->products)) {
+                            $product->discount = 0;
+                            continue;
+                        }
                     }
                     if ($coupon->type == 'percent') {
                         $product->discount = $product->price * $coupon->value / 100;
@@ -228,9 +230,18 @@ class CheckoutController extends Controller
                     $iproduct->config = $product['config'];
                 }
                 if ($coupon) {
-                    if (!in_array($iproduct->id, $coupon->products) && $coupon->type != 'all') {
-                        $iproduct->discount = 0;
-                    } else {
+                    if (isset($coupon->products)) {
+                        if (!in_array($iproduct->id, $coupon->products)) {
+                            $product->discount = 0;
+                            continue;
+                        } else {
+                            if ($coupon->type == 'percent') {
+                                $iproduct->discount = $iproduct->price * $coupon->value / 100;
+                            } else {
+                                $iproduct->discount = $coupon->value;
+                            }
+                        }
+                    } else { 
                         if ($coupon->type == 'percent') {
                             $iproduct->discount = $iproduct->price * $coupon->value / 100;
                         } else {

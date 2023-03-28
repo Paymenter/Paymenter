@@ -92,8 +92,8 @@
                 <select name="products[]" id="products" multiple
                     class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm dark:bg-darkmode rounded-md">
                     @foreach ($products as $product)
-                        <option value="{{ $product->id }}"
-                            {{ in_array($product->id, $coupon->products) ? 'selected' : '' }}>
+                        <option value="{{ $product->id }}" @isset($coupon->products)
+                            {{ in_array($product->id, $coupon->products) ? 'selected' : '' }} @endisset>
                             {{ $product->name }}
                         </option>
                     @endforeach

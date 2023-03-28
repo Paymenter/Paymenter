@@ -35,7 +35,6 @@ class CouponController extends Controller
     public function edit(Coupon $coupon){
         $products = Product::all();
 
-
         return view('admin.coupons.edit', compact('coupon', 'products'));
     }
 
