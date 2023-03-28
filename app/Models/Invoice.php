@@ -36,6 +36,16 @@ class Invoice extends Model
         return $this->belongsTo(User::class, 'user_id');
     }
 
+    public function total()
+    {
+        $total = 0;
+        foreach ($this->items as $item) {
+            $total += $item->total;
+        }
+
+        return $total;
+    }
+
     public function items()
     {
         return $this->hasMany(InvoiceItem::class, 'invoice_id', 'id');

@@ -33,4 +33,16 @@ class OrderProduct extends Model
     {
         return $this->belongsTo(Product::class, 'product_id', 'id');
     }
+
+    public function invoices()
+    {
+        return $this->hasMany(InvoiceItem::class, 'product_id', 'id');
+    }
+
+    public function getOpenInvoices()
+    {
+        return $this->invoices()->get()->filter(function ($invoice) {
+            return $invoice->status == 'pending';
+        });
+    }
 }

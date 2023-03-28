@@ -25,28 +25,24 @@ class ExtensionHelper
     public static function paymentDone($id)
     {
         $invoice = Invoice::findOrFail($id);
+        foreach($invoice->items()->get() as $item) {
+            $product = $item->product()->get()->first();
+            
+            if ($product->status == 'suspended') {
+                ExtensionHelper::unsuspendServer($product);
+            }
+            if ($product->status == 'pending') {
+                ExtensionHelper::createServer($product);
+            }
+            $product->status = 'paid';
+            $product->save();
+        }
         if ($invoice->status == 'paid') {
             return;
         }
         $invoice->status = 'paid';
         $invoice->paid_at = now();
         $invoice->save();
-        $order = Order::findOrFail($invoice->order_id);
-        if ($order->status == 'paid') {
-            return;
-        }
-        if ($order->status == 'suspended') {
-            foreach($order->products() as $product) {
-                ExtensionHelper::unsuspendServer($product);
-            }
-        }
-        if ($order->status == 'pending') {
-            foreach($order->products() as $product) {
-                ExtensionHelper::createServer($product);
-            }
-        }
-        $order->status = 'paid';
-        $order->save();
     }
 
     /**

@@ -82,7 +82,6 @@ Route::group(['prefix' => 'admin'], function () {
         Route::get('/', [App\Http\Controllers\Admin\InvoiceController::class, 'index'])->middleware(['auth.admin'])->name('admin.invoices');
         Route::get('/{invoice}', [App\Http\Controllers\Admin\InvoiceController::class, 'show'])->middleware(['auth.admin'])->name('admin.invoices.show');
         Route::post('/{invoice}/paid', [App\Http\Controllers\Admin\InvoiceController::class, 'paid'])->middleware(['auth.admin'])->name('admin.invoices.paid');
-        Route::post('/{invoice}/unpaid', [App\Http\Controllers\Admin\InvoiceController::class, 'unpaid'])->middleware(['auth.admin'])->name('admin.invoices.unpaid');
         Route::post('/{invoice}/create', [App\Http\Controllers\Admin\InvoiceController::class, 'create'])->middleware(['auth.admin'])->name('admin.invoices.create');
         Route::delete('/{invoice}/delete', [App\Http\Controllers\Admin\InvoiceController::class, 'destroy'])->middleware(['auth.admin'])->name('admin.invoices.delete');
     });

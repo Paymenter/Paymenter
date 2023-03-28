@@ -218,7 +218,7 @@ class CheckoutController extends Controller
             }
         }
         if ($total != 0) {
-            $total = $invoice->total;
+            $total = $invoice->total();
             $products = [];
             foreach ($order->products()->get() as $product) {
                 $iproduct = Product::where('id', $product->product_id)->first();
