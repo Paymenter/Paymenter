@@ -91,7 +91,7 @@ class TicketTest extends TestCase
 
         $response->assertStatus(302);
 
-        $this->assertDatabaseHas('ticketmessages', [
+        $this->assertDatabaseHas('ticket_messages', [
             'ticket_id' => $ticket->id,
             'user_id' => $this->user->id,
             'message' => 'Test',

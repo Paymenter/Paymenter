@@ -207,6 +207,7 @@
                         <th class="px-4 py-2">{{ __('Status') }}</th>
                         <th class="px-4 py-2">{{ __('Created at') }}</th>
                         <th class="px-4 py-2">{{ __('Paid at') }}</th>
+                        <th class="px-4 py-2">{{ __('Actions') }}</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -216,6 +217,12 @@
                             <td class="px-4 py-2">{{ $invoice->status }}</td>
                             <td class="px-4 py-2">{{ $invoice->created_at }}</td>
                             <td class="px-4 py-2">{{ $invoice->paid_at }}</td>
+                            <td class="px-4 py-2">
+                                <a href="{{ route('admin.invoices.show', $invoice->id) }}"
+                                    class="text-blue-600 hover:text-blue-900">
+                                    {{ __('View') }}
+                                </a>
+                            </td>
                         </tr>
                     @endforeach
                 </tbody>

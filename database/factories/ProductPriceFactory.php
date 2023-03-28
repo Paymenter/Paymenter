@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\User>
  */
-class ProductFactory extends Factory
+class ProductPriceFactory extends Factory
 {
     /**
      * Define the model's default state.
@@ -17,11 +17,9 @@ class ProductFactory extends Factory
     public function definition()
     {
         return [
-            'name' => fake()->name(),
-            'description' => fake()->text(),
-            'category_id' => fake()->numberBetween(1, 10),
-            'image' => fake()->imageUrl(),
-            'server_id' => fake()->numberBetween(1, 10),
+            'product_id' => fake()->numberBetween(1, 10),
+            'type' => fake()->randomKey(['one-time', 'recurring']),
+            'monthly' => fake()->numberBetween(1, 100),
         ];
     }
 }

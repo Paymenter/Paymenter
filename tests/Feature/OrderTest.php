@@ -4,7 +4,7 @@ namespace Tests\Feature;
 
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use App\Models\{Category, Invoice, Order, Product, User};
+use App\Models\{Category, Invoice, Order, Product, ProductPrice, User};
 
 class OrderTest extends TestCase
 {
@@ -20,8 +20,12 @@ class OrderTest extends TestCase
         $this->user = User::factory()->create();
         $this->categorie = Category::factory()->create();
         $this->product = Product::factory()->create([
-            'price' => 0,
             'category_id' => $this->categorie->id,
+        ]);
+        ProductPrice::factory()->create([
+            'product_id' => $this->product->id,
+            'type' => 'one-time',
+            'monthly' => 0,
         ]);
     }
 
@@ -56,6 +60,6 @@ class OrderTest extends TestCase
 
         $this->assertNotNull($invoice);
 
-        $response->assertRedirect(route('clients.invoice.show', $invoice));
+        $response->assertRedirect(route('clients.home'));
     }
 }

@@ -60,7 +60,9 @@
                                                 class="dark:bg-darkmode dark:text-darkmodetext dark:border-indigo-600 mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
                                                 @foreach (App\Models\Extension::where('type', 'gateway')->where('enabled', true)->get() as $gateway)
                                                     <option class="dark:bg-darkmode dark:text-darkmodetext"
-                                                        value="{{ $gateway->id }}">{{ isset($gateway->display_name) ? $gateway->display_name : $gateway->name }}</option>
+                                                        value="{{ $gateway->id }}">
+                                                        {{ isset($gateway->display_name) ? $gateway->display_name : $gateway->name }}
+                                                    </option>
                                                 @endforeach
                                             </select>
                                             <button type="submit"
@@ -107,11 +109,18 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach ($products as $product)
+                                    @foreach ($invoice->items()->get() as $product2)
+                                        @if ($product2->product_id != null)
+                                            @php
+                                                $product = App\Models\OrderProduct::find($product2->product_id);
+                                            @endphp
+                                        @else
+                                            @php $product = $product2; @endphp
+                                        @endif
                                         <tr class="border-b border-slate-200">
                                             <td class="py-4 pl-4 pr-3 text-sm sm:pl-6 md:pl-0">
                                                 <div class="dark:text-darkmodetext font-medium text-slate-700">
-                                                    {{ $product->name }}
+                                                    {{ $product->name ?? $product2->description }}
                                                 </div>
                                                 <div class="dark:text-darkmodetext mt-0.5 text-slate-500 sm:hidden">
                                                     {{ __('1 unit at') }}
@@ -120,7 +129,7 @@
                                             </td>
                                             <td
                                                 class="dark:text-darkmodetext hidden px-3 py-4 text-sm text-right text-slate-500 sm:table-cell">
-                                                {{ $product->quantity }}
+                                                {{ $product->quantity ?? $product2->quantity }}
                                             </td>
                                             <td
                                                 class="dark:text-darkmodetext hidden px-3 py-4 text-sm text-right text-slate-500 sm:table-cell">

@@ -41,6 +41,7 @@ class NewInvoice extends Mailable
             markdown: 'emails.invoices.new',
             with: [
                 'invoice' => $this->invoice,
+                'products' => $this->invoice->items()->get(),
             ]
         );
     }

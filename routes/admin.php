@@ -30,6 +30,8 @@ Route::group(['prefix' => 'admin'], function () {
         Route::post('/create', [App\Http\Controllers\Admin\ProductController::class, 'store'])->middleware(['auth.admin'])->name('admin.products.store');
         Route::get('/{product}/edit', [App\Http\Controllers\Admin\ProductController::class, 'edit'])->middleware(['auth.admin'])->name('admin.products.edit');
         Route::post('/{product}/edit', [App\Http\Controllers\Admin\ProductController::class, 'update'])->middleware(['auth.admin'])->name('admin.products.update');
+        Route::get('/{product}/pricing', [App\Http\Controllers\Admin\ProductController::class, 'pricing'])->middleware(['auth.admin'])->name('admin.products.pricing');
+        Route::post('/{product}/pricing', [App\Http\Controllers\Admin\ProductController::class, 'pricingUpdate'])->middleware(['auth.admin'])->name('admin.products.pricing.update');
         Route::get('/{product}/extension', [App\Http\Controllers\Admin\ProductController::class, 'extension'])->middleware(['auth.admin'])->name('admin.products.extension');
         Route::post('/{product}/extension', [App\Http\Controllers\Admin\ProductController::class, 'extensionUpdate'])->middleware(['auth.admin'])->name('admin.products.extension.update');
         Route::get('/{product}/extension/export', [App\Http\Controllers\Admin\ProductController::class, 'extensionExport'])->middleware(['auth.admin'])->name('admin.products.extension.export');
@@ -74,6 +76,14 @@ Route::group(['prefix' => 'admin'], function () {
         Route::post('/{order}/suspend', [App\Http\Controllers\Admin\OrderController::class, 'suspend'])->middleware(['auth.admin'])->name('admin.orders.suspend');
         Route::post('/{order}/create', [App\Http\Controllers\Admin\OrderController::class, 'create'])->middleware(['auth.admin'])->name('admin.orders.create');
         Route::post('/{order}/paid', [App\Http\Controllers\Admin\OrderController::class, 'paid'])->middleware(['auth.admin'])->name('admin.orders.paid');
+    });
+
+    Route::group(['prefix' => 'invoices'], function () {
+        Route::get('/', [App\Http\Controllers\Admin\InvoiceController::class, 'index'])->middleware(['auth.admin'])->name('admin.invoices');
+        Route::get('/{invoice}', [App\Http\Controllers\Admin\InvoiceController::class, 'show'])->middleware(['auth.admin'])->name('admin.invoices.show');
+        Route::post('/{invoice}/paid', [App\Http\Controllers\Admin\InvoiceController::class, 'paid'])->middleware(['auth.admin'])->name('admin.invoices.paid');
+        Route::post('/{invoice}/create', [App\Http\Controllers\Admin\InvoiceController::class, 'create'])->middleware(['auth.admin'])->name('admin.invoices.create');
+        Route::delete('/{invoice}/delete', [App\Http\Controllers\Admin\InvoiceController::class, 'destroy'])->middleware(['auth.admin'])->name('admin.invoices.delete');
     });
 
     Route::group(['prefix' => 'coupon'], function() {

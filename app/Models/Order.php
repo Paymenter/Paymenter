@@ -10,9 +10,6 @@ class Order extends Model
     use HasFactory;
     protected $table = 'orders';
     protected $fillable = [
-        'products',
-        'expiry_date',
-        'status',
         'client',
         'coupon',
     ];
@@ -21,7 +18,7 @@ class Order extends Model
     {
         $total = 0;
         foreach ($this->products as $product) {
-            $product->price = $product->price ?? $product->product()->get()->first()->price;
+            $product->price = $product->price ?? $product->product()->get()->first()->price($product->billing_cycle);
             $total += $product->price * $product->quantity;
         }
 
