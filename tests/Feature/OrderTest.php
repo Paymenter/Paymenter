@@ -60,6 +60,6 @@ class OrderTest extends TestCase
 
         $this->assertNotNull($invoice);
 
-        $response->assertRedirect(route('clients.invoice.show', $invoice));
+        $response->assertRedirect(route('clients.home'));
     }
 }
