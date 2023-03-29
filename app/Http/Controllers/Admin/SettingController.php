@@ -109,21 +109,16 @@ class SettingController extends Controller
             'port' => $request->mail_port,
             'encryption' => $request->mail_encryption,
             'username' => $request->mail_username,
-            'password' => $request->mail_password ? $request->mail_password : config('mail.password', ''),
-            'timeout' => null,
-            'auth_mode' => null,
+            'password' => $request->mail_password ? $request->mail_password : Crypt::decrypt(config('mail.password', '')),
         ]]);
         config(['mail.from.address' => $request->mail_from_address]);
         config(['mail.from.name' => $request->mail_from_name]);
 
         $email = Auth::user()->email;
         try {
-            Mail::raw('If you read this, your email is working!', function ($message) use ($email) {
-                $message->to($email);
-                $message->subject('Test Email');
-                $message->from(config('mail.username'), config('mail.from.name'));
-            });
+            \Illuminate\Support\Facades\Mail::to(auth()->user())->send(new \App\Mail\Test);
         } catch (\Exception $e) {
+            error_log($e->getMessage());
             // Return json response
             return response()->json(['error' => $e->getMessage()], 500);
         }
