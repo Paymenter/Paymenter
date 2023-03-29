@@ -219,6 +219,13 @@ class CheckoutController extends Controller
                 }
             }
         }
+        foreach ($order->products()->get() as $product) {
+            $iproduct = Product::where('id', $product->product_id)->first();
+            if ($iproduct->stock_enabled) {
+                $iproduct->stock = $iproduct->stock - $product->quantity;
+                $iproduct->save();
+            }
+        }
         if ($total != 0) {
             $total = $invoice->total();
             $products = [];
@@ -241,7 +248,7 @@ class CheckoutController extends Controller
                                 $iproduct->discount = $coupon->value;
                             }
                         }
-                    } else { 
+                    } else {
                         if ($coupon->type == 'percent') {
                             $iproduct->discount = $iproduct->price * $coupon->value / 100;
                         } else {
@@ -354,7 +361,7 @@ class CheckoutController extends Controller
             if ($product->stock_enabled && $product->stock < $request->quantity) {
                 return redirect()->back()->with('error', 'Product is out of stock');
             }
-            if ($product->quantity != 0) {
+            if ($cart[$product->id]->quantity != 0) {
                 $cart[$product->id]->quantity = $request->quantity;
                 session()->put('cart', $cart);
             } else {
