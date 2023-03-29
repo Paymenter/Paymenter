@@ -53,6 +53,7 @@ class OrderController extends Controller
             }
         }
         $order->products()->delete();
+        $order->invoices()->delete();
         $order->delete();
 
         return redirect()->route('admin.orders')->with('success', 'Order deleted');

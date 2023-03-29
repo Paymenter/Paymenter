@@ -114,11 +114,9 @@ class SettingController extends Controller
         config(['mail.from.address' => $request->mail_from_address]);
         config(['mail.from.name' => $request->mail_from_name]);
 
-        $email = Auth::user()->email;
         try {
             \Illuminate\Support\Facades\Mail::to(auth()->user())->send(new \App\Mail\Test);
         } catch (\Exception $e) {
-            error_log($e->getMessage());
             // Return json response
             return response()->json(['error' => $e->getMessage()], 500);
         }
