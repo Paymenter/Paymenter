@@ -98,6 +98,11 @@ class AppServiceProvider extends ServiceProvider
                 config(['services.google.client_secret' => config('settings::google_client_secret')]);
                 config(['services.google.redirect' => url('/login/google/callback')]);
             }
+            if (config('settings::github_enabled')) {
+                config(['services.github.client_id' => config('settings::github_client_id')]);
+                config(['services.github.client_secret' => config('settings::github_client_secret')]);
+                config(['services.github.redirect' => url('/login/github/callback')]);
+            }
             if (config('settings::currency') == null) {
                 config(['settings::currency' => 'USD']);
             }

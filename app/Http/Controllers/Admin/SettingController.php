@@ -128,6 +128,7 @@ class SettingController extends Controller
     {
         Setting::updateOrCreate(['key' => 'discord_enabled'], ['value' => $request->discord_enabled]);
         Setting::updateOrCreate(['key' => 'google_enabled'], ['value' => $request->google_enabled]);
+        Setting::updateOrCreate(['key' => 'github_enabled'], ['value' => $request->github_enabled]);
         foreach ($request->except(['_token']) as $key => $value) {
             Setting::updateOrCreate(['key' => $key], ['value' => $value]);
         }
