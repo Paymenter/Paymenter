@@ -126,10 +126,11 @@ class SettingController extends Controller
 
     public function login(Request $request)
     {
-        Setting::updateOrCreate(['key' => 'discord_client_id'], ['value' => $request->discord_client_id]);
-        Setting::updateOrCreate(['key' => 'discord_client_secret'], ['value' => $request->discord_client_secret]);
         Setting::updateOrCreate(['key' => 'discord_enabled'], ['value' => $request->discord_enabled]);
-
+        Setting::updateOrCreate(['key' => 'google_enabled'], ['value' => $request->google_enabled]);
+        foreach ($request->except(['_token']) as $key => $value) {
+            Setting::updateOrCreate(['key' => $key], ['value' => $value]);
+        }
         return redirect('/admin/settings#login')->with('success', 'Settings updated successfully');
     }
 
