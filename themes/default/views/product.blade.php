@@ -36,7 +36,7 @@
                                             onerror="removeElement(this);">
                                         <div class="mt-2 h-full relative">
                                             <h3
-                                                class="text-lg font-medium text-center text-gray-900 dark:text-darkmodetext">
+                                                class="text-lg font-medium text-center text-gray-900 dark:text-darkmodetext break-normal">
                                                 {{ $product->name }}</h3>
                                             <hr class="my-2 border-b-1 border-gray-300 dark:border-gray-600">
                                             <div
