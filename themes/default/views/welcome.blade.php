@@ -13,7 +13,7 @@
             <div class="py-10 mx-auto max-w-7xl sm:px-6 lg:px-8">
                 <div class="overflow-hidden bg-white rounded-lg shadow-lg dark:bg-darkmode2">
                     <div class="p-6 bg-white dark:bg-darkmode2 sm:px-20">
-                        <div class="prose dark:prose-invert">
+                        <div class="prose dark:prose-invert max-w-full	">
                             @if (config('settings::home_page_text'))
                                 {{ \Illuminate\Mail\Markdown::parse(str_replace("\n", '<br>', config('settings::home_page_text'))) }}
                             @endif
