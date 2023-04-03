@@ -29,6 +29,11 @@ return new class extends Migration
             $invoiceItem->description = $orderProduct->product->name;
             $invoiceItem->save();
         }
+        foreach(Invoice::all() as $invoice) {
+            if($invoice->order()->exists() == false) {
+                $invoice->delete();
+            }
+        }
     }
 
     /**
