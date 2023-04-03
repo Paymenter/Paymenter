@@ -227,7 +227,6 @@ class CheckoutController extends Controller
             }
         }
         if ($total != 0) {
-            $total = $invoice->total();
             $products = [];
             foreach ($order->products()->get() as $product) {
                 $iproduct = Product::where('id', $product->product_id)->first();
@@ -260,7 +259,6 @@ class CheckoutController extends Controller
                 }
                 $iproduct->price = $iproduct->price - $iproduct->discount;
                 $products[] = $iproduct;
-                $total += $iproduct->price * $iproduct->quantity;
             }
 
             if ($request->get('payment_method')) {
