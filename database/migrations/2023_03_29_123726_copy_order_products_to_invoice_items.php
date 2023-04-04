@@ -22,6 +22,9 @@ return new class extends Migration
             if(Invoice::where('order_id', $orderProduct->order_id)->latest()->exists() == false) {
                 continue;
             }
+            if ($orderProduct->product()->exists() == false) {
+                $orderProduct->delete();
+            }
             $invoiceItem = new InvoiceItem();
             $invoiceItem->invoice_id = Invoice::where('order_id', $orderProduct->order_id)->latest()->get()->first()->id;
             $invoiceItem->product_id = $orderProduct->product_id;
@@ -33,11 +36,6 @@ return new class extends Migration
         foreach(Invoice::all() as $invoice) {
             if($invoice->order()->exists() == false) {
                 $invoice->delete();
-            }
-        }
-        foreach(OrderProduct::all() as $orderProduct) {
-            if($orderProduct->product()->exists() == false) {
-                $orderProduct->delete();
             }
         }
     }
