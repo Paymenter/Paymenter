@@ -35,6 +35,11 @@ return new class extends Migration
                 $invoice->delete();
             }
         }
+        foreach(OrderProduct::all() as $orderProduct) {
+            if($orderProduct->product()->exists() == false) {
+                $orderProduct->delete();
+            }
+        }
     }
 
     /**
