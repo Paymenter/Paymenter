@@ -27,7 +27,7 @@ return new class extends Migration
             }
             $invoiceItem = new InvoiceItem();
             $invoiceItem->invoice_id = Invoice::where('order_id', $orderProduct->order_id)->latest()->get()->first()->id;
-            $invoiceItem->product_id = $orderProduct->product_id;
+            $invoiceItem->product_id = $orderProduct->id;
             $invoiceItem->total = $orderProduct->price * $orderProduct->quantity;
             $invoiceItem->save();
             $invoiceItem->description = $orderProduct->product()->get() ? 'Unknown' : $orderProduct->product()->get()->first()->name;
