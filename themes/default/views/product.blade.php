@@ -2,6 +2,12 @@
     <x-slot name="title">
         {{ __('Products') }}
     </x-slot>
+    <script>
+        function removeElement(element) {
+            element.remove();
+            this.error = true;
+        }
+    </script>
     <div class="dark:bg-darkmode dark:text-darkmodetext py-12">
         <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
             <div class="dark:bg-darkmode2 overflow-hidden bg-white rounded-lg shadow-lg">
@@ -30,7 +36,7 @@
                                             onerror="removeElement(this);">
                                         <div class="mt-2 h-full relative">
                                             <h3
-                                                class="text-lg font-medium text-center text-gray-900 dark:text-darkmodetext">
+                                                class="text-lg font-medium text-center text-gray-900 dark:text-darkmodetext break-normal">
                                                 {{ $product->name }}</h3>
                                             <hr class="my-2 border-b-1 border-gray-300 dark:border-gray-600">
                                             <div
@@ -40,11 +46,7 @@
                                             <br><br>
                                             <p
                                                 class="mt-1 text-base text-center text-gray-500 dark:text-darkmodetext mx-auto w-full bottom-0 absolute font-black">
-                                                @if ($product->price == 0)
-                                                    {{ __('Free') }}
-                                                @else
-                                                    {{ config('settings::currency_sign') }}{{ $product->price }}
-                                                @endif
+                                                {{ $product->price() ? config('settings::currency_sign') . $product->price() : __('Free') }}
                                             </p>
                                         </div>
                                     </a>
@@ -57,11 +59,3 @@
         </div>
     </div>
 </x-app-layout>
-
-
-<script>
-    function removeElement(element) {
-        element.remove();
-        this.error = true;
-    }
-</script>

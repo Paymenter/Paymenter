@@ -80,6 +80,23 @@ function Virtualizor_getUserConfig(Product $product)
 
 function Virtualizor_getProductConfig()
 {
+    $key = ExtensionHelper::getConfig('virtualizor', 'key');
+    $pass = ExtensionHelper::getConfig('virtualizor', 'pass');
+    $ip = ExtensionHelper::getConfig('virtualizor', 'ip');
+    $port = ExtensionHelper::getConfig('virtualizor', 'port');
+    $admin = new Virtualizor_Admin_API();
+    $admin->Virtualizor_Admin_API($ip, $key, $pass, $port);
+
+    // Get Plan list
+    $plans = $admin->plans();
+    $allplans = [];
+    foreach ($plans['plans'] as $plan) {
+        $allplans[] = [
+            'name' => $plan['plan_name'],
+            'value' => $plan['plan_name'],
+        ];
+    }
+
     return [
         [
             'name' => 'virt',
@@ -104,15 +121,16 @@ function Virtualizor_getProductConfig()
         [
             'name' => 'planname',
             'friendlyName' => 'Plan Name',
-            'type' => 'text',
+            'type' => 'dropdown',
             'required' => true,
+            'options' => $allplans,
         ],
     ];
 }
 
 function Virtualizor_createServer($user, $params, $order)
 {
-    $config = json_decode($params['config']);
+    $config = $params['config'];
     $key = ExtensionHelper::getConfig('virtualizor', 'key');
     $pass = ExtensionHelper::getConfig('virtualizor', 'pass');
     $ip = ExtensionHelper::getConfig('virtualizor', 'ip');
@@ -126,23 +144,22 @@ function Virtualizor_createServer($user, $params, $order)
     $post['planname'] = $params['planname'];
     $post['ptype'] = $params['virt'];
     $plans = $admin->plans($page, $reslen, $post);
-    if (!isset($plans['plans'][1])) {
+    if (!key($plans['plans'])) {
         ExtensionHelper::error('Virtualizor', 'Plan not found');
-
         return;
     }
-    $plan = $plans['plans'][1];
+    $plan = $plans['plans'][key($plans['plans'])];
     // Create server
     $post = [];
     $post['virt'] = $params['virt'];
     $post['user_email'] = $user->email;
-    $post['user_pass'] = $config->password;
+    $post['user_pass'] = $config['password'];
     $post['fname'] = $user->name;
     $post['lname'] = $user->name;
     $post['osid'] = 909;
     $post['server_group'] = 0;
-    $post['hostname'] = $config->hostname;
-    $post['rootpass'] = $config->password;
+    $post['hostname'] = $config['hostname'];
+    $post['rootpass'] = $config['password'];
     $post['num_ips6'] = $plan['ips6'];
     $post['num_ips6_subnet'] = $plan['ips6_subnet'];
     $post['num_ips'] = $plan['ips'];
@@ -154,7 +171,7 @@ function Virtualizor_createServer($user, $params, $order)
     $post['cores'] = $plan['cores'];
     $post['cpu_percent'] = $plan['cpu_percent'];
     $post['vnc'] = $plan['vnc'];
-    $post['vncpass'] = $config->password;
+    $post['vncpass'] = $config['password'];
     $post['kvm_cache'] = $plan['kvm_cache'];
     $post['io_mode'] = $plan['io_mode'];
     $post['vnc_keymap'] = $plan['vnc_keymap'];
@@ -164,6 +181,10 @@ function Virtualizor_createServer($user, $params, $order)
 
     $output = $admin->addvs_v2($post);
 
+    if(isset($output['error'])){
+        ExtensionHelper::error('Virtualizor', $output['error']);
+        return;
+    }
     // Set server ID
     $server = $output['vs_info']['vpsid'];
     ExtensionHelper::setOrderProductConfig('external_id', $server, $params['config_id']);

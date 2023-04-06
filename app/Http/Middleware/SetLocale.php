@@ -20,6 +20,12 @@ class SetLocale
     {
         if (Session::has('locale')) {
             $locale = Session::get('locale', config('settings::language'));
+            if (!config('settings::allow_auto_lang')) {
+                if ($locale !== config('settings::language')) {
+                    $locale = config('settings::language');
+                    Session::put('locale', $locale);
+                }
+            }
         } else {
             if (!config('settings::allow_auto_lang')) {
                 $locale = config('settings::language');
@@ -31,7 +37,7 @@ class SetLocale
                     if (strpos($language, '.json') !== false) {
                         unset($languages[$key]);
                     }
-                } 
+                }
                 if (!in_array($locale, $languages)) {
                     $locale = config('settings::language');
                 }

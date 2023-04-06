@@ -42,9 +42,8 @@ function DirectAdmin_createServer($user, $params, $order)
         ]
     );
     $result = $sock->fetch_parsed_body();
-    error_log(print_r($result, true));
     if ($result['error'] != '0') {
-        error_log(print_r($result, true));
+        ExtensionHelper::error('DirectAdmin', $result);
 
         return;
     } else {
@@ -77,7 +76,7 @@ function DirectAdmin_suspendServer($user, $params, $order)
     );
     $result = $sock->fetch_parsed_body();
     if ($result['error'] != '0') {
-        error_log(print_r($result, true));
+        ExtensionHelper::error('DirectAdmin', $result);
 
         return;
     }
@@ -106,7 +105,7 @@ function DirectAdmin_unsuspendServer($user, $params, $order)
     );
     $result = $sock->fetch_parsed_body();
     if ($result['error'] != '0') {
-        error_log(print_r($result, true));
+        ExtensionHelper::error('DirectAdmin', $result, true);
 
         return;
     }

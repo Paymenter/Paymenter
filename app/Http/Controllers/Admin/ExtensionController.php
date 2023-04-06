@@ -79,8 +79,7 @@ class ExtensionController extends Controller
         }
 
         foreach($response as $file){
-            $file->name = strtolower($file->name);
-            if($file->name !== 'readme.md'){
+            if(strtolower($file->name) !== 'readme.md'){
                 $fileurl = $file->download_url;
                 $filecontent = Http::get($fileurl);
                 $filecontent = $filecontent->body();

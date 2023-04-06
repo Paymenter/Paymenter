@@ -150,14 +150,14 @@ function Pterodactyl_deleteRequest($url)
 function Pterodactyl_createServer($user, $parmas, $order, $product)
 {
     if (Pterodactyl_serverExists($product->id)) {
-        error_log('Server already exists for order ' . $product->id);
+        ExtensionHelper::error('Pterodactyl', 'Server already exists for order ' . $product->id);
 
         return;
     }
     $url = pteroConfig('host') . '/api/application/servers';
     $eggData = Pterodactyl_getRequest(pteroConfig('host') . '/api/application/nests/' . $parmas['nest'] . '/eggs/' . $parmas['egg'] . '?include=variables')->json();
     if (!isset($eggData['attributes'])) {
-        error_log('No egg data found for ' . $parmas['egg']);
+        ExtensionHelper::error('Pterodactyl', 'No egg data found for ' . $parmas['egg']);
 
         return;
     }
@@ -229,7 +229,13 @@ function Pterodactyl_createServer($user, $parmas, $order, $product)
             'external_id' => (string) $product->id,
         ];
     }
-    Pterodactyl_postRequest($url, $json);
+    $response = Pterodactyl_postRequest($url, $json);
+
+    if (!$response->successful()) {
+        ExtensionHelper::error('Pterodactyl', 'Failed to create server for order ' . $product->id . ' with error ' . $response->body());
+
+        return;
+    }
 
     return true;
 }

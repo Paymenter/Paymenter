@@ -47,9 +47,11 @@ class OrderController extends Controller
 
     public function destroy(Order $order)
     {
-        if ($order->status == 'paid' || $order->status == 'suspended') {
-            ExtensionHelper::terminateServer($order);
+        foreach ($order->products()->get() as $product) {
+            ExtensionHelper::terminateServer($product);
         }
+        $order->products()->delete();
+        $order->invoices()->delete();
         $order->delete();
 
         return redirect()->route('admin.orders')->with('success', 'Order deleted');
@@ -57,38 +59,47 @@ class OrderController extends Controller
 
     public function suspend(Order $order)
     {
-        $order->status = 'suspended';
-        $order->save();
-        ExtensionHelper::suspendServer($order);
+        foreach ($order->products()->get() as $product) {
+            ExtensionHelper::suspendServer($product);
+            $product->status = 'suspended';
+            $product->save();
+        }
+
 
         return redirect()->route('admin.orders.show', $order);
     }
 
     public function unsuspend(Order $order)
     {
-        $order->status = 'paid';
-        $order->save();
-        ExtensionHelper::unsuspendServer($order);
+        foreach ($order->products()->get() as $product) {
+            ExtensionHelper::unsuspendServer($product);
+            $product->status = 'paid';
+            $product->save();
+        }
 
         return redirect()->route('admin.orders.show', $order);
     }
 
     public function create(Order $order)
     {
-        $order->status = 'paid';
-        $order->save();
-        ExtensionHelper::createServer($order);
+        foreach ($order->products()->get() as $product) {
+            ExtensionHelper::createServer($product);
+            $product->status = 'paid';
+            $product->save();
+        }
 
         return redirect()->route('admin.orders.show', $order);
     }
 
     public function paid(Order $order)
     {
-        $order->status = 'paid';
-        $order->save();
-        ExtensionHelper::createServer($order);
+        foreach ($order->products()->get() as $product) {
+            ExtensionHelper::unsuspendServer($product);
+            $product->status = 'paid';
+            $product->save();
+        }
 
-        foreach($order->invoices()->get() as $invoice) {
+        foreach ($order->invoices()->get() as $invoice) {
             $invoice->status = 'paid';
             $invoice->save();
         }

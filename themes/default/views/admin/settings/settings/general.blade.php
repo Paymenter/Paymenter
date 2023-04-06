@@ -36,14 +36,20 @@
             <link rel="stylesheet" href="https://unpkg.com/easymde/dist/easymde.min.css">
             <script src="https://unpkg.com/easymde/dist/easymde.min.js"></script>
             <div class="relative m-4 group md:col-span-2 col-span-1">
-                <textarea name="home_page_text" class="form-input peer @error('home_page_text') is-invalid @enderror" placeholder=" "
-                    name="home_page_text" id="home_page_text"></textarea>
+                <label class="dark:text-darkmodetext block text-md font-medium text-gray-700">
+                    {{ __('Home Page Text') }}  
+                </label>
+                <textarea name="home_page_text" class="form-input w-full @error('home_page_text') is-invalid @enderror" placeholder=" "
+                    name="home_page_text" id="home_page_text">{{ config('settings::home_page_text') }}</textarea>
             </div>
             <script>
-                var easyMDE = new EasyMDE({
-                    element: document.getElementById("home_page_text"),
+                document.addEventListener("DOMContentLoaded", function() {
+                    var easyMDE = new EasyMDE({
+                        element: document.getElementById("home_page_text"),
+                        spellChecker: false,
+                toolbar: ["bold", "italic", "heading", "|", "quote", "unordered-list", "ordered-list", "|", "link", "image", "table", "|", "preview", "side-by-side", "fullscreen", "|", "guide"]
+                    });
                 });
-                easyMDE.value(`{{ config('settings::home_page_text') }}`);
             </script>
             <h2 class="col-span-1 md:col-span-2 text-xl text-gray-900 dark:text-darkmodetext ">{{ __('Currency') }}
             </h2>

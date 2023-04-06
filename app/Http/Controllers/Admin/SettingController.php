@@ -25,7 +25,7 @@ class SettingController extends Controller
             if (strpos($language, '.json') !== false) {
                 unset($languages[$key]);
             }
-        } 
+        }
 
         return view('admin.settings.index', [
             'tabs' => $tabs,
@@ -63,10 +63,10 @@ class SettingController extends Controller
             Setting::updateOrCreate(['key' => $key], ['value' => $value]);
         }
         // Needs to manually do this because otherwise it isn't sended
-        if (!$request->get('allow_auto_lang')){
+        if (!$request->get('allow_auto_lang')) {
             Setting::updateOrCreate(['key' => 'allow_auto_lang'], ['value' => 0]);
         }
-        if(!$request->get('seo_twitter_card')){
+        if (!$request->get('seo_twitter_card')) {
             Setting::updateOrCreate(['key' => 'seo_twitter_card'], ['value' => 0]);
         }
 
@@ -94,6 +94,9 @@ class SettingController extends Controller
             }
             Setting::updateOrCreate(['key' => $key], ['value' => $value]);
         }
+        if (!$request->get('mail_disabled')) {
+            Setting::updateOrCreate(['key' => 'mail_disabled'], ['value' => 0]);
+        }
 
         return redirect('/admin/settings#mail')->with('success', 'Settings updated successfully');
     }
@@ -106,20 +109,13 @@ class SettingController extends Controller
             'port' => $request->mail_port,
             'encryption' => $request->mail_encryption,
             'username' => $request->mail_username,
-            'password' => $request->mail_password ? $request->mail_password : config('mail.password', ''),
-            'timeout' => null,
-            'auth_mode' => null,
+            'password' => $request->mail_password ? $request->mail_password : Crypt::decrypt(config('mail.password', '')),
         ]]);
         config(['mail.from.address' => $request->mail_from_address]);
         config(['mail.from.name' => $request->mail_from_name]);
 
-        $email = Auth::user()->email;
         try {
-            Mail::raw('If you read this, your email is working!', function ($message) use ($email) {
-                $message->to($email);
-                $message->subject('Test Email');
-                $message->from(config('mail.username'), config('mail.from.name'));
-            });
+            \Illuminate\Support\Facades\Mail::to(auth()->user())->send(new \App\Mail\Test);
         } catch (\Exception $e) {
             // Return json response
             return response()->json(['error' => $e->getMessage()], 500);
@@ -130,10 +126,12 @@ class SettingController extends Controller
 
     public function login(Request $request)
     {
-        Setting::updateOrCreate(['key' => 'discord_client_id'], ['value' => $request->discord_client_id]);
-        Setting::updateOrCreate(['key' => 'discord_client_secret'], ['value' => $request->discord_client_secret]);
         Setting::updateOrCreate(['key' => 'discord_enabled'], ['value' => $request->discord_enabled]);
-
+        Setting::updateOrCreate(['key' => 'google_enabled'], ['value' => $request->google_enabled]);
+        Setting::updateOrCreate(['key' => 'github_enabled'], ['value' => $request->github_enabled]);
+        foreach ($request->except(['_token']) as $key => $value) {
+            Setting::updateOrCreate(['key' => $key], ['value' => $value]);
+        }
         return redirect('/admin/settings#login')->with('success', 'Settings updated successfully');
     }
 

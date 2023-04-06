@@ -44,7 +44,7 @@ class InvoiceController extends Controller
             $iproduct->quantity = $product['quantity'];
             $iproduct->price = $product['price'] ?? $iproduct->price;
             if ($coupon) {
-                if (!in_array($iproduct->id, $coupon->products) && $coupon->type != 'all') {
+                if (!in_array($iproduct->id, $coupon->products)) {
                     $iproduct->discount = 0;
                 } else {
                     if ($coupon->type == 'percent') {

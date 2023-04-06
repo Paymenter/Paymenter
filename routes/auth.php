@@ -25,6 +25,13 @@ Route::get('/login', [AuthenticatedSessionController::class, 'create'])
 Route::post('/login', [AuthenticatedSessionController::class, 'store'])
                 ->middleware('guest');
 
+Route::get('/two-factor-challenge', [AuthenticatedSessionController::class, 'twoFactorChallenge'])
+                ->middleware('guest')
+                ->name('tfa');
+
+Route::post('/two-factor-challenge', [AuthenticatedSessionController::class, 'twoFactorAuthenticate'])
+                ->middleware('guest');
+
 Route::get('/forgot-password', [PasswordResetLinkController::class, 'create'])
                 ->middleware('guest')
                 ->name('password.request');

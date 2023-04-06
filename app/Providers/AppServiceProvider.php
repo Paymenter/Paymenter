@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Facades\Log;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -92,6 +93,16 @@ class AppServiceProvider extends ServiceProvider
                 config(['services.discord.client_secret' => config('settings::discord_client_secret')]);
                 config(['services.discord.redirect' => url('/login/discord/callback')]);
             }
+            if (config('settings::google_enabled')) {
+                config(['services.google.client_id' => config('settings::google_client_id')]);
+                config(['services.google.client_secret' => config('settings::google_client_secret')]);
+                config(['services.google.redirect' => url('/login/google/callback')]);
+            }
+            if (config('settings::github_enabled')) {
+                config(['services.github.client_id' => config('settings::github_client_id')]);
+                config(['services.github.client_secret' => config('settings::github_client_secret')]);
+                config(['services.github.redirect' => url('/login/github/callback')]);
+            }
             if (config('settings::currency') == null) {
                 config(['settings::currency' => 'USD']);
             }
@@ -99,7 +110,7 @@ class AppServiceProvider extends ServiceProvider
                 Theme::set(config('settings::theme'), 'default');
             }
         } catch (\Exception $e) {
-            
+            Log::error($e->getMessage());
         }
     }
 }

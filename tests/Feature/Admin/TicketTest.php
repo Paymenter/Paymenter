@@ -124,7 +124,7 @@ class TicketTest extends TestCase
         $response->assertStatus(302);
         $response->assertRedirect(route('admin.tickets.show', $ticket));
         
-        $this->assertDatabaseHas('ticketmessages', [
+        $this->assertDatabaseHas('ticket_messages', [
             'message' => 'Test Message',
             'ticket_id' => $ticket->id,
             'user_id' => $this->user->id,

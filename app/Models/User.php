@@ -33,6 +33,7 @@ class User extends Authenticatable
         'companyname',
         'permissions',
         'is_admin',
+        'tfa_secret'
     ];
 
     /**
@@ -46,6 +47,7 @@ class User extends Authenticatable
         'is_admin',
         'permissions',
         'api_token',
+        'tfa_secret',
     ];
 
     /**

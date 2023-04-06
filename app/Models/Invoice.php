@@ -14,6 +14,8 @@ class Invoice extends Model
         'order_id',
         'status',
         'paid_at',
+        'due_date',
+        'total',
     ];
 
     public function setStatusAttribute($value)
@@ -32,5 +34,20 @@ class Invoice extends Model
     public function user()
     {
         return $this->belongsTo(User::class, 'user_id');
+    }
+
+    public function total()
+    {
+        $total = 0;
+        foreach ($this->items as $item) {
+            $total += $item->total;
+        }
+
+        return $total;
+    }
+
+    public function items()
+    {
+        return $this->hasMany(InvoiceItem::class, 'invoice_id', 'id');
     }
 }

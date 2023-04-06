@@ -39,11 +39,13 @@
                                     </div>
                                 </td>
                                 <td>
+                                    @if($product->allow_quantity == 1 || $product->allow_quantity == 2)
                                     <form method="POST" action="{{ route('checkout.update', $product->id) }}">
                                         @csrf
                                         <div
                                             class="flex flex-row items-center px-6 py-4 text-sm text-gray-500 whitespace-nowrap dark:text-darkmodetext">
-                                            <input type="number" name="quantity" value="{{ $product->quantity }}" min="1" max="{{ $product->stock_enabled ? $product->stock : '' }}"
+                                            <input type="number" name="quantity" value="{{ $product->quantity }}"
+                                                min="1" max="{{ $product->stock_enabled ? $product->stock : '' }}"
                                                 class="w-20 h-10 text-center rounded-md dark:bg-darkmode2 dark:text-darkmodetext"
                                                 min="1">
                                             <button type="submit" class="ml-4">
@@ -53,6 +55,7 @@
                                             </button>
                                         </div>
                                     </form>
+                                    @endif
                                 </td>
                                 <td class="px-6 py-4 text-lg text-gray-500 whitespace-nowrap dark:text-darkmodetext">
                                     <span class="text-lg font-bold">{{ config('settings::currency_sign') }}
@@ -100,7 +103,8 @@
                     <div class="flex flex-row items-center relative">
                         <span class="text-lg font-bold">{{ __('Coupon:') }}</span>
                         <span class="text-lg font-bold ml-4">{{ $coupon->code }}</span>
-                        <form method="POST" action="{{ route('checkout.coupon') }}" class="ml-4 self-end right-0 absolute">
+                        <form method="POST" action="{{ route('checkout.coupon') }}"
+                            class="ml-4 self-end right-0 absolute">
                             @csrf
                             <input type="text" class="hidden" name="remove" value="1">
                             <button type="submit" class="form-submit items-center w-40 bg-red-500 hover:bg-red-600">
@@ -125,6 +129,24 @@
                     </div>
                 @endif
                 <div class="flex flex-row items-center justify-between">
+                    @foreach ($products as $product)
+                        <div class="flex flex-row items-center">
+                            <span class="text-lg">
+                                {{ ucfirst($product->billing_cycle) }}
+                            </span>
+                        </div>
+                        <div class="flex flex-col">
+                            <span class="text-lg">{{ config('settings::currency_sign') }}
+                                @if ($product->discount)
+                                    {{ round($product->price - $product->discount, 2) }}
+                                @else
+                                    {{ $product->price }}
+                                @endif
+                            </span>
+                        </div>
+                    @endforeach
+                </div>
+                <div class="flex flex-row items-center justify-between">
                     <div class="flex flex-row items-center">
                         <span class="text-lg font-bold">{{ __('Total') }}</span>
                     </div>
@@ -147,7 +169,8 @@
                         <select id="payment_method" name="payment_method" autocomplete="payment_method"
                             class="block w-full px-3 py-2 mt-1 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm dark:bg-darkmode2 dark:text-darkmodetext">
                             @foreach (App\Models\Extension::where('type', 'gateway')->where('enabled', true)->get() as $gateway)
-                                <option value="{{ $gateway->id }}">{{ isset($gateway->display_name) ? $gateway->display_name : $gateway->name }}</option>
+                                <option value="{{ $gateway->id }}">
+                                    {{ isset($gateway->display_name) ? $gateway->display_name : $gateway->name }}</option>
                             @endforeach
                         </select>
                     </div>

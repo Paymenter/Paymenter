@@ -6,6 +6,7 @@ use Tests\TestCase;
 use App\Models\User;
 use App\Models\Product;
 use App\Models\Category;
+use App\Models\ProductPrice;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
@@ -23,6 +24,11 @@ class ProductTest extends TestCase
         $this->category = Category::factory()->create();
         $this->product = Product::factory()->create([
             'category_id' => $this->category->id,
+        ]);
+        ProductPrice::factory()->create([
+            'product_id' => $this->product->id,
+            'type' => 'one-time',
+            'monthly' => 0,
         ]);
     }
 
@@ -71,7 +77,6 @@ class ProductTest extends TestCase
         $this->assertDatabaseHas('products', [
             'name' => 'Test Product',
             'description' => 'Test Product Description',
-            'price' => 100,
             'category_id' => $this->category->id,
         ]);
     }
@@ -88,7 +93,6 @@ class ProductTest extends TestCase
         $response = $this->actingAs($this->user)->post(route('admin.products.update', $this->product->id), [
             'name' => 'Test Product Updated',
             'description' => 'Test Product Description Updated',
-            'price' => 200,
             'image' => $image,
             'category_id' => $this->category->id,
         ]);
@@ -98,7 +102,6 @@ class ProductTest extends TestCase
         $this->assertDatabaseHas('products', [
             'name' => 'Test Product Updated',
             'description' => 'Test Product Description Updated',
-            'price' => 200,
             'category_id' => $this->category->id,
         ]);
     }
@@ -117,7 +120,6 @@ class ProductTest extends TestCase
         $this->assertDatabaseMissing('products', [
             'name' => 'Test Product',
             'description' => 'Test Product Description',
-            'price' => 100,
             'category_id' => $this->category->id,
         ]);
     }
