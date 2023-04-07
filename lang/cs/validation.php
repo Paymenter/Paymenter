@@ -38,7 +38,7 @@ return [
     'digits_between' => ':attribute musí být mezi :min a :max místy.',
     'dimensions' => ':attribute má neplatné rozlišení obrázku.',
     'distinct' => ':attribute má stejnou hodnotu.',
-    'email' => ':attribute musí být platná emailová adresa.',
+    'email' => ':attribute musí být platná e-mailová adresa.',
     'ends_with' => ':attribute musí končit jedním z následujících hodnot: :values.',
     'exists' => 'Vybraná :attribute je neplatná.',
     'file' => ':attribute musí být soubor.',
