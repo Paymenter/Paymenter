@@ -54,6 +54,9 @@ class CronJob extends Command
         $orders = OrderProduct::where('expiry_date', '<', now()->addDays(7))->where('status', '!=', 'cancelled')->get();
         $invoiceProcessed = 0;
         foreach ($orders as $order) {
+            if($order->billing_cycle == 'free') {
+                continue;
+            }
             // Get all InvoiceItems for this product
             $invoiceItems = $order->invoices()->get();
             // Check if there is a pending invoice
@@ -65,7 +68,6 @@ class CronJob extends Command
                 }
             }
 
-            // Check if there is a pending invoice
             $invoice = new \App\Models\Invoice();
             $invoice->order_id = $order->id;
             $invoice->status = 'pending';
@@ -84,6 +86,10 @@ class CronJob extends Command
                 $date = date('Y-m-d', strtotime('+2 year', strtotime($order->expiry_date)));
             } elseif ($order->billing_cycle == 'triennially') {
                 $date = date('Y-m-d', strtotime('+3 year', strtotime($order->expiry_date)));
+            } else {
+                $date = date('Y-m-d', strtotime('+1 month', strtotime($order->expiry_date)));
+                $order->billing_cycle = 'monthly';
+                $order->save();
             }
             // Add Invoice Items
             $invoiceItem = new \App\Models\InvoiceItem();
