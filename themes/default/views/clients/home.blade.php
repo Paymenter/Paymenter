@@ -25,14 +25,14 @@
                     <img class="w-8 h-8 rounded-md" style="align-self: center; width: 2rem; height: 2rem;"
                         src="https://www.gravatar.com/avatar/{{ md5(Auth::user()->email) }}?s=200&d=mp" />
                     <div class="ml-4 text-lg font-semibold leading-7">
-                        Invoices
+                        {{ __('Invoices')}}
                     </div>
                 </div>
                 <div class="flex flex-col text-center items-center">
                     @foreach ($invoices as $invoice)
                         <a href='{{ route('clients.invoice.show', $invoice->id) }}'
                             class="text-blue-500 hover:text-blue-700">
-                            Invoice ID: {{ $invoice->id }}
+                            {{ __('Invoice ID')}}: {{ $invoice->id }}
                         </a>
                         <hr class="w-1/2">
                         <br>
