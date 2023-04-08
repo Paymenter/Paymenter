@@ -349,6 +349,13 @@ class ProductController extends Controller
             $newProductSetting->save();
         }
 
+        $productPrice = ProductPrice::where('product_id', $product->id)->get()->first();
+        if ($productPrice) {
+            $newProductPrice = $productPrice->replicate();
+            $newProductPrice->product_id = $newProduct->id;
+            $newProductPrice->save();
+        }
+
         return redirect()->route('admin.products.edit', $newProduct->id)->with('success', 'Product duplicated successfully');
     }
 }

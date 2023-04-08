@@ -54,7 +54,7 @@ class CronJob extends Command
         $orders = OrderProduct::where('expiry_date', '<', now()->addDays(7))->where('status', '!=', 'cancelled')->get();
         $invoiceProcessed = 0;
         foreach ($orders as $order) {
-            if($order->billing_cycle == 'free') {
+            if($order->billing_cycle == 'free' || $order->billing_cycle == 'one-time') {
                 continue;
             }
             // Get all InvoiceItems for this product
