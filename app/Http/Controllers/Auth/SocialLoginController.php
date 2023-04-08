@@ -26,6 +26,9 @@ class SocialLoginController extends Controller
     {
         if ($provider == 'discord') {
             $user = Socialite::driver($provider)->user();
+            if($user->user["verified"] == false) {
+                return redirect()->route('login')->with('error', 'Your Discord account is not verified.');
+            }
             $user = User::where('email', $user->email)->first();
             if (!$user) {
                 return redirect()->route('register')->with('error', 'You are not registered on this site.');

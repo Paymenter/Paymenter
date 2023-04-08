@@ -14,7 +14,7 @@
 
             <!-- Validation Errors -->
             <x-auth-validation-errors class="mb-4" :errors="$errors" />
-
+            <x-success class="mb-4" />
             <form method="POST" action="{{ route('login') }}" id="login">
                 @csrf
 
@@ -70,7 +70,7 @@
                         config('settings::github_enabled') == 1)
                     <div class="flex items-center">
                         <div class="w-full h-0.5 bg-gray-200 dark:bg-gray-700"></div>
-                        <div class="px-5 text-center text-gray-500 dark:text-gray-400">{{ __('or')}}</div>
+                        <div class="px-5 text-center text-gray-500 dark:text-gray-400">{{ __('or') }}</div>
                         <div class="w-full h-0.5 bg-gray-200 dark:bg-gray-700"></div>
                     </div>
                     <div class="space-y-3">
@@ -120,7 +120,7 @@
                                         </clipPath>
                                     </defs>
                                 </svg>
-                                {{ __('Sign in with Apple')}}
+                                {{ __('Sign in with Apple') }}
                             </a>
                         @endif
                         @if (config('settings::discord_enabled'))
