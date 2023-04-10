@@ -68,7 +68,7 @@
                                                 {{ $product->price() ? config('settings::currency_sign') . $product->price() : __('Free') }}
                                             </td>
                                             <td class="text-center dark:text-white dark:bg-darkmode2 p-3">
-                                                {{ date('l jS F Y', strtotime($product2->expiry_date)) }}</td>
+                                                {{ $product2->expiry_date ? date('l jS F Y', strtotime($product2->expiry_date)) : __('Never') }}
                                             <td class="text-center dark:text-white dark:bg-darkmode2 p-3">
                                                 <div class="border border-gray-200">
                                                     @if ($product2->status === 'paid')
