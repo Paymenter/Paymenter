@@ -272,6 +272,9 @@ function Pterodactyl_getUser($user)
             'password_confirmation' => Pterodactyl_random_string(8),
         ];
         $response = Pterodactyl_postRequest($url, $json);
+        if(!$response->successful()) {
+            ExtensionHelper::error('Pterodactyl', 'Failed to create user for order ' . $product->id . ' with error ' . $response->body());
+        }
         $user = $response->json();
 
         return $user['attributes']['id'];

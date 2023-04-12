@@ -53,18 +53,6 @@
                     <span>{{ $order->updated_at }}</span>
                 </div>
             </div>
-            <div class="flex flex-row justify-between">
-                <div class="flex flex-col">
-                    <span class="font-bold">{{ __('Status') }}:</span>
-                    <span>{{ $order->status }}</span>
-                </div>
-            </div>
-            <div class="flex flex-row justify-between">
-                <div class="flex flex-col">
-                    <span class="font-bold">{{ __('Next Due Date') }}:</span>
-                    <span>{{ $order->expiry_date }}</span>
-                </div>
-            </div>
         </div>
         <div class="flex flex-col mt-4">
             <span class="font-bold">{{ __('Products') }}:</span>
@@ -136,6 +124,14 @@
                         <div class="flex flex-col">
                             <span class="font-bold">{{ __('Quantity') }}:</span>
                             <span>{{ $product->quantity }}</span>
+                        </div>
+                        <div class="flex flex-col">
+                            <span class="font-bold">{{ __('Status') }}:</span>
+                            <span>{{ $product->status }}</span>
+                        </div>
+                        <div class="flex flex-col">
+                            <span class="font-bold">{{ __('Next due date') }}:</span>
+                            <span>{{ $product->expiry_date ? $product->expiry_date : 'N/A' }}</span>
                         </div>
                         <div class="flex flex-col">
                             <span class="font-bold">{{ __('Link') }}:</span>
