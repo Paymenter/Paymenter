@@ -18,7 +18,7 @@ class AdminAPIRequest
         $user = auth('sanctum')->user();
 
         if ($user->is_admin > 0) {
-            if (auth()->user()->permissions) {
+            if (auth()->user()->permissions != null || auth()->user()->permissions != []) {
                 return redirect()->route('login')->with('error', 'Only Admins with full permissions can use the Admin API.');
             }
 
