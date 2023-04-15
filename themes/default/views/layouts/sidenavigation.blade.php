@@ -30,6 +30,7 @@
                             </svg>
                         </div>
                     </div>
+                    
                     <div class="w-4/5 mx-auto" id="submenuprof">
                         <x-sidebar-navigation-item route="clients.home" icon="ri-settings-2-line" dropdown="true">
                             Profile Settings
@@ -55,6 +56,11 @@
                     <x-sidebar-navigation-item route="clients.home" icon="ri-dashboard-3-line">
                         Dashboard
                     </x-sidebar-navigation-item>
+                    
+                    <x-sidebar-navigation-item route="clients.api.index" icon="ri-key-2-line" dropdown="true">
+                        API Tokens
+                    </x-sidebar-navigation-item>
+
                     @if (Auth::user()->is_admin == '1')
                         <x-sidebar-navigation-item route="admin.index" icon="ri-admin-line">
                             Admin

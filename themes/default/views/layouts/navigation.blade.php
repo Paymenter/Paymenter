@@ -78,6 +78,9 @@
                                 <a href="{{ route('admin.index') }}" class="block px-4 py-2 text-base text-gray-700 dark:hover:bg-darkbutton dark:text-darkmodetext hover:bg-gray-100" role="menuitem">{{ __('Admin Panel') }}</a>
                             </div>
                             @endif
+                            <div>
+                                <a href="{{ route('clients.api.index') }}" class="block px-4 py-2 text-base text-gray-700 dark:hover:bg-darkbutton dark:text-darkmodetext hover:bg-gray-100" role="menuitem">{{ __('API Tokens') }}</a>
+                            </div>
                             @if (!Auth::user()->is_admin)
                             <div>
                                 <a href="{{ route('clients.home') }}" class="block px-4 py-2 text-base text-gray-700 dark:hover:bg-darkbutton dark:text-darkmodetext hover:bg-gray-100" role="menuitem">{{ __('Dashboard') }}</a>
