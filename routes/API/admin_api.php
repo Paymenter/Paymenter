@@ -1,10 +1,10 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\API\Clients\TicketController;
-use App\Http\Controllers\API\Clients\APIController;
-use App\Http\Controllers\API\Clients\UserController;
-use App\Http\Controllers\API\Clients\InvoiceController;
+use App\Http\Controllers\API\Admin\APIController;
+use App\Http\Controllers\API\Admin\InvoiceController;
+use App\Http\Controllers\API\Admin\TicketController;
+use App\Http\Controllers\API\Admin\UserController;
 
 // Users
 Route::group(['prefix' => 'v1/users'], function () {
@@ -24,10 +24,10 @@ Route::group(['prefix' => 'v1/tickets'], function () {
 Route::group(['prefix' => 'v1/invoices'], function () {
     Route::get('/', [InvoiceController::class, 'getInvoices'])->name('api.client.v1.invoices.getInvoices');
     Route::get('/{invoiceId}', [InvoiceController::class, 'getInvoice'])->name('api.client.v1.invoices.getInvoice');
-    Route::get('/{invoiceId}/pay', [InvoiceController::class, 'payInvoice'])->name('api.client.v1.invoices.payInvoice');
 });
 
 // API
 Route::group(['prefix' => 'v1/api'], function () {
     Route::get('/permissions', [APIController::class, 'getPermissions'])->name('api.client.v1.api.getPermissions');
+    Route::post('/token', [APIController::class, 'createAPIToken'])->name('api.client.v1.api.createAPIToken');
 });
