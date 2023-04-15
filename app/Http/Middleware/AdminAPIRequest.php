@@ -2,10 +2,7 @@
 
 namespace App\Http\Middleware;
 
-use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
-use Laravel\Sanctum\PersonalAccessToken;
 
 class AdminAPIRequest
 {
@@ -21,6 +18,10 @@ class AdminAPIRequest
         $user = auth('sanctum')->user();
 
         if ($user->is_admin > 0) {
+            if (auth()->user()->permissions) {
+                return redirect()->route('login')->with('error', 'Only Admins with full permissions can use the Admin API.');
+            }
+
             return $next($request);
         }
 
