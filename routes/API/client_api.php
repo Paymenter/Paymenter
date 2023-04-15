@@ -1,8 +1,8 @@
 <?php
 
-use App\Http\Controllers\API\Admin\TicketController;
-use App\Http\Controllers\API\Clients\APIController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\API\Clients\TicketController;
+use App\Http\Controllers\API\Clients\APIController;
 use App\Http\Controllers\API\Clients\UserController;
 use App\Http\Controllers\API\Clients\InvoiceController;
 
