@@ -25,7 +25,7 @@
                                     <hr class="my-2 border-b-1 border-gray-300 dark:border-gray-600">
                                     <div
                                         class="mt-1 prose dark:prose-invert text-gray-500 dark:text-darkmodetext break-words">
-                                                    {{ \Illuminate\Mail\Markdown::parse(str_replace("\n", '<br>', substr($announcement->announcement, 0, 200). ' ...')) }}
+                                        {!! Str::Markdown(str_replace("\n", '<br>', substr($announcement->announcement, 0, 200). ' ...')) !!}
                                     </div>
                                     <br>
                                     <p class="mt-1 text-base text-center text-gray-500 dark:text-darkmodetext mx-auto w-full bottom-0 absolute font-black"

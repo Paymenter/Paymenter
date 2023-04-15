@@ -55,6 +55,46 @@ class TicketController extends Controller
     }
 
     /**
+     * Create a new ticket.
+     * 
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function createTicket(Request $request)
+    {
+        $user = $request->user();
+
+        if (!$user->tokenCan('admin:ticket:create')) {
+            return response()->json([
+                'error' => 'You do not have permission to create tickets.',
+            ], 403);
+        }
+
+        $request->validate([
+            'title' => 'required',
+            'message' => 'required',
+            'priority' => 'required',
+            'user_id' => 'required',
+        ]);
+
+        $body = json_decode($request->getContent());
+
+        $ticket = Ticket::create([
+            'title' => $body->title,
+            'priority' => $body->priority,
+            'user_id' => $body->user_id,
+        ]);
+
+        TicketMessage::create([
+            'ticket_id' => $ticket->id,
+            'message' => $body->message,
+            'user_id' => $user->id,
+        ]);
+
+        return response()->json([
+            'message' => "Ticket #{$ticket->id} was successfully created.",
+        ], 200);
+    }
+    /**
      * Close a ticket by ID.
      * 
      * @return \Illuminate\Http\JsonResponse

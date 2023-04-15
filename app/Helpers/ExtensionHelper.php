@@ -380,7 +380,7 @@ class ExtensionHelper
         if (!function_exists($function)) {
             return false;
         }
-        $link = $function($user, $config, $product->order()->get()->first());
+        $link = $function($user, $config, $product->order()->get()->first(), $product);
 
         return $link;
     }

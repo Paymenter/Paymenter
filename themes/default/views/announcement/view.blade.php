@@ -13,8 +13,8 @@
                         <i class="ri-time-line ml-1"></i>{{ $announcement->created_at->format('H:i') }}
                     </p>
                     <hr class="mb-4 mt-1 border-b-1 border-gray-300 dark:border-gray-600">
-                    <div class="prose dark:prose-invert text-gray-500 dark:text-darkmodetext">
-                        {{ \Illuminate\Mail\Markdown::parse(str_replace("\n", '<br>', $announcement->announcement)) }}
+                    <div class="prose dark:prose-invert text-gray-500 dark:text-darkmodetext max-w-full">
+                        {!! Str::markdown(str_replace("\n", '<br>', $announcement->announcement)) !!}
                     </div>
                 </div>
             </div>

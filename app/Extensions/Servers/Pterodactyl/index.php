@@ -332,9 +332,9 @@ function Pterodactyl_terminateServer($user, $params,$order, $product)
     return false;
 }
 
-function Pterodactyl_getLink($user, $params, $order)
+function Pterodactyl_getLink($user, $params, $order, $product)
 {
-    $server = Pterodactyl_serverExists($order->id);
+    $server = Pterodactyl_serverExists($product->id);
     if ($server) {
         $url = pteroConfig('host') . '/api/application/servers/' . $server;
         $response = Pterodactyl_getRequest($url);
