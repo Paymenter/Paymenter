@@ -268,8 +268,6 @@ function Pterodactyl_getUser($user)
             'last_name' => 'User',
             'language' => 'en',
             'root_admin' => false,
-            'password' => Pterodactyl_random_string(8),
-            'password_confirmation' => Pterodactyl_random_string(8),
         ];
         $response = Pterodactyl_postRequest($url, $json);
         if(!$response->successful()) {

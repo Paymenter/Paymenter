@@ -64,8 +64,9 @@
                         {{ __('Messages') }}</h1>
                     @foreach ($ticket->messages()->get() as $message)
                         <div class="p-4 mt-4 rounded-md dark:bg-darkmode bg-gray-100 grid grid-cols-1 md:grid-cols-2">
-                            <label for="message"
-                                class="prose dark:prose-invert">{!! Str::Markdown(str_replace("\n", '<br>', $message->message)) !!}</label>
+                            <label class="prose dark:prose-invert">
+                                {!! Str::Markdown(str_replace("\n", "  \n", $message->message), ['html_input' => 'escape']) !!}
+                            </label>
                             <p class="text-xs text-gray-500 dark:text-darkmodetext text-end"
                                 style="align-items:flex-end">
                                 @if ($message->user_id == Auth::user()->id)
