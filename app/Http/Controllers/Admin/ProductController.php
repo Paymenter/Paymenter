@@ -81,6 +81,7 @@ class ProductController extends Controller
                 }
             }
         }
+        $product->stock_enabled = $request->get('stock_enabled') ?? false;
 
         if ($request->get('no_image')) {
             $data['image'] = 'null';
