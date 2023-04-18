@@ -109,14 +109,8 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach ($invoice->items()->get() as $product2)
-                                        @if ($product2->product_id != null)
-                                            @php
-                                                $product = App\Models\OrderProduct::find($product2->product_id);
-                                            @endphp
-                                        @else
-                                            @php $product = $product2; @endphp
-                                        @endif
+                                    @foreach($products as $product2)
+                                        @php $product = $product2; @endphp
                                         <tr class="border-b border-slate-200">
                                             <td class="py-4 pl-4 pr-3 text-sm sm:pl-6 md:pl-0">
                                                 <div class="dark:text-darkmodetext font-medium text-slate-700">

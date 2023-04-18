@@ -18,45 +18,39 @@ class InvoiceController extends Controller
 
     public function show(Request $request, Invoice $invoice)
     {
-        $order = Order::findOrFail($invoice->order_id);
-        $coupon = $order->coupon()->get()->first();
-
-        // Check if the coupon is lifetime or not
-        if ($coupon) {
-            if ($coupon->time == 'onetime') {
-                $invoices = $order->invoices()->get();
-                if ($invoices->count() == 1) {
-                    $coupon = $order->coupon()->get()->first();
-                } else {
-                    $coupon = null;
-                }
-            } else {
-                $coupon = $order->coupon()->get()->first();
-            }
-        }
-
         if ($invoice->user_id != auth()->user()->id) {
             return redirect()->route('clients.invoice.index');
         }
         $products = [];
-        foreach ($order->products()->get() as $product) {
-            $iproduct = Product::where('id', $product->product_id)->first();
-            $iproduct->quantity = $product['quantity'];
-            $iproduct->price = $product['price'] ?? $iproduct->price;
-            if ($coupon) {
-                if (!in_array($iproduct->id, $coupon->products)) {
-                    $iproduct->discount = 0;
-                } else {
-                    if ($coupon->type == 'percent') {
-                        $iproduct->discount = $iproduct->price * $coupon->value / 100;
+        foreach($invoice->items()->get() as $item) {
+            if($item->product_id) {
+                $product = $item->product()->get()->first();
+                $order = $product->order()->get()->first();
+                $coupon = $order->coupon()->get()->first();
+                if ($coupon->time == 'onetime') {
+                    $invoices = $order->invoices()->get();
+                    if ($invoices->count() == 1) {
+                        $coupon = $order->coupon()->get()->first();
                     } else {
-                        $iproduct->discount = $coupon->value;
+                        $coupon = null;
                     }
                 }
-            } else {
-                $iproduct->discount = 0;
+                if ($coupon) {
+                    if (!in_array($product->id, $coupon->products) && !empty($coupon->products)) {
+                        $product->discount = 0;
+                    } else {
+                        if ($coupon->type == 'percent') {
+                            $product->discount = $product->price * $coupon->value / 100;
+                        } else {
+                            $product->discount = $coupon->value;
+                        }
+                    }
+                } else {
+                    $product->discount = 0;
+                }
+                $product->description = $item->description;
+                $products[] = $product;
             }
-            $products[] = $iproduct;
         }
         $currency_sign = config('settings::currency_sign');
 

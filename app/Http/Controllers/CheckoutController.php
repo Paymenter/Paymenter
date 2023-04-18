@@ -23,11 +23,9 @@ class CheckoutController extends Controller
             foreach ($products as $product) {
                 $total += $product->price * $product->quantity;
                 if ($coupon) {
-                    if (isset($coupon->products)) {
-                        if (!in_array($product->id, $coupon->products)) {
-                            $product->discount = 0;
-                            continue;
-                        }
+                    if (!in_array($product->id, $coupon->products) && !empty($coupon->products)) {
+                        $product->discount = 0;
+                        continue;
                     }
                     if ($coupon->type == 'percent') {
                         $product->discount = $product->price * $coupon->value / 100;
@@ -163,6 +161,7 @@ class CheckoutController extends Controller
             return redirect()->back()->with('error', 'Cart is empty');
         }
         $couponId = session('coupon');
+        $coupon;
         if ($couponId) {
             $coupon = Coupon::where('id', $couponId)->first();
         } else {
@@ -175,7 +174,29 @@ class CheckoutController extends Controller
             } elseif ($product->stock_enabled && $product->stock < $product->quantity) {
                 return redirect()->back()->with('error', 'Product is out of stock');
             }
-            $total += $product->price * $product->quantity;
+            if($coupon) {
+                if (isset($coupon->products)) {
+                    if (!in_array($product->id, $coupon->products) && !empty($coupon->products)) {
+                        $product->discount = 0;
+                        continue;
+                    } else {
+                        if ($coupon->type == 'percent') {
+                            $product->discount = $product->price * $coupon->value / 100;
+                        } else {
+                            $product->discount = $coupon->value;
+                        }
+                    }
+                } else {
+                    if ($coupon->type == 'percent') {
+                        $product->discount = $product->price * $coupon->value / 100;
+                    } else {
+                        $product->discount = $coupon->value;
+                    }
+                }
+            } else {
+                $product->discount = 0;
+            }
+            $total += $product->price * $product->quantity - $product->discount;
         }
 
         $user = User::findOrFail(auth()->user()->id);
