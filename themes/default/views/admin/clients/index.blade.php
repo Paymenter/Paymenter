@@ -75,10 +75,6 @@
                 buttons: [
                     'copy', 'csv', 'excel', 'pdf', 'print'
                 ],
-                rowReorder: {
-                    selector: 'td:nth-child(2)'
-                },
-                responsive: true
             });
         });
     </script>
