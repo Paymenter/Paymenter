@@ -56,7 +56,7 @@ class Product extends Model
             else if ($type)
                 return $prices->{$type};
             else
-                return $prices->monthly;
+                return $prices->monthly ?? $prices->quarterly ?? $prices->semi_annually ?? $prices->annually ?? $prices->biennially ?? $prices->triennially;
             }
     }
 }

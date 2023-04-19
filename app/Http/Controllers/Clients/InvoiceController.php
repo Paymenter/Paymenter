@@ -22,19 +22,22 @@ class InvoiceController extends Controller
             return redirect()->route('clients.invoice.index');
         }
         $products = [];
-        foreach($invoice->items()->get() as $item) {
-            if($item->product_id) {
+        foreach ($invoice->items()->get() as $item) {
+            if ($item->product_id) {
                 $product = $item->product()->get()->first();
                 $order = $product->order()->get()->first();
                 $coupon = $order->coupon()->get()->first();
-                if ($coupon->time == 'onetime') {
-                    $invoices = $order->invoices()->get();
-                    if ($invoices->count() == 1) {
-                        $coupon = $order->coupon()->get()->first();
-                    } else {
-                        $coupon = null;
+                if ($coupon) {
+                    if ($coupon->time == 'onetime') {
+                        $invoices = $order->invoices()->get();
+                        if ($invoices->count() == 1) {
+                            $coupon = $order->coupon()->get()->first();
+                        } else {
+                            $coupon = null;
+                        }
                     }
                 }
+
                 if ($coupon) {
                     if (!in_array($product->id, $coupon->products) && !empty($coupon->products)) {
                         $product->discount = 0;

@@ -12,6 +12,7 @@ class CheckoutController extends Controller
     {
         $products = session('cart');
         $total = 0;
+        $totalSetup = 0;
         $discount = 0;
         $couponId = session('coupon');
         if ($couponId) {
@@ -22,6 +23,7 @@ class CheckoutController extends Controller
         if ($products) {
             foreach ($products as $product) {
                 $total += $product->price * $product->quantity;
+                $totalSetup += $product->setup * $product->quantity;
                 if ($coupon) {
                     if (!in_array($product->id, $coupon->products) && !empty($coupon->products)) {
                         $product->discount = 0;
@@ -40,7 +42,7 @@ class CheckoutController extends Controller
             }
         }
 
-        return view('checkout.index', compact('products', 'total', 'discount', 'coupon'));
+        return view('checkout.index', compact('products', 'total', 'discount', 'coupon', 'totalSetup'));
     }
 
     public function add(Product $product)
@@ -134,6 +136,7 @@ class CheckoutController extends Controller
         if ($prices->type == 'recurring') {
             $product->price = $product->prices()->get()->first()->{$request->input('billing_cycle')} ?? $product->prices()->get()->first()->monthly;
             $product->billing_cycle = $request->input('billing_cycle');
+            $product->setup_fee = $product->prices()->get()->first()->{$request->input('billing_cycle') . '_setup'} ?? 0;
         } else if ($prices->type == 'one-time') {
             $product->price = $product->prices()->get()->first()->monthly;
         } else {
@@ -304,7 +307,7 @@ class CheckoutController extends Controller
         $orderProduct->order_id = $order->id;
         $orderProduct->product_id = $product->id;
         $orderProduct->quantity = $product->quantity;
-        $orderProduct->price = $product->price;
+        $orderProduct->price = $product->price + ($product->setup_fee * $product->quantity);
         if ($product->billing_cycle) {
             $orderProduct->billing_cycle = $product->billing_cycle;
             if ($product->billing_cycle == 'monthly') {
@@ -339,6 +342,7 @@ class CheckoutController extends Controller
             $orderProduct->status = 'paid';
             $orderProduct->save();
             ExtensionHelper::createServer($orderProduct);
+            return;
         } else {
             $orderProduct->status = 'pending';
             $orderProduct->save();
