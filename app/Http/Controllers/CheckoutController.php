@@ -199,7 +199,11 @@ class CheckoutController extends Controller
             } else {
                 $product->discount = 0;
             }
-            $total += $product->price * $product->quantity - $product->discount;
+            if($product->setup_fee) {
+                $total += ($product->setup_fee + $product->price) * $product->quantity - $product->discount;
+            } else {
+                $total += $product->price * $product->quantity - $product->discount;
+            }
         }
 
         $user = User::findOrFail(auth()->user()->id);
@@ -252,37 +256,40 @@ class CheckoutController extends Controller
         }
         if ($total != 0) {
             $products = [];
-            foreach ($order->products()->get() as $product) {
-                $iproduct = Product::where('id', $product->product_id)->first();
-                $iproduct->quantity = $product['quantity'];
-                $iproduct->price = $product['price'];
-                if (isset($product['config'])) {
-                    $iproduct->config = $product['config'];
-                }
-                if ($coupon) {
-                    if (isset($coupon->products)) {
-                        if (!in_array($iproduct->id, $coupon->products)) {
+            foreach ($invoice->items()->get() as $item) {
+                if ($item->product_id) {
+                    $product = $item->product()->get()->first();
+                    $order = $product->order()->get()->first();
+                    $coupon = $order->coupon()->get()->first();
+                    if ($coupon) {
+                        if ($coupon->time == 'onetime') {
+                            $invoices = $order->invoices()->get();
+                            if ($invoices->count() == 1) {
+                                $coupon = $order->coupon()->get()->first();
+                            } else {
+                                $coupon = null;
+                            }
+                        }
+                    }
+
+                    if ($coupon) {
+                        if (!in_array($product->id, $coupon->products) && !empty($coupon->products)) {
                             $product->discount = 0;
-                            continue;
                         } else {
                             if ($coupon->type == 'percent') {
-                                $iproduct->discount = $iproduct->price * $coupon->value / 100;
+                                $product->discount = $product->price * $coupon->value / 100;
                             } else {
-                                $iproduct->discount = $coupon->value;
+                                $product->discount = $coupon->value;
                             }
                         }
                     } else {
-                        if ($coupon->type == 'percent') {
-                            $iproduct->discount = $iproduct->price * $coupon->value / 100;
-                        } else {
-                            $iproduct->discount = $coupon->value;
-                        }
+                        $product->discount = 0;
                     }
-                } else {
-                    $iproduct->discount = 0;
+                    $product->name = $item->description;
+                    $product->price = $item->total;
+                    $products[] = $product;
+                    $total += $product->price * $product->quantity;
                 }
-                $iproduct->price = $iproduct->price - $iproduct->discount;
-                $products[] = $iproduct;
             }
 
             if ($request->get('payment_method')) {
@@ -307,7 +314,7 @@ class CheckoutController extends Controller
         $orderProduct->order_id = $order->id;
         $orderProduct->product_id = $product->id;
         $orderProduct->quantity = $product->quantity;
-        $orderProduct->price = $product->price + ($product->setup_fee * $product->quantity);
+        $orderProduct->price = $product->price;
         if ($product->billing_cycle) {
             $orderProduct->billing_cycle = $product->billing_cycle;
             if ($product->billing_cycle == 'monthly') {
@@ -350,7 +357,7 @@ class CheckoutController extends Controller
         $invoiceProduct = new InvoiceItem();
         $invoiceProduct->invoice_id = $invoice->id;
         $invoiceProduct->product_id = $orderProduct->id;
-        $invoiceProduct->total = $orderProduct->price * $orderProduct->quantity;
+        $invoiceProduct->total = ($orderProduct->price + $product->setup_fee) * $orderProduct->quantity;
         $description = $orderProduct->billing_cycle ? '(' . now()->format('Y-m-d') . ' - ' . date('Y-m-d', strtotime($orderProduct->expiry_date)) . ')' : '';
         $invoiceProduct->description = $product->name . ' ' . $description;
         $invoiceProduct->save();
