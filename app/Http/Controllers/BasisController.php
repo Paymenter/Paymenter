@@ -20,16 +20,15 @@ class BasisController extends Controller
         if ($product) {
             return redirect()->route('checkout.add', $product->id);
         }
-        if ($slug == null) {
-            $categories = Category::all();
-        } else {
-            $categories = Category::where('slug', $slug)->get();
+        $category;
+        if ($slug != null) {
+            $category = Category::where('slug', $slug)->first();
+            if(!$category) {
+                abort(404);
+            }
         }
-        if ($categories->count() == 0) {
-            return abort(404);
-        }
-
-        return view('product', compact('categories'));
+        $categories = Category::all();
+        return view('product', compact('categories', 'category'));
     }
 
     public function manifest(Request $request)
