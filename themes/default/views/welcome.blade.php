@@ -5,7 +5,7 @@
         <div class="content ">
             <div class="content-box">
                 <div class="prose dark:prose-invert min-w-full">
-                    {{ \Illuminate\Mail\Markdown::parse(str_replace("\n", '<br>', config('settings::home_page_text'))) }}
+                    {!! Str::Markdown(config('settings::home_page_text')) !!}
                 </div>
             </div>
         </div>
