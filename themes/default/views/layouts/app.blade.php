@@ -136,11 +136,11 @@
     @endisset
 
     <!-- Fonts -->
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;600;700&display=swap">
 
     @vite('resources/js/app.js')
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
-    <link href="https://cdn.jsdelivr.net/npm/remixicon@2.5.0/fonts/remixicon.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.2.0/fonts/remixicon.css" rel="stylesheet">
     <link rel="apple-touch-icon" sizes="180x180" href="/img/apple-touch-icon.png">
     <link rel="icon" type="image/png" sizes="32x32" href="/img/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="/img/favicon-16x16.png">
@@ -155,7 +155,7 @@
     <meta name="theme-color" content="#5270FD">
 </head>
 
-<body class="font-sans antialiased bg-gray-100">
+<body class="bg-secondary-100 dark:bg-secondary-50 text-secondary-700 font-sans">
     <canvas class="snow" id="snow" width="1920" height="1080"></canvas>
     <div id="app" class="min-h-screen dark:text-white dark:bg-darkmode">
         @if (config('settings::sidebar') == 1)
@@ -167,11 +167,11 @@
         <main class="grow">
             {{ $slot }}
         </main>
-        <footer>
-            <div class="flex flex-col justify-center items-center dark:text-white dark:bg-darkmode">
-                <!-- Please do not remove the credits. -->
-                <a class="text-gray-500 dark:text-gray-400 text-sm" href="https://paymenter.org">Paymenter &copy; 2022 -
-                    {{ date('Y') }}</a>
+        <footer class="pt-5 pb-3">
+            <div class="content text-center text-secondary-600 text-sm">
+                <a href="https://paymenter.org">
+                    Paymenter &copy; 2022 - {{ date('Y') }}
+                </a>
             </div>
         </footer>
     </div>
