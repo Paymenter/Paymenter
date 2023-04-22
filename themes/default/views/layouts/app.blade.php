@@ -157,7 +157,7 @@
 
 <body class="bg-secondary-100 dark:bg-secondary-50 text-secondary-700 font-sans">
     <canvas class="snow" id="snow" width="1920" height="1080"></canvas>
-    <div id="app" class="min-h-screen dark:text-white dark:bg-darkmode">
+    <div id="app" class="min-h-screen">
         @if (config('settings::sidebar') == 1)
             @include('layouts.sidenavigation')
         @else
