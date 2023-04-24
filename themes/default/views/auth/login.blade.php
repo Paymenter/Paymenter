@@ -10,22 +10,21 @@
             <form method="POST" action="{{ route('login') }}" id="login">
                 @csrf
                 <h2 class="text-lg font-semibold">{{ __('Login to continue') }}</h2>
-                <x-input class="mt-2" label="{{ __('Email') }}" type="email" placeholder="{{ __('Email..') }}" required
+                <x-input class="mt-3" label="{{ __('Email') }}" type="email" placeholder="{{ __('Email..') }}" required
                     name="email" id="email" icon="ri-at-line" />
                     
-                <div class="flex justify-between mt-2 text-sm text-secondary-600" >
+                <div class="flex justify-between mt-3 text-sm text-secondary-600" >
                     <label for="password">{{ __('Password') }}</label>
                     <a href="{{ route('password.request') }}">{{ __('Forgot Password?') }}</a>
                 </div>
                 <x-input type="password" required
-                    placeholder="{{ __('Password..') }}" name="password" id="password" icon="ri-lock-line"
-                    error="true" />
-                <x-input type="checkbox" name="remember" id="remember" label="Remember me" class="mt-2" />
-                <div class="flex justify-between items-center mt-4">
+                    placeholder="{{ __('Password..') }}" name="password" id="password" icon="ri-lock-line"/>
+                    
+                <x-input type="checkbox" name="remember" id="remember" label="Remember me" class="mt-3" />
+                <div class="flex justify-between items-center mt-3">
                     <a href="{{ route('register') }}" class="text-sm text-secondary-600 underline">{{ __('New here? Create an account.') }}</a>
                     <button class="button button-primary">{{ __('Login') }}</button>
                 </div>
-                <br>
                 <div class="flex items-center justify-center">
                     <!-- Recaptcha, also send the form id -->
                     <x-recaptcha form="login" />
@@ -35,12 +34,12 @@
                         config('settings::apple_enabled') == 1 ||
                         config('settings::google_enabled') == 1 ||
                         config('settings::github_enabled') == 1)
-                    <div class="flex items-center">
+                    <div class="flex items-center my-2">
                         <div class="w-full h-0.5 bg-secondary-200 dark:bg-secondary-300"></div>
                         <div class="px-5 text-center text-secondary-500 dark:text-secondary-400">{{ __('or') }}</div>
                         <div class="w-full h-0.5 bg-secondary-200 dark:bg-secondary-300"></div>
                     </div>
-                    <div class="space-y-3">
+                    <div class="space-y-2">
                         @if (config('settings::google_enabled') == 1)
                             <a href="{{ route('social.login', 'google') }}"
                                 class="button button-secondary !flex gap-x-2 items-center justify-center">
@@ -93,12 +92,12 @@
                         @if (config('settings::discord_enabled'))
                             <a href="{{ route('social.login', 'discord') }}"
                                 class="button button-secondary !flex gap-x-2 items-center justify-center">
-                                <svg class="w-5 h-5 mr-2 text-secondary-900 dark:text-white" viewBox="0 0 127.14 96.36"
+                                <svg class="w-5 h-5 mr-2 text-secondary-900 dark:text-secondary" viewBox="0 0 127.14 96.36"
                                     fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <defs>
                                         <style>
                                             .cls-1 {
-                                                fill: #fff;
+                                                fill: var(--secondary-900);
                                             }
                                         </style>
                                     </defs>

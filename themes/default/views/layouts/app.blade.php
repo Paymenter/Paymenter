@@ -158,22 +158,28 @@
 <body class="bg-secondary-100 dark:bg-secondary-50 text-secondary-700 font-sans">
     <canvas class="snow" id="snow" width="1920" height="1080"></canvas>
     <div id="app" class="min-h-screen">
-        @if (config('settings::sidebar') == 1)
-            @include('layouts.sidenavigation')
-        @else
-            @include('layouts.navigation')
-        @endif
-        <!-- Page Content -->
-        <main class="grow">
-            {{ $slot }}
-        </main>
-        <footer class="pt-5 pb-3">
-            <div class="content text-center text-secondary-600 text-sm">
-                <a href="https://paymenter.org">
-                    Paymenter &copy; 2022 - {{ date('Y') }}
-                </a>
+        @include('layouts.navigation')
+
+        <div class="@if (config('settings::sidebar') == 1) flex md:flex-nowrap flex-wrap @endif">
+            @if($clients)
+                @include('layouts.subnavigation')
+            @endif
+            <div class="w-full flex flex-col min-h-[calc(100vh-60px)]">
+
+                <!-- Page Content -->
+                <main class="grow">
+                    {{ $slot }}
+                </main>
+
+                <footer class="pt-5 pb-3 mt-auto">
+                    <div class="content text-center text-secondary-600 text-sm">
+                        <a href="https://paymenter.org">
+                            Paymenter &copy; 2022 - {{ date('Y') }}
+                        </a>
+                    </div>
+                </footer>
             </div>
-        </footer>
+        </div>
     </div>
 </body>
 

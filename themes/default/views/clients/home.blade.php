@@ -1,7 +1,4 @@
-<x-app-layout>
-    <x-slot name="title">
-        {{ __('Home') }}
-    </x-slot>
+<x-app-layout clients title="home">
     <div class="py-12 mx-auto max-w-7xl sm:px-6 lg:px-8">
         <x-success class="mt-4" />
         <div class="mx-auto max-w-7xl sm:px-6 lg:px-8" style="padding-bottom: 20px;">

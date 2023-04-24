@@ -1,7 +1,4 @@
-<x-app-layout>
-    <x-slot name="title">
-        {{ __('Profile') }}
-    </x-slot>
+<x-app-layout title="{{ __('Edit profile') }}">
     <!-- show form to edit user profile -->
     <x-success class="mt-4" />
     <div class="py-12">

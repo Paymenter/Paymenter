@@ -47,7 +47,7 @@
                             </div>
                             <p>{{ \Illuminate\Mail\Markdown::parse(str_replace("\n", '<br>', $product->description)) }}</p>
                             <div class="mt-3">
-                                <a href="#" class="button button-secondary w-full">Add to cart <i class="ri-shopping-cart-2-line"></i></a>
+                                <a href="{{ route('checkout.add', $product->id) }}" class="button button-secondary w-full">Add to cart <i class="ri-shopping-cart-2-line"></i></a>
                             </div>
                         </div>
                     </div>
