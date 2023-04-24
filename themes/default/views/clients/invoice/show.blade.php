@@ -1,7 +1,4 @@
-<x-app-layout>
-    <x-slot name="title">
-        {{ __('Invoice') }}
-    </x-slot>
+<x-app-layout clients title="{{ __('Invoice') }}">
     <section class="py-20">
         <div class="max-w-5xl mx-auto py-16 dark:bg-darkmode2 bg-white">
             <article class="overflow-hidden">

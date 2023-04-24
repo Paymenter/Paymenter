@@ -7,95 +7,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <script>
-        (function() {
-            if ("{{ config('settings::snow') }}" == 1) {
-                var canvas, ctx;
-                var points = [];
-                var maxDist = 1000;
-
-                function init() {
-                    canvas = document.getElementById("snow");
-                    ctx = canvas.getContext("2d");
-                    resizeCanvas();
-                    pointFun();
-                    setInterval(pointFun, 20);
-                    window.addEventListener('resize', resizeCanvas, false);
-                }
-
-                function point() {
-                    this.x = Math.random() * (canvas.width + maxDist) - (maxDist / 2);
-                    this.y = Math.random() * (canvas.height + maxDist) - (maxDist / 2);
-                    this.z = (Math.random() * 0.5) + 0.5;
-                    this.vx = ((Math.random() * 2) - 0.5) * this.z;
-                    this.vy = ((Math.random() * 1.5) + 0.5) * this.z;
-                    this.fill = "rgba(108, 122, 137," + ((0.4 * Math.random()) + 0.5) + ")";
-                    this.dia = ((Math.random() * 2.5) + 1.5) * this.z;
-                    this.vs = Math.floor(Math.random() * (25 - 15 + 1) + 15);
-                    points.push(this);
-                }
-
-                function generatePoints(amount) {
-                    var temp;
-                    for (var i = 0; i < amount; i++) {
-                        temp = new point();
-                    }
-                }
-
-                function draw(obj) {
-                    ctx.beginPath();
-                    ctx.strokeStyle = "transparent";
-                    ctx.fillStyle = obj.fill;
-                    ctx.arc(obj.x, obj.y, obj.dia, 0, 2 * Math.PI);
-                    ctx.closePath();
-                    ctx.stroke();
-                    ctx.fill();
-                }
-
-                function drawSnowflake(obj) {
-                    var snowflake = new Image();
-                    if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia(
-                            '(prefers-color-scheme: dark)').matches)) {
-                        snowflake.src = 'https://www.platinumhost.io/snowflake.svg';
-                    } else {
-                        snowflake.src = 'https://www.platinumhost.io/snowflake_dark.svg';
-                    }
-                    ctx.drawImage(snowflake, obj.x, obj.y * Math.PI, obj.vs, obj.vs);
-                }
-
-                function update(obj) {
-                    obj.x += obj.vx;
-                    obj.y += obj.vy;
-                    if (obj.x > canvas.width + (maxDist / 2)) {
-                        obj.x = -(maxDist / 2);
-                    } else if (obj.xpos < -(maxDist / 2)) {
-                        obj.x = canvas.width + (maxDist / 2);
-                    }
-                    if (obj.y > canvas.height + (maxDist / 2)) {
-                        obj.y = -(maxDist / 2);
-                    } else if (obj.y < -(maxDist / 2)) {
-                        obj.y = canvas.height + (maxDist / 2);
-                    }
-                }
-
-                function pointFun() {
-                    ctx.clearRect(0, 0, canvas.width, canvas.height);
-                    for (var i = 0; i < points.length; i++) {
-                        drawSnowflake(points[i]);
-                        draw(points[i]);
-                        update(points[i]);
-                    };
-                }
-
-                function resizeCanvas() {
-                    canvas.width = window.innerWidth;
-                    canvas.height = window.innerHeight;
-                    points = [];
-                    generatePoints(window.innerWidth / 3);
-                    pointFun();
-                }
-                window.onload = init;
-            }
-        })();
+        if ("{{ config('settings::snow') }}" == 1) {
+            document.addEventListener("DOMContentLoaded", function() {
+                window.snow();
+            });
+        }
         window.addEventListener('keydown', function(e) {
             var ctrlDown = true;
             var ctrlKey = 17,
@@ -130,7 +46,7 @@
         }
     </style>
     @isset($title)
-        <title>{{ config('app.name', 'Paymenter') . ' - ' . $title }}</title>
+        <title>{{ config('app.name', 'Paymenter') . ' - ' . ucfirst($title) }}</title>
     @else
         <title>{{ config('app.name', 'Paymenter') }}</title>
     @endisset
@@ -158,15 +74,15 @@
 <body class="bg-secondary-100 dark:bg-secondary-50 text-secondary-700 font-sans">
     <canvas class="snow" id="snow" width="1920" height="1080"></canvas>
     <div id="app" class="min-h-screen">
-        @include('layouts.navigation')
-
+        @if (!$clients || config('settings::sidebar') == 0)
+            @include('layouts.navigation')
+        @endif
         <div class="@if (config('settings::sidebar') == 1) flex md:flex-nowrap flex-wrap @endif">
-            @if($clients)
+            @if ($clients)
                 @include('layouts.subnavigation')
             @endif
             <div class="w-full flex flex-col min-h-[calc(100vh-60px)]">
 
-                <!-- Page Content -->
                 <main class="grow">
                     {{ $slot }}
                 </main>

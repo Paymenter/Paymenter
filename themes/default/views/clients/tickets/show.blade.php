@@ -1,7 +1,5 @@
-<x-app-layout>
-    <x-slot name="title">
-        {{ __('Ticket') }}
-    </x-slot>
+<x-app-layout clients title="{{ __('Ticket') }}">
+
 
     <!-- show last messages and form to reply -->
     <div class="py-12">

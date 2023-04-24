@@ -1,7 +1,5 @@
-<x-app-layout>
-    <x-slot name="title">
-        API Tokens
-    </x-slot>
+<x-app-layout clients title="{{ __('API') }}">
+
     
     <div class="py-12">
         <div class="mx-auto max-w-7xl sm:px-6 lg:px-8 flex flex-col">
