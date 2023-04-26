@@ -19,8 +19,8 @@
                     </p>
                 </div>
             </div>
-            <div>
-                {!! Str::markdown(str_replace("\n", '<br>', $announcement->announcement)) !!}
+            <div class="prose dark:prose-invert">
+                {!! Str::markdown(str_replace("\n", '<br>', Stevebauman\Purify\Facades\Purify::clean($announcement->announcement))) !!}
             </div>
         </div>
     </div>

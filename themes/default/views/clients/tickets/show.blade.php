@@ -31,7 +31,7 @@
                                 <div
                                     class="p-4 mt-4 rounded-md dark:bg-darkmode bg-gray-100 grid grid-cols-1 md:grid-cols-2">
                                     <label class="prose dark:prose-invert max-w-full">
-                                        {!! Str::Markdown(str_replace("\n", "\n", $message->message), ['html_input' => 'escape']) !!}
+                                        {!! Str::Markdown(str_replace("\n", "\n", Stevebauman\Purify\Facades\Purify::clean($message->message))) !!}
                                     </label>
                                     <p class="text-xs text-gray-500 dark:text-darkmodetext text-end"
                                         style="align-items:flex-end">

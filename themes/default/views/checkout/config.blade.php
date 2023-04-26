@@ -13,7 +13,7 @@
                     <h1 class="text-2xl font-bold">{{ $product->name }}</h1>
                     <hr class="my-2 border-b-1 border-gray-300 dark:border-gray-600">
                     <div class="prose dark:prose-invert text-gray-500 dark:text-darkmodetext">
-                        {{ \Illuminate\Mail\Markdown::parse(str_replace("\n", '<br>', $product->description)) }}
+                        {{ \Illuminate\Mail\Markdown::parse(str_replace("\n", '<br>', Stevebauman\Purify\Facades\Purify::clean($product->description))) }}
                     </div>
                     <form method="POST" action="{{ route('checkout.config', $product->id) }}">
                         @csrf
