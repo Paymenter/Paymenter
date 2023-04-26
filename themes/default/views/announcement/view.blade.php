@@ -19,7 +19,7 @@
                     </p>
                 </div>
             </div>
-            <div class="prose dark:prose-invert">
+            <div class="prose dark:prose-invert max-w-full">
                 {!! Str::markdown(str_replace("\n", '<br>', Stevebauman\Purify\Facades\Purify::clean($announcement->announcement))) !!}
             </div>
         </div>

@@ -45,11 +45,11 @@
             pointer-events: none;
         }
     </style>
-    @isset($title)
-        <title>{{ config('app.name', 'Paymenter') . ' - ' . ucfirst($title) }}</title>
-    @else
+    @empty($title)
         <title>{{ config('app.name', 'Paymenter') }}</title>
-    @endisset
+    @else
+        <title>{{ config('app.name', 'Paymenter') . ' - ' . ucfirst($title) }}</title>
+    @endempty
 
     <!-- Fonts -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;600;700&display=swap">
