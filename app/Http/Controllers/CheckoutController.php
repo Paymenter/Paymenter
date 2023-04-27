@@ -288,7 +288,6 @@ class CheckoutController extends Controller
                     $product->name = $item->description;
                     $product->price = $item->total;
                     $products[] = $product;
-                    $total += $product->price * $product->quantity;
                 }
             }
 

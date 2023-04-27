@@ -14,16 +14,6 @@
                 <label class="form-label">{{ __('Logo') }}</label>
             </div>
             <div class="relative m-4 group">
-                <select name="theme" class="form-input peer @error('theme') is-invalid @enderror" placeholder=" "
-                    name="theme" required>
-                    @foreach ($themes as $theme)
-                        <option value="{{ $theme }}" {{ $theme == config('settings::theme') ? 'selected' : '' }}>
-                            {{ $theme }}</option>
-                    @endforeach
-                </select>
-                <label class="form-label">{{ __('Theme') }}</label>
-            </div>
-            <div class="relative m-4 group">
                 <!-- sidebar -->
                 <select name="sidebar" class="form-input peer @error('sidebar') is-invalid @enderror" placeholder=" "
                     name="sidebar" required>

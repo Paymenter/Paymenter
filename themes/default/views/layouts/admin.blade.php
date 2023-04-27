@@ -41,6 +41,33 @@
             });
         });
     </script>
+    <style>
+        :root {
+            --secondary-50: {{ config('settings::theme:secondary-50', '#ffffff') }};
+            --secondary-100: {{ config('settings::theme:secondary-100', '#fafcff') }};
+            --secondary-200: {{ config('settings::theme:secondary-200', '#ebeef3') }};
+            --secondary-300: {{ config('settings::theme:secondary-300', '#bbbfd2') }};
+            --secondary-400: {{ config('settings::theme:secondary-400', '#808498') }};
+            --secondary-500: {{ config('settings::theme:secondary-500', '#606372') }};
+            --secondary-600: {{ config('settings::theme:secondary-600', '#4d4f60') }};
+            --secondary-700: {{ config('settings::theme:secondary-700', '#353741') }};
+            --secondary-800: {{ config('settings::theme:secondary-800', '#1c1c20') }};
+            --secondary-900: {{ config('settings::theme:secondary-900', '#000000') }};
+        }
+
+        .dark {
+            --secondary-50: {{ config('settings::theme:secondary-50-dark', '#1E202D') }};
+            --secondary-100: {{ config('settings::theme:secondary-100-dark', '#313441') }};
+            --secondary-200: {{ config('settings::theme:secondary-200-dark', '#404351') }};
+            --secondary-300: {{ config('settings::theme:secondary-300-dark', '#4F525E') }};
+            --secondary-400: {{ config('settings::theme:secondary-400-dark', '#656874') }};
+            --secondary-500: {{ config('settings::theme:secondary-500-dark', '#7D8091') }};
+            --secondary-600: {{ config('settings::theme:secondary-600-dark', '#AEB2C2') }};
+            --secondary-700: {{ config('settings::theme:secondary-700-dark', '#CACBD2') }};
+            --secondary-800: {{ config('settings::theme:secondary-800-dark', '#F1F1F1') }};
+            --secondary-900: {{ config('settings::theme:secondary-900-dark', '#ffffff') }};
+        }
+    </style>
 </head>
 
 <body class="font-sans antialiased">

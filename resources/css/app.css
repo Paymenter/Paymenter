@@ -23,48 +23,26 @@
 }
 
 :root{
-    --secondary-50:#FFF;
-    --secondary-100:#FAFCFF;
-    --secondary-200:#EBEEF3;
-    --secondary-300:#BBBFD2;
-    --secondary-400:#808498;
-    --secondary-500:#606372;
-    --secondary-600:#4D4F60;
-    --secondary-700:#353741;
-    --secondary-800:#1C1C20;
-    --secondary-900:#000;
+    
+    --primary-50: #EDF0FF;
+    --primary-100: #C6DBFF;
+    --primary-200: #9BBEFB;
+    --primary-300: #799CD8;
+    --primary-400: #5270FD;
 
-    --primary-50:#EDF0FF;
-    --primary-100:#C6DBFF;
-    --primary-200:#9BBEFB;
-    --primary-300:#799CD8;
-    --primary-400:#5270FD;
+    --danger-50: #FFEBEB;
+    --danger-100: #FDCFCF;
+    --danger-200: #EF9595;
+    --danger-300: #DB5858;
+    --danger-400: #DC3A3A;
 
-    --danger-50:#FFEBEB;
-    --danger-100:#FDCFCF;
-    --danger-200:#EF9595;
-    --danger-300:#DB5858;
-    --danger-400:#DC3A3A;
-
-    --success-50:#EBFFF1;
-    --success-100:#B5EFCE;
-    --success-200:#86DEA0;
-    --success-300:#82CE91;
-    --success-400:#4EB165;
+    --success-50: #EBFFF1;
+    --success-100: #B5EFCE;
+    --success-200: #86DEA0;
+    --success-300: #82CE91;
+    --success-400: #4EB165;
 }
 
-.dark{
-    --secondary-50:#1E202D;
-    --secondary-100:#313441;
-    --secondary-200:#404351;
-    --secondary-300:#4F525E;
-    --secondary-400:#656874;
-    --secondary-500:#7D8091;
-    --secondary-600:#AEB2C2;
-    --secondary-700:#CACBD2;
-    --secondary-800:#F1F1F1;
-    --secondary-900:#fff;
-}
 
 .button{
     @apply inline-block py-2 px-4 rounded-md text-center font-sans font-medium duration-300;

@@ -22,6 +22,7 @@ Route::group(['prefix' => 'admin'], function () {
         Route::post('/email/test', [App\Http\Controllers\Admin\SettingController::class, 'testEmail'])->middleware(['auth.admin', 'password.confirm'])->name('admin.settings.email.test');
         Route::post('/login', [App\Http\Controllers\Admin\SettingController::class, 'login'])->middleware(['auth.admin', 'password.confirm'])->name('admin.settings.login');
         Route::post('/security', [App\Http\Controllers\Admin\SettingController::class, 'security'])->middleware(['auth.admin', 'password.confirm'])->name('admin.settings.security');
+        Route::post('/theme', [App\Http\Controllers\Admin\SettingController::class, 'theme'])->middleware(['auth.admin', 'password.confirm'])->name('admin.settings.theme');
     });
 
     Route::group(['prefix' => 'products'], function () {
