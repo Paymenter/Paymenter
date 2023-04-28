@@ -263,7 +263,7 @@
                                         <div id='showmore{{$ticket->id}}'
                                             style='{!! count(explode("<br />", nl2br($ticketMessages->where("ticket_id", $ticket->id)->last()->message))) > 3 ? "-webkit-mask-image: linear-gradient(black 35%, transparent 100%);" : "" !!}'>
                                             @if (count($ticketMessages) > 0)
-                                                {{ \Illuminate\Mail\Markdown::parse(nl2br(implode(array_slice(explode("<br />", Stevebauman\Purify\Facades\Purify::clean(nl2br($ticketMessages->where('ticket_id', $ticket->id)->last()->message)), 0, 4))))) }}
+                                                {!! Str::markdown(implode(array_slice(explode("<br />", Stevebauman\Purify\Facades\Purify::clean(nl2br($ticketMessages->where('ticket_id', $ticket->id)->last()->message))), 0, 4))) !!}
                                             @else
                                                 {{ __('No messages...') }}
                                             @endif
