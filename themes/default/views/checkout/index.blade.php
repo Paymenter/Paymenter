@@ -158,7 +158,7 @@
                             </div>
                             <div class="flex flex-col">
                                 <span class="text-lg">{{ config('settings::currency_sign') }}
-                                    {{ $product->setup_fee }}
+                                    {{ $product->setup_fee - $product->discount_fee }}
                                 </span>
                             </div>
                         </div>

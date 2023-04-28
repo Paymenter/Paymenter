@@ -135,7 +135,7 @@
                                             </td>
                                             <td
                                                 class="dark:text-darkmodetext py-4 pl-3 pr-4 text-sm text-right text-slate-500 sm:pr-6 md:pr-0">
-                                                {{ $currency_sign }}{{ number_format((float) ($product->price * $product->quantity), 2, '.', '') }}
+                                                {{ $currency_sign }}{{ number_format((float) (($product->price - $product->discount) * $product->quantity), 2, '.', '') }}
                                             </td>
                                         </tr>
                                     @endforeach
@@ -198,7 +198,7 @@
                                         </th>
                                         <td
                                             class="dark:text-darkmodetext pt-4 pl-3 pr-4 text-sm font-normal text-right text-slate-700 sm:pr-6 md:pr-0">
-                                            {{ $currency_sign }}{{ number_format((float) $subtotal, 2, '.', '') }}
+                                            {{ $currency_sign }}{{ number_format((float) $total, 2, '.', '') }}
                                         </td>
                                     </tr>
                                 </tfoot>

@@ -32,7 +32,7 @@ function PayPal_pay($total, $products, $orderId)
                 'reference_id' => $orderId,
                 'amount' => [
                     'currency_code' => ExtensionHelper::getCurrency(),
-                    'value' => $total,
+                    'value' => round($total, 2)
                 ],
             ],
         ],
@@ -43,6 +43,10 @@ function PayPal_pay($total, $products, $orderId)
             'shipping_preference'  => 'NO_SHIPPING',
         ],
     ]);
+
+    if($response->failed()) {
+        ExtensionHelper::error('PayPal', $response->json());
+    }
 
     return $response->json()['links'][1]['href'];
 }

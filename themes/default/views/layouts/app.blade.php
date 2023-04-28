@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <script>
-        if ("{{ config('settings::snow') }}" == 1) {
+        if ("{{ config('settings::theme:snow') }}" == 1) {
             document.addEventListener("DOMContentLoaded", function() {
                 window.snow();
             });
@@ -98,7 +98,9 @@
 </head>
 
 <body class="bg-secondary-100 dark:bg-secondary-50 text-secondary-700 font-sans">
+    @if(config('settings::theme:snow') == 1)
     <canvas class="snow" id="snow" width="1920" height="1080"></canvas>
+    @endif
     <div id="app" class="min-h-screen">
         @if (!$clients || config('settings::sidebar') == 0)
             @include('layouts.navigation')
