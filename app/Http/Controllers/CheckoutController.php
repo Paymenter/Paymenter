@@ -241,15 +241,6 @@ class CheckoutController extends Controller
         }
         $invoice->save();
         foreach ($products as $product) {
-            // If quantity is more than 1, create multiple order products
-            if ($product->allow_quantity == 1)
-                for ($i = 0; $i < $product->quantity; ++$i) {
-                    $this->createOrderProduct($order, $product, $invoice, false);
-                }
-            else if ($product->allow_quantity == 2)
-                $this->createOrderProduct($order, $product, $invoice);
-            else
-                $this->createOrderProduct($order, $product, $invoice);
             if ($coupon) {
                 if (isset($coupon->products)) {
                     if (!in_array($product->id, $coupon->products) && !empty($coupon->products)) {
@@ -277,6 +268,17 @@ class CheckoutController extends Controller
                 $product->discount = 0;
                 $product->discount_fee = 0;
             }
+            if ($product->allow_quantity == 1)
+                for ($i = 0;
+                    $i < $product->quantity;
+                    ++$i
+                ) {
+                    $this->createOrderProduct($order, $product, $invoice, false);
+                }
+            else if ($product->allow_quantity == 2)
+                $this->createOrderProduct($order, $product, $invoice);
+            else
+                $this->createOrderProduct($order, $product, $invoice);
             if($product->setup_fee > 0) {
                 $invoiceItem = new InvoiceItem();
                 $invoiceItem->invoice_id = $invoice->id;
@@ -400,7 +402,7 @@ class CheckoutController extends Controller
                 $orderProductConfig->save();
             }
         }
-        if ($product->price == 0) {
+        if ($product->price == 0 || $product->price - $product->discount == 0) {
             $orderProduct->status = 'paid';
             $orderProduct->save();
             ExtensionHelper::createServer($orderProduct);
