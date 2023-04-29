@@ -62,7 +62,7 @@
                                             </td>
                                             <td class="text-center dark:text-white dark:bg-darkmode2 p-3"
                                                 data-order="0.00">
-                                                {{ $product->price() ? config('settings::currency_sign') . $product->price() : __('Free') }}
+                                                {{ ($product2->price !== '0.00' && $product2->price) ? config('settings::currency_sign') . $product2->price : __('Free') }}
                                             </td>
                                             <td class="text-center dark:text-white dark:bg-darkmode2 p-3">
                                                 {{ $product2->expiry_date ? date('l jS F Y', strtotime($product2->expiry_date)) : __('Never') }}

@@ -6,11 +6,6 @@ use App\Http\Controllers\API\Clients\APIController;
 use App\Http\Controllers\API\Clients\UserController;
 use App\Http\Controllers\API\Clients\InvoiceController;
 
-// Users
-Route::group(['prefix' => 'v1/users'], function () {
-    Route::get('/', [UserController::class, 'getUser'])->name('api.client.v1.users.getUser');
-});
-
 // Tickets
 Route::group(['prefix' => 'v1/tickets'], function () {
     Route::get('/', [TicketController::class, 'getTickets'])->name('api.client.v1.tickets.getTickets');
@@ -24,10 +19,11 @@ Route::group(['prefix' => 'v1/tickets'], function () {
 Route::group(['prefix' => 'v1/invoices'], function () {
     Route::get('/', [InvoiceController::class, 'getInvoices'])->name('api.client.v1.invoices.getInvoices');
     Route::get('/{invoiceId}', [InvoiceController::class, 'getInvoice'])->name('api.client.v1.invoices.getInvoice');
-    Route::get('/{invoiceId}/pay', [InvoiceController::class, 'payInvoice'])->name('api.client.v1.invoices.payInvoice');
+    Route::post('/{invoiceId}/pay', [InvoiceController::class, 'payInvoice'])->name('api.client.v1.invoices.payInvoice');
 });
 
 // API
-Route::group(['prefix' => 'v1/api'], function () {
+Route::group(['prefix' => 'v1/'], function () {
     Route::get('/permissions', [APIController::class, 'getPermissions'])->name('api.client.v1.api.getPermissions');
+    Route::get('/me', [APIController::class, 'getMe'])->name('api.client.v1.api.getMe');
 });

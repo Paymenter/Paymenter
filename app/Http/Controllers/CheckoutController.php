@@ -25,24 +25,34 @@ class CheckoutController extends Controller
                 $total += $product->price * $product->quantity;
                 $totalSetup += $product->setup_fee * $product->quantity;
                 if ($coupon) {
-                    if (!in_array($product->id, $coupon->products) && !empty($coupon->products)) {
-                        $product->discount = 0;
-                        $product->discount_fee = 0;
-                        continue;
-                    }
-                    if ($coupon->type == 'percent') {
-                        $product->discount = $product->price * $coupon->value / 100;
-                        $product->discount_fee = $product->setup_fee * $coupon->value / 100;
-                        $discount += ($product->discount + $product->discount_fee) * $product->quantity;
+                    if (isset($coupon->products)) {
+                        if (!in_array($product->id, $coupon->products) && !empty($coupon->products)) {
+                            $product->discount = 0;
+                            $product->discount_fee = 0;
+                            continue;
+                        } else {
+                            if ($coupon->type == 'percent') {
+                                $product->discount = $product->price * $coupon->value / 100;
+                                $product->discount_fee = $product->setup_fee * $coupon->value / 100;
+                            } else {
+                                $product->discount = $coupon->value;
+                                $product->discount_fee = $coupon->value;
+                            }
+                        }
                     } else {
-                        $product->discount = $coupon->value;
-                        $product->discount_fee = $coupon->value;
-                        $discount += ($product->discount + $product->discount_fee) * $product->quantity;
+                        if ($coupon->type == 'percent') {
+                            $product->discount = $product->price * $coupon->value / 100;
+                            $product->discount_fee = $product->setup_fee * $coupon->value / 100;
+                        } else {
+                            $product->discount = $coupon->value;
+                            $product->discount_fee = $coupon->value;
+                        }
                     }
                 } else {
                     $product->discount = 0;
                     $product->discount_fee = 0;
                 }
+                $discount += ($product->discount + $product->discount_fee) * $product->quantity;
             }
         }
         $total += $totalSetup;
