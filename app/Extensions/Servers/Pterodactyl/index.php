@@ -163,6 +163,7 @@ function Pterodactyl_createServer($user, $parmas, $order, $product)
 
         return;
     }
+    $environment = [];
     foreach ($eggData['attributes']['relationships']['variables']['data'] as $key => $val) {
         $attr = $val['attributes'];
         $var = $attr['env_variable'];
