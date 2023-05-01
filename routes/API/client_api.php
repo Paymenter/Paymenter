@@ -9,7 +9,7 @@ use App\Http\Controllers\API\Clients\InvoiceController;
 // Tickets
 Route::group(['prefix' => 'v1/tickets'], function () {
     Route::get('/', [TicketController::class, 'getTickets'])->name('api.client.v1.tickets.getTickets');
-    Route::post('/', [TicketController::class, 'createTicket'])->name('api.client.v1.tickets.createTickets');
+    Route::post('/', [TicketController::class, 'createTicket'])->name('api.client.v1.tickets.createTicket');
     Route::get('/{ticketId}', [TicketController::class, 'getTicket'])->name('api.client.v1.tickets.getTicket');
     Route::delete('/{ticketId}/close', [TicketController::class, 'closeTicket'])->name('api.client.v1.tickets.closeTicket');
     Route::put('/{ticketId}/reply', [TicketController::class, 'replyTicket'])->name('api.client.v1.tickets.replyTicket');
