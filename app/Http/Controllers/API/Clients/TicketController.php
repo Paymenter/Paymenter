@@ -7,6 +7,7 @@ use App\Models\Ticket;
 use Illuminate\Http\Request;
 use App\Models\TicketMessage;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\API\TicketRequest;
 use Illuminate\Support\Facades\RateLimiter;
 
 class TicketController extends Controller
@@ -34,17 +35,9 @@ class TicketController extends Controller
     /**
      * Create a new ticket.
      */
-    public function createTicket(Request $request)
+    public function createTicket(TicketRequest $request)
     {
         $user = $request->user();
-
-        $request->validate([
-            'title' => 'required',
-            'message' => 'required',
-            'priority' => 'required|in:low,medium,high',
-        ]);
-
-        $body = json_decode($request->getContent());
 
         if (!$user->tokenCan('ticket:create')) {
             return response()->json([
@@ -67,15 +60,15 @@ class TicketController extends Controller
         }
 
         $ticket = new Ticket();
-        $ticket->title = $body->title;
+        $ticket->title = $request->title;
         $ticket->status = 'open';
         $ticket->client = $user->id;
-        $ticket->priority = $body->priority;
+        $ticket->priority = $request->priority;
         $ticket->save();
 
         TicketMessage::create([
             'ticket_id' => $ticket->id,
-            'message' => $body->message,
+            'message' => $request->message,
             'user_id' => $user->id,
         ]);
 

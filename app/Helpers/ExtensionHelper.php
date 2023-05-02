@@ -34,7 +34,7 @@ class ExtensionHelper
             if ($product->status == 'pending') {
                 ExtensionHelper::createServer($product);
             }
-            $product->status = 'paid';
+            $product->status = 'paid';            
             $product->save();
         }
         if ($invoice->status == 'paid') {
