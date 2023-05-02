@@ -200,7 +200,11 @@ function Virtualizor_suspendServer($user, $params, $order)
     $port = ExtensionHelper::getConfig('virtualizor', 'port');
     $admin = new Virtualizor_Admin_API();
     $admin->Virtualizor_Admin_API($ip, $key, $pass, $port);
-    $output = $admin->suspend($params['config']['external_id']);
+    if(!isset($params['config']['external_id'])){
+        ExtensionHelper::error('Virtualizor', 'Server not found for order #'.$order->id.'.');
+        return;
+    }
+    $admin->suspend($params['config']['external_id']);
 
     return true;
 }
@@ -213,7 +217,11 @@ function Virtualizor_unsuspendServer($user, $params, $order)
     $port = ExtensionHelper::getConfig('virtualizor', 'port');
     $admin = new Virtualizor_Admin_API();
     $admin->Virtualizor_Admin_API($ip, $key, $pass, $port);
-    $output = $admin->unsuspend($params['config']['external_id']);
+    if (!isset($params['config']['external_id'])) {
+        ExtensionHelper::error('Virtualizor', 'Server not found for order #'.$order->id.'.');
+        return;
+    }
+    $admin->unsuspend($params['config']['external_id']);
 
     return true;
 }
@@ -226,7 +234,11 @@ function Virtualizor_terminateServer($user, $params, $order)
     $port = ExtensionHelper::getConfig('virtualizor', 'port');
     $admin = new Virtualizor_Admin_API();
     $admin->Virtualizor_Admin_API($ip, $key, $pass, $port);
-    $output = $admin->delete_vs($params['config']['external_id']);
+    if (!isset($params['config']['external_id'])) {
+        ExtensionHelper::error('Virtualizor', 'Server not found for order #'.$order->id.'.');
+        return;
+    }
+    $admin->delete_vs($params['config']['external_id']);
 
     return true;
 }

@@ -11,6 +11,8 @@ use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\URL;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -32,6 +34,9 @@ class AppServiceProvider extends ServiceProvider
     {
         Validator::extend('recaptcha', 'App\\Validators\\ReCaptcha@validate');
         Schema::defaultStringLength(191);
+        if (Str::startsWith(config('app.url') ?? '', 'https://')) {
+            URL::forceScheme('https');
+        }
         try {
             $settings = Setting::all();
             foreach ($settings as $setting) {
@@ -109,6 +114,8 @@ class AppServiceProvider extends ServiceProvider
             if (config('settings::theme') !== config('themes.active')) {
                 Theme::set(config('settings::theme'), 'default');
             }
+            // Unset settings::theme
+            config(['settings::theme' => null]);
         } catch (\Exception $e) {
             Log::error($e->getMessage());
         }

@@ -42,7 +42,7 @@
     }
     document.head.append(style);
 </script>
-<x-app-layout>
+<x-app-layout clients title="{{ __('Tickets') }}">
     <div class="py-12">
         <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
             <div class="overflow-hidden bg-white shadow-xl sm:rounded-lg dark:bg-darkmode2">
@@ -263,7 +263,7 @@
                                         <div id='showmore{{$ticket->id}}'
                                             style='{!! count(explode("<br />", nl2br($ticketMessages->where("ticket_id", $ticket->id)->last()->message))) > 3 ? "-webkit-mask-image: linear-gradient(black 35%, transparent 100%);" : "" !!}'>
                                             @if (count($ticketMessages) > 0)
-                                                {{ \Illuminate\Mail\Markdown::parse(nl2br(implode(array_slice(explode("<br />", nl2br($ticketMessages->where('ticket_id', $ticket->id)->last()->message)), 0, 4)))) }}
+                                                {!! Str::markdown(implode(array_slice(explode("<br />", Stevebauman\Purify\Facades\Purify::clean(nl2br($ticketMessages->where('ticket_id', $ticket->id)->last()->message))), 0, 4))) !!}
                                             @else
                                                 {{ __('No messages...') }}
                                             @endif

@@ -1,7 +1,4 @@
-<x-app-layout>
-    <x-slot name="title">
-        {{ __('Home') }}
-    </x-slot>
+<x-app-layout clients title="{{ __('Home') }}">
     <div class="py-12 mx-auto max-w-7xl sm:px-6 lg:px-8">
         <x-success class="mt-4" />
         <div class="mx-auto max-w-7xl sm:px-6 lg:px-8" style="padding-bottom: 20px;">
@@ -65,10 +62,10 @@
                                             </td>
                                             <td class="text-center dark:text-white dark:bg-darkmode2 p-3"
                                                 data-order="0.00">
-                                                {{ $product->price() ? config('settings::currency_sign') . $product->price() : __('Free') }}
+                                                {{ ($product2->price !== '0.00' && $product2->price) ? config('settings::currency_sign') . $product2->price : __('Free') }}
                                             </td>
                                             <td class="text-center dark:text-white dark:bg-darkmode2 p-3">
-                                                {{ date('l jS F Y', strtotime($product2->expiry_date)) }}</td>
+                                                {{ $product2->expiry_date ? date('l jS F Y', strtotime($product2->expiry_date)) : __('Never') }}
                                             <td class="text-center dark:text-white dark:bg-darkmode2 p-3">
                                                 <div class="border border-gray-200">
                                                     @if ($product2->status === 'paid')

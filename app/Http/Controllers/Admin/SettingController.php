@@ -26,11 +26,18 @@ class SettingController extends Controller
                 unset($languages[$key]);
             }
         }
-
+        $themeConfig = new \stdClass();
+        if (file_exists(base_path('themes/' . Theme::active() . '/theme.json'))) {
+            $themeConfig = json_decode(file_get_contents(base_path('themes/' . Theme::active() . '/theme.json')));
+            if (!$themeConfig) {
+                $themeConfig = new \stdClass();
+            }
+        }
         return view('admin.settings.index', [
             'tabs' => $tabs,
             'themes' => $themes,
             'languages' => $languages,
+            'themeConfig' => $themeConfig
         ]);
     }
 
@@ -51,13 +58,6 @@ class SettingController extends Controller
             $request->app_logo->move(public_path('images'), $imageName);
             $path = '/images/' . $imageName;
             Setting::updateOrCreate(['key' => 'app_logo'], ['value' => $path]);
-        }
-
-        $theme = request('theme');
-        try {
-            $theme = Theme::set($theme);
-        } catch (\Exception $e) {
-            $theme = 'default';
         }
         foreach ($request->except(['_token', 'app_logo', 'app_favicon']) as $key => $value) {
             Setting::updateOrCreate(['key' => $key], ['value' => $value]);
@@ -143,5 +143,18 @@ class SettingController extends Controller
         Setting::updateOrCreate(['key' => 'recaptcha_type'], ['value' => $request->recaptcha_type]);
 
         return redirect('/admin/settings#security')->with('success', 'Settings updated successfully');
+    }
+
+    public function theme(Request $request)
+    {
+        $request->validate([
+            'theme' => 'required',
+        ]);
+        Setting::updateOrCreate(['key' => 'theme'], ['value' => $request->theme]);
+        foreach ($request->except(['_token', 'theme']) as $key => $value) {
+            Setting::updateOrCreate(['key' => 'theme:' . $key], ['value' => $value]);
+        }
+
+        return redirect('/admin/settings#theme')->with('success', 'Settings updated successfully');
     }
 }

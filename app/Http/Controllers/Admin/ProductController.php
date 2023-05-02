@@ -81,6 +81,7 @@ class ProductController extends Controller
                 }
             }
         }
+        $product->stock_enabled = $request->get('stock_enabled') ?? false;
 
         if ($request->get('no_image')) {
             $data['image'] = 'null';
@@ -347,6 +348,13 @@ class ProductController extends Controller
             $newProductSetting = $productSetting->replicate();
             $newProductSetting->product_id = $newProduct->id;
             $newProductSetting->save();
+        }
+
+        $productPrice = ProductPrice::where('product_id', $product->id)->get()->first();
+        if ($productPrice) {
+            $newProductPrice = $productPrice->replicate();
+            $newProductPrice->product_id = $newProduct->id;
+            $newProductPrice->save();
         }
 
         return redirect()->route('admin.products.edit', $newProduct->id)->with('success', 'Product duplicated successfully');

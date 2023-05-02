@@ -1,4 +1,4 @@
-<x-app-layout>
+<x-app-layout clients title="{{ __('Product') }}">
     <x-slot name="title">
         {{ __('Product: ') }} {{ $product->name }}
     </x-slot>

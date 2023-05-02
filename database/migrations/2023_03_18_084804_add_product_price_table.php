@@ -40,8 +40,8 @@ return new class extends Migration
         });
         foreach (Order::all() as $order) {
             foreach ($order->products()->get() as $orderProduct) {
-                OrderProduct::where('id', $orderProduct->id)->update([
-                    'billing_cycle' => $order->billing_cycle,
+                $orderProduct->update([
+                    'billing_cycle' => $order->billing_cycle ?? 'monthly',
                     'expiry_date' => $order->expiry_date,
                     'status' => $order->status,
                 ]);

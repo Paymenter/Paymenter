@@ -1,7 +1,5 @@
-<x-app-layout>
-    <x-slot name="title">
-        {{ __('Ticket') }}
-    </x-slot>
+<x-app-layout clients title="{{ __('Ticket') }}">
+
 
     <!-- show last messages and form to reply -->
     <div class="py-12">
@@ -30,8 +28,11 @@
                             <h1 class="text-xl text-gray-500 dark:text-darkmodetext">{{ __('Messages') }}</h1>
 
                             @foreach ($messages as $message)
-                                <div class="p-4 mt-4 rounded-md dark:bg-darkmode bg-gray-100 grid grid-cols-1 md:grid-cols-2">
-                                    <label for="message" class="prose dark:prose-invert">{!! Str::Markdown(str_replace("\n", '<br>', $message->message)) !!}</label>
+                                <div
+                                    class="p-4 mt-4 rounded-md dark:bg-darkmode bg-gray-100 grid grid-cols-1 md:grid-cols-2">
+                                    <label class="prose dark:prose-invert max-w-full">
+                                        {!! Str::Markdown(str_replace("\n", "\n", Stevebauman\Purify\Facades\Purify::clean($message->message))) !!}
+                                    </label>
                                     <p class="text-xs text-gray-500 dark:text-darkmodetext text-end"
                                         style="align-items:flex-end">
                                         @if ($message->user_id == Auth::user()->id)
@@ -54,8 +55,8 @@
             </div>
             <br>
             <div class="overflow-hidden bg-white shadow-xl sm:rounded-lg dark:bg-darkmode2">
-
-                <form method="POST" action="{{ route('clients.tickets.reply', $ticket->id) }}" class="mt-10" id="reply">
+                <form method="POST" action="{{ route('clients.tickets.reply', $ticket->id) }}" class="mt-10"
+                    id="reply">
                     @csrf
                     <div
                         class="p-6 bg-white border-b border-gray-200 sm:px-20 dark:bg-darkmode2 dark:border-black mt-10">

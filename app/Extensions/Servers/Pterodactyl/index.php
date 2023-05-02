@@ -104,12 +104,14 @@ function Pterodactyl_getProductConfig()
             'name' => 'skip_scripts',
             'friendlyName' => 'Pterodactyl Skip Scripts',
             'type' => 'boolean',
+            'description' => 'Decides if Pterodactyl will skip install scripts',
         ],
         [
             'name' => 'allocation',
             'friendlyName' => 'Pterodactyl Allocation',
             'type' => 'text',
             'required' => true,
+            'description' => 'How many ports the user can allocate. Must be at least one.',
         ],
     ];
 }
@@ -161,6 +163,7 @@ function Pterodactyl_createServer($user, $parmas, $order, $product)
 
         return;
     }
+    $environment = [];
     foreach ($eggData['attributes']['relationships']['variables']['data'] as $key => $val) {
         $attr = $val['attributes'];
         $var = $attr['env_variable'];
@@ -268,10 +271,11 @@ function Pterodactyl_getUser($user)
             'last_name' => 'User',
             'language' => 'en',
             'root_admin' => false,
-            'password' => Pterodactyl_random_string(8),
-            'password_confirmation' => Pterodactyl_random_string(8),
         ];
         $response = Pterodactyl_postRequest($url, $json);
+        if(!$response->successful()) {
+            ExtensionHelper::error('Pterodactyl', 'Failed to create user for order ' . $product->id . ' with error ' . $response->body());
+        }
         $user = $response->json();
 
         return $user['attributes']['id'];
@@ -329,9 +333,9 @@ function Pterodactyl_terminateServer($user, $params,$order, $product)
     return false;
 }
 
-function Pterodactyl_getLink($user, $params, $order)
+function Pterodactyl_getLink($user, $params, $order, $product)
 {
-    $server = Pterodactyl_serverExists($order->id);
+    $server = Pterodactyl_serverExists($product->id);
     if ($server) {
         $url = pteroConfig('host') . '/api/application/servers/' . $server;
         $response = Pterodactyl_getRequest($url);

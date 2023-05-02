@@ -39,22 +39,23 @@
                                     </div>
                                 </td>
                                 <td>
-                                    @if($product->allow_quantity == 1 || $product->allow_quantity == 2)
-                                    <form method="POST" action="{{ route('checkout.update', $product->id) }}">
-                                        @csrf
-                                        <div
-                                            class="flex flex-row items-center px-6 py-4 text-sm text-gray-500 whitespace-nowrap dark:text-darkmodetext">
-                                            <input type="number" name="quantity" value="{{ $product->quantity }}"
-                                                min="1" max="{{ $product->stock_enabled ? $product->stock : '' }}"
-                                                class="w-20 h-10 text-center rounded-md dark:bg-darkmode2 dark:text-darkmodetext"
-                                                min="1">
-                                            <button type="submit" class="ml-4">
-                                                <span name="refresh" class="w-6 h-6 text-gray-500 hover:text-gray-700">
-                                                    Update
-                                                </span>
-                                            </button>
-                                        </div>
-                                    </form>
+                                    @if ($product->allow_quantity == 1 || $product->allow_quantity == 2)
+                                        <form method="POST" action="{{ route('checkout.update', $product->id) }}">
+                                            @csrf
+                                            <div
+                                                class="flex flex-row items-center px-6 py-4 text-sm text-gray-500 whitespace-nowrap dark:text-darkmodetext">
+                                                <input type="number" name="quantity" value="{{ $product->quantity }}"
+                                                    min="1"
+                                                    max="{{ $product->stock_enabled ? $product->stock : '' }}"
+                                                    class="w-20 h-10 text-center rounded-md dark:bg-darkmode2 dark:text-darkmodetext"
+                                                    min="1">
+                                                <button type="submit" class="ml-4">
+                                                    <span name="refresh" class="w-6 h-6 text-gray-500 hover:text-gray-700">
+                                                        Update
+                                                    </span>
+                                                </button>
+                                            </div>
+                                        </form>
                                     @endif
                                 </td>
                                 <td class="px-6 py-4 text-lg text-gray-500 whitespace-nowrap dark:text-darkmodetext">
@@ -127,9 +128,11 @@
                                 {{ round($discount, 2) }}</span>
                         </div>
                     </div>
-                @endif
-                <div class="flex flex-row items-center justify-between">
-                    @foreach ($products as $product)
+                @endif                
+                @foreach ($products as $product)
+                    @if($product->price > 0)
+                    <div class="flex flex-row items-center justify-between">
+
                         <div class="flex flex-row items-center">
                             <span class="text-lg">
                                 {{ ucfirst($product->billing_cycle) }}
@@ -144,8 +147,23 @@
                                 @endif
                             </span>
                         </div>
-                    @endforeach
-                </div>
+                    </div>
+                    @endif
+                    @if ($product->setup_fee > 0)
+                        <div class="flex flex-row items-center justify-between">
+                            <div class="flex flex-row items-center">
+                                <span class="text-lg">
+                                    {{ __('Setup fee') }}
+                                </span>
+                            </div>
+                            <div class="flex flex-col">
+                                <span class="text-lg">{{ config('settings::currency_sign') }}
+                                    {{ $product->setup_fee - $product->discount_fee }}
+                                </span>
+                            </div>
+                        </div>
+                    @endif
+                @endforeach
                 <div class="flex flex-row items-center justify-between">
                     <div class="flex flex-row items-center">
                         <span class="text-lg font-bold">{{ __('Total') }}</span>

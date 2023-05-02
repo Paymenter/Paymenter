@@ -124,6 +124,13 @@ class Upgrade extends Command
         $this->line('$upgrader> php artisan view:clear');
         $this->call('view:clear');
 
+        // Remove the old log files.
+        $this->line('$upgrader> rm -rf storage/logs/*.log');
+        $process = new Process(['rm', '-rf', 'storage/logs/*.log']);
+        $process->run(function ($type, $buffer) {
+            $this->{$type === Process::ERR ? 'error' : 'line'}($buffer);
+        });
+
         // Setup correct permissions on the new files.
         $this->line('$upgrader> chown -R ' . $user . ':' . $group . ' .');
         $process = new Process(['chown', '-R', $user . ':' . $group, '.']);

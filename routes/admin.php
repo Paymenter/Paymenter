@@ -22,6 +22,7 @@ Route::group(['prefix' => 'admin'], function () {
         Route::post('/email/test', [App\Http\Controllers\Admin\SettingController::class, 'testEmail'])->middleware(['auth.admin', 'password.confirm'])->name('admin.settings.email.test');
         Route::post('/login', [App\Http\Controllers\Admin\SettingController::class, 'login'])->middleware(['auth.admin', 'password.confirm'])->name('admin.settings.login');
         Route::post('/security', [App\Http\Controllers\Admin\SettingController::class, 'security'])->middleware(['auth.admin', 'password.confirm'])->name('admin.settings.security');
+        Route::post('/theme', [App\Http\Controllers\Admin\SettingController::class, 'theme'])->middleware(['auth.admin', 'password.confirm'])->name('admin.settings.theme');
     });
 
     Route::group(['prefix' => 'products'], function () {
@@ -44,7 +45,6 @@ Route::group(['prefix' => 'admin'], function () {
         Route::get('/', [App\Http\Controllers\Admin\CategoryController::class, 'index'])->middleware(['auth.admin'])->name('admin.categories');
         Route::get('/create', [App\Http\Controllers\Admin\CategoryController::class, 'create'])->middleware(['auth.admin'])->name('admin.categories.create');
         Route::post('/create', [App\Http\Controllers\Admin\CategoryController::class, 'store'])->middleware(['auth.admin'])->name('admin.categories.store');
-        Route::get('/{category}', [App\Http\Controllers\Admin\CategoryController::class, 'show'])->middleware(['auth.admin'])->name('admin.categories.show');
         Route::get('/{category}/edit', [App\Http\Controllers\Admin\CategoryController::class, 'edit'])->middleware(['auth.admin'])->name('admin.categories.edit');
         Route::post('/{category}/edit', [App\Http\Controllers\Admin\CategoryController::class, 'update'])->middleware(['auth.admin'])->name('admin.categories.update');
         Route::delete('/{category}/delete', [App\Http\Controllers\Admin\CategoryController::class, 'destroy'])->middleware(['auth.admin'])->name('admin.categories.delete');
@@ -82,8 +82,6 @@ Route::group(['prefix' => 'admin'], function () {
         Route::get('/', [App\Http\Controllers\Admin\InvoiceController::class, 'index'])->middleware(['auth.admin'])->name('admin.invoices');
         Route::get('/{invoice}', [App\Http\Controllers\Admin\InvoiceController::class, 'show'])->middleware(['auth.admin'])->name('admin.invoices.show');
         Route::post('/{invoice}/paid', [App\Http\Controllers\Admin\InvoiceController::class, 'paid'])->middleware(['auth.admin'])->name('admin.invoices.paid');
-        Route::post('/{invoice}/create', [App\Http\Controllers\Admin\InvoiceController::class, 'create'])->middleware(['auth.admin'])->name('admin.invoices.create');
-        Route::delete('/{invoice}/delete', [App\Http\Controllers\Admin\InvoiceController::class, 'destroy'])->middleware(['auth.admin'])->name('admin.invoices.delete');
     });
 
     Route::group(['prefix' => 'coupon'], function() {

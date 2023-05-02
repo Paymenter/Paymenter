@@ -47,6 +47,11 @@ class CouponController extends Controller
         ]);
 
         $coupon->update($request->all());
+        if(!$request->has('products')){
+            $coupon->products = [];
+            $coupon->save();
+        }
+
 
         return redirect()->route('admin.coupons.edit', $coupon->id)->with('success', 'Coupon updated successfully!');
     }

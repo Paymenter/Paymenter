@@ -25,9 +25,9 @@ class ExtensionHelper
     public static function paymentDone($id)
     {
         $invoice = Invoice::findOrFail($id);
-        foreach($invoice->items()->get() as $item) {
+        foreach ($invoice->items()->get() as $item) {
             $product = $item->product()->get()->first();
-            
+
             if ($product->status == 'suspended') {
                 ExtensionHelper::unsuspendServer($product);
             }
@@ -251,7 +251,15 @@ class ExtensionHelper
         }
         $user = User::findOrFail($order->client);
         $function = $extension->name . '_createServer';
-        $function($user, $config, $order, $product2);
+        if (!function_exists($function)) {
+            ExtensionHelper::error($extension->name, 'Function ' . $function . ' does not exist! (createServer)');
+            return;
+        }
+        try {
+            $function($user, $config, $order, $product2);
+        } catch (\Exception $e) {
+            ExtensionHelper::error($extension->name, 'Error creating server: ' . $e->getMessage());
+        }
     }
 
     public static function suspendServer(OrderProduct $product2)
@@ -372,7 +380,7 @@ class ExtensionHelper
         if (!function_exists($function)) {
             return false;
         }
-        $link = $function($user, $config, $product->order()->get()->first());
+        $link = $function($user, $config, $product->order()->get()->first(), $product);
 
         return $link;
     }

@@ -1,8 +1,8 @@
-@import 'tailwindcss/base';
-@import 'tailwindcss/components';
-@import 'tailwindcss/utilities';
-
 @import 'datatables.css';
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 @layer components{
     .form-label {
         @apply absolute left-[9px] top-px text-sm text-gray-500 transition-all duration-300 px-1 transform -translate-y-1/2 pointer-events-none peer-placeholder-shown:top-1/2 peer-placeholder-shown:text-base group-focus-within:!top-px group-focus-within:!text-sm group-focus-within:!text-logo rounded-md dark:text-darkmodetext dark:bg-darkmode bg-white ;
@@ -20,6 +20,72 @@
         @apply px-4 py-2 font-bold text-white rounded-md bg-logo hover:bg-blue-700;
     }
 
+}
+
+:root{
+    
+    --primary-50: #EDF0FF;
+    --primary-100: #C6DBFF;
+    --primary-200: #9BBEFB;
+    --primary-300: #799CD8;
+    --primary-400: #5270FD;
+
+    --danger-50: #FFEBEB;
+    --danger-100: #FDCFCF;
+    --danger-200: #EF9595;
+    --danger-300: #DB5858;
+    --danger-400: #DC3A3A;
+
+    --success-50: #EBFFF1;
+    --success-100: #B5EFCE;
+    --success-200: #86DEA0;
+    --success-300: #82CE91;
+    --success-400: #4EB165;
+}
+
+
+.button{
+    @apply inline-block py-2 px-4 rounded-md text-center font-sans font-medium duration-300;
+}
+
+.button-primary{
+    @apply bg-primary-400 text-primary-50 hover:bg-primary-300 hover:text-white focus:bg-primary-300 focus:text-white focus:ring-2 ring-primary-300 ring-offset-2 ring-offset-secondary-50 dark:ring-offset-secondary-100;
+}
+
+.button-secondary{
+    @apply bg-secondary-200 text-secondary-800 hover:bg-secondary-300 hover:text-secondary-900 focus:bg-secondary-300 focus:text-secondary-900 focus:ring-2 ring-secondary-300 ring-offset-2 ring-offset-secondary-50 dark:ring-offset-secondary-100;
+}
+
+.button-danger{
+    @apply bg-danger-400 text-danger-50 hover:bg-danger-300 hover:text-white focus:bg-danger-300 focus:text-white focus:ring-2 ring-danger-300 ring-offset-2 ring-offset-secondary-50 dark:ring-offset-secondary-100;
+}
+
+.button-success{
+    @apply bg-success-400 text-success-50 hover:bg-success-300 hover:text-white focus:bg-success-300 focus:text-white focus:ring-2 ring-success-300 ring-offset-2 ring-offset-secondary-50 dark:ring-offset-secondary-100;
+}
+
+.button-primary-outline{
+    @apply text-primary-400 hover:bg-primary-400 hover:text-white focus:bg-primary-400 focus:text-white focus:ring-2 ring-primary-400 ring-offset-2 ring-offset-secondary-50 dark:ring-offset-secondary-100;
+}
+
+.button-secondary-outline{
+    @apply text-secondary-800 hover:bg-secondary-200 hover:text-secondary-900 focus:bg-secondary-200 focus:text-secondary-900 focus:ring-2 ring-secondary-200 ring-offset-2 ring-offset-secondary-50 dark:ring-offset-secondary-100;
+}
+
+.button-danger-outline{
+    @apply text-danger-400 hover:bg-danger-400 hover:text-white focus:bg-danger-400 focus:text-white focus:ring-2 ring-danger-400 ring-offset-2 ring-offset-secondary-50 dark:ring-offset-secondary-100;
+}
+
+.button-success-outline{
+    @apply text-success-400 hover:bg-success-400 hover:text-white focus:bg-success-400 focus:text-white focus:ring-2 ring-success-400 ring-offset-2 ring-offset-secondary-50 dark:ring-offset-secondary-100;
+}
+
+.content{
+    @apply container mx-auto items-center px-4 mt-8;
+}
+
+.content-box{
+    @apply bg-secondary-50 dark:bg-secondary-100 px-6 py-5 rounded-2xl border-2 dark:border-secondary-100 border-secondary-200 duration-300;
 }
 
 .dataTables_wrapper .dt-buttons {
@@ -102,7 +168,6 @@ table.dataTable tfoot th {
     scrollbar-width: thin;
     scrollbar-color: #1A202C #5270fd;
 }   
-/* Works on Chrome, Edge, and Safari */
 
 *::-webkit-scrollbar {
     width: 15px;

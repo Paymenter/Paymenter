@@ -18,49 +18,56 @@ class InvoiceController extends Controller
 
     public function show(Request $request, Invoice $invoice)
     {
-        $order = Order::findOrFail($invoice->order_id);
-        $coupon = $order->coupon()->get()->first();
-
-        // Check if the coupon is lifetime or not
-        if ($coupon) {
-            if ($coupon->time == 'onetime') {
-                $invoices = $order->invoices()->get();
-                if ($invoices->count() == 1) {
-                    $coupon = $order->coupon()->get()->first();
-                } else {
-                    $coupon = null;
-                }
-            } else {
-                $coupon = $order->coupon()->get()->first();
-            }
-        }
-
         if ($invoice->user_id != auth()->user()->id) {
             return redirect()->route('clients.invoice.index');
         }
         $products = [];
-        foreach ($order->products()->get() as $product) {
-            $iproduct = Product::where('id', $product->product_id)->first();
-            $iproduct->quantity = $product['quantity'];
-            $iproduct->price = $product['price'] ?? $iproduct->price;
-            if ($coupon) {
-                if (!in_array($iproduct->id, $coupon->products)) {
-                    $iproduct->discount = 0;
-                } else {
-                    if ($coupon->type == 'percent') {
-                        $iproduct->discount = $iproduct->price * $coupon->value / 100;
-                    } else {
-                        $iproduct->discount = $coupon->value;
+        $total = 0;
+        foreach ($invoice->items()->get() as $item) {
+            if ($item->product_id) {
+                $product = $item->product()->get()->first();
+                $order = $product->order()->get()->first();
+                $coupon = $order->coupon()->get()->first();
+                if ($coupon) {
+                    if ($coupon->time == 'onetime') {
+                        $invoices = $order->invoices()->get();
+                        if ($invoices->count() == 1) {
+                            $coupon = $order->coupon()->get()->first();
+                        } else {
+                            $coupon = null;
+                        }
                     }
                 }
+
+                if ($coupon) {
+                    if (!in_array($product->id, $coupon->products) && !empty($coupon->products)) {
+                        $product->discount = 0;
+                    } else {
+                        if ($coupon->type == 'percent') {
+                            $product->discount = $product->price * $coupon->value / 100;
+                        } else {
+                            $product->discount = $coupon->value;
+                        }
+                    }
+                } else {
+                    $product->discount = 0;
+                }
+                $product->description = $item->description;
+                $product->price = $item->total;
+                $products[] = $product;
+                $total += $product->price - $product->discount;
             } else {
-                $iproduct->discount = 0;
+                $product = $item;
+                $product->price = $item->total;
+                $product->discount = 0;
+                $product->quantity = 1;
+                $products[] = $product;
+                $total += $product->price - $product->discount;
             }
-            $products[] = $iproduct;
         }
         $currency_sign = config('settings::currency_sign');
 
-        return view('clients.invoice.show', compact('invoice', 'order', 'products', 'currency_sign'));
+        return view('clients.invoice.show', compact('invoice', 'order', 'products', 'currency_sign', 'total'));
     }
 
     public function pay(Request $request, Invoice $invoice)
@@ -71,53 +78,52 @@ class InvoiceController extends Controller
         if ($invoice->status == 'paid') {
             return redirect()->route('clients.invoice.show', $invoice)->with('error', 'Invoice already paid');
         }
-        $order = Order::findOrFail($invoice->order_id);
         $total = $invoice->total;
         $products = [];
-        $coupon = $order->coupon()->get()->first();
 
-        // Check if the coupon is lifetime or not
-        if ($coupon) {
-            if ($coupon->time == 'onetime') {
-                $invoices = $order->invoices()->get();
-                if ($invoices->count() == 1) {
-                    $coupon = $order->coupon()->get()->first();
-                } else {
-                    $coupon = null;
-                }
-            } else {
+        foreach ($invoice->items()->get() as $item) {
+            if ($item->product_id) {
+                $product = $item->product()->get()->first();
+                $order = $product->order()->get()->first();
                 $coupon = $order->coupon()->get()->first();
-            }
-        }
-
-        foreach ($order->products()->get() as $product) {
-            $iproduct = Product::where('id', $product->product_id)->first();
-            $iproduct->quantity = $product['quantity'];
-            $iproduct->price = $product['price'];
-            if ($coupon) {
-                if (!in_array($iproduct->id, $coupon->products) && $coupon->type != 'all') {
-                    $iproduct->discount = 0;
-                } else {
-                    if ($coupon->type == 'percent') {
-                        $iproduct->discount = $iproduct->price * $coupon->value / 100;
-                    } else {
-                        $iproduct->discount = $coupon->value;
+                if ($coupon) {
+                    if ($coupon->time == 'onetime') {
+                        $invoices = $order->invoices()->get();
+                        if ($invoices->count() == 1) {
+                            $coupon = $order->coupon()->get()->first();
+                        } else {
+                            $coupon = null;
+                        }
                     }
                 }
-            } else {
-                $iproduct->discount = 0;
-            }
-            $iproduct->quantity = $product['quantity'];
-            if (isset($product['config'])) {
-                $iproduct->config = $product['config'];
-            }
-            if ($iproduct->discount) {
-                $iproduct->price = $iproduct->price - $iproduct->discount;
-            }
-            $products[] = $iproduct;
-            $total += $iproduct->price * $iproduct->quantity;
-        }
 
+                if ($coupon) {
+                    if (!in_array($product->id, $coupon->products) && !empty($coupon->products)) {
+                        $product->discount = 0;
+                    } else {
+                        if ($coupon->type == 'percent') {
+                            $product->discount = $product->price * $coupon->value / 100;
+                        } else {
+                            $product->discount = $coupon->value;
+                        }
+                    }
+                } else {
+                    $product->discount = 0;
+                }
+                $product->name = $item->description;
+                $product->price = $item->total;
+                $products[] = $product;
+                $total += ($product->price - $product->discount) * $product->quantity;
+            } else {
+                $product = $item;
+                $product->price = $item->total;
+                $product->name = $item->description;
+                $product->discount = 0;
+                $product->quantity = 1;
+                $products[] = $product;
+                $total += ($product->price - $product->discount) * $product->quantity;
+            }
+        }
         if ($request->get('payment_method')) {
             $payment_method = $request->get('payment_method');
             $payment_method = ExtensionHelper::getPaymentMethod($payment_method, $total, $products, $invoice->id);

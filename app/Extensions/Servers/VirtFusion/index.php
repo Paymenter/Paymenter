@@ -65,6 +65,11 @@ function VirtFusion_createServer($user, $params, $order)
             'ipv4' => $params['ips'],
         ]
     );
+    if($response->json()['errors']) {
+        ExtensionHelper::error('VirtFusion', 'Failed to create server', $response->json()['errors']);
+
+        return;
+    }
     ExtensionHelper::setOrderProductConfig('server_id', $response->json()['data']['id'], $params['config_id']);
 
     return true;
@@ -101,7 +106,7 @@ function VirtFusion_getUser($user)
         if ($response->status() == 200) {
             return $response->json()['data']['id'];
         } else {
-            ExtensionHelper::error('VirtFusion', 'Failed to create user');
+            ExtensionHelper::error('VirtFusion', 'Failed to create user ', (string) $response->json() . ' ' . $response->status());
 
             return;
         }

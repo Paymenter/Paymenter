@@ -34,14 +34,14 @@ class TicketController extends Controller
     /**
      * Create a new ticket.
      */
-    public function createTicket(Request $request, int $ticketId)
+    public function createTicket(Request $request)
     {
         $user = $request->user();
 
         $request->validate([
             'title' => 'required',
             'message' => 'required',
-            'priority' => 'required',
+            'priority' => 'required|in:low,medium,high',
         ]);
 
         $body = json_decode($request->getContent());
@@ -82,7 +82,7 @@ class TicketController extends Controller
         return response()->json([
             'message' => 'Ticket was successfully created.',
             'ticket' => $ticket,
-        ], 204);
+        ], 201);
     }
 
     /**

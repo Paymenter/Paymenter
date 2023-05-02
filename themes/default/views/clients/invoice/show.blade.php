@@ -1,7 +1,4 @@
-<x-app-layout>
-    <x-slot name="title">
-        {{ __('Invoice') }}
-    </x-slot>
+<x-app-layout clients title="{{ __('Invoice') }}">
     <section class="py-20">
         <div class="max-w-5xl mx-auto py-16 dark:bg-darkmode2 bg-white">
             <article class="overflow-hidden">
@@ -109,14 +106,8 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach ($invoice->items()->get() as $product2)
-                                        @if ($product2->product_id != null)
-                                            @php
-                                                $product = App\Models\OrderProduct::find($product2->product_id);
-                                            @endphp
-                                        @else
-                                            @php $product = $product2; @endphp
-                                        @endif
+                                    @foreach($products as $product2)
+                                        @php $product = $product2; @endphp
                                         <tr class="border-b border-slate-200">
                                             <td class="py-4 pl-4 pr-3 text-sm sm:pl-6 md:pl-0">
                                                 <div class="dark:text-darkmodetext font-medium text-slate-700">
@@ -144,7 +135,7 @@
                                             </td>
                                             <td
                                                 class="dark:text-darkmodetext py-4 pl-3 pr-4 text-sm text-right text-slate-500 sm:pr-6 md:pr-0">
-                                                {{ $currency_sign }}{{ number_format((float) ($product->price * $product->quantity), 2, '.', '') }}
+                                                {{ $currency_sign }}{{ number_format((float) (($product->price - $product->discount) * $product->quantity), 2, '.', '') }}
                                             </td>
                                         </tr>
                                     @endforeach
@@ -207,7 +198,7 @@
                                         </th>
                                         <td
                                             class="dark:text-darkmodetext pt-4 pl-3 pr-4 text-sm font-normal text-right text-slate-700 sm:pr-6 md:pr-0">
-                                            {{ $currency_sign }}{{ number_format((float) $subtotal, 2, '.', '') }}
+                                            {{ $currency_sign }}{{ number_format((float) $total, 2, '.', '') }}
                                         </td>
                                     </tr>
                                 </tfoot>

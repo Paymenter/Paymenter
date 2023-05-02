@@ -12,6 +12,7 @@ class CheckoutController extends Controller
     {
         $products = session('cart');
         $total = 0;
+        $totalSetup = 0;
         $discount = 0;
         $couponId = session('coupon');
         if ($couponId) {
@@ -22,27 +23,40 @@ class CheckoutController extends Controller
         if ($products) {
             foreach ($products as $product) {
                 $total += $product->price * $product->quantity;
+                $totalSetup += $product->setup_fee * $product->quantity;
                 if ($coupon) {
                     if (isset($coupon->products)) {
-                        if (!in_array($product->id, $coupon->products)) {
+                        if (!in_array($product->id, $coupon->products) && !empty($coupon->products)) {
                             $product->discount = 0;
+                            $product->discount_fee = 0;
                             continue;
+                        } else {
+                            if ($coupon->type == 'percent') {
+                                $product->discount = $product->price * $coupon->value / 100;
+                                $product->discount_fee = $product->setup_fee * $coupon->value / 100;
+                            } else {
+                                $product->discount = $coupon->value;
+                                $product->discount_fee = $coupon->value;
+                            }
                         }
-                    }
-                    if ($coupon->type == 'percent') {
-                        $product->discount = $product->price * $coupon->value / 100;
-                        $discount += $product->discount * $product->quantity;
                     } else {
-                        $product->discount = $coupon->value;
-                        $discount += $product->discount * $product->quantity;
+                        if ($coupon->type == 'percent') {
+                            $product->discount = $product->price * $coupon->value / 100;
+                            $product->discount_fee = $product->setup_fee * $coupon->value / 100;
+                        } else {
+                            $product->discount = $coupon->value;
+                            $product->discount_fee = $coupon->value;
+                        }
                     }
                 } else {
                     $product->discount = 0;
+                    $product->discount_fee = 0;
                 }
+                $discount += ($product->discount + $product->discount_fee) * $product->quantity;
             }
         }
-
-        return view('checkout.index', compact('products', 'total', 'discount', 'coupon'));
+        $total += $totalSetup;
+        return view('checkout.index', compact('products', 'total', 'discount', 'coupon', 'totalSetup'));
     }
 
     public function add(Product $product)
@@ -136,6 +150,7 @@ class CheckoutController extends Controller
         if ($prices->type == 'recurring') {
             $product->price = $product->prices()->get()->first()->{$request->input('billing_cycle')} ?? $product->prices()->get()->first()->monthly;
             $product->billing_cycle = $request->input('billing_cycle');
+            $product->setup_fee = $product->prices()->get()->first()->{$request->input('billing_cycle') . '_setup'} ?? 0;
         } else if ($prices->type == 'one-time') {
             $product->price = $product->prices()->get()->first()->monthly;
         } else {
@@ -163,6 +178,7 @@ class CheckoutController extends Controller
             return redirect()->back()->with('error', 'Cart is empty');
         }
         $couponId = session('coupon');
+        $coupon;
         if ($couponId) {
             $coupon = Coupon::where('id', $couponId)->first();
         } else {
@@ -175,7 +191,38 @@ class CheckoutController extends Controller
             } elseif ($product->stock_enabled && $product->stock < $product->quantity) {
                 return redirect()->back()->with('error', 'Product is out of stock');
             }
-            $total += $product->price * $product->quantity;
+            if ($coupon) {
+                if (isset($coupon->products)) {
+                    if (!in_array($product->id, $coupon->products) && !empty($coupon->products)) {
+                        $product->discount = 0;
+                        continue;
+                    } else {
+                        if ($coupon->type == 'percent') {
+                            $product->discount = $product->price * $coupon->value / 100;
+                            $product->discount_fee = $product->setup_fee * $coupon->value / 100;
+                        } else {
+                            $product->discount = $coupon->value;
+                            $product->discount_fee = $coupon->value;
+                        }
+                    }
+                } else {
+                    if ($coupon->type == 'percent') {
+                        $product->discount = $product->price * $coupon->value / 100;
+                        $product->discount_fee = $product->setup_fee * $coupon->value / 100;
+                    } else {
+                        $product->discount = $coupon->value;
+                        $product->discount_fee = $coupon->value;
+                    }
+                }
+            } else {
+                $product->discount = 0;
+                $product->discount_fee = 0;
+            }
+            if ($product->setup_fee) {
+                $total += ($product->setup_fee + $product->price) * $product->quantity - $product->discount - $product->discount_fee;
+            } else {
+                $total += $product->price * $product->quantity - $product->discount;
+            }
         }
 
         $user = User::findOrFail(auth()->user()->id);
@@ -194,15 +241,51 @@ class CheckoutController extends Controller
         }
         $invoice->save();
         foreach ($products as $product) {
-            // If quantity is more than 1, create multiple order products
+            if ($coupon) {
+                if (isset($coupon->products)) {
+                    if (!in_array($product->id, $coupon->products) && !empty($coupon->products)) {
+                        $product->discount = 0;
+                        continue;
+                    } else {
+                        if ($coupon->type == 'percent') {
+                            $product->discount = $product->price * $coupon->value / 100;
+                            $product->discount_fee = $product->setup_fee * $coupon->value / 100;
+                        } else {
+                            $product->discount = $coupon->value;
+                            $product->discount_fee = $coupon->value;
+                        }
+                    }
+                } else {
+                    if ($coupon->type == 'percent') {
+                        $product->discount = $product->price * $coupon->value / 100;
+                        $product->discount_fee = $product->setup_fee * $coupon->value / 100;
+                    } else {
+                        $product->discount = $coupon->value;
+                        $product->discount_fee = $coupon->value;
+                    }
+                }
+            } else {
+                $product->discount = 0;
+                $product->discount_fee = 0;
+            }
             if ($product->allow_quantity == 1)
-                for ($i = 0; $i < $product->quantity; ++$i) {
+                for ($i = 0;
+                    $i < $product->quantity;
+                    ++$i
+                ) {
                     $this->createOrderProduct($order, $product, $invoice, false);
                 }
             else if ($product->allow_quantity == 2)
                 $this->createOrderProduct($order, $product, $invoice);
             else
                 $this->createOrderProduct($order, $product, $invoice);
+            if($product->setup_fee > 0) {
+                $invoiceItem = new InvoiceItem();
+                $invoiceItem->invoice_id = $invoice->id;
+                $invoiceItem->description = $product->name . ' Setup Fee';
+                $invoiceItem->total = ($product->setup_fee - $product->discount_fee) * $product->quantity;
+                $invoiceItem->save();
+            }
         }
 
         session()->forget('cart');
@@ -228,37 +311,42 @@ class CheckoutController extends Controller
         }
         if ($total != 0) {
             $products = [];
-            foreach ($order->products()->get() as $product) {
-                $iproduct = Product::where('id', $product->product_id)->first();
-                $iproduct->quantity = $product['quantity'];
-                $iproduct->price = $product['price'];
-                if (isset($product['config'])) {
-                    $iproduct->config = $product['config'];
-                }
-                if ($coupon) {
-                    if (isset($coupon->products)) {
-                        if (!in_array($iproduct->id, $coupon->products)) {
+            foreach ($invoice->items()->get() as $item) {
+                if ($item->product_id) {
+                    $product = $item->product()->get()->first();
+                    $order = $product->order()->get()->first();
+                    $coupon = $order->coupon()->get()->first();
+                    if ($coupon) {
+                        if ($coupon->time == 'onetime') {
+                            $invoices = $order->invoices()->get();
+                            if ($invoices->count() == 1) {
+                                $coupon = $order->coupon()->get()->first();
+                            } else {
+                                $coupon = null;
+                            }
+                        }
+                    }
+
+                    if ($coupon) {
+                        if (!in_array($product->id, $coupon->products) && !empty($coupon->products)) {
                             $product->discount = 0;
-                            continue;
                         } else {
                             if ($coupon->type == 'percent') {
-                                $iproduct->discount = $iproduct->price * $coupon->value / 100;
+                                $product->discount = $product->price * $coupon->value / 100;
+                                $product->discount_fee = $product->setup_fee * $coupon->value / 100;
                             } else {
-                                $iproduct->discount = $coupon->value;
+                                $product->discount = $coupon->value;
+                                $product->discount_fee = $coupon->value;
                             }
                         }
                     } else {
-                        if ($coupon->type == 'percent') {
-                            $iproduct->discount = $iproduct->price * $coupon->value / 100;
-                        } else {
-                            $iproduct->discount = $coupon->value;
-                        }
+                        $product->discount = 0;
+                        $product->discount_fee = 0;
                     }
-                } else {
-                    $iproduct->discount = 0;
+                    $product->name = $item->description;
+                    $product->price = $item->total;
+                    $products[] = $product;
                 }
-                $iproduct->price = $iproduct->price - $iproduct->discount;
-                $products[] = $iproduct;
             }
 
             if ($request->get('payment_method')) {
@@ -301,8 +389,7 @@ class CheckoutController extends Controller
             }
             $orderProduct->save();
         }
-        if(!$orderProduct->billing_cycle) $orderProduct->expiry_date = date('Y-m-d H:i:s', strtotime('+1 month'));
-        
+
         if ($setQuantity) $orderProduct->quantity = $product->quantity ?? 1;
         else $orderProduct->quantity = 1;
         $orderProduct->save();
@@ -315,10 +402,11 @@ class CheckoutController extends Controller
                 $orderProductConfig->save();
             }
         }
-        if ($product->price == 0) {
+        if ($product->price == 0 || $product->price - $product->discount == 0) {
             $orderProduct->status = 'paid';
             $orderProduct->save();
             ExtensionHelper::createServer($orderProduct);
+            return;
         } else {
             $orderProduct->status = 'pending';
             $orderProduct->save();
@@ -356,6 +444,9 @@ class CheckoutController extends Controller
         $request->validate([
             'quantity' => 'required|numeric|min:1',
         ]);
+        if(!$product->stock_enabled) {
+            return redirect()->back()->with('error', 'Product is out of stock');
+        }
         $cart = session()->get('cart');
         if (isset($cart[$product->id])) {
             if ($product->stock_enabled && $product->stock < $request->quantity) {
