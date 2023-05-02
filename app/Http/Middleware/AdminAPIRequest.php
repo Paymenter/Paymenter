@@ -25,6 +25,11 @@ class AdminAPIRequest
             return $next($request);
         }
 
-        return redirect()->route('login');
+        if($request->wantsJson()) {
+            return response()->json([
+                'error' => 'You do not have permission to use the Admin API.',
+            ], 403);
+        } 
+        return redirect()->route('login')->with('error', 'You do not have permission to use the Admin API.');
     }
 }
