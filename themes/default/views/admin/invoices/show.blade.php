@@ -27,6 +27,12 @@
                     <span class="font-bold">{{ __('Status') }}:</span>
                     <span>{{ $invoice->status }}</span>
                 </div>
+                <div class="flex flex-col">
+                    <span class="font-bold">{{ __('Client') }}:</span>
+                    <a href="{{ route('admin.clients.edit', $invoice->user()->get()->first()->id) }}">
+                        {{ $invoice->user()->get()->first()->name }}
+                    </a>
+                </div>
             </div>
             <div class="flex flex-row justify-between">
                 <div class="flex flex-col">
@@ -50,20 +56,21 @@
                 <th>{{ __('ID') }}</th>
                 <th>{{ __('Name') }}</th>
                 <th>{{ __('Price') }}</th>
+                <th>{{ __('Discount')}} </th>
                 <th>{{ __('Assigned Order') }}</th>
             </tr>
         </thead>
         <tbody>
-            @foreach ($invoice->items as $item)
+            @foreach ($products as $item)
                 <tr>
                     <td>{{ $item->id }}</td>
                     <td>{{ $item->description }}</td>
-                    <td>{{ config('settings::currency_sign') }}{{ $item->total }}</td>
+                    <td>{{ config('settings::currency_sign') }}{{ $item->price }}</td>
+                    <td>{{ config('settings::currency_sign') }}{{ $item->discount }}</td>
                     <td>
-                        @isset($item->product()->first()->order()->get()->first()->id)
-                            <a
-                                href="{{ route('admin.orders.show',$item->product()->first()->order()->get()->first()->id) }}" class="text-blue-500 hover:text-blue-700">
-                                {{ __('Order') }} #{{ $item->product()->first()->order()->get()->first()->id }}
+                        @isset($item->order)
+                            <a href="{{ route('admin.orders.show', $item->order->id) }}">
+                                {{ $item->order->id }}
                             </a>
                         @endisset
                     </td>

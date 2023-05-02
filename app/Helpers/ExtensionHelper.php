@@ -9,6 +9,7 @@ use App\Models\Product;
 use App\Models\Extension;
 use App\Models\OrderProduct;
 use App\Models\OrderProductConfig;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Contracts\Encryption\DecryptException;
@@ -16,9 +17,9 @@ use Illuminate\Contracts\Encryption\DecryptException;
 class ExtensionHelper
 {
     /**
-     * Called when a new order is accepted.
+     * Called when a new invoice is accepted.
      *
-     * @param int $id ID of the order
+     * @param int $id ID of the invoice
      *
      * @return void
      */
@@ -27,16 +28,53 @@ class ExtensionHelper
         $invoice = Invoice::findOrFail($id);
         foreach ($invoice->items()->get() as $item) {
             $product = $item->product()->get()->first();
+            if(!$product) {
+                continue;
+            }
 
             if ($product->status == 'suspended') {
                 ExtensionHelper::unsuspendServer($product);
             }
             if ($product->status == 'pending') {
                 ExtensionHelper::createServer($product);
+            } 
+            if($product->status == 'pending' || $product->status == 'suspended') {
+                if ($product->billing_cycle) {
+                    if ($product->billing_cycle == 'monthly') {
+                        $product->expiry_date = Carbon::now()->addMonth();
+                    } elseif ($product->billing_cycle == 'quarterly') {
+                        $product->expiry_date = Carbon::now()->addMonths(3);
+                    } elseif ($product->billing_cycle == 'semi_annually') {
+                        $product->expiry_date = Carbon::now()->addMonths(6);
+                    } elseif ($product->billing_cycle == 'annually') {
+                        $product->expiry_date = Carbon::now()->addYear();
+                    } elseif ($product->billing_cycle == 'biennially') {
+                        $product->expiry_date = Carbon::now()->addYears(2);
+                    } elseif ($product->billing_cycle == 'triennially') {
+                        $product->expiry_date = Carbon::now()->addYears(3);
+                    }
+                }
+            } else {
+                if ($product->billing_cycle) {
+                    if ($product->billing_cycle == 'monthly') {
+                        $product->expiry_date = Carbon::parse($product->expiry_date)->addMonth();
+                    } elseif ($product->billing_cycle == 'quarterly') {
+                        $product->expiry_date = Carbon::parse($product->expiry_date)->addMonths(3);
+                    } elseif ($product->billing_cycle == 'semi_annually') {
+                        $product->expiry_date = Carbon::parse($product->expiry_date)->addMonths(6);
+                    } elseif ($product->billing_cycle == 'annually') {
+                        $product->expiry_date = Carbon::parse($product->expiry_date)->addYear();
+                    } elseif ($product->billing_cycle == 'biennially') {
+                        $product->expiry_date = Carbon::parse($product->expiry_date)->addYears(2);
+                    } elseif ($product->billing_cycle == 'triennially') {
+                        $product->expiry_date = Carbon::parse($product->expiry_date)->addYears(3);
+                    }
+                }
             }
-            $product->status = 'paid';            
+            $product->status = 'paid';
             $product->save();
         }
+
         if ($invoice->status == 'paid') {
             return;
         }
