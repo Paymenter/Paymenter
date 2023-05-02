@@ -35,10 +35,12 @@ class OrderController extends Controller
         $request->validate([
             'price' => 'required|numeric',
             'quantity' => 'required|numeric',
+            'expiry_date' => 'required|date',
         ]);
 
         $product->price = $request->input('price');
         $product->quantity = $request->input('quantity');
+        $product->expiry_date = $request->input('expiry_date');
         $product->save();
 
         return redirect()->route('admin.orders.show', $order);

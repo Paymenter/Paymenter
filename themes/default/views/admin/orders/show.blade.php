@@ -42,6 +42,13 @@
                     <span class="font-bold">{{ __('Total') }}:</span>
                     <span>{{ config('settings::currency_sign') }}{{ $order->total() }}</span>
                 </div>
+                <div class="flex flex-col">
+                    <span class="font-bold">{{ __('Client') }}:</span>
+                    <a href="{{ route('admin.clients.edit', $order->client()->get()->first()->id) }}"
+                        class="text-blue-500 hover:text-blue-700 dark:text-blue-300 dark:hover:text-blue-500">
+                        {{ $order->client()->get()->first()->name }}
+                    </a>
+                </div>
             </div>
             <div class="flex flex-row justify-between">
                 <div class="flex flex-col">
@@ -104,6 +111,12 @@
                                                         <input class="form-input" type="text" name="quantity"
                                                             value="{{ $product->quantity }}"
                                                             placeholder="{{ __('Quantity') }}" />
+                                                    </div>
+                                                    <div class="flex flex-col mt-4">
+                                                        <span class="font-bold">{{ __('Expiry Date') }}:</span>
+                                                        <input class="form-input" type="date" name="expiry_date"
+                                                            value="{{ $product->expiry_date }}"
+                                                            placeholder="{{ __('Expiry Date') }}" />
                                                     </div>
                                                     <div class="flex flex-row justify-end mt-4">
                                                         <button class="form-submit" type="submit">
