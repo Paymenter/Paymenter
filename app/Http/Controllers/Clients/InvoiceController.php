@@ -67,7 +67,7 @@ class InvoiceController extends Controller
         }
         $currency_sign = config('settings::currency_sign');
 
-        return view('clients.invoice.show', compact('invoice', 'order', 'products', 'currency_sign', 'total'));
+        return view('clients.invoice.show', compact('invoice', 'products', 'currency_sign', 'total'));
     }
 
     public function pay(Request $request, Invoice $invoice)

@@ -3,6 +3,9 @@
         {{ __('Invoices') }}
     </x-slot>
     <h1 class="text-center text-2xl font-bold">{{ __('Invoices') }}</h1>
+    <a href="{{ route('admin.invoices.create') }}" class="button button-primary">
+        {{ __('Create') }}
+    </a>
     <table class="table-auto w-full" id="table">
         <thead>
             <tr>

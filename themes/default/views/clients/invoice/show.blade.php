@@ -43,7 +43,7 @@
                                     <div class="text-sm font-light text-slate-500">
                                         <p class="dark:text-darkmodetext text-sm font-normal text-slate-700">
                                             {{ __('Due') }}</p>
-                                        <p class="dark:text-darkmodetext">{{ $order->expiry_date }}</p>
+                                        <p class="dark:text-darkmodetext">{{ $invoice->due_date ?? 'N/A' }}</p>
                                         <p class="dark:text-darkmodetext mt-2 text-xl font-normal text-slate-700">
                                             {{ __('Pay') }}
                                         </p>

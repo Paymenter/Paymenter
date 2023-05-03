@@ -4,9 +4,9 @@ namespace App\Http\Controllers\Admin;
 
 use App\Helpers\ExtensionHelper;
 use App\Http\Controllers\Controller;
-use App\Models\Invoice;
-
-
+use App\Mail\Invoices\NewInvoice;
+use App\Models\{Invoice, InvoiceItem, User};
+use Illuminate\Http\Request;
 
 class InvoiceController extends Controller
 {
@@ -71,6 +71,37 @@ class InvoiceController extends Controller
     public function paid(Invoice $invoice)
     {
         ExtensionHelper::paymentDone($invoice->id);
+
+        return redirect()->route('admin.invoices.show', $invoice);
+    }
+
+    public function create()
+    {
+        $users = User::all();
+        return view('admin.invoices.create', compact('users'));
+    }
+
+    public function store(Request $request)
+    {
+        $request->validate([
+            'user_id' => 'required|exists:users,id',
+            'item_name' => 'required|array',
+            'item_price' => 'required|array',
+        ]);
+        $invoice = new Invoice();
+        $invoice->user_id = $request->user_id;
+        $invoice->status = 'pending';
+        $invoice->save();
+        foreach ($request->item_name as $key => $item) {
+            $invoiceItem = new InvoiceItem();
+            $invoiceItem->invoice_id = $invoice->id;
+            $invoiceItem->total = $request->item_price[$key];
+            $invoiceItem->description = $item;
+            $invoiceItem->save();
+        }
+        if(!config('settings::mail_disabled')) {
+            \Illuminate\Support\Facades\Mail::to(auth()->user())->send(new NewInvoice($invoice));
+        }
 
         return redirect()->route('admin.invoices.show', $invoice);
     }
