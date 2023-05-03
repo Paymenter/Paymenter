@@ -19,14 +19,14 @@
         </div>
     </div>
 @else
-    <div class="max-w-[1650px] flex flex-wrap items-center w-full justify-between" id="mobile-menu">
-        <a href="{{ route('index') }}" class="flex items-center text-secondary-900 font-semibold text-lg py-2 gap-x-2">
+    <div class="max-w-[1650px] flex-wrap items-center w-full justify-between flex md:hidden px-4 py-4" id="mobile-menu">
+        <a href="{{ route('index') }}" class="flex items-center text-secondary-900 font-semibold text-lg gap-x-2">
             <x-application-logo class="w-10" />
             {{ config('app.name', 'Paymenter') }}
         </a>
         <!-- Mobile menu button -->
-        <div class="flex md:hidden px-2 py-1">
-            <button type="button" class="button button-primary" onclick="openMobileMenu()">
+        <div class="flex md:hidden">
+            <button type="button" class="button button-secondary-outline" onclick="openMobileMenu()">
                 <i class="ri-menu-line"></i>
             </button>
         </div>
@@ -37,19 +37,14 @@
             }
         </script>
     </div>
-    <div class="shrink-0 w-64 hidden sm:block fixed" id="clientsNavBar">
+
+    <div class="shrink-0 md:w-64 w-72 hidden sm:block md:sticky fixed top-0" id="clientsNavBar">
         <div class="bg-secondary-50 dark:bg-secondary-100 dark:border-0 border-r-2 border-secondary-200 h-screen sticky top-0 px-4 py-2 flex flex-col">
             <div class=" flex flex-wrap items-center w-full justify-between">
                 <a href="{{ route('index') }}" class="flex items-center text-secondary-900 font-semibold text-lg py-2 gap-x-2">
                     <x-application-logo class="w-10" />
                     {{ config('app.name', 'Paymenter') }}
                 </a>
-                <!-- Mobile menu button -->
-                <div class="flex md:hidden">
-                    <button type="button" class="button button-primary" onclick="openMobileMenu()">
-                        <i class="ri-menu-line"></i>
-                    </button>
-                </div>
             </div>
             <span class="text-sm text-secondary-600">General</span>
             <a href="{{ route('index') }}" class="py-1 flex items-center gap-x-2 hover:text-secondary-800 duration-300">
@@ -112,6 +107,8 @@
                     </button>
                 </div>
             </div>
+        </div>
+        <div class="fixed md:hidden top-0 w-screen h-full bg-black/50 backdrop-blur z-[-1]" onclick="openMobileMenu()">
         </div>
     </div>
 @endif
