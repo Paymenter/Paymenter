@@ -1,5 +1,5 @@
-<x-guest-layout>
-    <div class="flex flex-col items-center min-h-screen pt-6 bg-gray-100 sm:justify-center sm:pt-0">
+<x-app-layout clients>
+    <div class="content min-h-[50vh] flex items-center justify-center flex-col">
         <div>
             <a href="/">
                 <x-application-logo class="w-20 h-20 text-gray-500 fill-current" />
@@ -38,4 +38,4 @@
             </div>
         </div>
     </div>
-</x-guest-layout>
+</x-app-layout>

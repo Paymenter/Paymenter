@@ -80,6 +80,8 @@ Route::group(['prefix' => 'admin'], function () {
 
     Route::group(['prefix' => 'invoices'], function () {
         Route::get('/', [App\Http\Controllers\Admin\InvoiceController::class, 'index'])->middleware(['auth.admin'])->name('admin.invoices');
+        Route::get('/create', [App\Http\Controllers\Admin\InvoiceController::class, 'create'])->middleware(['auth.admin'])->name('admin.invoices.create');
+        Route::post('/create', [App\Http\Controllers\Admin\InvoiceController::class, 'store'])->middleware(['auth.admin'])->name('admin.invoices.store');
         Route::get('/{invoice}', [App\Http\Controllers\Admin\InvoiceController::class, 'show'])->middleware(['auth.admin'])->name('admin.invoices.show');
         Route::post('/{invoice}/paid', [App\Http\Controllers\Admin\InvoiceController::class, 'paid'])->middleware(['auth.admin'])->name('admin.invoices.paid');
     });

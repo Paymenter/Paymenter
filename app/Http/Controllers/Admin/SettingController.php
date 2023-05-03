@@ -84,9 +84,7 @@ class SettingController extends Controller
             'mail_from_address' => 'required',
             'mail_from_name' => 'required',
         ]);
-        if ($request->mail_encryption == 'none') {
-            $request->merge(['mail_encryption' => null]);
-        }
+        if ($request->mail_encryption == 'none') $request->merge(['mail_encryption' => null]);
         // Loop through all settings
         foreach ($request->except(['_token']) as $key => $value) {
             if ($key == 'mail_password') {
@@ -96,6 +94,9 @@ class SettingController extends Controller
         }
         if (!$request->get('mail_disabled')) {
             Setting::updateOrCreate(['key' => 'mail_disabled'], ['value' => 0]);
+        }
+        if(!$request->get('must_verify_email')) {
+            Setting::updateOrCreate(['key' => 'must_verify_email'], ['value' => null]);
         }
 
         return redirect('/admin/settings#mail')->with('success', 'Settings updated successfully');

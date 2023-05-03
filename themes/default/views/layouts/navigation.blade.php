@@ -4,6 +4,20 @@
             <x-application-logo class="w-10" />
             {{ config('app.name', 'Paymenter') }}
         </a>
+        <!-- Mobile menu button -->
+        <div class="flex md:hidden">
+            <button type="button" class="button button-primary" onclick="openMobileMenu()">
+                <i class="ri-menu-line"></i>
+            </button>
+        </div>
+        <script>
+            function openMobileMenu() {
+                document.getElementById("mobile-menu").classList.toggle("hidden");
+                document.getElementById("clientsNavBar").classList.toggle("hidden");
+            }
+        </script>
+    </div>
+    <div class="max-w-[1650px] mx-auto block md:flex items-center gap-x-10 px-5 hidden md:block" id="mobile-menu">
         <a href="{{ route('index') }}"
             class="md:px-2 py-3 flex items-center gap-x-1 hover:text-secondary-800 duration-300">
             {{ __('Home') }}

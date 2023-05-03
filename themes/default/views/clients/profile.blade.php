@@ -1,4 +1,4 @@
-<x-app-layout title="{{ __('Edit profile') }}">
+<x-app-layout title="{{ __('Edit profile') }}" clients>
     <!-- show form to edit user profile -->
     <x-success class="mt-4" />
     <div class="py-12">

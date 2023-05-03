@@ -46,6 +46,12 @@
                 </select>
                 <label class="form-label">{{ __('Mail Encryption') }}</label>
             </div>
+            <div class="relative m-4 group">
+                <input type="checkbox" class="w-fit form-input peer @error('must_verify_email') is-invalid @enderror"
+                    placeholder=" " name="must_verify_email" value="1"
+                    {{ config('settings::must_verify_email') == 1 ? 'checked' : '' }} />
+                <label class="form-label" style="position: unset">{{ __('Must Verify Email') }}</label>
+            </div>
         </div>
         <div class="float-right">
             <button class="form-submit">{{ __('Submit') }}</button>

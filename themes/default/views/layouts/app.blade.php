@@ -109,7 +109,7 @@
             @if ($clients)
                 @include('layouts.subnavigation')
             @endif
-            <div class="w-full flex flex-col min-h-[calc(100vh-60px)]">
+            <div class="w-full flex flex-col @if($clients) min-h-[calc(100vh-105px)] @else min-h-[calc(100vh-64px)] @endif">
 
                 <main class="grow">
                     {{ $slot }}
