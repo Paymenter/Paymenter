@@ -100,7 +100,7 @@ class InvoiceController extends Controller
             $invoiceItem->save();
         }
         if(!config('settings::mail_disabled')) {
-            \Illuminate\Support\Facades\Mail::to(auth()->user())->send(new NewInvoice($invoice));
+            \Illuminate\Support\Facades\Mail::to(User::find($request->user_id))->send(new NewInvoice($invoice));
         }
 
         return redirect()->route('admin.invoices.show', $invoice);
