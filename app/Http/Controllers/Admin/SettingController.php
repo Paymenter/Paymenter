@@ -6,8 +6,6 @@ use App\Models\Setting;
 use Qirolab\Theme\Theme;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Crypt;
 
 class SettingController extends Controller

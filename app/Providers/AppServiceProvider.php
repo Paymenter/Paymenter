@@ -114,6 +114,9 @@ class AppServiceProvider extends ServiceProvider
             if (config('settings::theme') !== config('themes.active')) {
                 Theme::set(config('settings::theme'), 'default');
             }
+            if(!config('mail.mailers.smtp.host') || !config('mail.mailers.smtp.port') || !config('mail.mailers.smtp.username') || !config('mail.mailers.smtp.password') || !config('mail.from.address') || !config('mail.from.name')) {
+                config('settings::mail_disabled', true);
+            }
             // Unset settings::theme
             config(['settings::theme' => null]);
         } catch (\Exception $e) {
