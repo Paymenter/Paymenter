@@ -114,6 +114,8 @@ class TicketController extends Controller
             'message' => request('message'),
             'user_id' => auth()->user()->id,
         ]);
+        $ticket->status = 'open';
+        $ticket->save();
 
         return redirect()->back()->with('success', 'Message sent successfully');
     }
