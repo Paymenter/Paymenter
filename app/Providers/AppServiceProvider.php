@@ -71,27 +71,34 @@ class AppServiceProvider extends ServiceProvider
             if (config('settings::mail_from_name') !== config('mail.from.name')) {
                 config(['mail.from.name' => config('settings::mail_from_name')]);
             }
-            if (
-                config('mail.mailers.smtp.host') != config('settings::mail_host') ||
-                config('mail.mailers.smtp.port') != config('settings::mail_port') ||
-                config('mail.mailers.smtp.username') != config('settings::mail_username') ||
-                config('mail.mailers.smtp.password') != config('settings::mail_password') ||
-                config('mail.from.address') != config('settings::mail_from_address') ||
-                config('mail.from.name') != config('settings::mail_from_name')
-            ) {
-                config(['mail.mailers.smtp' => [
-                    'transport' => 'smtp',
-                    'host' => config('settings::mail_host'),
-                    'port' => config('settings::mail_port'),
-                    'encryption' => config('settings::mail_encryption'),
-                    'username' => config('settings::mail_username'),
-                    'password' => config('mail.password'),
-                    'timeout' => null,
-                    'auth_mode' => null,
-                ]]);
-                config(['mail.from' => ['address' => config('settings::mail_from_address'), 'name' => config('settings::mail_from_name')]]);
+            if (empty(config('settings::mail_disabled')) || empty(config('settings::mail_host')) || empty(config('settings::mail_port')) || empty(config('settings::mail_username')) || empty(config('settings::mail_password'))) {
+                config('settings::mail_disabled', true);
+                Log::warning('Mail settings are not configured. Mail has been disabled.');
+            }
 
-                Artisan::call('queue:restart');
+            if (!config('settings::mail_disabled')) {
+                if (
+                    config('mail.mailers.smtp.host') != config('settings::mail_host') ||
+                    config('mail.mailers.smtp.port') != config('settings::mail_port') ||
+                    config('mail.mailers.smtp.username') != config('settings::mail_username') ||
+                    config('mail.mailers.smtp.password') != config('settings::mail_password') ||
+                    config('mail.from.address') != config('settings::mail_from_address') ||
+                    config('mail.from.name') != config('settings::mail_from_name')
+                ) {
+                    config(['mail.mailers.smtp' => [
+                        'transport' => 'smtp',
+                        'host' => config('settings::mail_host'),
+                        'port' => config('settings::mail_port'),
+                        'encryption' => config('settings::mail_encryption'),
+                        'username' => config('settings::mail_username'),
+                        'password' => config('mail.password'),
+                        'timeout' => null,
+                        'auth_mode' => null,
+                    ]]);
+                    config(['mail.from' => ['address' => config('settings::mail_from_address'), 'name' => config('settings::mail_from_name')]]);
+
+                    Artisan::call('queue:restart');
+                }
             }
             if (config('settings::discord_enabled')) {
                 config(['services.discord.client_id' => config('settings::discord_client_id')]);
@@ -113,9 +120,6 @@ class AppServiceProvider extends ServiceProvider
             }
             if (config('settings::theme') !== config('themes.active')) {
                 Theme::set(config('settings::theme'), 'default');
-            }
-            if(!config('mail.mailers.smtp.host') || !config('mail.mailers.smtp.port') || !config('mail.mailers.smtp.username') || !config('mail.mailers.smtp.password') || !config('mail.from.address') || !config('mail.from.name')) {
-                config('settings::mail_disabled', true);
             }
             // Unset settings::theme
             config(['settings::theme' => null]);
