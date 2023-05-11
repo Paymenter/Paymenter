@@ -40,4 +40,9 @@ class BasisController extends Controller
         $json = json_encode($request->all(), JSON_UNESCAPED_SLASHES);
         echo $json;
     }
+
+    public function tos()
+    {
+        return view('tos');
+    }
 }

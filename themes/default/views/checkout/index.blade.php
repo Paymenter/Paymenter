@@ -128,26 +128,26 @@
                                 {{ round($discount, 2) }}</span>
                         </div>
                     </div>
-                @endif                
+                @endif
                 @foreach ($products as $product)
-                    @if($product->price > 0)
-                    <div class="flex flex-row items-center justify-between">
+                    @if ($product->price > 0)
+                        <div class="flex flex-row items-center justify-between">
 
-                        <div class="flex flex-row items-center">
-                            <span class="text-lg">
-                                {{ ucfirst($product->billing_cycle) }}
-                            </span>
+                            <div class="flex flex-row items-center">
+                                <span class="text-lg">
+                                    {{ ucfirst($product->billing_cycle) }}
+                                </span>
+                            </div>
+                            <div class="flex flex-col">
+                                <span class="text-lg">{{ config('settings::currency_sign') }}
+                                    @if ($product->discount)
+                                        {{ round($product->price - $product->discount, 2) }}
+                                    @else
+                                        {{ $product->price }}
+                                    @endif
+                                </span>
+                            </div>
                         </div>
-                        <div class="flex flex-col">
-                            <span class="text-lg">{{ config('settings::currency_sign') }}
-                                @if ($product->discount)
-                                    {{ round($product->price - $product->discount, 2) }}
-                                @else
-                                    {{ $product->price }}
-                                @endif
-                            </span>
-                        </div>
-                    </div>
                     @endif
                     @if ($product->setup_fee > 0)
                         <div class="flex flex-row items-center justify-between">
@@ -181,6 +181,13 @@
                 <hr class="my-4">
 
                 <form method="POST" action="{{ route('checkout.pay') }}">
+                    <!-- Do you accept the terms? -->
+                    <div class="items-center p-1">
+                        @php
+                            $tos = "I agree to the <a href='" . route('tos') . "' class='text-blue-500 hover:text-blue-600'>terms of service</a>";
+                        @endphp
+                        <x-input id="tos" type="checkbox" name="tos" required :label="$tos" />
+                    </div>
                     <div class="flex flex-col">
                         <label for="payment_method"
                             class="block text-sm font-medium text-gray-700 dark:text-darkmodetext">{{ __('Payment method') }}</label>
