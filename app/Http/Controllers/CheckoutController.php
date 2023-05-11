@@ -173,9 +173,22 @@ class CheckoutController extends Controller
 
     public function pay(Request $request)
     {
-        $products = session('cart');
-        if (!$products) {
+        $cart = session('cart');
+        if (!$cart) {
             return redirect()->back()->with('error', 'Cart is empty');
+        }
+        if($request->has('tos') && config('settings::tos') == 1) {
+            $tos = $request->input('tos');
+            if ($tos == 'on') {
+                $tos = true;
+            } else {
+                $tos = false;
+            }
+            if (!$tos) {
+                return redirect()->back()->with('error', 'You must agree to the terms of service');
+            }
+        } else if(config('settings::tos') == 1) {
+            return redirect()->back()->with('error', 'You must agree to the terms of service');
         }
         $couponId = session('coupon');
         $coupon;
@@ -185,7 +198,8 @@ class CheckoutController extends Controller
             $coupon = null;
         }
         $total = 0;
-        foreach ($products as $product) {
+        $products = [];
+        foreach ($cart as $product) {
             if ($product->stock_enabled && $product->stock <= 0) {
                 return redirect()->back()->with('error', 'Product is out of stock');
             } elseif ($product->stock_enabled && $product->stock < $product->quantity) {
@@ -223,6 +237,7 @@ class CheckoutController extends Controller
             } else {
                 $total += $product->price * $product->quantity - $product->discount;
             }
+            $products[] = $product;
         }
 
         $user = User::findOrFail(auth()->user()->id);
@@ -241,33 +256,6 @@ class CheckoutController extends Controller
         }
         $invoice->save();
         foreach ($products as $product) {
-            if ($coupon) {
-                if (isset($coupon->products)) {
-                    if (!in_array($product->id, $coupon->products) && !empty($coupon->products)) {
-                        $product->discount = 0;
-                        continue;
-                    } else {
-                        if ($coupon->type == 'percent') {
-                            $product->discount = $product->price * $coupon->value / 100;
-                            $product->discount_fee = $product->setup_fee * $coupon->value / 100;
-                        } else {
-                            $product->discount = $coupon->value;
-                            $product->discount_fee = $coupon->value;
-                        }
-                    }
-                } else {
-                    if ($coupon->type == 'percent') {
-                        $product->discount = $product->price * $coupon->value / 100;
-                        $product->discount_fee = $product->setup_fee * $coupon->value / 100;
-                    } else {
-                        $product->discount = $coupon->value;
-                        $product->discount_fee = $coupon->value;
-                    }
-                }
-            } else {
-                $product->discount = 0;
-                $product->discount_fee = 0;
-            }
             if ($product->allow_quantity == 1)
                 for ($i = 0;
                     $i < $product->quantity;
@@ -310,43 +298,11 @@ class CheckoutController extends Controller
             }
         }
         if ($total != 0) {
-            $products = [];
-            foreach ($invoice->items()->get() as $item) {
-                if ($item->product_id) {
-                    $product = $item->product()->get()->first();
-                    $order = $product->order()->get()->first();
-                    $coupon = $order->coupon()->get()->first();
-                    if ($coupon) {
-                        if ($coupon->time == 'onetime') {
-                            $invoices = $order->invoices()->get();
-                            if ($invoices->count() == 1) {
-                                $coupon = $order->coupon()->get()->first();
-                            } else {
-                                $coupon = null;
-                            }
-                        }
-                    }
-
-                    if ($coupon) {
-                        if (!in_array($product->id, $coupon->products) && !empty($coupon->products)) {
-                            $product->discount = 0;
-                        } else {
-                            if ($coupon->type == 'percent') {
-                                $product->discount = $product->price * $coupon->value / 100;
-                                $product->discount_fee = $product->setup_fee * $coupon->value / 100;
-                            } else {
-                                $product->discount = $coupon->value;
-                                $product->discount_fee = $coupon->value;
-                            }
-                        }
-                    } else {
-                        $product->discount = 0;
-                        $product->discount_fee = 0;
-                    }
-                    $product->name = $item->description;
-                    $product->price = $item->total;
-                    $products[] = $product;
-                }
+            $products = $invoice->getItemsWithProducts()->products; 
+            $total = $invoice->getItemsWithProducts()->total;
+            if($total == 0) {
+                $invoice->status = 'paid';
+                $invoice->save();
             }
 
             if ($request->get('payment_method')) {

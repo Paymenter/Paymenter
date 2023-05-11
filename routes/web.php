@@ -20,6 +20,7 @@ Route::get('/profile', [App\Http\Controllers\Clients\HomeController::class, 'pro
 Route::post('/profile', [App\Http\Controllers\Clients\HomeController::class, 'update'])->name('clients.profile.update')->middleware(['auth', 'password.confirm']);
 Route::post('/profile/tfa', [App\Http\Controllers\Clients\HomeController::class, 'tfa'])->name('clients.profile.tfa')->middleware(['auth', 'password.confirm']);
 Route::get('/change-password', [App\Http\Controllers\Clients\HomeController::class, 'password'])->name('clients.password.change-password')->middleware(['auth']);
+Route::get('/tos', [App\Http\Controllers\BasisController::class, 'tos'])->name('tos');
 
 Route::group(['prefix' => 'checkout'], function () {
     Route::get('/', [App\Http\Controllers\CheckoutController::class, 'index'])->name('checkout.index');

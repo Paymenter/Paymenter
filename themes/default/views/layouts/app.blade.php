@@ -56,6 +56,12 @@
             --secondary-700: {{ config('settings::theme:secondary-700', '#353741') }};
             --secondary-800: {{ config('settings::theme:secondary-800', '#1c1c20') }};
             --secondary-900: {{ config('settings::theme:secondary-900', '#000000') }};
+
+            --primary-50: {{ config('settings::theme:primary-50', '#EDF0FF') }};
+            --primary-100: {{ config('settings::theme:primary-100', '#C6DBFF') }};
+            --primary-200: {{ config('settings::theme:primary-200', '#9BBEFB') }};
+            --primary-300: {{ config('settings::theme:primary-300', '#799CD8') }};
+            --primary-400: {{ config('settings::theme:primary-400', '#5270FD') }};
         }
 
         .dark {

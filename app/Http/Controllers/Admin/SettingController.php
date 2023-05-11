@@ -93,7 +93,7 @@ class SettingController extends Controller
         if (!$request->get('mail_disabled')) {
             Setting::updateOrCreate(['key' => 'mail_disabled'], ['value' => 0]);
         }
-        if(!$request->get('must_verify_email')) {
+        if (!$request->get('must_verify_email')) {
             Setting::updateOrCreate(['key' => 'must_verify_email'], ['value' => null]);
         }
 
@@ -136,11 +136,13 @@ class SettingController extends Controller
 
     public function security(Request $request)
     {
-        Setting::updateOrCreate(['key' => 'recaptcha_site_key'], ['value' => $request->recaptcha_site_key]);
-        Setting::updateOrCreate(['key' => 'recaptcha_secret_key'], ['value' => $request->recaptcha_secret_key]);
         Setting::updateOrCreate(['key' => 'recaptcha'], ['value' => $request->recaptcha]);
-        Setting::updateOrCreate(['key' => 'recaptcha_type'], ['value' => $request->recaptcha_type]);
-
+        if ($request->get('tos') !== config('settings::tos_text')) {
+            Setting::updateOrCreate(['key' => 'tos_last_updated'], ['value' => now()]);
+        }
+        foreach ($request->except(['_token']) as $key => $value) {
+            Setting::updateOrCreate(['key' => $key], ['value' => $value]);
+        }
         return redirect('/admin/settings#security')->with('success', 'Settings updated successfully');
     }
 
