@@ -39,6 +39,5 @@ class Kernel extends ConsoleKernel
         if(!config('settings::stats.runAt')) {
             Setting::updateOrCreate(['key' => 'stats.runAt'], ['value' => rand(0, 23) . ':' . rand(0, 59)]);
         }
-        error_log('Stats will run at ' . config('settings::stats.runAt'));
     }
 }
