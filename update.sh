@@ -44,16 +44,20 @@ if [ -t 0 ]; then
         read -p "Your webserver user has been detected as [$USER2]: is this correct? [Y/n]: " -r
         if [[ $REPLY =~ ^[Nn] ]]; then
             read -p "Please enter the name of the user running your webserver process. This varies from system to system, but is generally \"www-data\", \"nginx\", or \"apache\": " -r PERMUSER
+        else
+            PERMUSER=$USER2
         fi
     fi
     
     # If $group is set, use that as the group
     if [ -z "$PERMGROUP" ]; then
         GROUP2=$(stat -c '%G' "$file")
-        read -p "Your webserver group has been detected as [$GROUP2]: is this correct? [Y/n]: " -r
+        read -p "Your webserver group has been detected as [$GROUP2]: is this correct? [Y/n]: " -r 
         if [[ $REPLY =~ ^[Nn] ]]; then
             read -p "Please enter the name of the group running your webserver process. Normally this is the same as your user: " -r PERMGROUP
-        fi
+        else 
+            PERMGROUP=$GROUP2
+        fi 
     fi
     
     if [ -z $INSTALL ]; then
@@ -104,7 +108,11 @@ echo '$upgrader> rm -rf storage/logs/*.log'
 rm -rf storage/logs/*.log
 
 # Setup correct permissions on the new files.
-echo '$upgrader> chown -R $USER:$GROUP .'
+echo '$upgrader> chown -R '$PERMUSER':'$PERMGROUP '.'
 chown -R $PERMUSER:$PERMGROUP .
+
+# Set application up for maintenance.
+echo '$upgrader> php artisan up'
+php artisan up
 
 echo "Upgrade completed."
