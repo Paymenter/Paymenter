@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Helpers\ExtensionHelper;
+use App\Helpers\NotificationHelper;
 use App\Http\Controllers\Controller;
 use App\Mail\Invoices\NewInvoice;
 use App\Models\{Invoice, InvoiceItem, User};
@@ -99,10 +100,7 @@ class InvoiceController extends Controller
             $invoiceItem->description = $item;
             $invoiceItem->save();
         }
-        if(!config('settings::mail_disabled')) {
-            \Illuminate\Support\Facades\Mail::to(User::find($request->user_id))->send(new NewInvoice($invoice));
-        }
-
+        NotificationHelper::sendNewInvoiceNotification($invoice, User::find($request->user_id));
         return redirect()->route('admin.invoices.show', $invoice);
     }
 }

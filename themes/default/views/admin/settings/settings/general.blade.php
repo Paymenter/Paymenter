@@ -67,9 +67,9 @@
             <div class="relative m-4 group">
                 <input type="checkbox" class="form-input w-fit peer @error('allow_auto_lang') is-invalid @enderror"
                     placeholder=" " name="allow_auto_lang" value="1" 
-                    {{ config('settings::allow_auto_lang') ? 'checked' : '' }} data-popover-target="discord"/>
+                    {{ config('settings::allow_auto_lang') ? 'checked' : '' }} data-popover-target="language"/>
                 <label class="form-label" style="position: unset;"  >{{ __('Allow Auto Language') }}</label>
-                <div id="discord" role="tooltip" data-popover
+                <div id="language" role="tooltip" data-popover
                     class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
                     {{ __('If enabled, the language will be automatically set to the language of the browser.') }}
                     <div data-popper-arrow></div>

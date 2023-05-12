@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Helpers\ExtensionHelper;
+use App\Helpers\NotificationHelper;
 use App\Models\{Extension, Invoice, OrderProduct, OrderProductConfig, Order, Product, User, Coupon, InvoiceItem};
 
 class CheckoutController extends Controller
@@ -279,15 +280,9 @@ class CheckoutController extends Controller
         session()->forget('cart');
         session()->forget('coupon');
         if (!config('settings::mail_disabled')) {
-            try {
-                \Illuminate\Support\Facades\Mail::to(auth()->user())->send(new \App\Mail\Orders\NewOrder($order));
-            } catch (\Exception $e) {
-            }
+            NotificationHelper::sendNewOrderNotification($order, auth()->user());
             if ($total != 0) {
-                try {
-                    \Illuminate\Support\Facades\Mail::to(auth()->user())->send(new \App\Mail\Invoices\NewInvoice($invoice));
-                } catch (\Exception $e) {
-                }
+                NotificationHelper::sendNewInvoiceNotification($invoice, auth()->user());
             }
         }
         foreach ($order->products()->get() as $product) {

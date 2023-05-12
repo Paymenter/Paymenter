@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use App\Models\Order;
 use Illuminate\Console\Command;
 use App\Helpers\ExtensionHelper;
+use App\Helpers\NotificationHelper;
 use App\Mail\Invoices\NewInvoice;
 use App\Models\OrderProduct;
 use Illuminate\Support\Facades\Log;
@@ -100,13 +101,7 @@ class CronJob extends Command
             $invoiceItem->total = $order->price;
             $invoiceItem->save();
 
-            if (!config('settings::mail_disabled')) {
-                try {
-                    Mail::to($order->order()->get()->first()->client()->get())->send(new NewInvoice($invoice));
-                } catch (\Exception $e) {
-                    Log::error($e->getMessage());
-                }
-            }
+            NotificationHelper::sendNewInvoiceNotification($invoice, $order->order()->get()->first()->client()->get());
             $invoiceProcessed++;
         }
         $this->info('Sended Number of Invoices: ' . $invoiceProcessed);

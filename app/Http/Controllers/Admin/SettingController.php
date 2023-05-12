@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Helpers\NotificationHelper;
 use App\Models\Setting;
 use Qirolab\Theme\Theme;
 use Illuminate\Http\Request;
@@ -114,7 +115,7 @@ class SettingController extends Controller
         config(['mail.from.name' => $request->mail_from_name]);
 
         try {
-            \Illuminate\Support\Facades\Mail::to(auth()->user())->send(new \App\Mail\Test);
+            NotificationHelper::sendTestNotification(auth()->user());
         } catch (\Exception $e) {
             // Return json response
             return response()->json(['error' => $e->getMessage()], 500);
