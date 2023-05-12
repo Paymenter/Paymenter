@@ -43,6 +43,9 @@ class BasisController extends Controller
 
     public function tos()
     {
+        if(!config('settings::tos_text')) {
+            abort(404);
+        }
         return view('tos');
     }
 }
