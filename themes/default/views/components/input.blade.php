@@ -43,7 +43,7 @@
                 </div>
             @endisset
             <input type={{ $type }} @isset($placeholder) placeholder={{ $placeholder }} @endisset name={{ $name }} autocomplete="@isset($autocomplete) {{ $autocomplete }} @else {{ $type }} @endisset"
-                @isset($value) value={{ $value }} @else value="{{ old($name) }}" @endisset
+                @isset($value) value="{{ $value }}" @else value="{{ old($name) }}" @endisset
                 id={{ $id ?? $name }} @isset($required) {{ $required ? 'required' : '' }} @endisset
                 class="py-2 bg-secondary-200 text-secondary-800 font-medium rounded-md placeholder-secondary-500 outline-none w-full border focus:ring-2 focus:ring-offset-2 ring-offset-secondary-50 dark:ring-offset-secondary-100 duration-300
             @isset($icon) pl-10 pr-4 @else px-4 @endisset
