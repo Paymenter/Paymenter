@@ -168,7 +168,7 @@
                                 <label for="payment_method"
                                     class="text-sm text-secondary-600">{{ __('Payment method') }}</label>
                                 <select id="payment_method" name="payment_method" autocomplete="payment_method"
-                                    class="py-2 bg-secondary-200 text-secondary-800 font-medium rounded-md placeholder-secondary-500 outline-none w-full border focus:ring-2 focus:ring-offset-2 ring-offset-secondary-50 dark:ring-offset-secondary-100 duration-300 border-secondary-300 focus:border-secondary-400 focus:ring-primary-400"
+                                    class="py-2 bg-secondary-200 text-secondary-800 font-medium rounded-md placeholder-secondary-500 outline-none w-full border focus:ring-2 focus:ring-offset-2 ring-offset-secondary-50 dark:ring-offset-secondary-100 duration-300 border-secondary-300 focus:border-secondary-400 focus:ring-primary-400">
                                     @foreach (App\Models\Extension::where('type', 'gateway')->where('enabled', true)->get() as $gateway)
                                     <option value="{{ $gateway->id }}">
                                         {{ isset($gateway->display_name) ? $gateway->display_name : $gateway->name }}</option> @endforeach
