@@ -1,7 +1,7 @@
 <nav class="bg-secondary-50 dark:bg-secondary-100 dark:border-0 border-b-2 border-secondary-200">
     <div class="max-w-[1650px] mx-auto block md:flex items-center gap-x-10 px-5">
         <div class="flex justify-between md:w-auto w-full items-center">
-            <a href="{{ route('index') }}" class="flex items-center text-secondary-900 font-semibold text-lg py-2 gap-x-2">
+            <a href="{{ route('index') }}" class="flex items-center text-secondary-900 font-semibold text-lg py-2 gap-x-2 w-max">
                 <x-application-logo class="w-10" />
                 {{ config('app.name', 'Paymenter') }}
             </a>
