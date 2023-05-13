@@ -3,17 +3,17 @@
         <x-success class="mt-4" />
         <div class="grid grid-cols-12 gap-4">
             <div class="col-span-12">
-            <div class="content-box">
-                <div class="flex items-center">
-                    <div class="flex-shrink-0 w-12 h-12" style="display: flex;">
-                        <img class="w-8 h-8 rounded-md" style="align-self: center; width: 3rem; height: 3rem;"
-                            src="https://www.gravatar.com/avatar/{{ md5(Auth::user()->email) }}?s=200&d=mp" />
-                    </div>
-                    <div class="ml-4 text-lg font-semibold leading-7">
-                        {{ __('Welcome back') }}, {{ Auth::user()->name }}
+                <div class="content-box">
+                    <div class="flex items-center">
+                        <div class="flex-shrink-0 w-12 h-12" style="display: flex;">
+                            <img class="w-8 h-8 rounded-md" style="align-self: center; width: 3rem; height: 3rem;"
+                                src="https://www.gravatar.com/avatar/{{ md5(Auth::user()->email) }}?s=200&d=mp" />
+                        </div>
+                        <div class="ml-4 text-lg font-semibold leading-7">
+                            {{ __('Welcome back') }}, {{ Auth::user()->name }}
+                        </div>
                     </div>
                 </div>
-            </div>
             </div>
             <div class="lg:col-span-3 col-span-12">
                 <div class="content-box">
@@ -21,10 +21,10 @@
                         <img class="w-8 h-8 rounded-md" style="align-self: center; width: 2rem; height: 2rem;"
                             src="https://www.gravatar.com/avatar/{{ md5(Auth::user()->email) }}?s=200&d=mp" />
                         <div class="ml-4 text-lg font-semibold leading-7">
-                            {{ __('Invoices') }}
+                            {{ __('Pending Invoices') }}
                         </div>
                     </div>
-                    <div class="flex flex-col text-center items-center">
+                    <div class="flex flex-col items-center">
                         @foreach ($invoices as $invoice)
                             <a href='{{ route('clients.invoice.show', $invoice->id) }}'
                                 class="text-blue-500 hover:text-blue-700">
@@ -38,20 +38,23 @@
             </div>
             <div class="lg:col-span-9 col-span-12">
                 <div class="content-box">
-                    <table id="tableServicesList"
-                        class="items-center table dark:text-white sm:rounded-lg w-full p-1">
-                        <thead class="border-b border-gray-200">
+                    <table class="w-full">
+                        <thead class="border-b-2 border-secondary-200 dark:border-secondary-50 text-secondary-600">
                             <tr>
-                                <th class="dark:text-white sorting_asc p-2">
+                                <th scope="col" class="text-start pl-6 py-2 text-sm font-normal">
+
                                     {{ __('Product/Service') }}
                                 </th>
-                                <th class="dark:text-white sorting_asc p-2">{{ __('Pricing') }}</th>
-                                <th class="dark:text-white sorting_asc p-2">{{ __('Next Due Date') }}
+                                <th scope="col" class="text-start pr-6 py-2 text-sm font-normal">
+                                    {{ __('Pricing') }}</th>
+                                <th scope="col" class="text-start pr-6 py-2 text-sm font-normal">
+                                    {{ __('Next Due Date') }}
                                 </th>
-                                <th class="dark:text-white sorting_asc p-2">{{ __('Status') }}</th>
+                                <th scope="col" class="text-start pr-6 py-2 text-sm font-normal">
+                                    {{ __('Status') }}</th>
                             </tr>
                         </thead>
-                        <tbody class="w-full">
+                        <tbody>
                             @if (count($services) > 0)
                                 @foreach ($services as $service)
                                     @foreach ($service->products()->get() as $product2)
@@ -62,18 +65,17 @@
                                                 ->first();
                                         @endphp
                                         @if ($product)
-                                            <tr>
-                                                <td class="dark:text-white p-3">
+                                            <tr class="border-b-2 border-secondary-200 dark:border-secondary-50">
+                                                <td class="pl-6 py-3">
                                                     <strong>{{ ucfirst($product->name) }}</strong>
                                                 </td>
-                                                <td class="text-center dark:text-white p-3"
-                                                    data-order="0.00">
+                                                <td class="py-3" data-order="0.00">
                                                     {{ $product2->price !== '0.00' && $product2->price ? config('settings::currency_sign') . $product2->price : __('Free') }}
                                                 </td>
-                                                <td class="text-center dark:text-white p-3">
+                                                <td class="py-3">
                                                     {{ $product2->expiry_date ? date('l jS F Y', strtotime($product2->expiry_date)) : __('Never') }}
-                                                <td class="text-center dark:text-white p-3">
-                                                    <div class="border border-gray-200">
+                                                <td class="py-3">
+                                                    <div class="border border-gray-200 text-center">
                                                         @if ($product2->status === 'paid')
                                                             <span
                                                                 class="label status status-active text-green-500">{{ __('Active') }}</span>
@@ -95,7 +97,7 @@
                                             </tr>
                                         @else
                                             <tr>
-                                                <td class="dark:text-white p-3">
+                                                <td class="py-3">
                                                     <strong>{{ __('Something went wrong') }}</strong>
                                                 </td>
                                             </tr>

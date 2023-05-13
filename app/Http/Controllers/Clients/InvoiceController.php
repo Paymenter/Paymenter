@@ -11,7 +11,9 @@ class InvoiceController extends Controller
 {
     public function index(Request $request)
     {
-        $invoices = Invoice::where('user_id', auth()->user()->id)->get();
+        $invoices = Invoice::where('user_id', auth()->user()->id)->get()->sort(function ($a, $b) {
+            return strtotime($b->created_at) - strtotime($a->created_at);
+        });
 
         return view('clients.invoice.index', compact('invoices'));
     }

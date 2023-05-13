@@ -4,11 +4,13 @@
             <a href="{{ route('clients.home') }}" class="md:px-2 py-3 flex items-center gap-x-2 hover:text-secondary-800 duration-300">
                 <i class="ri-layout-2-line @if (request()->routeIs('clients.home')) text-primary-400 @endif"></i> {{ __('Dashboard') }}
             </a>
+            <!-- Will be added in the next update
             <a href="#" class="md:px-2 py-3 flex items-center gap-x-2 hover:text-secondary-800 duration-300">
                 <i class="ri-instance-line"></i> {{ __('Services') }}
             </a>
-            <a href="#" class="md:px-2 py-3 flex items-center gap-x-2 hover:text-secondary-800 duration-300">
-                <i class="ri-file-paper-line"></i> {{ __('Invoices') }}
+            -->
+            <a href="{{ route('clients.invoice.index') }}" class="md:px-2 py-3 flex items-center gap-x-2 hover:text-secondary-800 duration-300">
+                <i class="ri-file-paper-line @if (request()->routeIs('clients.invoice*')) text-primary-400 @endif"></i> {{ __('Invoices') }}
             </a>
             <a href="{{ route('clients.tickets.index') }}" class="md:px-2 py-3 flex items-center gap-x-2 hover:text-secondary-800 duration-300">
                 <i class="ri-customer-service-2-line @if (request()->routeIs('clients.tickets*')) text-primary-400 @endif"></i> {{ __('Tickets') }}
@@ -60,11 +62,13 @@
             <a href="{{ route('clients.home') }}" class="py-1 flex items-center gap-x-2 hover:text-secondary-800 duration-300">
                 <i class="ri-layout-2-line @if (request()->routeIs('clients.home')) text-primary-400 @endif"></i> {{ __('Dashboard') }}
             </a>
+            <!-- Will be added in the next update
             <a href="#" class="py-1 flex items-center gap-x-2 hover:text-secondary-800 duration-300">
                 <i class="ri-instance-line"></i> {{ __('Services') }}
             </a>
-            <a href="#" class="py-1 flex items-center gap-x-2 hover:text-secondary-800 duration-300">
-                <i class="ri-file-paper-line"></i> {{ __('Invoices') }}
+             -->
+            <a href="{{ route('clients.invoice.index') }}" class="py-1 flex items-center gap-x-2 hover:text-secondary-800 duration-300">
+                <i class="ri-file-paper-line @if (request()->routeIs('clients.invoice*')) text-primary-400 @endif""></i> {{ __('Invoices') }}
             </a>
             <a href="{{ route('clients.tickets.index') }}" class="py-1 flex items-center gap-x-2 hover:text-secondary-800 duration-300">
                 <i class="ri-customer-service-2-line @if (request()->routeIs('clients.tickets*')) text-primary-400 @endif"></i> {{ __('Tickets') }}
