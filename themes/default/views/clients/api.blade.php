@@ -1,86 +1,90 @@
 <x-app-layout clients title="{{ __('API') }}">
-
-    
-    <div class="py-12">
-        <div class="mx-auto max-w-7xl sm:px-6 lg:px-8 flex flex-col">
-            <x-success/>
-
-            <div class="overflow-hidden bg-white shadow-xl sm:rounded-lg dark:bg-darkmode2 mt-4">
-                <div class="p-6 bg-white border-b border-gray-200 sm:px-20 dark:bg-darkmode2 dark:border-black">
-                    <h1 class="text-xl text-gray-500 dark:text-darkmodetext">Create API Token</h1>
-
-                    <div class="grid grid-cols-1 gap-4">
-                        <div class="mt-6 text-gray-500 dark:text-darkmodetext dark:bg-darkmode2">
-                            <form method="POST" action="{{ route('clients.api.create') }}">
-                                @csrf
-                                <div class="mt-4">
-                                    <label for="name">{{ __('Name') }}</label>
-                                    <input id="name"
-                                        class="block w-full rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm dark:bg-darkmode dark:border-black"
-                                        name="name" required type="text" placeholder="Token Name">
-                                </div>
-
-                                <h2 class='mb-2 mt-4'>Permissions</h2>
-                                <div class="grid grid-cols-4 gap-2">
-                                    @foreach($permissions as $permission)
-                                    <div class="flex">
-                                        <input name='permissions[{{ $permission }}]' type='checkbox' class="text-indigo-600 my-auto dark:border-black border-gray-300 rounded shadow-sm dark:bg-darkmode focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"/>
-                                        <label class='ml-2 my-auto block' for='{{ $permission }}'>{{ $permission }}</label>
-                                    </div>
-                                    @endforeach
-                                </div>
-                                
-                                <div class="flex items-center justify-end mt-4">
-                                    <button type="submit"
-                                        class="px-4 py-2 font-bold text-white bg-blue-500 rounded hover:bg-blue-700">
-                                        {{ __('Create') }}
-                                    </button>
-                                </div>
-                            </form>
+    <div class="content">
+        <div class="grid grid-cols-12 gap-4">
+            <div class="col-span-12">
+                <div class="content-box">
+                    <h2 class="text-xl font-semibold">{{ __("Profile Settings") }}</h2>
+                </div>
+            </div>
+            <div class="lg:col-span-3 col-span-12">
+                <div class="content-box">
+                    <div class="flex gap-x-2 items-center">
+                        <div class="bg-primary-400 w-8 h-8 flex items-center justify-center rounded-md text-gray-50 text-xl">
+                            <i class="ri-account-circle-line"></i>
                         </div>
+                        <h3 class="font-semibold text-lg">{{ __("My Account") }}</h3>
+                    </div>
+                    <div class="flex flex-col gap-2 mt-2">
+                        <a href="{{ route('clients.profile') }}" class="border-l-2 border-transparent duration-300 hover:text-secondary-900 hover:pl-3 hover:border-primary-400 focus:text-secondary-900 focus:pl-3 focus:border-primary-400">
+                            {{ __("My Details") }}
+                        </a>
+                        <a href="{{ route('clients.profile') }}" class="border-l-2 border-transparent duration-300 hover:text-secondary-900 hover:pl-3 hover:border-primary-400 focus:text-secondary-900 focus:pl-3 focus:border-primary-400">
+                            {{ __("Account Security") }}
+                        </a>
+                        <a href="{{ route('clients.api.index') }}" class="text-secondary-900 pl-3 border-primary-400 border-l-2 duration-300 hover:text-secondary-900 hover:pl-3 hover:border-primary-400 focus:text-secondary-900 focus:pl-3 focus:border-primary-400">
+                            {{ __("Account API") }}
+                        </a>
                     </div>
                 </div>
             </div>
+            <div class="lg:col-span-9 col-span-12">
+                <div>
+                    <x-success/>
 
-            <div class="overflow-hidden bg-white shadow-xl sm:rounded-lg dark:bg-darkmode2 mt-8">
-                <div class="p-6 bg-white border-b border-gray-200 sm:px-20 dark:bg-darkmode2 dark:border-black">
-                    <h1 class="text-xl text-gray-500 dark:text-darkmodetext">Manage API Tokens</h1>
-
-                    <div class="grid grid-cols-1 gap-4">
-                        <div class="mt-6 text-gray-500 dark:text-darkmodetext dark:bg-darkmode2">
-                            <div class="grid grid-cols-1 gap-2">
-                                @if ($tokens->isEmpty())
-                                <label class='text-center'>You have not tokens created yet!</label>
-                                @endif
-
-                                @foreach($tokens as $token)
-                                <form method="POST" action="{{ route('clients.api.delete', $token->id) }}">
-                                    @csrf
-                                    @method('DELETE')
-                                    <div class="flex items-center justify-between p-4 dark:bg-darkmode border bg-gray-50 rounded dark:border-black">
-                                        <div class="break-all dark:text-white">
-                                            {{ $token->name }}
-                                        </div>
-
-                                        <div class="flex items-center ml-2">
-                                            @if ($token->last_used_at)
-                                                <div class="text-sm text-gray-400">
-                                                    {{ __('Last used') }} {{ $token->last_used_at->diffForHumans() }}
-                                                </div>
-                                            @endif
-
-                                            <button class="cursor-pointer ml-6 text-sm text-red-500" type="submit">
-                                                {{ __('Delete') }}
-                                            </button>
-                                        </div>
-                                    </div>
-                                </form>
+                    <div class="content-box">
+                        <h1 class="text-xl">Create API Token</h1>
+                        <form method="POST" action="{{ route('clients.api.create') }}">
+                            @csrf
+                            <x-input 
+                                type="text"
+                                class="mt-4"
+                                placeholder="{{ __('Token') }}" 
+                                name="name" 
+                                id="name" 
+                                label="{{ __('Token Name') }}"
+                            />
+                            <div class="grid grid-cols-4 gap-2 mt-4">
+                                @foreach($permissions as $permission)
+                                    <x-input 
+                                        type="checkbox"
+                                        name="permissions[{{ $permission }}]" 
+                                        id="{{ $permission }}" 
+                                        label="{{ $permission }}"
+                                    />
                                 @endforeach
                             </div>
-                        </div>
+                            <button type="submit" class="button button-primary mt-6">
+                                {{ __('Create') }}
+                            </button>
+                        </form>
+                    </div>
+                    <div class="content-box mt-4">
+                        <h1 class="text-xl">Manage API Token</h1>
+                        @if ($tokens->isEmpty())
+                            <label class='text-center'>You have not tokens created yet!</label>
+                        @endif
+                        
+                        @foreach($tokens as $token)
+                            <form method="POST" action="{{ route('clients.api.delete', $token->id) }}">
+                                @csrf
+                                @method('DELETE')
+                                <div class="w-full flex justify-between items-center px-4 py-3 bg-secondary-200 border border-secondary-300 rounded-md mt-2">
+                                    <p class="font-semibold text-lg">{{ $token->name }}</p>
+                                    @if ($token->last_used_at)
+                                        <div class="text-sm">
+                                            {{ __('Last used') }} {{ $token->last_used_at->diffForHumans() }}
+                                        </div>
+                                    @endif
+                                    <button class="button button-danger" type="submit">
+                                        {{ __('Delete') }}
+                                    </button>
+                                </div>
+                            </form>
+                        @endforeach
                     </div>
                 </div>
             </div>
         </div>
     </div>
+    
 </x-app-layout>

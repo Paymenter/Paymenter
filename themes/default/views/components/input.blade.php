@@ -12,7 +12,7 @@
     <div @isset($class) class={{ $class }} @endisset>
         {{ $slot }}
         @isset($label)
-            <label for={{ $id }} class="text-sm text-secondary-600">{{ $label }}</label>
+            <label for={{ $id }} class="text-sm text-secondary-600 block mb-1">{!! $label !!}</label>
         @endisset
         <div class="relative">
             @isset($icon)

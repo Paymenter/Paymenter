@@ -1,11 +1,37 @@
-<x-app-layout title="{{ __('Edit profile') }}" clients>
-    <!-- show form to edit user profile -->
-    <x-success class="mt-4" />
-    <div class="py-12">
-        <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
-            <div class="overflow-hidden bg-white shadow-xl sm:rounded-lg dark:bg-darkmode2">
-                <div class="p-6 bg-white border-b border-gray-200 sm:px-20 dark:bg-darkmode2 dark:border-black">
-                    <h1 class="text-xl text-gray-500 dark:text-darkmodetext">{{ __('Edit profile') }}</h1>
+<x-app-layout title="{{ __('Edit profile') }}" clients> 
+
+    <x-success />
+
+    <div class="content">
+        <div class="grid grid-cols-12 gap-4">
+            <div class="col-span-12">
+                <div class="content-box">
+                    <h2 class="text-xl font-semibold">{{ __("Profile Settings") }}</h2>
+                </div>
+            </div>
+            <div class="lg:col-span-3 col-span-12">
+                <div class="content-box">
+                    <div class="flex gap-x-2 items-center">
+                        <div class="bg-primary-400 w-8 h-8 flex items-center justify-center rounded-md text-gray-50 text-xl">
+                            <i class="ri-account-circle-line"></i>
+                        </div>
+                        <h3 class="font-semibold text-lg">{{ __("My Account") }}</h3>
+                    </div>
+                    <div class="flex flex-col gap-2 mt-2">
+                        <a href="{{ route('clients.profile') }}" class="text-secondary-900 pl-3 border-primary-400 border-l-2 duration-300 hover:text-secondary-900 hover:pl-3 hover:border-primary-400 focus:text-secondary-900 focus:pl-3 focus:border-primary-400">
+                            {{ __("My Details") }}
+                        </a>
+                        <a href="{{ route('clients.profile') }}" class="border-l-2 border-transparent duration-300 hover:text-secondary-900 hover:pl-3 hover:border-primary-400 focus:text-secondary-900 focus:pl-3 focus:border-primary-400">
+                            {{ __("Account Security") }}
+                        </a>
+                        <a href="{{ route('clients.api.index') }}" class="border-l-2 border-transparent duration-300 hover:text-secondary-900 hover:pl-3 hover:border-primary-400 focus:text-secondary-900 focus:pl-3 focus:border-primary-400">
+                            {{ __("Account API") }}
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="lg:col-span-9 col-span-12">
+                <div class="content-box">
                     @isset($secret)
                         <button data-modal-target="tfa" data-modal-toggle="tfa"
                             class="block text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 mt-2"
@@ -15,10 +41,10 @@
                         <div id="tfa" tabindex="-1" aria-hidden="true"
                             class="fixed top-0 left-0 right-0 z-50 hidden w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] md:h-full">
                             <div class="relative w-full h-full max-w-2xl md:h-auto">
-                                <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
+                                <div class="relative rounded-lg shadow bg-secondary-50 dark:bg-secondary-100">
                                     <div
-                                        class="flex items-start justify-between p-4 border-b rounded-t dark:border-gray-600">
-                                        <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
+                                        class="flex items-start justify-between p-4 border-b rounded-t">
+                                        <h3 class="text-xl font-semibold text-secondary-900">
                                             {{ __('Two Factor Authentication') }}
                                         </h3>
                                         <button type="button"
@@ -132,42 +158,56 @@
                         </div>
                     @endisset
                     <div class="grid grid-cols-1 gap-4">
-                        <div class="mt-6 text-gray-500 dark:text-darkmodetext dark:bg-darkmode2">
+                        <div class="mt-6">
                             <form method="POST" action="{{ route('clients.profile.update') }}">
                                 @csrf
-                                <div class="mt-4">
-                                    <label for="name">{{ __('Name') }}</label>
-                                    <input id="name"
-                                        class="block w-full rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm dark:bg-darkmode"
-                                        name="name" required type="text" value="{{ Auth::user()->name }}">
-                                </div>
-                                <div class="mt-4">
-                                    <label for="address">{{ __('Address') }}</label>
-                                    <input id="address"
-                                        class="block w-full rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm dark:bg-darkmode"
-                                        name="address" required type="text" value="{{ Auth::user()->address }}">
-                                </div>
-                                <div class="mt-4">
-                                    <label for="city">{{ __('City') }}</label>
-                                    <input id="city"
-                                        class="block w-full rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm dark:bg-darkmode"
-                                        name="city" required type="text" value="{{ Auth::user()->city }}">
-                                </div>
-                                <div class="mt-4">
-                                    <label for="country">{{ __('Country') }}</label>
-                                    <input id="country"
-                                        class="block w-full rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm dark:bg-darkmode"
-                                        name="country" required type="text" value="{{ Auth::user()->country }}">
-                                </div>
-                                <div class="mt-4">
-                                    <label for="phone">{{ __('Phone') }}</label>
-                                    <input id="phone"
-                                        class="block w-full rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm dark:bg-darkmode"
-                                        name="phone" required type="text" value="{{ Auth::user()->phone }}">
-                                </div>
-                                <div class="flex items-center justify-end mt-4">
-                                    <button type="submit"
-                                        class="px-4 py-2 font-bold text-white bg-blue-500 rounded hover:bg-blue-700">
+                                <x-input 
+                                    type="text"
+                                    class="mt-4"
+                                    placeholder="{{ __('Name') }}" 
+                                    name="name" 
+                                    id="name" 
+                                    label="{{ __('Name') }}"
+                                    value="{{ Auth::user()->name }}"
+                                />
+                                <x-input 
+                                    type="text"
+                                    class="mt-4"
+                                    placeholder="{{ __('Address') }}" 
+                                    name="address" 
+                                    id="address" 
+                                    label="{{ __('Name') }}"
+                                    value="{{ Auth::user()->address }}"
+                                />
+                                <x-input 
+                                    type="text"
+                                    class="mt-4"
+                                    placeholder="{{ __('City') }}" 
+                                    name="city" 
+                                    id="city" 
+                                    label="{{ __('City') }}"
+                                    value="{{ Auth::user()->city }}"
+                                />
+                                <x-input 
+                                    type="text"
+                                    class="mt-4"
+                                    placeholder="{{ __('Country') }}" 
+                                    name="country" 
+                                    id="country" 
+                                    label="{{ __('Country') }}"
+                                    value="{{ Auth::user()->country }}"
+                                />
+                                <x-input 
+                                    type="text"
+                                    class="mt-4"
+                                    placeholder="{{ __('Phone') }}" 
+                                    name="phone" 
+                                    id="phone" 
+                                    label="{{ __('Phone') }}"
+                                    value="{{ Auth::user()->phone }}"
+                                />
+                                <div class="flex justify-end mt-6">
+                                    <button type="submit" class="button button-primary">
                                         {{ __('Update') }}
                                     </button>
                                 </div>
@@ -178,4 +218,5 @@
             </div>
         </div>
     </div>
+
 </x-app-layout>

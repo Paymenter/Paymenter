@@ -19,7 +19,7 @@
                         <div class="flex flex-col gap-2 mt-2">
                             @foreach ($categories as $categoryItem)
                             @if ($categoryItem->products->count() > 0)
-                            <a href="{{ route('products', $categoryItem->slug) }}" class="@if (request()->routeIs('products', $categoryItem->name)) text-secondary-900 pl-3 border-primary-400 @endif border-l-2 border-transparent duration-300 hover:text-secondary-900 hover:pl-3 hover:border-primary-400">
+                            <a href="{{ route('products', $categoryItem->slug) }}" class="@if (($category->name == $categoryItem->name)) text-secondary-900 pl-3 border-primary-400 @endif border-l-2 border-transparent duration-300 hover:text-secondary-900 hover:pl-3 hover:border-primary-400 focus:text-secondary-900 focus:pl-3 focus:border-primary-400">
                                 {{ $categoryItem->name }}
                             </a>
                             @endif
@@ -37,16 +37,16 @@
                 <div class="grid grid-cols-3 gap-4 mt-4">
                     @foreach ($category->products()->get() as $product)
                     <div class="md:col-span-1 col-span-3">
-                        <div class="content-box">
+                        <div class="content-box h-full flex flex-col">
                             <div class="flex gap-x-3 items-center mb-2">
                                 <img src="{{ $product->image }}" alt="{{ $product->name }}" class="w-14 rounded-md"  onerror="removeElement(this);">
                                 <div>
-                                    <h3 class="text-lg text-secondary-800 leading-5 font-medium">{{ $product->name }}</h3>
+                                    <h3 class="text-lg text-secondary-800 leading-5 font-semibold">{{ $product->name }}</h3>
                                     <p>{{ $product->price() ? config('settings::currency_sign') . $product->price() : __('Free') }}</p>
                                 </div>
                             </div>
                             <p>{{ \Illuminate\Mail\Markdown::parse(str_replace("\n", '<br>', $product->description)) }}</p>
-                            <div class="mt-3">
+                            <div class="pt-3 mt-auto">
                                 <a href="{{ route('checkout.add', $product->id) }}" class="button button-secondary w-full">Add to cart <i class="ri-shopping-cart-2-line"></i></a>
                             </div>
                         </div>

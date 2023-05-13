@@ -19,11 +19,13 @@
                 @foreach ($categories as $category)
                     @if ($category->products->count() > 0)
                         <div class="lg:col-span-3 md:col-span-6 col-span-12">
-                            <div class="content-box">
+                            <div class="content-box h-full flex flex-col">
                                 <h3 class="font-semibold text-lg">{{ $category->name }}</h3>
                                 <p>{{ $category->description }}</p>
-                                <a href="{{ route('products', $category->slug) }}"
-                                    class="button button-secondary w-full mt-3">{{ __('Browse Category') }}</a>
+                                <div class="pt-3 mt-auto">
+                                    <a href="{{ route('products', $category->slug) }}"
+                                    class="button button-secondary w-full">{{ __('Browse Category') }}</a>
+                                </div>
                             </div>
                         </div>
                     @endif
