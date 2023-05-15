@@ -327,7 +327,11 @@ class ExtensionHelper
         }
         $user = User::findOrFail($order->client);
         $function = $extension->name . '_suspendServer';
-        $function($user, $config, $order, $product2);
+        try {
+            $function($user, $config, $order, $product2);
+        } catch (\Exception $e) {
+            ExtensionHelper::error($extension->name, 'Error creating server: ' . $e->getMessage());
+        }
     }
 
     public static function unsuspendServer(OrderProduct $product2)
@@ -357,7 +361,11 @@ class ExtensionHelper
         }
         $user = User::findOrFail($order->client);
         $function = $extension->name . '_unsuspendServer';
-        $function($user, $config, $order, $product2);
+        try {
+            $function($user, $config, $order, $product2);
+        } catch (\Exception $e) {
+            ExtensionHelper::error($extension->name, 'Error creating server: ' . $e->getMessage());
+        }
     }
 
     public static function terminateServer(OrderProduct $product2)
@@ -387,7 +395,11 @@ class ExtensionHelper
         }
         $user = User::findOrFail($order->client);
         $function = $extension->name . '_terminateServer';
-        $function($user, $config, $order, $product2);
+        try {
+            $function($user, $config, $order, $product2);
+        } catch (\Exception $e) {
+            ExtensionHelper::error($extension->name, 'Error creating server: ' . $e->getMessage());
+        }
     }
 
     public static function getLink(OrderProduct $product)
