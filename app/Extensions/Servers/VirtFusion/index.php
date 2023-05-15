@@ -33,7 +33,7 @@ function VirtFusion_getProductConfig()
         [
             'name' => 'hypervisor',
             'type' => 'text',
-            'friendlyName' => 'Hypervisor ID',
+            'friendlyName' => 'Hypervisor Group ID',
             'required' => true,
         ],
         [
@@ -66,8 +66,9 @@ function VirtFusion_createServer($user, $params, $order)
         ]
     );
     if($response->json()['errors']) {
-        ExtensionHelper::error('VirtFusion', 'Failed to create server', $response->json()['errors']);
-
+        //Array to string conversion
+        $error = implode(" ", $response->json()['errors']);
+        ExtensionHelper::error('VirtFusion', 'Failed to create server' . $error);
         return;
     }
     ExtensionHelper::setOrderProductConfig('server_id', $response->json()['data']['id'], $params['config_id']);
