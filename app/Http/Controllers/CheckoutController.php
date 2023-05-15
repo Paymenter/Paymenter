@@ -244,7 +244,7 @@ class CheckoutController extends Controller
         $user = User::findOrFail(auth()->user()->id);
         $order = new Order();
         $order->client = $user->id;
-        $order->coupon = session('coupon');
+        $order->coupon = $coupon->id ?? null;
         $order->save();
 
         $invoice = new Invoice();

@@ -5,7 +5,7 @@
         <div class="content ">
             <div class="content-box">
                 <div class="prose dark:prose-invert min-w-full">
-                    {!! Str::Markdown(Stevebauman\Purify\Facades\Purify::clean(config('settings::home_page_text'))) !!}
+                    {!! Stevebauman\Purify\Facades\Purify::clean(Str::Markdown(config('settings::home_page_text'))) !!}
                 </div>
             </div>
         </div>

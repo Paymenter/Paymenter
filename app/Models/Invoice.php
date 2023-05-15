@@ -51,7 +51,8 @@ class Invoice extends Model
         return $this->hasMany(InvoiceItem::class, 'invoice_id', 'id');
     }
 
-    public function getItemsWithProducts(){
+    public function getItemsWithProducts()
+    {
         $products = [];
         $total = 0;
         foreach ($this->items as $item) {
@@ -68,11 +69,29 @@ class Invoice extends Model
                             $coupon = null;
                         }
                     }
+                    if ($coupon->status !== 'active') {
+                        $coupon = null;
+                    }
+                    if ($coupon->end_at && $coupon->end_at < now()) {
+                        $coupon = null;
+                    }
+                    if ($coupon->start_at && $coupon->start_at > now()) {
+                        $coupon = null;
+                    }
+
                 }
 
                 if ($coupon) {
-                    if (!in_array($product->id, $coupon->products) && !empty($coupon->products)) {
-                        $product->discount = 0;
+                    if (!empty($coupon->products)) {
+                        if (!in_array($product->id, $coupon->products)) {
+                            $product->discount = 0;
+                        } else {
+                            if ($coupon->type == 'percent') {
+                                $product->discount = $product->price * $coupon->value / 100;
+                            } else {
+                                $product->discount = $coupon->value;
+                            }
+                        }
                     } else {
                         if ($coupon->type == 'percent') {
                             $product->discount = $product->price * $coupon->value / 100;
