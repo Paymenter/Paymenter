@@ -59,7 +59,7 @@
                             <label class="text-gray-700 dark:text-darkmodetext" for="price">
                                 {{ __('Price') }}
                             </label>
-                            <input type="text" name="price" id="price" value="{{ $pricing->monthly }}"
+                            <input type="text" name="monthly" id="price" value="{{ $pricing->monthly }}"
                                 class="form-input">
                         </div>
                     </div>
