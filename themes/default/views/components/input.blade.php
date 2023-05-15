@@ -2,7 +2,7 @@
     <div @isset($class) class={{ $class }} @endisset>
         <div class="flex items-start">
             <div class="flex items-center h-5">
-                <input id={{ $id }} type="checkbox" @isset($value) value={{ $value }} @endisset  @isset($checked) {{ $checked ? 'checked' : '' }} @endisset name={{ $name }} autocomplete="@isset($autocomplete) {{ $autocomplete }} @else {{ $type }} @endisset"
+                <input id={{ $id }} type="checkbox" @isset($value) value={{ $value }} @endisset  @isset($checked) {{ $checked ? 'checked' : '' }} @endisset name={{ $name }} autocomplete="@isset($autocomplete) {{ $autocomplete }} @else {{ $type }} @endisset" @isset($disabled) {{ $disabled ? 'disabled' : '' }} @endisset
                     class="w-4 h-4 border border-secondary-300 rounded bg-secondary-200 text-primary-400 focus:ring-3 focus:ring-primary-300 focus:ring-offset-2 ring-offset-secondary-50 dark:ring-offset-secondary-100" @isset($required) {{ $required ? 'required' : '' }} @endisset>
             </div>
             <label for={{ $id }} class="ml-2 text-sm font-medium text-secondary-700">{!! $label !!}</label>

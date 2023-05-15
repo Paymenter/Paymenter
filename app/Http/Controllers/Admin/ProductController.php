@@ -91,9 +91,9 @@ class ProductController extends Controller
         return redirect()->route('admin.products.edit', $product->id)->with('success', 'Product updated successfully');
     }
 
-    public function destroy(Product $product)
+    public function destroy(Product $product): \Illuminate\Http\RedirectResponse
     {
-        $product->prices()->delete();
+        $product->prices->delete();
         $product->delete();
 
         return redirect()->route('admin.products')->with('success', 'Product deleted successfully');
@@ -101,7 +101,7 @@ class ProductController extends Controller
 
     public function pricing(Product $product)
     {
-        $pricing = ProductPrice::where('product_id', $product->id)->first();
+        $pricing = $product->prices;
         return view('admin.products.pricing', compact('product', 'pricing'));
     }
 
@@ -111,18 +111,18 @@ class ProductController extends Controller
             'pricing' => 'required|in:recurring,free,one-time',
             'allow_quantity' => 'in:0,1,2'
         ]);
-        if($request->get('pricing') !== $product->prices()->get()->first()->type){
+        if($request->get('pricing') !== $product->prices->type){
             $request->validate([
                 'pricing' => 'required|in:recurring,free,one-time'
             ]);
             // Update it
-            $product->prices()->update([
+            $product->prices->update([
                 'type' => $request->get('pricing')
             ]);
 
             return redirect()->route('admin.products.pricing', $product->id)->with('success', 'Product pricing updated successfully');
         }
-        $product->prices()->update(
+        $product->prices->update(
             [
                 'monthly' => $request->get('monthly'),
                 'quarterly' => $request->get('quarterly'),

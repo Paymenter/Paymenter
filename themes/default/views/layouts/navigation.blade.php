@@ -75,7 +75,7 @@
                                 <a href="/home" class="px-2 py-2 hover:bg-secondary-300 flex items-center gap-x-2 rounded"><i
                                         class="ri-layout-2-line"></i> {{ __('Client area') }}</a>
                                 {{-- <a href="#" class="px-2 py-2 hover:bg-secondary-300 flex items-center gap-x-2 rounded"><i class="ri-instance-line"></i> {{ __('Services') }}</a> --}}
-                                @if (Auth::user()->is_admin)
+                                @if (Auth::user()->has('ADMINISTRATOR'))
                                     <a href="{{ route('admin.index') }}"
                                         class="px-2 py-2 hover:bg-secondary-300 flex items-center gap-x-2 rounded"><i
                                             class="ri-key-2-line"></i> {{ __('Admin area') }}</a>

@@ -11,7 +11,7 @@ use App\Helpers\ExtensionHelper;
 use App\Http\Controllers\Controller;
 use App\Models\Extension;
 
-class InvoiceController extends Controller
+class InvoiceController extends ClientApiController
 {
     /**
      * Get all invoices of current user.
@@ -23,9 +23,7 @@ class InvoiceController extends Controller
         $user = $request->user();
 
         if (!$user->tokenCan('invoice:read')) {
-            return response()->json([
-                'error' => 'You do not have permission to read invoices.',
-            ], 403);
+            return $this->error('You do not have permission to read invoices.', 403);
         }
 
         $invoices = $user->invoices()->paginate(25);
@@ -60,7 +58,7 @@ class InvoiceController extends Controller
         }
 
         return response()->json([
-            'invoice' => $invoice,
+            'invoice' => new InvoiceResource::make($invoice),
             'products' => $products,
         ], 200);
     }
