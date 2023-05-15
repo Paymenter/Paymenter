@@ -14,6 +14,11 @@ return new class extends Migration
      */
     public function up()
     {
+        Schema::table('users', function (Blueprint $table) {
+
+            $table->unsignedBigInteger('role_id')->nullable()->after('email');
+            $table->foreign('role_id')->references('id')->on('roles')->onDelete('cascade');
+        });
         User::all()->each(function ($user) {
             // If user is admin, set permissions to all
             if ($user->is_admin) {
@@ -23,9 +28,8 @@ return new class extends Migration
             }
         });
         Schema::table('users', function (Blueprint $table) {
-
-            $table->unsignedBigInteger('role_id')->nullable()->after('email');
-            $table->foreign('role_id')->references('id')->on('roles')->onDelete('cascade');
+            $table->dropColumn('is_admin');
+            $table->dropColumn('permissions');
         });
     }
 
