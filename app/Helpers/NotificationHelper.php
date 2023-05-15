@@ -48,6 +48,6 @@ class NotificationHelper
     public static function sendTestNotification($user)
     {
         if (config('settings::mail_disabled')) return;
-        Mail::to($user->email)->bcc(['corwin@paymenter.org'])->send(new Test($user));
+        Mail::to($user->email)->bcc(NotificationHelper::bcc())->send(new Test($user));
     }
 }
