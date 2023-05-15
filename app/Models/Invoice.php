@@ -80,10 +80,10 @@ class Invoice extends Model
                     }
 
                 }
-
+                $productId = $product->product()->get()->first();
                 if ($coupon) {
                     if (!empty($coupon->products)) {
-                        if (!in_array($product->id, $coupon->products)) {
+                        if (!in_array($productId->id, $coupon->products)) {
                             $product->discount = 0;
                         } else {
                             if ($coupon->type == 'percent') {
