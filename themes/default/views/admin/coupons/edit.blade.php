@@ -84,6 +84,15 @@
                 <input type="date" name="end_date" id="end_date" value="{{ $coupon->end_date }}"
                     class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm dark:bg-darkmode rounded-md" />
             </div>
+            <div class="w-full">
+                <label class="block dark:text-darkmodetext" for="uses">
+                    {{ __('Max Uses (not required)') }}
+                </label>
+                <input
+                    class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm dark:bg-darkmode rounded-md"
+                    type="number" name="max_uses" id="max_uses" step="1" min="0"
+                    value="{{ old('max_uses') }}">
+            </div>
             <div class="mt-4">
                 <label for="products" class="block dark:text-darkmodetext">
                     {{ __('Assigned Products') }}
@@ -92,7 +101,8 @@
                 <select name="products[]" id="products" multiple
                     class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm dark:bg-darkmode rounded-md">
                     @foreach ($products as $product)
-                        <option value="{{ $product->id }}" @isset($coupon->products)
+                        <option value="{{ $product->id }}"
+                            @isset($coupon->products)
                             {{ in_array($product->id, $coupon->products) ? 'selected' : '' }} @endisset>
                             {{ $product->name }}
                         </option>

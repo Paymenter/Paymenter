@@ -69,8 +69,8 @@
                 </label>
                 <input
                     class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm dark:bg-darkmode rounded-md"
-                    type="number" name="uses" id="uses" step="1" min="0"
-                    value="{{ old('uses') }}">
+                    type="number" name="max_uses" id="max_uses" step="1" min="0"
+                    value="{{ old('max_uses') }}">
             </div>
             <div class="w-full">
                 <!-- Assigned products -->

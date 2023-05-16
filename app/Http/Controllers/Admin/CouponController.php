@@ -53,6 +53,7 @@ class CouponController extends Controller
             'type' => 'required|in:percent,fixed',
             'time' => 'required|in:lifetime,onetime',
             'products' => 'sometimes',
+            'max_uses' => 'sometimes|numeric',
             'start_date' => 'sometimes|date',
             'end_date' => 'sometimes|date|after:start_date',
         ]);
@@ -91,6 +92,7 @@ class CouponController extends Controller
             'type' => 'required|in:percent,fixed',
             'time' => 'required|in:lifetime,onetime',
             'products' => 'sometimes',
+            'max_uses' => 'sometimes|numeric',
             'start_date' => 'sometimes|date',
             'end_date' => 'sometimes|date|after:start_date',
         ]);
