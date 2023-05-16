@@ -50,7 +50,7 @@ class ProductController extends Controller
         $data = $request->validate([
             'name' => 'string|required',
             'description' => 'required|string|min:10',
-            'price' => 'float|required',
+            'price' => 'required',
             'category_id' => 'required|integer',
             'image' => 'image|mimes:jpeg,png,jpg,gif,svg|max:5242',
         ]);
@@ -64,7 +64,7 @@ class ProductController extends Controller
         $product = Product::create($data);
         ProductPrice::create([
             'product_id' => $product->id,
-            'monthly' => $re['price'],
+            'monthly' => $data['price'],
             'type' => $data['price'] > 0 ? 'monthly' : 'free',
         ]);
 
