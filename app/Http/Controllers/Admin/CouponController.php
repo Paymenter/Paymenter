@@ -2,51 +2,101 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Models\Coupon;
+use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use App\Helpers\ExtensionHelper;
 use App\Http\Controllers\Controller;
 use App\Models\Product;
+use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\ValidationException;
+use Illuminate\View\View;
 
 class CouponController extends Controller
 {
-    public function index(){
+
+    /**
+     * Display a listing of the coupons
+     *
+     * @return View
+     */
+    public function index(): View
+    {
         $coupons = Coupon::all();
         return view('admin.coupons.index', compact('coupons'));
     }
-    
-    public function create(){
+
+    /**
+     * Display the create form
+     *
+     * @return View
+     */
+    public function create(): View
+    {
         $products = Product::all();
         return view('admin.coupons.create', compact('products'));
     }
 
-    public function store(Request $request){
-        $request->validate([
-            'code' => 'required|unique:coupons',
+    /**
+     * Store a coupon
+     *
+     * @param Request $request
+     * @return RedirectResponse
+     * @throws ValidationException
+     */
+    public function store(Request $request): RedirectResponse
+    {
+        $validatedRequest = Validator::make($request->all(), [
+            'code' => 'required|unique:coupons,code',
             'value' => 'required|numeric',
             'type' => 'required|in:percent,fixed',
             'time' => 'required|in:lifetime,onetime',
+            'products' => 'sometimes',
+            'start_date' => 'sometimes|date',
+            'end_date' => 'sometimes|date|after:start_date',
         ]);
 
-        $coupon = Coupon::create($request->all());
+        $coupon = Coupon::create($validatedRequest->validated());
 
         return redirect()->route('admin.coupons.edit', $coupon->id)->with('success', 'Coupon created successfully!');
     }
 
-    public function edit(Coupon $coupon){
+
+    /**
+     * Display the edit form
+     *
+     * @param Coupon $coupon
+     * @return View
+     */
+    public function edit(Coupon $coupon): View
+    {
         $products = Product::all();
 
         return view('admin.coupons.edit', compact('coupon', 'products'));
     }
 
-    public function update(Request $request, Coupon $coupon){
-        $request->validate([
+    /**
+     * Update the coupon
+     *
+     * @param Request $request
+     * @param Coupon $coupon
+     * @return RedirectResponse
+     */
+    public function update(Request $request, Coupon $coupon): RedirectResponse
+    {
+        $validatedRequest = Validator::make($request->all(), [
             'code' => 'required|unique:coupons,code,'.$coupon->id,
             'value' => 'required|numeric',
             'type' => 'required|in:percent,fixed',
             'time' => 'required|in:lifetime,onetime',
+            'products' => 'sometimes',
+            'start_date' => 'sometimes|date',
+            'end_date' => 'sometimes|date|after:start_date',
         ]);
 
-        $coupon->update($request->all());
+        $coupon->update($validatedRequest->validated());
+
         if(!$request->has('products')){
             $coupon->products = [];
             $coupon->save();
@@ -56,7 +106,14 @@ class CouponController extends Controller
         return redirect()->route('admin.coupons.edit', $coupon->id)->with('success', 'Coupon updated successfully!');
     }
 
-    public function destroy(Coupon $coupon){
+    /**
+     * Delete the coupon
+     *
+     * @param Coupon $coupon
+     * @return RedirectResponse
+     */
+    public function destroy(Coupon $coupon): RedirectResponse
+    {
         $coupon->delete();
         return redirect()->route('admin.coupons')->with('success', 'Coupon deleted successfully!');
     }
