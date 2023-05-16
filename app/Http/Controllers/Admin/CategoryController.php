@@ -45,7 +45,7 @@ class CategoryController extends Controller
         $validatedRequest = Validator::make($request->all(),[
             'name' => 'required',
             'description' => 'required',
-            'slug' => 'required',
+            'slug' => 'required|unique:categories,slug',
         ]);
 
         Category::create($validatedRequest->validated());
@@ -77,7 +77,7 @@ class CategoryController extends Controller
         $validatedRequest = Validator::make($request->all(),[
             'name' => 'required',
             'description' => 'required',
-            'slug' => 'required',
+            'slug' => 'required|unique:categories,slug,'.$category->id,
         ]);
 
         $category->update($validatedRequest->validated());
