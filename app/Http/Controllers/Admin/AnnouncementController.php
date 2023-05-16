@@ -4,28 +4,47 @@ namespace App\Http\Controllers\Admin;
 
 use App\Models\Announcement;
 use App\Http\Controllers\Controller;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\View\View;
 
 class AnnouncementController extends Controller
 {
-    public function index()
+
+    /**
+     * Display a listing of the announcements
+     *
+     * @return View
+     */
+    public function index(): View
     {
         $announcements = Announcement::all();
 
         return view('admin.announcements.index', compact('announcements'));
     }
 
-    public function create()
+    /**
+     * Display creating form
+     *
+     * @return View
+     */
+    public function create(): View
     {
         return view('admin.announcements.create');
     }
 
-    public function store(Request $request)
+    /**
+     * Store a new announcement
+     *
+     * @param Request $request
+     * @return RedirectResponse
+     */
+    public function store(Request $request): RedirectResponse
     {
         $data = request()->validate([
-            'title' => 'required',
+            'title' => 'required|string|min:4',
             'announcement' => 'required',
-            'published' => 'required',
+            'published' => 'required|boolean',
         ]);
 
         Announcement::create($data);
