@@ -19,6 +19,8 @@ return new class extends Migration
             $table->unsignedBigInteger('role_id')->nullable()->after('email');
             $table->foreign('role_id')->references('id')->on('roles')->onDelete('cascade');
         });
+        Role::create(['name' => 'admin', 'permissions' => 0]);
+        Role::create(['name' => 'user', 'permissions' => 0]);
         User::all()->each(function ($user) {
             // If user is admin, set permissions to all
             if ($user->is_admin) {
@@ -26,6 +28,7 @@ return new class extends Migration
             } else {
                 $user->role_id = 2;
             }
+            $user->save();
         });
         Schema::table('users', function (Blueprint $table) {
             $table->dropColumn('is_admin');
@@ -43,6 +46,9 @@ return new class extends Migration
         Schema::table('users', function (Blueprint $table) {
             $table->boolean('is_admin')->default(false);
             $table->json('permissions')->nullable();
+            $table->dropForeign(['role_id']);
+            $table->dropColumn('role_id');
         });
+        
     }
 };

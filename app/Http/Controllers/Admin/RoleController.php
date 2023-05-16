@@ -54,9 +54,11 @@ class RoleController extends Controller
             'name' => 'required|string|max:255',
             'permissions' => 'required|array',
         ]);
+        $permissions = $request->permissions;
+        $permissions[] = 'ADMINISTRATOR'; 
         Role::create([
             'name' => $request->name,
-            'permissions' => Permissions::create(array_push($request->permissions, 'ADMINISTRATOR')),
+            'permissions' => Permissions::create($permissions),
         ]);
         return redirect()->route('admin.roles')->with('success', 'Role created successfully');
     }
@@ -72,9 +74,11 @@ class RoleController extends Controller
             'name' => 'required|string|max:255',
             'permissions' => 'required|array',
         ]);
+        $permissions = $request->permissions;
+        $permissions[] = 'ADMINISTRATOR'; 
         $role->update([
             'name' => $request->name,
-            'permissions' => Permissions::create(array_push($request->permissions, 'ADMINISTRATOR')),
+            'permissions' => Permissions::create($permissions),
         ]);
         return redirect()->route('admin.roles')->with('success', 'Role updated successfully');
     }

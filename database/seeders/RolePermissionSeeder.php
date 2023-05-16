@@ -28,12 +28,14 @@ class RolePermissionSeeder extends Seeder
         } else {
             $admin = Role::where('name', 'admin')->first();
             $admin->permissions = Permissions::create($permissions);
+            $admin->save();
         }
         if (!Role::where('name', 'user')->exists()) {
             Role::create(['name' => 'user', 'permissions' => 0, 'id' => 2]);
         } else {
             $user = Role::where('name', 'user')->first();
             $user->permissions = 0;
+            $user->save();         
         }
         User::all()->each(function ($user) {
             if(!$user->role_id) {

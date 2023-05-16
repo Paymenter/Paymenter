@@ -184,84 +184,15 @@
 
                         <hr class="my-6 border-b-1 border-gray-300 dark:border-gray-600" />
 
-                        <!-- Admin toggle -->
-                        <div class="mb-3">
-                            <input type="checkbox" class="form-input w-fit peer " placeholder=" " name="admin"
-                                id="admin" {{ $user->is_admin ? 'checked' : '' }} onclick="toggleAdmin()">
-
-                            <label for="admin" class="form-label" style="position: unset;">
-                                {{ __('Admin') }}
-                            </label>
-                            <h3 class="text-lg text-gray-500 dark:text-darkmodetext">
-                                {{ __('Give this user admin permissions') }}
-                            </h3>
-                            <p class="text-sm text-gray-500 dark:text-darkmodetext">
-                                {{ __('Admins have access to all areas of the application or can be restricted to specific areas.') }}
-                                <br>
-                                {{ __('If you leave the permissions blank, the user will have access to all areas.') }}
-                            </p>
-                        </div>
-                        <p class="text-lg text-darkmodetext bg-logo col-span-3 rounded-sm p-1 items-center"
-                            onclick="openPermissions()" id="openPerms">
-                            {{ __('Permissions') }}
-                            <svg class="w-7 h-7 float-right" fill="none" stroke-linecap="round"
-                                stroke-linejoin="round" stroke-width="2" stroke="currentColor"
-                                id="permissionsToggleSVG" viewBox="0 0 24 24">
-                                <path d="M19 9l-7 7-7-7">
-                                </path>
-                            </svg>
-                        </p>
-                        <script>
-                            if (!{{ $user->is_admin }}) {
-                                document.getElementById("openPerms").style.display = "none";
-                            }
-
-                            function toggleAdmin() {
-                                if (document.getElementById("admin").checked) {
-                                    document.getElementById("openPerms").style.display = "block";
-                                } else {
-                                    document.getElementById("openPerms").style.display = "none";
-                                    document.querySelectorAll(".permissions").forEach(function(element) {
-                                        element.checked = false;
-                                    });
-                                    document.getElementById("permissionsToggle").style.display = "none";
-                                    document.getElementById("permissionsToggleSVG").style.transform = "rotate(0deg)";
-                                }
-                            }
-
-                            function openPermissions() {
-                                var x = document.getElementById("permissionsToggle");
-                                if (x.style.display === "none") {
-                                    x.style.display = "grid";
-                                    // Rotate the arrow
-                                    document.getElementById("permissionsToggleSVG").style.transform = "rotate(180deg)";
-                                } else {
-                                    x.style.display = "none";
-                                    document.getElementById("permissionsToggleSVG").style.transform = "rotate(0deg)";
-                                }
-                            }
-                        </script>
-                        <div class="grid grid-cols-3 gap-4" id="permissionsToggle" style="display: none;">
-                            @php
-                                $idk = '';
-                            @endphp
-                            @foreach ($permissions as $permission)
-                                @if ($idk != explode('.', $permission)[1])
-                                    @php $idk = explode('.', $permission)[1]; @endphp
-                                    <h3 class="col-span-3 text-lg font-medium text-gray-900 dark:text-darkmodetext">
-                                        {{ ucfirst(explode('.', str_replace('.', ' ', str_replace('admin.', '', $idk)))[0]) }}
-                                    </h3>
-                                @endif
-                                <div class="relative">
-                                    <input type="checkbox" class="form-input w-fit peer permissions" placeholder=" "
-                                        name="permissions[]" id="{{ $permission }}" value="{{ $permission }}"
-                                        {{ $user->has($permission) ? 'checked' : '' }}>
-                                    <label for="{{ $permission }}" class="form-label" style="position: unset;">
-                                        {{ str_replace('.', ' ', str_replace('admin.', '', $permission)) }}
-                                    </label>
-                                </div>
+                        <x-input type="select" name="role" id="role" label="{{ __('Role(admin)') }}">
+                            @foreach ($roles as $role)
+                                <option value="{{ $role->id }}" @if ($user->role->id == $role->id) selected @endif>
+                                    {{ $role->name }} 
+                                    @if($role->id == 2) {{ __('(Default, Client)') }} @endif
+                                    @if($role->id == 1) {{ __('(Full Administrator)') }} @endif
+                                </option>
                             @endforeach
-                        </div>
+                        </x-input>
                         <hr class="my-6 border-b-1 border-gray-300 dark:border-gray-600" />
                         <div class="flex items-end justify-end mt-4">
                             <button type="submit" class="form-submit">
