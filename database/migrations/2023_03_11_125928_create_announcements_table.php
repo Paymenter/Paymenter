@@ -17,7 +17,7 @@ return new class extends Migration
             $table->id();
             $table->string('title');
             $table->text('announcement');
-            $table->boolean('published')->default(true);
+            $table->boolean('published')->default(false);
             $table->timestamps();
         });
     }
