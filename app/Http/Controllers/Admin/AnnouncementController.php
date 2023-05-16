@@ -45,7 +45,7 @@ class AnnouncementController extends Controller
         $validatedRequest = Validator::make($request->all(), [
             'title' => 'required|string|min:4',
             'announcement' => 'string|required|min:4',
-            'published' => 'sometimes|boolean',
+            'published' => 'required',
         ]);
 
         Announcement::create($validatedRequest->validated());
@@ -76,7 +76,7 @@ class AnnouncementController extends Controller
         $validatedRequest = Validator::make($request->all(), [
             'title' => 'required|string|min:4',
             'announcement' => 'string|required|min:4',
-            'published' => 'sometimes|boolean',
+            'published' => 'sometimes',
         ]);
 
         $announcement->update($validatedRequest->validate());
