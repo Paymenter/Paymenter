@@ -4,65 +4,93 @@ namespace App\Http\Controllers\Admin;
 
 use App\Models\Announcement;
 use App\Http\Controllers\Controller;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\View\View;
 
 class AnnouncementController extends Controller
 {
-    public function index()
+
+    /**
+     * Display a listing of the announcements
+     *
+     * @return View
+     */
+    public function index(): View
     {
         $announcements = Announcement::all();
 
         return view('admin.announcements.index', compact('announcements'));
     }
 
-    public function create()
+    /**
+     * Display creating form
+     *
+     * @return View
+     */
+    public function create(): View
     {
         return view('admin.announcements.create');
     }
 
-    public function store(Request $request)
+    /**
+     * Store a new announcement
+     *
+     * @param Request $request
+     * @return RedirectResponse
+     */
+    public function store(Request $request): RedirectResponse
     {
-        $data = request()->validate([
-            'title' => 'required',
-            'announcement' => 'required',
+        $validatedRequest = Validator::make($request->all(), [
+            'title' => 'required|string|min:4',
+            'announcement' => 'string|required|min:4',
             'published' => 'required',
         ]);
 
-        Announcement::create($data);
-
-        if ($request->has('published')) {
-            $data['published'] = true;
-        } else {
-            $data['published'] = false;
-        }
+        Announcement::create($validatedRequest->validated());
 
         return redirect()->route('admin.announcements.edit', Announcement::latest()->first())->with('success', 'Announcement created successfully!');
     }
 
-    public function edit(Announcement $announcement)
+    /**
+     * Display the announcement edit form
+     *
+     * @param Announcement $announcement
+     * @return View
+     */
+    public function edit(Announcement $announcement): View
     {
         return view('admin.announcements.edit', compact('announcement'));
     }
 
-    public function update(Announcement $announcement, Request $request)
+    /**
+     * Update the announcement
+     *
+     * @param Announcement $announcement
+     * @param Request $request
+     * @return RedirectResponse
+     */
+    public function update(Announcement $announcement, Request $request): RedirectResponse
     {
-        $data = request()->validate([
-            'title' => 'required|between:3,255',
-            'announcement' => 'required',
+        $validatedRequest = Validator::make($request->all(), [
+            'title' => 'required|string|min:4',
+            'announcement' => 'string|required|min:4',
+            'published' => 'sometimes',
         ]);
 
-        if($request->has('published')) {
-            $data['published'] = true;
-        } else {
-            $data['published'] = false;
-        }
-
-        $announcement->update($data);
+        $announcement->update($validatedRequest->validate());
 
         return redirect()->route('admin.announcements')->with('success', 'Announcement updated successfully!');
     }
 
-    public function destroy(Announcement $announcement)
+    /**
+     * Delete the announcement
+     *
+     * @param Announcement $announcement
+     * @return RedirectResponse
+     */
+    public function destroy(Announcement $announcement): RedirectResponse
     {
         $announcement->delete();
 

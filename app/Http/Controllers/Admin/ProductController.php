@@ -5,33 +5,52 @@ namespace App\Http\Controllers\Admin;
 use App\Models\Product;
 use App\Models\Category;
 use App\Models\Extension;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use App\Models\ProductSetting;
 use App\Http\Controllers\Controller;
 use App\Models\ProductPrice;
+use Illuminate\View\View;
 
 class ProductController extends Controller
 {
-    public function index()
+
+    /**
+     *  Display a listing of the view
+     *
+     * @return View
+     */
+    public function index(): View
     {
         $categories = Category::all();
 
         return view('admin.products.index', compact('categories'));
     }
 
-    public function create()
+    /**
+     * Display the creating form
+     *
+     * @return View
+     */
+    public function create(): View
     {
         $categories = Category::all();
 
         return view('admin.products.create', compact('categories'));
     }
 
-    public function store(Request $request)
+    /**
+     * Store a new product
+     *
+     * @param Request $request
+     * @return RedirectResponse
+     */
+    public function store(Request $request): RedirectResponse
     {
-        $data = request()->validate([
-            'name' => 'required',
+        $data = $request->validate([
+            'name' => 'string|required',
             'description' => 'required|string|min:10',
-            'price' => 'required',
+            'price' => 'float|required',
             'category_id' => 'required|integer',
             'image' => 'image|mimes:jpeg,png,jpg,gif,svg|max:5242',
         ]);
@@ -45,7 +64,7 @@ class ProductController extends Controller
         $product = Product::create($data);
         ProductPrice::create([
             'product_id' => $product->id,
-            'monthly' => $data['price'],
+            'monthly' => $re['price'],
             'type' => $data['price'] > 0 ? 'monthly' : 'free',
         ]);
 
@@ -296,7 +315,7 @@ class ProductController extends Controller
         }
         if ($product->server_id != $server->id)
             $product->update(['server_id' => $server->id]);
-            
+
         include_once base_path('app/Extensions/Servers/' . $server->name . '/index.php');
         $extension = new \stdClass();
         $function = $server->name . '_getProductConfig';
