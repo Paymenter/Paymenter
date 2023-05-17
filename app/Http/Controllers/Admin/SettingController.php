@@ -18,6 +18,8 @@ class SettingController extends Controller
         foreach (glob(Theme::getViewPaths()[1] . '/admin/settings/settings/*.blade.php') as $filename) {
             $tabs[] = 'admin.settings.settings.' . basename($filename, '.blade.php');
         }
+        unset($tabs[array_search('admin.settings.settings.general', $tabs)]);
+        array_unshift($tabs, 'admin.settings.settings.general');
         $themes = array_diff(scandir(base_path('themes')), ['..', '.']);
         $languages = array_diff(scandir(base_path('lang')), ['..', '.']);
         foreach ($languages as $key => $language) {

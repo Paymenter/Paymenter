@@ -8,6 +8,7 @@ use App\Helpers\ExtensionHelper;
 use App\Helpers\NotificationHelper;
 use App\Mail\Invoices\NewInvoice;
 use App\Models\OrderProduct;
+use App\Models\Setting;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 
@@ -55,7 +56,7 @@ class CronJob extends Command
         $orders = OrderProduct::where('expiry_date', '<', now()->addDays(7))->where('status', '!=', 'cancelled')->get();
         $invoiceProcessed = 0;
         foreach ($orders as $order) {
-            if($order->billing_cycle == 'free' || $order->billing_cycle == 'one-time') {
+            if ($order->billing_cycle == 'free' || $order->billing_cycle == 'one-time') {
                 continue;
             }
             // Get all InvoiceItems for this product
@@ -106,6 +107,7 @@ class CronJob extends Command
         }
         $this->info('Sended Number of Invoices: ' . $invoiceProcessed);
         $this->info('Cron Job Finished');
+        Setting::updateOrCreate(['key' => 'cronjob_last_run'], ['value' => now()]);
 
         return Command::SUCCESS;
     }
