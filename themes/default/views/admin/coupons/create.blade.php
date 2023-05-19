@@ -103,8 +103,10 @@
                     type="date" name="end_date" id="end_date" value="{{ old('end_date') }}">
             </div>
         </div>
-        <button type="submit" class="form-submit float-right m-4">
-            {{ __('Create') }}
-        </button>
+        <div class="flex items-center justify-end mt-4">
+            <button type="submit" class="inline-flex justify-center w-max float-right button button-primary">
+                {{ __('Save') }}
+            </button>
+        </div>
     </form>
 </x-admin-layout>

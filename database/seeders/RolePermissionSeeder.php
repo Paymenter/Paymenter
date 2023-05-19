@@ -35,10 +35,10 @@ class RolePermissionSeeder extends Seeder
         } else {
             $user = Role::where('name', 'user')->first();
             $user->permissions = 0;
-            $user->save();         
+            $user->save();
         }
         User::all()->each(function ($user) {
-            if(!$user->role_id) {
+            if (!$user->role_id) {
                 $user->role_id = 2;
             }
             $user->save();

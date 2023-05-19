@@ -1,21 +1,5 @@
-<x-admin-layout>
-    <x-slot name="title">
-        {{ __('Clients') }}
-    </x-slot>
-    <div class="p-6 bg-white dark:bg-secondary-100 sm:px-20 ">
-        <div class="mt-8 text-2xl dark:text-darkmodetext">
-            {{ __('All clients') }}
-        </div>
-        <div class="mt-6 text-gray-500 dark:text-darkmodetext">
-            {{ __('Here you can see all your clients.') }}
-        </div>
-        <div class="flex justify-end mt-4 mr-4">
-            <a href="{{ route('admin.clients.create') }}"
-                class="px-4 py-2 font-bold text-white transition bg-blue-500 rounded delay-400 dark:text-darkmodetext dark:bg-darkbutton dark:hover:bg-logo hover:bg-blue-700">
-                {{ __('Create client') }}
-            </a>
-        </div>
-    </div>
+<x-admin-layout title="Configurable Options">
+
     <div class="p-6">
         <!-- align right a button to create a new client -->
         <table id="clientdatatable" class="table-auto w-full">
@@ -39,23 +23,23 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach ($users as $user)
+                @foreach ($configurableGroups as $configurableGroup)
                     <tr>
                         <td>
-                            {{ $user->id }}
+                            {{ $configurableGroup->id }}
                         </td>
                         <td>
-                            {{ $user->name }}
+                            {{ $configurableGroup->name }}
                         </td>
                         <td>
-                            {{ $user->email }}
+                            {{ $configurableGroup->description }}
                         </td>
                         <td>
-                            {{ $user->created_at }}
+                            {{ $configurableGroup->created_at }}
                         </td>
                         <td>
-                            <a href="{{ route('admin.clients.edit', $user->id) }}"
-                                class="form-submit">{{ __('Edit/View') }}</a>
+                            <a href="{{ route('admin.configurable-options.edit', $configurableGroup->id) }}"
+                                class="button button-primary">{{ __('Edit/View') }}</a>
                         </td>
                     </tr>
                 @endforeach

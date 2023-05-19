@@ -33,7 +33,7 @@
                     <td>{{ $order->created_at }}</td>
                     <td>{{ $order->updated_at }}</td>
                     <td>
-                        <a href="{{ route('admin.orders.show', $order->id) }}" class="form-submit">
+                        <a href="{{ route('admin.orders.show', $order->id) }}" class="button button-primary">
                             {{ __('Show') }}
                         </a>
                     </td>

@@ -1,8 +1,8 @@
 <x-app-layout clients title="{{ __('Invoice') }}">
     <section class="py-20">
-        <div class="max-w-5xl mx-auto py-16 dark:bg-darkmode2 bg-white">
+        <div class="max-w-5xl mx-auto py-16 dark:bg-secondary-100 bg-white">
             <article class="overflow-hidden">
-                <div class="dark:bg-darkmode2 bg-[white] rounded-b-md">
+                <div class="dark:bg-secondary-100 bg-[white] rounded-b-md">
                     <div class="p-9">
                         <div class="space-y-6 text-slate-700">
                             <x-application-logo />
@@ -115,7 +115,7 @@
                                                 </div>
                                                 <div class="dark:text-darkmodetext mt-0.5 text-slate-500 sm:hidden">
                                                     {{ __('1 unit at') }}
-                                                    {{ $currency_sign }}{{ number_format((float) $product->price, 2, '.', '') }}
+                                                    {{ $currency_sign }}{{ number_format((float) $product->basePrice, 2, '.', '') }}
                                                 </div>
                                             </td>
                                             <td

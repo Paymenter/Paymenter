@@ -110,9 +110,8 @@
                 </select>
             </div>
         </div>
-        <div class="mt-4">
-            <button type="submit"
-                class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+        <div class="flex items-center justify-end mt-4">
+            <button type="submit" class="inline-flex justify-center w-max float-right button button-primary">
                 {{ __('Save') }}
             </button>
         </div>

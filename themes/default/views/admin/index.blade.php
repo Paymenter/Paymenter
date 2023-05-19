@@ -12,7 +12,7 @@
                 <div class="grid gap-6 overflow-hidden grid-cols-1 lg:grid-cols-3">
                     <!-- show ticketclosed, tickets, orders -->
                     <div
-                        class="lg:col-span-2 p-7 bg-white border-2 dark:bg-darkmode2 dark:border-darkmodehover rounded-xl">
+                        class="lg:col-span-2 p-7 bg-white border-2 dark:bg-secondary-100 dark:border-darkmodehover rounded-xl">
                         <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 pb-10">
                             <div class="p-4 rounded-md dark:bg-darkmode bg-normal flex">
                                 <i class="ri-shopping-cart-2-line pl-2 pr-4 my-auto text-blue-600 text-4xl"></i>
@@ -45,7 +45,7 @@
                         </div>
                         <canvas id="myChart" class="w-full max-h-[400px]"></canvas>
                     </div>
-                    <div class="p-7 bg-white border-2 dark:bg-darkmode2 dark:border-darkmodehover rounded-xl">
+                    <div class="p-7 bg-white border-2 dark:bg-secondary-100 dark:border-darkmodehover rounded-xl">
                         <h2 class="text-xl font-bold mb-2 dark:text-darkmodetext">Support</h2>
                         <div class="grid grid-cols-1 xl:grid-cols-3 gap-4">
                             <div class="flex">
@@ -115,7 +115,7 @@
                             @endforeach
                         </div>
                     </div>
-                    <div class="p-7 bg-white border-2 dark:bg-darkmode2 dark:border-darkmodehover rounded-xl">
+                    <div class="p-7 bg-white border-2 dark:bg-secondary-100 dark:border-darkmodehover rounded-xl">
                         <h2 class="text-xl font-bold dark:text-darkmodetext">New Users</h2>
                         <canvas id="chartBar"></canvas>
                         <!-- Required chart.js -->

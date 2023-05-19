@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Setting;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
@@ -37,7 +38,10 @@ class SettingSeeder extends Seeder
             ['key' => 'snow', 'value' => 0],
             ['key' => 'allow_auto_log', 'value' => 0],
         ];
-
-        DB::table('settings')->insert($settings);
+        foreach ($settings as $setting) {
+            $setting['created_at'] = now();
+            $setting['updated_at'] = now();
+        }
+        Setting::insertOrIgnore($settings);
     }
 }

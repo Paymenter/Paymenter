@@ -4,7 +4,7 @@
     </x-slot>
     <h1 class="text-2xl font-bold dark:text-darkmodetext text-center">{{ __('Create Ticket') }}</h1>
 
-    <div class="dark:bg-darkmode2 bg-gray-200 bg-opacity-25 grid grid-cols-1">
+    <div class="dark:bg-secondary-100 bg-gray-200 bg-opacity-25 grid grid-cols-1">
         <div class="p-6">
             <div class="flex items-center">
                 <div class="dark:text-darkmodetext ml-4 text-lg text-gray-600 leading-7 font-semibold">
@@ -64,7 +64,7 @@
                 </div>
 
                 <div class="flex items-center justify-end mt-4">
-                    <button id="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                    <button type="submit" class="inline-flex justify-center w-max float-right button button-primary">
                         {{ __('Create') }}
                     </button>
                 </div>

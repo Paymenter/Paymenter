@@ -7,7 +7,7 @@
         </div>
 
         <div
-            class="w-full px-6 py-4 mt-6 overflow-hidden bg-white shadow-md dark:bg-darkmode2 sm:max-w-md sm:rounded-lg">
+            class="w-full px-6 py-4 mt-6 overflow-hidden bg-white shadow-md dark:bg-secondary-100 sm:max-w-md sm:rounded-lg">
             <div class="mb-4 text-sm text-gray-600 dark:text-darkmodetext">
                 {{ __('This is a secure area of the application. Please confirm your password before continuing.') }}
             </div>

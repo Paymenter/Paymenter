@@ -28,7 +28,7 @@
                 @if ($category->products->isNotEmpty())
                     <table class="min-w-full divide-y divide-gray-200" id="{{ $category->id }}">
 
-                        <thead class="bg-gray-50 dark:bg-darkmode2">
+                        <thead class="bg-gray-50 dark:bg-secondary-100">
                             <tr>
                                 <th>
                                     {{ $category->name }}</th>

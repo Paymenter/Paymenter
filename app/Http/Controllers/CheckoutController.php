@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Helpers\ExtensionHelper;
 use App\Helpers\NotificationHelper;
 use App\Models\{Extension, Invoice, OrderProduct, OrderProductConfig, Order, Product, User, Coupon, InvoiceItem};
+use Illuminate\Support\Arr;
 
 class CheckoutController extends Controller
 {
@@ -86,10 +87,9 @@ class CheckoutController extends Controller
             }
             if ($product->quantity != 0) {
                 ++$cart[$product->id]->quantity;
-                session()->put('cart', $cart);
-            } else {
-                session()->put('cart', $cart);
             }
+            session()->put('cart', $cart);
+
 
             return redirect()->back()->with('success', 'Product added to cart successfully!');
         } else {
@@ -119,8 +119,32 @@ class CheckoutController extends Controller
         }
         if (!isset($userConfig)) $userConfig = array();
         $prices = $product->prices()->get()->first();
+        $customConfig = $product->configurableGroups();
+        // If billing_cycle isn't set, set it to the lowest billing cycle available
+        $billing_cycle = $request->input('billing_cycle') ?? 'monthly';
+        if (!in_array($billing_cycle, ['monthly', 'quarterly', 'semi_annually', 'annually', 'biennially', 'triennially'])) {
+            $billing_cycle = 'monthly';
+        }
+        if ($billing_cycle == 'monthly' && !$prices->monthly) {
+            $billing_cycle = 'quarterly';
+        }
+        if ($billing_cycle == 'quarterly' && !$prices->quarterly) {
+            $billing_cycle = 'semi_annually';
+        }
+        if ($billing_cycle == 'semi_annually' && !$prices->semi_annually) {
+            $billing_cycle = 'annually';
+        }
+        if ($billing_cycle == 'annually' && !$prices->annually) {
+            $billing_cycle = 'biennially';
+        }
+        if ($billing_cycle == 'biennially' && !$prices->biennially) {
+            $billing_cycle = 'triennially';
+        }
+        if ($billing_cycle == 'triennially' && !$prices->triennially) {
+            $billing_cycle = 'monthly';
+        }
 
-        return view('checkout.config', compact('product', 'userConfig', 'prices'));
+        return view('checkout.config', compact('product', 'userConfig', 'prices', 'customConfig', 'billing_cycle'));
     }
 
     public function configPost(Request $request, Product $product)
@@ -158,9 +182,40 @@ class CheckoutController extends Controller
             $product->price = 0;
         }
         $product->quantity = 1;
+        $configItems = [];
+        foreach ($product->configurableGroups() as $config) {
+            $configItemsGet = $config->configurableOptions()->get();
+            foreach ($configItemsGet as $configItem) {
+                if (!$request->has($configItem->id)) {
+                    return redirect()->back()->with('error', $configItem->name . ' is required');
+                }
+                $configItems[$configItem->id] = $request->input($configItem->id);
+                $configItemInput = $configItem->configurableOptionInputs()->get();
+                foreach ($configItemInput as $configItemInput) {
+                    if ($configItem->type == 'quantity') {
+                        if (!$request->input($configItem->id)) continue;
+                    }
+                    if ($configItemInput->id != $request->input($configItem->id) && ($configItem->type == 'select' || $configItem->type == 'radio')) continue;
+                    $configItemPrice = $configItemInput->configurableOptionInputPrice()->get()->first();
+                    if ($configItemPrice) {
+                        if ($configItem->type == 'quantity') {
+                            $product->price += $configItemPrice->{$product->billing_cycle} * $request->input($configItem->id);
+                        } else {
+                            $product->price += $configItemPrice->{$product->billing_cycle};
+                        }
+                        $product->setup_fee += $configItemPrice->{$product->billing_cycle . '_setup'};
+                    }
+                }
+            }
+        }
+        $product->configurableOptions = $configItems;
         $cart = session()->get('cart');
         if (\Illuminate\Support\Arr::has($cart, $product->id)) {
-            ++$cart[$product->id]->quantity;
+            if ($product->quantity != 0) {
+                ++$cart[$product->id]->quantity;
+            } else {
+                $cart[$product->id] = $product;
+            }
             session()->put('cart', $cart);
 
             return redirect()->route('checkout.index')->with('success', 'Product added to cart successfully!');
@@ -178,7 +233,7 @@ class CheckoutController extends Controller
         if (!$cart) {
             return redirect()->back()->with('error', 'Cart is empty');
         }
-        if($request->has('tos') && config('settings::tos') == 1) {
+        if ($request->has('tos') && config('settings::tos') == 1) {
             $tos = $request->input('tos');
             if ($tos == 'on') {
                 $tos = true;
@@ -188,7 +243,7 @@ class CheckoutController extends Controller
             if (!$tos) {
                 return redirect()->back()->with('error', 'You must agree to the terms of service');
             }
-        } else if(config('settings::tos') == 1) {
+        } else if (config('settings::tos') == 1) {
             return redirect()->back()->with('error', 'You must agree to the terms of service');
         }
         $couponId = session('coupon');
@@ -258,7 +313,8 @@ class CheckoutController extends Controller
         $invoice->save();
         foreach ($products as $product) {
             if ($product->allow_quantity == 1)
-                for ($i = 0;
+                for (
+                    $i = 0;
                     $i < $product->quantity;
                     ++$i
                 ) {
@@ -268,7 +324,7 @@ class CheckoutController extends Controller
                 $this->createOrderProduct($order, $product, $invoice);
             else
                 $this->createOrderProduct($order, $product, $invoice);
-            if($product->setup_fee > 0) {
+            if ($product->setup_fee > 0) {
                 $invoiceItem = new InvoiceItem();
                 $invoiceItem->invoice_id = $invoice->id;
                 $invoiceItem->description = $product->name . ' Setup Fee';
@@ -293,9 +349,9 @@ class CheckoutController extends Controller
             }
         }
         if ($total != 0) {
-            $products = $invoice->getItemsWithProducts()->products; 
+            $products = $invoice->getItemsWithProducts()->products;
             $total = $invoice->getItemsWithProducts()->total;
-            if($total == 0) {
+            if ($total == 0) {
                 $invoice->status = 'paid';
                 $invoice->save();
             }
@@ -395,7 +451,7 @@ class CheckoutController extends Controller
         $request->validate([
             'quantity' => 'required|numeric|min:1',
         ]);
-        if(!$product->stock_enabled) {
+        if (!$product->stock_enabled) {
             return redirect()->back()->with('error', 'Product is out of stock');
         }
         $cart = session()->get('cart');

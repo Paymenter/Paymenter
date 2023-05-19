@@ -112,4 +112,18 @@ Route::group(['prefix' => 'admin', 'middleware' => 'permission:ADMINISTRATOR'], 
         Route::post('/{role}/edit', [App\Http\Controllers\Admin\RoleController::class, 'update'])->middleware(['permission:EDIT_ROLES'])->name('admin.roles.update');
         Route::delete('/{role}/delete', [App\Http\Controllers\Admin\RoleController::class, 'destroy'])->middleware(['permission:DELETE_ROLES'])->name('admin.roles.delete');
     });
+
+    Route::group(['prefix' => 'configurable-options'], function() {
+        Route::get('/', [App\Http\Controllers\Admin\ConfigurableOptionController::class, 'index'])->middleware(['permission:VIEW_CONFIGURABLE_OPTIONS'])->name('admin.configurable-options');
+        Route::get('/create', [App\Http\Controllers\Admin\ConfigurableOptionController::class, 'create'])->middleware(['permission:CREATE_CONFIGURABLE_OPTIONS'])->name('admin.configurable-options.create');
+        Route::post('/create', [App\Http\Controllers\Admin\ConfigurableOptionController::class, 'store'])->middleware(['permission:CREATE_CONFIGURABLE_OPTIONS'])->name('admin.configurable-options.store');
+        Route::get('/{configurableOptionGroup}/edit', [App\Http\Controllers\Admin\ConfigurableOptionController::class, 'edit'])->middleware(['permission:VIEW_CONFIGURABLE_OPTIONS'])->name('admin.configurable-options.edit');
+        Route::post('/{configurableOptionGroup}/edit', [App\Http\Controllers\Admin\ConfigurableOptionController::class, 'update'])->middleware(['permission:EDIT_CONFIGURABLE_OPTIONS'])->name('admin.configurable-options.update');
+
+        Route::post('/{configurableOptionGroup}/options/create', [App\Http\Controllers\Admin\ConfigurableOptionController::class, 'createOption'])->middleware(['permission:CREATE_CONFIGURABLE_OPTIONS'])->name('admin.configurable-options.options.create');
+        Route::post('/{configurableOptionGroup}/options/{configurableOption}/edit', [App\Http\Controllers\Admin\ConfigurableOptionController::class, 'updateOption'])->middleware(['permission:EDIT_CONFIGURABLE_OPTIONS'])->name('admin.configurable-options.options.update');
+        Route::post('/{configurableOptionGroup}/options/{configurableOption}/create', [App\Http\Controllers\Admin\ConfigurableOptionController::class, 'createOptionInput'])->middleware(['permission:CREATE_CONFIGURABLE_OPTIONS'])->name('admin.configurable-options.options.inputs.create');
+
+
+    });
 });

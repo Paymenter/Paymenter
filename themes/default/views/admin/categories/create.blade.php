@@ -15,9 +15,8 @@
                     <label class="block dark:text-darkmodetext text-sm font-medium text-gray-700">
                         {{ __('Name') }}
                     </label>
-                    <input id="name" type="text"
-                        class="form-input w-full @error('name') border-red-500 @enderror" name="name"
-                        value="{{ old('name') }}" required autocomplete="name" autofocus>
+                    <input id="name" type="text" class="form-input w-full @error('name') border-red-500 @enderror"
+                        name="name" value="{{ old('name') }}" required autocomplete="name" autofocus>
                 </div>
                 <div class="mt-4">
                     <label class="dark:text-darkmodetext block text-sm font-medium text-gray-700">
@@ -50,7 +49,7 @@
                     });
                 </script>
                 <div class="flex items-center justify-end mt-4">
-                    <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                    <button type="submit" class="inline-flex justify-center w-max float-right button button-primary">
                         {{ __('Create') }}
                     </button>
                 </div>

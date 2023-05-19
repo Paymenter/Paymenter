@@ -13,14 +13,14 @@
     <div class="flex flex-wrap">
         <div class="w-full">
             <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-600" id="categories">
-                <thead class="bg-gray-50 dark:bg-darkmode2 ">
+                <thead class="bg-gray-50 dark:bg-secondary-100 ">
                     <tr>
                         <th>{{ __('Name') }}</th>
                         <th>{{ __('Slug') }}</th>
                         <th>{{ __('Actions') }}</th>
                     </tr>
                 </thead>
-                <tbody class="bg-white dark:bg-darkmode2 divide-y divide-gray-200">
+                <tbody class="bg-white dark:bg-secondary-100 divide-y divide-gray-200">
                     @foreach ($categories as $category)
                         <tr>
                             <td>

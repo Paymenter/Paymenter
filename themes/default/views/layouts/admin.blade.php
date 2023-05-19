@@ -53,7 +53,7 @@
             --secondary-700: {{ config('settings::theme:secondary-700', '#353741') }};
             --secondary-800: {{ config('settings::theme:secondary-800', '#1c1c20') }};
             --secondary-900: {{ config('settings::theme:secondary-900', '#000000') }};
-       
+
             --primary-50: {{ config('settings::theme:primary-50', '#EDF0FF') }};
             --primary-100: {{ config('settings::theme:primary-100', '#C6DBFF') }};
             --primary-200: {{ config('settings::theme:primary-200', '#9BBEFB') }};
@@ -76,8 +76,8 @@
     </style>
 </head>
 
-<body class="font-sans antialiased">
-    <div id="app" class="min-h-screen bg-gray-100 dark:bg-darkmode">
+<body class="bg-secondary-100 dark:bg-secondary-50 text-secondary-700 font-sans">
+    <div id="app" class="min-h-screen">
         @if (config('settings::sidebar') == 1)
             @include('layouts.adminsidenavigation')
         @else
@@ -87,8 +87,9 @@
             @if (!request()->routeIs('admin.index') && !request()->routeIs('admin.settings*'))
                 <div class="py-12">
                     <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
-                        <div class="overflow-hidden dark:bg-darkmode2 bg-white shadow-sm sm:rounded-lg">
-                            <div class="p-6 dark:bg-darkmode2 bg-white border-b border-gray-200 dark:border-gray-800 md:p-12 dark:text-darkmodetext text-gray-800">
+                        <div class="overflow-hidden content">
+                            <div class="content-box">
+                                <x-success class="mb-4" />
                                 {{ $slot }}
                             </div>
                         </div>
@@ -98,11 +99,12 @@
                 {{ $slot }}
             @endif
         </main>
-        <footer>
-            <div class="flex flex-col justify-center items-center dark:text-white dark:bg-darkmode">
-                <!-- Please do not remove the credits. -->
-                <a class="text-gray-500 dark:text-gray-400 text-sm" href="https://paymenter.org">Paymenter &copy; 2022 -
-                    {{ date('Y') }}</a>
+
+        <footer class="pt-5 pb-3 mt-auto">
+            <div class="content text-center text-secondary-600 text-sm">
+                <a href="https://paymenter.org">
+                    Paymenter &copy; 2022 - {{ date('Y') }}
+                </a>
             </div>
         </footer>
     </div>

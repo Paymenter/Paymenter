@@ -2,7 +2,7 @@
     <div id="app"
         class="flex flex-col items-center min-h-screen pt-6 bg-gray-100 dark:text-darkmodetext dark:bg-darkmode sm:justify-center sm:pt-0">
         <div
-            class="w-full px-6 py-4 mt-6 overflow-hidden bg-white shadow-md dark:bg-darkmode2 sm:max-w-md sm:rounded-lg">
+            class="w-full px-6 py-4 mt-6 overflow-hidden bg-white shadow-md dark:bg-secondary-100 sm:max-w-md sm:rounded-lg">
             <div class="text-center">
                 <h2 class="text-2xl font-bold">{{ __('Reset Password') }}</h2>
             </div>
@@ -16,7 +16,7 @@
                 @csrf
                 <!-- Current Password -->
                 <div class="mt-4">
-                    <label class="block text-sm font-medium text-gray-700 bg-white dark:text-white dark:bg-darkmode2">
+                    <label class="block text-sm font-medium text-gray-700 bg-white dark:text-white dark:bg-secondary-100">
                         {{ __('Current Password') }}
                     </label>
 
@@ -28,7 +28,7 @@
 
                 <!-- New Password -->
                 <div class="mt-4">
-                    <label class="block text-sm font-medium text-gray-700 bg-white dark:text-white dark:bg-darkmode2">
+                    <label class="block text-sm font-medium text-gray-700 bg-white dark:text-white dark:bg-secondary-100">
                         {{ __('New Password') }}
                     </label>
 
@@ -39,7 +39,7 @@
 
                 <!-- Confirm Password -->
                 <div class="mt-4">
-                    <label class="block text-sm font-medium text-gray-700 bg-white dark:text-white dark:bg-darkmode2">
+                    <label class="block text-sm font-medium text-gray-700 bg-white dark:text-white dark:bg-secondary-100">
                         {{ __('Confirm New Password') }}
                     </label>
 

@@ -106,7 +106,7 @@
                                 @endforeach
                             @elseif (count($services) <= 0)
                                 <tr>
-                                    <td colspan="4" class="dark:text-white dark:bg-darkmode2"
+                                    <td colspan="4" class="dark:text-white dark:bg-secondary-100"
                                         style="text-align: center;">{{ __('No services found.') }}</td>
                                 </tr>
                             @endif

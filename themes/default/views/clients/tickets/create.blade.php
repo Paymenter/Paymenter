@@ -1,9 +1,9 @@
 <x-app-layout clients title="{{ __('Create Ticket') }}">
     <div class="py-12">
         <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
-            <div class="overflow-hidden bg-white shadow-xl sm:rounded-lg dark:bg-darkmode2">
+            <div class="overflow-hidden bg-white shadow-xl sm:rounded-lg dark:bg-secondary-100">
                 <x-success class="mb-4" />
-                <div class="grid grid-cols-1 bg-gray-200 bg-opacity-25 dark:bg-darkmode2">
+                <div class="grid grid-cols-1 bg-gray-200 bg-opacity-25 dark:bg-secondary-100">
                     <div class="p-6">
                         <div class="flex items-center">
                             <div class="ml-4 text-lg font-semibold leading-7 text-gray-600 dark:text-darkmodetext">

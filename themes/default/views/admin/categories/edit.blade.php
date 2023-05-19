@@ -46,8 +46,8 @@
 
             });
         </script>
-        <div class="mt-4">
-            <button type="submit" class="px-4 py-2 text-white bg-blue-500 rounded hover:bg-blue-600">
+        <div class="flex items-center justify-end mt-4">
+            <button type="submit" class="inline-flex justify-center w-max float-right button button-primary">
                 {{ __('Update') }}
             </button>
         </div>

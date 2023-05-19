@@ -59,4 +59,18 @@ class Product extends Model
                 return $prices->monthly ?? $prices->quarterly ?? $prices->semi_annually ?? $prices->annually ?? $prices->biennially ?? $prices->triennially;
             }
     }
+
+    public function configurableGroups()
+    {
+        // Check all groups products array
+        $groups = ConfigurableGroup::all();
+        $configurableGroups = [];
+        foreach ($groups as $group) {
+            $products = $group->products;
+            if (in_array($this->id, $products)) {
+                $configurableGroups[] = $group;
+            }
+        }
+        return $configurableGroups;
+    }
 }

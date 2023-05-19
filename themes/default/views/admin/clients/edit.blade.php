@@ -13,7 +13,7 @@
         </div>
         <div class="relative inline-block text-left justify-end">
             <button type="button"
-                class="dark:hover:bg-darkmode absolute top-0 right-0 dark:text-darkmodetext dark:bg-darkmode2 inline-flex w-max justify-end bg-white px-2 py-2 text-base font-medium rounded-md text-gray-700 mr-4"
+                class="dark:hover:bg-darkmode absolute top-0 right-0 dark:text-darkmodetext dark:bg-secondary-100 inline-flex w-max justify-end bg-white px-2 py-2 text-base font-medium rounded-md text-gray-700 mr-4"
                 id="menu-button" aria-expanded="true" aria-haspopup="true" data-dropdown-toggle="moreOptions">
                 <svg class="w-6 h-6" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20"
                     xmlns="http://www.w3.org/2000/svg">
@@ -65,9 +65,8 @@
         });
     </script>
 
-    </div>
     <div class="bg-gray-200 bg-opacity-25 grid grid-cols-1">
-        <div class="dark:bg-darkmode2 p-6">
+        <div class="dark:bg-secondary-100 p-6">
             <div class="flex items-center">
                 <div class="ml-4 text-lg text-gray-600 leading-7 font-semibold w-full">
                     <form method="POST" action="{{ route('admin.clients.update', $user->id) }}">
@@ -187,15 +186,20 @@
                         <x-input type="select" name="role" id="role" label="{{ __('Role(admin)') }}">
                             @foreach ($roles as $role)
                                 <option value="{{ $role->id }}" @if ($user->role->id == $role->id) selected @endif>
-                                    {{ $role->name }} 
-                                    @if($role->id == 2) {{ __('(Default, Client)') }} @endif
-                                    @if($role->id == 1) {{ __('(Full Administrator)') }} @endif
+                                    {{ $role->name }}
+                                    @if ($role->id == 2)
+                                        {{ __('(Default, Client)') }}
+                                    @endif
+                                    @if ($role->id == 1)
+                                        {{ __('(Full Administrator)') }}
+                                    @endif
                                 </option>
                             @endforeach
                         </x-input>
                         <hr class="my-6 border-b-1 border-gray-300 dark:border-gray-600" />
-                        <div class="flex items-end justify-end mt-4">
-                            <button type="submit" class="form-submit">
+                        <div class="flex items-center justify-end mt-4">
+                            <button type="submit"
+                                class="inline-flex justify-center w-max float-right button button-primary">
                                 {{ __('Update') }}
                             </button>
                         </div>

@@ -45,8 +45,8 @@
 <x-app-layout clients title="{{ __('Tickets') }}">
     <div class="py-12">
         <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
-            <div class="overflow-hidden bg-white shadow-xl sm:rounded-lg dark:bg-darkmode2">
-                <div class="p-6 bg-white border-gray-200 sm:pr-20 sm:pl-12 dark:bg-darkmode2 dark:text-darkmodetext pb-2">
+            <div class="overflow-hidden bg-white shadow-xl sm:rounded-lg dark:bg-secondary-100">
+                <div class="p-6 bg-white border-gray-200 sm:pr-20 sm:pl-12 dark:bg-secondary-100 dark:text-darkmodetext pb-2">
                     <div class="flex flex-row justify-between">
                         <div class="flex flex-row overflow-x-auto lg:flex-wrap lg:space-x-1">
                             <div class="flex-none">
@@ -203,8 +203,8 @@
                 </div>
             </div>
             
-            <div class="overflow-hidden bg-white shadow-xl sm:rounded-lg dark:bg-darkmode2 mt-6">
-                <div class="ticketBlockMaster overflow-hidden bg-white-200 shadow-xl sm:rounded-lg dark:bg-darkmode2 mt-6 pb-2.5">
+            <div class="overflow-hidden bg-white shadow-xl sm:rounded-lg dark:bg-secondary-100 mt-6">
+                <div class="ticketBlockMaster overflow-hidden bg-white-200 shadow-xl sm:rounded-lg dark:bg-secondary-100 mt-6 pb-2.5">
                     @if (count($tickets) > 0)
 
                     @php

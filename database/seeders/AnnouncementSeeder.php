@@ -15,6 +15,9 @@ class AnnouncementSeeder extends Seeder
      */
     public function run()
     {
+        if (Announcement::count() > 0) {
+            return;
+        }
         Announcement::create([
             'title' => 'Welcome to your new panel!',
             'announcement' => 'Welcome to your new panel! Manage the announcement in the admin area'

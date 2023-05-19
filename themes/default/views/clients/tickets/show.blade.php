@@ -4,13 +4,13 @@
     <!-- show last messages and form to reply -->
     <div class="py-12">
         <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
-            <div class="overflow-hidden bg-white shadow-xl sm:rounded-lg dark:bg-darkmode2">
+            <div class="overflow-hidden bg-white shadow-xl sm:rounded-lg dark:bg-secondary-100">
 
-                <div class="p-6 bg-white sm:px-20 dark:bg-darkmode2">
+                <div class="p-6 bg-white sm:px-20 dark:bg-secondary-100">
                     <h1 class="text-2xl font-bold text-gray-500 dark:text-darkmodetext">View Ticket #{{ $ticket->id }}
                     </h1>
                     <div class="grid grid-cols-1 gap-4">
-                        <div class="mt-6 text-gray-500 dark:text-darkmodetext dark:bg-darkmode2">
+                        <div class="mt-6 text-gray-500 dark:text-darkmodetext dark:bg-secondary-100">
                             <div class="mt-4">
                                 <p><strong>Subject:</strong> {{ $ticket->title }}</p>
                                 <form action="{{ route('clients.tickets.close', $ticket->id) }} " method="POST">
@@ -22,9 +22,9 @@
                     </div>
                 </div>
 
-                <div class="p-6 bg-white border-b border-gray-200 sm:px-20 dark:bg-darkmode2 dark:border-black">
+                <div class="p-6 bg-white border-b border-gray-200 sm:px-20 dark:bg-secondary-100 dark:border-black">
                     <div class="grid grid-cols-1 gap-4">
-                        <div class="mt-6 text-gray-500 dark:text-darkmodetext dark:bg-darkmode2">
+                        <div class="mt-6 text-gray-500 dark:text-darkmodetext dark:bg-secondary-100">
                             <h1 class="text-xl text-gray-500 dark:text-darkmodetext">{{ __('Messages') }}</h1>
 
                             @foreach ($messages as $message)
@@ -54,16 +54,16 @@
                 </div>
             </div>
             <br>
-            <div class="overflow-hidden bg-white shadow-xl sm:rounded-lg dark:bg-darkmode2">
+            <div class="overflow-hidden bg-white shadow-xl sm:rounded-lg dark:bg-secondary-100">
                 <form method="POST" action="{{ route('clients.tickets.reply', $ticket->id) }}" class="mt-10"
                     id="reply">
                     @csrf
                     <div
-                        class="p-6 bg-white border-b border-gray-200 sm:px-20 dark:bg-darkmode2 dark:border-black mt-10">
+                        class="p-6 bg-white border-b border-gray-200 sm:px-20 dark:bg-secondary-100 dark:border-black mt-10">
                         <h1 class="text-xl text-gray-500 dark:text-darkmodetext font-bold">{{ __('Reply') }}</h1>
                         <div class="grid grid-cols-1 gap-4">
                             <x-success class="mt-4" />
-                            <div class="mt-6 text-gray-500 dark:text-darkmodetext dark:bg-darkmode2">
+                            <div class="mt-6 text-gray-500 dark:text-darkmodetext dark:bg-secondary-100">
                                 <label for="message" class="text-md">{{ __('Message') }}</label>
                                 <textarea id="message"
                                     class="block w-full rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm dark:bg-darkmode"

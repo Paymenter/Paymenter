@@ -7,7 +7,7 @@
         {{ __('Edit') }} {{ $extension->name }}
     </div>
 
-    <div class="mt-6 text-gray-500 dark:text-darkmodetext dark:bg-darkmode2">
+    <div class="mt-6 text-gray-500 dark:text-darkmodetext dark:bg-secondary-100">
         <form method="POST" action="{{ route('admin.extensions.update', [$extension->type, $extension->name]) }}">
             @csrf
             <!-- disable or enable extension -->
@@ -80,8 +80,8 @@
                 </div>
             @endforeach
             <div class="flex items-center justify-end mt-4">
-                <button type="submit" class="px-4 py-2 font-bold text-white bg-blue-500 rounded hover:bg-blue-700">
-                    {{ __('Update') }}
+                <button type="submit" class="inline-flex justify-center w-max float-right button button-primary">
+                    {{ __('Save') }}
                 </button>
             </div>
         </form>
