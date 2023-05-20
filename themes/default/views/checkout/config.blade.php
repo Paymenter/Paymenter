@@ -138,6 +138,7 @@
                                             name="{{ $item->id }}" id="{{ $item->id }}"
                                             label="{{ ucfirst($name) }}" required>
                                             @foreach ($item->configurableOptionInputs()->orderBy('order', 'asc')->get() as $option)
+                                                @if($option->hidden) @continue @endif
                                                 <option value="{{ $option->id }}"
                                                     @if (old($item->name) == $option) selected @endif>
                                                     {{ $option->name }} @if ($option->configurableOptionInputPrice->{$billing_cycle})

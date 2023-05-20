@@ -109,8 +109,9 @@
                                                     name="option[{{ $option->id }}][order]" placeholder="Order"
                                                     value="{{ $option->order }}" />
                                                 <div class="items-center flex" class="block mt-1 w-full">
-                                                    <x-input label="Hidden" type="checkbox" name="hidden"
-                                                        placeholder="hidden" value="{{ $option->hidden }}" />
+                                                    <x-input label="Hidden" type="checkbox" name="option[{{ $option->id }}][hidden]" 
+                                                        checked="{{ $option->hidden }}"
+                                                        placeholder="hidden" value="1" />
                                                 </div>
                                             </div>
                                             <div class="flex flex-row text-sm gap-4 mt-2">

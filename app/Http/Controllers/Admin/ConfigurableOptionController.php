@@ -148,7 +148,9 @@ class ConfigurableOptionController extends Controller
             $configurableOption->configurableOptionInputs()->find($optionInputId)->update([
                 'name' => $optionInputData['name'],
                 'order' => $optionInputData['order'],
+                'hidden' => isset($optionInputData['hidden']) ? true : false,
             ]);
+
             $configurableOption->configurableOptionInputs()->find($optionInputId)->configurableOptionInputPrice()->update([
                 'monthly' => $optionInputData['pricing']['monthly'],
                 'quarterly' => $optionInputData['pricing']['quarterly'],
