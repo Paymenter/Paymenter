@@ -186,9 +186,9 @@ function Pterodactyl_createServer($user, $parmas, $order, $product, $configurabl
     $databases = isset($configurableOptions['databases']) ? $configurableOptions['databases'] : $parmas['databases'];
     $backups = isset($configurableOptions['backups']) ? $configurableOptions['backups'] : $parmas['backups'];
     $startup = isset($configurableOptions['startup']) ? $configurableOptions['startup'] : $eggData['attributes']['startup'];
+    $node = isset($configurableOptions['node']) ? $configurableOptions['node'] : $parmas['node'];
 
-
-    if ($parmas['node']) {
+    if ($node) {
         $allocation = Pterodactyl_getRequest(pteroConfig('host') . '/api/application/nodes/' . $parmas['node'] . '/allocations');
         $allocation = $allocation->json();
         foreach ($allocation['data'] as $key => $val) {
