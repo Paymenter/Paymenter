@@ -85,7 +85,7 @@ class OrderController extends Controller
     public function create(Order $order)
     {
         foreach ($order->products()->get() as $product) {
-            ExtensionHelper::createServer($product);
+            dd(ExtensionHelper::createServer($product));
             $product->status = 'paid';
             $product->save();
         }

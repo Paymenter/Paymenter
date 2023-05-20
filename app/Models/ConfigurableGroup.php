@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
@@ -16,6 +17,16 @@ class ConfigurableGroup extends Model
     protected $casts = [
         'products' => 'array',
     ];
+
+    // On created event
+    protected static function booted()
+    {
+        static::created(function ($group) {
+            if (!$group->products)
+                $group->products = [];
+            $group->save();
+        });
+    }
 
     public function configurableOptions()
     {

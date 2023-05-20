@@ -109,11 +109,13 @@ class ConfigurableOptionController extends Controller
             'hidden' => false,
         ]);
 
-        $item->configurableOptionInputs()->create([
+        $option = $item->configurableOptionInputs()->create([
             'option_id' => $item->id,
             'name' => 'New Input',
             'order' => 0,
         ]);
+
+        $option->configurableOptionInputPrice()->create();
 
         return redirect()->route('admin.configurable-options.edit', $configurableOptionGroup->id)->with('success', 'Configurable Option created successfully');
     }

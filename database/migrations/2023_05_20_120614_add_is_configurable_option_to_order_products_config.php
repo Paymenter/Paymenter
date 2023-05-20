@@ -13,12 +13,8 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('configurable_option_groups', function (Blueprint $table) {
-            $table->id();
-            $table->string('name');
-            $table->string('description')->nullable();
-            $table->json('products')->nullable();
-            $table->timestamps();
+        Schema::table('order_products_config', function (Blueprint $table) {
+            $table->boolean('is_configurable_option')->default(false)->after('order_product_id');
         });
     }
 
@@ -29,6 +25,8 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('configurable_option_groups');
+        Schema::table('order_products_config', function (Blueprint $table) {
+            $table->dropColumn('is_configurable_option');
+        });
     }
 };

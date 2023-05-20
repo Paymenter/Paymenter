@@ -2,6 +2,8 @@
 
 namespace App\Helpers;
 
+use App\Models\ConfigurableOption;
+use App\Models\ConfigurableOptionInput;
 use App\Models\User;
 use App\Models\Order;
 use App\Models\Invoice;
@@ -28,7 +30,7 @@ class ExtensionHelper
         $invoice = Invoice::findOrFail($id);
         foreach ($invoice->items()->get() as $item) {
             $product = $item->product()->get()->first();
-            if(!$product) {
+            if (!$product) {
                 continue;
             }
 
@@ -37,8 +39,8 @@ class ExtensionHelper
             }
             if ($product->status == 'pending') {
                 ExtensionHelper::createServer($product);
-            } 
-            if($product->status == 'pending' || $product->status == 'suspended') {
+            }
+            if ($product->status == 'pending' || $product->status == 'suspended') {
                 if ($product->billing_cycle) {
                     if ($product->billing_cycle == 'monthly') {
                         $product->expiry_date = Carbon::now()->addMonth();
@@ -284,8 +286,16 @@ class ExtensionHelper
             $config[$setting->name] = $setting->value;
         }
         $config['config_id'] = $product->id;
+        $configurableOptions = [];
         foreach ($product2->config()->get() as $config2) {
-            $config['config'][$config2->key] = $config2->value;
+            if ($config2->is_configurable_option) {
+                $option = ConfigurableOption::where('id', $config2->key)->get()->first();
+                $option->original_name = $option->name;
+                $option->name = explode('|', $option->name)[0] ?? $option->name;
+                $configurableOptions[$option->name] = ConfigurableOptionInput::where('id', $config2->value)->get()->first()->name ?? $config2->value;
+            } else {
+                $config['config'][$config2->key] = $config2->value;
+            }
         }
         $user = User::findOrFail($order->client);
         $function = $extension->name . '_createServer';
@@ -294,7 +304,7 @@ class ExtensionHelper
             return;
         }
         try {
-            $function($user, $config, $order, $product2);
+            $function($user, $config, $order, $product2, $configurableOptions);
         } catch (\Exception $e) {
             ExtensionHelper::error($extension->name, 'Error creating server: ' . $e->getMessage());
         }

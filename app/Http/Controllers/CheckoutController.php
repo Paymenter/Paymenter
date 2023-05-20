@@ -409,6 +409,16 @@ class CheckoutController extends Controller
                 $orderProductConfig->save();
             }
         }
+        if (isset($product->configurableOptions)) {
+            foreach ($product->configurableOptions as $key => $value) {
+                $orderProductConfig = new OrderProductConfig();
+                $orderProductConfig->order_product_id = $orderProduct->id;
+                $orderProductConfig->key = $key;
+                $orderProductConfig->value = $value;
+                $orderProductConfig->is_configurable_option = true;
+                $orderProductConfig->save();
+            }
+        }
         if ($product->price == 0 || $product->price - $product->discount == 0) {
             $orderProduct->status = 'paid';
             $orderProduct->save();
