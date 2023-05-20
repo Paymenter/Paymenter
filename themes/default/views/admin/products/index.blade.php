@@ -10,7 +10,7 @@
     <!-- right top aligned button -->
     <div class="flex justify-end pr-3 pt-3">
         <a href="{{ route('admin.products.create') }}">
-            <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+            <button class="button button-primary">
                 {{ __('Create') }}
             </button>
         </a>

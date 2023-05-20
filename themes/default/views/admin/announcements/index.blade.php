@@ -5,7 +5,7 @@
     <h1 class="text-2xl font-bold dark:text-darkmodetext">{{ __('Announcements') }}</h1>
     <div class="flex justify-end pr-3 pt-3">
         <a href="{{ route('admin.announcements.store') }}">
-            <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+            <button class="button button-primary">
                 {{ __('Create') }}
             </button>
         </a>
