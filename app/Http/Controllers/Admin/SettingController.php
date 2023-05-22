@@ -17,7 +17,7 @@ class SettingController extends Controller
         // Use default theme
         Theme::set('default');
         // Get current theme
-        foreach (glob(Theme::getViewPaths()[1] . '/admin/settings/settings/*.blade.php') as $filename) {
+        foreach (glob(Theme::getViewPaths()[0] . '/admin/settings/settings/*.blade.php') as $filename) {
             $tabs[] = 'admin.settings.settings.' . basename($filename, '.blade.php');
         }
         unset($tabs[array_search('admin.settings.settings.general', $tabs)]);
@@ -145,6 +145,8 @@ class SettingController extends Controller
         if ($request->get('tos') !== config('settings::tos_text')) {
             Setting::updateOrCreate(['key' => 'tos_last_updated'], ['value' => now()]);
         }
+        Setting::updateOrCreate(['key' => 'tos'], ['value' => $request->tos]);
+
         foreach ($request->except(['_token']) as $key => $value) {
             Setting::updateOrCreate(['key' => $key], ['value' => $value]);
         }
