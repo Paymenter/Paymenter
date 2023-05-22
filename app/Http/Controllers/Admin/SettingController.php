@@ -14,6 +14,8 @@ class SettingController extends Controller
     public function index()
     {
         $tabs = [];
+        // Use default theme
+        Theme::set('default');
         // Get current theme
         foreach (glob(Theme::getViewPaths()[1] . '/admin/settings/settings/*.blade.php') as $filename) {
             $tabs[] = 'admin.settings.settings.' . basename($filename, '.blade.php');
