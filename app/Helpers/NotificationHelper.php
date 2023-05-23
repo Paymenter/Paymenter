@@ -5,6 +5,7 @@ namespace App\Helpers;
 use App\Mail\Invoices\NewInvoice;
 use App\Mail\Orders\NewOrder;
 use App\Mail\Test;
+use App\Mail\Tickets\NewTicket;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Support\Facades\Mail;
 
@@ -49,5 +50,17 @@ class NotificationHelper
     {
         if (config('settings::mail_disabled')) return;
         Mail::to($user->email)->bcc(NotificationHelper::bcc())->send(new Test($user));
+    }
+
+    /**
+     * @param $ticket \App\Models\Ticket
+     * @param $user \App\Models\User
+     * 
+     * @return void
+     */
+    public static function sendNewTicketNotification($ticket, $user)
+    {
+        if (config('settings::mail_disabled')) return;
+        Mail::to($user->email)->bcc(NotificationHelper::bcc())->locale('nl')->queue(new NewTicket($ticket));
     }
 }

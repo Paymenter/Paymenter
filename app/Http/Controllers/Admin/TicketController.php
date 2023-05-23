@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Helpers\NotificationHelper;
 use App\Models\User;
 use App\Models\Ticket;
 use Illuminate\Http\Request;
@@ -47,6 +48,7 @@ class TicketController extends Controller
             'message' => $request->get('description'),
             'user_id' => auth()->user()->id,
         ]);
+        NotificationHelper::sendNewTicketNotification($ticket, auth()->user());
 
         return redirect()->route('admin.tickets.show', $ticket)->with('success', 'Ticket has been created');
     }

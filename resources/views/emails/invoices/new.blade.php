@@ -1,22 +1,22 @@
 @component('mail::message')
-# New invoice
+    # New invoice
 
-There is a new invoice for you.
- 
-You need to pay: {{ config('settings::currency_sign') }} {{ $invoice->total() }} 
+    There is a new invoice for you.
 
-@component('mail::table')
-| Product | Price |
-|:--------|:------|
-@foreach ($products as $product)
-| {{ $product->description }} | {{ config('settings::currency_sign') }} {{ $product->total }} |
-@endforeach
-@endcomponent
+    You need to pay: {{ config('settings::currency_sign') }} {{ $invoice->total() }}
 
-@component('mail::button', ['url' => route('clients.invoice.show', $invoice)])
-Pay now
-@endcomponent
+    @component('mail::table')
+        | Product | Price |
+        |:--------|:------|
+        @foreach ($products as $product)
+            | {{ $product->description }} | {{ config('settings::currency_sign') }} {{ $product->total }} |
+        @endforeach
+    @endcomponent
 
-Thanks,<br>
-{{ config('app.name') }}
+    @component('mail::button', ['url' => route('clients.invoice.show', $invoice)])
+        Pay now
+    @endcomponent
+
+    Thanks,<br>
+    {{ config('app.name') }}
 @endcomponent

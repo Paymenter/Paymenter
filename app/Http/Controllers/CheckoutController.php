@@ -209,7 +209,6 @@ class CheckoutController extends Controller
                         } else {
                             $product->price += $configItemPrice->{$product->billing_cycle};
                         }
-                        error_log($configItemPrice->{$product->billing_cycle});
                         $product->setup_fee += $configItemPrice->{$product->billing_cycle . '_setup'};
                     }
                 }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Clients;
 
+use App\Helpers\NotificationHelper;
 use App\Models\User;
 use App\Models\Order;
 use App\Models\Ticket;
@@ -54,9 +55,9 @@ class TicketController extends Controller
                 return true;
             }
         );
-        if (!$executed) {
-            return redirect()->back()->with('error', 'You are sending too many messages. Please wait a few minutes and try again.');
-        }
+        // if (!$executed) {
+        //     return redirect()->back()->with('error', 'You are sending too many messages. Please wait a few minutes and try again.');
+        // }
         $ticket = new Ticket();
         $ticket->title = request('title');
         $ticket->status = 'open';
@@ -69,6 +70,7 @@ class TicketController extends Controller
             'message' => request('description'),
             'user_id' => auth()->user()->id,
         ]);
+        NotificationHelper::sendNewTicketNotification($ticket, auth()->user());
 
         return redirect('/tickets')->with('success', 'Ticket created successfully');
     }
