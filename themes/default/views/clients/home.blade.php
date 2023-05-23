@@ -65,7 +65,7 @@
                                                 ->first();
                                         @endphp
                                         @if ($product)
-                                            <tr class="border-b-2 border-secondary-200 dark:border-secondary-50">
+                                            <tr class="border-b-2 border-secondary-200 dark:border-secondary-50 cursor-pointer" @if($product2->status === 'cancelled' || $product2->status === 'suspended') style="opacity: 0.5;" @else onclick="window.location='{{ route('clients.active-products.show', $product2->id) }}';" @endif>
                                                 <td class="pl-6 py-3">
                                                     <strong>{{ ucfirst($product->name) }}</strong>
                                                 </td>

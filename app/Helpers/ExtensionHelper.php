@@ -265,6 +265,43 @@ class ExtensionHelper
         return $pay;
     }
 
+    public static function loadConfiguration(Product $product, OrderProduct $product2)
+    {
+        $settings = $product->settings ?? collect();
+        $config = [];
+        foreach ($settings as $setting) {
+            $config[$setting->name] = $setting->value;
+        }
+        $config['config_id'] = $product->id;
+        $config['config'] = [];
+        foreach ($product2->config as $config2) {
+            if ($config2->is_configurable_option) {
+                continue;
+            }
+            $config['config'][$config2->key] = $config2->value;
+        }
+        return $config;
+    }
+
+    public static function loadConfigurableOptions(OrderProduct $product2)
+    {
+        $configurableOptions = [];
+        foreach ($product2->config as $config2) {
+            if (!$config2->is_configurable_option) {
+                continue;
+            }
+            $option = ConfigurableOption::where('id', $config2->key)->first();
+            if (!$option) {
+                continue;
+            }
+            $option->original_name = $option->name;
+            $option->name = explode('|', $option->name)[0] ?? $option->name;
+            $value = ConfigurableOptionInput::where('id', $config2->value)->first();
+            $configurableOptions[$option->name] = $value ? $value->name : $config2->value;
+        }
+        return $configurableOptions;
+    }
+
     public static function createServer(OrderProduct $product2)
     {
         $order = $product2->order()->first();
@@ -276,44 +313,26 @@ class ExtensionHelper
         if (!$extension) {
             return false;
         }
-        if (!file_exists(app_path() . '/Extensions/Servers/' . $extension->name . '/index.php')) {
-            return false;
-        }
         include_once app_path() . '/Extensions/Servers/' . $extension->name . '/index.php';
-        $settings = $product->settings()->get();
-        $config = [];
-        foreach ($settings as $setting) {
-            $config[$setting->name] = $setting->value;
-        }
-        $config['config_id'] = $product->id;
-        $configurableOptions = [];
-        foreach ($product2->config()->get() as $config2) {
-            if ($config2->is_configurable_option) {
-                $option = ConfigurableOption::where('id', $config2->key)->get()->first();
-                $option->original_name = $option->name;
-                $option->name = explode('|', $option->name)[0] ?? $option->name;
-                $configurableOptions[$option->name] = ConfigurableOptionInput::where('id', $config2->value)->get()->first()->name ?? $config2->value;
-            } else {
-                $config['config'][$config2->key] = $config2->value;
-            }
-        }
-        $user = User::findOrFail($order->client);
-        $function = $extension->name . '_createServer';
-        if (!function_exists($function)) {
-            ExtensionHelper::error($extension->name, 'Function ' . $function . ' does not exist! (createServer)');
+        $extensionName = $extension->name;
+        $extensionFunction = $extensionName . '_createServer';
+        if (!function_exists($extensionFunction)) {
+            self::error($extensionName, 'Function ' . $extensionFunction . ' does not exist! (createServer)');
             return;
         }
+        $config = self::loadConfiguration($product, $product2);
+        $configurableOptions = self::loadConfigurableOptions($product2);
+        $user = User::findOrFail($order->client);
         try {
-            $function($user, $config, $order, $product2, $configurableOptions);
+            $extensionFunction($user, $config, $order, $product2, $configurableOptions);
         } catch (\Exception $e) {
-            ExtensionHelper::error($extension->name, 'Error creating server: ' . $e->getMessage());
+            self::error($extensionName, 'Error creating server: ' . $e->getMessage());
         }
     }
 
     public static function suspendServer(OrderProduct $product2)
     {
         $order = $product2->order()->first();
-
         $product = Product::findOrFail($product2->product_id);
         if (!isset($product->server_id)) {
             return;
@@ -326,21 +345,18 @@ class ExtensionHelper
             return false;
         }
         include_once app_path() . '/Extensions/Servers/' . $extension->name . '/index.php';
-        $settings = $product->settings()->get();
-        $config = [];
-        foreach ($settings as $setting) {
-            $config[$setting->name] = $setting->value;
-        }
-        $config['config_id'] = $product->id;
-        foreach ($product2->config()->get() as $config2) {
-            $config['config'][$config2->key] = $config2->value;
-        }
+        $config = self::loadConfiguration($product, $product2);
+        $configurableOptions = self::loadConfigurableOptions($product2);
         $user = User::findOrFail($order->client);
         $function = $extension->name . '_suspendServer';
+        if (!function_exists($function)) {
+            self::error($extension->name, 'Function ' . $function . ' does not exist! (suspendServer)');
+            return;
+        }
         try {
-            $function($user, $config, $order, $product2);
+            $function($user, $config, $order, $product2, $configurableOptions);
         } catch (\Exception $e) {
-            ExtensionHelper::error($extension->name, 'Error creating server: ' . $e->getMessage());
+            self::error($extension->name, 'Error suspending server: ' . $e->getMessage());
         }
     }
 
@@ -360,19 +376,12 @@ class ExtensionHelper
             return false;
         }
         include_once app_path() . '/Extensions/Servers/' . $extension->name . '/index.php';
-        $settings = $product->settings()->get();
-        $config = [];
-        foreach ($settings as $setting) {
-            $config[$setting->name] = $setting->value;
-        }
-        $config['config_id'] = $product->id;
-        foreach ($product2->config()->get() as $config2) {
-            $config['config'][$config2->key] = $config2->value;
-        }
+        $config = self::loadConfiguration($product, $product2);
+        $configurableOptions = self::loadConfigurableOptions($product2);
         $user = User::findOrFail($order->client);
         $function = $extension->name . '_unsuspendServer';
         try {
-            $function($user, $config, $order, $product2);
+            $function($user, $config, $order, $product2, $configurableOptions);
         } catch (\Exception $e) {
             ExtensionHelper::error($extension->name, 'Error creating server: ' . $e->getMessage());
         }
@@ -394,19 +403,12 @@ class ExtensionHelper
             return false;
         }
         include_once app_path() . '/Extensions/Servers/' . $extension->name . '/index.php';
-        $settings = $product->settings()->get();
-        $config = [];
-        foreach ($settings as $setting) {
-            $config[$setting->name] = $setting->value;
-        }
-        $config['config_id'] = $product->id;
-        foreach ($product2->config()->get() as $config2) {
-            $config['config'][$config2->key] = $config2->value;
-        }
+        $config = self::loadConfiguration($product, $product2);
+        $configurableOptions = self::loadConfigurableOptions($product2);
         $user = User::findOrFail($order->client);
         $function = $extension->name . '_terminateServer';
         try {
-            $function($user, $config, $order, $product2);
+            $function($user, $config, $order, $product2, $configurableOptions);
         } catch (\Exception $e) {
             ExtensionHelper::error($extension->name, 'Error creating server: ' . $e->getMessage());
         }
@@ -441,7 +443,7 @@ class ExtensionHelper
             return false;
         }
         $link = $function($user, $config, $product->order()->get()->first(), $product);
-
+        
         return $link;
     }
 }

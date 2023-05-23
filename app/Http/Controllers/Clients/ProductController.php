@@ -11,15 +11,19 @@ class ProductController extends Controller
 {
     public function index(OrderProduct $product)
     {
+        if(!$product->order()->exists()) {
+            return abort(404);
+        }
         if ($product->order()->get()->first()->client != Auth::user()->id) {
             return abort(404);
         }
 
         $link = ExtensionHelper::getLink($product);
 
+        $orderProduct = $product;
         $product = $product->product()->get()->first();
 
 
-        return view('clients.products.view', compact('product', 'link'));
+        return view('clients.products.view', compact('product', 'link', 'orderProduct'));
     }
 }
