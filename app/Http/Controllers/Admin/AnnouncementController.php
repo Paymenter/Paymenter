@@ -42,13 +42,15 @@ class AnnouncementController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
-        $validatedRequest = Validator::make($request->all(), [
+        $validatedRequest = $request->validate([
             'title' => 'required|string|min:4',
             'announcement' => 'string|required|min:4',
-            'published' => 'required',
+            'published' => 'sometimes',
         ]);
 
-        Announcement::create($validatedRequest->validated());
+        $request->has('published') ? $validatedRequest['published'] = true : $validatedRequest['published'] = false;
+
+        Announcement::create($validatedRequest);
 
         return redirect()->route('admin.announcements.edit', Announcement::latest()->first())->with('success', 'Announcement created successfully!');
     }
@@ -73,15 +75,17 @@ class AnnouncementController extends Controller
      */
     public function update(Announcement $announcement, Request $request): RedirectResponse
     {
-        $validatedRequest = Validator::make($request->all(), [
+        $validatedRequest = $request->validate([
             'title' => 'required|string|min:4',
             'announcement' => 'string|required|min:4',
             'published' => 'sometimes',
         ]);
 
-        $announcement->update($validatedRequest->validate());
+        $request->has('published') ? $validatedRequest['published'] = true : $validatedRequest['published'] = false;
 
-        return redirect()->route('admin.announcements')->with('success', 'Announcement updated successfully!');
+        $announcement->update($validatedRequest);
+
+        return redirect()->route('admin.announcements.edit', $announcement)->with('success', 'Announcement updated successfully!');
     }
 
     /**
