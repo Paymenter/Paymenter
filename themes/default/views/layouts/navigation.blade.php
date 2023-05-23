@@ -59,7 +59,7 @@
                     <button type="button" aria-expanded="true" aria-haspopup="true" data-dropdown-placement="bottom-end"
                         data-dropdown-toggle="account" class="relative button button-primary md:flex-none flex-1">
                         {{ __('Account') }}
-                        <div class="absolute left-0 hidden w-60 mt-2 origin-top-right bg-secondary-200 border border-secondary-300 rounded-md text-secondary-700 font-normal text-start"
+                        <div class="absolute left-0 hidden w-60 mt-2 origin-top-right bg-secondary-200 border border-secondary-300 rounded-md text-secondary-700 font-normal text-start z-10"
                             role="menu" aria-orientation="vertical" aria-labelledby="product" tabindex="-1" id="account">
                             <a href="{{ route('clients.profile') }}"
                                 class="flex items-center px-4 py-3 gap-x-4 overflow-hidden">

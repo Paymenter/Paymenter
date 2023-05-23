@@ -92,69 +92,70 @@
                                 window.location.href = "{{ route('checkout.config', $product->id) }}?billing_cycle=" + this.value;
                             };
                         </script>
-                        <h1 class="text-xl font-bold mt-6">{{ __('Configurable Options') }}</h1>
-                        @foreach ($customConfig as $config)
-                            @php
-                                $configItems = $config
-                                    ->configurableOptions()
-                                    ->orderBy('order', 'asc')
-                                    ->get();
-                            @endphp
-                            @foreach ($configItems as $item)
-                                @if ($item->hidden)
-                                    @continue
-                                @endif
-                                <div class="mt-2">
-                                    @php $name = explode('|', $item->name)[1] ?? $item->name; @endphp
-                                    @if ($item->type == 'quantity')
-                                        <!-- Display the quantity input with plus and minus buttons -->
-                                        <div class="flex flex-row h-10 w-full rounded-lg relative bg-transparent mt-2">
-                                            <button
-                                                onclick="if (this.parentNode.querySelector('input[type=number]').value > 0) this.parentNode.querySelector('input[type=number]').stepDown()"
-                                                type="button"
-                                                class="bg-secondary-200 text-secondary-500 hover:text-secondary-700 hover:bg-secondary-300 h-full w-20 rounded-l cursor-pointer outline-none">
-                                                <span class="m-auto text-2xl font-thin">−</span>
-                                            </button>
-                                            <x-input type="number" name="{{ $item->id }}"
-                                                id="{{ $item->id }}" placeholder="{{ ucfirst($name) }}"
-                                                value="0" min="0" required />
-                                            <button
-                                                onclick="this.parentNode.querySelector('input[type=number]').stepUp()"
-                                                type="button"
-                                                class="bg-secondary-200 text-secondary-500 hover:text-secondary-700 hover:bg-secondary-300 h-full w-20 rounded-r cursor-pointer">
-                                                <span class="m-auto text-2xl font-thin">+</span>
-                                            </button>
-                                            <div class="flex items-center ml-1">
-                                                x {{ ucfirst($name) }}
-                                                @if ($item->configurableOptionInputs->first()->configurableOptionInputPrice->{$billing_cycle})
-                                                    {{ config('settings::currency_sign') . $item->configurableOptionInputs->first()->configurableOptionInputPrice->{$billing_cycle} }}
-                                                @else
-                                                    free
-                                                @endif
-                                            </div>
-                                        </div>
-                                    @else
-                                        <x-input type="{{ $item->type }}" placeholder="{{ ucfirst($item->name) }}"
-                                            name="{{ $item->id }}" id="{{ $item->id }}"
-                                            label="{{ ucfirst($name) }}" required>
-                                            @foreach ($item->configurableOptionInputs()->orderBy('order', 'asc')->get() as $option)
-                                                @if($option->hidden) @continue @endif
-                                                <option value="{{ $option->id }}"
-                                                    @if (old($item->name) == $option) selected @endif>
-                                                    {{ $option->name }} @if ($option->configurableOptionInputPrice->{$billing_cycle})
-                                                        -
-                                                        {{ config('settings::currency_sign') . $option->configurableOptionInputPrice->{$billing_cycle} }}
-                                                    @else
-                                                        - free
-                                                    @endif
-                                                </option>
-                                            @endforeach
-                                        </x-input>
-                                    @endif
-                                </div>
-                            @endforeach
-                        @endforeach
                     @endif
+                    <h1 class="text-xl font-bold mt-6">{{ __('Configurable Options') }}</h1>
+                    @foreach ($customConfig as $config)
+                        @php
+                            $configItems = $config
+                                ->configurableOptions()
+                                ->orderBy('order', 'asc')
+                                ->get();
+                        @endphp
+                        @foreach ($configItems as $item)
+                            @if ($item->hidden)
+                                @continue
+                            @endif
+                            <div class="mt-2">
+                                @php $name = explode('|', $item->name)[1] ?? $item->name; @endphp
+                                @if ($item->type == 'quantity')
+                                    <!-- Display the quantity input with plus and minus buttons -->
+                                    <div class="flex flex-row h-10 w-full rounded-lg relative bg-transparent mt-2">
+                                        <button
+                                            onclick="if (this.parentNode.querySelector('input[type=number]').value > 0) this.parentNode.querySelector('input[type=number]').stepDown()"
+                                            type="button"
+                                            class="bg-secondary-200 text-secondary-500 hover:text-secondary-700 hover:bg-secondary-300 h-full w-20 rounded-l cursor-pointer outline-none">
+                                            <span class="m-auto text-2xl font-thin">−</span>
+                                        </button>
+                                        <x-input type="number" name="{{ $item->id }}" id="{{ $item->id }}"
+                                            placeholder="{{ ucfirst($name) }}" value="0" min="0"
+                                            required />
+                                        <button onclick="this.parentNode.querySelector('input[type=number]').stepUp()"
+                                            type="button"
+                                            class="bg-secondary-200 text-secondary-500 hover:text-secondary-700 hover:bg-secondary-300 h-full w-20 rounded-r cursor-pointer">
+                                            <span class="m-auto text-2xl font-thin">+</span>
+                                        </button>
+                                        <div class="flex items-center ml-1">
+                                            x {{ ucfirst($name) }}
+                                            @if ($item->configurableOptionInputs->first()->configurableOptionInputPrice->{$billing_cycle})
+                                                {{ config('settings::currency_sign') . $item->configurableOptionInputs->first()->configurableOptionInputPrice->{$billing_cycle} }}
+                                            @else
+                                                free
+                                            @endif
+                                        </div>
+                                    </div>
+                                @else
+                                    <x-input type="{{ $item->type }}" placeholder="{{ ucfirst($item->name) }}"
+                                        name="{{ $item->id }}" id="{{ $item->id }}"
+                                        label="{{ ucfirst($name) }}" required>
+                                        @foreach ($item->configurableOptionInputs()->orderBy('order', 'asc')->get() as $option)
+                                            @if ($option->hidden)
+                                                @continue
+                                            @endif
+                                            <option value="{{ $option->id }}"
+                                                @if (old($item->name) == $option) selected @endif>  
+                                                {{ $option->name }} @if ($option->configurableOptionInputPrice->{$billing_cycle})
+                                                    -
+                                                    {{ config('settings::currency_sign') . $option->configurableOptionInputPrice->{$billing_cycle} }}
+                                                @else
+                                                    - free
+                                                @endif
+                                            </option>
+                                        @endforeach
+                                    </x-input>
+                                @endif
+                            </div>
+                        @endforeach
+                    @endforeach
                     <div class="flex justify-end mt-6">
                         <button type="submit" class="button button-primary">
                             {{ __('Continue') }}

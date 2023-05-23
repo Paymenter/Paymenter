@@ -76,7 +76,7 @@ class CheckoutController extends Controller
                 }
             }
         }
-        if ($product->prices()->get()->first()->type == 'recurring') {
+        if ($product->prices()->get()->first()->type == 'recurring' || count($product->configurableGroups()) > 0) {
             return redirect()->route('checkout.config', $product->id);
         }
         $product->quantity = 1;
@@ -104,13 +104,13 @@ class CheckoutController extends Controller
     public function config(Request $request, Product $product)
     {
         $server = Extension::find($product->server_id);
-        if (!$server && $product->prices()->get()->first()->type != 'recurring') {
+        if (!$server && $product->prices()->get()->first()->type != 'recurring' && count($product->configurableGroups()) == 0) {
             return redirect()->back()->with('error', 'Config Not Found');
         }
         if ($server) {
             include_once base_path('app/Extensions/Servers/' . $server->name . '/index.php');
             $function = $server->name . '_getUserConfig';
-            if (!function_exists($function) && $product->prices()->get()->first()->type != 'recurring') {
+            if (!function_exists($function) && $product->prices()->get()->first()->type != 'recurring' && count($product->configurableGroups()) == 0) {
                 return redirect()->back()->with('error', 'Config Not Found');
             }
             if (function_exists($function)) {
@@ -151,13 +151,13 @@ class CheckoutController extends Controller
     {
         $server = Extension::find($product->server_id);
         $prices = $product->prices()->get()->first();
-        if (!$server && $prices->type != 'recurring') {
+        if (!$server && $prices->type != 'recurring' && count($product->configurableGroups()) == 0) {
             return redirect()->back()->with('error', 'Config Not Found');
         }
         if ($server) {
             include_once base_path('app/Extensions/Servers/' . $server->name . '/index.php');
             $function = $server->name . '_getUserConfig';
-            if (!function_exists($function) && $prices->type != 'recurring') {
+            if (!function_exists($function) && $prices->type != 'recurring' && count($product->configurableGroups()) == 0) {
                 return redirect()->back()->with('error', 'Config Not Found');
             }
             if (function_exists($function)) {
@@ -183,9 +183,15 @@ class CheckoutController extends Controller
         }
         $product->quantity = 1;
         $configItems = [];
+        $resetBillingCycle = false;
+        if (!$product->billing_cycle) {
+            $resetBillingCycle = true;
+            $product->billing_cycle = 'monthly';
+        }
         foreach ($product->configurableGroups() as $config) {
             $configItemsGet = $config->configurableOptions()->get();
             foreach ($configItemsGet as $configItem) {
+                if ($configItem->hidden) continue;
                 if (!$request->has($configItem->id)) {
                     return redirect()->back()->with('error', $configItem->name . ' is required');
                 }
@@ -203,10 +209,14 @@ class CheckoutController extends Controller
                         } else {
                             $product->price += $configItemPrice->{$product->billing_cycle};
                         }
+                        error_log($configItemPrice->{$product->billing_cycle});
                         $product->setup_fee += $configItemPrice->{$product->billing_cycle . '_setup'};
                     }
                 }
             }
+        }
+        if ($resetBillingCycle) {
+            $product->billing_cycle = null;
         }
         $product->configurableOptions = $configItems;
         $cart = session()->get('cart');
