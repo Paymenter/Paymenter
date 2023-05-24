@@ -6,6 +6,7 @@ use App\Mail\Invoices\NewInvoice;
 use App\Mail\Orders\NewOrder;
 use App\Mail\Test;
 use App\Mail\Tickets\NewTicket;
+use App\Mail\Tickets\NewTicketMessage;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Support\Facades\Mail;
 
@@ -26,7 +27,7 @@ class NotificationHelper
     public static function sendNewOrderNotification($order, $user)
     {
         if (config('settings::mail_disabled')) return;
-        Mail::to($user->email)->bcc(NotificationHelper::bcc())->queue(new NewOrder($order));
+        Mail::to($user->email)->bcc(self::bcc())->queue(new NewOrder($order));
     }
 
     /**
@@ -38,7 +39,7 @@ class NotificationHelper
     public static function sendNewInvoiceNotification($invoice, $user)
     {
         if (config('settings::mail_disabled')) return;
-        Mail::to($user->email)->bcc(NotificationHelper::bcc())->queue(new NewInvoice($invoice));
+        Mail::to($user->email)->bcc(self::bcc())->queue(new NewInvoice($invoice));
     }
 
     /**
@@ -49,7 +50,7 @@ class NotificationHelper
     public static function sendTestNotification($user)
     {
         if (config('settings::mail_disabled')) return;
-        Mail::to($user->email)->bcc(NotificationHelper::bcc())->send(new Test($user));
+        Mail::to($user->email)->bcc(self::bcc())->send(new Test($user));
     }
 
     /**
@@ -61,6 +62,18 @@ class NotificationHelper
     public static function sendNewTicketNotification($ticket, $user)
     {
         if (config('settings::mail_disabled')) return;
-        Mail::to($user->email)->bcc(NotificationHelper::bcc())->locale('nl')->queue(new NewTicket($ticket));
+        Mail::to($user->email)->bcc(self::bcc())->queue(new NewTicket($ticket));
+    }
+
+    /**
+     * @param $ticket \App\Models\Ticket
+     * @param $user \App\Models\User
+     * 
+     * @return void
+     */
+    public static function sendNewTicketMessageNotification($ticket, $user)
+    {
+        if (config('settings::mail_disabled')) return;
+        Mail::to($user->email)->bcc(self::bcc())->queue(new NewTicketMessage($ticket));
     }
 }

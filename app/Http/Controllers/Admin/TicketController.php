@@ -71,6 +71,8 @@ class TicketController extends Controller
             'message' => $request->get('message'),
         ]);
 
+        NotificationHelper::sendNewTicketMessageNotification($ticket, auth()->user());
+
         return redirect()->route('admin.tickets.show', $ticket)->with('success', 'Message has been sent');
     }
 

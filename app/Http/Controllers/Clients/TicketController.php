@@ -119,6 +119,8 @@ class TicketController extends Controller
         $ticket->status = 'open';
         $ticket->save();
 
+        NotificationHelper::sendNewTicketMessageNotification($ticket, auth()->user());
+
         return redirect()->back()->with('success', 'Message sent successfully');
     }
 }
