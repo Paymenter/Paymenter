@@ -30,11 +30,14 @@ class SettingController extends Controller
             }
         }
         $themeConfig = new \stdClass();
-        if (file_exists(base_path('themes/' . Theme::active() . '/theme.json'))) {
-            $themeConfig = json_decode(file_get_contents(base_path('themes/' . Theme::active() . '/theme.json')));
+        if (file_exists(base_path('themes/' . config('settings::theme-active') . '/theme.json'))) {
+            $themeConfig = json_decode(file_get_contents(base_path('themes/' . config('settings::theme-active') . '/theme.json')));
             if (!$themeConfig) {
                 $themeConfig = new \stdClass();
             }
+        }
+        if (!isset($themeConfig->settings)) {
+            $themeConfig->settings = [];
         }
         return view('admin.settings.index', [
             'tabs' => $tabs,
