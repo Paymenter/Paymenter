@@ -98,16 +98,6 @@
                     {{ config('settings::seo_twitter_card') ? 'checked' : '' }} />
                 <label class="form-label" style="position: unset;">{{ __('Seo Twitter Card') }}</label>
             </div>
-            <div class="relative m-4 group">
-                <select name="snow" class="form-input peer @error('snow') is-invalid @enderror" placeholder=" "
-                    name="snow">
-                    <option value="1" {{ config('settings::snow') == 1 ? 'selected' : '' }}>
-                        {{ __('Enabled') }}</option>
-                    <option value="0" {{ config('settings::snow') == 0 ? 'selected' : '' }}>
-                        {{ __('Disabled') }}</option>
-                </select>
-                <label class="form-label">{{ __('Snow') }}</label>
-            </div>
         </div>
         <button class="float-right form-submit">{{ __('Submit') }}</button>
     </form>

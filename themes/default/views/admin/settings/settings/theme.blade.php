@@ -7,7 +7,7 @@
                 <select name="theme" class="form-input peer @error('theme') is-invalid @enderror" placeholder=" "
                     name="theme" required>
                     @foreach ($themes as $theme)
-                        <option value="{{ $theme }}" {{ $theme == config('settings::theme') ? 'selected' : '' }}>
+                        <option value="{{ $theme }}" {{ $theme == config('settings::theme-active') ? 'selected' : '' }}>
                             {{ $theme }}</option>
                     @endforeach
                 </select>

@@ -122,6 +122,7 @@ class AppServiceProvider extends ServiceProvider
                 Theme::set(config('settings::theme'), 'default');
             }
             // Unset settings::theme
+            config(['settings::theme-active' => config('settings::theme')]);
             config(['settings::theme' => null]);
         } catch (\Exception $e) {
             Log::error($e->getMessage());
