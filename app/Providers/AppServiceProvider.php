@@ -73,7 +73,6 @@ class AppServiceProvider extends ServiceProvider
             }
             if (empty(config('settings::mail_host')) || empty(config('settings::mail_port')) || empty(config('settings::mail_username')) || empty(config('settings::mail_password'))) {
                 config(['settings::mail_disabled' => true]);
-                Log::warning('Mail settings are not configured. Mail has been disabled.');
             }
 
             if (!config('settings::mail_disabled')) {

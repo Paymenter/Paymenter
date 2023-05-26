@@ -363,6 +363,8 @@ class CheckoutController extends Controller
             if ($total == 0) {
                 $invoice->status = 'paid';
                 $invoice->save();
+
+                return redirect()->route('clients.invoice.show', $invoice->id);
             }
 
             if ($request->get('payment_method')) {
