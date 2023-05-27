@@ -41,7 +41,7 @@
                         <div id="tfa" tabindex="-1" aria-hidden="true"
                             class="fixed top-0 left-0 right-0 z-50 hidden w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] md:h-full">
                             <div class="relative w-full h-full max-w-2xl md:h-auto">
-                                <div class="relative rounded-lg shadow bg-secondary-50 dark:bg-secondary-100">
+                                <div class="content-box">
                                     <div
                                         class="flex items-start justify-between p-4 border-b rounded-t">
                                         <h3 class="text-xl font-semibold text-secondary-900">
@@ -49,7 +49,7 @@
                                         </h3>
                                         <button type="button"
                                             class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white"
-                                            data-modal-hide="defaultModal">
+                                            data-modal-hide="tfa">
                                             <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"
                                                 xmlns="http://www.w3.org/2000/svg">
                                                 <path fill-rule="evenodd"

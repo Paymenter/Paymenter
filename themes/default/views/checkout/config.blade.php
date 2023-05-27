@@ -93,7 +93,9 @@
                             };
                         </script>
                     @endif
+                    @if(count($customConfig) > 0)
                     <h1 class="text-xl font-bold mt-6">{{ __('Configurable Options') }}</h1>
+                    @endif
                     @foreach ($customConfig as $config)
                         @php
                             $configItems = $config
