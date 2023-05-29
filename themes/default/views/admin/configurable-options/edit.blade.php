@@ -152,7 +152,6 @@
                                                     name="option[{{ $option->id }}][pricing][triennially]"
                                                     placeholder="Triennially"
                                                     value="{{ $pricing['triennially'] ?? '' }}" />
-                                                <hr class="border-secondary-300" />
                                             </div>
                                             <div class="flex flex-row text-sm gap-4 mt-2">
                                                 <x-input label="Monthly/One-time Setup Fee" type="text"
