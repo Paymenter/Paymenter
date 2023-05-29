@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\ConfigurableGroup;
 use App\Models\ConfigurableOption;
+use App\Models\ConfigurableOptionInput;
+use App\Models\OrderProductConfig;
 use App\Models\Product;
 use Illuminate\Http\Request;
 
@@ -80,12 +82,12 @@ class ConfigurableOptionController extends Controller
         $data = $request->validate([
             'name' => 'required|unique:configurable_option_groups,name,' . $configurableOptionGroup->id,
             'description' => 'required|string',
-            'products' => 'required|array',
+            'products' => 'sometimes|array',
         ]);
         $configurableOptionGroup->update([
             'name' => $data['name'],
             'description' => $data['description'],
-            'products' => $data['products'],
+            'products' => $data['products'] ?? [],
         ]);
         return redirect()->route('admin.configurable-options.edit', $configurableOptionGroup->id)->with('success', 'Configurable Option Group updated successfully');
     }
@@ -171,6 +173,27 @@ class ConfigurableOptionController extends Controller
     }
 
     /**
+     * Delete the specified configurable option from database.
+     * 
+     * @param  ConfigurableGroup  $configurableOptionGroup
+     * @param  ConfigurableOption  $configurableOption
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function destroyOption(ConfigurableGroup $configurableOptionGroup, ConfigurableOption $configurableOption): \Illuminate\Http\RedirectResponse
+    {
+        // Get all orderproductconfig options
+        $orderProductConfigOptions = OrderProductConfig::where('key', $configurableOption->id)->where('is_configurable_option', true)->get();
+        // Delete all orderproductconfig options
+        foreach ($orderProductConfigOptions as $orderProductConfigOption) {
+            $orderProductConfigOption->delete();
+        }
+
+
+        $configurableOption->delete();
+        return redirect()->route('admin.configurable-options.edit', $configurableOptionGroup->id)->with('success', 'Configurable Option deleted successfully');
+    }
+
+    /**
      * Create new configurable option input.
      * 
      * @param  Request  $request
@@ -186,6 +209,33 @@ class ConfigurableOptionController extends Controller
             'order' => 0,
         ]);
         $optionInput->configurableOptionInputPrice()->create();
-        return redirect()->route('admin.configurable-options.edit', $configurableOptionGroup->id)->with('success', 'Configurable Option Input created successfully');
+        return redirect()->route('admin.configurable-options.edit', $configurableOptionGroup->id)->with('success', 'Configurable Option Input created successfully')->with('open', $configurableOption->id);
+    }
+    
+    /**
+     * Delete the specified configurable option input from database.
+     * 
+     * @param  ConfigurableGroup  $configurableOptionGroup
+     * @param  ConfigurableOption  $configurableOption
+     * @param  ConfigurableOptionInput  $configurableOptionInput
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function destroyOptionInput(ConfigurableGroup $configurableOptionGroup, ConfigurableOption $configurableOption, ConfigurableOptionInput $configurableOptionInput): \Illuminate\Http\RedirectResponse
+    {
+        // If the option input is lower then 1  
+        if($configurableOption->configurableOptionInputs()->count() < 2) {
+            return redirect()->route('admin.configurable-options.edit', $configurableOptionGroup->id)->with('error', 'You can not delete the last option input');
+        }
+        // Get all orderproductconfig options
+        $orderProductConfigOptions = OrderProductConfig::where('key', $configurableOptionInput->id)->where('is_configurable_option', true)->get();
+        // Delete all orderproductconfig options
+        foreach ($orderProductConfigOptions as $orderProductConfigOption) {
+            if($orderProductConfigOption->value == $configurableOptionInput->id) {
+                $orderProductConfigOption->delete();
+            }
+        }
+
+        $configurableOptionInput->delete();
+        return redirect()->route('admin.configurable-options.edit', $configurableOptionGroup->id)->with('success', 'Configurable Option Input deleted successfully')->with('open', $configurableOption->id);
     }
 }

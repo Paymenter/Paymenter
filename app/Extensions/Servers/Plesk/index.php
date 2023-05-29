@@ -68,7 +68,7 @@ function Plesk_getUserConfig()
     ];
 }
 
-function Plesk_createServer($user, $params, $order, $configurableOptions)
+function Plesk_createServer($user, $params, $order)
 {
     $apiKey = Plesk_getApiKey();
     $host = ExtensionHelper::getConfig('Plesk', 'host');
@@ -180,3 +180,7 @@ function Plesk_terminateServer($user, $params)
     return $domain;
 }
 
+function Plesk_getLink($user, $params){
+    $host = ExtensionHelper::getConfig('Plesk', 'host');
+    return $host . '/smb/web/overview/id/' . Plesk_getDomainID($params['config']['domain']) . '/type/domain';
+}

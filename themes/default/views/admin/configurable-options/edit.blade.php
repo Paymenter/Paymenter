@@ -10,7 +10,7 @@
                 placeholder="Description" required autofocus value="{{ $configurableOptionGroup->description }}" />
             <!-- MultiSelect -->
             <x-input id="configurable_options" class="block mt-1 w-full" type="select" name="products[]"
-                label="Configurable Options" placeholder="Configurable Options" required multiple>
+                label="Configurable Options" placeholder="Configurable Options" multiple>
                 @foreach ($products as $product)
                     <option value="{{ $product->id }}" @if (in_array($product->id, $configurableOptionGroup->products)) selected @endif>
                         {{ $product->name }}</option>
@@ -54,6 +54,9 @@
                     <th>
                         {{ __('Edit') }}
                     </th>
+                    <th>
+                        {{ __('Delete') }}
+                    </th>
                 </tr>
             </thead>
             <tbody>
@@ -80,10 +83,14 @@
                                             value="{{ $configurableOption->name }}" />
                                         <x-input id="type" class="block mt-1 w-full" type="select" name="type"
                                             label="Type" placeholder="Type" required>
-                                            <option value="select" @if($configurableOption->type == 'select') selected @endif>Select</option>
-                                            <option value="radio" @if($configurableOption->type == 'radio') selected @endif>Radio</option>
-                                            <option value="checkbox" @if($configurableOption->type == 'checkbox') selected @endif>Checkbox</option>
-                                            <option value="quantity" @if($configurableOption->type == 'quantity') selected @endif>Quantity</option>
+                                            <option value="select" @if ($configurableOption->type == 'select') selected @endif>
+                                                Select</option>
+                                            <option value="radio" @if ($configurableOption->type == 'radio') selected @endif>
+                                                Radio</option>
+                                            <option value="checkbox" @if ($configurableOption->type == 'checkbox') selected @endif>
+                                                Checkbox</option>
+                                            <option value="quantity" @if ($configurableOption->type == 'quantity') selected @endif>
+                                                Quantity</option>
                                         </x-input>
                                     </div>
                                     <div class="flex flex-row gap-4">
@@ -105,13 +112,20 @@
                                                 <x-input label="Name" type="text" class="block mt-1 w-full"
                                                     name="option[{{ $option->id }}][name]" placeholder="Name"
                                                     value="{{ $option->name }}" />
-                                                <x-input label="Order" type="text" class="block mt-1 w-full"
-                                                    name="option[{{ $option->id }}][order]" placeholder="Order"
-                                                    value="{{ $option->order }}" />
+                                                <div class="flex items-end">
+                                                    <x-input label="Order" type="text" class="block mt-1 w-full"
+                                                        name="option[{{ $option->id }}][order]" placeholder="Order"
+                                                        value="{{ $option->order }}" />
+                                                    <button type="button" class="button button-danger h-min ml-1"
+                                                        onclick="event.preventDefault(); document.getElementById('deleteOption{{ $option->id }}').submit();">
+                                                        {{ __('Delete') }}
+                                                    </button>
+                                                </div>
                                                 <div class="items-center flex" class="block mt-1 w-full">
-                                                    <x-input label="Hidden" type="checkbox" name="option[{{ $option->id }}][hidden]" 
-                                                        checked="{{ $option->hidden }}"
-                                                        placeholder="hidden" value="1" />
+                                                    <x-input label="Hidden" type="checkbox"
+                                                        name="option[{{ $option->id }}][hidden]"
+                                                        checked="{{ $option->hidden }}" placeholder="hidden"
+                                                        value="1" />
                                                 </div>
                                             </div>
                                             <div class="flex flex-row text-sm gap-4 mt-2">
@@ -165,8 +179,6 @@
                                                     name="option[{{ $option->id }}][pricing][triennially_setup]"
                                                     placeholder="Triennially Setup Fee"
                                                     value="{{ $pricing['triennially_setup'] ?? '' }}" />
-
-
                                             </div>
                                         </div>
                                     @endforeach
@@ -184,6 +196,14 @@
                                         {{ __('Add new input') }}
                                     </button>
                                 </form>
+                                @foreach ($configurableOption->configurableOptionInputs as $option)
+                                    <form method="POST" class="hidden"
+                                        action="{{ route('admin.configurable-options.options.inputs.destroy', ['configurableOptionGroup' => $configurableOptionGroup->id, 'configurableOption' => $configurableOption->id, 'configurableOptionInput' => $option->id]) }}"
+                                        id="deleteOption{{ $option->id }}">
+                                        @csrf
+                                        @method('DELETE')
+                                    </form>
+                                @endforeach
                             </x-modal>
                             <button type="button" class="button button-primary"
                                 id="editModalButton{{ $configurableOption->id }}"
@@ -192,11 +212,33 @@
                                 {{ __('Edit') }}
                             </button>
                         </td>
+                        <td>
+                            <button type="button" class="button button-danger"
+                                onclick="event.preventDefault(); document.getElementById('deleteForm{{ $configurableOption->id }}').submit();">
+                                {{ __('Delete') }}
+                            </button>
+                            <form id="deleteForm{{ $configurableOption->id }}"
+                                action="{{ route('admin.configurable-options.options.destroy', ['configurableOptionGroup' => $configurableOptionGroup->id, 'configurableOption' => $configurableOption->id]) }}"
+                                method="POST" class="hidden">
+                                @csrf
+                                @method('DELETE')
+                            </form>
+                        </td>
                     </tr>
                 @endforeach
             </tbody>
         </table>
     </div>
+    <script>
+        var open = '{{ session()->get('open') }}';
+        if (open) {
+            document.addEventListener("DOMContentLoaded", function(event) {
+                setTimeout(() => {
+                    document.getElementById('editModalButton' + open).click();
+                }, 500);
+            });
+        }
+    </script>
 
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/pdfmake.min.js"></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/vfs_fonts.js"></script>
