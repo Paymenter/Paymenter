@@ -1,7 +1,15 @@
 <?php
 
+use App\Classes\Routing;
 use Illuminate\Support\Facades\Route;
 
+require __DIR__ . '/admin.php';
+require __DIR__ . '/extensions.php';
+
+if (!Routing::useLaravelRouting()) {
+    Route::view('/{path?}', 'app')
+    ->where('path', '^(?!(\/)?(api|static|images)).+');
+}
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -65,7 +73,5 @@ Route::group(['prefix' => 'api', 'middleware' => 'auth'], function () {
 });
 
 require __DIR__ . '/auth.php';
-require __DIR__ . '/admin.php';
-require __DIR__ . '/extensions.php';
 
 Route::get('/{slug?}/{product?}', [App\Http\Controllers\BasisController::class, 'products'])->name('products');

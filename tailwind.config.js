@@ -6,7 +6,7 @@ module.exports = {
         "./vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php",
         "./storage/framework/views/*.php",
         "./resources/views/**/*.blade.php",
-        "./themes/**/**/**/*.{blade.php,js,vue,ts}",
+        "./themes/**/**/**/*.{blade.php,js,vue,ts,jsx,tsx}",
         "./node_modules/flowbite/**/*.js"
     ],
 
