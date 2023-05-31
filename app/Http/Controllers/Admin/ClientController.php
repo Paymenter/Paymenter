@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Route;
 use App\Models\{Invoice, Order, Role, Ticket};
+use Illuminate\Support\Facades\Hash;
 
 class ClientController extends Controller
 {
@@ -29,6 +30,8 @@ class ClientController extends Controller
             'email' => 'required|email|unique:users',
             'password' => 'required|min:8',
         ]);
+        $password = Hash::make($request->password);
+        $request->merge(['password' => $password]);
         $user = User::create($request->all());
 
         return redirect()->route('admin.clients.edit', $user->id);

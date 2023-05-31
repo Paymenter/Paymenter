@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Models\Role;
 use Illuminate\Console\Command;
 
 class User extends Command
@@ -29,12 +30,6 @@ class User extends Command
     {
         $email = $this->ask('Create a user. What is his/her email?');
 
-        $password = $this->secret('Password for this new user?');
-
-        $name = $this->ask('What is his/her name?');
-
-        $admin = $this->confirm('Is this user an admin?');
-
         if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
             exit($this->error('Invalid email address stublifer.'));
         }
@@ -43,15 +38,22 @@ class User extends Command
             exit($this->error('User already exists.'));
         }
 
+        $password = $this->secret('Password for this new user?');
+
+        $name = $this->ask('What is his/her name?');
+        $roles = Role::all()->pluck('name')->toArray();
+        
+        $role = $this->choice('What is his/her role?', $roles, 1);
+        
         $user = \App\Models\User::create([
             'email' => $email,
             'name' => $name,
             'password' => \Hash::make($password),
-            'is_admin' => $admin,
+            'role_id' => Role::where('name', $role)->first()->id,
         ]);
         $this->info('Account created successfully!');
-        echo $this->table(['name', 'email', 'admin'], [
-            [$user->name, $user->email, $user->is_admin ? 'yes' : 'no'],
+        echo $this->table(['name', 'email', 'role'], [
+            [$user->name, $user->email, $user->role->name],
         ]);
     }
 }
