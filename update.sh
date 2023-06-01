@@ -94,8 +94,8 @@ echo '$upgrader> composer install --no-dev --optimize-autoloader'
 composer install --no-dev --optimize-autoloader
 
 # Run the database migrations.
-echo '$upgrader> php artisan migrate --force'
-php artisan migrate --force
+echo '$upgrader> php artisan migrate --force --seed'
+php artisan migrate --force --seed
 
 # Clear config and view caches.
 echo '$upgrader> php artisan config:clear'
