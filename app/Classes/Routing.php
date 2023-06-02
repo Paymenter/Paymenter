@@ -12,7 +12,7 @@ class Routing
     */
     public static function useLaravelRouting()
     {
-        $themeName = Setting::where('key', 'theme')->first()->value ?? 'default';
+        $themeName = config('settings::theme-active') ?? 'default';
 
         try {
             $themeData = file_get_contents(base_path() . "/themes/{$themeName}/theme.json");

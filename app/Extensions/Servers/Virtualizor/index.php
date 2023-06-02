@@ -128,7 +128,7 @@ function Virtualizor_getProductConfig()
     ];
 }
 
-function Virtualizor_createServer($user, $params, $order)
+function Virtualizor_createServer($user, $params, $order, $configurableOptions)
 {
     $config = $params['config'];
     $key = ExtensionHelper::getConfig('virtualizor', 'key');
@@ -160,28 +160,28 @@ function Virtualizor_createServer($user, $params, $order)
     $post['server_group'] = 0;
     $post['hostname'] = $config['hostname'];
     $post['rootpass'] = $config['password'];
-    $post['num_ips6'] = $plan['ips6'];
-    $post['num_ips6_subnet'] = $plan['ips6_subnet'];
-    $post['num_ips'] = $plan['ips'];
-    $post['ram'] = $plan['ram'];
-    $post['swapram'] = $plan['swap'];
-    $post['bandwidth'] = $plan['bandwidth'];
-    $post['network_speed'] = $plan['network_speed'];
-    $post['cpu'] = $plan['cpu'];
-    $post['cores'] = $plan['cores'];
-    $post['cpu_percent'] = $plan['cpu_percent'];
-    $post['vnc'] = $plan['vnc'];
+    $post['num_ips6'] = isset($configurableOptions['ips6']) ? $configurableOptions['ips6'] : $plan['ips6'];
+    $post['num_ips6_subnet'] = isset($configurableOptions['ips6_subnet']) ? $configurableOptions['ips6_subnet'] : $plan['ips6_subnet'];
+    $post['num_ips'] = isset($configurableOptions['ips']) ? $configurableOptions['ips'] : $plan['ips'];
+    $post['ram'] = isset($configurableOptions['ram']) ? $configurableOptions['ram'] : $plan['ram'];
+    $post['swapram'] = isset($configurableOptions['swap']) ? $configurableOptions['swap'] : $plan['swap'];
+    $post['bandwidth'] = isset($configurableOptions['bandwidth']) ? $configurableOptions['bandwidth'] : $plan['bandwidth'];
+    $post['network_speed'] = isset($configurableOptions['network_speed']) ? $configurableOptions['network_speed'] : $plan['network_speed'];
+    $post['cpu'] = isset($configurableOptions['cpu']) ? $configurableOptions['cpu'] : $plan['cpu'];
+    $post['cores'] = isset($configurableOptions['cores']) ? $configurableOptions['cores'] : $plan['cores'];
+    $post['cpu_percent'] = isset($configurableOptions['cpu_percent']) ? $configurableOptions['cpu_percent'] : $plan['cpu_percent'];
+    $post['vnc'] = isset($configurableOptions['vnc']) ? $configurableOptions['vnc'] : $plan['vnc'];
     $post['vncpass'] = $config['password'];
     $post['kvm_cache'] = $plan['kvm_cache'];
     $post['io_mode'] = $plan['io_mode'];
     $post['vnc_keymap'] = $plan['vnc_keymap'];
     $post['nic_type'] = $plan['nic_type'];
-    $post['osreinstall_limit'] = $plan['osreinstall_limit'];
-    $post['space'] = $plan['space'];
+    $post['osreinstall_limit'] = isset($configurableOptions['osreinstall_limit']) ? $configurableOptions['osreinstall_limit'] : $plan['osreinstall_limit'];
+    $post['space'] = isset($configurableOptions['space']) ? $configurableOptions['space'] : $plan['space'];
 
     $output = $admin->addvs_v2($post);
 
-    if(isset($output['error'])){
+    if (isset($output['error'])) {
         ExtensionHelper::error('Virtualizor', $output['error']);
         return;
     }
@@ -200,8 +200,8 @@ function Virtualizor_suspendServer($user, $params, $order)
     $port = ExtensionHelper::getConfig('virtualizor', 'port');
     $admin = new Virtualizor_Admin_API();
     $admin->Virtualizor_Admin_API($ip, $key, $pass, $port);
-    if(!isset($params['config']['external_id'])){
-        ExtensionHelper::error('Virtualizor', 'Server not found for order #'.$order->id.'.');
+    if (!isset($params['config']['external_id'])) {
+        ExtensionHelper::error('Virtualizor', 'Server not found for order #' . $order->id . '.');
         return;
     }
     $admin->suspend($params['config']['external_id']);
@@ -218,7 +218,7 @@ function Virtualizor_unsuspendServer($user, $params, $order)
     $admin = new Virtualizor_Admin_API();
     $admin->Virtualizor_Admin_API($ip, $key, $pass, $port);
     if (!isset($params['config']['external_id'])) {
-        ExtensionHelper::error('Virtualizor', 'Server not found for order #'.$order->id.'.');
+        ExtensionHelper::error('Virtualizor', 'Server not found for order #' . $order->id . '.');
         return;
     }
     $admin->unsuspend($params['config']['external_id']);
@@ -235,7 +235,7 @@ function Virtualizor_terminateServer($user, $params, $order)
     $admin = new Virtualizor_Admin_API();
     $admin->Virtualizor_Admin_API($ip, $key, $pass, $port);
     if (!isset($params['config']['external_id'])) {
-        ExtensionHelper::error('Virtualizor', 'Server not found for order #'.$order->id.'.');
+        ExtensionHelper::error('Virtualizor', 'Server not found for order #' . $order->id . '.');
         return;
     }
     $admin->delete_vs($params['config']['external_id']);
