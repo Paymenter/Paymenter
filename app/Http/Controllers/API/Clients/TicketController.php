@@ -99,6 +99,28 @@ class TicketController extends Controller
     }
 
     /**
+     * Get messages of a ticket by ID.
+     */
+    public function getMessages(Request $request, int $ticketId)
+    {
+        $user = $request->user();
+
+        if (!$user->tokenCan('ticket:read')) {
+            return response()->json([
+                'error' => 'You do not have permission to read tickets.',
+            ], 403);
+        }
+
+        $ticket = Ticket::where('client', $user->id)->where('id', $ticketId)->firstOrFail();
+
+        $messages = $ticket->messages()->with('user')->paginate(25);
+
+        return response()->json([
+            'messages' => API::repaginate($messages),
+        ], 200);
+    }
+
+    /**
      * Close a ticket by ID.
      */
     public function closeTicket(Request $request, int $ticketId)
