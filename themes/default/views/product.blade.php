@@ -19,7 +19,7 @@
                         <div class="flex flex-col gap-2 mt-2">
                             @foreach ($categories as $categoryItem)
                             @if ($categoryItem->products->count() > 0)
-                            <a href="{{ route('products', $categoryItem->slug) }}" class="@if (($category->name == $categoryItem->name)) text-secondary-900 pl-3 border-primary-400 @endif border-l-2 border-transparent duration-300 hover:text-secondary-900 hover:pl-3 hover:border-primary-400 focus:text-secondary-900 focus:pl-3 focus:border-primary-400">
+                            <a href="{{ route('products', $categoryItem->slug) }}" class="@if ($category->name == $categoryItem->name) text-secondary-900 pl-3 !border-primary-400 @endif border-l-2 border-transparent duration-300 hover:text-secondary-900 hover:pl-3 hover:border-primary-400 focus:text-secondary-900 focus:pl-3 focus:border-primary-400">
                                 {{ $categoryItem->name }}
                             </a>
                             @endif

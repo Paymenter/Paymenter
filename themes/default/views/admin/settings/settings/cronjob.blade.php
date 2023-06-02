@@ -6,9 +6,9 @@
     @isset($last_ran_at)
         <h2 class="col-span-1 md:col-span-2 text-xl text-gray-900 dark:text-darkmodetext ">{{ __('Last Ran At') }}:
             {{ $last_ran_at }}</h2>
-        @if($last_ran_at < now()->subMinutes(10))
-            <p class="col-span-1 md:col-span-2 text-lg text-gray-900 dark:text-darkmodetext ">
-                {{ __('Cronjob has not run in the' ) }} <span class="text-danger-400 dark:text-danger-300">{{ now()->diffInMinutes($last_ran_at) }}</span> {{ __('minutes.') }}
+        @if ($last_ran_at < now()->subMinutes(10))
+            <p class="col-span-1 md:col-span-2 text-lg text-gray-900 dark:text-darkmodetext">
+                {{ __('Cronjob has not run in the last :minutes minutes.', ['minutes' => '<span class="text-danger-400 dark:text-danger-300">' . now()->diffInMinutes($last_ran_at) '</span>']) }}
                 {{ __('Please check your cronjob setup.') }}
             </p>
             <a href="https://paymenter.org/docs/getting-started/installation/#cronjob" target="_blank"
@@ -17,7 +17,8 @@
             </a>
         @endif
     @else
-        <h2 class="col-span-1 md:col-span-2 text-xl text-danger-400 dark:text-danger-300">{{ __('Last Ran At') }}: Never </h2>
+        <h2 class="col-span-1 md:col-span-2 text-xl text-danger-400 dark:text-danger-300">{{ __('Last Ran At') }}: Never
+        </h2>
         <p class="col-span-1 md:col-span-2 text-lg text-gray-900 dark:text-darkmodetext ">
             {{ __('Cronjob is not running. Please setup cronjob to run every minute.') }}<br />
             {{ __('This will cause issues such as invoices not being generated/ mails not being sent etc.') }}

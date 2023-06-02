@@ -19,7 +19,7 @@
                 document.addEventListener("DOMContentLoaded", function(event) {
                     const options = {};
                     const $targetEl = document.querySelector('#popup-modal');
-                    const modal = new Flowbite.default.Modal($targetEl, options);
+                    const modal = new window.Modal($targetEl, options);
 
                     modal.show();
                 });

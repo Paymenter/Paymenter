@@ -25,6 +25,7 @@ function PayPal_pay($total, $products, $orderId)
     $response = Http::withHeaders([
         'Content-Type' => 'application/json',
         'Authorization' => 'Bearer ' . $token,
+        'PayPal-Request-Id' => $orderId,
     ])->post($url . '/v2/checkout/orders', [
         'intent' => 'CAPTURE',
         'purchase_units' => [
@@ -36,15 +37,21 @@ function PayPal_pay($total, $products, $orderId)
                 ],
             ],
         ],
-        'application_context' => [
-            'cancel_url' => route('clients.invoice.show', $orderId),
-            'return_url' => route('clients.invoice.show', $orderId),
-            'brand_name' =>  config('app.name', 'Paymenter'),
-            'shipping_preference'  => 'NO_SHIPPING',
+        'payment_source' => [
+            'paypal' => [
+                'experience_context' => [
+                    'cancel_url' => route('clients.invoice.show', $orderId),
+                    'return_url' => route('clients.invoice.show', $orderId),
+                    'brand_name' =>  config('app.name', 'Paymenter'),
+                    'shipping_preference'  => 'NO_SHIPPING',
+                    'user_action' => 'PAY_NOW',
+                    'payment_method_preference' => 'IMMEDIATE_PAYMENT_REQUIRED',
+                ]
+            ]
         ],
     ]);
 
-    if($response->failed()) {
+    if ($response->failed()) {
         ExtensionHelper::error('PayPal', $response->json());
     }
 
