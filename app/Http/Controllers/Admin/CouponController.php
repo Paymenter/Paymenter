@@ -52,10 +52,10 @@ class CouponController extends Controller
             'value' => 'required|numeric',
             'type' => 'required|in:percent,fixed',
             'time' => 'required|in:lifetime,onetime',
-            'products' => 'sometimes',
-            'max_uses' => 'sometimes|numeric',
-            'start_date' => 'sometimes|date',
-            'end_date' => 'sometimes|date|after:start_date',
+            'products' => 'nullable',
+            'max_uses' => 'nullable|numeric',
+            'start_date' => 'nullable|date',
+            'end_date' => 'nullable|date|after:start_date',
         ]);
 
         $coupon = Coupon::create($validatedRequest->validated());
@@ -91,10 +91,10 @@ class CouponController extends Controller
             'value' => 'required|numeric',
             'type' => 'required|in:percent,fixed',
             'time' => 'required|in:lifetime,onetime',
-            'products' => 'sometimes',
-            'max_uses' => 'sometimes|numeric',
-            'start_date' => 'sometimes|date',
-            'end_date' => 'sometimes|date|after:start_date',
+            'products' => 'nullable',
+            'max_uses' => 'nullable|numeric',
+            'start_date' => 'nullable|date',
+            'end_date' => 'nullable|date|after:start_date',
         ]);
 
         $coupon->update($validatedRequest->validated());
