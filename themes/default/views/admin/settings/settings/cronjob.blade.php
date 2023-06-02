@@ -8,7 +8,9 @@
             {{ $last_ran_at }}</h2>
         @if ($last_ran_at < now()->subMinutes(10))
             <p class="col-span-1 md:col-span-2 text-lg text-gray-900 dark:text-darkmodetext">
-                {{ __('Cronjob has not run in the last :minutes minutes.', ['minutes' => '<span class="text-danger-400 dark:text-danger-300">' . now()->diffInMinutes($last_ran_at) '</span>']) }}
+                {{ __('Cronjob has not run in the last') }}
+                <span class="text-danger-400 dark:text-danger-300"> {{ now()->diffInMinutes($last_ran_at) }} </span>
+                {{ __('minutes.') }}<br />
                 {{ __('Please check your cronjob setup.') }}
             </p>
             <a href="https://paymenter.org/docs/getting-started/installation/#cronjob" target="_blank"
