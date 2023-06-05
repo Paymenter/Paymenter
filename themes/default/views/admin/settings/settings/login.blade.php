@@ -19,8 +19,8 @@
                     <br />
                     {{ __('You need to set your redirect url to') }}
                     <span class="text-blue-500 hover:cursor-pointer	"
-                        onclick="copyToClipboard('{{ route('social.login', 'discord') }}')">
-                        {{ route('social.login', 'discord') }}</span>
+                        onclick="copyToClipboard('{{ route('social.login.callback', 'discord') }}')">
+                        {{ route('social.login.callback', 'discord') }}</span>
                     <div data-popper-arrow></div>
                 </div>
                 </span>
@@ -60,8 +60,8 @@
                     <br />
                     {{ __('You need to set your redirect url to') }}
                     <span class="text-blue-500 hover:cursor-pointer	"
-                        onclick="copyToClipboard('{{ route('social.login', 'google') }}')">
-                        {{ route('social.login', 'google') }}</span>
+                        onclick="copyToClipboard('{{ route('social.login.callback', 'google') }}')">
+                        {{ route('social.login.callback', 'google') }}</span>
                     <div data-popper-arrow></div>
                 </div>
                 </span>
@@ -102,8 +102,8 @@
                     <br />
                     {{ __('You need to set your redirect url to') }}
                     <span class="text-blue-500 hover:cursor-pointer	"
-                        onclick="copyToClipboard('{{ route('social.login', 'github') }}')">
-                        {{ route('social.login', 'github') }}</span>
+                        onclick="copyToClipboard('{{ route('social.login.callback', 'github') }}')">
+                        {{ route('social.login.callback', 'github') }}</span>
                     <div data-popper-arrow></div>
                 </div>
                 </span>
