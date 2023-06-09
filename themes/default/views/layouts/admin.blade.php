@@ -76,7 +76,7 @@
     </style>
 </head>
 
-<body class="bg-secondary-100 dark:bg-secondary-50 text-secondary-700 font-sans">
+<body class="font-sans bg-secondary-100 dark:bg-secondary-50 text-secondary-700">
     <div id="app" class="min-h-screen">
         @if (config('settings::sidebar') == 1)
             @include('layouts.adminsidenavigation')
@@ -100,13 +100,7 @@
             @endif
         </main>
 
-        <footer class="pt-5 pb-3 mt-auto">
-            <div class="content text-center text-secondary-600 text-sm">
-                <a href="https://paymenter.org">
-                    Paymenter &copy; 2022 - {{ date('Y') }}
-                </a>
-            </div>
-        </footer>
+        <x-footer />
     </div>
 </body>
 
