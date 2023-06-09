@@ -34,7 +34,6 @@ class LoginRequest extends FormRequest
             'g-recaptcha-response' => 'recaptcha',
             'cf-turnstile-response' => 'recaptcha',
             'h-captcha-response' => 'recaptcha',
-
         ];
     }
 

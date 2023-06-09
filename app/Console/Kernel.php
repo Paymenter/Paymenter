@@ -15,7 +15,6 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        // $schedule->command('inspire')->hourly();
         $schedule->command('CronJob:run')->everyMinute();
         $this->registerStatsCommand();
         $schedule->command('stats:run')->daily()->at(config('settings::stats.runAt'));
