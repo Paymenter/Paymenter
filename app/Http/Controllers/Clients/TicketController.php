@@ -109,14 +109,14 @@ class TicketController extends Controller
         
         $ticketMessage = new TicketMessage();
         $ticketMessage->ticket_id = $ticket->id;
-        $ticketMessage->message = $body['messsage'];
+        $ticketMessage->message = $body['message'];
         $ticketMessage->user_id = $user->id;
         $ticketMessage->save();
 
         $ticket->status = 'open';
         $ticket->save();
 
-        NotificationHelper::sendNewTicketMessageNotification($ticket, auth()->user());
+        NotificationHelper::sendNewTicketMessageNotification($ticket, $user);
 
         return redirect()->back()->with('success', 'Message sent successfully');
     }
