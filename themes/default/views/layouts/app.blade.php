@@ -103,7 +103,7 @@
     <meta name="theme-color" content="#5270FD">
 </head>
 
-<body class="bg-secondary-100 dark:bg-secondary-50 text-secondary-700 font-sans">
+<body class="font-sans bg-secondary-100 dark:bg-secondary-50 text-secondary-700">
     @if(config('settings::theme:snow') == 1)
     <canvas class="snow" id="snow" width="1920" height="1080"></canvas>
     @endif
@@ -121,13 +121,7 @@
                     {{ $slot }}
                 </main>
 
-                <footer class="pt-5 pb-3 mt-auto">
-                    <div class="content text-center text-secondary-600 text-sm">
-                        <a href="https://paymenter.org">
-                            Paymenter &copy; 2022 - {{ date('Y') }}
-                        </a>
-                    </div>
-                </footer>
+                <x-footer />
             </div>
         </div>
     </div>
