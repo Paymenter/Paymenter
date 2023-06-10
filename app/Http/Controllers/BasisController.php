@@ -20,13 +20,15 @@ class BasisController extends Controller
         if ($product) {
             return redirect()->route('checkout.add', $product->id);
         }
-        $category;
+
+        $category = null;
         if ($slug != null) {
             $category = Category::where('slug', $slug)->first();
             if(!$category) {
                 abort(404);
             }
         }
+
         $categories = Category::all();
         return view('product', compact('categories', 'category'));
     }
@@ -38,7 +40,7 @@ class BasisController extends Controller
             $request->merge([$key => $value]);
         }
         $json = json_encode($request->all(), JSON_UNESCAPED_SLASHES);
-        echo $json;
+        echo $json; 
     }
 
     public function tos()

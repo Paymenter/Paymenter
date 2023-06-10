@@ -40,7 +40,8 @@ class TicketController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate([
+        $user = $request->user();
+        $body = $request->validate([
             'g-recaptcha-response' => 'recaptcha',
             'cf-turnstile-response' => 'recaptcha',
             'title' => 'required',
@@ -48,29 +49,26 @@ class TicketController extends Controller
             'priority' => 'required',
             'h-captcha-response' => 'recaptcha',
         ]);
-        $executed = RateLimiter::attempt(
-            'create-ticket:' . auth()->user()->id,
-            $perMinute = 1,
-            function () {
-                return true;
-            }
-        );
-        // if (!$executed) {
-        //     return redirect()->back()->with('error', 'You are sending too many messages. Please wait a few minutes and try again.');
-        // }
+
+        if (RateLimiter::tooManyAttempts("create-ticket:$user->id", $perMinute = 1)) {
+            return redirect()->back()->with('error', 'You are sending too many messages. Please wait a few minutes and try again.');
+        }
+        RateLimiter::hit("create-ticket:$user->id");
+
         $ticket = new Ticket();
-        $ticket->title = request('title');
+        $ticket->title = $body['title'];
         $ticket->status = 'open';
-        $ticket->client = auth()->user()->id;
-        $ticket->priority = request('priority');
+        $ticket->client = $user->id;
+        $ticket->priority = $body['priority'];
         $ticket->save();
 
-        TicketMessage::create([
-            'ticket_id' => $ticket->id,
-            'message' => request('description'),
-            'user_id' => auth()->user()->id,
-        ]);
-        NotificationHelper::sendNewTicketNotification($ticket, auth()->user());
+        $ticketMessage = new TicketMessage();
+        $ticketMessage->ticket_id = $ticket->id;
+        $ticketMessage->message = $body['description'];
+        $ticketMessage->user_id = $user->id;
+        $ticketMessage->save();
+
+        NotificationHelper::sendNewTicketNotification($ticket, $user);
 
         return redirect('/tickets')->with('success', 'Ticket created successfully');
     }
@@ -84,6 +82,10 @@ class TicketController extends Controller
 
     public function close(Ticket $ticket)
     {
+        if ($ticket->status == 'closed') {
+            return redirect()->back()->with('error', 'Ticket already closed.');
+        }
+
         $ticket->status = 'closed';
         $ticket->save();
 
@@ -92,34 +94,29 @@ class TicketController extends Controller
 
     public function reply(Request $request, Ticket $ticket)
     {
-        $request->validate([
+        $user = $request->user();
+        $body = $request->validate([
             'g-recaptcha-response' => 'recaptcha',
             'cf-turnstile-response' => 'recaptcha',
             'h-captcha-response' => 'recaptcha',
             'message' => 'required',
         ]);
-        if ($ticket->status == 'closed') {
-            return redirect()->back()->with('error', 'You can not reply to a closed ticket.');
-        }
-        $executed = RateLimiter::attempt(
-            'send-message:' . $ticket->id,
-            $perMinute = 3,
-            function () {
-                return true;
-            }
-        );
-        if (!$executed) {
+
+        if (RateLimiter::tooManyAttempts("send-message:$user->id", $perMinute = 5)) {
             return redirect()->back()->with('error', 'You are sending too many messages. Please wait a few minutes and try again.');
         }
-        TicketMessage::create([
-            'ticket_id' => $ticket->id,
-            'message' => request('message'),
-            'user_id' => auth()->user()->id,
-        ]);
+        RateLimiter::hit("send-message:$user->id");
+        
+        $ticketMessage = new TicketMessage();
+        $ticketMessage->ticket_id = $ticket->id;
+        $ticketMessage->message = $body['message'];
+        $ticketMessage->user_id = $user->id;
+        $ticketMessage->save();
+
         $ticket->status = 'open';
         $ticket->save();
 
-        NotificationHelper::sendNewTicketMessageNotification($ticket, auth()->user());
+        NotificationHelper::sendNewTicketMessageNotification($ticket, $user);
 
         return redirect()->back()->with('success', 'Message sent successfully');
     }
