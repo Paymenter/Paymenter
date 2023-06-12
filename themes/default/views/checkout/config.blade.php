@@ -17,8 +17,8 @@
                 <form method="POST" action="{{ route('checkout.config', $product->id) }}">
                     @csrf
                     @foreach ($userConfig as $config)
-                        @if ($config->type == 'text')
-                            <x-input type="text" placeholder="{{ ucfirst($config->name) }}" name="{{ $config->name }}"
+                        @if ($config->type == 'text' || $config->type == 'number' || $config->type == 'email' || $config->type == 'password')
+                            <x-input type="{{ $config->type }}" placeholder="{{ ucfirst($config->name) }}" name="{{ $config->name }}"
                                 id="{{ $config->name }}" label="{{ ucfirst($config->name) }}" required />
                         @elseif($config->type == 'textarea')
                             <div class="mt-4">

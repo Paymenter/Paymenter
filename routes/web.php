@@ -64,6 +64,7 @@ Route::group(['prefix' => 'announcements'], function () {
 Route::group(['prefix' => 'client/products', 'middleware' => 'auth'], function () {
     Route::get('/', [App\Http\Controllers\Clients\ProductController::class, 'index'])->name('clients.active-products.index');
     Route::get('/{product}', [App\Http\Controllers\Clients\ProductController::class, 'index'])->name('clients.active-products.show');
+    Route::get('/{product}/{url}', [App\Http\Controllers\Clients\ProductController::class, 'show'])->name('clients.active-products.extension');
 });
 
 Route::group(['prefix' => 'api', 'middleware' => 'auth'], function () {

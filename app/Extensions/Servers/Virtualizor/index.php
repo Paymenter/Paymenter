@@ -128,7 +128,7 @@ function Virtualizor_getProductConfig()
     ];
 }
 
-function Virtualizor_createServer($user, $params, $order, $configurableOptions)
+function Virtualizor_createServer($user, $params, $order, $product, $configurableOptions)
 {
     $config = $params['config'];
     $key = ExtensionHelper::getConfig('virtualizor', 'key');

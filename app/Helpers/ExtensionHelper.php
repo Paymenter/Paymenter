@@ -15,6 +15,7 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Contracts\Encryption\DecryptException;
+use Illuminate\Support\Facades\View;
 
 class ExtensionHelper
 {
@@ -445,5 +446,100 @@ class ExtensionHelper
         $link = $function($user, $config, $product->order()->get()->first(), $product);
         
         return $link;
+    }
+
+    /**
+     * Get the product configuration for the admin area
+     * 
+     * @param Product $product
+     * 
+     * @return array
+     */
+    public static function getProductConfiguration(Product $product)
+    {
+        if(!isset($product->server_id)){
+            return [];
+        }
+        $extension = Extension::where('id', $product->server_id)->first();
+        if(!$extension){
+            return [];
+        }
+        if(!file_exists(app_path() . '/Extensions/Servers/' . $extension->name . '/index.php')){
+            return [];
+        }
+        include_once app_path() . '/Extensions/Servers/' . $extension->name . '/index.php';
+        $settings = $product->settings;
+        $config = [];
+        foreach($settings as $setting){
+            $config[$setting->name] = $setting->value;
+        }
+        $config['config_id'] = $product->id;
+        
+        $function = $extension->name . '_getProductConfig';
+        if(!function_exists($function)){
+            return [];
+        }
+        $config =  $function($config);
+        return json_decode(json_encode($config));
+    }
+
+    /**
+     * Get custom pages for client area
+     * 
+     * @param OrderProduct $product
+     * 
+     * @return array
+     */
+    public static function getCustomPages(OrderProduct $product2)
+    {
+        $order = $product2->order()->first();
+
+        $product = Product::findOrFail($product2->product_id);
+        if (!isset($product->server_id)) {
+            return [];
+        }
+        $extension = Extension::where('id', $product->server_id)->first();
+        if (!$extension) {
+            return [];
+        }
+        if (!file_exists(app_path() . '/Extensions/Servers/' . $extension->name . '/index.php')) {
+            return [];
+        }
+        include_once app_path() . '/Extensions/Servers/' . $extension->name . '/index.php';
+        $config = self::loadConfiguration($product, $product2);
+        $configurableOptions = self::loadConfigurableOptions($product2);
+        $user = User::findOrFail($order->client);
+        $function = $extension->name . '_getCustomPages';
+        View::addNamespace(strtolower($extension->name), app_path() . '/Extensions/Servers/' . $extension->name . '/views');
+        try {
+            return $function($user, $config, $order, $product2, $configurableOptions);
+        } catch (\Exception $e) {
+            ExtensionHelper::error($extension->name, 'Error creating server: ' . $e->getMessage());
+            return [];
+        } 
+    }
+    
+
+    /**
+     * Get all parameters for a order product
+     * 
+     * @param OrderProduct $product
+     * 
+     * @return object
+     */
+    public static function getParameters(OrderProduct $product2)
+    {
+        $product = Product::findOrFail($product2->product_id);
+        $config = self::loadConfiguration($product, $product2);
+        $user = User::findOrFail($product2->order->client);
+        $configurableOptions = self::loadConfigurableOptions($product2);
+        
+        return (object) [
+            'user' => $user,
+            'config' => $config,
+            'order' => $product2->order,
+            'product' => $product2,
+            'configurableOptions' => $configurableOptions,
+        ];
     }
 }
