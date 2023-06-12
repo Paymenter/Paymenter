@@ -18,6 +18,13 @@ function Proxmox_getConfig()
             'description' => 'The IP address or domain name of the Proxmox server (with http:// or https://)',
         ],
         [
+            'name' => 'port',
+            'friendlyName' => 'Port',
+            'type' => 'text',
+            'required' => true,
+            'description' => 'The port of the Proxmox server',
+        ],
+        [
             'name' => 'username',
             'friendlyName' => 'Username',
             'type' => 'text',
@@ -430,7 +437,7 @@ function Proxmox_getRequest($url)
         'Authorization' => 'PVEAPIToken=' . ExtensionHelper::getConfig('Proxmox', 'username') . '=' . ExtensionHelper::getConfig('Proxmox', 'password'),
         'Accept' => 'application/json',
         'Content-Type' => 'application/json'
-    ])->withoutVerifying()->get(ExtensionHelper::getConfig('Proxmox', 'host') . '/api2/json' . $url);
+    ])->withoutVerifying()->get(ExtensionHelper::getConfig('Proxmox', 'host') . ':' . ExtensionHelper::getConfig('Proxmox', 'port') . '/api2/json' . $url);
 
     return $response;
 }
@@ -441,7 +448,7 @@ function Proxmox_postRequest($url, $data = [])
         'Authorization' => 'PVEAPIToken=' . ExtensionHelper::getConfig('Proxmox', 'username') . '=' . ExtensionHelper::getConfig('Proxmox', 'password'),
         'Accept' => 'application/json',
         'Content-Type' => 'application/json'
-    ])->withoutVerifying()->post(ExtensionHelper::getConfig('Proxmox', 'host') . '/api2/json' . $url, $data);
+    ])->withoutVerifying()->post(ExtensionHelper::getConfig('Proxmox', 'host') . ':' . ExtensionHelper::getConfig('Proxmox', 'port') . '/api2/json' . $url, $data);
 
     return $response;
 }
@@ -527,6 +534,14 @@ function Proxmox_getCustomPages($user, $parmas, $order, $product, $configurableO
     if (!$stats->json()) throw new Exception('Unable to get server stats');
     $stats = $stats->json()['data'];
 
+    $vnc = Proxmox_postRequest('/nodes/' . $parmas['node'] . '/qemu/' . ($product->id + 100) . '/vncproxy', ['websocket'=> 1, 'generate-password' => 1]);
+    if (!$vnc->json()) throw new Exception('Unable to get server vnc');
+    $vnc = $vnc->json()['data'];
+
+
+    // Make url for iframe
+    $websocket = ExtensionHelper::getConfig('Proxmox', 'host') . ':' . ExtensionHelper::getConfig('Proxmox','port') . '/?console=kvm&novnc=1&node=' . $parmas['node'] . '&resize=1&vmid=' . ($product->id + 100) . '&path=api2/json/nodes/' . $parmas['node'] . '/qemu/' . ($product->id + 100) . '/vncwebsocket/port/' . $vnc['port'] . '"/vncticket/"' . urlencode($vnc['ticket']);
+
     return [
         'name' => 'Proxmox',
         'template' => 'proxmox::control',
@@ -535,12 +550,19 @@ function Proxmox_getCustomPages($user, $parmas, $order, $product, $configurableO
             'node' => $parmas['node'],
             'vmid' => $product->id + 100,
             'stats' => $stats,
+            'vnc' => $vnc,
+            'websocket' => $websocket,
         ],
         'pages' => [
             [
                 'template' => 'proxmox::stats',
                 'name' => 'Statistics',
                 'url' => 'stats',
+            ],
+            [
+                'template' => 'proxmox::vnc',
+                'name' => 'VNC',
+                'url' => 'vnc',
             ]
         ]
     ];

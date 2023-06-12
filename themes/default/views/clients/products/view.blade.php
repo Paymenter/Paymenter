@@ -89,7 +89,4 @@
             @endisset
         </div>
     </div>
-    @if (str_contains(request()->url(), 'view'))
-        @dd('View')
-    @endif
 </x-app-layout>
