@@ -37,6 +37,12 @@ class ProductController extends Controller
         $extensionLink = $link;
         $link = ExtensionHelper::getLink($product, $link);
         $views = ExtensionHelper::getCustomPages($product);
+        // Check if array has link
+        if(isset($views['pages'])){
+            if(!in_array($extensionLink, array_column($views['pages'], 'url'))){
+                return abort(404, 'Page not found');
+            }
+        }
         $orderProduct = $product;
         $product = $product->product()->get()->first();
 
