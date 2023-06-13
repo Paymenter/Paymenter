@@ -104,6 +104,17 @@
                                 $setting->required = false;
                             @endphp
                         @endif
+                        @if ($setting->type == 'title')
+                            <div class="mt-4 col-span-2">
+                                <div class="text-xl dark:text-darkmodetext">
+                                    {{ $setting->friendlyName }}
+                                </div>
+                                <p class="text-gray-500 dark:text-darkmodetext">
+                                    {{ $setting->description }}
+                                </p>
+                            </div>
+                            @continue
+                        @endif
                         <div class="mt-4">
                             <label for="{{ $setting->name }}" class="flex items-center space-x-1">
                                 <span>

@@ -1,6 +1,5 @@
 <x-admin-layout title="Editing {{ $role->name }} role">
     <h1 class="text-center text-2xl font-bold">{{ __('Editing') }} {{ $role->name }} {{ __('role') }}</h1>
-    <x-success class="mt-4" />
     @if($role->name == 'admin' || $role->name == 'user') 
         <h4 class="text-center text-2xl font-bold text-danger-400">{{ __('You cannot edit this role, this is the default role for') }} {{ $role->name }}'s</h4>
     @endif

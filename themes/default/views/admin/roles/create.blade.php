@@ -1,6 +1,5 @@
 <x-admin-layout title="Creating a new role">
     <h1 class="text-center text-2xl font-bold">{{ __('Creating a new role') }}</h1>
-    <x-success class="mt-4" />
     <form action="{{ route('admin.roles.store') }}" method="POST">
         @csrf
         <label for="name">{{ __('Name') }}</label>

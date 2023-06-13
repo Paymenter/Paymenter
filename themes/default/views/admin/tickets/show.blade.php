@@ -95,7 +95,6 @@
                 <h1 class="text-xl text-gray-500 dark:text-darkmodetext font-bold">
                     {{ __('Reply') }}</h1>
                 <div class="grid grid-cols-1 gap-4">
-                    <x-success class="mt-4" />
                     <div class="mt-6 text-gray-500 dark:text-darkmodetext dark:bg-secondary-100">
                         <label for="message" class="text-md">{{ __('Message') }}</label>
                         <textarea id="message"

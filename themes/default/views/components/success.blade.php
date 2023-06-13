@@ -12,7 +12,8 @@
             <i class="ri-close-line"></i>
         </button>
     </div>
-@elseif(session('error'))
+@endif
+@if(session('error'))
     <div id="alert" role="alert" class="bg-danger-400 text-danger-50 px-4 py-1 rounded-md flex items-center justify-between mb-4">
         <div class="flex items-centet gap-x-2">
             <i class="ri-error-warning-line"></i>
