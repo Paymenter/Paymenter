@@ -15,7 +15,7 @@
         </button>
 
         <button class="button button-primary" onclick="proxmox_control('stop')"
-            {{ $status === 'stopped' ? "disabled=true" : '' }}">
+            {{ $status === 'stopped' && "disabled=true" }}">
             Force Stop Server
         </button>
     </div>

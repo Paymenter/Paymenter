@@ -47,7 +47,6 @@
                 data: [
                     @foreach ($stats as $stat)
                         @isset($stat['mem'])
-                            // Convert to MB
                             '{{ $stat['mem'] / 1024 / 1024 }}',
                         @endisset
                     @endforeach
