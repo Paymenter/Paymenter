@@ -17,7 +17,7 @@ class TicketTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->user = User::factory()->create(['is_admin' => 1]);
+        $this->user = User::factory()->create(['role_id' => 1]);
         $this->client = User::factory()->create();
     }
 
@@ -124,7 +124,7 @@ class TicketTest extends TestCase
         $response->assertStatus(302);
         $response->assertRedirect(route('admin.tickets.show', $ticket));
         
-        $this->assertDatabaseHas('ticketmessages', [
+        $this->assertDatabaseHas('ticket_messages', [
             'message' => 'Test Message',
             'ticket_id' => $ticket->id,
             'user_id' => $this->user->id,

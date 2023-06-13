@@ -19,7 +19,6 @@
                 <th>{{ __('ID') }}</th>
                 <th>{{ __('User') }}</th>
                 <th>{{ __('Total') }}</th>
-                <th>{{ __('Status') }}</th>
                 <th>{{ __('Created At') }}</th>
                 <th>{{ __('Updated At') }}</th>
                 <th>{{ __('Actions') }}</th>
@@ -31,11 +30,10 @@
                     <td>{{ $order->id }}</td>
                     <td>{{ $order->client()->get()->first()->name }}</td>
                     <td>{{ $order->total() }}</td>
-                    <td>{{ $order->status }}</td>
                     <td>{{ $order->created_at }}</td>
                     <td>{{ $order->updated_at }}</td>
                     <td>
-                        <a href="{{ route('admin.orders.show', $order->id) }}" class="form-submit">
+                        <a href="{{ route('admin.orders.show', $order->id) }}" class="button button-primary">
                             {{ __('Show') }}
                         </a>
                     </td>

@@ -12,7 +12,7 @@ class MainController extends Controller
         $revenueTotal = 0;
         $invoices = Invoice::where('status', 'paid')->get();
         foreach ($invoices as $invoice) {
-            $revenueTotal += $invoice->order()->get()->first()->total();
+            $revenueTotal += $invoice->total();
         }
 
         return view('admin.index', compact('revenueTotal'));

@@ -3,7 +3,7 @@
         {{ __('Tickets ' . $ticket->title) }}
     </x-slot>
 
-    <div class="p-6 bg-white sm:px-20 dark:bg-darkmode2">
+    <div class="p-6 bg-white sm:px-20 dark:bg-secondary-100">
         <h1 class="text-2xl font-bold text-gray-500 dark:text-darkmodetext">{{ __('View Ticket #') }}{{ $ticket->id }}
         </h1>
     </div>
@@ -57,15 +57,16 @@
             </p>
         </div>
     @else
-        <div class="p-6 bg-white border-b border-gray-200 dark:bg-darkmode2 dark:border-white">
+        <div class="p-6 bg-white border-b border-gray-200 dark:bg-secondary-100 dark:border-white">
             <div class="grid grid-cols-1 gap-4">
-                <div class="mt-6 text-gray-500 dark:text-darkmodetext dark:bg-darkmode2">
+                <div class="mt-6 text-gray-500 dark:text-darkmodetext dark:bg-secondary-100">
                     <h1 class="text-xl text-gray-500 dark:text-darkmodetext">
                         {{ __('Messages') }}</h1>
                     @foreach ($ticket->messages()->get() as $message)
                         <div class="p-4 mt-4 rounded-md dark:bg-darkmode bg-gray-100 grid grid-cols-1 md:grid-cols-2">
-                            <label for="message"
-                                class="prose dark:prose-invert">{{ \Illuminate\Mail\Markdown::parse(str_replace("\n", '<br>', $message->message)) }}</label>
+                            <label class="prose dark:prose-invert">
+                                {!! Str::Markdown(str_replace("\n", "  \n", $message->message), ['html_input' => 'escape']) !!}
+                            </label>
                             <p class="text-xs text-gray-500 dark:text-darkmodetext text-end"
                                 style="align-items:flex-end">
                                 @if ($message->user_id == Auth::user()->id)
@@ -87,22 +88,21 @@
         </div>
     @endif
     <br>
-    <div class="overflow-hidden bg-white sm:rounded-lg dark:bg-darkmode2">
+    <div class="overflow-hidden bg-white sm:rounded-lg dark:bg-secondary-100">
         <form method="POST" action="{{ route('admin.tickets.reply', $ticket->id) }}" class="mt-10">
             @csrf
-            <div class="p-6 bg-white border-gray-200 sm:px-20 dark:bg-darkmode2 mt-10">
+            <div class="p-6 bg-white border-gray-200 sm:px-20 dark:bg-secondary-100 mt-10">
                 <h1 class="text-xl text-gray-500 dark:text-darkmodetext font-bold">
                     {{ __('Reply') }}</h1>
                 <div class="grid grid-cols-1 gap-4">
-                    <x-success class="mt-4" />
-                    <div class="mt-6 text-gray-500 dark:text-darkmodetext dark:bg-darkmode2">
+                    <div class="mt-6 text-gray-500 dark:text-darkmodetext dark:bg-secondary-100">
                         <label for="message" class="text-md">{{ __('Message') }}</label>
                         <textarea id="message"
                             class="block w-full rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm dark:bg-darkmode"
                             rows="4" name="message" required></textarea>
                         <br>
                         <div class="mt-4">
-                            <button class="form-submit float-right">
+                            <button class="button button-success">
                                 {{ __('Reply') }}
                             </button>
                         </div>

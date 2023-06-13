@@ -15,7 +15,7 @@ class ClientTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->user = User::factory()->create(['is_admin' => 1]);
+        $this->user = User::factory()->create(['role_id' => 1]);
     }
 
     /**

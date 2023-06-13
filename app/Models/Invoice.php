@@ -14,6 +14,8 @@ class Invoice extends Model
         'order_id',
         'status',
         'paid_at',
+        'due_date',
+        'total',
     ];
 
     public function setStatusAttribute($value)
@@ -32,5 +34,92 @@ class Invoice extends Model
     public function user()
     {
         return $this->belongsTo(User::class, 'user_id');
+    }
+
+    public function total()
+    {
+        $total = 0;
+        foreach ($this->items as $item) {
+            $total += $item->total;
+        }
+
+        return $total;
+    }
+
+    public function items()
+    {
+        return $this->hasMany(InvoiceItem::class, 'invoice_id', 'id');
+    }
+
+    public function getItemsWithProducts()
+    {
+        $products = [];
+        $total = 0;
+        foreach ($this->items as $item) {
+            if ($item->product_id) {
+                $product = $item->product()->get()->first();
+                $order = $product->order()->get()->first();
+                $coupon = $order->coupon()->get()->first();
+                if ($coupon) {
+                    if ($coupon->time == 'onetime') {
+                        $invoices = $order->invoices()->get();
+                        if ($invoices->count() == 1) {
+                            $coupon = $order->coupon()->get()->first();
+                        } else {
+                            $coupon = null;
+                        }
+                    }
+                    if ($coupon->status !== 'active') {
+                        $coupon = null;
+                    }
+                    if ($coupon->end_at && $coupon->end_at < now()) {
+                        $coupon = null;
+                    }
+                    if ($coupon->start_at && $coupon->start_at > now()) {
+                        $coupon = null;
+                    }
+
+                }
+                $productId = $product->product()->get()->first();
+                if ($coupon) {
+                    if (!empty($coupon->products)) {
+                        if (!in_array($productId->id, $coupon->products)) {
+                            $product->discount = 0;
+                        } else {
+                            if ($coupon->type == 'percent') {
+                                $product->discount = $product->price * $coupon->value / 100;
+                            } else {
+                                $product->discount = $coupon->value;
+                            }
+                        }
+                    } else {
+                        if ($coupon->type == 'percent') {
+                            $product->discount = $product->price * $coupon->value / 100;
+                        } else {
+                            $product->discount = $coupon->value;
+                        }
+                    }
+                } else {
+                    $product->discount = 0;
+                }
+                $product->name = $item->description;
+                $product->price = $item->total;
+                $products[] = $product;
+                $total += ($product->price - $product->discount);
+            } else {
+                $product = $item;
+                $product->price = $item->total;
+                $product->name = $item->description;
+                $product->discount = 0;
+                $product->quantity = 1;
+                $products[] = $product;
+                $total += ($product->price - $product->discount);
+            }
+        }
+        // Return total and products as object
+        return (object) [
+            'total' => $total,
+            'products' => $products
+        ];
     }
 }

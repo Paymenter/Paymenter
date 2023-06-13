@@ -8,7 +8,7 @@
         </div>
         <div class="relative inline-block text-left justify-end">
             <button type="button"
-                class="dark:hover:bg-darkmode absolute top-0 right-0 dark:text-darkmodetext dark:bg-darkmode2 inline-flex w-max justify-end bg-white px-2 py-2 text-base font-medium rounded-md text-gray-700 mr-4"
+                class="dark:hover:bg-darkmode absolute top-0 right-0 dark:text-darkmodetext dark:bg-secondary-100 inline-flex w-max justify-end bg-white px-2 py-2 text-base font-medium rounded-md text-gray-700 mr-4"
                 id="menu-button" aria-expanded="true" aria-haspopup="true" data-dropdown-toggle="moreOptions">
                 <svg class="w-6 h-6" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20"
                     xmlns="http://www.w3.org/2000/svg">
@@ -42,6 +42,13 @@
                     <span class="font-bold">{{ __('Total') }}:</span>
                     <span>{{ config('settings::currency_sign') }}{{ $order->total() }}</span>
                 </div>
+                <div class="flex flex-col">
+                    <span class="font-bold">{{ __('Client') }}:</span>
+                    <a href="{{ route('admin.clients.edit', $order->client()->get()->first()->id) }}"
+                        class="text-blue-500 hover:text-blue-700 dark:text-blue-300 dark:hover:text-blue-500">
+                        {{ $order->client()->get()->first()->name }}
+                    </a>
+                </div>
             </div>
             <div class="flex flex-row justify-between">
                 <div class="flex flex-col">
@@ -51,18 +58,6 @@
                 <div class="flex flex-col">
                     <span class="font-bold">{{ __('Updated') }}:</span>
                     <span>{{ $order->updated_at }}</span>
-                </div>
-            </div>
-            <div class="flex flex-row justify-between">
-                <div class="flex flex-col">
-                    <span class="font-bold">{{ __('Status') }}:</span>
-                    <span>{{ $order->status }}</span>
-                </div>
-            </div>
-            <div class="flex flex-row justify-between">
-                <div class="flex flex-col">
-                    <span class="font-bold">{{ __('Next Due Date') }}:</span>
-                    <span>{{ $order->expiry_date }}</span>
                 </div>
             </div>
         </div>
@@ -117,6 +112,12 @@
                                                             value="{{ $product->quantity }}"
                                                             placeholder="{{ __('Quantity') }}" />
                                                     </div>
+                                                    <div class="flex flex-col mt-4">
+                                                        <span class="font-bold">{{ __('Expiry Date') }}:</span>
+                                                        <input class="form-input" type="date" name="expiry_date"
+                                                            value="{{ $product->expiry_date }}"
+                                                            placeholder="{{ __('Expiry Date') }}" />
+                                                    </div>
                                                     <div class="flex flex-row justify-end mt-4">
                                                         <button class="form-submit" type="submit">
                                                             {{ __('Change') }}
@@ -136,6 +137,14 @@
                         <div class="flex flex-col">
                             <span class="font-bold">{{ __('Quantity') }}:</span>
                             <span>{{ $product->quantity }}</span>
+                        </div>
+                        <div class="flex flex-col">
+                            <span class="font-bold">{{ __('Status') }}:</span>
+                            <span>{{ $product->status }}</span>
+                        </div>
+                        <div class="flex flex-col">
+                            <span class="font-bold">{{ __('Next due date') }}:</span>
+                            <span>{{ $product->expiry_date ? $product->expiry_date : 'N/A' }}</span>
                         </div>
                         <div class="flex flex-col">
                             <span class="font-bold">{{ __('Link') }}:</span>
@@ -207,6 +216,7 @@
                         <th class="px-4 py-2">{{ __('Status') }}</th>
                         <th class="px-4 py-2">{{ __('Created at') }}</th>
                         <th class="px-4 py-2">{{ __('Paid at') }}</th>
+                        <th class="px-4 py-2">{{ __('Actions') }}</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -216,6 +226,12 @@
                             <td class="px-4 py-2">{{ $invoice->status }}</td>
                             <td class="px-4 py-2">{{ $invoice->created_at }}</td>
                             <td class="px-4 py-2">{{ $invoice->paid_at }}</td>
+                            <td class="px-4 py-2">
+                                <a href="{{ route('admin.invoices.show', $invoice->id) }}"
+                                    class="text-blue-600 hover:text-blue-900">
+                                    {{ __('View') }}
+                                </a>
+                            </td>
                         </tr>
                     @endforeach
                 </tbody>

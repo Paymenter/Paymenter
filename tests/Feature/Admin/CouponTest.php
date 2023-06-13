@@ -15,7 +15,7 @@ class CouponTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->user = User::factory()->create(['is_admin' => 1]);
+        $this->user = User::factory()->create(['role_id' => 1]);
     }
 
 
@@ -54,7 +54,7 @@ class CouponTest extends TestCase
         $response = $this->actingAs($this->user)->post(route('admin.coupons.store'), [
             'code' => 'TEST',
             'type' => 'fixed',
-            'value' => 100,
+            'value' => '100',
             'time' => 'lifetime'
         ]);
 
@@ -63,7 +63,7 @@ class CouponTest extends TestCase
         $this->assertDatabaseHas('coupons', [
             'code' => 'TEST',
             'type' => 'fixed',
-            'value' => 100,
+            'value' => '100',
             'time' => 'lifetime'
         ]);
     }
@@ -78,14 +78,14 @@ class CouponTest extends TestCase
         $coupon = Coupon::factory()->create([
             'code' => 'TEST',
             'type' => 'fixed',
-            'value' => 100,
+            'value' => '100',
             'time' => 'lifetime'
         ]);
 
         $response = $this->actingAs($this->user)->put(route('admin.coupons.update', $coupon), [
             'code' => 'TEST2',
             'type' => 'percent',
-            'value' => 100,
+            'value' => '100',
             'time' => 'onetime',
             'max_uses' => 10,
             'start_date' => '2021-01-01',
@@ -97,7 +97,7 @@ class CouponTest extends TestCase
         $this->assertDatabaseHas('coupons', [
             'code' => 'TEST2',
             'type' => 'percent',
-            'value' => 100,
+            'value' => '100',
             'time' => 'onetime',
             'max_uses' => 10,
             'start_date' => '2021-01-01',
@@ -115,7 +115,7 @@ class CouponTest extends TestCase
         $coupon = Coupon::factory()->create([
             'code' => 'TEST',
             'type' => 'fixed',
-            'value' => 100,
+            'value' => '100',
             'time' => 'lifetime'
         ]);
 
@@ -126,7 +126,7 @@ class CouponTest extends TestCase
         $this->assertDatabaseMissing('coupons', [
             'code' => 'TEST',
             'type' => 'fixed',
-            'value' => 100,
+            'value' => '100',
             'time' => 'lifetime'
         ]);
     }

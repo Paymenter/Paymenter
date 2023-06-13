@@ -9,7 +9,7 @@
 
     </x-slot>
     <!-- create client -->
-    <div class="dark:bg-darkmode2 p-6 sm:px-20 bg-white">
+    <div class="dark:bg-secondary-100 p-6 sm:px-20 bg-white">
         <div class="dark:text-darkmodetext mt-8 text-2xl">
             {{ __('Create client') }}
         </div>
@@ -18,7 +18,7 @@
         </div>
     </div>
 
-    <div class="dark:bg-darkmode2 bg-gray-200 bg-opacity-25 grid grid-cols-1">
+    <div class="dark:bg-secondary-100 bg-gray-200 bg-opacity-25 grid grid-cols-1">
         <div class="p-6">
             <div class="flex items-center">
                 <div class="ml-4 text-lg text-gray-600 leading-7 font-semibold w-full">
@@ -147,9 +147,9 @@
 
                         <hr class="my-6 border-b-1 border-gray-300 dark:border-gray-600" />
 
-                        <div class="mt-4">
+                        <div class="flex items-center justify-end mt-4">
                             <button type="submit"
-                                class="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                                class="inline-flex justify-center w-max float-right button button-primary">
                                 {{ __('Save') }}
                             </button>
                         </div>

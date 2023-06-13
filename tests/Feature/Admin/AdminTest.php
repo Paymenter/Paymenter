@@ -15,7 +15,7 @@ class AdminTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->user = User::factory()->create(['is_admin' => 1]);
+        $this->user = User::factory()->create(['role_id' => 1]);
     }
 
     /**
@@ -37,7 +37,7 @@ class AdminTest extends TestCase
      */
     public function testCanLoginAsAdmin()
     {
-        $user = User::factory()->create(['is_admin' => 1]);
+        $user = User::factory()->create(['role_id' => 1]);
         $response = $this->post('/login', [
             'email' => $user->email,
             'password' => 'password',

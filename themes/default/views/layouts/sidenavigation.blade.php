@@ -4,7 +4,7 @@
             <div class="sidebar fixed top-0 bottom-0 lg:left-0 p-2 w-[300px] overflow-y-auto text-center shadow-lg bg-white dark:bg-gray-900">
                 <div class="text-xl text-gray-700 dark:text-darkmodetext hover:text-white">
                     <a href="{{ route('index') }}" class="p-2.5 items-center mt-1 flex mx-auto duration-300 cursor-pointer hover:bg-blue-900 rounded-md">
-                        <img src="{{ asset('img/logo.png') }}" alt="logo" class="w-10 h-10 rounded-full" />
+                        <x-application-logo />
                         <h1 class="font-bold text-[15px] ml-3">{{ config('settings::app_name') }}</h1>
                     </a>
                     <hr class="my-2 border-b-1 border-gray-300 dark:border-gray-600"/>
@@ -30,6 +30,7 @@
                             </svg>
                         </div>
                     </div>
+                    
                     <div class="w-4/5 mx-auto" id="submenuprof">
                         <x-sidebar-navigation-item route="clients.home" icon="ri-settings-2-line" dropdown="true">
                             Profile Settings
@@ -55,6 +56,11 @@
                     <x-sidebar-navigation-item route="clients.home" icon="ri-dashboard-3-line">
                         Dashboard
                     </x-sidebar-navigation-item>
+                    
+                    <x-sidebar-navigation-item route="clients.api.index" icon="ri-key-2-line" dropdown="true">
+                        API Tokens
+                    </x-sidebar-navigation-item>
+
                     @if (Auth::user()->is_admin == '1')
                         <x-sidebar-navigation-item route="admin.index" icon="ri-admin-line">
                             Admin

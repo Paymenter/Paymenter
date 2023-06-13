@@ -31,12 +31,36 @@
                     placeholder=" " name="recaptcha_site_key" value="{{ config('settings::recaptcha_site_key') }}" />
                 <label class="form-label">{{ __('Recaptcha public key') }}</label>
             </div>
-            <div class="relative m-4 group">
+            <div class="relative m-4 group col-span-2">
                 <input type="text" class="form-input peer @error('recaptcha_secret_key') is-invalid @enderror"
                     placeholder=" " name="recaptcha_secret_key"
                     value="{{ config('settings::recaptcha_secret_key') }}" />
                 <label class="form-label">{{ __('Recaptcha Secret key') }}</label>
             </div>
+
+            <!-- TOS -->
+            <h2 class="m-4 ml-6 text-xl text-gray-900 dark:text-darkmodetext">{{ __('Terms of Service:') }}</h2>
+            <div class="relative m-4 group">
+                <input type="checkbox" class="form-input w-fit peer @error('tos') is-invalid @enderror" placeholder=" "
+                    name="tos" value="1" {{ config('settings::tos') ? 'checked' : '' }} />
+                <label class="form-label"
+                    style="position: unset">{{ __('Require TOS to be accepted on checkout') }}</label>
+            </div>
+            <div class="relative m-4 group col-span-2">
+                <textarea class="form-input peer @error('tos_text') is-invalid @enderror" placeholder=" " id="tos_text"
+                    name="tos_text">{{ config('settings::tos_text') }}</textarea>
+            </div>
+            <script>
+                document.addEventListener("DOMContentLoaded", function() {
+                    var easyMDE = new EasyMDE({
+                        element: document.getElementById("tos_text"),
+                        spellChecker: false,
+                        toolbar: ["bold", "italic", "heading", "|", "quote", "unordered-list", "ordered-list", "|",
+                            "link", "image", "table", "|", "preview", "side-by-side", "fullscreen", "|", "guide"
+                        ]
+                    });
+                });
+            </script>
         </div>
         <button class="form-submit float-right">{{ __('Submit') }}</button>
     </form>

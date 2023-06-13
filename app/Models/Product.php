@@ -12,12 +12,12 @@ class Product extends Model
     protected $fillable = [
         'name',
         'description',
-        'price',
         'category_id',
         'image',
         'server_id',
         'stock',
         'stock_enabled',
+        'allow_quantity',
     ];
 
     public function category()
@@ -33,5 +33,44 @@ class Product extends Model
     public function settings()
     {
         return $this->hasMany(ProductSetting::class, 'product_id');
+    }
+
+    public function prices()
+    {
+        return $this->hasOne(ProductPrice::class, 'product_id');
+    }
+
+    public function price($type = null)
+    {
+        $prices = $this->prices()->get()->first();
+        if ($prices->type == 'one-time') {
+            if($type == 'setup')
+                return $prices->monthly_setup;
+            else
+                return $prices->monthly;
+        } else if ($prices->type == 'free') {
+            return 0;
+        } else {
+            if($type == 'setup')
+                return $prices->{$prices->type . '_setup'};
+            else if ($type)
+                return $prices->{$type};
+            else
+                return $prices->monthly ?? $prices->quarterly ?? $prices->semi_annually ?? $prices->annually ?? $prices->biennially ?? $prices->triennially;
+            }
+    }
+
+    public function configurableGroups()
+    {
+        // Check all groups products array
+        $groups = ConfigurableGroup::all();
+        $configurableGroups = [];
+        foreach ($groups as $group) {
+            $products = $group->products;
+            if (in_array($this->id, $products)) {
+                $configurableGroups[] = $group;
+            }
+        }
+        return $configurableGroups;
     }
 }

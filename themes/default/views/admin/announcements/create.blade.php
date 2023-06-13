@@ -22,8 +22,7 @@
                         {{ __('Description') }}
                     </label>
                     <textarea id="announcement" type="text" class="form-input w-full @error('announcement') border-red-500 @enderror"
-                        name="announcement" value="{{ old('description') }}" required
-                        autocomplete="announcement" autofocus></textarea>
+                        name="announcement" value="{{ old('description') }}" required autocomplete="announcement" autofocus></textarea>
                 </div>
                 <script>
                     var easyMDE = new EasyMDE({
@@ -42,7 +41,7 @@
                     </label>
                 </div>
                 <div class="flex items-center justify-end mt-4">
-                    <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                    <button type="submit" class="inline-flex justify-center w-max float-right button button-primary">
                         {{ __('Create') }}
                     </button>
                 </div>

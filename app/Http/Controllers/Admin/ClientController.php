@@ -6,7 +6,8 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Route;
-use App\Models\{Invoice, Order, Ticket};
+use App\Models\{Invoice, Order, Role, Ticket};
+use Illuminate\Support\Facades\Hash;
 
 class ClientController extends Controller
 {
@@ -29,6 +30,8 @@ class ClientController extends Controller
             'email' => 'required|email|unique:users',
             'password' => 'required|min:8',
         ]);
+        $password = Hash::make($request->password);
+        $request->merge(['password' => $password]);
         $user = User::create($request->all());
 
         return redirect()->route('admin.clients.edit', $user->id);
@@ -36,15 +39,8 @@ class ClientController extends Controller
 
     public function edit(User $user)
     {
-        $routeCollection = Route::getRoutes();
-        $permissions = [];
-        foreach ($routeCollection as $value) {
-            if (strpos($value->getName(), 'admin.') !== false) {
-                $permissions[] = $value->getName();
-            }
-        }
-
-        return view('admin.clients.edit', compact('user', 'permissions'));
+        $roles = Role::all();
+        return view('admin.clients.edit', compact('user', 'roles'));
     }
 
     public function loginasClient(User $user)
@@ -63,20 +59,6 @@ class ClientController extends Controller
             return redirect()->back()->with('error', 'Only Admins with full permissions can edit users');
         }
         $user->update($request->all());
-        if ($request->admin) {
-            $user->is_admin = 1;
-            if ($request->permissions) {
-                $user->permissions = $request->permissions;
-            } else {
-                $user->permissions = [];
-            }
-            $user->save();
-        } else {
-            $user->is_admin = 0;
-            $user->permissions = [];
-            $user->save();
-        }
-
         return redirect()->route('admin.clients.edit', $user->id)->with('success', 'User updated successfully');
     }
 

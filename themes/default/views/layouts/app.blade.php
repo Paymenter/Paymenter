@@ -7,95 +7,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <script>
-        (function() {
-            if ("{{ config('settings::snow') }}" == 1) {
-                var canvas, ctx;
-                var points = [];
-                var maxDist = 1000;
-
-                function init() {
-                    canvas = document.getElementById("snow");
-                    ctx = canvas.getContext("2d");
-                    resizeCanvas();
-                    pointFun();
-                    setInterval(pointFun, 20);
-                    window.addEventListener('resize', resizeCanvas, false);
-                }
-
-                function point() {
-                    this.x = Math.random() * (canvas.width + maxDist) - (maxDist / 2);
-                    this.y = Math.random() * (canvas.height + maxDist) - (maxDist / 2);
-                    this.z = (Math.random() * 0.5) + 0.5;
-                    this.vx = ((Math.random() * 2) - 0.5) * this.z;
-                    this.vy = ((Math.random() * 1.5) + 0.5) * this.z;
-                    this.fill = "rgba(108, 122, 137," + ((0.4 * Math.random()) + 0.5) + ")";
-                    this.dia = ((Math.random() * 2.5) + 1.5) * this.z;
-                    this.vs = Math.floor(Math.random() * (25 - 15 + 1) + 15);
-                    points.push(this);
-                }
-
-                function generatePoints(amount) {
-                    var temp;
-                    for (var i = 0; i < amount; i++) {
-                        temp = new point();
-                    }
-                }
-
-                function draw(obj) {
-                    ctx.beginPath();
-                    ctx.strokeStyle = "transparent";
-                    ctx.fillStyle = obj.fill;
-                    ctx.arc(obj.x, obj.y, obj.dia, 0, 2 * Math.PI);
-                    ctx.closePath();
-                    ctx.stroke();
-                    ctx.fill();
-                }
-
-                function drawSnowflake(obj) {
-                    var snowflake = new Image();
-                    if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia(
-                            '(prefers-color-scheme: dark)').matches)) {
-                        snowflake.src = 'https://www.platinumhost.io/snowflake.svg';
-                    } else {
-                        snowflake.src = 'https://www.platinumhost.io/snowflake_dark.svg';
-                    }
-                    ctx.drawImage(snowflake, obj.x, obj.y * Math.PI, obj.vs, obj.vs);
-                }
-
-                function update(obj) {
-                    obj.x += obj.vx;
-                    obj.y += obj.vy;
-                    if (obj.x > canvas.width + (maxDist / 2)) {
-                        obj.x = -(maxDist / 2);
-                    } else if (obj.xpos < -(maxDist / 2)) {
-                        obj.x = canvas.width + (maxDist / 2);
-                    }
-                    if (obj.y > canvas.height + (maxDist / 2)) {
-                        obj.y = -(maxDist / 2);
-                    } else if (obj.y < -(maxDist / 2)) {
-                        obj.y = canvas.height + (maxDist / 2);
-                    }
-                }
-
-                function pointFun() {
-                    ctx.clearRect(0, 0, canvas.width, canvas.height);
-                    for (var i = 0; i < points.length; i++) {
-                        drawSnowflake(points[i]);
-                        draw(points[i]);
-                        update(points[i]);
-                    };
-                }
-
-                function resizeCanvas() {
-                    canvas.width = window.innerWidth;
-                    canvas.height = window.innerHeight;
-                    points = [];
-                    generatePoints(window.innerWidth / 3);
-                    pointFun();
-                }
-                window.onload = init;
-            }
-        })();
+        if ("{{ config('settings::theme:snow') }}" == 1) {
+            document.addEventListener("DOMContentLoaded", function() {
+                window.snow();
+            });
+        }
         window.addEventListener('keydown', function(e) {
             var ctrlDown = true;
             var ctrlKey = 17,
@@ -128,19 +44,51 @@
             z-index: 2;
             pointer-events: none;
         }
+
+        :root {
+            --secondary-50: {{ config('settings::theme:secondary-50', '#ffffff') }};
+            --secondary-100: {{ config('settings::theme:secondary-100', '#fafcff') }};
+            --secondary-200: {{ config('settings::theme:secondary-200', '#ebeef3') }};
+            --secondary-300: {{ config('settings::theme:secondary-300', '#bbbfd2') }};
+            --secondary-400: {{ config('settings::theme:secondary-400', '#808498') }};
+            --secondary-500: {{ config('settings::theme:secondary-500', '#606372') }};
+            --secondary-600: {{ config('settings::theme:secondary-600', '#4d4f60') }};
+            --secondary-700: {{ config('settings::theme:secondary-700', '#353741') }};
+            --secondary-800: {{ config('settings::theme:secondary-800', '#1c1c20') }};
+            --secondary-900: {{ config('settings::theme:secondary-900', '#000000') }};
+
+            --primary-50: {{ config('settings::theme:primary-50', '#EDF0FF') }};
+            --primary-100: {{ config('settings::theme:primary-100', '#C6DBFF') }};
+            --primary-200: {{ config('settings::theme:primary-200', '#9BBEFB') }};
+            --primary-300: {{ config('settings::theme:primary-300', '#799CD8') }};
+            --primary-400: {{ config('settings::theme:primary-400', '#5270FD') }};
+        }
+
+        .dark {
+            --secondary-50: {{ config('settings::theme:secondary-50-dark', '#1E202D') }};
+            --secondary-100: {{ config('settings::theme:secondary-100-dark', '#313441') }};
+            --secondary-200: {{ config('settings::theme:secondary-200-dark', '#404351') }};
+            --secondary-300: {{ config('settings::theme:secondary-300-dark', '#4F525E') }};
+            --secondary-400: {{ config('settings::theme:secondary-400-dark', '#656874') }};
+            --secondary-500: {{ config('settings::theme:secondary-500-dark', '#7D8091') }};
+            --secondary-600: {{ config('settings::theme:secondary-600-dark', '#AEB2C2') }};
+            --secondary-700: {{ config('settings::theme:secondary-700-dark', '#CACBD2') }};
+            --secondary-800: {{ config('settings::theme:secondary-800-dark', '#F1F1F1') }};
+            --secondary-900: {{ config('settings::theme:secondary-900-dark', '#ffffff') }};
+        }
     </style>
-    @isset($title)
-        <title>{{ config('app.name', 'Paymenter') . ' - ' . $title }}</title>
-    @else
+    @empty($title)
         <title>{{ config('app.name', 'Paymenter') }}</title>
-    @endisset
+    @else
+        <title>{{ config('app.name', 'Paymenter') . ' - ' . ucfirst($title) }}</title>
+    @endempty
 
     <!-- Fonts -->
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;600;700&display=swap">
 
-    @vite(['resources/css/app.css'])
+    @vite('resources/js/app.js')
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
-    <link href="https://cdn.jsdelivr.net/npm/remixicon@2.5.0/fonts/remixicon.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.2.0/fonts/remixicon.css" rel="stylesheet">
     <link rel="apple-touch-icon" sizes="180x180" href="/img/apple-touch-icon.png">
     <link rel="icon" type="image/png" sizes="32x32" href="/img/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="/img/favicon-16x16.png">
@@ -155,27 +103,28 @@
     <meta name="theme-color" content="#5270FD">
 </head>
 
-<body class="font-sans antialiased bg-gray-100">
+<body class="font-sans bg-secondary-100 dark:bg-secondary-50 text-secondary-700">
+    @if(config('settings::theme:snow') == 1)
     <canvas class="snow" id="snow" width="1920" height="1080"></canvas>
-    <div id="app" class="min-h-screen dark:text-white dark:bg-darkmode">
-        @if (config('settings::sidebar') == 1)
-            @include('layouts.sidenavigation')
-        @else
+    @endif
+    <div id="app" class="min-h-screen">
+        @if (!$clients || config('settings::sidebar') == 0)
             @include('layouts.navigation')
         @endif
-        <!-- Page Content -->
-        <main class="grow">
-            {{ $slot }}
-        </main>
-        <footer>
-            <div class="flex flex-col justify-center items-center dark:text-white dark:bg-darkmode">
-                <!-- Please do not remove the credits. -->
-                <a class="text-gray-500 dark:text-gray-400 text-sm" href="https://paymenter.org">Paymenter &copy; 2022 -
-                    {{ date('Y') }}</a>
+        <div class="@if (config('settings::sidebar') == 1) flex md:flex-nowrap flex-wrap @endif">
+            @if ($clients)
+                @include('layouts.subnavigation')
+            @endif
+            <div class="w-full flex flex-col @if($clients) min-h-[calc(100vh-105px)] @else min-h-[calc(100vh-64px)] @endif">
+
+                <main class="grow">
+                    {{ $slot }}
+                </main>
+
+                <x-footer />
             </div>
-        </footer>
+        </div>
     </div>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.6.4/flowbite.min.js"></script>
 </body>
 
 </html>

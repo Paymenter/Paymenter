@@ -82,7 +82,18 @@ class Upgrade extends Command
             }
         }
         ini_set('output_buffering', '0');
+        // Call update.sh <url>
+        $this->line('$upgrader> curl -L "https://raw.githubusercontent.com/paymenter/paymenter/master/update.sh" | bash -s -- --user=' . $user . ' --group=' . $group . ' --url=' . $this->getUrl());
+        $process = Process::fromShellCommandline('curl -L "https://raw.githubusercontent.com/paymenter/paymenter/master/update.sh" | bash -s -- --user=' . $user . ' --group=' . $group . ' --url=' . $this->getUrl());
+        $process->run(function ($type, $buffer) {
+            $this->{$type === Process::ERR ? 'error' : 'line'}($buffer);
+        });
 
+
+        $this->info('Upgrade process completed successfully!');
+
+        return Command::SUCCESS;
+        
         // Download the latest release from GitHub.
         $this->line("\$upgrader> curl -L \"{$this->getUrl()}\" | tar -xzv");
         $process = Process::fromShellCommandline("curl -L \"{$this->getUrl()}\" | tar -xzv");
@@ -124,6 +135,13 @@ class Upgrade extends Command
         $this->line('$upgrader> php artisan view:clear');
         $this->call('view:clear');
 
+        // Remove the old log files.
+        $this->line('$upgrader> rm -rf storage/logs/*.log');
+        $process = new Process(['rm', '-rf', 'storage/logs/*.log']);
+        $process->run(function ($type, $buffer) {
+            $this->{$type === Process::ERR ? 'error' : 'line'}($buffer);
+        });
+
         // Setup correct permissions on the new files.
         $this->line('$upgrader> chown -R ' . $user . ':' . $group . ' .');
         $process = new Process(['chown', '-R', $user . ':' . $group, '.']);
@@ -134,10 +152,6 @@ class Upgrade extends Command
         // Set application back up.
         $this->line('$upgrader> php artisan up');
         $this->call('up');
-
-        $this->info('Upgrade process completed successfully!');
-
-        return Command::SUCCESS;
     }
 
     protected function getUrl(): string

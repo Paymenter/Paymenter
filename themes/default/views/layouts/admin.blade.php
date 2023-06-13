@@ -9,7 +9,7 @@
 
     <title>{{ 'Admin - ' . $title }}</title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap">
-    @vite(['resources/css/app.css'])
+    @vite('resources/js/app.js')
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
     <link rel="apple-touch-icon" sizes="180x180" href="/img/apple-touch-icon.png">
@@ -41,11 +41,43 @@
             });
         });
     </script>
-    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+        :root {
+            --secondary-50: {{ config('settings::theme:secondary-50', '#ffffff') }};
+            --secondary-100: {{ config('settings::theme:secondary-100', '#fafcff') }};
+            --secondary-200: {{ config('settings::theme:secondary-200', '#ebeef3') }};
+            --secondary-300: {{ config('settings::theme:secondary-300', '#bbbfd2') }};
+            --secondary-400: {{ config('settings::theme:secondary-400', '#808498') }};
+            --secondary-500: {{ config('settings::theme:secondary-500', '#606372') }};
+            --secondary-600: {{ config('settings::theme:secondary-600', '#4d4f60') }};
+            --secondary-700: {{ config('settings::theme:secondary-700', '#353741') }};
+            --secondary-800: {{ config('settings::theme:secondary-800', '#1c1c20') }};
+            --secondary-900: {{ config('settings::theme:secondary-900', '#000000') }};
+
+            --primary-50: {{ config('settings::theme:primary-50', '#EDF0FF') }};
+            --primary-100: {{ config('settings::theme:primary-100', '#C6DBFF') }};
+            --primary-200: {{ config('settings::theme:primary-200', '#9BBEFB') }};
+            --primary-300: {{ config('settings::theme:primary-300', '#799CD8') }};
+            --primary-400: {{ config('settings::theme:primary-400', '#5270FD') }};
+        }
+
+        .dark {
+            --secondary-50: {{ config('settings::theme:secondary-50-dark', '#1E202D') }};
+            --secondary-100: {{ config('settings::theme:secondary-100-dark', '#313441') }};
+            --secondary-200: {{ config('settings::theme:secondary-200-dark', '#404351') }};
+            --secondary-300: {{ config('settings::theme:secondary-300-dark', '#4F525E') }};
+            --secondary-400: {{ config('settings::theme:secondary-400-dark', '#656874') }};
+            --secondary-500: {{ config('settings::theme:secondary-500-dark', '#7D8091') }};
+            --secondary-600: {{ config('settings::theme:secondary-600-dark', '#AEB2C2') }};
+            --secondary-700: {{ config('settings::theme:secondary-700-dark', '#CACBD2') }};
+            --secondary-800: {{ config('settings::theme:secondary-800-dark', '#F1F1F1') }};
+            --secondary-900: {{ config('settings::theme:secondary-900-dark', '#ffffff') }};
+        }
+    </style>
 </head>
 
-<body class="font-sans antialiased">
-    <div id="app" class="min-h-screen bg-gray-100 dark:bg-darkmode">
+<body class="font-sans bg-secondary-100 dark:bg-secondary-50 text-secondary-700">
+    <div id="app" class="min-h-screen">
         @if (config('settings::sidebar') == 1)
             @include('layouts.adminsidenavigation')
         @else
@@ -55,8 +87,9 @@
             @if (!request()->routeIs('admin.index') && !request()->routeIs('admin.settings*'))
                 <div class="py-12">
                     <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
-                        <div class="overflow-hidden dark:bg-darkmode2 bg-white shadow-sm sm:rounded-lg">
-                            <div class="p-6 dark:bg-darkmode2 bg-white border-b border-gray-200 dark:border-gray-800 md:p-12 dark:text-darkmodetext text-gray-800">
+                        <div class="overflow-hidden content">
+                            <div class="content-box">
+                                <x-success class="mb-4" />
                                 {{ $slot }}
                             </div>
                         </div>
@@ -66,15 +99,9 @@
                 {{ $slot }}
             @endif
         </main>
-        <footer>
-            <div class="flex flex-col justify-center items-center dark:text-white dark:bg-darkmode">
-                <!-- Please do not remove the credits. -->
-                <a class="text-gray-500 dark:text-gray-400 text-sm" href="https://paymenter.org">Paymenter &copy; 2022 -
-                    {{ date('Y') }}</a>
-            </div>
-        </footer>
+
+        <x-footer />
     </div>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.6.4/flowbite.min.js"></script>
 </body>
 
 </html>

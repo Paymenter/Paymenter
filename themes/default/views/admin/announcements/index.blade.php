@@ -5,7 +5,7 @@
     <h1 class="text-2xl font-bold dark:text-darkmodetext">{{ __('Announcements') }}</h1>
     <div class="flex justify-end pr-3 pt-3">
         <a href="{{ route('admin.announcements.store') }}">
-            <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+            <button class="button button-primary">
                 {{ __('Create') }}
             </button>
         </a>
@@ -13,14 +13,14 @@
     <div class="flex flex-wrap">
         <div class="w-full">
             <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-600" id="categories">
-                <thead class="bg-gray-50 dark:bg-darkmode2 ">
+                <thead class="bg-gray-50 dark:bg-secondary-100 ">
                     <tr>
                         <th>{{ __('Name') }}</th>
                         <th>{{ __('Created At') }}</th>
                         <th>{{ __('Actions') }}</th>
                     </tr>
                 </thead>
-                <tbody class="bg-white dark:bg-darkmode2 divide-y divide-gray-200">
+                <tbody class="bg-white dark:bg-secondary-100 divide-y divide-gray-200">
                     @foreach ($announcements as $announcement)
                         <tr>
                             <td>

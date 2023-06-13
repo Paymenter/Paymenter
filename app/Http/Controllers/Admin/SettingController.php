@@ -2,12 +2,11 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Helpers\NotificationHelper;
 use App\Models\Setting;
 use Qirolab\Theme\Theme;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Crypt;
 
 class SettingController extends Controller
@@ -15,10 +14,14 @@ class SettingController extends Controller
     public function index()
     {
         $tabs = [];
+        // Use default theme
+        Theme::set('default');
         // Get current theme
-        foreach (glob(Theme::getViewPaths()[1] . '/admin/settings/settings/*.blade.php') as $filename) {
+        foreach (glob(Theme::getViewPaths()[0] . '/admin/settings/settings/*.blade.php') as $filename) {
             $tabs[] = 'admin.settings.settings.' . basename($filename, '.blade.php');
         }
+        unset($tabs[array_search('admin.settings.settings.general', $tabs)]);
+        array_unshift($tabs, 'admin.settings.settings.general');
         $themes = array_diff(scandir(base_path('themes')), ['..', '.']);
         $languages = array_diff(scandir(base_path('lang')), ['..', '.']);
         foreach ($languages as $key => $language) {
@@ -26,11 +29,21 @@ class SettingController extends Controller
                 unset($languages[$key]);
             }
         }
-
+        $themeConfig = new \stdClass();
+        if (file_exists(base_path('themes/' . config('settings::theme-active') . '/theme.json'))) {
+            $themeConfig = json_decode(file_get_contents(base_path('themes/' . config('settings::theme-active') . '/theme.json')));
+            if (!$themeConfig) {
+                $themeConfig = new \stdClass();
+            }
+        }
+        if (!isset($themeConfig->settings)) {
+            $themeConfig->settings = [];
+        }
         return view('admin.settings.index', [
             'tabs' => $tabs,
             'themes' => $themes,
             'languages' => $languages,
+            'themeConfig' => $themeConfig
         ]);
     }
 
@@ -51,13 +64,6 @@ class SettingController extends Controller
             $request->app_logo->move(public_path('images'), $imageName);
             $path = '/images/' . $imageName;
             Setting::updateOrCreate(['key' => 'app_logo'], ['value' => $path]);
-        }
-
-        $theme = request('theme');
-        try {
-            $theme = Theme::set($theme);
-        } catch (\Exception $e) {
-            $theme = 'default';
         }
         foreach ($request->except(['_token', 'app_logo', 'app_favicon']) as $key => $value) {
             Setting::updateOrCreate(['key' => $key], ['value' => $value]);
@@ -84,9 +90,7 @@ class SettingController extends Controller
             'mail_from_address' => 'required',
             'mail_from_name' => 'required',
         ]);
-        if ($request->mail_encryption == 'none') {
-            $request->merge(['mail_encryption' => null]);
-        }
+        if ($request->mail_encryption == 'none') $request->merge(['mail_encryption' => null]);
         // Loop through all settings
         foreach ($request->except(['_token']) as $key => $value) {
             if ($key == 'mail_password') {
@@ -96,6 +100,9 @@ class SettingController extends Controller
         }
         if (!$request->get('mail_disabled')) {
             Setting::updateOrCreate(['key' => 'mail_disabled'], ['value' => 0]);
+        }
+        if (!$request->get('must_verify_email')) {
+            Setting::updateOrCreate(['key' => 'must_verify_email'], ['value' => null]);
         }
 
         return redirect('/admin/settings#mail')->with('success', 'Settings updated successfully');
@@ -109,20 +116,13 @@ class SettingController extends Controller
             'port' => $request->mail_port,
             'encryption' => $request->mail_encryption,
             'username' => $request->mail_username,
-            'password' => $request->mail_password ? $request->mail_password : config('mail.password', ''),
-            'timeout' => null,
-            'auth_mode' => null,
+            'password' => $request->mail_password ? $request->mail_password : Crypt::decrypt(config('mail.password', '')),
         ]]);
         config(['mail.from.address' => $request->mail_from_address]);
         config(['mail.from.name' => $request->mail_from_name]);
 
-        $email = Auth::user()->email;
         try {
-            Mail::raw('If you read this, your email is working!', function ($message) use ($email) {
-                $message->to($email);
-                $message->subject('Test Email');
-                $message->from(config('mail.username'), config('mail.from.name'));
-            });
+            NotificationHelper::sendTestNotification(auth()->user());
         } catch (\Exception $e) {
             // Return json response
             return response()->json(['error' => $e->getMessage()], 500);
@@ -133,20 +133,39 @@ class SettingController extends Controller
 
     public function login(Request $request)
     {
-        Setting::updateOrCreate(['key' => 'discord_client_id'], ['value' => $request->discord_client_id]);
-        Setting::updateOrCreate(['key' => 'discord_client_secret'], ['value' => $request->discord_client_secret]);
         Setting::updateOrCreate(['key' => 'discord_enabled'], ['value' => $request->discord_enabled]);
-
+        Setting::updateOrCreate(['key' => 'google_enabled'], ['value' => $request->google_enabled]);
+        Setting::updateOrCreate(['key' => 'github_enabled'], ['value' => $request->github_enabled]);
+        foreach ($request->except(['_token']) as $key => $value) {
+            Setting::updateOrCreate(['key' => $key], ['value' => $value]);
+        }
         return redirect('/admin/settings#login')->with('success', 'Settings updated successfully');
     }
 
     public function security(Request $request)
     {
-        Setting::updateOrCreate(['key' => 'recaptcha_site_key'], ['value' => $request->recaptcha_site_key]);
-        Setting::updateOrCreate(['key' => 'recaptcha_secret_key'], ['value' => $request->recaptcha_secret_key]);
         Setting::updateOrCreate(['key' => 'recaptcha'], ['value' => $request->recaptcha]);
-        Setting::updateOrCreate(['key' => 'recaptcha_type'], ['value' => $request->recaptcha_type]);
+        if ($request->get('tos') !== config('settings::tos_text')) {
+            Setting::updateOrCreate(['key' => 'tos_last_updated'], ['value' => now()]);
+        }
+        Setting::updateOrCreate(['key' => 'tos'], ['value' => $request->tos]);
 
+        foreach ($request->except(['_token']) as $key => $value) {
+            Setting::updateOrCreate(['key' => $key], ['value' => $value]);
+        }
         return redirect('/admin/settings#security')->with('success', 'Settings updated successfully');
+    }
+
+    public function theme(Request $request)
+    {
+        $request->validate([
+            'theme' => 'required',
+        ]);
+        Setting::updateOrCreate(['key' => 'theme'], ['value' => $request->theme]);
+        foreach ($request->except(['_token', 'theme']) as $key => $value) {
+            Setting::updateOrCreate(['key' => 'theme:' . $key], ['value' => $value]);
+        }
+
+        return redirect('/admin/settings#theme')->with('success', 'Settings updated successfully');
     }
 }

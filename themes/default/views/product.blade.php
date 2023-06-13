@@ -1,62 +1,56 @@
-<x-app-layout>
-    <x-slot name="title">
-        {{ __('Products') }}
-    </x-slot>
+<x-app-layout title="products">
     <script>
         function removeElement(element) {
             element.remove();
             this.error = true;
         }
     </script>
-    <div class="dark:bg-darkmode dark:text-darkmodetext py-12">
-        <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
-            <div class="dark:bg-darkmode2 overflow-hidden bg-white rounded-lg shadow-lg">
-                <div class="dark:bg-darkmode2 p-6 bg-white">
-                    <!-- display all categories with products -->
-                    <h1 class="text-center text-2xl font-bold">{{ __('Categories') }}</h1>
-                    @if ($categories->count() < 1)
-                        <div class="dark:bg-darkmode px-4 py-5 sm:px-6">
-                            <h3 class="dark:text-darkmodetext text-lg leading-6 font-medium text-gray-900">
-                                {{ __('Categories') }}
-                            </h3>
-                            <p class="dark:text-darkmodetext mt-1 max-w-2xl text-sm text-gray-500">
-                                {{ __('Category not found!') }}
-                            </p>
+    <div class="content">
+        <div class="grid grid-cols-12 gap-4">
+            @if ($categories->count() > 0)
+                <div class="lg:col-span-3 col-span-12">
+                    <div class="content-box">
+                        <div class="flex gap-x-2 items-center">
+                            <div class="bg-primary-400 w-8 h-8 flex items-center justify-center rounded-md text-gray-50 text-xl">
+                                <i class="ri-list-indefinite"></i>
+                            </div>
+                            <h3 class="font-semibold text-lg">{{ __("Categories") }}</h3>
                         </div>
-                    @endif
-                    @foreach ($categories as $category)
-                        <div class="mt-4">
-                            <h2 class="text-xl font-bold text-left">{{ $category->name }}</h2>
-                            <hr class="mb-4 mt-1 border-b-1 border-gray-300 dark:border-gray-600">
-                            <div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
-                                @foreach ($category->products as $product)
-                                    <a href="{{ route('checkout.add', $product->id) }}"
-                                        class="p-4 transition rounded-lg delay-400 border dark:border-darkmode hover:shadow-md dark:hover:shadow-gray-500 flex flex-col bg-gray-100 dark:bg-darkmode break-all">
-                                        <img class="rounded-lg" src="{{ $product->image }}" alt="{{ $product->name }}"
-                                            onerror="removeElement(this);">
-                                        <div class="mt-2 h-full relative">
-                                            <h3
-                                                class="text-lg font-medium text-center text-gray-900 dark:text-darkmodetext">
-                                                {{ $product->name }}</h3>
-                                            <hr class="my-2 border-b-1 border-gray-300 dark:border-gray-600">
-                                            <div
-                                                class="mt-1 prose dark:prose-invert text-gray-500 dark:text-darkmodetext">
-                                                {{ \Illuminate\Mail\Markdown::parse(str_replace("\n", '<br>', $product->description)) }}
-                                            </div>
-                                            <br><br>
-                                            <p
-                                                class="mt-1 text-base text-center text-gray-500 dark:text-darkmodetext mx-auto w-full bottom-0 absolute font-black">
-                                                @if ($product->price == 0)
-                                                    {{ __('Free') }}
-                                                @else
-                                                    {{ config('settings::currency_sign') }}{{ $product->price }}
-                                                @endif
-                                            </p>
-                                        </div>
-                                    </a>
-                                @endforeach
+                        <div class="flex flex-col gap-2 mt-2">
+                            @foreach ($categories as $categoryItem)
+                            @if ($categoryItem->products->count() > 0)
+                            <a href="{{ route('products', $categoryItem->slug) }}" class="@if ($category->name == $categoryItem->name) text-secondary-900 pl-3 !border-primary-400 @endif border-l-2 border-transparent duration-300 hover:text-secondary-900 hover:pl-3 hover:border-primary-400 focus:text-secondary-900 focus:pl-3 focus:border-primary-400">
+                                {{ $categoryItem->name }}
+                            </a>
+                            @endif
+                            @endforeach
+                        </div>
+                    </div>
+                </div>
+            @endif
+
+            <div class="@if ($categories->count() > 0) lg:col-span-9 @endif col-span-12">
+                <div class="content-box">
+                    <h1 class="text-3xl font-semibold text-secondary-900">{{ $category->name }}</h1>
+                    <p>{{ $category->description }}</p>
+                </div>
+                <div class="grid grid-cols-3 gap-4 mt-4">
+                    @foreach ($category->products()->get() as $product)
+                    <div class="md:col-span-1 col-span-3">
+                        <div class="content-box h-full flex flex-col">
+                            <div class="flex gap-x-3 items-center mb-2">
+                                <img src="{{ $product->image }}" alt="{{ $product->name }}" class="w-14 rounded-md"  onerror="removeElement(this);">
+                                <div>
+                                    <h3 class="text-lg text-secondary-800 leading-5 font-semibold">{{ $product->name }}</h3>
+                                    <p>{{ $product->price() ? config('settings::currency_sign') . $product->price() : __('Free') }}</p>
+                                </div>
+                            </div>
+                            <p>{{ \Illuminate\Mail\Markdown::parse(str_replace("\n", '<br>', $product->description)) }}</p>
+                            <div class="pt-3 mt-auto">
+                                <a href="{{ route('checkout.add', $product->id) }}" class="button button-secondary w-full">Add to cart <i class="ri-shopping-cart-2-line"></i></a>
                             </div>
                         </div>
+                    </div>
                     @endforeach
                 </div>
             </div>

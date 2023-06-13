@@ -1,0 +1,180 @@
+{
+    "author": "Paymenter",
+    "description": "Default theme for Paymenter",
+    "settings": [
+        {
+            "type": "checkbox",
+            "label": "Snow",
+            "name": "snow",
+            "default": false
+        },
+        {
+            "type": "subcategory",
+            "label": "Colors Primary",
+            "settings": [
+                {
+                    "type": "color",
+                    "label": "Primary 50",
+                    "name": "primary-50",
+                    "default": "#EDF0FF"
+                },
+                {
+                    "type": "color",
+                    "label": "Primary 100",
+                    "name": "primary-100",
+                    "default": "#C6DBFF"
+                },
+                {
+                    "type": "color",
+                    "label": "Primary 200",
+                    "name": "primary-200",
+                    "default": "#9BBEFB"
+                },
+                {
+                    "type": "color",
+                    "label": "Primary 300",
+                    "name": "primary-300",
+                    "default": "#799CD8"
+                },
+                {
+                    "type": "color",
+                    "label": "Primary 400",
+                    "name": "primary-400",
+                    "default": "#5270FD"
+                }
+            ]
+        },
+        {
+            "type": "subcategory",
+            "label": "Colors Secondary",
+            "settings": [
+                {
+                    "type": "color",
+                    "label": "Secondary 50",
+                    "name": "secondary-50",
+                    "default": "#FFFFFF"
+                },
+                {
+                    "type": "color",
+                    "label": "Secondary 100",
+                    "name": "secondary-100",
+                    "default": "#FAFCFF"
+                },
+                {
+                    "type": "color",
+                    "label": "Secondary 200",
+                    "name": "secondary-200",
+                    "default": "#EBEEF3"
+                },
+                {
+                    "type": "color",
+                    "label": "Secondary 300",
+                    "name": "secondary-300",
+                    "default": "#BBBFD2"
+                },
+                {
+                    "type": "color",
+                    "label": "Secondary 400",
+                    "name": "secondary-400",
+                    "default": "#808498"
+                },
+                {
+                    "type": "color",
+                    "label": "Secondary 500",
+                    "name": "secondary-500",
+                    "default": "#606372"
+                },
+                {
+                    "type": "color",
+                    "label": "Secondary 600",
+                    "name": "secondary-600",
+                    "default": "#4D4F60"
+                },
+                {
+                    "type": "color",
+                    "label": "Secondary 700",
+                    "name": "secondary-700",
+                    "default": "#353741"
+                },
+                {
+                    "type": "color",
+                    "label": "Secondary 800",
+                    "name": "secondary-800",
+                    "default": "#1C1C20"
+                },
+                {
+                    "type": "color",
+                    "label": "Secondary 900",
+                    "name": "secondary-900",
+                    "default": "#000000"
+                }
+            ]
+        },
+        {
+            "type": "subcategory",
+            "label": "Colors Secondary (DarkMode)",
+            "settings":[
+                {
+                    "type": "color",
+                    "label": "Secondary 50",
+                    "name": "secondary-50-dark",
+                    "default": "#1E202D"
+                },
+                {
+                    "type": "color",
+                    "label": "Secondary 100",
+                    "name": "secondary-100-dark",
+                    "default": "#313441"
+                },
+                {
+                    "type": "color",
+                    "label": "Secondary 200",
+                    "name": "secondary-200-dark",
+                    "default": "#404351"
+                },
+                {
+                    "type": "color",
+                    "label": "Secondary 300",
+                    "name": "secondary-300-dark",
+                    "default": "#4F525E"
+                },
+                {
+                    "type": "color",
+                    "label": "Secondary 400",
+                    "name": "secondary-400-dark",
+                    "default": "#656874"
+                },
+                {
+                    "type": "color",
+                    "label": "Secondary 500",
+                    "name": "secondary-500-dark",
+                    "default": "#7D8091"
+                },
+                {
+                    "type": "color",
+                    "label": "Secondary 600",
+                    "name": "secondary-600-dark",
+                    "default": "#AEB2C2"
+                },
+                {
+                    "type": "color",
+                    "label": "Secondary 700",
+                    "name": "secondary-700-dark",
+                    "default": "#CACBD2"
+                },
+                {
+                    "type": "color",
+                    "label": "Secondary 800",
+                    "name": "secondary-800-dark",
+                    "default": "#F1F1F1"
+                },
+                {
+                    "type": "color",
+                    "label": "Secondary 900",
+                    "name": "secondary-900-dark",
+                    "default": "#ffffff"
+                }
+            ]   
+        }
+    ]
+}

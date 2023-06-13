@@ -3,14 +3,37 @@
         {{ __('Products') }}
     </x-slot>
 
-
+    <div class="container h-full mx-auto">
+        <div class="p-6 mx-auto bg-white max-w-7xl pl-0 dark:bg-secondary-100 dark:border-darkmode">
+            <div class="flex flex-row overflow-x-auto lg:flex-wrap lg:space-x-1">
+                <div class="flex-none">
+                    <a href="{{ route('admin.products.edit', $product->id) }}"
+                        class="inline-flex justify-center w-full p-4 px-2 py-2 text-xs font-bold uppercase border-b-2 dark:text-darkmodetext dark:hover:bg-darkbutton border-logo text-logo">
+                        {{ __('Details') }}
+                    </a>
+                </div>
+                <div class="flex-none">
+                    <a href="{{ route('admin.products.pricing', $product->id) }}"
+                        class="inline-flex justify-center w-full p-4 px-2 py-2 text-xs font-bold text-gray-900 uppercase border-b-2 dark:text-darkmodetext dark:hover:bg-darkbutton border-y-transparent hover:border-logo hover:text-logo">
+                        {{ __('Pricing') }}
+                    </a>
+                </div>
+                <div class="flex-none">
+                    <a href="{{ route('admin.products.extension', $product->id) }}"
+                        class="inline-flex justify-center w-full p-4 px-2 py-2 text-xs font-bold text-gray-900 uppercase border-b-2 dark:text-darkmodetext dark:hover:bg-darkbutton border-y-transparent hover:border-logo hover:text-logo">
+                        {{ __('Extension') }}
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
     <div class="grid grid-cols-1 md:grid-cols-2 mt-4">
         <div class="text-2xl dark:text-darkmodetext">
             {{ __('Update product') }} {{ $product->name }}
         </div>
         <div class="relative inline-block text-left justify-end">
             <button type="button"
-                class="dark:hover:bg-darkmode absolute top-0 right-0 dark:text-darkmodetext dark:bg-darkmode2 inline-flex w-max justify-end bg-white px-2 py-2 text-base font-medium rounded-md text-gray-700 mr-4"
+                class="dark:hover:bg-darkmode absolute top-0 right-0 dark:text-darkmodetext dark:bg-secondary-100 inline-flex w-max justify-end bg-white px-2 py-2 text-base font-medium rounded-md text-gray-700 mr-4"
                 id="menu-button" aria-expanded="true" aria-haspopup="true" data-dropdown-toggle="moreOptions">
                 <svg class="w-6 h-6" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20"
                     xmlns="http://www.w3.org/2000/svg">
@@ -23,9 +46,6 @@
                 role="menu" aria-orientation="vertical" aria-labelledby="menu-button" tabindex="-1"
                 id="moreOptions">
                 <div class="py-1 grid grid-cols-1" role="none">
-                    <a href="{{ route('admin.products.extension', $product->id) }}"
-                        class="block px-4 py-2 text-base text-gray-700 dark:text-darkmodetext dark:hover:bg-darkmode2 hover:bg-gray-100 hover:text-gray-900"
-                        role="menuitem" tabindex="-1" id="menu-item-0">Extension Settings</a>
                     <button
                         class="block px-4 py-2 text-base text-gray-700 dark:text-darkmodetext dark:hover:bg-darkmode2 hover:bg-gray-100"
                         role="menuitem" tabindex="-1" id="menu-item-0"
@@ -49,7 +69,7 @@
             </form>
         </div>
     </div>
-    <div class="mt-6 text-gray-500 dark:text-darkmodetext dark:bg-darkmode2">
+    <div class="mt-6 text-gray-500 dark:text-darkmodetext dark:bg-secondary-100">
         <form method="POST" action="{{ route('admin.products.update', $product->id) }}" enctype="multipart/form-data">
             @csrf
             <div>
@@ -63,13 +83,6 @@
 
                 <textarea id="description" class="block w-full mt-1 rounded-lg dark:bg-darkmode" name="description" required
                     rows="4">{{ $product->description }}</textarea>
-            </div>
-            <div class="mt-4">
-                <label for="price">{{ __('Price') }}</label>
-
-                {{ config('settings::currency_sign') }}<input id="price"
-                    class="block w-full mt-1 rounded-lg dark:bg-darkmode" type="number" name="price" min="0"
-                    step="0.01" value="{{ number_format($product->price, 2) }}" required />
             </div>
             <div class="mt-4">
                 <label for="stock_enabled">{{ __('Enable Stock') }}</label>
@@ -91,8 +104,8 @@
                     <label for="no_image">No Image</label>
                     <input type="checkbox" name="no_image" id="no_image" value="1" class="form-input w-4 h-4"
                         @if ($product->image == 'null') checked @endif>
-                    <img src="{{ $product->image }}" alt="{{ $product->name }}" class="w-32 h-32 mt-4"
-                        id="prodctimg" onerror="removeElement(this)">
+                    <img src="{{ $product->image }}" alt="{{ $product->name }}" class="w-32 h-32 mt-4" id="prodctimg"
+                        onerror="removeElement(this)">
                     <script>
                         function removeElement(element) {
                             element.onerror = "";
@@ -138,9 +151,8 @@
                 </div>
             </div>
             <div class="flex items-center justify-end mt-4">
-                <button type="submit"
-                    class="px-4 py-2 font-bold text-white bg-blue-500 rounded hover:bg-blue-700 dark:text-darkmodetext">
-                    {{ __('Update') }}
+                <button type="submit" class="inline-flex justify-center w-max float-right button button-primary">
+                    {{ __('Save') }}
                 </button>
             </div>
         </form>

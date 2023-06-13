@@ -53,10 +53,6 @@ class Stats extends Command
             'stats' => [
                 'orders' => [
                     'count' => \App\Models\Order::count(),
-                    'pending' => \App\Models\Order::where('status', 'pending')->count(),	
-                    'paid' => \App\Models\Order::where('status', 'paid')->count(),
-                    'suspended' => \App\Models\Order::where('status', 'suspended')->count(),
-                    'cancelled' => \App\Models\Order::where('status', 'cancelled')->count(),
                 ],
                 'invoices' => [
                     'count' => \App\Models\Invoice::count(),

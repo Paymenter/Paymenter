@@ -11,6 +11,7 @@ class OrderProductConfig extends Model
     protected $table = 'order_products_config';
     protected $fillable = [
         'order_product_id',
+        'is_configurable_option',
         'key',
         'value',
     ];

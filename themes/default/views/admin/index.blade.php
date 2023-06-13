@@ -12,11 +12,11 @@
                 <div class="grid gap-6 overflow-hidden grid-cols-1 lg:grid-cols-3">
                     <!-- show ticketclosed, tickets, orders -->
                     <div
-                        class="lg:col-span-2 p-7 bg-white border-2 dark:bg-darkmode2 dark:border-darkmodehover rounded-xl">
+                        class="lg:col-span-2 p-7 bg-white border-2 dark:bg-secondary-100 dark:border-darkmodehover rounded-xl">
                         <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 pb-10">
                             <div class="p-4 rounded-md dark:bg-darkmode bg-normal flex">
                                 <i class="ri-shopping-cart-2-line pl-2 pr-4 my-auto text-blue-600 text-4xl"></i>
-                                <div class="flex flex-col">    
+                                <div class="flex flex-col">
                                     <h1 class="text-lg text-gray-500 dark:text-darkmodetext">Orders today</h1>
                                     <p class="text-xl font-bold text-black dark:text-darkmodetext">
                                         {{ App\Models\Order::whereDate('created_at', '=', date('Y-m-d'))->count() }}
@@ -45,30 +45,36 @@
                         </div>
                         <canvas id="myChart" class="w-full max-h-[400px]"></canvas>
                     </div>
-                    <div class="p-7 bg-white border-2 dark:bg-darkmode2 dark:border-darkmodehover rounded-xl">
+                    <div class="p-7 bg-white border-2 dark:bg-secondary-100 dark:border-darkmodehover rounded-xl">
                         <h2 class="text-xl font-bold mb-2 dark:text-darkmodetext">Support</h2>
                         <div class="grid grid-cols-1 xl:grid-cols-3 gap-4">
                             <div class="flex">
-                                <i class="ri-coupon-line p-4 text-blue-600 bg-normal dark:bg-darkmode text-2xl items-center text-center h-16 w-16 rounded-lg mr-4"></i>
+                                <i
+                                    class="ri-coupon-line p-4 text-blue-600 bg-normal dark:bg-darkmode text-2xl items-center text-center h-16 w-16 rounded-lg mr-4"></i>
                                 <div class="flex flex-col my-auto">
                                     <h3 class="text-gray-700 dark:text-darkmodetext">Open Tickets</h3>
-                                    <span class="font-bold text-xl dark:text-darkmodetext">{{ App\Models\Ticket::where('status', '!=', 'closed')->count() }}</span>
+                                    <span
+                                        class="font-bold text-xl dark:text-darkmodetext">{{ App\Models\Ticket::where('status', '!=', 'closed')->count() }}</span>
                                 </div>
                             </div>
-                            
+
                             <div class="flex">
-                                <i class="ri-coupon-line p-4 text-blue-600 bg-normal dark:bg-darkmode text-2xl items-center text-center h-16 w-16 rounded-lg mr-4"></i>
+                                <i
+                                    class="ri-coupon-line p-4 text-blue-600 bg-normal dark:bg-darkmode text-2xl items-center text-center h-16 w-16 rounded-lg mr-4"></i>
                                 <div class="flex flex-col my-auto">
                                     <h3 class="text-gray-700 dark:text-darkmodetext">Closed Tickets</h3>
-                                    <span class="font-bold text-xl dark:text-darkmodetext">{{ App\Models\Ticket::where('status', 'closed')->count() }}</span>
+                                    <span
+                                        class="font-bold text-xl dark:text-darkmodetext">{{ App\Models\Ticket::where('status', 'closed')->count() }}</span>
                                 </div>
                             </div>
-                            
+
                             <div class="flex">
-                                <i class="ri-coupon-line p-4 text-blue-600 bg-normal dark:bg-darkmode text-2xl items-center text-center h-16 w-16 rounded-lg mr-4"></i>
+                                <i
+                                    class="ri-coupon-line p-4 text-blue-600 bg-normal dark:bg-darkmode text-2xl items-center text-center h-16 w-16 rounded-lg mr-4"></i>
                                 <div class="flex flex-col my-auto">
                                     <h3 class="text-gray-700 dark:text-darkmodetext">Total Tickets</h3>
-                                    <span class="font-bold text-xl dark:text-darkmodetext">{{ App\Models\Ticket::count() }}</span>
+                                    <span
+                                        class="font-bold text-xl dark:text-darkmodetext">{{ App\Models\Ticket::count() }}</span>
                                 </div>
                             </div>
                         </div>
@@ -77,7 +83,8 @@
                         <div class="grid grid-cols-1 gap-4">
                             @foreach (App\Models\Ticket::orderByRaw('updated_at - created_at DESC')->get()->take(5) as $ticket)
                                 <a href="/admin/tickets/{{ $ticket->id }}">
-                                    <div class="px-4 py-2 rounded-md flex dark:hover:bg-darkmode/50 dark:bg-darkmode bg-normal hover:bg-blue-100">
+                                    <div
+                                        class="px-4 py-2 rounded-md flex dark:hover:bg-darkmode/50 dark:bg-darkmode bg-normal hover:bg-blue-100">
                                         <div class="flex flex-col">
                                             <h1 class="text-xl text-gray-500 dark:text-darkmodetext">Ticket
                                                 #{{ $ticket->id }} by
@@ -85,7 +92,8 @@
                                                     {{ $ticket->client()->get()->first()->name }}
                                                 </span>
                                             </h1>
-                                            <p class="text-2xl font-bold text-black dark:text-darkmodetext flex items-center">
+                                            <p
+                                                class="text-2xl font-bold text-black dark:text-darkmodetext flex items-center">
                                                 <label class="mr-2">{{ $ticket->title }}</label>
                                                 @if ($ticket->priority == 'high')
                                                     <span
@@ -115,7 +123,7 @@
                             @endforeach
                         </div>
                     </div>
-                    <div class="p-7 bg-white border-2 dark:bg-darkmode2 dark:border-darkmodehover rounded-xl">
+                    <div class="p-7 bg-white border-2 dark:bg-secondary-100 dark:border-darkmodehover rounded-xl">
                         <h2 class="text-xl font-bold dark:text-darkmodetext">New Users</h2>
                         <canvas id="chartBar"></canvas>
                         <!-- Required chart.js -->
@@ -166,46 +174,45 @@
             <script>
                 var ctx = document.getElementById('myChart').getContext('2d');
                 var myChart = new Chart(ctx, {
-                    type: 'bar',
+                    type: 'line',
                     data: {
-                        labels: ['Revenue', 'Tickets', 'Orders', ],
+                        labels: [
+                            @for ($i = 1; $i <= 30; $i++)
+                                "{{ $i }}",
+                            @endfor
+                        ],
                         datasets: [{
-                                label: 'Yesterday',
+                                label: 'Orders',
                                 data: [
-                                    {{ App\Models\OrderProduct::whereDate('created_at', '=', date('Y-m-d', strtotime('-1 days')))->sum('price') }},
-                                    {{ App\Models\Ticket::whereDate('created_at', '=', date('Y-m-d', strtotime('-1 days')))->count() }},
-                                    {{ App\Models\Order::whereDate('created_at', '=', date('Y-m-d', strtotime('-1 days')))->count() }},
+                                    @for ($i = 1; $i <= 30; $i++)
+                                        {{ App\Models\Order::whereDay('created_at', '=', $i)->count() }},
+                                    @endfor
                                 ],
-                                backgroundColor: [
-                                    'rgba(255, 99, 132, 0.2)',
-                                    'rgba(54, 162, 235, 0.2)',
-                                    'rgba(255, 206, 86, 0.2)',
-                                ],
-                                borderColor: [
-                                    'rgba(255, 99, 132, 1)',
-                                    'rgba(54, 162, 235, 1)',
-                                    'rgba(255, 206, 86, 1)',
-                                ],
-                                borderWidth: 1
+                                backgroundColor: 'rgb(82,112,253)',
+                                borderColor: 'rgb(82,112,253)',
+                                tension: 0.2,
                             },
                             {
-                                label: 'Today',
+                                label: 'Users',
                                 data: [
-                                    {{ App\Models\OrderProduct::whereDate('created_at', '=', date('Y-m-d'))->sum('price') }},
-                                    {{ App\Models\Ticket::whereDate('created_at', '=', date('Y-m-d'))->count() }},
-                                    {{ App\Models\Order::whereDate('created_at', '=', date('Y-m-d'))->count() }},
+                                    @for ($i = 1; $i <= 30; $i++)
+                                        {{ App\Models\User::whereDay('created_at', '=', $i)->count() }},
+                                    @endfor
                                 ],
-                                backgroundColor: [
-                                    'rgba(255, 99, 132, 0.2)',
-                                    'rgba(54, 162, 235, 0.2)',
-                                    'rgba(255, 206, 86, 0.2)',
+                                backgroundColor: 'rgba(255, 99, 132, 1)',
+                                borderColor: 'rgba(255, 99, 132, 1)',
+                                tension: 0.2,
+                            },
+                            {
+                                label: 'Revenue',
+                                data: [
+                                    @for ($i = 1; $i <= 30; $i++)
+                                        {{ App\Models\OrderProduct::whereDay('created_at', '=', $i)->sum('price') }},
+                                    @endfor
                                 ],
-                                borderColor: [
-                                    'rgba(255, 99, 132, 1)',
-                                    'rgba(54, 162, 235, 1)',
-                                    'rgba(255, 206, 86, 1)',
-                                ],
-                                borderWidth: 1
+                                backgroundColor: 'rgba(255, 206, 86, 1)',
+                                borderColor: 'rgba(255, 206, 86, 1)',
+                                tension: 0.2,
                             }
                         ],
                     },

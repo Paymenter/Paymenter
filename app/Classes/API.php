@@ -25,7 +25,29 @@ class API
     ];
     
     /**
+     * All available admin API permissions.
+     * 
+     * @return array
+     */
+    public static $adminPermissions = [
+        'admin:ticket:read',
+        'admin:ticket:create',
+        'admin:ticket:delete',
+        'admin:ticket:update',
+        'admin:invoice:read',
+        'admin:invoice:create',
+        'admin:invoice:delete',
+        'admin:invoice:update',
+        'admin:api:read',
+        'admin:api:create',
+        'admin:api:delete',
+        'admin:api:update',
+    ];
+
+    /**
      * Repaginate the data for API.
+     * 
+     * @return array
      */
     public static function repaginate(mixed $data)
     {

@@ -14,16 +14,6 @@
                 <label class="form-label">{{ __('Logo') }}</label>
             </div>
             <div class="relative m-4 group">
-                <select name="theme" class="form-input peer @error('theme') is-invalid @enderror" placeholder=" "
-                    name="theme" required>
-                    @foreach ($themes as $theme)
-                        <option value="{{ $theme }}" {{ $theme == config('settings::theme') ? 'selected' : '' }}>
-                            {{ $theme }}</option>
-                    @endforeach
-                </select>
-                <label class="form-label">{{ __('Theme') }}</label>
-            </div>
-            <div class="relative m-4 group">
                 <!-- sidebar -->
                 <select name="sidebar" class="form-input peer @error('sidebar') is-invalid @enderror" placeholder=" "
                     name="sidebar" required>
@@ -77,9 +67,9 @@
             <div class="relative m-4 group">
                 <input type="checkbox" class="form-input w-fit peer @error('allow_auto_lang') is-invalid @enderror"
                     placeholder=" " name="allow_auto_lang" value="1" 
-                    {{ config('settings::allow_auto_lang') ? 'checked' : '' }} data-popover-target="discord"/>
+                    {{ config('settings::allow_auto_lang') ? 'checked' : '' }} data-popover-target="language"/>
                 <label class="form-label" style="position: unset;"  >{{ __('Allow Auto Language') }}</label>
-                <div id="discord" role="tooltip" data-popover
+                <div id="language" role="tooltip" data-popover
                     class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
                     {{ __('If enabled, the language will be automatically set to the language of the browser.') }}
                     <div data-popper-arrow></div>
@@ -107,16 +97,6 @@
                     placeholder=" " name="seo_twitter_card" value="1"
                     {{ config('settings::seo_twitter_card') ? 'checked' : '' }} />
                 <label class="form-label" style="position: unset;">{{ __('Seo Twitter Card') }}</label>
-            </div>
-            <div class="relative m-4 group">
-                <select name="snow" class="form-input peer @error('snow') is-invalid @enderror" placeholder=" "
-                    name="snow">
-                    <option value="1" {{ config('settings::snow') == 1 ? 'selected' : '' }}>
-                        {{ __('Enabled') }}</option>
-                    <option value="0" {{ config('settings::snow') == 0 ? 'selected' : '' }}>
-                        {{ __('Disabled') }}</option>
-                </select>
-                <label class="form-label">{{ __('Snow') }}</label>
             </div>
         </div>
         <button class="float-right form-submit">{{ __('Submit') }}</button>

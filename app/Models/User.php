@@ -3,6 +3,8 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+
+use App\Utils\Permissions;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -31,8 +33,6 @@ class User extends Authenticatable
         'country',
         'phone',
         'companyname',
-        'permissions',
-        'is_admin',
         'tfa_secret'
     ];
 
@@ -46,7 +46,6 @@ class User extends Authenticatable
         'remember_token',
         'is_admin',
         'permissions',
-        'api_token',
         'tfa_secret',
     ];
 
@@ -59,6 +58,16 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'permissions' => 'array',
     ];
+
+    // If role_id is null, set to 2 (client)
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($user) {
+            $user->role_id = $user->role_id ?? 2;
+        });
+    }
 
     public function orders()
     {
@@ -75,19 +84,13 @@ class User extends Authenticatable
         return $this->hasMany(Invoice::class, 'user_id', 'id');
     }
 
+    public function role()
+    {
+        return $this->belongsTo(Role::class, 'role_id', 'id');
+    }
+
     public function has($permission)
     {
-        if ($this->is_admin == 1 && $this->permissions == null) {
-            return true;
-        }
-        if ($this->permissions == null) {
-            return false;
-        }
-        // Check if array contains permission
-        if (in_array($permission, $this->permissions)) {
-            return true;
-        }
-
-        return false;
+        return (new Permissions($this->role->permissions))->has($permission);
     }
 }

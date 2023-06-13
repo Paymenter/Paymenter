@@ -19,7 +19,7 @@
                 document.addEventListener("DOMContentLoaded", function(event) {
                     const options = {};
                     const $targetEl = document.querySelector('#popup-modal');
-                    const modal = new Flowbite.default.Modal($targetEl, options);
+                    const modal = new window.Modal($targetEl, options);
 
                     modal.show();
                 });
@@ -98,7 +98,7 @@
                                     {{ __('Extension Name') }}
                                 </label>
                                 <select name="name"
-                                    class="dark:bg-darkmode2 dark:text-darkmodetext shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                    class="dark:bg-secondary-100 dark:text-darkmodetext shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                                     id="name">
                                     <option value="" disabled selected>
                                         {{ __('Select Extension') }}</option>
@@ -146,7 +146,7 @@
         </div>
     </div>
     @if (!$servers)
-        <p class="dark:bg-darkmode2 dark:text-darkmodetext text-gray-600 px-3 rounded-md text-xl m-4">
+        <p class="dark:bg-secondary-100 dark:text-darkmodetext text-gray-600 px-3 rounded-md text-xl m-4">
             {{ __('No extensions found') }}
         </p>
     @else

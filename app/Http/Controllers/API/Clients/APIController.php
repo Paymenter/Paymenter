@@ -36,4 +36,19 @@ class APIController extends Controller
             'token' => $user->createToken($body['tokenName'], $body['permissions'])->plainTextToken,
         ], 201);
     }
+
+
+    /**
+     * Get authenticated user.
+     * 
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getMe(Request $request)
+    {
+        $user = $request->user();
+
+        return response()->json([
+            'user' => $user,
+        ], 200);
+    }
 }

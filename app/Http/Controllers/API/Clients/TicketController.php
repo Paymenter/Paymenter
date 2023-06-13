@@ -7,6 +7,7 @@ use App\Models\Ticket;
 use Illuminate\Http\Request;
 use App\Models\TicketMessage;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\API\TicketRequest;
 use Illuminate\Support\Facades\RateLimiter;
 
 class TicketController extends Controller
@@ -34,17 +35,9 @@ class TicketController extends Controller
     /**
      * Create a new ticket.
      */
-    public function createTicket(Request $request, int $ticketId)
+    public function createTicket(TicketRequest $request)
     {
         $user = $request->user();
-
-        $request->validate([
-            'title' => 'required',
-            'message' => 'required',
-            'priority' => 'required',
-        ]);
-
-        $body = json_decode($request->getContent());
 
         if (!$user->tokenCan('ticket:create')) {
             return response()->json([
@@ -67,22 +60,22 @@ class TicketController extends Controller
         }
 
         $ticket = new Ticket();
-        $ticket->title = $body->title;
+        $ticket->title = $request->title;
         $ticket->status = 'open';
         $ticket->client = $user->id;
-        $ticket->priority = $body->priority;
+        $ticket->priority = $request->priority;
         $ticket->save();
 
         TicketMessage::create([
             'ticket_id' => $ticket->id,
-            'message' => $body->message,
+            'message' => $request->message,
             'user_id' => $user->id,
         ]);
 
         return response()->json([
             'message' => 'Ticket was successfully created.',
             'ticket' => $ticket,
-        ], 204);
+        ], 201);
     }
 
     /**
@@ -102,6 +95,28 @@ class TicketController extends Controller
 
         return response()->json([
             'ticket' => $ticket,
+        ], 200);
+    }
+
+    /**
+     * Get messages of a ticket by ID.
+     */
+    public function getMessages(Request $request, int $ticketId)
+    {
+        $user = $request->user();
+
+        if (!$user->tokenCan('ticket:read')) {
+            return response()->json([
+                'error' => 'You do not have permission to read tickets.',
+            ], 403);
+        }
+
+        $ticket = Ticket::where('client', $user->id)->where('id', $ticketId)->firstOrFail();
+
+        $messages = $ticket->messages()->with('user')->paginate(25);
+
+        return response()->json([
+            'messages' => API::repaginate($messages),
         ], 200);
     }
 

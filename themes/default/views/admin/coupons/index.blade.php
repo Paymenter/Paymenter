@@ -5,7 +5,7 @@
     <h1 class="text-2xl font-bold dark:text-darkmodetext">{{ __('Coupons') }}</h1>
     <div class="flex justify-end pr-3 pt-3">
         <a href="{{ route('admin.coupons.store') }}">
-            <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+            <button class="button button-primary">
                 {{ __('Create') }}
             </button>
         </a>
@@ -13,7 +13,7 @@
     <div class="flex flex-wrap">
         <div class="w-full">
             <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-600" id="coupon">
-                <thead class="bg-gray-50 dark:bg-darkmode2 ">
+                <thead class="bg-gray-50 dark:bg-secondary-100 ">
                     <tr>
                         <th>{{ __('Code') }}</th>
                         <th>{{ __('Type') }}</th>
@@ -22,7 +22,7 @@
                         <th>{{ __('Actions') }}</th>
                     </tr>
                 </thead>
-                <tbody class="bg-white dark:bg-darkmode2 divide-y divide-gray-200">
+                <tbody class="bg-white dark:bg-secondary-100 divide-y divide-gray-200">
                     @foreach ($coupons as $coupon)
                         <tr>
                             <td>{{ $coupon->code }}</td>

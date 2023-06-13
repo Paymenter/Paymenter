@@ -1,82 +1,49 @@
-<x-guest-layout>
-    <div class="flex flex-col items-center min-h-screen pt-6 bg-gray-100 dark:bg-darkmode sm:justify-center sm:pt-0">
-        <div>
-            <a href="/">
-                <x-application-logo class="w-20 h-20 text-gray-500 fill-current" />
-            </a>
+<x-app-layout>
+
+    <div class="content min-h-[50vh] flex items-center justify-center flex-col">
+        <div class="flex items-center text-secondary-900 font-semibold text-lg py-4 gap-x-2">
+            <x-application-logo class="w-10" />
+            {{ config('app.name', 'Paymenter') }}
         </div>
 
-        <div
-            class="w-full px-6 py-4 mt-6 overflow-hidden bg-white shadow-md dark:bg-darkmode2 sm:max-w-md sm:rounded-lg">
-
-            <!-- Session Status -->
-            <x-auth-session-status class="mb-4" :status="session('status')" />
-
-            <!-- Validation Errors -->
-            <x-auth-validation-errors class="mb-4" :errors="$errors" />
-
+        <div class="content-box max-w-lg w-full">
             <form method="POST" action="{{ route('login') }}" id="login">
                 @csrf
-
-                <!-- Email Address -->
-                <div class="mt-4">
-                    <label class="block text-sm font-medium text-gray-700 dark:text-darkmodetext">
-                        {{ __('Email') }}
-                        @if (Route::has('register'))
-                            <a style="float: right; margin-bottom: 1px;"
-                                class="text-sm text-gray-600 underline dark:text-darkmodetext hover:text-gray-900"
-                                href="{{ route('register') }}">
-                                {{ __('New here?') }} <b>{{ __('Create an account.') }}</b>
-                            </a>
-                        @endif
-                    </label>
-
-                    <input id="email" type="email"
-                        class="dark:text-darkmodetext dark:bg-darkmode rounded-lg form-input w-full @error('email') border-red-500 @enderror"
-                        name="email" value="{{ old('email') }}" required autocomplete="email">
-
-                    @error('email')
-                        <p class="mt-1 text-xs italic text-red-500 dark:text-darkmodetext">
-                            {{ $message }}
-                        </p>
-                    @enderror
+                <h2 class="text-lg font-semibold">{{ __('Login to continue') }}</h2>
+                <x-input class="mt-3" label="{{ __('Email') }}" type="email" placeholder="{{ __('Email..') }}" required
+                    name="email" id="email" icon="ri-at-line" />
+                    
+                <div class="flex justify-between mt-4 mb-1 text-sm text-secondary-600" >
+                    <label for="password">{{ __('Password') }}</label>
+                    <a href="{{ route('password.request') }}" class="underline">{{ __('Forgot Password?') }}</a>
                 </div>
+                <x-input type="password" required
+                    placeholder="{{ __('Password..') }}" name="password" id="password" icon="ri-lock-line"/>
+                    
+                <x-input type="checkbox" name="remember" id="remember" label="Remember me" class="mt-4" />
+                
+                <button class="button button-primary w-full mt-4">{{ __('Login') }}</button>
 
-                <!-- Password -->
-                <div class="mt-4">
-                    <label class="block text-sm font-medium text-gray-700 dark:text-darkmodetext">
-                        {{ __('Password') }}
-                    </label>
+                <a href="{{ route('register') }}" class="text-sm text-secondary-600 underline mt-2 block text-center">{{ __('New here? Create an account.') }}</a>
 
-                    <input id="password" type="password"
-                        class="dark:text-darkmodetext dark:bg-darkmode rounded-lg form-input w-full @error('password') border-red-500 @enderror"
-                        name="password" required autocomplete="new-password">
-
-                    @error('password')
-                        <p class="mt-1 text-xs italic text-red-500 dark:text-darkmodetext">
-                            {{ $message }}
-                        </p>
-                    @enderror
-                </div>
-                <br>
                 <div class="flex items-center justify-center">
                     <!-- Recaptcha, also send the form id -->
                     <x-recaptcha form="login" />
                 </div>
-                <!-- Social Login -->
+
                 @if (config('settings::discord_enabled') == 1 ||
                         config('settings::apple_enabled') == 1 ||
                         config('settings::google_enabled') == 1 ||
                         config('settings::github_enabled') == 1)
-                    <div class="flex items-center">
-                        <div class="w-full h-0.5 bg-gray-200 dark:bg-gray-700"></div>
-                        <div class="px-5 text-center text-gray-500 dark:text-gray-400">or</div>
-                        <div class="w-full h-0.5 bg-gray-200 dark:bg-gray-700"></div>
+                    <div class="flex items-center my-2">
+                        <div class="w-full h-0.5 bg-secondary-200 dark:bg-secondary-300"></div>
+                        <div class="px-5 text-center text-secondary-500 dark:text-secondary-400">{{ __('or') }}</div>
+                        <div class="w-full h-0.5 bg-secondary-200 dark:bg-secondary-300"></div>
                     </div>
-                    <div class="space-y-3">
+                    <div class="space-y-2">
                         @if (config('settings::google_enabled') == 1)
                             <a href="{{ route('social.login', 'google') }}"
-                                class="w-full inline-flex items-center justify-center py-2.5 px-5 mr-2 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-gray-900 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">
+                                class="button button-secondary !flex gap-x-2 items-center justify-center">
                                 <svg class="w-5 h-5 mr-2" viewBox="0 0 21 20" fill="none"
                                     xmlns="http://www.w3.org/2000/svg">
                                     <g clip-path="url(#clip0_13183_10121)">
@@ -105,8 +72,8 @@
                         @endif
                         @if (config('settings::apple_enabled'))
                             <a href="{{ route('social.login', 'apple') }}"
-                                class="w-full inline-flex items-center justify-center py-2.5 px-5 mr-2 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-gray-900 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">
-                                <svg class="w-5 h-5 mr-2 text-gray-900 dark:text-white" viewBox="0 0 21 20"
+                                class="button button-secondary !flex gap-x-2 items-center justify-center">
+                                <svg class="w-5 h-5 mr-2 text-secondary-900 dark:text-white" viewBox="0 0 21 20"
                                     fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <g clip-path="url(#clip0_13183_29163)">
                                         <path
@@ -120,18 +87,18 @@
                                         </clipPath>
                                     </defs>
                                 </svg>
-                                Sign in with Apple
+                                {{ __('Sign in with Apple') }}
                             </a>
                         @endif
                         @if (config('settings::discord_enabled'))
                             <a href="{{ route('social.login', 'discord') }}"
-                                class="w-full inline-flex items-center justify-center py-2.5 px-5 mr-2 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-gray-900 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">
-                                <svg class="w-5 h-5 mr-2 text-gray-900 dark:text-white" viewBox="0 0 127.14 96.36"
+                                class="button button-secondary !flex gap-x-2 items-center justify-center">
+                                <svg class="w-5 h-5 mr-2 text-secondary-900 dark:text-secondary" viewBox="0 0 127.14 96.36"
                                     fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <defs>
                                         <style>
                                             .cls-1 {
-                                                fill: #fff;
+                                                fill: var(--secondary-900);
                                             }
                                         </style>
                                     </defs>
@@ -147,8 +114,8 @@
                         @endif
                         @if (config('settings::github_enabled'))
                             <a href="{{ route('social.login', 'github') }}"
-                                class="w-full inline-flex items-center justify-center py-2.5 px-5 mr-2 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-gray-900 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">
-                                <svg class="w-5 h-5 mr-2 text-gray-900 dark:text-white" viewBox="0 0 20 20"
+                                class="button button-secondary !flex gap-x-2 items-center justify-center">
+                                <svg class="w-5 h-5 mr-2 text-secondary-900 dark:text-white" viewBox="0 0 20 20"
                                     fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <path
                                         d="M10 0C4.477 0 0 4.477 0 10C0 14.92 3.59 18.89 8.21 19.81C8.83 19.86 9.02 19.47 9.02 19.12C9.02 18.77 9.01 17.92 9.01 16.76C5.83 17.45 5.37 15.79 5.37 15.79C4.96 14.94 4.34 14.5 4.34 14.5C3.62 13.86 4.5 13.88 4.5 13.88C5.3 13.95 5.83 14.73 5.83 14.73C6.74 16.04 8.34 15.6 9.05 15.38C9.16 15.08 9.34 14.72 9.55 14.4C7.18 14.14 4.67 13.42 4.67 9.58C4.67 8.62 5.07 7.82 5.68 7.17C5.54 6.92 5.14 6.09 5.82 4.97C5.82 4.97 6.63 4.74 8.23 5.71C9.1 5.42 10.06 5.28 11.02 5.27C11.98 5.28 12.94 5.42 13.81 5.71C15.41 4.74 16.22 4.97 16.22 4.97C16.9 6.09 16.5 6.92 16.36 7.17C16.97 7.82 17.37 8.62 17.37 9.58C17.37 13.42 14.86 14.14 12.49 14.4C12.7 14.72 12.88 15.08 12.99 15.38C13.7 15.6 15.3 16.04 16.21 14.73C16.21 14.73 16.74 13.95 17.54 13.88C17.54 13.88 18.42 13.86 17.7 14.5C17.7 14.5 17.08 14.94 16.67 15.79C16.67 15.79 16.21 17.45 13.03 16.76C13.03 17.92 13.02 18.77 13.02 19.12C13.02 19.47 13.21 19.86 13.83 19.81C18.41 18.89 22 14.92 22 10C22 4.477 17.523 0 12 0H10Z"
@@ -159,28 +126,8 @@
                         @endif
                     </div>
                 @endif
-                <!-- Remember Me -->
-                <div class="block mt-4">
-                    <label for="remember_me" class="inline-flex items-center dark:text-darkmodetext">
-                        <input id="remember_me" type="checkbox"
-                            class="text-indigo-600 border-gray-300 rounded shadow-sm dark:bg-darkmode focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-                            name="remember">
-                        <span class="ml-2 text-sm text-gray-600 dark:text-darkmodetext">{{ __('Remember me') }}</span>
-                    </label>
-                </div>
-                <div class="flex items-center justify-end mt-4">
-                    @if (Route::has('password.request'))
-                        <a class="text-sm text-gray-600 underline dark:text-darkmodetext hover:text-gray-900"
-                            href="{{ route('password.request') }}">
-                            {{ __('Forgot your password?') }}
-                        </a>
-                    @endif
-                    <button type="submit"
-                        class="inline-flex items-center px-4 py-2 ml-4 text-xs font-semibold tracking-widest uppercase transition duration-150 ease-in-out bg-gray-800 border border-transparent rounded-md dark:text-darkmodetext hover:bg-gray-700 active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:ring ring-gray-300 disabled:opacity-25">
-                        {{ __('Log in') }}
-                    </button>
-                </div>
             </form>
         </div>
     </div>
-</x-guest-layout>
+
+</x-app-layout>

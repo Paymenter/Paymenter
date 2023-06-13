@@ -14,6 +14,10 @@ class APIController extends Controller
         $tokens = $user->tokens()->get();
         $permissions = API::$permissions;
 
+        if ($user->is_admin == 1) {
+            $permissions = array_merge($permissions, API::$adminPermissions);
+        }
+
         return view('clients.api', compact('tokens', 'permissions'));
     }
     
@@ -26,7 +30,14 @@ class APIController extends Controller
             'permissions' => 'required|array',
         ]);
 
-        $token = $user->createToken(request('name'), array_keys(request('permissions')))->plainTextToken;
+        $permissions = array_keys(request('permissions'));
+
+        // Prevent admin permissions from being added by non-admins
+        if ($user->is_admin == 0) {
+            $permissions = array_diff($permissions, API::$adminPermissions);
+        }
+
+        $token = $user->createToken(request('name'), $permissions)->plainTextToken;
         
         return redirect('/api')->with('success', 'Here is your API token: "' . $token . '" Please save it somewhere safe. You will not be able to see it again.');
     }

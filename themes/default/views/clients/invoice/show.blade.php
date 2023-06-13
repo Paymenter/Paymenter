@@ -1,11 +1,8 @@
-<x-app-layout>
-    <x-slot name="title">
-        {{ __('Invoice') }}
-    </x-slot>
+<x-app-layout clients title="{{ __('Invoice') }}">
     <section class="py-20">
-        <div class="max-w-5xl mx-auto py-16 dark:bg-darkmode2 bg-white">
+        <div class="max-w-5xl mx-auto py-16 dark:bg-secondary-100 bg-white">
             <article class="overflow-hidden">
-                <div class="dark:bg-darkmode2 bg-[white] rounded-b-md">
+                <div class="dark:bg-secondary-100 bg-[white] rounded-b-md">
                     <div class="p-9">
                         <div class="space-y-6 text-slate-700">
                             <x-application-logo />
@@ -46,7 +43,7 @@
                                     <div class="text-sm font-light text-slate-500">
                                         <p class="dark:text-darkmodetext text-sm font-normal text-slate-700">
                                             {{ __('Due') }}</p>
-                                        <p class="dark:text-darkmodetext">{{ $order->expiry_date }}</p>
+                                        <p class="dark:text-darkmodetext">{{ $invoice->due_date ?? 'N/A' }}</p>
                                         <p class="dark:text-darkmodetext mt-2 text-xl font-normal text-slate-700">
                                             {{ __('Pay') }}
                                         </p>
@@ -55,16 +52,16 @@
                                             @csrf
                                             <label for="payment_method"
                                                 class="dark:text-darkmodetext block text-sm font-medium text-gray-700">{{ __('Payment method') }}</label>
-                                            <select id="payment_method" name="payment_method"
-                                                autocomplete="payment_method"
-                                                class="dark:bg-darkmode dark:text-darkmodetext dark:border-indigo-600 mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                                            <x-input id="payment_method" name="payment_method" type="select"
+                                                autocomplete="payment_method">
                                                 @foreach (App\Models\Extension::where('type', 'gateway')->where('enabled', true)->get() as $gateway)
                                                     <option class="dark:bg-darkmode dark:text-darkmodetext"
-                                                        value="{{ $gateway->id }}">{{ isset($gateway->display_name) ? $gateway->display_name : $gateway->name }}</option>
+                                                        value="{{ $gateway->id }}">
+                                                        {{ isset($gateway->display_name) ? $gateway->display_name : $gateway->name }}
+                                                    </option>
                                                 @endforeach
-                                            </select>
-                                            <button type="submit"
-                                                class="mt-4 inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                                            </x-input>
+                                            <button type="submit" class="button button-primary mt-3">
                                                 {{ __('Pay') }}
                                             </button>
                                         </form>
@@ -107,20 +104,21 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach ($products as $product)
+                                    @foreach ($products as $product2)
+                                        @php $product = $product2; @endphp
                                         <tr class="border-b border-slate-200">
                                             <td class="py-4 pl-4 pr-3 text-sm sm:pl-6 md:pl-0">
                                                 <div class="dark:text-darkmodetext font-medium text-slate-700">
-                                                    {{ $product->name }}
+                                                    {{ $product->name ?? $product2->description }}
                                                 </div>
                                                 <div class="dark:text-darkmodetext mt-0.5 text-slate-500 sm:hidden">
                                                     {{ __('1 unit at') }}
-                                                    {{ $currency_sign }}{{ number_format((float) $product->price, 2, '.', '') }}
+                                                    {{ $currency_sign }}{{ number_format((float) $product->basePrice, 2, '.', '') }}
                                                 </div>
                                             </td>
                                             <td
                                                 class="dark:text-darkmodetext hidden px-3 py-4 text-sm text-right text-slate-500 sm:table-cell">
-                                                {{ $product->quantity }}
+                                                {{ $product->quantity ?? $product2->quantity }}
                                             </td>
                                             <td
                                                 class="dark:text-darkmodetext hidden px-3 py-4 text-sm text-right text-slate-500 sm:table-cell">
@@ -130,12 +128,12 @@
                                                     </span>
                                                     {{ $currency_sign }}{{ number_format((float) ($product->price - $product->discount), 2, '.', '') }}
                                                 @else
-                                                    {{ $currency_sign }}{{ number_format((float) $product->price, 2, '.', '') }}
+                                                    {{ $currency_sign }}{{ number_format((float) $product->price / $product->quantity, 2, '.', '') }}
                                                 @endif
                                             </td>
                                             <td
                                                 class="dark:text-darkmodetext py-4 pl-3 pr-4 text-sm text-right text-slate-500 sm:pr-6 md:pr-0">
-                                                {{ $currency_sign }}{{ number_format((float) ($product->price * $product->quantity), 2, '.', '') }}
+                                                {{ $currency_sign }}{{ number_format((float) ($product->price - $product->discount), 2, '.', '') }}
                                             </td>
                                         </tr>
                                     @endforeach
@@ -198,7 +196,7 @@
                                         </th>
                                         <td
                                             class="dark:text-darkmodetext pt-4 pl-3 pr-4 text-sm font-normal text-right text-slate-700 sm:pr-6 md:pr-0">
-                                            {{ $currency_sign }}{{ number_format((float) $subtotal, 2, '.', '') }}
+                                            {{ $currency_sign }}{{ number_format((float) $total, 2, '.', '') }}
                                         </td>
                                     </tr>
                                 </tfoot>

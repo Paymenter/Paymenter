@@ -2,7 +2,7 @@
     <x-slot name="title">
         {{ __('Clients') }}
     </x-slot>
-    <div class="p-6 bg-white dark:bg-darkmode2 sm:px-20 ">
+    <div class="p-6 bg-white dark:bg-secondary-100 sm:px-20 ">
         <div class="mt-8 text-2xl dark:text-darkmodetext">
             {{ __('All clients') }}
         </div>
@@ -75,10 +75,6 @@
                 buttons: [
                     'copy', 'csv', 'excel', 'pdf', 'print'
                 ],
-                rowReorder: {
-                    selector: 'td:nth-child(2)'
-                },
-                responsive: true
             });
         });
     </script>
