@@ -52,8 +52,11 @@ function Proxmox_getProductConfig($options)
         ];
     }
 
-    $currentNode = $options['node'] ?? null;
-    $storageName = $options['storage'] ?? null;
+    $currentNode = isset($options['node']) ? $options['node'] : null;
+    $storageName = isset($options['storage']) ? $options['storage'] : null;
+    if ($currentNode == null) {
+        $currentNode = $nodeList[0]['value'];
+    }
     $storage = Proxmox_getRequest('/nodes/' . $currentNode . '/storage');
     $storageList = [];
     if (!$storage->json()) throw new Exception('Unable to get storage');
@@ -81,34 +84,39 @@ function Proxmox_getProductConfig($options)
     }
 
     // Only list contentVztmpl 
-    $template = Proxmox_getRequest('/nodes/' . $currentNode . '/storage/' . $storageName . '/content');
     $templateList = [];
     $isoList = [];
-    if (!$template->json()) throw new Exception('Unable to get template');
-    foreach ($template->json()['data'] as $template) {
-        if ($template['content'] == 'vztmpl') {
-            $templateList[] = [
-                'name' => $template['volid'],
-                'value' => $template['volid']
-            ];
-        } else if ($template['content'] == 'iso') {
-            $isoList[] = [
-                'name' => $template['volid'],
-                'value' => $template['volid']
-            ];
+    if ($storageName != null) {
+        $template = Proxmox_getRequest('/nodes/' . $currentNode . '/storage/' . $storageName . '/content');
+        if (!$template->json()) throw new Exception('Unable to get template');
+        foreach ($template->json()['data'] as $template) {
+            if ($template['content'] == 'vztmpl') {
+                $templateList[] = [
+                    'name' => $template['volid'],
+                    'value' => $template['volid']
+                ];
+            } else if ($template['content'] == 'iso') {
+                $isoList[] = [
+                    'name' => $template['volid'],
+                    'value' => $template['volid']
+                ];
+            }
         }
     }
+
 
     $bridgeList = [];
     $bridge = Proxmox_getRequest('/nodes/' . $currentNode . '/network');
     if (!$bridge->json()) throw new Exception('Unable to get bridge');
     foreach ($bridge->json()['data'] as $bridge) {
+        if (!isset($bridge['active'])) continue;
         if (!$bridge['active']) continue;
         $bridgeList[] = [
             'name' => $bridge['iface'],
             'value' => $bridge['iface']
         ];
     }
+
 
 
     return [
