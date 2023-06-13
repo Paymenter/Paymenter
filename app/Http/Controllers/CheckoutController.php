@@ -357,6 +357,10 @@ class CheckoutController extends Controller
                 $iproduct->save();
             }
         }
+        if($coupon) {
+            $coupon->uses = $coupon->uses + 1;
+            $coupon->save();
+        }
         if ($total != 0) {
             $products = $invoice->getItemsWithProducts()->products;
             $total = $invoice->getItemsWithProducts()->total;
