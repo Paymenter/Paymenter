@@ -77,16 +77,23 @@
                 @endforeach
             </ul>
         @endisset
-        <div class="content-box">
-            @isset($extensionLink)
+        @isset($extensionLink)
+            @isset($views['pages']))
                 @foreach ($views['pages'] as $page)
                     @if ($extensionLink == $page['url'])
-                        @include($page['template'], $views['data'])
+                        <div class="content-box">
+                            @include($page['template'], $views['data'])
+                        </div>
                     @endif
                 @endforeach
-            @else
-                @include($views['template'], $views['data'])
             @endisset
-        </div>
+        @else
+            @isset($views['template'])
+                <div class="content-box">
+
+                    @include($views['template'], $views['data'])
+                </div>
+            @endisset
+        @endisset
     </div>
 </x-app-layout>

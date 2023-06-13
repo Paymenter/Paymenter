@@ -65,7 +65,12 @@ function Proxmox_getProductConfig($options)
     }
 
     $resourcePool = Proxmox_getRequest('/pools');
-    $poolList = [];
+    $poolList = [
+        [
+            'name' => 'None',
+            'value' => ''
+        ]
+    ];
 
     if (!$resourcePool->json()) throw new Exception('Unable to get resource pool');
     foreach ($resourcePool->json()['data'] as $pool) {
@@ -82,15 +87,11 @@ function Proxmox_getProductConfig($options)
     if (!$template->json()) throw new Exception('Unable to get template');
     foreach ($template->json()['data'] as $template) {
         if ($template['content'] == 'vztmpl') {
-            // Remove local:vztmpl/ from the name
-            $template['volid'] = str_replace('local:vztmpl/', '', $template['volid']);
             $templateList[] = [
                 'name' => $template['volid'],
                 'value' => $template['volid']
             ];
         } else if ($template['content'] == 'iso') {
-            // Remove local:iso/ from the name
-            $template['volid'] = str_replace('local:iso/', '', $template['volid']);
             $isoList[] = [
                 'name' => $template['volid'],
                 'value' => $template['volid']
@@ -197,14 +198,64 @@ function Proxmox_getProductConfig($options)
             'friendlyName' => 'Unprivileged Container',
             'description' => 'Enable/disable unprivileged container',
         ],
-
         [
             'name' => 'nesting',
             'type' => 'boolean',
             'friendlyName' => 'Nesting',
             'description' => 'Enable/disable nesting',
         ],
-
+        [
+            'name' => 'ostypelxc',
+            'type' => 'dropdown',
+            'friendlyName' => 'OS Type',
+            'description' => 'The OS type of the wanted VM',
+            'options' => [
+                [
+                    'name' => 'debian',
+                    'value' => 'debian'
+                ],
+                [
+                    'name' => 'devuan',
+                    'value' => 'devuan'
+                ],
+                [
+                    'name' => 'ubuntu',
+                    'value' => 'ubuntu'
+                ],
+                [
+                    'name' => 'centos',
+                    'value' => 'centos'
+                ],
+                [
+                    'name' => 'fedora',
+                    'value' => 'fedora'
+                ],
+                [
+                    'name' => 'opensuse',
+                    'value' => 'opensuse'
+                ],
+                [
+                    'name' => 'archlinux',
+                    'value' => 'archlinux'
+                ],
+                [
+                    'name' => 'alpine',
+                    'value' => 'alpine'
+                ],
+                [
+                    'name' => 'gentoo',
+                    'value' => 'gentoo'
+                ],
+                [
+                    'name' => 'nixos',
+                    'value' => 'nixos'
+                ],
+                [
+                    'name' => 'unmanaged',
+                    'value' => 'unmanaged'
+                ]
+            ]
+        ],
 
         [
             'type' => 'title',
@@ -495,12 +546,34 @@ function Proxmox_createServer($user, $parmas, $order, $product, $configurableOpt
     $memory = isset($configurableOptions['memory']) ? $configurableOptions['memory'] : $parmas['memory'];
     $disk = isset($configurableOptions['disk']) ? $configurableOptions['disk'] : $parmas['disk'];
 
+    $vmid = Proxmox_getRequest('/cluster/nextid')->json()['data'];
+
+    // Assign it to the orderProduct for further use
+    ExtensionHelper::setOrderProductConfig('vmid', $vmid, $order->id);
+    $postData = [];
+
     $currentConfig = $product->product->settings;
     $postData = [];
     if ($currentConfig->where('name', 'type')->first()->value == 'lxc') {
+        $postData = [
+            'vmid' => $vmid,
+            'node' => $node,
+            'storage' => $storage,
+            'cores' => $cores,
+            'memory' => $memory,
+            'onboot' => 1,
+            'ostemplate' => $parmas['template'],
+            'ostype' => $parmas['ostypelxc'],
+            'description' => $parmas['config']['hostname'],
+            'hostname' => $parmas['config']['hostname'],
+            'password' => $parmas['config']['password'],
+            'net0' => 'name=test' . ',bridge=' . $parmas['bridge'] . ',' . (isset($parmas['firewall']) ? 'firewall=1' : 'firewall=0'),
+        ];
+        isset($pool) ? $postData['pool'] = $pool : null;
+        $response = Proxmox_postRequest('/nodes/' . $node . '/lxc', $postData);
     } else {
         $postData = [
-            'vmid' => $product->id + 100,
+            'vmid' => $vmid,
             'node' => $node,
             'storage' => $storage,
             'cores' => $cores,
@@ -516,31 +589,40 @@ function Proxmox_createServer($user, $parmas, $order, $product, $configurableOpt
         isset($pool) ? $postData['pool'] = $pool : null;
         isset($parmas['cloudinit']) ? $postData[$parmas['storageType'] . '0'] = $parmas['storage'] . ':cloudinit' . ',format=' . $parmas['storageFormat'] : null;
         if (isset($parmas['os']) && $parmas['os'] == 'iso') {
-            $postData['ide2'] = $parmas['storage'] . ':iso/' . $parmas['iso'] . ',media=cdrom';
+            $postData['ide2'] = $parmas['iso'] . ',media=cdrom';
         }
+        $response = Proxmox_postRequest('/nodes/' . $node . '/qemu', $postData);
     }
-    $response = Proxmox_postRequest('/nodes/' . $node . '/qemu', $postData);
-    if (!$response->json()) throw new Exception('Unable to create server');
+    if (!$response->json()) throw new Exception('Unable to create server' . $response->body());
     return true;
 }
 
 function Proxmox_getCustomPages($user, $parmas, $order, $product, $configurableOptions)
 {
-    $status = Proxmox_getRequest('/nodes/' . $parmas['node'] . '/qemu/' . ($product->id + 100) . '/status/current');
+    $vmType = $parmas['type'];
+    $vmid = $parmas['config']['vmid'];
+    $status = Proxmox_getRequest('/nodes/' . $parmas['node'] . '/' . $vmType . '/' . $vmid . '/status/current');
     if (!$status->json()) throw new Exception('Unable to get server status');
     $status = $status->json()['data']['status'];
 
-    $stats = Proxmox_getRequest('/nodes/' . $parmas['node'] . '/qemu/' . ($product->id + 100) . '/rrddata?timeframe=hour');
+    $stats = Proxmox_getRequest('/nodes/' . $parmas['node'] . '/' . $vmType . '/' . $vmid . '/rrddata?timeframe=hour');
     if (!$stats->json()) throw new Exception('Unable to get server stats');
     $stats = $stats->json()['data'];
 
-    $vnc = Proxmox_postRequest('/nodes/' . $parmas['node'] . '/qemu/' . ($product->id + 100) . '/vncproxy', ['websocket'=> 1, 'generate-password' => 1]);
+    $vnc;
+    if ($vmType == 'lxc') $vnc = Proxmox_postRequest('/nodes/' . $parmas['node'] . '/' . $vmType . '/' . $vmid . '/vncproxy', ['websocket' => 1]);
+    else  $vnc = Proxmox_postRequest('/nodes/' . $parmas['node'] . '/' . $vmType . '/' . $vmid . '/vncproxy', ['websocket' => 1, 'generate-password' => 1]);
     if (!$vnc->json()) throw new Exception('Unable to get server vnc');
     $vnc = $vnc->json()['data'];
 
+    $users = Proxmox_getRequest('/nodes/' . $parmas['node'] . '/' . $vmType . '/' . $vmid . '/agent/info');
+    if (!$users->json()) throw new Exception('Unable to get server users');
+    $users = $users->json()['data'];
+
 
     // Make url for iframe
-    $websocket = ExtensionHelper::getConfig('Proxmox', 'host') . ':' . ExtensionHelper::getConfig('Proxmox','port') . '/?console=kvm&novnc=1&node=' . $parmas['node'] . '&resize=1&vmid=' . ($product->id + 100) . '&path=api2/json/nodes/' . $parmas['node'] . '/qemu/' . ($product->id + 100) . '/vncwebsocket/port/' . $vnc['port'] . '"/vncticket/"' . urlencode($vnc['ticket']);
+    $websocket = ExtensionHelper::getConfig('Proxmox', 'host') . ':' . ExtensionHelper::getConfig('Proxmox', 'port') . '/?console=kvm&novnc=1&node=' . $parmas['node'] . '&resize=1&vmid=' . $vmid . '&path=api2/json/nodes/' . $parmas['node'] . '/' . $vmType . '/' . $vmid . '/vncwebsocket/port/' . $vnc['port'] . '/"vncticket"/' . $vnc['ticket'];
+
 
     return [
         'name' => 'Proxmox',
@@ -548,10 +630,11 @@ function Proxmox_getCustomPages($user, $parmas, $order, $product, $configurableO
         'data' => [
             'status' => $status,
             'node' => $parmas['node'],
-            'vmid' => $product->id + 100,
+            'vmid' => $vmid,
             'stats' => $stats,
             'vnc' => $vnc,
             'websocket' => $websocket,
+            'users' => $users,
         ],
         'pages' => [
             [
@@ -559,11 +642,16 @@ function Proxmox_getCustomPages($user, $parmas, $order, $product, $configurableO
                 'name' => 'Statistics',
                 'url' => 'stats',
             ],
-            [
-                'template' => 'proxmox::vnc',
-                'name' => 'VNC',
-                'url' => 'vnc',
-            ]
+            // [
+            //     'template' => 'proxmox::vnc',
+            //     'name' => 'VNC',
+            //     'url' => 'vnc',
+            // ],
+            // [
+            //     'template' => 'proxmox::settings',
+            //     'name' => 'Settings',
+            //     'url' => 'settings',
+            // ]
         ]
     ];
 }
@@ -581,7 +669,7 @@ function Proxmox_status(Request $request, OrderProduct $product)
         'vmid' => $product->id + 100,
     ];
     // Change status
-    $status = Proxmox_postRequest('/nodes/' . $params['node'] . '/qemu/' . ($product->id + 100) . '/status/' . $request->status,  $postData);
+    $status = Proxmox_postRequest('/nodes/' . $params['node'] . '/qemu/' . $vmid . '/status/' . $request->status,  $postData);
     if (!$status->json()) throw new Exception('Unable to ' . $request->status . ' server');
 
     // Return json response

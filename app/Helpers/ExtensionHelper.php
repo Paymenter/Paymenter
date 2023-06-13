@@ -514,7 +514,7 @@ class ExtensionHelper
         try {
             return $function($user, $config, $order, $product2, $configurableOptions);
         } catch (\Exception $e) {
-            ExtensionHelper::error($extension->name, 'Error creating server: ' . $e->getMessage());
+            ExtensionHelper::error($extension->name, 'Error getting pages ' . $e->getMessage() . ' on line ' . $e->getLine() . ' in file ' . $e->getFile());
             return [];
         } 
     }
