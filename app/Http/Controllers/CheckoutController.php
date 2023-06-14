@@ -201,7 +201,7 @@ class CheckoutController extends Controller
                     if ($configItem->type == 'quantity') {
                         if (!$request->input($configItem->id)) continue;
                     }
-                    if ($configItemInput->id != $request->input($configItem->id) && ($configItem->type == 'select' || $configItem->type == 'radio')) continue;
+                    if ($configItemInput->id != $request->input($configItem->id) && ($configItem->type == 'select' || $configItem->type == 'radio' || $configItem->type == 'slider')) continue;
                     $configItemPrice = $configItemInput->configurableOptionInputPrice()->get()->first();
                     if ($configItemPrice) {
                         if ($configItem->type == 'quantity') {
