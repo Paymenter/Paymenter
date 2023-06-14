@@ -33,16 +33,52 @@ function Pterodactyl_getConfig()
 
 function Pterodactyl_getProductConfig()
 {
+    $nodes =  Pterodactyl_getRequest(pteroConfig('host') . '/api/application/nodes');
+    $nodeList = [
+        [
+            'name' => 'None',
+            'value' => '',
+        ],
+    ];
+    foreach ($nodes->json()['data'] as $node) {
+        $nodeList[] = [
+            'name' => $node['attributes']['name'],
+            'value' => $node['attributes']['id'],
+        ];
+    }
+
+    $location =  Pterodactyl_getRequest(pteroConfig('host') . '/api/application/locations');
+    $locationList = [];
+    foreach ($location->json()['data'] as $location) {
+        $locationList[] = [
+            'name' => $location['attributes']['short'],
+            'value' => $location['attributes']['id'],
+        ];
+    }
+
+    $nests =  Pterodactyl_getRequest(pteroConfig('host') . '/api/application/nests');
+    $nestList = [];
+    foreach ($nests->json()['data'] as $nest) {
+        $nestList[] = [
+            'name' => $nest['attributes']['name'],
+            'value' => $nest['attributes']['id'],
+        ];
+    }
+
+
+
     return [
         [
             'name' => 'node',
             'friendlyName' => 'Pterodactyl Node (leave empty for node assigned to location)',
-            'type' => 'text',
+            'type' => 'dropdown',
+            'options' => $nodeList,
         ],
         [
             'name' => 'location',
             'friendlyName' => 'Pterodactyl Location',
-            'type' => 'text',
+            'type' => 'dropdown',
+            'options' => $locationList,
             'required' => true,
         ],
         [
@@ -53,8 +89,9 @@ function Pterodactyl_getProductConfig()
         ],
         [
             'name' => 'nest',
-            'friendlyName' => 'Pterodactyl Nest ID',
-            'type' => 'text',
+            'friendlyName' => 'Pterodactyl Nest',
+            'type' => 'dropdown',
+            'options' => $nestList,
             'required' => true,
         ],
         [
