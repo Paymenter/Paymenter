@@ -138,8 +138,8 @@
                                     </span>
                                 @endisset
                             </label>
-                            @if ($setting->type == 'text')
-                                <input type="text" name="{{ $setting->name }}"
+                            @if ($setting->type == 'text' || $setting->type == 'number' || $setting->type == 'password')
+                                <input type="{{ $setting->type }}" name="{{ $setting->name }}"
                                     value="{{ App\Helpers\ExtensionHelper::getProductConfig($extension->name, $setting->name, $product->id) }}"
                                     @if ($setting->required) required @endif
                                     class="block w-full rounded-md shadow-sm focus:ring-logo focus:border-logo sm:text-sm dark:bg-darkmode" />

@@ -91,6 +91,8 @@
                                                 Checkbox</option>
                                             <option value="quantity" @if ($configurableOption->type == 'quantity') selected @endif>
                                                 Quantity</option>
+                                            <option value="slider" @if ($configurableOption->type == 'slider') selected @endif>
+                                                Slider</option>
                                         </x-input>
                                     </div>
                                     <div class="flex flex-row gap-4">

@@ -86,23 +86,31 @@ function Proxmox_getProductConfig($options)
     // Only list contentVztmpl 
     $templateList = [];
     $isoList = [];
-    if ($storageName != null) {
-        $template = Proxmox_getRequest('/nodes/' . $currentNode . '/storage/' . $storageName . '/content');
-        if (!$template->json()) throw new Exception('Unable to get template');
-        foreach ($template->json()['data'] as $template) {
-            if ($template['content'] == 'vztmpl') {
-                $templateList[] = [
-                    'name' => $template['volid'],
-                    'value' => $template['volid']
-                ];
-            } else if ($template['content'] == 'iso') {
-                $isoList[] = [
-                    'name' => $template['volid'],
-                    'value' => $template['volid']
-                ];
+    foreach($nodeList as $node)
+    {
+        // Get all storage
+        $storage = Proxmox_getRequest('/nodes/' . $node['value'] . '/storage');
+        if (!$storage->json()) throw new Exception('Unable to get storage');
+        foreach ($storage->json()['data'] as $storage) {
+            $storageName = $storage['storage'];
+            $template = Proxmox_getRequest('/nodes/' . $node['value'] . '/storage/' . $storageName . '/content');
+            if (!$template->json()) throw new Exception('Unable to get template');
+            foreach ($template->json()['data'] as $template) {
+                if ($template['content'] == 'vztmpl') {
+                    $templateList[] = [
+                        'name' => $template['volid'],
+                        'value' => $template['volid']
+                    ];
+                } else if ($template['content'] == 'iso') {
+                    $isoList[] = [
+                        'name' => $template['volid'],
+                        'value' => $template['volid']
+                    ];
+                }
             }
         }
     }
+    
 
 
     $bridgeList = [];
@@ -541,7 +549,19 @@ function Proxmox_getUserConfig(Product $product)
     }
 
     return [
-        []
+        [
+            'name' => 'hostname',
+            'type' => 'text',
+            'friendlyName' => 'Hostname',
+            'description' => 'The hostname of the VM',
+        ],
+        [
+            'name' => 'password',
+            'type' => 'password',
+            'friendlyName' => 'Password',
+            'description' => 'The password of the VM',
+            'required' => true,
+        ],
     ];
 }
 
@@ -672,9 +692,10 @@ function Proxmox_status(Request $request, OrderProduct $product)
     ]);
     $data = ExtensionHelper::getParameters($product);
     $params = $data->config;
+    $vmid = $params['config']['vmid'];
     $postData = [
         'node' => $params['node'],
-        'vmid' => $product->id + 100,
+        'vmid' => $vmid,
     ];
     // Change status
     $status = Proxmox_postRequest('/nodes/' . $params['node'] . '/qemu/' . $vmid . '/status/' . $request->status,  $postData);

@@ -168,4 +168,16 @@ class SettingController extends Controller
 
         return redirect('/admin/settings#theme')->with('success', 'Settings updated successfully');
     }
+
+    public function credits(Request $request)
+    {
+        $request->validate([
+            'credits' => 'required',
+        ]);
+        Setting::updateOrCreate(['key' => 'credits'], ['value' => $request->credits]);
+        foreach ($request->except(['_token', 'theme']) as $key => $value) {
+            Setting::updateOrCreate(['key' => 'theme:' . $key], ['value' => $value]);
+        }
+        return redirect('/admin/settings#credits')->with('success', 'Settings updated successfully');
+    }
 }
