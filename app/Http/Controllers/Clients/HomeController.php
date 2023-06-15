@@ -118,4 +118,14 @@ class HomeController extends Controller
 
         return redirect()->back()->with('success', 'Profile updated successfully');
     }
+
+    /**
+     * Add credit to user
+     * 
+     * @return view
+     */
+    public function credits()
+    {
+        return view('clients.credits');
+    }
 }

@@ -44,7 +44,7 @@
                 </div>
                 <div class="flex flex-col">
                     <span class="font-bold">{{ __('Client') }}:</span>
-                    <a href="{{ route('admin.clients.edit', $order->client()->get()->first()->id) }}"
+                    <a href="{{ route('admin.clients.edit',$order->client()->get()->first()->id) }}"
                         class="text-blue-500 hover:text-blue-700 dark:text-blue-300 dark:hover:text-blue-500">
                         {{ $order->client()->get()->first()->name }}
                     </a>
@@ -59,6 +59,17 @@
                     <span class="font-bold">{{ __('Updated') }}:</span>
                     <span>{{ $order->updated_at }}</span>
                 </div>
+            </div>
+            <div class="flex flex-row justify-between">
+                @isset($order->coupon()->get()->first()->code)
+                    <div class="flex flex-col">
+                        <span class="font-bold">{{ __('Coupon') }}:</span>
+                        <span>
+                            <a href="{{ route('admin.coupons.edit',$order->coupon()->get()->first()->id) }}"
+                                class="text-blue-500 hover:text-blue-700 dark:text-blue-300 dark:hover:text-blue-500">
+                                {{ $order->coupon()->get()->first()->code }}</a></span>
+                    </div>
+                @endisset
             </div>
         </div>
         <div class="flex flex-col mt-4">

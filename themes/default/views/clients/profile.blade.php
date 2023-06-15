@@ -23,10 +23,12 @@
                             class="text-secondary-900 pl-3 border-primary-400 border-l-2 duration-300 hover:text-secondary-900 hover:pl-3 hover:border-primary-400 focus:text-secondary-900 focus:pl-3 focus:border-primary-400">
                             {{ __('My Details') }}
                         </a>
-                        <a href="{{ route('clients.profile') }}"
-                            class="border-l-2 border-transparent duration-300 hover:text-secondary-900 hover:pl-3 hover:border-primary-400 focus:text-secondary-900 focus:pl-3 focus:border-primary-400">
-                            {{ __('Account Security') }}
-                        </a>
+                        @if(config('settings::credits'))
+                            <a href="{{ route('clients.credits') }}"
+                                class="border-l-2 border-transparent duration-300 hover:text-secondary-900 hover:pl-3 hover:border-primary-400 focus:text-secondary-900 focus:pl-3 focus:border-primary-400">
+                                {{ __('Credits') }}
+                            </a>
+                        @endif
                         <a href="{{ route('clients.api.index') }}"
                             class="border-l-2 border-transparent duration-300 hover:text-secondary-900 hover:pl-3 hover:border-primary-400 focus:text-secondary-900 focus:pl-3 focus:border-primary-400">
                             {{ __('Account API') }}

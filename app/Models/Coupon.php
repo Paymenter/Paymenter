@@ -33,4 +33,9 @@ class Coupon extends Model {
             return $this->value;
         }
     }
+
+    public function orders()
+    {
+        return $this->hasMany(Order::class, 'coupon', 'id');
+    }
 }

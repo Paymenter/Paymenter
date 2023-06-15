@@ -201,7 +201,7 @@ class CheckoutController extends Controller
                     if ($configItem->type == 'quantity') {
                         if (!$request->input($configItem->id)) continue;
                     }
-                    if ($configItemInput->id != $request->input($configItem->id) && ($configItem->type == 'select' || $configItem->type == 'radio')) continue;
+                    if ($configItemInput->id != $request->input($configItem->id) && ($configItem->type == 'select' || $configItem->type == 'radio' || $configItem->type == 'slider')) continue;
                     $configItemPrice = $configItemInput->configurableOptionInputPrice()->get()->first();
                     if ($configItemPrice) {
                         if ($configItem->type == 'quantity') {
@@ -356,6 +356,10 @@ class CheckoutController extends Controller
                 $iproduct->stock = $iproduct->stock - $product->quantity;
                 $iproduct->save();
             }
+        }
+        if($coupon) {
+            $coupon->uses = $coupon->uses + 1;
+            $coupon->save();
         }
         if ($total != 0) {
             $products = $invoice->getItemsWithProducts()->products;

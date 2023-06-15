@@ -109,6 +109,16 @@
                     @endforeach
                 </select>
             </div>
+            <div class="mt-4">
+                <label for="used_by" class="block dark:text-darkmodetext">
+                    {{ __('Times Used') }}
+                </label>
+
+                <input type="text" disabled
+                    class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm dark:bg-darkmode rounded-md"
+                    value="{{ $coupon->uses }}">
+            </div>
+
         </div>
         <div class="flex items-center justify-end mt-4">
             <button type="submit" class="inline-flex justify-center w-max float-right button button-primary">

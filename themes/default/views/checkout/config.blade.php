@@ -18,8 +18,9 @@
                     @csrf
                     @foreach ($userConfig as $config)
                         @if ($config->type == 'text' || $config->type == 'number' || $config->type == 'email' || $config->type == 'password')
-                            <x-input type="{{ $config->type }}" placeholder="{{ ucfirst($config->name) }}" name="{{ $config->name }}"
-                                id="{{ $config->name }}" label="{{ ucfirst($config->name) }}" required />
+                            <x-input type="{{ $config->type }}" placeholder="{{ ucfirst($config->name) }}"
+                                name="{{ $config->name }}" id="{{ $config->name }}" label="{{ ucfirst($config->name) }}"
+                                required />
                         @elseif($config->type == 'textarea')
                             <div class="mt-4">
                                 <label for={{ $config->name }}
@@ -93,8 +94,8 @@
                             };
                         </script>
                     @endif
-                    @if(count($customConfig) > 0)
-                    <h1 class="text-xl font-bold mt-6">{{ __('Configurable Options') }}</h1>
+                    @if (count($customConfig) > 0)
+                        <h1 class="text-xl font-bold mt-6">{{ __('Configurable Options') }}</h1>
                     @endif
                     @foreach ($customConfig as $config)
                         @php
@@ -135,6 +136,57 @@
                                             @endif
                                         </div>
                                     </div>
+                                @elseif($item->type == 'radio')
+                                    <div class="mt-2">
+                                        <label for="{{ $item->id }}"
+                                            class="text-sm text-secondary-600">{{ ucfirst($name) }}</label>
+                                        <div class="flex flex-col radios">
+                                            @foreach ($item->configurableOptionInputs()->orderBy('order', 'asc')->get() as $key => $option)
+                                                @if ($option->hidden)
+                                                    @continue
+                                                @endif
+                                                <div class="inline-flex">
+                                                    <input type="radio" id="{{ $option->id }}"
+                                                        name="{{ $item->id }}" value="{{ $option->id }}"
+                                                        @if (old($item->name) == $option) checked @elseif(!$key) checked @endif>
+                                                    <label class="ml-2  inline-flex items-center"
+                                                        for="{{ $option->id }}">{{ $option->name }}
+                                                        @if ($option->configurableOptionInputPrice->{$billing_cycle})
+                                                            -
+                                                            {{ config('settings::currency_sign') . $option->configurableOptionInputPrice->{$billing_cycle} }}
+                                                        @else
+                                                            - free
+                                                        @endif
+                                                    </label>
+                                                </div>
+                                            @endforeach
+                                        </div>
+                                    </div>
+                                @elseif($item->type == 'slider')
+                                    <div class="mt-2">
+                                        @php $includeJs = true; @endphp
+                                        <label for="{{ $item->id }}"
+                                            class="text-sm text-secondary-600">{{ ucfirst($name) }}</label>
+                                        <div class="flex flex-col radios">
+                                            @foreach ($item->configurableOptionInputs()->orderBy('order', 'asc')->get() as $key => $option)
+                                                @if ($option->hidden)
+                                                    @continue
+                                                @endif
+                                                <input type="radio" id="{{ $option->id }}"
+                                                    name="{{ $item->id }}" value="{{ $option->id }}"
+                                                    @if (old($item->name) == $option) checked @elseif(!$key) checked @endif>
+                                                <label class="ml-2  inline-flex items-center"
+                                                    for="{{ $option->id }}">{{ $option->name }}
+                                                    @if ($option->configurableOptionInputPrice->{$billing_cycle})
+                                                        -
+                                                        {{ config('settings::currency_sign') . $option->configurableOptionInputPrice->{$billing_cycle} }}
+                                                    @else
+                                                        - free
+                                                    @endif
+                                                </label>
+                                            @endforeach
+                                        </div>
+                                    </div>
                                 @else
                                     <x-input type="{{ $item->type }}" placeholder="{{ ucfirst($item->name) }}"
                                         name="{{ $item->id }}" id="{{ $item->id }}"
@@ -144,7 +196,7 @@
                                                 @continue
                                             @endif
                                             <option value="{{ $option->id }}"
-                                                @if (old($item->name) == $option) selected @endif>  
+                                                @if (old($item->name) == $option) selected @endif>
                                                 {{ $option->name }} @if ($option->configurableOptionInputPrice->{$billing_cycle})
                                                     -
                                                     {{ config('settings::currency_sign') . $option->configurableOptionInputPrice->{$billing_cycle} }}
@@ -167,5 +219,14 @@
             </div>
         </div>
     </div>
+    @isset($includeJs)
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/radioslider@1.0.0-beta.1/dist/radioslider.min.css">
 
+        <script src="https://cdn.jsdelivr.net/npm/radioslider@1.0.0-beta.1/dist/jquery.radioslider.min.js"></script>
+        <script>
+            $(function() {
+                var radios = $(".radios").radioslider();
+            });
+        </script>
+    @endisset
 </x-app-layout>

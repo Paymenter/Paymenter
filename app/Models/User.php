@@ -33,7 +33,8 @@ class User extends Authenticatable
         'country',
         'phone',
         'companyname',
-        'tfa_secret'
+        'tfa_secret',
+        'role_id',
     ];
 
     /**
