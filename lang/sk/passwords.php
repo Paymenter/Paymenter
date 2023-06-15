@@ -12,9 +12,9 @@ return [
     |
     */
 
-    'reset' => 'A jelszavad megváltozott',
-    'sent' => 'Elküldtük a jelszó visszaállitási hivatkozást emailben!',
-    'throttled' => 'Kérlek várj egy kicsit, majd próbáld ujra',
-    'token' => 'Ez a jelszó helyreállitási token helytelen',
-    'user' => "A megadott e-mail cim nem található.",
+    'reset' => 'Tvoje heslo sa zmenila',
+    'sent' => 'Odoslali sme inštrukcie na obnovu hesla cez email',
+    'throttled' => 'Chvíľu počkajte a skúste to znova',
+    'token' => 'Tento token na obnovenie hesla je nesprávny',
+    'user' => "Zadaná e-mailová adresa sa nenašla.",
 ];
