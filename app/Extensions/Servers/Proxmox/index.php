@@ -86,8 +86,7 @@ function Proxmox_getProductConfig($options)
     // Only list contentVztmpl 
     $templateList = [];
     $isoList = [];
-    foreach($nodeList as $node)
-    {
+    foreach ($nodeList as $node) {
         // Get all storage
         $storage = Proxmox_getRequest('/nodes/' . $node['value'] . '/storage');
         if (!$storage->json()) throw new Exception('Unable to get storage');
@@ -110,7 +109,7 @@ function Proxmox_getProductConfig($options)
             }
         }
     }
-    
+
 
 
     $bridgeList = [];
@@ -686,7 +685,7 @@ function Proxmox_getCustomPages($user, $parmas, $order, $product, $configurableO
 
 function Proxmox_status(Request $request, OrderProduct $product)
 {
-    // Validate request with stop/start/restart
+    if (!ExtensionHelper::hasAccess($product,  $request->user())) throw new Exception('You do not have access to this server');
     $request->validate([
         'status' => ['required', 'string', 'in:stop,start,reboot,shutdown'],
     ]);

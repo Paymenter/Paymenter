@@ -588,4 +588,21 @@ class ExtensionHelper
             'configurableOptions' => $configurableOptions,
         ];
     }
+
+    /**
+     * Check if user may access the server
+     * 
+     * @param OrderProduct $product
+     * @param User $user
+     * 
+     * @return bool
+     */
+    public static function hasAccess(OrderProduct $product, User $user)
+    {
+        if($product->order->client == $user->id){
+            return true;
+        }
+        
+        return false;
+    }
 }
