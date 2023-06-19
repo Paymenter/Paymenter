@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers\Clients;
 
+use App\Helpers\ExtensionHelper;
 use App\Models\Order;
 use App\Models\Invoice;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\Extension;
 use Illuminate\Support\Facades\Crypt;
 use RobThree\Auth\TwoFactorAuth;
 
@@ -126,6 +128,49 @@ class HomeController extends Controller
      */
     public function credits()
     {
-        return view('clients.credits');
+        if(config('settings::credits') == false) {
+            return abort(404, 'Credits are disabled');
+        }
+        $gateways = ExtensionHelper::getGateways();
+        return view('clients.credits', compact('gateways'));
+    }
+
+    /**
+     * Add credit to user
+     * 
+     * @param Request $request
+     * @return redirect
+     */
+    public function addCredits(Request $request)
+    {
+        if(!config('settings::credits')) {
+            return redirect()->back()->with('error', 'Credits are disabled');
+        }
+        $request->validate([
+            'amount' => 'required|numeric|min:1',
+            'gateway' => 'required|string',
+        ]);
+
+        $gateway = Extension::findOrFail($request->gateway);
+        $amount = $request->amount;
+        if($amount <= config('settings::minimum_deposit')) {
+            return redirect()->back()->with('error', 'Minimum credits allowed is ' . config('settings::minimum_deposit'));
+        }
+        if($amount > config('settings::maximum_deposit')) {
+            return redirect()->back()->with('error', 'Maximum credits allowed is ' . config('settings::maximum_deposit'));
+        }
+        $user = $request->user();
+        if(($user->credits + $amount) > config('settings::maximum_credits')) {
+            return redirect()->back()->with('error', 'Maximum credits allowed is ' . config('settings::maximum_credits'));
+        }
+
+        // Make invoice for user
+        $invoice = new Invoice();
+        $invoice->user_id = $user->id;
+        $invoice->credits = $amount;
+        $invoice->status = 'pending';
+        $invoice->save();
+
+        return redirect(ExtensionHelper::addCredits($gateway, $invoice));
     }
 }

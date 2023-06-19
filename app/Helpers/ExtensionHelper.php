@@ -29,6 +29,18 @@ class ExtensionHelper
     public static function paymentDone($id)
     {
         $invoice = Invoice::findOrFail($id);
+
+        // Is the invoice for credits? Then add them to the user's account.
+        if($invoice->credits > 0) {
+            $user = User::findOrFail($invoice->user_id);
+            $user->credits = $user->credits + $invoice->credits;
+            $user->save();
+
+            $invoice->status = 'paid';
+            $invoice->save();
+            return;	
+        }
+        
         foreach ($invoice->items()->get() as $item) {
             $product = $item->product()->get()->first();
             if (!$product) {
@@ -266,6 +278,30 @@ class ExtensionHelper
         return $pay;
     }
 
+    public static function addCredits(Extension $extension, Invoice $invoice)
+    {
+        if (!$extension) {
+            return false;
+        }
+        if (!file_exists(app_path() . '/Extensions/Gateways/' . $extension->name . '/index.php')) {
+            return false;
+        }
+        include_once app_path() . '/Extensions/Gateways/' . $extension->name . '/index.php';
+        $total = $invoice->credits;
+        $function = $extension->name . '_pay';
+        $product = new Product();
+        $product->name = 'Credits';
+        $product->description = 'Credits';
+        $product->price = $total;
+        $product->quantity = 1;
+        $product->id = 0;
+
+        $pay = $function($total, [$product], $invoice->id);
+
+        return $pay;
+    }
+
+
     public static function loadConfiguration(Product $product, OrderProduct $product2)
     {
         $settings = $product->settings ?? collect();
@@ -301,6 +337,16 @@ class ExtensionHelper
             $configurableOptions[$option->name] = $value ? $value->name : $config2->value;
         }
         return $configurableOptions;
+    }
+
+    public static function getGateways()
+    {
+        $gateways = [];
+        $extensions = Extension::where('enabled', true)->where('type', 'gateway')->get();
+        foreach ($extensions as $extension) {
+            $gateways[] = $extension;
+        }
+        return $gateways;
     }
 
     public static function createServer(OrderProduct $product2)

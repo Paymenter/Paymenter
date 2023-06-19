@@ -21,7 +21,10 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($invoices as $invoice)
+                        @foreach ($invoices->sortByDesc('status') as $invoice)
+                            @if ($invoice->items->count() == 0)
+                                @continue
+                            @endif
                             <tr class="border-b-2 border-secondary-200 dark:border-secondary-50">
                                 <td class="pl-6 py-3">
                                     {{ config('settings::currency_sign') }}{{ $invoice->total() }}

@@ -60,6 +60,11 @@
                                                         {{ isset($gateway->display_name) ? $gateway->display_name : $gateway->name }}
                                                     </option>
                                                 @endforeach
+                                                @if (config('settings::credits'))
+                                                    <option value="credits">
+                                                        {{ __('Pay with credits') }}
+                                                    </option>
+                                                @endif
                                             </x-input>
                                             <button type="submit" class="button button-primary mt-3">
                                                 {{ __('Pay') }}

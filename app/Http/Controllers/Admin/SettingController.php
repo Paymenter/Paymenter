@@ -172,7 +172,9 @@ class SettingController extends Controller
     public function credits(Request $request)
     {
         $request->validate([
-            'credits' => 'required',
+            'minimum_deposit' => 'required|numeric|min:0',
+            'maximum_deposit' => 'required|numeric|min:0',
+            'maximum_balance' => 'required|numeric|min:0',
         ]);
         Setting::updateOrCreate(['key' => 'credits'], ['value' => $request->credits]);
         foreach ($request->except(['_token', 'theme']) as $key => $value) {

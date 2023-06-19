@@ -94,4 +94,9 @@ class User extends Authenticatable
     {
         return (new Permissions($this->role->permissions))->has($permission);
     }
+
+    public function formattedCredits()
+    {
+        return number_format($this->credits, 2);
+    }
 }

@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Helpers\ExtensionHelper;
 use App\Http\Controllers\Controller;
 use App\Models\Invoice;
+use App\Models\User;
 
 class InvoiceController extends Controller
 {
@@ -48,6 +49,16 @@ class InvoiceController extends Controller
 
         if ($request->get('payment_method')) {
             $payment_method = $request->get('payment_method');
+            if ($payment_method == 'credits') {
+                $user = User::where('id', auth()->user()->id)->first();
+                if ($user->credits < $total) {
+                    return redirect()->route('clients.invoice.show', $invoice->id)->with('error', 'You do not have enough credits');
+                }
+                $user->credits = $user->credits - $total;
+                $user->save();
+                ExtensionHelper::paymentDone($invoice->id);
+                return redirect()->route('clients.invoice.show', $invoice->id)->with('success', 'Payment done');
+            }
             $payment_method = ExtensionHelper::getPaymentMethod($payment_method, $total, $products, $invoice->id);
             if ($payment_method) {
                 return redirect($payment_method);

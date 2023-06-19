@@ -37,7 +37,7 @@ class SettingSeeder extends Seeder
             ['key' => 'language', 'value' => 'en'],
             ['key' => 'snow', 'value' => 0],
             ['key' => 'allow_auto_log', 'value' => 0],
-            ['key' => 'credits', 'value' => 1],
+            ['key' => 'credits', 'value' => 0],
             ['key' => 'minimum_deposit', 'value' => '5'],
             ['key' => 'maximum_deposit', 'value' => '100'],
             ['key' => 'maximum_balance', 'value' => '300']

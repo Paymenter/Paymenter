@@ -28,6 +28,7 @@ Route::get('/profile', [App\Http\Controllers\Clients\HomeController::class, 'pro
 Route::post('/profile', [App\Http\Controllers\Clients\HomeController::class, 'update'])->name('clients.profile.update')->middleware(['auth', 'password.confirm']);
 Route::post('/profile/tfa', [App\Http\Controllers\Clients\HomeController::class, 'update2FA'])->name('clients.profile.tfa')->middleware(['auth', 'password.confirm']);
 Route::get('/credits', [App\Http\Controllers\Clients\HomeController::class, 'credits'])->name('clients.credits')->middleware(['auth']);
+Route::post('/credits', [App\Http\Controllers\Clients\HomeController::class, 'addCredits'])->name('clients.credits.add')->middleware(['auth']);
 Route::get('/change-password', [App\Http\Controllers\Clients\HomeController::class, 'password'])->name('clients.password.change-password')->middleware(['auth']);
 Route::get('/tos', [App\Http\Controllers\BasisController::class, 'tos'])->name('tos');
 

@@ -1,7 +1,4 @@
 <x-app-layout clients title="{{ __('Credits') }}">
-
-    <x-success />
-
     <div class="content">
         <div class="grid grid-cols-12 gap-4">
             <div class="col-span-12">
@@ -36,16 +33,42 @@
             </div>
             <div class="lg:col-span-9 col-span-12">
                 <div class="content-box">
+                    <h1 class="text-2xl font-semibold">{{ __('Current Balance') }}</h1>
+                    <div class="flex flex-row items-center justify-between">
+                        <div class="flex flex-col gap-2">
+                            <span class="text-gray-500">{{ __('Current Balance') }}</span>
+                            <span class="text-2xl font-semibold">{{ config('settings::currency_sign') }}
+                                {{ Auth::user()->formattedCredits() }}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="content-box mt-4">
                     <h1 class="text-2xl font-semibold">{{ __('Add Credits') }}</h1>
                     <x-success />
-                    <div class="flex flex-row items-center">
-                    <x-input type="text" class="mt-4 flex-1" placeholder="{{ __('Amount') }}" name="amount" id="amount"
-                        label="{{ __('Amount') }}" />
-    
-                        <button class="button button-primary mt-6 flex w-fit h-fit ml-3">
-                            {{ __('Add') }}
-                        </button>
-                    </div>
+                    @if (count($gateways) == 0)
+                        <div class="alert alert-warning">
+                            {{ __('No payment gateway found.') }}
+                        </div>
+                    @else
+                        <form action="{{ route('clients.credits.add') }}" method="POST">
+                            @csrf
+                            <div class="flex flex-row items-center justify-between">
+                                <x-input type="text" class="flex-1" placeholder="{{ __('Amount') }}" name="amount"
+                                    id="amount" label="{{ __('Amount') }}" />
+                                <x-input type="select" class="flex-1 ml-2" placeholder="{{ __('Payment Method') }}"
+                                    id="gateway_id" name="gateway" label="{{ __('Payment Method') }}">
+                                    <option value="" selected disabled>{{ __('Select Gateway') }}</option>
+                                    @foreach ($gateways as $gateway)
+                                        <option value="{{ $gateway->id }}">{{ $gateway->name }}</option>
+                                    @endforeach
+                                </x-input>
+                                <button class="button button-primary mt-6 flex w-fit h-fit ml-3">
+                                    {{ __('Add') }}
+                                </button>
+                            </div>
+                        </form>
+                    @endif
                 </div>
             </div>
         </div>

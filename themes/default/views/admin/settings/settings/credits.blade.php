@@ -1,5 +1,5 @@
 <div class="hidden mt-3" id="tab-credits">
-    <form method="POST" enctype="multipart/form-data" class="mb-3" action="{{ route('admin.settings.general') }}">
+    <form method="POST" enctype="multipart/form-data" class="mb-3" action="{{ route('admin.settings.credits') }}">
         @csrf
         <div class="grid grid-cols-1">
             <div class="relative m-4 group">
