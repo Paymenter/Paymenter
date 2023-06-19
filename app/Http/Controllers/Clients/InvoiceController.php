@@ -24,6 +24,9 @@ class InvoiceController extends Controller
         if ($invoice->user_id != auth()->user()->id) {
             return redirect()->route('clients.invoice.index');
         }
+        if ($invoice->credits) {
+            return redirect()->route('clients.credits');
+        }
 
         $invoiceItems = $invoice->getItemsWithProducts();
         $products = $invoiceItems->products;
@@ -64,7 +67,7 @@ class InvoiceController extends Controller
                 return redirect($payment_method);
             }
         }
-        
+
         return redirect()->back()->with('error', 'Payment method not found');
     }
 }

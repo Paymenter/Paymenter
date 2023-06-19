@@ -36,7 +36,6 @@
                     <h1 class="text-2xl font-semibold">{{ __('Current Balance') }}</h1>
                     <div class="flex flex-row items-center justify-between">
                         <div class="flex flex-col gap-2">
-                            <span class="text-gray-500">{{ __('Current Balance') }}</span>
                             <span class="text-2xl font-semibold">{{ config('settings::currency_sign') }}
                                 {{ Auth::user()->formattedCredits() }}</span>
                         </div>
@@ -45,6 +44,7 @@
 
                 <div class="content-box mt-4">
                     <h1 class="text-2xl font-semibold">{{ __('Add Credits') }}</h1>
+                    <p class="text-gray-500">{{ __('It can take some time to process your payment.') }}</p>
                     <x-success />
                     @if (count($gateways) == 0)
                         <div class="alert alert-warning">

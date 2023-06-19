@@ -154,14 +154,14 @@ class HomeController extends Controller
         $gateway = Extension::findOrFail($request->gateway);
         $amount = $request->amount;
         if($amount <= config('settings::minimum_deposit')) {
-            return redirect()->back()->with('error', 'Minimum credits allowed is ' . config('settings::minimum_deposit'));
+            return redirect()->back()->with('error', 'Minimum deposit is ' . config('settings::minimum_deposit'));
         }
-        if($amount > config('settings::maximum_deposit')) {
-            return redirect()->back()->with('error', 'Maximum credits allowed is ' . config('settings::maximum_deposit'));
+        if($amount >= config('settings::maximum_deposit')) {
+            return redirect()->back()->with('error', 'Maximum deposit is ' . config('settings::maximum_deposit'));
         }
         $user = $request->user();
-        if(($user->credits + $amount) > config('settings::maximum_credits')) {
-            return redirect()->back()->with('error', 'Maximum credits allowed is ' . config('settings::maximum_credits'));
+        if(($user->credits + $amount) > config('settings::maximum_balance')) {
+            return redirect()->back()->with('error', 'Maximum credits is ' . config('settings::maximum_credits'));
         }
 
         // Make invoice for user
