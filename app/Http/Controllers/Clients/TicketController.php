@@ -75,6 +75,9 @@ class TicketController extends Controller
 
     public function show(Ticket $ticket)
     {
+        if($ticket->client != auth()->user()->id) {
+            return redirect()->back()->with('error', 'You do not have permission to view this ticket.');
+        }
         $messages = TicketMessage::where('ticket_id', $ticket->id)->get();
 
         return view('clients.tickets.show', compact('ticket', 'messages'));

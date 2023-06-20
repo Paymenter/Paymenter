@@ -60,14 +60,10 @@ class CronJob extends Command
                 continue;
             }
             // Get all InvoiceItems for this product
-            $invoiceItems = $order->invoices()->get();
-            // Check if there is a pending invoice
-            foreach ($invoiceItems as $invoiceItem) {
-                $invoice = $invoiceItem->invoice()->get()->first();
-                if ($invoice->status == 'pending') {
-                    // Stop processing this order
-                    continue 2;
-                }
+            $invoiceItems = $order->getOpenInvoices()->get();
+            if ($invoiceItems->count() > 0) {
+                $invoiceProcessed++;
+                continue;
             }
 
             $invoice = new \App\Models\Invoice();

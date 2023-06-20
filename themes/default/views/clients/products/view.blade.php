@@ -78,7 +78,7 @@
             </ul>
         @endisset
         @isset($extensionLink)
-            @isset($views['pages']))
+            @isset($views['pages'])
                 @foreach ($views['pages'] as $page)
                     @if ($extensionLink == $page['url'])
                         <div class="content-box">
@@ -90,7 +90,6 @@
         @else
             @isset($views['template'])
                 <div class="content-box">
-
                     @include($views['template'], $views['data'])
                 </div>
             @endisset
