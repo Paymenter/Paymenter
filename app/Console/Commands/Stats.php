@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Models\Order;
+use App\Models\Role;
 use App\Models\Setting;
 use Illuminate\Support\Str;
 use Illuminate\Console\Command;
@@ -31,22 +32,29 @@ class Stats extends Command
      */
     public function handle()
     {
-        if(config('settigns::stats.disabled')) {
+        if (config('settigns::stats.disabled')) {
             return;
         }
         $this->info('Posting Stats to Paymenter API');
         $url = 'https://api.paymenter.org/stats';
         $token = config('settings::stats.token');
-        if(!$token) {
+        if (!$token) {
             $token = Str::uuid();
             Setting::updateOrCreate(['key' => 'stats.token'], ['value' => $token]);
         }
         $extensions = [];
-        foreach(\App\Models\Extension::where('enabled', 1)->get() as $extension) {
+        foreach (\App\Models\Extension::where('enabled', 1)->get() as $extension) {
             $extensions[] = [
                 'name' => $extension->name,
                 'count' => \App\Models\Product::where('server_id', $extension->id)->count(),
             ];
+        }
+        $userCoount = 0;
+        foreach (Role::all() as $role) {
+            $role = Role::find($role->id);
+            if ($role->id !== 2) {
+                $userCoount += $role->users()->count();
+            }
         }
         $data = [
             'token' => $token,
@@ -68,12 +76,12 @@ class Stats extends Command
                 'coupons' => [
                     'count' => \App\Models\Coupon::count(),
                 ],
-                'categories' =>[
+                'categories' => [
                     'count' => \App\Models\Category::count(),
                 ],
                 'users' => [
                     'count' => \App\Models\User::count(),
-                    'admins' => \App\Models\User::where('is_admin', '1')->count(),
+                    'admins' => $userCoount,
                 ],
                 'extensions' => [
                     'servers' => \App\Models\Extension::where('type', 'server')->count(),
@@ -85,7 +93,7 @@ class Stats extends Command
             ]
         ];
         $response = Http::post($url, $data);
-        if($response->successful()) {
+        if ($response->successful()) {
             $this->info('Stats Posted Successfully');
         } else {
             $this->error($response->body());
