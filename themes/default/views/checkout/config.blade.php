@@ -142,6 +142,7 @@
                                             class="text-sm text-secondary-600">{{ ucfirst($name) }}</label>
                                         <div class="flex flex-col radios">
                                             @foreach ($item->configurableOptionInputs()->orderBy('order', 'asc')->get() as $key => $option)
+                                                @php $name = explode('|', $option->name)[1] ?? $option->name; @endphp
                                                 @if ($option->hidden)
                                                     @continue
                                                 @endif
@@ -150,7 +151,8 @@
                                                         name="{{ $item->id }}" value="{{ $option->id }}"
                                                         @if (old($item->name) == $option) checked @elseif(!$key) checked @endif>
                                                     <label class="ml-2  inline-flex items-center"
-                                                        for="{{ $option->id }}">{{ $option->name }}
+                                                        for="{{ $option->id }}">
+                                                        {{ ucfirst($name) }}
                                                         @if ($option->configurableOptionInputPrice->{$billing_cycle})
                                                             -
                                                             {{ config('settings::currency_sign') . $option->configurableOptionInputPrice->{$billing_cycle} }}
@@ -169,6 +171,7 @@
                                             class="text-sm text-secondary-600">{{ ucfirst($name) }}</label>
                                         <div class="flex flex-col radios">
                                             @foreach ($item->configurableOptionInputs()->orderBy('order', 'asc')->get() as $key => $option)
+                                                @php $name = explode('|', $option->name)[1] ?? $option->name; @endphp
                                                 @if ($option->hidden)
                                                     @continue
                                                 @endif
@@ -176,7 +179,8 @@
                                                     name="{{ $item->id }}" value="{{ $option->id }}"
                                                     @if (old($item->name) == $option) checked @elseif(!$key) checked @endif>
                                                 <label class="ml-2  inline-flex items-center"
-                                                    for="{{ $option->id }}">{{ $option->name }}
+                                                    for="{{ $option->id }}">
+                                                    {{ ucfirst($name) }}
                                                     @if ($option->configurableOptionInputPrice->{$billing_cycle})
                                                         -
                                                         {{ config('settings::currency_sign') . $option->configurableOptionInputPrice->{$billing_cycle} }}
@@ -192,12 +196,14 @@
                                         name="{{ $item->id }}" id="{{ $item->id }}"
                                         label="{{ ucfirst($name) }}" required>
                                         @foreach ($item->configurableOptionInputs()->orderBy('order', 'asc')->get() as $option)
+                                            @php $name = explode('|', $option->name)[1] ?? $option->name; @endphp
                                             @if ($option->hidden)
                                                 @continue
                                             @endif
                                             <option value="{{ $option->id }}"
                                                 @if (old($item->name) == $option) selected @endif>
-                                                {{ $option->name }} @if ($option->configurableOptionInputPrice->{$billing_cycle})
+                                                {{ ucfirst($name) }}
+                                                @if ($option->configurableOptionInputPrice->{$billing_cycle})
                                                     -
                                                     {{ config('settings::currency_sign') . $option->configurableOptionInputPrice->{$billing_cycle} }}
                                                 @else
