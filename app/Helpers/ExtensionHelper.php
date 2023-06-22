@@ -31,16 +31,16 @@ class ExtensionHelper
         $invoice = Invoice::findOrFail($id);
 
         // Is the invoice for credits? Then add them to the user's account.
-        if($invoice->credits > 0) {
+        if ($invoice->credits > 0) {
             $user = User::findOrFail($invoice->user_id);
             $user->credits = $user->credits + $invoice->credits;
             $user->save();
 
             $invoice->status = 'paid';
             $invoice->save();
-            return;	
+            return;
         }
-        
+
         foreach ($invoice->items()->get() as $item) {
             $product = $item->product()->get()->first();
             if (!$product) {
@@ -490,7 +490,7 @@ class ExtensionHelper
             return false;
         }
         $link = $function($user, $config, $product->order()->get()->first(), $product);
-        
+
         return $link;
     }
 
@@ -503,26 +503,26 @@ class ExtensionHelper
      */
     public static function getProductConfiguration(Product $product)
     {
-        if(!isset($product->server_id)){
+        if (!isset($product->server_id)) {
             return [];
         }
         $extension = Extension::where('id', $product->server_id)->first();
-        if(!$extension){
+        if (!$extension) {
             return [];
         }
-        if(!file_exists(app_path() . '/Extensions/Servers/' . $extension->name . '/index.php')){
+        if (!file_exists(app_path() . '/Extensions/Servers/' . $extension->name . '/index.php')) {
             return [];
         }
         include_once app_path() . '/Extensions/Servers/' . $extension->name . '/index.php';
         $settings = $product->settings;
         $config = [];
-        foreach($settings as $setting){
+        foreach ($settings as $setting) {
             $config[$setting->name] = $setting->value;
         }
         $config['config_id'] = $product->id;
-        
+
         $function = $extension->name . '_getProductConfig';
-        if(!function_exists($function)){
+        if (!function_exists($function)) {
             return [];
         }
         $config =  $function($config);
@@ -556,15 +556,18 @@ class ExtensionHelper
         $configurableOptions = self::loadConfigurableOptions($product2);
         $user = User::findOrFail($order->client);
         $function = $extension->name . '_getCustomPages';
+        if (!function_exists($function)) {
+            return [];
+        }
         View::addNamespace(strtolower($extension->name), app_path() . '/Extensions/Servers/' . $extension->name . '/views');
         try {
             return $function($user, $config, $order, $product2, $configurableOptions);
         } catch (\Exception $e) {
             ExtensionHelper::error($extension->name, 'Error getting pages ' . $e->getMessage() . ' on line ' . $e->getLine() . ' in file ' . $e->getFile());
             return [];
-        } 
+        }
     }
-    
+
 
     /**
      * Get all parameters for a order product
@@ -579,7 +582,7 @@ class ExtensionHelper
         $config = self::loadConfiguration($product, $product2);
         $user = User::findOrFail($product2->order->client);
         $configurableOptions = self::loadConfigurableOptions($product2);
-        
+
         return (object) [
             'user' => $user,
             'config' => $config,
@@ -599,10 +602,10 @@ class ExtensionHelper
      */
     public static function hasAccess(OrderProduct $product, User $user)
     {
-        if($product->order->client == $user->id){
+        if ($product->order->client == $user->id) {
             return true;
         }
-        
+
         return false;
     }
 }
