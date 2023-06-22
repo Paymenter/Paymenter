@@ -23,7 +23,7 @@ jobs:
         id: metadata
         uses: docker/metadata-action@v4
         with:
-          images: ghcr.io/paymenter/panel
+          images: ghcr.io/paymenter/paymenter
           flavor: |
             latest=false
           tags: |
@@ -42,14 +42,14 @@ jobs:
         with:
           registry: ghcr.io
           username: ${{ github.repository_owner }}
-          password: ${{ secrets.REGISTRY_TOKEN }}
+          password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Update version
         if: "github.event_name == 'release' && github.event.action == 'published'"
         env:
           REF: ${{ github.event.release.tag_name }}
         run: |
-          sed -i "s/    'version' => 'canary',/    'version' => '${REF:1}',/" config/app.php
+          sed -i "s/    'version' => 'development',/    'version' => '${REF:1}',/" config/app.php
 
       - name: Build and Push
         uses: docker/build-push-action@v3
