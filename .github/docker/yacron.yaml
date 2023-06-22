@@ -1,0 +1,8 @@
+jobs:
+  - name: scheduler
+    command:
+      - /usr/bin/php
+      - /var/www/paymenter/artisan
+      - schedule:run
+    schedule: "* * * * *"
+    utc: true
