@@ -41,6 +41,10 @@ class ExtensionHelper
             return;
         }
 
+        $invoice->status = 'paid';
+        $invoice->paid_at = now();
+        $invoice->save();
+
         foreach ($invoice->items()->get() as $item) {
             $product = $item->product()->get()->first();
             if (!$product) {
@@ -89,13 +93,6 @@ class ExtensionHelper
             $product->status = 'paid';
             $product->save();
         }
-
-        if ($invoice->status == 'paid') {
-            return;
-        }
-        $invoice->status = 'paid';
-        $invoice->paid_at = now();
-        $invoice->save();
     }
 
     /**
