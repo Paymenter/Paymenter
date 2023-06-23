@@ -177,8 +177,8 @@ class SettingController extends Controller
             'maximum_balance' => 'required|numeric|min:0',
         ]);
         Setting::updateOrCreate(['key' => 'credits'], ['value' => $request->credits]);
-        foreach ($request->except(['_token', 'theme']) as $key => $value) {
-            Setting::updateOrCreate(['key' => 'theme:' . $key], ['value' => $value]);
+        foreach ($request->except(['_token']) as $key => $value) {
+            Setting::updateOrCreate(['key' => $key], ['value' => $value]);
         }
         return redirect('/admin/settings#credits')->with('success', 'Settings updated successfully');
     }
