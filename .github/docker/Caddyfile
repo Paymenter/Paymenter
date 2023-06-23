@@ -14,7 +14,7 @@
 	encode gzip zstd
 
 	php_fastcgi 127.0.0.1:9000 {
-		trusted_proxies 172.20.0.0/16
+		trusted_proxies 172.23.0.0/16
 	}
 
 	try_files {path} {path}/ /index.php?{query}
