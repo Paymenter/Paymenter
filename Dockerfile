@@ -23,7 +23,7 @@ COPY        --chown=1001:0 app ./app
 COPY        --chown=1001:0 bootstrap ./bootstrap
 COPY        --chown=1001:0 config ./config
 COPY        --chown=1001:0 database ./database
-COPY        --chown=1001:0 /lang ./lang
+COPY        --chown=1001:0 lang ./lang
 COPY        --chown=1001:0 resources/views ./resources/views
 COPY        --chown=1001:0 routes ./routes
 COPY        --chown=1001:0 .env.example ./.env
@@ -68,7 +68,7 @@ ENV         USER=caddy
 
 RUN         composer install --no-dev --optimize-autoloader \
     && rm -rf bootstrap/cache/*.php \
-    && rm -rf .env storage/logs/*.log
+    && rm -rf storage/logs/*.log
 
 COPY        --from=docker.io/library/caddy:latest /usr/bin/caddy /usr/local/bin/caddy
 COPY        .github/docker/Caddyfile /etc/caddy/Caddyfile
