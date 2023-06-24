@@ -41,8 +41,8 @@ services:
   cache:
     image: redis:alpine
     restart: always
-  payment:
-    image: paymenter:v0.0.1
+  paymenter:
+    image: ghcr.io/paymenter/paymenter:master
     restart: always
     ports:
       - "8080:8080"
@@ -59,7 +59,7 @@ services:
     image: nginx:stable-alpine3.17-slim
     restart: always
     links:
-      - payment
+      - paymenter
     ports:
       - "443:443"
     volumes:
