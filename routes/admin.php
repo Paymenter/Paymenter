@@ -22,7 +22,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'permission:ADMINISTRATOR'], 
         Route::post('/email/test', [App\Http\Controllers\Admin\SettingController::class, 'testEmail'])->middleware(['password.confirm', 'permission:EDIT_SETTINGS'])->name('admin.settings.email.test');
         Route::post('/login', [App\Http\Controllers\Admin\SettingController::class, 'login'])->middleware(['password.confirm', 'permission:EDIT_SETTINGS'])->name('admin.settings.login');
         Route::post('/security', [App\Http\Controllers\Admin\SettingController::class, 'security'])->middleware(['password.confirm', 'permission:EDIT_SETTINGS'])->name('admin.settings.security');
-        Route::post('/theme', [App\Http\Controllers\Admi\SettingController::class, 'theme'])->middleware(['password.confirm', 'permission:EDIT_SETTINGS'])->name('admin.settings.theme');
+        Route::post('/theme', [App\Http\Controllers\Admin\SettingController::class, 'theme'])->middleware(['password.confirm', 'permission:EDIT_SETTINGS'])->name('admin.settings.theme');
         Route::post('/credits', [App\Http\Controllers\Admin\SettingController::class, 'credits'])->middleware(['password.confirm', 'permission:EDIT_SETTINGS'])->name('admin.settings.credits');
     });
 
