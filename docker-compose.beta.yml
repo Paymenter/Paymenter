@@ -42,7 +42,7 @@ services:
     image: redis:alpine
     restart: always
   paymenter:
-    image: paymenter:v0.0.1
+    image: ghcr.io/paymenter/paymenter:master
     restart: always
     ports:
       - "8080:8080"
