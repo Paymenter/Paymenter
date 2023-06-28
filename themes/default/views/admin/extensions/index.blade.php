@@ -29,7 +29,7 @@
             <div id="popup-modal" tabindex="-1"
                 class="fixed top-0 left-0 right-0 z-50 hidden p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-modal md:h-full">
                 <div class="relative w-full h-full max-w-md md:h-auto">
-                    <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
+                    <div class="relative bg-secondary-100 rounded-lg shadow">
                         <button type="button"
                             class="absolute top-3 right-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-800 dark:hover:text-white"
                             data-modal-hide="popup-modal">
@@ -151,7 +151,7 @@
         </p>
     @else
         <table class="min-w-full divide-y divide-gray-200 w-full" id="table">
-            <thead class="dark:bg-darkmode bg-gray-50">
+            <thead class="bg-secondary-100 ">
                 <tr>
                     <th scope="col"
                         class="dark:text-darkmodetext px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -164,8 +164,8 @@
                         {{ __('Edit') }}</th>
                 </tr>
             </thead>
-            <tbody class="dark:bg-darkmode bg-white divide-y divide-gray-200">
-                <tr class="dark:bg-darkmode">
+            <tbody class="bg-secondary-100 divide-y divide-gray-200">
+                <tr class="bg-secondary-100">
                     <td colspan="3"
                         class="dark:text-darkmodetext px-6 py-4 whitespace-nowrap text-gray-500 font-bold text-lg text-center">
                         Servers</td>
@@ -174,7 +174,7 @@
                     @if ($extensio == '.' || $extensio == '..')
                         @continue
                     @endif
-                    <tr class="dark:bg-darkmode">
+                    <tr class="bg-secondary-100">
                         <td class="dark:text-darkmodetext px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                             {{ $extensio }}</td>
                         <td class="dark:text-darkmodetext px-6 py-4 whitespace-nowrap text-sm text-gray-500">
@@ -190,7 +190,7 @@
                         </td>
                     </tr>
                 @endforeach
-                <tr class="dark:bg-darkmode">
+                <tr class="bg-secondary-100">
                     <td colspan="3"
                         class="dark:text-darkmodetext px-6 py-4 whitespace-nowrap text-gray-500 font-bold text-lg text-center">
                         Gateways</td>

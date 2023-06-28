@@ -1,12 +1,22 @@
-<x-admin-layout>
-    <x-slot name="title">
-        {{ __('Clients') }}
-    </x-slot>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Clients') }}
-        </h2>
-    </x-slot>
+<x-admin-layout title="Edit client">
+    <div class="w-full h-full rounded mb-4">
+        <div class="px-6 mx-auto">
+            <div class="flex flex-row overflow-x-auto lg:flex-wrap lg:space-x-1">
+                <div class="flex-none">
+                    <a href="{{ route('admin.clients.edit', $user->id) }}"
+                        class="inline-flex justify-center w-full p-4 px-2 py-2 text-xs font-bold text-gray-900 uppercase border-b-2 dark:text-darkmodetext dark:hover:bg-darkbutton hover:border-logo hover:text-logo @if (request()->routeIs('admin.clients.edit')) border-logo @else border-y-transparent @endif">
+                        {{ __('Client Details') }}
+                    </a>
+                </div>
+                <div class="flex-none">
+                    <a href="{{ route('admin.clients.products', $user->id) }}"
+                        class="inline-flex justify-center w-full p-4 px-2 py-2 text-xs font-bold text-gray-900 uppercase border-b-2 dark:text-darkmodetext dark:hover:bg-darkbutton hover:border-logo hover:text-logo @if (request()->routeIs('admin.clients.products*')) border-logo @else border-y-transparent @endif">
+                        {{ __('Products/Services') }}
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
     <div class="grid grid-cols-1 md:grid-cols-2 mt-4">
         <div class="text-2xl dark:text-darkmodetext">
             {{ __('Edit client') }}

@@ -86,7 +86,7 @@
         <main class="grow">
             @if (!request()->routeIs('admin.index') && !request()->routeIs('admin.settings*'))
                 <div class="py-12">
-                    <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
+                    <div class="mx-auto max-w-8xl sm:px-6 lg:px-8">
                         <div class="overflow-hidden content">
                             <div class="content-box">
                                 <x-success class="mb-4" />

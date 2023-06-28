@@ -103,9 +103,10 @@ class Invoice extends Model
                     $product->discount = 0;
                 }
                 $product->name = $item->description;
-                $product->price = $item->total;
+                $product->original_price = $item->total;
+                $product->price = $item->total - $product->discount;
                 $products[] = $product;
-                $total += ($product->price - $product->discount);
+                $total += $product->price;
             } else {
                 $product = $item;
                 $product->price = $item->total;

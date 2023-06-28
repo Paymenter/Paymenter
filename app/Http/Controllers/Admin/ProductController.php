@@ -10,6 +10,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use App\Models\ProductSetting;
 use App\Http\Controllers\Controller;
+use App\Models\OrderProduct;
 use App\Models\ProductPrice;
 use Illuminate\View\View;
 
@@ -113,6 +114,7 @@ class ProductController extends Controller
 
     public function destroy(Product $product): \Illuminate\Http\RedirectResponse
     {
+        OrderProduct::where('product_id', $product->id)->delete();
         $product->prices->delete();
         $product->delete();
 

@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Helpers\ExtensionHelper;
 use App\Models\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Route;
-use App\Models\{Invoice, Order, Role, Ticket};
+use App\Models\{Invoice, Order, OrderProduct, Role, Ticket};
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\View;
 
 class ClientController extends Controller
 {
@@ -64,21 +65,82 @@ class ClientController extends Controller
 
     public function destroy(User $user)
     {
-        // Delete tickets, orders, etc.
-        $tickets = Ticket::where('client', $user->id)->get();
-        foreach ($tickets as $ticket) {
-            $ticket->delete();
-        }
-        $orders = Order::where('client', $user->id)->get();
-        foreach ($orders as $order) {
-            $order->delete();
-        }
-        $invoices = Invoice::where('user_id', $user->id)->get();
-        foreach ($invoices as $invoice) {
-            $invoice->delete();
-        }
         $user->delete();
 
         return redirect()->route('admin.clients');
+    }
+
+
+    /**
+     * Display the Products
+     * 
+     * @return View
+     */
+    public function products(User $user, OrderProduct $orderProduct = null)
+    {
+        if (!$orderProduct) {
+            $orderProduct = Order::where('client', $user->id)->first();
+            $orderProduct = $orderProduct->products()->first();
+            if (!$orderProduct) {
+                return redirect()->route('admin.clients.edit', $user->id)->with('error', 'No orders found');
+            }
+        }
+        $orderProducts = $user->orderProducts;
+        $configurableOptions = $orderProduct->config;
+
+        return view('admin.clients.products', compact('user', 'orderProducts', 'orderProduct', 'configurableOptions'));
+    }
+
+    /**
+     * Change the order product
+     * 
+     * @return Redirect
+     */
+    public function updateProduct(User $user, OrderProduct $orderProduct, Request $request): \Illuminate\Http\RedirectResponse
+    {
+        $request->validate([
+            'price' => 'required|numeric',
+            'quantity' => 'required|numeric',
+            'expiry_date' => 'required|date',
+            'status' => 'required|in:pending,paid,cancelled,suspended',
+        ]);
+
+        $orderProduct->price = $request->input('price');
+        $orderProduct->quantity = $request->input('quantity');
+        $orderProduct->expiry_date = $request->input('expiry_date');
+        $orderProduct->status = $request->input('status');
+        $orderProduct->save();
+
+        return redirect()->route('admin.clients.products', [$user->id, $orderProduct->id])->with('success', 'Product updated'); 
+    }
+
+    /**
+     * Create/Suspend/Unsuspend/Terminate the order product
+     * 
+     * @return Redirect
+     */
+    public function changeProductStatus(User $user, OrderProduct $orderProduct, Request $request): \Illuminate\Http\RedirectResponse
+    {
+        $request->validate([
+            'status' => 'required|in:create,suspend,unsuspend,terminate',
+        ]);
+
+        switch ($request->input('status')) {
+            case 'create':
+                ExtensionHelper::createServer($orderProduct);
+                break;
+            case 'suspend':
+                ExtensionHelper::suspendServer($orderProduct);
+                break;
+            case 'unsuspend':
+                ExtensionHelper::unsuspendServer($orderProduct);
+                break;
+            case 'terminate':
+                ExtensionHelper::terminateServer($orderProduct);
+                break;
+        }
+
+
+        return redirect()->route('admin.clients.products', $user->id)->with('success', 'Product status changed');
     }
 }

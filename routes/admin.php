@@ -66,6 +66,10 @@ Route::group(['prefix' => 'admin', 'middleware' => 'permission:ADMINISTRATOR'], 
         Route::get('/{user}/edit', [App\Http\Controllers\Admin\ClientController::class, 'edit'])->middleware(['permission:VIEW_CLIENTS'])->name('admin.clients.edit');
         Route::post('/{user}/edit', [App\Http\Controllers\Admin\ClientController::class, 'update'])->middleware(['permission:EDIT_CLIENTS'])->name('admin.clients.update');
         Route::delete('/{user}/delete', [App\Http\Controllers\Admin\ClientController::class, 'destroy'])->middleware(['permission:DELETE_CLIENTS'])->name('admin.clients.delete');
+        Route::get('/{user}/{orderProduct?}', [App\Http\Controllers\Admin\ClientController::class, 'products'])->middleware(['permission:VIEW_CLIENTS'])->name('admin.clients.products');
+        Route::post('/{user}/{orderProduct}/update', [App\Http\Controllers\Admin\ClientController::class, 'updateProduct'])->middleware(['permission:EDIT_CLIENTS'])->name('admin.clients.products.update');
+        Route::post('/{user}/{orderProduct}/changeProductStatus', [App\Http\Controllers\Admin\ClientController::class, 'changeProductStatus'])->middleware(['permission:EDIT_CLIENTS'])->name('admin.clients.products.changestatus');
+        Route::post('/{user}/{orderProduct}/{orderProductConfig}/update', [App\Http\Controllers\Admin\ClientController::class, 'updateProductConfig'])->middleware(['permission:EDIT_CLIENTS'])->name('admin.clients.products.config.update');
     });
 
     Route::group(['prefix' => 'orders'], function () {

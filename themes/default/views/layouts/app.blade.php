@@ -93,10 +93,10 @@
     <link rel="icon" type="image/png" sizes="32x32" href="/img/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="/img/favicon-16x16.png">
     <link rel="manifest" href="/site.webmanifest">
-    <meta content="{{ config('settings::seo_title') }}" property="og:title">
-    <meta content="{{ config('settings::seo_description') }}" property="og:description">
-    <meta content="{{ config('settings::seo_description') }}" name="description">
-    <meta content='{{ config('settings::seo_image') }}' property="og:image">
+    <meta content="{{ ucfirst($title) ?? config('settings::seo_title') }}" property="og:title">
+    <meta content="{{ $description ?? config('settings::seo_description') }}" property="og:description">
+    <meta content="{{ $description ?? config('settings::seo_description') }}" name="description">
+    <meta content='{{ $image ?? config('settings::seo_image') }}' property='og:image'>
     <link type="application/json+oembed"
         href="{{ url('/') }}/manifest.json?title={{ config('app.name', 'Paymenter') }}&author_url={{ url('/') }}&author_name={{ config('app.name', 'Paymenter') }}" />
     <meta name="twitter:card" content="@if (config('settings::seo_twitter_card')) summary_large_image @endif">

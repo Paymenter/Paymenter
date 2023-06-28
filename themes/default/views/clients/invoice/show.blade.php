@@ -129,16 +129,16 @@
                                                 class="dark:text-darkmodetext hidden px-3 py-4 text-sm text-right text-slate-500 sm:table-cell">
                                                 @if ($product->discount)
                                                     <span class="text-red-500 line-through">
-                                                        {{ $currency_sign }}{{ number_format((float) $product->price, 2, '.', '') }}
+                                                        {{ $currency_sign }}{{ number_format((float) $product->original_price, 2, '.', '') }}
                                                     </span>
-                                                    {{ $currency_sign }}{{ number_format((float) ($product->price - $product->discount), 2, '.', '') }}
+                                                    {{ $currency_sign }}{{ number_format((float) ($product->price), 2, '.', '') }}
                                                 @else
                                                     {{ $currency_sign }}{{ number_format((float) $product->price / $product->quantity, 2, '.', '') }}
                                                 @endif
                                             </td>
                                             <td
                                                 class="dark:text-darkmodetext py-4 pl-3 pr-4 text-sm text-right text-slate-500 sm:pr-6 md:pr-0">
-                                                {{ $currency_sign }}{{ number_format((float) ($product->price - $product->discount), 2, '.', '') }}
+                                                {{ $currency_sign }}{{ number_format((float) ($product->price), 2, '.', '') }}
                                             </td>
                                         </tr>
                                     @endforeach

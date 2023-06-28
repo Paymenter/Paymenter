@@ -68,6 +68,15 @@ class User extends Authenticatable
         static::creating(function ($user) {
             $user->role_id = $user->role_id ?? 2;
         });
+
+        static::deleting(function ($user) {
+            foreach ($user->orders as $order) {
+                $order->products()->delete();
+            }
+            $user->orders()->delete();
+            $user->tickets()->delete();
+            $user->invoices()->delete();
+        });
     }
 
     public function orders()
@@ -88,6 +97,16 @@ class User extends Authenticatable
     public function role()
     {
         return $this->belongsTo(Role::class, 'role_id', 'id');
+    }
+
+    /** 
+     * Get all OrderProducts for this user
+     *  
+     * @return \Illuminate\Database\Eloquent\Relations\HasManyThrough 
+     */
+    public function orderProducts()
+    {
+        return $this->hasManyThrough(OrderProduct::class, Order::class, 'client', 'order_id', 'id', 'id');
     }
 
     public function has($permission)

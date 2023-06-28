@@ -1,13 +1,10 @@
-<x-app-layout>
-    <x-slot name="title">
-        {{ __('Announcements') }}
-    </x-slot>
-    
+<x-app-layout title="{{ __('Announcements') }}">
+
     <div class="content">
         <h2 class="font-semibold text-2xl mb-2 text-secondary-900">{{ __('Announcements') }}</h2>
         @if ($announcements->count() > 0)
             <div class="grid grid-cols-12 gap-4">
-                @foreach ($announcements as $announcement)
+                @foreach ($announcements->sortByDesc('created_at') as $announcement)
                     <div class="lg:col-span-4 md:col-span-6 col-span-12">
                         <div class="content-box">
                             <h3 class="font-semibold text-lg">{{ $announcement->title }}</h3>

@@ -60,7 +60,7 @@ class HomeController extends Controller
 
             $user->tfa_secret = null;
             $user->save();
-            
+
             return redirect()->back()->with('success', 'Two factor authentication disabled');
         }
 
@@ -69,22 +69,22 @@ class HomeController extends Controller
             'code' => 'required|size:6',
             'password' => 'required',
         ]);
-        
+
         if (!password_verify($request->password, $user->password)) {
             return redirect()->back()->with('error', 'Invalid password');
         }
-        
+
         $tfa = new TwoFactorAuth();
         $secret = $request->secret;
         $code = $request->code;
         $valid = $tfa->verifyCode($secret, $code);
-        
+
         if ($valid) {
             $user->tfa_secret = Crypt::encrypt($secret);
             $user->save();
             return redirect()->back()->with('success', 'Two factor authentication enabled');
         }
-        
+
         return redirect()->back()->with('error', 'Invalid code');
     }
 
@@ -109,7 +109,7 @@ class HomeController extends Controller
             'country' => 'required|string',
             'phone' => 'required|numeric',
         ]);
-        
+
         $user = $request->user();
         $user->name = $request->name;
         $user->address = $request->address;
@@ -128,7 +128,7 @@ class HomeController extends Controller
      */
     public function credits()
     {
-        if(config('settings::credits') == false) {
+        if (config('settings::credits') == false) {
             return abort(404, 'Credits are disabled');
         }
         $gateways = ExtensionHelper::getGateways();
@@ -143,7 +143,7 @@ class HomeController extends Controller
      */
     public function addCredits(Request $request)
     {
-        if(!config('settings::credits')) {
+        if (!config('settings::credits')) {
             return redirect()->back()->with('error', 'Credits are disabled');
         }
         $request->validate([
@@ -153,14 +153,14 @@ class HomeController extends Controller
 
         $gateway = Extension::findOrFail($request->gateway);
         $amount = $request->amount;
-        if($amount <= config('settings::minimum_deposit')) {
+        if ($amount <= config('settings::minimum_deposit')) {
             return redirect()->back()->with('error', 'Minimum deposit is ' . config('settings::minimum_deposit'));
         }
-        if($amount >= config('settings::maximum_deposit')) {
+        if ($amount >= config('settings::maximum_deposit')) {
             return redirect()->back()->with('error', 'Maximum deposit is ' . config('settings::maximum_deposit'));
         }
         $user = $request->user();
-        if(($user->credits + $amount) > config('settings::maximum_balance')) {
+        if (($user->credits + $amount) > config('settings::maximum_balance')) {
             return redirect()->back()->with('error', 'Maximum credits is ' . config('settings::maximum_credits'));
         }
 
