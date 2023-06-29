@@ -1,6 +1,6 @@
 <x-admin-layout title="Products/Services of {{ $user->name }}">
-    <div class="w-full h-full rounded mb-4">
-        <div class="px-6 mx-auto">
+    <div class="w-full h-full">
+        <div class="pb-6 mx-auto">
             <div class="flex flex-row overflow-x-auto lg:flex-wrap lg:space-x-1">
                 <div class="flex-none">
                     <a href="{{ route('admin.clients.edit', $user->id) }}"
@@ -43,25 +43,29 @@
                         href="{{ route('admin.orders.show', $orderProduct->order->id) }}"
                         class="text-logo">#{{ $orderProduct->order->id }}</a></h3>
                 <div class="flex gap-2">
-                    <x-input type="select" name="action" id="action" label="Extension Settings" class="w-full" onchange="document.getElementById('statusinput').value = this.value">
+                    <x-input type="select" name="action" id="action" label="Extension Settings" class="w-full"
+                        onchange="document.getElementById('statusinput').value = this.value">
                         <option selected disabled>{{ __('Select Action') }}</option>
                         <option value="create">{{ __('Create') }}</option>
                         <option value="suspend">{{ __('Suspend') }}</option>
                         <option value="unsuspend">{{ __('Unsuspend') }}</option>
                         <option value="terminate">{{ __('Terminate') }}</option>
                     </x-input>
-                    <button class="button button-primary h-fit self-end" 
-                        onclick="event.preventDefault(); document.getElementById('changestatus').submit();"
-                    >{{ __('Go') }}</button>
+                    <button class="button button-primary h-fit self-end"
+                        onclick="event.preventDefault(); document.getElementById('changestatus').submit();">{{ __('Go') }}</button>
                 </div>
                 <x-input type="text" disabled name="created_at" id="created_at"
                     value="{{ $orderProduct->created_at }}" label="Created At" />
                 <x-input type="select" name="status" id="status" label="Status">
                     <option value="0" selected disabled>{{ __('Select Status') }}</option>
-                    <option value="pending" {{ $orderProduct->status === 'pending' ? 'selected' : '' }}>{{ __('Pending') }}</option>
-                    <option value="paid" {{ $orderProduct->status === 'paid' ? 'selected' : '' }}>{{ __('Paid') }}</option>
-                    <option value="cancelled" {{ $orderProduct->status === 'cancelled' ? 'selected' : '' }}>{{ __('Cancelled') }}</option>
-                    <option value="suspended" {{ $orderProduct->status === 'suspended' ? 'selected' : '' }}>{{ __('Suspended') }}</option>
+                    <option value="pending" {{ $orderProduct->status === 'pending' ? 'selected' : '' }}>
+                        {{ __('Pending') }}</option>
+                    <option value="paid" {{ $orderProduct->status === 'paid' ? 'selected' : '' }}>
+                        {{ __('Paid') }}</option>
+                    <option value="cancelled" {{ $orderProduct->status === 'cancelled' ? 'selected' : '' }}>
+                        {{ __('Cancelled') }}</option>
+                    <option value="suspended" {{ $orderProduct->status === 'suspended' ? 'selected' : '' }}>
+                        {{ __('Suspended') }}</option>
                 </x-input>
             </div>
             <div class="flex flex-col gap-4">
@@ -84,38 +88,81 @@
         <input type="hidden" name="status" id="statusinput">
     </form>
 
-
-    <div class="">
-        <h1 class="text-2xl my-2">{{ __('Configurable Options') }}</h1>
-        @foreach ($configurableOptions as $configurableOption)
-            <div class="flex flex-col md:flex-row justify-between items-center border-b border-gray-500 py-2">
-                @if ($configurableOption->configurableOption())
-                    @php $configurableOption = $configurableOption->configurableOption @endphp
-                    <div class="flex flex-col md:flex-row justify-between items-center">
-                        <h2 class="text-lg">{{ $configurableOption->name }}</h2>
-                        <p class="text-sm text-gray-500">{{ $configurableOption->configurableOptionInput->name }}
-                        </p>
-                    </div>
-                    <div class="flex flex-col md:flex-row justify-between items-center">
-                        <p class="text-lg">{{ $configurableOption->value }}</p>
-                        <button class="button button-primary">Edit</button>
-                    </div>
-                @else
-                    <form
-                        action="{{ route('admin.clients.products.config.update', [$user->id, $orderProduct->id, $configurableOption->id]) }}"
-                        method="POST" class="flex-row flex items-center w-full gap-6">
-                        @csrf
-                        <x-input type="text" name="key" id="key" value="{{ $configurableOption->key }}"
-                            label="Key" />
-                        <x-input type="text" name="value" id="value" value="{{ $configurableOption->value }}"
-                            label="Value" />
-                        <button class="button button-primary self-end">Update</button>
-
-                    </form>
-                @endif
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div class="">
+            <h1 class="text-2xl my-2">{{ __('Invoices') }}</h1>
+            <div class="flex flex-col gap-2">
+                <table>
+                    <thead>
+                        <tr>
+                            <th class="border-b border-gray-500">{{ __('Invoice ID') }}</th>
+                            <th class="border-b border-gray-500">{{ __('Status') }}</th>
+                            <th class="border-b border-gray-500">{{ __('Created At') }}</th>
+                            <th class="border-b border-gray-500">{{ __('Total') }}</th>
+                            <th class="border-b border-gray-500">{{ __('Action') }}</th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-center">
+                        @foreach ($orderProduct->getInvoices() as $invoice)
+                            <tr>
+                                <td class="border-b border-gray-500"><a
+                                        href="{{ route('admin.invoices.show', $invoice->id) }}"
+                                        class="text-logo">#{{ $invoice->id }}</a></td>
+                                <td class="border-b border-gray-500">{{ $invoice->status }}</td>
+                                <td class="border-b border-gray-500">{{ $invoice->created_at }}</td>
+                                <td class="border-b border-gray-500">
+                                    {{ config('settings::currency_sign') }}{{ $invoice->total() }}</td>
+                                <td class="border-b border-gray-500">
+                                    <a href="{{ route('admin.invoices.show', $invoice->id) }}"
+                                        class="button button-primary">{{ __('View') }}</a>
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
             </div>
-        @endforeach
 
-    </div>
+        </div>
+        <div class="">
+            @if ($configurableOptions->count() > 0)
+                <h1 class="text-2xl my-2">{{ __('Configurable Options') }}</h1>
+            @endif
+            @foreach ($configurableOptions as $configurableOption)
+                <div class="flex flex-col md:flex-row justify-between items-center border-b border-gray-500 py-2">
+                    @if ($configurableOption->configurableOption())
+                        <form
+                            action="{{ route('admin.clients.products.config.update', [$user->id, $orderProduct->id, $configurableOption->id]) }}"
+                            method="POST" class="flex-row flex items-center w-full gap-6">
+                            @csrf
+                            <x-input type="text" name="key" id="key"
+                                value="{{ $configurableOption->configurableOption->name }}" disabled
+                                label="Key" />
+                            <x-input type="select" name="value" id="value"
+                                value="{{ $configurableOption->configurableOptionInput->name }}" label="Value">
+                                <option value="0" selected disabled>{{ __('Select Value') }}</option>
+                                @foreach ($configurableOption->configurableOption->configurableOptionInputs as $configurableOptionInput)
+                                    <option value="{{ $configurableOptionInput->id }}"
+                                        @if ($configurableOption->configurableOptionInput->id === $configurableOptionInput->id) selected @endif>
+                                        {{ $configurableOptionInput->name }}
+                                    </option>
+                                @endforeach
+                            </x-input>
+                            <button class="button button-primary self-end">Update</button>
+                        </form>
+                    @else
+                        <form
+                            action="{{ route('admin.clients.products.config.update', [$user->id, $orderProduct->id, $configurableOption->id]) }}"
+                            method="POST" class="flex-row flex items-center w-full gap-6">
+                            @csrf
+                            <x-input type="text" name="key" id="key"
+                                value="{{ $configurableOption->key }}" label="Key" />
+                            <x-input type="text" name="value" id="value"
+                                value="{{ $configurableOption->value }}" label="Value" />
+                            <button class="button button-primary self-end">Update</button>
+                        </form>
+                    @endif
+                </div>
+            @endforeach
+        </div>
     </div>
 </x-admin-layout>

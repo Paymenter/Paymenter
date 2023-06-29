@@ -6,7 +6,7 @@ use App\Helpers\ExtensionHelper;
 use App\Models\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Models\{Invoice, Order, OrderProduct, Role, Ticket};
+use App\Models\{Invoice, Order, OrderProduct, OrderProductConfig, Role, Ticket};
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\View;
 
@@ -143,4 +143,22 @@ class ClientController extends Controller
 
         return redirect()->route('admin.clients.products', $user->id)->with('success', 'Product status changed');
     }
+
+    /**
+     * Update the product configurable options
+     * 
+     * @return Redirect
+     */
+    public function updateProductConfig(User $user, OrderProduct $orderProduct, OrderProductConfig $orderProductConfig, Request $request): \Illuminate\Http\RedirectResponse
+    {
+        $request->validate([
+            'value' => 'required',
+        ]);
+
+        $orderProductConfig->value = $request->input('value');
+        $orderProductConfig->save();
+
+        return redirect()->route('admin.clients.products', [$user->id, $orderProduct->id])->with('success', 'Product updated'); 
+    }
+
 }

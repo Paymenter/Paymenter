@@ -43,7 +43,8 @@ class Invoice extends Model
             $total += $item->total;
         }
 
-        return $total;
+        // Return 2 decimal places
+        return number_format($total, 2);
     }
 
     public function items()

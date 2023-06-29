@@ -4,7 +4,7 @@
     </x-slot>
 
     <div class="h-full mx-auto">
-        <div class="p-6 mx-auto bg-white max-w-7xl pl-0 dark:bg-secondary-100 dark:border-darkmode">
+        <div class="pb-6 bg-white dark:bg-secondary-100 dark:border-darkmode">
             <div class="flex flex-row overflow-x-auto lg:flex-wrap lg:space-x-1">
                 <div class="flex-none">
                     <a href="{{ route('admin.products.edit', $product->id) }}"

@@ -4,7 +4,7 @@
     </x-slot>
 
 
-    <div class="container h-full px-6 py-10 mx-auto">
+    <div class="h-full px-6 py-10 mx-auto">
         <div class="w-full h-full rounded ">
             <div class="p-6 mx-auto bg-white border-b border-gray-200 shadow-xl max-w-7xl sm:px-6 lg:px-8 dark:bg-secondary-100 dark:border-darkmode"
                 id="tabs">

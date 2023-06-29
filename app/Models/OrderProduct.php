@@ -39,6 +39,12 @@ class OrderProduct extends Model
         return $this->hasOne(InvoiceItem::class, 'product_id', 'id')->get()->first() ? $this->hasOne(InvoiceItem::class, 'product_id', 'id')->get()->first()->invoice() : new Invoice();
     }
 
+    public function getInvoices()
+    {
+        return $this->hasMany(InvoiceItem::class, 'product_id', 'id')->get()->map(function ($invoiceItem) {
+            return $invoiceItem->invoice()->get()->first();
+        });
+    }
     public function getOpenInvoices()
     {
         return $this->invoices()->get()->filter(function ($invoice) {
