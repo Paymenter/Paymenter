@@ -60,9 +60,10 @@ class CronJob extends Command
                 continue;
             }
             // Get all InvoiceItems for this product
-            $invoiceItems = $order->getOpenInvoices()->get();
+            $invoiceItems = $order->getOpenInvoices();
+            NotificationHelper::sendNewInvoiceNotification($invoiceItems->first(), $order->order()->get()->first()->client()->get()->first());
+            dd();
             if ($invoiceItems->count() > 0) {
-                $invoiceProcessed++;
                 continue;
             }
 
@@ -98,7 +99,7 @@ class CronJob extends Command
             $invoiceItem->total = $order->price;
             $invoiceItem->save();
 
-            NotificationHelper::sendNewInvoiceNotification($invoice, $order->order()->get()->first()->client()->get());
+            NotificationHelper::sendNewInvoiceNotification($invoice, $order->order()->get()->first()->client()->get()->first());
             $invoiceProcessed++;
         }
         $this->info('Sended Number of Invoices: ' . $invoiceProcessed);

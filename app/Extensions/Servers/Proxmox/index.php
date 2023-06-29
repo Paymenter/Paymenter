@@ -29,14 +29,14 @@ function Proxmox_getConfig()
             'friendlyName' => 'Username',
             'type' => 'text',
             'required' => true,
-            'description' => 'The username of the Proxmox server',
+            'description' => 'The api username of the Proxmox server',
         ],
         [
             'name' => 'password',
-            'friendlyName' => 'Password',
+            'friendlyName' => 'API Token',
             'type' => 'text',
             'required' => true,
-            'description' => 'The password of the Proxmox server',
+            'description' => 'The API Token of the Proxmox server',
         ]
     ];
 }
@@ -124,6 +124,21 @@ function Proxmox_getProductConfig($options)
         ];
     }
 
+    $cpuList = [
+        [
+            'name' => 'Default',
+            'value' => ''
+        ]
+    ];
+    $cpu = Proxmox_getRequest('/nodes/' . $currentNode . '/capabilities/qemu/cpu');
+    if (!$cpu->json()) throw new Exception('Unable to get cpu');
+    foreach ($cpu->json()['data'] as $cpu) {
+        $cpuList[] = [
+            'name' => $cpu['name'] . ' (' . $cpu['vendor'] . ')',
+            'value' => $cpu['name']
+        ];
+    }
+
 
 
     return [
@@ -191,6 +206,12 @@ function Proxmox_getProductConfig($options)
             'friendlyName' => 'Disk (GB)',
             'required' => true,
             'description' => 'The amount of disk of the wanted VM',
+        ],
+        [
+            'name' => 'network_limit',
+            'type' => 'text',
+            'friendlyName' => 'Network Limit (MB)',
+            'description' => 'The network limit of the wanted VM',
         ],
 
 
@@ -270,6 +291,12 @@ function Proxmox_getProductConfig($options)
                     'value' => 'unmanaged'
                 ]
             ]
+        ],
+        [
+            'type' => 'text',
+            'name' => 'swap',
+            'friendlyName' => 'Swap (MB)',
+            'description' => 'The amount of swap of the wanted VM',
         ],
 
         [
@@ -494,6 +521,13 @@ function Proxmox_getProductConfig($options)
                 ]
             ]
         ],
+        [
+            'name' => 'cputype',
+            'type' => 'dropdown',
+            'friendlyName' => 'CPU type',
+            'description' => 'The CPU type of the VM',
+            'options' => $cpuList
+        ],
     ];
 }
 
@@ -515,6 +549,28 @@ function Proxmox_postRequest($url, $data = [])
         'Accept' => 'application/json',
         'Content-Type' => 'application/json'
     ])->withoutVerifying()->post(ExtensionHelper::getConfig('Proxmox', 'host') . ':' . ExtensionHelper::getConfig('Proxmox', 'port') . '/api2/json' . $url, $data);
+
+    return $response;
+}
+
+function Proxmox_deleteRequest($url)
+{
+    $response = Http::withHeaders([
+        'Authorization' => 'PVEAPIToken=' . ExtensionHelper::getConfig('Proxmox', 'username') . '=' . ExtensionHelper::getConfig('Proxmox', 'password'),
+        'Accept' => 'application/json',
+        'Content-Type' => 'application/json'
+    ])->withoutVerifying()->delete(ExtensionHelper::getConfig('Proxmox', 'host') . ':' . ExtensionHelper::getConfig('Proxmox', 'port') . '/api2/json' . $url);
+
+    return $response;
+}
+
+function Proxmox_putRequest($url, $data = [])
+{
+    $response = Http::withHeaders([
+        'Authorization' => 'PVEAPIToken=' . ExtensionHelper::getConfig('Proxmox', 'username') . '=' . ExtensionHelper::getConfig('Proxmox', 'password'),
+        'Accept' => 'application/json',
+        'Content-Type' => 'application/json'
+    ])->withoutVerifying()->put(ExtensionHelper::getConfig('Proxmox', 'host') . ':' . ExtensionHelper::getConfig('Proxmox', 'port') . '/api2/json' . $url, $data);
 
     return $response;
 }
@@ -572,6 +628,9 @@ function Proxmox_createServer($user, $parmas, $order, $product, $configurableOpt
     $cores = isset($configurableOptions['cores']) ? $configurableOptions['cores'] : $parmas['cores'];
     $memory = isset($configurableOptions['memory']) ? $configurableOptions['memory'] : $parmas['memory'];
     $disk = isset($configurableOptions['disk']) ? $configurableOptions['disk'] : $parmas['disk'];
+    $swap = isset($configurableOptions['swap']) ? $configurableOptions['swap'] : $parmas['swap'];
+    $network_limit = isset($configurableOptions['network_limit']) ? $configurableOptions['network_limit'] : ($parmas['network_limit'] ?? null);
+    $cpu = isset($configurableOptions['cpu']) ? $configurableOptions['cpu'] : ($parmas['cpu'] ?? null);
 
     $vmid = Proxmox_getRequest('/cluster/nextid')->json()['data'];
 
@@ -594,7 +653,8 @@ function Proxmox_createServer($user, $parmas, $order, $product, $configurableOpt
             'description' => $parmas['config']['hostname'],
             'hostname' => $parmas['config']['hostname'],
             'password' => $parmas['config']['password'],
-            'net0' => 'name=test' . ',bridge=' . $parmas['bridge'] . ',' . (isset($parmas['firewall']) ? 'firewall=1' : 'firewall=0'),
+            'swap' => $swap ?? 512,
+            'net0' => 'name=test' . ',bridge=' . $parmas['bridge'] . ',' . (isset($parmas['firewall']) ? 'firewall=1' : 'firewall=0') . (isset($network_limit) ? ',rate=' . $network_limit : ''),
         ];
         isset($pool) ? $postData['pool'] = $pool : null;
         $response = Proxmox_postRequest('/nodes/' . $node . '/lxc', $postData);
@@ -615,6 +675,7 @@ function Proxmox_createServer($user, $parmas, $order, $product, $configurableOpt
         ];
         isset($pool) ? $postData['pool'] = $pool : null;
         isset($parmas['cloudinit']) ? $postData[$parmas['storageType'] . '0'] = $parmas['storage'] . ':cloudinit' . ',format=' . $parmas['storageFormat'] : null;
+        isset($cpu) ? $postData['cpu'] = $cpu : null;
         if (isset($parmas['os']) && $parmas['os'] == 'iso') {
             $postData['ide2'] = $parmas['iso'] . ',media=cdrom';
         }
@@ -623,6 +684,30 @@ function Proxmox_createServer($user, $parmas, $order, $product, $configurableOpt
     if (!$response->json()) throw new Exception('Unable to create server' . $response->body());
     return true;
 }
+
+function Proxmox_suspendServer($user, $parmas, $order, $product, $configurableOptions)
+{
+    throw new Exception('Not implemented');
+}
+
+function Proxmox_unsuspendServer($user, $parmas, $order, $product, $configurableOptions)
+{
+    throw new Exception('Not implemented');
+}
+
+function Proxmox_terminateServer($user, $parmas, $order, $product, $configurableOptions)
+{
+    $vmType = $parmas['type'];
+    $vmid = $parmas['config']['vmid'];
+    $postData = [
+        'purge' => 1,
+        'destroy-unreferenced-disks' => 1,
+    ];
+    $response = Proxmox_deleteRequest('/nodes/' . $parmas['node'] . '/' . $vmType . '/' . $vmid, $postData);
+    if (!$response->json()) throw new Exception('Unable to terminate server');
+    return true;
+}
+
 
 function Proxmox_getCustomPages($user, $parmas, $order, $product, $configurableOptions)
 {
@@ -636,19 +721,23 @@ function Proxmox_getCustomPages($user, $parmas, $order, $product, $configurableO
     if (!$stats->json()) throw new Exception('Unable to get server stats');
     $stats = $stats->json()['data'];
 
-    $vnc;
-    if ($vmType == 'lxc') $vnc = Proxmox_postRequest('/nodes/' . $parmas['node'] . '/' . $vmType . '/' . $vmid . '/vncproxy', ['websocket' => 1]);
-    else  $vnc = Proxmox_postRequest('/nodes/' . $parmas['node'] . '/' . $vmType . '/' . $vmid . '/vncproxy', ['websocket' => 1, 'generate-password' => 1]);
-    if (!$vnc->json()) throw new Exception('Unable to get server vnc');
-    $vnc = $vnc->json()['data'];
+    // $vnc;
+    // if ($vmType == 'lxc') $vnc = Proxmox_postRequest('/nodes/' . $parmas['node'] . '/' . $vmType . '/' . $vmid . '/vncproxy', ['websocket' => 1]);
+    // else  $vnc = Proxmox_postRequest('/nodes/' . $parmas['node'] . '/' . $vmType . '/' . $vmid . '/vncproxy', ['websocket' => 1, 'generate-password' => 1]);
+    // if (!$vnc->json()) throw new Exception('Unable to get server vnc');
+    // $vnc = $vnc->json()['data'];
+    // $websocket = ExtensionHelper::getConfig('Proxmox', 'host') . ':' . ExtensionHelper::getConfig('Proxmox', 'port') . '/?console=kvm&novnc=1&node=' . $parmas['node'] . '&resize=1&vmid=' . $vmid . '&path=api2/json/nodes/' . $parmas['node'] . '/' . $vmType . '/' . $vmid . '/vncwebsocket/port/' . $vnc['port'] . '/"vncticket"/' . $vnc['ticket'];
 
     $users = Proxmox_getRequest('/nodes/' . $parmas['node'] . '/' . $vmType . '/' . $vmid . '/agent/info');
     if (!$users->json()) throw new Exception('Unable to get server users');
     $users = $users->json()['data'];
 
+    $config = Proxmox_getRequest('/nodes/' . $parmas['node'] . '/' . $vmType . '/' . $vmid . '/config');
+    if (!$config->json()) throw new Exception('Unable to get server config');
+    $config = $config->json()['data'];
+
 
     // Make url for iframe
-    $websocket = ExtensionHelper::getConfig('Proxmox', 'host') . ':' . ExtensionHelper::getConfig('Proxmox', 'port') . '/?console=kvm&novnc=1&node=' . $parmas['node'] . '&resize=1&vmid=' . $vmid . '&path=api2/json/nodes/' . $parmas['node'] . '/' . $vmType . '/' . $vmid . '/vncwebsocket/port/' . $vnc['port'] . '/"vncticket"/' . $vnc['ticket'];
 
 
     return [
@@ -659,9 +748,10 @@ function Proxmox_getCustomPages($user, $parmas, $order, $product, $configurableO
             'node' => $parmas['node'],
             'vmid' => $vmid,
             'stats' => $stats,
-            'vnc' => $vnc,
-            'websocket' => $websocket,
+            // 'vnc' => $vnc,
+            // 'websocket' => $websocket,
             'users' => $users,
+            'config' => (object) $config,
         ],
         'pages' => [
             [
@@ -674,11 +764,11 @@ function Proxmox_getCustomPages($user, $parmas, $order, $product, $configurableO
             //     'name' => 'VNC',
             //     'url' => 'vnc',
             // ],
-            // [
-            //     'template' => 'proxmox::settings',
-            //     'name' => 'Settings',
-            //     'url' => 'settings',
-            // ]
+            [
+                'template' => 'proxmox::settings',
+                'name' => 'Settings',
+                'url' => 'settings',
+            ]
         ]
     ];
 }
@@ -705,4 +795,25 @@ function Proxmox_status(Request $request, OrderProduct $product)
         'status' => 'success',
         'message' => 'Server has been ' . $request->status . 'ed successfully'
     ]);
+}
+
+function Proxmox_configure(Request $request, OrderProduct $product)
+{
+    if (!ExtensionHelper::hasAccess($product,  $request->user())) throw new Exception('You do not have access to this server');
+    $request->validate([
+        'hostname' => ['required', 'string', 'max:255'],
+    ]);
+    $data = ExtensionHelper::getParameters($product);
+
+    $params = $data->config;
+    $vmid = $params['config']['vmid'];
+    $vmType = $params['type'];
+
+    $postData = [
+        'hostname' => $request->hostname,
+    ];
+    $config = Proxmox_putRequest('/nodes/' . $params['node'] . '/' . $vmType . '/' . $vmid . '/config',  $postData);
+
+    if (!$config->json()) throw new Exception('Unable to configure server');
+    return redirect()->back()->with('success', 'Server has been configured successfully');
 }

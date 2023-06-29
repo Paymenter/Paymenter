@@ -9,3 +9,7 @@ include_once __DIR__ . '/index.php';
 Route::post('/proxmox/status/{id}', function (Request $request, OrderProduct $id) {
     return Proxmox_status($request, $id);
 })->name('extensions.proxmox.status');
+
+Route::post('/proxmox/configure/{id}', function (Request $request, OrderProduct $id) {
+    return Proxmox_configure($request, $id);
+})->name('extensions.proxmox.configure');

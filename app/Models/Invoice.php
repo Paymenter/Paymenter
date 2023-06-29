@@ -79,7 +79,6 @@ class Invoice extends Model
                     if ($coupon->start_at && $coupon->start_at > now()) {
                         $coupon = null;
                     }
-
                 }
                 $productId = $product->product()->get()->first();
                 if ($coupon) {

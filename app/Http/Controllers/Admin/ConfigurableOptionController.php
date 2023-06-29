@@ -211,7 +211,7 @@ class ConfigurableOptionController extends Controller
         $optionInput->configurableOptionInputPrice()->create();
         return redirect()->route('admin.configurable-options.edit', $configurableOptionGroup->id)->with('success', 'Configurable Option Input created successfully')->with('open', $configurableOption->id);
     }
-    
+
     /**
      * Delete the specified configurable option input from database.
      * 
@@ -223,14 +223,14 @@ class ConfigurableOptionController extends Controller
     public function destroyOptionInput(ConfigurableGroup $configurableOptionGroup, ConfigurableOption $configurableOption, ConfigurableOptionInput $configurableOptionInput): \Illuminate\Http\RedirectResponse
     {
         // If the option input is lower then 1  
-        if($configurableOption->configurableOptionInputs()->count() < 2) {
+        if ($configurableOption->configurableOptionInputs()->count() < 2) {
             return redirect()->route('admin.configurable-options.edit', $configurableOptionGroup->id)->with('error', 'You can not delete the last option input');
         }
         // Get all orderproductconfig options
-        $orderProductConfigOptions = OrderProductConfig::where('key', $configurableOptionInput->id)->where('is_configurable_option', true)->get();
+        $orderProductConfigOptions = OrderProductConfig::where('value', $configurableOptionInput->id)->where('is_configurable_option_input', true)->get();
         // Delete all orderproductconfig options
         foreach ($orderProductConfigOptions as $orderProductConfigOption) {
-            if($orderProductConfigOption->value == $configurableOptionInput->id) {
+            if ($orderProductConfigOption->value == $configurableOptionInput->id) {
                 $orderProductConfigOption->delete();
             }
         }

@@ -141,7 +141,7 @@ class ClientController extends Controller
         }
 
 
-        return redirect()->route('admin.clients.products', $user->id)->with('success', 'Product status changed');
+        return redirect()->route('admin.clients.products', [$user->id, $orderProduct->id])->with('success', 'Product status changed');
     }
 
     /**
