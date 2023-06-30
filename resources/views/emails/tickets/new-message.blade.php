@@ -1,17 +1,17 @@
 @component('mail::message')
 
-    # New reply
+# New reply
 
-    New reply has been added to ticket.
+New reply has been added to ticket.
 
-    Ticket subject: {{ $ticket->subject }}
+Ticket subject: {{ $ticket->subject }}
 
-    Ticket message: {{ $ticket->messages()->latest()->first()->message }}
+Ticket message: {{ $ticket->messages()->latest()->first()->message }}
 
-    @component('mail::button', ['url' => route('clients.tickets.show', $ticket)])
-        View ticket
-    @endcomponent
+@component('mail::button', ['url' => route('clients.tickets.show', $ticket)])
+    View ticket
+@endcomponent
 
-    Thanks, <br>
-    {{ config('app.name') }}
+Thanks, <br>
+{{ config('app.name') }}
 @endcomponent
