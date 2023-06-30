@@ -670,7 +670,18 @@ function Proxmox_createServer($user, $parmas, $order, $product, $configurableOpt
 
     $currentConfig = $product->product->settings;
     $postData = [];
-    if ($currentConfig->where('name', 'type')->first()->value == 'lxc') {
+    $vmType = $currentConfig->where('name', 'type')->first()->value;
+    if ($currentConfig->where('name', 'clone')->first()->value == '1') {
+        $postData = [
+            'newid' => $vmid,
+            'name' => $parmas['config']['hostname'],
+            'target' => $node,
+            'storage' => $storage,
+            'full' => 1, 
+        ];
+        isset($parmas['pool']) && $postData['pool'] = $parmas['pool'];
+        $response = Proxmox_postRequest('/nodes/' . $node . '/' . $vmType . '/' . $parmas['vmId'] . '/clone', $postData);
+    } else if ($vmType == 'lxc') {
         $postData = [
             'vmid' => $vmid,
             'node' => $node,
