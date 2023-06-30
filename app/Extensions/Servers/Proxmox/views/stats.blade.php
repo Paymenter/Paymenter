@@ -10,7 +10,9 @@
         data: {
             labels: [
                 @foreach ($stats as $stat)
-                    new Date('{{ $stat['time'] }}' * 1000).toLocaleTimeString(),
+                    @isset($stat['cpu'])
+                        new Date('{{ $stat['time'] }}' * 1000).toLocaleTimeString(),
+                    @endisset
                 @endforeach
             ],
             datasets: [{
@@ -39,7 +41,9 @@
         data: {
             labels: [
                 @foreach ($stats as $stat)
-                    new Date('{{ $stat['time'] }}' * 1000).toLocaleTimeString(),
+                    @isset($stat['mem'])
+                        new Date('{{ $stat['time'] }}' * 1000).toLocaleTimeString(),
+                    @endisset
                 @endforeach
             ],
             datasets: [{
@@ -68,7 +72,9 @@
         data: {
             labels: [
                 @foreach ($stats as $stat)
-                    new Date('{{ $stat['time'] }}' * 1000).toLocaleTimeString(),
+                    @isset($stat['disk'])
+                        new Date('{{ $stat['time'] }}' * 1000).toLocaleTimeString(),
+                    @endisset
                 @endforeach
             ],
             datasets: [{

@@ -528,6 +528,36 @@ function Proxmox_getProductConfig($options)
             'description' => 'The CPU type of the VM',
             'options' => $cpuList
         ],
+        [
+            'name' => 'vcpu',
+            'type' => 'number',
+            'friendlyName' => 'vCPU cores',
+            'description' => 'The number of vCPU cores of the VM',
+        ],
+        [
+            'name' => 'sockets',
+            'type' => 'number',
+            'friendlyName' => 'Sockets',
+            'description' => 'The number of sockets of the VM',
+        ],
+
+        [
+            'type' => 'title',
+            'friendlyName' => 'Clone options',
+            'description' => 'Options for cloning a VM'
+        ],
+        [
+            'name' => 'clone',
+            'type' => 'boolean',
+            'friendlyName' => 'Clone',
+            'description' => 'Enable/disable cloning',
+        ],
+        [
+            'name' => 'vmId',
+            'type' => 'number',
+            'friendlyName' => 'VM ID',
+            'description' => 'The ID of the VM to clone',
+        ],
     ];
 }
 
@@ -659,6 +689,8 @@ function Proxmox_createServer($user, $parmas, $order, $product, $configurableOpt
         isset($pool) ? $postData['pool'] = $pool : null;
         $response = Proxmox_postRequest('/nodes/' . $node . '/lxc', $postData);
     } else {
+        $socket = isset($configurableOptions['sockets']) ? $configurableOptions['sockets'] : ($parmas['sockets'] ?? null);
+        $vcpu = isset($configurableOptions['vcpu']) ? $configurableOptions['vcpu'] : ($parmas['vcpu'] ?? null);
         $postData = [
             'vmid' => $vmid,
             'node' => $node,
@@ -666,7 +698,8 @@ function Proxmox_createServer($user, $parmas, $order, $product, $configurableOpt
             'cores' => $cores,
             'memory' => $memory,
             'onboot' => 1,
-            'sockets' => 1,
+            'sockets' => $socket ?? 1,
+            'agent' => 1,
             'ostype' => $parmas['ostype'],
             'name' => $parmas['config']['hostname'],
             'description' => $parmas['config']['hostname'],
@@ -676,6 +709,7 @@ function Proxmox_createServer($user, $parmas, $order, $product, $configurableOpt
         isset($pool) ? $postData['pool'] = $pool : null;
         isset($parmas['cloudinit']) ? $postData[$parmas['storageType'] . '0'] = $parmas['storage'] . ':cloudinit' . ',format=' . $parmas['storageFormat'] : null;
         isset($cpu) ? $postData['cpu'] = $cpu : null;
+        isset($vcpu) ? $postData['vcpus'] = $vcpu : null;
         if (isset($parmas['os']) && $parmas['os'] == 'iso') {
             $postData['ide2'] = $parmas['iso'] . ',media=cdrom';
         }
@@ -699,6 +733,9 @@ function Proxmox_terminateServer($user, $parmas, $order, $product, $configurable
 {
     $vmType = $parmas['type'];
     $vmid = $parmas['config']['vmid'];
+    // Stop the VM first
+    $response = Proxmox_postRequest('/nodes/' . $parmas['node'] . '/' . $vmType . '/' . $vmid . '/status/stop');
+    // Delete the VM
     $postData = [
         'purge' => 1,
         'destroy-unreferenced-disks' => 1,
@@ -715,7 +752,7 @@ function Proxmox_getCustomPages($user, $parmas, $order, $product, $configurableO
     $vmid = $parmas['config']['vmid'];
     $status = Proxmox_getRequest('/nodes/' . $parmas['node'] . '/' . $vmType . '/' . $vmid . '/status/current');
     if (!$status->json()) throw new Exception('Unable to get server status');
-    $status = $status->json()['data']['status'];
+    $status = $status->json()['data'];
 
     $stats = Proxmox_getRequest('/nodes/' . $parmas['node'] . '/' . $vmType . '/' . $vmid . '/rrddata?timeframe=hour');
     if (!$stats->json()) throw new Exception('Unable to get server stats');
@@ -728,7 +765,7 @@ function Proxmox_getCustomPages($user, $parmas, $order, $product, $configurableO
     // $vnc = $vnc->json()['data'];
     // $websocket = ExtensionHelper::getConfig('Proxmox', 'host') . ':' . ExtensionHelper::getConfig('Proxmox', 'port') . '/?console=kvm&novnc=1&node=' . $parmas['node'] . '&resize=1&vmid=' . $vmid . '&path=api2/json/nodes/' . $parmas['node'] . '/' . $vmType . '/' . $vmid . '/vncwebsocket/port/' . $vnc['port'] . '/"vncticket"/' . $vnc['ticket'];
 
-    $users = Proxmox_getRequest('/nodes/' . $parmas['node'] . '/' . $vmType . '/' . $vmid . '/agent/info');
+    $users = Proxmox_getRequest('/nodes/' . $parmas['node'] . '/' . $vmType . '/' . $vmid . '/agent/get-users');
     if (!$users->json()) throw new Exception('Unable to get server users');
     $users = $users->json()['data'];
 
@@ -782,12 +819,13 @@ function Proxmox_status(Request $request, OrderProduct $product)
     $data = ExtensionHelper::getParameters($product);
     $params = $data->config;
     $vmid = $params['config']['vmid'];
+    $vmType = $params['type'];
     $postData = [
         'node' => $params['node'],
         'vmid' => $vmid,
     ];
     // Change status
-    $status = Proxmox_postRequest('/nodes/' . $params['node'] . '/qemu/' . $vmid . '/status/' . $request->status,  $postData);
+    $status = Proxmox_postRequest('/nodes/' . $params['node'] . '/' . $vmType . '/' . $vmid . '/status/' . $request->status,  $postData);
     if (!$status->json()) throw new Exception('Unable to ' . $request->status . ' server');
 
     // Return json response

@@ -47,7 +47,7 @@ class OrderProduct extends Model
     }
     public function getOpenInvoices()
     {
-        return $this->invoices()->get()->filter(function ($invoice) {
+        return $this->getInvoices()->filter(function ($invoice) {
             if($invoice->total() == 0)
                 return false;
             return $invoice->status == 'pending';
