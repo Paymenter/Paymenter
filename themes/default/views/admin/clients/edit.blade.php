@@ -193,6 +193,11 @@
 
                         <hr class="my-6 border-b-1 border-gray-300 dark:border-gray-600" />
 
+                        <x-input type="number" name="credits" id="credits" label="{{ __('Credits') }}"
+                            value="{{ $user->credits }}" />
+                            
+                        <hr class="my-6 border-b-1 border-gray-300 dark:border-gray-600" />
+
                         <x-input type="select" name="role" id="role" label="{{ __('Role(admin)') }}">
                             @foreach ($roles as $role)
                                 <option value="{{ $role->id }}" @if ($user->role->id == $role->id) selected @endif>
