@@ -248,9 +248,9 @@ function Pterodactyl_createServer($user, $parmas, $order, $product, $configurabl
                 'cpu' => (int) $cpu,
             ],
             'feature_limits' => [
-                'databases' => $parmas['databases'] ? (int) $parmas['databases'] : null,
-                'allocations' => $parmas['allocation'],
-                'backups' => $parmas['backups'],
+                'databases' => $databases ? (int) $databases : null,
+                'allocations' => $allocations,
+                'backups' => $backups,
             ],
             'allocation' => [
                 'default' => (int) $allocation,

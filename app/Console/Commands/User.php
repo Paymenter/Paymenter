@@ -42,9 +42,9 @@ class User extends Command
 
         $name = $this->ask('What is his/her name?');
         $roles = Role::all()->pluck('name')->toArray();
-        
+
         $role = $this->choice('What is his/her role?', $roles, 1);
-        
+
         $user = \App\Models\User::create([
             'email' => $email,
             'name' => $name,
