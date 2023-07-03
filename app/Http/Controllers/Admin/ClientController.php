@@ -60,6 +60,8 @@ class ClientController extends Controller
             return redirect()->back()->with('error', 'Only Admins with full permissions can edit users');
         }
         $user->update($request->all());
+        $user->role_id = $request->input('role');
+        $user->save();
         return redirect()->route('admin.clients.edit', $user->id)->with('success', 'User updated successfully');
     }
 
@@ -111,7 +113,7 @@ class ClientController extends Controller
         $orderProduct->status = $request->input('status');
         $orderProduct->save();
 
-        return redirect()->route('admin.clients.products', [$user->id, $orderProduct->id])->with('success', 'Product updated'); 
+        return redirect()->route('admin.clients.products', [$user->id, $orderProduct->id])->with('success', 'Product updated');
     }
 
     /**
@@ -158,7 +160,6 @@ class ClientController extends Controller
         $orderProductConfig->value = $request->input('value');
         $orderProductConfig->save();
 
-        return redirect()->route('admin.clients.products', [$user->id, $orderProduct->id])->with('success', 'Product updated'); 
+        return redirect()->route('admin.clients.products', [$user->id, $orderProduct->id])->with('success', 'Product updated');
     }
-
 }
