@@ -82,6 +82,9 @@ class ClientController extends Controller
     {
         if (!$orderProduct) {
             $orderProduct = Order::where('client', $user->id)->first();
+            if (!$orderProduct) {
+                return redirect()->route('admin.clients.edit', $user->id)->with('error', 'No orders found');
+            }
             $orderProduct = $orderProduct->products()->first();
             if (!$orderProduct) {
                 return redirect()->route('admin.clients.edit', $user->id)->with('error', 'No orders found');
