@@ -5,7 +5,7 @@
     <h1 class="text-2xl font-bold dark:text-darkmodetext text-center">{{ __('Tickets') }}</h1>
     <div class="flex items-center justify-end mt-4">
         <a href="{{ route('admin.tickets.create') }}"
-            class="mr-4 bg-logo hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+            class="mr-4 button button-primary">
             {{ __('Create') }}
         </a>
     </div>
@@ -17,7 +17,7 @@
                         @if ($tickets->count())
                             <h3 class="dark:text-darkmodetext text-center my-4 text-xl"> {{ __('Open Tickets') }} </h3>
                             <table class="min-w-full divide-y divide-gray-200" id="tickets">
-                                <thead class="dark:bg-darkmode">
+                                <thead>
                                     <tr>
                                         <th scope="col"
                                             class="dark:text-darkmodetext px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -44,7 +44,7 @@
                                         </th>
                                     </tr>
                                 </thead>
-                                <tbody class="dark:bg-darkmode bg-white divide-y divide-gray-200">
+                                <tbody class="divide-y divide-gray-200">
                                     @foreach ($tickets as $service)
                                         <tr>
                                             <td class="px-6 py-4 whitespace-nowrap">
@@ -177,16 +177,4 @@
             </div>
         </div>
     </div>
-    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.12.1/css/jquery.dataTables.css">
-    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.js"></script>
-    <script>
-        $(document).ready(function() {
-            var table = $('tickets').DataTable({
-                dom: 'Bfrtip',
-                buttons: [
-                    'copy', 'csv', 'excel', 'pdf', 'print'
-                ]
-            });
-        });
-    </script>
 </x-admin-layout>
