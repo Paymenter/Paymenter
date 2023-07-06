@@ -111,6 +111,7 @@ class ExtensionController extends Controller
             $extension->enabled = $db->enabled;
             $extension->id = $db->id;
             $extension->type = 'server';
+            $extension->display_name = $db->display_name;
 
             return view('admin.extensions.edit', compact('extension'));
         } elseif ($sort == 'gateway') {
@@ -132,6 +133,7 @@ class ExtensionController extends Controller
             $extension->enabled = $db->enabled;
             $extension->id = $db->id;
             $extension->type = 'gateway';
+            $extension->display_name = $db->display_name;
 
             return view('admin.extensions.edit', compact('extension'));
         }
