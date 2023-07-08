@@ -370,7 +370,7 @@ class ExtensionHelper
         try {
             $extensionFunction($user, $config, $order, $product2, $configurableOptions);
         } catch (\Exception $e) {
-            self::error($extensionName, 'Error creating server: ' . $e->getMessage());
+            self::error($extensionName, 'Error creating server: ' . $e->getMessage() . ' on line ' . $e->getLine() . ' in file ' . $e->getFile() . ' on line ' . $e->getLine() . ' in file ' . $e->getFile());
         }
     }
 
@@ -400,7 +400,7 @@ class ExtensionHelper
         try {
             $function($user, $config, $order, $product2, $configurableOptions);
         } catch (\Exception $e) {
-            self::error($extension->name, 'Error suspending server: ' . $e->getMessage());
+            self::error($extension->name, 'Error suspending server: ' . $e->getMessage() . ' on line ' . $e->getLine() . ' in file ' . $e->getFile());
         }
     }
 
@@ -427,7 +427,7 @@ class ExtensionHelper
         try {
             $function($user, $config, $order, $product2, $configurableOptions);
         } catch (\Exception $e) {
-            ExtensionHelper::error($extension->name, 'Error creating server: ' . $e->getMessage());
+            ExtensionHelper::error($extension->name, 'Error creating server: ' . $e->getMessage() . ' on line ' . $e->getLine() . ' in file ' . $e->getFile());
         }
     }
 
@@ -454,16 +454,19 @@ class ExtensionHelper
         try {
             $function($user, $config, $order, $product2, $configurableOptions);
         } catch (\Exception $e) {
-            ExtensionHelper::error($extension->name, 'Error creating server: ' . $e->getMessage());
+            ExtensionHelper::error($extension->name, 'Error creating server: ' . $e->getMessage() . ' on line ' . $e->getLine() . ' in file ' . $e->getFile());
         }
     }
 
-    public static function getLink(OrderProduct $product)
+    public static function getLink(OrderProduct $product2)
     {
-        if (!isset($product->product()->get()->first()->server_id)) {
+        $order = $product2->order()->first();
+
+        $product = Product::findOrFail($product2->product_id);
+        if (!isset($product->server_id)) {
             return false;
         }
-        $extension = Extension::where('id', $product->product()->get()->first()->server_id)->first();
+        $extension = Extension::where('id', $product->server_id)->first();
         if (!$extension) {
             return false;
         }
@@ -472,21 +475,14 @@ class ExtensionHelper
             return false;
         }
         include_once app_path() . '/Extensions/Servers/' . $extension->name . '/index.php';
-        $settings = $product->product->settings()->get();
-        $config = [];
-        foreach ($settings as $setting) {
-            $config[$setting->name] = $setting->value;
-        }
-        $config['config_id'] = $product->product->id;
-        foreach ($product->config()->get() as $config2) {
-            $config['config'][$config2->key] = $config2->value;
-        }
-        $user = User::findOrFail($product->order->client);
+        $config = self::loadConfiguration($product, $product2);
+        $configurableOptions = self::loadConfigurableOptions($product2);
+        $user = User::findOrFail($order->client);
         $function = $extension->name . '_getLink';
         if (!function_exists($function)) {
             return false;
         }
-        $link = $function($user, $config, $product->order()->get()->first(), $product);
+        $link = $function($user, $config, $order, $product, $configurableOptions);
 
         return $link;
     }
@@ -560,7 +556,7 @@ class ExtensionHelper
         try {
             return $function($user, $config, $order, $product2, $configurableOptions);
         } catch (\Exception $e) {
-            ExtensionHelper::error($extension->name, 'Error getting pages ' . $e->getMessage() . ' on line ' . $e->getLine() . ' in file ' . $e->getFile());
+            ExtensionHelper::error($extension->name, 'Error getting pages ' . $e->getMessage() . ' on line ' . $e->getLine() . ' in file ' . $e->getFile() . ' on line ' . $e->getLine() . ' in file ' . $e->getFile());
             return [];
         }
     }
