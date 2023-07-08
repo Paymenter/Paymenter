@@ -35,6 +35,7 @@ class User extends Authenticatable
         'companyname',
         'tfa_secret',
         'role_id',
+        'credits',
     ];
 
     /**
