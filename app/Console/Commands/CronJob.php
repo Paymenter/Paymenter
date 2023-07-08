@@ -38,7 +38,7 @@ class CronJob extends Command
         $this->info('Cron Job Started');
         $orders = OrderProduct::where('expiry_date', '<', now())->get();
         foreach ($orders as $order) {
-            if ($order->price == 0) {
+            if ($order->price == 0.00) {
                 continue;
             }
             if ($order->status == 'paid') {
@@ -59,7 +59,7 @@ class CronJob extends Command
         $orders = OrderProduct::where('expiry_date', '<', now()->addDays(7))->where('status', '!=', 'cancelled')->get();
         $invoiceProcessed = 0;
         foreach ($orders as $order) {
-            if ($order->billing_cycle == 'free' || $order->billing_cycle == 'one-time' || $order->price == 0) {
+            if ($order->billing_cycle == 'free' || $order->billing_cycle == 'one-time' || $order->price == 0.00) {
                 continue;
             }
             // Get all InvoiceItems for this product

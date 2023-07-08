@@ -486,9 +486,6 @@ class CheckoutController extends Controller
         $request->validate([
             'quantity' => 'required|numeric|min:1',
         ]);
-        if (!$product->stock_enabled) {
-            return redirect()->back()->with('error', 'Product is out of stock');
-        }
         $cart = session()->get('cart');
         if (isset($cart[$product->id])) {
             if ($product->stock_enabled && $product->stock < $request->quantity) {

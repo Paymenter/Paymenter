@@ -482,7 +482,7 @@ class ExtensionHelper
         if (!function_exists($function)) {
             return false;
         }
-        $link = $function($user, $config, $order, $product, $configurableOptions);
+        $link = $function($user, $config, $order, $product2, $configurableOptions);
 
         return $link;
     }
