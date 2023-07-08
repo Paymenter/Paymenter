@@ -27,6 +27,9 @@
                     <th>
                         {{ __('Edit') }}
                     </th>
+                    <th>
+                        {{ __('Delete') }}
+                    </th>
                 </tr>
             </thead>
             <tbody>
@@ -47,6 +50,14 @@
                         <td>
                             <a href="{{ route('admin.configurable-options.edit', $configurableGroup->id) }}"
                                 class="button button-primary">{{ __('Edit/View') }}</a>
+                        </td>
+                        <td>
+                            <form method="POST"
+                                action="{{ route('admin.configurable-options.delete', $configurableGroup->id) }}">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="button button-danger">{{ __('Delete') }}</button>
+                            </form>
                         </td>
                     </tr>
                 @endforeach

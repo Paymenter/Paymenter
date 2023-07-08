@@ -70,6 +70,7 @@ class ConfigurableOptionController extends Controller
         return view('admin.configurable-options.edit', compact('configurableOptionGroup', 'products', 'configurableOptions'));
     }
 
+
     /**
      * Update the specified configurable option group in database.
      * 
@@ -91,6 +92,44 @@ class ConfigurableOptionController extends Controller
         ]);
         return redirect()->route('admin.configurable-options.edit', $configurableOptionGroup->id)->with('success', 'Configurable Option Group updated successfully');
     }
+
+    /**
+     * Remove the specified configurable option group from database.
+     * 
+     * @param  ConfigurableGroup  $configurableOptionGroup
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function destroy(ConfigurableGroup $configurableOptionGroup): \Illuminate\Http\RedirectResponse
+    {
+        // Get all orderproductconfig options
+        $options = $configurableOptionGroup->configurableOptions;
+        foreach ($options as $option) {
+            // Get all orderproductconfig options
+            $orderProductConfigOptions = OrderProductConfig::where('key', $option->id)->where('is_configurable_option', true)->get();
+            // Delete all orderproductconfig options
+            foreach ($orderProductConfigOptions as $orderProductConfigOption) {
+                $orderProductConfigOption->delete();
+            }
+
+            // Also loop through all option inputs and delete them
+            foreach ($option->configurableOptionInputs as $configurableOptionInput) {
+                // Get all orderproductconfig options
+                $orderProductConfigOptions = OrderProductConfig::where('value', $configurableOptionInput->id)->where('is_configurable_option', true)->get();
+                // Delete all orderproductconfig options
+                foreach ($orderProductConfigOptions as $orderProductConfigOption) {
+                    $orderProductConfigOption->delete();
+                }
+                $configurableOptionInput->delete();
+            }
+
+            $option->delete();
+        }
+
+        $configurableOptionGroup->delete();
+
+        return redirect()->route('admin.configurable-options')->with('success', 'Configurable Option Group deleted successfully');
+    }
+
 
     /**
      * Create new configurable option.
@@ -188,6 +227,17 @@ class ConfigurableOptionController extends Controller
             $orderProductConfigOption->delete();
         }
 
+        // Also loop through all option inputs and delete them
+        foreach ($configurableOption->configurableOptionInputs as $configurableOptionInput) {
+            // Get all orderproductconfig options
+            $orderProductConfigOptions = OrderProductConfig::where('value', $configurableOptionInput->id)->where('is_configurable_option', true)->get();
+            // Delete all orderproductconfig options
+            foreach ($orderProductConfigOptions as $orderProductConfigOption) {
+                $orderProductConfigOption->delete();
+            }
+            $configurableOptionInput->delete();
+        }
+
 
         $configurableOption->delete();
         return redirect()->route('admin.configurable-options.edit', $configurableOptionGroup->id)->with('success', 'Configurable Option deleted successfully');
@@ -227,7 +277,7 @@ class ConfigurableOptionController extends Controller
             return redirect()->route('admin.configurable-options.edit', $configurableOptionGroup->id)->with('error', 'You can not delete the last option input');
         }
         // Get all orderproductconfig options
-        $orderProductConfigOptions = OrderProductConfig::where('value', $configurableOptionInput->id)->where('is_configurable_option_input', true)->get();
+        $orderProductConfigOptions = OrderProductConfig::where('value', $configurableOptionInput->id)->where('is_configurable_option', true)->get();
         // Delete all orderproductconfig options
         foreach ($orderProductConfigOptions as $orderProductConfigOption) {
             if ($orderProductConfigOption->value == $configurableOptionInput->id) {

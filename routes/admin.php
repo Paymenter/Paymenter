@@ -124,6 +124,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'permission:ADMINISTRATOR'], 
         Route::post('/create', [App\Http\Controllers\Admin\ConfigurableOptionController::class, 'store'])->middleware(['permission:CREATE_CONFIGURABLE_OPTIONS'])->name('admin.configurable-options.store');
         Route::get('/{configurableOptionGroup}/edit', [App\Http\Controllers\Admin\ConfigurableOptionController::class, 'edit'])->middleware(['permission:VIEW_CONFIGURABLE_OPTIONS'])->name('admin.configurable-options.edit');
         Route::post('/{configurableOptionGroup}/edit', [App\Http\Controllers\Admin\ConfigurableOptionController::class, 'update'])->middleware(['permission:EDIT_CONFIGURABLE_OPTIONS'])->name('admin.configurable-options.update');
+        Route::delete('/{configurableOptionGroup}/delete', [App\Http\Controllers\Admin\ConfigurableOptionController::class, 'destroy'])->middleware(['permission:DELETE_CONFIGURABLE_OPTIONS'])->name('admin.configurable-options.delete');
 
         Route::post('/{configurableOptionGroup}/options/create', [App\Http\Controllers\Admin\ConfigurableOptionController::class, 'createOption'])->middleware(['permission:CREATE_CONFIGURABLE_OPTIONS'])->name('admin.configurable-options.options.create');
         Route::post('/{configurableOptionGroup}/options/{configurableOption}/edit', [App\Http\Controllers\Admin\ConfigurableOptionController::class, 'updateOption'])->middleware(['permission:EDIT_CONFIGURABLE_OPTIONS'])->name('admin.configurable-options.options.update');
