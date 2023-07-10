@@ -28,6 +28,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'permission:ADMINISTRATOR'], 
 
     Route::group(['prefix' => 'products'], function () {
         Route::get('/', [App\Http\Controllers\Admin\ProductController::class, 'index'])->middleware(['permission:VIEW_PRODUCTS'])->name('admin.products');
+        Route::post('/', [App\Http\Controllers\Admin\ProductController::class, 'reorder'])->middleware(['permission:EDIT_PRODUCTS'])->name('admin.products.reorder');
         Route::get('/create', [App\Http\Controllers\Admin\ProductController::class, 'create'])->middleware(['permission:CREATE_PRODUCTS'])->name('admin.products.create');
         Route::post('/create', [App\Http\Controllers\Admin\ProductController::class, 'store'])->middleware(['permission:CREATE_PRODUCTS'])->name('admin.products.store');
         Route::get('/{product}/edit', [App\Http\Controllers\Admin\ProductController::class, 'edit'])->middleware(['permission:VIEW_PRODUCTS'])->name('admin.products.edit');
