@@ -30,6 +30,38 @@ class ProductController extends Controller
     }
 
     /**
+     * Reorder a product
+     * 
+     * @param Request $request
+     * 
+     * @return void
+     */
+    public function reorder(Request $request)
+    {
+        $request->validate([
+            'id' => 'required|integer',
+            'category_id' => 'required|integer',
+            'newIndex' => 'required|integer',
+        ]);
+        
+        $product = Product::findOrFail($request->get('id'));
+        $category = Category::findOrFail($request->get('category_id'));
+
+        $product->order = $request->get('newIndex');
+        $product->save();
+
+        $products = Product::where('category_id', $category->id)->orderBy('order', 'asc')->get();
+        $index = 0;
+        foreach ($products as $product) {
+            $product->order = $index;
+            $product->save();
+            $index++;
+        }
+
+        return response()->json(['success' => true]);
+    }
+
+    /**
      * Display the creating form
      *
      * @return View

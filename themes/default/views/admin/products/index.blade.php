@@ -10,6 +10,7 @@
             </button>
         </a>
     </div>
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
 
     @if ($categories->isEmpty())
         <!-- not found -->
@@ -19,61 +20,109 @@
             </p>
         </div>
     @else
-        @foreach ($categories as $category)
-            @if ($category->products->isNotEmpty())
-                <table class="min-w-full divide-y divide-gray-200" id="{{ $category->id }}">
-
-                    <thead class="bg-gray-50 dark:bg-secondary-100">
-                        <tr>
-                            <th>
-                                {{ $category->name }}</th>
-                            <th>
-                                {{ $category->description }}</th>
-                            <th>
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody class="">
-                        @foreach ($category->products()->get() as $product)
+        <div id="categories">
+            @foreach ($categories as $category)
+                <div class="mt-10">
+                    <h2 class="font-semibold text-2xl mb-2 text-secondary-900">{{ $category->name }}</h2>
+                    <p class="ml-2">{{ $category->description }}</p>
+                    <table class="min-w-full mt-4">
+                        <thead class="bg-gray-50 dark:bg-secondary-200 text-left">
                             <tr>
-                                <td>
-                                    {{ $product->name }}</td>
-                                <td>
-                                    {{ Str::limit($product->description, 50) }}</td>
-                                <td>
-                                    <a href="{{ route('admin.products.edit', $product->id) }}">
-                                        <button class="form-submit">
-                                            {{ __('Edit') }}
-                                        </button>
-                                    </a>
-                                </td>
+                                <th class="px-1 pl-3 py-3">
+                                    {{ __('Name') }}
+                                </th>
+                                <th class="py-3">
+                                    {{ __('Description') }}
+                                </th>
+                                <th class="py-3">
+                                    {{ __('Actions') }}
+                                </th>
+                                <th class="px-1 pr-2 py-3">
+                                    {{ __('Order') }}
+                                </th>
                             </tr>
-                        @endforeach
-                    </tbody>
-                </table>
-                <script>
-                    $(document).ready(function() {
-                        var table = $('#{{ $category->id }}').DataTable({
-                            dom: 'Bfrtip',
-                            buttons: [
-                                'copy', 'csv', 'excel', 'pdf', 'print'
-                            ]
+                        </thead>
+                        <tbody class="" id="{{ $category->id }}">
+                            @if ($category->products->isNotEmpty())
+                                @foreach ($category->products()->orderBy('order')->get() as $product)
+                                    <tr id="{{ $product->id }}">
+                                        <td class="py-2 px-4">
+                                            {{ $product->name }}</td>
+                                        <td class="py-2 px-4">
+                                            {{ Str::limit($product->description, 50) }}</td>
+                                        <td class="py-2">
+                                            <a href="{{ route('admin.products.edit', $product->id) }}">
+                                                <button class="button button-primary">
+                                                    {{ __('Edit') }}
+                                                </button>
+                                            </a>
+                                        </td>
+                                        <td class="w-10 text-2xl ml-4 font-thin text-center draggable">
+                                            <i class="ri-drag-move-2-line draggable"></i>
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            @else
+                                <tr>
+                                    <td colspan="4" class="text-center">
+                                        <p class="text-gray-500 px-3 rounded-md text-xl m-4">
+                                            {{ __('No products found on category') }} {{ $category->name }}
+                                        </p>
+                                    </td>
+                                </tr>
+                            @endif
+                        </tbody>
+                    </table>
+                    <script>
+                        var el = document.getElementById('{{ $category->id }}');
+                        var sortable = Sortable.create(el, {
+                            animation: 150,
+                            ghostClass: 'bg-gray-100',
+                            chosenClass: 'bg-secondary-200',
+                            handle: '.draggable',
+                            onEnd: function(evt) {
+                                var url = "{{ route('admin.products.reorder') }}";
+                                var data = {
+                                    id: evt.item.id,
+                                    category_id: evt.item.parentNode.id,
+                                    newIndex: evt.newIndex - 1,
+                                    _token: '{{ csrf_token() }}'
+                                };
+                                // Plain JavaScript
+                                var request = new XMLHttpRequest();
+                                request.open('POST', url, true);
+                                request.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
+                                request.send(JSON.stringify(data));
+
+                                request.onload = function() {
+                                    if (request.status >= 200 && request.status < 400) {
+                                        // Success!
+                                        var resp = request.responseText;
+                                        console.log(resp);
+                                    } else {
+                                        // We reached our target server, but it returned an error
+                                        console.log('error');
+                                    }
+                                };
+
+                            },
                         });
-                    });
-                </script>
-            @else
-                <!-- not found -->
-                <div class="ml-10 flex items-baseline ">
-                    <p class="text-gray-600 px-3 rounded-md text-xl m-4">
-                        {{ __('No products found on category') }} {{ $category->name }}
-                    </p>
+                    </script>
                 </div>
-            @endif
-        @endforeach
+            @endforeach
+        </div>
+        {{-- <script>
+            var el = document.getElementById('categories');
+            var sortable = Sortable.create(el, {
+                animation: 150,
+                ghostClass: 'bg-gray-100',
+                chosenClass: 'bg-secondary-200',
+                handle: '.draggable',
+                onEnd: function(evt) {
+                    console.log(evt.oldIndex);
+                },
+            });
+        </script> --}}
     @endif
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/pdfmake.min.js"></script>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/vfs_fonts.js"></script>
-    <script type="text/javascript"
-        src="https://cdn.datatables.net/v/dt/jszip-2.5.0/dt-1.12.1/b-2.2.3/b-colvis-2.2.3/b-html5-2.2.3/b-print-2.2.3/datatables.min.js">
-    </script>
+
 </x-admin-layout>
