@@ -40,22 +40,36 @@ class ProductController extends Controller
     {
         $request->validate([
             'id' => 'required|integer',
-            'category_id' => 'required|integer',
+            'category_id' => 'required|integer|exists:categories,id',
             'newIndex' => 'required|integer',
         ]);
-        
-        $product = Product::findOrFail($request->get('id'));
-        $category = Category::findOrFail($request->get('category_id'));
-
-        $product->order = $request->get('newIndex');
-        $product->save();
+        $newIndex = $request->get('newIndex');
+        $oldIndex = $request->get('oldIndex');
+        if ($oldIndex == $newIndex) {
+            return response()->json(['success' => true]);
+        }
+        $category = Category::find($request->get('category_id'));
 
         $products = Product::where('category_id', $category->id)->orderBy('order', 'asc')->get();
-        $index = 0;
-        foreach ($products as $product) {
-            $product->order = $index;
-            $product->save();
-            $index++;
+
+        $product = $products->where('id', $request->get('id'))->first();
+        $product->order = $newIndex;
+        $product->save();
+
+        if ($newIndex > $oldIndex) {
+            foreach ($products as $p) {
+                if ($p->id !== $product->id && $p->order > $oldIndex && $p->order <= $newIndex) {
+                    $p->order--;
+                    $p->save();
+                }
+            }
+        } else {
+            foreach ($products as $p) {
+                if ($p->id !== $product->id && $p->order >= $newIndex && $p->order < $oldIndex) {
+                    $p->order++;
+                    $p->save();
+                }
+            }
         }
 
         return response()->json(['success' => true]);

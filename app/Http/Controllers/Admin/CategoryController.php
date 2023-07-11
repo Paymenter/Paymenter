@@ -20,10 +20,55 @@ class CategoryController extends Controller
      */
     public function index(): View
     {
-        $categories = Category::all();
+        $categories = Category::all()->sortBy('order');
 
         return view('admin.categories.index', compact('categories'));
     }
+
+    /**
+     * Reorder the categories
+     * 
+     * @param Request $request
+     * @return void
+     */
+    public function reorder(Request $request)
+    {
+        $request->validate([
+            'id' => 'required|integer|exists:categories,id',
+            'newIndex' => 'required|integer|min:0',
+            'oldIndex' => 'required|integer|min:0',
+        ]);
+        $newIndex = $request->input('newIndex');
+        $oldIndex = $request->input('oldIndex');
+        if ($newIndex == $oldIndex) {
+            return response()->json(['success' => true]);
+        }
+        $categories = Category::all()->sortBy('order');
+        $category = $categories->where('id', $request->input('id'))->first();
+        $category->order = $newIndex;
+        $category->save();
+
+        // If the new index is greater than the old index, we need to shift all the categories between the old and new index up one
+        if ($newIndex > $oldIndex) {
+            foreach ($categories as $c) {
+                if ($c->order > $oldIndex && $c->order <= $newIndex && $c->id != $category->id) {
+                    $c->order--;
+                    $c->save();
+                }
+            }
+            // If the new index is less than the old index, we need to shift all the categories between the old and new index down one
+        } else {
+            foreach ($categories as $c) {
+                if ($c->order < $oldIndex && $c->order >= $newIndex && $c->id != $category->id) {
+                    $c->order++;
+                    $c->save();
+                }
+            }
+        }
+
+        return response()->json(['success' => true]);
+    }
+
 
     /**
      * Display the create form
@@ -42,7 +87,7 @@ class CategoryController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
-        $validatedRequest = Validator::make($request->all(),[
+        $validatedRequest = Validator::make($request->all(), [
             'name' => 'required',
             'description' => 'required',
             'slug' => 'required|unique:categories,slug',
@@ -74,10 +119,10 @@ class CategoryController extends Controller
      */
     public function update(Category $category, Request $request): RedirectResponse
     {
-        $validatedRequest = Validator::make($request->all(),[
+        $validatedRequest = Validator::make($request->all(), [
             'name' => 'required',
             'description' => 'required',
-            'slug' => 'required|unique:categories,slug,'.$category->id,
+            'slug' => 'required|unique:categories,slug,' . $category->id,
         ]);
 
         $category->update($validatedRequest->validated());

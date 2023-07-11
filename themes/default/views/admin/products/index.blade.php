@@ -13,17 +13,22 @@
     <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
 
     @if ($categories->isEmpty())
-        <!-- not found -->
         <div class="ml-10 flex items-baseline ">
             <p class="text-gray-600 px-3 rounded-md text-xl m-4">
                 {{ __('No products found') }}
+                
             </p>
+            <button class="button button-primary">
+                <a href="{{ route('admin.categories.create') }}">
+                    {{ __('Create category') }}
+                </a>
+            </button>
         </div>
     @else
         <div id="categories">
             @foreach ($categories as $category)
                 <div class="mt-10">
-                    <h2 class="font-semibold text-2xl mb-2 text-secondary-900">{{ $category->name }}</h2>
+                    <h2 class="font-semibold text-2xl mb-2 text-secondary-900 flex-1">{{ $category->name }}</h2>
                     <p class="ml-2">{{ $category->description }}</p>
                     <table class="min-w-full mt-4">
                         <thead class="bg-gray-50 dark:bg-secondary-200 text-left">
@@ -85,7 +90,8 @@
                                 var data = {
                                     id: evt.item.id,
                                     category_id: evt.item.parentNode.id,
-                                    newIndex: evt.newIndex - 1,
+                                    newIndex: evt.newIndex,
+                                    oldIndex: evt.oldIndex,
                                     _token: '{{ csrf_token() }}'
                                 };
                                 // Plain JavaScript
@@ -111,18 +117,6 @@
                 </div>
             @endforeach
         </div>
-        {{-- <script>
-            var el = document.getElementById('categories');
-            var sortable = Sortable.create(el, {
-                animation: 150,
-                ghostClass: 'bg-gray-100',
-                chosenClass: 'bg-secondary-200',
-                handle: '.draggable',
-                onEnd: function(evt) {
-                    console.log(evt.oldIndex);
-                },
-            });
-        </script> --}}
     @endif
 
 </x-admin-layout>

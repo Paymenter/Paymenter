@@ -45,6 +45,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'permission:ADMINISTRATOR'], 
 
     Route::group(['prefix' => 'categories'], function () {
         Route::get('/', [App\Http\Controllers\Admin\CategoryController::class, 'index'])->middleware(['permission:VIEW_CATEGORIES'])->name('admin.categories');
+        Route::post('/', [App\Http\Controllers\Admin\CategoryController::class, 'reorder'])->middleware(['permission:EDIT_CATEGORIES'])->name('admin.categories.reorder');
         Route::get('/create', [App\Http\Controllers\Admin\CategoryController::class, 'create'])->middleware(['permission:CREATE_CATEGORIES'])->name('admin.categories.create');
         Route::post('/create', [App\Http\Controllers\Admin\CategoryController::class, 'store'])->middleware(['permission:CREATE_CATEGORIES'])->name('admin.categories.store');
         Route::get('/{category}/edit', [App\Http\Controllers\Admin\CategoryController::class, 'edit'])->middleware(['permission:VIEW_CATEGORIES'])->name('admin.categories.edit');
