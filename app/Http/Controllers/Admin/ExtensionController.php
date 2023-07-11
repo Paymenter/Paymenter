@@ -46,7 +46,8 @@ class ExtensionController extends Controller
         return view('admin.extensions.index', compact('servers', 'gateways'));
     }
 
-    public function download(Request $request){
+    public function download(Request $request)
+    {
         $request->validate([
             'name' => 'required',
         ]);
@@ -62,32 +63,49 @@ class ExtensionController extends Controller
             $extension->enabled = 0;
             $extension->save();
         }
-        $url = 'https://api.github.com/repos/Paymenter/Extensions/contents/'.$type.'/'.$name;
+        $url = 'https://api.github.com/repos/Paymenter/Extensions/contents/' . $type . '/' . $name;
         $response = Http::get($url);
         $response = json_decode($response);
-        if(isset($response->message)){
+        if (isset($response->message)) {
             return redirect()->route('admin.extensions')->with('error', 'Extension not found');
         }
-        
-        $path = base_path('app/Extensions/'.$type.'/'.$name);
-        if(!file_exists($path)){
+
+        $path = base_path('app/Extensions/' . $type . '/' . $name);
+        if (!file_exists($path)) {
             mkdir($path, 0777, true);
         } else {
-            if(!$request->get('verify')){
+            if (!$request->get('verify')) {
                 return redirect()->route('admin.extensions')->withInput()->with('verify', true);
             }
         }
-
-        foreach($response as $file){
-            if(strtolower($file->name) !== 'readme.md'){
-                $fileurl = $file->download_url;
-                $filecontent = Http::get($fileurl);
-                $filecontent = $filecontent->body();
-                $path = base_path('app/Extensions/'.$type.'/'.$name.'/'.$file->name);
-                file_put_contents($path, $filecontent);
+        foreach ($response as $file) {
+            if (strtolower($file->name) !== 'readme.md') {
+                $path = base_path('app/Extensions/' . $type . '/' . $name . '/' . $file->name);
+                $this->handleFile($file, $path);
             }
         }
+
         return redirect()->route('admin.extensions')->with('success', 'Extension downloaded successfully');
+    }
+
+    private function handleFile($file, $path)
+    {
+        if ($file->type == 'dir') {
+            if (!file_exists($path)) {
+                mkdir($path, 0777, true);
+            }
+            $response = Http::get($file->url);
+            $response = json_decode($response);
+
+            foreach ($response as $file) {
+                $this->handleFile($file, $path . '/' . $file->name);
+            }
+            return;
+        
+        }
+        $filecontent = Http::get($file->download_url);
+        $filecontent = $filecontent->body();
+        file_put_contents($path, $filecontent);
     }
 
     public function edit($sort, $name)
