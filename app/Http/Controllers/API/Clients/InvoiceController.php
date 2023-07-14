@@ -8,10 +8,10 @@ use App\Models\Invoice;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use App\Helpers\ExtensionHelper;
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\API\Controller;
 use App\Models\Extension;
 
-class InvoiceController extends ClientApiController
+class InvoiceController extends Controller
 {
     /**
      * Get all invoices of current user.

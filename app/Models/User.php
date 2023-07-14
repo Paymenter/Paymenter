@@ -48,6 +48,7 @@ class User extends Authenticatable
         'remember_token',
         'permissions',
         'tfa_secret',
+        'credits',
     ];
 
     /**

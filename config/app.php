@@ -16,6 +16,20 @@ return [
 
     'version' => 'development',
 
+
+    /*
+    |--------------------------------------------------------------------------
+    | Pagination
+    |--------------------------------------------------------------------------
+    |
+    | This value is the default pagination limit for your application. This value
+    | is used when the framework needs to paginate data. You may change this
+    | value as needed to fit the needs of your application.
+    |
+    */
+
+    'pagination' => 25,
+
     /*
     |--------------------------------------------------------------------------
     | Application Name

@@ -6,7 +6,7 @@ use App\Classes\API;
 use App\Models\Ticket;
 use Illuminate\Http\Request;
 use App\Models\TicketMessage;
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\API\Controller;
 use App\Http\Requests\API\TicketRequest;
 use Illuminate\Support\Facades\RateLimiter;
 
@@ -20,29 +20,29 @@ class TicketController extends Controller
         $user = $request->user();
 
         if (!$user->tokenCan('ticket:read')) {
-            return response()->json([
-                'error' => 'You do not have permission to read tickets.',
-            ], 403);
+            return $this->unauthorized('You do not have permission to read tickets.', 403);
         }
 
-        $tickets = $user->tickets()->paginate(25);
+        $tickets = $user->tickets()->paginate(config('app.pagination'));
 
-        return response()->json([
-            'tickets' => API::repaginate($tickets),
-        ], 200);
+        return $this->success('Tickets successfully retrieved.', API::repaginate($tickets));
     }
 
     /**
      * Create a new ticket.
      */
-    public function createTicket(TicketRequest $request)
+    public function createTicket(Request $request)
     {
+        $request->validate([
+            'title' => 'required|max:255',
+            'message' => 'required',
+            'priority' => 'required|in:low,medium,high',
+        ]);
+
         $user = $request->user();
 
         if (!$user->tokenCan('ticket:create')) {
-            return response()->json([
-                'error' => 'You do not have permission to create tickets.',
-            ], 403);
+            return $this->unauthorized('You do not have permission to create tickets.', 403);
         }
 
         $executed = RateLimiter::attempt(
@@ -54,9 +54,7 @@ class TicketController extends Controller
         );
 
         if (!$executed) {
-            return response()->json([
-                'error' => 'You are creating too many new tickets. Please wait a few minutes and try again.',
-            ], 429);
+            return $this->error('You are creating too many tickets. Please wait a few minutes and try again.', 429);
         }
 
         $ticket = new Ticket();
@@ -72,8 +70,7 @@ class TicketController extends Controller
             'user_id' => $user->id,
         ]);
 
-        return response()->json([
-            'message' => 'Ticket was successfully created.',
+        return $this->success('Ticket successfully created.', [
             'ticket' => $ticket,
         ], 201);
     }
@@ -86,16 +83,14 @@ class TicketController extends Controller
         $user = $request->user();
 
         if (!$user->tokenCan('ticket:read')) {
-            return response()->json([
-                'error' => 'You do not have permission to read tickets.',
-            ], 403);
+            return $this->unauthorized('You do not have permission to read tickets.', 403);
         }
 
         $ticket = Ticket::where('user_id', $user->id)->where('id', $ticketId)->firstOrFail();
 
-        return response()->json([
+        return $this->success('Ticket successfully retrieved.', [
             'ticket' => $ticket,
-        ], 200);
+        ]);
     }
 
     /**
@@ -106,18 +101,15 @@ class TicketController extends Controller
         $user = $request->user();
 
         if (!$user->tokenCan('ticket:read')) {
-            return response()->json([
-                'error' => 'You do not have permission to read tickets.',
-            ], 403);
+            $this->unauthorized('You do not have permission to read tickets.', 403);
         }
 
         $ticket = Ticket::where('user_id', $user->id)->where('id', $ticketId)->firstOrFail();
 
-        $messages = $ticket->messages()->with('user')->paginate(25);
+        //Get ticket messages with user id and name 
+        $messages = $ticket->messages()->with('user')->paginate(config('app.pagination'));
 
-        return response()->json([
-            'messages' => API::repaginate($messages),
-        ], 200);
+        return $this->success('Messages successfully retrieved.', API::repaginate($messages));
     }
 
     /**
@@ -126,11 +118,9 @@ class TicketController extends Controller
     public function closeTicket(Request $request, int $ticketId)
     {
         $user = $request->user();
-        
+
         if (!$user->tokenCan('ticket:update')) {
-            return response()->json([
-                'error' => 'You do not have permission to update tickets.',
-            ], 403);
+            return $this->unauthorized('You do not have permission to update tickets.', 403);
         }
 
         $ticket = Ticket::where('user_id', $user->id)->where('id', $ticketId)->firstOrFail();
@@ -138,9 +128,7 @@ class TicketController extends Controller
         $ticket->status = 'closed';
         $ticket->save();
 
-        return response()->json([
-            'message' => "Ticket #{$ticket->id} was successfully closed.}",
-        ], 200);
+        return $this->success('Ticket successfully closed.');
     }
 
     /**
@@ -149,25 +137,19 @@ class TicketController extends Controller
     public function replyTicket(Request $request, int $ticketId)
     {
         $user = $request->user();
-        
-        if (!$user->tokenCan('ticket:update')) {
-            return response()->json([
-                'error' => 'You do not have permission to update tickets.',
-            ], 403);
-        }
 
-        $ticket = Ticket::where('user_id', $user->id)->where('id', $ticketId)->firstOrFail();
+        if (!$user->tokenCan('ticket:update')) {
+            return $this->unauthorized('You do not have permission to update tickets.', 403);
+        }
 
         $request->validate([
             'message' => 'required',
         ]);
 
-        $message = json_decode($request->getContent())->message;
+        $ticket = Ticket::where('user_id', $user->id)->where('id', $ticketId)->firstOrFail();
 
         if ($ticket->status == 'closed') {
-            return response()->json([
-                'error' => 'This ticket is closed and thus cannot be replied to.',
-            ], 403);
+            return $this->error('You cannot reply to a closed ticket.', 403);
         }
 
         $executed = RateLimiter::attempt(
@@ -179,19 +161,15 @@ class TicketController extends Controller
         );
 
         if (!$executed) {
-            return response()->json([
-                'error' => 'You are sending too many messages. Please wait a few minutes and try again.',
-            ], 429);
+            return $this->error('You are sending too many messages. Please wait a few minutes and try again.', 429);
         }
 
         TicketMessage::create([
             'ticket_id' => $ticket->id,
-            'message' => $message,
+            'message' => $request->message,
             'user_id' => $user->id,
         ]);
 
-        return response()->json([
-            'message' => 'Message was successfully added to ticket.',
-        ], 204);
+        return $this->success('Message successfully sent.', [], 201);
     }
 }

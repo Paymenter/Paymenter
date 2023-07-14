@@ -54,13 +54,13 @@ class API
         $data = $data->toArray();
 
         return [
+            'data' => $data['data'],
             'metadata' => [
                 'total_items' => $data['total'],
                 'total_pages' => $data['last_page'],
                 'max_per_page' => $data['per_page'],
                 'item_count' => count($data['data']),
             ],
-            'data' => $data['data'],
         ];
     }
 }
