@@ -21,7 +21,6 @@ class ProductFactory extends Factory
             'description' => fake()->text(),
             'category_id' => fake()->numberBetween(1, 10),
             'image' => fake()->imageUrl(),
-            'extension_id' => fake()->numberBetween(1, 10),
         ];
     }
 }

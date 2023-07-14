@@ -89,7 +89,7 @@ return new class extends Migration
             unset($extensionSetting->extension);
             $extensionSetting->save();
         }
-        
+
         Schema::table('product_price', function (Blueprint $table) {
             $table->dropForeign(['product_id']);
             $table->foreign('product_id')->references('id')->on('products')->onDelete('cascade')->change();
@@ -145,6 +145,5 @@ return new class extends Migration
      */
     public function down()
     {
-        
     }
 };
