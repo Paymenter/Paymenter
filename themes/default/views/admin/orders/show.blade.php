@@ -44,9 +44,9 @@
                 </div>
                 <div class="flex flex-col">
                     <span class="font-bold">{{ __('Client') }}:</span>
-                    <a href="{{ route('admin.clients.edit',$order->client()->get()->first()->id) }}"
+                    <a href="{{ route('admin.clients.edit',$order->user->id) }}"
                         class="text-blue-500 hover:text-blue-700 dark:text-blue-300 dark:hover:text-blue-500">
-                        {{ $order->client()->get()->first()->name }}
+                        {{ $order->user->name }}
                     </a>
                 </div>
             </div>

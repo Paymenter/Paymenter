@@ -665,7 +665,7 @@ function Proxmox_createServer($user, $parmas, $order, $product, $configurableOpt
     $vmid = Proxmox_getRequest('/cluster/nextid')->json()['data'];
 
     // Assign it to the orderProduct for further use
-    ExtensionHelper::setOrderProductConfig('vmid', $vmid, $order->id);
+    ExtensionHelper::setOrderProductConfig('vmid', $vmid, $product->id);
     $postData = [];
 
     $currentConfig = $product->product->settings;

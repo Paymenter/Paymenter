@@ -39,7 +39,7 @@ class TicketController extends Controller
             'title' => $request->get('title'),
             'status' => 'open',
             'priority' => $request->priority,
-            'client' => $request->get('user'),
+            'user_id' => $request->get('user'),
         ]);
         $ticket->save();
 

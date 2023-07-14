@@ -72,7 +72,7 @@
                                             </td>
                                             <td
                                                 class="dark:text-darkmodetext px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                                {{ $service->client()->get()[0]->name }}
+                                                {{ $service->user->name }}
                                             </td>
                                             <td
                                                 class="dark:text-darkmodetext px-6 py-4 whitespace-nowrap text-sm text-gray-500">
@@ -151,7 +151,7 @@
                                             </td>
                                             <td
                                                 class="dark:text-darkmodetext px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                                {{ $service->client()->get()[0]->name }}
+                                                {{ $service->user->name }}
                                             </td>
                                             <td
                                                 class="dark:text-darkmodetext px-6 py-4 whitespace-nowrap text-sm text-gray-500">

@@ -72,7 +72,7 @@ class CronJob extends Command
             $invoice = new \App\Models\Invoice();
             $invoice->order_id = $order->id;
             $invoice->status = 'pending';
-            $invoice->user_id = $order->order()->get()->first()->client;
+            $invoice->user_id = $order->order->user_id;
             $invoice->save();
             $date;
             if ($order->billing_cycle == 'monthly') {
@@ -101,7 +101,7 @@ class CronJob extends Command
             $invoiceItem->total = $order->price;
             $invoiceItem->save();
 
-            NotificationHelper::sendNewInvoiceNotification($invoice, $order->order()->get()->first()->client()->get()->first());
+            NotificationHelper::sendNewInvoiceNotification($invoice, $order->order->user);
             $invoiceProcessed++;
             $this->info('Sended Invoice: ' . $invoice->id);
         }

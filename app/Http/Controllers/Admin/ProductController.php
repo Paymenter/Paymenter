@@ -216,8 +216,8 @@ class ProductController extends Controller
     public function extension(Product $product)
     {
         $extensions = Extension::where('type', 'server')->where('enabled', true)->get();
-        if ($product->server_id != null) {
-            $extension = Extension::findOrFail($product->server_id);
+        if ($product->extension_id != null) {
+            $extension = Extension::findOrFail($product->extension_id);
             $config = [];
             try {
                 $config = ExtensionHelper::getProductConfiguration($product);
@@ -237,16 +237,16 @@ class ProductController extends Controller
     public function extensionUpdate(Request $request, Product $product)
     {
         $data = request()->validate([
-            'server_id' => 'required|integer',
+            'extension_id' => 'required|integer',
         ]);
         // Check if only the server has been changed
-        if ($product->server_id != $request->input('server_id')) {
+        if ($product->extension_id != $request->input('extension_id')) {
             // Delete all product settings
             ProductSetting::where('product_id', $product->id)->delete();
             $product->update($data);
             return redirect()->route('admin.products.extension', $product->id)->with('success', 'Server changed successfully');
         }
-        $extension = Extension::findOrFail($product->server_id);
+        $extension = Extension::findOrFail($product->extension_id);
 
         $config = ExtensionHelper::getProductConfiguration($product);
         $extension->productConfig = $config;
@@ -261,13 +261,13 @@ class ProductController extends Controller
                 [
                     'product_id' => $product->id,
                     'name' => $config->name,
-                    'extension' => $product->server()->get()->first()->id,
+                    'extension' => $product->extension->id,
                 ],
                 [
                     'product_id' => $product->id,
                     'name' => $config->name,
                     'value' => $request->input($config->name),
-                    'extension' => $product->server()->get()->first()->id,
+                    'extension' => $product->extension->id,
                 ]
             );
         }
@@ -277,7 +277,7 @@ class ProductController extends Controller
 
     public function extensionExport(Product $product)
     {
-        $extension = Extension::findOrFail($product->server_id);
+        $extension = Extension::findOrFail($product->extension_id);
         if (!$extension) {
             return view('admin.products.extension', compact('product', 'extensions', 'server', 'extension'))->with('error', 'Extension not found');
         }
@@ -353,8 +353,8 @@ class ProductController extends Controller
 
             return redirect()->route('admin.products.extension', $product->id)->with('error', 'Extension not found');
         }
-        if ($product->server_id != $server->id)
-            $product->update(['server_id' => $server->id]);
+        if ($product->extension_id != $server->id)
+            $product->update(['extension_id' => $server->id]);
 
         include_once base_path('app/Extensions/Servers/' . $server->name . '/index.php');
         $extension = new \stdClass();
@@ -381,13 +381,13 @@ class ProductController extends Controller
                     [
                         'product_id' => $product->id,
                         'name' => $config->name,
-                        'extension' => $product->server()->get()->first()->id,
+                        'extension' => $product->extension->id,
                     ],
                     [
                         'product_id' => $product->id,
                         'name' => $config->name,
                         'value' => $json->config->{$config->name},
-                        'extension' => $product->server()->get()->first()->id,
+                        'extension' => $product->extension->id,
                     ]
                 );
             }

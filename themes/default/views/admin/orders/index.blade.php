@@ -28,7 +28,7 @@
             @foreach ($orders as $order)
                 <tr>
                     <td>{{ $order->id }}</td>
-                    <td>{{ $order->client()->get()->first()->name }}</td>
+                    <td>{{ $order->user->name }}</td>
                     <td>{{ $order->total() }}</td>
                     <td>{{ $order->created_at }}</td>
                     <td>{{ $order->updated_at }}</td>

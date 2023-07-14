@@ -14,7 +14,7 @@ class Product extends Model
         'description',
         'category_id',
         'image',
-        'server_id',
+        'extension_id',
         'stock',
         'stock_enabled',
         'allow_quantity',
@@ -26,9 +26,9 @@ class Product extends Model
         return $this->belongsTo(Category::class);
     }
 
-    public function server()
+    public function extension()
     {
-        return $this->belongsTo(Extension::class, 'server_id');
+        return $this->belongsTo(Extension::class, 'extension_id');
     }
 
     public function settings()
@@ -43,7 +43,8 @@ class Product extends Model
 
     public function price($type = null)
     {
-        $prices = $this->prices()->get()->first();
+        $prices = $this->prices;
+        
         if ($prices->type == 'one-time') {
             if($type == 'setup')
                 return $prices->monthly_setup;

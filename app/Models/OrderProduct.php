@@ -45,10 +45,11 @@ class OrderProduct extends Model
             return $invoiceItem->invoice()->get()->first();
         });
     }
+    
     public function getOpenInvoices()
     {
         return $this->getInvoices()->filter(function ($invoice) {
-            if($invoice->total() == 0)
+            if ($invoice->total() == 0)
                 return false;
             return $invoice->status == 'pending';
         });

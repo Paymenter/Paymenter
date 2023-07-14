@@ -24,7 +24,7 @@
     <div class="ml-10 flex flex-col md:flex-row items-baseline">
         <p class="dark:text-darkmodetext text-gray-600 px-3 rounded-md text-xl md:m-4">
             <strong>{{ __('Client:') }}</strong>
-            {{ $ticket->client()->get()->first()->name }}
+            {{ $ticket->user->name }}
         </p>
         <p class="dark:text-darkmodetext text-gray-600 px-3 rounded-md text-xl md:m-4">
             <strong>{{ __('Product(s):') }}</strong>

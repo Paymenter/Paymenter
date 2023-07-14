@@ -89,7 +89,7 @@
                                             <h1 class="text-xl text-gray-500 dark:text-darkmodetext">Ticket
                                                 #{{ $ticket->id }} by
                                                 <span class="dark:text-darkmodetext">
-                                                    {{ $ticket->client()->get()->first()->name }}
+                                                    {{ $ticket->user->name }}
                                                 </span>
                                             </h1>
                                             <p

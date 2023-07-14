@@ -5,7 +5,7 @@ use App\Helpers\ExtensionHelper;
 
 include_once 'httpsocket.php';
 
-function DirectAdmin_createServer($user, $params, $order)
+function DirectAdmin_createServer($user, $params, $order, $product)
 {
     $host = ExtensionHelper::getConfig('DirectAdmin', 'host');
     $sock = new DAHTTPSocket();
@@ -47,7 +47,7 @@ function DirectAdmin_createServer($user, $params, $order)
 
         return;
     } else {
-        ExtensionHelper::setOrderProductConfig('username', $username, $params['config_id']);
+        ExtensionHelper::setOrderProductConfig('username', $username, $product->id);
     }
 
     return $response;

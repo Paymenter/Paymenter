@@ -39,7 +39,7 @@ class TicketTest extends TestCase
             'title' => 'TEST',
             'status' => 'open',
             'priority' => 'low',
-            'client' => $this->user->id,
+            'user_id' => $this->user->id,
         ]);
 
         $response = $this->actingAs($this->user)->get(route('admin.tickets.show', $ticket));
@@ -70,7 +70,7 @@ class TicketTest extends TestCase
             'title' => 'TEST',
             'status' => 'open',
             'priority' => 'low',
-            'client' => $this->client->id,
+            'user_id' => $this->client->id,
         ]);
     }
 
@@ -85,7 +85,7 @@ class TicketTest extends TestCase
             'title' => 'TEST',
             'status' => 'open',
             'priority' => 'low',
-            'client' => $this->user->id,
+            'user_id' => $this->user->id,
         ]);
 
         $response = $this->actingAs($this->user)->post(route('admin.tickets.status', $ticket), [
@@ -99,7 +99,7 @@ class TicketTest extends TestCase
             'title' => 'TEST',
             'status' => 'closed',
             'priority' => 'low',
-            'client' => $this->user->id,
+            'user_id' => $this->user->id,
         ]);
     }
 
@@ -114,7 +114,7 @@ class TicketTest extends TestCase
             'title' => 'TEST',
             'status' => 'open',
             'priority' => 'low',
-            'client' => $this->user->id,
+            'user_id' => $this->user->id,
         ]);
 
         $response = $this->actingAs($this->user)->post(route('admin.tickets.reply', $ticket), [

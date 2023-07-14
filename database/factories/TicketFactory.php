@@ -19,7 +19,7 @@ class TicketFactory extends Factory
         return [
             'title' => fake()->name(),
             'status' => fake()->randomKey(['open', 'closed', 'pending']),
-            'client' => fake()->numberBetween(1, 10),
+            'user_id' => fake()->numberBetween(1, 10),
             'order_id' => fake()->numberBetween(1, 10),
             'priority' => fake()->randomKey(['low', 'medium', 'high']),
         ];

@@ -187,7 +187,7 @@ function Virtualizor_createServer($user, $params, $order, $product, $configurabl
     }
     // Set server ID
     $server = $output['vs_info']['vpsid'];
-    ExtensionHelper::setOrderProductConfig('external_id', $server, $params['config_id']);
+    ExtensionHelper::setOrderProductConfig('external_id', $server, $product->id);
 
     return true;
 }

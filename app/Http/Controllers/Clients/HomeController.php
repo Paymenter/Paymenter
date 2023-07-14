@@ -16,7 +16,7 @@ class HomeController extends Controller
     public function index(Request $request)
     {
         $user = $request->user();
-        $services = Order::where('client', $user->id)->get();
+        $services = $user->orders;
         $invoices = Invoice::where('user_id', $user->id)->where('status', 'pending')->get();
 
         return view('clients.home', compact('services', 'invoices'));

@@ -62,7 +62,7 @@ class TicketController extends Controller
         $ticket = new Ticket();
         $ticket->title = $request->title;
         $ticket->status = 'open';
-        $ticket->client = $user->id;
+        $ticket->user_id = $user->id;
         $ticket->priority = $request->priority;
         $ticket->save();
 
@@ -91,7 +91,7 @@ class TicketController extends Controller
             ], 403);
         }
 
-        $ticket = Ticket::where('client', $user->id)->where('id', $ticketId)->firstOrFail();
+        $ticket = Ticket::where('user_id', $user->id)->where('id', $ticketId)->firstOrFail();
 
         return response()->json([
             'ticket' => $ticket,
@@ -111,7 +111,7 @@ class TicketController extends Controller
             ], 403);
         }
 
-        $ticket = Ticket::where('client', $user->id)->where('id', $ticketId)->firstOrFail();
+        $ticket = Ticket::where('user_id', $user->id)->where('id', $ticketId)->firstOrFail();
 
         $messages = $ticket->messages()->with('user')->paginate(25);
 
@@ -133,7 +133,7 @@ class TicketController extends Controller
             ], 403);
         }
 
-        $ticket = Ticket::where('client', $user->id)->where('id', $ticketId)->firstOrFail();
+        $ticket = Ticket::where('user_id', $user->id)->where('id', $ticketId)->firstOrFail();
 
         $ticket->status = 'closed';
         $ticket->save();
@@ -156,7 +156,7 @@ class TicketController extends Controller
             ], 403);
         }
 
-        $ticket = Ticket::where('client', $user->id)->where('id', $ticketId)->firstOrFail();
+        $ticket = Ticket::where('user_id', $user->id)->where('id', $ticketId)->firstOrFail();
 
         $request->validate([
             'message' => 'required',

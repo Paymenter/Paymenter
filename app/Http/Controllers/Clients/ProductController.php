@@ -11,10 +11,7 @@ class ProductController extends Controller
 {
     public function index(OrderProduct $product)
     {
-        if(!$product->order()->exists()) {
-            return abort(404, 'Order not found');
-        }
-        if ($product->order()->get()->first()->client != Auth::user()->id) {
+        if ($product->order->user != Auth::user()) {
             return abort(404, 'Order not found');
         }
 
@@ -28,10 +25,7 @@ class ProductController extends Controller
 
     public function show(OrderProduct $product, string $link)
     {
-        if(!$product->order()->exists()) {
-            return abort(404, 'Order not found');
-        }
-        if ($product->order()->get()->first()->client != Auth::user()->id) {
+        if ($product->order->user != Auth::user()) {
             return abort(404, 'Order not found');
         }
         $extensionLink = $link;

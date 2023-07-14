@@ -75,11 +75,11 @@
                 <div class="flex">
                     <select id="server"
                         class="block w-full rounded-md shadow-sm focus:ring-logo focus:border-logo sm:text-sm dark:bg-darkmode"
-                        name="server_id" required onchange="document.getElementById('submitt').disabled = false;">
+                        name="extension_id" required onchange="document.getElementById('submitt').disabled = false;">
                         @if ($extensions->count())
                             <option value="" disabled selected>None</option>
                             @foreach ($extensions as $server)
-                                @if ($server->id == $product->server_id)
+                                @if ($server->id == $product->extension_id)
                                     <option value="{{ $server->id }}" selected>{{ $server->name }}
                                     </option>
                                 @else

@@ -66,8 +66,8 @@ class CheckoutController extends Controller
         if ($product->stock_enabled && $product->stock <= 0) {
             return redirect()->back()->with('error', 'Product is out of stock');
         }
-        if (isset($product->server_id)) {
-            $server = Extension::find($product->server_id);
+        if (isset($product->extension_id)) {
+            $server = $product->extension;
             if ($server) {
                 include_once base_path('app/Extensions/Servers/' . $server->name . '/index.php');
                 $function = $server->name . '_getUserConfig';
@@ -103,7 +103,7 @@ class CheckoutController extends Controller
 
     public function config(Request $request, Product $product)
     {
-        $server = Extension::find($product->server_id);
+        $server = $product->extension;
         if (!$server && $product->prices()->get()->first()->type != 'recurring' && count($product->configurableGroups()) == 0) {
             return redirect()->back()->with('error', 'Config Not Found');
         }
@@ -149,7 +149,7 @@ class CheckoutController extends Controller
 
     public function configPost(Request $request, Product $product)
     {
-        $server = Extension::find($product->server_id);
+        $server = $product->extension;
         $prices = $product->prices()->get()->first();
         if (!$server && $prices->type != 'recurring' && count($product->configurableGroups()) == 0) {
             return redirect()->back()->with('error', 'Config Not Found');
@@ -307,13 +307,12 @@ class CheckoutController extends Controller
 
         $user = User::findOrFail(auth()->user()->id);
         $order = new Order();
-        $order->client = $user->id;
+        $order->user()->associate($user);
         $order->coupon = $coupon->id ?? null;
         $order->save();
 
         $invoice = new Invoice();
-        $invoice->user_id = $user->id;
-        $invoice->order_id = $order->id;
+        $invoice->user()->associate($user);
         if ($total == 0) {
             $invoice->status = 'paid';
         } else {

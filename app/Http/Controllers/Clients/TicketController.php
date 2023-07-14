@@ -9,14 +9,15 @@ use App\Models\Ticket;
 use Illuminate\Http\Request;
 use App\Models\TicketMessage;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\RateLimiter;
 
 class TicketController extends Controller
 {
     public function index(Request $request)
     {
-        $tickets = Ticket::where('client', auth()->user()->id)->get();
-        $users = User::where('id', auth()->user()->id)->get();
+        $user = $request->user();
+        $tickets = $user->tickets()->get();
         $ticketMessages = TicketMessage::all();
         $sort = $request->get('sort');
 
@@ -24,7 +25,7 @@ class TicketController extends Controller
             'clients.tickets.index',
             compact(
                 'tickets',
-                'users',
+                'user',
                 'ticketMessages',
                 'sort'
             )
@@ -33,7 +34,7 @@ class TicketController extends Controller
 
     public function create()
     {
-        $services = Order::where('client', auth()->user()->id)->get();
+        $services = Auth::user()->orders;
 
         return view('clients.tickets.create', compact('services'));
     }
@@ -58,24 +59,24 @@ class TicketController extends Controller
         $ticket = new Ticket();
         $ticket->title = $body['title'];
         $ticket->status = 'open';
-        $ticket->client = $user->id;
+        $ticket->user()->associate($user);
         $ticket->priority = $body['priority'];
         $ticket->save();
 
         $ticketMessage = new TicketMessage();
         $ticketMessage->ticket_id = $ticket->id;
         $ticketMessage->message = $body['description'];
-        $ticketMessage->user_id = $user->id;
+        $ticketMessage->user()->associate($user);
         $ticketMessage->save();
 
         NotificationHelper::sendNewTicketNotification($ticket, $user);
 
-        return redirect('/tickets')->with('success', 'Ticket created successfully');
+        return redirect()->route('clients.tickets.show', $ticket)->with('success', 'Ticket has been created');
     }
 
     public function show(Ticket $ticket)
     {
-        if($ticket->client != auth()->user()->id) {
+        if ($ticket->user_id != Auth::user()->id) {
             return redirect()->back()->with('error', 'You do not have permission to view this ticket.');
         }
         $messages = TicketMessage::where('ticket_id', $ticket->id)->get();
@@ -109,11 +110,11 @@ class TicketController extends Controller
             return redirect()->back()->with('error', 'You are sending too many messages. Please wait a few minutes and try again.');
         }
         RateLimiter::hit("send-message:$user->id");
-        
+
         $ticketMessage = new TicketMessage();
         $ticketMessage->ticket_id = $ticket->id;
         $ticketMessage->message = $body['message'];
-        $ticketMessage->user_id = $user->id;
+        $ticketMessage->user()->associate($user);
         $ticketMessage->save();
 
         $ticket->status = 'open';

@@ -350,10 +350,10 @@ class ExtensionHelper
     {
         $order = $product2->order()->first();
         $product = Product::findOrFail($product2->product_id);
-        if (!isset($product->server_id)) {
+        if (!isset($product->extension_id)) {
             return;
         }
-        $extension = Extension::where('id', $product->server_id)->first();
+        $product->extension;
         if (!$extension) {
             return false;
         }
@@ -366,7 +366,7 @@ class ExtensionHelper
         }
         $config = self::loadConfiguration($product, $product2);
         $configurableOptions = self::loadConfigurableOptions($product2);
-        $user = User::findOrFail($order->client);
+        $user = $order->user;
         try {
             $extensionFunction($user, $config, $order, $product2, $configurableOptions);
         } catch (\Exception $e) {
@@ -378,10 +378,10 @@ class ExtensionHelper
     {
         $order = $product2->order()->first();
         $product = Product::findOrFail($product2->product_id);
-        if (!isset($product->server_id)) {
+        if (!isset($product->extension_id)) {
             return;
         }
-        $extension = Extension::where('id', $product->server_id)->first();
+        $product->extension;
         if (!$extension) {
             return false;
         }
@@ -391,7 +391,7 @@ class ExtensionHelper
         include_once app_path() . '/Extensions/Servers/' . $extension->name . '/index.php';
         $config = self::loadConfiguration($product, $product2);
         $configurableOptions = self::loadConfigurableOptions($product2);
-        $user = User::findOrFail($order->client);
+        $user = $order->user;
         $function = $extension->name . '_suspendServer';
         if (!function_exists($function)) {
             self::error($extension->name, 'Function ' . $function . ' does not exist! (suspendServer)');
@@ -409,10 +409,10 @@ class ExtensionHelper
         $order = $product2->order()->first();
 
         $product = Product::findOrFail($product2->product_id);
-        if (!isset($product->server_id)) {
+        if (!isset($product->extension_id)) {
             return;
         }
-        $extension = Extension::where('id', $product->server_id)->first();
+        $product->extension;
         if (!$extension) {
             return false;
         }
@@ -422,7 +422,7 @@ class ExtensionHelper
         include_once app_path() . '/Extensions/Servers/' . $extension->name . '/index.php';
         $config = self::loadConfiguration($product, $product2);
         $configurableOptions = self::loadConfigurableOptions($product2);
-        $user = User::findOrFail($order->client);
+        $user = $order->user;
         $function = $extension->name . '_unsuspendServer';
         try {
             $function($user, $config, $order, $product2, $configurableOptions);
@@ -436,10 +436,10 @@ class ExtensionHelper
         $order = $product2->order()->first();
 
         $product = Product::findOrFail($product2->product_id);
-        if (!isset($product->server_id)) {
+        if (!isset($product->extension_id)) {
             return;
         }
-        $extension = Extension::where('id', $product->server_id)->first();
+        $product->extension;
         if (!$extension) {
             return false;
         }
@@ -449,7 +449,7 @@ class ExtensionHelper
         include_once app_path() . '/Extensions/Servers/' . $extension->name . '/index.php';
         $config = self::loadConfiguration($product, $product2);
         $configurableOptions = self::loadConfigurableOptions($product2);
-        $user = User::findOrFail($order->client);
+        $user = $order->user;
         $function = $extension->name . '_terminateServer';
         try {
             $function($user, $config, $order, $product2, $configurableOptions);
@@ -463,10 +463,10 @@ class ExtensionHelper
         $order = $product2->order()->first();
 
         $product = Product::findOrFail($product2->product_id);
-        if (!isset($product->server_id)) {
+        if (!isset($product->extension_id)) {
             return false;
         }
-        $extension = Extension::where('id', $product->server_id)->first();
+        $product->extension;
         if (!$extension) {
             return false;
         }
@@ -477,7 +477,7 @@ class ExtensionHelper
         include_once app_path() . '/Extensions/Servers/' . $extension->name . '/index.php';
         $config = self::loadConfiguration($product, $product2);
         $configurableOptions = self::loadConfigurableOptions($product2);
-        $user = User::findOrFail($order->client);
+        $user = $order->user;
         $function = $extension->name . '_getLink';
         if (!function_exists($function)) {
             return false;
@@ -496,10 +496,10 @@ class ExtensionHelper
      */
     public static function getProductConfiguration(Product $product)
     {
-        if (!isset($product->server_id)) {
+        if (!isset($product->extension_id)) {
             return [];
         }
-        $extension = Extension::where('id', $product->server_id)->first();
+        $product->extension;
         if (!$extension) {
             return [];
         }
@@ -534,10 +534,10 @@ class ExtensionHelper
         $order = $product2->order()->first();
 
         $product = Product::findOrFail($product2->product_id);
-        if (!isset($product->server_id)) {
+        if (!isset($product->extension_id)) {
             return [];
         }
-        $extension = Extension::where('id', $product->server_id)->first();
+        $product->extension;
         if (!$extension) {
             return [];
         }
@@ -547,7 +547,7 @@ class ExtensionHelper
         include_once app_path() . '/Extensions/Servers/' . $extension->name . '/index.php';
         $config = self::loadConfiguration($product, $product2);
         $configurableOptions = self::loadConfigurableOptions($product2);
-        $user = User::findOrFail($order->client);
+        $user = $order->user;
         $function = $extension->name . '_getCustomPages';
         if (!function_exists($function)) {
             return [];
@@ -573,7 +573,7 @@ class ExtensionHelper
     {
         $product = Product::findOrFail($product2->product_id);
         $config = self::loadConfiguration($product, $product2);
-        $user = User::findOrFail($product2->order->client);
+        $user = $product2->order->user;
         $configurableOptions = self::loadConfigurableOptions($product2);
 
         return (object) [
@@ -595,7 +595,7 @@ class ExtensionHelper
      */
     public static function hasAccess(OrderProduct $product, User $user)
     {
-        if ($product->order->client == $user->id) {
+        if ($product->order->user == $user->id) {
             return true;
         }
 

@@ -81,12 +81,12 @@ class User extends Authenticatable
 
     public function orders()
     {
-        return $this->hasMany(Order::class, 'client', 'id');
+        return $this->hasMany(Order::class);
     }
 
     public function tickets()
     {
-        return $this->hasMany(Ticket::class, 'client', 'id');
+        return $this->hasMany(Ticket::class);
     }
 
     public function invoices()
@@ -106,7 +106,7 @@ class User extends Authenticatable
      */
     public function orderProducts()
     {
-        return $this->hasManyThrough(OrderProduct::class, Order::class, 'client', 'order_id', 'id', 'id');
+        return $this->hasManyThrough(OrderProduct::class, Order::class, 'user_id', 'order_id', 'id', 'id');
     }
 
     public function has($permission)

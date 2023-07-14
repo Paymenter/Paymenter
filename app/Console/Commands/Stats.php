@@ -32,7 +32,7 @@ class Stats extends Command
      */
     public function handle()
     {
-        if (config('settigns::stats.disabled')) {
+        if (config('settings::stats.disabled')) {
             return;
         }
         $this->info('Posting Stats to Paymenter API');
@@ -46,7 +46,7 @@ class Stats extends Command
         foreach (\App\Models\Extension::where('enabled', 1)->get() as $extension) {
             $extensions[] = [
                 'name' => $extension->name,
-                'count' => \App\Models\Product::where('server_id', $extension->id)->count(),
+                'count' => \App\Models\Product::where('extension_id', $extension->id)->count(),
             ];
         }
         $userCoount = 0;
