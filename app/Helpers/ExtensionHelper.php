@@ -353,7 +353,7 @@ class ExtensionHelper
         if (!isset($product->extension_id)) {
             return;
         }
-        $product->extension;
+        $extension = $product->extension;
         if (!$extension) {
             return false;
         }
@@ -381,7 +381,7 @@ class ExtensionHelper
         if (!isset($product->extension_id)) {
             return;
         }
-        $product->extension;
+        $extension = $product->extension;
         if (!$extension) {
             return false;
         }
@@ -412,7 +412,7 @@ class ExtensionHelper
         if (!isset($product->extension_id)) {
             return;
         }
-        $product->extension;
+        $extension = $product->extension;
         if (!$extension) {
             return false;
         }
@@ -439,7 +439,7 @@ class ExtensionHelper
         if (!isset($product->extension_id)) {
             return;
         }
-        $product->extension;
+        $extension = $product->extension;
         if (!$extension) {
             return false;
         }
@@ -466,7 +466,7 @@ class ExtensionHelper
         if (!isset($product->extension_id)) {
             return false;
         }
-        $product->extension;
+        $extension = $extension = $product->extension;
         if (!$extension) {
             return false;
         }
@@ -499,7 +499,7 @@ class ExtensionHelper
         if (!isset($product->extension_id)) {
             return [];
         }
-        $product->extension;
+        $extension = $product->extension;
         if (!$extension) {
             return [];
         }
@@ -537,7 +537,7 @@ class ExtensionHelper
         if (!isset($product->extension_id)) {
             return [];
         }
-        $product->extension;
+        $extension = $product->extension;
         if (!$extension) {
             return [];
         }

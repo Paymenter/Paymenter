@@ -318,6 +318,7 @@ class CheckoutController extends Controller
         } else {
             $invoice->status = 'pending';
         }
+        $invoice->order()->associate($order);
         $invoice->save();
         foreach ($products as $product) {
             if ($product->allow_quantity == 1)

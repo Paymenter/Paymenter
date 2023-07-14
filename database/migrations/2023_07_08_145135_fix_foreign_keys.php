@@ -89,11 +89,7 @@ return new class extends Migration
             unset($extensionSetting->extension);
             $extensionSetting->save();
         }
-
-        Schema::table('invoices', function (Blueprint $table) {
-            $table->dropColumn('order_id');
-        });
-
+        
         Schema::table('product_price', function (Blueprint $table) {
             $table->dropForeign(['product_id']);
             $table->foreign('product_id')->references('id')->on('products')->onDelete('cascade')->change();

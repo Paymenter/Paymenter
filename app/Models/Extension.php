@@ -18,7 +18,7 @@ class Extension extends Model
 
     public function getConfig()
     {
-        return $this->hasMany(ExtensionSetting::class, 'extension', 'id');
+        return $this->hasMany(ExtensionSetting::class);
     }
 
     public function getServer()
