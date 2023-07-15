@@ -15,10 +15,9 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        $schedule->command('CronJob:run')->everyMinute();
+        $schedule->command('p:cronjob')->everyMinute();
         $this->registerStatsCommand();
-        $schedule->command('stats:run')->daily()->at(config('settings::stats.runAt'));
-
+        $schedule->command('p:stats')->daily()->at(config('settings::stats.runAt'));
     }
 
     /**
@@ -33,7 +32,7 @@ class Kernel extends ConsoleKernel
 
     protected function registerStatsCommand()
     {
-        if(!config('settings::stats.runAt')) {
+        if (!config('settings::stats.runAt')) {
             Setting::updateOrCreate(['key' => 'stats.runAt'], ['value' => rand(0, 23) . ':' . rand(0, 59)]);
         }
     }

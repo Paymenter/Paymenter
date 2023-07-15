@@ -19,7 +19,7 @@ class CronJob extends Command
      *
      * @var string
      */
-    protected $signature = 'cronjob:run';
+    protected $signature = 'p:cronjob';
 
     /**
      * The console command description.

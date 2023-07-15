@@ -95,33 +95,6 @@ class ExtensionHelper
         }
     }
 
-    /**
-     * Called when a payment is failed.
-     *
-     * @param int $id ID of the order
-     *
-     * @return void
-     */
-    public function paymentFailed($id)
-    {
-        $order = Order::findOrFail($id);
-        $order->status = 'failed';
-        $order->save();
-    }
-
-    /**
-     * Called when a payment is cancelled.
-     *
-     * @param int $id ID of the order
-     *
-     * @return void
-     */
-    public function paymentCancelled($id)
-    {
-        $order = Order::find($id);
-        $order->status = 'cancelled';
-        $order->save();
-    }
 
     /**
      * Called when you got a error.
@@ -141,7 +114,7 @@ class ExtensionHelper
      * Called when a new order is accepted
      * ```php
      * ExtensionHelper::getConfig('paymenter', 'paymenter');
-     * ```.
+     * ```
      *
      * @param string $name Name of the extension
      * @param string $key Name of the config
@@ -174,7 +147,7 @@ class ExtensionHelper
      * Sets the config of an extension
      * ```php
      * ExtensionHelper::setConfig('paymenter', 'paymenter', 'paypal');
-     * ```.
+     * ```
      *
      * @param string $name Name of the extension
      * @param string $key Name of the config
@@ -208,6 +181,11 @@ class ExtensionHelper
         }
     }
 
+    /**
+     * Get the currency
+     * 
+     * @return string
+     */
     public static function getCurrency()
     {
         return config('settings::currency') ?? 'USD';
@@ -259,6 +237,16 @@ class ExtensionHelper
         }
     }
 
+    /**
+     * Get link to redirect the user to for payment
+     * 
+     * @param int $id ID of the extension
+     * @param int $total Total price
+     * @param array $products Array of products
+     * @param int $orderId ID of the order
+     * 
+     * @return string
+     */
     public static function getPaymentMethod($id, $total, $products, $orderId)
     {
         $extension = Extension::where('id', $id)->first();
@@ -275,6 +263,14 @@ class ExtensionHelper
         return $pay;
     }
 
+    /**
+     * Redirect to payment url, when a user adds credits
+     * 
+     * @param Extension $extension
+     * @param Invoice $invoice
+     * 
+     * @return string
+     */
     public static function addCredits(Extension $extension, Invoice $invoice)
     {
         if (!$extension) {
@@ -286,6 +282,8 @@ class ExtensionHelper
         include_once app_path() . '/Extensions/Gateways/' . $extension->name . '/index.php';
         $total = $invoice->credits;
         $function = $extension->name . '_pay';
+
+        // We fake a product, so we can use the same function as for products
         $product = new Product();
         $product->name = 'Credits';
         $product->description = 'Credits';
@@ -317,6 +315,14 @@ class ExtensionHelper
         return $config;
     }
 
+
+    /**
+     * Load configurable options by product
+     * 
+     * @param OrderProduct $product2
+     * 
+     * @return array
+     */
     public static function loadConfigurableOptions(OrderProduct $product2)
     {
         $configurableOptions = [];
@@ -336,6 +342,11 @@ class ExtensionHelper
         return $configurableOptions;
     }
 
+    /**
+     * Get all gateways
+     * 
+     * @return array
+     */
     public static function getGateways()
     {
         $gateways = [];
@@ -458,6 +469,13 @@ class ExtensionHelper
         }
     }
 
+    /**
+     * Get a (login) link for the client and admin area
+     * 
+     * @param OrderProduct $product
+     * 
+     * @return string
+     */
     public static function getLink(OrderProduct $product2)
     {
         $order = $product2->order()->first();
@@ -595,7 +613,7 @@ class ExtensionHelper
      */
     public static function hasAccess(OrderProduct $product, User $user)
     {
-        if ($product->order->user == $user->id) {
+        if ($product->order->user == $user) {
             return true;
         }
 
