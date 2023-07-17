@@ -15,7 +15,10 @@ class Invoice extends Model
         'status',
         'paid_at',
         'due_date',
-        'total',
+    ];
+
+    protected $hidden = [
+        'credits',
     ];
 
     public function setStatusAttribute($value)
