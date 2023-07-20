@@ -28,7 +28,7 @@ class HasApiPermission
         }
 
         // Additional check if the user role has also the api permission
-        if (strpos($request->route()->uri, 'api/admin') == false) {
+        if (strpos($request->route()->uri, 'api/admin') !== false) {
             if (!API::hasPermission($user, $permission)) {
                 return response()->json([
                     'success' => false,
