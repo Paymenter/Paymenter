@@ -143,6 +143,9 @@ function VirtFusion_suspendServer($user, $params, $order)
 {
     $apikey = ExtensionHelper::getConfig('VirtFusion', 'apikey');
     $host = ExtensionHelper::getConfig('VirtFusion', 'host');
+    if (!isset($params['config']['server_id'])) {
+        return;
+    }
     $server = $params['config']['server_id'];
 
     $response = Http::withHeaders([
@@ -167,6 +170,9 @@ function VirtFusion_unsuspendServer($user, $params, $order)
 {
     $apikey = ExtensionHelper::getConfig('VirtFusion', 'apikey');
     $host = ExtensionHelper::getConfig('VirtFusion', 'host');
+    if (!isset($params['config']['server_id'])) {
+        return;
+    }
     $server = $params['config']['server_id'];
 
     $response = Http::withHeaders([
@@ -191,6 +197,9 @@ function VirtFusion_terminateServer($user, $params, $order)
 {
     $apikey = ExtensionHelper::getConfig('VirtFusion', 'apikey');
     $host = ExtensionHelper::getConfig('VirtFusion', 'host');
+    if (!isset($params['config']['server_id'])) {
+        return;
+    }
     $server = $params['config']['server_id'];
 
     $response = Http::withHeaders([
@@ -215,6 +224,9 @@ function VirtFusion_getCustomPages($user, $params, $order, $product, $configurab
 {
     $apikey = ExtensionHelper::getConfig('VirtFusion', 'apikey');
     $host = ExtensionHelper::getConfig('VirtFusion', 'host');
+    if (!isset($params['config']['server_id'])) {
+        return;
+    }
     $server = $params['config']['server_id'];
 
     $response = Http::withHeaders([
@@ -241,9 +253,12 @@ function VirtFusion_getCustomPages($user, $params, $order, $product, $configurab
 }
 
 function VirtFusion_getLink($user, $params, $order, $product, $configurableOptions)
-{ 
+{
     $apikey = ExtensionHelper::getConfig('VirtFusion', 'apikey');
     $host = ExtensionHelper::getConfig('VirtFusion', 'host');
+    if (!isset($params['config']['server_id'])) {
+        return;
+    }
     $server = $params['config']['server_id'];
 
     $response = Http::withHeaders([
@@ -257,9 +272,10 @@ function VirtFusion_getLink($user, $params, $order, $product, $configurableOptio
 }
 
 
-function VirtFusion_login(OrderProduct $id, Request $request) {
+function VirtFusion_login(OrderProduct $id, Request $request)
+{
 
-    if(!ExtensionHelper::hasAccess($id, auth()->user())){
+    if (!ExtensionHelper::hasAccess($id, auth()->user())) {
         return response()->json(['error' => 'You do not have access to this server'], 403);
     }
     $params = ExtensionHelper::getParameters($id)->config;

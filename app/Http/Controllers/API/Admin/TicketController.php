@@ -4,9 +4,10 @@ namespace App\Http\Controllers\API\Admin;
 
 use App\Classes\API;
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\API\Controller;
 use App\Models\Ticket;
 use App\Models\TicketMessage;
+use App\Models\User;
 
 class TicketController extends Controller
 {
@@ -17,19 +18,9 @@ class TicketController extends Controller
      */
     public function getTickets(Request $request)
     {
-        $user = $request->user();
-
-        if (!$user->tokenCan('admin:ticket:read')) {
-            return response()->json([
-                'error' => 'You do not have permission to read tickets.',
-            ], 403);
-        }
-
         $tickets = Ticket::paginate(25);
 
-        return response()->json([
-            'tickets' => API::repaginate($tickets),
-        ], 200);
+        return $this->success('Tickets successfully retrieved.', API::repaginate($tickets));
     }
 
     /**
@@ -39,19 +30,25 @@ class TicketController extends Controller
      */
     public function getTicket(Request $request, int $ticketId)
     {
-        $user = $request->user();
-
-        if (!$user->tokenCan('admin:ticket:read')) {
-            return response()->json([
-                'error' => 'You do not have permission to read tickets.',
-            ], 403);
-        }
-
         $ticket = Ticket::where('id', $ticketId)->firstOrFail();
 
-        return response()->json([
+        return $this->success('Ticket successfully retrieved.', [
             'ticket' => $ticket,
-        ], 200);
+        ]);
+    }
+
+    /**
+     * Get ticket messages by ticket ID.
+     * 
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getTicketMessages(Request $request, int $ticketId)
+    {
+        $ticket = Ticket::where('id', $ticketId)->firstOrFail();
+
+        $messages = $ticket->messages()->paginate(25);
+
+        return $this->success('Ticket messages successfully retrieved.', API::repaginate($messages));
     }
 
     /**
@@ -61,62 +58,50 @@ class TicketController extends Controller
      */
     public function createTicket(Request $request)
     {
-        $user = $request->user();
-
-        if (!$user->tokenCan('admin:ticket:create')) {
-            return response()->json([
-                'error' => 'You do not have permission to create tickets.',
-            ], 403);
-        }
-
         $request->validate([
             'title' => 'required',
             'message' => 'required',
             'priority' => 'required',
-            'user_id' => 'required',
+            'user_id' => 'required|exists:users,id',
         ]);
 
-        $body = json_decode($request->getContent());
-
         $ticket = Ticket::create([
-            'title' => $body->title,
-            'priority' => $body->priority,
-            'user_id' => $body->user_id,
+            'title' => $request->title,
+            'priority' => $request->priority,
+            'user_id' => $request->user_id,
+            'status' => 'open',
         ]);
 
         TicketMessage::create([
             'ticket_id' => $ticket->id,
-            'message' => $body->message,
-            'user_id' => $user->id,
+            'message' => $request->message,
+            'user_id' => $request->user()->id,
         ]);
 
-        return response()->json([
-            'message' => "Ticket #{$ticket->id} was successfully created.",
-        ], 200);
+        return $this->success('Ticket successfully created.', [
+            'ticket' => $ticket,
+        ]);
     }
+
     /**
-     * Close a ticket by ID.
+     * Update ticket status.
      * 
      * @return \Illuminate\Http\JsonResponse
      */
-    public function closeTicket(Request $request, int $ticketId)
+    public function updateTicketStatus(Request $request, int $ticketId)
     {
-        $user = $request->user();
-        
-        if (!$user->tokenCan('admin:ticket:update')) {
-            return response()->json([
-                'error' => 'You do not have permission to update tickets.',
-            ], 403);
-        }
+        $request->validate([
+            'status' => 'required|in:open,closed',
+        ]);
 
         $ticket = Ticket::where('id', $ticketId)->firstOrFail();
 
-        $ticket->status = 'closed';
+        $ticket->status = $request->status;
         $ticket->save();
 
-        return response()->json([
-            'message' => "Ticket #{$ticket->id} was successfully closed.",
-        ], 200);
+        return $this->success('Ticket status successfully updated.', [
+            'ticket' => $ticket,
+        ]);
     }
 
     /**
@@ -127,12 +112,6 @@ class TicketController extends Controller
     public function replyTicket(Request $request, int $ticketId)
     {
         $user = $request->user();
-        
-        if (!$user->tokenCan('admin:ticket:update')) {
-            return response()->json([
-                'error' => 'You do not have permission to update tickets.',
-            ], 403);
-        }
 
         $ticket = Ticket::where('id', $ticketId)->firstOrFail();
 
@@ -143,9 +122,7 @@ class TicketController extends Controller
         $message = json_decode($request->getContent())->message;
 
         if ($ticket->status == 'closed') {
-            return response()->json([
-                'error' => 'This ticket is closed and thus cannot be replied to.',
-            ], 403);
+            return $this->error('You cannot reply to a closed ticket.', 403);
         }
 
         TicketMessage::create([
@@ -154,8 +131,8 @@ class TicketController extends Controller
             'user_id' => $user->id,
         ]);
 
-        return response()->json([
-            'message' => 'Message was successfully added to ticket.',
-        ], 204);
+        return $this->success('Ticket successfully replied to.', [
+            'ticket' => $ticket,
+        ]);
     }
 }

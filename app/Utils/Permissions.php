@@ -69,7 +69,7 @@ class Permissions extends BitField
         parent::__construct($bits);
     }
 
-    /**|
+    /**
      * Check if permission flag equals bit-field
      *
      * @param string $permission

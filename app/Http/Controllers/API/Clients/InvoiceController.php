@@ -22,11 +22,7 @@ class InvoiceController extends Controller
     {
         $user = $request->user();
 
-        if (!$user->tokenCan('invoice:read')) {
-            return $this->error('You do not have permission to read invoices.', 403);
-        }
-
-        $invoices = $user->invoices()->paginate(25);
+        $invoices = $user->invoices()->where('credits', null)->paginate(25);
         return $this->success('Invoices successfully retrieved.', API::repaginate($invoices));
     }
 
@@ -60,30 +56,38 @@ class InvoiceController extends Controller
         $user = $request->user();
 
         $request->validate([
-            'payment_method' => 'required|exists:extensions,name',
+            'payment_method' => 'required|string',
         ]);
-
-        if (!$user->tokenCan('invoice:update')) {
-            return $this->error('You do not have permission to update invoices.', 403);
-        }
 
         $invoice = Invoice::where('id', $invoiceId)->where('user_id', $user->id)->firstOrFail();
 
         if ($invoice->status == 'paid') {
-            return response()->json([
-                'error' => 'Invoice is already paid',
-            ], 400);
-        }
-
-        $payment_method = Extension::where('type', 'gateway')->where('name', $request->get('payment_method'))->first();
-
-        if (!$payment_method->enabled) {
-            return $this->error('Payment method is not enabled.', 400);
+            return $this->error('Invoice already paid.', 400);
         }
 
         $productsAndTotal = $invoice->getItemsWithProducts();
         $total = $productsAndTotal->total;
         $products = $productsAndTotal->products;
+        $payment_method = $request->get('payment_method');
+
+        if ($payment_method == 'credits') {
+            if ($user->credits < $total) {
+                return $this->error('You do not have enough credits.', 400);
+            }
+            $user->credits = $user->credits - $total;
+            $user->save();
+            $invoice->status = 'paid';
+            $invoice->save();
+            return $this->success('Invoice successfully paid.', [
+                'invoice' => $invoice,
+            ]);
+        }
+
+        $payment_method = Extension::where('type', 'gateway')->where('name', $payment_method)->first();
+
+        if (!$payment_method || !$payment_method->enabled) {
+            return $this->error('Payment method is not enabled.', 400);
+        }
 
         $payment_method = ExtensionHelper::getPaymentMethod($payment_method->id, $total, $products, $invoice->id);
 

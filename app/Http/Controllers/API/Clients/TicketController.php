@@ -19,10 +19,6 @@ class TicketController extends Controller
     {
         $user = $request->user();
 
-        if (!$user->tokenCan('ticket:read')) {
-            return $this->unauthorized('You do not have permission to read tickets.', 403);
-        }
-
         $tickets = $user->tickets()->paginate(config('app.pagination'));
 
         return $this->success('Tickets successfully retrieved.', API::repaginate($tickets));
@@ -40,10 +36,6 @@ class TicketController extends Controller
         ]);
 
         $user = $request->user();
-
-        if (!$user->tokenCan('ticket:create')) {
-            return $this->unauthorized('You do not have permission to create tickets.', 403);
-        }
 
         $executed = RateLimiter::attempt(
             'create-ticket:' . $user->id,
@@ -82,10 +74,6 @@ class TicketController extends Controller
     {
         $user = $request->user();
 
-        if (!$user->tokenCan('ticket:read')) {
-            return $this->unauthorized('You do not have permission to read tickets.', 403);
-        }
-
         $ticket = Ticket::where('user_id', $user->id)->where('id', $ticketId)->firstOrFail();
 
         return $this->success('Ticket successfully retrieved.', [
@@ -99,10 +87,6 @@ class TicketController extends Controller
     public function getMessages(Request $request, int $ticketId)
     {
         $user = $request->user();
-
-        if (!$user->tokenCan('ticket:read')) {
-            $this->unauthorized('You do not have permission to read tickets.', 403);
-        }
 
         $ticket = Ticket::where('user_id', $user->id)->where('id', $ticketId)->firstOrFail();
 
@@ -119,10 +103,6 @@ class TicketController extends Controller
     {
         $user = $request->user();
 
-        if (!$user->tokenCan('ticket:update')) {
-            return $this->unauthorized('You do not have permission to update tickets.', 403);
-        }
-
         $ticket = Ticket::where('user_id', $user->id)->where('id', $ticketId)->firstOrFail();
 
         $ticket->status = 'closed';
@@ -137,10 +117,6 @@ class TicketController extends Controller
     public function replyTicket(Request $request, int $ticketId)
     {
         $user = $request->user();
-
-        if (!$user->tokenCan('ticket:update')) {
-            return $this->unauthorized('You do not have permission to update tickets.', 403);
-        }
 
         $request->validate([
             'message' => 'required',

@@ -70,7 +70,7 @@ class CronJob extends Command
             }
 
             $invoice = new \App\Models\Invoice();
-            $invoice->order_id = $order->id;
+            $invoice->order_id = $order->order->id;
             $invoice->status = 'pending';
             $invoice->user_id = $order->order->user_id;
             $invoice->save();

@@ -2,6 +2,8 @@
 
 namespace App\Classes;
 
+use App\Utils\Permissions;
+
 class API
 {
     /**
@@ -23,7 +25,7 @@ class API
         'api:delete',
         'api:update',
     ];
-    
+
     /**
      * All available admin API permissions.
      * 
@@ -43,6 +45,35 @@ class API
         'admin:api:delete',
         'admin:api:update',
     ];
+
+
+    public static $adminPermissionsDifference = [
+        'admin:ticket:read' => 'VIEW_TICKETS',
+        'admin:ticket:create' => 'CREATE_TICKETS',
+        'admin:ticket:delete' => 'DELETE_TICKETS',
+        'admin:ticket:update' => 'EDIT_TICKETS',
+        'admin:invoice:read' => 'VIEW_INVOICES',
+        'admin:invoice:create' => 'CREATE_INVOICES',
+        'admin:invoice:delete' => 'DELETE_INVOICES',
+        'admin:invoice:update' => 'EDIT_INVOICES',
+        'admin:api:read' => 'VIEW_APIS',
+        'admin:api:create' => 'CREATE_APIS',
+        'admin:api:delete' => 'DELETE_APIS',
+        'admin:api:update' => 'UPDATE_APIS',
+    ];
+
+    /** 
+     * Check if user has permission.
+     * 
+     * @return bool
+     */
+    public static function hasPermission($user, $permission)
+    {
+        $permission = self::$adminPermissionsDifference[$permission];
+        $permissions = new Permissions($user->role->permissions);
+        return $permissions->has($permission);
+    }
+
 
     /**
      * Repaginate the data for API.

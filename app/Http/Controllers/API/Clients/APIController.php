@@ -26,10 +26,6 @@ class APIController extends Controller
         $user = $request->user();
         $body = $request->json()->all();
 
-        if (!$user->tokenCan('api:create')) {
-            return $this->unauthorized('You do not have permission to create API tokens.');
-        }
-
         return response()->json([
             'token' => $user->createToken($body['tokenName'], $body['permissions'])->plainTextToken,
         ], 201);
