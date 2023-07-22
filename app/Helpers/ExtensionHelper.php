@@ -26,7 +26,7 @@ class ExtensionHelper
      *
      * @return void
      */
-    public static function paymentDone($id)
+    public static function paymentDone($id, $paymentMethod = 'manual', $paymentReference = null)
     {
         $invoice = Invoice::findOrFail($id);
 
@@ -42,6 +42,8 @@ class ExtensionHelper
         }
 
         $invoice->status = 'paid';
+        $invoice->paid_with = $paymentMethod;
+        $invoice->paid_reference = $paymentReference;
         $invoice->paid_at = now();
         $invoice->save();
 

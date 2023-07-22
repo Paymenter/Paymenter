@@ -2,19 +2,19 @@
     <x-slot name="title">
         {{ __('Invoices') }}
     </x-slot>
-    <h1 class="text-center text-2xl font-bold">{{ __('Invoices') }}</h1>
+    <h1 class="text-center text-2xl font-bold">{{ __('Invoice') }} #{{ $invoice->id }}</h1>
     <!-- Show single invoice -->
     <div class="mt-6 text-gray-500 dark:text-darkmodetext">
         <div class="flex flex-col">
             <div class="flex flex-row justify-between">
                 <div class="flex flex-col">
                     <span class="font-bold">{{ __('Total') }}:</span>
-                    <span>{{ config('settings::currency_sign') }}{{ $invoice->total() }}</span>
+                    <span>{{ config('settings::currency_sign') }}{{ $total }}</span>
                 </div>
             </div>
             <div class="flex flex-row justify-between">
                 <div class="flex flex-col">
-                    <span class="font-bold">{{ __('Created') }}:</span>
+                    <span class="font-bold">{{ __('Invoice Date') }}:</span>
                     <span>{{ $invoice->created_at }}</span>
                 </div>
                 <div class="flex flex-col">
@@ -25,28 +25,67 @@
             <div class="flex flex-row justify-between">
                 <div class="flex flex-col">
                     <span class="font-bold">{{ __('Status') }}:</span>
-                    <span>{{ $invoice->status }}</span>
+                    <span> {{ $invoice->status }}</span>
                 </div>
                 <div class="flex flex-col">
                     <span class="font-bold">{{ __('Client') }}:</span>
-                    <a href="{{ route('admin.clients.edit', $invoice->user()->get()->first()->id) }}">
-                        {{ $invoice->user()->get()->first()->name }}
+                    <a href="{{ route('admin.clients.edit', $invoice->user->id) }}"
+                        class="text-blue-500 underline underline-offset-2">
+                        {{ $invoice->user->name }}
                     </a>
                 </div>
             </div>
-            <div class="flex flex-row justify-between">
-                <div class="flex flex-col">
-                    <span class="font-bold">{{ __('Mark as paid') }}:</span>
-                    <span>
-                        <form action="{{ route('admin.invoices.paid', $invoice->id) }}" method="POST">
-                            @csrf
-                            <button type="submit" class="form-submit">
+            @if ($invoice->status !== 'paid')
+                <div class="flex flex-row justify-between mt-3">
+                    <div class="flex flex-col">
+                        <span>
+                            <button class="button button-primary" data-modal-target="{{ $invoice->id }}"
+                                data-modal-toggle="{{ $invoice->id }}">
                                 {{ __('Mark as paid') }}
                             </button>
-                        </form>
-                    </span>
+                        </span>
+                    </div>
                 </div>
-            </div>
+                <form action="{{ route('admin.invoices.paid', $invoice->id) }}" method="POST">
+                <x-modal :id="$invoice->id" title="Marking invoice {{ $invoice->id }} as paid">
+                        @csrf
+                        <x-input type="select" name="paid_with" label="Payment Method">
+                            @foreach (App\Models\Extension::where('type', 'gateway')->where('enabled', true)->get() as $extension)
+                                <option value="{{ $extension->name }}">{{ $extension->name }}</option>
+                            @endforeach
+                            <option value="manual">{{ __('Manual') }}</option>
+                        </x-input>
+
+                        <x-input type="text" name="paid_reference" label="Reference" />
+
+                        <x-slot name="footer">
+                            <button class="button button-primary float-right"  type="submit">
+                                {{ __('Mark as paid') }}
+                            </button>
+                        </x-slot>
+                    </x-modal>
+                </form>
+            @else
+                <div class="flex flex-row justify-between mt-3">
+                    <div class="flex flex-col">
+                        <span class="font-bold">{{ __('Paid At') }}:</span>
+                        <span>{{ $invoice->paid_at }}</span>
+                    </div>
+                </div>
+                <div class="flex flex-row justify-between mt-3">
+                    <div class="flex flex-col">
+                        <span class="font-bold">{{ __('Payment Method') }}:</span>
+                        <span>{{ $invoice->paid_with }}</span>
+                    </div>
+                    @isset($invoice->paid_reference)
+                        <div class="flex flex-col">
+                            <span class="font-bold">{{ __('Reference') }}:</span>
+                            <span>{{ $invoice->paid_reference }}</span>
+                        </div>
+                    @endisset
+                </div>
+            @endif
+
         </div>
     </div>
     <!-- Items -->
@@ -56,7 +95,7 @@
                 <th>{{ __('ID') }}</th>
                 <th>{{ __('Name') }}</th>
                 <th>{{ __('Price') }}</th>
-                <th>{{ __('Discount')}} </th>
+                <th>{{ __('Discount') }} </th>
                 <th>{{ __('Assigned Order') }}</th>
             </tr>
         </thead>
@@ -64,12 +103,13 @@
             @foreach ($products as $item)
                 <tr>
                     <td>{{ $item->id }}</td>
-                    <td>{{ $item->description }}</td>
+                    <td>{{ $item->name }}</td>
                     <td>{{ config('settings::currency_sign') }}{{ $item->price }}</td>
                     <td>{{ config('settings::currency_sign') }}{{ $item->discount }}</td>
                     <td>
                         @isset($item->order)
-                            <a href="{{ route('admin.orders.show', $item->order->id) }}">
+                            <a href="{{ route('admin.orders.show', $item->order->id) }}"
+                                class="text-primary-400 underline underline-offset-2">
                                 {{ $item->order->id }}
                             </a>
                         @endisset

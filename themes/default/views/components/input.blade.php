@@ -105,7 +105,7 @@
             @error($name) border-danger-300 focus:border-danger-400 focus:ring-danger-300 @else border-secondary-300 focus:border-secondary-400 focus:ring-primary-400 @enderror">
         </div>
         @error($name)
-            <label for={{ $id }} class="text-sm text-danger-300">{{ $message }}</label>
+            <label for={{ $id ?? $name }} class="text-sm text-danger-300">{{ $message }}</label>
         @enderror
     </div>
 @endif

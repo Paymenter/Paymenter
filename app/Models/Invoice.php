@@ -14,6 +14,9 @@ class Invoice extends Model
         'order_id',
         'status',
         'paid_at',
+        'paid_with',
+        // Reference is used to store the transaction ID from the payment gateway
+        'paid_reference',
         'due_date',
     ];
 
@@ -61,14 +64,14 @@ class Invoice extends Model
         $total = 0;
         foreach ($this->items as $item) {
             if ($item->product_id) {
-                $product = $item->product()->get()->first();
-                $order = $product->order()->get()->first();
-                $coupon = $order->coupon()->get()->first();
+                $product = $item->product;
+                $order = $product->order;
+                $coupon = $order->coupon;
                 if ($coupon) {
                     if ($coupon->time == 'onetime') {
-                        $invoices = $order->invoices()->get();
+                        $invoices = $order->invoices;
                         if ($invoices->count() == 1) {
-                            $coupon = $order->coupon()->get()->first();
+                            $coupon = $order->coupon;
                         } else {
                             $coupon = null;
                         }
@@ -83,7 +86,7 @@ class Invoice extends Model
                         $coupon = null;
                     }
                 }
-                $productId = $product->product()->get()->first();
+                $productId = $product->product;
                 if ($coupon) {
                     if (!empty($coupon->products)) {
                         if (!in_array($productId->id, $coupon->products)) {

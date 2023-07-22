@@ -60,7 +60,7 @@ function Stripe_webhook($request)
     if ($event->type == 'checkout.session.completed') {
         $order = $event->data->object;
         $order_id = $order->metadata->order_id;
-        ExtensionHelper::paymentDone($order_id);
+        ExtensionHelper::paymentDone($order_id, 'Stripe', $order->payment_intent);
     }
 }
 

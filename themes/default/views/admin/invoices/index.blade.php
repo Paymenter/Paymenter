@@ -22,7 +22,7 @@
             @foreach ($invoices as $invoice)
                 <tr>
                     <td>{{ $invoice->id }}</td>
-                    <td>{{ $invoice->user()->get()->first()->name }}</td>
+                    <td>{{ $invoice->user->name }}</td>
                     <td>{{ $invoice->total() }}</td>
                     <td>{{ $invoice->status }}</td>
                     <td>{{ $invoice->created_at }}</td>
