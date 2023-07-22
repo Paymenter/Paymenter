@@ -40,7 +40,7 @@ function Mollie_webhook($request)
     ])->get($url);
     if ($response->json()['status'] == 'paid') {
         $orderId = $response->json()['metadata']['order_id'];
-        ExtensionHelper::paymentDone($orderId);
+        ExtensionHelper::paymentDone($orderId, 'Mollie');
     }
 
     return $response->json();

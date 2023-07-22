@@ -76,7 +76,7 @@ function PayPal_webhook($request)
         $data = json_decode($body, true);
         if ($data['event_type'] == 'CHECKOUT.ORDER.APPROVED') {
             $orderId = $data['resource']['purchase_units'][0]['reference_id'];
-            ExtensionHelper::paymentDone($orderId);
+            ExtensionHelper::paymentDone($orderId, 'PayPal', $data['resource']['id'] ?? null);
         }
     }
 }

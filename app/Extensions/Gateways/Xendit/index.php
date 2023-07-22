@@ -34,8 +34,8 @@ function Xendit_webhook($request)
     }
     $json = $request->getContent();
     $json = json_decode($json, true);
-    ExtensionHelper::paymentDone($json['external_id']);
-    response()->json(['message' => 'Webhook received'], 200);
+    ExtensionHelper::paymentDone($json['external_id'], 'Xendit');
+    return response()->json(['message' => 'Webhook received'], 200);
 }
 
 function Xendit_getConfig()
