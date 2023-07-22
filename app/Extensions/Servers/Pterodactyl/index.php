@@ -150,21 +150,6 @@ function Pterodactyl_getProductConfig()
             'required' => true,
             'description' => 'How many ports the user can allocate. Must be at least one.',
         ],
-
-        [
-            'name' => 'ram_times_x_is_storage',
-            'friendlyName' => 'Pterodactyl RAM x Storage',
-            'type' => 'number',
-            'required' => true,
-            'description' => 'How many times the RAM is the storage. For example, if the RAM is 1024 and this value is 2, the storage will be 2048.',
-        ],
-        [
-            'name' => 'ram_times_x_is_cpu',
-            'friendlyName' => 'Pterodactyl RAM x CPU',
-            'type' => 'number',
-            'required' => true,
-            'description' => 'How many times the RAM is the CPU. For example, if the RAM is 1024 and this value is 2, the CPU will be 2048.',
-        ],
     ];
 }
 
@@ -239,11 +224,6 @@ function Pterodactyl_createServer($user, $parmas, $order, $product, $configurabl
     $backups = isset($configurableOptions['backups']) ? $configurableOptions['backups'] : $parmas['backups'];
     $startup = isset($configurableOptions['startup']) ? $configurableOptions['startup'] : $eggData['attributes']['startup'];
     $node = isset($configurableOptions['node']) ? $configurableOptions['node'] : $parmas['node'];
-    $ram_times_x_is_storage = isset($configurableOptions['ram_times_x_is_storage']) ? $configurableOptions['ram_times_x_is_storage'] : $parmas['ram_times_x_is_storage'];
-    $ram_times_x_is_cpu = isset($configurableOptions['ram_times_x_is_cpu']) ? $configurableOptions['ram_times_x_is_cpu'] : $parmas['ram_times_x_is_cpu'];
-
-    $cpu = (int) $cpu * (int) $ram_times_x_is_cpu;
-    $disk = (int) $disk * (int) $ram_times_x_is_storage;
 
     if ($node) {
         $allocation = Pterodactyl_getRequest(pteroConfig('host') . '/api/application/nodes/' . $parmas['node'] . '/allocations');
@@ -347,7 +327,7 @@ function Pterodactyl_getUser($user)
             'root_admin' => false,
         ];
         $response = Pterodactyl_postRequest($url, $json);
-        if(!$response->successful()) {
+        if (!$response->successful()) {
             ExtensionHelper::error('Pterodactyl', 'Failed to create user for order ' . $product->id . ' with error ' . $response->body());
         }
         $user = $response->json();
@@ -394,7 +374,7 @@ function Pterodactyl_unsuspendServer($user, $params, $order, $product)
     return false;
 }
 
-function Pterodactyl_terminateServer($user, $params,$order, $product)
+function Pterodactyl_terminateServer($user, $params, $order, $product)
 {
     $server = Pterodactyl_serverExists($product->id);
     if ($server) {
