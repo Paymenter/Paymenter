@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\{Invoice, Order, OrderProduct, OrderProductConfig, Role, Ticket};
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\View;
 
 class ClientController extends Controller
@@ -29,11 +30,17 @@ class ClientController extends Controller
         $request->validate([
             'name' => 'required',
             'email' => 'required|email|unique:users',
-            'password' => 'required|min:8',
+            'password' => 'sometimes|min:8',
         ]);
-        $password = Hash::make($request->password);
-        $request->merge(['password' => $password]);
+        if ($request->password) {
+            $password = Hash::make($request->password);
+            $request->merge(['password' => $password]);
+        }
         $user = User::create($request->all());
+        if (!$request->password) {
+            Password::sendResetLink(['email' => $user->email]);
+        }
+
 
         return redirect()->route('admin.clients.edit', $user->id);
     }
