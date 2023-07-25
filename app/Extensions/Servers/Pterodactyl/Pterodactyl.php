@@ -355,7 +355,7 @@ class Pterodactyl extends Extension
         return false;
     }
 
-    public static function suspendServer($user, $params, $order, $product)
+    public static function suspendServer($user, $params, $order, $product, $configurableOptions)
     {
         $server = self::serverExists($product->id);
         if ($server) {
@@ -368,7 +368,7 @@ class Pterodactyl extends Extension
         return false;
     }
 
-    public static function unsuspendServer($user, $params, $order, $product)
+    public static function unsuspendServer($user, $params, $order, $product, $configurableOptions)
     {
         $server = self::serverExists($product->id);
         if ($server) {
@@ -381,7 +381,7 @@ class Pterodactyl extends Extension
         return false;
     }
 
-    public static function terminateServer($user, $params, $order, $product)
+    public static function terminateServer($user, $params, $order, $product, $configurableOptions)
     {
         $server = self::serverExists($product->id);
         if ($server) {

@@ -39,7 +39,52 @@ class Extension
      * @param array $configurableOptions
      * @return bool
      */
-    public static function createServer(User $user, $params, $order, $orderProduct, $configurableOptions)
+    public static function createServer($user, $params, $order, $orderProduct, $configurableOptions)
+    {
+        return false;
+    }
+
+    /**
+     * Suspend a server
+     * 
+     * @param User $user
+     * @param array $params
+     * @param Order $order
+     * @param OrderProduct $orderProduct
+     * @param array $configurableOptions
+     * @return bool
+     */
+    public static function suspendServer($user, $params, $order, $orderProduct, $configurableOptions)
+    {
+        return false;
+    }
+
+    /**
+     * Unsuspend a server
+     * 
+     * @param User $user
+     * @param array $params
+     * @param Order $order
+     * @param OrderProduct $orderProduct
+     * @param array $configurableOptions
+     * @return bool
+     */
+    public static function unsuspendServer($user, $params, $order, $orderProduct, $configurableOptions)
+    {
+        return false;
+    }
+
+    /**
+     * Terminate a server
+     * 
+     * @param User $user
+     * @param array $params
+     * @param Order $order
+     * @param OrderProduct $orderProduct
+     * @param array $configurableOptions
+     * @return bool
+     */
+    public static function terminateServer($user, $params, $order, $orderProduct, $configurableOptions)
     {
         return false;
     }

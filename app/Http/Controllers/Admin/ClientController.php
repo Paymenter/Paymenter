@@ -30,16 +30,19 @@ class ClientController extends Controller
         $request->validate([
             'name' => 'required',
             'email' => 'required|email|unique:users',
-            'password' => 'sometimes|min:8',
+            'password' => 'nullable|min:8',
         ]);
+
         if ($request->password) {
             $password = Hash::make($request->password);
             $request->merge(['password' => $password]);
+        } else {
+            $password = Hash::make(\Str::random());
+            $request->merge(['password' => $password]);
+            $sendPassword = true;
         }
         $user = User::create($request->all());
-        if (!$request->password) {
-            Password::sendResetLink(['email' => $user->email]);
-        }
+        isset($sendPassword) && $sendPassword ? Password::sendResetLink(['email' => $user->email]) : null;
 
 
         return redirect()->route('admin.clients.edit', $user->id);
