@@ -63,7 +63,7 @@ class ExtensionController extends Controller
             $extension->enabled = 0;
             $extension->save();
         }
-        $url = 'https://api.github.com/repos/Paymenter/Extensions/contents/' . $type . '/' . $name;
+        $url = 'https://api.github.com/repos/Paymenter/Extensions/contents/' . $type . '/' . $name . '?ref=' . config('app.version');
         $response = Http::get($url);
         $response = json_decode($response);
         if (isset($response->message)) {
