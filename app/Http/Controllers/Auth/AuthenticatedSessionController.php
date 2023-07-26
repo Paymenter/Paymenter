@@ -40,6 +40,7 @@ class AuthenticatedSessionController extends Controller
                 'user_id' => Auth::user()->id,
                 'token_value' => $token = Str::random(64),
                 'expires_at' => CarbonImmutable::now()->addMinutes(5),
+                'remember' => $request->filled('remember'),
             ]);
             Auth::logout();
 
@@ -88,7 +89,7 @@ class AuthenticatedSessionController extends Controller
         $user = User::findOrFail($token['user_id']);
 
         if ($tfa->verifyCode(Crypt::decrypt($user->tfa_secret), $request->code, 2)) {
-            Auth::loginUsingId($token['user_id']);
+            Auth::loginUsingId($token['user_id'], $token['remember']);
             $request->session()->regenerate();
             $request->session()->forget('auth_confirmation_token');
             return redirect()->route('clients.home');

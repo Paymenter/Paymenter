@@ -559,6 +559,9 @@ class ExtensionHelper
             return [];
         }
         $module = new $module($extension);
+        if(!method_exists($module, 'getCustomPages')) {
+            return [];
+        }
         $config = self::loadConfiguration($product, $product2);
         $configurableOptions = self::loadConfigurableOptions($product2);
         $user = $order->user;
