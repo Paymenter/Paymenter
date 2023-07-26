@@ -50,7 +50,7 @@ class Invoice extends Model
         }
 
         // Return 2 decimal places
-        return number_format($total, 2);
+        return number_format($total, 2, '.', '');
     }
 
     public function items()
