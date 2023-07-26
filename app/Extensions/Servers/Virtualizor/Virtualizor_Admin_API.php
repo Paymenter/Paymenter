@@ -1,4 +1,5 @@
 <?php
+namespace App\Extensions\Servers\Virtualizor;
 
 class Virtualizor_Admin_API
 {

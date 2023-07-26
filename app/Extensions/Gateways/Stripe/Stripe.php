@@ -2,15 +2,16 @@
 
 namespace App\Extensions\Gateways\Stripe;
 
-use App\Classes\Extension;
+use App\Classes\Extensions\Gateway;
 use Stripe\StripeClient;
 use App\Helpers\ExtensionHelper;
+use Illuminate\Http\Request;
 
-class Stripe extends Extension
+class Stripe extends Gateway
 {
-    public static function getUrl($total, $products, $orderId)
+    public function getUrl($total, $products, $orderId)
     {
-        $client = self::stripeClient();
+        $client = $this->stripeClient();
         // Create array with all the products
         $items = [];
         foreach ($products as $product) {
@@ -40,7 +41,7 @@ class Stripe extends Extension
         return $order;
     }
 
-    public static function webhook($request)
+    public function webhook(Request $request)
     {
         $payload = $request->getContent();
         $sig_header = $request->header('stripe-signature');
@@ -84,15 +85,15 @@ class Stripe extends Extension
         return $stripe;
     }
 
-    public static function pay($total, $products, $orderId)
+    public function pay($total, $products, $orderId)
     {
-        $stripe = self::stripeClient();
-        $order = self::getUrl($total, $products, $orderId);
+        $stripe = $this->stripeClient();
+        $order = $this->getUrl($total, $products, $orderId);
 
         return $stripe->checkout->sessions->retrieve($order->id, [])->url;
     }
 
-    public static function getConfig()
+    public function getConfig()
     {
         return [
             [

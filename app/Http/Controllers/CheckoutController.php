@@ -69,10 +69,12 @@ class CheckoutController extends Controller
         if (isset($product->extension_id)) {
             $server = $product->extension;
             if ($server) {
-                include_once base_path('app/Extensions/Servers/' . $server->name . '/index.php');
-                $function = $server->name . '_getUserConfig';
-                if (function_exists($function)) {
-                    return redirect()->route('checkout.config', $product->id);
+                $module = "App\\Extensions\\Servers\\" . $server->name . "\\" . $server->name;
+                if(class_exists($module)) {      
+                    $module = new $module($server);
+                    if (method_exists($module, 'getUserConfig')) {
+                        return redirect()->route('checkout.config', $product->id);
+                    }
                 }
             }
         }

@@ -1,32 +1,18 @@
 <?php
 
-namespace App\Classes;
+namespace App\Classes\Extensions;
 
-use App\Models\User;
-
-class Extension
+class Server extends Extension
 {
     /**
-     * Get all the configuration for the extension
+     * Get product config
      * 
+     * @param array $options
      * @return array
      */
-    public static function getConfig()
+    public function getProductConfig($options)
     {
         return [];
-    }
-
-    /**
-     * Get the URL to redirect to
-     * 
-     * @param int $total
-     * @param array $products
-     * @param int $orderId
-     * @return string
-     */
-    public static function pay($total, $products, $orderId)
-    {
-        return false;
     }
 
     /**
@@ -39,7 +25,7 @@ class Extension
      * @param array $configurableOptions
      * @return bool
      */
-    public static function createServer($user, $params, $order, $orderProduct, $configurableOptions)
+    public function createServer($user, $params, $order, $orderProduct, $configurableOptions)
     {
         return false;
     }
@@ -54,7 +40,7 @@ class Extension
      * @param array $configurableOptions
      * @return bool
      */
-    public static function suspendServer($user, $params, $order, $orderProduct, $configurableOptions)
+    public function suspendServer($user, $params, $order, $orderProduct, $configurableOptions)
     {
         return false;
     }
@@ -69,7 +55,7 @@ class Extension
      * @param array $configurableOptions
      * @return bool
      */
-    public static function unsuspendServer($user, $params, $order, $orderProduct, $configurableOptions)
+    public function unsuspendServer($user, $params, $order, $orderProduct, $configurableOptions)
     {
         return false;
     }
@@ -84,7 +70,7 @@ class Extension
      * @param array $configurableOptions
      * @return bool
      */
-    public static function terminateServer($user, $params, $order, $orderProduct, $configurableOptions)
+    public function terminateServer($user, $params, $order, $orderProduct, $configurableOptions)
     {
         return false;
     }

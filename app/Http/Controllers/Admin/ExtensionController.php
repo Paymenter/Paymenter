@@ -126,7 +126,8 @@ class ExtensionController extends Controller
             $extension = Extension::where('name', $name)->first();
         }
         $namespace = "App\Extensions\\" . ucfirst($sort) . "s\\" . $name . "\\" . $name;
-        $extension->config = json_decode(json_encode($namespace::getConfig()));
+
+        $extension->config = json_decode(json_encode((new $namespace($extension))->getConfig()));
         $extension->name = $name;
 
         return view('admin.extensions.edit', compact('extension'));
@@ -151,7 +152,7 @@ class ExtensionController extends Controller
             $extension = Extension::where('name', $name)->first();
         }
         $namespace = 'App\Extensions\\' . ucfirst($sort) . 's\\' . $name . '\\' . $name;
-        $extension->config = json_decode(json_encode($namespace::getConfig()));
+        $extension->config = json_decode(json_encode((new $namespace($extension))->getConfig()));
         $extension->name = $name;
         foreach ($extension->config as $config) {
             if ($config->required && !$request->input($config->name)) {

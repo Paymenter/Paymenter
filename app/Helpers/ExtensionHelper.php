@@ -255,12 +255,12 @@ class ExtensionHelper
         if (!$extension) {
             return false;
         }
-        if (!file_exists(app_path() . '/Extensions/Gateways/' . $extension->name . '/index.php')) {
+        $module = 'App\Extensions\Gateways\\' . $extension->name . '\\' . $extension->name;
+        if (!class_exists($module)) {
             return false;
         }
-        include_once app_path() . '/Extensions/Gateways/' . $extension->name . '/index.php';
-        $function = $extension->name . '_pay';
-        $pay = $function($total, $products, $orderId);
+        $module = new $module($extension);
+        $pay = $module->pay($total, $products, $orderId);
 
         return $pay;
     }
@@ -278,12 +278,12 @@ class ExtensionHelper
         if (!$extension) {
             return false;
         }
-        if (!file_exists(app_path() . '/Extensions/Gateways/' . $extension->name . '/index.php')) {
+        $module = 'App\Extensions\Gateways\\' . $extension->name . '\\' . $extension->name;
+        if (!class_exists($module)) {
             return false;
         }
-        include_once app_path() . '/Extensions/Gateways/' . $extension->name . '/index.php';
+        $module = new $module($extension);
         $total = $invoice->credits;
-        $function = $extension->name . '_pay';
 
         // We fake a product, so we can use the same function as for products
         $product = new Product();
@@ -293,7 +293,7 @@ class ExtensionHelper
         $product->quantity = 1;
         $product->id = 0;
 
-        $pay = $function($total, [$product], $invoice->id);
+        $pay = $module->pay($total, [$product], $invoice->id);
 
         return $pay;
     }
@@ -370,18 +370,17 @@ class ExtensionHelper
         if (!$extension) {
             return false;
         }
-        include_once app_path() . '/Extensions/Servers/' . $extension->name . '/index.php';
+        $module = 'App\Extensions\\Servers\\' . $extension->name . '\\' . $extension->name;
         $extensionName = $extension->name;
-        $extensionFunction = $extensionName . '_createServer';
-        if (!function_exists($extensionFunction)) {
-            self::error($extensionName, 'Function ' . $extensionFunction . ' does not exist! (createServer)');
-            return;
+        if (!class_exists($module)) {
+            return false;
         }
+        $module = new $module($extension);
         $config = self::loadConfiguration($product, $product2);
         $configurableOptions = self::loadConfigurableOptions($product2);
         $user = $order->user;
         try {
-            $extensionFunction($user, $config, $order, $product2, $configurableOptions);
+            $module->createServer($user, $config, $order, $product2, $configurableOptions);
         } catch (\Exception $e) {
             self::error($extensionName, 'Error creating server: ' . $e->getMessage() . ' on line ' . $e->getLine() . ' in file ' . $e->getFile() . ' on line ' . $e->getLine() . ' in file ' . $e->getFile());
         }
@@ -398,20 +397,17 @@ class ExtensionHelper
         if (!$extension) {
             return false;
         }
-        if (!file_exists(app_path() . '/Extensions/Servers/' . $extension->name . '/index.php')) {
+        $module = 'App\Extensions\\Servers\\' . $extension->name . '\\' . $extension->name;
+        if (!class_exists($module)) {
             return false;
         }
-        include_once app_path() . '/Extensions/Servers/' . $extension->name . '/index.php';
+        $module = new $module($extension);
         $config = self::loadConfiguration($product, $product2);
         $configurableOptions = self::loadConfigurableOptions($product2);
         $user = $order->user;
-        $function = $extension->name . '_suspendServer';
-        if (!function_exists($function)) {
-            self::error($extension->name, 'Function ' . $function . ' does not exist! (suspendServer)');
-            return;
-        }
+
         try {
-            $function($user, $config, $order, $product2, $configurableOptions);
+            $module->suspendServer($user, $config, $order, $product2, $configurableOptions);
         } catch (\Exception $e) {
             self::error($extension->name, 'Error suspending server: ' . $e->getMessage() . ' on line ' . $e->getLine() . ' in file ' . $e->getFile());
         }
@@ -429,18 +425,18 @@ class ExtensionHelper
         if (!$extension) {
             return false;
         }
-        if (!file_exists(app_path() . '/Extensions/Servers/' . $extension->name . '/index.php')) {
+        $module = 'App\Extensions\\Servers\\' . $extension->name . '\\' . $extension->name;
+        if (!class_exists($module)) {
             return false;
         }
-        include_once app_path() . '/Extensions/Servers/' . $extension->name . '/index.php';
+        $module = new $module($extension);
         $config = self::loadConfiguration($product, $product2);
         $configurableOptions = self::loadConfigurableOptions($product2);
         $user = $order->user;
-        $function = $extension->name . '_unsuspendServer';
         try {
-            $function($user, $config, $order, $product2, $configurableOptions);
+            $module->unsuspendServer($user, $config, $order, $product2, $configurableOptions);
         } catch (\Exception $e) {
-            ExtensionHelper::error($extension->name, 'Error creating server: ' . $e->getMessage() . ' on line ' . $e->getLine() . ' in file ' . $e->getFile());
+            self::error($extension->name, 'Error creating server: ' . $e->getMessage() . ' on line ' . $e->getLine() . ' in file ' . $e->getFile());
         }
     }
 
@@ -456,18 +452,19 @@ class ExtensionHelper
         if (!$extension) {
             return false;
         }
-        if (!file_exists(app_path() . '/Extensions/Servers/' . $extension->name . '/index.php')) {
+        $module = 'App\Extensions\\Servers\\' . $extension->name . '\\' . $extension->name;
+        if (!class_exists($module)) {
             return false;
         }
-        include_once app_path() . '/Extensions/Servers/' . $extension->name . '/index.php';
+        $module = new $module($extension);
         $config = self::loadConfiguration($product, $product2);
         $configurableOptions = self::loadConfigurableOptions($product2);
         $user = $order->user;
-        $function = $extension->name . '_terminateServer';
+
         try {
-            $function($user, $config, $order, $product2, $configurableOptions);
+            $module->terminateServer($user, $config, $order, $product2, $configurableOptions);
         } catch (\Exception $e) {
-            ExtensionHelper::error($extension->name, 'Error creating server: ' . $e->getMessage() . ' on line ' . $e->getLine() . ' in file ' . $e->getFile());
+            self::error($extension->name, 'Error creating server: ' . $e->getMessage() . ' on line ' . $e->getLine() . ' in file ' . $e->getFile());
         }
     }
 
@@ -490,11 +487,11 @@ class ExtensionHelper
         if (!$extension) {
             return false;
         }
-        // Check if file exists
-        if (!file_exists(app_path() . '/Extensions/Servers/' . $extension->name . '/index.php')) {
+        $module = 'App\Extensions\\Servers\\' . $extension->name . '\\' . $extension->name;
+        if (!class_exists($module)) {
             return false;
         }
-        include_once app_path() . '/Extensions/Servers/' . $extension->name . '/index.php';
+        $module = new $module($extension);
         $config = self::loadConfiguration($product, $product2);
         $configurableOptions = self::loadConfigurableOptions($product2);
         $user = $order->user;
@@ -502,7 +499,7 @@ class ExtensionHelper
         if (!function_exists($function)) {
             return false;
         }
-        $link = $function($user, $config, $order, $product2, $configurableOptions);
+        $link = $module->getLink($user, $config, $order, $product2, $configurableOptions);
 
         return $link;
     }
@@ -523,22 +520,18 @@ class ExtensionHelper
         if (!$extension) {
             return [];
         }
-        if (!file_exists(app_path() . '/Extensions/Servers/' . $extension->name . '/index.php')) {
+        $module = 'App\Extensions\\Servers\\' . $extension->name . '\\' . $extension->name;
+        if (!class_exists($module)) {
             return [];
         }
-        include_once app_path() . '/Extensions/Servers/' . $extension->name . '/index.php';
+        $module = new $module($extension);
         $settings = $product->settings;
         $config = [];
         foreach ($settings as $setting) {
             $config[$setting->name] = $setting->value;
         }
         $config['config_id'] = $product->id;
-
-        $function = $extension->name . '_getProductConfig';
-        if (!function_exists($function)) {
-            return [];
-        }
-        $config =  $function($config);
+        $config = $module->getProductConfig($config);
         return json_decode(json_encode($config));
     }
 
@@ -561,20 +554,18 @@ class ExtensionHelper
         if (!$extension) {
             return [];
         }
-        if (!file_exists(app_path() . '/Extensions/Servers/' . $extension->name . '/index.php')) {
+        $module = 'App\Extensions\\Servers\\' . $extension->name . '\\' . $extension->name;
+        if (!class_exists($module)) {
             return [];
         }
-        include_once app_path() . '/Extensions/Servers/' . $extension->name . '/index.php';
+        $module = new $module($extension);
         $config = self::loadConfiguration($product, $product2);
         $configurableOptions = self::loadConfigurableOptions($product2);
         $user = $order->user;
-        $function = $extension->name . '_getCustomPages';
-        if (!function_exists($function)) {
-            return [];
-        }
+
         View::addNamespace(strtolower($extension->name), app_path() . '/Extensions/Servers/' . $extension->name . '/views');
         try {
-            return $function($user, $config, $order, $product2, $configurableOptions);
+            return $module->getCustomPages($user, $config, $order, $product2, $configurableOptions);
         } catch (\Exception $e) {
             ExtensionHelper::error($extension->name, 'Error getting pages ' . $e->getMessage() . ' on line ' . $e->getLine() . ' in file ' . $e->getFile() . ' on line ' . $e->getLine() . ' in file ' . $e->getFile());
             return [];

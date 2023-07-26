@@ -1,4 +1,5 @@
 <?php
+namespace App\Extensions\Servers\DirectAdmin;
 
 /**
  * Socket communication class.

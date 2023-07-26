@@ -2,14 +2,14 @@
 
 namespace App\Extensions\Servers\Pterodactyl;
 
-use App\Classes\Extension;
+use App\Classes\Extensions\Server;
 use App\Helpers\ExtensionHelper;
 use Illuminate\Support\Facades\Http;
 
-class Pterodactyl extends Extension
+class Pterodactyl extends Server
 {
 
-    private static function config($key)
+    private function config($key)
     {
         $config = ExtensionHelper::getConfig('Pterodactyl', $key);
         if ($config) {
@@ -19,7 +19,7 @@ class Pterodactyl extends Extension
         return null;
     }
 
-    public static function getConfig()
+    public function getConfig()
     {
         return [
             [
@@ -38,10 +38,10 @@ class Pterodactyl extends Extension
     }
 
 
-    private static function postRequest($url, $data)
+    private function postRequest($url, $data)
     {
         $response = Http::withHeaders([
-            'Authorization' => 'Bearer ' . self::config('apiKey'),
+            'Authorization' => 'Bearer ' . $this->config('apiKey'),
             'Accept' => 'Application/vnd.Pterodactyl.v1+json',
             'Content-Type' => 'application/json',
         ])->post($url, $data);
@@ -49,10 +49,10 @@ class Pterodactyl extends Extension
         return $response;
     }
 
-    private static function getRequest($url)
+    private function getRequest($url)
     {
         $response = Http::withHeaders([
-            'Authorization' => 'Bearer ' . self::config('apiKey'),
+            'Authorization' => 'Bearer ' . $this->config('apiKey'),
             'Accept' => 'Application/vnd.Pterodactyl.v1+json',
             'Content-Type' => 'application/json',
         ])->get($url);
@@ -60,10 +60,10 @@ class Pterodactyl extends Extension
         return $response;
     }
 
-    public static function deleteRequest($url)
+    public function deleteRequest($url)
     {
         $response = Http::withHeaders([
-            'Authorization' => 'Bearer ' . self::config('apiKey'),
+            'Authorization' => 'Bearer ' . $this->config('apiKey'),
             'Accept' => 'Application/vnd.Pterodactyl.v1+json',
             'Content-Type' => 'application/json',
         ])->delete($url);
@@ -71,9 +71,9 @@ class Pterodactyl extends Extension
         return $response;
     }
 
-    public static function getProductConfig()
+    public function getProductConfig($options)
     {
-        $nodes =  self::getRequest(self::config('host') . '/api/application/nodes');
+        $nodes =  $this->getRequest($this->config('host') . '/api/application/nodes');
         $nodeList = [
             [
                 'name' => 'None',
@@ -87,7 +87,7 @@ class Pterodactyl extends Extension
             ];
         }
 
-        $location =  self::getRequest(self::config('host') . '/api/application/locations');
+        $location =  $this->getRequest($this->config('host') . '/api/application/locations');
         $locationList = [];
         foreach ($location->json()['data'] as $location) {
             $locationList[] = [
@@ -96,7 +96,7 @@ class Pterodactyl extends Extension
             ];
         }
 
-        $nests =  self::getRequest(self::config('host') . '/api/application/nests');
+        $nests =  $this->getRequest($this->config('host') . '/api/application/nests');
         $nestList = [];
         foreach ($nests->json()['data'] as $nest) {
             $nestList[] = [
@@ -193,17 +193,17 @@ class Pterodactyl extends Extension
         ];
     }
 
-    public static function createServer($user, $parmas, $order, $product, $configurableOptions)
+    public function createServer($user, $parmas, $order, $product, $configurableOptions)
     {
-        if (self::serverExists($product->id)) {
+        if ($this->serverExists($product->id)) {
             ExtensionHelper::error('Pterodactyl', 'Server already exists for order ' . $product->id);
 
             return;
         }
-        $url = self::config('host') . '/api/application/servers';
+        $url = $this->config('host') . '/api/application/servers';
         $nest_id = isset($configurableOptions['nest_id']) ? $configurableOptions['nest_id'] : $parmas['nest'];
         $egg_id = isset($configurableOptions['egg']) ? $configurableOptions['egg'] : $parmas['egg'];
-        $eggData = self::getRequest(self::config('host') . '/api/application/nests/' . $nest_id . '/eggs/' . $egg_id . '?include=variables')->json();
+        $eggData = $this->getRequest($this->config('host') . '/api/application/nests/' . $nest_id . '/eggs/' . $egg_id . '?include=variables')->json();
         if (!isset($eggData['attributes'])) {
             ExtensionHelper::error('Pterodactyl', 'No egg data found for ' . $parmas['egg']);
 
@@ -233,7 +233,7 @@ class Pterodactyl extends Extension
         $node = isset($configurableOptions['node']) ? $configurableOptions['node'] : $parmas['node'];
 
         if ($node) {
-            $allocation = self::getRequest(self::config('host') . '/api/application/nodes/' . $parmas['node'] . '/allocations');
+            $allocation = $this->getRequest($this->config('host') . '/api/application/nodes/' . $parmas['node'] . '/allocations');
             $allocation = $allocation->json();
             foreach ($allocation['data'] as $key => $val) {
                 if ($val['attributes']['assigned'] == false) {
@@ -242,8 +242,8 @@ class Pterodactyl extends Extension
                 }
             }
             $json = [
-                'name' => self::random_string(8) . '-' . $product->id,
-                'user' => (int) self::getUser($user),
+                'name' => $this->random_string(8) . '-' . $product->id,
+                'user' => (int) $this->getUser($user),
                 'egg' => (int) $egg_id,
                 'docker_image' => $eggData['attributes']['docker_image'],
                 'startup' => $startup,
@@ -267,8 +267,8 @@ class Pterodactyl extends Extension
             ];
         } else {
             $json = [
-                'name' => self::random_string(8) . '-' . $product->id,
-                'user' => (int) self::getUser($user),
+                'name' => $this->random_string(8) . '-' . $product->id,
+                'user' => (int) $this->getUser($user),
                 'egg' => (int) $egg_id,
                 'docker_image' => $eggData['attributes']['docker_image'],
                 'startup' => $startup,
@@ -293,7 +293,7 @@ class Pterodactyl extends Extension
                 'external_id' => (string) $product->id,
             ];
         }
-        $response = self::postRequest($url, $json);
+        $response = $this->postRequest($url, $json);
 
         if (!$response->successful()) {
             ExtensionHelper::error('Pterodactyl', 'Failed to create server for order ' . $product->id . ' with error ' . $response->body());
@@ -304,7 +304,7 @@ class Pterodactyl extends Extension
         return true;
     }
 
-    private static function random_string($length = 10)
+    private function random_string($length = 10)
     {
         $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
         $charactersLength = strlen($characters);
@@ -316,24 +316,24 @@ class Pterodactyl extends Extension
         return $randomString;
     }
 
-    public static function getUser($user)
+    public function getUser($user)
     {
-        $url = self::config('host') . '/api/application/users?filter%5Bemail%5D=' . $user->email;
-        $response = self::getRequest($url);
+        $url = $this->config('host') . '/api/application/users?filter%5Bemail%5D=' . $user->email;
+        $response = $this->getRequest($url);
         $users = $response->json();
         if (count($users['data']) > 0) {
             return $users['data'][0]['attributes']['id'];
         } else {
-            $url = self::config('host') . '/api/application/users';
+            $url = $this->config('host') . '/api/application/users';
             $json = [
-                'username' => self::random_string(8),
+                'username' => $this->random_string(8),
                 'email' => $user->email,
                 'first_name' => $user->name,
                 'last_name' => 'User',
                 'language' => 'en',
                 'root_admin' => false,
             ];
-            $response = self::postRequest($url, $json);
+            $response = $this->postRequest($url, $json);
             if (!$response->successful()) {
                 ExtensionHelper::error('Pterodactyl', 'Failed to create user for order ' . $product->id . ' with error ' . $response->body());
             }
@@ -343,10 +343,10 @@ class Pterodactyl extends Extension
         }
     }
 
-    private static function serverExists($order)
+    private function serverExists($order)
     {
-        $url = self::config('host') . '/api/application/servers/external/' . $order;
-        $response = self::getRequest($url);
+        $url = $this->config('host') . '/api/application/servers/external/' . $order;
+        $response = $this->getRequest($url);
         $code = $response->status();
         if ($code == 200) {
             return $response->json()['attributes']['id'];
@@ -355,12 +355,12 @@ class Pterodactyl extends Extension
         return false;
     }
 
-    public static function suspendServer($user, $params, $order, $product, $configurableOptions)
+    public function suspendServer($user, $params, $order, $product, $configurableOptions)
     {
-        $server = self::serverExists($product->id);
+        $server = $this->serverExists($product->id);
         if ($server) {
-            $url = self::config('host') . '/api/application/servers/' . $server . '/suspend';
-            self::postRequest($url, []);
+            $url = $this->config('host') . '/api/application/servers/' . $server . '/suspend';
+            $this->postRequest($url, []);
 
             return true;
         }
@@ -368,12 +368,12 @@ class Pterodactyl extends Extension
         return false;
     }
 
-    public static function unsuspendServer($user, $params, $order, $product, $configurableOptions)
+    public function unsuspendServer($user, $params, $order, $product, $configurableOptions)
     {
-        $server = self::serverExists($product->id);
+        $server = $this->serverExists($product->id);
         if ($server) {
-            $url = self::config('host') . '/api/application/servers/' . $server . '/unsuspend';
-            self::postRequest($url, []);
+            $url = $this->config('host') . '/api/application/servers/' . $server . '/unsuspend';
+            $this->postRequest($url, []);
 
             return true;
         }
@@ -381,12 +381,12 @@ class Pterodactyl extends Extension
         return false;
     }
 
-    public static function terminateServer($user, $params, $order, $product, $configurableOptions)
+    public function terminateServer($user, $params, $order, $product, $configurableOptions)
     {
-        $server = self::serverExists($product->id);
+        $server = $this->serverExists($product->id);
         if ($server) {
-            $url = self::config('host') . '/api/application/servers/' . $server;
-            self::deleteRequest($url);
+            $url = $this->config('host') . '/api/application/servers/' . $server;
+            $this->deleteRequest($url);
 
             return true;
         }
@@ -394,15 +394,15 @@ class Pterodactyl extends Extension
         return false;
     }
 
-    public static function getLink($user, $params, $order, $product)
+    public function getLink($user, $params, $order, $product)
     {
-        $server = self::serverExists($product->id);
+        $server = $this->serverExists($product->id);
         if ($server) {
-            $url = self::config('host') . '/api/application/servers/' . $server;
-            $response = self::getRequest($url);
+            $url = $this->config('host') . '/api/application/servers/' . $server;
+            $response = $this->getRequest($url);
             $server = $response->json();
 
-            return self::config('host') . '/server/' . $server['attributes']['identifier'];
+            return $this->config('host') . '/server/' . $server['attributes']['identifier'];
         }
 
         return false;
