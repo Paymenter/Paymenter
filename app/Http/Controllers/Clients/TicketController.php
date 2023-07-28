@@ -121,6 +121,9 @@ class TicketController extends Controller
         $ticket->save();
 
         NotificationHelper::sendNewTicketMessageNotification($ticket, $user);
+        if ($ticket->assigned_to) {
+            NotificationHelper::sendNewTicketMessageNotification($ticket, User::where('id', $ticket->assigned_to)->first());
+        }
 
         return redirect()->back()->with('success', 'Message sent successfully');
     }

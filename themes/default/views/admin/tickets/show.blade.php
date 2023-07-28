@@ -7,57 +7,66 @@
         <h1 class="text-2xl font-bold text-gray-500 dark:text-darkmodetext">{{ __('View Ticket #') }}{{ $ticket->id }}
         </h1>
     </div>
-    <div class="ml-10 flex flex-col md:flex-row items-baseline">
-        <h1 class="dark:text-darkmodetext text-gray-600 px-3 rounded-md font-bold text-xl md:m-4">
-            <strong>{{ __('Subject:') }}</strong>
-            {{ $ticket->title }}
-        </h1>
-        <p class="dark:text-darkmodetext text-gray-600 px-3 rounded-md text-xl md:m-4">
-            <strong>{{ __('Priority:') }}</strong>
-            {{ $ticket->priority }}
-        </p>
-        <p class="dark:text-darkmodetext text-gray-600 px-3  rounded-md text-xl md:m-4">
-            <strong>{{ __('Status:') }}</strong>
-            {{ $ticket->status }}
-        </p>
-    </div>
-    <div class="ml-10 flex flex-col md:flex-row items-baseline">
-        <p class="dark:text-darkmodetext text-gray-600 px-3 rounded-md text-xl md:m-4">
-            <strong>{{ __('Client:') }}</strong>
-            {{ $ticket->user->name }}
-        </p>
-        <p class="dark:text-darkmodetext text-gray-600 px-3 rounded-md text-xl md:m-4">
-            <strong>{{ __('Product(s):') }}</strong>
-            @forelse ($ticket->orders()->get() as $product)
-                {{ $product->name }}
-            @empty
-                {{ __('No products') }}
-            @endforelse
-        </p>
-        <form action="{{ route('admin.tickets.status', $ticket->id) }}" method="POST">
-            @csrf
-            <div class="flex items-baseline p-2 md:m-4">
-                <select name="status" id="status"
-                    class="dark:bg-darkmode form-input rounded-md shadow-sm mt-1 block">
-                    <option value="open">{{ __('Open') }}</option>
-                    <option value="closed">{{ __('Closed') }}</option>
-                </select>
-                <button type="submit"
-                    class="ml-10 bg-logo hover:bg-logo/75 text-white font-bold py-2 px-4 rounded whitespace-nowrap">
-                    {{ __('Change status') }}
-                </button>
-            </div>
-        </form>
-    </div>
+    <form action="{{ route('admin.tickets.update', $ticket->id) }}" method="POST" class="pb-10">
+        @csrf
 
-    @if (empty($ticket->messages()->get()[0]))
+        <div class="grid md:grid-cols-2 mt-4 gap-4">
+            <div class="flex flex-col items-baseline">
+                <x-input type="text" id="title" :label="__('Subject')" name="title" value="{{ $ticket->title }}"
+                    required class="mt-2 w-full" icon="ri-pencil-line" />
+
+                <x-input type="select" name="priority" :label="__('Priority')" icon="ri-bar-chart-line" class="mt-2 w-full">
+                    <option value="low" @if ($ticket->priority == 1) selected @endif>
+                        {{ __('Low') }}</option>
+                    <option value="medium" @if ($ticket->priority == 2) selected @endif>
+                        {{ __('Medium') }}</option>
+                    <option value="high" @if ($ticket->priority == 3) selected @endif>
+                        {{ __('High') }}</option>
+                </x-input>
+
+                <x-input type="select" name="status" :label="__('Status')" icon="ri-bar-chart-line" class="mt-2 w-full">
+                    <option value="open" @if ($ticket->status == 'open') selected @endif>
+                        {{ __('Open') }}</option>
+                    <option value="closed" @if ($ticket->status == 'closed') selected @endif>
+                        {{ __('Closed') }}</option>
+                </x-input>
+            </div>
+            <div class="flex flex-col items-baseline">
+                <x-input type="text" id="user" :label="__('User')" name="user"
+                    value="{{ $ticket->user->name }}" required class="mt-2 w-full" icon="ri-user-line" readonly />
+                <x-input type="select" id="product" name="product_id" :label="__('Product')" icon="ri-checkbox-circle-line"
+                    class="mt-2 w-full">
+                    <option value="">{{ __('None') }}</option>
+                    @foreach ($ticket->user->orderProducts()->get() as $product)
+                        <option value="{{ $product->id }}" @if ($product->id == $ticket->order_id) selected @endif>
+                            {{ $product->id }} - {{ $product->product->name }}
+                    @endforeach
+                </x-input>
+
+                <x-input type="select" id="assigned_to" name="assigned_to" :label="__('Assigned To')" icon="ri-user-line"
+                    class="mt-2 w-full">
+                    <option value="">{{ __('None') }}</option>
+                    @foreach (App\Models\User::where('role_id', '!=', 2)->get() as $user)
+                        <option value="{{ $user->id }}" @if ($user->id == $ticket->assigned_to) selected @endif>
+                            {{ $user->name }} - {{ $user->role->name }}
+                    @endforeach
+                </x-input>
+            </div>
+        </div>
+        <button type="submit" class="button button-success float-right mt-4">
+            {{ __('Update') }}
+        </button>
+    </form>
+    @if (empty(
+            $ticket->messages()->get()->first()
+        ))
         <div class="ml-10 flex items-baseline ">
             <p class="dark:text-darkmodetext text-gray-600 px-3 rounded-md text-xl m-4">
                 {{ __('No messages yet') }}
             </p>
         </div>
     @else
-        <div class="p-6 bg-white border-b border-gray-200 dark:bg-secondary-100 dark:border-white">
+        <div class="p-6 bg-white border-b border-gray-200 dark:bg-secondary-100 dark:border-secondary-300">
             <div class="grid grid-cols-1 gap-4">
                 <div class="mt-6 text-gray-500 dark:text-darkmodetext dark:bg-secondary-100">
                     <h1 class="text-xl text-gray-500 dark:text-darkmodetext">
@@ -96,8 +105,8 @@
                     {{ __('Reply') }}</h1>
                 <div class="grid grid-cols-1 gap-4">
                     <div class="mt-6 text-gray-500 dark:text-darkmodetext dark:bg-secondary-100">
-                        <x-input type="textarea" id="message" :label="__('Message')" rows="4"
-                            name="message" required></x-input>
+                        <x-input type="textarea" id="message" :label="__('Message')" rows="4" name="message"
+                            required></x-input>
                         <br>
                         <button class="button button-success float-right">
                             {{ __('Reply') }}

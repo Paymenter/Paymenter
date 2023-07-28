@@ -18,6 +18,7 @@ class Ticket extends Model
         'user_id',
         'priority',
         'order_id',
+        'assigned_to',
     ];
 
 

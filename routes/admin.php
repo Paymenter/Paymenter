@@ -11,7 +11,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'permission:ADMINISTRATOR'], 
         Route::get('/create', [App\Http\Controllers\Admin\TicketController::class, 'create'])->middleware(['permission:CREATE_TICKETS'])->name('admin.tickets.create');
         Route::post('/create', [App\Http\Controllers\Admin\TicketController::class, 'store'])->middleware(['permission:CREATE_TICKETS'])->name('admin.tickets.store');
         Route::get('/{ticket}', [App\Http\Controllers\Admin\TicketController::class, 'show'])->middleware(['permission:VIEW_TICKETS'])->name('admin.tickets.show');
-        Route::post('/{ticket}/status', [App\Http\Controllers\Admin\TicketController::class, 'status'])->middleware(['permission:EDIT_TICKETS'])->name('admin.tickets.status');
+        Route::post('/{ticket}/update', [App\Http\Controllers\Admin\TicketController::class, 'update'])->middleware(['permission:EDIT_TICKETS'])->name('admin.tickets.update');
         Route::post('/{ticket}/reply', [App\Http\Controllers\Admin\TicketController::class, 'reply'])->middleware(['permission:EDIT_TICKETS'])->name('admin.tickets.reply');
     });
 

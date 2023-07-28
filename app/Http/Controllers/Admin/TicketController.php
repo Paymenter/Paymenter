@@ -48,7 +48,7 @@ class TicketController extends Controller
             'message' => $request->get('description'),
             'user_id' => auth()->user()->id,
         ]);
-        NotificationHelper::sendNewTicketNotification($ticket, auth()->user());
+        NotificationHelper::sendNewTicketNotification($ticket, User::where('id', $ticket->user_id)->first());
 
         return redirect()->route('admin.tickets.show', $ticket)->with('success', 'Ticket has been created');
     }
@@ -71,18 +71,24 @@ class TicketController extends Controller
             'message' => $request->get('message'),
         ]);
 
-        NotificationHelper::sendNewTicketMessageNotification($ticket, auth()->user());
+        NotificationHelper::sendNewTicketMessageNotification($ticket, User::where('id', $ticket->user_id)->first());
 
         return redirect()->route('admin.tickets.show', $ticket)->with('success', 'Message has been sent');
     }
 
-    public function status(Request $request, Ticket $ticket)
+    public function update(Request $request, Ticket $ticket)
     {
         $request->validate([
             'status' => 'required|in:open,closed',
+            'priority' => 'required|in:low,medium,high',
+            'assigned_to' => 'nullable|exists:users,id',
+            'product_id' => 'nullable|exists:order_products,id',
         ]);
 
         $ticket->status = $request->get('status');
+        $ticket->priority = $request->get('priority');
+        $ticket->assigned_to = $request->get('assinged_to');
+        $ticket->order_id = $request->get('product_id');
         $ticket->save();
 
         return redirect()->route('admin.tickets.show', $ticket)->with('success', 'Ticket status has been updated');

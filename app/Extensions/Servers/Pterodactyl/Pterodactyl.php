@@ -330,8 +330,6 @@ class Pterodactyl extends Server
                 'email' => $user->email,
                 'first_name' => $user->name,
                 'last_name' => 'User',
-                'language' => 'en',
-                'root_admin' => false,
             ];
             $response = $this->postRequest($url, $json);
             if (!$response->successful()) {
