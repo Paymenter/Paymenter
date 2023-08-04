@@ -88,8 +88,9 @@ class TicketTest extends TestCase
             'user_id' => $this->user->id,
         ]);
 
-        $response = $this->actingAs($this->user)->post(route('admin.tickets.status', $ticket), [
+        $response = $this->actingAs($this->user)->post(route('admin.tickets.update', $ticket), [
             'status' => 'closed',
+            'priority' => 'low',
         ]);
 
         $response->assertStatus(302);
