@@ -3,7 +3,7 @@
     "scripts": {
         "dev": "vite",
         "build": "vite build",
-        "lang": "node lang.js"
+        "lang": "laravel-language-extractor --theme default"
     },
     "devDependencies": {
         "@popperjs/core": "^2.10.2",
