@@ -46,7 +46,7 @@ class Invoice extends Model
     {
         $total = 0;
         foreach ($this->items as $item) {
-            $total += $item->total;
+            $total += number_format((float)$item->total, 2, '.', '');
         }
 
         // Return 2 decimal places
@@ -76,14 +76,16 @@ class Invoice extends Model
                             $coupon = null;
                         }
                     }
-                    if ($coupon->status !== 'active') {
-                        $coupon = null;
-                    }
-                    if ($coupon->end_at && $coupon->end_at < now()) {
-                        $coupon = null;
-                    }
-                    if ($coupon->start_at && $coupon->start_at > now()) {
-                        $coupon = null;
+                    if ($coupon) {
+                        if ($coupon->status !== 'active') {
+                            $coupon = null;
+                        }
+                        if ($coupon->end_at && $coupon->end_at < now()) {
+                            $coupon = null;
+                        }
+                        if ($coupon->start_at && $coupon->start_at > now()) {
+                            $coupon = null;
+                        }
                     }
                 }
                 $productId = $product->product;
