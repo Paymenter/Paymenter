@@ -66,7 +66,7 @@ class Invoice extends Model
             if ($item->product_id) {
                 $product = $item->product;
                 $order = $product->order;
-                $coupon = $order->coupon;
+                $coupon = $order->coupon()->get()->first();
                 if ($coupon) {
                     if ($coupon->time == 'onetime') {
                         $invoices = $order->invoices;
