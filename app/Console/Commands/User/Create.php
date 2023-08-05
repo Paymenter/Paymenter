@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Console\Commands;
+namespace App\Console\Commands\User;
 
 use App\Models\Role;
 use Illuminate\Console\Command;
 
-class User extends Command
+class Create extends Command
 {
     /**
      * The name and signature of the console command.
