@@ -71,21 +71,19 @@ class Invoice extends Model
                     if ($coupon->time == 'onetime') {
                         $invoices = $order->invoices;
                         if ($invoices->count() == 1) {
-                            $coupon = $order->coupon;
+                            $coupon = $order->coupon()->get()->first();
                         } else {
                             $coupon = null;
                         }
                     }
-                    if ($coupon) {
-                        if ($coupon->status !== 'active') {
-                            $coupon = null;
-                        }
-                        if ($coupon->end_at && $coupon->end_at < now()) {
-                            $coupon = null;
-                        }
-                        if ($coupon->start_at && $coupon->start_at > now()) {
-                            $coupon = null;
-                        }
+                    if ($coupon && $coupon->status !== 'active'){
+                        $coupon = null;
+                    }
+                    if ($coupon && $coupon->end_at && $coupon->end_at < now()) {
+                        $coupon = null;
+                    }
+                    if ($coupon && $coupon->start_at && $coupon->start_at > now()) {
+                        $coupon = null;
                     }
                 }
                 $productId = $product->product;
