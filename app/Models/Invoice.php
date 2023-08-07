@@ -70,7 +70,7 @@ class Invoice extends Model
                 if ($coupon) {
                     if ($coupon->time == 'onetime') {
                         $invoices = $order->invoices;
-                        if ($invoices->count() == 1) {
+                        if ($invoices->first()->id == $this->id) {
                             $coupon = $order->coupon()->get()->first();
                         } else {
                             $coupon = null;
