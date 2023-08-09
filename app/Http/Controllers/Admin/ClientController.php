@@ -63,15 +63,14 @@ class ClientController extends Controller
 
     public function update(Request $request, User $user)
     {
-        if (auth()->user()->id == $user->id) {
-            return redirect()->back()->with('error', 'You cannot edit your own account');
-        }
         if (auth()->user()->permissions) {
             return redirect()->back()->with('error', 'Only Admins with full permissions can edit users');
         }
         $user->update($request->all());
-        $user->role_id = $request->input('role');
-        $user->save();
+        if (auth()->user()->id !== $user->id) {
+            $user->role_id = $request->input('role');
+            $user->save();
+        }
         return redirect()->route('admin.clients.edit', $user->id)->with('success', 'User updated successfully');
     }
 
