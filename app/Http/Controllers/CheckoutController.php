@@ -170,8 +170,11 @@ class CheckoutController extends Controller
         if (!method_exists($module, 'getUserConfig') && $product->prices()->get()->first()->type != 'recurring' && count($product->configurableGroups()) == 0) {
             return redirect()->back()->with('error', 'Config Not Found');
         }
-        $userConfig = json_decode(json_encode($module->getUserConfig($product)));
-
+        if(!method_exists($module, 'getUserConfig')){
+            $userConfig = array();
+        } else {
+           $userConfig = json_decode(json_encode($module->getUserConfig($product)));
+        }
         $config = [];
         foreach ($userConfig as $configItem) {
             if (!$request->input($configItem->name)) {
