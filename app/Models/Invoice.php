@@ -44,9 +44,58 @@ class Invoice extends Model
 
     public function total()
     {
-        $total = 0;
+        $total = 0.00;
         foreach ($this->items as $item) {
-            $total += number_format((float)$item->total, 2, '.', '');
+            $product = $item->product()->get()->first()??null;
+            if ($product) {
+                $order = $product->order()->get()->first()??null;
+            } else {
+                $order = null;
+            }
+            if ($order == null) {
+                $total = InvoiceItem::where('invoice_id', $this->id)->sum('total');
+                return number_format($total, 2, '.', '');
+            }
+            $coupon = $order->coupon()->get()->first();
+            if ($coupon) {
+                $couponStatus = true;
+                if ($coupon->time == 'onetime') {
+                    $invoices = $order->invoices;
+                    if ($invoices->first()->id == $this->id) {
+                        $coupon = $order->coupon()->get()->first();
+                    } else {
+                        $coupon = null;
+                    }
+                }
+
+                if (!$couponStatus) {
+                    $coupon = NULL;
+                }
+            }
+            $productId = $product->product;
+            if ($coupon) {
+                if (!empty($coupon->products)) {
+                    if (!in_array($productId->id, $coupon->products)) {
+                        $product->discount = 0;
+                    } else {
+                        if ($coupon->type == 'percent') {
+                            $product->discount = $product->price * $coupon->value / 100;
+                        } else {
+                            $product->discount = $coupon->value;
+                        }
+                    }
+                } else {
+                    if ($coupon->type == 'percent') {
+                        $product->discount = $product->price * $coupon->value / 100;
+                    } else {
+                        $product->discount = $coupon->value;
+                    }
+                }
+            } else {
+                $product->discount = 0;
+            }
+            $product->price = $item->total - $product->discount;
+            $total += number_format((float)$product->price, 2, '.', '');
         }
 
         // Return 2 decimal places
