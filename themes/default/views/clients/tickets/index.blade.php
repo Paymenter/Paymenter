@@ -271,13 +271,19 @@
                                     <div class="flex flex-row items-start justify-start">
                                         <div class="flex flex-col flex-grow w-full space-y-0 self-center text-left">
                                             <div class="text-2xl font-semibold text-black dark:text-darkmodetext">
-                                                {{ $ticket->title }}</div>
+                                                {{__('Subject')}}: {{ $ticket->title }}</div>
                                             <div
                                                 class="text-sm font-medium text-gray-700 dark:text-darkmodetext pt-2 max-w-screen-lg w-full">
-                                                <div id='showmore{{ $ticket->id }}' style='{!! count(explode('<br />', nl2br($ticket->messages->last()->message))) > 3
-                                                    ? '-webkit-mask-image: linear-gradient(black 35%, transparent 100%);'
-                                                    : '' !!}'>
-                                                        {!! Str::markdown(implode(array_slice(explode('<br />', Stevebauman\Purify\Facades\Purify::clean(nl2br($ticket->messages->last()->message))),0,4))) !!}
+                                                <div id='showmore{{$ticket->id}}'
+                                                     style='{!! count(explode("<br />", nl2br($ticketMessages->where("ticket_id", $ticket->id)->last()->message))) > 3 ? "-webkit-mask-image: linear-gradient(black 35%, transparent 100%);" : "" !!}'>
+                                                    @if (count($ticketMessages) > 0)
+                                                        <h2 class="leading-7">{{__('Last Message')}}:</h2>
+                                                        <div class="flex">
+                                                            <span class="font-bold">{{ $ticketMessages->where('ticket_id', $ticket->id)->last()->user->name }}:&nbsp;</span> {!! Str::markdown(implode(array_slice(explode("<br />", Stevebauman\Purify\Facades\Purify::clean(nl2br($ticketMessages->where('ticket_id', $ticket->id)->last()->message))), 0, 4))) !!}
+                                                        </div>
+                                                    @else
+                                                        {{ __('No messages...') }}
+                                                    @endif
                                                 </div>
                                             </div>
                                         </div>
