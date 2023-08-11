@@ -177,15 +177,15 @@
                     type: 'line',
                     data: {
                         labels: [
-                            @for ($i = 1; $i <= 30; $i++)
+                            @for ($i = 29; $i >= 0; $i--)
                                 "{{ $i }}",
                             @endfor
                         ],
                         datasets: [{
                                 label: 'Orders',
                                 data: [
-                                    @for ($i = 1; $i <= 30; $i++)
-                                        {{ App\Models\Order::whereDay('created_at', '=', $i)->count() }},
+                                    @for ($i = 29; $i >= 0; $i--)
+                                        {{ isset($orderCounts[$i]) ? $orderCounts[$i] : 0 }},
                                     @endfor
                                 ],
                                 backgroundColor: 'rgb(82,112,253)',
@@ -195,8 +195,8 @@
                             {
                                 label: 'Users',
                                 data: [
-                                    @for ($i = 1; $i <= 30; $i++)
-                                        {{ App\Models\User::whereDay('created_at', '=', $i)->count() }},
+                                    @for ($i = 29; $i >= 0; $i--)
+                                        {{ isset($userCounts[$i]) ? $userCounts[$i] : 0 }},
                                     @endfor
                                 ],
                                 backgroundColor: 'rgba(255, 99, 132, 1)',
@@ -206,8 +206,8 @@
                             {
                                 label: 'Revenue',
                                 data: [
-                                    @for ($i = 1; $i <= 30; $i++)
-                                        {{ App\Models\OrderProduct::whereDay('created_at', '=', $i)->sum('price') }},
+                                    @for ($i = 29; $i >= 0; $i--)
+                                        {{ isset($invoiceCounts[$i]) ? $invoiceCounts[$i] : 0 }},
                                     @endfor
                                 ],
                                 backgroundColor: 'rgba(255, 206, 86, 1)',
