@@ -32,7 +32,7 @@
                         @if (count($invoices) === 0)
                             <div class="text-center">
                                 <p class="text-blue-500 font-bold text-lg mt-2">
-                                    Hurra! Brak rachunków do opłacenia
+                                    {{__('Hurray! No invoices to pay')}}
                                 </p>
                             </div>
                         @endif
