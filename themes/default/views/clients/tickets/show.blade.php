@@ -12,7 +12,7 @@
     <!-- show last messages and form to reply -->
     <div class="py-12">
         <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
-            <div class="overflow-hidden bg-white shadow-xl sm:rounded-lg dark:bg-secondary-100">
+            <div class="overflow-hidden bg-white shadow-xl sm:rounded-t-lg dark:bg-secondary-100 border-b border-gray-200 dark:bg-secondary-100 dark:border-secondary-300">
                 <div class="p-6 bg-white sm:px-20 dark:bg-secondary-100">
                     <x-success class="mt-4" />
                     <h1 class="text-2xl font-bold text-gray-500 dark:text-darkmodetext">{{__('Ticket')}} #{{ $ticket->id }}
@@ -92,11 +92,10 @@
                     </div>
                 </div>
             </div>
-            <br>
-            <div class="overflow-hidden bg-white shadow-xl sm:rounded-lg dark:bg-secondary-100">
+            <div class="overflow-hidden bg-white shadow-xl sm:rounded-b-lg dark:bg-secondary-100">
                 @if($ticket->status == "closed")
-                    <div class="p-6 text-red-500 bg-white border-b border-gray-200 sm:px-20 dark:bg-secondary-100 dark:border-black mt-10 mx-auto my-auto">
-                        {{__('The application has been closed, you cannot respond.')}}
+                    <div class="p-6 text-center text-red-500 bg-white sm:px-20 dark:bg-secondary-100 mx-auto my-auto">
+                        {{__('The ticket has been closed, you cannot respond.')}}
                     </div>
                 @else
                     <form method="POST" action="{{ route('clients.tickets.reply', $ticket->id) }}" class="mt-10"

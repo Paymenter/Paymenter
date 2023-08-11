@@ -15,7 +15,7 @@
                         class="lg:col-span-2 p-7 bg-white border-2 dark:bg-secondary-100 dark:border-darkmodehover rounded-xl">
                         <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 pb-10">
                             <div class="p-4 rounded-md dark:bg-darkmode bg-normal flex">
-                                <i class="ri-shopping-cart-2-line pl-2 pr-4 my-auto text-blue-600 text-4xl"></i>
+                                <i class="ri-shopping-cart-2-line p-4 bg-blue-400 text-blue-900 text-2xl items-center text-center h-16 w-16 rounded-lg mr-4"></i>
                                 <div class="flex flex-col">
                                     <h1 class="text-lg text-gray-500 dark:text-darkmodetext">Orders today</h1>
                                     <p class="text-xl font-bold text-black dark:text-darkmodetext">
@@ -24,16 +24,7 @@
                                 </div>
                             </div>
                             <div class="p-4 rounded-md dark:bg-darkmode bg-normal flex">
-                                <i class="ri-coupon-line pl-2 pr-4 my-auto text-blue-600 text-4xl"></i>
-                                <div class="flex flex-col">
-                                    <h1 class="text-lg text-gray-500 dark:text-darkmodetext">Tickets today</h1>
-                                    <p class="text-xl font-bold text-black dark:text-darkmodetext">
-                                        {{ App\Models\Ticket::whereDate('created_at', '=', date('Y-m-d'))->count() }}
-                                    </p>
-                                </div>
-                            </div>
-                            <div class="p-4 rounded-md dark:bg-darkmode bg-normal flex">
-                                <i class="ri-coins-line pl-2 pr-4 my-auto text-blue-600 text-4xl"></i>
+                                <i class="ri-coins-line p-4 bg-green-400 text-green-900 text-2xl items-center text-center h-16 w-16 rounded-lg mr-4"></i>
                                 <div class="flex flex-col">
                                     <h1 class="text-lg text-gray-500 dark:text-darkmodetext">Revenue Total</h1>
                                     <p class="text-xl font-bold text-black dark:text-darkmodetext">
@@ -42,82 +33,117 @@
                                     </p>
                                 </div>
                             </div>
+                            <div class="p-4 rounded-md dark:bg-darkmode bg-normal flex">
+                                <i class="ri-coupon-line p-4 bg-red-400 text-red-900 text-2xl items-center text-center h-16 w-16 rounded-lg mr-4"></i>
+                                <div class="flex flex-col">
+                                    <h1 class="text-lg text-gray-500 dark:text-darkmodetext">Orders today</h1>
+                                    <p class="text-xl font-bold text-black dark:text-darkmodetext">
+                                        {{ App\Models\Ticket::whereDate('created_at', '=', date('Y-m-d'))->count() }}
+                                    </p>
+                                </div>
+                            </div>
                         </div>
                         <canvas id="myChart" class="w-full max-h-[400px]"></canvas>
                     </div>
-                    <div class="p-7 bg-white border-2 dark:bg-secondary-100 dark:border-darkmodehover rounded-xl">
-                        <h2 class="text-xl font-bold mb-2 dark:text-darkmodetext">Support</h2>
+                    <div class="p-5 bg-white border-2 dark:bg-secondary-100 dark:border-darkmodehover rounded-xl">
+                        <h2 class="text-xl font-bold mb-2 dark:text-darkmodetext">{{__('Tickets')}}</h2>
                         <div class="grid grid-cols-1 xl:grid-cols-3 gap-4">
                             <div class="flex">
                                 <i
-                                    class="ri-coupon-line p-4 text-blue-600 bg-normal dark:bg-darkmode text-2xl items-center text-center h-16 w-16 rounded-lg mr-4"></i>
+                                    class="ri-coupon-line p-4 bg-blue-400 text-blue-900 text-2xl items-center text-center h-16 w-16 rounded-lg mr-4"></i>
                                 <div class="flex flex-col my-auto">
-                                    <h3 class="text-gray-700 dark:text-darkmodetext">Open Tickets</h3>
-                                    <span
-                                        class="font-bold text-xl dark:text-darkmodetext">{{ App\Models\Ticket::where('status', '!=', 'closed')->count() }}</span>
+                                    <span class="font-bold text-xl dark:text-darkmodetext">
+                                        {{ App\Models\Ticket::count() }}
+                                    </span>
+                                    <h3 class="text-gray-700 dark:text-darkmodetext">{{__('All')}}</h3>
                                 </div>
                             </div>
 
                             <div class="flex">
                                 <i
-                                    class="ri-coupon-line p-4 text-blue-600 bg-normal dark:bg-darkmode text-2xl items-center text-center h-16 w-16 rounded-lg mr-4"></i>
+                                    class="ri-coupon-line p-4 bg-green-400 text-green-900 text-2xl items-center text-center h-16 w-16 rounded-lg mr-4"></i>
                                 <div class="flex flex-col my-auto">
-                                    <h3 class="text-gray-700 dark:text-darkmodetext">Closed Tickets</h3>
-                                    <span
-                                        class="font-bold text-xl dark:text-darkmodetext">{{ App\Models\Ticket::where('status', 'closed')->count() }}</span>
+                                    <span class="font-bold text-xl dark:text-darkmodetext">
+                                        {{ App\Models\Ticket::where('status', '!=', 'closed')->count() }}
+                                    </span>
+                                    <h3 class="text-gray-700 dark:text-darkmodetext">{{__("Open")}}</h3>
                                 </div>
                             </div>
 
                             <div class="flex">
                                 <i
-                                    class="ri-coupon-line p-4 text-blue-600 bg-normal dark:bg-darkmode text-2xl items-center text-center h-16 w-16 rounded-lg mr-4"></i>
+                                    class="ri-coupon-line p-4 bg-red-400 text-red-900 text-2xl items-center text-center h-16 w-16 rounded-lg mr-4"></i>
                                 <div class="flex flex-col my-auto">
-                                    <h3 class="text-gray-700 dark:text-darkmodetext">Total Tickets</h3>
-                                    <span
-                                        class="font-bold text-xl dark:text-darkmodetext">{{ App\Models\Ticket::count() }}</span>
+                                    <span class="font-bold text-xl dark:text-darkmodetext">
+                                        {{ App\Models\Ticket::where('status', 'closed')->count() }}
+                                    </span>
+                                    <h3 class="text-gray-700 dark:text-darkmodetext">{{__('Closed')}}</h3>
                                 </div>
                             </div>
                         </div>
 
-                        <h2 class="text-xl font-bold mt-4 mb-2 dark:text-darkmodetext">Recent Open Tickets</h2>
+                        <h2 class="text-xl font-bold mt-4 mb-2 dark:text-darkmodetext">{{__('Last Tickets')}}</h2>
                         <div class="grid grid-cols-1 gap-4">
-                            @foreach (App\Models\Ticket::orderByRaw('updated_at - created_at DESC')->get()->take(5) as $ticket)
+                            @foreach (App\Models\Ticket::orderByRaw('updated_at - created_at DESC')->get()->take(4) as $ticket)
                                 <a href="/admin/tickets/{{ $ticket->id }}">
-                                    <div
-                                        class="px-4 py-2 rounded-md flex dark:hover:bg-darkmode/50 dark:bg-darkmode bg-normal hover:bg-blue-100">
-                                        <div class="flex flex-col">
-                                            <h1 class="text-xl text-gray-500 dark:text-darkmodetext">Ticket
-                                                #{{ $ticket->id }} by
+                                    <div class="px-4 py-2 rounded-md flex flex-col dark:hover:bg-darkmode/50 dark:bg-darkmode bg-normal hover:bg-blue-100">
+                                        <div class="flex flex-row justify-between">
+                                            <h1 class="text-xl text-gray-500 dark:text-darkmodetext flex flex-col">
+                                                <b>{{__('Ticket')}} #{{ $ticket->id }}</b>
                                                 <span class="dark:text-darkmodetext">
-                                                    {{ $ticket->user->name }}
+                                                    <b>{{__('Client')}}:</b> {{ $ticket->user->name }} (#{{ $ticket->user->id }})
                                                 </span>
+                                                <div>
+                                                    <b>{{__('Admin')}}:</b> <span class="dark:text-darkmodetext">
+                                                        @php
+                                                            if ($ticket->assigned_to !== null) {
+                                                                $admin = App\Models\User::where('id', '=', $ticket->assigned_to)->get();
+                                                            } else {
+                                                                $admin = null;
+                                                            }
+                                                        @endphp
+                                                        @if (!$admin)
+                                                            {{__('Unassigned')}}
+                                                    @else
+                                                        {{ $admin[0]->name }}
+                                                    @endif
+                                                </div>
                                             </h1>
-                                            <p
-                                                class="text-2xl font-bold text-black dark:text-darkmodetext flex items-center">
-                                                <label class="mr-2">{{ $ticket->title }}</label>
-                                                @if ($ticket->priority == 'high')
-                                                    <span
-                                                        class="px-1.5 py-0.5 text-xs text-white bg-red-500 rounded-md mr-2">High</span>
-                                                @elseif($ticket->priority == 'medium')
-                                                    <span
-                                                        class="px-1.5 py-0.5 text-xs text-white bg-yellow-500 rounded-md mr-2">Medium</span>
-                                                @elseif($ticket->priority == 'low')
-                                                    <span
-                                                        class="px-1.5 py-0.5 text-xs text-white bg-green-500 rounded-md mr-2">Low</span>
-                                                @endif
+                                            <div class="flex flex-col my-auto">
+                                                <p class="font-bold flex mb-0">
+                                                    @if($ticket->priority == 'high')
+                                                        <span class="px-1.5 py-0.5 text-xs text-white bg-red-500 rounded-md mr-2 animate-pulse my-auto">
+                                                            {{__('High') }}
+                                                        </span>
+                                                    @elseif($ticket->priority == 'medium')
+                                                        <span class="px-1.5 py-0.5 text-xs text-white bg-yellow-500 rounded-md mr-2 my-auto">
+                                                            {{__('Medium') }}
+                                                        </span>
+                                                    @elseif($ticket->priority == 'low')
+                                                        <span class="px-1.5 py-0.5 text-xs text-white bg-green-500 rounded-md mr-2 my-auto">
+                                                            {{__('Low') }}
+                                                        </span>
+                                                    @endif
 
-                                                @if ($ticket->status == 'closed')
-                                                    <span
-                                                        class="px-1.5 py-0.5 text-xs text-white bg-red-500 rounded-md">closed</span>
-                                                @elseif($ticket->status == 'replied')
-                                                    <span
-                                                        class="px-1.5 py-0.5 text-xs text-white bg-yellow-500 rounded-md">replied</span>
-                                                @endif
-                                            </p>
+                                                    @if ($ticket->status == 'closed')
+                                                        <span class="px-1.5 py-0.5 text-xs text-white bg-red-500 rounded-md my-auto">
+                                                            {{ __('Closed') }}
+                                                        </span>
+                                                    @elseif($ticket->status == 'replied')
+                                                        <span class="px-1.5 py-0.5 text-xs text-white bg-yellow-500 rounded-md my-auto">
+                                                            {{ __('Replied') }}
+                                                            </span>
+                                                    @elseif($ticket->status == 'open')
+                                                        <span class="px-1.5 py-0.5 text-xs text-white bg-green-500 rounded-md my-auto">
+                                                            {{ __('Open') }}
+                                                        </span>
+                                                    @endif
+                                                </p>
+                                                <div class="my-0 flex flex-col text-center dark:text-darkmodetext">
+                                                    {{ $ticket->updated_at->diffForHumans() }}
+                                                </div>
+                                            </div>
                                         </div>
-                                        <label class="block my-auto ml-auto dark:text-darkmodetext">
-                                            {{ $ticket->updated_at->diffForHumans() }}
-                                        </label>
                                     </div>
                                 </a>
                             @endforeach
