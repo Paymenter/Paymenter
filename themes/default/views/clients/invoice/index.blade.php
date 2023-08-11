@@ -14,13 +14,14 @@
                             {{ __('Total') }}
                         </th>
                         <th scope="col" class="text-start pr-6 py-2 text-sm font-normal">
-                            {{ __('Created Date') }}</th>
-
+                            {{ __('Created Date') }}
+                        </th>
                         <th scope="col" class="text-start pr-6 py-2 text-sm font-normal">
-                            {{ __('Status') }}</th>
+                            {{ __('Status') }}
+                        </th>
                         <th scope="col" class="text-start pr-6 py-2 text-sm font-normal">
-                            {{ __('Actions') }}</th>
-
+                            {{ __('Actions') }}
+                        </th>
                     </tr>
                     </thead>
                     <tbody>
@@ -41,13 +42,13 @@
                             <td class="pr-6 py-3">
                                 @if (ucfirst($invoice->status) == 'Pending')
                                     <span class="text-red-400 font-semibold">
-                                            Do Opłacenia
-                                        </span>
+                                            {{ __('Pending') }}
+                                    </span>
                                 @endif
                                 @if (ucfirst($invoice->status) == 'Paid')
                                     <span class="text-green-400 font-semibold">
-                                                Opłacono
-                                            </span>
+                                        {{__('Paid')}}
+                                    </span>
                                 @endif
                             </td>
                             <td class="pr-6 py-3">
@@ -58,7 +59,6 @@
                             </td>
                         </tr>
                     @endforeach
-
                     </tbody>
                 </table>
             @endif
