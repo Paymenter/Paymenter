@@ -133,7 +133,7 @@
     @endif
     <br>
     <div class="overflow-hidden bg-white shadow-xl sm:rounded-lg dark:bg-secondary-100">
-        <form method="POST" action="{{ route('clients.tickets.reply', $ticket->id) }}" class="mt-10" id="reply">
+        <form method="POST" action="{{ route('admin.tickets.reply', $ticket->id) }}" class="mt-10" id="reply">
             @csrf
             <div class="bg-white mb-5 border-gray-200 sm:px-20 dark:bg-secondary-100 dark:border-black mt-5">
                 <h1 class="text-xl text-gray-500 dark:text-darkmodetext font-bold">{{ __('Reply') }}</h1>
