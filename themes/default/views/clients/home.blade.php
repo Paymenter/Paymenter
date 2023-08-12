@@ -49,7 +49,7 @@
                                                 <span class="font-semibold">{{__('Amount to pay')}} - {{ $invoice->total() }} {{ config('settings::currency_sign') }}</span>
                                             </div>
                                         </div>
-                                        <div class="justify-end flex text-center text-primary-400 my-auto button button-primary text-md w-fit" style="padding: 5px 8px !important;">
+                                        <div class="justify-end flex text-center text-primary-400 my-auto button button-primary text-md w-fit py-[5px] px-[8px]">
                                             <b>{{__('View')}}</b>
                                         </div>
                                     </div>
