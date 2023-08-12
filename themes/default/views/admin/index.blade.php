@@ -93,8 +93,9 @@
                                                 <span class="dark:text-darkmodetext">
                                                     <b>{{__('Client')}}:</b> {{ $ticket->user->name }} (#{{ $ticket->user->id }})
                                                 </span>
-                                                <div>
-                                                    <b>{{__('Admin')}}:</b> <span class="dark:text-darkmodetext">
+                                                @isset($ticket->assigned_to)
+                                                    <div>
+                                                        <b>{{__('Admin')}}:</b> <span class="dark:text-darkmodetext">
                                                         @php
                                                             if ($ticket->assigned_to !== null) {
                                                                 $admin = App\Models\User::where('id', '=', $ticket->assigned_to)->get();
@@ -103,11 +104,12 @@
                                                             }
                                                         @endphp
                                                         @if (!$admin)
-                                                            {{__('Unassigned')}}
-                                                    @else
-                                                        {{ $admin[0]->name }}
-                                                    @endif
-                                                </div>
+                                                                {{__('Unassigned')}}
+                                                        @else
+                                                            {{ $admin[0]->name }}
+                                                        @endif
+                                                    </div>
+                                                @endisset
                                             </h1>
                                             <div class="flex flex-col my-auto">
                                                 <p class="font-bold flex mb-0">
