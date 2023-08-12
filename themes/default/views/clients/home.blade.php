@@ -37,39 +37,26 @@
                             </div>
                         @endif
                             @foreach ($invoices as $invoice)
-                                @php
+                                <div class="hover:bg-secondary-300 transition-all border-b-[1px] border-secondary-200 ease-out hover:ease-in cursor-pointer w-full p-3" onclick="window.location.href='{{ route('clients.invoice.show', $invoice->id) }}'">
+                                    <div class="flex flex-row">
+                                        <div class="flex my-auto text-2xl ms-2 w-1/12 justify-center text-primary-400">
+                                            <i class="ri-bill-fill"></i>
+                                        </div>
+                                        <div class="w-8/12 ml-4 truncate">
+                                            <span class="font-semibold">{{ __('Invoice ID') }}:</span>
+                                            <span class="font-semibold">{{ $invoice->id }}</span>
+                                    @php
                                     $products = $invoice->getItemsWithProducts()->products;
                                 @endphp
-                                @foreach ($products as $item)
-                                    @php
-                                        $expiryDate = new \DateTime($item->expiry_date);
-                                        $countdownDate = clone $expiryDate;
-                                        $countdownDate->modify('+7 days')->setTime(0, 1, 0);
-                                        $currentDate = new \DateTime();
-                                        $interval = $currentDate->diff($countdownDate);
-                                        $remainingDays = $interval->days;
-                                        $remainingHours = $interval->h;
-                                    @endphp
-                                    <div class="hover:bg-secondary-300 transition-all border-b-[1px] border-secondary-200 ease-out hover:ease-in cursor-pointer w-full p-3" onclick="window.location.href='{{ route('clients.invoice.show', $invoice->id) }}'">
-                                        <div class="flex flex-row">
-                                            <div class="flex my-auto text-2xl ms-2 w-1/12 justify-center text-blue-500">
-                                                <i class="ri-bill-fill"></i>
-                                            </div>
-                                            <div class="w-8/12 ml-4 truncate">
-                                                <span class="font-semibold">{{ $item->product->name ?? $item->name }}</span>
-                                                <span class="font-semibold">(#{{ $item->product->id?? $item->id }})</span>
-                                                <span class="text-blue-500 items-center flex opacity-80 text-sm">{{__('Pay for the product / service')}}</span>
-                                            </div>
-                                            <div class="justify-end min-h-[48px] max-h-[48px] flex w-3/12 text-sm font-medium text-center text-red-500">
-                                                @if ($currentDate < $countdownDate)
-                                                    {{__('Time to pay')}} {{ $remainingDays }}d {{ $remainingHours }}h
-                                                @else
-                                                    {{ __('Expired')}}
-                                                @endif
-                                            </div>
+                                    <div class="w-full text-sm text-gray-400 truncate">
+                                        <span class="font-semibold">Amount to pay - {{ $invoice->total() }} {{ config('settings::currency_sign') }}</span>
+                                    </div>
+                                        </div>
+                                        <div class="justify-end flex text-center text-primary-400 my-auto button button-primary text-md w-fit" style="padding: 5px 8px !important;">
+                                            <b>View</b>
                                         </div>
                                     </div>
-                                @endforeach
+                                </div>
                             @endforeach
 
                             <div class="p-2"></div>
@@ -121,7 +108,7 @@
                                                 {{ $product2->price !== '0.00' && $product2->price ? $product2->price . " " . config('settings::currency_sign') : __('Free') }}
                                             </td>
                                             <td class="py-3 hidden md:table-cell">
-                                                {{ $product2->expiry_date ? date('d.m.Y', strtotime($product2->expiry_date)) : __('Never') }}
+                                                {{ $product2->expiry_date ? date('d-m-Y', strtotime($product2->expiry_date)) : __('Never') }}
                                             </td>
                                             <td class="py-3 hidden md:table-cell">
                                                 <div class="font-bold rounded-md text-left">
