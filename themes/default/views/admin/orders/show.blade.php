@@ -48,7 +48,7 @@
                     <th class="font-bold">{{__('Status')}}</th>
                     <th class="font-bold">{{__('Active to')}}</th>
                     <th class="font-bold">{{__('Link')}}</th>
-                    <th class="font-bold text-end p-2">{{__('Actions')}}</th>
+                    <th class="font-bold p-2">{{__('Actions')}}</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -79,7 +79,7 @@
                             {{ $product->link ?: 'N/A' }}
                         </td>
 
-                        <td class="flex space-x-2 justify-end p-2">
+                        <td class="flex space-x-2 p-2 justify-center">
                             <!-- Buttons to edit/delete/suspend/unsuspend the user -->
                             <div class="my-auto">
                                 <a data-tooltip-target="tooltip-animation1" class="button button-primary" href="{{ route('admin.clients.products', ['user' => $order->user, 'orderProduct' => $product->id]) }}" target="_blank">
@@ -110,7 +110,7 @@
                                         </button>
                                     </form>
                                     <div id="tooltip-animation5" role="tooltip" class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
-                                        {{__('Create product')}}
+                                        {{__('Create server in extension')}}
                                         <div class="tooltip-arrow" data-popper-arrow></div>
                                     </div>
                                 </div>
@@ -126,34 +126,6 @@
                                     </form>
                                     <div id="tooltip-animation6" role="tooltip" class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
                                         {{__('Mark as paid')}}
-                                        <div class="tooltip-arrow" data-popper-arrow></div>
-                                    </div>
-                                </div>
-                            @endif
-
-                            @if ($product->status == 'suspended')
-                                <div>
-                                    <form method="POST" action="{{ route('admin.orders.unsuspend', $order->id) }}">
-                                        @csrf
-                                        <button class="bg-[#4EB165] button button-success" type="submit" data-tooltip-target="tooltip-animation3">
-                                            <i class="ri-lock-unlock-line"></i>
-                                        </button>
-                                    </form>
-                                    <div id="tooltip-animation3" role="tooltip" class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
-                                        {{__('Unsuspend product')}}
-                                        <div class="tooltip-arrow" data-popper-arrow></div>
-                                    </div>
-                                </div>
-                            @elseif($product->status == 'paid')
-                                <div>
-                                    <form method="POST" action="{{ route('admin.orders.suspend', $order->id) }}">
-                                        @csrf
-                                        <button class="bg-[#DC3A3A] button button-danger" type="submit" data-tooltip-target="tooltip-animation4">
-                                            <i class="ri-lock-2-line"></i>
-                                        </button>
-                                    </form>
-                                    <div id="tooltip-animation4" role="tooltip" class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
-                                        {{__('Suspend product')}}
                                         <div class="tooltip-arrow" data-popper-arrow></div>
                                     </div>
                                 </div>
@@ -224,7 +196,7 @@
                                    placeholder="{{ __('Expiry Date') }}" />
                         </div>
                         <div class="flex flex-row justify-end mt-4">
-                            <button class="bg-blue-500 button button-primary" type="submit">
+                            <button class="button button-primary" type="submit">
                                 {{ __('Change') }}
                             </button>
                         </div>
@@ -268,10 +240,15 @@
                         <td class="px-4 py-2">{{ $invoice->created_at }}</td>
                         <td class="px-4 py-2">{{ $invoice->paid_at }}</td>
                         <td class="px-4 py-2">
-                            <a href="{{ route('admin.invoices.show', $invoice->id) }}"
-                               class="text-blue-600 hover:text-blue-900">
-                                {{ __('View') }}
-                            </a>
+                            <div class="my-auto">
+                                <a data-tooltip-target="tooltip-animation-invoice" class="button button-primary" href="{{ route('admin.invoices.show', $invoice->id) }}" target="_blank">
+                                    <i class="ri-eye-line"></i>
+                                </a>
+                                <div id="tooltip-animation-invoice" role="tooltip" class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
+                                    {{__('View Invoice')}}
+                                    <div class="tooltip-arrow" data-popper-arrow></div>
+                                </div>
+                            </div>
                         </td>
                     </tr>
                 @endforeach
