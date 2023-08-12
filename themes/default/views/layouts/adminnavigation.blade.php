@@ -29,14 +29,19 @@
                     </button>
                     <div class="absolute right-0 hidden w-56 mt-2 origin-top-right bg-secondary-50 rounded-lg shadow-lg dark:bg-secondary-300 ring-1 ring-black ring-opacity-5" role="menu" aria-orientation="vertical" aria-labelledby="menu-button" tabindex="-1" id="clients">
                         <div class="py-1" role="none">
-                            <a href="{{ route('admin.clients') }}" class="block px-4 py-2 text-base text-gray-700 dark:text-darkmodetext dark:hover:bg-secondary-200 hover:bg-gray-100 hover:text-gray-900" role="menuitem" tabindex="-1" id="menu-item-0">All Clients</a>
-                            <a href="{{ route('admin.clients.create') }}" class="block px-4 py-2 text-base text-gray-700 dark:text-darkmodetext dark:hover:bg-secondary-200 hover:bg-gray-100 hover:text-gray-900" role="menuitem" tabindex="-1" id="menu-item-1">Create Client</a>
+                            <a href="{{ route('admin.clients') }}" class="block px-4 py-2 text-base text-gray-700 dark:text-darkmodetext dark:hover:bg-secondary-200 hover:bg-gray-100 hover:text-gray-900" role="menuitem" tabindex="-1" id="menu-item-0">{{__('All Clients')}}</a>
+                            <a href="{{ route('admin.clients.create') }}" class="block px-4 py-2 text-base text-gray-700 dark:text-darkmodetext dark:hover:bg-secondary-200 hover:bg-gray-100 hover:text-gray-900" role="menuitem" tabindex="-1" id="menu-item-1">{{__('Create Client')}}</a>
                         </div>
                     </div>
                 </div>
                 <div class="relative inline-block text-left">
                     <a href="{{ route('admin.orders') }}" class="dark:bg-secondary-100 dark:text-darkmodetext dark:hover:bg-secondary-200 inline-flex w-full justify-center bg-secondary-50 px-2 py-2 text-base font-medium rounded-md text-gray-700 @if (request()->routeIs('admin.orders*')) bg-gray-200 @endif" id="menu-button" aria-expanded="true" aria-haspopup="true">
-                        <i class="pr-1 ri-shopping-cart-2-line mr-1" @if (request()->routeIs('admin.orders*')) style="color: #5270FD" @endif></i> Orders
+                        <i class="pr-1 ri-shopping-cart-2-line mr-1" @if (request()->routeIs('admin.orders*')) style="color: #5270FD" @endif></i> {{__('Orders')}}
+                    </a>
+                </div>
+                <div class="relative inline-block text-left">
+                    <a href="{{ route('admin.invoices') }}" class="dark:bg-secondary-100 dark:text-darkmodetext dark:hover:bg-secondary-200 inline-flex w-full justify-center bg-secondary-50 px-2 py-2 text-base font-medium rounded-md text-gray-700 @if (request()->routeIs('admin.invoices*')) bg-gray-200 @endif" id="menu-button" aria-expanded="true" aria-haspopup="true">
+                        <i class="pr-1 ri-bill-line mr-1" @if (request()->routeIs('admin.invoices*')) style="color: #5270FD" @endif></i> {{__('Invoices')}}
                     </a>
                 </div>
                 <div class="relative inline-block text-left">

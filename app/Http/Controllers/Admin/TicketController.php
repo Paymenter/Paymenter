@@ -8,6 +8,8 @@ use App\Models\Ticket;
 use Illuminate\Http\Request;
 use App\Models\TicketMessage;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Validator;
 
 class TicketController extends Controller
 {
@@ -79,7 +81,7 @@ class TicketController extends Controller
     public function update(Request $request, Ticket $ticket)
     {
         $request->validate([
-            'title' => 'required',
+            'title' => 'required|string|regex:/^[a-zA-Z0-9\s]+$/u',
             'status' => 'required|in:open,closed',
             'priority' => 'required|in:low,medium,high',
             'assigned_to' => 'nullable|exists:users,id',
