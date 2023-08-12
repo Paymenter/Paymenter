@@ -20,6 +20,10 @@ class TicketMessage extends Model
         return $this->belongsTo(User::class);
     }
 
+    public function messageDate()
+    {
+        return $this->created_at->isToday() ? $this->created_at->format('H:i') : $this->created_at->format('d M Y, H:i');
+    }
 
     public function ticket()
     {

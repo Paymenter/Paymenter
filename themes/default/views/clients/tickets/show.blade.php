@@ -42,7 +42,7 @@
                             @foreach ($ticket->messages()->get() as $message)
                                 @if ($message->user_id == Auth::user()->id)
                                     <div class="col-span-3 text-center w-full">
-                                        {{showTicketDate(strtotime($message->created_at))}}
+                                        {{$message->messageDate()}}
                                     </div>
                                     <div class="col-span-1"></div>
                                     <div class="w-full col-span-2" id="message">
@@ -64,7 +64,7 @@
                                     </div>
                                 @elseif ($message->user_id !== Auth::user()->id)
                                     <div class="col-span-3 text-center w-full">
-                                        {{showTicketDate(strtotime($message->created_at))}}
+                                        {{$message->messageDate()}}
                                     </div>
                                     <div class="w-full col-span-2" id="message">
                                         <div class="grid grid-cols-12 max-w-full">

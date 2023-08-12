@@ -2,15 +2,6 @@
     <x-slot name="title">
         {{ __('Tickets ' . $ticket->title) }}
     </x-slot>
-    @php
-        function showTicketDate(int $createdAt):string{
-            if(date('Y-m-d', $createdAt) === date('Y-m-d', strtotime('now'))) {
-                return date('H:i', $createdAt);
-            } else {
-                return date('d', $createdAt) . " " . date('M', $createdAt) . " " . date('Y, H:i', $createdAt);
-            }
-        }
-    @endphp
 
     <div class="bg-white dark:bg-secondary-100">
         <h1 class="text-2xl font-bold text-gray-500 dark:text-darkmodetext">{{ __('View Ticket #') }}{{ $ticket->id }}
@@ -82,7 +73,7 @@
                     @foreach ($ticket->messages()->get() as $message)
                         @if ($message->user_id == Auth::user()->id)
                             <div class="col-span-3 text-center w-full">
-                                {{showTicketDate(strtotime($message->created_at))}}
+                                {{$message->messageDate()}}
                             </div>
                             <div class="col-span-1"></div>
                             <div class="w-full col-span-2" id="message">
@@ -104,7 +95,7 @@
                             </div>
                         @elseif ($message->user_id !== Auth::user()->id)
                             <div class="col-span-3 text-center w-full">
-                                {{showTicketDate(strtotime($message->created_at))}}
+                                {{$message->messageDate()}}
                             </div>
                             <div class="w-full col-span-2" id="message">
                                 <div class="grid grid-cols-12 max-w-full">
