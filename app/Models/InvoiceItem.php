@@ -21,6 +21,11 @@ class InvoiceItem extends Model
         return $this->belongsTo(Invoice::class, 'invoice_id', 'id');
     }
 
+    public function getTotalAttribute($value)
+    {
+        return number_format((float)$value, 2, '.', '');
+    }
+
     public function product()
     {
         return $this->belongsTo(OrderProduct::class, 'product_id', 'id');

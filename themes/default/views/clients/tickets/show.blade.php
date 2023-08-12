@@ -110,13 +110,13 @@
                                         <textarea
                                             id="message"
                                             class="block my-auto w-full rounded-2xl shadow-sm focus:ring-indigo-500 focus:border-indigo-500 border-indigo-300 dark:border-0 sm:text-sm dark:bg-secondary-200"
-                                            rows="1"
+                                            rows="4"
                                             name="message"
                                             placeholder="Aa"
                                             required
                                         ></textarea>
                                         <x-recaptcha form="reply" />
-                                        <button class="button-primary ml-1 rounded-full w-10 my-auto ml-2 h-10 float-right transition-all ease-in-out">
+                                        <button class="button-primary ml-1 rounded-full w-10 h-10 float-right transition-all ease-in-out">
                                             <i class="ri-send-plane-fill"></i>
                                         </button>
                                     </div>

@@ -37,7 +37,7 @@
                                 {{ $invoice->total() }} {{ config('settings::currency_sign') }}
                             </td>
                             <td class="pr-6 py-3">
-                                {{ $invoice->created_at->format('d.m.Y H:i') }}
+                                {{ $invoice->created_at }}
                             </td>
                             <td class="pr-6 py-3">
                                 @if (ucfirst($invoice->status) == 'Pending')

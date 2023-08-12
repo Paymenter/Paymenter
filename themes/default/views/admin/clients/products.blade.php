@@ -76,7 +76,7 @@
                     label="Expiry Date" />
                 <x-input type="number" name="quantity" id="quantity" value="{{ $orderProduct->quantity }}"
                     label="Quantity" />
-                <x-input type="number" name="price" id="price" value="{{ $orderProduct->price }}"
+                <x-input type="text" name="price" id="price" value="{{ $orderProduct->price }}"
                     label="Price" />
             </div>
         </div>

@@ -17,8 +17,7 @@ class TicketController extends Controller
     public function index(Request $request)
     {
         $user = $request->user();
-        $tickets = $user->tickets()->get();
-        $ticketMessages = TicketMessage::all();
+        $tickets = $user->tickets()->with('messages')->get();
         $sort = $request->get('sort');
 
         return view(
@@ -26,7 +25,6 @@ class TicketController extends Controller
             compact(
                 'tickets',
                 'user',
-                'ticketMessages',
                 'sort'
             )
         );

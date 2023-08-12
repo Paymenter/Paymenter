@@ -194,7 +194,7 @@ class Virtualizor extends Server
 
         $output = $admin->addvs_v2($post);
 
-        if (isset($output['error'])) {
+        if (isset($output['error']) && !empty($output['error'])) {
             ExtensionHelper::error('Virtualizor', $output['error']);
             return;
         }

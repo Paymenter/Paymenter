@@ -57,16 +57,18 @@
                 @endif
 
                 @auth
-                    <div class="ml-auto items-center justify-end hidden md:flex">
-                        <a href="{{ route('clients.credits') }}" class="text-md mr-2">
-                            <i class="ri-wallet-3-line"></i> {{__('Your Balance:')}} <span class="font-semibold">{{ Auth::user()->formattedCredits() }} {{ config('settings::currency_sign') }}</span>
-                        </a>
-                    </div>
-                    <div class="ml-auto flex items-center justify-end md:hidden">
-                        <a href="{{ route('clients.credits') }}" class="text-md mr-2">
-                            <i class="ri-wallet-3-line"></i> <span class="font-semibold">{{ Auth::user()->formattedCredits() }} {{ config('settings::currency_sign') }}</span>
-                        </a>
-                    </div>
+                    @if(Auth::user()->credits > 0 && config('settings::credits'))
+                        <div class="ml-auto items-center justify-end hidden md:flex">
+                            <a href="{{ route('clients.credits') }}" class="text-md mr-2">
+                                <i class="ri-wallet-3-line"></i> {{__('Your Balance:')}} <span class="font-semibold">{{ Auth::user()->formattedCredits() }} {{ config('settings::currency_sign') }}</span>
+                            </a>
+                        </div>
+                        <div class="ml-auto flex items-center justify-end md:hidden">
+                            <a href="{{ route('clients.credits') }}" class="text-md mr-2">
+                                <i class="ri-wallet-3-line"></i> <span class="font-semibold">{{ Auth::user()->formattedCredits() }} {{ config('settings::currency_sign') }}</span>
+                            </a>
+                        </div>
+                    @endif
                     <button type="button" aria-expanded="true" aria-haspopup="true" data-dropdown-placement="bottom-end"
                             data-dropdown-toggle="account" class="relative md:flex-none flex-1">
                         <div class="inline-flex items-center justify-center">
