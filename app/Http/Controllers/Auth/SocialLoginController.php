@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Auth;
 use App\Models\User;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 use Laravel\Socialite\Facades\Socialite;
 
 class SocialLoginController extends Controller
@@ -24,41 +26,56 @@ class SocialLoginController extends Controller
 
     public function handleProviderCallback($provider)
     {
-        if ($provider == 'discord') {
-            $user = Socialite::driver($provider)->user();
-            if($user->user["verified"] == false) {
-                return redirect()->route('login')->with('error', 'Your Discord account is not verified.');
-            }
-            $user = User::where('email', $user->email)->first();
-            if (!$user) {
-                return redirect()->route('register')->with('error', 'You are not registered on this site.');
-            } else {
-                Auth::login($user, true);
+        $socialUser = Socialite::driver($provider)->user();
+        $user = User::where('email', $socialUser->email)->first();
 
-                return redirect()->route('index');
-            }
-        } elseif ($provider == 'google') {
-            $user = Socialite::driver($provider)->user();
-            $user = User::where('email', $user->email)->first();
-            if (!$user) {
-                return redirect()->route('register')->with('error', 'You are not registered on this site.');
-            } else {
-                Auth::login($user, true);
+        switch ($provider) {
+            case 'discord':
+                if ($socialUser->user["verified"] == false) {
+                    return redirect()->route('login')->with('error', 'Your Discord account is not verified.');
+                }
+                break;
 
-                return redirect()->route('index');
-            }
-        } elseif ($provider == 'github') {
-            $user = Socialite::driver($provider)->user();
-            $user = User::where('email', $user->email)->first();
-            if (!$user) {
-                return redirect()->route('register')->with('error', 'You are not registered on this site.');
-            } else {
-                Auth::login($user, true);
+            case 'google':
+                // You can add any specific logic related to Google provider here
+                break;
 
-                return redirect()->route('index');
-            }
+            case 'github':
+                // You can add any specific logic related to GitHub provider here
+                break;
+
+            default:
+                return redirect()->route('login');
+        }
+
+        if (!$user) {
+            // Generate a random password
+            $randomPassword = Str::random(12); // Adjust the length as needed
+
+            // Hash the password
+            $hashedPassword = Hash::make($randomPassword);
+
+            // User doesn't exist, so register them
+            $newUser = User::create([
+                'name' => $socialUser->name,
+                'email' => $socialUser->email,
+                'password' => $hashedPassword, // Store the hashed password
+                'api_token' => Str::random(60),
+                'is_social_user' => true, // Set the flag for social registration
+                // Set other fields as needed
+            ]);
+
+            // Log in the newly registered user
+            Auth::login($newUser, true);
+
+            event(new Registered($newUser));
+
+            return redirect()->route('index');
         } else {
-            return redirect()->route('login');
+            // User exists, log them in
+            Auth::login($user, true);
+
+            return redirect()->route('index');
         }
     }
 }

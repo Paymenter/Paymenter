@@ -36,6 +36,7 @@ class User extends Authenticatable
         'tfa_secret',
         'role_id',
         'credits',
+        'is_social_user',
     ];
 
     /**

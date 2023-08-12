@@ -17,6 +17,12 @@ class ConfirmablePasswordController extends Controller
      */
     public function show(Request $request)
     {
+        if (Auth::check() && Auth::user()->is_social_user) {
+            // If user is a social user, bypass the password confirmation view
+            $request->session()->put('auth.password_confirmed_at', time());
+            return redirect()->intended(RouteServiceProvider::HOME);
+        }
+
         return view('auth.passwords.confirm');
     }
 
@@ -32,16 +38,24 @@ class ConfirmablePasswordController extends Controller
             'cf-turnstile-response' => 'recaptcha',
             'h-captcha-response' => 'recaptcha',
         ]);
-        if (!Auth::guard('web')->validate([
-            'email' => $request->user()->email,
-            'password' => $request->password,
-        ])) {
-            throw ValidationException::withMessages(['password' => __('auth.password')]);
+
+        // Check if the user is a social user (set this flag during social registration)
+        if (Auth::check() && Auth::user()->is_social_user) {
+            // Bypass password check for social users
+            $request->session()->put('auth.password_confirmed_at', time());
+            return redirect()->intended(RouteServiceProvider::HOME);
+        } else {
+            // Perform the password check for non-social users
+            if (!Auth::guard('web')->validate([
+                'email' => $request->user()->email,
+                'password' => $request->password,
+            ])) {
+                throw ValidationException::withMessages(['password' => __('auth.password')]);
+            }
         }
 
-
+        // Update session and redirect
         $request->session()->put('auth.password_confirmed_at', time());
-
         return redirect()->intended(RouteServiceProvider::HOME);
     }
 }
