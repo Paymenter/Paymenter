@@ -35,11 +35,8 @@
                 {{ __('Products') }}
             </h3>
             <style>
-                th, td {
-                    padding: 5px;
-                }
                 .button {
-                    padding: 8px !important;
+                    padding: 4px 10px !important;
                 }
             </style>
             <table class="mt-4 gap-y-3 min-w-max overflow-x-auto">
@@ -51,7 +48,7 @@
                     <th class="font-bold">{{__('Status')}}</th>
                     <th class="font-bold">{{__('Active to')}}</th>
                     <th class="font-bold">{{__('Link')}}</th>
-                    <th class="font-bold text-end">{{__('Actions')}}</th>
+                    <th class="font-bold text-end p-2">{{__('Actions')}}</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -82,9 +79,9 @@
                             {{ $product->link ?: 'N/A' }}
                         </td>
 
-                        <td class="flex space-x-2 justify-end">
+                        <td class="flex space-x-2 justify-end p-2">
                             <!-- Buttons to edit/delete/suspend/unsuspend the user -->
-                            <div>
+                            <div class="my-auto">
                                 <a data-tooltip-target="tooltip-animation1" class="button button-primary" href="{{ route('admin.clients.products', ['user' => $order->user, 'orderProduct' => $product->id]) }}" target="_blank">
                                     <i class="ri-pencil-line"></i>
                                 </a>
