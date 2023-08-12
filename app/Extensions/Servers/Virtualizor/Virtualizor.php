@@ -75,7 +75,8 @@ class Virtualizor extends Server
             [
                 'name' => 'password',
                 'type' => 'text',
-                'friendlyName' => 'Password',
+                'validation' => 'max:6|regex:/^[a-zA-Z0-9]+$/i',
+                'friendlyName' => 'Password (max 6 characters and only letters and numbers)',
                 'required' => true,
             ],
             [
