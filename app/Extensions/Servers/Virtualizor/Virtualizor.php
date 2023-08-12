@@ -75,7 +75,8 @@ class Virtualizor extends Server
             [
                 'name' => 'password',
                 'type' => 'text',
-                'friendlyName' => 'Password',
+                'validation' => 'max:6|regex:/^[a-zA-Z0-9]+$/i',
+                'friendlyName' => 'Password (max 6 characters and only letters and numbers)',
                 'required' => true,
             ],
             [
@@ -184,7 +185,6 @@ class Virtualizor extends Server
         $post['cores'] = isset($configurableOptions['cores']) ? $configurableOptions['cores'] : $plan['cores'];
         $post['cpu_percent'] = isset($configurableOptions['cpu_percent']) ? $configurableOptions['cpu_percent'] : $plan['cpu_percent'];
         $post['vnc'] = isset($configurableOptions['vnc']) ? $configurableOptions['vnc'] : $plan['vnc'];
-        $post['vncpass'] = $config['password'];
         $post['kvm_cache'] = $plan['kvm_cache'];
         $post['io_mode'] = $plan['io_mode'];
         $post['vnc_keymap'] = $plan['vnc_keymap'];

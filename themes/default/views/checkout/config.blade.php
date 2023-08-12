@@ -19,7 +19,7 @@
                     @foreach ($userConfig as $config)
                         @if ($config->type == 'text' || $config->type == 'number' || $config->type == 'email' || $config->type == 'password')
                             <x-input type="{{ $config->type }}" placeholder="{{ $config->placeholder ?? ucfirst($config->name) }}"
-                                name="{{ $config->name }}" id="{{ $config->name }}" label="{{ ucfirst($config->name) }}"
+                                name="{{ $config->name }}" id="{{ $config->name }}" label="{{ $config->friendlyName ?? ucfirst($config->name) }}"
                                 required />
                         @elseif($config->type == 'textarea')
                             <div class="mt-4">

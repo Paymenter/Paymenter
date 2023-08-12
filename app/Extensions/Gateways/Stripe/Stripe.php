@@ -21,7 +21,7 @@ class Stripe extends Gateway
                     'product_data' => [
                         'name' => $product->name,
                     ],
-                    'unit_amount' => $product->price * 100,
+                    'unit_amount' => round($product->price * 100, 0)
                 ],
                 'quantity' => $product->quantity,
             ];
