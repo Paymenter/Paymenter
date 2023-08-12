@@ -45,15 +45,12 @@
                                         <div class="w-8/12 ml-4 truncate">
                                             <span class="font-semibold">{{ __('Invoice ID') }}:</span>
                                             <span class="font-semibold">{{ $invoice->id }}</span>
-                                    @php
-                                    $products = $invoice->getItemsWithProducts()->products;
-                                @endphp
-                                    <div class="w-full text-sm text-gray-400 truncate">
-                                        <span class="font-semibold">Amount to pay - {{ $invoice->total() }} {{ config('settings::currency_sign') }}</span>
-                                    </div>
+                                            <div class="w-full text-sm text-gray-400 truncate">
+                                                <span class="font-semibold">{{__('Amount to pay')}} - {{ $invoice->total() }} {{ config('settings::currency_sign') }}</span>
+                                            </div>
                                         </div>
                                         <div class="justify-end flex text-center text-primary-400 my-auto button button-primary text-md w-fit" style="padding: 5px 8px !important;">
-                                            <b>View</b>
+                                            <b>{{__('View')}}</b>
                                         </div>
                                     </div>
                                 </div>

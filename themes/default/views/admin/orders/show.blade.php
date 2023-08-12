@@ -76,16 +76,16 @@
                             @endif
                         </td>
                         <td class="text-center">
-                            {{ $product->expiry_date ? $product->expiry_date : 'N/A' }}
+                            {{ $product->expiry_date ?: 'N/A' }}
                         </td>
                         <td class="text-center">
-                            {{ $product->link ? $product->link : 'N/A' }}
+                            {{ $product->link ?: 'N/A' }}
                         </td>
 
                         <td class="flex space-x-2 justify-end">
                             <!-- Buttons to edit/delete/suspend/unsuspend the user -->
                             <div>
-                                <a data-tooltip-target="tooltip-animation1" class="button button-primary" href="{{ route('admin.clients.products', ['user' => $order->user, 'orderProduct' => $order->products[0]->id]) }}" target="_blank">
+                                <a data-tooltip-target="tooltip-animation1" class="button button-primary" href="{{ route('admin.clients.products', ['user' => $order->user, 'orderProduct' => $product->id]) }}" target="_blank">
                                     <i class="ri-pencil-line"></i>
                                 </a>
                                 <div id="tooltip-animation1" role="tooltip" class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
@@ -119,7 +119,7 @@
                                 </div>
                             @endif
 
-                            @if ($order->products[0]->status == 'pending')
+                            @if ($product->status == 'pending')
                                 <div>
                                     <form method="POST" action="{{ route('admin.orders.paid', $order->id) }}">
                                         @csrf
@@ -134,7 +134,7 @@
                                 </div>
                             @endif
 
-                            @if ($order->products[0]->status == 'suspended')
+                            @if ($product->status == 'suspended')
                                 <div>
                                     <form method="POST" action="{{ route('admin.orders.unsuspend', $order->id) }}">
                                         @csrf
@@ -147,7 +147,7 @@
                                         <div class="tooltip-arrow" data-popper-arrow></div>
                                     </div>
                                 </div>
-                            @elseif($order->products[0]->status == 'paid')
+                            @elseif($product->status == 'paid')
                                 <div>
                                     <form method="POST" action="{{ route('admin.orders.suspend', $order->id) }}">
                                         @csrf
@@ -201,7 +201,7 @@
                                   d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
                                   clip-rule="evenodd"></path>
                         </svg>
-                        <span class="sr-only">Zamknij</span>
+                        <span class="sr-only">{{__('Close')}}</span>
                     </button>
                 </div>
                 <div class="p-6 space-y-6">
