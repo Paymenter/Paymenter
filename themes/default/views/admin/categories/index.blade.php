@@ -2,13 +2,19 @@
     <x-slot name="title">
         {{ __('Categories') }}
     </x-slot>
-    <div class="flex">
-        <h1 class="text-2xl font-bold dark:text-darkmodetext flex-1">{{ __('Categories') }}</h1>
-        <div class="flex justify-end pr-3 pt-3">
-            <a href="{{ route('admin.categories.store') }}">
-                <button class="button button-primary">
-                    {{ __('Create') }}
-                </button>
+    <div class="p-3 bg-white dark:bg-secondary-100 flex flex-row justify-between">
+        <div>
+            <div class="mt-3 text-2xl font-bold dark:text-darkmodetext">
+                {{ __('Categories') }}
+            </div>
+            <div class="mt-3 text-gray-500 dark:text-darkmodetext">
+                {{ __('Here you can see all categories.') }}
+            </div>
+        </div>
+        <div class="flex my-auto float-end justify-end mr-4">
+            <a href="{{ route('admin.categories.store') }}"
+               class="px-4 py-2 font-bold text-white transition rounded delay-400 bg-blue-500 button button-primary">
+                <i class="ri-user-add-line"></i> {{ __('Create') }}
             </a>
         </div>
     </div>
@@ -17,6 +23,7 @@
         <table class="min-w-full mt-4">
             <thead class="bg-gray-50 dark:bg-secondary-200 text-left">
                 <tr>
+                    <th class="px-1 pl-3 py-3">{{ __('ID') }}</th>
                     <th class="px-1 pl-3 py-3">{{ __('Name') }}</th>
                     <th class="py-3">{{ __('Slug') }}</th>
                     <th class="py-3">{{ __('Actions') }}</th>
@@ -26,15 +33,16 @@
             <tbody class="bg-white dark:bg-secondary-100 divide-y divide-gray-200" id="categories">
                 @foreach ($categories as $category)
                     <tr id="{{ $category->id }}">
+                        <td class="py-2 px-4">{{ $category->id }}</td>
+                        <td class="py-2 px-4">{{ $category->name }}</td>
                         <td class="py-2 px-4">
-                            {{ $category->name }}</td>
-                        <td class="py-2 px-4"><a href="{{ route('products', $category->slug) }}" target="_blank"
-                                class="underline hover:text-blue-500 decoration-blue-500">{{ $category->slug }}</a>
+                            <a href="{{ route('products', $category->slug) }}" target="_blank" class="hover:underline hover:text-blue-500 decoration-blue-500">
+                                {{ $category->slug }}
+                            </a>
                         </td>
                         <td class="py-2 px-4">
                             <div class="flex flew-wrap">
-                                <a href="{{ route('admin.categories.edit', $category->id) }}"
-                                    class="mr-4 button button-primary">
+                                <a href="{{ route('admin.categories.edit', $category->id) }}" class="mr-4 button button-primary">
                                     {{ __('Edit') }}
                                 </a>
                                 <form action="{{ route('admin.categories.delete', $category->id) }}" method="POST">

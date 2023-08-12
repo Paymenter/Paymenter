@@ -42,7 +42,7 @@
                             <td class="pr-6 py-3">
                                 @if (ucfirst($invoice->status) == 'Pending')
                                     <span class="text-red-400 font-semibold">
-                                            {{ __('Pending') }}
+                                        {{ __('Pending') }}
                                     </span>
                                 @endif
                                 @if (ucfirst($invoice->status) == 'Paid')

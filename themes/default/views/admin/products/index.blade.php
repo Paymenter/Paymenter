@@ -1,14 +1,19 @@
 <x-admin-layout title="Products">
-    <div class="mt-8 text-2xl dark:text-darkmodetext text-center">
-        {{ __('Products') }}
-    </div>
-    <!-- right top aligned button -->
-    <div class="flex justify-end pr-3 pt-3">
-        <a href="{{ route('admin.products.create') }}">
-            <button class="button button-primary">
-                {{ __('Create') }}
-            </button>
-        </a>
+    <div class="p-3 bg-white dark:bg-secondary-100 flex flex-row justify-between">
+        <div>
+            <div class="mt-3 text-2xl font-bold dark:text-darkmodetext">
+                {{ __('Products') }}
+            </div>
+            <div class="mt-3 text-gray-500 dark:text-darkmodetext">
+                {{ __('Here you can see all products.') }}
+            </div>
+        </div>
+        <div class="flex my-auto float-end justify-end mr-4">
+            <a href="{{ route('admin.products.create') }}"
+               class="px-4 py-2 font-bold text-white transition rounded delay-400 bg-blue-500 button button-primary">
+                <i class="ri-user-add-line"></i> {{ __('Create') }}
+            </a>
+        </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
 
@@ -16,7 +21,7 @@
         <div class="ml-10 flex items-baseline ">
             <p class="text-gray-600 px-3 rounded-md text-xl m-4">
                 {{ __('No products found') }}
-                
+
             </p>
             <button class="button button-primary">
                 <a href="{{ route('admin.categories.create') }}">
@@ -28,11 +33,14 @@
         <div id="categories">
             @foreach ($categories as $category)
                 <div class="mt-10">
-                    <h2 class="font-semibold text-2xl mb-2 text-secondary-900 flex-1">{{ $category->name }}</h2>
-                    <p class="ml-2">{{ $category->description }}</p>
+                    <h2 class="text-2xl mb-2 text-secondary-900 flex-1 dark:text-darkmodetext"><b>{{__('Category')}}:</b> {{ $category->name }}</h2>
+                    <p class="text-secondary-900 dark:text-darkmodetext"><b>{{__('Category Description')}}:</b> {{ $category->description }}</p>
                     <table class="min-w-full mt-4">
                         <thead class="bg-gray-50 dark:bg-secondary-200 text-left">
                             <tr>
+                                <th class="px-1 pl-3 py-3">
+                                    {{ __('ID') }}
+                                </th>
                                 <th class="px-1 pl-3 py-3">
                                     {{ __('Name') }}
                                 </th>
@@ -52,13 +60,15 @@
                                 @foreach ($category->products()->orderBy('order')->get() as $product)
                                     <tr id="{{ $product->id }}">
                                         <td class="py-2 px-4">
+                                            {{ $product->id }}</td>
+                                        <td class="py-2 px-4">
                                             {{ $product->name }}</td>
                                         <td class="py-2 px-4">
                                             {{ Str::limit($product->description, 50) }}</td>
                                         <td class="py-2">
                                             <a href="{{ route('admin.products.edit', $product->id) }}">
                                                 <button class="button button-primary">
-                                                    {{ __('Edit') }}
+                                                    <i class="ri-pencil-line"></i> {{ __('Edit') }}
                                                 </button>
                                             </a>
                                         </td>

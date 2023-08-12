@@ -150,12 +150,26 @@
                         </div>
                     </div>
                     <div class="p-7 bg-white border-2 dark:bg-secondary-100 dark:border-darkmodehover rounded-xl">
-                        <h2 class="text-xl font-bold dark:text-darkmodetext">New Users</h2>
+                        <h2 class="text-xl font-bold dark:text-darkmodetext">{{__('New Users')}}</h2>
                         <canvas id="chartBar"></canvas>
-                        <!-- Required chart.js -->
-                        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
                         <!-- Chart bar -->
                     </div>
+
+                    <div class="p-7 bg-white border-2 dark:bg-secondary-100 dark:border-darkmodehover rounded-xl">
+                        <h2 class="text-xl font-bold dark:text-darkmodetext">{{__('New Orders')}}</h2>
+                        <canvas id="chartBarOrders"></canvas>
+                        <!-- Chart bar -->
+                    </div>
+
+                    <!--
+                    <div class="p-7 bg-white border-2 dark:bg-secondary-100 dark:border-darkmodehover rounded-xl">
+                        <h2 class="text-xl font-bold dark:text-darkmodetext">Przychody</h2>
+                        <canvas id="chartBarMoney"></canvas>
+                    </div>
+                    -->
+
+                    <!-- Required chart.js -->
+                    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
                 </div>
             </div>
         </div>
@@ -173,7 +187,7 @@
                 const dataBarChart = {
                     labels: labelsBarChart,
                     datasets: [{
-                        label: "Users",
+                        label: "{{__('Users')}}",
                         backgroundColor: "#f87979",
                         data: [
                             @for ($i = 1; $i <= 12; $i++)
@@ -194,6 +208,85 @@
                     configBarChart
                 );
             </script>
+
+            <script>
+                const labelsBarOrdersChart = [
+                    @for ($i = 1; $i <= 12; $i++)
+                        "{{ date('F', mktime(0, 0, 0, $i, 1)) }}",
+                    @endfor
+                ];
+                const dataBarOrdersChart = {
+                    labels: labelsBarOrdersChart,
+                    datasets: [{
+                        label: "{{__('Orders')}}",
+                        backgroundColor: "#79b4f8",
+                        data: [
+                            @for ($i = 1; $i <= 12; $i++)
+                                {{ App\Models\Order::whereMonth('created_at', '=', $i)->count() }},
+                            @endfor
+                        ],
+                    }],
+                };
+
+                const configBarOrdersChart = {
+                    type: "bar",
+                    data: dataBarOrdersChart,
+                    options: {},
+                };
+
+                var ordersChartBar = new Chart(
+                    document.getElementById("chartBarOrders"),
+                    configBarOrdersChart
+                );
+            </script>
+
+            <!--
+            <script>
+                const labelsBarMoneyChart = [
+                    @for ($i = 1; $i <= 12; $i++)
+                        "{{ date('F', mktime(0, 0, 0, $i, 1)) }}",
+                    @endfor
+                ];
+
+                const currencySign = "{{ config('settings::currency_sign') }}";
+
+                const dataBarMoneyChart = {
+                    labels: labelsBarMoneyChart,
+                    datasets: [{
+                        label: "Przychody",
+                        backgroundColor: "#f4f879",
+                        data: [
+                            @for ($i = 1; $i <= 12; $i++)
+                                {{ App\Models\InvoiceItem::whereMonth('created_at', '=', $i)->sum('total') }},
+                            @endfor
+                        ],
+                    }],
+                };
+
+                const configBarMoneyChart = {
+                    type: "bar",
+                    data: dataBarMoneyChart,
+                    options: {
+                        plugins: {
+                            tooltip: {
+                                callbacks: {
+                                    label: function (tooltipItem, data) {
+                                        console.log(data);
+                                        console.log(tooltipItem);
+                                        return tooltipItem.formattedValue + ' {{ config('settings::currency_sign') }}';
+                                    }
+                                }
+                            }
+                        }
+                    }
+                };
+
+                var moneyChartBar = new Chart(
+                    document.getElementById("chartBarMoney"),
+                    configBarMoneyChart
+                );
+            </script>
+            -->
         </div>
 
         <div>
