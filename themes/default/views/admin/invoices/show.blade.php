@@ -7,57 +7,58 @@
             {{ __('Invoice') }} #{{ $invoice->id }}
         </div>
         <!-- TODO: BUTTONS FOR CANCEL, DELETE ETC. -->
-        <div>
-            <button class="button button-primary" data-modal-target="{{ $invoice->id }}" data-modal-toggle="{{ $invoice->id }}">
-                <i class="ri-money-dollar-circle-line"></i> @if($invoice->status === 'paid') {{ __('Change payment details') }} @else {{ __('Mark as paid') }} @endif
-            </button>
-            <form action="{{ route('admin.invoices.paid', $invoice->id) }}" method="POST">
-                <x-modal :id="$invoice->id" title="Marking invoice {{ $invoice->id }} as paid">
-                    @csrf
-                    <x-input type="select" name="paid_with" label="Payment Method">
-                        @foreach (App\Models\Extension::where('type', 'gateway')->where('enabled', true)->get() as $extension)
-                            <option value="{{ $extension->name }}">{{ $extension->name }}</option>
-                        @endforeach
-                        <option value="manual">{{ __('Manual') }}</option>
-                    </x-input>
+        @if($invoice->status === 'pending]')
+            <div>
+                <button class="button button-primary text-sm" data-modal-target="{{ $invoice->id }}" data-modal-toggle="{{ $invoice->id }}">
+                    <i class="ri-money-dollar-circle-line"></i> {{ __('Mark as paid') }}
+                </button>
+                <form action="{{ route('admin.invoices.paid', $invoice->id) }}" method="POST">
+                    <x-modal :id="$invoice->id" title="{{__('Marking invoice')}} {{ $invoice->id }} {{__('as paid')}}">
+                        @csrf
+                        <x-input type="select" name="paid_with" label="Payment Method">
+                            @foreach (App\Models\Extension::where('type', 'gateway')->where('enabled', true)->get() as $extension)
+                                <option value="{{ $extension->name }}">{{ $extension->name }}</option>
+                            @endforeach
+                            <option value="manual">{{ __('Manual') }}</option>
+                        </x-input>
 
-                    <x-input type="text" name="paid_reference" label="Reference" />
+                        <x-input type="text" name="paid_reference" label="{{__('Reference')}}" />
 
-                    <x-slot name="footer">
-                        <button class="button button-primary float-right"  type="submit">
-                            {{ __('Mark as paid') }}
-                        </button>
-                    </x-slot>
-                </x-modal>
-            </form>
-        </div>
+                        <x-slot name="footer">
+                            <button class="button button-primary float-right"  type="submit">
+                                {{ __('Mark as paid') }}
+                            </button>
+                        </x-slot>
+                    </x-modal>
+                </form>
+            </div>
+        @endif
     </div>
 
     <div class="grid grid-cols-1 gap-4 w-full">
         <div class="text-gray-500 dark:text-darkmodetext dark:bg-secondary-100">
-            <div class="flex flex-col">
+            <div class="flex flex-row gap-x-4">
                 @php
                     $invoice->paid_with = $invoice->paid_with=== "unknown"? __('Not Paid')  : $invoice->paid_with;
                 @endphp
-                <div class="flex flex-col lg:flex-row gap-x-4 items-baseline">
-                    <a class="cursor-pointer hover:shadow-sm w-full" onclick="window.location.href='{{ route('admin.clients.edit', $invoice->user->id) }}'">
-                        <x-input disabled type="text" name="client" :label="__('Client')" name="title" value="{{ $invoice->user->name }}" class="mt-2 lg:mt-0" icon="ri-user-line" />
+                <div class="flex flex-col items-baseline w-full">
+                    <a class="hover:cursor-pointer hover:shadow-sm w-full" onclick="window.location.href='{{ route('admin.clients.edit', $invoice->user->id) }}'">
+                        <x-input disabled type="text" name="client" :label="__('Client') . ' (' . __('Click to show').')'" name="title" value="{{ $invoice->user->name }}" class="mt-2 lg:mt-0" icon="ri-user-line" />
                     </a>
-                    <x-input disabled type="text" name="status" :label="__('Status')" icon="ri-calendar-line" class="w-full mt-2 lg:mt-0" value="{{ ucfirst($invoice->status) }}"/>
-                </div>
-                <div class="flex flex-col lg:flex-row gap-x-4 items-baseline">
-                    <x-input disabled type="text" name="total" :label="__('Total')" icon="ri-money-dollar-circle-line" class="w-full mt-2 lg:mt-0" value="{{ ucfirst($invoice->total()) }} {{ config('settings::currency_sign') }}"/>
-
-                    <x-input disabled type="text" name="paid_at" :label="__('Paid At')" icon="ri-calendar-line" class="w-full mt-2 lg:mt-0" value="{{ $invoice->paid_at?? __('Not Paid') }}"/>
-                </div>
-                <div class="flex flex-col lg:flex-row gap-x-4 items-baseline">
-                    <div class="w-full flex flex-row gap-x-4">
-                        <x-input disabled type="text" name="paid_with" :label="__('Payment Method')" icon="ri-money-dollar-circle-line" class="w-full mt-2 lg:mt-0" value="{{ ucfirst($invoice->paid_with) }}"/>
-                        <x-input disabled type="text" name="paid_reference" :label="__('Reference')" icon="ri-information-line" class="w-full mt-2 lg:mt-0" value="{{ $invoice->paid_reference?? __('Not Paid') }}"/>
+                    <div class="flex flex-row w-full gap-x-4">
+                        <x-input disabled type="text" name="total" :label="__('Total')" icon="ri-money-dollar-circle-line" class="w-full mt-2 lg:mt-0" value="{{ ucfirst($invoice->total()) }} {{ config('settings::currency_sign') }}"/>
+                        <x-input disabled type="text" name="status" :label="__('Status')" icon="ri-calendar-line" class="w-full mt-2 lg:mt-0" value="{{ ucfirst($invoice->status) }}"/>
                     </div>
-                    <div class="w-full flex flex-row gap-x-4">
+                </div>
+                <div class="flex flex-col items-baseline w-full">
+                    <div class="flex flex-row w-full gap-x-4">
+                        <x-input disabled type="text" name="paid_with" :label="__('Payment Method')" icon="ri-money-dollar-circle-line" class="w-full mt-2 lg:mt-0" value="{{ ucfirst($invoice->paid_with) }}"/>
+                        <x-input disabled type="text" name="reference" :label="__('Reference')" icon="ri-money-dollar-circle-line" class="w-full mt-2 lg:mt-0" value="{{ $invoice->reference }}"/>
+                    </div>
+                    <div class="flex flex-row gap-x-4">
                         <x-input disabled type="text" name="created_at" :label="__('Created At')" icon="ri-calendar-line" class="w-full mt-2 lg:mt-0" value="{{ $invoice->created_at }}"/>
                         <x-input disabled type="text" name="updated_at" :label="__('Updated At')" icon="ri-calendar-line" class="w-full mt-2 lg:mt-0" value="{{ $invoice->updated_at }}"/>
+                        <x-input disabled type="text" name="paid_at" :label="__('Paid At')" icon="ri-calendar-line" class="w-full mt-2 lg:mt-0" value="{{ $invoice->paid_at?? __('Not Paid') }}"/>
                     </div>
                 </div>
             </div>
