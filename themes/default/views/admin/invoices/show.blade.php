@@ -92,7 +92,7 @@
     <h3 class="text-xl mt-5 text-center leading-5 font-bold dark:text-darkmodetext">
         {{ __('Products') }}
     </h3>
-    <div class=''>
+    <div class='overflow-x-scroll lg:overflow-hidden'>
         <table class='mt-4 min-w-max gap-y-3 table-auto w-full'>
             <thead>
                 <tr class="border-b-2 border-secondary-200">
