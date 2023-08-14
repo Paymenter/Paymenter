@@ -1,0 +1,60 @@
+name: Beta Build
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+    
+  build:
+    name: Build
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Code checkout
+        uses: actions/checkout@v3
+
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - name: Install dependencies
+        run: npm i
+
+      - name: Build
+        run: npm run build
+
+      - id: get_latest_release
+        uses: pozetroninc/github-action-get-latest-release@master
+        with:
+          owner: Paymenter
+          repo: Paymenter
+          excludes: prerelease, draft
+
+      - name: Create release branch and bump version
+        run: sed -i "s/    'version' => 'development',/    'version' => 'beta-${{ steps.get_latest_release.outputs.release }}-${{ github.sha }}',/" config/app.php
+
+      - name: Create release archive
+        run: |
+          rm -rf node_modules tests CODE_OF_CONDUCT.md CONTRIBUTING.md flake.lock flake.nix phpstan.neon phpunit.xml shell.nix
+          tar -czf paymenter.tar.gz * .env.example .gitignore
+
+      - name: Create checksum and add to changelog
+        run: |
+          SUM=`sha256sum paymenter.tar.gz`
+          echo $SUM > checksum.txt
+          
+      - name: Upload archive to https://api.paymenter.org/beta
+        uses: JantHsueh/upload-file-action@master
+        with:
+          url: https://api.paymenter.org/beta
+          forms: |
+            {
+              "api_key": "${{ secrets.API_KEY }}",
+            }
+          fileForms: |
+            {
+              "checksum": "checksum.txt",
+              "file": "paymenter.tar.gz"
+            }
