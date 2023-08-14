@@ -49,12 +49,5 @@ jobs:
         uses: JantHsueh/upload-file-action@master
         with:
           url: https://api.paymenter.org/beta
-          forms: |
-            {
-              "api_key": "${{ secrets.API_KEY }}",
-            }
-          fileForms: |
-            {
-              "checksum": "checksum.txt",
-              "file": "paymenter.tar.gz"
-            }
+          forms: '{"api_key": "${{ secrets.API_KEY }}"}'
+          fileForms: '{"checksum": "checksum.txt","file": "paymenter.tar.gz"}
