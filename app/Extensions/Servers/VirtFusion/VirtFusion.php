@@ -134,7 +134,7 @@ class VirtFusion extends Server
                 ]
             );
 
-            if ($response->status() == 200) {
+            if ($response->successful()) {
                 return $response->json()['data']['id'];
             } else {
                 ExtensionHelper::error('VirtFusion', 'Failed to create user ', (string) $response->json() . ' ' . $response->status());
