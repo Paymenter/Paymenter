@@ -36,7 +36,7 @@
                             <div class="p-4 rounded-md dark:bg-darkmode bg-normal flex">
                                 <i class="ri-coupon-line p-4 bg-red-400 text-red-900 text-2xl items-center text-center h-16 w-16 rounded-lg mr-4"></i>
                                 <div class="flex flex-col">
-                                    <h1 class="text-lg text-gray-500 dark:text-darkmodetext">Orders today</h1>
+                                    <h1 class="text-lg text-gray-500 dark:text-darkmodetext">Tickets today</h1>
                                     <p class="text-xl font-bold text-black dark:text-darkmodetext">
                                         {{ App\Models\Ticket::whereDate('created_at', '=', date('Y-m-d'))->count() }}
                                     </p>

@@ -182,4 +182,19 @@ class SettingController extends Controller
         }
         return redirect('/admin/settings#credits')->with('success', 'Settings updated successfully');
     }
+
+    public function affiliate(Request $request)
+    {
+        $request->validate([
+            'affiliate' => 'sometimes|boolean',
+            'affiliate_percentage' => 'required|numeric|min:0|max:100',
+            'affiliate_type' => 'required|in:random,fixed,custom'
+        ]);
+        
+        foreach ($request->except(['_token']) as $key => $value) {
+            Setting::updateOrCreate(['key' => $key], ['value' => $value]);
+        }
+
+        return redirect('/admin/settings#affiliate')->with('success', 'Settings updated successfully');
+    }
 }
