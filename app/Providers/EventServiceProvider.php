@@ -55,6 +55,9 @@ class EventServiceProvider extends ServiceProvider
         $paths = [
             $this->app->path('Listeners'),
         ];
+        if (!\Illuminate\Support\Facades\Schema::hasTable('extensions')) {
+            return $paths;
+        }
         Extension::where('type', 'events')->where('enabled', true)->get()->each(function ($extension) {
             $paths[] = $extension->path . '/Listeners';
         });
