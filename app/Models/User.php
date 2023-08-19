@@ -119,4 +119,14 @@ class User extends Authenticatable
     {
         return number_format($this->credits, 2);
     }
+
+    public function affiliate()
+    {
+        return $this->hasOne(Affiliate::class);
+    }
+
+    public function affiliateUser()
+    {
+        return $this->hasOne(AffiliateUser::class);
+    }
 }

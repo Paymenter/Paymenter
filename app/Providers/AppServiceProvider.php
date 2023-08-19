@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Models\Affiliate;
 use App\Models\Setting;
 use Illuminate\Contracts\Encryption\DecryptException;
 use Qirolab\Theme\Theme;
@@ -36,6 +37,18 @@ class AppServiceProvider extends ServiceProvider
         Schema::defaultStringLength(191);
         if (Str::startsWith(config('app.url') ?? '', 'https://')) {
             URL::forceScheme('https');
+        }
+        // Check if request contains ?ref= parameter
+        if (request()->has('ref')) {
+            // Check if affiliate code exists
+            $affiliate = Affiliate::where('code', request()->ref)->first();
+            if ($affiliate) {
+                $affiliate->increment('visitors');
+                if (!auth()->check()) {
+                    // Set affiliate cookie
+                    cookie()->queue('affiliate', $affiliate->code, 60 * 24 * 90);
+                }
+            }
         }
         try {
             $settings = Setting::all();

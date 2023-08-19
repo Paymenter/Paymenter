@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Models\Extension;
+use App\Models\Invoice;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
@@ -30,6 +32,7 @@ class EventServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        Invoice::observe(\App\Observers\InvoiceObserver::class);
     }
 
     /**
@@ -39,6 +42,26 @@ class EventServiceProvider extends ServiceProvider
      */
     public function shouldDiscoverEvents()
     {
-        return false;
+        return true;
+    }
+
+    /**
+     * Get the listener directories that should be used to discover events.
+     *
+     * @return array<int, string>
+     */
+    public function discoverEventsWithin(): array
+    {
+        $paths = [
+            $this->app->path('Listeners'),
+        ];
+        try {
+            Extension::where('type', 'events')->where('enabled', true)->get()->each(function ($extension) {
+                $paths[] = $extension->path . '/Listeners';
+            });
+        } catch (\Throwable $th) {
+            
+        }
+        return $paths;
     }
 }

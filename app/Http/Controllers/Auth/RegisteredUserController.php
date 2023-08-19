@@ -6,6 +6,8 @@ use App\Models\User;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\Affiliate;
+use App\Models\AffiliateUser;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Auth\Events\Registered;
@@ -46,14 +48,22 @@ class RegisteredUserController extends Controller
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
-            'api_token' => Str::random(60),
         ]));
         // Send email to user
         if (!config('settings::mail_disabled')) {
             try {
                 $user->sendEmailVerificationNotification();
             } catch (\Exception $e) {
-                error_log('Failed to send email to user');
+            }
+        }
+
+        if ($request->cookie('affiliate')) {
+            $affiliate = Affiliate::where('code', $request->cookie('affiliate'))->first();
+            if ($affiliate) {
+                $affiliateUser = new AffiliateUser();
+                $affiliateUser->affiliate()->associate($affiliate);
+                $affiliateUser->user()->associate($user);
+                $affiliateUser->save();
             }
         }
 

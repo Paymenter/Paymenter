@@ -7,8 +7,11 @@ use App\Models\Order;
 use App\Models\Invoice;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\Affiliate;
 use App\Models\Extension;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Str;
 use RobThree\Auth\TwoFactorAuth;
 
 class HomeController extends Controller
@@ -172,5 +175,50 @@ class HomeController extends Controller
         $invoice->save();
 
         return redirect(ExtensionHelper::addCredits($gateway, $invoice));
+    }
+
+
+    public function affiliate()
+    {
+        if (!config('settings::affiliate')) {
+            abort(404);
+        }
+        $affiliate = Auth::user()->affiliate;
+        return view('clients.affiliate', compact('affiliate'));
+    }
+
+    /**
+     * Store affiliate
+     *
+     * @param Request $request
+     * @return void
+     */
+    public function affiliateStore(Request $request)
+    {
+        if (!config('settings::affiliate')) {
+            abort(404);
+        }
+        $user = $request->user();
+        $affiliate = $user->affiliate;
+        if ($affiliate) {
+            return redirect()->back()->with('error', 'You already have an affiliate');
+        }
+        if (config('settings::affiliate_type') == 'custom') {
+            $request->validate([
+                'code' => 'required|unique:affiliates,code',
+            ]);
+        };
+        $affiliate = new Affiliate();
+        $affiliate->user()->associate($user);
+        if (config('settings::affiliate_type') == 'custom') {
+            $affiliate->code = $request->code;
+        } else if(config('settings::affiliate_type') == 'random') {
+            $affiliate->code = Str::random(10);
+        } else if(config('settings::affiliate_type') == 'fixed') {
+            $affiliate->code = str_replace(' ', '', $user->name);
+        }
+        $affiliate->save();
+
+        return redirect()->back()->with('success', 'Affiliate created successfully');
     }
 }

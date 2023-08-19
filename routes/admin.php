@@ -24,6 +24,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'permission:ADMINISTRATOR'], 
         Route::post('/security', [App\Http\Controllers\Admin\SettingController::class, 'security'])->middleware(['password.confirm', 'permission:EDIT_SETTINGS'])->name('admin.settings.security');
         Route::post('/theme', [App\Http\Controllers\Admin\SettingController::class, 'theme'])->middleware(['password.confirm', 'permission:EDIT_SETTINGS'])->name('admin.settings.theme');
         Route::post('/credits', [App\Http\Controllers\Admin\SettingController::class, 'credits'])->middleware(['password.confirm', 'permission:EDIT_SETTINGS'])->name('admin.settings.credits');
+        Route::post('/affiliate', [App\Http\Controllers\Admin\SettingController::class, 'affiliate'])->middleware(['password.confirm', 'permission:EDIT_SETTINGS'])->name('admin.settings.affiliate');
     });
 
     Route::group(['prefix' => 'products'], function () {

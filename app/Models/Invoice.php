@@ -32,6 +32,11 @@ class Invoice extends Model
         $this->attributes['status'] = $value;
     }
 
+    public function isPaid()
+    {
+        return $this->status == 'paid';
+    }
+
     public function order()
     {
         return $this->belongsTo(Order::class, 'order_id', 'id');

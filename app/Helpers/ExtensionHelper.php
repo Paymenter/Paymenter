@@ -495,10 +495,6 @@ class ExtensionHelper
         $config = self::loadConfiguration($product, $product2);
         $configurableOptions = self::loadConfigurableOptions($product2);
         $user = $order->user;
-        $function = $extension->name . '_getLink';
-        if (!function_exists($function)) {
-            return false;
-        }
         $link = $module->getLink($user, $config, $order, $product2, $configurableOptions);
 
         return $link;

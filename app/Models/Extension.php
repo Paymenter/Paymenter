@@ -25,4 +25,9 @@ class Extension extends Model
     {
         return $this->hasMany(ProductSetting::class, 'extension', 'id');
     }
+
+    public function getPathAttribute()
+    {
+        return app_path('Extensions/' . ucfirst($this->type) . '/' . $this->name);
+    }
 }
