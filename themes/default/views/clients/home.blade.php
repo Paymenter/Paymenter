@@ -105,7 +105,7 @@
                                                 {{ $product2->price !== '0.00' && $product2->price ? $product2->price . " " . config('settings::currency_sign') : __('Free') }}
                                             </td>
                                             <td class="py-3 hidden md:table-cell">
-                                                {{ $product2->expiry_date ? date('d-m-Y', strtotime($product2->expiry_date)) : __('Never') }}
+                                                {{ $product2->expiry_date ? $product2->expiry_date->toDateString() : __('Never') }}
                                             </td>
                                             <td class="py-3 hidden md:table-cell">
                                                 <div class="font-bold rounded-md text-left">
