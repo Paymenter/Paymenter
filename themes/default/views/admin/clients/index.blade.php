@@ -47,7 +47,10 @@
                             {{ $user->id }}
                         </td>
                         <td>
-                            {{ $user->name }}
+                            <div class="flex flex-row items-center">
+                                <img class="w-8 h-8 rounded-md" src="https://www.gravatar.com/avatar/{{md5($user->email)}}?s=200&d=mp" alt="Avatar"/>
+                                <span class="ml-2">{{ $user->name }}</span>
+                            </div>
                         </td>
                         <td>
                             {{ $user->email }}

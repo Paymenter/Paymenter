@@ -97,7 +97,7 @@ class CronJob extends Command
             $invoiceItem->invoice_id = $invoice->id;
             $invoiceItem->product_id = $order->id;
             $description = $order->billing_cycle ? '(' . date('Y-m-d', strtotime($order->expiry_date)) . ' - ' . date('Y-m-d', strtotime($date)) . ')' : '';
-            $invoiceItem->description = $order->product()->get()->first() ? $order->product()->get()->first()->name . $description : '' . $description;
+            $invoiceItem->description = $order->product()->get()->first() ? $order->product()->get()->first()->name . ' ' . $description : '' . $description;
             $invoiceItem->total = $order->price;
             $invoiceItem->save();
 
