@@ -244,7 +244,7 @@ class ExtensionHelper
     {
         $config = OrderProductConfig::where('order_product_id', $id)->where('key', $key)->first();
         if (!$config) {
-            return;
+            return null;
         }
         return $config->value;
     }
