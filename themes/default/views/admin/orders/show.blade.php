@@ -81,7 +81,7 @@
                         </td>
 
                         <td class="flex space-x-2 p-2 justify-center">
-                            <!-- Buttons to edit/delete/suspend/unsuspend the user -->
+                            <!-- Buttons to edit/delete the user -->
                             <div class="my-auto">
                                 <a data-tooltip-target="tooltip-animation1" class="button button-primary" href="{{ route('admin.clients.products', ['user' => $order->user, 'orderProduct' => $product->id]) }}" target="_blank">
                                     <i class="ri-pencil-line"></i>
@@ -133,13 +133,16 @@
                             @endif
 
                             <div>
-                                <form> <!-- TODO: DELETE ONLY THIS SERVICE, NOT ORDER route('admin.orders.delete', $order->id) -->
-                                    <button class="button button-danger" data-tooltip-target="tooltip-animation7">
+                                <form action="{{ route('admin.orders.deleteProduct', ['order' => $order->id, 'product' => $product->id]) }}" method="POST">
+                                    @method('DELETE')
+                                    @csrf
+                                    <button type="submit" class="button button-danger" data-tooltip-target="tooltip-animation7">
                                         <i class="ri-delete-bin-2-line"></i>
                                     </button>
                                 </form>
+
                                 <div id="tooltip-animation7" role="tooltip" class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
-                                    TODO: DELETE ONLY THIS SERVICE, NOT ORDER
+                                    Delete product from order
                                     <div class="tooltip-arrow" data-popper-arrow></div>
                                 </div>
                             </div>
@@ -152,6 +155,7 @@
         </div>
     </div>
 
+    @if(isset($product))
     <!-- Change quantity / price modal -->
     <div id="changePriceQuantity{{ $product->id }}" tabindex="-1" aria-hidden="true"
          class="fixed top-0 left-0 right-0 z-50 hidden w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] md:h-full">
@@ -193,7 +197,7 @@
                         <div class="flex flex-col mt-4">
                             <span class="font-bold">{{ __('Expiry Date') }}:</span>
                             <input class="form-input" type="date" name="expiry_date"
-                                   value="{{ $product->expiry_date }}"
+                                   value="{{ $product->expiry_date->format('Y-m-d') }}"
                                    placeholder="{{ __('Expiry Date') }}" />
                         </div>
                         <div class="flex flex-row justify-end mt-4">
@@ -206,6 +210,7 @@
             </div>
         </div>
     </div>
+    @endif
 
     <!-- Show all invoices -->
     <div class="flex flex-col mt-12 w-full">
@@ -230,12 +235,12 @@
                     <tr class="place-items-center">
                         <td class="px-4 py-2">{{ $invoice->id }}</td>
                         <td class="px-4 py-2">
-                            @if($product->status === 'paid')
+                            @if($invoice->status === 'paid')
                                 <span class="text-green-500 font-bold">{{ __('Paid') }}</span>
-                            @elseif($product->status === 'pending')
+                            @elseif($invoice->status === 'pending')
                                 <span class="text-red-500 font-bold">{{ __('Pending') }}</span>
                             @else
-                                <span class="text-yellow-500 font-bold">{{ ucfirst($product->status) }}</span>
+                                <span class="text-yellow-500 font-bold">{{ ucfirst($invoice->status) }}</span>
                             @endif
                         </td>
                         <td class="px-4 py-2">{{ $invoice->created_at }}</td>
