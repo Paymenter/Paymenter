@@ -19,6 +19,10 @@ class OrderProduct extends Model
         'status',
     ];
 
+    protected $casts = [
+        'expiry_date' => 'date',
+    ];
+
     public function config()
     {
         return $this->hasMany(OrderProductConfig::class, 'order_product_id', 'id');
