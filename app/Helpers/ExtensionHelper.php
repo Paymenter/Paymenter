@@ -239,6 +239,7 @@ class ExtensionHelper
         }
     }
 
+
     public static function getOrderProductConfig($key, $id)
     {
         $config = OrderProductConfig::where('order_product_id', $id)->where('key', $key)->first();
@@ -247,6 +248,7 @@ class ExtensionHelper
         }
         return $config->value;
     }
+
 
     /**
      * Get link to redirect the user to for payment
@@ -487,27 +489,45 @@ class ExtensionHelper
     public static function getLink(OrderProduct $product2)
     {
         $order = $product2->order()->first();
-
         $product = Product::findOrFail($product2->product_id);
+    
         if (!isset($product->extension_id)) {
             return false;
         }
-        $extension = $extension = $product->extension;
+    
+        $extension = $product->extension;
+    
         if (!$extension) {
             return false;
         }
+    
         $module = 'App\Extensions\\Servers\\' . $extension->name . '\\' . $extension->name;
+    
         if (!class_exists($module)) {
             return false;
         }
+    
+        // Check if the module has the getLink method
+        if (!method_exists($module, 'getLink')) {
+            return false;
+        }
+    
         $module = new $module($extension);
         $config = self::loadConfiguration($product, $product2);
         $configurableOptions = self::loadConfigurableOptions($product2);
         $user = $order->user;
+    
+        // Check if the module's getLink method is callable
+        if (!is_callable([$module, 'getLink'])) {
+            return false;
+        }
+    
+        // Call the getLink method
         $link = $module->getLink($user, $config, $order, $product2, $configurableOptions);
-
+    
         return $link;
     }
+    
 
     /**
      * Get the product configuration for the admin area
