@@ -182,7 +182,7 @@ class Pterodactyl extends Server
                 'friendlyName' => 'Product Name (leave empty for auto generated name)',
                 'type' => 'text',
                 'required' => false,
-                'description' => 'If you do not fill in this field the server name will be set to "PRODUCT NAME-PRODUCT ID".',
+                'description' => 'If you do not fill in this field the server name will be set to the PRODUCT NAME #ID eg. "Test Product #26"',
             ],
             [
                 'name' => 'skip_scripts',
@@ -250,7 +250,7 @@ class Pterodactyl extends Server
                 }
             }
             $json = [
-                'name' => $servername??$product->name . '-' . $product->id,
+                'name' => $servername??$product->product->name . ' #' . $product->id,
                 'user' => (int) $this->getUser($user),
                 'egg' => (int) $egg_id,
                 'docker_image' => $eggData['attributes']['docker_image'],
@@ -275,7 +275,7 @@ class Pterodactyl extends Server
             ];
         } else {
             $json = [
-                'name' => $servername??$product->name . '-' . $product->id,
+                'name' => $servername??$product->product->name . '-' . $product->id,
                 'user' => (int) $this->getUser($user),
                 'egg' => (int) $egg_id,
                 'docker_image' => $eggData['attributes']['docker_image'],
