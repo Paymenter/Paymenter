@@ -110,20 +110,24 @@ class CheckoutController extends Controller
         if (!$server && $product->prices()->get()->first()->type != 'recurring' && count($product->configurableGroups()) == 0) {
             return redirect()->back()->with('error', 'Config Not Found');
         }
-        $module = "App\\Extensions\\Servers\\" . $server->name . "\\" . $server->name;
-        if (!class_exists($module)) {
+        if(isset($product->extension_id)) {
+            $module = "App\\Extensions\\Servers\\" . $server->name . "\\" . $server->name;
+            if (!class_exists($module)) {
             return redirect()->back()->with('error', 'Config Not Found');
-        }
-        $module = new $module($server);
-
-        if (!method_exists($module, 'getUserConfig') && $product->prices()->get()->first()->type != 'recurring' && count($product->configurableGroups()) == 0) {
-            return redirect()->back()->with('error', 'Config Not Found');
-        }
-        if(!method_exists($module, 'getUserConfig')){
-            $userConfig = array();
+            }
+            $module = new $module($server);
+            if (!method_exists($module, 'getUserConfig') && $product->prices()->get()->first()->type != 'recurring' && count($product->configurableGroups()) == 0) {
+                return redirect()->back()->with('error', 'Config Not Found');
+            }
+            if(method_exists($module, 'getUserConfig')){
+                $userConfig = json_decode(json_encode($module->getUserConfig($product)));
+            }
         } else {
-        $userConfig = json_decode(json_encode($module->getUserConfig($product)));
-        }
+            if ($product->prices()->get()->first()->type != 'recurring' && count($product->configurableGroups()) == 0) {
+                return redirect()->back()->with('error', 'Config Not Found');
+            }
+        }   
+        
         if (!isset($userConfig)) $userConfig = array();
         $prices = $product->prices()->get()->first();
         $customConfig = $product->configurableGroups();
@@ -161,20 +165,26 @@ class CheckoutController extends Controller
         if (!$server && $prices->type != 'recurring' && count($product->configurableGroups()) == 0) {
             return redirect()->back()->with('error', 'Config Not Found');
         }
-        $module = "App\\Extensions\\Servers\\" . $server->name . "\\" . $server->name;
-        if (!class_exists($module)) {
+        if(isset($product->extension_id)) {
+            $module = "App\\Extensions\\Servers\\" . $server->name . "\\" . $server->name;
+            if (!class_exists($module)) {
             return redirect()->back()->with('error', 'Config Not Found');
-        }
-        $module = new $module($server);
-
-        if (!method_exists($module, 'getUserConfig') && $product->prices()->get()->first()->type != 'recurring' && count($product->configurableGroups()) == 0) {
-            return redirect()->back()->with('error', 'Config Not Found');
-        }
-        if(!method_exists($module, 'getUserConfig')){
-            $userConfig = array();
+            }
+            $module = new $module($server);
+            if (!method_exists($module, 'getUserConfig') && $product->prices()->get()->first()->type != 'recurring' && count($product->configurableGroups()) == 0) {
+                return redirect()->back()->with('error', 'Config Not Found');
+            }
+            if(method_exists($module, 'getUserConfig')){
+                $userConfig = json_decode(json_encode($module->getUserConfig($product)));
+            }
         } else {
-           $userConfig = json_decode(json_encode($module->getUserConfig($product)));
+            if ($product->prices()->get()->first()->type != 'recurring' && count($product->configurableGroups()) == 0) {
+                return redirect()->back()->with('error', 'Config Not Found');
+            }
         }
+
+        if (!isset($userConfig)) $userConfig = array();
+        
         $config = [];
         foreach ($userConfig as $configItem) {
             if (!$request->input($configItem->name)) {
