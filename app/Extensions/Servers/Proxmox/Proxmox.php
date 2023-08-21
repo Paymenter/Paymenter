@@ -51,7 +51,8 @@ class Proxmox extends Server
     public function getProductConfig($options)
     {
         $nodes = $this->getRequest('/nodes');
-        if (!$nodes->json()) throw new Exception('Unable to get nodes');
+        if (!$nodes->json())
+            throw new Exception('Unable to get nodes');
         foreach ($nodes->json()['data'] as $node) {
             $nodeList[] = [
                 'name' => $node['node'],
@@ -66,7 +67,8 @@ class Proxmox extends Server
         }
         $storage = $this->getRequest('/nodes/' . $currentNode . '/storage');
         $storageList = [];
-        if (!$storage->json()) throw new Exception('Unable to get storage');
+        if (!$storage->json())
+            throw new Exception('Unable to get storage');
         foreach ($storage->json()['data'] as $storage) {
             $storageList[] = [
                 'name' => $storage['storage'],
@@ -82,7 +84,8 @@ class Proxmox extends Server
             ]
         ];
 
-        if (!$resourcePool->json()) throw new Exception('Unable to get resource pool');
+        if (!$resourcePool->json())
+            throw new Exception('Unable to get resource pool');
         foreach ($resourcePool->json()['data'] as $pool) {
             $poolList[] = [
                 'name' => $pool['poolid'],
@@ -96,11 +99,13 @@ class Proxmox extends Server
         foreach ($nodeList as $node) {
             // Get all storage
             $storage = $this->getRequest('/nodes/' . $node['value'] . '/storage');
-            if (!$storage->json()) throw new Exception('Unable to get storage');
+            if (!$storage->json())
+                throw new Exception('Unable to get storage');
             foreach ($storage->json()['data'] as $storage) {
                 $storageName = $storage['storage'];
                 $template = $this->getRequest('/nodes/' . $node['value'] . '/storage/' . $storageName . '/content');
-                if (!$template->json()) throw new Exception('Unable to get template');
+                if (!$template->json())
+                    throw new Exception('Unable to get template');
                 foreach ($template->json()['data'] as $template) {
                     if ($template['content'] == 'vztmpl') {
                         $templateList[] = [
@@ -121,10 +126,13 @@ class Proxmox extends Server
 
         $bridgeList = [];
         $bridge = $this->getRequest('/nodes/' . $currentNode . '/network');
-        if (!$bridge->json()) throw new Exception('Unable to get bridge');
+        if (!$bridge->json())
+            throw new Exception('Unable to get bridge');
         foreach ($bridge->json()['data'] as $bridge) {
-            if (!isset($bridge['active'])) continue;
-            if (!$bridge['active']) continue;
+            if (!isset($bridge['active']))
+                continue;
+            if (!$bridge['active'])
+                continue;
             $bridgeList[] = [
                 'name' => $bridge['iface'],
                 'value' => $bridge['iface']
@@ -138,7 +146,8 @@ class Proxmox extends Server
             ]
         ];
         $cpu = $this->getRequest('/nodes/' . $currentNode . '/capabilities/qemu/cpu');
-        if (!$cpu->json()) throw new Exception('Unable to get cpu');
+        if (!$cpu->json())
+            throw new Exception('Unable to get cpu');
         foreach ($cpu->json()['data'] as $cpu) {
             $cpuList[] = [
                 'name' => $cpu['name'] . ' (' . $cpu['vendor'] . ')',
@@ -160,21 +169,21 @@ class Proxmox extends Server
                 'friendlyName' => 'Node',
                 'required' => true,
                 'description' => 'The node name of the wanted node (submit to update the storage list)',
-                'options' =>  $nodeList
+                'options' => $nodeList
             ],
             [
                 'name' => 'storage',
                 'type' => 'dropdown',
                 'friendlyName' => 'Storage',
                 'description' => 'The storage name of the wanted storage',
-                'options' =>  $storageList
+                'options' => $storageList
             ],
             [
                 'name' => 'pool',
                 'type' => 'dropdown',
                 'friendlyName' => 'Resource Pool',
                 'description' => 'Resource Pool places VMs in a group',
-                'options' =>  $poolList
+                'options' => $poolList
             ],
             [
                 'name' => 'type',
@@ -615,7 +624,8 @@ class Proxmox extends Server
     public function test()
     {
         $response = $this->getRequest('/nodes');
-        if (!$response->json()) throw new Exception('Unable to get nodes');
+        if (!$response->json())
+            throw new Exception('Unable to get nodes');
         return true;
     }
 
@@ -672,7 +682,8 @@ class Proxmox extends Server
         $vmid = $this->getRequest('/cluster/nextid')->json()['data'];
 
         // Assign it to the orderProduct for further use
-        ExtensionHelper::setOrderProductConfig('vmid', $vmid, $product->id);
+        ExtensionHelper::setOrderProductConfig('vmid', $vmid, $product->id);        
+
         $postData = [];
 
         $currentConfig = $product->product->settings;
@@ -733,7 +744,8 @@ class Proxmox extends Server
             }
             $response = $this->postRequest('/nodes/' . $node . '/qemu', $postData);
         }
-        if (!$response->json()) throw new Exception('Unable to create server' . $response->body());
+        if (!$response->json())
+            throw new Exception('Unable to create server' . $response->body());
         return true;
     }
 
@@ -750,7 +762,7 @@ class Proxmox extends Server
     public function terminateServer($user, $parmas, $order, $product, $configurableOptions)
     {
         $vmType = $parmas['type'];
-        $vmid = ExtensionHelper::getOrderProductConfig('vmid', $order->id);
+        $vmid = $parmas['config']['vmid'];
         // Stop the VM first
         $response = $this->postRequest('/nodes/' . $parmas['node'] . '/' . $vmType . '/' . $vmid . '/status/stop');
         // Delete the VM
@@ -759,7 +771,8 @@ class Proxmox extends Server
             'destroy-unreferenced-disks' => 1,
         ];
         $response = $this->deleteRequest('/nodes/' . $parmas['node'] . '/' . $vmType . '/' . $vmid, $postData);
-        if (!$response->json()) throw new Exception('Unable to terminate server');
+        if (!$response->json())
+            throw new Exception('Unable to terminate server');
         return true;
     }
 
@@ -767,13 +780,16 @@ class Proxmox extends Server
     public function getCustomPages($user, $parmas, $order, $product, $configurableOptions)
     {
         $vmType = $parmas['type'];
-        $vmid = ExtensionHelper::getOrderProductConfig('vmid', $order->id);
+        $vmid = ExtensionHelper::getOrderProductConfig('vmid', $product->id);
+
         $status = $this->getRequest('/nodes/' . $parmas['node'] . '/' . $vmType . '/' . $vmid . '/status/current');
-        if (!$status->json()) throw new Exception('Unable to get server status');
+        if (!$status->json())
+            throw new Exception('Unable to get server status');
         $status = $status->json()['data'];
 
         $stats = $this->getRequest('/nodes/' . $parmas['node'] . '/' . $vmType . '/' . $vmid . '/rrddata?timeframe=hour');
-        if (!$stats->json()) throw new Exception('Unable to get server stats');
+        if (!$stats->json())
+            throw new Exception('Unable to get server stats');
         $stats = $stats->json()['data'];
 
         // $vnc;
@@ -784,11 +800,13 @@ class Proxmox extends Server
         // $websocket = ExtensionHelper::getConfig('Proxmox', 'host') . ':' . ExtensionHelper::getConfig('Proxmox', 'port') . '/?console=kvm&novnc=1&node=' . $parmas['node'] . '&resize=1&vmid=' . $vmid . '&path=api2/json/nodes/' . $parmas['node'] . '/' . $vmType . '/' . $vmid . '/vncwebsocket/port/' . $vnc['port'] . '/"vncticket"/' . $vnc['ticket'];
 
         $users = $this->getRequest('/nodes/' . $parmas['node'] . '/' . $vmType . '/' . $vmid . '/agent/get-users');
-        if (!$users->json()) throw new Exception('Unable to get server users');
+        if (!$users->json())
+            throw new Exception('Unable to get server users');
         $users = $users->json()['data'];
 
         $config = $this->getRequest('/nodes/' . $parmas['node'] . '/' . $vmType . '/' . $vmid . '/config');
-        if (!$config->json()) throw new Exception('Unable to get server config');
+        if (!$config->json())
+            throw new Exception('Unable to get server config');
         $config = $config->json()['data'];
 
 
@@ -830,7 +848,8 @@ class Proxmox extends Server
 
     public function status(Request $request, OrderProduct $product)
     {
-        if (!ExtensionHelper::hasAccess($product,  $request->user())) throw new Exception('You do not have access to this server');
+        if (!ExtensionHelper::hasAccess($product, $request->user()))
+            throw new Exception('You do not have access to this server');
         $request->validate([
             'status' => ['required', 'string', 'in:stop,start,reboot,shutdown'],
         ]);
@@ -843,8 +862,9 @@ class Proxmox extends Server
             'vmid' => $vmid,
         ];
         // Change status
-        $status = $this->postRequest('/nodes/' . $params['node'] . '/' . $vmType . '/' . $vmid . '/status/' . $request->status,  $postData);
-        if (!$status->json()) throw new Exception('Unable to ' . $request->status . ' server');
+        $status = $this->postRequest('/nodes/' . $params['node'] . '/' . $vmType . '/' . $vmid . '/status/' . $request->status, $postData);
+        if (!$status->json())
+            throw new Exception('Unable to ' . $request->status . ' server');
 
         // Return json response
         return response()->json([
@@ -855,7 +875,8 @@ class Proxmox extends Server
 
     public function configure(Request $request, OrderProduct $product)
     {
-        if (!ExtensionHelper::hasAccess($product,  $request->user())) throw new Exception('You do not have access to this server');
+        if (!ExtensionHelper::hasAccess($product, $request->user()))
+            throw new Exception('You do not have access to this server');
         $request->validate([
             'hostname' => ['required', 'string', 'max:255'],
         ]);
@@ -868,9 +889,10 @@ class Proxmox extends Server
         $postData = [
             'hostname' => $request->hostname,
         ];
-        $config = $this->putRequest('/nodes/' . $params['node'] . '/' . $vmType . '/' . $vmid . '/config',  $postData);
+        $config = $this->putRequest('/nodes/' . $params['node'] . '/' . $vmType . '/' . $vmid . '/config', $postData);
 
-        if (!$config->json()) throw new Exception('Unable to configure server');
+        if (!$config->json())
+            throw new Exception('Unable to configure server');
         return redirect()->back()->with('success', 'Server has been configured successfully');
     }
 }
