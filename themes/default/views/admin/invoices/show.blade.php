@@ -7,7 +7,7 @@
             {{ __('Invoice') }} #{{ $invoice->id }}
         </div>
         <!-- TODO: BUTTONS FOR CANCEL, DELETE ETC. -->
-        @if($invoice->status === 'pending]')
+        @if($invoice->status === 'pending')
             <div>
                 <button class="button button-primary text-sm" data-modal-target="{{ $invoice->id }}" data-modal-toggle="{{ $invoice->id }}">
                     <i class="ri-money-dollar-circle-line"></i> {{ __('Mark as paid') }}
