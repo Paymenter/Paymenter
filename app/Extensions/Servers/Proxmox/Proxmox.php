@@ -750,7 +750,7 @@ class Proxmox extends Server
     public function terminateServer($user, $parmas, $order, $product, $configurableOptions)
     {
         $vmType = $parmas['type'];
-        $vmid = $parmas['config']['vmid'];
+        $vmid = ExtensionHelper::getOrderProductConfig('vmid', $order->id);
         // Stop the VM first
         $response = $this->postRequest('/nodes/' . $parmas['node'] . '/' . $vmType . '/' . $vmid . '/status/stop');
         // Delete the VM
@@ -767,7 +767,7 @@ class Proxmox extends Server
     public function getCustomPages($user, $parmas, $order, $product, $configurableOptions)
     {
         $vmType = $parmas['type'];
-        $vmid = $parmas['config']['vmid'];
+        $vmid = ExtensionHelper::getOrderProductConfig('vmid', $order->id);
         $status = $this->getRequest('/nodes/' . $parmas['node'] . '/' . $vmType . '/' . $vmid . '/status/current');
         if (!$status->json()) throw new Exception('Unable to get server status');
         $status = $status->json()['data'];
