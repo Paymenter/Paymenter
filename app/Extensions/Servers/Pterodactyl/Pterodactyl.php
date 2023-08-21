@@ -178,6 +178,13 @@ class Pterodactyl extends Server
                 'required' => true,
             ],
             [
+                'name' => 'servername',
+                'friendlyName' => 'Product Name (leave empty for auto generated name)',
+                'type' => 'text',
+                'required' => false,
+                'description' => 'If you do not fill in this field the server name will be set to "PRODUCT NAME-PRODUCT ID".',
+            ],
+            [
                 'name' => 'skip_scripts',
                 'friendlyName' => 'Pterodactyl Skip Scripts',
                 'type' => 'boolean',
@@ -231,6 +238,7 @@ class Pterodactyl extends Server
         $backups = isset($configurableOptions['backups']) ? $configurableOptions['backups'] : $parmas['backups'];
         $startup = isset($configurableOptions['startup']) ? $configurableOptions['startup'] : $eggData['attributes']['startup'];
         $node = isset($configurableOptions['node']) ? $configurableOptions['node'] : $parmas['node'];
+        $servername = isset($configurableOptions['servername']) ? $configurableOptions['servername'] : $parmas['servername'];
 
         if ($node) {
             $allocation = $this->getRequest($this->config('host') . '/api/application/nodes/' . $parmas['node'] . '/allocations');
@@ -242,7 +250,7 @@ class Pterodactyl extends Server
                 }
             }
             $json = [
-                'name' => $this->random_string(8) . '-' . $product->id,
+                'name' => $servername??$product->name . '-' . $product->id,
                 'user' => (int) $this->getUser($user),
                 'egg' => (int) $egg_id,
                 'docker_image' => $eggData['attributes']['docker_image'],
@@ -267,7 +275,7 @@ class Pterodactyl extends Server
             ];
         } else {
             $json = [
-                'name' => $this->random_string(8) . '-' . $product->id,
+                'name' => $servername??$product->name . '-' . $product->id,
                 'user' => (int) $this->getUser($user),
                 'egg' => (int) $egg_id,
                 'docker_image' => $eggData['attributes']['docker_image'],
@@ -326,7 +334,7 @@ class Pterodactyl extends Server
         } else {
             $url = $this->config('host') . '/api/application/users';
             $json = [
-                'username' => $this->random_string(8),
+                'username' => $user->username??$this->random_string(8),
                 'email' => $user->email,
                 'first_name' => $user->name,
                 'last_name' => 'User',

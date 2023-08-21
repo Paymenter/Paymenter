@@ -36,6 +36,7 @@ class User extends Authenticatable
         'tfa_secret',
         'role_id',
         'credits',
+        'username',
     ];
 
     /**
@@ -100,10 +101,10 @@ class User extends Authenticatable
         return $this->belongsTo(Role::class, 'role_id', 'id');
     }
 
-    /** 
+    /**
      * Get all OrderProducts for this user
-     *  
-     * @return \Illuminate\Database\Eloquent\Relations\HasManyThrough 
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasManyThrough
      */
     public function orderProducts()
     {

@@ -8,15 +8,18 @@
         <div class="content-box max-w-lg w-full">
             <form method="POST" action="{{ route('register') }}" id="register">
                 @csrf
-                
+
                 <h2 class="text-lg font-semibold">{{ __('Make an Account') }}</h2>
-                
+
+                <x-input class="mt-3" label="{{ __('Username') }}" type="name" placeholder="{{ __('Username..') }}" required
+                         name="username" id="username" icon="ri-user-3-line" />
+
                 <x-input class="mt-3" label="{{ __('Name') }}" type="name" placeholder="{{ __('Name..') }}" required
                     name="name" id="name" icon="ri-user-3-line" />
 
                 <x-input class="mt-3" label="{{ __('Email') }}" type="email" placeholder="{{ __('Email..') }}" required
                     name="email" id="email" icon="ri-at-line" />
-                
+
                 <x-input type="password" required class="mt-3" label="{{ __('Password') }}"
                     placeholder="{{ __('Password..') }}" name="password" id="password" icon="ri-lock-line"/>
 
