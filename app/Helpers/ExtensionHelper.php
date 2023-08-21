@@ -239,6 +239,15 @@ class ExtensionHelper
         }
     }
 
+    public static function getOrderProductConfig($key, $id)
+    {
+        $config = OrderProductConfig::where('order_product_id', $id)->where('key', $key)->first();
+        if (!$config) {
+            return;
+        }
+        return $config->value;
+    }
+
     /**
      * Get link to redirect the user to for payment
      * 
