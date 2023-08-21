@@ -29,6 +29,7 @@ class Create extends Command
     public function handle()
     {
         $email = $this->ask('Create a user. What is his/her email?');
+        $username = $this->ask('What is his/her username?');
 
         if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
             exit($this->error('Invalid email address stublifer.'));
@@ -36,6 +37,10 @@ class Create extends Command
 
         if (\App\Models\User::where('email', $email)->exists()) {
             exit($this->error('User already exists.'));
+        }
+
+        if (\App\Models\User::where('username', $username)->exists()) {
+            exit($this->error('Username already exists.'));
         }
 
         $password = $this->secret('Password for this new user?');
@@ -48,12 +53,13 @@ class Create extends Command
         $user = \App\Models\User::create([
             'email' => $email,
             'name' => $name,
+            'username' => $username,
             'password' => \Hash::make($password),
             'role_id' => Role::where('name', $role)->first()->id,
         ]);
         $this->info('Account created successfully!');
-        echo $this->table(['name', 'email', 'role'], [
-            [$user->name, $user->email, $user->role->name],
+        echo $this->table(['name', 'email', 'role', 'username'], [
+            [$user->name, $user->email, $user->role->name, $user->username],
         ]);
     }
 }
