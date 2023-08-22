@@ -37,14 +37,12 @@
                     <p>{{ $category->description }}</p>
                 </div>
                 <div class="grid grid-cols-3 gap-4 mt-4">
-                    @foreach ($category->products()->orderBy('order')->get() as $product)
+                @foreach ($category->products()->orderBy('order')->get() as $product)
                         <div class="md:col-span-1 col-span-3">
                             <div class="content-box h-full flex flex-col">
                                 <div class="flex gap-x-3 items-center mb-2">
-                                    @if ($product->image !== 'null')
-                                        <img src="{{ $product->image }}" alt="{{ $product->name }}"
-                                            class="w-14 rounded-md" onerror="removeElement(this);">
-                                    @endif
+                                    <img src="{{ $product->image }}" alt="{{ $product->name }}" class="w-14 rounded-md"
+                                        onerror="removeElement(this);">
                                     <div>
                                         <h3 class="text-lg text-secondary-800 leading-5 font-semibold">
                                             {{ $product->name }}</h3>
@@ -55,10 +53,17 @@
                                 <p>{!! Stevebauman\Purify\Facades\Purify::clean(Str::markdown(str_replace("\n", '<br>', $product->description))) !!}
                                 </p>
                                 <div class="pt-3 mt-auto">
+                                    @if ($product->stock_enabled && $product->stock <= 0)
+                                    <span class="button button-secondary w-full disabled">
+                                        Out of stock
+                                    </span>
+                                @else
                                     <a href="{{ route('checkout.add', $product->id) }}"
-                                        class="button button-secondary w-full">Add to cart <i
-                                            class="ri-shopping-cart-2-line"></i></a>
-                                </div>
+                                        class="button button-secondary w-full">
+                                        Add to cart <i class="ri-shopping-cart-2-line"></i>
+                                    </a>
+                                @endif
+                            </div>
                             </div>
                         </div>
                     @endforeach
