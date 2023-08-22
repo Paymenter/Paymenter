@@ -94,7 +94,7 @@
                                     <x-input type="text" placeholder="{{ __('Coupon') }}" name="coupon" id="password"
                                         icon="ri-coupon-2-line" class="w-full" />
                                     <button type="submit" class="button button-primary">
-                                        Validate
+                                        {{ __('Validate') }}
                                     </button>
                                 </div>
                             </form>
@@ -124,11 +124,18 @@
                                         </span>
                                     </div>
                                     <div class="flex flex-col">
-                                        <span>{{ config('settings::currency_sign') }}
+                                        <span>
+                                            @php
+                                                if ($product->quantity > 1) {
+                                                    $quantity = $product->quantity . " x";
+                                                } else {
+                                                    $quantity = "";
+                                                }
+                                            @endphp
                                             @if ($product->discount)
-                                                {{ round($product->price - $product->discount, 2) }}
+                                                {{ $quantity }} {{ config('settings::currency_sign') }} {{  round($product->price - $product->discount, 2) }}
                                             @else
-                                                {{ $product->price }}
+                                                {{ $quantity }} {{ config('settings::currency_sign') }} {{ $product->price }}
                                             @endif
                                         </span>
                                     </div>
