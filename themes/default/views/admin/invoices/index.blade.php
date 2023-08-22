@@ -35,16 +35,25 @@
                     <td>{{ $invoice->id }}</td>
                     <td>{{ $invoice->user->name }}</td>
                     <td>{{ $invoice->total() }} {{ config('settings::currency_sign') }}</td>
-                    <td>@if (ucfirst($invoice->status) == 'Pending')
+                    <td>
+                        @if (ucfirst($invoice->status) == 'Pending')
                             <span class="text-red-400 font-semibold">
-                                        {{ __('Pending') }}
-                                    </span>
-                        @endif
-                        @if (ucfirst($invoice->status) == 'Paid')
+                                {{ __('Pending') }}
+                            </span>
+                        @elseif (ucfirst($invoice->status) == 'Paid')
                             <span class="text-green-400 font-semibold">
-                                        {{__('Paid')}}
-                                    </span>
-                        @endif</td>
+                                {{__('Paid')}}
+                            </span>
+                        @elseif (ucfirst($invoice->status) == 'Cancelled')
+                            <span class="text-orange-400 font-semibold">
+                                {{__('Cancelled')}}
+                            </span>
+                        @else
+                            <span class="text-gray-400 font-semibold">
+                                {{ ucfirst($invoice->status) }}
+                            </span>
+                        @endif
+                    </td>
                     <td>{{ $invoice->created_at }}</td>
                     <td>{{ $invoice->updated_at }}</td>
                     <td>
