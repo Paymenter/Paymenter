@@ -45,6 +45,8 @@ class CronJob extends Command
                 $order->status = 'suspended';
                 $order->save();
                 ExtensionHelper::suspendServer($order);
+                NotificationHelper::sendUnpaidInvoiceNotification($order->invoices()->latest()->first(), $order->order->user);
+                $this->info('Suspended server: ' . $order->id);
             } elseif ($order->status == 'pending') {
                 $order->status = 'cancelled';
                 $order->save();

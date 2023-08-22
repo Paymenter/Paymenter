@@ -3,6 +3,7 @@
 namespace App\Helpers;
 
 use App\Mail\Invoices\NewInvoice;
+use App\Mail\Invoices\UnpaidInvoice;
 use App\Mail\Orders\NewOrder;
 use App\Mail\Test;
 use App\Mail\Tickets\NewTicket;
@@ -22,7 +23,7 @@ class NotificationHelper
     /**
      * @param $order \App\Models\Order
      * @param $user \App\Models\User
-     * 
+     *
      * @return void
      */
     public static function sendNewOrderNotification($order, $user)
@@ -38,7 +39,7 @@ class NotificationHelper
     /**
      * @param $invoice \App\Models\Invoice
      * @param $user \App\Models\User
-     * 
+     *
      * @return void
      */
     public static function sendNewInvoiceNotification($invoice, $user)
@@ -52,8 +53,24 @@ class NotificationHelper
     }
 
     /**
+     * @param $invoice \App\Models\Invoice
      * @param $user \App\Models\User
-     * 
+     *
+     * @return void
+     */
+    public static function sendUnpaidInvoiceNotification($invoice, $user)
+    {
+        if (config('settings::mail_disabled')) return;
+        try {
+            Mail::to($user->email)->bcc(self::bcc())->queue(new UnpaidInvoice($invoice));
+        } catch (\Exception $e) {
+            Log::error($e->getMessage());
+        }
+    }
+
+    /**
+     * @param $user \App\Models\User
+     *
      * @return void
      */
     public static function sendTestNotification($user)
@@ -65,7 +82,7 @@ class NotificationHelper
     /**
      * @param $ticket \App\Models\Ticket
      * @param $user \App\Models\User
-     * 
+     *
      * @return void
      */
     public static function sendNewTicketNotification($ticket, $user)
@@ -81,7 +98,7 @@ class NotificationHelper
     /**
      * @param $ticket \App\Models\Ticket
      * @param $user \App\Models\User
-     * 
+     *
      * @return void
      */
     public static function sendNewTicketMessageNotification($ticket, $user)
