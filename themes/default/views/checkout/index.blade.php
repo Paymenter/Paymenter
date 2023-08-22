@@ -35,7 +35,7 @@
                             </thead>
                             <tbody>
                                 @foreach ($products as $product)
-                                    <tr class="border-b-2 border-secondary-200 dark:border-secondary-50">
+                                    <tr class="@if(count($products) > 1) border-b-2 border-secondary-200 dark:border-secondary-50 @endif">
                                         <td class="pl-6 py-3">
                                             <div class="flex">
                                                 <img src="{{ $product->image }}" alt="{{ $product->name }}" class="w-8 h-8 md:w-12 md:h-12 my-auto rounded-md"
