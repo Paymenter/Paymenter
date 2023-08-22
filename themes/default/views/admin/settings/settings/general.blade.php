@@ -22,12 +22,13 @@
                     <option value="1" {{ config('settings::sidebar') == 1 ? 'selected' : '' }}>
                         {{ __('Sidebar') }}</option>
                 </select>
+                <label class="form-label">{{ __('Menu display style') }}</label>
             </div>
             <link rel="stylesheet" href="https://unpkg.com/easymde/dist/easymde.min.css">
             <script src="https://unpkg.com/easymde/dist/easymde.min.js"></script>
             <div class="relative m-4 group md:col-span-2 col-span-1">
                 <label class="dark:text-darkmodetext block text-md font-medium text-gray-700">
-                    {{ __('Home Page Text') }}  
+                    {{ __('Home Page Text') }}
                 </label>
                 <textarea name="home_page_text" class="form-input w-full @error('home_page_text') is-invalid @enderror" placeholder=" "
                     name="home_page_text" id="home_page_text">{{ config('settings::home_page_text') }}</textarea>
@@ -66,7 +67,7 @@
             </div>
             <div class="relative m-4 group">
                 <input type="checkbox" class="form-input w-fit peer @error('allow_auto_lang') is-invalid @enderror"
-                    placeholder=" " name="allow_auto_lang" value="1" 
+                    placeholder=" " name="allow_auto_lang" value="1"
                     {{ config('settings::allow_auto_lang') ? 'checked' : '' }} data-popover-target="language"/>
                 <label class="form-label" style="position: unset;"  >{{ __('Allow Auto Language') }}</label>
                 <div id="language" role="tooltip" data-popover
