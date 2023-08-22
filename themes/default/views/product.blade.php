@@ -37,14 +37,15 @@
                     <p>{{ $category->description }}</p>
                 </div>
                 <div class="grid grid-cols-3 gap-4 mt-4">
-                @foreach ($category->products()->orderBy('order')->get() as $product)
+                    @foreach ($category->products()->orderBy('order')->get() as $product)
                         <div class="md:col-span-1 col-span-3">
                             <div class="content-box h-full flex flex-col">
                                 <div class="flex gap-x-3 items-center mb-2">
-                                @if ($product->image !== 'null')
+                                    @if ($product->image !== 'null')
                                         <img src="{{ $product->image }}" alt="{{ $product->name }}"
                                             class="w-14 rounded-md" onerror="removeElement(this);">
-                                    @endif                                    <div>
+                                    @endif
+                                    <div>
                                         <h3 class="text-lg text-secondary-800 leading-5 font-semibold">
                                             {{ $product->name }}</h3>
                                         <p>{{ $product->price() ? config('settings::currency_sign') . $product->price() : __('Free') }}
