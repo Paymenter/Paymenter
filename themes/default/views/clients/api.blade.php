@@ -26,6 +26,12 @@
                         <a href="{{ route('clients.api.index') }}" class="text-secondary-900 pl-3 border-primary-400 border-l-2 duration-300 hover:text-secondary-900 hover:pl-3 hover:border-primary-400 focus:text-secondary-900 focus:pl-3 focus:border-primary-400">
                             {{ __("Account API") }}
                         </a>
+                        @if (config('settings::affiliate'))
+                            <a href="{{ route('clients.affiliate') }}"
+                               class="border-l-2 border-transparent duration-300 hover:text-secondary-900 hover:pl-3 hover:border-primary-400 focus:text-secondary-900 focus:pl-3 focus:border-primary-400">
+                                {{ __('Affiliate') }}
+                            </a>
+                        @endif
                     </div>
                 </div>
             </div>
@@ -37,20 +43,20 @@
                         <h1 class="text-xl">Create API Token</h1>
                         <form method="POST" action="{{ route('clients.api.create') }}">
                             @csrf
-                            <x-input 
+                            <x-input
                                 type="text"
                                 class="mt-4"
-                                placeholder="{{ __('Token') }}" 
-                                name="name" 
-                                id="name" 
+                                placeholder="{{ __('Token') }}"
+                                name="name"
+                                id="name"
                                 label="{{ __('Token Name') }}"
                             />
                             <div class="grid grid-cols-4 gap-2 mt-4">
                                 @foreach($permissions as $permission)
-                                    <x-input 
+                                    <x-input
                                         type="checkbox"
-                                        name="permissions[{{ $permission }}]" 
-                                        id="{{ $permission }}" 
+                                        name="permissions[{{ $permission }}]"
+                                        id="{{ $permission }}"
                                         label="{{ $permission }}"
                                     />
                                 @endforeach
@@ -65,7 +71,7 @@
                         @if ($tokens->isEmpty())
                             <label class='text-center'>You have not tokens created yet!</label>
                         @endif
-                        
+
                         @foreach($tokens as $token)
                             <form method="POST" action="{{ route('clients.api.delete', $token->id) }}">
                                 @csrf
@@ -88,5 +94,5 @@
             </div>
         </div>
     </div>
-    
+
 </x-app-layout>
