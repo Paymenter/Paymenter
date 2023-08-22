@@ -81,18 +81,18 @@ class Pterodactyl extends Server
             ],
         ];
         foreach ($nodes->json()['data'] as $node) {
-            $nodeList[] = [
-                'name' => $node['attributes']['name'],
-                'value' => $node['attributes']['id'],
-            ];
-        }
+            $nodeName = $node['attributes']['name'];
+            $nodeLocationID = $node['attributes']['location_id'];
 
-        $location =  $this->getRequest($this->config('host') . '/api/application/locations');
-        $locationList = [];
-        foreach ($location->json()['data'] as $location) {
-            $locationList[] = [
-                'name' => $location['attributes']['short'],
-                'value' => $location['attributes']['id'],
+            $locationResponse = $this->getRequest($this->config('host') . '/api/application/locations/'. $nodeLocationID);
+            $location = $locationResponse->json();
+            $locationName = $location['attributes']['short'];
+
+            $nodeValue = json_encode(['node_id' => $node['attributes']['id'], 'location_id' => $nodeLocationID]);
+
+            $nodeList[] = [
+                'name' => $nodeName . ' ('. $locationName .')',
+                'value' => $nodeValue,
             ];
         }
 
@@ -110,16 +110,9 @@ class Pterodactyl extends Server
         return [
             [
                 'name' => 'node',
-                'friendlyName' => 'Pterodactyl Node (leave empty for node assigned to location)',
+                'friendlyName' => 'Pterodactyl Node',
                 'type' => 'dropdown',
                 'options' => $nodeList,
-            ],
-            [
-                'name' => 'location',
-                'friendlyName' => 'Pterodactyl Location',
-                'type' => 'dropdown',
-                'options' => $locationList,
-                'required' => true,
             ],
             [
                 'name' => 'egg',
@@ -185,17 +178,17 @@ class Pterodactyl extends Server
                 'description' => 'If you do not fill in this field the server name will be set to the PRODUCT NAME #ID eg. "Test Product #26"',
             ],
             [
-                'name' => 'skip_scripts',
-                'friendlyName' => 'Pterodactyl Skip Scripts',
-                'type' => 'boolean',
-                'description' => 'Decides if Pterodactyl will skip install scripts',
-            ],
-            [
                 'name' => 'allocation',
                 'friendlyName' => 'Pterodactyl Allocation',
                 'type' => 'text',
                 'required' => true,
                 'description' => 'How many ports the user can allocate. Must be at least one.',
+            ],
+            [
+                'name' => 'skip_scripts',
+                'friendlyName' => 'Pterodactyl Skip Scripts',
+                'type' => 'boolean',
+                'description' => 'Decides if Pterodactyl will skip install scripts',
             ],
         ];
     }
@@ -233,11 +226,20 @@ class Pterodactyl extends Server
         $swap = isset($configurableOptions['swap']) ? $configurableOptions['swap'] : $parmas['swap'];
         $memory = isset($configurableOptions['memory']) ? $configurableOptions['memory'] : $parmas['memory'];
         $allocations = isset($configurableOptions['allocation']) ? $configurableOptions['allocation'] : $parmas['allocation'];
-        $location = isset($configurableOptions['location']) ? $configurableOptions['location'] : $parmas['location'];
         $databases = isset($configurableOptions['databases']) ? $configurableOptions['databases'] : $parmas['databases'];
         $backups = isset($configurableOptions['backups']) ? $configurableOptions['backups'] : $parmas['backups'];
         $startup = isset($configurableOptions['startup']) ? $configurableOptions['startup'] : $eggData['attributes']['startup'];
-        $node = isset($configurableOptions['node']) ? $configurableOptions['node'] : $parmas['node'];
+        $selectedNode = isset($configurableOptions['node']) ? $configurableOptions['node'] : $parmas['node'];
+
+        if ($selectedNode) {
+            $selectedData = json_decode($selectedNode, true);
+
+            if ($selectedData && isset($selectedData['node']) && isset($selectedData['location'])) {
+                $node = $selectedData['node_id'];
+                $location = $selectedData['location_id'];
+
+            }
+        }
         $servername = isset($configurableOptions['servername']) ? $configurableOptions['servername'] : $parmas['servername'];
 
         if ($node) {
