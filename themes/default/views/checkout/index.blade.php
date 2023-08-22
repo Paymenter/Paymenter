@@ -34,8 +34,14 @@
                                 </tr>
                             </thead>
                             <tbody>
+                                @php
+                                    $i = 0;
+                                @endphp
                                 @foreach ($products as $product)
-                                    <tr class="@if(count($products) > 1) border-b-2 border-secondary-200 dark:border-secondary-50 @endif">
+                                    @php
+                                        ++$i;
+                                    @endphp
+                                    <tr class="@if(count($products) > $i) border-b-2 border-secondary-200 dark:border-secondary-50 @endif">
                                         <td class="pl-6 py-3">
                                             <div class="flex">
                                                 <img src="{{ $product->image }}" alt="{{ $product->name }}" class="w-8 h-8 md:w-12 md:h-12 my-auto rounded-md"
@@ -116,8 +122,12 @@
                         <hr class="my-4 border-secondary-300">
                         @foreach ($products as $product)
                             @if ($product->price > 0)
-                                <div class="flex flex-row items-center justify-between">
-
+                                @if(count($products) > 1)
+                                    <span class="text-sm uppercase font-light text-gray-500 -mb-3">
+                                        {{ ucfirst($product->name) }}
+                                    </span>
+                                @endif
+                                <div class="flex flex-row items-center justify-between -mt-1">
                                     <div class="flex flex-row items-center">
                                         <span>
                                             {{ ucfirst($product->billing_cycle) }}
@@ -149,21 +159,25 @@
                                         </span>
                                     </div>
                                     <div class="flex flex-col">
-                                        <span class="text-lg">{{ config('settings::currency_sign') }}
-                                            {{ $product->setup_fee - $product->discount_fee }}
+                                        <span class="text-lg">
+                                            {{ $quantity }} {{ config('settings::currency_sign') }} {{ $product->setup_fee - $product->discount_fee }}
                                         </span>
                                     </div>
                                 </div>
                             @endif
                         @endforeach
                         @if (!empty($discount))
-                            <div class="flex flex-row items-center justify-between">
+                            <div class="flex flex-row items-center justify-between mt-3">
                                 <div class="flex flex-row items-center">
                                     <span>{{ __('Discount') }}</span>
                                 </div>
                                 <div class="flex flex-col">
                                     <span>{{ config('settings::currency_sign') }}
-                                        {{ round($discount, 2) }}</span>
+                                        {{ round($discount, 2) }}
+                                        @if($coupon->type == "percent")
+                                            ({{ $coupon->value }}%)
+                                        @endif
+                                    </span>
                                 </div>
                             </div>
                         @endif
