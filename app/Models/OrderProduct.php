@@ -43,13 +43,22 @@ class OrderProduct extends Model
         return $this->hasOne(InvoiceItem::class, 'product_id', 'id')->get()->first() ? $this->hasOne(InvoiceItem::class, 'product_id', 'id')->get()->first()->invoice() : new Invoice();
     }
 
+    public function lastInvoice()
+    {
+        $lastInvoiceItem = $this->hasOne(InvoiceItem::class, 'product_id', 'id')
+            ->orderByDesc('id')  // Sortowanie odwrotne względem ID (najnowsza pozycja faktury)
+            ->first();
+
+        return $lastInvoiceItem->invoice;
+    }
+
     public function getInvoices()
     {
         return $this->hasMany(InvoiceItem::class, 'product_id', 'id')->get()->map(function ($invoiceItem) {
             return $invoiceItem->invoice()->get()->first();
         });
     }
-    
+
     public function getOpenInvoices()
     {
         return $this->getInvoices()->filter(function ($invoice) {

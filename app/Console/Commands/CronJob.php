@@ -45,16 +45,24 @@ class CronJob extends Command
                 $order->status = 'suspended';
                 $order->save();
                 ExtensionHelper::suspendServer($order);
-                NotificationHelper::sendUnpaidInvoiceNotification($order->invoices()->latest()->first(), $order->order->user);
+                NotificationHelper::sendUnpaidInvoiceNotification($order->invoices()->get()->latest(), $order->order->user);
                 $this->info('Suspended server: ' . $order->id);
             } elseif ($order->status == 'suspended' || $order->status == 'pending') {
                 if (strtotime($order->expiry_date) < strtotime('-1 week')) {
-                    $invoice = $order->invoices()->latest()->first();
-                    $invoice->status = 'cancelled';
                     ExtensionHelper::terminateServer($order);
                     $order->status = 'cancelled';
                     NotificationHelper::sendDeletedOrderNotification($order->order, $order->order->user);
                     $order->save();
+                    $invoice = $order->lastInvoice();
+
+                    if ($invoice) {
+                        if ($invoice->status !== 'paid') {
+                            $invoice->status = 'cancelled';
+                            $invoice->cancelled_at = now()->format('Y-m-d H:i:s');
+                            $invoice->save();
+                            $this->info('Invoice ' . $invoice->id . ' status changed to ' . $invoice->status);
+                        }
+                    }
                 }
             }
         }

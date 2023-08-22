@@ -74,7 +74,7 @@
                             @endif
                         </td>
                         <td class="text-center">
-                            {{ $product->expiry_date ?: 'N/A' }}
+                            {{ $product->expiry_date->format('Y-m-d') ?: 'N/A' }}
                         </td>
                         <td class="text-center">
                             {{ $product->link ?: 'N/A' }}
@@ -247,7 +247,7 @@
                         <td class="px-4 py-2">{{ $invoice->paid_at }}</td>
                         <td class="px-4 py-2">
                             <div class="my-auto">
-                                <a data-tooltip-target="tooltip-animation-invoice" class="button button-primary" href="{{ route('admin.invoices.show', $invoice->id) }}" target="_blank">
+                                <a data-tooltip-target="tooltip-animation-invoice" class="button button-primary" href="{{ route('admin.invoices.show', $invoice->id) }}">
                                     <i class="ri-eye-line"></i>
                                 </a>
                                 <div id="tooltip-animation-invoice" role="tooltip" class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
