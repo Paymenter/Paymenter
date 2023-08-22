@@ -492,6 +492,9 @@ class ExtensionHelper
             return false;
         }
         $module = new $module($extension);
+        if (!method_exists($module, 'getLink')) {
+            return false;
+        }
         $config = self::loadConfiguration($product, $product2);
         $configurableOptions = self::loadConfigurableOptions($product2);
         $user = $order->user;
@@ -521,6 +524,9 @@ class ExtensionHelper
             return [];
         }
         $module = new $module($extension);
+        if (!method_exists($module, 'getProductConfig')) {
+            return [];
+        }
         $settings = $product->settings;
         $config = [];
         foreach ($settings as $setting) {
@@ -555,7 +561,7 @@ class ExtensionHelper
             return [];
         }
         $module = new $module($extension);
-        if(!method_exists($module, 'getCustomPages')) {
+        if (!method_exists($module, 'getCustomPages')) {
             return [];
         }
         $config = self::loadConfiguration($product, $product2);
