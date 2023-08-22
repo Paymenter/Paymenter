@@ -4,6 +4,7 @@ namespace App\Helpers;
 
 use App\Mail\Invoices\NewInvoice;
 use App\Mail\Invoices\UnpaidInvoice;
+use App\Mail\Orders\DeletedOrder;
 use App\Mail\Orders\NewOrder;
 use App\Mail\Test;
 use App\Mail\Tickets\NewTicket;
@@ -63,6 +64,22 @@ class NotificationHelper
         if (config('settings::mail_disabled')) return;
         try {
             Mail::to($user->email)->bcc(self::bcc())->queue(new UnpaidInvoice($invoice));
+        } catch (\Exception $e) {
+            Log::error($e->getMessage());
+        }
+    }
+
+    /**
+     * @param $invoice \App\Models\Invoice
+     * @param $user \App\Models\User
+     *
+     * @return void
+     */
+    public static function sendDeletedOrderNotification($order, $user)
+    {
+        if (config('settings::mail_disabled')) return;
+        try {
+            Mail::to($user->email)->bcc(self::bcc())->queue(new DeletedOrder($order));
         } catch (\Exception $e) {
             Log::error($e->getMessage());
         }
