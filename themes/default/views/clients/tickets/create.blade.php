@@ -66,7 +66,7 @@
                                                                 case 'paid':
                                                                     $status = __('Active');;
                                                                     break;
-                                                                case 'canceled':
+                                                                case 'cancelled':
                                                                     $status = __('Cancelled');
                                                                     break;
                                                                 case 'suspended':
