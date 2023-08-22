@@ -1,4 +1,10 @@
 <x-app-layout>
+    <script>
+        function removeElement(element) {
+            element.remove();
+            this.error = true;
+        }
+    </script>
     <x-slot name="title">
         {{ __('Checkout') }}
     </x-slot>
@@ -31,7 +37,11 @@
                                 @foreach ($products as $product)
                                     <tr class="border-b-2 border-secondary-200 dark:border-secondary-50">
                                         <td class="pl-6 py-3">
-                                            {{ $product->name }}
+                                            <div class="flex">
+                                                <img src="{{ $product->image }}" alt="{{ $product->name }}" class="w-8 h-8 md:w-12 md:h-12 my-auto rounded-md"
+                                                     onerror="removeElement(this);">
+                                                <strong class="ml-3 my-auto">{{ ucfirst($product->name) }}</strong>
+                                            </div>
                                         </td>
                                         <td class="py-3">
                                             @if ($product->allow_quantity == 1 || $product->allow_quantity == 2)
@@ -56,7 +66,9 @@
                                             @else
                                                 {{ $product->price }}
                                             @endif
-                                            {{ __('each') }}
+                                            @if($product->quantity >= 1)
+                                                {{ __('each') }}
+                                            @endif
                                         </td>
                                         <td class="py-3 pr-6">
                                             <form method="POST" action="{{ route('checkout.remove', $product->id) }}">
@@ -164,12 +176,6 @@
                         </div>
                         <hr class="my-4 border-secondary-300">
                         <form method="POST" action="{{ route('checkout.pay') }}">
-                            <div class="items-center p-1">
-                                @php
-                                    $tos = "I agree to the <a href='" . route('tos') . "' class='text-blue-500 hover:text-blue-600'>terms of service</a>";
-                                @endphp
-                                <x-input id="tos" type="checkbox" name="tos" required :label="$tos" />
-                            </div>
                             <div class="flex flex-col">
                                 <label for="payment_method"
                                     class="text-sm text-secondary-600">{{ __('Payment method') }}</label>
@@ -186,6 +192,12 @@
                                         </option>
                                     @endif
                                 </select>
+                            </div>
+                            <div class="items-center p-1">
+                                @php
+                                    $tos = "I agree to the <a href='" . route('tos') . "' class='text-blue-500 hover:text-blue-600'>terms of service</a>";
+                                @endphp
+                                <x-input id="tos" type="checkbox" name="tos" required :label="$tos" />
                             </div>
                             @csrf
                             <div class="flex justify-end mt-4">

@@ -96,7 +96,7 @@
                                         <tr class="border-b-2 border-secondary-200 dark:border-secondary-200">
                                             <td class="pl-6 py-3 items-center break-all max-w-fit">
                                                 <div class="flex">
-                                                    <img src="{{ $product->image }}" alt="{{ $product->name }}" class="w-8 h-8 md:w-12 md:h-12 my-auto"
+                                                    <img src="{{ $product->image }}" alt="{{ $product->name }}" class="w-8 h-8 md:w-12 md:h-12 my-auto rounded-md"
                                                          onerror="removeElement(this);">
                                                     <strong class="ml-3 my-auto">{{ ucfirst($product->name) }}</strong>
                                                 </div>
