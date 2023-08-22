@@ -251,7 +251,7 @@ class Pterodactyl extends Server
             }
             $json = [
                 'name' => $servername??$product->product->name . ' #' . $product->id,
-                'user' => (int) $this->getUser($user),
+                'user' => (int) $this->getUser($user, $product),
                 'egg' => (int) $egg_id,
                 'docker_image' => $eggData['attributes']['docker_image'],
                 'startup' => $startup,
@@ -276,7 +276,7 @@ class Pterodactyl extends Server
         } else {
             $json = [
                 'name' => $servername??$product->product->name . '-' . $product->id,
-                'user' => (int) $this->getUser($user),
+                'user' => (int) $this->getUser($user, $product),
                 'egg' => (int) $egg_id,
                 'docker_image' => $eggData['attributes']['docker_image'],
                 'startup' => $startup,
@@ -324,7 +324,7 @@ class Pterodactyl extends Server
         return $randomString;
     }
 
-    public function getUser($user)
+    public function getUser($user, $product = null)
     {
         $url = $this->config('host') . '/api/application/users?filter%5Bemail%5D=' . $user->email;
         $response = $this->getRequest($url);
@@ -333,11 +333,15 @@ class Pterodactyl extends Server
             return $users['data'][0]['attributes']['id'];
         } else {
             $url = $this->config('host') . '/api/application/users';
+            $sanitized = preg_replace('/[^a-zA-Z0-9]/', '', strtolower($user->name));
+            if (empty($sanitized)) {
+                $sanitized = $this->random_string(8); // Ta funkcja musi być dostępna w twoim kodzie
+            }
             $json = [
-                'username' => $user->username??$this->random_string(8),
+                'username' => $sanitized.'_'.$this->random_string(3)??$this->random_string(8),
                 'email' => $user->email,
                 'first_name' => $user->name,
-                'last_name' => 'User',
+                'last_name' => $user->lastname??'User',
             ];
             $response = $this->postRequest($url, $json);
             if (!$response->successful()) {

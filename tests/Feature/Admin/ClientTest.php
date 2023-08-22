@@ -51,7 +51,7 @@ class ClientTest extends TestCase
     {
         $response = $this->actingAs($this->user)->post(route('admin.clients.store'), [
             'name' => 'TEST',
-            'username' => 'test',
+            'lastname' => 'test',
             'email' => 'client@paymenter.org',
             'password' => 'password',
         ]);

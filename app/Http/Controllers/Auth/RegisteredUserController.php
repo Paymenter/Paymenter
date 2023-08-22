@@ -36,7 +36,7 @@ class RegisteredUserController extends Controller
     {
         $request->validate([
             'name' => 'required|string|max:255',
-            'username' => 'required|string|regex:/\w*$/|max:30|unique:users',
+            'lastname' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|confirmed|min:8',
             'g-recaptcha-response' => 'recaptcha',
@@ -48,7 +48,7 @@ class RegisteredUserController extends Controller
         Auth::login($user = User::create([
             'name' => $request->name,
             'email' => $request->email,
-            'username' => $request->username,
+            'lastname' => $request->lastname,
             'password' => Hash::make($request->password),
         ]));
         // Send email to user
