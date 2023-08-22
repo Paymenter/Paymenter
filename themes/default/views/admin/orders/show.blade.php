@@ -9,6 +9,7 @@
         </div>
         @if($order->status !== 'cancelled')
             <form action="{{ route('admin.orders.delete', $order->id) }} " method="POST">
+                @method('DELETE')
                 @csrf
                 <button class="button button-danger float-right flex items-center"><i class="ri-close-circle-line"></i> {{__('Delete Unrecoverable')}}</button>
             </form>
