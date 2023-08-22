@@ -41,9 +41,10 @@
                         <div class="md:col-span-1 col-span-3">
                             <div class="content-box h-full flex flex-col">
                                 <div class="flex gap-x-3 items-center mb-2">
-                                    <img src="{{ $product->image }}" alt="{{ $product->name }}" class="w-14 rounded-md"
-                                        onerror="removeElement(this);">
-                                    <div>
+                                @if ($product->image !== 'null')
+                                        <img src="{{ $product->image }}" alt="{{ $product->name }}"
+                                            class="w-14 rounded-md" onerror="removeElement(this);">
+                                    @endif                                    <div>
                                         <h3 class="text-lg text-secondary-800 leading-5 font-semibold">
                                             {{ $product->name }}</h3>
                                         <p>{{ $product->price() ? config('settings::currency_sign') . $product->price() : __('Free') }}
