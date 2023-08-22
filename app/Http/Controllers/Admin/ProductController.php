@@ -236,10 +236,9 @@ class ProductController extends Controller
 
     public function extensionUpdate(Request $request, Product $product)
     {
-        $data = $request->validate([
+        $data = request()->validate([
             'extension_id' => 'required|integer',
         ]);
-
         // Check if only the server has been changed
         if ($product->extension_id != $request->input('extension_id')) {
             // Delete all product settings
@@ -247,74 +246,34 @@ class ProductController extends Controller
             $product->update($data);
             return redirect()->route('admin.products.extension', $product->id)->with('success', 'Server changed successfully');
         }
-
         $extension = Extension::findOrFail($product->extension_id);
+
         $config = ExtensionHelper::getProductConfiguration($product);
         $extension->productConfig = $config;
 
         foreach ($extension->productConfig as $config) {
             if ($config->type == 'title') continue;
             $config->required = isset($config->required) ? $config->required : false;
-
             if ($config->required && $request->input($config->name) == null) {
                 return redirect()->route('admin.products.extension', $product->id)->with('error', 'Please fill in all required fields');
             }
-
-            // Handle special cases for node and location fields
-            if ($config->name == 'node') {
-                $nodeValue = $request->input($config->name);
-                $nodeData = json_decode($nodeValue, true);
-
-                if ($nodeData && isset($nodeData['node_id']) && isset($nodeData['location_id'])) {
-                    $nodeId = $nodeData['node_id'];
-                    $locationId = $nodeData['location_id'];
-
-                    ProductSetting::updateOrCreate(
-                        [
-                            'product_id' => $product->id,
-                            'name' => 'node_id', // Assuming you have a field for node_id
-                        ],
-                        [
-                            'product_id' => $product->id,
-                            'name' => 'node_id',
-                            'value' => $nodeId,
-                            'extension' => $product->extension->id,
-                        ]
-                    );
-
-                    ProductSetting::updateOrCreate(
-                        [
-                            'product_id' => $product->id,
-                            'name' => 'location_id', // Assuming you have a field for location_id
-                        ],
-                        [
-                            'product_id' => $product->id,
-                            'name' => 'location_id',
-                            'value' => $locationId,
-                            'extension' => $product->extension->id,
-                        ]
-                    );
-                }
-            } else {
-                ProductSetting::updateOrCreate(
-                    [
-                        'product_id' => $product->id,
-                        'name' => $config->name,
-                        'extension' => $product->extension->id,
-                    ],
-                    [
-                        'product_id' => $product->id,
-                        'name' => $config->name,
-                        'value' => $request->input($config->name),
-                        'extension' => $product->extension->id,
-                    ]
-                );
-            }
+            ProductSetting::updateOrCreate(
+                [
+                    'product_id' => $product->id,
+                    'name' => $config->name,
+                    'extension' => $product->extension->id,
+                ],
+                [
+                    'product_id' => $product->id,
+                    'name' => $config->name,
+                    'value' => $request->input($config->name),
+                    'extension' => $product->extension->id,
+                ]
+            );
         }
 
         return redirect()->route('admin.products.extension', $product->id)->with('success', 'Product updated successfully');
     }
-
 
     public function extensionExport(Product $product)
     {
