@@ -14,6 +14,7 @@ class ExtensionController extends Controller
     {
         $servers = scandir(base_path('app/Extensions/Servers/'));
         $gateways = scandir(base_path('app/Extensions/Gateways/'));
+        $events = scandir(base_path('app/Extensions/Events/'));
         foreach ($servers as $key => $server) {
             if ($server == '.' || $server == '..') {
                 continue;
@@ -42,8 +43,22 @@ class ExtensionController extends Controller
                 $extension->save();
             }
         }
+        foreach ($events as $key => $event) {
+            if ($event == '.' || $event == '..') {
+                continue;
+            }
+            // Check if the extension is enabled
+            $extension = Extension::where('name', $event)->first();
+            if (!$extension) {
+                $extension = new Extension();
+                $extension->name = $event;
+                $extension->type = 'event';
+                $extension->enabled = 0;
+                $extension->save();
+            }
+        }
 
-        return view('admin.extensions.index', compact('servers', 'gateways'));
+        return view('admin.extensions.index', compact('servers', 'gateways', 'events'));
     }
 
     public function download(Request $request)
@@ -59,7 +74,8 @@ class ExtensionController extends Controller
         if (!$extension) {
             $extension = new Extension();
             $extension->name = $name;
-            $extension->type = $type == 'Servers' ? 'server' : 'gateway';
+            // Type to lowercase -s
+            $extension->type = substr($type, 0, -1);
             $extension->enabled = 0;
             $extension->save();
         }
@@ -109,9 +125,6 @@ class ExtensionController extends Controller
 
     public function edit($sort, $name)
     {
-        if ($sort != 'server' && $sort != 'gateway') {
-            return redirect()->route('admin.extensions')->with('error', 'Extension not found');
-        }
         $extension = Extension::where('name', $name)->first();
         if (!$extension) {
             // Check if class exists
@@ -135,7 +148,7 @@ class ExtensionController extends Controller
 
     public function update(Request $request, $sort, $name)
     {
-        if ($sort != 'server' && $sort != 'gateway') {
+        if ($sort != 'server' && $sort != 'gateway' && $sort != 'event') {
             return redirect()->route('admin.extensions')->with('error', 'Extension not found');
         }
         $extension = Extension::where('name', $name)->first();

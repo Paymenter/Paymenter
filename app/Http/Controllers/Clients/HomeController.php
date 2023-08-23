@@ -20,7 +20,7 @@ class HomeController extends Controller
     {
         $user = $request->user();
         $services = $user->orders;
-        $invoices = Invoice::where('user_id', $user->id)->where('status', 'pending')->get();
+        $invoices = Invoice::where('user_id', $user->id)->where('credits', null)->where('status', 'pending')->get();
 
         return view('clients.home', compact('services', 'invoices'));
     }
@@ -29,7 +29,7 @@ class HomeController extends Controller
      * Show profile page with 2 factor authentication code if not enabled
      *
      * @param Request $request
-     * @return void
+     * @return Illuminate\View\View
      */
     public function profile(Request $request)
     {
