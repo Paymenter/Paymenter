@@ -1,5 +1,5 @@
 @if (session('success'))
-    <div id="success" class="fixed bottom-0 left-1/2 transform -translate-x-1/2 md:w-1/3 z-50 flex items-center p-4 mb-16 text-green-800 rounded-lg bg-green-50 dark:bg-gray-800 dark:text-green-400 shadow-md shadow-[#384b44]" role="alert">
+    <div id="success" class="fixed bottom-0 left-1/3 transform md:w-1/3 z-50 flex items-center p-4 mb-16 text-green-800 rounded-lg bg-green-50 dark:bg-gray-800 dark:text-green-400 shadow-md shadow-[#384b44]" role="alert">
       <svg class="flex-shrink-0 w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
         <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z"/>
       </svg>
@@ -19,15 +19,15 @@
             const alertElement = document.getElementById('success');
             alertElement.classList.remove('hidden');
             alertElement.classList.add('flex');
-            alertElement.style.transform = 'translateX(500%)';
+            alertElement.style.transform = 'translateY(500%)';
 
             requestAnimationFrame(function() {
                 alertElement.style.transition = 'transform 0.5s ease-in-out';
-                alertElement.style.transform = 'translateX(-50%)';
+                alertElement.style.transform = 'translateY(-50%)';
             });
 
             setTimeout(function() {
-                alertElement.style.transform = 'translateX(500%)';
+                alertElement.style.transform = 'translateY(500%)';
                 alertElement.addEventListener('transitionend', function() {
                     alertElement.classList.remove('flex');
                     alertElement.classList.add('hidden');
@@ -39,7 +39,7 @@
     </script>
 @endif
 @if(session('error'))
-    <div id="error" class="fixed bottom-0 left-1/2 transform -translate-x-1/2 md:w-1/3 z-50 flex items-center p-4 mb-16 text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400 shadow-md shadow-[#4b3b38]" role="alert">
+    <div id="error" class="fixed bottom-0 left-1/3 transform md:w-1/3 z-50 flex items-center p-4 mb-16 text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400 shadow-md shadow-[#4b3b38]" role="alert">
       <svg class="flex-shrink-0 w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
         <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z"/>
       </svg>
@@ -59,15 +59,15 @@
             const alertElement = document.getElementById('error');
             alertElement.classList.remove('hidden');
             alertElement.classList.add('flex');
-            alertElement.style.transform = 'translateX(500%)';
+            alertElement.style.transform = 'translateY(500%)';
 
             requestAnimationFrame(function() {
                 alertElement.style.transition = 'transform 0.5s ease-in-out';
-                alertElement.style.transform = 'translateX(-50%)';
+                alertElement.style.transform = 'translateY(-50%)';
             });
 
             setTimeout(function() {
-                alertElement.style.transform = 'translateX(500%)';
+                alertElement.style.transform = 'translateY(500%)';
                 alertElement.addEventListener('transitionend', function() {
                     alertElement.classList.remove('flex');
                     alertElement.classList.add('hidden');
