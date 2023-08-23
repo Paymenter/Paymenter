@@ -673,6 +673,7 @@ class Proxmox extends Server
 
         // Assign it to the orderProduct for further use
         ExtensionHelper::setOrderProductConfig('vmid', $vmid, $product->id);
+        ExtensionHelper::setOrderProductConfig('ip', 'changeme', $product->id);
         $postData = [];
 
         $currentConfig = $product->product->settings;
