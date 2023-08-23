@@ -33,7 +33,7 @@
             </div>
             <div class="flex flex-col items-baseline">
                 <x-input type="text" id="user" :label="__('User')" name="user"
-                    value="{{ $ticket->user->name }}" required class="mt-2 w-full" icon="ri-user-line" readonly />
+                    value="{{ $ticket->user->name }} (#{{ $ticket->user->id }})" required class="mt-2 w-full" icon="ri-user-line" readonly />
                 <x-input type="select" id="product" name="product_id" :label="__('Product')" icon="ri-checkbox-circle-line"
                     class="mt-2 w-full">
                     <option value="">{{ __('None') }}</option>

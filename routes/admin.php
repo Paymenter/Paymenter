@@ -18,6 +18,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'permission:ADMINISTRATOR'], 
     Route::group(['prefix' => 'settings', 'middleware' => 'permission:VIEW_SETTINGS'], function () {
         Route::get('/', [App\Http\Controllers\Admin\SettingController::class, 'index'])->middleware(['password.confirm', 'permission:VIEW_SETTINGS'])->name('admin.settings');
         Route::post('/general', [App\Http\Controllers\Admin\SettingController::class, 'general'])->middleware(['password.confirm', 'permission:EDIT_SETTINGS'])->name('admin.settings.general');
+        Route::post('/company', [App\Http\Controllers\Admin\SettingController::class, 'company'])->middleware(['password.confirm', 'permission:EDIT_SETTINGS'])->name('admin.settings.company');
         Route::post('/email', [App\Http\Controllers\Admin\SettingController::class, 'email'])->middleware(['password.confirm', 'permission:EDIT_SETTINGS'])->name('admin.settings.email');
         Route::post('/email/test', [App\Http\Controllers\Admin\SettingController::class, 'testEmail'])->middleware(['password.confirm', 'permission:EDIT_SETTINGS'])->name('admin.settings.email.test');
         Route::post('/login', [App\Http\Controllers\Admin\SettingController::class, 'login'])->middleware(['password.confirm', 'permission:EDIT_SETTINGS'])->name('admin.settings.login');
