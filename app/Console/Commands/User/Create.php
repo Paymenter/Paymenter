@@ -29,7 +29,6 @@ class Create extends Command
     public function handle()
     {
         $email = $this->ask('Create a user. What is his/her email?');
-        $lastname = $this->ask('What is his/her lastname?');
 
         if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
             exit($this->error('Invalid email address stublifer.'));
@@ -41,7 +40,8 @@ class Create extends Command
 
         $password = $this->secret('Password for this new user?');
 
-        $name = $this->ask('What is his/her name?');
+        $name = $this->ask('What is his/her first name?');
+        $lastname = $this->ask('What is his/her lastname?');
         $roles = Role::all()->pluck('name')->toArray();
 
         $role = $this->choice('What is his/her role?', $roles, 1);
@@ -54,8 +54,8 @@ class Create extends Command
             'role_id' => Role::where('name', $role)->first()->id,
         ]);
         $this->info('Account created successfully!');
-        echo $this->table(['name', 'email', 'role', 'username'], [
-            [$user->name, $user->email, $user->role->name, $user->username],
+        echo $this->table(['name', 'email', 'role', 'lastname'], [
+            [$user->name, $user->email, $user->role->name, $user->lastname],
         ]);
     }
 }
