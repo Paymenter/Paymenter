@@ -60,8 +60,7 @@
                                             Out of stock
                                         </a>
                                     @else
-                                        <a href="{{ route('checkout.add', $product->id) }}"
-                                           class="button button-secondary w-full">
+                                        <a href="{{ route('checkout.add', $product->id) }}" class="button button-secondary w-full">
                                             Add to cart <i class="ri-shopping-cart-2-line"></i>
                                         </a>
                                     @endif
