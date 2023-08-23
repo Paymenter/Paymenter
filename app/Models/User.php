@@ -23,7 +23,8 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'id',
-        'name',
+        'first_name',
+        'last_name',
         'email',
         'password',
         'address',
@@ -61,6 +62,8 @@ class User extends Authenticatable
         'permissions' => 'array',
     ];
 
+    protected $appends = ['name'];
+
     // If role_id is null, set to 2 (client)
     protected static function boot()
     {
@@ -78,6 +81,11 @@ class User extends Authenticatable
             $user->tickets()->delete();
             $user->invoices()->delete();
         });
+    }
+
+    public function getNameAttribute()
+    {
+        return $this->first_name . ' ' . $this->last_name;
     }
 
     public function orders()
@@ -100,10 +108,10 @@ class User extends Authenticatable
         return $this->belongsTo(Role::class, 'role_id', 'id');
     }
 
-    /** 
+    /**
      * Get all OrderProducts for this user
-     *  
-     * @return \Illuminate\Database\Eloquent\Relations\HasManyThrough 
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasManyThrough
      */
     public function orderProducts()
     {

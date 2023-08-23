@@ -44,10 +44,17 @@
                                     <span class="text-red-400 font-semibold">
                                         {{ __('Pending') }}
                                     </span>
-                                @endif
-                                @if (ucfirst($invoice->status) == 'Paid')
+                                @elseif (ucfirst($invoice->status) == 'Paid')
                                     <span class="text-green-400 font-semibold">
                                         {{__('Paid')}}
+                                    </span>
+                                @elseif (ucfirst($invoice->status) == 'Cancelled')
+                                    <span class="text-orange-400 font-semibold">
+                                        {{__('Cancelled')}}
+                                    </span>
+                                @else
+                                    <span class="text-gray-400 font-semibold">
+                                        {{ ucfirst($invoice->status) }}
                                     </span>
                                 @endif
                             </td>

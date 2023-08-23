@@ -27,7 +27,7 @@
                     <option value="fixed" {{ config('settings::affiliate_type') == 'fixed' ? 'selected' : '' }}>
                         {{ __('Fixed Link') . ' ' . url(str_replace(' ', '', auth()->user()->name)) }}</option>
                     <option value="custom" {{ config('settings::affiliate_type') == 'custom' ? 'selected' : '' }}>
-                        {{ __('Custom Link') }}</option>
+                        {{ __('Custom Link (The user sets his own code)') }}</option>
                 </select>
 
                 <label class="form-label">{{ __('Affiliate Type') }}</label>

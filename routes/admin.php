@@ -76,6 +76,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'permission:ADMINISTRATOR'], 
     });
 
     Route::group(['prefix' => 'orders'], function () {
+        Route::delete('/{order}/{product}/delete', [App\Http\Controllers\Admin\OrderController::class, 'destroyProduct'])->middleware(['permission:EDIT_ORDERS'])->name('admin.orders.deleteProduct');
         Route::get('/', [App\Http\Controllers\Admin\OrderController::class, 'index'])->middleware(['permission:VIEW_ORDERS'])->name('admin.orders');
         Route::delete('/{order}/delete', [App\Http\Controllers\Admin\OrderController::class, 'destroy'])->middleware(['permission:DELETE_ORDERS'])->name('admin.orders.delete');
         Route::get('/{order}', [App\Http\Controllers\Admin\OrderController::class, 'show'])->middleware(['permission:VIEW_ORDERS'])->name('admin.orders.show');

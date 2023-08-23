@@ -178,10 +178,11 @@ class Pterodactyl extends Server
                 'required' => true,
             ],
             [
-                'name' => 'skip_scripts',
-                'friendlyName' => 'Pterodactyl Skip Scripts',
-                'type' => 'boolean',
-                'description' => 'Decides if Pterodactyl will skip install scripts',
+                'name' => 'servername',
+                'friendlyName' => 'Product Name (leave empty for auto generated name)',
+                'type' => 'text',
+                'required' => false,
+                'description' => 'If you do not fill in this field the server name will be set to the PRODUCT NAME #ID eg. "Test Product #26"',
             ],
             [
                 'name' => 'allocation',
@@ -189,6 +190,12 @@ class Pterodactyl extends Server
                 'type' => 'text',
                 'required' => true,
                 'description' => 'How many ports the user can allocate. Must be at least one.',
+            ],
+            [
+                'name' => 'skip_scripts',
+                'friendlyName' => 'Pterodactyl Skip Scripts',
+                'type' => 'boolean',
+                'description' => 'Decides if Pterodactyl will skip install scripts',
             ],
         ];
     }
@@ -231,6 +238,7 @@ class Pterodactyl extends Server
         $backups = isset($configurableOptions['backups']) ? $configurableOptions['backups'] : $parmas['backups'];
         $startup = isset($configurableOptions['startup']) ? $configurableOptions['startup'] : $eggData['attributes']['startup'];
         $node = isset($configurableOptions['node']) ? $configurableOptions['node'] : $parmas['node'];
+        $servername = isset($configurableOptions['servername']) ? $configurableOptions['servername'] : $parmas['servername'];
 
         if ($node) {
             $allocation = $this->getRequest($this->config('host') . '/api/application/nodes/' . $parmas['node'] . '/allocations');
@@ -242,8 +250,8 @@ class Pterodactyl extends Server
                 }
             }
             $json = [
-                'name' => $this->random_string(8) . '-' . $product->id,
-                'user' => (int) $this->getUser($user),
+                'name' => $servername??$product->product->name . ' #' . $product->id,
+                'user' => (int) $this->getUser($user, $product),
                 'egg' => (int) $egg_id,
                 'docker_image' => $eggData['attributes']['docker_image'],
                 'startup' => $startup,
@@ -267,8 +275,8 @@ class Pterodactyl extends Server
             ];
         } else {
             $json = [
-                'name' => $this->random_string(8) . '-' . $product->id,
-                'user' => (int) $this->getUser($user),
+                'name' => $servername??$product->product->name . '-' . $product->id,
+                'user' => (int) $this->getUser($user, $product),
                 'egg' => (int) $egg_id,
                 'docker_image' => $eggData['attributes']['docker_image'],
                 'startup' => $startup,
@@ -316,7 +324,7 @@ class Pterodactyl extends Server
         return $randomString;
     }
 
-    public function getUser($user)
+    public function getUser($user, $product = null)
     {
         $url = $this->config('host') . '/api/application/users?filter%5Bemail%5D=' . $user->email;
         $response = $this->getRequest($url);
@@ -325,11 +333,15 @@ class Pterodactyl extends Server
             return $users['data'][0]['attributes']['id'];
         } else {
             $url = $this->config('host') . '/api/application/users';
+            $sanitized = preg_replace('/[^a-zA-Z0-9]/', '', strtolower($user->name));
+            if (empty($sanitized)) {
+                $sanitized = $this->random_string(8); // Ta funkcja musi być dostępna w twoim kodzie
+            }
             $json = [
-                'username' => $this->random_string(8),
+                'username' => $sanitized.'_'.$this->random_string(3)??$this->random_string(8),
                 'email' => $user->email,
                 'first_name' => $user->name,
-                'last_name' => 'User',
+                'last_name' => $user->lastname??'User',
             ];
             $response = $this->postRequest($url, $json);
             if (!$response->successful()) {

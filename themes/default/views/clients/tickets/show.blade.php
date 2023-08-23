@@ -110,7 +110,7 @@
                                         <textarea
                                             id="message"
                                             class="block my-auto w-full rounded-2xl shadow-sm focus:ring-indigo-500 focus:border-indigo-500 border-indigo-300 dark:border-0 sm:text-sm dark:bg-secondary-200"
-                                            rows="4"
+                                            rows="2"
                                             name="message"
                                             placeholder="Aa"
                                             required

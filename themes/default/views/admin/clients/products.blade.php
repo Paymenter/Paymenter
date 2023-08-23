@@ -72,7 +72,7 @@
                 <h3 class="text-lg border-b mb-1 border-gray-500 fon">Product ID: <a
                         href="{{ route('admin.products.edit', $orderProduct->product->id) }}"
                         class="text-logo">#{{ $orderProduct->product->id }}</a></h3>
-                <x-input type="date" name="expiry_date" id="expiry_date" value="{{ $orderProduct->expiry_date }}"
+                <x-input type="date" name="expiry_date" id="expiry_date" value="{{ $orderProduct->expiry_date->format('Y-m-d') }}"
                     label="Expiry Date" />
                 <x-input type="number" name="quantity" id="quantity" value="{{ $orderProduct->quantity }}"
                     label="Quantity" />

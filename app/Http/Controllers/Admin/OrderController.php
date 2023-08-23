@@ -6,6 +6,7 @@ use App\Models\Order;
 use App\Helpers\ExtensionHelper;
 use App\Http\Controllers\Controller;
 use App\Models\OrderProduct;
+use App\Models\Product;
 use Illuminate\Http\Request;
 
 class OrderController extends Controller
@@ -28,6 +29,15 @@ class OrderController extends Controller
         }
 
         return view('admin.orders.show', compact('order', 'products'));
+    }
+
+    public function destroyProduct(Order $order, OrderProduct $product)
+    {
+        ExtensionHelper::terminateServer($product);
+        $product->delete();
+
+        return redirect()->route('admin.orders.show', $order)->with('success', 'Product deleted');
+
     }
 
     public function changeProduct(Order $order, OrderProduct $product, Request $request)

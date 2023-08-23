@@ -40,20 +40,22 @@ class Create extends Command
 
         $password = $this->secret('Password for this new user?');
 
-        $name = $this->ask('What is his/her name?');
+        $firstname = $this->ask('What is his/her first name?');
+        $lastname = $this->ask('What is his/her last name?');
         $roles = Role::all()->pluck('name')->toArray();
 
         $role = $this->choice('What is his/her role?', $roles, 1);
 
         $user = \App\Models\User::create([
             'email' => $email,
-            'name' => $name,
+            'first_name' => $firstname,
+            'last_name' => $lastname,
             'password' => \Hash::make($password),
             'role_id' => Role::where('name', $role)->first()->id,
         ]);
         $this->info('Account created successfully!');
-        echo $this->table(['name', 'email', 'role'], [
-            [$user->name, $user->email, $user->role->name],
+        echo $this->table(['first_name', 'email', 'role', 'last_name'], [
+            [$user->first_name, $user->email, $user->role->name, $user->last_name],
         ]);
     }
 }

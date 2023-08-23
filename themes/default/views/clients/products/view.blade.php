@@ -21,16 +21,16 @@
                         </p>
                     </div>
                 </div>
-                @if ($orderProduct->status == 'paid' && $orderProduct->expiry_date)
+                @if ($orderProduct->expiry_date)
                     <div class="w-full md:w-1/2 px-2">
                         <div class="mb-4">
                             <h2 class="text-lg font-bold">{{ __('Status') }}</h2>
                         </div>
                         <div class="mb-4">
-                            <p><span class="font-bold">{{ __('Due Date') }}: </span>{{ $orderProduct->expiry_date }}
+                            <p><span class="font-bold">{{ __('Due Date') }}: </span>{{ $orderProduct->expiry_date->format('Y-m-d') }}
                             </p>
                             <p><span class="font-bold">{{ __('Status') }}:
-                                </span>{{ $orderProduct->status == 'paid' ? 'Active' : 'Inactive' }}
+                                </span>{{ $orderProduct->status == 'paid' ? 'Active' : ucfirst($orderProduct->status) }}
                             </p>
                             <p> <span class="font-bold">
                                     {{ __('Billing Cycle') }}: {{ ucfirst($orderProduct->billing_cycle) }}

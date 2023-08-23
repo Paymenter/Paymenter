@@ -165,9 +165,12 @@
                         <div class="mt-6">
                             <form method="POST" action="{{ route('clients.profile.update') }}">
                                 @csrf
-                                <x-input type="text" class="mt-4" placeholder="{{ __('Name') }}"
-                                    name="name" id="name" label="{{ __('Name') }}"
-                                    value="{{ Auth::user()->name }}" />
+                                <x-input type="text" class="mt-4" placeholder="{{ __('First name') }}"
+                                    name="first_name" id="first_name" label="{{ __('Name') }}"
+                                    value="{{ Auth::user()->first_name }}" />
+                                <x-input type="text" class="mt-4" placeholder="{{ __('Last name') }}"
+                                         name="last_name" id="last_name" label="{{ __('Name') }}"
+                                         value="{{ Auth::user()->last_name }}" />
                                 <x-input type="text" class="mt-4" placeholder="{{ __('Address') }}"
                                     name="address" id="address" label="{{ __('Name') }}"
                                     value="{{ Auth::user()->address }}" />

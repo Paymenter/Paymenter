@@ -64,6 +64,10 @@ class CheckoutController extends Controller
 
     public function add(Product $product)
     {
+        $cart = session()->get('cart');
+        if (!$product->allow_quantity && \Illuminate\Support\Arr::has($cart, $product->id)) {
+            return redirect()->route('checkout.index')->with('error', 'You already have this product in your shopping cart');
+        }
         if ($product->stock_enabled && $product->stock <= 0) {
             return redirect()->back()->with('error', 'Product is out of stock');
         }
@@ -83,7 +87,6 @@ class CheckoutController extends Controller
             return redirect()->route('checkout.config', $product->id);
         }
         $product->quantity = 1;
-        $cart = session()->get('cart');
         if (\Illuminate\Support\Arr::has($cart, $product->id)) {
             if ($product->stock_enabled && $product->stock <= $cart[$product->id]->quantity) {
                 return redirect()->back()->with('error', 'Product is out of stock');
@@ -126,8 +129,8 @@ class CheckoutController extends Controller
             if ($product->prices()->get()->first()->type != 'recurring' && count($product->configurableGroups()) == 0) {
                 return redirect()->back()->with('error', 'Config Not Found');
             }
-        }   
-        
+        }
+
         if (!isset($userConfig)) $userConfig = array();
         $prices = $product->prices()->get()->first();
         $customConfig = $product->configurableGroups();
@@ -184,7 +187,7 @@ class CheckoutController extends Controller
         }
 
         if (!isset($userConfig)) $userConfig = array();
-        
+
         $config = [];
         foreach ($userConfig as $configItem) {
             if (!$request->input($configItem->name)) {
@@ -247,6 +250,9 @@ class CheckoutController extends Controller
         }
         $product->configurableOptions = $configItems;
         $cart = session()->get('cart');
+        if (!$product->allow_quantity && \Illuminate\Support\Arr::has($cart, $product->id)) {
+            return redirect()->route('checkout.index')->with('error', 'You already have this product in your shopping cart');
+        }
         if (\Illuminate\Support\Arr::has($cart, $product->id)) {
             if ($product->quantity != 0) {
                 ++$cart[$product->id]->quantity;

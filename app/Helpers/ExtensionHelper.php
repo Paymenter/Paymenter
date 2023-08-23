@@ -185,7 +185,7 @@ class ExtensionHelper
 
     /**
      * Get the currency
-     * 
+     *
      * @return string
      */
     public static function getCurrency()
@@ -241,12 +241,12 @@ class ExtensionHelper
 
     /**
      * Get link to redirect the user to for payment
-     * 
+     *
      * @param int $id ID of the extension
      * @param int $total Total price
      * @param array $products Array of products
      * @param int $orderId ID of the order
-     * 
+     *
      * @return string
      */
     public static function getPaymentMethod($id, $total, $products, $orderId)
@@ -267,10 +267,10 @@ class ExtensionHelper
 
     /**
      * Redirect to payment url, when a user adds credits
-     * 
+     *
      * @param Extension $extension
      * @param Invoice $invoice
-     * 
+     *
      * @return string
      */
     public static function addCredits(Extension $extension, Invoice $invoice)
@@ -320,9 +320,9 @@ class ExtensionHelper
 
     /**
      * Load configurable options by product
-     * 
+     *
      * @param OrderProduct $product2
-     * 
+     *
      * @return array
      */
     public static function loadConfigurableOptions(OrderProduct $product2)
@@ -346,7 +346,7 @@ class ExtensionHelper
 
     /**
      * Get all gateways
-     * 
+     *
      * @return array
      */
     public static function getGateways()
@@ -436,7 +436,7 @@ class ExtensionHelper
         try {
             $module->unsuspendServer($user, $config, $order, $product2, $configurableOptions);
         } catch (\Exception $e) {
-            self::error($extension->name, 'Error creating server: ' . $e->getMessage() . ' on line ' . $e->getLine() . ' in file ' . $e->getFile());
+            self::error($extension->name, 'Error unsuspending server: ' . $e->getMessage() . ' on line ' . $e->getLine() . ' in file ' . $e->getFile());
         }
     }
 
@@ -464,15 +464,15 @@ class ExtensionHelper
         try {
             $module->terminateServer($user, $config, $order, $product2, $configurableOptions);
         } catch (\Exception $e) {
-            self::error($extension->name, 'Error creating server: ' . $e->getMessage() . ' on line ' . $e->getLine() . ' in file ' . $e->getFile());
+            self::error($extension->name, 'Error when terminating server: ' . $e->getMessage() . ' on line ' . $e->getLine() . ' in file ' . $e->getFile());
         }
     }
 
     /**
      * Get a (login) link for the client and admin area
-     * 
+     *
      * @param OrderProduct $product
-     * 
+     *
      * @return string
      */
     public static function getLink(OrderProduct $product2)
@@ -505,9 +505,9 @@ class ExtensionHelper
 
     /**
      * Get the product configuration for the admin area
-     * 
+     *
      * @param Product $product
-     * 
+     *
      * @return array
      */
     public static function getProductConfiguration(Product $product)
@@ -539,9 +539,9 @@ class ExtensionHelper
 
     /**
      * Get custom pages for client area
-     * 
+     *
      * @param OrderProduct $product
-     * 
+     *
      * @return array
      */
     public static function getCustomPages(OrderProduct $product2)
@@ -580,9 +580,9 @@ class ExtensionHelper
 
     /**
      * Get all parameters for a order product
-     * 
+     *
      * @param OrderProduct $product
-     * 
+     *
      * @return object
      */
     public static function getParameters(OrderProduct $product2)
@@ -603,10 +603,10 @@ class ExtensionHelper
 
     /**
      * Check if user may access the server
-     * 
+     *
      * @param OrderProduct $product
      * @param User $user
-     * 
+     *
      * @return bool
      */
     public static function hasAccess(OrderProduct $product, User $user)

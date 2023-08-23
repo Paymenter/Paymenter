@@ -28,7 +28,8 @@ class ClientController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name' => 'required',
+            'first_name' => 'required',
+            'last_name' => 'required',
             'email' => 'required|email|unique:users',
             'password' => 'nullable|min:8',
         ]);
@@ -84,7 +85,7 @@ class ClientController extends Controller
 
     /**
      * Display the Products
-     * 
+     *
      * @return View
      */
     public function products(User $user, OrderProduct $orderProduct = null)
@@ -107,7 +108,7 @@ class ClientController extends Controller
 
     /**
      * Change the order product
-     * 
+     *
      * @return Redirect
      */
     public function updateProduct(User $user, OrderProduct $orderProduct, Request $request): \Illuminate\Http\RedirectResponse
@@ -130,7 +131,7 @@ class ClientController extends Controller
 
     /**
      * Create/Suspend/Unsuspend/Terminate the order product
-     * 
+     *
      * @return Redirect
      */
     public function changeProductStatus(User $user, OrderProduct $orderProduct, Request $request): \Illuminate\Http\RedirectResponse
@@ -160,7 +161,7 @@ class ClientController extends Controller
 
     /**
      * Update the product configurable options
-     * 
+     *
      * @return Redirect
      */
     public function updateProductConfig(User $user, OrderProduct $orderProduct, OrderProductConfig $orderProductConfig, Request $request): \Illuminate\Http\RedirectResponse

@@ -1,4 +1,10 @@
 <x-app-layout>
+    <script>
+        function removeElement(element) {
+            element.remove();
+            this.error = true;
+        }
+    </script>
     <x-slot name="title">
         {{ __('Checkout') }}
     </x-slot>
@@ -28,10 +34,20 @@
                                 </tr>
                             </thead>
                             <tbody>
+                                @php
+                                    $i = 0;
+                                @endphp
                                 @foreach ($products as $product)
-                                    <tr class="border-b-2 border-secondary-200 dark:border-secondary-50">
+                                    @php
+                                        ++$i;
+                                    @endphp
+                                    <tr class="@if(count($products) > $i) border-b-2 border-secondary-200 dark:border-secondary-50 @endif">
                                         <td class="pl-6 py-3">
-                                            {{ $product->name }}
+                                            <div class="flex">
+                                                <img src="{{ $product->image }}" alt="{{ $product->name }}" class="w-8 h-8 md:w-12 md:h-12 my-auto rounded-md"
+                                                     onerror="removeElement(this);">
+                                                <strong class="ml-3 my-auto">{{ ucfirst($product->name) }}</strong>
+                                            </div>
                                         </td>
                                         <td class="py-3">
                                             @if ($product->allow_quantity == 1 || $product->allow_quantity == 2)
@@ -56,7 +72,9 @@
                                             @else
                                                 {{ $product->price }}
                                             @endif
-                                            {{ __('each') }}
+                                            @if($product->quantity >= 1)
+                                                {{ __('each') }}
+                                            @endif
                                         </td>
                                         <td class="py-3 pr-6">
                                             <form method="POST" action="{{ route('checkout.remove', $product->id) }}">
@@ -82,7 +100,7 @@
                                     <x-input type="text" placeholder="{{ __('Coupon') }}" name="coupon" id="password"
                                         icon="ri-coupon-2-line" class="w-full" />
                                     <button type="submit" class="button button-primary">
-                                        Validate
+                                        {{ __('Validate') }}
                                     </button>
                                 </div>
                             </form>
@@ -104,19 +122,30 @@
                         <hr class="my-4 border-secondary-300">
                         @foreach ($products as $product)
                             @if ($product->price > 0)
-                                <div class="flex flex-row items-center justify-between">
-
+                                @if(count($products) > 1)
+                                    <span class="text-sm uppercase font-light text-gray-500 -mb-3">
+                                        {{ ucfirst($product->name) }}
+                                    </span>
+                                @endif
+                                <div class="flex flex-row items-center justify-between -mt-1">
                                     <div class="flex flex-row items-center">
                                         <span>
                                             {{ ucfirst($product->billing_cycle) }}
                                         </span>
                                     </div>
                                     <div class="flex flex-col">
-                                        <span>{{ config('settings::currency_sign') }}
+                                        <span>
+                                            @php
+                                                if ($product->quantity > 1) {
+                                                    $quantity = $product->quantity . " x";
+                                                } else {
+                                                    $quantity = "";
+                                                }
+                                            @endphp
                                             @if ($product->discount)
-                                                {{ round($product->price - $product->discount, 2) }}
+                                                {{ $quantity }} {{ config('settings::currency_sign') }} {{  round($product->price - $product->discount, 2) }}
                                             @else
-                                                {{ $product->price }}
+                                                {{ $quantity }} {{ config('settings::currency_sign') }} {{ $product->price }}
                                             @endif
                                         </span>
                                     </div>
@@ -130,21 +159,25 @@
                                         </span>
                                     </div>
                                     <div class="flex flex-col">
-                                        <span class="text-lg">{{ config('settings::currency_sign') }}
-                                            {{ $product->setup_fee - $product->discount_fee }}
+                                        <span class="text-lg">
+                                            {{ $quantity }} {{ config('settings::currency_sign') }} {{ $product->setup_fee - $product->discount_fee }}
                                         </span>
                                     </div>
                                 </div>
                             @endif
                         @endforeach
                         @if (!empty($discount))
-                            <div class="flex flex-row items-center justify-between">
+                            <div class="flex flex-row items-center justify-between mt-3">
                                 <div class="flex flex-row items-center">
                                     <span>{{ __('Discount') }}</span>
                                 </div>
                                 <div class="flex flex-col">
                                     <span>{{ config('settings::currency_sign') }}
-                                        {{ round($discount, 2) }}</span>
+                                        {{ round($discount, 2) }}
+                                        @if($coupon->type == "percent")
+                                            ({{ $coupon->value }}%)
+                                        @endif
+                                    </span>
                                 </div>
                             </div>
                         @endif
@@ -164,12 +197,6 @@
                         </div>
                         <hr class="my-4 border-secondary-300">
                         <form method="POST" action="{{ route('checkout.pay') }}">
-                            <div class="items-center p-1">
-                                @php
-                                    $tos = "I agree to the <a href='" . route('tos') . "' class='text-blue-500 hover:text-blue-600'>terms of service</a>";
-                                @endphp
-                                <x-input id="tos" type="checkbox" name="tos" required :label="$tos" />
-                            </div>
                             <div class="flex flex-col">
                                 <label for="payment_method"
                                     class="text-sm text-secondary-600">{{ __('Payment method') }}</label>
@@ -186,6 +213,12 @@
                                         </option>
                                     @endif
                                 </select>
+                            </div>
+                            <div class="items-center p-1">
+                                @php
+                                    $tos = "I agree to the <a href='" . route('tos') . "' class='text-blue-500 hover:text-blue-600'>terms of service</a>";
+                                @endphp
+                                <x-input id="tos" type="checkbox" name="tos" required :label="$tos" />
                             </div>
                             @csrf
                             <div class="flex justify-end mt-4">

@@ -31,9 +31,9 @@ class ProductController extends Controller
 
     /**
      * Reorder a product
-     * 
+     *
      * @param Request $request
-     * 
+     *
      * @return void
      */
     public function reorder(Request $request)
