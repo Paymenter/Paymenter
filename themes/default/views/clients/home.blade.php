@@ -8,12 +8,13 @@
     <div class="content">
         <x-success class="mt-4" />
         <div class="grid grid-cols-12 gap-4">
-            <div class="col-span-12">
-                <div class="content-box">
+            <div class="col-span-12 relative">
+                <div class="bottom-0 top-0 right-0 left-0 flex absolute z-0 rounded-xl" id="particlesjs"></div>
+                <div class="bg-primary-400 p-4 rounded-xl text-white">
                     <div class="flex items-center">
-                        <div class="flex-shrink-0 w-12 h-12" style="display: flex;">
+                        <div class="flex-shrink-0 w-12 h-12" style="display: none;">
                             <img class="w-8 h-8 rounded-md" style="align-self: center; width: 3rem; height: 3rem;"
-                                src="https://www.gravatar.com/avatar/{{ md5(Auth::user()->email) }}?s=200&d=mp"  alt="{{Auth::user()->name}}"/>
+                                 src="https://www.gravatar.com/avatar/{{ md5(Auth::user()->email) }}?s=200&d=mp" />
                         </div>
                         <div class="ml-4 text-lg font-semibold leading-7">
                             {{ __('Welcome back') }}, {{ Auth::user()->name }}
@@ -31,7 +32,7 @@
                     <div class="flex flex-col items-center">
                         @if (count($invoices) === 0)
                             <div class="text-center">
-                                <p class="text-blue-500 font-bold text-lg mt-2">
+                                <p class="text-primary-400 font-bold text-lg mt-2">
                                     {{__('Hurray! No invoices to pay')}}
                                 </p>
                             </div>
@@ -147,7 +148,7 @@
 
                             </tr>
                             <tr class="w-full">
-                                <td colspan="4" class="w-full dark:text-blue-500 font-bold text-lg text-center dark:bg-secondary-100">
+                                <td colspan="4" class="w-full dark:text-primary-400 font-bold text-lg text-center dark:bg-secondary-100">
                                     {{ __('No services found.') }}
                                 </td>
                             </tr>
@@ -158,4 +159,10 @@
             </div>
         </div>
     </div>
+    <script src="http://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <script>
+        particlesJS.load('particlesjs', 'assets/particlesjs-config.json', function() {
+            console.log('callback - particles.js config loaded');
+        });
+    </script>
 </x-app-layout>
