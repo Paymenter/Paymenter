@@ -171,7 +171,7 @@ class CheckoutController extends Controller
         if(isset($product->extension_id)) {
             $module = "App\\Extensions\\Servers\\" . $server->name . "\\" . $server->name;
             if (!class_exists($module)) {
-            return redirect()->back()->with('error', 'Config Not Found');
+                return redirect()->back()->with('error', 'Config Not Found');
             }
             $module = new $module($server);
             if (!method_exists($module, 'getUserConfig') && $product->prices()->get()->first()->type != 'recurring' && count($product->configurableGroups()) == 0) {
@@ -396,8 +396,11 @@ class CheckoutController extends Controller
             $coupon->save();
         }
         if ($total != 0) {
-            $products = $invoice->getItemsWithProducts()->products;
-            $total = $invoice->getItemsWithProducts()->total;
+            $invoice = Invoice::where('id', $invoice->id)->first();
+            $invoiceTotalAndProducts = $invoice->getItemsWithProducts();
+            $products = $invoiceTotalAndProducts->products;
+            $total = $invoiceTotalAndProducts->total;
+            
             if ($total == 0) {
                 $invoice->status = 'paid';
                 $invoice->save();

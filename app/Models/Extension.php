@@ -28,6 +28,11 @@ class Extension extends Model
 
     public function getPathAttribute()
     {
-        return app_path('Extensions/' . ucfirst($this->type) . '/' . $this->name);
+        return app_path('Extensions/' . ucfirst($this->type) . 's' . '/' . $this->name);
+    }
+
+    public function getNamespaceAttribute()
+    {
+        return 'App\\Extensions\\' . ucfirst($this->type) . 's' . '\\' . $this->name;
     }
 }

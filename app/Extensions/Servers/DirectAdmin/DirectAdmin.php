@@ -22,7 +22,9 @@ class DirectAdmin extends Server
         $server_pass = ExtensionHelper::getConfig('DirectAdmin', 'password');
         $sock->set_login($server_login, $server_pass);
         // Generate random username with 8 characters
+        $password = substr(str_shuffle(str_repeat($x = 'abcdefghijklmnopqrstuvwxyz', ceil(10/ strlen($x)))), 1, 10);
         $username = substr(str_shuffle(str_repeat($x = 'abcdefghijklmnopqrstuvwxyz', ceil(8 / strlen($x)))), 1, 8);
+
         if (isset($params['ip'])) {
             $ip = $params['ip'];
         } else {
@@ -37,10 +39,10 @@ class DirectAdmin extends Server
                 'add' => 'Submit',
                 'username' => $username,
                 'email' => $user->email,
-                'passwd' => 'Random',
-                'passwd2' => 'Random',
+                'passwd' => $password,
+                'passwd2' => $password  ,
                 'domain' => $params['config']['domain'],
-                'package' => 'test',
+                'package' => $params['package'],
                 'ip' => $ip,
                 'notify' => 'yes',
             ]
