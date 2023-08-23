@@ -19,6 +19,13 @@
                         <p><span class="font-bold">{{ __('Product Price') }}:
                             </span>{{ config('settings::currency_sign') }}{{ $orderProduct->price }}
                         </p>
+                        @foreach ($orderProduct->config as $config)
+                            @if ($config->key == 'ip')
+                                <p><span class="font-bold">Server IP:</span>{{ $config->value }}</p>
+                            @elseif ($config->key == 'hostname')
+                                <p><span class="font-bold">Hostname:</span>{{ $config->value }}</p>
+                            @endif
+                        @endforeach
                     </div>
                 </div>
                 @if ($orderProduct->expiry_date)
