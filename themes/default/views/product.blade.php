@@ -55,9 +55,16 @@
                                 <p>{!! Stevebauman\Purify\Facades\Purify::clean(Str::markdown(str_replace("\n", '<br>', $product->description))) !!}
                                 </p>
                                 <div class="pt-3 mt-auto">
-                                    <a href="{{ route('checkout.add', $product->id) }}"
-                                        class="button button-secondary w-full">Add to cart <i
-                                            class="ri-shopping-cart-2-line"></i></a>
+                                    @if ($product->stock_enabled && $product->stock <= 0)
+                                        <a class="button bg-secondary-200 text-white w-full hover:cursor-not-allowed">
+                                            Out of stock
+                                        </a>
+                                    @else
+                                        <a href="{{ route('checkout.add', $product->id) }}"
+                                           class="button button-secondary w-full">
+                                            Add to cart <i class="ri-shopping-cart-2-line"></i>
+                                        </a>
+                                    @endif
                                 </div>
                             </div>
                         </div>
