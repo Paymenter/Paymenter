@@ -2,8 +2,13 @@
 
 namespace App\Providers;
 
+use App\Models\Affiliate;
+use App\Models\Announcement;
 use App\Models\Extension;
 use App\Models\Invoice;
+use App\Models\Ticket;
+use App\Models\TicketMessage;
+use App\Models\User;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
@@ -33,6 +38,22 @@ class EventServiceProvider extends ServiceProvider
     public function boot()
     {
         Invoice::observe(\App\Observers\InvoiceObserver::class);
+        TicketMessage::observe(\App\Observers\TicketMessageObserver::class);
+        Ticket::observe(\App\Observers\TicketObserver::class);
+        User::observe(\App\Observers\UserObserver::class);
+        Affiliate::observe(\App\Observers\AffiliateObserver::class);
+        Announcement::observe(\App\Observers\AnnouncementObserver::class);
+        try {
+            foreach (Extension::where('enabled', true)->get() as $extension) {
+                $module = $extension->namespace . '\\' . $extension->name . 'Listeners';
+                if (!class_exists($module)) {
+                    continue;
+                }
+                Event::subscribe(new $module);
+            }
+        } catch (\Exception $e) {
+            //
+        }
     }
 
     /**
@@ -52,16 +73,8 @@ class EventServiceProvider extends ServiceProvider
      */
     public function discoverEventsWithin(): array
     {
-        $paths = [
+        return [
             $this->app->path('Listeners'),
         ];
-        try {
-            Extension::where('type', 'events')->where('enabled', true)->get()->each(function ($extension) {
-                $paths[] = $extension->path . '/Listeners';
-            });
-        } catch (\Throwable $th) {
-            
-        }
-        return $paths;
     }
 }

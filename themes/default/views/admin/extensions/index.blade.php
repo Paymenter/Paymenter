@@ -215,6 +215,31 @@
                         </td>
                     </tr>
                 @endforeach
+                <tr class="bg-secondary-100">
+                    <td colspan="3"
+                        class="dark:text-darkmodetext px-6 py-4 whitespace-nowrap text-gray-500 font-bold text-lg text-center">
+                        Events</td>
+                </tr>
+                @foreach ($events as $event)
+                    @if ($event == '.' || $event == '..')
+                        @continue
+                    @endif
+                    <tr>
+                        <td class="dark:text-darkmodetext px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                            {{ $event }}</td>
+                        <td class="dark:text-darkmodetext px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                            @if (App\Models\Extension::where('name', $event)->get()->first()->enabled)
+                                {{ __('Yes') }}
+                            @else
+                                {{ __('No') }}
+                            @endif
+                        </td>
+                        <td class="dark:text-darkmodetext px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                            <a href="{{ route('admin.extensions.edit', ['event', $event]) }}"
+                                class="dark:bg-darkmodebutton text-indigo-600 hover:text-indigo-900 hover:bg-button p-2 rounded-lg">{{ __('Edit') }}</a>
+                        </td>
+                    </tr>
+                @endforeach
             </tbody>
         </table>
 

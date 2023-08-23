@@ -2,6 +2,9 @@
 
 namespace App\Observers;
 
+use App\Events\Invoice\InvoiceCreated;
+use App\Events\Invoice\InvoiceDeleted;
+use App\Events\Invoice\InvoicePaid;
 use App\Models\Invoice;
 use App\Models\User;
 
@@ -15,7 +18,7 @@ class InvoiceObserver
      */
     public function created(Invoice $invoice)
     {
-        //
+        event(new InvoiceCreated($invoice));
     }
 
     /**
@@ -33,6 +36,7 @@ class InvoiceObserver
                 $user->credits += round($invoice->total() * $affiliateUser->affiliate->commission / 100, 2);
                 $user->save();
             }
+            event(new InvoicePaid($invoice));
         }
     }
 
@@ -44,7 +48,7 @@ class InvoiceObserver
      */
     public function deleted(Invoice $invoice)
     {
-        //
+        event(new InvoiceDeleted($invoice));
     }
 
     /**

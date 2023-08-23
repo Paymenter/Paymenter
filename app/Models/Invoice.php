@@ -51,9 +51,9 @@ class Invoice extends Model
     {
         $total = 0.00;
         foreach ($this->items as $item) {
-            $product = $item->product()->get()->first()??null;
+            $product = $item->product()->get()->first() ?? null;
             if ($product) {
-                $order = $product->order()->get()->first()??null;
+                $order = $product->order()->get()->first() ?? null;
             } else {
                 $order = null;
             }
