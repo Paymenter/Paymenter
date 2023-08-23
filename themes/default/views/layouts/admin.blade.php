@@ -83,7 +83,6 @@
         @else
             @include('layouts.adminnavigation')
         @endif
-        <x-success class="mb-4" />
         <main class="grow">
             @if (!request()->routeIs('admin.index') && !request()->routeIs('admin.settings*'))
                 <div class="py-12">
@@ -102,6 +101,7 @@
 
         <x-footer />
     </div>
+    <x-success />
 </body>
 
 </html>
