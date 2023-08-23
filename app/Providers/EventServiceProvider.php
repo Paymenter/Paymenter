@@ -43,12 +43,16 @@ class EventServiceProvider extends ServiceProvider
         User::observe(\App\Observers\UserObserver::class);
         Affiliate::observe(\App\Observers\AffiliateObserver::class);
         Announcement::observe(\App\Observers\AnnouncementObserver::class);
-        foreach (Extension::where('enabled', true)->get() as $extension) {
-            $module = $extension->namespace . '\\' . $extension->name . 'Listeners';
-            if (!class_exists($module)) {
-                continue;
+        try {
+            foreach (Extension::where('enabled', true)->get() as $extension) {
+                $module = $extension->namespace . '\\' . $extension->name . 'Listeners';
+                if (!class_exists($module)) {
+                    continue;
+                }
+                Event::subscribe(new $module);
             }
-            Event::subscribe(new $module);
+        } catch (\Exception $e) {
+            //
         }
     }
 
