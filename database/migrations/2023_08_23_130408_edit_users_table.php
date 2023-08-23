@@ -14,10 +14,8 @@ return new class extends Migration
     public function up()
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn('name');
-            $table
-                ->string('first_name')
-                ->after('id');
+            $table->renameColumn('name', 'firstname');
+            $table->string('last_name')->after('first_name');
         });
     }
 
@@ -30,6 +28,7 @@ return new class extends Migration
     {
         Schema::table('users', function (Blueprint $table) {
             $table->dropColumn('first_name');
+            $table->dropColumn('last_name');
         });
     }
 };
