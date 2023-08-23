@@ -21,9 +21,9 @@ class RegistrationTest extends TestCase
     {
         config('settings::mail_disabled', true);
         $response = $this->post('/register', [
-            'name' => 'Test User',
+            'first_name' => 'Test User',
             'email' => 'test@example.com',
-            'lastname' => 'test',
+            'last_name' => 'test',
             'password' => 'password',
             'password_confirmation' => 'password',
         ]);

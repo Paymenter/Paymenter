@@ -106,7 +106,8 @@ class HomeController extends Controller
     public function update(Request $request)
     {
         $request->validate([
-            'name' => 'required|string',
+            'first_name' => 'required|string',
+            'last_name' => 'required|string',
             'address' => 'required|string',
             'city' => 'required|string',
             'country' => 'required|string',
@@ -114,7 +115,8 @@ class HomeController extends Controller
         ]);
 
         $user = $request->user();
-        $user->name = $request->name;
+        $user->first_name = $request->first_name;
+        $user->last_name = $request->last_name;
         $user->address = $request->address;
         $user->city = $request->city;
         $user->country = $request->country;
@@ -126,7 +128,7 @@ class HomeController extends Controller
 
     /**
      * Add credit to user
-     * 
+     *
      * @return view
      */
     public function credits()
@@ -140,7 +142,7 @@ class HomeController extends Controller
 
     /**
      * Add credit to user
-     * 
+     *
      * @param Request $request
      * @return redirect
      */

@@ -83,14 +83,25 @@
                         @csrf
                         <div class="grid grid-cols-2 gap-4 mt-4 dark:text-white">
                             <div>
-                                <label for="name"
+                                <label for="first_name"
                                     class="dark:text-darkmodetext block text-sm font-medium text-gray-700">
-                                    {{ __('Name') }}
+                                    {{ __('First name') }}
                                 </label>
                                 <div class="mt-1">
-                                    <input type="text" name="name" value="{{ $user->name }}" id="name"
-                                        placeholder="John Doe" autocomplete="name" required
+                                    <input type="text" name="first_name" value="{{ $user->first_name }}" id="first_name"
+                                        placeholder="John" autocomplete="first_name" required
                                         class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm dark:bg-darkmode rounded-md">
+                                </div>
+                            </div>
+                            <div>
+                                <label for="last_name"
+                                       class="dark:text-darkmodetext block text-sm font-medium text-gray-700">
+                                    {{ __('Last name') }}
+                                </label>
+                                <div class="mt-1">
+                                    <input type="text" name="last_name" value="{{ $user->last_name }}" id="last_name"
+                                           placeholder="Doe" autocomplete="last_name" required
+                                           class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm dark:bg-darkmode rounded-md">
                                 </div>
                             </div>
                             <div>
@@ -195,7 +206,7 @@
 
                         <x-input type="number" name="credits" id="credits" label="{{ __('Credits') }}"
                             value="{{ $user->credits }}" />
-                            
+
                         <hr class="my-6 border-b-1 border-gray-300 dark:border-gray-600" />
 
                         <x-input type="select" name="role" id="role" label="{{ __('Role(admin)') }}">

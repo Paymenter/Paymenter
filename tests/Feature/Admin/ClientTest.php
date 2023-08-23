@@ -50,8 +50,8 @@ class ClientTest extends TestCase
     public function testIfAdminCanCreateAClient()
     {
         $response = $this->actingAs($this->user)->post(route('admin.clients.store'), [
-            'name' => 'TEST',
-            'lastname' => 'test',
+            'first_name' => 'TEST',
+            'last_name' => 'test',
             'email' => 'client@paymenter.org',
             'password' => 'password',
         ]);
@@ -69,7 +69,7 @@ class ClientTest extends TestCase
         $client = User::factory()->create();
 
         $response = $this->actingAs($this->user)->post(route('admin.clients.update', $client), [
-            'name' => 'TEST',
+            'first_name' => 'TEST',
         ]);
 
         $response->assertStatus(302);

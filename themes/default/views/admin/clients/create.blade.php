@@ -26,14 +26,25 @@
                         @csrf
                         <div class="grid grid-cols-2 gap-4 mt-4">
                             <div>
-                                <label for="name"
+                                <label for="first_name"
                                     class="dark:text-darkmodetext block text-sm font-medium text-gray-700">
-                                    {{ __('Name') }}
+                                    {{ __('First Name') }}
                                 </label>
                                 <div class="mt-1">
-                                    <input type="text" name="name" id="name" placeholder="John Doe"
-                                        autocomplete="name" required
+                                    <input type="text" name="first_name" id="first_name" placeholder="John"
+                                        autocomplete="first_name" required
                                         class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm dark:bg-darkmode rounded-md">
+                                </div>
+                            </div>
+                            <div>
+                                <label for="last_name"
+                                       class="dark:text-darkmodetext block text-sm font-medium text-gray-700">
+                                    {{ __('Last Name') }}
+                                </label>
+                                <div class="mt-1">
+                                    <input type="text" name="last_name" id="last_name" placeholder="Doe"
+                                           autocomplete="last_name" required
+                                           class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm dark:bg-darkmode rounded-md">
                                 </div>
                             </div>
                             <div>

@@ -35,8 +35,8 @@ class RegisteredUserController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name' => 'required|string|max:255',
-            'lastname' => 'required|string|max:255',
+            'first_name' => 'required|string|max:255',
+            'last_name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|confirmed|min:8',
             'g-recaptcha-response' => 'recaptcha',
@@ -46,9 +46,9 @@ class RegisteredUserController extends Controller
 
 
         Auth::login($user = User::create([
-            'name' => $request->name,
+            'first_name' => $request->name,
             'email' => $request->email,
-            'lastname' => $request->lastname,
+            'last_name' => $request->lastname,
             'password' => Hash::make($request->password),
         ]));
         // Send email to user
