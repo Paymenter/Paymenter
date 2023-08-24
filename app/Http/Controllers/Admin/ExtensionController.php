@@ -148,13 +148,10 @@ class ExtensionController extends Controller
 
     public function update(Request $request, $sort, $name)
     {
-        if ($sort != 'server' && $sort != 'gateway' && $sort != 'event') {
-            return redirect()->route('admin.extensions')->with('error', 'Extension not found');
-        }
         $extension = Extension::where('name', $name)->first();
         if (!$extension) {
             // Check if class exists
-            if (!class_exists('App\Extensions\\' . ucfirst($sort) . 's\\' . $name . '\\' . $name)) {
+            if (!class_exists('App\\Extensions\\' . ucfirst($sort) . 's\\' . $name . '\\' . $name)) {
                 return redirect()->route('admin.extensions')->with('error', 'Extension not found');
             }
             Extension::create([
