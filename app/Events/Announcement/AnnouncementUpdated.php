@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Events\User;
+namespace App\Events\Announcement;
 
 use App\Models\Announcement;
 use Illuminate\Broadcasting\Channel;
