@@ -72,7 +72,7 @@
                 <h3 class="text-lg border-b mb-1 border-gray-500 fon">Product ID: <a
                         href="{{ route('admin.products.edit', $orderProduct->product->id) }}"
                         class="text-logo">#{{ $orderProduct->product->id }}</a></h3>
-                <x-input type="date" name="expiry_date" id="expiry_date" value="{{ $orderProduct->expiry_date->format('Y-m-d') }}"
+                <x-input type="date" name="expiry_date" id="expiry_date" value="{{ $orderProduct->expiry_date ? $orderProduct->expiry_date->format('Y-m-d') : '' }}"
                     label="Expiry Date" />
                 <x-input type="number" name="quantity" id="quantity" value="{{ $orderProduct->quantity }}"
                     label="Quantity" />
@@ -89,7 +89,7 @@
     </form>
 
     <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-        <div class="">
+        <div>
             <h1 class="text-2xl my-2">{{ __('Invoices') }}</h1>
             <div class="flex flex-col gap-2">
                 <table>
@@ -123,7 +123,7 @@
             </div>
 
         </div>
-        <div class="">
+        <div>
             @if ($configurableOptions->count() > 0)
                 <h1 class="text-2xl my-2">{{ __('Configurable Options') }}</h1>
             @endif

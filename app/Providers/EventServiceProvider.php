@@ -52,7 +52,7 @@ class EventServiceProvider extends ServiceProvider
                 Event::subscribe(new $module);
             }
         } catch (\Exception $e) {
-            //
+            // If the database is not yet migrated, this will throw an exception.
         }
     }
 

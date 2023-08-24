@@ -14,6 +14,16 @@
                 <label class="form-label">{{ __('Logo') }}</label>
             </div>
             <div class="relative m-4 group">
+                <!-- TImezone -->
+                <select name="timezone" class="form-input peer @error('timezone') is-invalid @enderror" placeholder=" "
+                    name="timezone" required>
+                    @foreach ($timezones as $timezone)
+                        <option value="{{ $timezone }}" {{ $timezone == config('settings::timezone') ? 'selected' : '' }}>
+                            {{ $timezone }}</option>
+                    @endforeach
+                </select>
+            </div>
+            <div class="relative m-4 group">
                 <!-- sidebar -->
                 <select name="sidebar" class="form-input peer @error('sidebar') is-invalid @enderror" placeholder=" "
                     name="sidebar" required>
