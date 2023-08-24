@@ -1,4 +1,5 @@
 <x-app-layout description="{{ $category->description ?? null }}" title="{{ $category->name ?? __('Products') }}">
+    <x-success />
     <script>
         function removeElement(element) {
             element.remove();
