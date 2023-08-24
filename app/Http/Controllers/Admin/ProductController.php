@@ -292,6 +292,7 @@ class ProductController extends Controller
         $settings['server'] = $extension->name;
 
         foreach ($extension->productConfig as $config) {
+            if ($config->type == 'title') continue;
             $productSettings2 = $productSettings->where('name', $config->name)->first();
             if ($productSettings2) {
                 if (empty($productSettings2->value)) {
