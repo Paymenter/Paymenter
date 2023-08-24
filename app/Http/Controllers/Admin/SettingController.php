@@ -39,11 +39,13 @@ class SettingController extends Controller
         if (!isset($themeConfig->settings)) {
             $themeConfig->settings = [];
         }
+        $timezones = \DateTimeZone::listIdentifiers(\DateTimeZone::ALL);
         return view('admin.settings.index', [
             'tabs' => $tabs,
             'themes' => $themes,
             'languages' => $languages,
-            'themeConfig' => $themeConfig
+            'themeConfig' => $themeConfig,
+            'timezones' => $timezones
         ]);
     }
 
@@ -58,6 +60,9 @@ class SettingController extends Controller
             'currency' => 'required|max:10',
             'currency_sign' => 'required|max:4',
             'language' => 'required',
+
+            'timezone' => 'required',
+
         ]);
         if ($request->hasFile('app_logo')) {
             $imageName = time() . '.' . $request->app_logo->extension();

@@ -68,12 +68,12 @@
                             class="block w-full rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm dark:bg-darkmode"
                             @if ($setting->required) required @endif />
                     @elseif($setting->type == 'dropdown')
-                        <select name="{{ $setting->name }}[]" multiple
+                        <select name="{{ $setting->name }}"
                             class="block w-full rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm dark:bg-darkmode"
                             @if ($setting->required) required @endif>
                             @foreach ($setting->options as $option)
-                                <option value="{{ $option }}" @if (in_array($option, [App\Helpers\ExtensionHelper::getConfig($extension->name, $setting->name)])) selected @endif>
-                                    {{ $option }}</option>
+                                <option value="{{ $option->value }}" @if (App\Helpers\ExtensionHelper::getConfig($extension->name, $setting->name) == $option->value) selected @endif>
+                                    {{ $option->name }}
                             @endforeach
                         </select>
                     @endif

@@ -112,6 +112,9 @@ class AppServiceProvider extends ServiceProvider
                     Artisan::call('queue:restart');
                 }
             }
+            if (config('settings::timezone') !== config('app.timezone')) {
+                config(['app.timezone' => config('settings::timezone')]);
+            }
             if (config('settings::discord_enabled')) {
                 config(['services.discord.client_id' => config('settings::discord_client_id')]);
                 config(['services.discord.client_secret' => config('settings::discord_client_secret')]);

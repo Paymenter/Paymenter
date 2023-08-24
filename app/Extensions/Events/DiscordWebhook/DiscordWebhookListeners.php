@@ -8,7 +8,6 @@ use App\Events\Ticket\TicketCreated;
 use App\Events\Ticket\TicketMessageCreated;
 use App\Events\User\UserCreated;
 use App\Helpers\ExtensionHelper;
-use Illuminate\Contracts\Events\Dispatcher;
 
 class DiscordWebhookListeners
 {
@@ -25,8 +24,13 @@ class DiscordWebhookListeners
             ],
         ];
         $url = ExtensionHelper::getConfig('DiscordWebhook', 'webhook_url');
-        if(!$url) {
+        if (!$url) {
             return;
+        }
+        if (ExtensionHelper::getConfig('DiscordWebhook', 'ping_type') == 'user') {
+            $data['content'] = '<@' . ExtensionHelper::getConfig('DiscordWebhook', 'ping_id') . '>';
+        } else if (ExtensionHelper::getConfig('DiscordWebhook', 'ping_type') == 'role') {
+            $data['content'] = '<@&' . ExtensionHelper::getConfig('DiscordWebhook', 'ping_id') . '>';
         }
         $curl = curl_init($url);
         curl_setopt($curl, CURLOPT_HTTPHEADER, array('Content-type: application/json'));
