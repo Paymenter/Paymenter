@@ -51,6 +51,7 @@ class ClientController extends Controller
 
     public function edit(User $user)
     {
+        $user = $user->load('role');
         $roles = Role::all();
         return view('admin.clients.edit', compact('user', 'roles'));
     }
@@ -100,7 +101,7 @@ class ClientController extends Controller
                 return redirect()->route('admin.clients.edit', $user->id)->with('error', 'No orders found');
             }
         }
-        $orderProducts = $user->orderProducts;
+        $orderProducts = $user->orderProducts()->with('product')->get();
         $configurableOptions = $orderProduct->config;
 
         return view('admin.clients.products', compact('user', 'orderProducts', 'orderProduct', 'configurableOptions'));

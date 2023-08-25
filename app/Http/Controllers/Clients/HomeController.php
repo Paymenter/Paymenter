@@ -19,7 +19,7 @@ class HomeController extends Controller
     public function index(Request $request)
     {
         $user = $request->user();
-        $services = $user->orders;
+        $services = $user->orders()->with(['products', 'products.product'])->get();
         $invoices = Invoice::where('user_id', $user->id)->where('credits', null)->where('status', 'pending')->get();
 
         return view('clients.home', compact('services', 'invoices'));
@@ -185,7 +185,7 @@ class HomeController extends Controller
         if (!config('settings::affiliate')) {
             abort(404);
         }
-        $affiliate = Auth::user()->affiliate;
+        $affiliate = Auth::user()->affiliate()->with('affiliateUsers')->get()->first();
         return view('clients.affiliate', compact('affiliate'));
     }
 

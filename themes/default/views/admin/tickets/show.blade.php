@@ -37,7 +37,7 @@
                 <x-input type="select" id="product" name="product_id" :label="__('Product')" icon="ri-checkbox-circle-line"
                     class="mt-2 w-full">
                     <option value="">{{ __('None') }}</option>
-                    @foreach ($ticket->user->orderProducts()->get() as $product)
+                    @foreach ($ticket->user->orderProducts()->with('product')->get() as $product)
                         <option value="{{ $product->id }}" @if ($product->id == $ticket->order_id) selected @endif>
                             {{ $product->id }} - {{ $product->product->name }}
                     @endforeach
@@ -46,7 +46,7 @@
                 <x-input type="select" id="assigned_to" name="assigned_to" :label="__('Assigned To')" icon="ri-user-line"
                     class="mt-2 w-full">
                     <option value="">{{ __('None') }}</option>
-                    @foreach (App\Models\User::where('role_id', '!=', 2)->get() as $user)
+                    @foreach (App\Models\User::where('role_id', '!=', 2)->with('role')->get() as $user)
                         <option value="{{ $user->id }}" @if ($user->id == $ticket->assigned_to) selected @endif>
                             {{ $user->name }} - {{ $user->role->name }}
                     @endforeach
@@ -57,9 +57,8 @@
             <i class="ri-loop-left-line"></i> {{ __('Update') }}
         </button>
     </form>
-    @if (empty(
-            $ticket->messages()->get()->first()
-        ))
+    @php $messages = $ticket->messages()->with('user')->get(); @endphp
+    @empty($messages)
         <div class="ml-10 flex items-baseline ">
             <p class="dark:text-darkmodetext text-gray-600 px-3 rounded-md text-xl m-4">
                 {{ __('No messages yet') }}
@@ -70,7 +69,7 @@
             <div class="mt-6 dark:bg-secondary-100">
                 <div class="grid grid-cols-3 gap-4">
 
-                    @foreach ($ticket->messages()->get() as $message)
+                    @foreach ($messages as $message)
                         @if ($message->user_id == Auth::user()->id)
                             <div class="col-span-3 text-center w-full">
                                 {{$message->messageDate()}}
@@ -121,7 +120,7 @@
                 </div>
             </div>
         </div>
-    @endif
+    @endempty
     <br>
     <div class="overflow-hidden bg-white shadow-xl sm:rounded-lg dark:bg-secondary-100">
         <form method="POST" action="{{ route('admin.tickets.reply', $ticket->id) }}" class="mt-10" id="reply">

@@ -47,7 +47,7 @@
                         <x-input disabled type="text" name="client" :label="__('Client') . ' (' . __('Click to show').')'" name="title" value="{{ $invoice->user->name }}" class="mt-2 lg:mt-0" icon="ri-user-line" />
                     </a>
                     <div class="flex flex-row w-full gap-x-4">
-                        <x-input disabled type="text" name="total" :label="__('Total')" icon="ri-money-dollar-circle-line" class="w-full mt-2 lg:mt-0" value="{{ ucfirst($invoice->total()) }} {{ config('settings::currency_sign') }}"/>
+                        <x-input disabled type="text" name="total" :label="__('Total')" icon="ri-money-dollar-circle-line" class="w-full mt-2 lg:mt-0" value="{{ ucfirst($total) }} {{ config('settings::currency_sign') }}"/>
                         <x-input disabled type="text" name="status" :label="__('Status')" icon="ri-calendar-line" class="w-full mt-2 lg:mt-0" value="{{ ucfirst($invoice->status) }}"/>
                     </div>
                 </div>
@@ -69,7 +69,7 @@
                         <x-input disabled type="text" name="client" :label="__('Client') . ' (' . __('Click to show').')'" name="title" value="{{ $invoice->user->name }}" class="mt-2 lg:mt-0" icon="ri-user-line" />
                     </a>
 
-                    <x-input disabled type="text" name="total" :label="__('Total')" icon="ri-money-dollar-circle-line" class="w-full mt-2 lg:mt-0" value="{{ ucfirst($invoice->total()) }} {{ config('settings::currency_sign') }}"/>
+                    <x-input disabled type="text" name="total" :label="__('Total')" icon="ri-money-dollar-circle-line" class="w-full mt-2 lg:mt-0" value="{{ ucfirst($total) }} {{ config('settings::currency_sign') }}"/>
 
                     <x-input disabled type="text" name="status" :label="__('Status')" icon="ri-calendar-line" class="w-full mt-2 lg:mt-0" value="{{ ucfirst($invoice->status) }}"/>
 

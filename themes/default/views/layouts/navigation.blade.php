@@ -34,8 +34,8 @@
 
                 <div class="absolute left-0 hidden w-56 mt-2 origin-top-right bg-secondary-200 border border-secondary-300 rounded-md"
                     role="menu" aria-orientation="vertical" aria-labelledby="product" tabindex="-1" id="orders">
-                    @foreach (App\Models\Category::all() as $category)
-                        @if ($category->products->count() > 0)
+                    @foreach (App\Models\Category::withCount('products')->get() as $category)
+                        @if ($category->products_count > 0)
                             <a href="{{ route('products', $category->slug) }}"
                                 class="flex px-4 py-2 rounded text-secondary-700 hover:bg-secondary-100 hover:text-secondary-900"
                                 role="menuitem" tabindex="-1" id="menu-item-0">{{ $category->name }}</a>

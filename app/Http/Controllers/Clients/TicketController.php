@@ -17,7 +17,7 @@ class TicketController extends Controller
     public function index(Request $request)
     {
         $user = $request->user();
-        $tickets = $user->tickets()->with('messages')->get();
+        $tickets = $user->tickets()->with(['messages', 'messages.user'])->get();
         $sort = $request->get('sort');
 
         return view(
@@ -77,7 +77,7 @@ class TicketController extends Controller
         if ($ticket->user_id != Auth::user()->id) {
             return redirect()->back()->with('error', 'You do not have permission to view this ticket.');
         }
-        $messages = TicketMessage::where('ticket_id', $ticket->id)->get();
+        $messages = $ticket->messages()->with('user')->get();
 
         return view('clients.tickets.show', compact('ticket', 'messages'));
     }

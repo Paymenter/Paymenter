@@ -63,7 +63,7 @@
                         <div class="flex flex-col gap-2">
                             <span class="text-xl font-semibold">{{ __('Signups') }}</span>
                             <span class="text-gray-500">{{ __('Total signups') }}</span>
-                            <span class="text-2xl font-semibold">{{ $affiliate->affiliateUsers()->count() }}</span>
+                            <span class="text-2xl font-semibold">{{ $affiliate->affiliateUsers->count() }}</span>
                         </div>
                         <div class="flex flex-col gap-2">
                             <span class="text-xl font-semibold">{{ __('Earnings') }}</span>

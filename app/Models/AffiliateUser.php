@@ -27,8 +27,8 @@ class AffiliateUser extends Model
     public function earnings()
     {
         $earnings = 0;
-        foreach($this->invoices as $invoice) {
-            if(!$invoice->isPaid())
+        foreach ($this->invoices as $invoice) {
+            if (!$invoice->isPaid())
                 continue;
             $earnings += $invoice->total() * $this->affiliate->commission / 100;
         }

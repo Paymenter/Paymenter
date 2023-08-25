@@ -11,7 +11,7 @@ class Order extends Model
     protected $table = 'orders';
     protected $fillable = [
         'user_id',
-        'coupon',
+        'coupon_id',
     ];
 
     public function total()
@@ -42,6 +42,6 @@ class Order extends Model
 
     public function coupon()
     {
-        return $this->belongsTo(Coupon::class, 'coupon', 'id');
+        return $this->belongsTo(Coupon::class);
     }
 }

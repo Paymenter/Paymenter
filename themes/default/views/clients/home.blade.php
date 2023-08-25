@@ -80,66 +80,59 @@
                         <tbody>
                         @if (count($services) > 0)
                             @foreach ($services as $service)
-                                @foreach ($service->products()->get() as $product2)
+                                @foreach ($service->products as $product2)
                                     @php
-                                        $product = $product2
-                                            ->product()
-                                            ->get()
-                                            ->first();
+                                        $product = $product2->product;
                                     @endphp
                                     @if($product2->status === 'cancelled')
-                                        @php
-                                            $product = NULL;
-                                        @endphp
+                                        @continue
                                     @endif
-                                    @if ($product)
-                                        <tr class="border-b-2 border-secondary-200 dark:border-secondary-200">
-                                            <td class="pl-6 py-3 items-center break-all max-w-fit">
-                                                <div class="flex">
-                                                    <img src="{{ $product->image }}" alt="{{ $product->name }}" class="w-8 h-8 md:w-12 md:h-12 my-auto rounded-md"
-                                                         onerror="removeElement(this);">
-                                                    <strong class="ml-3 my-auto">{{ ucfirst($product->name) }}</strong>
-                                                </div>
-                                            </td>
-                                            <td class="py-3 hidden md:table-cell" data-order="0.00">
-                                                {{ $product2->price !== '0.00' && $product2->price ? $product2->price . " " . config('settings::currency_sign') : __('Free') }}
-                                            </td>
-                                            <td class="py-3 hidden md:table-cell">
-                                                {{ $product2->expiry_date ? $product2->expiry_date->toDateString() : __('Never') }}
-                                            </td>
-                                            <td class="py-3 hidden md:table-cell">
-                                                <div class="font-bold rounded-md text-left">
-                                                    @if ($product2->status === 'paid')
-                                                        <span
-                                                            class="label status status-active text-green-500">{{__('Active')}}</span>
-                                                    @elseif($product2->status === 'pending')
-                                                        <span
-                                                            class="label status status-active text-orange-500">{{ __('Pending') }}</span>
-                                                    @elseif($product2->status === 'cancelled')
-                                                        <span
-                                                            class="label status status-active text-red-500">{{ __('Expired') }}</span>
-                                                    @elseif($product2->status === 'suspended')
-                                                        <span
-                                                            class="label status status-active text-red-500">{{ __('Suspended') }}</span>
-                                                    @else
-                                                        <span
-                                                            class="label status status-active text-red-500">{{ $product2->status }}</span>
-                                                    @endif
-                                                </div>
-                                            </td>
-                                            <td class="py-3 flex">
-                                                <a class="button button-secondary" @if($product2->status === 'cancelled' || $product2->status === 'suspended') style="opacity: 0.5; cursor: not-allowed;" @else href="{{ route('clients.active-products.show', $product2->id) }}" @endif><i class="ri-eye-line"></i></a>
-                                                <span class="relative flex ml-2">
-                                                        <a class="button @if($product2->status !== 'pending' || $product2->status !== 'suspended') cursor-pointer bg-secondary-200 hidden @else button-secondary @endif" @if($product2->status === 'pending' || $product2->status === 'suspended') href='{{ route('clients.invoice.index') }}'@endif><i class="ri-money-dollar-circle-line"></i></a>
-                                                        @if($product2->status === 'pending' || $product2->status === 'suspended')
-                                                        <span class="animate-ping -top-1 -right-1 absolute inline-flex h-3 w-3 rounded-full bg-red-400 opacity-75"></span>
-                                                        <span class="absolute inline-flex -top-1 -right-1 rounded-full h-3 w-3 bg-red-500"></span>
-                                                    @endif
-                                                    </span>
+                                    <tr class="border-b-2 border-secondary-200 dark:border-secondary-200">
+                                        <td class="pl-6 py-3 items-center break-all max-w-fit">
+                                            <div class="flex">
+                                                <img src="{{ $product->image }}" alt="{{ $product->name }}" class="w-8 h-8 md:w-12 md:h-12 my-auto rounded-md"
+                                                     onerror="removeElement(this);">
+                                                <strong class="ml-3 my-auto">{{ ucfirst($product->name) }}</strong>
+                                            </div>
+                                        </td>
+                                        <td class="py-3 hidden md:table-cell" data-order="0.00">
+                                            {{ $product2->price !== '0.00' && $product2->price ? $product2->price . " " . config('settings::currency_sign') : __('Free') }}
+                                        </td>
+                                        <td class="py-3 hidden md:table-cell">
+                                            {{ $product2->expiry_date ? $product2->expiry_date->toDateString() : __('Never') }}
+                                        </td>
+                                        <td class="py-3 hidden md:table-cell">
+                                            <div class="font-bold rounded-md text-left">
+                                                @if ($product2->status === 'paid')
+                                                    <span
+                                                        class="label status status-active text-green-500">{{__('Active')}}</span>
+                                                @elseif($product2->status === 'pending')
+                                                    <span
+                                                        class="label status status-active text-orange-500">{{ __('Pending') }}</span>
+                                                @elseif($product2->status === 'cancelled')
+                                                    <span
+                                                        class="label status status-active text-red-500">{{ __('Expired') }}</span>
+                                                @elseif($product2->status === 'suspended')
+                                                    <span
+                                                        class="label status status-active text-red-500">{{ __('Suspended') }}</span>
+                                                @else
+                                                    <span
+                                                        class="label status status-active text-red-500">{{ $product2->status }}</span>
+                                                @endif
+                                            </div>
+                                        </td>
+                                        <td class="py-3 flex">
+                                            <a class="button button-secondary" @if($product2->status === 'cancelled' || $product2->status === 'suspended') style="opacity: 0.5; cursor: not-allowed;" @else href="{{ route('clients.active-products.show', $product2->id) }}" @endif><i class="ri-eye-line"></i></a>
+                                            <span class="relative flex ml-2">
+                                                    <a class="button @if($product2->status !== 'pending' || $product2->status !== 'suspended') cursor-pointer bg-secondary-200 hidden @else button-secondary @endif" @if($product2->status === 'pending' || $product2->status === 'suspended') href='{{ route('clients.invoice.index') }}'@endif><i class="ri-money-dollar-circle-line"></i></a>
+                                                    @if($product2->status === 'pending' || $product2->status === 'suspended')
+                                                    <span class="animate-ping -top-1 -right-1 absolute inline-flex h-3 w-3 rounded-full bg-red-400 opacity-75"></span>
+                                                    <span class="absolute inline-flex -top-1 -right-1 rounded-full h-3 w-3 bg-red-500"></span>
+                                                @endif
+                                                </span>
+                                        </td>
+                                    </tr>
 
-                                            </td>
-                                        </tr>
-                                    @endif
                                 @endforeach
                             @endforeach
                         @elseif (count($services) <= 0)

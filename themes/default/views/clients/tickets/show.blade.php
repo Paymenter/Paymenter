@@ -39,7 +39,7 @@
                     <div class="mt-6 dark:bg-secondary-100">
                         <div class="grid grid-cols-3 gap-4">
 
-                            @foreach ($ticket->messages()->get() as $message)
+                            @foreach ($messages as $message)
                                 @if ($message->user_id == Auth::user()->id)
                                     <div class="col-span-3 text-center w-full">
                                         {{$message->messageDate()}}
