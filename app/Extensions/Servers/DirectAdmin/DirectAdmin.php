@@ -199,18 +199,56 @@ class DirectAdmin extends Server
 
     public function getProductConfig($options)
     {
+        // Get package options
+        $packages = [];
+        $host = ExtensionHelper::getConfig('DirectAdmin', 'host');
+        $pass = ExtensionHelper::getConfig('DirectAdmin', 'password');
+        $user = ExtensionHelper::getConfig('DirectAdmin', 'username');
+        $ssl = ExtensionHelper::getConfig('DirectAdmin', 'ssl');
+        $sock = new DAHTTPSocket();
+        if ($ssl) {
+            $sock->connect('ssl://' . $host, '2222');
+        } else {
+            $sock->connect($host, '2222');
+        }
+        $sock->set_login($user, $pass);
+        $sock->query('/CMD_API_PACKAGES_USER');
+        $result = $sock->fetch_parsed_body();
+        if(!isset($result['list'])) {
+            throw new \Exception('No packages found or could not connect to DirectAdmin server');
+        }
+        
+        foreach ($result['list'] as $package) {
+            $packages[] = [
+                'name' => $package,
+                'value' => $package,
+            ];
+        }
+
+        $ips = [];
+        $sock->query('/CMD_API_SHOW_RESELLER_IPS');
+        $result = $sock->fetch_parsed_body();
+        foreach ($result['list'] as $ip) {
+            $ips[] = [
+                'name' => $ip,
+                'value' => $ip,
+            ];
+        }
+
         return [
             [
                 'name' => 'package',
-                'type' => 'text',
+                'type' => 'dropdown',
                 'friendlyName' => 'Package',
                 'required' => true,
+                'options' => $packages,
             ],
             [
                 'name' => 'ip',
-                'type' => 'text',
+                'type' => 'dropdown',
                 'friendlyName' => 'IP',
-                'required' => false,
+                'required' => true,
+                'options' => $ips,
             ],
         ];
     }
