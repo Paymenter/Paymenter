@@ -31,6 +31,7 @@
         "stripe/stripe-php": "^9.6"
     },
     "require-dev": {
+        "barryvdh/laravel-debugbar": "^3.9",
         "laravel/pint": "^1.0",
         "laravel/sail": "^1.0.1",
         "mockery/mockery": "^1.4.4",
