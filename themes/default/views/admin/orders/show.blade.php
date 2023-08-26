@@ -74,7 +74,7 @@
                             @endif
                         </td>
                         <td class="text-center">
-                            {{ $product->expiry_date->format('Y-m-d') ?: 'N/A' }}
+                            {{ $product->expiry_date ? $product->expiry_date->format('Y-m-d') : 'N/A' }}
                         </td>
                         <td class="text-center">
                             {{ $product->link ?: 'N/A' }}
@@ -197,7 +197,7 @@
                         <div class="flex flex-col mt-4">
                             <span class="font-bold">{{ __('Expiry Date') }}:</span>
                             <input class="form-input" type="date" name="expiry_date"
-                                   value="{{ $product->expiry_date->format('Y-m-d') }}"
+                                   value="{{ $product->expiry_date ? $product->expiry_date->format('Y-m-d') : '' }}"
                                    placeholder="{{ __('Expiry Date') }}" />
                         </div>
                         <div class="flex flex-row justify-end mt-4">

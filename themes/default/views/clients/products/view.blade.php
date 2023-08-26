@@ -27,7 +27,7 @@
                             <h2 class="text-lg font-bold">{{ __('Status') }}</h2>
                         </div>
                         <div class="mb-4">
-                            <p><span class="font-bold">{{ __('Due Date') }}: </span>{{ $orderProduct->expiry_date->format('Y-m-d') }}
+                            <p><span class="font-bold">{{ __('Due Date') }}: </span>{{ $orderProduct->expiry_date }}
                             </p>
                             <p><span class="font-bold">{{ __('Status') }}:
                                 </span>{{ $orderProduct->status == 'paid' ? 'Active' : ucfirst($orderProduct->status) }}
