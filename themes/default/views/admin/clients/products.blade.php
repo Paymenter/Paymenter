@@ -72,7 +72,8 @@
                 <h3 class="text-lg border-b mb-1 border-gray-500 fon">Product ID: <a
                         href="{{ route('admin.products.edit', $orderProduct->product->id) }}"
                         class="text-logo">#{{ $orderProduct->product->id }}</a></h3>
-                <x-input type="date" name="expiry_date" id="expiry_date" value="{{ $orderProduct->expiry_date ? $orderProduct->expiry_date->format('Y-m-d') : '' }}"
+                <x-input type="date" name="expiry_date" id="expiry_date"
+                    value="{{ $orderProduct->expiry_date ? $orderProduct->expiry_date->format('Y-m-d') : '' }}"
                     label="Expiry Date" />
                 <x-input type="number" name="quantity" id="quantity" value="{{ $orderProduct->quantity }}"
                     label="Quantity" />
@@ -88,7 +89,7 @@
         <input type="hidden" name="status" id="statusinput">
     </form>
 
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mt-4">
         <div>
             <h1 class="text-2xl my-2">{{ __('Invoices') }}</h1>
             <div class="flex flex-col gap-2">
@@ -124,9 +125,14 @@
 
         </div>
         <div>
-            @if ($configurableOptions->count() > 0)
+            <div class="flex flex-row justify-between items-center">
                 <h1 class="text-2xl my-2">{{ __('Configurable Options') }}</h1>
-            @endif
+                <form action="{{ route('admin.clients.products.config.create', [$user->id, $orderProduct->id]) }}"
+                    method="POST">
+                    @csrf
+                    <button class="button button-primary">{{ __('Add New') }}</button>
+                </form>
+            </div>
             @foreach ($configurableOptions as $configurableOption)
                 <div class="flex flex-col md:flex-row justify-between items-center border-b border-gray-500 py-2">
                     @if ($configurableOption->configurableOption())
@@ -158,7 +164,17 @@
                                 value="{{ $configurableOption->key }}" label="Key" />
                             <x-input type="text" name="value" id="value"
                                 value="{{ $configurableOption->value }}" label="Value" />
-                            <button class="button button-primary self-end">Update</button>
+                            <div class="flex flex-row gap-2 mt-6">
+                                <button class="button button-primary self-end">Update</button>
+                                <button class="button button-danger self-end"
+                                    onclick="event.preventDefault(); document.getElementById('delete-form-{{ $configurableOption->id }}').submit();">Delete</button>
+                            </div>
+                        </form>
+                        <form
+                            action="{{ route('admin.clients.products.config.delete', [$user->id, $orderProduct->id, $configurableOption->id]) }}"
+                            id="delete-form-{{ $configurableOption->id }}" method="POST">
+                            @csrf
+                            @method('DELETE')
                         </form>
                     @endif
                 </div>

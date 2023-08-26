@@ -176,4 +176,32 @@ class ClientController extends Controller
 
         return redirect()->route('admin.clients.products', [$user->id, $orderProduct->id])->with('success', 'Product updated');
     }
+
+    /**
+     * Add a product configurable option
+     * 
+     * @return Redirect
+     */
+    public function newProductConfig(User $user, OrderProduct $orderProduct, Request $request): \Illuminate\Http\RedirectResponse
+    {
+        $orderProductConfig = new OrderProductConfig();
+        $orderProductConfig->key = 'New Config';
+        $orderProductConfig->value = 'New Value';
+        $orderProductConfig->order_product_id = $orderProduct->id;
+        $orderProductConfig->save();
+
+        return redirect()->route('admin.clients.products', [$user->id, $orderProduct->id])->with('success', 'Product updated');
+    }
+
+    /**
+     * Delete a product configurable option
+     * 
+     * @return Redirect
+     */
+    public function deleteProductConfig(User $user, OrderProduct $orderProduct, OrderProductConfig $orderProductConfig): \Illuminate\Http\RedirectResponse
+    {
+        $orderProductConfig->delete();
+
+        return redirect()->route('admin.clients.products', [$user->id, $orderProduct->id])->with('success', 'Product updated');
+    }
 }

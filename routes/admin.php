@@ -72,7 +72,9 @@ Route::group(['prefix' => 'admin', 'middleware' => 'permission:ADMINISTRATOR'], 
         Route::get('/{user}/{orderProduct?}', [App\Http\Controllers\Admin\ClientController::class, 'products'])->middleware(['permission:VIEW_CLIENTS'])->name('admin.clients.products');
         Route::post('/{user}/{orderProduct}/update', [App\Http\Controllers\Admin\ClientController::class, 'updateProduct'])->middleware(['permission:EDIT_CLIENTS'])->name('admin.clients.products.update');
         Route::post('/{user}/{orderProduct}/changeProductStatus', [App\Http\Controllers\Admin\ClientController::class, 'changeProductStatus'])->middleware(['permission:EDIT_CLIENTS'])->name('admin.clients.products.changestatus');
+        Route::post('/{user}/{orderProduct}/newProductConfig', [App\Http\Controllers\Admin\ClientController::class, 'newProductConfig'])->middleware(['permission:EDIT_CLIENTS'])->name('admin.clients.products.config.create');
         Route::post('/{user}/{orderProduct}/{orderProductConfig}/update', [App\Http\Controllers\Admin\ClientController::class, 'updateProductConfig'])->middleware(['permission:EDIT_CLIENTS'])->name('admin.clients.products.config.update');
+        Route::delete('/{user}/{orderProduct}/{orderProductConfig}/delete', [App\Http\Controllers\Admin\ClientController::class, 'deleteProductConfig'])->middleware(['permission:EDIT_CLIENTS'])->name('admin.clients.products.config.delete');
     });
 
     Route::group(['prefix' => 'orders'], function () {
