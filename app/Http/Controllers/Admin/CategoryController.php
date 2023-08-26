@@ -43,27 +43,15 @@ class CategoryController extends Controller
         if ($newIndex == $oldIndex) {
             return response()->json(['success' => true]);
         }
-        $categories = Category::all()->sortBy('order');
-        $category = $categories->where('id', $request->input('id'))->first();
-        $category->order = $newIndex;
+        $category = Category::find($request->input('id'));
+        $category->order = $newIndex - 1;
         $category->save();
+        
+        $categories = Category::all()->sortBy('order');
 
-        // If the new index is greater than the old index, we need to shift all the categories between the old and new index up one
-        if ($newIndex > $oldIndex) {
-            foreach ($categories as $c) {
-                if ($c->order > $oldIndex && $c->order <= $newIndex && $c->id != $category->id) {
-                    $c->order--;
-                    $c->save();
-                }
-            }
-            // If the new index is less than the old index, we need to shift all the categories between the old and new index down one
-        } else {
-            foreach ($categories as $c) {
-                if ($c->order < $oldIndex && $c->order >= $newIndex && $c->id != $category->id) {
-                    $c->order++;
-                    $c->save();
-                }
-            }
+        for($i = 0; $i < $categories->count(); $i++) {
+            $categories[$i]->order = $i;
+            $categories[$i]->save();
         }
 
         return response()->json(['success' => true]);

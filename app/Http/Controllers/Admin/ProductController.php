@@ -24,7 +24,7 @@ class ProductController extends Controller
      */
     public function index(): View
     {
-        $categories = Category::all();
+        $categories = Category::with('products')->orderBy('order', 'asc')->get();
 
         return view('admin.products.index', compact('categories'));
     }
@@ -39,7 +39,7 @@ class ProductController extends Controller
     public function reorder(Request $request)
     {
         $request->validate([
-            'id' => 'required|integer',
+            'id' => 'required|integer|exists:products,id',
             'category_id' => 'required|integer|exists:categories,id',
             'newIndex' => 'required|integer',
         ]);
@@ -50,26 +50,16 @@ class ProductController extends Controller
         }
         $category = Category::find($request->get('category_id'));
 
-        $products = Product::where('category_id', $category->id)->orderBy('order', 'asc')->get();
 
-        $product = $products->where('id', $request->get('id'))->first();
-        $product->order = $newIndex;
+        $product = Product::find($request->get('id'));
+        $product->order = $newIndex - 1;
         $product->save();
 
-        if ($newIndex > $oldIndex) {
-            foreach ($products as $p) {
-                if ($p->id !== $product->id && $p->order > $oldIndex && $p->order <= $newIndex) {
-                    $p->order--;
-                    $p->save();
-                }
-            }
-        } else {
-            foreach ($products as $p) {
-                if ($p->id !== $product->id && $p->order >= $newIndex && $p->order < $oldIndex) {
-                    $p->order++;
-                    $p->save();
-                }
-            }
+        $products = Product::where('category_id', $category->id)->orderBy('order', 'asc')->get();
+
+        for ($i = 0; $i < $products->count(); $i++) {
+            $products[$i]->order = $i;
+            $products[$i]->save();
         }
 
         return response()->json(['success' => true]);
