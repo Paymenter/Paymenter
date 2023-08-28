@@ -139,4 +139,8 @@ Route::group(['prefix' => 'admin', 'middleware' => 'permission:ADMINISTRATOR'], 
         Route::delete('/{configurableOptionGroup}/options/{configurableOption}/delete', [App\Http\Controllers\Admin\ConfigurableOptionController::class, 'destroyOption'])->middleware(['permission:DELETE_CONFIGURABLE_OPTIONS'])->name('admin.configurable-options.options.destroy');
         Route::delete('/{configurableOptionGroup}/options/{configurableOption}/inputs/{configurableOptionInput}/delete', [App\Http\Controllers\Admin\ConfigurableOptionController::class, 'destroyOptionInput'])->middleware(['permission:DELETE_CONFIGURABLE_OPTIONS'])->name('admin.configurable-options.options.inputs.destroy');
     });
+
+    Route::group(['prefix' => 'email'], function() {
+        Route::get('/', [App\Http\Controllers\Admin\EmailController::class, 'index'])->middleware(['permission:VIEW_EMAIL'])->name('admin.email');
+    });
 });

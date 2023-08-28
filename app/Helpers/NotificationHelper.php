@@ -9,7 +9,9 @@ use App\Mail\Orders\NewOrder;
 use App\Mail\Test;
 use App\Mail\Tickets\NewTicket;
 use App\Mail\Tickets\NewTicketMessage;
+use App\Models\EmailLog;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Mail\Mailable;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 
@@ -21,6 +23,26 @@ class NotificationHelper
         return explode(',', config('settings::bcc')) ?? [];
     }
 
+    protected static function sendMail($user, Mailable $mail)
+    {
+        if (config('settings::mail_disabled')) return;
+        $emailLog = EmailLog::create([
+            'user_id' => $user->id,
+            'subject' => $mail->subject,
+            'body' => $mail->render(),
+            'body_text' => $mail->textView,
+        ]);
+        try {
+            Mail::to($user->email)->bcc(self::bcc())->queue($mail);
+        } catch (\Exception $e) {
+            Log::error($e->getMessage());
+            $emailLog->update([
+                'errors' => (string) $e,
+                'success' => false,
+            ]);
+        }
+    }
+
     /**
      * @param $order \App\Models\Order
      * @param $user \App\Models\User
@@ -29,12 +51,7 @@ class NotificationHelper
      */
     public static function sendNewOrderNotification($order, $user)
     {
-        if (config('settings::mail_disabled')) return;
-        try {
-            Mail::to($user->email)->bcc(self::bcc())->queue(new NewOrder($order));
-        } catch (\Exception $e) {
-            Log::error($e->getMessage());
-        }
+        self::sendMail($user, new NewOrder($order));
     }
 
     /**
@@ -45,12 +62,7 @@ class NotificationHelper
      */
     public static function sendNewInvoiceNotification($invoice, $user)
     {
-        if (config('settings::mail_disabled')) return;
-        try {
-            Mail::to($user->email)->bcc(self::bcc())->queue(new NewInvoice($invoice));
-        } catch (\Exception $e) {
-            Log::error($e->getMessage());
-        }
+        self::sendMail($user, new NewInvoice($invoice));
     }
 
     /**
@@ -61,12 +73,7 @@ class NotificationHelper
      */
     public static function sendUnpaidInvoiceNotification($invoice, $user)
     {
-        if (config('settings::mail_disabled')) return;
-        try {
-            Mail::to($user->email)->bcc(self::bcc())->queue(new UnpaidInvoice($invoice));
-        } catch (\Exception $e) {
-            Log::error($e->getMessage());
-        }
+        self::sendMail($user, new UnpaidInvoice($invoice));
     }
 
     /**
@@ -77,12 +84,7 @@ class NotificationHelper
      */
     public static function sendDeletedOrderNotification($order, $user)
     {
-        if (config('settings::mail_disabled')) return;
-        try {
-            Mail::to($user->email)->bcc(self::bcc())->queue(new DeletedOrder($order));
-        } catch (\Exception $e) {
-            Log::error($e->getMessage());
-        }
+        self::sendMail($user, new DeletedOrder($order));
     }
 
     /**
@@ -92,8 +94,7 @@ class NotificationHelper
      */
     public static function sendTestNotification($user)
     {
-        if (config('settings::mail_disabled')) return;
-        Mail::to($user->email)->bcc(self::bcc())->send(new Test($user));
+        self::sendMail($user, new Test());
     }
 
     /**
@@ -104,12 +105,7 @@ class NotificationHelper
      */
     public static function sendNewTicketNotification($ticket, $user)
     {
-        if (config('settings::mail_disabled')) return;
-        try {
-            Mail::to($user->email)->bcc(self::bcc())->queue(new NewTicket($ticket));
-        } catch (\Exception $e) {
-            Log::error($e->getMessage());
-        }
+        self::sendMail($user, new NewTicket($ticket));
     }
 
     /**
@@ -120,11 +116,6 @@ class NotificationHelper
      */
     public static function sendNewTicketMessageNotification($ticket, $user)
     {
-        if (config('settings::mail_disabled')) return;
-        try {
-            Mail::to($user->email)->bcc(self::bcc())->queue(new NewTicketMessage($ticket));
-        } catch (\Exception $e) {
-            Log::error($e->getMessage());
-        }
+        self::sendMail($user, new NewTicketMessage($ticket));
     }
 }

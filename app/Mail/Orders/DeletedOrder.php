@@ -30,6 +30,7 @@ class DeletedOrder extends Mailable
     public function __construct(Order $order)
     {
         $this->order = $order;
+        $this->subject('Deleted order due to non-payment');
     }
 
     /**

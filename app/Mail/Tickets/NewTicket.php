@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Mail\Tickets;
 
 use App\Models\Ticket;
@@ -23,6 +24,7 @@ class NewTicket extends Mailable
     public function __construct(Ticket $ticket)
     {
         $this->ticket = $ticket;
+        $this->subject('New ticket');
     }
 
     /**

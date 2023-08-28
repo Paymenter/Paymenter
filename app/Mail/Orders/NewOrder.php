@@ -30,6 +30,7 @@ class NewOrder extends Mailable
     public function __construct(Order $order)
     {
         $this->order = $order;
+        $this->subject('New order');
     }
 
     /**

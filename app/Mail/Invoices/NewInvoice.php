@@ -28,6 +28,7 @@ class NewInvoice extends Mailable
     public function __construct(Invoice $invoice)
     {
         $this->invoice = $invoice;
+        $this->subject('New invoice');
     }
 
     /**

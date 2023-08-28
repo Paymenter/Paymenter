@@ -62,6 +62,8 @@ class Permissions extends BitField
         'EDIT_CONFIGURABLE_OPTIONS' => 1 << 42,
         'CREATE_CONFIGURABLE_OPTIONS' => 1 << 43,
         'DELETE_CONFIGURABLE_OPTIONS' => 1 << 44,
+
+        'VIEW_EMAIL' => 1 << 45,
     ];
 
     public function __construct(int $bits)

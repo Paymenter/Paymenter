@@ -12,6 +12,10 @@ class Test extends Mailable
     use Queueable;
     use SerializesModels;
 
+    public function __construct()
+    {
+        $this->subject('Test email');
+    }
     /**
      * Get the message content definition.
      *

@@ -25,6 +25,7 @@ class NewTicketMessage extends Mailable
     {
         $this->ticket = $ticket;
         $this->message = $ticket->messages()->latest()->first();
+        $this->subject('New ticket message');
     }
 
     /**
