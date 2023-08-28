@@ -4,31 +4,34 @@
             <article class="overflow-hidden">
                 <div class="dark:bg-secondary-100 bg-[white] rounded-md">
                     <div class="p-9 flex flex-row w-full justify-between">
-                        <div class="space-y-4 text-slate-700 flex">
-                            <p class="dark:text-darkmodetext flex text-xl font-extrabold tracking-tight font-body">
+                        <div class="text-slate-700 flex h-full">
+                            <div>
                                 <x-application-logo />
-                                <span class="flex my-auto ml-2">
-                                    {{ config('app.name', 'Paymenter') }}
-                                </span>
-                            </p>
+                            </div>
+                            <span class="ml-2 my-auto dark:text-darkmodetext text-xl font-extrabold font-body">
+                                {{ config('app.name', 'Paymenter') }}
+                            </span>
                         </div>
                         @if ($invoice->status == 'pending')
-                            <div class="flex">
+                            <div class="">
                                 <p class="text-red-500 font-semibold mt-2 text-xl">
                                     {{__('Invoice Not Paid')}}
                                 </p>
                             </div>
                         @elseif($invoice->status == 'cancelled')
-                            <div class="flex">
+                            <div class="">
                                 <p class="text-orange-500 font-semibold mt-2 text-xl">
                                     {{__('Invoice Cancelled')}}
                                 </p>
                             </div>
                         @else
-                            <div class="flex">
+                            <div class="text-end">
                                 <p class="text-green-500 font-semibold mt-2 text-xl">
                                     {{__('Invoice Paid')}}
                                 </p>
+                                <span class="block text-sm text-gray-500 dark:text-darkmodetext">
+                                    {{ $invoice->paid_at }}
+                                </span>
                             </div>
                         @endif
                     </div>
@@ -37,25 +40,30 @@
                             <div class="grid grid-cols-4 gap-12">
                                 <div class="dark:text-darkmodetext text-sm font-light text-slate-500">
                                     <p class="dark:text-darkmodetext text-sm font-bold text-slate-700">
-                                        {{ __('Invoice Detail:') }}
+                                        {{ __('Billed To') }}</p>
+                                    <p>{{ config('settings::company_name')??config('app.name', 'Paymenter') }}</p>
+                                    <p>{{ config('settings::company_address') }}</p>
+                                    <p>{{ config('settings::company_zip') }} {{ config('settings::company_city') }}</p>
+                                    <p>{{ config('settings::company_country') }}</p>
+                                    <p>{{ __('TIN') }}: {{ config('settings::company_tin') }}</p>
+                                </div>
+                                <div class="dark:text-darkmodetext text-sm font-light text-slate-500">
+                                    <p class="dark:text-darkmodetext text-sm font-bold text-slate-700">
+                                        {{ __('Purchaser:') }}
                                     </p>
                                     <p>{{ auth()->user()->name }}</p>
                                     <p>{{ auth()->user()->zip }} {{ auth()->user()->city }}</p>
                                     <p>{{ auth()->user()->address }}</p>
                                     <p>{{ auth()->user()->country }}</p>
                                 </div>
-                                <div class="dark:text-darkmodetext text-sm font-light text-slate-500">
-                                    <p class="dark:text-darkmodetext text-sm font-bold text-slate-700">
-                                        {{ __('Billed To') }}</p>
-                                    <p>{{ config('app.name', 'Paymenter') }}</p>
                                 </div>
                                 <div class="dark:text-darkmodetext text-sm font-light text-slate-500">
                                     <p class="dark:text-darkmodetext text-sm font-bold text-slate-700">
-                                        {{ __('Invoice Number') }}</p>
-                                    <p>{{ $invoice->id }}</p>
+                                        {{ __('Invoice Number') }}:</p>
+                                    <p>{{ $invoice->id }}/{{ $invoice->created_at->format('m/Y') }}</p>
 
                                     <p class="dark:text-darkmodetext mt-2 text-sm font-bold text-slate-700">
-                                        {{ __('Date of Issue') }}
+                                        {{ __('Date of Issue') }}:
                                     </p>
                                     <p>{{ $invoice->created_at }}</p>
                                 </div>
@@ -70,14 +78,6 @@
                                         <p class="dark:text-darkmodetext font-bold text-sm text-slate-700">
                                             {{__('Cancellation Date')}}</p>
                                         <p>{{ $invoice->cancelled_at??"N/A" }}</p>
-                                    </div>
-                                @else
-                                    <div class="text-sm font-light text-slate-500">
-
-                                        <p class="dark:text-darkmodetext font-bold text-xl text-slate-700">
-                                            {{ __('Paid') }}
-                                        </p>
-                                        <p class="dark:text-darkmodetext">{{ $invoice->paid_at }}</p>
                                     </div>
                                 @endif
                             </div>
@@ -161,7 +161,8 @@
                                             {{  number_format((float) ($discount), 2, '.', '') }} {{ $currency_sign }}
                                         </td>
                                     </tr>
-                                    <!--                                     can be enabled if this is made
+                                    <!--
+                                    can be enabled if this is made
                                     <tr>
                                         <th scope="row" colspan="3"
                                             class="hidden pt-6 pl-6 pr-3 text-sm font-light text-right text-slate-500 sm:table-cell md:pl-0">
@@ -218,7 +219,7 @@
                                         </th>
                                         <td
                                             class="dark:text-darkmodetext pt-4 pl-3 pr-4 text-sm font-normal text-right text-slate-700 sm:pr-6 md:pr-0">
-                                            {{ $currency_sign }}{{ number_format((float) $total, 2, '.', '') }}
+                                            {{ number_format((float) $total, 2, '.', '') }} {{ $currency_sign }}
                                         </td>
                                     </tr>
                                 </tfoot>

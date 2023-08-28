@@ -1,14 +1,4 @@
 <x-app-layout clients title="{{ __('Ticket') }}">
-    @php
-        function showTicketDate(int $createdAt):string{
-            if(date('Y-m-d', $createdAt) === date('Y-m-d', strtotime('now'))) {
-                return date('H:i', $createdAt);
-            } else {
-                return date('d', $createdAt) . " " . date('M', $createdAt) . " " . date('Y, H:i', $createdAt);
-            }
-        }
-    @endphp
-
     <!-- show last messages and form to reply -->
     <div class="py-12">
         <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
@@ -41,40 +31,36 @@
 
                             @foreach ($messages as $message)
                                 @if ($message->user_id == Auth::user()->id)
-                                    <div class="col-span-3 text-center w-full">
-                                        {{$message->messageDate()}}
-                                    </div>
                                     <div class="col-span-1"></div>
                                     <div class="w-full col-span-2" id="message">
-                                        <div class="grid grid-cols-12 max-w-full place-items-end">
-                                            <div class="col-span-11 my-auto">
-                                                <span class="text-sm flex max-w-full justify-end font-normal text-opacity-50 mr-5">{{__('You')}}</span>
-                                                <div class="justify-end text-gray-100 break-all dark:text-white-400 w-fit rounded-2xl bg-indigo-600 p-2 px-4 mr-2">
-                                                    <p class="max-w-full text-end" style="color: white !important;">
-                                                        {!! Str::Markdown(str_replace("\n", "  \n", $message->message), ['html_input' => 'escape']) !!}
-                                                    </p>
+                                        <div class="grid grid-cols-12 place-items-end">
+                                            <div class="col-span-11">
+                                                <div class="text-sm flex justify-end font-normal text-opacity-50 mr-4">({{$message->messageDate()}}) {{__('You')}}</div>
+                                                <div class="w-full flex justify-end">
+                                                    <div class="max-w-fit text-gray-100 break-all dark:text-white-400 rounded-2xl bg-primary-400 p-2 px-4 mr-2">
+                                                        <p class="text-end" style="color: white !important;">
+                                                            {!! Str::Markdown(str_replace("\n", "  \n", $message->message), ['html_input' => 'escape']) !!}
+                                                        </p>
+                                                    </div>
                                                 </div>
                                             </div>
                                             <div class="justify-start w-full h-full flex col-span-1">
                                                 <img src="https://www.gravatar.com/avatar/{{ md5($message->user->email) }}?s=200&d=mp"
-                                                     class="h-10 w-10 mt-7 shadow-md rounded-full bg-secondary-200 inline-block"
+                                                     class="h-10 w-10 mt-6 shadow-md rounded-full bg-secondary-200 inline-block"
                                                      onerror='this.error=null;this.src="https://d33wubrfki0l68.cloudfront.net/c0e8a3c6172bd5bebfe787d49974adcff1ec4d3a/ca6a2/img/people/joseph-jolton.png";'>
                                             </div>
                                         </div>
                                     </div>
                                 @elseif ($message->user_id !== Auth::user()->id)
-                                    <div class="col-span-3 text-center w-full">
-                                        {{$message->messageDate()}}
-                                    </div>
                                     <div class="w-full col-span-2" id="message">
                                         <div class="grid grid-cols-12 max-w-full">
                                             <div class="justify-end w-full flex col-span-1">
                                                 <img src="https://www.gravatar.com/avatar/{{ md5($message->user->email) }}?s=200&d=mp"
-                                                     class="h-10 w-10 mt-7 shadow-md rounded-full bg-secondary-200 inline-block"
+                                                     class="h-10 w-10 mt-6 shadow-md rounded-full bg-secondary-200 inline-block"
                                                      onerror='this.error=null;this.src="https://d33wubrfki0l68.cloudfront.net/c0e8a3c6172bd5bebfe787d49974adcff1ec4d3a/ca6a2/img/people/joseph-jolton.png";'>
                                             </div>
                                             <div class="col-span-11">
-                                                <span class="text-sm ml-5 font-normal text-opacity-50">{{$message->user->name}} ({{ ucfirst($message->user->role->name) }})</span>
+                                                <span class="text-sm ml-5 font-normal text-opacity-50">{{$message->user->name}} ({{$message->messageDate()}})</span>
                                                 <div class="my-auto text-gray-500 break-all dark:text-darkmodetext ml-2 w-fit rounded-2xl bg-gray-200 dark:bg-darkmode p-2 px-4">
                                                     <p class="prose dark:prose-invert max-w-full break-word">
                                                         {!! Str::Markdown(str_replace("\n", "  \n", $message->message), ['html_input' => 'escape']) !!}

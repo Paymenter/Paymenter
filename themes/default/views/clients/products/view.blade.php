@@ -30,11 +30,14 @@
                             <p><span class="font-bold">{{ __('Due Date') }}: </span>{{ $orderProduct->expiry_date }}
                             </p>
                             <p><span class="font-bold">{{ __('Status') }}:
-                                </span>{{ $orderProduct->status == 'paid' ? 'Active' : ucfirst($orderProduct->status) }}
+                                </span>{{ $orderProduct->status == 'paid' ? __('Active') : ucfirst($orderProduct->status) }}
                             </p>
-                            <p> <span class="font-bold">
-                                    {{ __('Billing Cycle') }}: {{ ucfirst($orderProduct->billing_cycle) }}
-                                </span></p>
+                            <p>
+                                <span class="font-bold">
+                                    {{ __('Billing Cycle') }}:
+                                </span>
+                                {{ ucfirst($orderProduct->billing_cycle) }}
+                            </p>
                         </div>
                     </div>
                 @endif

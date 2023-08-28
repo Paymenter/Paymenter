@@ -60,7 +60,9 @@ class SettingController extends Controller
             'currency' => 'required|max:10',
             'currency_sign' => 'required|max:4',
             'language' => 'required',
+
             'timezone' => 'required',
+
         ]);
         if ($request->hasFile('app_logo')) {
             $imageName = time() . '.' . $request->app_logo->extension();
@@ -80,6 +82,25 @@ class SettingController extends Controller
         }
 
         return redirect('/admin/settings#general')->with('success', 'Settings updated successfully');
+    }
+
+    public function company(Request $request)
+    {
+        $request->validate([
+            'company_name' => 'max:255',
+            'company_address' => 'max:255',
+            'company_city' => 'max:255',
+            'company_country' => 'max:255',
+            'company_zip' => 'max:255',
+            'company_phone' => 'max:255',
+            'company_email' => 'max:255|email',
+            'company_tin' => 'max:255',
+        ]);
+        foreach ($request->except(['_token', 'app_logo', 'app_favicon']) as $key => $value) {
+            Setting::updateOrCreate(['key' => $key], ['value' => $value]);
+        }
+
+        return redirect('/admin/settings#company')->with('success', 'Settings updated successfully');
     }
 
     public function email(Request $request)
@@ -193,7 +214,7 @@ class SettingController extends Controller
             'affiliate_percentage' => 'required|numeric|min:0|max:100',
             'affiliate_type' => 'required|in:random,fixed,custom'
         ]);
-        
+
         foreach ($request->except(['_token']) as $key => $value) {
             Setting::updateOrCreate(['key' => $key], ['value' => $value]);
         }

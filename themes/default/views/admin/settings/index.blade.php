@@ -2,8 +2,6 @@
     <x-slot name="title">
         {{ __('Settings') }}
     </x-slot>
-
-
     <div class="h-full px-6 py-10 mx-auto">
         <div class="w-full h-full rounded ">
             <div class="p-6 mx-auto bg-white border-b border-gray-200 shadow-xl max-w-7xl sm:px-6 lg:px-8 dark:bg-secondary-100 dark:border-darkmode"
@@ -66,7 +64,7 @@
             document.execCommand("copy");
             $temp.remove();
 
-            // Display on the left side of the screen 
+            // Display on the left side of the screen
             var message = "Copied to clipboard";
             document.getElementById("message").innerHTML = message;
             var x = document.getElementById("toast-success");

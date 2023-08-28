@@ -89,23 +89,23 @@
             <h2 class="col-span-1 md:col-span-2 text-xl text-gray-900 dark:text-darkmodetext ">{{ __('SEO') }}</h2>
             <div class="relative m-4 group">
                 <input type="text" class="form-input peer @error('seo_title') is-invalid @enderror" placeholder=" "
-                    name="seo_title" required value="{{ config('settings::seo_title') }}" />
+                       name="seo_title" required value="{{ config('settings::seo_title') }}" />
                 <label class="form-label">{{ __('Seo Title') }}</label>
             </div>
             <div class="relative m-4 group">
                 <input type="text" class="form-input peer @error('seo_description') is-invalid @enderror"
-                    placeholder=" " name="seo_description" required
-                    value="{{ config('settings::seo_description') }}" />
+                       placeholder=" " name="seo_description" required
+                       value="{{ config('settings::seo_description') }}" />
                 <label class="form-label">{{ __('Seo Description') }}</label>
             </div>
             <div class="relative m-4 group">
                 <input type="text" class="form-input peer @error('seo_keywords') is-invalid @enderror"
-                    placeholder=" " name="seo_keywords" value="{{ config('settings::seo_keywords') }}" />
+                       placeholder=" " name="seo_keywords" value="{{ config('settings::seo_keywords') }}" />
                 <label class="form-label">{{ __('Seo Keywords (separate with comma)') }}</label>
             </div>
             <div class="relative m-4 group">
                 <input type="checkbox" class="form-input w-fit peer @error('seo_twitter_card') is-invalid @enderror"
-                    placeholder=" " name="seo_twitter_card" value="1"
+                       placeholder=" " name="seo_twitter_card" value="1"
                     {{ config('settings::seo_twitter_card') ? 'checked' : '' }} />
                 <label class="form-label" style="position: unset;">{{ __('Seo Twitter Card') }}</label>
             </div>
