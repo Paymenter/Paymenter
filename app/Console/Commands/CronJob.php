@@ -48,7 +48,7 @@ class CronJob extends Command
                 NotificationHelper::sendUnpaidInvoiceNotification($order->invoices()->get()->latest(), $order->order->user);
                 $this->info('Suspended server: ' . $order->id);
             } elseif ($order->status == 'suspended' || $order->status == 'pending') {
-                if (strtotime($order->expiry_date) < strtotime('-1 week')) {
+                if (strtotime($order->expiry_date) < strtotime('-' . config('settings::remove_unpaid_order_after')??'7' . ' days')) {
                     ExtensionHelper::terminateServer($order);
                     $order->status = 'cancelled';
                     NotificationHelper::sendDeletedOrderNotification($order->order, $order->order->user);
