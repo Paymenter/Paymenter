@@ -94,7 +94,7 @@ class NotificationHelper
      */
     public static function sendTestNotification($user)
     {
-        self::sendMail($user, new Test());
+        self::sendMail($user, new Test($user));
     }
 
     /**

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "68b4e5d0dea6f0e4759f7aa91234a39a",
+    "content-hash": "160c8d792607ca06a5b4bc7fade998fc",
     "packages": [
         {
             "name": "brick/math",
@@ -2582,6 +2582,56 @@
             "time": "2023-06-21T08:46:11+00:00"
         },
         {
+            "name": "mustache/mustache",
+            "version": "v2.14.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/bobthecow/mustache.php.git",
+                "reference": "e62b7c3849d22ec55f3ec425507bf7968193a6cb"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/bobthecow/mustache.php/zipball/e62b7c3849d22ec55f3ec425507bf7968193a6cb",
+                "reference": "e62b7c3849d22ec55f3ec425507bf7968193a6cb",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.2.4"
+            },
+            "require-dev": {
+                "friendsofphp/php-cs-fixer": "~1.11",
+                "phpunit/phpunit": "~3.7|~4.0|~5.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "Mustache": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Justin Hileman",
+                    "email": "justin@justinhileman.info",
+                    "homepage": "http://justinhileman.com"
+                }
+            ],
+            "description": "A Mustache implementation in PHP.",
+            "homepage": "https://github.com/bobthecow/mustache.php",
+            "keywords": [
+                "mustache",
+                "templating"
+            ],
+            "support": {
+                "issues": "https://github.com/bobthecow/mustache.php/issues",
+                "source": "https://github.com/bobthecow/mustache.php/tree/v2.14.2"
+            },
+            "time": "2022-08-23T13:07:01+00:00"
+        },
+        {
             "name": "nesbot/carbon",
             "version": "2.69.0",
             "source": {
@@ -4089,6 +4139,74 @@
                 "source": "https://github.com/socialiteproviders/manager"
             },
             "time": "2023-01-26T23:11:27+00:00"
+        },
+        {
+            "name": "spatie/laravel-database-mail-templates",
+            "version": "3.5.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/spatie/laravel-database-mail-templates.git",
+                "reference": "ebba166928b023d94b20c9d7831ef652d677e8e3"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/spatie/laravel-database-mail-templates/zipball/ebba166928b023d94b20c9d7831ef652d677e8e3",
+                "reference": "ebba166928b023d94b20c9d7831ef652d677e8e3",
+                "shasum": ""
+            },
+            "require": {
+                "laravel/framework": "~5.8|^6.0|^7.0|^8.0|^9.0|^10.0",
+                "mustache/mustache": "^2.14.1|^2.14",
+                "php": "^7.2|^8.0"
+            },
+            "require-dev": {
+                "ext-pdo_sqlite": "*",
+                "mockery/mockery": "^1.0|^1.3.1",
+                "orchestra/testbench": "~3.8|^4.0|^5.0|^6.0|^7.0|^8.0",
+                "phpunit/phpunit": "^7.5|^8.0|^9.3"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Spatie\\MailTemplates\\MailTemplatesServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Spatie\\MailTemplates\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Alex Vanderbist",
+                    "email": "alex@spatie.be",
+                    "homepage": "https://spatie.be",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Render Laravel mailables using a template stored in the database.",
+            "homepage": "https://github.com/spatie/laravel-database-mail-templates",
+            "keywords": [
+                "laravel-database-mail-templates",
+                "spatie"
+            ],
+            "support": {
+                "issues": "https://github.com/spatie/laravel-database-mail-templates/issues",
+                "source": "https://github.com/spatie/laravel-database-mail-templates/tree/3.5.1"
+            },
+            "funding": [
+                {
+                    "url": "https://spatie.be/open-source/support-us",
+                    "type": "custom"
+                }
+            ],
+            "time": "2023-01-25T00:15:13+00:00"
         },
         {
             "name": "stevebauman/purify",

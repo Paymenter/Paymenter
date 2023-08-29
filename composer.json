@@ -27,6 +27,7 @@
         "qirolab/laravel-themer": "^2.0",
         "robthree/twofactorauth": "^2.0",
         "socialiteproviders/discord": "^4.1",
+        "spatie/laravel-database-mail-templates": "^3.5",
         "stevebauman/purify": "^6.0",
         "stripe/stripe-php": "^9.6"
     },
