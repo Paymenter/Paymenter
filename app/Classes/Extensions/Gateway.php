@@ -7,12 +7,11 @@ class Gateway extends Extension {
      * 
      * @param int $total
      * @param array $products
-     * @param int $orderId
+     * @param int $invoiceId
      * @return string
      */
-    public function pay($total, $products, $orderId)
+    public function pay($total, $products, $invoiceId)
     {
-        return false;
+        return '';
     }
-
 }
