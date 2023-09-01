@@ -194,23 +194,27 @@ class Pterodactyl extends Server
         ];
     }
 
-    public function createServer($user, $params, $order, $orderProduct, $configurableOptions)
+    public function createServer($user, $params, $order, $orderProduct, $configurableOptions): bool
     {
         if ($this->serverExists($orderProduct->id)) {
             ExtensionHelper::error('Pterodactyl', 'Server already exists for order ' . $orderProduct->id);
 
             return true;
         }
+
         $url = $this->config('host') . '/api/application/servers';
         $nest_id = $configurableOptions['nest_id'] ?? $params['nest'];
         $egg_id = $configurableOptions['egg'] ?? $params['egg'];
         $eggData = $this->getRequest($this->config('host') . '/api/application/nests/' . $nest_id . '/eggs/' . $egg_id . '?include=variables')->json();
+
         if (!isset($eggData['attributes'])) {
             ExtensionHelper::error('Pterodactyl', 'No egg data found for ' . $params['egg']);
 
             return false;
         }
+
         $environment = [];
+
         foreach ($eggData['attributes']['relationships']['variables']['data'] as $key => $val) {
             $attr = $val['attributes'];
             $var = $attr['env_variable'];
@@ -221,6 +225,7 @@ class Pterodactyl extends Server
             }
             $environment[$var] = $default;
         }
+
         $cpu = $configurableOptions['cpu'] ?? $params['cpu'];
         $io = $configurableOptions['io'] ?? $params['io'];
         $disk = $configurableOptions['disk'] ?? $params['disk'];
