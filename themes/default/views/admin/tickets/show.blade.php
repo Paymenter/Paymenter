@@ -80,6 +80,25 @@
                                             <div class="max-w-fit text-gray-100 break-all dark:text-white-400 rounded-2xl bg-primary-400 p-2 px-4 mr-2">
                                                 <p class="text-end" style="color: white !important;">
                                                     {!! Str::Markdown(str_replace("\n", "  \n", $message->message), ['html_input' => 'escape']) !!}
+                                                    @if($message->files()->count() > 0)
+                                                        <br>
+                                                        <br>
+                                                        <hr class="border-gray-200 dark:border-secondary-300">
+                                                        {{ __('Attachments') }} ({{ $message->files()->count() }})
+                                                        <div class="grid grid-cols-2 gap-4">
+                                                            @foreach($message->files as $attachment)
+                                                                <div class="col-span-1">
+                                                                    <a href="{{ $attachment->url }}" class="text-white hover:text-white" download>
+                                                                        @if($attachment->isImage())
+                                                                            <img src="{{ $attachment->url }}" class="w-20 h-20 rounded-md">
+                                                                        @else    
+                                                                            <i class="ri-attachment-line"></i> {{ $attachment->filename }}
+                                                                        @endif
+                                                                    </a>
+                                                                </div>
+                                                            @endforeach
+                                                        </div>
+                                                    @endif
                                                 </p>
                                             </div>
                                         </div>
@@ -120,7 +139,7 @@
     @endempty
     <br>
     <div class="overflow-hidden bg-white shadow-xl sm:rounded-lg dark:bg-secondary-100">
-        <form method="POST" action="{{ route('admin.tickets.reply', $ticket->id) }}" class="mt-10" id="reply">
+        <form method="POST" action="{{ route('admin.tickets.reply', $ticket->id) }}" class="mt-10" id="reply" enctype="multipart/form-data">
             @csrf
             <div class="bg-white mb-5 border-gray-200 sm:px-20 dark:bg-secondary-100 dark:border-black mt-5">
                 <h1 class="text-xl text-gray-500 dark:text-darkmodetext font-bold">{{ __('Reply') }}</h1>
@@ -135,11 +154,12 @@
                                 placeholder="Aa"
                                 required
                             ></textarea>
-                            <x-recaptcha form="reply" />
                             <button class="button-primary ml-1 rounded-full w-10 my-auto ml-2 h-10 float-right transition-all ease-in-out">
                                 <i class="ri-send-plane-fill"></i>
                             </button>
                         </div>
+                        <x-input type="file" id="attachments" :label="__('Attachments')" name="attachments[]" multiple />
+                        <x-recaptcha form="reply" />
                         <br>
                     </div>
                 </div>

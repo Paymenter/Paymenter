@@ -29,4 +29,10 @@ class TicketMessage extends Model
     {
         return $this->belongsTo(Ticket::class);
     }
+
+
+    public function files()
+    {
+        return $this->morphMany(FileUpload::class, 'fileable');
+    }
 }
