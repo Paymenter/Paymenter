@@ -237,8 +237,8 @@ class Pterodactyl extends Server
         $backups = $configurableOptions['backups'] ?? $params['backups'];
         $startup = $configurableOptions['startup'] ?? $eggData['attributes']['startup'];
         $node = $configurableOptions['node'] ?? $params['node'];
-        $servername = $configurableOptions['servername'] ?? $params['servername'];
-        $servername = $servername ?? $orderProduct->product->name . ' #' . $orderProduct->id;
+        $servername = $configurableOptions['servername'] ?? $params['servername'] ?? false;
+        $servername = empty($servername) ?  $orderProduct->product->name . ' #' . $orderProduct->id : $servername;
 
 
         if ($node) {
