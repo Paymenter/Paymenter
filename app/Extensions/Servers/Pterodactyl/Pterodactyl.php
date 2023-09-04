@@ -265,8 +265,8 @@ class Pterodactyl extends Server
                 ],
                 'feature_limits' => [
                     'databases' => $databases ? (int) $databases : null,
-                    'allocations' => $allocations,
-                    'backups' => $backups,
+                    'allocations' => (int) $allocations,
+                    'backups' => (int) $backups,
                 ],
                 'allocation' => [
                     'default' => (int) $allocation,
@@ -290,8 +290,8 @@ class Pterodactyl extends Server
                 ],
                 'feature_limits' => [
                     'databases' => $databases ? (int) $databases : null,
-                    'allocations' => $allocations,
-                    'backups' => $backups,
+                    'allocations' => (int) $allocations,
+                    'backups' => (int) $backups,
                 ],
                 'deploy' => [
                     'locations' => [(int) $location],
