@@ -5,7 +5,7 @@
         <div class="content ">
             <div class="content-box">
                 <div class="prose dark:prose-invert min-w-full">
-                    {!! Stevebauman\Purify\Facades\Purify::clean(Str::Markdown(config('settings::home_page_text'))) !!}
+                    @markdownify(config('settings::home_page_text'))
                 </div>
             </div>
         </div>
@@ -43,7 +43,7 @@
                     <div class="lg:col-span-4 md:col-span-6 col-span-12">
                         <div class="content-box">
                             <h3 class="font-semibold text-lg">{{ $announcement->title }}</h3>
-                            <p>{!! Stevebauman\Purify\Facades\Purify::clean(str_replace("\n", '<br>', substr($announcement->announcement, 0, 100) . '...')) !!}</p>
+                            <p>@markdownify(substr($announcement->announcement, 0, 100) . '...')</p>
                             <div class="flex justify-between items-center mt-3">
                                 <span class="text-sm text-secondary-600">{{ __('Published') }}
                                     {{ $announcement->created_at->diffForHumans() }}</span>

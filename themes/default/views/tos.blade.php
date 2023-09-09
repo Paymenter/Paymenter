@@ -8,7 +8,7 @@
                 Last Updated: {{ config('settings::tos_last_updated') }}
             </p>
             <div class="prose dark:prose-invert min-w-full">
-                {!! Stevebauman\Purify\Facades\Purify::clean(Str::Markdown(config('settings::tos_text'))) !!}
+                @markdownify(config('settings::tos_text'))
             </div>
         </div>
     </div>

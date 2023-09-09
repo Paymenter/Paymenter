@@ -53,7 +53,7 @@
                                         </p>
                                     </div>
                                 </div>
-                                <p>{!! Stevebauman\Purify\Facades\Purify::clean(Str::markdown(str_replace("\n", '<br>', $product->description))) !!}
+                                <p>@markdownify($product->description)
                                 </p>
                                 <div class="pt-3 mt-auto">
                                     @if ($product->stock_enabled && $product->stock <= 0)
