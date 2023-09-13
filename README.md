@@ -31,5 +31,5 @@ The requirements for Paymenter are the following:
 - Composer
 
 ## Installation & Documentation
-For a detailed explanation of how to install and configure Paymenter, take a look at our [documentation here](https://paymenter.org/docs/intro)!
+For a detailed explanation of how to install and configure Paymenter, take a look at our [documentation here](https://paymenter.org/docs/getting-started/introduction/)!
 - Or, get additional help via [Community Discord](https://discord.gg/xB4UUT3XQg).
