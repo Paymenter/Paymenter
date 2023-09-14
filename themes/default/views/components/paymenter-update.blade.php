@@ -1,4 +1,4 @@
-@if (config('app.version') == 'development')
+@if (config('app.version') !== 'development')
     @if(Auth::user()->has('ADMINISTRATOR'))
         <div id="update_panel" class="fixed hidden items-center w-full max-w-xs right-5 bottom-5" role="alert">
             <div id="toast-interactive" class="w-full max-w-xs p-3 text-gray-500 bg-white dark:bg-secondary-200 dark:text-gray-400 rounded-lg shadow-md dark:shadow-2xl" role="alert">
