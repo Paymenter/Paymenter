@@ -116,7 +116,7 @@
                 document.querySelector('#close_update_panel').addEventListener('click', function() {
                     document.getElementById('update_panel').style.display = 'none';
 
-                    let date = new Date(currentTime.getTime() + (12 * 60 * 60 * 1000)); // 12 hours
+                    let date = new Date(currentTime.getTime() + (72 * 60 * 60 * 1000)); // 12 hours
                     localStorage.setItem('update_panel_expiration', date.toISOString());
                 });
             }
