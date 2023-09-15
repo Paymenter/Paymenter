@@ -2,7 +2,6 @@
 
 namespace App\Console;
 
-use App\Jobs\CheckUpdates;
 use App\Models\Setting;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
