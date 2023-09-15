@@ -2,6 +2,7 @@
 
 namespace App\Console;
 
+use App\Jobs\CheckUpdates;
 use App\Models\Setting;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
@@ -17,6 +18,7 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         $schedule->command('p:cronjob')->everyMinute();
+        $schedule->command('p:check-updates')->daily();
         $schedule->command('p:stats')->dailyAt($this->registerStatsCommand());
     }
 

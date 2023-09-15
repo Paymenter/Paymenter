@@ -1,4 +1,4 @@
-@if (config('app.version') !== 'development')
+@if (config('app.version') !== config('settings::latest_version') && config('settings::latest_version') !== null)
     @if(Auth::user()->has('ADMINISTRATOR'))
         <div id="update_panel" class="fixed hidden items-center w-full max-w-xs right-5 bottom-5" role="alert">
             <div id="toast-interactive" class="w-full max-w-xs p-3 text-gray-500 bg-white dark:bg-secondary-200 dark:text-gray-400 rounded-lg shadow-md dark:shadow-2xl" role="alert">
@@ -7,7 +7,7 @@
                         <i class="ri-refresh-line"></i>
                     </div>
                     <div class="ml-3 text-sm font-normal">
-                        <span class="mb-1 text-sm font-semibold text-gray-900 dark:text-white">{{ __('Update available') }} <span id="latest"></span></span>
+                        <span class="mb-1 text-sm font-semibold text-gray-900 dark:text-white">{{ __('Update available') }} <span id="latest">{{ config('settings::latest_version') }}</span></span>
                         <div class="mb-2 text-sm font-normal">{{ __('A new paymenter version is available for download.') }}</div>
                         <div class="grid grid-cols-2 gap-2">
                             <div>
@@ -27,30 +27,19 @@
         </div>
 
         <script>
-            document.getElementById('latest').innerHTML = '...';
-            fetch('https://api.github.com/repos/Paymenter/Paymenter/releases/latest')
-                .then(response => response.json())
-                .then(data => {
-                    if(data.tag_name === 'v{{ config('app.version') }}') {
+            let expirationDate = localStorage.getItem('update_panel_expiration');
+            let currentTime = new Date();
 
-                    } else {
-                        let expirationDate = localStorage.getItem('update_panel_expiration');
-                        let currentTime = new Date();
+            if (!expirationDate || new Date(expirationDate) < currentTime) {
+                document.getElementById('update_panel').style.display = 'flex';
 
-                        if (!expirationDate || new Date(expirationDate) < currentTime) {
+                document.querySelector('#close_update_panel').addEventListener('click', function() {
+                    document.getElementById('update_panel').style.display = 'none';
 
-                            document.getElementById('update_panel').style.display = 'flex';
-
-                            document.querySelector('#close_update_panel').addEventListener('click', function() {
-                                document.getElementById('update_panel').style.display = 'none';
-
-                                let twelveHoursLater = new Date(currentTime.getTime() + (12 * 60 * 60 * 1000));
-                                localStorage.setItem('update_panel_expiration', twelveHoursLater.toISOString());
-                            });
-                        }
-                        document.getElementById('latest').innerHTML = data.tag_name;
-                    }
+                    let date = new Date(currentTime.getTime() + (12 * 60 * 60 * 1000)); // 12 hours
+                    localStorage.setItem('update_panel_expiration', date.toISOString());
                 });
+            }
         </script>
     @endif
 @endif
