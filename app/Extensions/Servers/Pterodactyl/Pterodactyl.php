@@ -160,6 +160,12 @@ class Pterodactyl extends Server
                 'required' => true,
             ],
             [
+                'name' => 'cpu_pinning',
+                'friendlyName' => 'CPU pinning',
+                'type' => 'text',
+                'required' => false,
+            ],
+            [
                 'name' => 'databases',
                 'friendlyName' => 'Pterodactyl Database',
                 'type' => 'text',
@@ -227,6 +233,7 @@ class Pterodactyl extends Server
         }
 
         $cpu = $configurableOptions['cpu'] ?? $params['cpu'];
+        $cpu_pinning = $configurableOptions['cpu_pinning'] ?? $params['cpu_pinning'] ?? null;
         $io = $configurableOptions['io'] ?? $params['io'];
         $disk = $configurableOptions['disk'] ?? $params['disk'];
         $swap = $configurableOptions['swap'] ?? $params['swap'];
@@ -238,8 +245,7 @@ class Pterodactyl extends Server
         $startup = $configurableOptions['startup'] ?? $eggData['attributes']['startup'];
         $node = $configurableOptions['node'] ?? $params['node'];
         $servername = $configurableOptions['servername'] ?? $params['servername'] ?? false;
-        $servername = empty($servername) ?  $orderProduct->product->name . ' #' . $orderProduct->id : $servername;
-
+        $servername = empty($servername) ? $orderProduct->product->name . ' #' . $orderProduct->id : $servername;
 
         if ($node) {
             $allocation = $this->getRequest($this->config('host') . '/api/application/nodes/' . $params['node'] . '/allocations');
@@ -262,6 +268,7 @@ class Pterodactyl extends Server
                     'disk' => (int) $disk,
                     'io' => (int) $io,
                     'cpu' => (int) $cpu,
+                    'threads' => $cpu_pinning,
                 ],
                 'feature_limits' => [
                     'databases' => $databases ? (int) $databases : null,
@@ -287,6 +294,7 @@ class Pterodactyl extends Server
                     'disk' => (int) $disk,
                     'io' => (int) $io,
                     'cpu' => (int) $cpu,
+                    'threads' => $cpu_pinning,
                 ],
                 'feature_limits' => [
                     'databases' => $databases ? (int) $databases : null,
