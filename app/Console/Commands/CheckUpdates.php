@@ -22,7 +22,7 @@ class CheckUpdates extends Command
      */
     protected $description = 'Check if there is an update available for the paymenter';
 
-    protected $url = 'https://api.github.com/repos/Paymenter/Paymenter/releases/latest';
+    protected $url = 'https://api.paymenter.org/version';
 
     /**
      * Execute the console command.
@@ -36,17 +36,21 @@ class CheckUpdates extends Command
         if (config('app.version') === 'development') {
             $this->warn('You are using a development version.');
             $this->warn('This is not recommended for production environments, as it may contain errors or unstable features.');
-        } else {
+            return Command::SUCCESS;
+        } elseif (config('app.commit')) {
+            $this->warn('You are using a beta version.');
+            $this->warn('This is not recommended for production environments, as it may contain errors or unstable features.');
+
             try {
                 $response = Http::get($this->url);
 
                 $data = $response->json();
 
-                $appVersion = "v" . config('app.version');
+                $appVersion = config('app.commit');
 
-                if (isset($data['tag_name']) && version_compare($appVersion, $data['tag_name'], '<')) {
-                    $this->info('New update available! Version ' . $data['tag_name']);
-                    Setting::updateOrCreate(['key' => 'latest_version'], ['value' => $data['tag_name']]);
+                if (isset($data['beta']) && version_compare($appVersion, $data['beta'], '<')) {
+                    $this->info('New update available! Commit ' . $data['beta']);
+                    Setting::updateOrCreate(['key' => 'latest_version'], ['value' => $data['beta']]);
                 } else {
                     $this->info('No updates available. Your app is up to date.');
                 }
@@ -54,6 +58,25 @@ class CheckUpdates extends Command
                 $this->error('Error occurred while checking for updates: ' . $e->getMessage());
                 return Command::FAILURE;
             }
+            return Command::SUCCESS;
+        }
+
+        try {
+            $response = Http::get($this->url);
+
+            $data = $response->json();
+
+            $appVersion = config('app.version');
+
+            if (isset($data['tag_name']) && version_compare($appVersion, $data['stable'], '<')) {
+                $this->info('New update available! Version v' . $data['stable']);
+                Setting::updateOrCreate(['key' => 'latest_version'], ['value' => $data['stable']]);
+            } else {
+                $this->info('No updates available. Your app is up to date.');
+            }
+        } catch (\Exception $e) {
+            $this->error('Error occurred while checking for updates: ' . $e->getMessage());
+            return Command::FAILURE;
         }
 
         return Command::SUCCESS;

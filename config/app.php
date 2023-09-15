@@ -14,10 +14,10 @@ return [
     |
     */
 
-    'version' => 'development',
+    'version' => 'beta',
 
     // Used for beta versions
-    'commit' => '',
+    'commit' => '2aaaa15',
 
 
     /*
