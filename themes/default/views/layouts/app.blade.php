@@ -104,10 +104,12 @@
 </head>
 
 <body class="font-sans bg-secondary-100 dark:bg-secondary-50 text-secondary-700">
+
     @if(config('settings::theme:snow') == 1)
     <canvas class="snow" id="snow" width="1920" height="1080"></canvas>
     @endif
     <div id="app" class="min-h-screen">
+        <x-paymenter-update />
         @if (!$clients || config('settings::sidebar') == 0)
             @include('layouts.navigation')
         @endif

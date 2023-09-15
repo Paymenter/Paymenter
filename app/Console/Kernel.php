@@ -17,6 +17,7 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         $schedule->command('p:cronjob')->everyMinute();
+        $schedule->command('p:check-updates')->daily();
         $schedule->command('p:stats')->dailyAt($this->registerStatsCommand());
     }
 

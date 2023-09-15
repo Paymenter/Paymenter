@@ -204,7 +204,7 @@
 
                         <hr class="my-6 border-b-1 border-gray-300 dark:border-gray-600" />
 
-                        <x-input type="number" name="credits" id="credits" label="{{ __('Credits') }}"
+                        <x-input type="number" name="credits" step="0.01" id="credits" label="{{ __('Credits') }}"
                             value="{{ $user->credits }}" />
 
                         <hr class="my-6 border-b-1 border-gray-300 dark:border-gray-600" />

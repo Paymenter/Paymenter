@@ -78,33 +78,38 @@
                         <div class="inline-flex items-center justify-center">
                             <img class="w-8 h-8 rounded-md" src="https://www.gravatar.com/avatar/{{md5(Auth::user()->email)}}?s=200&d=mp" alt="Avatar"/>
                             <p class="p-2 font-bold">
-                                {{ Auth::user()->name }}
+                                {{ Auth::user()->first_name }}
                             </p>
                         </div>
                         <div class="absolute left-0 hidden w-60 mt-2 origin-top-right bg-secondary-200 border border-secondary-300 rounded-md text-secondary-700 font-normal text-start z-10"
                              role="menu" aria-orientation="vertical" aria-labelledby="product" tabindex="-1" id="account">
-                            <div class="px-2 pb-2">
-                                <a href="{{ route('clients.profile') }}"
-                                   class="px-2 py-2 hover:bg-secondary-300 flex items-center gap-x-2 rounded">
+                            <div class="px-2 py-2">
+
+                                <a href="{{ route('clients.profile') }}" class="px-2 py-2 hover:bg-secondary-300 flex items-center gap-x-2 rounded transition-all ease-in-out">
                                     <i class="ri-account-circle-line"></i> {{__('Profile')}}
                                 </a>
-                                <a href="/home" class="px-2 py-2 hover:bg-secondary-300 flex items-center gap-x-2 rounded"><i
-                                        class="ri-layout-2-line"></i> {{ __('Client area') }}</a>
+                                <a href="{{ route('clients.home') }}" class="px-2 py-2 hover:bg-secondary-300 flex items-center gap-x-2 rounded transition-all ease-in-out">
+                                    <i class="ri-layout-2-line"></i> {{ __('Client area') }}
+                                </a>
+
                                 {{-- <a href="#" class="px-2 py-2 hover:bg-secondary-300 flex items-center gap-x-2 rounded"><i class="ri-instance-line"></i> {{ __('Services') }}</a> --}}
+
                                 @if (Auth::user()->has('ADMINISTRATOR'))
-                                    <a href="{{ route('admin.index') }}"
-                                       class="px-2 py-2 hover:bg-secondary-300 flex items-center gap-x-2 rounded"><i
-                                            class="ri-key-2-line"></i> {{ __('Admin area') }}</a>
-                                    <a href="{{ route('clients.api.index') }}"
-                                       class="px-2 py-2 hover:bg-secondary-300 flex items-center gap-x-2 rounded"><i
-                                            class="ri-code-s-slash-line"></i>
-                                        {{ __('API') }}</a>
+                                    <a href="{{ route('admin.index') }}" class="px-2 py-2 hover:bg-secondary-300 flex items-center gap-x-2 rounded transition-all ease-in-out">
+                                        <i class="ri-key-2-line"></i> {{ __('Admin area') }}
+                                    </a>
+                                    <a href="{{ route('clients.api.index') }}" class="px-2 py-2 hover:bg-secondary-300 flex items-center gap-x-2 rounded transition-all ease-in-out">
+                                        <i class="ri-code-s-slash-line"></i> {{ __('API') }}
+                                    </a>
                                 @endif
+
                                 <hr class="mx-2 my-1 border-secondary-400" />
-                                <a type="button" href="{{ route('logout') }}"
-                                   class="px-2 py-2 hover:bg-secondary-300 flex items-center gap-x-2 rounded"
-                                   onclick="event.preventDefault();document.getElementById('logout-form').submit();"><i
-                                        class="ri-logout-box-line"></i> {{ __('Log Out') }}</a>
+
+                                <a type="button" href="{{ route('logout') }}" onclick="event.preventDefault();document.getElementById('logout-form').submit();"
+                                   class="px-2 py-2 hover:bg-secondary-300 flex items-center gap-x-2 rounded transition-all ease-in-out"
+                                >
+                                    <i class="ri-logout-box-line"></i> {{ __('Log Out') }}
+                                </a>
                                 <form id="logout-form" action="{{ route('logout') }}" method="POST" class="hidden">
                                     @csrf
                                 </form>
