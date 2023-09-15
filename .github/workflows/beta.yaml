@@ -33,7 +33,10 @@ jobs:
           excludes: prerelease, draft
 
       - name: Create release branch and bump version
-        run: sed -i "s/    'version' => 'development',/    'version' => 'v0.8',/" config/app.php
+        run: sed -i "s/    'version' => 'development',/    'version' => 'beta',/" config/app.php
+
+      - name: Add commit sha to app.php
+        run: sed -i "s/    'commit' => '',/    'commit' => '${{ github.sha }}',/" config/app.php
 
       - name: Create release archive
         run: |
