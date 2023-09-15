@@ -1,6 +1,6 @@
 @if (config('app.version') !== config('settings::latest_version') && config('settings::latest_version') !== null)
     @if(Auth::user()->has('ADMINISTRATOR'))
-        @if(config('app.commit'))
+        @if(config('app.commit') && config('app.version') === 'beta')
             <div id="modal_update" tabindex="-1" class="fixed top-0 left-0 right-0 z-50 hidden p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full">
                 <div class="relative w-full max-w-xl max-h-full">
                     <div class="relative bg-white rounded-lg shadow dark:bg-secondary-200">
@@ -72,7 +72,7 @@
                             )
                         </span>
                         <div class="mb-2 text-sm font-normal">
-                            @if(config('app.commit'))
+                            @if(config('app.commit') && config('app.version') === 'beta')
                                 {{ __('A new paymenter beta version is available for download.') }}
                             @else
                                 {{ __('A new paymenter stable version is available for download.') }}
@@ -81,7 +81,7 @@
                         <div class="grid grid-cols-2 gap-2">
                             <div>
                                 <a
-                                    @if(config('app.commit'))
+                                    @if(config('app.commit') && config('app.version') === 'beta')
                                         data-modal-target="modal_update"
                                         data-modal-toggle="modal_update"
                                     @else

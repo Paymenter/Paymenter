@@ -37,7 +37,7 @@ class CheckUpdates extends Command
             $this->warn('You are using a development version.');
             $this->warn('This is not recommended for production environments, as it may contain errors or unstable features.');
             return Command::SUCCESS;
-        } elseif (config('app.commit')) {
+        } elseif (config('app.commit') && config('app.version') === 'beta') {
             $this->warn('You are using a beta version.');
             $this->warn('This is not recommended for production environments, as it may contain errors or unstable features.');
 
