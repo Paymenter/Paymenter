@@ -28,6 +28,7 @@ Route::get('/manifest.json', [App\Http\Controllers\BasisController::class, 'mani
 Route::get('/profile', [App\Http\Controllers\Clients\HomeController::class, 'profile'])->name('clients.profile')->middleware(['auth', 'password.confirm']);
 Route::post('/profile', [App\Http\Controllers\Clients\HomeController::class, 'update'])->name('clients.profile.update')->middleware(['auth', 'password.confirm']);
 Route::post('/profile/tfa', [App\Http\Controllers\Clients\HomeController::class, 'update2FA'])->name('clients.profile.tfa')->middleware(['auth', 'password.confirm']);
+Route::delete('/profile/sessions', [App\Http\Controllers\Clients\HomeController::class, 'destroySessions'])->name('clients.profile.sessions')->middleware(['auth', 'password.confirm']);
 Route::get('/affiliate', [App\Http\Controllers\Clients\HomeController::class, 'affiliate'])->name('clients.affiliate')->middleware(['auth']);
 Route::post('/affiliate/store', [App\Http\Controllers\Clients\HomeController::class, 'affiliateStore'])->name('clients.affiliate.store')->middleware(['auth']);
 Route::get('/credits', [App\Http\Controllers\Clients\HomeController::class, 'credits'])->name('clients.credits')->middleware(['auth']);

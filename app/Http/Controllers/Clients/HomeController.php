@@ -91,6 +91,23 @@ class HomeController extends Controller
         return redirect()->back()->with('error', 'Invalid code');
     }
 
+    /**
+     * Destroy all sessions except current
+     *
+     * @param Request $request
+     * @return void
+     */
+    public function destroySessions(Request $request)
+    {
+        $user = $request->user();
+        $sessions = $user->sessions()->where('id', '!=', $request->session()->getId())->get();
+        foreach ($sessions as $session) {
+            $session->delete();
+        }
+
+        return redirect()->back()->with('success', 'Sessions destroyed successfully');
+    }
+
 
     public function password()
     {

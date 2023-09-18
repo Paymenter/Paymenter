@@ -44,6 +44,39 @@
             </div>
             <div class="lg:col-span-9 col-span-12">
                 <div class="content-box">
+                    <h1 class="text-xl font-semibold">{{ __('My Details') }}</h1>
+                    <div class="grid grid-cols-1 gap-4">
+                        <div class="mt-6">
+                            <form method="POST" action="{{ route('clients.profile.update') }}">
+                                @csrf
+                                <x-input type="text" class="mt-4" placeholder="{{ __('First name') }}"
+                                    name="first_name" id="first_name" label="{{ __('Name') }}"
+                                    value="{{ Auth::user()->first_name }}" />
+                                <x-input type="text" class="mt-4" placeholder="{{ __('Last name') }}"
+                                    name="last_name" id="last_name" label="{{ __('Name') }}"
+                                    value="{{ Auth::user()->last_name }}" />
+                                <x-input type="text" class="mt-4" placeholder="{{ __('Address') }}" name="address"
+                                    id="address" label="{{ __('Name') }}" value="{{ Auth::user()->address }}" />
+                                <x-input type="text" class="mt-4" placeholder="{{ __('City') }}" name="city"
+                                    id="city" label="{{ __('City') }}" value="{{ Auth::user()->city }}" />
+                                <x-input type="text" class="mt-4" placeholder="{{ __('Country') }}" name="country"
+                                    id="country" label="{{ __('Country') }}" value="{{ Auth::user()->country }}" />
+                                <x-input type="text" class="mt-4" placeholder="{{ __('Phone') }}" name="phone"
+                                    id="phone" label="{{ __('Phone') }}" value="{{ Auth::user()->phone }}" />
+                                <div class="flex justify-end mt-6">
+                                    <button type="submit" class="button button-primary">
+                                        {{ __('Update') }}
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div class="content-box mt-4">
+                    <h1 class="text-xl font-semibold">{{ __('2FA') }}</h1>
+                    <p class="text-base leading-relaxed text-gray-500 dark:text-gray-400">
+                        {{ __('Two factor authentication adds an extra layer of security to your account. Once enabled, you will be prompted to enter a code from your authenticator app when logging in.') }}
+                    </p>
                     @isset($secret)
                         <button data-modal-target="tfa" data-modal-toggle="tfa" class="button button-primary"
                             type="button">
@@ -90,8 +123,8 @@
                                             @csrf
                                             <input type="hidden" name="secret" value="{{ $secret }}">
                                             <div class="mt-4">
-                                                <x-input id="code" label="{{ __('Code') }}" name="code" required
-                                                    type="text" />
+                                                <x-input id="code" label="{{ __('Code') }}" name="code"
+                                                    required type="text" />
                                             </div>
                                             <div class="mt-4">
                                                 <x-input id="password" label="{{ __('Password') }}" name="password"
@@ -125,8 +158,8 @@
                                         <button type="button"
                                             class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white"
                                             data-modal-hide="tfa">
-                                            <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"
-                                                xmlns="http://www.w3.org/2000/svg">
+                                            <svg aria-hidden="true" class="w-5 h-5" fill="currentColor"
+                                                viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
                                                 <path fill-rule="evenodd"
                                                     d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
                                                     clip-rule="evenodd"></path>
@@ -161,36 +194,43 @@
                             </div>
                         </div>
                     @endisset
-                    <div class="grid grid-cols-1 gap-4">
-                        <div class="mt-6">
-                            <form method="POST" action="{{ route('clients.profile.update') }}">
-                                @csrf
-                                <x-input type="text" class="mt-4" placeholder="{{ __('First name') }}"
-                                    name="first_name" id="first_name" label="{{ __('Name') }}"
-                                    value="{{ Auth::user()->first_name }}" />
-                                <x-input type="text" class="mt-4" placeholder="{{ __('Last name') }}"
-                                         name="last_name" id="last_name" label="{{ __('Name') }}"
-                                         value="{{ Auth::user()->last_name }}" />
-                                <x-input type="text" class="mt-4" placeholder="{{ __('Address') }}"
-                                    name="address" id="address" label="{{ __('Name') }}"
-                                    value="{{ Auth::user()->address }}" />
-                                <x-input type="text" class="mt-4" placeholder="{{ __('City') }}"
-                                    name="city" id="city" label="{{ __('City') }}"
-                                    value="{{ Auth::user()->city }}" />
-                                <x-input type="text" class="mt-4" placeholder="{{ __('Country') }}"
-                                    name="country" id="country" label="{{ __('Country') }}"
-                                    value="{{ Auth::user()->country }}" />
-                                <x-input type="text" class="mt-4" placeholder="{{ __('Phone') }}"
-                                    name="phone" id="phone" label="{{ __('Phone') }}"
-                                    value="{{ Auth::user()->phone }}" />
-                                <div class="flex justify-end mt-6">
-                                    <button type="submit" class="button button-primary">
-                                        {{ __('Update') }}
-                                    </button>
+                </div>
+                <div class="content-box mt-4">
+                    <h1 class="text-xl font-semibold">{{ __('Browser Sessions') }}</h1>
+                    <p class="text-base leading-relaxed text-gray-500 dark:text-gray-400">
+                        {{ __('Manage and logout your active sessions on other browsers and devices.') }}
+                    </p>
+                    <div class="flex flex-col gap-4 p-4">
+                        @foreach (Auth::user()->sessions as $session)
+                            <div class="flex items-center">
+                                <div>
+                                    <i class="ri-computer-line text-2xl text-gray-400"></i>
                                 </div>
-                            </form>
-                        </div>
+                                <div class="ml-3">
+                                    <div class="text-sm text-gray-600 dark:text-gray-400">
+                                        {{ $session->formatted_device }}
+                                    </div>
+                                    <div>
+                                        <div class="text-xs text-gray-500">
+                                            {{ $session->ip_address }},
+                                            @if($session->is_current_device)
+                                                <span class="text-green-500 font-semibold">This device</span>
+                                            @else 
+                                                {{ $session->formatted_last_active }}
+                                            @endif
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        @endforeach
                     </div>
+                    <form action="{{ route('clients.profile.sessions') }}" method="POST">
+                        @csrf
+                        @method('DELETE')
+                        <button class="button button-secondary">
+                            {{ __('Logout Other Browser Sessions') }}
+                        </button>
+                    </form>
                 </div>
             </div>
         </div>
