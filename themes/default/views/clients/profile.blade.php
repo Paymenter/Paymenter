@@ -204,7 +204,11 @@
                         @foreach (Auth::user()->sessions as $session)
                             <div class="flex items-center">
                                 <div>
-                                    <i class="ri-computer-line text-2xl text-gray-400"></i>
+                                    @if($session->is_mobile)
+                                        <i class="ri-smartphone-line text-2xl text-gray-400"></i>
+                                    @else
+                                        <i class="ri-computer-line text-2xl text-gray-400"></i>
+                                    @endif
                                 </div>
                                 <div class="ml-3">
                                     <div class="text-sm text-gray-600 dark:text-gray-400">

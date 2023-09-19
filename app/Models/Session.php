@@ -36,6 +36,11 @@ class Session extends Model
         return $this->last_activity->diffForHumans();
     }
 
+    public function getIsMobileAttribute()
+    {
+        return preg_match('/(android|webos|avantgo|blackberry|bolt|boost|cricket|docomo|fone|hiptop|mini|mobi|palm|phone|pie|tablet|up\.browser|up\.link|webos|wos)/i', $this->user_agent);
+    }
+
     public function getFormattedDeviceAttribute()
     {
         if (preg_match('/Linux/i', $this->user_agent)) $os = 'Linux';
