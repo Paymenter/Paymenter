@@ -8,12 +8,6 @@
                         {{ __('Email Logs') }}
                     </a>
                 </div>
-                <div class="flex-none">
-                    <a href="{{ route('admin.email.templates') }}"
-                       class="inline-flex justify-center w-full p-4 px-2 py-2 text-xs font-bold text-gray-900 uppercase border-b-2 dark:text-darkmodetext dark:hover:bg-darkbutton hover:border-logo hover:text-logo @if (request()->routeIs('admin.email.templates*')) border-logo @else border-y-transparent @endif">
-                        {{ __('Templates') }}
-                    </a>
-                </div>
             </div>
         </div>
     </div>

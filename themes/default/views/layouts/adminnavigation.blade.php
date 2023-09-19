@@ -95,9 +95,7 @@
                     </button>
                     <div class="absolute right-0 hidden w-56 mt-2 origin-top-right bg-secondary-50 rounded-lg shadow-lg dark:bg-secondary-300 ring-1 ring-black ring-opacity-5" role="menu" aria-orientation="vertical" aria-labelledby="menu-button" tabindex="-1" id="email">
                         <div class="py-1" role="none">
-                            <a href="{{ route('admin.email.templates') }}" class="block px-4 py-2 text-base text-gray-700 dark:text-darkmodetext dark:hover:bg-secondary-200 hover:bg-gray-100 hover:text-gray-900" role="menuitem" tabindex="-1" id="menu-item-0">{{ __('Templates') }}</a>
                             <a href="{{ route('admin.email') }}" class="block px-4 py-2 text-base text-gray-700 dark:text-darkmodetext dark:hover:bg-secondary-200 hover:bg-gray-100 hover:text-gray-900" role="menuitem" tabindex="-1" id="menu-item-1">{{ __('Logs') }}</a>
-                            <a href="{{ route('admin.email') }}" class="block px-4 py-2 text-base text-gray-700 dark:text-darkmodetext dark:hover:bg-secondary-200 hover:bg-gray-100 hover:text-gray-900" role="menuitem" tabindex="-1" id="menu-item-2">{{ __('Style') }}</a>
                         </div>
                     </div>
                 </div>
