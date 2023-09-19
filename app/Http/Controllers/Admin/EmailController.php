@@ -4,13 +4,14 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\EmailLog;
+use App\Models\Setting;
 use Illuminate\Http\Request;
 
 class EmailController extends Controller
 {
     /**
      * Get all sended emails
-     * 
+     *
      * @return \Illuminate\View\View
      */
     public function index(): \Illuminate\View\View

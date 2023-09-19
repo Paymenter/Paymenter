@@ -86,6 +86,19 @@
                         </div>
                     </div>
                 </div>
+                <div class="relative inline-block text-left">
+                    <button type="button" class="dark:bg-secondary-100 dark:text-darkmodetext dark:hover:bg-secondary-200 inline-flex w-full justify-center bg-secondary-50 px-2 py-2 text-base font-medium rounded-md text-gray-700 @if (request()->routeIs('admin.email*')) bg-gray-200 @endif" id="menu-button" aria-expanded="true" aria-haspopup="true" data-dropdown-toggle="email">
+                        <i class="pr-1 ri-mail-line mr-1" @if (request()->routeIs('admin.email*')) style="color: #5270FD" @endif></i> {{ __('Emails') }}
+                        <svg class="w-5 h-5 ml-1 -mr-1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                            <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clip-rule="evenodd" />
+                        </svg>
+                    </button>
+                    <div class="absolute right-0 hidden w-56 mt-2 origin-top-right bg-secondary-50 rounded-lg shadow-lg dark:bg-secondary-300 ring-1 ring-black ring-opacity-5" role="menu" aria-orientation="vertical" aria-labelledby="menu-button" tabindex="-1" id="email">
+                        <div class="py-1" role="none">
+                            <a href="{{ route('admin.email') }}" class="block px-4 py-2 text-base text-gray-700 dark:text-darkmodetext dark:hover:bg-secondary-200 hover:bg-gray-100 hover:text-gray-900" role="menuitem" tabindex="-1" id="menu-item-1">{{ __('Logs') }}</a>
+                        </div>
+                    </div>
+                </div>
 
                 <div class="relative inline-block text-left">
                     <button type="button" class="dark:bg-secondary-100 dark:text-darkmodetext dark:hover:bg-secondary-200 inline-flex w-full justify-center bg-secondary-50 px-2 py-2 text-base font-medium rounded-md text-gray-700 mr-4 @if (request()->routeIs('admin.settings') || request()->routeIs('admin.extensions*')) bg-gray-200 @endif" id="menu-button" aria-expanded="true" aria-haspopup="true" data-dropdown-toggle="other">
