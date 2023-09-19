@@ -1,0 +1,18 @@
+<?php
+
+namespace {{ namespace }};
+
+use App\Classes\Extensions\Event;
+
+class {{ class }} extends Event
+{
+    /**
+     * Get all the configuration for the extension
+     * 
+     * @return array
+     */
+    public function getConfig()
+    {
+        return [];
+    } 
+}

@@ -46,7 +46,7 @@ class OrderProduct extends Model
     public function lastInvoice()
     {
         $lastInvoiceItem = $this->hasOne(InvoiceItem::class, 'product_id', 'id')
-            ->orderByDesc('id')  // Sortowanie odwrotne względem ID (najnowsza pozycja faktury)
+            ->orderByDesc('id')
             ->first();
 
         return $lastInvoiceItem->invoice;

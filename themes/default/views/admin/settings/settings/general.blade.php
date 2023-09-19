@@ -4,19 +4,19 @@
         <div class="grid grid-cols-1 md:grid-cols-2">
             <div class="relative m-4 group">
                 <input type="text" class="form-input peer @error('app_name') is-invalid @enderror" placeholder=" "
-                    name="app_name" required value="{{ config('settings::app_name') }}" />
+                       name="app_name" required value="{{ config('settings::app_name') }}" />
                 <label class="form-label">{{ __('Name') }}</label>
             </div>
             <!-- App Logo -->
             <div class="relative m-4 group">
                 <input type="file" class="form-input p-0 peer @error('app_logo') is-invalid @enderror"
-                    placeholder=" " name="app_logo" accept="image/*" />
+                       placeholder=" " name="app_logo" accept="image/*" />
                 <label class="form-label">{{ __('Logo') }}</label>
             </div>
             <div class="relative m-4 group">
                 <!-- TImezone -->
                 <select name="timezone" class="form-input peer @error('timezone') is-invalid @enderror" placeholder=" "
-                    name="timezone" required>
+                        name="timezone" required>
                     @foreach ($timezones as $timezone)
                         <option value="{{ $timezone }}" {{ $timezone == config('settings::timezone') ? 'selected' : '' }}>
                             {{ $timezone }}</option>
@@ -26,7 +26,7 @@
             <div class="relative m-4 group">
                 <!-- sidebar -->
                 <select name="sidebar" class="form-input peer @error('sidebar') is-invalid @enderror" placeholder=" "
-                    name="sidebar" required>
+                        name="sidebar" required>
                     <option value="0" {{ config('settings::sidebar') == 0 ? 'selected' : '' }}>
                         {{ __('Topbar') }}</option>
                     <option value="1" {{ config('settings::sidebar') == 1 ? 'selected' : '' }}>
@@ -37,38 +37,49 @@
             <link rel="stylesheet" href="https://unpkg.com/easymde/dist/easymde.min.css">
             <script src="https://unpkg.com/easymde/dist/easymde.min.js"></script>
             <div class="relative m-4 group md:col-span-2 col-span-1">
-                <label class="dark:text-darkmodetext block text-md font-medium text-gray-700">
+                <label class="dark:text-darkmodetext block text-md font-medium text-gray-700" for="home_page_text">
                     {{ __('Home Page Text') }}
                 </label>
-                <textarea name="home_page_text" class="form-input w-full @error('home_page_text') is-invalid @enderror" placeholder=" "
-                    name="home_page_text" id="home_page_text">{{ config('settings::home_page_text') }}</textarea>
+                <textarea
+                    name="home_page_text"
+                    class="form-input w-full @error('home_page_text') is-invalid @enderror"
+                    placeholder=" "
+                    name="home_page_text"
+                    id="home_page_text"
+                >{{ config('settings::home_page_text') }}</textarea>
             </div>
             <script>
                 document.addEventListener("DOMContentLoaded", function() {
                     var easyMDE = new EasyMDE({
                         element: document.getElementById("home_page_text"),
                         spellChecker: false,
-                toolbar: ["bold", "italic", "heading", "|", "quote", "unordered-list", "ordered-list", "|", "link", "image", "table", "|", "preview", "side-by-side", "fullscreen", "|", "guide"]
+                        toolbar: ["bold", "italic", "heading", "|", "quote", "unordered-list", "ordered-list", "|", "link", "image", "table", "|", "preview", "side-by-side", "fullscreen", "|", "guide"]
                     });
                 });
             </script>
+            <h2 class="col-span-1 md:col-span-2 text-xl text-gray-900 dark:text-darkmodetext ">{{ __('Orders') }}</h2>
+            <div class="relative m-4 group">
+                <input type="number" class="form-input peer @error('remove_unpaid_order_after') is-invalid @enderror"
+                       placeholder=" " name="remove_unpaid_order_after" value="{{ config('settings::remove_unpaid_order_after') }}" />
+                <label class="form-label">{{ __('Days after which an unpaid server will remove itself') }}</label>
+            </div>
             <h2 class="col-span-1 md:col-span-2 text-xl text-gray-900 dark:text-darkmodetext ">{{ __('Currency') }}
             </h2>
             <div class="relative m-4 group">
                 <input type="text" class="form-input peer @error('currency_sign') is-invalid @enderror"
-                    placeholder=" " name="currency_sign" value="{{ config('settings::currency_sign') }}" />
+                       placeholder=" " name="currency_sign" value="{{ config('settings::currency_sign') }}" />
                 <label class="form-label">{{ __('Currency Sign') }}</label>
             </div>
             <div class="relative m-4 group">
                 <input type="text" class="form-input peer @error('currency') is-invalid @enderror" placeholder=" "
-                    name="currency" value="{{ config('settings::currency') }}" />
+                       name="currency" value="{{ config('settings::currency') }}" />
                 <label class="form-label">{{ __('Currency Code') }}</label>
             </div>
             <h2 class="col-span-1 md:col-span-2 text-xl text-gray-900 dark:text-darkmodetext ">{{ __('Language') }}
             </h2>
             <div class="relative m-4 group">
                 <select class="form-input peer @error('language') is-invalid @enderror" placeholder=" "
-                    name="language" required>
+                        name="language" required>
                     @foreach ($languages as $language)
                         <option value="{{ $language }}" {{ $language == config('settings::language') ? 'selected' : '' }}>
                             {{ $language }}</option>
@@ -77,11 +88,11 @@
             </div>
             <div class="relative m-4 group">
                 <input type="checkbox" class="form-input w-fit peer @error('allow_auto_lang') is-invalid @enderror"
-                    placeholder=" " name="allow_auto_lang" value="1"
-                    {{ config('settings::allow_auto_lang') ? 'checked' : '' }} data-popover-target="language"/>
+                       placeholder=" " name="allow_auto_lang" value="1"
+                       {{ config('settings::allow_auto_lang') ? 'checked' : '' }} data-popover-target="language"/>
                 <label class="form-label" style="position: unset;"  >{{ __('Allow Auto Language') }}</label>
                 <div id="language" role="tooltip" data-popover
-                    class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
+                     class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
                     {{ __('If enabled, the language will be automatically set to the language of the browser.') }}
                     <div data-popper-arrow></div>
                 </div>

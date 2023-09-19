@@ -41,7 +41,8 @@ class SettingSeeder extends Seeder
             ['key' => 'minimum_deposit', 'value' => '5'],
             ['key' => 'maximum_deposit', 'value' => '100'],
             ['key' => 'maximum_balance', 'value' => '300'],
-            ['key' => 'timezone', 'value' => 'UTC']
+            ['key' => 'timezone', 'value' => 'UTC'],
+            ['key' => 'latest_version', 'value' => config('app.version')]
         ];
         foreach ($settings as $setting) {
             $setting['created_at'] = now();

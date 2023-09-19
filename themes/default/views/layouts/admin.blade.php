@@ -78,6 +78,7 @@
 
 <body class="font-sans bg-secondary-100 dark:bg-secondary-50 text-secondary-700">
     <div id="app" class="min-h-screen">
+        <x-paymenter-update />
         @if (config('settings::sidebar') == 1)
             @include('layouts.adminsidenavigation')
         @else

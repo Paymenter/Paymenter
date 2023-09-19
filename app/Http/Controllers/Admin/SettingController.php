@@ -60,9 +60,9 @@ class SettingController extends Controller
             'currency' => 'required|max:10',
             'currency_sign' => 'required|max:4',
             'language' => 'required',
-
+            'allow_auto_lang' => 'boolean',
             'timezone' => 'required',
-
+            'remove_unpaid_order_after' => 'required|numeric|min:0',
         ]);
         if ($request->hasFile('app_logo')) {
             $imageName = time() . '.' . $request->app_logo->extension();

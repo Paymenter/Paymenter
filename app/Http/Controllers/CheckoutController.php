@@ -71,6 +71,17 @@ class CheckoutController extends Controller
         if ($product->stock_enabled && $product->stock <= 0) {
             return redirect()->back()->with('error', 'Product is out of stock');
         }
+        if ($product->limit) {
+            $orderProducts = OrderProduct::where('product_id', $product->id)->count();
+            if ($orderProducts >= $product->limit) {
+                return redirect()->back()->with('error', 'Product limit reached');
+            }
+            if (isset($cart[$product->id])) {
+                if ($cart[$product->id]->quantity + $orderProducts >= $product->limit) {
+                    return redirect()->back()->with('error', 'Product limit reached');
+                }
+            }
+        }
         if (isset($product->extension_id)) {
             $server = $product->extension;
             if ($server) {
@@ -113,16 +124,16 @@ class CheckoutController extends Controller
         if (!$server && $product->prices()->get()->first()->type != 'recurring' && count($product->configurableGroups()) == 0) {
             return redirect()->back()->with('error', 'Config Not Found');
         }
-        if(isset($product->extension_id)) {
+        if (isset($product->extension_id)) {
             $module = "App\\Extensions\\Servers\\" . $server->name . "\\" . $server->name;
             if (!class_exists($module)) {
-            return redirect()->back()->with('error', 'Config Not Found');
+                return redirect()->back()->with('error', 'Config Not Found');
             }
             $module = new $module($server);
             if (!method_exists($module, 'getUserConfig') && $product->prices()->get()->first()->type != 'recurring' && count($product->configurableGroups()) == 0) {
                 return redirect()->back()->with('error', 'Config Not Found');
             }
-            if(method_exists($module, 'getUserConfig')){
+            if (method_exists($module, 'getUserConfig')) {
                 $userConfig = json_decode(json_encode($module->getUserConfig($product)));
             }
         } else {
@@ -168,7 +179,7 @@ class CheckoutController extends Controller
         if (!$server && $prices->type != 'recurring' && count($product->configurableGroups()) == 0) {
             return redirect()->back()->with('error', 'Config Not Found');
         }
-        if(isset($product->extension_id)) {
+        if (isset($product->extension_id)) {
             $module = "App\\Extensions\\Servers\\" . $server->name . "\\" . $server->name;
             if (!class_exists($module)) {
                 return redirect()->back()->with('error', 'Config Not Found');
@@ -177,7 +188,7 @@ class CheckoutController extends Controller
             if (!method_exists($module, 'getUserConfig') && $product->prices()->get()->first()->type != 'recurring' && count($product->configurableGroups()) == 0) {
                 return redirect()->back()->with('error', 'Config Not Found');
             }
-            if(method_exists($module, 'getUserConfig')){
+            if (method_exists($module, 'getUserConfig')) {
                 $userConfig = json_decode(json_encode($module->getUserConfig($product)));
             }
         } else {
@@ -252,6 +263,20 @@ class CheckoutController extends Controller
         $cart = session()->get('cart');
         if (!$product->allow_quantity && \Illuminate\Support\Arr::has($cart, $product->id)) {
             return redirect()->route('checkout.index')->with('error', 'You already have this product in your shopping cart');
+        }
+        if ($product->stock_enabled && $product->stock <= 0) {
+            return redirect()->back()->with('error', 'Product is out of stock');
+        }
+        if ($product->limit) {
+            $orderProducts = OrderProduct::where('product_id', $product->id)->count();
+            if ($orderProducts >= $product->limit) {
+                return redirect()->back()->with('error', 'Product limit reached');
+            }
+            if (isset($cart[$product->id])) {
+                if ($cart[$product->id]->quantity + $orderProducts >= $product->limit) {
+                    return redirect()->back()->with('error', 'Product limit reached');
+                }
+            }
         }
         if (\Illuminate\Support\Arr::has($cart, $product->id)) {
             if ($product->quantity != 0) {
@@ -400,7 +425,7 @@ class CheckoutController extends Controller
             $invoiceTotalAndProducts = $invoice->getItemsWithProducts();
             $products = $invoiceTotalAndProducts->products;
             $total = $invoiceTotalAndProducts->total;
-            
+
             if ($total == 0) {
                 $invoice->status = 'paid';
                 $invoice->save();
@@ -527,6 +552,12 @@ class CheckoutController extends Controller
         if (isset($cart[$product->id])) {
             if ($product->stock_enabled && $product->stock < $request->quantity) {
                 return redirect()->back()->with('error', 'Product is out of stock');
+            }
+            if ($product->limit) {
+                $orderProducts = OrderProduct::where('product_id', $product->id)->count();
+                if ($orderProducts + $request->quantity > $product->limit) {
+                    return redirect()->back()->with('error', 'Product limit reached');
+                }
             }
             if ($cart[$product->id]->quantity != 0) {
                 $cart[$product->id]->quantity = $request->quantity;

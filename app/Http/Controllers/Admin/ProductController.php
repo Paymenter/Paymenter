@@ -86,8 +86,8 @@ class ProductController extends Controller
     public function store(Request $request): RedirectResponse
     {
         $data = $request->validate([
-            'name' => 'string|required',
-            'description' => 'required|string|min:10',
+            'name' => 'required|string',
+            'description' => 'required|string',
             'price' => 'required',
             'category_id' => 'required|integer',
             'image' => 'image|mimes:jpeg,png,jpg,gif,svg|max:5242',
@@ -119,8 +119,8 @@ class ProductController extends Controller
     public function update(Request $request, Product $product)
     {
         $data = request()->validate([
-            'name' => 'required',
-            'description' => 'required|string|min:10',
+            'name' => 'required|string',
+            'description' => 'required|string',
             'category_id' => 'required|integer',
             'image' => 'image|mimes:jpeg,png,jpg,gif,svg|max:5242',
             'stock' => 'integer|required_if:stock_enabled,true',
@@ -167,7 +167,8 @@ class ProductController extends Controller
     {
         $request->validate([
             'pricing' => 'required|in:recurring,free,one-time',
-            'allow_quantity' => 'in:0,1,2'
+            'allow_quantity' => 'in:0,1,2',
+            'limit' => 'nullable|integer',
         ]);
         if ($request->get('pricing') !== $product->prices->type) {
             $request->validate([
@@ -198,6 +199,7 @@ class ProductController extends Controller
         );
         $product->update([
             'allow_quantity' => $request->get('allow_quantity'),
+            'limit' => $request->get('limit'),
         ]);
 
         return redirect()->route('admin.products.pricing', $product->id)->with('success', 'Product pricing updated successfully');

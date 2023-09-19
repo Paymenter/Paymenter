@@ -19,6 +19,7 @@ class Product extends Model
         'stock_enabled',
         'allow_quantity',
         'order',
+        'limit',
     ];
 
     public function category()
