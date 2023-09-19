@@ -8,6 +8,7 @@ use Illuminate\Contracts\Encryption\DecryptException;
 use Qirolab\Theme\Theme;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Crypt;
@@ -142,5 +143,9 @@ class AppServiceProvider extends ServiceProvider
         } catch (\Exception $e) {
             Log::error($e->getMessage());
         }
+        // @markdownify (markdown and purify html)
+        Blade::directive('markdownify', function ($value): string {
+            return "<?= \Stevebauman\Purify\Facades\Purify::clean(\Illuminate\Support\Str::markdown(nl2br(($value)))) ?>";
+        });
     }
 }

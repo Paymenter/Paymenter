@@ -5,6 +5,7 @@ namespace App\Console;
 use App\Models\Setting;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
+use Illuminate\Support\Str;
 
 class Kernel extends ConsoleKernel
 {
@@ -16,8 +17,8 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         $schedule->command('p:cronjob')->everyMinute();
-        $this->registerStatsCommand();
-        $schedule->command('p:stats')->daily()->at(config('settings::stats.runAt'));
+        $schedule->command('p:check-updates')->daily();
+        $schedule->command('p:stats')->dailyAt($this->registerStatsCommand());
     }
 
     /**
@@ -32,8 +33,15 @@ class Kernel extends ConsoleKernel
 
     protected function registerStatsCommand()
     {
-        if (!config('settings::stats.runAt')) {
-            Setting::updateOrCreate(['key' => 'stats.runAt'], ['value' => rand(0, 23) . ':' . rand(0, 59)]);
+        $uuid = config('settings::stats.token');
+        if (!$uuid) {
+            $uuid = Str::uuid();
+            Setting::updateOrCreate(['key' => 'stats.token'], ['value' => $uuid]);
         }
+        $time = hexdec(str_replace('-', '', substr($uuid, 27))) % 1440;
+        $hour = floor($time / 60);
+        $minute = $time % 60;
+
+        return "$hour:$minute";
     }
 }

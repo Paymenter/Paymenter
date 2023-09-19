@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Helpers\FileUploadHelper;
 use App\Helpers\NotificationHelper;
 use App\Models\User;
 use App\Models\Ticket;
@@ -64,14 +65,21 @@ class TicketController extends Controller
     {
         $request->validate([
             'message' => 'required',
+            'attachments' => 'nullable|array',
         ]);
 
         $ticket->status = 'replied';
         $ticket->save();
-        $ticket->messages()->create([
+        $ticketMessage = $ticket->messages()->create([
             'user_id' => auth()->user()->id,
             'message' => $request->get('message'),
         ]);
+
+        if($request->hasFile('attachments')) {
+            foreach($request->file('attachments') as $file) {
+                FileUploadHelper::upload($file, $ticketMessage, TicketMessage::class);
+            }
+        }
 
         NotificationHelper::sendNewTicketMessageNotification($ticket, User::where('id', $ticket->user_id)->first());
 

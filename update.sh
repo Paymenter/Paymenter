@@ -97,6 +97,10 @@ composer install --no-dev --optimize-autoloader
 echo '$upgrader> php artisan migrate --force --seed'
 php artisan migrate --force --seed
 
+# Link the storage directory.
+echo '$upgrader> php artisan storage:link'
+php artisan storage:link
+
 # Clear config and view caches.
 echo '$upgrader> php artisan config:clear'
 php artisan config:clear

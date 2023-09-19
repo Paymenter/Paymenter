@@ -103,6 +103,11 @@ class User extends Authenticatable
         return $this->hasMany(Invoice::class, 'user_id', 'id');
     }
 
+    public function sessions()
+    {
+        return $this->hasMany(Session::class);
+    }
+
     public function role()
     {
         return $this->belongsTo(Role::class, 'role_id', 'id');

@@ -78,16 +78,47 @@
                                         <div class="text-sm flex justify-end font-normal text-opacity-50 mr-4">({{$message->messageDate()}}) {{__('You')}}</div>
                                         <div class="w-full flex justify-end">
                                             <div class="max-w-fit text-gray-100 break-all dark:text-white-400 rounded-2xl bg-primary-400 p-2 px-4 mr-2">
-                                                <p class="text-end" style="color: white !important;">
+                                                <span class="text-end" style="color: white !important;">
                                                     {!! Str::Markdown(str_replace("\n", "  \n", $message->message), ['html_input' => 'escape']) !!}
-                                                </p>
+
+                                                    @if($message->files()->count() > 0)
+                                                        <br>
+                                                        <hr class="border-slate-100">
+
+                                                        <div class="flex justify-end text-end">
+                                                            <span class="text-slate-100 ">{{ __('Attachments') }} ({{ $message->files()->count() }})</span>
+                                                        </div>
+
+                                                        <div class="flex flex-row flex-wrap gap-3">
+                                                            @foreach($message->files as $attachment)
+                                                                <div class="col-span-1">
+                                                                    <a href="{{ $attachment->url }}" class="text-slate-200 hover:text-white" download>
+                                                                        @if($attachment->isImage())
+                                                                            <img src="{{ $attachment->url }}" class="h-10 rounded-sm" alt="">
+                                                                        @else
+                                                                            <div class="text-slate-200 hover:text-white text-sm break-all text-center">
+                                                                                 <div class="justify-center flex">
+                                                                                     <div id="tooltip" role="tooltip" class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
+                                                                                         {{ $attachment->filename }}
+                                                                                         <div class="tooltip-arrow" data-popper-arrow></div>
+                                                                                     </div>
+                                                                                    <i data-tooltip-target="tooltip" class="ri-file-text-line text-4xl mx-auto text-slate-200"></i>
+                                                                                </div>
+                                                                            </div>
+                                                                        @endif
+                                                                    </a>
+                                                                </div>
+                                                            @endforeach
+                                                        </div>
+                                                    @endif
+                                                </span>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="justify-start w-full h-full flex col-span-1">
                                         <img src="https://www.gravatar.com/avatar/{{ md5($message->user->email) }}?s=200&d=mp"
                                              class="h-10 w-10 mt-6 shadow-md rounded-full bg-secondary-200 inline-block"
-                                             onerror='this.error=null;this.src="https://d33wubrfki0l68.cloudfront.net/c0e8a3c6172bd5bebfe787d49974adcff1ec4d3a/ca6a2/img/people/joseph-jolton.png";'>
+                                             onerror='this.error=null;this.src="https://d33wubrfki0l68.cloudfront.net/c0e8a3c6172bd5bebfe787d49974adcff1ec4d3a/ca6a2/img/people/joseph-jolton.png";' alt="">
                                     </div>
                                 </div>
                             </div>
@@ -97,14 +128,41 @@
                                     <div class="justify-end w-full flex col-span-1">
                                         <img src="https://www.gravatar.com/avatar/{{ md5($message->user->email) }}?s=200&d=mp"
                                              class="h-10 w-10 mt-6 shadow-md rounded-full bg-secondary-200 inline-block"
-                                             onerror='this.error=null;this.src="https://d33wubrfki0l68.cloudfront.net/c0e8a3c6172bd5bebfe787d49974adcff1ec4d3a/ca6a2/img/people/joseph-jolton.png";'>
+                                             onerror='this.error=null;this.src="https://d33wubrfki0l68.cloudfront.net/c0e8a3c6172bd5bebfe787d49974adcff1ec4d3a/ca6a2/img/people/joseph-jolton.png";' alt="">
                                     </div>
                                     <div class="col-span-11">
                                         <span class="text-sm ml-5 font-normal text-opacity-50">{{$message->user->name}} ({{$message->messageDate()}})</span>
                                         <div class="my-auto text-gray-500 break-all dark:text-darkmodetext ml-2 w-fit rounded-2xl bg-gray-200 dark:bg-darkmode p-2 px-4">
-                                            <p class="prose dark:prose-invert max-w-full break-word">
-                                                {!! Str::Markdown(str_replace("\n", "  \n", $message->message), ['html_input' => 'escape']) !!}
-                                            </p>
+                                            <span class="text-end" style="color: white !important;">
+                                                    {!! Str::Markdown(str_replace("\n", "  \n", $message->message), ['html_input' => 'escape']) !!}
+
+                                                @if($message->files()->count() > 0)
+                                                    <br>
+                                                    <hr class="border-slate-100">
+                                                    <span class="text-slate-100 ">{{ __('Attachments') }} ({{ $message->files()->count() }})</span>
+                                                    <div class="flex flex-row flex-wrap gap-4">
+                                                            @foreach($message->files as $attachment)
+                                                            <div class="col-span-1">
+                                                                    <a href="{{ $attachment->url }}" class="text-slate-200 hover:text-white" download>
+                                                                        @if($attachment->isImage())
+                                                                            <img src="{{ $attachment->url }}" class="h-10 rounded-sm" alt="">
+                                                                        @else
+                                                                            <div class="text-slate-200 hover:text-white text-sm break-all text-center">
+                                                                                 <div class="justify-center flex">
+                                                                                     <div id="tooltip" role="tooltip" class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
+                                                                                         {{ $attachment->filename }}
+                                                                                         <div class="tooltip-arrow" data-popper-arrow></div>
+                                                                                     </div>
+                                                                                    <i data-tooltip-target="tooltip" class="ri-file-text-line text-4xl mx-auto text-slate-200"></i>
+                                                                                </div>
+                                                                            </div>
+                                                                        @endif
+                                                                    </a>
+                                                                </div>
+                                                        @endforeach
+                                                        </div>
+                                                @endif
+                                                </span>
                                         </div>
                                     </div>
                                 </div>
@@ -120,13 +178,19 @@
     @endempty
     <br>
     <div class="overflow-hidden bg-white shadow-xl sm:rounded-lg dark:bg-secondary-100">
-        <form method="POST" action="{{ route('admin.tickets.reply', $ticket->id) }}" class="mt-10" id="reply">
+        <form method="POST" action="{{ route('admin.tickets.reply', $ticket->id) }}" class="mt-10" id="reply" enctype="multipart/form-data">
             @csrf
             <div class="bg-white mb-5 border-gray-200 sm:px-20 dark:bg-secondary-100 dark:border-black mt-5">
                 <h1 class="text-xl text-gray-500 dark:text-darkmodetext font-bold">{{ __('Reply') }}</h1>
                 <div class="grid grid-cols-1 gap-4">
                     <div class="mt-3 text-gray-500 dark:text-darkmodetext dark:bg-secondary-100">
+
+                        <div id="attachments-list" class="flex flex-row gap-x-4 mb-3"></div>
+
                         <div class="flex flex-row">
+                            <label for="attachments" class="button-secondary rounded-full cursor-pointer flex w-10 h-10 mr-2 transition-all ease-in-out">
+                                <i class="ri-add-line my-auto mx-auto"></i>
+                            </label>
                             <textarea
                                 id="message"
                                 class="block my-auto w-full rounded-2xl shadow-sm focus:ring-indigo-500 focus:border-indigo-500 border-indigo-300 dark:border-0 sm:text-sm dark:bg-secondary-200"
@@ -135,19 +199,90 @@
                                 placeholder="Aa"
                                 required
                             ></textarea>
-                            <x-recaptcha form="reply" />
-                            <button class="button-primary ml-1 rounded-full w-10 my-auto ml-2 h-10 float-right transition-all ease-in-out">
+                            <button type="submit" id="submit-button" class="button-primary rounded-full w-10 ml-2 h-10 float-right transition-all ease-in-out">
                                 <i class="ri-send-plane-fill"></i>
                             </button>
                         </div>
+                        <x-input type="file" id="attachments" :label="__('Attachments')" name="attachments[]" multiple class="hidden"  />
+                        <x-recaptcha form="reply" />
                         <br>
                     </div>
                 </div>
             </div>
         </form>
     </div>
-    <!-- Script for auto-extend message textarea -->
     <script>
+        const fileInput = document.getElementById('attachments');
+        const fileList = document.getElementById('attachments-list');
+        const submitButton = document.getElementById('submit-button');
+
+        const files = [];
+
+        fileInput.addEventListener('change', (e) => {
+            const selectedFiles = e.target.files;
+
+            for (let i = 0; i < selectedFiles.length; i++) {
+                files.push(selectedFiles[i]);
+                const listItem = createListItem(selectedFiles[i]);
+                fileList.appendChild(listItem);
+            }
+
+            fileInput.value = '';
+        });
+
+        function createListItem(file) {
+            const listItem = document.createElement('div');
+            listItem.classList.add('bg-secondary-200', 'rounded-md', 'w-full', 'max-w-[120px]', 'p-2', 'justify-center', 'flex-col', 'items-center', 'shadow-sm', 'mb-3');
+
+            const fileContent = document.createElement('div');
+            fileContent.classList.add('justify-center', 'flex');
+
+            if (/\.(jpe?g|png|gif|bmp)$/i.test(file.name)) {
+                const image = document.createElement('img');
+                image.src = URL.createObjectURL(file);
+                image.alt = file.name;
+                image.classList.add('max-h-10', 'rounded-sm');
+
+                fileContent.appendChild(image);
+            } else {
+                const icon = document.createElement('i');
+                icon.classList.add('ri-article-line', 'text-4xl', 'mx-auto', 'text-secondary-500');
+                fileContent.appendChild(icon);
+            }
+
+            const fileName = document.createElement('div');
+            fileName.textContent = file.name;
+            fileName.classList.add('text-xs', 'text-center', 'text-secondary-500', 'w-full', 'truncate', 'mt-1');
+
+            const removeButton = document.createElement('button');
+            removeButton.textContent = 'x';
+            removeButton.classList.add('text-red-500', 'hover:text-red-700', 'cursor-pointer', 'float-right', 'text-xs', 'font-bold');
+            removeButton.addEventListener('click', () => {
+
+                const index = files.indexOf(file);
+                files.splice(index, 1);
+                listItem.remove();
+            });
+
+            listItem.appendChild(removeButton);
+            listItem.appendChild(fileContent);
+            listItem.appendChild(fileName);
+
+            return listItem;
+        }
+
+        submitButton.addEventListener('click', () => {
+            if (files.length > 0) {
+                const fileListArray = new DataTransfer();
+                for (const file of files) {
+                    fileListArray.items.add(file);
+                }
+                fileInput.files = fileListArray.files;
+            }
+
+            console.log('Wartość inputu "file" ustawiona na wcześniej wybrane pliki.');
+        });
+
         const tx = document.getElementsByTagName("textarea");
         for (let i = 0; i < tx.length; i++) {
             tx[i].setAttribute("style", "height:" + (tx[i].scrollHeight) + "px;overflow-y:hidden;");
