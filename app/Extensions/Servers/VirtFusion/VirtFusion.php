@@ -257,26 +257,6 @@ class VirtFusion extends Server
         ];
     }
 
-    public function getLink($user, $params, $order, $product, $configurableOptions)
-    {
-        $apikey = ExtensionHelper::getConfig('VirtFusion', 'apikey');
-        $host = ExtensionHelper::getConfig('VirtFusion', 'host');
-        if (!isset($params['config']['server_id'])) {
-            return;
-        }
-        $server = $params['config']['server_id'];
-
-        $response = Http::withHeaders([
-            'Authorization' => 'Bearer ' . $apikey,
-            'Accept' => 'Application/json',
-            'Content-Type' => 'application/json',
-        ])->get(
-            $host . '/api/v1/servers/' . $server
-        );
-        return $host . '/server/' . $response->json()['data']['uuid'];
-    }
-
-
     public function login(OrderProduct $id, Request $request)
     {
 

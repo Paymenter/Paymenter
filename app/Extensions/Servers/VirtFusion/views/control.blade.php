@@ -23,8 +23,8 @@
         <div class="flex-col ml-4">
             <div>{{ $details->network['interfaces'][0]['ipv4'][0]['address'] ?? 'N/A' }}</div>
             <div>{{ $details->network['interfaces'][0]['ipv6'][0]['address'] ?? 'N/A' }}</div>  
-            <div>{{ $details->settings['resources']['storage'] ?? 'N/A' }} MB</div>
-            <div>{{ $details->settings['resources']['traffic'] ?? 'N/A'}} MB</div>
+            <div>{{ $details->settings['resources']['storage'] ?? 'N/A' }} GB</div>
+            <div>{{ $details->settings['resources']['traffic'] ?? 'N/A'}} GB</div>
         </div>
     </div>
 
