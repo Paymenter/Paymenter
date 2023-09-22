@@ -24,7 +24,7 @@ class Mailable extends TemplateMailable
             return $this;
         }
         $html_template = $emailTemplate->html_template;
-        View::addNamespace('mail', base_path('resources/views/vendor/mail/html'));
+        View::addNamespace('mail', base_path('vendor/laravel/framework/src/Illuminate/Mail/resources/views/html'));
         $html_template = BladeCompiler::render($html_template, $this->buildViewData());
         $html_template = \Illuminate\Mail\Markdown::parse($html_template);
 
