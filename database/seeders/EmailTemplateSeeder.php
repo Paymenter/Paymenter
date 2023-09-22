@@ -19,7 +19,7 @@ class EmailTemplateSeeder extends Seeder
             EmailTemplate::create([
                 'mailable' => \App\Mail\Test::class,
                 'subject' => 'Test Mail',
-                'html_template' => $html,'text_template' => 'empty for now'
+                'html_template' => $html,
             ]);
         }
         if (!EmailTemplate::where('mailable', \App\Mail\Invoices\NewInvoice::class)->exists()) {
@@ -29,7 +29,6 @@ class EmailTemplateSeeder extends Seeder
                 'mailable' => \App\Mail\Invoices\NewInvoice::class,
                 'subject' => 'New invoice',
                 'html_template' => $html,
-                'text_template' => 'empty for now'
             ]);
         }
         if (!EmailTemplate::where('mailable', \App\Mail\Invoices\UnpaidInvoiceReminder::class)->exists()) {
@@ -39,7 +38,6 @@ class EmailTemplateSeeder extends Seeder
                 'mailable' => \App\Mail\Invoices\UnpaidInvoiceReminder::class,
                 'subject' => 'Unpaid invoice reminder',
                 'html_template' => $html,
-                'text_template' => 'empty for now'
             ]);
         }
         if (!EmailTemplate::where('mailable', \App\Mail\Orders\DeletedOrder::class)->exists()) {
@@ -49,7 +47,6 @@ class EmailTemplateSeeder extends Seeder
                 'mailable' => \App\Mail\Orders\DeletedOrder::class,
                 'subject' => 'Deleted order due to non-payment',
                 'html_template' => $html,
-                'text_template' => 'empty for now'
             ]);
         }
         if (!EmailTemplate::where('mailable', \App\Mail\Orders\NewOrder::class)->exists()) {
@@ -59,7 +56,6 @@ class EmailTemplateSeeder extends Seeder
                 'mailable' => \App\Mail\Orders\NewOrder::class,
                 'subject' => 'New order',
                 'html_template' => $html,
-                'text_template' => 'empty for now'
             ]);
         }
         if (!EmailTemplate::where('mailable', \App\Mail\Tickets\NewTicket::class)->exists()) {
@@ -69,7 +65,6 @@ class EmailTemplateSeeder extends Seeder
                 'mailable' => \App\Mail\Tickets\NewTicket::class,
                 'subject' => 'New ticket',
                 'html_template' => $html,
-                'text_template' => 'empty for now'
             ]);
         }
         if (!EmailTemplate::where('mailable', \App\Mail\Tickets\NewTicketMessage::class)->exists()) {
@@ -79,7 +74,6 @@ class EmailTemplateSeeder extends Seeder
                 'mailable' => \App\Mail\Tickets\NewTicketMessage::class,
                 'subject' => 'New ticket message',
                 'html_template' => $html,
-                'text_template' => 'empty for now'
             ]);
         }
     }
