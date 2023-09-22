@@ -121,28 +121,11 @@ class CheckoutController extends Controller
     public function config(Request $request, Product $product)
     {
         $server = $product->extension;
-        if (!$server && $product->prices()->get()->first()->type != 'recurring' && count($product->configurableGroups()) == 0) {
+        $userConfig = ExtensionHelper::getUserConfig($product);
+        if (!$server && $product->prices()->get()->first()->type != 'recurring' && count($product->configurableGroups()) == 0 && empty($userConfig)) {
             return redirect()->back()->with('error', 'Config Not Found');
         }
-        if (isset($product->extension_id)) {
-            $module = "App\\Extensions\\Servers\\" . $server->name . "\\" . $server->name;
-            if (!class_exists($module)) {
-                return redirect()->back()->with('error', 'Config Not Found');
-            }
-            $module = new $module($server);
-            if (!method_exists($module, 'getUserConfig') && $product->prices()->get()->first()->type != 'recurring' && count($product->configurableGroups()) == 0) {
-                return redirect()->back()->with('error', 'Config Not Found');
-            }
-            if (method_exists($module, 'getUserConfig')) {
-                $userConfig = json_decode(json_encode($module->getUserConfig($product)));
-            }
-        } else {
-            if ($product->prices()->get()->first()->type != 'recurring' && count($product->configurableGroups()) == 0) {
-                return redirect()->back()->with('error', 'Config Not Found');
-            }
-        }
 
-        if (!isset($userConfig)) $userConfig = array();
         $prices = $product->prices()->get()->first();
         $customConfig = $product->configurableGroups();
         // If billing_cycle isn't set, set it to the lowest billing cycle available
@@ -176,42 +159,16 @@ class CheckoutController extends Controller
     {
         $server = $product->extension;
         $prices = $product->prices()->get()->first();
-        if (!$server && $prices->type != 'recurring' && count($product->configurableGroups()) == 0) {
+        $userConfig = ExtensionHelper::getUserConfig($product);
+        if (!$server && $prices->type != 'recurring' && count($product->configurableGroups()) == 0 && empty($userConfig)) {
             return redirect()->back()->with('error', 'Config Not Found');
         }
-        if (isset($product->extension_id)) {
-            $module = "App\\Extensions\\Servers\\" . $server->name . "\\" . $server->name;
-            if (!class_exists($module)) {
-                return redirect()->back()->with('error', 'Config Not Found');
-            }
-            $module = new $module($server);
-            if (!method_exists($module, 'getUserConfig') && $product->prices()->get()->first()->type != 'recurring' && count($product->configurableGroups()) == 0) {
-                return redirect()->back()->with('error', 'Config Not Found');
-            }
-            if (method_exists($module, 'getUserConfig')) {
-                $userConfig = json_decode(json_encode($module->getUserConfig($product)));
-            }
-        } else {
-            if ($product->prices()->get()->first()->type != 'recurring' && count($product->configurableGroups()) == 0) {
-                return redirect()->back()->with('error', 'Config Not Found');
-            }
-        }
 
-        if (!isset($userConfig)) $userConfig = array();
-
-        $config = [];
-        foreach ($userConfig as $configItem) {
-            if (!$request->input($configItem->name)) {
-                return redirect()->back()->with('error', $configItem->name . ' is required');
-            }
-            if (isset($configItem->validation)) {
-                error_log($configItem->validation);
-                Validator::make($request->all(), [
-                    $configItem->name => $configItem->validation,
-                ])->validate();
-            }
-            $config[$configItem->name] = $request->input($configItem->name);
+        $config = ExtensionHelper::validateUserConfig($product, $request);
+        if($config instanceof \Illuminate\Http\RedirectResponse) {
+            return $config;
         }
+        
         $product->config = $config;
 
         if ($prices->type == 'recurring') {

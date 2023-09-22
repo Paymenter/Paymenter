@@ -15,6 +15,8 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Contracts\Encryption\DecryptException;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\View;
 
 class ExtensionHelper
@@ -97,6 +99,97 @@ class ExtensionHelper
         }
     }
 
+    /**
+     * Get userConfig
+     * 
+     * @param Product $product
+     * 
+     * @return array
+     */
+    public static function getUserConfig(Product $product)
+    {
+        if (!$product->extension_id) {
+            return [];
+        }
+        $server = $product->extension;
+        $module = "App\\Extensions\\Servers\\" . $server->name . "\\" . $server->name;
+        if (!class_exists($module)) {
+            return [];
+        }
+        $module = new $module($server);
+        if (!method_exists($module, 'getUserConfig')) {
+            return [];
+        }
+        if (method_exists($module, 'getUserConfig')) {
+            $userConfig = json_decode(json_encode($module->getUserConfig($product)));
+        }
+        return $userConfig ?? [];
+    }
+
+    /**
+     * Validate userConfig
+     * 
+     * @param Product $product
+     * @param Request $request
+     * 
+     * @return void
+     */
+    public static function validateUserConfig(Product $product, Request $request)
+    {
+        if (!$product->extension_id) {
+            return true;
+        }
+        $server = $product->extension;
+        $module = "App\\Extensions\\Servers\\" . $server->name . "\\" . $server->name;
+        if (!class_exists($module)) {
+            return true;
+        }
+        $module = new $module($server);
+        if (!method_exists($module, 'getUserConfig')) {
+            return true;
+        }
+        if (method_exists($module, 'getUserConfig')) {
+            $userConfig = json_decode(json_encode($module->getUserConfig($product)));
+        }
+        $options = [];
+        foreach ($userConfig as $config) {
+            $validate = self::validateConfigItem($config, $request);
+            if ($validate !== true) {
+                return $validate;
+            }
+            $value = $request->get($config->name);
+            $options[$config->name] = $value;
+        }
+
+        return $options;
+    }
+
+    /**
+     * Validate config item
+     * 
+     * @param object $config
+     * @param Request $request
+     * 
+     * @return void
+     */
+    public static function validateConfigItem($config, Request $request)
+    {
+        if (isset($config->required) && $config->required) {
+            if(!isset($config->validation)) {
+                $config->validation = 'required';
+            } else {
+                $config->validation .= '|required';
+            }
+        }
+
+        if (isset($config->validation) && $config->validation) {
+            return Validator::make($request->all(), [
+                $config->name => $config->validation,
+            ])->validate();
+        }
+
+        return true;
+    }
 
     /**
      * Called when you got a error.

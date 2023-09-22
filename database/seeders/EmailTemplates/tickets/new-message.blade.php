@@ -1,5 +1,3 @@
-@component('mail::message')
-
 # New reply
 
 New reply has been added to ticket.
@@ -14,4 +12,3 @@ Ticket message: {{ $ticket->messages()->latest()->first()->message }}
 
 Thanks, <br>
 {{ config('app.name') }}
-@endcomponent
