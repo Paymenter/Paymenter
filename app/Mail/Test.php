@@ -8,9 +8,9 @@ use App\Models\User;
 class Test extends Mailable
 {
     /** @var string */
-    public $name;
+    public $user;
     public function __construct(User $user)
     {
-        $this->name = $user->name;
+        $this->user = $user;
     }
 }

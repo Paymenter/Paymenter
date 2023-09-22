@@ -1,4 +1,3 @@
-@component('mail::message')
 # Your order has been deleted
 
 Your order has been deleted and services blocked due to non-payment
@@ -17,4 +16,3 @@ Your order has been deleted and services blocked due to non-payment
 
 Regards,<br>
 {{ config('app.name') }}
-@endcomponent

@@ -1,4 +1,3 @@
-@component('mail::message')
 
 # New ticket
 
@@ -14,4 +13,3 @@ Ticket message: {{ $ticket->messages()->first()->message }}
 
 Thanks, <br>
 {{ config('app.name') }}
-@endcomponent

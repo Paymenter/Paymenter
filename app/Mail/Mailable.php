@@ -2,29 +2,35 @@
 
 namespace App\Mail;
 
-
-
-use Spatie\MailTemplates\TemplateMailable;
+use App\Models\EmailTemplate;
+use Illuminate\Mail\Mailable as TemplateMailable;
+use Illuminate\Support\Facades\Blade;
+use Illuminate\Support\Facades\View;
+use Illuminate\Support\Str;
+use Illuminate\View\Compilers\BladeCompiler;
 
 class Mailable extends TemplateMailable
 {
-    /** @var string */
-    public $company_name;
-
-    /** @var string */
-    public $css;
-
-    /** @var string */
-    public $logo;
-
-    public function __construct()
+    public function getHtmlLayout($file = 'template')
     {
-        $this->company_name = config('settings::app_name') ?? '';
-        $this->css = config('settings::email_css') ?? '';
+        return file_get_contents(base_path('resources/views/emails/' . $file . '.twig'));
     }
 
-    public function getHtmlLayout(): string
+
+    public function build()
     {
-        return file_get_contents(base_path('resources/views/emails/template.html'));
+        $emailTemplate = EmailTemplate::where('mailable', get_class($this))->first();
+        if (!$emailTemplate) {
+            return $this;
+        }
+        $html_template = $emailTemplate->html_template;
+        View::addNamespace('mail', base_path('resources/views/vendor/mail/html'));
+        $html_template = BladeCompiler::render($html_template, $this->buildViewData());
+        $html_template = \Illuminate\Mail\Markdown::parse($html_template);
+
+        $emailTemplate->subject = BladeCompiler::render($emailTemplate->subject, $this->buildViewData());
+
+        return $this->view('emails.base', ['content' => $html_template])
+            ->subject($emailTemplate->subject);
     }
 }

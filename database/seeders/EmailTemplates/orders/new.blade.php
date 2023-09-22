@@ -1,4 +1,3 @@
-@component('mail::message')
 # Your order has been received
 
 Thanks for your order. We will process it as soon as possible.
@@ -20,4 +19,3 @@ Total: {{ config('settings::currency_sign') }} {{ $order->total() }}
 
 Thanks,<br>
 {{ config('app.name') }}
-@endcomponent

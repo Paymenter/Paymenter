@@ -11,7 +11,7 @@ use App\Mail\Tickets\NewTicket;
 use App\Mail\Tickets\NewTicketMessage;
 use App\Models\EmailLog;
 use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Mail\Mailable;
+use App\Mail\Mailable;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 

@@ -1,7 +1,7 @@
-@component('mail::message')
-# New invoice
-There is a new invoice for you.
-You need to pay: {{ config('settings::currency_sign') }} {{ $invoice->total() }}
+# Unpaid invoice
+You have an unpaid invoice
+You need to pay: {{ config('settings::currency_sign') }} {{ $invoice->total() }}<br>
+Your services have been blocked, will be removed in {{ config('settings::remove_unpaid')?? 7 }} days
 @component('mail::table')
 | Product | Price |
 |:--------|:------|
@@ -14,4 +14,4 @@ Pay now
 @endcomponent
 Thanks,<br>
 {{ config('app.name') }}
-@endcomponent
+

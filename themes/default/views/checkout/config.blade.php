@@ -17,36 +17,7 @@
                 <form method="POST" action="{{ route('checkout.config', $product->id) }}">
                     @csrf
                     @foreach ($userConfig as $config)
-                        @if ($config->type == 'text' || $config->type == 'number' || $config->type == 'email' || $config->type == 'password')
-                            <x-input type="{{ $config->type }}" placeholder="{{ $config->placeholder ?? ucfirst($config->name) }}"
-                                name="{{ $config->name }}" id="{{ $config->name }}" label="{{ $config->friendlyName ?? ucfirst($config->name) }}"
-                                required />
-                        @elseif($config->type == 'textarea')
-                            <div class="mt-4">
-                                <label for={{ $config->name }}
-                                    class="text-sm text-secondary-600">{{ ucfirst($config->name) }}</label>
-                                <textarea
-                                    class="py-2 bg-secondary-200 text-secondary-800 font-medium rounded-md placeholder-secondary-500 outline-none w-full border focus:ring-2 focus:ring-offset-2 ring-offset-secondary-50 dark:ring-offset-secondary-100 duration-300 border-secondary-300 focus:border-secondary-400 focus:ring-primary-400"
-                                    placeholder="{{ ucfirst($config->name) }}" name="{{ $config->name }}" id="{{ $config->name }}" required>
-                                    {{ old($config->name) }}
-                                </textarea>
-                            </div>
-                        @elseif($config->type == 'dropdown')
-                            <div class="mt-4">
-                                <label for={{ $config->name }}
-                                    class="text-sm text-secondary-600">{{ ucfirst($config->name) }}</label>
-                                <select
-                                    class="py-2 bg-secondary-200 text-secondary-800 font-medium rounded-md placeholder-secondary-500 outline-none w-full border focus:ring-2 focus:ring-offset-2 ring-offset-secondary-50 dark:ring-offset-secondary-100 duration-300 border-secondary-300 focus:border-secondary-400 focus:ring-primary-400"
-                                    name="{{ $config->name }}" id="{{ $config->name }}" required>
-                                    @foreach ($config->options as $option)
-                                        <option value="{{ $option->value }}"
-                                            @if (old($config->name) == $option) selected @endif>
-                                            {{ $option->name }}
-                                        </option>
-                                    @endforeach
-                                </select>
-                            </div>
-                        @endif
+                        <x-config-item :config="$config" />
                     @endforeach
                     @if ($prices->type == 'recurring')
                         <div class="mt-4">

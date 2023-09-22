@@ -2,10 +2,9 @@
 
 namespace Database\Seeders;
 
+use App\Models\EmailTemplate;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-use Illuminate\Mail\Markdown;
-use Spatie\MailTemplates\Models\MailTemplate;
 
 class EmailTemplateSeeder extends Seeder
 {
@@ -14,26 +13,73 @@ class EmailTemplateSeeder extends Seeder
      */
     public function run(): void
     {
-        if (!MailTemplate::where('mailable', \App\Mail\Test::class)->exists()) {
-            $html = '
-# Hello, {{ name }}.
+        if (!EmailTemplate::where('mailable', \App\Mail\Test::class)->exists()) {
+            $html = file_get_contents(__DIR__ . '/EmailTemplates/test.blade.php');
 
-This is a test mail.
-
-You can use markdown here
-
-## This is a heading
-### This is a subheading
-
-- This is a list
-- This is a list
-- This is a list';
-            $html = Markdown::parse($html);
-            MailTemplate::create([
+            EmailTemplate::create([
                 'mailable' => \App\Mail\Test::class,
                 'subject' => 'Test Mail',
+                'html_template' => $html,'text_template' => 'empty for now'
+            ]);
+        }
+        if (!EmailTemplate::where('mailable', \App\Mail\Invoices\NewInvoice::class)->exists()) {
+            $html = file_get_contents(__DIR__ . '/EmailTemplates/invoices/new.blade.php');
+
+            EmailTemplate::create([
+                'mailable' => \App\Mail\Invoices\NewInvoice::class,
+                'subject' => 'New invoice',
                 'html_template' => $html,
-                'text_template' => 'Hello, {{ name }}.'
+                'text_template' => 'empty for now'
+            ]);
+        }
+        if (!EmailTemplate::where('mailable', \App\Mail\Invoices\UnpaidInvoiceReminder::class)->exists()) {
+            $html = file_get_contents(__DIR__ . '/EmailTemplates/invoices/new.blade.php');
+
+            EmailTemplate::create([
+                'mailable' => \App\Mail\Invoices\UnpaidInvoiceReminder::class,
+                'subject' => 'Unpaid invoice reminder',
+                'html_template' => $html,
+                'text_template' => 'empty for now'
+            ]);
+        }
+        if (!EmailTemplate::where('mailable', \App\Mail\Orders\DeletedOrder::class)->exists()) {
+            $html = file_get_contents(__DIR__ . '/EmailTemplates/orders/deleted.blade.php');
+
+            EmailTemplate::create([
+                'mailable' => \App\Mail\Orders\DeletedOrder::class,
+                'subject' => 'Deleted order due to non-payment',
+                'html_template' => $html,
+                'text_template' => 'empty for now'
+            ]);
+        }
+        if (!EmailTemplate::where('mailable', \App\Mail\Orders\NewOrder::class)->exists()) {
+            $html = file_get_contents(__DIR__ . '/EmailTemplates/orders/new.blade.php');
+
+            EmailTemplate::create([
+                'mailable' => \App\Mail\Orders\NewOrder::class,
+                'subject' => 'New order',
+                'html_template' => $html,
+                'text_template' => 'empty for now'
+            ]);
+        }
+        if (!EmailTemplate::where('mailable', \App\Mail\Tickets\NewTicket::class)->exists()) {
+            $html = file_get_contents(__DIR__ . '/EmailTemplates/tickets/new.blade.php');
+
+            EmailTemplate::create([
+                'mailable' => \App\Mail\Tickets\NewTicket::class,
+                'subject' => 'New ticket',
+                'html_template' => $html,
+                'text_template' => 'empty for now'
+            ]);
+        }
+        if (!EmailTemplate::where('mailable', \App\Mail\Tickets\NewTicketMessage::class)->exists()) {
+            $html = file_get_contents(__DIR__ . '/EmailTemplates/tickets/new-message.blade.php');
+
+            EmailTemplate::create([
+                'mailable' => \App\Mail\Tickets\NewTicketMessage::class,
+                'subject' => 'New ticket message',
+                'html_template' => $html,
+                'text_template' => 'empty for now'
             ]);
         }
     }
