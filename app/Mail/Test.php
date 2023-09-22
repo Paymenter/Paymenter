@@ -2,29 +2,15 @@
 
 namespace App\Mail;
 
-use Illuminate\Bus\Queueable;
-use Illuminate\Mail\Mailable;
-use Illuminate\Mail\Mailables\Content;
-use Illuminate\Queue\SerializesModels;
+use App\Mail\Mailable;
+use App\Models\User;
 
 class Test extends Mailable
 {
-    use Queueable;
-    use SerializesModels;
-
-    public function __construct()
+    /** @var string */
+    public $user;
+    public function __construct(User $user)
     {
-        $this->subject('Test email');
-    }
-    /**
-     * Get the message content definition.
-     *
-     * @return \Illuminate\Mail\Mailables\Content
-     */
-    public function content()
-    {
-        return new Content(
-            markdown: 'emails.test',
-        );
+        $this->user = $user;
     }
 }

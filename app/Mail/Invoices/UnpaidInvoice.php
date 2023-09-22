@@ -4,7 +4,7 @@ namespace App\Mail\Invoices;
 
 use App\Models\Invoice;
 use Illuminate\Bus\Queueable;
-use Illuminate\Mail\Mailable;
+use App\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Queue\SerializesModels;
 
@@ -18,7 +18,15 @@ class UnpaidInvoice extends Mailable
      *
      * @var \App\Models\Invoices
      */
-    protected $invoice;
+    public $invoice;
+
+    /**
+     * The products instance.
+     * 
+     * @var \App\Models\Products
+     */
+    public $products;
+     
 
     /**
      * Create a new message instance.
@@ -28,22 +36,6 @@ class UnpaidInvoice extends Mailable
     public function __construct(Invoice $invoice)
     {
         $this->invoice = $invoice;
-        $this->subject('Unpaid invoice');
-    }
-
-    /**
-     * Get the message content definition.
-     *
-     * @return \Illuminate\Mail\Mailables\Content
-     */
-    public function content()
-    {
-        return new Content(
-            markdown: 'emails.invoices.unpaid',
-            with: [
-                'invoice' => $this->invoice,
-                'products' => $this->invoice->items()->get(),
-            ]
-        );
+        $this->products = $invoice->items()->get();
     }
 }
