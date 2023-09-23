@@ -137,16 +137,16 @@ class ExtensionHelper
     public static function validateUserConfig(Product $product, Request $request)
     {
         if (!$product->extension_id) {
-            return true;
+            return [];
         }
         $server = $product->extension;
         $module = "App\\Extensions\\Servers\\" . $server->name . "\\" . $server->name;
         if (!class_exists($module)) {
-            return true;
+            return [];
         }
         $module = new $module($server);
         if (!method_exists($module, 'getUserConfig')) {
-            return true;
+            return [];
         }
         if (method_exists($module, 'getUserConfig')) {
             $userConfig = json_decode(json_encode($module->getUserConfig($product)));
