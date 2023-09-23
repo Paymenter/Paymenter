@@ -28,8 +28,8 @@ class NotificationHelper
         if (config('settings::mail_disabled')) return;
         $emailLog = EmailLog::create([
             'user_id' => $user->id,
-            'subject' => $mail->subject,
             'body' => $mail->render(),
+            'subject' => $mail->subject,
             'body_text' => $mail->textView,
         ]);
         try {

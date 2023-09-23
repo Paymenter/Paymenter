@@ -11,12 +11,6 @@ use Illuminate\View\Compilers\BladeCompiler;
 
 class Mailable extends TemplateMailable
 {
-    public function getHtmlLayout($file = 'template')
-    {
-        return file_get_contents(base_path('resources/views/emails/' . $file . '.twig'));
-    }
-
-
     public function build()
     {
         $emailTemplate = EmailTemplate::where('mailable', get_class($this))->first();
