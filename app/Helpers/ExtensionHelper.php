@@ -165,6 +165,35 @@ class ExtensionHelper
     }
 
     /**
+     * Update extension config
+     * 
+     * @param Extension $extension
+     * @param Request $request
+     * 
+     * @return void
+     */
+    public static function updateConfig(Extension $extension, Request $request)
+    {
+        $namespace = 'App\Extensions\\' . ucfirst($extension->type) . 's\\' . $extension->name . '\\' . $extension->name;
+        $extension->config = json_decode(json_encode((new $namespace($extension))->getConfig()));
+        
+        foreach ($extension->config as $config) {
+            $validate = self::validateConfigItem($config, $request);
+            if ($validate !== true && !is_array($validate)) {
+                return $validate;
+            }
+            $value = $request->get($config->name);
+            $extension->getConfig()->updateOrCreate([
+                'key' => $config->name,
+            ], [
+                'value' => $value,
+            ]);
+        }
+
+        return true;
+    }
+
+    /**
      * Validate config item
      * 
      * @param object $config

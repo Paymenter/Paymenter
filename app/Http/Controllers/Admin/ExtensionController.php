@@ -143,6 +143,11 @@ class ExtensionController extends Controller
         $extension->config = json_decode(json_encode((new $namespace($extension))->getConfig()));
         $extension->name = $name;
 
+        $extensionConfig = $extension->getConfig()->get();
+        foreach ($extension->config as $key => $config) {
+            $config->value = $extensionConfig->where('key', $config->name)->first()->value ?? null;
+        }
+
         return view('admin.extensions.edit', compact('extension'));
     }
 
@@ -161,16 +166,12 @@ class ExtensionController extends Controller
             ]);
             $extension = Extension::where('name', $name)->first();
         }
-        $namespace = 'App\Extensions\\' . ucfirst($sort) . 's\\' . $name . '\\' . $name;
-        $extension->config = json_decode(json_encode((new $namespace($extension))->getConfig()));
-        $extension->name = $name;
-        foreach ($extension->config as $config) {
-            if ($config->required && !$request->input($config->name)) {
-                return redirect()->route('admin.extensions.edit', ['sort' => $sort, 'name' => $name])->with('error', 'Please fill in all required fields');
-            }
-            ExtensionHelper::setConfig($extension->name, $config->name, $request->input($config->name));
+        $extension->update(['enabled' => $request->input('enabled'), 'display_name' => $request->input('display_name')]);
+        $config = ExtensionHelper::updateConfig($extension, $request);
+        if ($config instanceof \Illuminate\Http\RedirectResponse) {
+            return $config;
         }
-        Extension::where('name', $extension->name)->update(['enabled' => $request->input('enabled'), 'display_name' => $request->input('display_name')]);
+
 
         return redirect()->route('admin.extensions.edit', ['sort' => $sort, 'name' => $name])->with('success', 'Extension updated successfully');
     }
