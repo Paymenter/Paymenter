@@ -154,7 +154,7 @@ class ExtensionHelper
         $options = [];
         foreach ($userConfig as $config) {
             $validate = self::validateConfigItem($config, $request);
-            if ($validate !== true) {
+            if ($validate !== true && !is_array($validate)) {
                 return $validate;
             }
             $value = $request->get($config->name);
@@ -175,7 +175,7 @@ class ExtensionHelper
     public static function validateConfigItem($config, Request $request)
     {
         if (isset($config->required) && $config->required) {
-            if(!isset($config->validation)) {
+            if (!isset($config->validation)) {
                 $config->validation = 'required';
             } else {
                 $config->validation .= '|required';

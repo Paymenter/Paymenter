@@ -683,11 +683,31 @@ class Proxmox extends Server
                 'newid' => $vmid,
                 'name' => $parmas['config']['hostname'],
                 'target' => $node,
-                'storage' => $storage,
                 'full' => 1,
             ];
             isset($parmas['pool']) && $postData['pool'] = $parmas['pool'];
             $response = $this->postRequest('/nodes/' . $node . '/' . $vmType . '/' . $parmas['vmId'] . '/clone', $postData);
+            if (!$response->json()) throw new Exception('Unable to clone server');
+            
+            // Update hardware
+            $postData = [
+                'cores' => $cores,
+                'memory' => $memory,
+                'cipassword' => $parmas['config']['password'],
+            ];
+            $response = $this->putRequest('/nodes/' . $node . '/' . $vmType . '/' . $vmid . '/config', $postData);
+            if (!$response->json()) throw new Exception('Unable to update hardware');
+
+            // Get disk
+            $disk = $this->getRequest('/nodes/' . $node . '/' . $vmType . '/' . $vmid . '/config')->json()['data'];
+            $disk = explode('order=', $disk['boot'])[1];
+            $disk = explode(',', $disk)[0];
+            $postData = [
+                'disk' => $disk,
+                'size' => $parmas['disk'] . 'G',
+            ];
+            $response = $this->putRequest('/nodes/' . $node . '/' . $vmType . '/' . $vmid . '/resize', $postData);
+            return true;
         } else if ($vmType == 'lxc') {
             $postData = [
                 'vmid' => $vmid,
