@@ -142,5 +142,8 @@ Route::group(['prefix' => 'admin', 'middleware' => 'permission:ADMINISTRATOR'], 
 
     Route::group(['prefix' => 'email'], function() {
         Route::get('/', [App\Http\Controllers\Admin\EmailController::class, 'index'])->middleware(['permission:VIEW_EMAIL'])->name('admin.email');
+        Route::get('/templates', [App\Http\Controllers\Admin\EmailController::class, 'templates'])->middleware(['permission:EDIT_EMAIL'])->name('admin.email.templates');
+        Route::get('/templates/{template}', [App\Http\Controllers\Admin\EmailController::class, 'template'])->middleware(['permission:EDIT_EMAIL'])->name('admin.email.template');
+        Route::post('/templates/{template}/update', [App\Http\Controllers\Admin\EmailController::class, 'update'])->middleware(['permission:EDIT_EMAIL'])->name('admin.email.template.update');
     });
 });

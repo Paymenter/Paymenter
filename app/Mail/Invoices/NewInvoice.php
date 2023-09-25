@@ -5,7 +5,6 @@ namespace App\Mail\Invoices;
 use App\Models\Invoice;
 use Illuminate\Bus\Queueable;
 use App\Mail\Mailable;
-use Illuminate\Mail\Mailables\Content;
 use Illuminate\Queue\SerializesModels;
 
 class NewInvoice extends Mailable
