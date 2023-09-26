@@ -218,6 +218,7 @@ class SettingController extends Controller
         foreach ($request->except(['_token']) as $key => $value) {
             Setting::updateOrCreate(['key' => $key], ['value' => $value]);
         }
+        Setting::updateOrCreate(['key' => 'affiliate'], ['value' => $request->affiliate ? 1 : 0]);
 
         return redirect('/admin/settings#affiliate')->with('success', 'Settings updated successfully');
     }
