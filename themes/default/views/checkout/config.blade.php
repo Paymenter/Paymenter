@@ -127,8 +127,6 @@
                                                         @if ($option->configurableOptionInputPrice->{$billing_cycle})
                                                             -
                                                             {{ config('settings::currency_sign') . $option->configurableOptionInputPrice->{$billing_cycle} }}
-                                                        @else
-                                                            - free
                                                         @endif
                                                     </label>
                                                 </div>
@@ -155,8 +153,6 @@
                                                     @if ($option->configurableOptionInputPrice->{$billing_cycle})
                                                         -
                                                         {{ config('settings::currency_sign') . $option->configurableOptionInputPrice->{$billing_cycle} }}
-                                                    @else
-                                                        - free
                                                     @endif
                                                 </label>
                                             @endforeach
@@ -177,8 +173,6 @@
                                                 @if ($option->configurableOptionInputPrice->{$billing_cycle})
                                                     -
                                                     {{ config('settings::currency_sign') . $option->configurableOptionInputPrice->{$billing_cycle} }}
-                                                @else
-                                                    - free
                                                 @endif
                                             </option>
                                         @endforeach

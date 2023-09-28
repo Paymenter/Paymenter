@@ -589,7 +589,7 @@ class ExtensionHelper
             self::error($extension->name, 'Error when terminating server: ' . $e->getMessage() . ' on line ' . $e->getLine() . ' in file ' . $e->getFile());
         }
     }
-
+    
     /**
      * Get a (login) link for the client and admin area
      *
@@ -656,6 +656,14 @@ class ExtensionHelper
         }
         $config['config_id'] = $product->id;
         $config = $module->getProductConfig($config);
+
+        foreach ($settings as $setting) {
+            foreach ($config as $key => $value) {
+                if($value['name'] == $setting->name) {
+                    $config[$key]['value'] = $setting->value;
+                }
+            }
+        }
         return json_decode(json_encode($config));
     }
 

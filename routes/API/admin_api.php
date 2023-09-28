@@ -29,6 +29,6 @@ Route::group(['prefix' => 'v1/invoices'], function () {
 
 // API
 Route::group(['prefix' => 'v1'], function () {
-    Route::get('/permissions', [APIController::class, 'getPermissions'])->name('api.client.v1.api.getPermissions');
-    Route::post('/token', [APIController::class, 'createAPIToken'])->name('api.client.v1.api.createAPIToken');
+    Route::get('/permissions', [APIController::class, 'getPermissions'])->name('api.admin.v1.api.getPermissions');
+    Route::post('/token', [APIController::class, 'createAPIToken'])->name('api.admin.v1.api.createAPIToken');
 });
