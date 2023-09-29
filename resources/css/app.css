@@ -7,11 +7,11 @@
     .form-label {
         @apply absolute left-[9px] top-px text-sm text-gray-500 transition-all duration-300 px-1 transform -translate-y-1/2 pointer-events-none peer-placeholder-shown:top-1/2 peer-placeholder-shown:text-base group-focus-within:!top-px group-focus-within:!text-sm group-focus-within:!text-logo rounded-md dark:text-darkmodetext dark:bg-darkmode bg-white ;
     }
-    
+
     .form-input {
-        @apply w-full px-3 py-3 rounded-md shadow-sm outline-none dark:text-darkmodetext dark:bg-darkmode;
+        @apply w-full px-3 py-3 rounded-md shadow-sm outline-none focus:ring-1 focus:ring-primary-400 border-0 dark:text-darkmodetext dark:bg-darkmode transition-all ease-in-out;
     }
-    
+
     .form-input.is-invalid {
         @apply border-red-500;
     }
@@ -40,39 +40,39 @@
 }
 
 
-.button{
+.button {
     @apply inline-block py-2 px-4 rounded-md text-center font-sans font-medium duration-300;
 }
 
-.button-primary{
+.button-primary {
     @apply bg-primary-400 text-primary-50 hover:bg-primary-300 hover:text-white focus:bg-primary-300 focus:text-white focus:ring-2 ring-primary-300 ring-offset-2 ring-offset-secondary-50 dark:ring-offset-secondary-100;
 }
 
-.button-secondary{
+.button-secondary {
     @apply bg-secondary-200 text-secondary-800 hover:bg-secondary-300 hover:text-secondary-900 focus:bg-secondary-300 focus:text-secondary-900 focus:ring-2 ring-secondary-300 ring-offset-2 ring-offset-secondary-50 dark:ring-offset-secondary-100;
 }
 
-.button-danger{
+.button-danger {
     @apply bg-danger-400 text-danger-50 hover:bg-danger-300 hover:text-white focus:bg-danger-300 focus:text-white focus:ring-2 ring-danger-300 ring-offset-2 ring-offset-secondary-50 dark:ring-offset-secondary-100;
 }
 
-.button-success{
+.button-success {
     @apply bg-success-400 text-success-50 hover:bg-success-300 hover:text-white focus:bg-success-300 focus:text-white focus:ring-2 ring-success-300 ring-offset-2 ring-offset-secondary-50 dark:ring-offset-secondary-100;
 }
 
-.button-primary-outline{
+.button-primary-outline {
     @apply text-primary-400 hover:bg-primary-400 hover:text-white focus:bg-primary-400 focus:text-white focus:ring-2 ring-primary-400 ring-offset-2 ring-offset-secondary-50 dark:ring-offset-secondary-100;
 }
 
-.button-secondary-outline{
+.button-secondary-outline {
     @apply text-secondary-800 hover:bg-secondary-200 hover:text-secondary-900 focus:bg-secondary-200 focus:text-secondary-900 focus:ring-2 ring-secondary-200 ring-offset-2 ring-offset-secondary-50 dark:ring-offset-secondary-100;
 }
 
-.button-danger-outline{
+.button-danger-outline {
     @apply text-danger-400 hover:bg-danger-400 hover:text-white focus:bg-danger-400 focus:text-white focus:ring-2 ring-danger-400 ring-offset-2 ring-offset-secondary-50 dark:ring-offset-secondary-100;
 }
 
-.button-success-outline{
+.button-success-outline {
     @apply text-success-400 hover:bg-success-400 hover:text-white focus:bg-success-400 focus:text-white focus:ring-2 ring-success-400 ring-offset-2 ring-offset-secondary-50 dark:ring-offset-secondary-100;
 }
 
@@ -146,10 +146,10 @@ table.dataTable tfoot th {
 
 .dataTables_paginate span a.current {
 	@apply z-10 py-2 px-3 leading-tight text-blue-600 bg-blue-50 border border-blue-300 hover:bg-blue-100 hover:text-blue-700 dark:border-gray-700 dark:bg-gray-700 dark:text-white;
-}      
+}
 
 .dataTables_paginate .next {
- 	@apply py-2 px-3 leading-tight text-gray-500 bg-white rounded-r-lg border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-secondary-100 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white; 
+ 	@apply py-2 px-3 leading-tight text-gray-500 bg-white rounded-r-lg border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-secondary-100 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white;
 }
 
 .dataTables_paginate .previous {
@@ -163,7 +163,7 @@ table.dataTable tfoot th {
 * {
     scrollbar-width: thin;
     scrollbar-color: var(--primary-400) var(--secondary-50);
-}   
+}
 
 *::-webkit-scrollbar {
     width: 15px;

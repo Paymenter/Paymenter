@@ -63,7 +63,7 @@ class ExtensionController extends Controller
 
     /**
      * Browse extensions via the marketplace API
-     * 
+     *
      */
     public function browse(Request $request)
     {
@@ -81,9 +81,9 @@ class ExtensionController extends Controller
 
     /**
      * Install extension from the marketplace
-     * 
+     *
      * @param Request $request
-     * 
+     *
      * @return \Illuminate\Http\RedirectResponse
      */
     public function install(Request $request, $id)
