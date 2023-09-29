@@ -34,6 +34,7 @@ class Upgrade extends Command
      */
     public function handle()
     {
+        $this->call('p:check-updates');
         $this->info('Starting upgrade process...');
 
         if (version_compare(PHP_VERSION, '8.1.0') < 0) {
