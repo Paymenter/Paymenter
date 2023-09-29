@@ -57,6 +57,8 @@ Route::group(['prefix' => 'admin', 'middleware' => 'permission:ADMINISTRATOR'], 
 
     Route::group(['prefix' => 'extensions'], function () {
         Route::get('/', [App\Http\Controllers\Admin\ExtensionController::class, 'index'])->middleware(['password.confirm', 'permission:VIEW_EXTENSIONS'])->name('admin.extensions');
+        Route::get('/browse', [App\Http\Controllers\Admin\ExtensionController::class, 'browse'])->middleware(['password.confirm', 'permission:VIEW_EXTENSIONS'])->name('admin.extensions.browse');
+        Route::post('/install/{id}', [App\Http\Controllers\Admin\ExtensionController::class, 'install'])->middleware(['password.confirm', 'permission:EDIT_EXTENSIONS'])->name('admin.extensions.install');
         Route::post('/download', [App\Http\Controllers\Admin\ExtensionController::class, 'download'])->middleware(['password.confirm', 'permission:EDIT_EXTENSIONS'])->name('admin.extensions.download');
         Route::get('/edit/{sort}/{name}', [App\Http\Controllers\Admin\ExtensionController::class, 'edit'])->middleware(['password.confirm', 'permission:VIEW_EXTENSIONS'])->name('admin.extensions.edit');
         Route::post('/edit/{sort}/{name}', [App\Http\Controllers\Admin\ExtensionController::class, 'update'])->middleware(['password.confirm', 'permission:EDIT_EXTENSIONS'])->name('admin.extensions.update');

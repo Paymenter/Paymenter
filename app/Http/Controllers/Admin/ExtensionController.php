@@ -61,6 +61,68 @@ class ExtensionController extends Controller
         return view('admin.extensions.index', compact('servers', 'gateways', 'events'));
     }
 
+    /**
+     * Browse extensions via the marketplace API
+     * 
+     */
+    public function browse(Request $request)
+    {
+        if ($request->page) {
+            $page = $request->page;
+        } else {
+            $page = 1;
+        }
+        $url = config('app.marketplace') . 'extensions?page=' . $page . '&version=' . config('app.version') . '&search=' . $request->search;
+        $response = Http::get($url)->json();
+        $extensions = $response['data'];
+
+        return view('admin.extensions.browse', compact('extensions'));
+    }
+
+    /**
+     * Install extension from the marketplace
+     * 
+     * @param Request $request
+     * 
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function install(Request $request, $id)
+    {
+        $url = config('app.marketplace') . 'extensions/' . $id . '?version=' . config('app.version');
+        $response = Http::get($url);
+        if (!$response->successful()) {
+            return redirect()->route('admin.extensions.browse')->with('error', 'Extension not found');
+        }
+        $extension = $response->json();
+        $path = base_path('app/Extensions/' . ucfirst($extension['type']) . 's/' . $extension['name']);
+        if (!file_exists($path)) {
+            mkdir($path, 0777, true);
+        }
+        // Download zip to temp folder
+        $zip = Http::get(config('app.marketplace') . 'extensions/' . $id . '/download?version=' . config('app.version'));
+        $zip = $zip->body();
+        $zipPath = base_path('storage/app/temp/' . $extension['name'] . '.zip');
+        file_put_contents($zipPath, $zip);
+        // Unzip
+        $zip = new \ZipArchive();
+        $zip->open($zipPath);
+        $zip->extractTo($path);
+        $zip->close();
+        // Delete zip
+        unlink($zipPath);
+
+        // Check if the extension is enabled
+        $extensionModel = Extension::where('name', $extension['name'])->first();
+        if (!$extensionModel) {
+            $extensionModel = new Extension();
+            $extensionModel->name = $extension['name'];
+            $extensionModel->type = $extension['type'];
+            $extensionModel->enabled = 0;
+            $extensionModel->save();
+        }
+        return redirect()->route('admin.extensions')->with('success', 'Extension downloaded successfully');
+    }
+
     public function download(Request $request)
     {
         $request->validate([
