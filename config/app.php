@@ -19,6 +19,10 @@ return [
     // Used for beta versions
     'commit' => '',
 
+    // Marketplace API
+    'marketplace' => 'https://betamarket.paymenter.org/api/v1/',
+    //'marketplace' => 'http://localhost:8001/api/v1/',
+
 
     /*
     |--------------------------------------------------------------------------

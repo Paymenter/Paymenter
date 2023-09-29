@@ -76,21 +76,16 @@ class CheckoutController extends Controller
             if ($orderProducts >= $product->limit) {
                 return redirect()->back()->with('error', 'Product limit reached');
             }
-            if (isset($cart[$product->id])) {
-                if ($cart[$product->id]->quantity + $orderProducts >= $product->limit) {
-                    return redirect()->back()->with('error', 'Product limit reached');
-                }
+            if (isset($cart[$product->id]) && $cart[$product->id]->quantity + $orderProducts >= $product->limit) {
+                return redirect()->back()->with('error', 'Product limit reached');
             }
         }
-        if (isset($product->extension_id)) {
-            $server = $product->extension;
-            if ($server) {
-                $module = "App\\Extensions\\Servers\\" . $server->name . "\\" . $server->name;
-                if (class_exists($module)) {
-                    $module = new $module($server);
-                    if (method_exists($module, 'getUserConfig')) {
-                        return redirect()->route('checkout.config', $product->id);
-                    }
+        if (isset($product->extension_id) && $product->extension) {
+            $module = "App\\Extensions\\Servers\\" . $server->name . "\\" . $server->name;
+            if (class_exists($module)) {
+                $module = new $module($server);
+                if (method_exists($module, 'getUserConfig')) {
+                    return redirect()->route('checkout.config', $product->id);
                 }
             }
         }
@@ -107,15 +102,12 @@ class CheckoutController extends Controller
             }
             session()->put('cart', $cart);
 
-
-            return redirect()->back()->with('success', 'Product added to cart successfully!');
-        } else {
-            $cart[$product->id] = $product;
-            $product->price = $product->prices()->get()->first()->type == 'one-time' ? $product->prices()->get()->first()->monthly : 0;
-            session()->put('cart', $cart);
-
             return redirect()->back()->with('success', 'Product added to cart successfully!');
         }
+        $cart[$product->id] = $product;
+        $product->price = $product->prices()->get()->first()->type == 'one-time' ? $product->prices()->get()->first()->monthly : 0;
+        session()->put('cart', $cart);
+        return redirect()->back()->with('success', 'Product added to cart successfully!');
     }
 
     public function config(Request $request, Product $product)
@@ -165,10 +157,10 @@ class CheckoutController extends Controller
         }
 
         $config = ExtensionHelper::validateUserConfig($product, $request);
-        if($config instanceof \Illuminate\Http\RedirectResponse) {
+        if ($config instanceof \Illuminate\Http\RedirectResponse) {
             return $config;
         }
-        
+
         $product->config = $config;
 
         if ($prices->type == 'recurring') {
@@ -221,18 +213,20 @@ class CheckoutController extends Controller
         if (!$product->allow_quantity && \Illuminate\Support\Arr::has($cart, $product->id)) {
             return redirect()->route('checkout.index')->with('error', 'You already have this product in your shopping cart');
         }
+
+        // If product has stock enabled, check if it's in stock
         if ($product->stock_enabled && $product->stock <= 0) {
             return redirect()->back()->with('error', 'Product is out of stock');
         }
+
+        // Check if product has a limit per user
         if ($product->limit) {
             $orderProducts = OrderProduct::where('product_id', $product->id)->count();
             if ($orderProducts >= $product->limit) {
                 return redirect()->back()->with('error', 'Product limit reached');
             }
-            if (isset($cart[$product->id])) {
-                if ($cart[$product->id]->quantity + $orderProducts >= $product->limit) {
-                    return redirect()->back()->with('error', 'Product limit reached');
-                }
+            if (isset($cart[$product->id]) && $cart[$product->id]->quantity + $orderProducts >= $product->limit) {
+                return redirect()->back()->with('error', 'Product limit reached');
             }
         }
         if (\Illuminate\Support\Arr::has($cart, $product->id)) {
@@ -244,12 +238,10 @@ class CheckoutController extends Controller
             session()->put('cart', $cart);
 
             return redirect()->route('checkout.index')->with('success', 'Product added to cart successfully!');
-        } else {
-            $cart[$product->id] = $product;
-            session()->put('cart', $cart);
-
-            return redirect()->route('checkout.index')->with('success', 'Product added to cart successfully!');
         }
+        $cart[$product->id] = $product;
+        session()->put('cart', $cart);
+        return redirect()->route('checkout.index')->with('success', 'Product added to cart successfully!');
     }
 
     public function pay(Request $request)
