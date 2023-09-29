@@ -81,6 +81,7 @@ class CheckoutController extends Controller
             }
         }
         if (isset($product->extension_id) && $product->extension) {
+            $server = $product->extension;
             $module = "App\\Extensions\\Servers\\" . $server->name . "\\" . $server->name;
             if (class_exists($module)) {
                 $module = new $module($server);
