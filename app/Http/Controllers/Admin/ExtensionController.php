@@ -111,6 +111,21 @@ class ExtensionController extends Controller
         // Delete zip
         unlink($zipPath);
 
+        // If it unzips in a subfolder, move the files to the root
+        $subfolder = scandir($path);
+        if (count($subfolder) == 3) {
+            $subfolder = $subfolder[2];
+            $subfolderPath = $path . '/' . $subfolder;
+            $files = scandir($subfolderPath);
+            foreach ($files as $file) {
+                if ($file == '.' || $file == '..') {
+                    continue;
+                }
+                rename($subfolderPath . '/' . $file, $path . '/' . $file);
+            }
+            rmdir($subfolderPath);
+        }
+
         // Check if the extension is enabled
         $extensionModel = Extension::where('name', $extension['name'])->first();
         if (!$extensionModel) {
