@@ -48,7 +48,7 @@ class CheckUpdates extends Command
 
                 $appVersion = config('app.commit');
 
-                if (isset($data['beta']) && version_compare($appVersion, $data['beta'], '<')) {
+                if (isset($data['beta']) && $data['beta'] !== $appVersion) {
                     $this->info('New update available! Commit ' . $data['beta']);
                     Setting::updateOrCreate(['key' => 'latest_version'], ['value' => $data['beta']]);
                 } else {
