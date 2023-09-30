@@ -97,9 +97,11 @@ class ExtensionController extends Controller
         }
         $extension = $response->json();
         $path = base_path('app/Extensions/' . ucfirst($extension['type']) . 's/' . $extension['name']);
-        if (!file_exists($path)) {
-            mkdir($path, 0777, true);
+        if(file_exists($path)) {
+            //Remove the folder
+            $this->deleteDir($path);
         }
+        mkdir($path, 0777, true);
         // Download zip to temp folder
         $zip = Http::get(config('app.marketplace') . 'extensions/' . $id . '/download?version=' . config('app.version'));
         $zip = $zip->body();
@@ -140,67 +142,32 @@ class ExtensionController extends Controller
         return redirect()->route('admin.extensions')->with('success', 'Extension downloaded successfully');
     }
 
-    public function download(Request $request)
+    /**
+     * Delete a directory recursively
+     *
+     * @param $dir
+     *
+     * @return bool
+     */
+    private function deleteDir($dir)
     {
-        $request->validate([
-            'name' => 'required',
-        ]);
-        $rqname = $request->input('name');
-        $name = explode('-', $rqname)[0];
-        $type = explode('-', $rqname)[1];
-
-        $extension = Extension::where('name', $name)->first();
-        if (!$extension) {
-            $extension = new Extension();
-            $extension->name = $name;
-            // Type to lowercase -s
-            $extension->type = substr($type, 0, -1);
-            $extension->enabled = 0;
-            $extension->save();
+        if (!file_exists($dir)) {
+            return true;
         }
-        $url = 'https://api.github.com/repos/Paymenter/Extensions/contents/' . $type . '/' . $name . '?ref=' . config('app.version');
-        $response = Http::get($url);
-        $response = json_decode($response);
-        if (isset($response->message)) {
-            return redirect()->route('admin.extensions')->with('error', 'Extension not found');
+        if (!is_dir($dir)) {
+            return unlink($dir);
         }
-
-        $path = base_path('app/Extensions/' . $type . '/' . $name);
-        if (!file_exists($path)) {
-            mkdir($path, 0777, true);
-        } else {
-            if (!$request->get('verify')) {
-                return redirect()->route('admin.extensions')->withInput()->with('verify', true);
+        foreach (scandir($dir) as $item) {
+            if ($item == '.' || $item == '..') {
+                continue;
+            }
+            if (!$this->deleteDir($dir . DIRECTORY_SEPARATOR . $item)) {
+                return false;
             }
         }
-        foreach ($response as $file) {
-            if (strtolower($file->name) !== 'readme.md') {
-                $path = base_path('app/Extensions/' . $type . '/' . $name . '/' . $file->name);
-                $this->handleFile($file, $path);
-            }
-        }
-
-        return redirect()->route('admin.extensions')->with('success', 'Extension downloaded successfully');
+        return rmdir($dir);
     }
-
-    private function handleFile($file, $path)
-    {
-        if ($file->type == 'dir') {
-            if (!file_exists($path)) {
-                mkdir($path, 0777, true);
-            }
-            $response = Http::get($file->url);
-            $response = json_decode($response);
-
-            foreach ($response as $file) {
-                $this->handleFile($file, $path . '/' . $file->name);
-            }
-            return;
-        }
-        $filecontent = Http::get($file->download_url);
-        $filecontent = $filecontent->body();
-        file_put_contents($path, $filecontent);
-    }
+    
 
     public function edit($sort, $name)
     {
@@ -227,12 +194,12 @@ class ExtensionController extends Controller
             $config->value = $extensionConfig->where('key', $config->name)->first()->value ?? null;
             try {
                 $config->value = Crypt::decryptString($config->value);
-            } catch (DecryptException $e) {
-                
-            }
+            } catch (DecryptException $e) {}
         }
 
-        return view('admin.extensions.edit', compact('extension'));
+        $metadata = ExtensionHelper::getMetadata($extension);
+
+        return view('admin.extensions.edit', compact('extension', 'metadata'));
     }
 
     public function update(Request $request, $sort, $name)

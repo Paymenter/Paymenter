@@ -8,7 +8,16 @@ use Illuminate\Support\Facades\Http;
 
 class Pterodactyl extends Server
 {
-
+    public function getMetadata(): array
+    {
+        return [
+            'display_name' => 'Pterodactyl',
+            'version' => '1.0.0',
+            'author' => 'Paymenter',
+            'website' => 'https://paymenter.org',
+        ];
+    }
+    
     private function config($key): ?string
     {
         $config = ExtensionHelper::getConfig('Pterodactyl', $key);

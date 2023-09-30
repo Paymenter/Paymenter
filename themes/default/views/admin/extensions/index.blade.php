@@ -9,140 +9,9 @@
         </h2>
         <!-- Download Extension -->
         <div class="ml-4 absolute right-0">
-            <button type="button" data-modal-target="defaultModal" onclick="getExtensions()"
-                data-modal-toggle="defaultModal" class="form-submit float-right">
-                {{ __('Download Extension') }}
-            </button>
-        </div>
-        @if (session('verify'))
-            <script>
-                document.addEventListener("DOMContentLoaded", function(event) {
-                    const options = {};
-                    const $targetEl = document.querySelector('#popup-modal');
-                    const modal = new window.Modal($targetEl, options);
-
-                    modal.show();
-                });
-            </script>
-            <button type="button" data-modal-target="popup-modal" data-modal-toggle="popup-modal"
-                class="hidden"></button>
-            <div id="popup-modal" tabindex="-1"
-                class="fixed top-0 left-0 right-0 z-50 hidden p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-modal md:h-full">
-                <div class="relative w-full h-full max-w-md md:h-auto">
-                    <div class="relative bg-secondary-100 rounded-lg shadow">
-                        <button type="button"
-                            class="absolute top-3 right-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-800 dark:hover:text-white"
-                            data-modal-hide="popup-modal">
-                            <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"
-                                xmlns="http://www.w3.org/2000/svg">
-                                <path fill-rule="evenodd"
-                                    d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
-                                    clip-rule="evenodd"></path>
-                            </svg>
-                            <span class="sr-only">Close modal</span>
-                        </button>
-                        <form action="{{ route('admin.extensions.download') }}" method="POST">
-                            @csrf
-                            <input type="hidden" name="name" value="{{ old('name') }}">
-                            <input type="hidden" name="verify" value="1">
-                            <div class="p-6 text-center">
-                                <svg aria-hidden="true" class="mx-auto mb-4 text-gray-400 w-14 h-14 dark:text-gray-200"
-                                    fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                                    xmlns="http://www.w3.org/2000/svg">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z">
-                                    </path>
-                                </svg>
-                                <h3 class="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">
-                                    The extension is already found!<br> Do you want to override
-                                    it?</h3>
-                                <button type="submit"
-                                    class="text-white bg-red-600 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center mr-2">
-                                    Yes, do it!
-                                </button>
-                                <button data-modal-hide="popup-modal" type="button"
-                                    class="text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-200 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600">No,
-                                    cancel</button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        @endif
-
-        <div id="defaultModal" tabindex="-1" aria-hidden="true"
-            class="fixed top-0 left-0 right-0 z-50 hidden w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-modal md:h-full">
-            <div class="relative w-full h-full max-w-2xl md:h-auto">
-                <form action="{{ route('admin.extensions.download') }}" method="POST">
-                    @csrf
-                    <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
-                        <div class="flex items-start justify-between p-4 border-b rounded-t dark:border-gray-600">
-                            <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
-                                {{ __('Download Extension') }}
-                            </h3>
-                            <button type="button"
-                                class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white"
-                                data-modal-hide="defaultModal">
-                                <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"
-                                    xmlns="http://www.w3.org/2000/svg">
-                                    <path fill-rule="evenodd"
-                                        d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
-                                        clip-rule="evenodd"></path>
-                                </svg>
-                                <span class="sr-only">Close modal</span>
-                            </button>
-                        </div>
-                        <div class="p-6 space-y-6">
-                            <div class="mb-4">
-                                <label class="block text-gray-700 text-sm font-bold mb-2" for="name">
-                                    {{ __('Extension Name') }}
-                                </label>
-                                <select name="name"
-                                    class="dark:bg-secondary-100 dark:text-darkmodetext shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                    id="name">
-                                    <option value="" disabled selected>
-                                        {{ __('Select Extension') }}</option>
-                                </select>
-                                <script>
-                                    function getExtensions() {
-                                        if (document.getElementById("name").options.length == 1) {
-                                            loadExtensions();
-                                        }
-                                    }
-
-                                    function loadExtensions() {
-                                        fetch('https://api.github.com/repos/paymenter/extensions/contents/Gateways')
-                                            .then(response => response.json())
-                                            .then(data => {
-                                                data.forEach(extension => {
-                                                    var option = document.createElement("option");
-                                                    option.text = extension.name + " (Gateway)";
-                                                    option.value = extension.name + "-Gateways";
-                                                    document.getElementById("name").appendChild(option);
-                                                });
-                                            });
-
-                                        fetch('https://api.github.com/repos/paymenter/extensions/contents/Servers')
-                                            .then(response => response.json())
-                                            .then(data => {
-                                                data.forEach(extension => {
-                                                    var option = document.createElement("option");
-                                                    option.text = extension.name + " (Server)";
-                                                    option.value = extension.name + "-Servers";
-                                                    document.getElementById("name").appendChild(option);
-                                                });
-                                            });
-                                    }
-                                </script>
-                            </div>
-                        </div>
-                        <div
-                            class="flex items-center p-6 space-x-2 border-t border-gray-200 rounded-b dark:border-gray-600">
-                            <button type="submit" class="form-submit">Download</button>
-                        </div>
-                    </div>
-                </form>
-            </div>
+            <a class="form-submit float-right" href="{{ route('admin.extensions.browse') }}">
+                {{ __('Browse Extensions') }}
+            </a>
         </div>
     </div>
     @if (!$servers)
@@ -161,6 +30,10 @@
                         {{ __('Enabled?') }}</th>
                     <th scope="col"
                         class="dark:text-darkmodetext px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        {{ __('Version') }}</th>
+
+                    <th scope="col"
+                        class="dark:text-darkmodetext px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                         {{ __('Edit') }}</th>
                 </tr>
             </thead>
@@ -174,15 +47,24 @@
                     @if ($extensio == '.' || $extensio == '..')
                         @continue
                     @endif
+                    @php
+                        $extension = App\Models\Extension::where('name', $extensio)
+                            ->get()
+                            ->first();
+                    @endphp
+                    @php $metadata = App\Helpers\ExtensionHelper::getMetadata($extension); @endphp
                     <tr class="bg-secondary-100">
                         <td class="dark:text-darkmodetext px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                            {{ $extensio }}</td>
+                            {{ $metadata->display_name ?? $extensio }}</td>
                         <td class="dark:text-darkmodetext px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                            @if (App\Models\Extension::where('name', $extensio)->get()->first()->enabled)
+                            @if ($extension->enabled)
                                 {{ __('Yes') }}
                             @else
                                 {{ __('No') }}
                             @endif
+                        </td>
+                        <td class="dark:text-darkmodetext px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                            {{ $metadata->version ?? 'Unknown Version' }}
                         </td>
                         <td class="dark:text-darkmodetext px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                             <a href="{{ route('admin.extensions.edit', ['server', $extensio]) }}"
@@ -199,15 +81,24 @@
                     @if ($gateway == '.' || $gateway == '..')
                         @continue
                     @endif
+                    @php
+                        $extension = App\Models\Extension::where('name', $gateway)
+                            ->get()
+                            ->first();
+                    @endphp
+                    @php $metadata = App\Helpers\ExtensionHelper::getMetadata($extension); @endphp
                     <tr>
                         <td class="dark:text-darkmodetext px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                            {{ $gateway }}</td>
+                            {{ $metadata->display_name ?? $gateway }}</td>
                         <td class="dark:text-darkmodetext px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                            @if (App\Models\Extension::where('name', $gateway)->get()->first()->enabled)
+                            @if ($extension->enabled)
                                 {{ __('Yes') }}
                             @else
                                 {{ __('No') }}
                             @endif
+                        </td>
+                        <td class="dark:text-darkmodetext px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                            {{ $metadata->version ?? 'Unknown Version' }}
                         </td>
                         <td class="dark:text-darkmodetext px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                             <a href="{{ route('admin.extensions.edit', ['gateway', $gateway]) }}"
@@ -224,15 +115,24 @@
                     @if ($event == '.' || $event == '..')
                         @continue
                     @endif
+                    @php
+                        $extension = App\Models\Extension::where('name', $event)
+                            ->get()
+                            ->first();
+                    @endphp
+                    @php $metadata = App\Helpers\ExtensionHelper::getMetadata($extension); @endphp
                     <tr>
                         <td class="dark:text-darkmodetext px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                             {{ $event }}</td>
                         <td class="dark:text-darkmodetext px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                            @if (App\Models\Extension::where('name', $event)->get()->first()->enabled)
+                            @if ($extension->enabled)
                                 {{ __('Yes') }}
                             @else
                                 {{ __('No') }}
                             @endif
+                        </td>
+                        <td class="dark:text-darkmodetext px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                            {{ $metadata->version ?? 'Unknown Version' }}
                         </td>
                         <td class="dark:text-darkmodetext px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                             <a href="{{ route('admin.extensions.edit', ['event', $event]) }}"

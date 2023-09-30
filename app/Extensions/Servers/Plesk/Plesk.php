@@ -8,6 +8,16 @@ use App\Helpers\ExtensionHelper;
 
 class Plesk extends Server
 {
+    public function getMetadata()
+    {
+        return [
+            'display_name' => 'Plesk',
+            'version' => '1.0.0',
+            'author' => 'Paymenter',
+            'website' => 'https://paymenter.org',
+        ];
+    }
+
     private function getApiKey()
     {
         $username = ExtensionHelper::getConfig('Plesk', 'username');

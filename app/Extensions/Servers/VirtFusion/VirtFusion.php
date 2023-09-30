@@ -10,6 +10,16 @@ use Illuminate\Support\Facades\Http;
 
 class VirtFusion extends Server
 {
+    public function getMetadata()
+    {
+        return [
+            'display_name' => 'VirtFusion',
+            'version' => '1.0.0',
+            'author' => 'Paymenter',
+            'website' => 'https://paymenter.org',
+        ];
+    }
+    
     public function getConfig()
     {
         return [

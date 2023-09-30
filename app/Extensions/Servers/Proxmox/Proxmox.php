@@ -14,6 +14,16 @@ use Illuminate\Support\Facades\Http;
 
 class Proxmox extends Server
 {
+    public function getMetadata()
+    {
+        return [
+            'display_name' => 'Proxmox',
+            'version' => '1.0.0',
+            'author' => 'Paymenter',
+            'website' => 'https://paymenter.org',
+        ];
+    }
+
     public function getConfig()
     {
         return [

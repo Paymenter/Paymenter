@@ -8,6 +8,16 @@ use Illuminate\Support\Facades\Http;
 
 class Mollie extends Gateway
 {
+    public function getMetadata()
+    {
+        return [
+            'display_name' => 'Mollie',
+            'version' => '1.0.0',
+            'author' => 'Paymenter',
+            'website' => 'https://paymenter.org',
+        ];
+    }
+    
     public function pay($total, $products, $orderId)
     {
         $url = 'https://api.mollie.com/v2/payments';

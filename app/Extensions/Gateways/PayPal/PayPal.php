@@ -8,6 +8,16 @@ use Illuminate\Support\Facades\Http;
 
 class PayPal extends Gateway
 {
+    public function getMetadata()
+    {
+        return [
+            'display_name' => 'PayPal',
+            'version' => '1.0.0',
+            'author' => 'Paymenter',
+            'website' => 'https://paymenter.org',
+        ];
+    }
+    
     public function pay($total, $products, $orderId)
     {
         $client_id = ExtensionHelper::getConfig('PayPal', 'client_id');

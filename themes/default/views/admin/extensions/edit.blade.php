@@ -4,7 +4,26 @@
     </x-slot>
 
     <div class="mt-8 text-2xl dark:text-darkmodetext">
-        {{ __('Edit') }} {{ $extension->name }}
+        <p>
+            {{ __('Edit') }} {{ $extension->name }}
+        </p>
+        @if ($metadata)
+            @if ($metadata->version)
+                <p class="text-sm">
+                    {{ __('Version') }}: {{ $metadata->version }}
+                </p>
+            @endif
+            @if ($metadata->author)
+                <p class="text-sm">
+                    {{ __('Author') }}: {{ $metadata->author }}
+                </p>
+            @endif
+            @if ($metadata->website)
+                <p class="text-sm">
+                    {{ __('Website') }}: <a href="{{ $metadata->website }}" target="_blank">{{ $metadata->website }}</a>
+                </p>
+            @endif
+        @endif
     </div>
 
     <div class="mt-6 text-gray-500 dark:text-darkmodetext dark:bg-secondary-100">
@@ -25,9 +44,8 @@
             </div>
             <div class="mt-4">
                 <label for="display_name">{{ __('Display Name') }}</label>
-                <x-input id="display_name" type="text"
-                    name="display_name"
-                    value="{{ isset($extension->display_name) ? $extension->display_name : $extension->name }}"
+                <x-input id="display_name" type="text" name="display_name"
+                    value="{{ isset($extension->display_name) ? $extension->display_name : $metadata->display_name ?? $extension->name }}"
                     required />
             </div>
             @foreach ($extension->config as $setting)

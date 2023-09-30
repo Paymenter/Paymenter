@@ -9,6 +9,16 @@ use App\Extensions\Servers\DirectAdmin\DAHTTPSocket;
 
 class DirectAdmin extends Server
 {
+    public function getMetadata()
+    {
+        return [
+            'display_name' => 'DirectAdmin',
+            'version' => '1.0.0',
+            'author' => 'Paymenter',
+            'website' => 'https://paymenter.org',
+        ];
+    }
+
     public function createServer($user, $params, $order, $product, $configurableOptions)
     {
         $host = ExtensionHelper::getConfig('DirectAdmin', 'host');

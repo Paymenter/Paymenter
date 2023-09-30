@@ -11,11 +11,26 @@ class Extension
      * 
      * @var Extension
      */
-    private $extension;
+    public $extension;
 
     public function __construct(ModelsExtension $extension)
     {
         $this->extension = $extension;
+    }
+
+    /**
+     * Returns metadata about the extension
+     * 
+     * @return array
+     */
+    public function getMetadata()
+    {
+        return [
+            'display_name' => null,
+            'version' => null,
+            'author' => null,
+            'website' => null,
+        ];
     }
 
     /**

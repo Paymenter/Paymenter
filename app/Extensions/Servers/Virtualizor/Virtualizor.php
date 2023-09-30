@@ -10,6 +10,16 @@ use App\Extensions\Servers\Virtualizor\Virtualizor_Admin_API;
 
 class Virtualizor extends Server
 {
+    public function getMetadata()
+    {
+        return [
+            'display_name' => 'Virtualizor',
+            'version' => '1.0.0',
+            'author' => 'Paymenter',
+            'website' => 'https://paymenter.org',
+        ];
+    }
+    
     public function getConfig()
     {
         return [
