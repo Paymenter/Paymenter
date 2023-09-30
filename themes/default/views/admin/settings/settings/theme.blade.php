@@ -50,5 +50,6 @@
             @endforeach
         </div>
         <button type="submit" class="button button-primary float-right">{{ __('Save') }}</button>
+        <button type="submit" name="reset" value="1" class="button button-danger float-right mr-4">{{ __('Reset') }}</button>
     </form>
 </div>

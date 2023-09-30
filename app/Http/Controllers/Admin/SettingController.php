@@ -182,6 +182,12 @@ class SettingController extends Controller
 
     public function theme(Request $request)
     {
+        if($request->has('reset')) {
+            foreach(Setting::where('key', 'like', 'theme:%')->get() as $setting) {
+                $setting->delete();
+            }
+            return redirect('/admin/settings#theme')->with('success', 'Settings updated successfully');
+        }
         $request->validate([
             'theme' => 'required',
         ]);
