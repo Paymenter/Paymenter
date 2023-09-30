@@ -3,20 +3,24 @@
         <h1 class="text-2xl font-bold">{{ __('Browse extensions') }}</h1>
         <input type="text" class="form-input w-1/5 h-2/3" placeholder="{{ __('Search') }}" id="extensionSearch">
     </div>
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-3">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-3 mt-3">
         @foreach ($extensions as $extension)
             @php $extension = (object) $extension; @endphp
             <div class="max-h-md extension" data-title="{{ $extension->name }}" data-slogan="{{ $extension->slogan }}">
-                <div class="!bg-secondary-200 content-box w-full h-full flex flex-col justify-center">
-                    <div class="flex flex-row gap-x-3">
-                        <img src="{{ config('app.marketplace') . '../../storage/' . $extension->icon }}" alt="{{ $extension->name }}" class="w-[135px] mx-auto rounded-md drop-shadow-lg">
-                        <div class="flex flex-col relative">
+                <div class="!bg-secondary-200 content-box w-full flex flex-row gap-x-3 h-full justify-center">
+                    <div class="flex flex-row gap-x-3 h-full w-full">
+
+                        <div class="w-fit h-full flex py-2 items-center">
+                            <img src="{{ config('app.marketplace') . '../../storage/' . $extension->icon }}" alt="{{ $extension->name }}" class="w-[128px] h-auto rounded-md drop-shadow-lg">
+                        </div>
+
+                        <div class="flex flex-col relative h-full w-full">
                             <h1 class="text-xl font-bold">{{ $extension->name }}</h1>
                             <span>{{ $extension->slogan }}</span>
                             <div class="absolute bottom-0 w-full">
                                 <div class="flex flex-row justify-between items-center relative w-full">
                                     <div>
-                                        <div class="block">
+                                        <div>
                                             <span class="font-semibold">{{ __('Price') }}: </span>
                                             {{ $extension->price == 0?"Free":$extension->price . "$" }}
                                         </div>
@@ -50,6 +54,7 @@
             </div>
         @endforeach
     </div>
+
     <script>
         const searchInput = document.getElementById('extensionSearch');
         const extensionTitles = document.querySelectorAll('.extension');
