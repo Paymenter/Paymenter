@@ -56,7 +56,7 @@
                                     name="last_name" id="last_name" label="{{ __('Name') }}"
                                     value="{{ Auth::user()->last_name }}" />
                                 <x-input type="text" class="mt-4" placeholder="{{ __('Address') }}" name="address"
-                                    id="address" label="{{ __('Name') }}" value="{{ Auth::user()->address }}" />
+                                    id="address" label="{{ __('Address') }}" value="{{ Auth::user()->address }}" />
                                 <x-input type="text" class="mt-4" placeholder="{{ __('City') }}" name="city"
                                     id="city" label="{{ __('City') }}" value="{{ Auth::user()->city }}" />
                                 <x-input type="text" class="mt-4" placeholder="{{ __('Country') }}" name="country"
