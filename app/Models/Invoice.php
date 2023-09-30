@@ -108,6 +108,10 @@ class Invoice extends Model
                 $product->name = $item->description;
                 $product->original_price = $item->total;
                 $product->price = $item->total - $product->discount;
+                // $item->price can't be less than 0
+                if ($product->price < 0) {
+                    $product->price = 0;
+                }
                 $products[] = $product;
                 $total += $product->price;
             } else {

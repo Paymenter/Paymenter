@@ -55,6 +55,12 @@ class CheckoutController extends Controller
                     $product->discount = 0;
                     $product->discount_fee = 0;
                 }
+                if ($product->discount > $product->price) {
+                    $product->discount = $product->price;
+                }
+                if ($product->discount_fee > $product->setup_fee) {
+                    $product->discount_fee = $product->setup_fee;
+                }
                 $discount += ($product->discount + $product->discount_fee) * $product->quantity;
             }
         }
@@ -306,6 +312,12 @@ class CheckoutController extends Controller
                 $product->discount = 0;
                 $product->discount_fee = 0;
             }
+            if ($product->discount > $product->price) {
+                $product->discount = $product->price;
+            }
+            if ($product->discount_fee > $product->setup_fee) {
+                $product->discount_fee = $product->setup_fee;
+            }
             if ($product->setup_fee) {
                 $total += ($product->setup_fee + $product->price) * $product->quantity - $product->discount - $product->discount_fee;
             } else {
@@ -353,12 +365,11 @@ class CheckoutController extends Controller
 
         session()->forget('cart');
         session()->forget('coupon');
-        if (!config('settings::mail_disabled')) {
-            NotificationHelper::sendNewOrderNotification($order, auth()->user());
-            if ($total != 0) {
-                NotificationHelper::sendNewInvoiceNotification($invoice, auth()->user());
-            }
+        NotificationHelper::sendNewOrderNotification($order, auth()->user());
+        if ($total != 0) {
+            NotificationHelper::sendNewInvoiceNotification($invoice, auth()->user());
         }
+
         foreach ($order->products()->get() as $product) {
             $iproduct = Product::where('id', $product->product_id)->first();
             if ($iproduct->stock_enabled) {
