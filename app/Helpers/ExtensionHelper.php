@@ -15,6 +15,7 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Contracts\Encryption\DecryptException;
+use Illuminate\Contracts\Encryption\EncryptException;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\View;
@@ -100,6 +101,33 @@ class ExtensionHelper
     }
 
     /**
+     * Get metadata of an extension
+     * 
+     * @param Extension $extension
+     * 
+     * @return array
+     */
+    public static function getMetadata(Extension $extension)
+    {
+        $namespace = 'App\Extensions\\' . ucfirst($extension->type) . 's\\' . $extension->name . '\\' . $extension->name;        // As it autoloads, we need to wrap it in a try/catch
+        try {
+            if (!class_exists($namespace)) {
+                return [];
+            }
+        } catch (\Exception $e) {
+            return [];
+        }
+        $namespace = new $namespace($extension);
+        if (!method_exists($namespace, 'getMetadata')) {
+            return [];
+        }
+        $metadata = json_decode(json_encode($namespace->getMetadata()));
+
+
+        return $metadata ?? [];
+    }
+
+    /**
      * Get userConfig
      * 
      * @param Product $product
@@ -176,13 +204,18 @@ class ExtensionHelper
     {
         $namespace = 'App\Extensions\\' . ucfirst($extension->type) . 's\\' . $extension->name . '\\' . $extension->name;
         $extension->config = json_decode(json_encode((new $namespace($extension))->getConfig()));
-        
+
         foreach ($extension->config as $config) {
             $validate = self::validateConfigItem($config, $request);
             if ($validate !== true && !is_array($validate)) {
                 return $validate;
             }
             $value = $request->get($config->name);
+            try {
+                $value = Crypt::encryptString($value);
+            } catch(EncryptException $e){
+
+            }
             $extension->getConfig()->updateOrCreate([
                 'key' => $config->name,
             ], [
@@ -589,7 +622,7 @@ class ExtensionHelper
             self::error($extension->name, 'Error when terminating server: ' . $e->getMessage() . ' on line ' . $e->getLine() . ' in file ' . $e->getFile());
         }
     }
-    
+
     /**
      * Get a (login) link for the client and admin area
      *
@@ -659,7 +692,7 @@ class ExtensionHelper
 
         foreach ($settings as $setting) {
             foreach ($config as $key => $value) {
-                if($value['name'] == $setting->name) {
+                if ($value['name'] == $setting->name) {
                     $config[$key]['value'] = $setting->value;
                 }
             }

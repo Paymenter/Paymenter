@@ -6,6 +6,8 @@ use App\Models\Extension;
 use Illuminate\Http\Request;
 use App\Helpers\ExtensionHelper;
 use App\Http\Controllers\Controller;
+use Illuminate\Contracts\Encryption\DecryptException;
+use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Http;
 
 class ExtensionController extends Controller
@@ -223,6 +225,11 @@ class ExtensionController extends Controller
         $extensionConfig = $extension->getConfig()->get();
         foreach ($extension->config as $key => $config) {
             $config->value = $extensionConfig->where('key', $config->name)->first()->value ?? null;
+            try {
+                $config->value = Crypt::decryptString($config->value);
+            } catch (DecryptException $e) {
+                
+            }
         }
 
         return view('admin.extensions.edit', compact('extension'));
