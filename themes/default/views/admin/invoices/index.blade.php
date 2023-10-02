@@ -55,7 +55,7 @@
                         @endif
                     </td>
                     <td>{{ $invoice->created_at }}</td>
-                    <td>{{ $invoice->updated_at }}</td>
+                    <td>{{ $invoice->paid_at ?? 'Not Paid' }}</td>
                     <td>
                         <a href="{{ route('admin.invoices.show', $invoice->id) }}" class="button button-primary">
                             {{ __('Show') }}
