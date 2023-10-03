@@ -7,15 +7,20 @@
     <x-input type="{{ $config->type }}" placeholder="{{ $config->placeholder ?? ucfirst($config->name) }}"
         name="{{ $config->name }}" id="{{ $config->name }}"
         value="{{ old($config->name) ?? $config->value }}"
-        label="{{ $config->friendlyName ?? ucfirst($config->name) }}" required />
+        label="{{ $config->friendlyName ?? ucfirst($config->name) }}"
+        :required="isset($config->required) ? $config->required : false"
+        />
 @elseif($config->type == 'textarea')
     <x-input type="textarea" placeholder="{{ $config->placeholder ?? ucfirst($config->name) }}"
         name="{{ $config->name }}" id="{{ $config->name }}"
         value="{{ old($config->name) ?? $config->value }}"
-        label="{{ $config->friendlyName ?? ucfirst($config->name) }}" required />
+        label="{{ $config->friendlyName ?? ucfirst($config->name) }}"
+        :required="isset($config->required) ? $config->required : false"
+         />
 @elseif($config->type == 'dropdown')
     <x-input type="select" label="{{ ucfirst($config->friendlyName ?? $config->name) }}"
-        name="{{ $config->name }}" id="{{ $config->name }}" required>
+        name="{{ $config->name }}" id="{{ $config->name }}"
+        :required="isset($config->required) ? $config->required : false">
         @foreach ($config->options as $option)
             <option value="{{ $option->value }}" @if (old($config->name) == $option || $config->value == $option) selected @endif>
                 {{ $option->name }}
