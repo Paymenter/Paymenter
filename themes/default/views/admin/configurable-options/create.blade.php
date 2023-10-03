@@ -9,8 +9,8 @@
             <x-input id="description" class="block mt-1 w-full" type="text" name="description" label="Description"
                 placeholder="Description" required autofocus />
             <!-- MultiSelect -->
-            <x-input id="configurable_options" class="block mt-1 w-full" type="select" name="products[]"
-                label="Configurable Options" placeholder="Configurable Options" required multiple>
+            <x-input id="products" class="block mt-1 w-full" type="select" name="products[]"
+                label="Products" placeholder="Products" required multiple>
                 @foreach ($products as $product)
                     <option value="{{ $product->id }}">{{ $product->name }}</option>
                 @endforeach
