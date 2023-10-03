@@ -197,7 +197,7 @@ class ExtensionController extends Controller
             } catch (DecryptException $e) {}
         }
 
-        $metadata = ExtensionHelper::getMetadata($extension);
+        $metadata = ExtensionHelper::getMetadata(Extension::where('name', $name)->first());
 
         return view('admin.extensions.edit', compact('extension', 'metadata'));
     }

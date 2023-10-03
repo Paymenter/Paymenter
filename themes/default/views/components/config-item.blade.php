@@ -22,7 +22,7 @@
         name="{{ $config->name }}" id="{{ $config->name }}"
         :required="isset($config->required) ? $config->required : false">
         @foreach ($config->options as $option)
-            <option value="{{ $option->value }}" @if (old($config->name) == $option || $config->value == $option) selected @endif>
+            <option value="{{ $option->value }}" @if (old($config->name) == $option || $config->value == $option->value) selected @endif>
                 {{ $option->name }}
             </option>
         @endforeach

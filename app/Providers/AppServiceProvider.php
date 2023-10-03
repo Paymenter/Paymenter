@@ -35,6 +35,8 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         Validator::extend('recaptcha', 'App\\Validators\\ReCaptcha@validate');
+        Validator::extend('domain', 'App\\Validators\\Domain@validate');
+        Validator::replacer('domain', 'App\\Validators\\Domain@message');
         Schema::defaultStringLength(191);
         if (Str::startsWith(config('app.url') ?? '', 'https://')) {
             URL::forceScheme('https');
