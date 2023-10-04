@@ -85,7 +85,7 @@ class Upgrade extends Command
         ini_set('output_buffering', '0');
         // Call update.sh <url>
         $this->line('$upgrader> curl -L "https://raw.githubusercontent.com/paymenter/paymenter/master/update.sh" | bash -s -- --user=' . $user . ' --group=' . $group . ' --url=' . $this->getUrl());
-        $process = Process::fromShellCommandline('curl -L "https://raw.githubusercontent.com/paymenter/paymenter/master/update.sh" | bash -s -- --user=' . $user . ' --group=' . $group . ' --url=' . $this->getUrl());
+        $process = Process::fromShellCommandline('curl -L "https://raw.githubusercontent.com/paymenter/paymenter/master/update.sh" | bash -s -- --user=' . $user . ' --group=' . $group . ' --url=' . $this->getUrl(), null, null, null, 1200);
         $process->run(function ($type, $buffer) {
             $this->{$type === Process::ERR ? 'error' : 'line'}($buffer);
         });
