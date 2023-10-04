@@ -28,3 +28,4 @@ Route::group(['prefix' => 'v1/invoices'], function () {
     Route::get('/{invoiceId}', [InvoiceController::class, 'getInvoice'])->name('api.client.v1.invoices.getInvoice')->middleware('api.permission:invoice:read');
     Route::post('/{invoiceId}/pay', [InvoiceController::class, 'payInvoice'])->name('api.client.v1.invoices.payInvoice')->middleware('api.permission:invoice:update');
 });
+

@@ -115,6 +115,8 @@ rm -rf storage/logs/*.log
 echo '$upgrader> chown -R '$PERMUSER':'$PERMGROUP '.'
 chown -R $PERMUSER:$PERMGROUP .
 
+php artisan p:check-updates
+
 # Set application up for maintenance.
 echo '$upgrader> php artisan up'
 php artisan up

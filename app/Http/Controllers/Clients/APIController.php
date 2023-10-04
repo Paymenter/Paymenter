@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Clients;
 use App\Classes\API;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 class APIController extends Controller
 {
@@ -37,6 +38,9 @@ class APIController extends Controller
             $permissions = array_diff($permissions, API::$adminPermissions);
         } else {
             foreach ($permissions as $permission) {
+                if(!Str::startsWith($permission, 'admin:')) {
+                    continue;
+                }
                 if (!API::hasPermission($user, $permission)) {
                     return redirect('/api')->with('error', 'You do not have permission to create API tokens with the permission "' . $permission . '".');
                 }

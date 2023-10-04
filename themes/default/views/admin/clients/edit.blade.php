@@ -82,130 +82,46 @@
                     <form method="POST" action="{{ route('admin.clients.update', $user->id) }}">
                         @csrf
                         <div class="grid grid-cols-2 gap-4 mt-4 dark:text-white">
-                            <div>
-                                <label for="first_name"
-                                    class="dark:text-darkmodetext block text-sm font-medium text-gray-700">
-                                    {{ __('First name') }}
-                                </label>
-                                <div class="mt-1">
-                                    <input type="text" name="first_name" value="{{ $user->first_name }}" id="first_name"
-                                        placeholder="John" autocomplete="first_name" required
-                                        class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm dark:bg-darkmode rounded-md">
-                                </div>
-                            </div>
-                            <div>
-                                <label for="last_name"
-                                       class="dark:text-darkmodetext block text-sm font-medium text-gray-700">
-                                    {{ __('Last name') }}
-                                </label>
-                                <div class="mt-1">
-                                    <input type="text" name="last_name" value="{{ $user->last_name }}" id="last_name"
-                                           placeholder="Doe" autocomplete="last_name" required
-                                           class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm dark:bg-darkmode rounded-md">
-                                </div>
-                            </div>
-                            <div>
-                                <label for="email"
-                                    class="dark:text-darkmodetext block text-sm font-medium text-gray-700">
-                                    {{ __('Email') }}
-                                </label>
-                                <div class="mt-1">
-                                    <input type="text" name="email" id="email" value="{{ $user->email }}"
-                                        placeholder="jdoe@example.com" autocomplete="email" required
-                                        class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm dark:bg-darkmode rounded-md">
-                                </div>
-                            </div>
-                            <div>
-                                <label for="phone"
-                                    class="dark:text-darkmodetext block text-sm font-medium text-gray-700">
-                                    {{ __('Phone') }}
-                                </label>
-                                <div class="mt-1">
-                                    <input type="text" name="phone" value="{{ $user->phone }}"
-                                        placeholder="+1-234-567-89" id="phone" autocomplete="phone"
-                                        class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm dark:bg-darkmode rounded-md">
-                                </div>
-                            </div>
-                            <div>
-                                <label for="companynames"
-                                    class="dark:text-darkmodetext block text-sm font-medium text-gray-700">
-                                    {{ __('Company Names') }}
-                                </label>
-                                <div class="mt-1">
-                                    <input type="text" placeholder="Optional" value="{{ $user->companynames }}"
-                                        name="companynames" id="companynames" autocomplete="companynames"
-                                        class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm dark:bg-darkmode rounded-md">
-                                </div>
-                            </div>
+                            <x-input name="first_name" id="first_name" label="{{ __('First name') }}" type="text"
+                                value="{{ $user->first_name }}" />
+                            <x-input name="last_name" id="last_name" label="{{ __('Last name') }}" type="text"
+                                value="{{ $user->last_name }}" />
+
+                            <x-input name="email" id="email" label="{{ __('Email') }}" type="email"
+                                value="{{ $user->email }}" />
+
+                            <x-input name="phone" id="phone" label="{{ __('Phone') }}" type="text"
+                                value="{{ $user->phone }}" />
+
+                            <x-input name="companyname" id="companyname" label="{{ __('Company Name') }}"
+                                type="text" value="{{ $user->companyname }}" />
                         </div>
 
                         <hr class="my-6 border-b-1 border-gray-300 dark:border-gray-600" />
 
                         <div class="grid grid-cols-3 gap-4">
-                            <div>
-                                <label for="address"
-                                    class="dark:text-darkmodetext block text-sm font-medium text-gray-700">
-                                    {{ __('Address') }}
-                                </label>
-                                <div class="mt-1">
-                                    <input type="text" name="address" value="{{ $user->address }}" id="address"
-                                        placeholder="Bobcat Lane" autocomplete="address"
-                                        class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm dark:bg-darkmode rounded-md">
-                                </div>
-                            </div>
-                            <div>
-                                <label for="city"
-                                    class="dark:text-darkmodetext block text-sm font-medium text-gray-700">
-                                    {{ __('City') }}
-                                </label>
-                                <div class="mt-1">
-                                    <input type="text" name="city" value="{{ $user->city }}" id="city"
-                                        placeholder="St. Robert" autocomplete="city"
-                                        class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm dark:bg-darkmode rounded-md">
-                                </div>
-                            </div>
-                            <div>
-                                <label for="state"
-                                    class="dark:text-darkmodetext block text-sm font-medium text-gray-700">
-                                    {{ __('State') }}
-                                </label>
-                                <div class="mt-1">
-                                    <input type="text" name="state" value="{{ $user->state }}" id="state"
-                                        placeholder="Missouri" autocomplete="state"
-                                        class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm dark:bg-darkmode rounded-md">
-                                </div>
-                            </div>
+                            <x-input name="address" id="address" label="{{ __('Address') }}" type="text"
+                                value="{{ $user->address }}" />
+
+                            <x-input name="city" id="city" label="{{ __('City') }}" type="text"
+                                value="{{ $user->city }}" />
+
+                            <x-input name="state" id="state" label="{{ __('State') }}" type="text"
+                                value="{{ $user->state }}" />
                         </div>
 
                         <div class="grid grid-cols-2 gap-4 mt-4">
-                            <div>
-                                <label for="zip"
-                                    class="dark:text-darkmodetext block text-sm font-medium text-gray-700">
-                                    {{ __('Zip') }}
-                                </label>
-                                <div class="mt-1">
-                                    <input type="text" name="zip" value="{{ $user->zip }}" id="zip"
-                                        placeholder="1234 NW" autocomplete="zip"
-                                        class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm dark:bg-darkmode rounded-md">
-                                </div>
-                            </div>
-                            <div>
-                                <label for="country"
-                                    class="dark:text-darkmodetext block text-sm font-medium text-gray-700">
-                                    {{ __('Country') }}
-                                </label>
-                                <div class="mt-1">
-                                    <input type="text" name="country" value="{{ $user->country }}"
-                                        id="country" placeholder="United States" autocomplete="country"
-                                        class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm dark:bg-darkmode rounded-md">
-                                </div>
-                            </div>
+                            <x-input name="country" id="country" label="{{ __('Country') }}" type="text"
+                                value="{{ $user->country }}" />
+
+                            <x-input name="zip" id="zip" label="{{ __('Zip') }}" type="text"
+                                value="{{ $user->zip }}" />
                         </div>
 
                         <hr class="my-6 border-b-1 border-gray-300 dark:border-gray-600" />
 
-                        <x-input type="number" name="credits" step="0.01" id="credits" label="{{ __('Credits') }}"
-                            value="{{ $user->credits }}" />
+                        <x-input type="number" name="credits" step="0.01" id="credits"
+                            label="{{ __('Credits') }}" value="{{ $user->credits }}" />
 
                         <hr class="my-6 border-b-1 border-gray-300 dark:border-gray-600" />
 
