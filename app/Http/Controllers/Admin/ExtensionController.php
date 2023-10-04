@@ -102,6 +102,10 @@ class ExtensionController extends Controller
             $this->deleteDir($path);
         }
         mkdir($path, 0777, true);
+        // Check if temp folder exists
+        if (!file_exists(base_path('storage/app/temp'))) {
+            mkdir(base_path('storage/app/temp'), 0777, true);
+        }
         // Download zip to temp folder
         $zip = Http::get(config('app.marketplace') . 'extensions/' . $id . '/download?version=' . config('app.version'));
         $zip = $zip->body();
@@ -129,6 +133,9 @@ class ExtensionController extends Controller
             }
             rmdir($subfolderPath);
         }
+
+        // Remove temp folder
+        $this->deleteDir(base_path('storage/app/temp'));
 
         // Check if the extension is enabled
         $extensionModel = Extension::where('name', $extension['name'])->first();
