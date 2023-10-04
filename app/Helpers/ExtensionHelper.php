@@ -692,7 +692,7 @@ class ExtensionHelper
 
         foreach ($settings as $setting) {
             foreach ($config as $key => $value) {
-                if ($value['name'] == $setting->name) {
+                if (isset($setting->name) && isset($value['name']) && $value['name'] == $setting->name) {
                     $config[$key]['value'] = $setting->value;
                 }
             }
