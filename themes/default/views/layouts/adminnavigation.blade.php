@@ -184,7 +184,7 @@
 
                 <!-- settings -->
                 <a class="text-black hover:bg-secondary-300 block px-3 py-2 rounded-md text-base font-medium dark:text-darkmodetext hover:cursor-pointer @if (request()->routeIs('admin.settings*')) bg-secondary-200 @endif" data-dropdown-toggle="settings-menu">{{ __('Settings') }}</a>
-                <div class="dropdown-menu bg-secondary-200 p-2 rounded-md shadow-sm hidden ml-2" id="settings-menu">
+                <div class="dropdown-menu bg-secondary-200 p-2 rounded-md shadow-sm hidden ml-2 z-10" id="settings-menu">
                     <a href="{{ route('admin.settings') }}" class="text-black hover:bg-secondary-300 block px-3 py-2 rounded-md text-base font-medium dark:text-darkmodetext @if (request()->routeIs('admin.settings*')) bg-secondary-200 @endif">{{ __('Settings') }}</a>
                     <a href="{{ route('admin.extensions') }}" class="text-black hover:bg-secondary-300 block px-3 py-2 rounded-md text-base font-medium dark:text-darkmodetext @if (request()->routeIs('admin.extensions*')) bg-secondary-200 @endif">{{ __('Extension Settings') }}</a>
                 </div>
