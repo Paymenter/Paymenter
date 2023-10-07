@@ -7,6 +7,7 @@ use App\Helpers\ExtensionHelper;
 use App\Helpers\NotificationHelper;
 use App\Models\{Extension, Invoice, OrderProduct, OrderProductConfig, Order, Product, User, Coupon, InvoiceItem};
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
 class CheckoutController extends Controller
@@ -78,9 +79,12 @@ class CheckoutController extends Controller
             return redirect()->back()->with('error', 'Product is out of stock');
         }
         if ($product->limit) {
-            $orderProducts = OrderProduct::where('product_id', $product->id)->count();
-            if ($orderProducts >= $product->limit) {
-                return redirect()->back()->with('error', 'Product limit reached');
+            $orderProducts = 0;
+            if (auth()->check() && auth()->user()->orderProducts) {
+                $orderProducts = Auth::user()->orderProducts()->where('product_id', $product->id)->count();
+                if ($orderProducts >= $product->limit) {
+                    return redirect()->back()->with('error', 'Product limit reached');
+                }
             }
             if (isset($cart[$product->id]) && $cart[$product->id]->quantity + $orderProducts >= $product->limit) {
                 return redirect()->back()->with('error', 'Product limit reached');
@@ -228,9 +232,13 @@ class CheckoutController extends Controller
 
         // Check if product has a limit per user
         if ($product->limit) {
-            $orderProducts = OrderProduct::where('product_id', $product->id)->count();
-            if ($orderProducts >= $product->limit) {
-                return redirect()->back()->with('error', 'Product limit reached');
+            $orderProducts = 0;
+            if (auth()->check() && auth()->user()->orderProducts) {
+                $orderProducts = Auth::user()->orderProducts()->where('product_id', $product->id)->count();
+
+                if ($orderProducts >= $product->limit) {
+                    return redirect()->back()->with('error', 'Product limit reached');
+                }
             }
             if (isset($cart[$product->id]) && $cart[$product->id]->quantity + $orderProducts >= $product->limit) {
                 return redirect()->back()->with('error', 'Product limit reached');
@@ -515,7 +523,10 @@ class CheckoutController extends Controller
                 return redirect()->back()->with('error', 'Product is out of stock');
             }
             if ($product->limit) {
-                $orderProducts = OrderProduct::where('product_id', $product->id)->count();
+                $orderProducts = 0;
+                if (auth()->check() && auth()->user()->orderProducts) {
+                    $orderProducts = Auth::user()->orderProducts()->where('product_id', $product->id)->count();
+                }
                 if ($orderProducts + $request->quantity > $product->limit) {
                     return redirect()->back()->with('error', 'Product limit reached');
                 }
