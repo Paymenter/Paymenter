@@ -97,7 +97,7 @@ class ExtensionController extends Controller
         }
         $extension = $response->json();
         $path = base_path('app/Extensions/' . ucfirst($extension['type']) . 's/' . $extension['name']);
-        if(file_exists($path)) {
+        if (file_exists($path)) {
             //Remove the folder
             $this->deleteDir($path);
         }
@@ -123,15 +123,17 @@ class ExtensionController extends Controller
         $subfolder = scandir($path);
         if (count($subfolder) == 3) {
             $subfolder = $subfolder[2];
-            $subfolderPath = $path . '/' . $subfolder;
-            $files = scandir($subfolderPath);
-            foreach ($files as $file) {
-                if ($file == '.' || $file == '..') {
-                    continue;
+            if (is_dir($path . '/' . $subfolder)) {
+                $subfolderPath = $path . '/' . $subfolder;
+                $files = scandir($subfolderPath);
+                foreach ($files as $file) {
+                    if ($file == '.' || $file == '..') {
+                        continue;
+                    }
+                    rename($subfolderPath . '/' . $file, $path . '/' . $file);
                 }
-                rename($subfolderPath . '/' . $file, $path . '/' . $file);
+                rmdir($subfolderPath);
             }
-            rmdir($subfolderPath);
         }
 
         // Remove temp folder
@@ -174,7 +176,7 @@ class ExtensionController extends Controller
         }
         return rmdir($dir);
     }
-    
+
 
     public function edit($sort, $name)
     {
@@ -201,7 +203,8 @@ class ExtensionController extends Controller
             $config->value = $extensionConfig->where('key', $config->name)->first()->value ?? null;
             try {
                 $config->value = Crypt::decryptString($config->value);
-            } catch (DecryptException $e) {}
+            } catch (DecryptException $e) {
+            }
         }
 
         $metadata = ExtensionHelper::getMetadata(Extension::where('name', $name)->first());
