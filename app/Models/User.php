@@ -80,6 +80,7 @@ class User extends Authenticatable
             $user->orders()->delete();
             $user->tickets()->delete();
             $user->invoices()->delete();
+            EmailLog::where('user_id', $user->id)->delete();
         });
     }
 
