@@ -103,7 +103,7 @@ class ProductController extends Controller
         ProductPrice::create([
             'product_id' => $product->id,
             'monthly' => $data['price'],
-            'type' => $data['price'] > 0 ? 'monthly' : 'free',
+            'type' => $data['price'] > 0 ? 'recurring' : 'free',
         ]);
 
         return redirect()->route('admin.products.edit', $product->id)->with('success', 'Product created successfully');
