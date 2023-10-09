@@ -287,6 +287,11 @@ class Pterodactyl extends Server
                 'allocation' => [
                     'default' => (int) $allocation,
                 ],
+                'deploy' => [
+                    'locations' => [(int) $location],
+                    'dedicated_ip' => false,
+                    'port_range' => [],
+                ],
                 'environment' => $environment,
                 'external_id' => (string) $orderProduct->id,
             ];
