@@ -36,7 +36,7 @@
                                                     @csrf
                                                     <button type="submit" class="button button-primary">
                                                         <i class="ri-download-2-line text-xs"></i>
-                                                        <span class="hidden 2xl:flex">{{ __('Download') }}</span>
+                                                        <span class="hidden 2xl:inline-flex">{{ __('Download') }}</span>
                                                     </button>
                                                 </form>
                                             </div>
@@ -44,7 +44,7 @@
                                             <div class="flex h-full">
                                                 <a href="{{ config('app.marketplace') . '/extension/' . $extension->id  . '/' . $extension->name }}" class="button button-primary">
                                                     <i class="ri-wallet-3-fill text-xs"></i>
-                                                    <span class="hidden 2xl:flex">{{ __('Buy') }}</span>
+                                                    <span class="hidden 2xl:inline-flex">{{ __('Buy') }}</span>
                                                 </a>
                                             </div>
                                         @endif
