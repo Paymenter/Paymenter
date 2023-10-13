@@ -7,6 +7,21 @@ use App\Classes\Extensions\Gateway;
 class {{ class }} extends Gateway
 {
     /**
+    * Get the extension metadata
+    * 
+    * @return array
+    */
+    public function getMetadata()
+    {
+        return [
+            'display_name' => '{{ class }}',
+            'version' => '1.0.0',
+            'author' => 'Paymenter',
+            'website' => 'https://paymenter.org',
+        ];
+    }
+
+    /**
      * Get all the configuration for the extension
      * 
      * @return array
