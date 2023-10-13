@@ -12,12 +12,12 @@ class Pterodactyl extends Server
     {
         return [
             'display_name' => 'Pterodactyl',
-            'version' => '1.0.0',
+            'version' => '1.0.1',
             'author' => 'Paymenter',
             'website' => 'https://paymenter.org',
         ];
     }
-    
+
     private function config($key): ?string
     {
         $config = ExtensionHelper::getConfig('Pterodactyl', $key);
@@ -206,6 +206,20 @@ class Pterodactyl extends Server
                 'type' => 'boolean',
                 'description' => 'Decides if Pterodactyl will skip install scripts',
             ],
+            [
+                'name' => 'port_range',
+                'friendlyName' => 'Pterodactyl Port Range',
+                'type' => 'text',
+                'required' => false,
+                'description' => 'Port range for the server. Example: 7777-7779',
+            ],
+            [
+                'name' => 'port_array',
+                'friendlyName' => 'Pterodactyl Port Array',
+                'type' => 'text',
+                'required' => false,
+                'description' => 'List of ports + their egg variable name. Example: {"SERVER_PORT": 7777, "NONE": 7778, "QUERY_PORT": 27015, "RCON_PORT": 27020}',
+            ]
         ];
     }
 
@@ -253,8 +267,13 @@ class Pterodactyl extends Server
         $backups = $configurableOptions['backups'] ?? $params['backups'];
         $startup = $configurableOptions['startup'] ?? $eggData['attributes']['startup'];
         $node = $configurableOptions['node'] ?? $params['node'];
+        $port_range = $configurableOptions['port_range'] ?? $params['port_range'] ?? null;
+        $port_array = $configurableOptions['port_array'] ?? $params['port_array'] ?? null;
         $servername = $configurableOptions['servername'] ?? $params['servername'] ?? false;
         $servername = empty($servername) ? $orderProduct->product->name . ' #' . $orderProduct->id : $servername;
+        $port_array = (object) $this->portArrays($port_array, $environment, $location, $node, $orderProduct);
+        $allocationed = $port_array->allocations ?? [];
+        $environment = $port_array->environment ?? $environment;
 
         if ($node) {
             $allocation = $this->getRequest($this->config('host') . '/api/application/nodes/' . $params['node'] . '/allocations');
@@ -286,6 +305,7 @@ class Pterodactyl extends Server
                 ],
                 'allocation' => [
                     'default' => (int) $allocation,
+                    'additional' => $allocationed ?? [],
                 ],
                 'environment' => $environment,
                 'external_id' => (string) $orderProduct->id,
@@ -310,14 +330,21 @@ class Pterodactyl extends Server
                     'allocations' => (int) $allocations,
                     'backups' => (int) $backups,
                 ],
-                'deploy' => [
-                    'locations' => [(int) $location],
-                    'dedicated_ip' => false,
-                    'port_range' => [],
+                'allocation' => [
+                    'default' => (int) $port_array->default ?? null,
+                    'additional' => $allocationed ?? [],
                 ],
                 'environment' => $environment,
                 'external_id' => (string) $orderProduct->id,
             ];
+
+            if (!$allocationed && $port_range->default) {
+                $json['deploy'] =  [
+                    'locations' => [(int) $location],
+                    'dedicated_ip' => false,
+                    'port_range' => $port_range ? [$port_range] : [],
+                ];
+            }
         }
         $response = $this->postRequest($url, $json);
 
@@ -328,6 +355,131 @@ class Pterodactyl extends Server
         }
 
         return true;
+    }
+
+    private function portArrays($port_array, $environment, $location, $node, $orderProduct)
+    {
+        // example {"SERVER_PORT": 7777, "NONE": [7778, 7779] "QUERY_PORT": 2701, "RCON_PORT": 27020}
+        if (!isset($port_array)) return [];
+        try {
+            $port_array = json_decode($port_array, true);
+        } catch (\Exception $e) {
+            ExtensionHelper::error('Pterodactyl', 'Failed to decode port array for order ' . $orderProduct->id . ' with error ' . $e->getMessage());
+            return [];
+        }
+        if (!$port_array) return [];
+        if (!$node) {
+            // If no node is selected, we need to get the node id from the location
+            $node = $this->getRequest($this->config('host') . '/api/application/nodes?per_page=100');
+            $node = $node->json();
+            $node = collect($node['data'])->where('attributes.location_id', $location);
+            while (!$node) {
+                if (!isset($node['meta']['pagination']['links']['next'])) {
+                    ExtensionHelper::error('Pterodactyl', 'Failed to find node for order ' . $orderProduct->id . ' skipping port array');
+                    return [];
+                }
+                $node = $this->getRequest($node['meta']['pagination']['links']['next']);
+                $node = $node->json();
+                $node = collect($node['data'])->where('attributes.location_id', $location);
+            }
+            // Search for the emptiest node
+            foreach ($node as $key => $val) {
+                if ($val['attributes']['maintenance_mode']) continue;
+                // Node has *infinity* resources
+                if ($val['attributes']['memory_overallocate'] == -1 && $val['attributes']['disk_overallocate'] == -1) {
+                    $node = $val['attributes']['id'];
+                    break;
+                }
+                if (($val['attributes']['memory'] / 100 * ($val['attributes']['memory_overallocate'] + 100)) > $val['attributes']['allocated_resources']['memory']) {
+                    $node = $val['attributes']['id'];
+                    break;
+                }
+            }
+        }
+        if (!$node) {
+            ExtensionHelper::error('Pterodactyl', 'Failed to find node for order ' . $orderProduct->id . ' skipping port array');
+            return [];
+        }
+
+        $availableAllocations = [];
+        $allocationData = $this->getRequest($this->config('host') . '/api/application/nodes/' . $node . '/allocations?per_page=100');
+        $allocationData = $allocationData->json();
+
+        while (isset($allocationData['meta']['pagination']['links']['next'])) {
+            foreach ($allocationData['data'] as $key => $val) {
+                if ($val['attributes']['assigned'] == false) {
+                    $availableAllocations[] = [
+                        'id' => $val['attributes']['id'],
+                        'port' => $val['attributes']['port']
+                    ];
+                }
+            }
+            $allocationData = $this->getRequest($allocationData['meta']['pagination']['links']['next'] . '&per_page=100');
+            $allocationData = $allocationData->json();
+        }
+
+        foreach ($allocationData['data'] as $key => $val) {
+            if ($val['attributes']['assigned'] == false) {
+                $availableAllocations[] = [
+                    'id' => $val['attributes']['id'],
+                    'port' => $val['attributes']['port']
+                ];
+            }
+        }
+
+        $availableAllocations = collect($availableAllocations);
+        $allocations = [];
+
+        foreach ($port_array as $key => $val) {
+            if (is_array($val)) {
+                foreach ($val as $key2 => $val2) {
+                    $allocation = $availableAllocations->where('port', $val2)->first();
+                    while (!$allocation) {
+                        // Check if there are even ports higher than the one we are looking for
+                        if (!$availableAllocations->where('port', '>', $val2)->first()) {
+                            // Just pick the first one
+                            $allocation = $availableAllocations->random();
+                        } else {
+                            $allocation = $availableAllocations->where('port', $val2 + 1)->first();
+                            $val2++;
+                        }
+                    }
+                    $allocations[] = $allocation['id'];
+                    $availableAllocations->forget($availableAllocations->search($allocation));
+                    if ($key !== 'NONE' || $key !== 'SERVER_PORT') {
+                        if (isset($environment[$key])) $environment[$key] = $allocation['port'];
+                    }
+                }
+                continue;
+            }
+            // Check if port is available
+            $allocation = $availableAllocations->where('port', $val)->first();
+            while (!$allocation) {
+                // Check if there are even ports higher than the one we are looking for
+                if (!$availableAllocations->where('port', '>', $val)->first()) {
+                    // Just pick the first one
+                    $allocation = $availableAllocations->random();
+                } else {
+                    $allocation = $availableAllocations->where('port', $val + 1)->first();
+                    $val++;
+                }
+            }
+            if ($key !== 'SERVER_PORT') $allocations[] = $allocation['id'];
+            $availableAllocations->forget($availableAllocations->search($allocation));
+
+            if ($key !== 'NONE' && $key !== 'SERVER_PORT') {
+                if (isset($environment[$key])) $environment[$key] = $allocation['port'];
+            }
+            if ($key === 'SERVER_PORT') {
+                $default = $allocation['id'];
+            }
+        }
+
+        return [
+            'allocations' => $allocations,
+            'default' => $default ?? null,
+            'environment' => $environment,
+        ];
     }
 
     private function random_string($length = 10): string
@@ -356,10 +508,10 @@ class Pterodactyl extends Server
                 $sanitized = $this->random_string(8); // Ta funkcja musi być dostępna w twoim kodzie
             }
             $json = [
-                'username' => $sanitized.'_'.$this->random_string(3)??$this->random_string(8),
+                'username' => $sanitized . '_' . $this->random_string(3) ?? $this->random_string(8),
                 'email' => $user->email,
                 'first_name' => $user->name,
-                'last_name' => $user->lastname??'User',
+                'last_name' => $user->lastname ?? 'User',
             ];
             $response = $this->postRequest($url, $json);
             if (!$response->successful()) {
