@@ -93,6 +93,8 @@
                                                 Quantity</option>
                                             <option value="slider" @if ($configurableOption->type == 'slider') selected @endif>
                                                 Slider</option>
+                                            <option value="text" @if ($configurableOption->type == 'text') selected @endif>
+                                                Text</option>
                                         </x-input>
                                     </div>
                                     <div class="flex flex-row gap-4">
@@ -107,9 +109,9 @@
                                         </div>
 
                                     </div>
-                                    @foreach ($configurableOption->configurableOptionInputs as $option)
+                                    @foreach ($configurableOption->configurableOptionInputs as $key => $option)
                                         @php $pricing = $option->configurableOptionInputPrice; @endphp
-                                        <div class="content-box mt-2">
+                                        <div class="content-box mt-2 @if(in_array($configurableOption->type, ['text', 'checkbox', 'quantity']) && $key > 0) hidden @endif">
                                             <div class="flex flex-row text-sm gap-4 mt-1">
                                                 <x-input label="Name" type="text" class="block mt-1 w-full"
                                                     name="option[{{ $option->id }}][name]" placeholder="Name"

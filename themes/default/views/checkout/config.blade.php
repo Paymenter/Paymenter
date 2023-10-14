@@ -158,15 +158,15 @@
                                             @endforeach
                                         </div>
                                     </div>
-                                @else
+                                @elseif($item->type == 'select')
                                     <x-input type="{{ $item->type }}" placeholder="{{ ucfirst($item->name) }}"
                                         name="{{ $item->id }}" id="{{ $item->id }}"
                                         label="{{ ucfirst($name) }}" required>
                                         @foreach ($item->configurableOptionInputs()->orderBy('order', 'asc')->get() as $option)
-                                            @php $name = explode('|', $option->name)[1] ?? $option->name; @endphp
                                             @if ($option->hidden)
                                                 @continue
                                             @endif
+                                            @php $name = explode('|', $option->name)[1] ?? $option->name; @endphp
                                             <option value="{{ $option->id }}"
                                                 @if (old($item->name) == $option) selected @endif>
                                                 {{ ucfirst($name) }}
@@ -176,6 +176,11 @@
                                                 @endif
                                             </option>
                                         @endforeach
+                                    </x-input>
+                                @else 
+                                    <x-input type="{{ $item->type }}" placeholder="{{ ucfirst($item->name) }}"
+                                        name="{{ $item->id }}" id="{{ $item->id }}"
+                                        label="{{ ucfirst($name) }}" required>
                                     </x-input>
                                 @endif
                             </div>
