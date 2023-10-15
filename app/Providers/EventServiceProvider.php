@@ -2,6 +2,13 @@
 
 namespace App\Providers;
 
+use App\Models\Affiliate;
+use App\Models\Announcement;
+use App\Models\Extension;
+use App\Models\Invoice;
+use App\Models\Ticket;
+use App\Models\TicketMessage;
+use App\Models\User;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
@@ -30,6 +37,23 @@ class EventServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        Invoice::observe(\App\Observers\InvoiceObserver::class);
+        TicketMessage::observe(\App\Observers\TicketMessageObserver::class);
+        Ticket::observe(\App\Observers\TicketObserver::class);
+        User::observe(\App\Observers\UserObserver::class);
+        Affiliate::observe(\App\Observers\AffiliateObserver::class);
+        Announcement::observe(\App\Observers\AnnouncementObserver::class);
+        try {
+            foreach (Extension::where('enabled', true)->get() as $extension) {
+                $module = $extension->namespace . '\\' . $extension->name . 'Listeners';
+                if (!class_exists($module)) {
+                    continue;
+                }
+                Event::subscribe(new $module);
+            }
+        } catch (\Exception $e) {
+            // If the database is not yet migrated, this will throw an exception.
+        }
     }
 
     /**
@@ -39,6 +63,18 @@ class EventServiceProvider extends ServiceProvider
      */
     public function shouldDiscoverEvents()
     {
-        return false;
+        return true;
+    }
+
+    /**
+     * Get the listener directories that should be used to discover events.
+     *
+     * @return array<int, string>
+     */
+    public function discoverEventsWithin(): array
+    {
+        return [
+            $this->app->path('Listeners'),
+        ];
     }
 }

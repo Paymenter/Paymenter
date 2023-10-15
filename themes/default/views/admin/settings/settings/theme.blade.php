@@ -7,7 +7,7 @@
                 <select name="theme" class="form-input peer @error('theme') is-invalid @enderror" placeholder=" "
                     name="theme" required>
                     @foreach ($themes as $theme)
-                        <option value="{{ $theme }}" {{ $theme == config('settings::theme') ? 'selected' : '' }}>
+                        <option value="{{ $theme }}" {{ $theme == config('settings::theme-active') ? 'selected' : '' }}>
                             {{ $theme }}</option>
                     @endforeach
                 </select>
@@ -50,5 +50,6 @@
             @endforeach
         </div>
         <button type="submit" class="button button-primary float-right">{{ __('Save') }}</button>
+        <button type="submit" name="reset" value="1" class="button button-danger float-right mr-4">{{ __('Reset') }}</button>
     </form>
 </div>

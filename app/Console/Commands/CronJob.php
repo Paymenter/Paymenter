@@ -5,8 +5,10 @@ namespace App\Console\Commands;
 use App\Models\Order;
 use Illuminate\Console\Command;
 use App\Helpers\ExtensionHelper;
+use App\Helpers\NotificationHelper;
 use App\Mail\Invoices\NewInvoice;
 use App\Models\OrderProduct;
+use App\Models\Setting;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 
@@ -17,7 +19,7 @@ class CronJob extends Command
      *
      * @var string
      */
-    protected $signature = 'cronjob:run';
+    protected $signature = 'p:cronjob';
 
     /**
      * The console command description.
@@ -36,42 +38,55 @@ class CronJob extends Command
         $this->info('Cron Job Started');
         $orders = OrderProduct::where('expiry_date', '<', now())->get();
         foreach ($orders as $order) {
+            if ($order->price == 0.00) {
+                continue;
+            }
             if ($order->status == 'paid') {
                 $order->status = 'suspended';
                 $order->save();
                 ExtensionHelper::suspendServer($order);
-            } elseif ($order->status == 'pending') {
-                $order->status = 'cancelled';
-                $order->save();
-            } elseif ($order->status == 'suspended') {
-                if (strtotime($order->expiry_date) < strtotime('-1 week')) {
+                $invoice = $order->lastInvoice();
+                // Free products don't have invoices
+                if ($invoice) {
+                    NotificationHelper::sendUnpaidInvoiceNotification($invoice, $order->order->user);
+                }
+                $this->info('Suspended server: ' . $order->id);
+            } elseif ($order->status == 'suspended' || $order->status == 'pending') {
+                if (strtotime($order->expiry_date) < strtotime('-' . config('settings::remove_unpaid_order_after', 7) . ' days')) {
                     ExtensionHelper::terminateServer($order);
                     $order->status = 'cancelled';
+                    NotificationHelper::sendDeletedOrderNotification($order->order, $order->order->user);
                     $order->save();
+                    $invoice = $order->lastInvoice();
+
+                    if ($invoice) {
+                        if ($invoice->status !== 'paid') {
+                            $invoice->status = 'cancelled';
+                            $invoice->cancelled_at = now()->format('Y-m-d H:i:s');
+                            $invoice->save();
+                            $this->info('Invoice ' . $invoice->id . ' status changed to ' . $invoice->status);
+                        }
+                    }
                 }
             }
         }
         $orders = OrderProduct::where('expiry_date', '<', now()->addDays(7))->where('status', '!=', 'cancelled')->get();
         $invoiceProcessed = 0;
         foreach ($orders as $order) {
-            if($order->billing_cycle == 'free' || $order->billing_cycle == 'one-time') {
+            if ($order->billing_cycle == 'free' || $order->billing_cycle == 'one-time' || $order->price == 0.00) {
                 continue;
             }
             // Get all InvoiceItems for this product
-            $invoiceItems = $order->invoices()->get();
-            // Check if there is a pending invoice
-            foreach ($invoiceItems as $invoiceItem) {
-                $invoice = $invoiceItem->invoice()->get()->first();
-                if ($invoice->status == 'pending') {
-                    // Stop processing this order
-                    continue 2;
-                }
+            $invoiceItems = $order->getOpenInvoices();
+
+            if ($invoiceItems->count() > 0) {
+                continue;
             }
 
             $invoice = new \App\Models\Invoice();
-            $invoice->order_id = $order->id;
+            $invoice->order_id = $order->order->id;
             $invoice->status = 'pending';
-            $invoice->user_id = $order->order()->get()->first()->client;
+            $invoice->user_id = $order->order->user_id;
             $invoice->save();
             $date;
             if ($order->billing_cycle == 'monthly') {
@@ -96,21 +111,17 @@ class CronJob extends Command
             $invoiceItem->invoice_id = $invoice->id;
             $invoiceItem->product_id = $order->id;
             $description = $order->billing_cycle ? '(' . date('Y-m-d', strtotime($order->expiry_date)) . ' - ' . date('Y-m-d', strtotime($date)) . ')' : '';
-            $invoiceItem->description = $order->product()->get()->first() ? $order->product()->get()->first()->name . $description : '' . $description;
+            $invoiceItem->description = $order->product()->get()->first() ? $order->product()->get()->first()->name . ' ' . $description : '' . $description;
             $invoiceItem->total = $order->price;
             $invoiceItem->save();
 
-            if (!config('settings::mail_disabled')) {
-                try {
-                    Mail::to($order->order()->get()->first()->client()->get())->send(new NewInvoice($invoice));
-                } catch (\Exception $e) {
-                    Log::error($e->getMessage());
-                }
-            }
+            NotificationHelper::sendNewInvoiceNotification($invoice, $order->order->user);
             $invoiceProcessed++;
+            $this->info('Sended Invoice: ' . $invoice->id);
         }
         $this->info('Sended Number of Invoices: ' . $invoiceProcessed);
         $this->info('Cron Job Finished');
+        Setting::updateOrCreate(['key' => 'cronjob_last_run'], ['value' => now()]);
 
         return Command::SUCCESS;
     }

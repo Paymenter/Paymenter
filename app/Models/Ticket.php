@@ -15,23 +15,21 @@ class Ticket extends Model
         'title',
         'description',
         'status',
-        'client',
+        'user_id',
         'priority',
         'order_id',
+        'assigned_to',
     ];
 
-    protected $hidden = [
-        'client',
-    ];
 
     public function orders()
     {
         return $this->hasMany(Order::class, 'id', 'order_id');
     }
 
-    public function client()
+    public function user()
     {
-        return $this->hasOne(User::class, 'id', 'client');
+        return $this->belongsTo(User::class);
     }
 
     public function messages()

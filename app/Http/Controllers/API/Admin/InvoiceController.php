@@ -7,7 +7,7 @@ use App\Models\Order;
 use App\Models\Invoice;
 use App\Models\Product;
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\API\Controller;
 
 class InvoiceController extends Controller
 {
@@ -18,18 +18,9 @@ class InvoiceController extends Controller
      */
     public function getInvoices(Request $request)
     {
-        $user = $request->user();
-
-        if (!$user->tokenCan('admin:invoice:read')) {
-            return response()->json([
-                'error' => 'You do not have permission to read invoices.',
-            ], 403);
-        }
-
         $invoices = Invoice::paginate(25);
-        return response()->json([
-            'invoices' => API::repaginate($invoices),
-        ], 200);
+
+        return $this->success('Invoices successfully retrieved.', API::repaginate($invoices));
     }
 
     /**

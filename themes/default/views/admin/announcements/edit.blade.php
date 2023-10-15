@@ -39,8 +39,8 @@
                 {{ __('Published') }}
             </label>
         </div>
-        <div class="mt-4">
-            <button type="submit" class="form-submit">
+        <div class="flex items-center justify-end mt-4">
+            <button type="submit" class="inline-flex justify-center w-max float-right button button-primary">
                 {{ __('Update') }}
             </button>
         </div>

@@ -2,29 +2,31 @@
 
 namespace App\Http\Controllers\Clients;
 
+use App\Helpers\FileUploadHelper;
+use App\Helpers\NotificationHelper;
 use App\Models\User;
 use App\Models\Order;
 use App\Models\Ticket;
 use Illuminate\Http\Request;
 use App\Models\TicketMessage;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\RateLimiter;
 
 class TicketController extends Controller
 {
     public function index(Request $request)
     {
-        $tickets = Ticket::where('client', auth()->user()->id)->get();
-        $users = User::where('id', auth()->user()->id)->get();
-        $ticketMessages = TicketMessage::all();
+        $user = $request->user();
+        $tickets = $user->tickets()->with(['messages', 'messages.user'])->get();
         $sort = $request->get('sort');
 
         return view(
             'clients.tickets.index',
             compact(
                 'tickets',
-                'users',
-                'ticketMessages',
+                'user',
                 'sort'
             )
         );
@@ -32,14 +34,15 @@ class TicketController extends Controller
 
     public function create()
     {
-        $services = Order::where('client', auth()->user()->id)->get();
+        $services = Auth::user()->orders;
 
         return view('clients.tickets.create', compact('services'));
     }
 
     public function store(Request $request)
     {
-        $request->validate([
+        $user = $request->user();
+        $body = $request->validate([
             'g-recaptcha-response' => 'recaptcha',
             'cf-turnstile-response' => 'recaptcha',
             'title' => 'required',
@@ -47,41 +50,45 @@ class TicketController extends Controller
             'priority' => 'required',
             'h-captcha-response' => 'recaptcha',
         ]);
-        $executed = RateLimiter::attempt(
-            'create-ticket:' . auth()->user()->id,
-            $perMinute = 1,
-            function () {
-                return true;
-            }
-        );
-        if (!$executed) {
+
+        if (RateLimiter::tooManyAttempts("create-ticket:$user->id", $perMinute = 1)) {
             return redirect()->back()->with('error', 'You are sending too many messages. Please wait a few minutes and try again.');
         }
+        RateLimiter::hit("create-ticket:$user->id");
+
         $ticket = new Ticket();
-        $ticket->title = request('title');
+        $ticket->title = $body['title'];
         $ticket->status = 'open';
-        $ticket->client = auth()->user()->id;
-        $ticket->priority = request('priority');
+        $ticket->user()->associate($user);
+        $ticket->priority = $body['priority'];
         $ticket->save();
 
-        TicketMessage::create([
-            'ticket_id' => $ticket->id,
-            'message' => request('description'),
-            'user_id' => auth()->user()->id,
-        ]);
+        $ticketMessage = new TicketMessage();
+        $ticketMessage->ticket_id = $ticket->id;
+        $ticketMessage->message = $body['description'];
+        $ticketMessage->user()->associate($user);
+        $ticketMessage->save();
 
-        return redirect('/tickets')->with('success', 'Ticket created successfully');
+        NotificationHelper::sendNewTicketNotification($ticket, $user);
+
+        return redirect()->route('clients.tickets.show', $ticket)->with('success', 'Ticket has been created');
     }
 
     public function show(Ticket $ticket)
     {
-        $messages = TicketMessage::where('ticket_id', $ticket->id)->get();
+        if ($ticket->user_id != Auth::user()->id) {
+            return redirect()->back()->with('error', 'You do not have permission to view this ticket.');
+        }
 
-        return view('clients.tickets.show', compact('ticket', 'messages'));
+        return view('clients.tickets.show', compact('ticket'));
     }
 
     public function close(Ticket $ticket)
     {
+        if ($ticket->status == 'closed') {
+            return redirect()->back()->with('error', 'Ticket already closed.');
+        }
+
         $ticket->status = 'closed';
         $ticket->save();
 
@@ -90,30 +97,38 @@ class TicketController extends Controller
 
     public function reply(Request $request, Ticket $ticket)
     {
+        $user = $request->user();
         $request->validate([
             'g-recaptcha-response' => 'recaptcha',
             'cf-turnstile-response' => 'recaptcha',
             'h-captcha-response' => 'recaptcha',
             'message' => 'required',
+            'attachments' => 'nullable|array',
         ]);
-        if ($ticket->status == 'closed') {
-            return redirect()->back()->with('error', 'You can not reply to a closed ticket.');
+
+        if (RateLimiter::tooManyAttempts("send-message:$user->id", $perMinute = 5)) {
+            return redirect()->route('clients.tickets.show', $ticket->id)->with('error', 'You are sending too many messages. Please wait a few minutes and try again.');
         }
-        $executed = RateLimiter::attempt(
-            'send-message:' . $ticket->id,
-            $perMinute = 3,
-            function () {
-                return true;
-            }
-        );
-        if (!$executed) {
-            return redirect()->back()->with('error', 'You are sending too many messages. Please wait a few minutes and try again.');
-        }
-        TicketMessage::create([
-            'ticket_id' => $ticket->id,
-            'message' => request('message'),
+        RateLimiter::hit("send-message:$user->id");
+
+        $ticket->status = 'open';
+        $ticket->save();
+
+        $ticketMessage = $ticket->messages()->create([
             'user_id' => auth()->user()->id,
+            'message' => $request->get('message'),
         ]);
+
+        if($request->hasFile('attachments')) {
+            foreach($request->file('attachments') as $file) {
+                FileUploadHelper::upload($file, $ticketMessage, TicketMessage::class);
+            }
+        }
+
+        //NotificationHelper::sendNewTicketMessageNotification($ticket, $user);
+        if ($ticket->assigned_to) {
+            NotificationHelper::sendNewTicketMessageNotification($ticket, User::where('id', $ticket->assigned_to)->first());
+        }
 
         return redirect()->back()->with('success', 'Message sent successfully');
     }

@@ -1,14 +1,16 @@
 @if (config('settings::sidebar') == 0)
-    <div class="bg-secondary-50 dark:bg-secondary-100 dark:border-0 dark:border-t-2 border-b-2 border-secondary-200">
+    <div class="bg-secondary-50 dark:bg-secondary-100 dark:border-0 dark:border-t-2 border-b-2 md:block border-secondary-200 hidden" id="clientsNavBar">
         <div class="max-w-[1650px] mx-auto block md:flex items-center gap-x-10 px-5">
             <a href="{{ route('clients.home') }}" class="md:px-2 py-3 flex items-center gap-x-2 hover:text-secondary-800 duration-300">
                 <i class="ri-layout-2-line @if (request()->routeIs('clients.home')) text-primary-400 @endif"></i> {{ __('Dashboard') }}
             </a>
+            <!-- Will be added in the next update
             <a href="#" class="md:px-2 py-3 flex items-center gap-x-2 hover:text-secondary-800 duration-300">
                 <i class="ri-instance-line"></i> {{ __('Services') }}
             </a>
-            <a href="#" class="md:px-2 py-3 flex items-center gap-x-2 hover:text-secondary-800 duration-300">
-                <i class="ri-file-paper-line"></i> {{ __('Invoices') }}
+            -->
+            <a href="{{ route('clients.invoice.index') }}" class="md:px-2 py-3 flex items-center gap-x-2 hover:text-secondary-800 duration-300">
+                <i class="ri-file-paper-line @if (request()->routeIs('clients.invoice*')) text-primary-400 @endif"></i> {{ __('Invoices') }}
             </a>
             <a href="{{ route('clients.tickets.index') }}" class="md:px-2 py-3 flex items-center gap-x-2 hover:text-secondary-800 duration-300">
                 <i class="ri-customer-service-2-line @if (request()->routeIs('clients.tickets*')) text-primary-400 @endif"></i> {{ __('Tickets') }}
@@ -19,12 +21,33 @@
         </div>
     </div>
 @else
-    <div class="shrink-0 w-64">
+    <div class="max-w-[1650px] flex-wrap items-center w-full justify-between flex md:hidden px-4 py-4" id="mobile-menu">
+        <a href="{{ route('index') }}" class="flex items-center text-secondary-900 font-semibold text-lg gap-x-2">
+            <x-application-logo class="w-10" />
+            {{ config('app.name', 'Paymenter') }}
+        </a>
+        <!-- Mobile menu button -->
+        <div class="flex md:hidden">
+            <button type="button" class="button button-secondary-outline" onclick="openMobileMenu()">
+                <i class="ri-menu-line"></i>
+            </button>
+        </div>
+        <script>
+            function openMobileMenu() {
+                document.getElementById("mobile-menu").classList.toggle("opacity-0");
+                document.getElementById("clientsNavBar").classList.toggle("hidden");
+            }
+        </script>
+    </div>
+
+    <div class="shrink-0 md:w-64 w-72 hidden sm:block md:sticky fixed top-0" id="clientsNavBar">
         <div class="bg-secondary-50 dark:bg-secondary-100 dark:border-0 border-r-2 border-secondary-200 h-screen sticky top-0 px-4 py-2 flex flex-col">
-            <a href="{{ route('index') }}" class="flex items-center text-secondary-900 font-semibold text-lg pt-2 pb-3 gap-x-2">
-                <x-application-logo class="w-10" />
-                {{ config('app.name', 'Paymenter') }}
-            </a>
+            <div class=" flex flex-wrap items-center w-full justify-between">
+                <a href="{{ route('index') }}" class="flex items-center text-secondary-900 font-semibold text-lg py-2 gap-x-2">
+                    <x-application-logo class="w-10" />
+                    {{ config('app.name', 'Paymenter') }}
+                </a>
+            </div>
             <span class="text-sm text-secondary-600">General</span>
             <a href="{{ route('index') }}" class="py-1 flex items-center gap-x-2 hover:text-secondary-800 duration-300">
                 <i class="ri-home-line @if (request()->routeIs('index')) text-primary-400 @endif"></i> {{ __('Home') }}
@@ -39,11 +62,13 @@
             <a href="{{ route('clients.home') }}" class="py-1 flex items-center gap-x-2 hover:text-secondary-800 duration-300">
                 <i class="ri-layout-2-line @if (request()->routeIs('clients.home')) text-primary-400 @endif"></i> {{ __('Dashboard') }}
             </a>
+            <!-- Will be added in the next update
             <a href="#" class="py-1 flex items-center gap-x-2 hover:text-secondary-800 duration-300">
                 <i class="ri-instance-line"></i> {{ __('Services') }}
             </a>
-            <a href="#" class="py-1 flex items-center gap-x-2 hover:text-secondary-800 duration-300">
-                <i class="ri-file-paper-line"></i> {{ __('Invoices') }}
+             -->
+            <a href="{{ route('clients.invoice.index') }}" class="py-1 flex items-center gap-x-2 hover:text-secondary-800 duration-300">
+                <i class="ri-file-paper-line @if (request()->routeIs('clients.invoice*')) text-primary-400 @endif""></i> {{ __('Invoices') }}
             </a>
             <a href="{{ route('clients.tickets.index') }}" class="py-1 flex items-center gap-x-2 hover:text-secondary-800 duration-300">
                 <i class="ri-customer-service-2-line @if (request()->routeIs('clients.tickets*')) text-primary-400 @endif"></i> {{ __('Tickets') }}
@@ -86,6 +111,8 @@
                     </button>
                 </div>
             </div>
+        </div>
+        <div class="fixed md:hidden top-0 w-screen h-full bg-black/50 backdrop-blur z-[-1]" onclick="openMobileMenu()">
         </div>
     </div>
 @endif

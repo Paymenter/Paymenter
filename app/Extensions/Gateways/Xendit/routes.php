@@ -2,8 +2,5 @@
 
 use Illuminate\Support\Facades\Route;
 
-include_once __DIR__ . '/index.php';
 
-Route::post('/xendit/webhook', function () {
-    Xendit_webhook(request());
-})->name('xendit.webhook');
+Route::post('/xendit/webhook', [App\Extensions\Gateways\Xendit\Xendit::class, 'webhook'])->name('xendit.webhook');

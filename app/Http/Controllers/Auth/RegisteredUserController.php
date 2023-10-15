@@ -6,6 +6,8 @@ use App\Models\User;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\Affiliate;
+use App\Models\AffiliateUser;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Auth\Events\Registered;
@@ -33,7 +35,8 @@ class RegisteredUserController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name' => 'required|string|max:255',
+            'first_name' => 'required|string|max:255',
+            'last_name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|confirmed|min:8',
             'g-recaptcha-response' => 'recaptcha',
@@ -43,17 +46,26 @@ class RegisteredUserController extends Controller
 
 
         Auth::login($user = User::create([
-            'name' => $request->name,
+            'first_name' => $request->first_name,
             'email' => $request->email,
+            'last_name' => $request->last_name,
             'password' => Hash::make($request->password),
-            'api_token' => Str::random(60),
         ]));
         // Send email to user
         if (!config('settings::mail_disabled')) {
             try {
                 $user->sendEmailVerificationNotification();
             } catch (\Exception $e) {
-                error_log('Failed to send email to user');
+            }
+        }
+
+        if ($request->cookie('affiliate')) {
+            $affiliate = Affiliate::where('code', $request->cookie('affiliate'))->first();
+            if ($affiliate) {
+                $affiliateUser = new AffiliateUser();
+                $affiliateUser->affiliate()->associate($affiliate);
+                $affiliateUser->user()->associate($user);
+                $affiliateUser->save();
             }
         }
 

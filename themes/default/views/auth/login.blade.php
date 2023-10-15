@@ -13,18 +13,19 @@
                 <x-input class="mt-3" label="{{ __('Email') }}" type="email" placeholder="{{ __('Email..') }}" required
                     name="email" id="email" icon="ri-at-line" />
                     
-                <div class="flex justify-between mt-3 text-sm text-secondary-600" >
+                <div class="flex justify-between mt-4 mb-1 text-sm text-secondary-600" >
                     <label for="password">{{ __('Password') }}</label>
-                    <a href="{{ route('password.request') }}">{{ __('Forgot Password?') }}</a>
+                    <a href="{{ route('password.request') }}" class="underline">{{ __('Forgot Password?') }}</a>
                 </div>
                 <x-input type="password" required
                     placeholder="{{ __('Password..') }}" name="password" id="password" icon="ri-lock-line"/>
                     
-                <x-input type="checkbox" name="remember" id="remember" label="Remember me" class="mt-3" />
-                <div class="flex justify-between items-center mt-3">
-                    <a href="{{ route('register') }}" class="text-sm text-secondary-600 underline">{{ __('New here? Create an account.') }}</a>
-                    <button class="button button-primary">{{ __('Login') }}</button>
-                </div>
+                <x-input type="checkbox" name="remember" id="remember" label="Remember me" class="mt-4" />
+                
+                <button class="button button-primary w-full mt-4">{{ __('Login') }}</button>
+
+                <a href="{{ route('register') }}" class="text-sm text-secondary-600 underline mt-2 block text-center">{{ __('New here? Create an account.') }}</a>
+
                 <div class="flex items-center justify-center">
                     <!-- Recaptcha, also send the form id -->
                     <x-recaptcha form="login" />

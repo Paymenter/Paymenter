@@ -17,7 +17,7 @@ class TicketTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->user = User::factory()->create(['is_admin' => 1]);
+        $this->user = User::factory()->create(['role_id' => 1]);
         $this->client = User::factory()->create();
     }
 
@@ -39,7 +39,7 @@ class TicketTest extends TestCase
             'title' => 'TEST',
             'status' => 'open',
             'priority' => 'low',
-            'client' => $this->user->id,
+            'user_id' => $this->user->id,
         ]);
 
         $response = $this->actingAs($this->user)->get(route('admin.tickets.show', $ticket));
@@ -70,7 +70,7 @@ class TicketTest extends TestCase
             'title' => 'TEST',
             'status' => 'open',
             'priority' => 'low',
-            'client' => $this->client->id,
+            'user_id' => $this->client->id,
         ]);
     }
 
@@ -85,11 +85,13 @@ class TicketTest extends TestCase
             'title' => 'TEST',
             'status' => 'open',
             'priority' => 'low',
-            'client' => $this->user->id,
+            'user_id' => $this->user->id,
         ]);
 
-        $response = $this->actingAs($this->user)->post(route('admin.tickets.status', $ticket), [
+        $response = $this->actingAs($this->user)->post(route('admin.tickets.update', $ticket), [
+            'title' => 'TEST',
             'status' => 'closed',
+            'priority' => 'low',
         ]);
 
         $response->assertStatus(302);
@@ -99,7 +101,7 @@ class TicketTest extends TestCase
             'title' => 'TEST',
             'status' => 'closed',
             'priority' => 'low',
-            'client' => $this->user->id,
+            'user_id' => $this->user->id,
         ]);
     }
 
@@ -114,7 +116,7 @@ class TicketTest extends TestCase
             'title' => 'TEST',
             'status' => 'open',
             'priority' => 'low',
-            'client' => $this->user->id,
+            'user_id' => $this->user->id,
         ]);
 
         $response = $this->actingAs($this->user)->post(route('admin.tickets.reply', $ticket), [

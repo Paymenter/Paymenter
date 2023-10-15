@@ -15,6 +15,9 @@ npm-debug.log
 yarn-error.log
 /.idea
 /.vscode
+themes/*
+!themes/default
 app/Extensions/Servers/Minecraft/*
+app/Extensions/Gateways/RazorPay/*
 themes/theme-clear/*
 .php-cs-fixer.cache

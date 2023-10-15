@@ -34,6 +34,7 @@ class Upgrade extends Command
      */
     public function handle()
     {
+        $this->call('p:check-updates');
         $this->info('Starting upgrade process...');
 
         if (version_compare(PHP_VERSION, '8.1.0') < 0) {
@@ -82,65 +83,13 @@ class Upgrade extends Command
             }
         }
         ini_set('output_buffering', '0');
-
-        // Download the latest release from GitHub.
-        $this->line("\$upgrader> curl -L \"{$this->getUrl()}\" | tar -xzv");
-        $process = Process::fromShellCommandline("curl -L \"{$this->getUrl()}\" | tar -xzv");
+        // Call update.sh <url>
+        $this->line('$upgrader> curl -L "https://raw.githubusercontent.com/paymenter/paymenter/master/update.sh" | bash -s -- --user=' . $user . ' --group=' . $group . ' --url=' . $this->getUrl());
+        $process = Process::fromShellCommandline('curl -L "https://raw.githubusercontent.com/paymenter/paymenter/master/update.sh" | bash -s -- --user=' . $user . ' --group=' . $group . ' --url=' . $this->getUrl(), null, null, null, 1200);
         $process->run(function ($type, $buffer) {
             $this->{$type === Process::ERR ? 'error' : 'line'}($buffer);
         });
 
-        // Set application down for maintenance.
-        $this->line('$upgrader> php artisan down');
-        $this->call('down');
-
-        // Setup correct permissions on the new files.
-        $this->line('$upgrader> chmod -R 755 storage bootstrap/cache');
-        $process = new Process(['chmod', '-R', '755', 'storage', 'bootstrap/cache']);
-        $process->run(function ($type, $buffer) {
-            $this->{$type === Process::ERR ? 'error' : 'line'}($buffer);
-        });
-
-        // Run the composer install command.
-        $this->line('$upgrader> composer install --no-dev --optimize-autoloader');
-        $process = new Process(['composer', 'install', '--no-dev', '--optimize-autoloader']);
-        $process->run(function ($type, $buffer) {
-            $this->{$type === Process::ERR ? 'error' : 'line'}($buffer);
-        });
-
-        $app = require __DIR__ . '/../../../bootstrap/app.php';
-        $kernel = $app->make(Kernel::class);
-        $kernel->bootstrap();
-        $this->setLaravel($app);
-
-        // Run the database migrations.
-        $this->line('$upgrader> php artisan migrate --force');
-        $this->call('migrate', ['--force' => true]);
-
-        // Clear config and view caches.
-        $this->line('$upgrader> php artisan config:clear');
-        $this->call('config:clear');
-
-        $this->line('$upgrader> php artisan view:clear');
-        $this->call('view:clear');
-
-        // Remove the old log files.
-        $this->line('$upgrader> rm -rf storage/logs/*.log');
-        $process = new Process(['rm', '-rf', 'storage/logs/*.log']);
-        $process->run(function ($type, $buffer) {
-            $this->{$type === Process::ERR ? 'error' : 'line'}($buffer);
-        });
-
-        // Setup correct permissions on the new files.
-        $this->line('$upgrader> chown -R ' . $user . ':' . $group . ' .');
-        $process = new Process(['chown', '-R', $user . ':' . $group, '.']);
-        $process->run(function ($type, $buffer) {
-            $this->{$type === Process::ERR ? 'error' : 'line'}($buffer);
-        });
-
-        // Set application back up.
-        $this->line('$upgrader> php artisan up');
-        $this->call('up');
 
         $this->info('Upgrade process completed successfully!');
 

@@ -9,7 +9,7 @@ class BasisController extends Controller
 {
     public function index()
     {
-        $categories = Category::all();
+        $categories = Category::with('products')->get();
         $announcements = Announcement::where('published', 1)->get();
 
         return view('welcome', compact('categories', 'announcements'));
@@ -20,13 +20,15 @@ class BasisController extends Controller
         if ($product) {
             return redirect()->route('checkout.add', $product->id);
         }
-        $category;
+
+        $category = null;
         if ($slug != null) {
             $category = Category::where('slug', $slug)->first();
             if(!$category) {
                 abort(404);
             }
         }
+
         $categories = Category::all();
         return view('product', compact('categories', 'category'));
     }
@@ -38,6 +40,14 @@ class BasisController extends Controller
             $request->merge([$key => $value]);
         }
         $json = json_encode($request->all(), JSON_UNESCAPED_SLASHES);
-        echo $json;
+        echo $json; 
+    }
+
+    public function tos()
+    {
+        if(!config('settings::tos_text')) {
+            abort(404);
+        }
+        return view('tos');
     }
 }

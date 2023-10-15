@@ -19,6 +19,10 @@ class OrderProduct extends Model
         'status',
     ];
 
+    protected $casts = [
+        'expiry_date' => 'date',
+    ];
+
     public function config()
     {
         return $this->hasMany(OrderProductConfig::class, 'order_product_id', 'id');
@@ -36,12 +40,30 @@ class OrderProduct extends Model
 
     public function invoices()
     {
-        return $this->hasMany(InvoiceItem::class, 'product_id', 'id');
+        return $this->hasOne(InvoiceItem::class, 'product_id', 'id')->get()->first() ? $this->hasOne(InvoiceItem::class, 'product_id', 'id')->get()->first()->invoice() : new Invoice();
+    }
+
+    public function lastInvoice()
+    {
+        $lastInvoiceItem = $this->hasOne(InvoiceItem::class, 'product_id', 'id')
+            ->orderByDesc('id')
+            ->first();
+
+        return $lastInvoiceItem->invoice;
+    }
+
+    public function getInvoices()
+    {
+        return $this->hasMany(InvoiceItem::class, 'product_id', 'id')->get()->map(function ($invoiceItem) {
+            return $invoiceItem->invoice()->get()->first();
+        });
     }
 
     public function getOpenInvoices()
     {
-        return $this->invoices()->get()->filter(function ($invoice) {
+        return $this->getInvoices()->filter(function ($invoice) {
+            if ($invoice->total() == 0)
+                return false;
             return $invoice->status == 'pending';
         });
     }

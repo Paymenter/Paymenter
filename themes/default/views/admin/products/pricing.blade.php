@@ -2,8 +2,8 @@
     <x-slot name="title">
         {{ __('Pricing') }}
     </x-slot>
-    <div class="container h-full mx-auto">
-        <div class="p-6 mx-auto bg-white max-w-7xl pl-0 dark:bg-darkmode2 dark:border-darkmode">
+    <div class="h-full mx-auto">
+        <div class="pb-6 bg-white dark:bg-secondary-100 dark:border-darkmode">
             <div class="flex flex-row overflow-x-auto lg:flex-wrap lg:space-x-1">
                 <div class="flex-none">
                     <a href="{{ route('admin.products.edit', $product->id) }}"
@@ -59,7 +59,7 @@
                             <label class="text-gray-700 dark:text-darkmodetext" for="price">
                                 {{ __('Price') }}
                             </label>
-                            <input type="text" name="price" id="price" value="{{ $pricing->monthly }}"
+                            <input type="text" name="monthly" id="price" value="{{ $pricing->monthly }}"
                                 class="form-input">
                         </div>
                     </div>
@@ -93,8 +93,8 @@
                             <label class="text-gray-700 dark:text-darkmodetext" for="semiannually">
                                 {{ __('Semiannually') }}
                             </label>
-                            <input type="text" name="semi_annually" id="semi_annually" value="{{ $pricing->semi_annually }}"
-                                class="form-input">
+                            <input type="text" name="semi_annually" id="semi_annually"
+                                value="{{ $pricing->semi_annually }}" class="form-input">
                             <label class="text-gray-700 dark:text-darkmodetext" for="semi_annually_setup">
                                 {{ __('Semiannually Setup Fee') }}
                             </label>
@@ -117,8 +117,8 @@
                             <label class="text-gray-700 dark:text-darkmodetext" for="biennially">
                                 {{ __('Biennially') }}
                             </label>
-                            <input type="text" name="biennially" id="biennially" value="{{ $pricing->biennially }}"
-                                class="form-input">
+                            <input type="text" name="biennially" id="biennially"
+                                value="{{ $pricing->biennially }}" class="form-input">
                             <label class="text-gray-700 dark:text-darkmodetext" for="biennially_setup">
                                 {{ __('Biennially Setup Fee') }}
                             </label>
@@ -158,10 +158,22 @@
                         </select>
                     </div>
                 </div>
-                <button type="submit"
-                    class="inline-flex justify-center w-max float-right px-4 py-2 mt-4 mb-4 text-sm font-medium text-white uppercase transition-all duration-150 ease-linear bg-logo rounded shadow outline-none active:bg-logo hover:shadow-lg focus:outline-none">
-                    {{ __('Save') }}
-                </button>
+                <!-- Limit -->
+                <div class="flex flex-row text-sm mt-4">
+                    <div class="flex flex-col">
+                        <label class="text-gray-700 dark:text-darkmodetext" for="limit">
+                            {{ __('Limit per client') }}
+                        </label>
+                        <input type="text" name="limit" id="limit" value="{{ $product->limit }}"
+                            class="form-input">
+                    </div>
+                </div>
+                <div class="flex items-center justify-end mt-4">
+                    <button type="submit"
+                        class="inline-flex justify-center w-max float-right button button-primary">
+                        {{ __('Save') }}
+                    </button>
+                </div>
             </div>
         </div>
     </form>

@@ -1,0 +1,72 @@
+version: '3.8'
+x-common:
+  database:
+    &db-env
+    MYSQL_PASSWORD: &db-password "YOUR_DB_PASSWORD"
+    MYSQL_ROOT_PASSWORD: "YOUR_ROOT_PASSWORD"
+  panel:
+    &pm-env
+    APP_NAME: Paymenter
+    APP_ENV: production
+    APP_KEY: YOUR_APP_KEY
+    APP_DEBUG: false
+    APP_URL: https://domain.tld
+    LOG_CHANNEL: stack
+    LOG_DEPRECATIONS_CHANNEL: null
+    LOG_LEVEL: debug
+    DB_CONNECTION: mysql
+    DB_HOST: database
+    DB_PORT: 3306
+    DB_DATABASE: paymenter
+    DB_USERNAME: paymenter
+    BROADCAST_DRIVER: log
+    CACHE_DRIVER: file
+    FILESYSTEM_DISK: local
+    QUEUE_CONNECTION: database
+    SESSION_DRIVER: file
+    SESSION_LIFETIME: 120
+    MEMCACHED_HOST: cache
+
+services:
+  database:
+    image: mariadb:10.5
+    restart: always
+    command: --default-authentication-plugin=mysql_native_password
+    volumes:
+      - "/opt/paymenter/database:/var/lib/mysql"
+    environment:
+      <<: *db-env
+      MYSQL_DATABASE: "paymenter"
+      MYSQL_USER: "paymenter"
+  cache:
+    image: redis:alpine
+    restart: always
+  paymenter:
+    image: ghcr.io/paymenter/paymenter:latest
+    restart: always
+    ports:
+      - "8080:8080"
+    links:
+      - database
+      - cache
+    volumes:
+      - "/opt/paymenter/var/:/app/var/"
+      - "/opt/paymenter/logs/:/app/storage/logs"
+    environment:
+      <<: *pm-env
+      DB_PASSWORD: *db-password
+  proxy:
+    image: nginx:stable-alpine3.17-slim
+    restart: always
+    links:
+      - paymenter
+    ports:
+      - "443:443"
+    volumes:
+      - "/opt/paymenter/nginx/:/etc/nginx/http.d"
+      - "/opt/paymenter/certs/:/etc/certs/"
+networks:
+  default:
+    ipam:
+      config:
+        - subnet: 172.23.0.0/16

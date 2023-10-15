@@ -1,7 +1,4 @@
-<x-app-layout>
-    <x-slot name="title">
-        {{ $announcement->title }}
-    </x-slot>
+<x-app-layout title="{{ $announcement->title }}" description='{{ strip_tags(Str::markdown(nl2br(Stevebauman\Purify\Facades\Purify::clean($announcement->announcement)))) }}'>
     
     <!-- View Announcement -->
     <div class="content">
@@ -20,7 +17,7 @@
                 </div>
             </div>
             <div class="prose dark:prose-invert max-w-full">
-                {!! Str::markdown(str_replace("\n", '<br>', Stevebauman\Purify\Facades\Purify::clean($announcement->announcement))) !!}
+                @markdownify($announcement->announcement)
             </div>
         </div>
     </div>

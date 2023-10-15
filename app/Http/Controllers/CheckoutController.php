@@ -4,7 +4,11 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Helpers\ExtensionHelper;
+use App\Helpers\NotificationHelper;
 use App\Models\{Extension, Invoice, OrderProduct, OrderProductConfig, Order, Product, User, Coupon, InvoiceItem};
+use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
 
 class CheckoutController extends Controller
 {
@@ -52,6 +56,12 @@ class CheckoutController extends Controller
                     $product->discount = 0;
                     $product->discount_fee = 0;
                 }
+                if ($product->discount > $product->price) {
+                    $product->discount = $product->price;
+                }
+                if ($product->discount_fee > $product->setup_fee) {
+                    $product->discount_fee = $product->setup_fee;
+                }
                 $discount += ($product->discount + $product->discount_fee) * $product->quantity;
             }
         }
@@ -61,92 +71,109 @@ class CheckoutController extends Controller
 
     public function add(Product $product)
     {
+        $cart = session()->get('cart');
+        if (!$product->allow_quantity && \Illuminate\Support\Arr::has($cart, $product->id)) {
+            return redirect()->route('checkout.index')->with('error', 'You already have this product in your shopping cart');
+        }
         if ($product->stock_enabled && $product->stock <= 0) {
             return redirect()->back()->with('error', 'Product is out of stock');
         }
-        if (isset($product->server_id)) {
-            $server = Extension::find($product->server_id);
-            if ($server) {
-                include_once base_path('app/Extensions/Servers/' . $server->name . '/index.php');
-                $function = $server->name . '_getUserConfig';
-                if (function_exists($function)) {
+        if ($product->limit) {
+            $orderProducts = 0;
+            if (auth()->check() && auth()->user()->orderProducts) {
+                $orderProducts = Auth::user()->orderProducts()->where('product_id', $product->id)->count();
+                if ($orderProducts >= $product->limit) {
+                    return redirect()->back()->with('error', 'Product limit reached');
+                }
+            }
+            if (isset($cart[$product->id]) && $cart[$product->id]->quantity + $orderProducts >= $product->limit) {
+                return redirect()->back()->with('error', 'Product limit reached');
+            }
+        }
+        if (isset($product->extension_id) && $product->extension) {
+            $server = $product->extension;
+            $module = "App\\Extensions\\Servers\\" . $server->name . "\\" . $server->name;
+            if (class_exists($module)) {
+                $module = new $module($server);
+                if (method_exists($module, 'getUserConfig')) {
                     return redirect()->route('checkout.config', $product->id);
                 }
             }
         }
-        if ($product->prices()->get()->first()->type == 'recurring') {
+        if ($product->prices()->get()->first()->type == 'recurring' || count($product->configurableGroups()) > 0) {
             return redirect()->route('checkout.config', $product->id);
         }
         $product->quantity = 1;
-        $cart = session()->get('cart');
         if (\Illuminate\Support\Arr::has($cart, $product->id)) {
             if ($product->stock_enabled && $product->stock <= $cart[$product->id]->quantity) {
                 return redirect()->back()->with('error', 'Product is out of stock');
             }
             if ($product->quantity != 0) {
                 ++$cart[$product->id]->quantity;
-                session()->put('cart', $cart);
-            } else {
-                session()->put('cart', $cart);
             }
-
-            return redirect()->back()->with('success', 'Product added to cart successfully!');
-        } else {
-            $cart[$product->id] = $product;
-            $product->price = $product->prices()->get()->first()->type == 'one-time' ? $product->prices()->get()->first()->monthly : 0;
             session()->put('cart', $cart);
 
             return redirect()->back()->with('success', 'Product added to cart successfully!');
         }
+        $cart[$product->id] = $product;
+        $product->price = $product->prices()->get()->first()->type == 'one-time' ? $product->prices()->get()->first()->monthly : 0;
+        session()->put('cart', $cart);
+        return redirect()->back()->with('success', 'Product added to cart successfully!');
     }
 
     public function config(Request $request, Product $product)
     {
-        $server = Extension::find($product->server_id);
-        if (!$server && $product->prices()->get()->first()->type != 'recurring') {
+        $server = $product->extension;
+        $userConfig = ExtensionHelper::getUserConfig($product);
+        if (!$server && $product->prices()->get()->first()->type != 'recurring' && count($product->configurableGroups()) == 0 && empty($userConfig)) {
             return redirect()->back()->with('error', 'Config Not Found');
         }
-        if ($server) {
-            include_once base_path('app/Extensions/Servers/' . $server->name . '/index.php');
-            $function = $server->name . '_getUserConfig';
-            if (!function_exists($function) && $product->prices()->get()->first()->type != 'recurring') {
-                return redirect()->back()->with('error', 'Config Not Found');
-            }
-            if (function_exists($function)) {
-                $userConfig = json_decode(json_encode($function($product)));
-            }
-        }
-        if (!isset($userConfig)) $userConfig = array();
-        $prices = $product->prices()->get()->first();
 
-        return view('checkout.config', compact('product', 'userConfig', 'prices'));
+        $prices = $product->prices()->get()->first();
+        $customConfig = $product->configurableGroups();
+        // If billing_cycle isn't set, set it to the lowest billing cycle available
+        $billing_cycle = $request->input('billing_cycle') ?? 'monthly';
+        if (!in_array($billing_cycle, ['monthly', 'quarterly', 'semi_annually', 'annually', 'biennially', 'triennially'])) {
+            $billing_cycle = 'monthly';
+        }
+        if ($billing_cycle == 'monthly' && !$prices->monthly) {
+            $billing_cycle = 'quarterly';
+        }
+        if ($billing_cycle == 'quarterly' && !$prices->quarterly) {
+            $billing_cycle = 'semi_annually';
+        }
+        if ($billing_cycle == 'semi_annually' && !$prices->semi_annually) {
+            $billing_cycle = 'annually';
+        }
+        if ($billing_cycle == 'annually' && !$prices->annually) {
+            $billing_cycle = 'biennially';
+        }
+        if ($billing_cycle == 'biennially' && !$prices->biennially) {
+            $billing_cycle = 'triennially';
+        }
+        if ($billing_cycle == 'triennially' && !$prices->triennially) {
+            $billing_cycle = 'monthly';
+        }
+
+        return view('checkout.config', compact('product', 'userConfig', 'prices', 'customConfig', 'billing_cycle'));
     }
 
     public function configPost(Request $request, Product $product)
     {
-        $server = Extension::find($product->server_id);
+        $server = $product->extension;
         $prices = $product->prices()->get()->first();
-        if (!$server && $prices->type != 'recurring') {
+        $userConfig = ExtensionHelper::getUserConfig($product);
+        if (!$server && $prices->type != 'recurring' && count($product->configurableGroups()) == 0 && empty($userConfig)) {
             return redirect()->back()->with('error', 'Config Not Found');
         }
-        if ($server) {
-            include_once base_path('app/Extensions/Servers/' . $server->name . '/index.php');
-            $function = $server->name . '_getUserConfig';
-            if (!function_exists($function) && $prices->type != 'recurring') {
-                return redirect()->back()->with('error', 'Config Not Found');
-            }
-            if (function_exists($function)) {
-                $userConfig = json_decode(json_encode($function($product)));
-                $config = [];
-                foreach ($userConfig as $configItem) {
-                    if (!$request->input($configItem->name)) {
-                        return redirect()->back()->with('error', $configItem->name . ' is required');
-                    }
-                    $config[$configItem->name] = $request->input($configItem->name);
-                }
-                $product->config = $config;
-            }
+
+        $config = ExtensionHelper::validateUserConfig($product, $request);
+        if ($config instanceof \Illuminate\Http\RedirectResponse) {
+            return $config;
         }
+
+        $product->config = $config;
+
         if ($prices->type == 'recurring') {
             $product->price = $product->prices()->get()->first()->{$request->input('billing_cycle')} ?? $product->prices()->get()->first()->monthly;
             $product->billing_cycle = $request->input('billing_cycle');
@@ -157,25 +184,99 @@ class CheckoutController extends Controller
             $product->price = 0;
         }
         $product->quantity = 1;
+        $configItems = [];
+        $resetBillingCycle = false;
+        if (!$product->billing_cycle) {
+            $resetBillingCycle = true;
+            $product->billing_cycle = 'monthly';
+        }
+        foreach ($product->configurableGroups() as $config) {
+            $configItemsGet = $config->configurableOptions()->get();
+            foreach ($configItemsGet as $configItem) {
+                if ($configItem->hidden) continue;
+                if (!$request->has($configItem->id)) {
+                    return redirect()->back()->with('error', $configItem->name . ' is required');
+                }
+                $configItems[$configItem->id] = $request->input($configItem->id);
+                $configItemInput = $configItem->configurableOptionInputs()->get();
+                foreach ($configItemInput as $configItemInput) {
+                    if ($configItem->type == 'quantity') {
+                        if (!$request->input($configItem->id)) continue;
+                    }
+                    if ($configItemInput->id != $request->input($configItem->id) && ($configItem->type == 'select' || $configItem->type == 'radio' || $configItem->type == 'slider')) continue;
+                    $configItemPrice = $configItemInput->configurableOptionInputPrice()->get()->first();
+                    if ($configItemPrice) {
+                        if ($configItem->type == 'quantity') {
+                            $product->price += $configItemPrice->{$product->billing_cycle} * $request->input($configItem->id);
+                        } else {
+                            $product->price += $configItemPrice->{$product->billing_cycle};
+                        }
+                        $product->setup_fee += $configItemPrice->{$product->billing_cycle . '_setup'};
+                    }
+                }
+            }
+        }
+        if ($resetBillingCycle) {
+            $product->billing_cycle = null;
+        }
+        $product->configurableOptions = $configItems;
         $cart = session()->get('cart');
-        if (\Illuminate\Support\Arr::has($cart, $product->id)) {
-            ++$cart[$product->id]->quantity;
-            session()->put('cart', $cart);
+        if (!$product->allow_quantity && \Illuminate\Support\Arr::has($cart, $product->id)) {
+            return redirect()->route('checkout.index')->with('error', 'You already have this product in your shopping cart');
+        }
 
-            return redirect()->route('checkout.index')->with('success', 'Product added to cart successfully!');
-        } else {
-            $cart[$product->id] = $product;
+        // If product has stock enabled, check if it's in stock
+        if ($product->stock_enabled && $product->stock <= 0) {
+            return redirect()->back()->with('error', 'Product is out of stock');
+        }
+
+        // Check if product has a limit per user
+        if ($product->limit) {
+            $orderProducts = 0;
+            if (auth()->check() && auth()->user()->orderProducts) {
+                $orderProducts = Auth::user()->orderProducts()->where('product_id', $product->id)->count();
+
+                if ($orderProducts >= $product->limit) {
+                    return redirect()->back()->with('error', 'Product limit reached');
+                }
+            }
+            if (isset($cart[$product->id]) && $cart[$product->id]->quantity + $orderProducts >= $product->limit) {
+                return redirect()->back()->with('error', 'Product limit reached');
+            }
+        }
+        if (\Illuminate\Support\Arr::has($cart, $product->id)) {
+            if ($product->quantity != 0) {
+                ++$cart[$product->id]->quantity;
+            } else {
+                $cart[$product->id] = $product;
+            }
             session()->put('cart', $cart);
 
             return redirect()->route('checkout.index')->with('success', 'Product added to cart successfully!');
         }
+        $cart[$product->id] = $product;
+        session()->put('cart', $cart);
+        return redirect()->route('checkout.index')->with('success', 'Product added to cart successfully!');
     }
 
     public function pay(Request $request)
     {
-        $products = session('cart');
-        if (!$products) {
+        $cart = session('cart');
+        if (!$cart) {
             return redirect()->back()->with('error', 'Cart is empty');
+        }
+        if ($request->has('tos') && config('settings::tos') == 1) {
+            $tos = $request->input('tos');
+            if ($tos == 'on') {
+                $tos = true;
+            } else {
+                $tos = false;
+            }
+            if (!$tos) {
+                return redirect()->back()->with('error', 'You must agree to the terms of service');
+            }
+        } else if (config('settings::tos') == 1) {
+            return redirect()->back()->with('error', 'You must agree to the terms of service');
         }
         $couponId = session('coupon');
         $coupon;
@@ -185,7 +286,8 @@ class CheckoutController extends Controller
             $coupon = null;
         }
         $total = 0;
-        foreach ($products as $product) {
+        $products = [];
+        foreach ($cart as $product) {
             if ($product->stock_enabled && $product->stock <= 0) {
                 return redirect()->back()->with('error', 'Product is out of stock');
             } elseif ($product->stock_enabled && $product->stock < $product->quantity) {
@@ -218,58 +320,39 @@ class CheckoutController extends Controller
                 $product->discount = 0;
                 $product->discount_fee = 0;
             }
+            if ($product->discount > $product->price) {
+                $product->discount = $product->price;
+            }
+            if ($product->discount_fee > $product->setup_fee) {
+                $product->discount_fee = $product->setup_fee;
+            }
             if ($product->setup_fee) {
                 $total += ($product->setup_fee + $product->price) * $product->quantity - $product->discount - $product->discount_fee;
             } else {
                 $total += $product->price * $product->quantity - $product->discount;
             }
+            $products[] = $product;
         }
 
         $user = User::findOrFail(auth()->user()->id);
         $order = new Order();
-        $order->client = $user->id;
-        $order->coupon = session('coupon');
+        $order->user()->associate($user);
+        $order->coupon_id = $coupon->id ?? null;
         $order->save();
 
         $invoice = new Invoice();
-        $invoice->user_id = $user->id;
-        $invoice->order_id = $order->id;
+        $invoice->user()->associate($user);
         if ($total == 0) {
             $invoice->status = 'paid';
         } else {
             $invoice->status = 'pending';
         }
+        $invoice->order()->associate($order);
         $invoice->save();
         foreach ($products as $product) {
-            if ($coupon) {
-                if (isset($coupon->products)) {
-                    if (!in_array($product->id, $coupon->products) && !empty($coupon->products)) {
-                        $product->discount = 0;
-                        continue;
-                    } else {
-                        if ($coupon->type == 'percent') {
-                            $product->discount = $product->price * $coupon->value / 100;
-                            $product->discount_fee = $product->setup_fee * $coupon->value / 100;
-                        } else {
-                            $product->discount = $coupon->value;
-                            $product->discount_fee = $coupon->value;
-                        }
-                    }
-                } else {
-                    if ($coupon->type == 'percent') {
-                        $product->discount = $product->price * $coupon->value / 100;
-                        $product->discount_fee = $product->setup_fee * $coupon->value / 100;
-                    } else {
-                        $product->discount = $coupon->value;
-                        $product->discount_fee = $coupon->value;
-                    }
-                }
-            } else {
-                $product->discount = 0;
-                $product->discount_fee = 0;
-            }
             if ($product->allow_quantity == 1)
-                for ($i = 0;
+                for (
+                    $i = 0;
                     $i < $product->quantity;
                     ++$i
                 ) {
@@ -279,7 +362,7 @@ class CheckoutController extends Controller
                 $this->createOrderProduct($order, $product, $invoice);
             else
                 $this->createOrderProduct($order, $product, $invoice);
-            if($product->setup_fee > 0) {
+            if ($product->setup_fee > 0) {
                 $invoiceItem = new InvoiceItem();
                 $invoiceItem->invoice_id = $invoice->id;
                 $invoiceItem->description = $product->name . ' Setup Fee';
@@ -290,18 +373,11 @@ class CheckoutController extends Controller
 
         session()->forget('cart');
         session()->forget('coupon');
-        if (!config('settings::mail_disabled')) {
-            try {
-                \Illuminate\Support\Facades\Mail::to(auth()->user())->send(new \App\Mail\Orders\NewOrder($order));
-            } catch (\Exception $e) {
-            }
-            if ($total != 0) {
-                try {
-                    \Illuminate\Support\Facades\Mail::to(auth()->user())->send(new \App\Mail\Invoices\NewInvoice($invoice));
-                } catch (\Exception $e) {
-                }
-            }
+        NotificationHelper::sendNewOrderNotification($order, auth()->user());
+        if ($total != 0) {
+            NotificationHelper::sendNewInvoiceNotification($invoice, auth()->user());
         }
+
         foreach ($order->products()->get() as $product) {
             $iproduct = Product::where('id', $product->product_id)->first();
             if ($iproduct->stock_enabled) {
@@ -309,48 +385,35 @@ class CheckoutController extends Controller
                 $iproduct->save();
             }
         }
+        if ($coupon) {
+            $coupon->uses = $coupon->uses + 1;
+            $coupon->save();
+        }
         if ($total != 0) {
-            $products = [];
-            foreach ($invoice->items()->get() as $item) {
-                if ($item->product_id) {
-                    $product = $item->product()->get()->first();
-                    $order = $product->order()->get()->first();
-                    $coupon = $order->coupon()->get()->first();
-                    if ($coupon) {
-                        if ($coupon->time == 'onetime') {
-                            $invoices = $order->invoices()->get();
-                            if ($invoices->count() == 1) {
-                                $coupon = $order->coupon()->get()->first();
-                            } else {
-                                $coupon = null;
-                            }
-                        }
-                    }
+            $invoice = Invoice::where('id', $invoice->id)->first();
+            $invoiceTotalAndProducts = $invoice->getItemsWithProducts();
+            $products = $invoiceTotalAndProducts->products;
+            $total = $invoiceTotalAndProducts->total;
 
-                    if ($coupon) {
-                        if (!in_array($product->id, $coupon->products) && !empty($coupon->products)) {
-                            $product->discount = 0;
-                        } else {
-                            if ($coupon->type == 'percent') {
-                                $product->discount = $product->price * $coupon->value / 100;
-                                $product->discount_fee = $product->setup_fee * $coupon->value / 100;
-                            } else {
-                                $product->discount = $coupon->value;
-                                $product->discount_fee = $coupon->value;
-                            }
-                        }
-                    } else {
-                        $product->discount = 0;
-                        $product->discount_fee = 0;
-                    }
-                    $product->name = $item->description;
-                    $product->price = $item->total;
-                    $products[] = $product;
-                }
+            if ($total == 0) {
+                $invoice->status = 'paid';
+                $invoice->save();
+
+                return redirect()->route('clients.invoice.show', $invoice->id);
             }
 
             if ($request->get('payment_method')) {
                 $payment_method = $request->get('payment_method');
+                if ($payment_method == 'credits') {
+                    $user = User::where('id', auth()->user()->id)->first();
+                    if ($user->credits < $total) {
+                        return redirect()->route('clients.invoice.show', $invoice->id)->with('error', 'You do not have enough credits');
+                    }
+                    $user->credits = $user->credits - $total;
+                    $user->save();
+                    ExtensionHelper::paymentDone($invoice->id);
+                    return redirect()->route('clients.invoice.show', $invoice->id)->with('success', 'Payment done');
+                }
                 $payment_method = ExtensionHelper::getPaymentMethod($payment_method, $total, $products, $invoice->id);
                 if ($payment_method) {
                     return redirect($payment_method);
@@ -402,6 +465,16 @@ class CheckoutController extends Controller
                 $orderProductConfig->save();
             }
         }
+        if (isset($product->configurableOptions)) {
+            foreach ($product->configurableOptions as $key => $value) {
+                $orderProductConfig = new OrderProductConfig();
+                $orderProductConfig->order_product_id = $orderProduct->id;
+                $orderProductConfig->key = $key;
+                $orderProductConfig->value = $value;
+                $orderProductConfig->is_configurable_option = true;
+                $orderProductConfig->save();
+            }
+        }
         if ($product->price == 0 || $product->price - $product->discount == 0) {
             $orderProduct->status = 'paid';
             $orderProduct->save();
@@ -444,13 +517,19 @@ class CheckoutController extends Controller
         $request->validate([
             'quantity' => 'required|numeric|min:1',
         ]);
-        if(!$product->stock_enabled) {
-            return redirect()->back()->with('error', 'Product is out of stock');
-        }
         $cart = session()->get('cart');
         if (isset($cart[$product->id])) {
             if ($product->stock_enabled && $product->stock < $request->quantity) {
                 return redirect()->back()->with('error', 'Product is out of stock');
+            }
+            if ($product->limit) {
+                $orderProducts = 0;
+                if (auth()->check() && auth()->user()->orderProducts) {
+                    $orderProducts = Auth::user()->orderProducts()->where('product_id', $product->id)->count();
+                }
+                if ($orderProducts + $request->quantity > $product->limit) {
+                    return redirect()->back()->with('error', 'Product limit reached');
+                }
             }
             if ($cart[$product->id]->quantity != 0) {
                 $cart[$product->id]->quantity = $request->quantity;

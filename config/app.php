@@ -16,6 +16,26 @@ return [
 
     'version' => 'development',
 
+    // Used for beta versions
+    'commit' => '',
+
+    // Marketplace API
+    'marketplace' => 'https://market.paymenter.org/api/v1/',
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | Pagination
+    |--------------------------------------------------------------------------
+    |
+    | This value is the default pagination limit for your application. This value
+    | is used when the framework needs to paginate data. You may change this
+    | value as needed to fit the needs of your application.
+    |
+    */
+
+    'pagination' => 25,
+
     /*
     |--------------------------------------------------------------------------
     | Application Name
@@ -69,19 +89,6 @@ return [
     'url' => env('APP_URL', 'http://localhost'),
 
     'asset_url' => env('ASSET_URL'),
-
-    /*
-    |--------------------------------------------------------------------------
-    | Application Timezone
-    |--------------------------------------------------------------------------
-    |
-    | Here you may specify the default timezone for your application, which
-    | will be used by the PHP date and date-time functions. We have gone
-    | ahead and set this to a sensible default for you out of the box.
-    |
-    */
-
-    'timezone' => 'UTC',
 
     /*
     |--------------------------------------------------------------------------

@@ -1,0 +1,46 @@
+<?php
+
+namespace {{ namespace }};
+
+use App\Classes\Extensions\Gateway;
+
+class {{ class }} extends Gateway
+{
+    /**
+    * Get the extension metadata
+    * 
+    * @return array
+    */
+    public function getMetadata()
+    {
+        return [
+            'display_name' => '{{ class }}',
+            'version' => '1.0.0',
+            'author' => 'Paymenter',
+            'website' => 'https://paymenter.org',
+        ];
+    }
+
+    /**
+     * Get all the configuration for the extension
+     * 
+     * @return array
+     */
+    public function getConfig()
+    {
+        return [];
+    }
+    
+    /**
+     * Get the URL to redirect to
+     * 
+     * @param int $total
+     * @param array $products
+     * @param int $invoiceId
+     * @return string
+     */
+    public function pay($total, $products, $invoiceId)
+    {
+        return '';
+    }
+}

@@ -5,7 +5,7 @@
 [![GitHub release (latest by date)](https://img.shields.io/github/v/release/paymenter/paymenter)](https://github.com/Paymenter/paymenter/releases)
 ![Downloads](https://img.shields.io/github/downloads/paymenter/paymenter/total)
 
-[Discord](https://discord.gg/xB4UUT3XQg), [Demo](https://demo.paymenter.org), [Docs](https://paymenter.org/docs/intro), [Website](https://paymenter.org)
+[Discord](https://discord.gg/xB4UUT3XQg), [Demo](https://demo.paymenter.org), [Docs](https://paymenter.org/docs/getting-started/introduction/), [Website](https://paymenter.org)
 
 ## A advanced payment system for your hosting company
 ### About
@@ -31,5 +31,5 @@ The requirements for Paymenter are the following:
 - Composer
 
 ## Installation & Documentation
-For a detailed explanation of how to install and configure Paymenter, take a look at our [documentation here](https://paymenter.org/docs/intro)!
+For a detailed explanation of how to install and configure Paymenter, take a look at our [documentation here](https://paymenter.org/docs/getting-started/introduction/)!
 - Or, get additional help via [Community Discord](https://discord.gg/xB4UUT3XQg).

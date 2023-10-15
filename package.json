@@ -3,7 +3,7 @@
     "scripts": {
         "dev": "vite",
         "build": "vite build",
-        "lang": "node lang.js"
+        "lang": "laravel-language-extractor --theme default"
     },
     "devDependencies": {
         "@popperjs/core": "^2.10.2",
@@ -14,7 +14,7 @@
         "flowbite": "^1.6.3",
         "laravel-vite-plugin": "^0.7.4",
         "sass": "^1.32.11",
-        "tailwindcss": "^3.1.6",
-        "vite": "^4.2.1"
+        "tailwindcss": "^3.3.3",
+        "vite": "^4.2.3"
     }
 }

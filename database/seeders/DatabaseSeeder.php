@@ -12,15 +12,11 @@ class DatabaseSeeder extends Seeder
      *
      * @return void
      */
-    public function run()
+    public function run(): void
     {
-        // \App\Models\User::factory(10)->create();
-
-        \App\Models\User::factory()->create([
-            'name' => 'Corwin van Velthuizen',
-            'email' => 'info@corwindev.nl',
-            'password' => bcrypt('Req@r4837dXgy.U'),
-            'is_admin' => 1,
-        ]);
+        $this->call(RolePermissionSeeder::class);
+        $this->call(SettingSeeder::class);
+        $this->call(AnnouncementSeeder::class);
+        $this->call(EmailTemplateSeeder::class);
     }
 }

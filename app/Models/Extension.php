@@ -18,11 +18,21 @@ class Extension extends Model
 
     public function getConfig()
     {
-        return $this->hasMany(ExtensionSetting::class, 'extension', 'id');
+        return $this->hasMany(ExtensionSetting::class);
     }
 
     public function getServer()
     {
         return $this->hasMany(ProductSetting::class, 'extension', 'id');
+    }
+
+    public function getPathAttribute()
+    {
+        return app_path('Extensions/' . ucfirst($this->type) . 's' . '/' . $this->name);
+    }
+
+    public function getNamespaceAttribute()
+    {
+        return 'App\\Extensions\\' . ucfirst($this->type) . 's' . '\\' . $this->name;
     }
 }

@@ -3,6 +3,8 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+
+use App\Utils\Permissions;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -21,7 +23,8 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'id',
-        'name',
+        'first_name',
+        'last_name',
         'email',
         'password',
         'address',
@@ -31,9 +34,9 @@ class User extends Authenticatable
         'country',
         'phone',
         'companyname',
-        'permissions',
-        'is_admin',
-        'tfa_secret'
+        'tfa_secret',
+        'role_id',
+        'credits',
     ];
 
     /**
@@ -44,10 +47,9 @@ class User extends Authenticatable
     protected $hidden = [
         'password',
         'remember_token',
-        'is_admin',
         'permissions',
-        'api_token',
         'tfa_secret',
+        'credits',
     ];
 
     /**
@@ -60,14 +62,41 @@ class User extends Authenticatable
         'permissions' => 'array',
     ];
 
+    protected $appends = ['name'];
+
+    // If role_id is null, set to 2 (client)
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($user) {
+            $user->role_id = $user->role_id ?? 2;
+        });
+
+        static::deleting(function ($user) {
+            foreach ($user->orders as $order) {
+                $order->products()->delete();
+            }
+            $user->orders()->delete();
+            $user->tickets()->delete();
+            $user->invoices()->delete();
+            EmailLog::where('user_id', $user->id)->delete();
+        });
+    }
+
+    public function getNameAttribute()
+    {
+        return $this->first_name . ' ' . $this->last_name;
+    }
+
     public function orders()
     {
-        return $this->hasMany(Order::class, 'client', 'id');
+        return $this->hasMany(Order::class);
     }
 
     public function tickets()
     {
-        return $this->hasMany(Ticket::class, 'client', 'id');
+        return $this->hasMany(Ticket::class);
     }
 
     public function invoices()
@@ -75,19 +104,43 @@ class User extends Authenticatable
         return $this->hasMany(Invoice::class, 'user_id', 'id');
     }
 
+    public function sessions()
+    {
+        return $this->hasMany(Session::class);
+    }
+
+    public function role()
+    {
+        return $this->belongsTo(Role::class, 'role_id', 'id');
+    }
+
+    /**
+     * Get all OrderProducts for this user
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasManyThrough
+     */
+    public function orderProducts()
+    {
+        return $this->hasManyThrough(OrderProduct::class, Order::class, 'user_id', 'order_id', 'id', 'id');
+    }
+
     public function has($permission)
     {
-        if ($this->is_admin == 1 && $this->permissions == null) {
-            return true;
-        }
-        if ($this->permissions == null) {
-            return false;
-        }
-        // Check if array contains permission
-        if (in_array($permission, $this->permissions)) {
-            return true;
-        }
+        return (new Permissions($this->role->permissions))->has($permission);
+    }
 
-        return false;
+    public function formattedCredits()
+    {
+        return number_format($this->credits, 2);
+    }
+
+    public function affiliate()
+    {
+        return $this->hasOne(Affiliate::class);
+    }
+
+    public function affiliateUser()
+    {
+        return $this->hasOne(AffiliateUser::class);
     }
 }

@@ -56,6 +56,12 @@
             --secondary-700: {{ config('settings::theme:secondary-700', '#353741') }};
             --secondary-800: {{ config('settings::theme:secondary-800', '#1c1c20') }};
             --secondary-900: {{ config('settings::theme:secondary-900', '#000000') }};
+
+            --primary-50: {{ config('settings::theme:primary-50', '#EDF0FF') }};
+            --primary-100: {{ config('settings::theme:primary-100', '#C6DBFF') }};
+            --primary-200: {{ config('settings::theme:primary-200', '#9BBEFB') }};
+            --primary-300: {{ config('settings::theme:primary-300', '#799CD8') }};
+            --primary-400: {{ config('settings::theme:primary-400', '#5270FD') }};
         }
 
         .dark {
@@ -87,21 +93,23 @@
     <link rel="icon" type="image/png" sizes="32x32" href="/img/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="/img/favicon-16x16.png">
     <link rel="manifest" href="/site.webmanifest">
-    <meta content="{{ config('settings::seo_title') }}" property="og:title">
-    <meta content="{{ config('settings::seo_description') }}" property="og:description">
-    <meta content="{{ config('settings::seo_description') }}" name="description">
-    <meta content='{{ config('settings::seo_image') }}' property="og:image">
+    <meta content="{{ ucfirst($title) ?? config('settings::seo_title') }}" property="og:title">
+    <meta content="{{ $description ?? config('settings::seo_description') }}" property="og:description">
+    <meta content="{{ $description ?? config('settings::seo_description') }}" name="description">
+    <meta content='{{ $image ?? config('settings::seo_image') }}' property='og:image'>
     <link type="application/json+oembed"
         href="{{ url('/') }}/manifest.json?title={{ config('app.name', 'Paymenter') }}&author_url={{ url('/') }}&author_name={{ config('app.name', 'Paymenter') }}" />
     <meta name="twitter:card" content="@if (config('settings::seo_twitter_card')) summary_large_image @endif">
     <meta name="theme-color" content="#5270FD">
 </head>
 
-<body class="bg-secondary-100 dark:bg-secondary-50 text-secondary-700 font-sans">
+<body class="font-sans bg-secondary-100 dark:bg-secondary-50 text-secondary-700">
+
     @if(config('settings::theme:snow') == 1)
     <canvas class="snow" id="snow" width="1920" height="1080"></canvas>
     @endif
     <div id="app" class="min-h-screen">
+        <x-paymenter-update />
         @if (!$clients || config('settings::sidebar') == 0)
             @include('layouts.navigation')
         @endif
@@ -109,19 +117,13 @@
             @if ($clients)
                 @include('layouts.subnavigation')
             @endif
-            <div class="w-full flex flex-col min-h-[calc(100vh-60px)]">
+            <div class="w-full flex flex-col @if($clients) min-h-[calc(100vh-105px)] @else min-h-[calc(100vh-64px)] @endif">
 
                 <main class="grow">
                     {{ $slot }}
                 </main>
 
-                <footer class="pt-5 pb-3 mt-auto">
-                    <div class="content text-center text-secondary-600 text-sm">
-                        <a href="https://paymenter.org">
-                            Paymenter &copy; 2022 - {{ date('Y') }}
-                        </a>
-                    </div>
-                </footer>
+                <x-footer />
             </div>
         </div>
     </div>

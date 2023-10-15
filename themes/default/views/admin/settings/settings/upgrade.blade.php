@@ -4,13 +4,13 @@
             {{ __('You are running a development version') }}
         </div>
         <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative m-4 ml-6" role="alert">
-            <strong class="font-bold">{{ __('This version is not supported for production use.') }}</strong>
+            <strong class="font-bold">{{ __('This version is not supported for production use. It may contain various errors and some functions may not work.') }}</strong>
             <span class="block sm:inline">{{ __('Please use the latest stable version.') }}</span>
         </div>
     @else
         <div class="m-4 ml-6 text-xl text-gray-900 dark:text-darkmodetext ">{{ __('You are running version') }}
             {{ config('app.version') }}</div>
-        <div class="m-4 ml-6 text-xl text-gray-900 dark:text-darkmodetext ">{{ __('Latest version') }} 
+        <div class="m-4 ml-6 text-xl text-gray-900 dark:text-darkmodetext ">{{ __('Latest version') }}
             <span id="latest-version"></span>
         </div>
     @endif

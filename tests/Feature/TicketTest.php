@@ -35,7 +35,7 @@ class TicketTest extends TestCase
 
         $response->assertStatus(302);
 
-        $ticket = Ticket::where('client', $this->user->id)->first();
+        $ticket = Ticket::where('user_id', $this->user->id)->first();
 
         $this->assertNotNull($ticket);
     }
@@ -63,7 +63,7 @@ class TicketTest extends TestCase
             'title' => 'TEST',
             'status' => 'open',
             'priority' => 'low',
-            'client' => $this->user->id,
+            'user_id' => $this->user->id,
         ]);
 
         $response = $this->actingAs($this->user)->get(route('clients.tickets.show', $ticket));
@@ -82,7 +82,7 @@ class TicketTest extends TestCase
             'title' => 'TEST',
             'status' => 'open',
             'priority' => 'low',
-            'client' => $this->user->id,
+            'user_id' => $this->user->id,
         ]);
 
         $response = $this->actingAs($this->user)->post(route('clients.tickets.reply', $ticket), [
@@ -109,7 +109,7 @@ class TicketTest extends TestCase
             'title' => 'TEST',
             'status' => 'open',
             'priority' => 'low',
-            'client' => $this->user->id,
+            'user_id' => $this->user->id,
         ]);
 
         $response = $this->actingAs($this->user)->post(route('clients.tickets.close', $ticket));

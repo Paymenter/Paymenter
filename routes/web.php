@@ -1,6 +1,15 @@
 <?php
 
+use App\Classes\Routing;
 use Illuminate\Support\Facades\Route;
+
+require __DIR__ . '/admin.php';
+require __DIR__ . '/extensions.php';
+
+if (!Routing::useLaravelRouting()) {
+    Route::view('/{path?}', 'app')
+    ->where('path', '^(?!(\/)?(api|static|images)).+');
+}
 
 /*
 |--------------------------------------------------------------------------
@@ -18,8 +27,14 @@ Route::get('/home', [App\Http\Controllers\Clients\HomeController::class, 'index'
 Route::get('/manifest.json', [App\Http\Controllers\BasisController::class, 'manifest'])->name('manifest');
 Route::get('/profile', [App\Http\Controllers\Clients\HomeController::class, 'profile'])->name('clients.profile')->middleware(['auth', 'password.confirm']);
 Route::post('/profile', [App\Http\Controllers\Clients\HomeController::class, 'update'])->name('clients.profile.update')->middleware(['auth', 'password.confirm']);
-Route::post('/profile/tfa', [App\Http\Controllers\Clients\HomeController::class, 'tfa'])->name('clients.profile.tfa')->middleware(['auth', 'password.confirm']);
+Route::post('/profile/tfa', [App\Http\Controllers\Clients\HomeController::class, 'update2FA'])->name('clients.profile.tfa')->middleware(['auth', 'password.confirm']);
+Route::delete('/profile/sessions', [App\Http\Controllers\Clients\HomeController::class, 'destroySessions'])->name('clients.profile.sessions')->middleware(['auth', 'password.confirm']);
+Route::get('/affiliate', [App\Http\Controllers\Clients\HomeController::class, 'affiliate'])->name('clients.affiliate')->middleware(['auth']);
+Route::post('/affiliate/store', [App\Http\Controllers\Clients\HomeController::class, 'affiliateStore'])->name('clients.affiliate.store')->middleware(['auth']);
+Route::get('/credits', [App\Http\Controllers\Clients\HomeController::class, 'credits'])->name('clients.credits')->middleware(['auth']);
+Route::post('/credits', [App\Http\Controllers\Clients\HomeController::class, 'addCredits'])->name('clients.credits.add')->middleware(['auth']);
 Route::get('/change-password', [App\Http\Controllers\Clients\HomeController::class, 'password'])->name('clients.password.change-password')->middleware(['auth']);
+Route::get('/tos', [App\Http\Controllers\BasisController::class, 'tos'])->name('tos');
 
 Route::group(['prefix' => 'checkout'], function () {
     Route::get('/', [App\Http\Controllers\CheckoutController::class, 'index'])->name('checkout.index');
@@ -55,6 +70,7 @@ Route::group(['prefix' => 'announcements'], function () {
 Route::group(['prefix' => 'client/products', 'middleware' => 'auth'], function () {
     Route::get('/', [App\Http\Controllers\Clients\ProductController::class, 'index'])->name('clients.active-products.index');
     Route::get('/{product}', [App\Http\Controllers\Clients\ProductController::class, 'index'])->name('clients.active-products.show');
+    Route::get('/{product}/{url}', [App\Http\Controllers\Clients\ProductController::class, 'show'])->name('clients.active-products.extension');
 });
 
 Route::group(['prefix' => 'api', 'middleware' => 'auth'], function () {
@@ -64,7 +80,5 @@ Route::group(['prefix' => 'api', 'middleware' => 'auth'], function () {
 });
 
 require __DIR__ . '/auth.php';
-require __DIR__ . '/admin.php';
-require __DIR__ . '/extensions.php';
 
 Route::get('/{slug?}/{product?}', [App\Http\Controllers\BasisController::class, 'products'])->name('products');

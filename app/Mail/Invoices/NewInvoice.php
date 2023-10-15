@@ -4,8 +4,7 @@ namespace App\Mail\Invoices;
 
 use App\Models\Invoice;
 use Illuminate\Bus\Queueable;
-use Illuminate\Mail\Mailable;
-use Illuminate\Mail\Mailables\Content;
+use App\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 
 class NewInvoice extends Mailable
@@ -18,7 +17,14 @@ class NewInvoice extends Mailable
      *
      * @var \App\Models\Invoices
      */
-    protected $invoice;
+    public $invoice;
+
+    /**
+     * The products instance.
+     * 
+     * @var \App\Models\Products
+     */
+    public $products;
 
     /**
      * Create a new message instance.
@@ -28,21 +34,6 @@ class NewInvoice extends Mailable
     public function __construct(Invoice $invoice)
     {
         $this->invoice = $invoice;
-    }
-
-    /**
-     * Get the message content definition.
-     *
-     * @return \Illuminate\Mail\Mailables\Content
-     */
-    public function content()
-    {
-        return new Content(
-            markdown: 'emails.invoices.new',
-            with: [
-                'invoice' => $this->invoice,
-                'products' => $this->invoice->items()->get(),
-            ]
-        );
+        $this->products = $invoice->items()->get();
     }
 }

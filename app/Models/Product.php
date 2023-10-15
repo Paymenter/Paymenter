@@ -14,10 +14,12 @@ class Product extends Model
         'description',
         'category_id',
         'image',
-        'server_id',
+        'extension_id',
         'stock',
         'stock_enabled',
         'allow_quantity',
+        'order',
+        'limit',
     ];
 
     public function category()
@@ -25,9 +27,9 @@ class Product extends Model
         return $this->belongsTo(Category::class);
     }
 
-    public function server()
+    public function extension()
     {
-        return $this->belongsTo(Extension::class, 'server_id');
+        return $this->belongsTo(Extension::class, 'extension_id');
     }
 
     public function settings()
@@ -37,12 +39,13 @@ class Product extends Model
 
     public function prices()
     {
-        return $this->hasOne(ProductPrice::class, 'product_id');
+        return $this->hasOne(ProductPrice::class);
     }
 
     public function price($type = null)
     {
-        $prices = $this->prices()->get()->first();
+        $prices = $this->prices;
+        
         if ($prices->type == 'one-time') {
             if($type == 'setup')
                 return $prices->monthly_setup;
@@ -58,5 +61,19 @@ class Product extends Model
             else
                 return $prices->monthly ?? $prices->quarterly ?? $prices->semi_annually ?? $prices->annually ?? $prices->biennially ?? $prices->triennially;
             }
+    }
+
+    public function configurableGroups()
+    {
+        // Check all groups products array
+        $groups = ConfigurableGroup::all();
+        $configurableGroups = [];
+        foreach ($groups as $group) {
+            $products = $group->products;
+            if (in_array($this->id, $products)) {
+                $configurableGroups[] = $group;
+            }
+        }
+        return $configurableGroups;
     }
 }

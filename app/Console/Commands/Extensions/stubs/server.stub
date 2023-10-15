@@ -1,0 +1,104 @@
+<?php
+
+namespace {{ namespace }};
+
+use App\Classes\Extensions\Server;
+
+class {{ class }} extends Server
+{
+    /**
+    * Get the extension metadata
+    * 
+    * @return array
+    */
+    public function getMetadata()
+    {
+        return [
+            'display_name' => '{{ class }}',
+            'version' => '1.0.0',
+            'author' => 'Paymenter',
+            'website' => 'https://paymenter.org',
+        ];
+    }
+    
+    /**
+     * Get all the configuration for the extension
+     * 
+     * @return array
+     */
+    public function getConfig()
+    {
+        return [];
+    }
+
+    /**
+     * Get product config
+     * 
+     * @param array $options
+     * @return array
+     */
+    public function getProductConfig($options)
+    {
+        return [];
+    }
+
+    /**
+     * Create a server
+     * 
+     * @param User $user
+     * @param array $params
+     * @param Order $order
+     * @param OrderProduct $orderProduct
+     * @param array $configurableOptions
+     * @return bool
+     */
+    public function createServer($user, $params, $order, $orderProduct, $configurableOptions)
+    {
+        return false;
+    }
+
+    /**
+     * Suspend a server
+     * 
+     * @param User $user
+     * @param array $params
+     * @param Order $order
+     * @param OrderProduct $orderProduct
+     * @param array $configurableOptions
+     * @return bool
+     */
+    public function suspendServer($user, $params, $order, $orderProduct, $configurableOptions)
+    {
+        return false;
+    }
+
+    /**
+     * Unsuspend a server
+     * 
+     * @param User $user
+     * @param array $params
+     * @param Order $order
+     * @param OrderProduct $orderProduct
+     * @param array $configurableOptions
+     * @return bool
+     */
+    public function unsuspendServer($user, $params, $order, $orderProduct, $configurableOptions)
+    {
+        return false;
+    }
+
+    /**
+     * Terminate a server
+     * 
+     * @param User $user
+     * @param array $params
+     * @param Order $order
+     * @param OrderProduct $orderProduct
+     * @param array $configurableOptions
+     * @return bool
+     */
+    public function terminateServer($user, $params, $order, $orderProduct, $configurableOptions)
+    {
+        return false;
+    }
+}

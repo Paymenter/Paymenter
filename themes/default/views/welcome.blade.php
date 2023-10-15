@@ -5,7 +5,7 @@
         <div class="content ">
             <div class="content-box">
                 <div class="prose dark:prose-invert min-w-full">
-                    {!! Str::Markdown(Stevebauman\Purify\Facades\Purify::clean(config('settings::home_page_text'))) !!}
+                    @markdownify(config('settings::home_page_text'))
                 </div>
             </div>
         </div>
@@ -19,11 +19,13 @@
                 @foreach ($categories as $category)
                     @if ($category->products->count() > 0)
                         <div class="lg:col-span-3 md:col-span-6 col-span-12">
-                            <div class="content-box">
+                            <div class="content-box h-full flex flex-col">
                                 <h3 class="font-semibold text-lg">{{ $category->name }}</h3>
                                 <p>{{ $category->description }}</p>
-                                <a href="{{ route('products', $category->slug) }}"
-                                    class="button button-secondary w-full mt-3">{{ __('Browse Category') }}</a>
+                                <div class="pt-3 mt-auto">
+                                    <a href="{{ route('products', $category->slug) }}"
+                                    class="button button-secondary w-full">{{ __('Browse Category') }}</a>
+                                </div>
                             </div>
                         </div>
                     @endif
@@ -37,11 +39,11 @@
         <div class="content">
             <h2 class="font-semibold text-2xl mb-2 text-secondary-900">{{ __('Announcements') }}</h2>
             <div class="grid grid-cols-12 gap-4">
-                @foreach ($announcements as $announcement)
+                @foreach ($announcements->sortByDesc('created_at') as $announcement)
                     <div class="lg:col-span-4 md:col-span-6 col-span-12">
                         <div class="content-box">
                             <h3 class="font-semibold text-lg">{{ $announcement->title }}</h3>
-                            <p>{!! str_replace("\n", '<br>', substr($announcement->announcement, 0, 100) . '...') !!}</p>
+                            <p>@markdownify(substr($announcement->announcement, 0, 100) . '...')</p>
                             <div class="flex justify-between items-center mt-3">
                                 <span class="text-sm text-secondary-600">{{ __('Published') }}
                                     {{ $announcement->created_at->diffForHumans() }}</span>

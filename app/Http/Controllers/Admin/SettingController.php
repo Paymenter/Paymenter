@@ -2,12 +2,11 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Helpers\NotificationHelper;
 use App\Models\Setting;
 use Qirolab\Theme\Theme;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Crypt;
 
 class SettingController extends Controller
@@ -15,10 +14,14 @@ class SettingController extends Controller
     public function index()
     {
         $tabs = [];
+        // Use default theme
+        Theme::set('default');
         // Get current theme
-        foreach (glob(Theme::getViewPaths()[1] . '/admin/settings/settings/*.blade.php') as $filename) {
+        foreach (glob(Theme::getViewPaths()[0] . '/admin/settings/settings/*.blade.php') as $filename) {
             $tabs[] = 'admin.settings.settings.' . basename($filename, '.blade.php');
         }
+        unset($tabs[array_search('admin.settings.settings.general', $tabs)]);
+        array_unshift($tabs, 'admin.settings.settings.general');
         $themes = array_diff(scandir(base_path('themes')), ['..', '.']);
         $languages = array_diff(scandir(base_path('lang')), ['..', '.']);
         foreach ($languages as $key => $language) {
@@ -27,17 +30,22 @@ class SettingController extends Controller
             }
         }
         $themeConfig = new \stdClass();
-        if (file_exists(base_path('themes/' . Theme::active() . '/theme.json'))) {
-            $themeConfig = json_decode(file_get_contents(base_path('themes/' . Theme::active() . '/theme.json')));
+        if (file_exists(base_path('themes/' . config('settings::theme-active') . '/theme.json'))) {
+            $themeConfig = json_decode(file_get_contents(base_path('themes/' . config('settings::theme-active') . '/theme.json')));
             if (!$themeConfig) {
                 $themeConfig = new \stdClass();
             }
         }
+        if (!isset($themeConfig->settings)) {
+            $themeConfig->settings = [];
+        }
+        $timezones = \DateTimeZone::listIdentifiers(\DateTimeZone::ALL);
         return view('admin.settings.index', [
             'tabs' => $tabs,
             'themes' => $themes,
             'languages' => $languages,
-            'themeConfig' => $themeConfig
+            'themeConfig' => $themeConfig,
+            'timezones' => $timezones
         ]);
     }
 
@@ -51,7 +59,10 @@ class SettingController extends Controller
             'app_logo' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'currency' => 'required|max:10',
             'currency_sign' => 'required|max:4',
-            'language' => 'required'
+            'language' => 'required',
+            'allow_auto_lang' => 'boolean',
+            'timezone' => 'required',
+            'remove_unpaid_order_after' => 'required|numeric|min:0',
         ]);
         if ($request->hasFile('app_logo')) {
             $imageName = time() . '.' . $request->app_logo->extension();
@@ -73,6 +84,25 @@ class SettingController extends Controller
         return redirect('/admin/settings#general')->with('success', 'Settings updated successfully');
     }
 
+    public function company(Request $request)
+    {
+        $request->validate([
+            'company_name' => 'max:255',
+            'company_address' => 'max:255',
+            'company_city' => 'max:255',
+            'company_country' => 'max:255',
+            'company_zip' => 'max:255',
+            'company_phone' => 'max:255',
+            'company_email' => 'max:255|email',
+            'company_tin' => 'max:255',
+        ]);
+        foreach ($request->except(['_token', 'app_logo', 'app_favicon']) as $key => $value) {
+            Setting::updateOrCreate(['key' => $key], ['value' => $value]);
+        }
+
+        return redirect('/admin/settings#company')->with('success', 'Settings updated successfully');
+    }
+
     public function email(Request $request)
     {
         $request->validate([
@@ -84,9 +114,7 @@ class SettingController extends Controller
             'mail_from_address' => 'required',
             'mail_from_name' => 'required',
         ]);
-        if ($request->mail_encryption == 'none') {
-            $request->merge(['mail_encryption' => null]);
-        }
+        if ($request->mail_encryption == 'none') $request->merge(['mail_encryption' => null]);
         // Loop through all settings
         foreach ($request->except(['_token']) as $key => $value) {
             if ($key == 'mail_password') {
@@ -96,6 +124,9 @@ class SettingController extends Controller
         }
         if (!$request->get('mail_disabled')) {
             Setting::updateOrCreate(['key' => 'mail_disabled'], ['value' => 0]);
+        }
+        if (!$request->get('must_verify_email')) {
+            Setting::updateOrCreate(['key' => 'must_verify_email'], ['value' => null]);
         }
 
         return redirect('/admin/settings#mail')->with('success', 'Settings updated successfully');
@@ -115,7 +146,7 @@ class SettingController extends Controller
         config(['mail.from.name' => $request->mail_from_name]);
 
         try {
-            \Illuminate\Support\Facades\Mail::to(auth()->user())->send(new \App\Mail\Test);
+            NotificationHelper::sendTestNotification(auth()->user());
         } catch (\Exception $e) {
             // Return json response
             return response()->json(['error' => $e->getMessage()], 500);
@@ -137,16 +168,26 @@ class SettingController extends Controller
 
     public function security(Request $request)
     {
-        Setting::updateOrCreate(['key' => 'recaptcha_site_key'], ['value' => $request->recaptcha_site_key]);
-        Setting::updateOrCreate(['key' => 'recaptcha_secret_key'], ['value' => $request->recaptcha_secret_key]);
         Setting::updateOrCreate(['key' => 'recaptcha'], ['value' => $request->recaptcha]);
-        Setting::updateOrCreate(['key' => 'recaptcha_type'], ['value' => $request->recaptcha_type]);
+        if ($request->get('tos') !== config('settings::tos_text')) {
+            Setting::updateOrCreate(['key' => 'tos_last_updated'], ['value' => now()]);
+        }
+        Setting::updateOrCreate(['key' => 'tos'], ['value' => $request->tos]);
 
+        foreach ($request->except(['_token']) as $key => $value) {
+            Setting::updateOrCreate(['key' => $key], ['value' => $value]);
+        }
         return redirect('/admin/settings#security')->with('success', 'Settings updated successfully');
     }
 
     public function theme(Request $request)
     {
+        if($request->has('reset')) {
+            foreach(Setting::where('key', 'like', 'theme:%')->get() as $setting) {
+                $setting->delete();
+            }
+            return redirect('/admin/settings#theme')->with('success', 'Settings updated successfully');
+        }
         $request->validate([
             'theme' => 'required',
         ]);
@@ -156,5 +197,35 @@ class SettingController extends Controller
         }
 
         return redirect('/admin/settings#theme')->with('success', 'Settings updated successfully');
+    }
+
+    public function credits(Request $request)
+    {
+        $request->validate([
+            'minimum_deposit' => 'required|numeric|min:0',
+            'maximum_deposit' => 'required|numeric|min:0',
+            'maximum_balance' => 'required|numeric|min:0',
+        ]);
+        Setting::updateOrCreate(['key' => 'credits'], ['value' => $request->credits]);
+        foreach ($request->except(['_token']) as $key => $value) {
+            Setting::updateOrCreate(['key' => $key], ['value' => $value]);
+        }
+        return redirect('/admin/settings#credits')->with('success', 'Settings updated successfully');
+    }
+
+    public function affiliate(Request $request)
+    {
+        $request->validate([
+            'affiliate' => 'sometimes|boolean',
+            'affiliate_percentage' => 'required|numeric|min:0|max:100',
+            'affiliate_type' => 'required|in:random,fixed,custom'
+        ]);
+
+        foreach ($request->except(['_token']) as $key => $value) {
+            Setting::updateOrCreate(['key' => $key], ['value' => $value]);
+        }
+        Setting::updateOrCreate(['key' => 'affiliate'], ['value' => $request->affiliate ? 1 : 0]);
+
+        return redirect('/admin/settings#affiliate')->with('success', 'Settings updated successfully');
     }
 }

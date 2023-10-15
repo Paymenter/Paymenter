@@ -4,7 +4,7 @@ namespace App\Mail\Orders;
 
 use App\Models\Order;
 use Illuminate\Bus\Queueable;
-use Illuminate\Mail\Mailable;
+use App\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Queue\SerializesModels;
 
@@ -18,7 +18,14 @@ class NewOrder extends Mailable
      *
      * @var \App\Models\Order
      */
-    protected $order;
+    public $order;
+
+    /**
+     * The products instance.
+     *
+     * @var \App\Models\Product
+     */
+    public $products;
 
     /**
      * Create a new message instance.
@@ -30,21 +37,6 @@ class NewOrder extends Mailable
     public function __construct(Order $order)
     {
         $this->order = $order;
-    }
-
-    /**
-     * Get the message content definition.
-     *
-     * @return \Illuminate\Mail\Mailables\Content
-     */
-    public function content()
-    {
-        return new Content(
-            markdown: 'emails.orders.new',
-            with: [
-                'order' => $this->order,
-                'products' => $this->order->products()->get(),
-            ]
-        );
+        $this->products = $order->products()->get();
     }
 }

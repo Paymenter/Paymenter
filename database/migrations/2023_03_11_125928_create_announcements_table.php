@@ -17,14 +17,9 @@ return new class extends Migration
             $table->id();
             $table->string('title');
             $table->text('announcement');
-            $table->boolean('published')->default(true);
+            $table->boolean('published')->default(false);
             $table->timestamps();
         });
-        // Add first announcement
-        $announcement = new \App\Models\Announcement();
-        $announcement->title = 'Welcome to your new panel!';
-        $announcement->announcement = 'Welcome to your new panel! You can edit this announcement in the admin panel.';
-        $announcement->save();
     }
 
     /**

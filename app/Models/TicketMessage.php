@@ -17,6 +17,22 @@ class TicketMessage extends Model
 
     public function user()
     {
-        return $this->belongsTo(User::class, 'user_id');
+        return $this->belongsTo(User::class);
+    }
+
+    public function messageDate()
+    {
+        return $this->created_at->isToday() ? $this->created_at->format('H:i') : $this->created_at->format('d M Y, H:i');
+    }
+
+    public function ticket()
+    {
+        return $this->belongsTo(Ticket::class);
+    }
+
+
+    public function files()
+    {
+        return $this->morphMany(FileUpload::class, 'fileable');
     }
 }

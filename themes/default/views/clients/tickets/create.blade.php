@@ -1,9 +1,9 @@
 <x-app-layout clients title="{{ __('Create Ticket') }}">
     <div class="py-12">
         <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
-            <div class="overflow-hidden bg-white shadow-xl sm:rounded-lg dark:bg-darkmode2">
+            <div class="overflow-hidden bg-white shadow-xl sm:rounded-lg dark:bg-secondary-100">
                 <x-success class="mb-4" />
-                <div class="grid grid-cols-1 bg-gray-200 bg-opacity-25 dark:bg-darkmode2">
+                <div class="grid grid-cols-1 bg-gray-200 bg-opacity-25 dark:bg-secondary-100">
                     <div class="p-6">
                         <div class="flex items-center">
                             <div class="ml-4 text-lg font-semibold leading-7 text-gray-600 dark:text-darkmodetext">
@@ -51,31 +51,49 @@
                                             {{ __('Related service') }}
                                         </label>
                                         <select id="service" name="service"
-                                            class="block w-full mt-1 rounded-md shadow-sm form-input dark:text-darkmodetext dark:bg-darkmode">
+                                                class="block w-full mt-1 rounded-md shadow-sm form-input dark:text-darkmodetext dark:bg-darkmode">
                                             @if (count($services) > 0)
                                                 <option value="low"
-                                                    @if (old('service') == 1) selected @endif>
-                                                    {{ __('None') }}
+                                                        @if (old('service') == 1) selected @endif>
+                                                    {{__('Select Product/Service')}} {{ __('(Optional)')}}
                                                 </option>
                                                 @foreach ($services as $service)
-                                                    @foreach ($service->products as $product)
-                                                        @php $product = $product->product()->get()->first() @endphp
-                                                        {{ $product }}
+                                                    @foreach ($service->products()->get() as $product2)
+                                                        @php
+                                                            $product = $product2->product()->get()->first();
+                                                            $status = '';
+                                                            switch ($product2->status) {
+                                                                case 'paid':
+                                                                    $status = __('Active');;
+                                                                    break;
+                                                                case 'cancelled':
+                                                                    $status = __('Cancelled');
+                                                                    break;
+                                                                case 'suspended':
+                                                                    $status = __('Suspended');
+                                                                    break;
+                                                                case 'deleted':
+                                                                    $status = __('Deleted');
+                                                                    break;
+                                                                default:
+                                                                    $status = __('Unknown');
+                                                            }
+                                                        @endphp
                                                         <option value="low"
-                                                            @if (old('service') == 1) selected @endif>
+                                                                @if (old('service') == 1) selected @endif>
                                                             <!-- Check if $product->name exists without calling it -->
                                                             @if (isset($product->name))
                                                                 {{ ucfirst($product->name) }} -
-                                                                ({{ ucfirst($service->status) }})
+                                                                [#{{ $service->id }}] ({{ ucfirst($status) }})
                                                             @else
-                                                                {{ __('Unknown -') }} ({{ ucfirst($service->status) }})
+                                                                {{ __('Unknown -') }} [#{{ $service->id }}] ({{ ucfirst($status) }})
                                                             @endif
                                                         </option>
                                                     @endforeach
                                                 @endforeach
                                             @else
                                                 <option value="low"
-                                                    @if (old('service') == 1) selected @endif>
+                                                        @if (old('service') == 1) selected @endif>
                                                     {{ __('None') }}
                                                 </option>
                                             @endif

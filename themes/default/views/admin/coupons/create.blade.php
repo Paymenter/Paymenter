@@ -69,8 +69,8 @@
                 </label>
                 <input
                     class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm dark:bg-darkmode rounded-md"
-                    type="number" name="uses" id="uses" step="1" min="0"
-                    value="{{ old('uses') }}">
+                    type="number" name="max_uses" id="max_uses" step="1" min="0"
+                    value="{{ old('max_uses') }}">
             </div>
             <div class="w-full">
                 <!-- Assigned products -->
@@ -103,8 +103,10 @@
                     type="date" name="end_date" id="end_date" value="{{ old('end_date') }}">
             </div>
         </div>
-        <button type="submit" class="form-submit float-right m-4">
-            {{ __('Create') }}
-        </button>
+        <div class="flex items-center justify-end mt-4">
+            <button type="submit" class="inline-flex justify-center w-max float-right button button-primary">
+                {{ __('Save') }}
+            </button>
+        </div>
     </form>
 </x-admin-layout>

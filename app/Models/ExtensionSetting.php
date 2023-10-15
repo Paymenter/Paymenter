@@ -10,13 +10,13 @@ class ExtensionSetting extends Model
     use HasFactory;
     protected $table = 'extension_settings';
     protected $fillable = [
-        'extension',
+        'extension_id',
         'key',
         'value',
     ];
 
     public function extension()
     {
-        return $this->belongsTo(Extension::class, 'id', 'extension');
+        return $this->belongsTo(Extension::class);
     }
 }

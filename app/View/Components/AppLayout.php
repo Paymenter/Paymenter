@@ -8,11 +8,15 @@ class AppLayout extends Component
 {
     public $title;
     public $clients;
+    public $description;
+    public $image;
 
-    public function __construct($title = '', $clients = false)
+    public function __construct($title = '', $clients =false, $description = null, $image = null)
     {
-        $this->title = $title ;
+        $this->title = $title;
         $this->clients = $clients ? true : false;
+        $this->description = $description;
+        $this->image = $image;
     }
 
     /**

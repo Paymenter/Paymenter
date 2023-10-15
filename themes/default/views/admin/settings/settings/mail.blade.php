@@ -9,12 +9,12 @@
                 <label class="form-label" style="position: unset">{{ __('Disable all mails') }}</label>
             </div>
             <div class="relative m-4 group">
-                <input type="text" class="form-input peer @error('mail_username') is-invalid @enderror" placeholder=" "
-                    name="mail_username" value="{{ config('mail.username') }}" />
+                <input type="text" class="form-input peer @error('mail_username') is-invalid @enderror"
+                    placeholder=" " name="mail_username" value="{{ config('mail.username') }}" />
                 <label class="form-label">{{ __('Mail Username') }}</label>
             </div>
             <div class="relative m-4 group">
-                <input type="password" class="form-input peer @error('mail_password') is-invalid @enderror" 
+                <input type="password" class="form-input peer @error('mail_password') is-invalid @enderror"
                     placeholder=" " name="mail_password" value="{{ config('mail.password') }}" />
                 <label class="form-label">{{ __('Mail Password') }}</label>
             </div>
@@ -45,6 +45,22 @@
                     <option value="none" {{ config('mail.encryption') == '' ? 'selected' : '' }}>None</option>
                 </select>
                 <label class="form-label">{{ __('Mail Encryption') }}</label>
+            </div>
+            <div class="relative m-4 group" data-popover-target="bcc">
+                <input type="text" class="form-input peer @error('bcc') is-invalid @enderror" placeholder=" "
+                    name="bcc" value="{{ config('settings::bcc') }}" />
+                <label class="form-label">{{ __('BCC Messages') }}</label>
+            </div>
+            <div id="bcc" role="tooltip" data-popover
+                class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
+                {{ __('Email addresses to BCC all outgoing emails to. Separate multiple email addresses using commas.') }}
+                <div data-popper-arrow></div>
+            </div>
+            <div class="relative m-4 group">
+                <input type="checkbox" class="w-fit form-input peer @error('must_verify_email') is-invalid @enderror"
+                    placeholder=" " name="must_verify_email" value="1"
+                    {{ config('settings::must_verify_email') == 1 ? 'checked' : '' }} />
+                <label class="form-label" style="position: unset">{{ __('Must Verify Email') }}</label>
             </div>
         </div>
         <div class="float-right">

@@ -20,7 +20,7 @@ class ProductTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->user = User::factory()->create(['is_admin' => 1]);
+        $this->user = User::factory()->create(['role_id' => 1]);
         $this->category = Category::factory()->create();
         $this->product = Product::factory()->create([
             'category_id' => $this->category->id,

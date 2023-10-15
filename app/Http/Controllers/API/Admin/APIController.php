@@ -4,7 +4,7 @@ namespace App\Http\Controllers\API\Admin;
 
 use App\Classes\API;
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\API\Controller;
 
 class APIController extends Controller
 {

@@ -1,81 +1,83 @@
 <x-app-layout clients title="{{ __('Invoice') }}">
     <section class="py-20">
-        <div class="max-w-5xl mx-auto py-16 dark:bg-darkmode2 bg-white">
+        <div class="max-w-5xl mx-auto dark:bg-secondary-100 bg-white rounded-md">
             <article class="overflow-hidden">
-                <div class="dark:bg-darkmode2 bg-[white] rounded-b-md">
-                    <div class="p-9">
-                        <div class="space-y-6 text-slate-700">
-                            <x-application-logo />
-
-                            <p class="dark:text-darkmodetext text-xl font-extrabold tracking-tight uppercase font-body">
+                <div class="dark:bg-secondary-100 bg-[white] rounded-md">
+                    <div class="p-9 flex flex-row w-full justify-between">
+                        <div class="text-slate-700 flex h-full">
+                            <div>
+                                <x-application-logo />
+                            </div>
+                            <span class="ml-2 my-auto dark:text-darkmodetext text-xl font-extrabold font-body">
                                 {{ config('app.name', 'Paymenter') }}
-                            </p>
+                            </span>
                         </div>
+                        @if ($invoice->status == 'pending')
+                            <div class="">
+                                <p class="text-red-500 font-semibold mt-2 text-xl">
+                                    {{__('Invoice Not Paid')}}
+                                </p>
+                            </div>
+                        @elseif($invoice->status == 'cancelled')
+                            <div class="">
+                                <p class="text-orange-500 font-semibold mt-2 text-xl">
+                                    {{__('Invoice Cancelled')}}
+                                </p>
+                            </div>
+                        @else
+                            <div class="text-end">
+                                <p class="text-green-500 font-semibold mt-2 text-xl">
+                                    {{__('Invoice Paid')}}
+                                </p>
+                                <span class="block text-sm text-gray-500 dark:text-darkmodetext">
+                                    {{ $invoice->paid_at }}
+                                </span>
+                            </div>
+                        @endif
                     </div>
                     <div class="p-9">
                         <div class="flex w-full">
                             <div class="grid grid-cols-4 gap-12">
                                 <div class="dark:text-darkmodetext text-sm font-light text-slate-500">
-                                    <p class="dark:text-darkmodetext text-sm font-normal text-slate-700">
-                                        {{ __('Invoice Detail:') }}
+                                    <p class="dark:text-darkmodetext text-sm font-bold text-slate-700">
+                                        {{ __('Billed To') }}</p>
+                                    <p>{{ config('settings::company_name')??config('app.name', 'Paymenter') }}</p>
+                                    <p>{{ config('settings::company_address') }}</p>
+                                    <p>{{ config('settings::company_zip') }} {{ config('settings::company_city') }}</p>
+                                    <p>{{ config('settings::company_country') }}</p>
+                                    <p>{{ __('TIN') }}: {{ config('settings::company_tin') }}</p>
+                                </div>
+                                <div class="dark:text-darkmodetext text-sm font-light text-slate-500">
+                                    <p class="dark:text-darkmodetext text-sm font-bold text-slate-700">
+                                        {{ __('Purchaser:') }}
                                     </p>
                                     <p>{{ auth()->user()->name }}</p>
+                                    <p>{{ auth()->user()->zip }} {{ auth()->user()->city }}</p>
                                     <p>{{ auth()->user()->address }}</p>
                                     <p>{{ auth()->user()->country }}</p>
-                                    <p>{{ auth()->user()->zip }}</p>
+                                </div>
                                 </div>
                                 <div class="dark:text-darkmodetext text-sm font-light text-slate-500">
-                                    <p class="dark:text-darkmodetext text-sm font-normal text-slate-700">
-                                        {{ __('Billed To') }}</p>
-                                    <p>{{ config('app.name', 'Paymenter') }}</p>
-                                </div>
-                                <div class="dark:text-darkmodetext text-sm font-light text-slate-500">
-                                    <p class="dark:text-darkmodetext text-sm font-normal text-slate-700">
-                                        {{ __('Invoice Number') }}</p>
-                                    <p>{{ $invoice->id }}</p>
+                                    <p class="dark:text-darkmodetext text-sm font-bold text-slate-700">
+                                        {{ __('Invoice Number') }}:</p>
+                                    <p>{{ $invoice->id }}/{{ $invoice->created_at->format('m/Y') }}</p>
 
-                                    <p class="dark:text-darkmodetext mt-2 text-sm font-normal text-slate-700">
-                                        {{ __('Date of Issue') }}
+                                    <p class="dark:text-darkmodetext mt-2 text-sm font-bold text-slate-700">
+                                        {{ __('Date of Issue') }}:
                                     </p>
                                     <p>{{ $invoice->created_at }}</p>
                                 </div>
                                 @if ($invoice->status == 'pending')
-                                    <div class="text-sm font-light text-slate-500">
-                                        <p class="dark:text-darkmodetext text-sm font-normal text-slate-700">
-                                            {{ __('Due') }}</p>
-                                        <p class="dark:text-darkmodetext">{{ $order->expiry_date }}</p>
-                                        <p class="dark:text-darkmodetext mt-2 text-xl font-normal text-slate-700">
-                                            {{ __('Pay') }}
-                                        </p>
-                                        <p>
-                                        <form action="{{ route('clients.invoice.pay', $invoice->id) }}" method="post">
-                                            @csrf
-                                            <label for="payment_method"
-                                                class="dark:text-darkmodetext block text-sm font-medium text-gray-700">{{ __('Payment method') }}</label>
-                                            <select id="payment_method" name="payment_method"
-                                                autocomplete="payment_method"
-                                                class="dark:bg-darkmode dark:text-darkmodetext dark:border-indigo-600 mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-                                                @foreach (App\Models\Extension::where('type', 'gateway')->where('enabled', true)->get() as $gateway)
-                                                    <option class="dark:bg-darkmode dark:text-darkmodetext"
-                                                        value="{{ $gateway->id }}">
-                                                        {{ isset($gateway->display_name) ? $gateway->display_name : $gateway->name }}
-                                                    </option>
-                                                @endforeach
-                                            </select>
-                                            <button type="submit"
-                                                class="mt-4 inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                                                {{ __('Pay') }}
-                                            </button>
-                                        </form>
-                                        </p>
+                                    <div class="dark:text-darkmodetext text-sm font-light text-slate-500">
+                                        <p class="dark:text-darkmodetext font-bold text-sm text-slate-700">
+                                            {{ __('Due Date') }}</p>
+                                        <p>{{ $invoice->due_at??"N/A" }}</p>
                                     </div>
-                                @else
-                                    <div class="text-sm font-light text-slate-500">
-
-                                        <p class="dark:text-darkmodetext text-xl font-normal text-slate-700">
-                                            {{ __('Paid') }}
-                                        </p>
-                                        <p class="dark:text-darkmodetext">{{ $invoice->paid_at }}</p>
+                                @elseif($invoice->status == 'cancelled')
+                                    <div class="dark:text-darkmodetext text-sm font-light text-slate-500">
+                                        <p class="dark:text-darkmodetext font-bold text-sm text-slate-700">
+                                            {{__('Cancellation Date')}}</p>
+                                        <p>{{ $invoice->cancelled_at??"N/A" }}</p>
                                     </div>
                                 @endif
                             </div>
@@ -106,42 +108,61 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach($products as $product2)
-                                        @php $product = $product2; @endphp
+                                    @php $discount = 0.00; @endphp
+                                    @foreach ($products as $product)
+                                        @php
+                                        if ($product->original_price > $product->price) {
+                                            $discount += $product->original_price - $product->price;
+                                        }
+                                        @endphp
                                         <tr class="border-b border-slate-200">
                                             <td class="py-4 pl-4 pr-3 text-sm sm:pl-6 md:pl-0">
-                                                <div class="dark:text-darkmodetext font-medium text-slate-700">
+                                                <div class="dark:text-darkmodetext font-medium text-slate-700 @if($invoice->status == 'cancelled') line-through @endif">
                                                     {{ $product->name ?? $product2->description }}
                                                 </div>
-                                                <div class="dark:text-darkmodetext mt-0.5 text-slate-500 sm:hidden">
+                                                <div class="dark:text-darkmodetext mt-0.5 text-slate-500 sm:hidden @if($invoice->status == 'cancelled') line-through @endif">
                                                     {{ __('1 unit at') }}
-                                                    {{ $currency_sign }}{{ number_format((float) $product->price, 2, '.', '') }}
+                                                    {{ number_format((float) $product->basePrice, 2, '.', '') }} {{ $currency_sign }}
                                                 </div>
                                             </td>
                                             <td
-                                                class="dark:text-darkmodetext hidden px-3 py-4 text-sm text-right text-slate-500 sm:table-cell">
+                                                class="dark:text-darkmodetext hidden px-3 py-4 text-sm text-right text-slate-500 sm:table-cell @if($invoice->status == 'cancelled') line-through @endif">
                                                 {{ $product->quantity ?? $product2->quantity }}
                                             </td>
                                             <td
-                                                class="dark:text-darkmodetext hidden px-3 py-4 text-sm text-right text-slate-500 sm:table-cell">
+                                                class="dark:text-darkmodetext hidden px-3 py-4 text-sm text-right text-slate-500 sm:table-cell @if($invoice->status == 'cancelled') line-through @endif">
                                                 @if ($product->discount)
                                                     <span class="text-red-500 line-through">
-                                                        {{ $currency_sign }}{{ number_format((float) $product->price, 2, '.', '') }}
+                                                        {{ number_format((float) $product->original_price, 2, '.', '') }} {{ $currency_sign }}
                                                     </span>
-                                                    {{ $currency_sign }}{{ number_format((float) ($product->price - $product->discount), 2, '.', '') }}
+                                                    &nbsp;&nbsp;{{ number_format((float) ($product->price), 2, '.', '') }} {{ $currency_sign }}
                                                 @else
-                                                    {{ $currency_sign }}{{ number_format((float) $product->price, 2, '.', '') }}
+                                                    &nbsp;&nbsp;{{ number_format((float) $product->price / $product->quantity, 2, '.', '') }} {{ $currency_sign }}
                                                 @endif
                                             </td>
                                             <td
-                                                class="dark:text-darkmodetext py-4 pl-3 pr-4 text-sm text-right text-slate-500 sm:pr-6 md:pr-0">
-                                                {{ $currency_sign }}{{ number_format((float) (($product->price - $product->discount) * $product->quantity), 2, '.', '') }}
+                                                class="dark:text-darkmodetext py-4 pl-3 pr-4 text-sm text-right text-slate-500 sm:pr-6 md:pr-0 @if($invoice->status == 'cancelled') line-through @endif">
+                                                {{ number_format((float) ($product->price), 2, '.', '') }} {{ $currency_sign }}
                                             </td>
                                         </tr>
                                     @endforeach
                                 </tbody>
                                 <tfoot>
-                                    <!--                                     can be enabled if this is made
+                                    <tr>
+                                        <th scope="row" colspan="3"
+                                            class="hidden pt-6 pl-6 pr-3 text-sm font-light text-right text-slate-500 sm:table-cell md:pl-0">
+                                            {{__('Discount')}}
+                                        </th>
+                                        <th scope="row"
+                                            class="pt-6 pl-4 pr-3 text-sm font-light text-left text-slate-500 sm:hidden">
+                                            {{__('Discount')}}
+                                        </th>
+                                        <td class="pt-6 pl-3 pr-4 text-sm text-right text-slate-500 sm:pr-6 md:pr-0 @if($invoice->status == 'cancelled') line-through @endif">
+                                            {{  number_format((float) ($discount), 2, '.', '') }} {{ $currency_sign }}
+                                        </td>
+                                    </tr>
+                                    <!--
+                                    can be enabled if this is made
                                     <tr>
                                         <th scope="row" colspan="3"
                                             class="hidden pt-6 pl-6 pr-3 text-sm font-light text-right text-slate-500 sm:table-cell md:pl-0">
@@ -172,8 +193,8 @@
                                             $0.00
                                         </td>
                                     </tr>
-                                
-                                
+
+
                                     <tr>
                                         <th scope="row" colspan="3"
                                             class="hidden pt-4 pl-6 pr-3 text-sm font-light text-right text-slate-500 sm:table-cell md:pl-0">
@@ -198,11 +219,44 @@
                                         </th>
                                         <td
                                             class="dark:text-darkmodetext pt-4 pl-3 pr-4 text-sm font-normal text-right text-slate-700 sm:pr-6 md:pr-0">
-                                            {{ $currency_sign }}{{ number_format((float) $total, 2, '.', '') }}
+                                            {{ number_format((float) $total, 2, '.', '') }} {{ $currency_sign }}
                                         </td>
                                     </tr>
                                 </tfoot>
                             </table>
+                            @if ($invoice->status == 'pending')
+                                <div class="flex justify-between mt-3">
+                                    <div>
+
+                                    </div>
+                                    <div class="text-sm font-light text-slate-500 col-span-2 text-right justify-end">
+                                        <p>
+                                        <form action="{{ route('clients.invoice.pay', $invoice->id) }}" method="post">
+                                            @csrf
+                                            <label for="payment_method"
+                                                   class="dark:text-darkmodetext block text-sm font-medium text-gray-700">{{ __('Payment method') }}</label>
+                                            <x-input id="payment_method" name="payment_method" type="select"
+                                                     autocomplete="payment_method">
+                                                @if (config('settings::credits'))
+                                                    <option value="credits">
+                                                        {{__('Pay with credits')}}
+                                                    </option>
+                                                @endif
+                                                @foreach (App\Models\Extension::where('type', 'gateway')->where('enabled', true)->get() as $gateway)
+                                                    <option class="dark:bg-darkmode dark:text-darkmodetext"
+                                                            value="{{ $gateway->id }}">
+                                                        {{ isset($gateway->display_name) ? $gateway->display_name : $gateway->name }}
+                                                    </option>
+                                                @endforeach
+                                            </x-input>
+                                            <button type="submit" class="button button-success bg-green-500 mt-3">
+                                                {{__('Pay')}}
+                                            </button>
+                                        </form>
+                                        </p>
+                                    </div>
+                                </div>
+                            @endif
                         </div>
                     </div>
 

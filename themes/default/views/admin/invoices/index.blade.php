@@ -2,7 +2,21 @@
     <x-slot name="title">
         {{ __('Invoices') }}
     </x-slot>
-    <h1 class="text-center text-2xl font-bold">{{ __('Invoices') }}</h1>
+    <div class="p-3 bg-white dark:bg-secondary-100 flex flex-row justify-between">
+        <div>
+            <div class="mt-3 text-2xl font-bold dark:text-darkmodetext">
+                {{ __('Invoices') }}
+            </div>
+            <div class="mt-3 text-gray-500 dark:text-darkmodetext">
+                {{ __('Here you can see all invoices.') }}
+            </div>
+        </div>
+        <div class="flex my-auto float-end justify-end mr-4">
+            <a href="{{ route('admin.invoices.create') }}" class="px-4 py-2 font-bold text-white transition rounded delay-400 button button-primary">
+                <i class="ri-add-circle-line mt-2"></i> {{ __('Create') }}
+            </a>
+        </div>
+    </div>
     <table class="table-auto w-full" id="table">
         <thead>
             <tr>
@@ -19,13 +33,31 @@
             @foreach ($invoices as $invoice)
                 <tr>
                     <td>{{ $invoice->id }}</td>
-                    <td>{{ $invoice->user()->get()->first()->name }}</td>
-                    <td>{{ $invoice->total() }}</td>
-                    <td>{{ $invoice->status }}</td>
-                    <td>{{ $invoice->created_at }}</td>
-                    <td>{{ $invoice->updated_at }}</td>
+                    <td>{{ $invoice->user->name }}</td>
+                    <td>{{ $invoice->total() }} {{ config('settings::currency_sign') }}</td>
                     <td>
-                        <a href="{{ route('admin.invoices.show', $invoice->id) }}" class="form-submit">
+                        @if (ucfirst($invoice->status) == 'Pending')
+                            <span class="text-red-400 font-semibold">
+                                {{ __('Pending') }}
+                            </span>
+                        @elseif (ucfirst($invoice->status) == 'Paid')
+                            <span class="text-green-400 font-semibold">
+                                {{__('Paid')}}
+                            </span>
+                        @elseif (ucfirst($invoice->status) == 'Cancelled')
+                            <span class="text-orange-400 font-semibold">
+                                {{__('Cancelled')}}
+                            </span>
+                        @else
+                            <span class="text-gray-400 font-semibold">
+                                {{ ucfirst($invoice->status) }}
+                            </span>
+                        @endif
+                    </td>
+                    <td>{{ $invoice->created_at }}</td>
+                    <td>{{ $invoice->paid_at ?? 'Not Paid' }}</td>
+                    <td>
+                        <a href="{{ route('admin.invoices.show', $invoice->id) }}" class="button button-primary">
                             {{ __('Show') }}
                         </a>
                     </td>
@@ -43,9 +75,17 @@
         $(document).ready(function() {
             var table = $('#table').DataTable({
                 dom: 'Bfrtip',
+                "language": {
+                    "search": "{{__('Search')}}",
+                    "zeroRecords": "{{__('No matching records found')}}",
+                    "info": "{{__('Showing')}} _PAGE_ {{__('of')}} _PAGES_",
+                    "infoEmpty": "{{__('No records available')}}",
+                    "infoFiltered": "{{__('filtered from')}} _MAX_ {{__('total records')}}",
+                },
+                order: [[ 0, 'desc' ]],
                 buttons: [
                     'copy', 'csv', 'excel', 'pdf', 'print'
-                ]
+                ],
             });
         });
     </script>
