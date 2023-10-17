@@ -12,7 +12,7 @@ class Pterodactyl extends Server
     {
         return [
             'display_name' => 'Pterodactyl',
-            'version' => '1.0.1',
+            'version' => '1.1.6',
             'author' => 'Paymenter',
             'website' => 'https://paymenter.org',
         ];
@@ -276,14 +276,25 @@ class Pterodactyl extends Server
         $environment = $port_array->environment ?? $environment;
 
         if ($node) {
-            $allocation = $this->getRequest($this->config('host') . '/api/application/nodes/' . $params['node'] . '/allocations');
-            $allocation = $allocation->json();
-            foreach ($allocation['data'] as $key => $val) {
-                if (!$val['attributes']['assigned']) {
-                    $allocation = $val['attributes']['id'];
-                    break;
+            $allocations = $this->getRequest($this->config('host') . '/api/application/nodes/' . $params['node'] . '/allocations');
+            $allocations = $allocations->json();
+            while (!isset($allocation)) {
+                foreach ($allocations['data'] as $key => $val) {
+                    if (!$val['attributes']['assigned']) {
+                        $allocation = $val['attributes']['id'];
+                        break;
+                    }
+                }
+                if (!isset($allocation)) {
+                    if (!isset($allocations['meta']['pagination']['links']['next'])) {
+                        ExtensionHelper::error('Pterodactyl', 'Failed to find allocation for order ' . $orderProduct->id . ' skipping server creation');
+                        return false;
+                    }
+                    $allocations = $this->getRequest($allocations['meta']['pagination']['links']['next']);
+                    $allocations = $allocations->json();
                 }
             }
+            error_log($allocation);
             $json = [
                 'name' => $servername,
                 'user' => (int) $this->getUser($user, $orderProduct),
@@ -331,14 +342,14 @@ class Pterodactyl extends Server
                     'backups' => (int) $backups,
                 ],
                 'allocation' => [
-                    'default' => (int) $port_array->default ?? null,
-                    'additional' => $allocationed ?? [],
+                    'default' => isset($port_array->default) ? (int)  $port_array->default : null,
+                    'additional' => isset($allocationed) ? $allocationed : [],
                 ],
                 'environment' => $environment,
                 'external_id' => (string) $orderProduct->id,
             ];
 
-            if (!$allocationed && $port_range->default) {
+            if (!$allocationed && !isset($port_range->default)) {
                 $json['deploy'] =  [
                     'locations' => [(int) $location],
                     'dedicated_ip' => false,
