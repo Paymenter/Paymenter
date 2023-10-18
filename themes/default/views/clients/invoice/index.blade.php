@@ -68,6 +68,12 @@
                     @endforeach
                     </tbody>
                 </table>
+			@else
+				 <div class="text-center">
+					<p class="text-primary-300 dark:text-primary-400 font-bold text-lg mt-2 mb-2">
+						{{__('No records available')}}
+					</p>
+				</div>
             @endif
         </div>
     </div>

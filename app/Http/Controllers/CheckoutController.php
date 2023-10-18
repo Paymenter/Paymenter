@@ -408,11 +408,12 @@ class CheckoutController extends Controller
                     $user = User::where('id', auth()->user()->id)->first();
                     if ($user->credits < $total) {
                         return redirect()->route('clients.invoice.show', $invoice->id)->with('error', 'You do not have enough credits');
-                    }
-                    $user->credits = $user->credits - $total;
-                    $user->save();
-                    ExtensionHelper::paymentDone($invoice->id);
-                    return redirect()->route('clients.invoice.show', $invoice->id)->with('success', 'Payment done');
+                    }else{
+						$user->credits = $user->credits - $total;
+						$user->save();
+						ExtensionHelper::paymentDone($invoice->id);
+						return redirect()->route('clients.invoice.show', $invoice->id)->with('success', 'Payment done');
+					}
                 }
                 $payment_method = ExtensionHelper::getPaymentMethod($payment_method, $total, $products, $invoice->id);
                 if ($payment_method) {

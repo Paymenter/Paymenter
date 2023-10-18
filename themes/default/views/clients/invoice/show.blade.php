@@ -259,7 +259,7 @@
                             @endif
                         </div>
                     </div>
-
+					@if ($invoice->status == 'paid')
                     <div class="mt-48 p-9">
                         <div class="border-t pt-9 border-slate-200">
                             <div class="dark:text-darkmodetext text-center text-sm font-light text-slate-700">
@@ -269,6 +269,7 @@
                             </div>
                         </div>
                     </div>
+					 @endif
                 </div>
             </article>
         </div>

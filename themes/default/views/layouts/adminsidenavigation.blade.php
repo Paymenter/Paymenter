@@ -34,13 +34,13 @@
                 </div>
                 <div class="w-4/5 mx-auto" id="submenuprof">
                     <x-sidebar-navigation-item route="clients.home" icon="ri-settings-2-line" dropdown="true">
-                        Profile Settings
+						{{ __('Profile Settings') }}
                     </x-sidebar-navigation-item>
                     <a href="{{ route('logout') }}"
                         onclick="event.preventDefault(); document.getElementById('logout-form').submit();"
                         class="p-2.5 mt-2 flex items-center rounded-md px-2 duration-300 cursor-pointer hover:bg-blue-600 text-red-500 hover:text-white font-bold text-sm"
                         role="menuitem">
-                        <i class="ri-logout-box-line ml-2 mr-4 w-4"></i>Sign Out
+                        <i class="ri-logout-box-line ml-2 mr-4 w-4"></i>{{ __('Sign Out') }}
                     </a>
                     <form id="logout-form" action="{{ route('logout') }}" method="POST" class="hidden">
                         @csrf
@@ -54,7 +54,7 @@
                     onclick="dropdowntickets()">
                     <i class="ri-coupon-line"></i>
                     <div class="flex items-center justify-between w-full">
-                        <span class="text-[15px] ml-4 font-bold">Tickets</span>
+                        <span class="text-[15px] ml-4 font-bold">{{ __('Tickets') }}</span>
                         <svg id="arrowtickets" sidebar-toggle-item class="w-6 h-6 transition-all duration-300"
                             fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
                             <path fill-rule="evenodd"
@@ -66,23 +66,23 @@
                 <div class="w-4/5 mx-auto" id="submenutickets">
                     <x-sidebar-navigation-item route="admin.tickets.create" icon="ri-add-circle-line"
                         dropdown="true">
-                        Create Ticket
+                       {{ __('Create Ticket') }}
                     </x-sidebar-navigation-item>
                     <x-sidebar-navigation-item route="admin.tickets" icon="ri-coupon-line" dropdown="true">
-                        View Ticket
+                        {{ __('View Ticket') }}
                     </x-sidebar-navigation-item>
                 </div>
                 <x-sidebar-navigation-item route="admin.products" icon="ri-shopping-basket-2-fill">
-                    Products
+                    {{ __('Products') }}
                 </x-sidebar-navigation-item>
                 <x-sidebar-navigation-item route="admin.categories" icon="ri-folders-line">
-                    Categories
+					 {{ __('Categories') }}
                 </x-sidebar-navigation-item>
                 <x-sidebar-navigation-item route="admin.orders" icon="ri-file-text-line">
-                    Orders
+					{{ __('Orders') }}
                 </x-sidebar-navigation-item>
                 <x-sidebar-navigation-item route="admin.clients" icon="ri-user-3-line">
-                    Clients
+                   {{ __('Clients') }}
                 </x-sidebar-navigation-item>
                 <script type="text/javascript">
                     function dropdownprof() {
