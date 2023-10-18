@@ -4,7 +4,7 @@ namespace App\Extensions\Gateways\PayPal;
 use App\Classes\Extensions\Gateway;
 use App\Helpers\ExtensionHelper;
 use Illuminate\Support\Facades\Http;
-
+use Illuminate\Http\Request;
 
 class PayPal extends Gateway
 {
@@ -73,7 +73,7 @@ class PayPal extends Gateway
         return $response->json()['links'][1]['href'];
     }
 
-    public function webhook($request)
+    public function webhook(Request $request)
     {
         $body = $request->getContent();
         $sigString = $request->header('PAYPAL-TRANSMISSION-ID') . '|' . $request->header('PAYPAL-TRANSMISSION-TIME') . '|' . ExtensionHelper::getConfig('PayPal', 'webhookId') . '|' . crc32($body);
