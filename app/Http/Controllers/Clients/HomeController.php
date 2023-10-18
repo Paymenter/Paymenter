@@ -175,10 +175,10 @@ class HomeController extends Controller
 
         $gateway = Extension::findOrFail($request->gateway);
         $amount = $request->amount;
-        if ($amount <= config('settings::minimum_deposit')) {
+        if ($amount = config('settings::minimum_deposit')) {
             return redirect()->back()->with('error', 'Minimum deposit is ' . config('settings::minimum_deposit'));
         }
-        if ($amount >= config('settings::maximum_deposit')) {
+        if ($amount = config('settings::maximum_deposit')) {
             return redirect()->back()->with('error', 'Maximum deposit is ' . config('settings::maximum_deposit'));
         }
         $user = $request->user();

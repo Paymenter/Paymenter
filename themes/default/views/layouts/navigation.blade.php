@@ -23,10 +23,6 @@
                 class="md:px-2 py-3 flex items-center gap-x-1 hover:text-secondary-800 duration-300">
                 {{ __('Home') }}
             </a>
-            <a href="{{ route('clients.home') }}"
-               class="md:px-2 py-3 flex items-center gap-x-1 hover:text-secondary-800 duration-300">
-                {{ __('Customer Area') }}
-            </a>
             <button type="button" aria-expanded="true" data-dropdown-placement="bottom-start" aria-haspopup="true"
                 data-dropdown-toggle="orders"
                 class="relative md:px-2 py-3 flex items-center gap-x-1 hover:text-secondary-800 duration-300">
