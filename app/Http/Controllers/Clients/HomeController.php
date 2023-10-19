@@ -20,7 +20,7 @@ class HomeController extends Controller
     {
         $user = $request->user();
         $services = $user->orders()->with(['products', 'products.product'])->get();
-        $invoices = Invoice::where('user_id', $user->id)->where('credits', null)->where('status', 'pending')->get();
+        $invoices = Invoice::where('user_id', $user->id)->where('credits', null)->where('status', 'pending')->with(['items.product.order.coupon', 'items.product.product'])->get();
 
         return view('clients.home', compact('services', 'invoices'));
     }

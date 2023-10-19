@@ -61,7 +61,7 @@ class Invoice extends Model
     {
         $products = [];
         $total = 0; 
-        foreach ($this->items->load(['product.order.coupon', 'product.product']) as $item) {
+        foreach ($this->items as $item) {
             if ($item->product) {
                 $product = $item->product;
                 $order = $product->order;
