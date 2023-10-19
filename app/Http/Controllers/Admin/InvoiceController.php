@@ -13,7 +13,7 @@ class InvoiceController extends Controller
 {
     public function index()
     {
-        $invoices = Invoice::with('user')->get();
+        $invoices = Invoice::with(['items.product.order.coupon', 'items.product.product', 'user'])->get();
 
         return view('admin.invoices.index', compact('invoices'));
     }

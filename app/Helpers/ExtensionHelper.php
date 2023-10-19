@@ -213,8 +213,7 @@ class ExtensionHelper
             $value = $request->get($config->name);
             try {
                 $value = Crypt::encryptString($value);
-            } catch(EncryptException $e){
-
+            } catch (EncryptException $e) {
             }
             $extension->getConfig()->updateOrCreate([
                 'key' => $config->name,
@@ -632,9 +631,9 @@ class ExtensionHelper
      */
     public static function getLink(OrderProduct $product2)
     {
-        $order = $product2->order()->first();
+        $order = $product2->order;
 
-        $product = Product::findOrFail($product2->product_id);
+        $product = $product2->product;
         if (!isset($product->extension_id)) {
             return false;
         }

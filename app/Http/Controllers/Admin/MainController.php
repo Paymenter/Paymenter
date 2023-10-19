@@ -12,7 +12,7 @@ class MainController extends Controller
     public function index()
     {
         $revenueTotal = 0;
-        $invoices = Invoice::where('status', 'paid')->get();
+        $invoices = Invoice::where('status', 'paid')->with(['items.product.order.coupon', 'items.product.product'])->get();
         foreach ($invoices as $invoice) {
             $revenueTotal += $invoice->total();
         }

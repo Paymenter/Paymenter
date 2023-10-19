@@ -92,7 +92,7 @@
 
                         <h2 class="text-xl font-bold mt-4 mb-2 dark:text-darkmodetext">{{__('Last Tickets')}}</h2>
                         <div class="grid grid-cols-1 gap-4">
-                            @foreach (App\Models\Ticket::orderBy('updated_at', 'DESC')->get()->take(4) as $ticket)
+                            @foreach (App\Models\Ticket::orderBy('updated_at', 'DESC')->with('user')->get()->take(4) as $ticket)
                                 <a href="/admin/tickets/{{ $ticket->id }}">
                                     <div class="px-4 py-2 rounded-md flex flex-col dark:hover:bg-secondary-300 dark:bg-secondary-200 bg-normal hover:bg-blue-100 transition-all ease-in-out">
                                         <div class="flex flex-row justify-between max-w-full">
