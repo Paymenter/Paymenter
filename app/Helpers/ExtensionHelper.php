@@ -2,10 +2,11 @@
 
 namespace App\Helpers;
 
+use App\Jobs\Servers\CreateServer;
+use App\Jobs\Servers\UnsuspendServer;
 use App\Models\ConfigurableOption;
 use App\Models\ConfigurableOptionInput;
 use App\Models\User;
-use App\Models\Order;
 use App\Models\Invoice;
 use App\Models\Product;
 use App\Models\Extension;
@@ -57,10 +58,10 @@ class ExtensionHelper
             }
 
             if ($product->status == 'suspended') {
-                ExtensionHelper::unsuspendServer($product);
+                UnsuspendServer::dispatch($product);
             }
             if ($product->status == 'pending') {
-                ExtensionHelper::createServer($product);
+                CreateServer::dispatch($product);
             }
             if ($product->status == 'pending' || $product->status == 'suspended') {
                 if ($product->billing_cycle) {
