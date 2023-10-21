@@ -32,7 +32,7 @@
             </thead>
             <tbody class="bg-white dark:bg-secondary-100 divide-y divide-gray-200" id="categories">
                 @foreach ($categories as $category)
-                    <tr id="{{ $category->id }}">
+                    <tr id="{{ $category->id }}" data-id="{{ $category->id }}" data-order="{{ $category->order }}">
                         <td class="py-2 px-4">{{ $category->id }}</td>
                         <td class="py-2 px-4">{{ $category->name }}</td>
                         <td class="py-2 px-4">
@@ -71,10 +71,19 @@
             handle: '.draggable',
             onEnd: function(evt) {
                 var url = "{{ route('admin.categories.reorder') }}";
+                var categories = document.querySelectorAll('#categories tr');
+                categories.forEach(function(category) {
+                    category.setAttribute('data-order', category.rowIndex);
+                });
+                categories = Array.from(categories).map(function(category) {
+                    return {
+                        id: category.getAttribute('data-id'),
+                        order: category.getAttribute('data-order'),
+                    };
+                });
+
                 var data = {
-                    id: evt.item.id,
-                    newIndex: evt.newIndex,
-                    oldIndex: evt.oldIndex,
+                    categories: categories,
                     _token: '{{ csrf_token() }}'
                 };
                 // Plain JavaScript
