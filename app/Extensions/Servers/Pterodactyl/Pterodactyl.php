@@ -379,6 +379,7 @@ class Pterodactyl extends Server
             return [];
         }
         if (!$port_array) return [];
+        if (!is_array($port_array)) return [];
         if (!$node) {
             // If no node is selected, we need to get the node id from the location
             $node = $this->getRequest($this->config('host') . '/api/application/nodes?per_page=100');

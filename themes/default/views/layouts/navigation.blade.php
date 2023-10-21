@@ -23,6 +23,12 @@
                 class="md:px-2 py-3 flex items-center gap-x-1 hover:text-secondary-800 duration-300">
                 {{ __('Home') }}
             </a>
+            @auth 
+                <a href="{{ route('clients.home') }}"
+                    class="md:px-2 py-3 flex items-center gap-x-1 hover:text-secondary-800 duration-300">
+                    {{ __('Customer Area') }}
+                </a>
+            @endauth
             <button type="button" aria-expanded="true" data-dropdown-placement="bottom-start" aria-haspopup="true"
                 data-dropdown-toggle="orders"
                 class="relative md:px-2 py-3 flex items-center gap-x-1 hover:text-secondary-800 duration-300">
@@ -83,9 +89,6 @@
 
                                 <a href="{{ route('clients.profile') }}" class="px-2 py-2 hover:bg-secondary-300 flex items-center gap-x-2 rounded transition-all ease-in-out">
                                     <i class="ri-account-circle-line"></i> {{__('Profile')}}
-                                </a>
-                                <a href="{{ route('clients.home') }}" class="px-2 py-2 hover:bg-secondary-300 flex items-center gap-x-2 rounded transition-all ease-in-out">
-                                    <i class="ri-layout-2-line"></i> {{ __('Client area') }}
                                 </a>
 
                                 {{-- <a href="#" class="px-2 py-2 hover:bg-secondary-300 flex items-center gap-x-2 rounded"><i class="ri-instance-line"></i> {{ __('Services') }}</a> --}}

@@ -55,7 +55,7 @@ class ProductController extends Controller
         $product->order = $newIndex - 1;
         $product->save();
 
-        $products = Product::where('category_id', $category->id)->orderBy('order', 'asc')->get();
+        $products = Product::where('category_id', $category->id)->orderBy('order', 'asc')->orderBy('updated_at', 'desc')->get();
 
         for ($i = 0; $i < $products->count(); $i++) {
             $products[$i]->order = $i;

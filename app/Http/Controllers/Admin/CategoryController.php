@@ -47,9 +47,9 @@ class CategoryController extends Controller
         $category->order = $newIndex - 1;
         $category->save();
         
-        $categories = Category::all()->sortBy('order');
+        $categories = Category::orderBy('order', 'asc')->orderBy('updated_at', 'desc')->get();
 
-        for($i = 0; $i < $categories->count(); $i++) {
+        for ($i = 0; $i < $categories->count(); $i++) {
             $categories[$i]->order = $i;
             $categories[$i]->save();
         }
