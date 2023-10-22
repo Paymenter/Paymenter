@@ -58,7 +58,7 @@
                         <tbody class="" id="{{ $category->id }}">
                             @if ($category->products->isNotEmpty())
                                 @foreach ($category->products()->orderBy('order')->get() as $product)
-                                    <tr id="{{ $product->id }}">
+                                    <tr id="{{ $product->id }}" data-id="{{ $product->id }}" data-order="{{ $product->order }}" data-category="{{ $category->id }}">
                                         <td class="py-2 px-4">
                                             {{ $product->id }}</td>
                                         <td class="py-2 px-4">
@@ -97,11 +97,24 @@
                             handle: '.draggable',
                             onEnd: function(evt) {
                                 var url = "{{ route('admin.products.reorder') }}";
+                                // Get all items by data-category
+                                var products = document.querySelectorAll('[data-category="' + evt.item.parentNode.id + '"]');
+                                // Loop through all items and update order
+                                products.forEach(function(product) {
+                                    product.setAttribute('data-order', product.rowIndex);
+                                });
+                                // Products should be array with {id, order}
+                                products = Array.from(products).map(function(product) {
+                                    return {
+                                        id: product.id,
+                                        order: product.getAttribute('data-order')
+                                    }
+                                });
+
+                                // Send data to server
                                 var data = {
-                                    id: evt.item.id,
-                                    category_id: evt.item.parentNode.id,
-                                    newIndex: evt.newIndex,
-                                    oldIndex: evt.oldIndex,
+                                    products: products,
+                                    category: evt.item.parentNode.id,
                                     _token: '{{ csrf_token() }}'
                                 };
                                 // Plain JavaScript

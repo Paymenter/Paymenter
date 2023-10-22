@@ -2,10 +2,11 @@
 
 namespace App\Helpers;
 
+use App\Jobs\Servers\CreateServer;
+use App\Jobs\Servers\UnsuspendServer;
 use App\Models\ConfigurableOption;
 use App\Models\ConfigurableOptionInput;
 use App\Models\User;
-use App\Models\Order;
 use App\Models\Invoice;
 use App\Models\Product;
 use App\Models\Extension;
@@ -57,10 +58,10 @@ class ExtensionHelper
             }
 
             if ($product->status == 'suspended') {
-                ExtensionHelper::unsuspendServer($product);
+                UnsuspendServer::dispatch($product);
             }
             if ($product->status == 'pending') {
-                ExtensionHelper::createServer($product);
+                CreateServer::dispatch($product);
             }
             if ($product->status == 'pending' || $product->status == 'suspended') {
                 if ($product->billing_cycle) {
@@ -213,8 +214,7 @@ class ExtensionHelper
             $value = $request->get($config->name);
             try {
                 $value = Crypt::encryptString($value);
-            } catch(EncryptException $e){
-
+            } catch (EncryptException $e) {
             }
             $extension->getConfig()->updateOrCreate([
                 'key' => $config->name,
@@ -632,9 +632,9 @@ class ExtensionHelper
      */
     public static function getLink(OrderProduct $product2)
     {
-        $order = $product2->order()->first();
+        $order = $product2->order;
 
-        $product = Product::findOrFail($product2->product_id);
+        $product = $product2->product;
         if (!isset($product->extension_id)) {
             return false;
         }

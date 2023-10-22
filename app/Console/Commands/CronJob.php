@@ -76,10 +76,11 @@ class CronJob extends Command
             if ($order->billing_cycle == 'free' || $order->billing_cycle == 'one-time' || $order->price == 0.00) {
                 continue;
             }
+            // FIXME: Why do we need to call it twice?
+            $order->getOpenInvoices();
+            
             // Get all InvoiceItems for this product
-            $invoiceItems = $order->getOpenInvoices();
-
-            if ($invoiceItems->count() > 0) {
+            if ($order->getOpenInvoices()->count() > 0) {
                 continue;
             }
 

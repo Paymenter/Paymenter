@@ -39,27 +39,14 @@ class ProductController extends Controller
     public function reorder(Request $request)
     {
         $request->validate([
-            'id' => 'required|integer|exists:products,id',
-            'category_id' => 'required|integer|exists:categories,id',
-            'newIndex' => 'required|integer',
+            'products' => 'required|array',
+            'category' => 'required|integer|exists:categories,id',
         ]);
-        $newIndex = $request->get('newIndex');
-        $oldIndex = $request->get('oldIndex');
-        if ($oldIndex == $newIndex) {
-            return response()->json(['success' => true]);
-        }
-        $category = Category::find($request->get('category_id'));
-
-
-        $product = Product::find($request->get('id'));
-        $product->order = $newIndex - 1;
-        $product->save();
-
-        $products = Product::where('category_id', $category->id)->orderBy('order', 'asc')->get();
-
-        for ($i = 0; $i < $products->count(); $i++) {
-            $products[$i]->order = $i;
-            $products[$i]->save();
+        $products = collect($request->get('products'));
+        $categoryProducts = Category::find($request->get('category'))->products;
+        foreach ($categoryProducts as $categoryProduct) {
+            $categoryProduct->order = $products->where('id', $categoryProduct->id)->first()['order'];
+            $categoryProduct->save();
         }
 
         return response()->json(['success' => true]);

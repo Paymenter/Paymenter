@@ -54,14 +54,12 @@ class OrderProduct extends Model
 
     public function getInvoices()
     {
-        return $this->hasMany(InvoiceItem::class, 'product_id', 'id')->get()->map(function ($invoiceItem) {
-            return $invoiceItem->invoice()->get()->first();
-        });
+        return $this->hasManyThrough(Invoice::class, InvoiceItem::class, 'product_id', 'id', 'id', 'invoice_id');
     }
 
     public function getOpenInvoices()
     {
-        return $this->getInvoices()->filter(function ($invoice) {
+        return $this->getInvoices->filter(function ($invoice) {
             if ($invoice->total() == 0)
                 return false;
             return $invoice->status == 'pending';

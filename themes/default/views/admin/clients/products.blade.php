@@ -104,7 +104,7 @@
                         </tr>
                     </thead>
                     <tbody class="text-center">
-                        @foreach ($orderProduct->getInvoices() as $invoice)
+                        @foreach ($orderProduct->getInvoices as $invoice)
                             <tr>
                                 <td class="border-b border-gray-500"><a
                                         href="{{ route('admin.invoices.show', $invoice->id) }}"

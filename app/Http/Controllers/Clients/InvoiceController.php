@@ -12,7 +12,7 @@ class InvoiceController extends Controller
 {
     public function index(Request $request)
     {
-        $invoices = Invoice::where('user_id', $request->user()->id)->where('credits', null)->get()->sort(function ($a, $b) {
+        $invoices = Invoice::where('user_id', $request->user()->id)->where('credits', null)->with(['items.product.order.coupon', 'items.product.product'])->get()->sort(function ($a, $b) {
             return strtotime($b->created_at) - strtotime($a->created_at);
         });
 

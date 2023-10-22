@@ -53,6 +53,15 @@ class User extends Authenticatable
     ];
 
     /**
+     * The default with relationships
+     * 
+     * @var array<int, string>
+     */
+    protected $with = [
+        'role',
+    ];
+
+    /**
      * The attributes that should be cast.
      *
      * @var array<string, string>

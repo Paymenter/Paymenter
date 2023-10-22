@@ -34,25 +34,16 @@ class CategoryController extends Controller
     public function reorder(Request $request)
     {
         $request->validate([
-            'id' => 'required|integer|exists:categories,id',
-            'newIndex' => 'required|integer|min:0',
-            'oldIndex' => 'required|integer|min:0',
+            'categories' => 'required|array',
         ]);
-        $newIndex = $request->input('newIndex');
-        $oldIndex = $request->input('oldIndex');
-        if ($newIndex == $oldIndex) {
-            return response()->json(['success' => true]);
-        }
-        $category = Category::find($request->input('id'));
-        $category->order = $newIndex - 1;
-        $category->save();
-        
-        $categories = Category::all()->sortBy('order');
 
-        for($i = 0; $i < $categories->count(); $i++) {
-            $categories[$i]->order = $i;
-            $categories[$i]->save();
+        $categories = collect($request->get('categories'));
+        $dbCategories = Category::all()->sortBy('order');
+        foreach ($dbCategories as $category) {
+            $category->order = $categories->where('id', $category->id)->first()['order'];
+            $category->save();
         }
+
 
         return response()->json(['success' => true]);
     }

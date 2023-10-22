@@ -11,14 +11,14 @@ class ProductController extends Controller
 {
     public function index(OrderProduct $product)
     {
+        $product->load(['product', 'order', 'order.user']);
         if ($product->order->user != Auth::user()) {
             return abort(404, 'Order not found');
         }
-
         $link = ExtensionHelper::getLink($product);
         $views = ExtensionHelper::getCustomPages($product);
         $orderProduct = $product;
-        $product = $product->product()->get()->first();
+        $product = $product->product;
 
         return view('clients.products.view', compact('product', 'link', 'orderProduct', 'views'));
     }

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Helpers\ExtensionHelper;
 use App\Helpers\NotificationHelper;
+use App\Jobs\Servers\CreateServer;
 use App\Models\{Extension, Invoice, OrderProduct, OrderProductConfig, Order, Product, User, Coupon, InvoiceItem};
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
@@ -478,7 +479,7 @@ class CheckoutController extends Controller
         if ($product->price == 0 || $product->price - $product->discount == 0) {
             $orderProduct->status = 'paid';
             $orderProduct->save();
-            ExtensionHelper::createServer($orderProduct);
+            CreateServer::dispatch($orderProduct);
             return;
         } else {
             $orderProduct->status = 'pending';

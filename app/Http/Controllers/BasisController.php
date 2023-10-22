@@ -9,7 +9,7 @@ class BasisController extends Controller
 {
     public function index()
     {
-        $categories = Category::with('products')->get();
+        $categories = Category::with('products')->orderBy('order')->get();
         $announcements = Announcement::where('published', 1)->get();
 
         return view('welcome', compact('categories', 'announcements'));
