@@ -35,6 +35,7 @@ Route::get('/credits', [App\Http\Controllers\Clients\HomeController::class, 'cre
 Route::post('/credits', [App\Http\Controllers\Clients\HomeController::class, 'addCredits'])->name('clients.credits.add')->middleware(['auth']);
 Route::get('/change-password', [App\Http\Controllers\Clients\HomeController::class, 'password'])->name('clients.password.change-password')->middleware(['auth']);
 Route::get('/tos', [App\Http\Controllers\BasisController::class, 'tos'])->name('tos');
+Route::get('/file/{fileUpload:uuid}', [App\Http\Controllers\BasisController::class, 'downloadFile'])->name('file')->middleware('auth');
 
 Route::group(['prefix' => 'checkout'], function () {
     Route::get('/', [App\Http\Controllers\CheckoutController::class, 'index'])->name('checkout.index');

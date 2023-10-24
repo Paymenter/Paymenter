@@ -17,7 +17,7 @@ class FileUploadHelper {
         $mime_type = $file->getMimeType();
         $uuid = Str::uuid();
 
-        $file->storeAs('public/uploads', $uuid . '.' . $extension);
+        $file->storeAs('uploads', $uuid . '.' . $extension);
 
         $fileUpload = FileUpload::create([
             'uuid' => $uuid,

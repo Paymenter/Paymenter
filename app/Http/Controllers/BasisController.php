@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\{Announcement, Category, Product};
+use App\Models\{Announcement, Category, FileUpload, Product};
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class BasisController extends Controller
 {
@@ -49,5 +50,10 @@ class BasisController extends Controller
             abort(404);
         }
         return view('tos');
+    }
+
+    public function downloadFile(FileUpload $fileUpload)
+    {
+        return response()->download(storage_path('app/uploads/' . $fileUpload->uuid . '.' . $fileUpload->extension), $fileUpload->filename);
     }
 }
