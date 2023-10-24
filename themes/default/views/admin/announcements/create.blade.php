@@ -11,19 +11,12 @@
         <div class="w-full">
             <form method="POST" action="{{ route('admin.announcements.store') }}">
                 @csrf
-                <div class="mt-4">
-                    <label class="block dark:text-darkmodetext text-sm font-medium text-gray-700">
-                        {{ __('Title') }}
-                    </label>
-                    <input class="form-input w-full" type="text" name="title" value="{{ old('title') }}">
-                </div>
-                <div class="mt-4">
-                    <label class="block dark:text-darkmodetext text-sm font-medium text-gray-700">
-                        {{ __('Description') }}
-                    </label>
-                    <textarea id="announcement" type="text" class="form-input w-full @error('announcement') border-red-500 @enderror"
-                        name="announcement" value="{{ old('description') }}" required autocomplete="announcement" autofocus></textarea>
-                </div>
+                    <x-input class="mt-4" type="text" name="title" value="{{ old('title') }}" label="{{__('Title') }}"/>
+
+                    
+                    <x-input id="announcement" type="textarea" class="mt-4"
+                        name="announcement" value="{{ old('description') }}" required label="{{__('Description') }}"/>
+
                 <script>
                     var easyMDE = new EasyMDE({
                         element: document.getElementById("announcement"),
@@ -34,12 +27,9 @@
                     });
                 </script>
                 <!-- Published -->
-                <div class="flex items-center">
-                    <input id="published" type="checkbox" class="form-input w-fit" name="published" value="1">
-                    <label for="published" class="ml-2 block text-sm text-gray-900 dark:text-darkmodetext">
-                        {{ __('Published') }}
-                    </label>
-                </div>
+
+                    <x-input id="published" type="checkbox" class="mt-4" name="published" value="1" label="{{ __('Published') }}"/>
+
                 <div class="flex items-center justify-end mt-4">
                     <button type="submit" class="inline-flex justify-center w-max float-right button button-primary">
                         {{ __('Create') }}
