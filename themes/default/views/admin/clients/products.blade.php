@@ -112,7 +112,8 @@
                                 <td class="border-b border-gray-500">{{ $invoice->status }}</td>
                                 <td class="border-b border-gray-500">{{ $invoice->created_at }}</td>
                                 <td class="border-b border-gray-500">
-                                    {{ config('settings::currency_sign') }}{{ $invoice->total() }}</td>
+                                    <x-money :amount="$invoice->total()" />
+                                </td>
                                 <td class="border-b border-gray-500">
                                     <a href="{{ route('admin.invoices.show', $invoice->id) }}"
                                         class="button button-primary">{{ __('View') }}</a>

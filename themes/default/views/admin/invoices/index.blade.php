@@ -34,7 +34,9 @@
                 <tr>
                     <td>{{ $invoice->id }}</td>
                     <td>{{ $invoice->user->name }}</td>
-                    <td>{{ $invoice->total() }} {{ config('settings::currency_sign') }}</td>
+                    <td>
+                        <x-money :amount="$invoice->total()" />
+                    </td>
                     <td>
                         @if (ucfirst($invoice->status) == 'Pending')
                             <span class="text-red-400 font-semibold">

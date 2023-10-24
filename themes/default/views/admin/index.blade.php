@@ -28,8 +28,7 @@
                                 <div class="flex flex-col">
                                     <h1 class="text-lg text-gray-500 dark:text-darkmodetext">{{ __('Revenue Total') }}</h1>
                                     <p class="text-xl font-bold text-black dark:text-darkmodetext">
-                                        {{ $revenueTotal }}
-                                        {{ config('settings::currency_sign') }}
+                                        <x-money :amount="$revenueTotal" />
                                     </p>
                                 </div>
                             </div>

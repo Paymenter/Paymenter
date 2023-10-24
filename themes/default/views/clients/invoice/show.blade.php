@@ -122,7 +122,7 @@
                                                 </div>
                                                 <div class="dark:text-darkmodetext mt-0.5 text-slate-500 sm:hidden @if($invoice->status == 'cancelled') line-through @endif">
                                                     {{ __('1 unit at') }}
-                                                    {{ number_format((float) $product->basePrice, 2, '.', '') }} {{ $currency_sign }}
+                                                    <x-money :amount="number_format((float) $product->basePrice, 2, '.', '')" />
                                                 </div>
                                             </td>
                                             <td
@@ -133,16 +133,18 @@
                                                 class="dark:text-darkmodetext hidden px-3 py-4 text-sm text-right text-slate-500 sm:table-cell @if($invoice->status == 'cancelled') line-through @endif">
                                                 @if ($product->discount)
                                                     <span class="text-red-500 line-through">
-                                                        {{ number_format((float) $product->original_price, 2, '.', '') }} {{ $currency_sign }}
+                                                        <x-money :amount="number_format((float) $product->original_price, 2, '.', '')" />
                                                     </span>
-                                                    &nbsp;&nbsp;{{ number_format((float) ($product->price), 2, '.', '') }} {{ $currency_sign }}
+                                                    &nbsp;&nbsp;
+                                                    <x-money :amount="number_format((float) $product->price, 2, '.', '')" />
                                                 @else
-                                                    &nbsp;&nbsp;{{ number_format((float) $product->price / $product->quantity, 2, '.', '') }} {{ $currency_sign }}
+                                                    &nbsp;&nbsp;
+                                                    <x-money :amount="number_format((float) $product->price / $product->quantity, 2, '.', '')" />
                                                 @endif
                                             </td>
                                             <td
                                                 class="dark:text-darkmodetext py-4 pl-3 pr-4 text-sm text-right text-slate-500 sm:pr-6 md:pr-0 @if($invoice->status == 'cancelled') line-through @endif">
-                                                {{ number_format((float) ($product->price), 2, '.', '') }} {{ $currency_sign }}
+                                                <x-money :amount="number_format((float) ($product->price * $product->quantity), 2, '.', '')" />
                                             </td>
                                         </tr>
                                     @endforeach
@@ -158,7 +160,7 @@
                                             {{__('Discount')}}
                                         </th>
                                         <td class="pt-6 pl-3 pr-4 text-sm text-right text-slate-500 sm:pr-6 md:pr-0 @if($invoice->status == 'cancelled') line-through @endif">
-                                            {{  number_format((float) ($discount), 2, '.', '') }} {{ $currency_sign }}
+                                            <x-money :amount="number_format((float) ($discount), 2, '.', '')" />
                                         </td>
                                     </tr>
                                     <!--
@@ -219,7 +221,7 @@
                                         </th>
                                         <td
                                             class="dark:text-darkmodetext pt-4 pl-3 pr-4 text-sm font-normal text-right text-slate-700 sm:pr-6 md:pr-0">
-                                            {{ number_format((float) $total, 2, '.', '') }} {{ $currency_sign }}
+                                            <x-money :amount="number_format((float) $total, 2, '.', '')" />
                                         </td>
                                     </tr>
                                 </tfoot>

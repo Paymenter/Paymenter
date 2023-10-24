@@ -62,7 +62,7 @@
                             {{ $product->product()->get()->first()->name }}
                         </td>
                         <td class="text-center">
-                            {{ $product->price ?? $product->product->price }} {{ config('settings::currency_sign') }}
+                            <x-money :amount="$product->price ?? $product->product->price" />
                         </td>
                         <td class="text-center">
                             @if($product->status === 'paid')

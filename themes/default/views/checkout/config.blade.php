@@ -28,32 +28,38 @@
                                 name="billing_cycle" id="billing_cycle" required>
                                 @if ($prices->monthly)
                                     <option value="monthly" @if ($billing_cycle == 'monthly' || old('billing_cycle') == 'monthly') selected @endif>
-                                        {{ __('Monthly') . ' - ' . config('settings::currency_sign') . $prices->monthly }}
+                                        {{ __('Monthly') . ' - ' }}
+                                        <x-money :amount="$prices->monthly" />
                                     </option>
                                 @endif
                                 @if ($prices->quarterly)
                                     <option value="quarterly" @if ($billing_cycle == 'quarterly' || old('billing_cycle') == 'quarterly') selected @endif>
-                                        {{ __('Quarterly') . ' - ' . config('settings::currency_sign') . $prices->quarterly }}
+                                        {{ __('Quarterly') . ' - ' }}
+                                        <x-money :amount="$prices->quarterly" />
                                     </option>
                                 @endif
                                 @if ($prices->semi_annually)
                                     <option value="semi_annually" @if ($billing_cycle == 'semi_annually' || old('billing_cycle') == 'semi_annually') selected @endif>
-                                        {{ __('Semi-annually') . ' - ' . config('settings::currency_sign') . $prices->semi_annually }}
+                                        {{ __('Semi-annually') . ' - ' }}
+                                        <x-money :amount="$prices->semi_annually" />
                                     </option>
                                 @endif
                                 @if ($prices->annually)
                                     <option value="annually" @if ($billing_cycle == 'annually' || old('billing_cycle') == 'annually') selected @endif>
-                                        {{ __('Annually') . ' - ' . config('settings::currency_sign') . $prices->annually }}
+                                        {{ __('Annually') . ' - ' }}
+                                        <x-money :amount="$prices->annually" />
                                     </option>
                                 @endif
                                 @if ($prices->biennially)
                                     <option value="biennially" @if ($billing_cycle == 'biennially' || old('billing_cycle') == 'biennially') selected @endif>
-                                        {{ __('Biennially') . ' - ' . config('settings::currency_sign') . $prices->biennially }}
+                                        {{ __('Biennially') . ' - ' }}
+                                        <x-money :amount="$prices->biennially" />
                                     </option>
                                 @endif
                                 @if ($prices->triennially)
                                     <option value="triennially" @if ($billing_cycle == 'triennially' || old('billing_cycle') == 'triennially') selected @endif>
-                                        {{ __('Triennially') . ' - ' . config('settings::currency_sign') . $prices->triennially }}
+                                        {{ __('Triennially') . ' - ' }}
+                                        <x-money :amount="$prices->triennially" />
                                     </option>
                                 @endif
                             </select>
@@ -101,7 +107,7 @@
                                         <div class="flex items-center ml-1">
                                             x {{ ucfirst($name) }}
                                             @if ($item->configurableOptionInputs->first()->configurableOptionInputPrice->{$billing_cycle})
-                                                {{ config('settings::currency_sign') . $item->configurableOptionInputs->first()->configurableOptionInputPrice->{$billing_cycle} }}
+                                                <x-money :amount="$item->configurableOptionInputs->first()->configurableOptionInputPrice->{$billing_cycle}" />
                                             @else
                                                 free
                                             @endif
@@ -126,7 +132,7 @@
                                                         {{ ucfirst($name) }}
                                                         @if ($option->configurableOptionInputPrice->{$billing_cycle})
                                                             -
-                                                            {{ config('settings::currency_sign') . $option->configurableOptionInputPrice->{$billing_cycle} }}
+                                                            <x-money :amount="$option->configurableOptionInputPrice->{$billing_cycle}" />
                                                         @endif
                                                     </label>
                                                 </div>
@@ -152,7 +158,7 @@
                                                     {{ ucfirst($name) }}
                                                     @if ($option->configurableOptionInputPrice->{$billing_cycle})
                                                         -
-                                                        {{ config('settings::currency_sign') . $option->configurableOptionInputPrice->{$billing_cycle} }}
+                                                        <x-money :amount="$option->configurableOptionInputPrice->{$billing_cycle}" />
                                                     @endif
                                                 </label>
                                             @endforeach
@@ -172,7 +178,7 @@
                                                 {{ ucfirst($name) }}
                                                 @if ($option->configurableOptionInputPrice->{$billing_cycle})
                                                     -
-                                                    {{ config('settings::currency_sign') . $option->configurableOptionInputPrice->{$billing_cycle} }}
+                                                    <x-money :amount="$option->configurableOptionInputPrice->{$billing_cycle}" />
                                                 @endif
                                             </option>
                                         @endforeach

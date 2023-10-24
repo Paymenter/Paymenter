@@ -59,6 +59,7 @@ class SettingController extends Controller
             'app_logo' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'currency' => 'required|max:10',
             'currency_sign' => 'required|max:4',
+            'currency_position' => 'required|in:left,right',
             'language' => 'required',
             'allow_auto_lang' => 'boolean',
             'timezone' => 'required',

@@ -47,7 +47,9 @@
                                                 <span class="font-semibold">{{ __('Invoice ID') }}:</span>
                                                 <span class="font-semibold">{{ $invoice->id }}</span>
                                                 <div class="w-full text-sm text-gray-400 truncate">
-                                                    <span class="font-semibold">{{__('Amount to pay')}} - {{ $invoice->total() }} {{ config('settings::currency_sign') }}</span>
+                                                    <span class="font-semibold">{{__('Amount to pay')}} - 
+                                                        <x-money :amount="$invoice->total()" />
+                                                    </span>
                                                 </div>
                                             </div>
                                             <div class="justify-end flex text-center text-primary-400 my-auto button button-primary text-md w-fit py-[5px] px-[8px]">
@@ -101,7 +103,7 @@
                                                     </div>
                                                 </td>
                                                 <td class="py-3 hidden md:table-cell" data-order="0.00">
-                                                    {{ $product2->price !== '0.00' && $product2->price ? $product2->price . " " . config('settings::currency_sign') : __('Free') }}
+                                                    <x-money :amount="$product2->price" />
                                                 </td>
                                                 <td class="py-3 hidden md:table-cell">
                                                     {{ $product2->expiry_date ? $product2->expiry_date->toDateString() : __('Never') }}

@@ -143,9 +143,11 @@
                                                 }
                                             @endphp
                                             @if ($product->discount)
-                                                {{ $quantity }} {{ config('settings::currency_sign') }} {{  round($product->price - $product->discount, 2) }}
+                                                {{ $quantity }} 
+                                                <x-money :amount="round($product->price - $product->discount, 2)" />
                                             @else
-                                                {{ $quantity }} {{ config('settings::currency_sign') }} {{ $product->price }}
+                                                {{ $quantity }} 
+                                                <x-money :amount="$product->price" />
                                             @endif
                                         </span>
                                     </div>
@@ -160,7 +162,8 @@
                                     </div>
                                     <div class="flex flex-col">
                                         <span class="text-lg">
-                                            {{ $quantity }} {{ config('settings::currency_sign') }} {{ $product->setup_fee - $product->discount_fee }}
+                                            {{ $quantity }} 
+                                            <x-money :amount="$product->setup_fee - $product->discount_fee" />
                                         </span>
                                     </div>
                                 </div>

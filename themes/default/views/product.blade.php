@@ -49,7 +49,8 @@
                                     <div>
                                         <h3 class="text-lg text-secondary-800 leading-5 font-semibold">
                                             {{ $product->name }}</h3>
-                                        <p>{{ $product->price() ? config('settings::currency_sign') . $product->price() : __('Free') }}
+                                        <p>
+                                            <x-money :amount="$product->price()" showFree="true" />
                                         </p>
                                     </div>
                                 </div>

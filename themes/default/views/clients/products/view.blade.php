@@ -17,7 +17,8 @@
                         <p><span class="font-bold">{{ __('Product Description') }}: </span>{{ $product->description }}
                         </p>
                         <p><span class="font-bold">{{ __('Product Price') }}:
-                            </span>{{ config('settings::currency_sign') }}{{ $orderProduct->price }}
+                            </span>
+                            <x-money :amount="$product->price" showFree="true" />
                         </p>
                     </div>
                 </div>

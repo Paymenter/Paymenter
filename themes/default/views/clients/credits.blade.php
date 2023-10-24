@@ -44,8 +44,9 @@
                     <h1 class="text-2xl font-semibold">{{ __('Current Balance') }}</h1>
                     <div class="flex flex-row items-center justify-between">
                         <div class="flex flex-col gap-2">
-                            <span class="text-2xl font-semibold">{{ config('settings::currency_sign') }}
-                                {{ Auth::user()->formattedCredits() }}</span>
+                            <span class="text-2xl font-semibold">
+                                <x-money :amount="Auth::user()->formattedCredits()" />
+                            </span>
                         </div>
                     </div>
                 </div>

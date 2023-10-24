@@ -108,8 +108,12 @@
                     <tr>
                         <td class="text-center p-2">{{ $item->id }}</td>
                         <td class="text-center p-2">{{ $item->name }}</td>
-                        <td class="text-center p-2">{{ config('settings::currency_sign') }}{{ $item->price }}</td>
-                        <td class="text-center p-2">{{ config('settings::currency_sign') }}{{ $item->discount }}</td>
+                        <td class="text-center p-2">
+                            <x-money :amount="$item->price" />
+                        </td>
+                        <td class="text-center p-2">
+                            <x-money :amount="$item->discount" />
+                        </td>
                         <td class="text-center p-2">
                             @if($item->order)
                                 <a href="{{ route('admin.orders.show', $item->order->id) }}"

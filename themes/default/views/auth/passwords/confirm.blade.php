@@ -7,8 +7,6 @@
         </div>
         
         <div class="w-full px-6 py-4 mt-6 overflow-hidden bg-white shadow-md sm:max-w-md sm:rounded-lg content-box">
-            <x-success />
-
             <div class="mb-4 text-sm">
                 {{ __('This is a secure area of the application. Please confirm your password before continuing.') }}
             </div>
@@ -22,12 +20,6 @@
                     <x-input id="password" type="password" label="{{ __('Password') }}"
                         name="password" required autocomplete="new-password" >
                     </x-input>
-
-                    @error('password')
-                        <p class="mt-1 text-xs italic text-red-500">
-                            {{ $message }}
-                        </p>
-                    @enderror
                 </div>
                 <x-recaptcha form="pw-confirm" />
                 <div class="flex justify-end mt-4">

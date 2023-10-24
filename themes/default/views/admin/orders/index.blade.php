@@ -22,7 +22,9 @@
                 <tr>
                     <td>{{ $order->id }}</td>
                     <td>{{ $order->user->name }}</td>
-                    <td>{{ $order->total() }} {{ config('settings::currency_sign') }}</td>
+                    <td>
+                        <x-money :amount="$order->total()" />
+                    </td>
                     <td>{{ $order->created_at }}</td>
                     <td>{{ $order->updated_at }}</td>
                     <td>

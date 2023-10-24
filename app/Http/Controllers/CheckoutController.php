@@ -294,6 +294,20 @@ class CheckoutController extends Controller
             } elseif ($product->stock_enabled && $product->stock < $product->quantity) {
                 return redirect()->back()->with('error', 'Product is out of stock');
             }
+            if ($product->limit) {
+                $orderProducts = 0;
+                if (auth()->check() && auth()->user()->orderProducts) {
+                    $orderProducts = Auth::user()->orderProducts()->where('product_id', $product->id)->count();
+                }
+                if ($orderProducts + $product->quantity > $product->limit) {
+                    $cart = session()->get('cart');
+                    if (isset($cart[$product->id])) {
+                        unset($cart[$product->id]);
+                        session()->put('cart', $cart);
+                    }
+                    return redirect()->back()->with('error', 'Product limit reached');
+                }
+            }
             if ($coupon) {
                 if (isset($coupon->products)) {
                     if (!in_array($product->id, $coupon->products) && !empty($coupon->products)) {

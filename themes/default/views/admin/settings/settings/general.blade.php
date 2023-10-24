@@ -75,6 +75,16 @@
                        name="currency" value="{{ config('settings::currency') }}" />
                 <label class="form-label">{{ __('Currency Code') }}</label>
             </div>
+            <div class="relative m-4 group">
+                <select name="currency_position" class="form-input peer @error('currency_position') is-invalid @enderror"
+                        placeholder=" " name="currency_position" required>
+                    <option value="left" {{ config('settings::currency_position') == 'left' ? 'selected' : '' }}>
+                        {{ __('Left') }}</option>
+                    <option value="right" {{ config('settings::currency_position') == 'right' ? 'selected' : '' }}>
+                        {{ __('Right') }}</option>
+                </select>
+                <label class="form-label">{{ __('Currency Position') }}</label>
+            </div>
             <h2 class="col-span-1 md:col-span-2 text-xl text-gray-900 dark:text-darkmodetext ">{{ __('Language') }}
             </h2>
             <div class="relative m-4 group">

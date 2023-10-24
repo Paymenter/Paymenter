@@ -34,7 +34,7 @@
                                 {{ $invoice->id }}
                             </td>
                             <td class="pl-6 py-3">
-                                {{ $invoice->total() }} {{ config('settings::currency_sign') }}
+                                <x-money :amount="$invoice->total()" />
                             </td>
                             <td class="pr-6 py-3">
                                 {{ $invoice->created_at }}
