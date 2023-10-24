@@ -68,7 +68,7 @@ class CheckUpdates extends Command
 
             $appVersion = config('app.version');
 
-            if (isset($data['tag_name']) && version_compare($appVersion, $data['stable'], '<')) {
+            if (isset($data['stable']) && version_compare($appVersion, $data['stable'], '<')) {
                 $this->info('New update available! Version v' . $data['stable']);
                 Setting::updateOrCreate(['key' => 'latest_version'], ['value' => $data['stable']]);
             } else {
