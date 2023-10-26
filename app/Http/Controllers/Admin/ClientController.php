@@ -78,6 +78,9 @@ class ClientController extends Controller
 
     public function destroy(User $user)
     {
+        if ($user->id === auth()->user()->id) {
+            return redirect()->back()->with('error', 'You cannot delete yourself.');
+        }
         $user->delete();
 
         return redirect()->route('admin.clients');
