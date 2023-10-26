@@ -143,7 +143,7 @@
                                                 <x-input label="Semi-Annually" type="text"
                                                     name="option[{{ $option->id }}][pricing][semi_annually]"
                                                     placeholder="Semi-Annually"
-                                                    value="{{ $pricing['semiannually'] ?? '' }}" />
+                                                    value="{{ $pricing['semi_annually'] ?? '' }}" />
                                                 <x-input label="Annually" type="text"
                                                     name="option[{{ $option->id }}][pricing][annually]"
                                                     placeholder="Annually"
