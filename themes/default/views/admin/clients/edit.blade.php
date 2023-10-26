@@ -39,12 +39,19 @@
                     <a href="{{ route('admin.clients.loginasclient', $user->id) }}"
                         class="block px-4 py-2 text-base text-gray-700 dark:text-darkmodetext dark:hover:bg-darkmode2 hover:bg-gray-100 hover:text-gray-900"
                         role="menuitem" tabindex="-1" id="menu-item-0">{{ __('Login as client') }}</a>
-                    <button
+                        <button
                         class="block px-4 py-2 text-base text-gray-700 dark:text-darkmodetext dark:hover:bg-darkmode2 hover:bg-gray-100 hover:text-red-900 dark:hover:text-red-300"
                         role="menuitem" tabindex="-1" id="menu-item-0"
-                        onclick="document.getElementById('delete').submit()">
+                        onclick="confirmDelete()">
                         {{ __('Delete') }}
                     </button>
+                    <script>
+                        function confirmDelete() {
+                            if (confirm('Do you really want to delete this account?')) {
+                                document.getElementById('delete').submit();
+                            }
+                        }
+                    </script>
                 </div>
             </div>
             <form action="{{ route('admin.clients.delete', $user->id) }}" method="POST" id="delete">
