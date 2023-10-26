@@ -17,6 +17,7 @@
     ],
     "require": {
         "php": "^8.0.2 || ^8.1 || ^8.2",
+        "diglactic/laravel-breadcrumbs": "^8.1",
         "doctrine/dbal": "^3.5",
         "fakerphp/faker": "^1.20",
         "guzzlehttp/guzzle": "^7.2",

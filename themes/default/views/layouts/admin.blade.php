@@ -87,10 +87,11 @@
             @include('layouts.adminnavigation')
         @endif
         <main class="grow">
-            @if (!request()->routeIs('admin.index') && !request()->routeIs('admin.settings*'))
-                <div class="py-12">
+            @if (!request()->routeIs('admin.index'))
+                <div class="py-6 pb-12">
                     <div class="mx-auto max-w-8xl sm:px-6 lg:px-8">
                         <div class="overflow-hidden content">
+                            {{ Breadcrumbs::render() }}
                             <div class="content-box">
                                 {{ $slot }}
                             </div>
