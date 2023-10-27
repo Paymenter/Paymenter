@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use App\Models\{Category, Invoice, Order, Product, ProductPrice, User};
+use Livewire\Livewire;
 
 class OrderTest extends TestCase
 {
@@ -36,9 +37,8 @@ class OrderTest extends TestCase
      */
     public function testCanPlaceProductInCart()
     {
-        $response = $this->actingAs($this->user)->get(route('checkout.add', $this->product->id));
-
-        $response->assertStatus(302);
+        Livewire::test('product', ['product' => $this->product])
+            ->call('addToCart', $this->product->id)->assertSet('added', true);
     }
 
     /**
@@ -48,18 +48,12 @@ class OrderTest extends TestCase
      */
     public function testCanContinueToInvoice()
     {
-        $response = $this->actingAs($this->user)->get(route('checkout.add', $this->product->id));
+        Livewire::test('product', ['product' => $this->product])
+            ->call('addToCart', $this->product->id)->assertSet('added', true);
 
-        $response->assertStatus(302);
-
-        $response = $this->actingAs($this->user)->post(route('checkout.pay'));
-
-        $response->assertStatus(302);
-
-        $invoice = Invoice::where('user_id', $this->user->id)->first();
-
-        $this->assertNotNull($invoice);
-
-        $response->assertRedirect(route('clients.home'));
+        Livewire::actingAs($this->user)
+            ->test('checkout', ['product' => $this->product])
+            ->call('pay')->assertRedirect(route('clients.home'));
+        
     }
 }

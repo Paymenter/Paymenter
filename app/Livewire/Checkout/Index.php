@@ -155,6 +155,9 @@ class Index extends Component
 
     public function pay()
     {
+        if (!auth()->check()) {
+            return redirect()->route('login');
+        }
         if (config('settings::tos') == 1) {
             $this->validateOnly('tos', [
                 'tos' => 'required|accepted',
