@@ -145,6 +145,14 @@ class Index extends Component
         $this->updateCart();
     }
 
+    public function removeProduct($product)
+    {
+        $cart = session()->get('cart');
+        unset($cart[$product]);
+        session()->put('cart', $cart);
+        $this->updateCart();
+    }
+
     public function pay()
     {
         if (config('settings::tos') == 1) {

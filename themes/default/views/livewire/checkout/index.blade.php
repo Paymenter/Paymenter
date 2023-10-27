@@ -61,7 +61,7 @@
                                             {{ __('each') }}
                                         @endif
                                     </td>
-                                    <td class="py-3 pr-6" wire:click="remove">
+                                    <td class="py-3 pr-6" wire:click="removeProduct({{ $product->id }})">
                                         <button type="submit" class="button button-danger-outline">
                                             <i class="ri-delete-bin-2-line"></i>
                                         </button>
