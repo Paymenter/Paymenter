@@ -18,7 +18,7 @@
                         </p>
                         <p><span class="font-bold">{{ __('Product Price') }}:
                             </span>
-                            <x-money :amount="$product->price" showFree="true" />
+                            <x-money :amount="$product->price()" showFree="true" />
                         </p>
                     </div>
                 </div>

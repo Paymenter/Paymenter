@@ -25,6 +25,7 @@
         "laravel/sanctum": "^3.2",
         "laravel/socialite": "^5.5",
         "laravel/tinker": "^2.7",
+        "livewire/livewire": "^3.0",
         "qirolab/laravel-themer": "^2.0",
         "robthree/twofactorauth": "^2.0",
         "socialiteproviders/discord": "^4.1",

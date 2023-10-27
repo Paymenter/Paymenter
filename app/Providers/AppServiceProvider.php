@@ -5,6 +5,7 @@ namespace App\Providers;
 use App\Models\Affiliate;
 use App\Models\Setting;
 use Illuminate\Contracts\Encryption\DecryptException;
+use Illuminate\Support\Facades\Route;
 use Qirolab\Theme\Theme;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Artisan;
@@ -15,6 +16,7 @@ use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\URL;
+use Livewire\Livewire;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -41,6 +43,10 @@ class AppServiceProvider extends ServiceProvider
         if (Str::startsWith(config('app.url') ?? '', 'https://')) {
             URL::forceScheme('https');
         }
+        Livewire::setUpdateRoute(function ($handle) {
+            return Route::post('/paymenter/live/update', $handle)->middleware('web');
+        });
+
         // Check if request contains ?ref= parameter
         if (request()->has('ref')) {
             // Check if affiliate code exists

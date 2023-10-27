@@ -8,12 +8,16 @@
                     name={{ $name }}
                     autocomplete="@isset($autocomplete) {{ $autocomplete }} @else {{ $type }} @endisset"
                     @isset($disabled) {{ $disabled ? 'disabled' : '' }} @endisset
+                    {{ $attributes->except('class') }}
                     class="w-4 h-4 border border-secondary-300 rounded bg-secondary-200 text-primary-400 focus:ring-3 focus:ring-primary-300 focus:ring-offset-2 ring-offset-secondary-50 dark:ring-offset-secondary-100"
                     @isset($required) {{ $required ? 'required' : '' }} @endisset>
             </div>
             <label for="{{ $id ?? $name }}"
                 class="ml-2 text-sm font-medium text-secondary-700">{!! $label !!}</label>
         </div>
+        @error($name)
+            <label for="{{ $id ?? $name }}" class="text-sm text-danger-300">{{ $message }}</label>
+        @enderror
     </div>
 @elseif($type == 'color')
     <div @isset($class) class={{ $class }} @endisset>
@@ -33,6 +37,7 @@
                 autocomplete="@isset($autocomplete) {{ $autocomplete }} @else {{ $type }} @endisset"
                 @isset($value) value={{ $value }} @else value="{{ old($name) }}" @endisset
                 id={{ $id ?? $name }}
+                {{ $attributes->except('class') }}
                 @isset($required) {{ $required ? 'required' : '' }} @endisset
                 class="bg-secondary-200 text-secondary-800 font-medium rounded-md placeholder-secondary-500 outline-none w-full border focus:ring-2 focus:ring-offset-2 ring-offset-secondary-50 dark:ring-offset-secondary-100 duration-300
             @error($name) border-danger-300 focus:border-danger-400 focus:ring-danger-300 @else border-secondary-300 focus:border-secondary-400 focus:ring-primary-400 @enderror">

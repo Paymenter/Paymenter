@@ -55,12 +55,7 @@
                 {{ __('Help Center') }}
             </a>
             <div class="ml-auto flex items-center gap-x-1 justify-center md:pb-0 pb-4">
-                @if (count(session()->get('cart', [])) > 0)
-                    <a href="{{ route('checkout.index') }}" class="button button-secondary-outline !font-normal">
-                        <i class="ri-shopping-bag-line"></i>
-                        {{ count(session()->get('cart')) }}
-                    </a>
-                @endif
+                <livewire:cart-count />
 
                 @auth
                     @if(Auth::user()->credits > 0 && config('settings::credits'))
