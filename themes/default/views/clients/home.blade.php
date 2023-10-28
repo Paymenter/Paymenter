@@ -106,7 +106,7 @@
                                                     <x-money :amount="$product2->price" />
                                                 </td>
                                                 <td class="py-3 hidden md:table-cell">
-                                                    {{ $product2->expiry_date ? $product2->expiry_date->toDateString() : __('Never') }}
+                                                    {{ $product2->expiry_date ? $product2->expiry_date->toDateString() : __('Doesn\'t Expire') }}
                                                 </td>
                                                 <td class="py-3 hidden md:table-cell">
                                                     <div class="font-bold rounded-md text-left">
@@ -147,7 +147,7 @@
 
                                     </tr>
                                     <tr class="w-full">
-                                        <td colspan="4" class="w-full dark:text-primary-400 font-bold text-lg text-center dark:bg-secondary-100">
+                                        <td colspan="4" class=" pt-5 w-full dark:text-primary-400 font-bold text-lg text-center dark:bg-secondary-100">
                                             {{ __('No services found.') }}
                                         </td>
                                     </tr>

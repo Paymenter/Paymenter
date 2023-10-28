@@ -83,7 +83,7 @@
 @if ($errors->any())
     <div class="flex justify-center">
         <div id="alert"
-            class="flex p-4 mx-4 text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400 max-w-3xl w-full"
+            class="flex p-4 mt-2 mb-2 mx-4 text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400 max-w-3xl w-full"
             role="alert">
             <svg aria-hidden="true" class="flex-shrink-0 w-5 h-5" fill="currentColor" viewBox="0 0 20 20"
                 xmlns="http://www.w3.org/2000/svg">
