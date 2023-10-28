@@ -19,7 +19,7 @@
                         {{ __('Name') }}
                     </th>
                     <th>
-                        {{ __('Email') }}
+                        {{ __('Description') }}
                     </th>
                     <th>
                         {{ __('Created At') }}
