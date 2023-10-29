@@ -23,7 +23,7 @@
                 class="md:px-2 py-3 flex items-center gap-x-1 hover:text-secondary-800 duration-300">
                 {{ __('Home') }}
             </a>
-            @auth 
+            @auth
                 <a href="{{ route('clients.home') }}"
                     class="md:px-2 py-3 flex items-center gap-x-1 hover:text-secondary-800 duration-300">
                     {{ __('Customer Area') }}
@@ -62,14 +62,14 @@
                         <div class="ml-auto items-center justify-end hidden md:flex">
                             <a href="{{ route('clients.credits') }}" class="text-md mr-2">
                                 <i class="ri-wallet-3-line"></i> {{__('Your Balance:')}} <span class="font-semibold">
-                                    <x-money :amount="Auth::user()->formattedCredits()" />
+                                    <x-money :amount="Auth::user()->credits" />
                                 </span>
                             </a>
                         </div>
                         <div class="ml-auto flex items-center justify-end md:hidden">
                             <a href="{{ route('clients.credits') }}" class="text-md mr-2">
                                 <i class="ri-wallet-3-line"></i> <span class="font-semibold">
-                                    <x-money :amount="Auth::user()->formattedCredits()" />
+                                    <x-money :amount="Auth::user()->credits" />
                                 </span>
                             </a>
                         </div>
