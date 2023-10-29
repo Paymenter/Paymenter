@@ -45,7 +45,7 @@
                     <div class="flex flex-row items-center justify-between">
                         <div class="flex flex-col gap-2">
                             <span class="text-2xl font-semibold">
-                                <x-money :amount="Auth::user()->formattedCredits()" />
+                                <x-money :amount="Auth::user()->credits" />
                             </span>
                         </div>
                     </div>
