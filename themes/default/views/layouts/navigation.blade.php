@@ -50,10 +50,6 @@
                 class="md:px-2 py-3 flex items-center gap-x-1 hover:text-secondary-800 duration-300">
                 {{ __('Announcements') }}
             </a>
-            <a href="{{ route('clients.tickets.index') }}"
-                class="md:px-2 py-3 flex items-center gap-x-1 hover:text-secondary-800 duration-300">
-                {{ __('Help Center') }}
-            </a>
             <div class="ml-auto flex items-center gap-x-1 justify-center md:pb-0 pb-4">
                 <livewire:cart-count />
 

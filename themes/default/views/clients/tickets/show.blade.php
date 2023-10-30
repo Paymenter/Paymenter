@@ -1,9 +1,9 @@
 <x-app-layout clients title="{{ __('Ticket') }}">
         <!-- show last messages and form to reply -->
-        <div class="py-3 sm:py-12">
-            <div class="mx-auto max-w-7xl sm:px-6 lg:px-5">
+        <div class="py-4 sm:py-12">
+            <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
                 <div class="overflow-hidden bg-white shadow-xl sm:rounded-lg dark:bg-secondary-100 dark:border-secondary-300">
-                    <div class="p-2 bg-white sm:px-10 dark:bg-secondary-100">
+                    <div class="p-5 bg-white sm:px-10 dark:bg-secondary-100">
                         <x-success class="mt-4" />
                         <div class="justify-between flex flex-row items-center">
                             <h1 class="text-2xl font-bold text-gray-500 dark:text-darkmodetext">{{__('Ticket')}} #{{ $ticket->id }}</h1>
