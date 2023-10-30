@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Clients;
 use App\Helpers\ExtensionHelper;
 use App\Models\Order;
 use App\Models\Invoice;
-use App\Models\WalletHistory;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Affiliate;
