@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Clients;
 use App\Helpers\ExtensionHelper;
 use App\Models\Order;
 use App\Models\Invoice;
+use App\Models\WalletHistory;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Affiliate;
@@ -154,7 +155,8 @@ class HomeController extends Controller
             return abort(404, 'Credits are disabled');
         }
         $gateways = ExtensionHelper::getGateways();
-        return view('clients.credits', compact('gateways'));
+        $walletHistory = WalletHistory::where('user_id', Auth::user()->id)->get();
+        return view('clients.credits', compact('gateways', 'walletHistory'));
     }
 
     /**

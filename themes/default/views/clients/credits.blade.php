@@ -79,6 +79,52 @@
                         </form>
                     @endif
                 </div>
+
+                <div class="content-box mt-4">
+                    <h1 class="text-2xl font-semibold">{{ __('History of the payments') }}</h1>
+
+                    <table class="w-full pt-2">
+                        <thead class="border-b-2 border-secondary-200 dark:border-secondary-200 text-secondary-600">
+                        <tr>
+                            <th scope="col" class="text-start pl-6 py-2 text-sm font-normal">{{ __('Date') }}</th>
+                            <th scope="col" class="text-start pl-6 py-2 text-sm font-normal">{{ __('Amount') }}</th>
+                            <th scope="col" class="text-start pl-6 py-2 text-sm font-normal">{{ __('Type') }}</th>
+                            <th scope="col" class="text-start pl-6 py-2 text-sm font-normal">{{ __('Status') }}</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        @forelse ($walletHistory as $wallet)
+                            <tr>
+                                <td class="pl-6 py-3 items-center break-all max-w-fit">{{ $wallet->created_at }}</td>
+                                <td class="pl-6 py-3 items-center break-all max-w-fit">@if($wallet->type == 'charge') + @else @if($wallet->gateway == 'manual') - @endif @endif {{ $wallet->amount }} {{ config('settings::currency_sign') }}</td>
+                                <td class="pl-6 py-3 items-center break-all max-w-fit">
+                                    @if($wallet->type == 'charge')
+                                        {{ __('Charge') }} ({{ $wallet->gateway }})
+                                    @elseif($wallet->type == 'invoice')
+                                        {{ __('Invoice') }} #{{ $wallet->invoice_id }}
+                                        @if($wallet->gateway !== 'manual') ({{ $wallet->gateway }}) @endif
+                                    @endif
+
+                                </td>
+                                <td class="pl-6 py-3 items-center break-all max-w-fit">
+                                    @if ($wallet->status == 'pending')
+                                        <span class="text-yellow-400 dark:text-yellow-200">{{ __('Pending') }}</span>
+                                    @elseif($wallet->status == 'completed')
+                                        <span class="text-success-400 dark:text-success-200">{{ __('Completed') }}</span>
+                                    @elseif($wallet->status == 'failed')
+                                        <span class="text-danger-400 dark:text-danger-200">{{ __('Failed') }}</span>
+                                    @endif
+                                </td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="4" class="text-center py-3">{{ __('No records found.') }}</td>
+                            </tr>
+                        @endforelse
+                        </tbody>
+                    </table>
+
+                </div>
             </div>
         </div>
     </div>

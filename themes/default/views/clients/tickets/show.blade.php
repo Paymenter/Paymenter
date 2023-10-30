@@ -2,7 +2,7 @@
     <!-- show last messages and form to reply -->
     <div class="py-12">
         <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
-            <div class="overflow-hidden bg-white shadow-xl sm:rounded-t-lg dark:bg-secondary-100 border-b border-gray-200 dark:bg-secondary-100 dark:border-secondary-300">
+            <div class="overflow-hidden bg-white shadow-xl sm:rounded-lg dark:bg-secondary-100 dark:border-secondary-300">
                 <div class="p-6 bg-white sm:px-20 dark:bg-secondary-100">
                     <x-success class="mt-4" />
                     <h1 class="text-2xl font-bold text-gray-500 dark:text-darkmodetext">{{__('Ticket')}} #{{ $ticket->id }}
@@ -166,7 +166,7 @@
                                         <textarea
                                             id="message"
                                             class="block my-auto w-full rounded-2xl shadow-sm focus:ring-indigo-500 focus:border-indigo-500 border-indigo-300 dark:border-0 sm:text-sm dark:bg-secondary-200"
-                                            rows="2"
+                                            rows="1"
                                             name="message"
                                             placeholder="Aa"
                                             required
