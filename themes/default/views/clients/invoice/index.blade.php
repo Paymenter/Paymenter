@@ -5,7 +5,7 @@
             <h2 class="text-xl font-semibold p-6">{{ __('Invoices') }}</h2>
             @if ($invoices->count() > 0)
                 <table class="w-full">
-                    <thead class="border-b-2 border-secondary-200 dark:border-secondary-50 text-secondary-600">
+                    <thead class="border-b-2 border-secondary-200 text-secondary-600">
                     <tr>
                         <th scope="col" class="text-start pl-6 py-2 text-sm font-normal">
                             {{ __('ID')}}

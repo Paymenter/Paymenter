@@ -168,10 +168,12 @@ table.dataTable tfoot th {
 *::-webkit-scrollbar {
     width: 15px;
     box-shadow: 0 0 0 1px var(--secondary-50);
+    border-radius: 10px;
 }
 
 *::-webkit-scrollbar-track {
     background: var(--secondary-50);
+    border-radius: 10px;
 }
 
 *::-webkit-scrollbar-thumb {
