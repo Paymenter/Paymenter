@@ -155,8 +155,8 @@ class HomeController extends Controller
             return abort(404, 'Credits are disabled');
         }
         $gateways = ExtensionHelper::getGateways();
-        $walletHistory = WalletHistory::where('user_id', Auth::user()->id)->get();
-        return view('clients.credits', compact('gateways', 'walletHistory'));
+        $userInvoices = Invoice::where('user_id', Auth::user()->id)->get();
+        return view('clients.credits', compact('gateways', 'userInvoices'));
     }
 
     /**
