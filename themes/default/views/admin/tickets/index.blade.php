@@ -72,11 +72,6 @@
                                         class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-emerald-500 text-emerald-100">
                                         {{ __('Open') }}
                                     </span>
-                                @elseif($ticket->status == 'closed')
-                                    <span
-                                        class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-500 text-red-100">
-                                        {{ __('Closed') }}
-                                    </span>
                                 @endif
                             </td>
                             <td>
@@ -137,17 +132,17 @@
                             <td>
                                 @if ($ticket->priority == 'low')
                                     <span
-                                        class="dark:text-darkmodetext px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-600 text-green-800">
+                                        class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-500 text-green-100">
                                         {{ __('Low') }}
                                     </span>
                                 @elseif($ticket->priority == 'medium')
                                     <span
-                                        class="dark:text-darkmodetext px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-600 text-yellow-800">
-                                        {{ __('medium') }}
+                                        class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-amber-500 text-amber-100">
+                                        {{ __('Medium') }}
                                     </span>
                                 @elseif($ticket->priority == 'high')
                                     <span
-                                        class="dark:text-darkmodetext px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-600 text-red-800">
+                                        class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-500 text-red-100">
                                         {{ __('High') }}
                                     </span>
                                 @endif
@@ -156,7 +151,10 @@
                                 {{ $ticket->user->name }}
                             </td>
                             <td>
-                                {{ $ticket->status }}
+                                <span
+                                    class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-500 text-red-100">
+                                        {{ __(ucfirst($ticket->status)) }}
+                                    </span>
                             </td>
                             <td>
                                 {{ $ticket->created_at }}
