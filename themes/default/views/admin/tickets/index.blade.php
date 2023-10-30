@@ -4,8 +4,8 @@
     </x-slot>
     <h1 class="text-2xl font-bold dark:text-darkmodetext text-center">{{ __('Tickets') }}</h1>
     <div class="flex items-center justify-end mt-4">
-        <a href="{{ route('admin.tickets.create') }}" class="mr-4 button button-primary">
-            {{ __('Create') }}
+        <a href="{{ route('admin.tickets.create') }}" class="mr-4 button button-success">
+            <i class="ri-add-fill"></i> <span>{{ __('Create') }}</span>
         </a>
     </div>
 
@@ -19,6 +19,7 @@
             <table class="table-auto w-full" id="ticketsOpen">
                 <thead>
                     <tr>
+                        <th>{{ __('ID') }}</th>
                         <th>{{ __('Subject') }}</th>
                         <th>{{ __('Priority') }}</th>
                         <th>{{ __('Client') }}</th>
@@ -28,41 +29,62 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach ($tickets as $service)
-                        <tr onclick="window.location='{{ route('admin.tickets.show', $service->id) }}';" class="cursor-pointer">
+                    @foreach ($tickets as $ticket)
+                        <tr onclick="window.location='{{ route('admin.tickets.show', $ticket->id) }}';" class="cursor-pointer">
                             <td class="text-clip overflow-hidden">
-                                {{ $service->title }}
+                                #{{ $ticket->id }}
                             </td>
                             <td>
-                                @if ($service->priority == 'low')
+                                {{ $ticket->title }}
+                            </td>
+                            <td>
+                                @if ($ticket->priority == 'low')
                                     <span
-                                        class="dark:text-darkmodetext px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-600 text-green-800">
+                                        class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-500 text-green-100">
                                         {{ __('Low') }}
                                     </span>
-                                @elseif($service->priority == 'medium')
+                                @elseif($ticket->priority == 'medium')
                                     <span
-                                        class="dark:text-darkmodetext px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-600 text-yellow-800">
-                                        {{ __('medium') }}
+                                        class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-amber-500 text-amber-100">
+                                        {{ __('Medium') }}
                                     </span>
-                                @elseif($service->priority == 'high')
+                                @elseif($ticket->priority == 'high')
                                     <span
-                                        class="dark:text-darkmodetext px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-600 text-red-800">
+                                        class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-500 text-red-100">
                                         {{ __('High') }}
                                     </span>
                                 @endif
                             </td>
                             <td>
-                                {{ $service->user->name }}
+                                <div class="flex flex-row items-center">
+                                    <img class="w-8 h-8 rounded-full" src="https://www.gravatar.com/avatar/{{md5($ticket->user->email)}}?s=200&d=mp" alt="Avatar"/>
+                                    <span class="ml-2">{{ $ticket->user->name }}</span>
+                                </div>
                             </td>
                             <td>
-                                {{ $service->status }}
+                                @if ($ticket->status == 'replied')
+                                    <span
+                                        class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-500 text-blue-100">
+                                        {{ __('Replied') }}
+                                    </span>
+                                @elseif($ticket->status == 'open')
+                                    <span
+                                        class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-emerald-500 text-emerald-100">
+                                        {{ __('Open') }}
+                                    </span>
+                                @elseif($ticket->status == 'closed')
+                                    <span
+                                        class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-500 text-red-100">
+                                        {{ __('Closed') }}
+                                    </span>
+                                @endif
                             </td>
                             <td>
-                                {{ $service->created_at }}
+                                {{ $ticket->created_at }}
                             </td>
                             <td>
-                                <a href="{{ route('admin.tickets.show', $service->id) }}"
-                                    class="text-indigo-600 hover:text-indigo-900">{{ __('View') }}</a>
+                                <a href="{{ route('admin.tickets.show', $ticket->id) }}"
+                                    class="button button-primary">{{ __('View') }}</a>
                             </td>
                         </tr>
                     @endforeach
@@ -105,25 +127,25 @@
                     </tr>
                 </thead>
                 <tbody class="dark:bg-darkmode bg-white divide-y divide-gray-200">
-                    @foreach ($closed as $service)
-                        <tr onclick="window.location='{{ route('admin.tickets.show', $service->id) }}';" class="cursor-pointer">
+                    @foreach ($closed as $ticket)
+                        <tr onclick="window.location='{{ route('admin.tickets.show', $ticket->id) }}';" class="cursor-pointer">
                             <td class="text-clip overflow-hidden">
                                 <div class="dark:text-darkmodetext text-sm text-gray-900">
-                                    {{ $service->title }}
+                                    {{ $ticket->title }}
                                 </div>
                             </td>
                             <td>
-                                @if ($service->priority == 'low')
+                                @if ($ticket->priority == 'low')
                                     <span
                                         class="dark:text-darkmodetext px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-600 text-green-800">
                                         {{ __('Low') }}
                                     </span>
-                                @elseif($service->priority == 'medium')
+                                @elseif($ticket->priority == 'medium')
                                     <span
                                         class="dark:text-darkmodetext px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-600 text-yellow-800">
                                         {{ __('medium') }}
                                     </span>
-                                @elseif($service->priority == 'high')
+                                @elseif($ticket->priority == 'high')
                                     <span
                                         class="dark:text-darkmodetext px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-600 text-red-800">
                                         {{ __('High') }}
@@ -131,16 +153,16 @@
                                 @endif
                             </td>
                             <td>
-                                {{ $service->user->name }}
+                                {{ $ticket->user->name }}
                             </td>
                             <td>
-                                {{ $service->status }}
+                                {{ $ticket->status }}
                             </td>
                             <td>
-                                {{ $service->created_at }}
+                                {{ $ticket->created_at }}
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                <a href="{{ route('admin.tickets.show', $service->id) }}"
+                                <a href="{{ route('admin.tickets.show', $ticket->id) }}"
                                     class="text-indigo-600 hover:text-indigo-900">{{ __('View') }}</a>
                             </td>
                         </tr>
