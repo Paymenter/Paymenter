@@ -194,20 +194,20 @@
                     @if (count($tickets) > 0)
 
                         @php
-                        switch ($sort) {
-                            case 'z-a':
-                                $tickets = $tickets->sortByDesc('title');
-                                break;
-                            case 'newest':
-                                $tickets = $tickets->sortBy('created_at');
-                                break;
-                            case 'oldest':
-                                $tickets = $tickets->sortByDesc('created_at');
-                                break;
-                            default:
-                                $tickets = $tickets->sortBy('title');
-                                break;
-                        }
+                            switch ($sort) {
+                                case 'z-a':
+                                    $tickets = $tickets->sortByDesc('title');
+                                    break;
+                                case 'newest':
+                                    $tickets = $tickets->sortBy('created_at');
+                                    break;
+                                case 'oldest':
+                                    $tickets = $tickets->sortByDesc('created_at');
+                                    break;
+                                default:
+                                    $tickets = $tickets->sortBy('title');
+                                    break;
+                            }
                         @endphp
 
 
