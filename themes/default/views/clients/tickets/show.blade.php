@@ -146,40 +146,46 @@
                         </div>
                     @endempty
     <br>
-    <div class="overflow-hidden">
-        <form method="POST" action="{{ route('admin.tickets.reply', $ticket->id) }}"id="reply" enctype="multipart/form-data">
-            @csrf
-            <div class="bg-white mb-3 border-gray-200 sm:px-20 dark:bg-secondary-100 dark:border-black mt-2">
-                <h1 class="text-xl text-gray-500 dark:text-darkmodetext font-bold">{{ __('Reply') }}</h1>
-                <div class="grid grid-cols-1 gap-4">
-                    <div class="mt-3 text-gray-500 dark:text-darkmodetext dark:bg-secondary-100">
+                    <div class="overflow-hidden bg-white shadow-xl sm:rounded-b-lg dark:bg-secondary-100">
+                        @if($ticket->status == "closed")
+                            <div class="p-6 text-center text-red-500 bg-white sm:px-20 dark:bg-secondary-100 mx-auto my-auto">
+                                {{__('The ticket has been closed, you cannot respond.')}}
+                            </div>
+                        @else
+                            <form method="POST" action="{{ route('clients.tickets.reply', $ticket->id) }}" class="mt-2" id="reply" enctype="multipart/form-data">
+                                @csrf
+                                <div class="bg-white mb-5 border-gray-200 sm:px-20 dark:bg-secondary-100 dark:border-black mt-5">
+                                    <h1 class="text-xl text-gray-500 dark:text-darkmodetext font-bold">{{ __('Reply') }}</h1>
+                                    <div class="grid grid-cols-1 gap-4">
+                                        <div class="mt-3 text-gray-500 dark:text-darkmodetext dark:bg-secondary-100">
 
-                        <div id="attachments-list" class="flex flex-row gap-x-4 mb-3"></div>
+                                            <div id="attachments-list" class="flex flex-row gap-x-4 mb-3"></div>
 
-                        <div class="flex flex-row">
-                            <label for="attachments" class="button-secondary rounded-full cursor-pointer flex w-10 h-10 mr-2 transition-all ease-in-out">
-                                <i class="ri-add-line my-auto mx-auto"></i>
-                            </label>
-                            <textarea
-                                id="message"
-                                class="block my-auto w-full rounded-2xl shadow-sm focus:ring-indigo-500 focus:border-indigo-500 border-indigo-300 dark:border-0 sm:text-sm dark:bg-secondary-200"
-                                rows="1"
-                                name="message"
-                                placeholder="Aa"
-                                required
-                            ></textarea>
-                            <button type="submit" id="submit-button" class="button-primary rounded-full w-10 ml-2 h-10 float-right transition-all ease-in-out">
-                                <i class="ri-send-plane-fill"></i>
-                            </button>
-                        </div>
-                        <x-input type="file" id="attachments" :label="__('Attachments')" name="attachments[]" multiple class="hidden"  />
-                        <x-recaptcha form="reply" />
-                        <br>
+                                            <div class="flex flex-row">
+                                                <label for="attachments" class="button-secondary rounded-full cursor-pointer flex w-10 h-10 mr-2 transition-all ease-in-out">
+                                                    <i class="ri-add-line my-auto mx-auto"></i>
+                                                </label>
+                                                <textarea
+                                                    id="message"
+                                                    class="block my-auto w-full rounded-2xl shadow-sm focus:ring-indigo-500 focus:border-indigo-500 border-indigo-300 dark:border-0 sm:text-sm dark:bg-secondary-200"
+                                                    rows="1"
+                                                    name="message"
+                                                    placeholder="Aa"
+                                                    required
+                                                ></textarea>
+                                                <button type="submit" id="submit-button" class="button-primary rounded-full w-10 ml-2 h-10 float-right transition-all ease-in-out">
+                                                    <i class="ri-send-plane-fill"></i>
+                                                </button>
+                                            </div>
+                                            <x-input type="file" id="attachments" :label="__('Attachments')" name="attachments[]" multiple class="hidden"  />
+                                            <x-recaptcha form="reply" />
+                                            <br>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        @endif
                     </div>
-                </div>
-            </div>
-        </form>
-    </div>
     <script>
 
         function slideDown() {
