@@ -195,7 +195,6 @@
 
         }
 
-        // Uruchom funkcję po załadowaniu strony
         window.addEventListener('load', slideDown);
 
         const fileInput = document.getElementById('attachments');
