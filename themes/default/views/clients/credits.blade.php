@@ -96,7 +96,7 @@
                         @forelse ($walletHistory as $wallet)
                             <tr>
                                 <td class="pl-6 py-3 items-center break-all max-w-fit">{{ $wallet->created_at }}</td>
-                                <td class="pl-6 py-3 items-center break-all max-w-fit">@if($wallet->type == 'charge') + @else @if($wallet->gateway == 'manual') - @endif @endif {{ $wallet->amount }} {{ config('settings::currency_sign') }}</td>
+                                <td class="pl-6 py-3 items-center break-all max-w-fit">@if($wallet->type == 'charge') + @else @if($wallet->gateway == 'manual') - @endif @endif <x-money :amount="$wallet->amount" /> </td>
                                 <td class="pl-6 py-3 items-center break-all max-w-fit">
                                     @if($wallet->type == 'charge')
                                         {{ __('Charge') }} ({{ $wallet->gateway }})
