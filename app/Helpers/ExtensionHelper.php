@@ -40,27 +40,10 @@ class ExtensionHelper
             $user->credits = $user->credits + $invoice->credits;
             $user->save();
 
-            $walletHistory = new WalletHistory();
-            $walletHistory->user_id = $user->id;
-            $walletHistory->type = 'charge';
-            $walletHistory->gateway = $paymentMethod;
-            $walletHistory->status = 'completed';
-            $walletHistory->amount = $invoice->credits;
-            $walletHistory->save();
-
             $invoice->status = 'paid';
             $invoice->save();
             return;
         }
-
-        $walletHistory = new WalletHistory();
-        $walletHistory->user_id = $user->id;
-        $walletHistory->type = 'invoice';
-        $walletHistory->gateway = $paymentMethod;
-        $walletHistory->invoice_id = $invoice->id;
-        $walletHistory->status = 'completed';
-        $walletHistory->amount = $invoice->total();
-        $walletHistory->save();
 
         $invoice->status = 'paid';
         $invoice->paid_with = $paymentMethod;
