@@ -47,7 +47,7 @@
                                                 <span class="font-semibold">{{ __('Invoice ID') }}:</span>
                                                 <span class="font-semibold">{{ $invoice->id }}</span>
                                                 <div class="w-full text-sm text-gray-400 truncate">
-                                                    <span class="font-semibold">{{__('Amount to pay')}} - 
+                                                    <span class="font-semibold">{{__('Amount to pay')}} -
                                                         <x-money :amount="$invoice->total()" />
                                                     </span>
                                                 </div>
@@ -82,19 +82,21 @@
                             </thead>
                             <tbody>
                             @php
-                                $i = 0
+                                $i = 0;
+                                $additionalLines = -1;
                             @endphp
                                 @if (count($services) > 0)
                                     @foreach ($services as $service)
                                         @foreach ($service->products as $product2)
                                             @php
                                                 $product = $product2->product;
+                                                if (count($service->products) > 1) $additionalLines++;
                                                 $i++
                                             @endphp
                                             @if($product2->status === 'cancelled')
                                                 @continue
                                             @endif
-                                            <tr class="@if(count($services) > $i) border-b-2 border-secondary-200 @endif">
+                                            <tr class="@if((count($services) + $additionalLines) > $i) border-b-2 border-secondary-200 @endif">
                                                 <td class="pl-6 py-3 items-center break-all max-w-fit">
                                                     <div class="flex">
                                                         <img src="{{ $product->image }}" alt="{{ $product->name }}" class="w-8 h-8 md:w-12 md:h-12 my-auto rounded-md"
