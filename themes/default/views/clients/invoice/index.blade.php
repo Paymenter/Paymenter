@@ -25,11 +25,13 @@
                     </tr>
                     </thead>
                     <tbody>
+                    @php($i = 0)
                     @foreach ($invoices->sortByDesc('status') as $invoice)
                         @if ($invoice->items->count() == 0)
                             @continue
                         @endif
-                        <tr class="border-b-2 border-secondary-200 dark:border-secondary-50">
+                        @php($i++)
+                        <tr class="@if(count($invoices) > $i) border-b-2 border-secondary-200 @endif">
                             <td class="pl-6 py-3">
                                 {{ $invoice->id }}
                             </td>
@@ -61,7 +63,7 @@
                             <td class="pr-6 py-3">
                                 <a href="{{ route('clients.invoice.show', $invoice->id) }}"
                                    class="button button-secondary">
-                                    {{ __('View') }}
+                                    <i class="ri-eye-line"></i> {{ __('View') }}
                                 </a>
                             </td>
                         </tr>
@@ -70,7 +72,5 @@
                 </table>
             @endif
         </div>
-    </div>
-    </div>
     </div>
 </x-app-layout>

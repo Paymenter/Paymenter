@@ -12,6 +12,7 @@ use App\Models\Product;
 use App\Models\Extension;
 use App\Models\OrderProduct;
 use App\Models\OrderProductConfig;
+use App\Models\WalletHistory;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Crypt;
@@ -33,17 +34,33 @@ class ExtensionHelper
     public static function paymentDone($id, $paymentMethod = 'manual', $paymentReference = null)
     {
         $invoice = Invoice::findOrFail($id);
+        $user = User::findOrFail($invoice->user_id);
 
-        // Is the invoice for credits? Then add them to the user's account.
         if ($invoice->credits > 0) {
-            $user = User::findOrFail($invoice->user_id);
             $user->credits = $user->credits + $invoice->credits;
             $user->save();
+
+            $walletHistory = new WalletHistory();
+            $walletHistory->user_id = $user->id;
+            $walletHistory->type = 'charge';
+            $walletHistory->gateway = $paymentMethod;
+            $walletHistory->status = 'completed';
+            $walletHistory->amount = $invoice->credits;
+            $walletHistory->save();
 
             $invoice->status = 'paid';
             $invoice->save();
             return;
         }
+
+        $walletHistory = new WalletHistory();
+        $walletHistory->user_id = $user->id;
+        $walletHistory->type = 'invoice';
+        $walletHistory->gateway = $paymentMethod;
+        $walletHistory->invoice_id = $invoice->id;
+        $walletHistory->status = 'completed';
+        $walletHistory->amount = $invoice->total();
+        $walletHistory->save();
 
         $invoice->status = 'paid';
         $invoice->paid_with = $paymentMethod;
@@ -103,9 +120,9 @@ class ExtensionHelper
 
     /**
      * Get metadata of an extension
-     * 
+     *
      * @param Extension $extension
-     * 
+     *
      * @return array
      */
     public static function getMetadata(Extension $extension)
@@ -130,9 +147,9 @@ class ExtensionHelper
 
     /**
      * Get userConfig
-     * 
+     *
      * @param Product $product
-     * 
+     *
      * @return array
      */
     public static function getUserConfig(Product $product)
@@ -157,10 +174,10 @@ class ExtensionHelper
 
     /**
      * Validate userConfig
-     * 
+     *
      * @param Product $product
      * @param Request $request
-     * 
+     *
      * @return void
      */
     public static function validateUserConfig(Product $product, Request $request)
@@ -195,10 +212,10 @@ class ExtensionHelper
 
     /**
      * Update extension config
-     * 
+     *
      * @param Extension $extension
      * @param Request $request
-     * 
+     *
      * @return void
      */
     public static function updateConfig(Extension $extension, Request $request)
@@ -228,10 +245,10 @@ class ExtensionHelper
 
     /**
      * Validate config item
-     * 
+     *
      * @param object $config
      * @param Request $request
-     * 
+     *
      * @return void
      */
     public static function validateConfigItem($config, Request $request)
