@@ -25,13 +25,11 @@
                     </tr>
                     </thead>
                     <tbody>
-                    @php($i = 0)
                     @foreach ($invoices->sortByDesc('status') as $invoice)
                         @if ($invoice->items->count() == 0)
                             @continue
                         @endif
-                        @php($i++)
-                        <tr class="@if(count($invoices) > $i) border-b-2 border-secondary-200 @endif">
+                        <tr class="@if(($loop->index + 1) < $loop->count) border-b-2 border-secondary-200 @endif">
                             <td class="pl-6 py-3">
                                 {{ $invoice->id }}
                             </td>
