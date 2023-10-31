@@ -50,19 +50,19 @@
                             <form method="POST" action="{{ route('clients.profile.update') }}">
                                 @csrf
                                 <x-input type="text" class="mt-4" placeholder="{{ __('First name') }}"
-                                    name="first_name" id="first_name" label="{{ __('Name') }}"
-                                    value="{{ Auth::user()->first_name }}" />
+                                    name="first_name" id="first_name" label="{{ __('First Name') }}"
+                                    value="{{ Auth::user()->first_name }}" required/>
                                 <x-input type="text" class="mt-4" placeholder="{{ __('Last name') }}"
-                                    name="last_name" id="last_name" label="{{ __('Name') }}"
-                                    value="{{ Auth::user()->last_name }}" />
+                                    name="last_name" id="last_name" label="{{ __('Last Name') }}"
+                                    value="{{ Auth::user()->last_name }}" required/>
                                 <x-input type="text" class="mt-4" placeholder="{{ __('Address') }}" name="address"
-                                    id="address" label="{{ __('Address') }}" value="{{ Auth::user()->address }}" />
+                                    id="address" label="{{ __('Address') }}" value="{{ Auth::user()->address }}" :required="config('settings::requiredClientDetails_address') == 1"/>
                                 <x-input type="text" class="mt-4" placeholder="{{ __('City') }}" name="city"
-                                    id="city" label="{{ __('City') }}" value="{{ Auth::user()->city }}" />
+                                    id="city" label="{{ __('City') }}" value="{{ Auth::user()->city }}" :required="config('settings::requiredClientDetails_city') == 1"/>
                                 <x-input type="text" class="mt-4" placeholder="{{ __('Country') }}" name="country"
-                                    id="country" label="{{ __('Country') }}" value="{{ Auth::user()->country }}" />
+                                    id="country" label="{{ __('Country') }}" value="{{ Auth::user()->country }}" :required="config('settings::requiredClientDetails_country') == 1"/>
                                 <x-input type="text" class="mt-4" placeholder="{{ __('Phone') }}" name="phone"
-                                    id="phone" label="{{ __('Phone') }}" value="{{ Auth::user()->phone }}" />
+                                    id="phone" label="{{ __('Phone') }}" value="{{ Auth::user()->phone }}" :required="config('settings::requiredClientDetails_phone') == 1"/>
                                 <div class="flex justify-end mt-6">
                                     <button type="submit" class="button button-primary">
                                         {{ __('Update') }}

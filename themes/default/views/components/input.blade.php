@@ -1,5 +1,5 @@
 @if ($type == 'checkbox')
-    <div @isset($class) class={{ $class }} @endisset>
+    <div @isset($class) class="{{ $class }}" @endisset>
         <div class="flex items-start">
             <div class="flex items-center h-5">
                 <input id="{{ $id ?? $name }}" type="checkbox"

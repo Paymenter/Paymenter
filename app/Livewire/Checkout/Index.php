@@ -167,6 +167,11 @@ class Index extends Component
         if (!auth()->check()) {
             return redirect()->route('login');
         }
+        if (config('settings::requiredClientDetails_address') && !auth()->user()->address) return redirect()->route('clients.profile')->with(['error' => 'Please define your address.']);
+        if (config('settings::requiredClientDetails_city') && !auth()->user()->city) return redirect()->route('clients.profile')->with(['error' => 'Please define your city.']);
+        if (config('settings::requiredClientDetails_country') && !auth()->user()->city) return redirect()->route('clients.profile')->with(['error' => 'Please define your country.']);
+        if (config('settings::requiredClientDetails_phone') && !auth()->user()->phone) return redirect()->route('clients.profile')->with(['error' => 'Please define your phone number.']);
+
         if (config('settings::tos') == 1) {
             $this->validateOnly('tos', [
                 'tos' => 'required|accepted',
