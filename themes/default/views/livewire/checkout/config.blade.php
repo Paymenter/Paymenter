@@ -15,7 +15,7 @@
                             <div class="mt-4">
                                 <h3>{{ __('Billing cycle') }}</h3>
 
-                                <div class="flex flex-row flex-wrap mb-4 gap-4">
+                                <div class="flex flex-row flex-wrap mt-2 mb-4 gap-4">
                                     @php $priceTypes = ['monthly', 'quarterly', 'semi_annually', 'annually', 'biennially', 'triennially']; @endphp
                                     @foreach ($priceTypes as $priceType)
                                         @if ($prices->{$priceType})

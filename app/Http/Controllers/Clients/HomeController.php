@@ -125,10 +125,10 @@ class HomeController extends Controller
         $request->validate([
             'first_name' => 'required|string',
             'last_name' => 'required|string',
-            'address' => 'required|string',
-            'city' => 'required|string',
-            'country' => 'required|string',
-            'phone' => 'required|numeric',
+            'address' => (config('settings::requiredClientDetails_address') == 1 ? 'required|': 'nullable|') . 'string',
+            'city' => (config('settings::requiredClientDetails_city') == 1 ? 'required|': 'nullable|') . 'string',
+            'country' => (config('settings::requiredClientDetails_country') == 1 ? 'required|': 'nullable|') . 'string',
+            'phone' => (config('settings::requiredClientDetails_phone') == 1 ? 'required|': 'nullable|') . 'numeric',
         ]);
 
         $user = $request->user();
