@@ -45,7 +45,7 @@
                                     <p>{{ config('settings::company_address') }}</p>
                                     <p>{{ config('settings::company_zip') }} {{ config('settings::company_city') }}</p>
                                     <p>{{ config('settings::company_country') }}</p>
-                                    <p>{{ __('TIN') }}: {{ config('settings::company_tin') }}</p>
+                                    <p>{{ config('settings::company_tin') ?__('TIN').":":null }} {{ config('settings::company_tin') }}</p>
                                 </div>
                                 <div class="dark:text-darkmodetext text-sm font-light text-slate-500">
                                     <p class="dark:text-darkmodetext text-sm font-bold text-slate-700">

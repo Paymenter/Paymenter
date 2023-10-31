@@ -116,9 +116,9 @@
             @include('layouts.navigation')
         @endif
         <div class="@if (config('settings::sidebar') == 1) flex md:flex-nowrap flex-wrap @endif">
-            @if ($clients)
+            @auth
                 @include('layouts.subnavigation')
-            @endif
+            @endauth
             <div class="w-full flex flex-col @if($clients) min-h-[calc(100vh-105px)] @else min-h-[calc(100vh-64px)] @endif">
 
                 <main class="grow">

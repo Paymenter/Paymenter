@@ -154,7 +154,8 @@ class HomeController extends Controller
             return abort(404, 'Credits are disabled');
         }
         $gateways = ExtensionHelper::getGateways();
-        return view('clients.credits', compact('gateways'));
+        $userInvoices = Invoice::where('user_id', Auth::user()->id)->with(['items.product.order.coupon', 'items.product.product'])->get();
+        return view('clients.credits', compact('gateways', 'userInvoices'));
     }
 
     /**

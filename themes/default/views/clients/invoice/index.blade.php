@@ -5,7 +5,7 @@
             <h2 class="text-xl font-semibold p-6">{{ __('Invoices') }}</h2>
             @if ($invoices->count() > 0)
                 <table class="w-full">
-                    <thead class="border-b-2 border-secondary-200 dark:border-secondary-50 text-secondary-600">
+                    <thead class="border-b-2 border-secondary-200 text-secondary-600">
                     <tr>
                         <th scope="col" class="text-start pl-6 py-2 text-sm font-normal">
                             {{ __('ID')}}
@@ -29,7 +29,7 @@
                         @if ($invoice->items->count() == 0)
                             @continue
                         @endif
-                        <tr class="border-b-2 border-secondary-200 dark:border-secondary-50">
+                        <tr class="@if(($loop->index + 1) < $loop->count) border-b-2 border-secondary-200 @endif">
                             <td class="pl-6 py-3">
                                 {{ $invoice->id }}
                             </td>
@@ -61,7 +61,7 @@
                             <td class="pr-6 py-3">
                                 <a href="{{ route('clients.invoice.show', $invoice->id) }}"
                                    class="button button-secondary">
-                                    {{ __('View') }}
+                                    <i class="ri-eye-line"></i> {{ __('View') }}
                                 </a>
                             </td>
                         </tr>
@@ -70,7 +70,5 @@
                 </table>
             @endif
         </div>
-    </div>
-    </div>
     </div>
 </x-app-layout>
