@@ -104,7 +104,7 @@
                                         <div class="items-center flex" class="block mt-1 w-full">
                                             <x-input type="hidden" value="0" name="hidden" />
                                             <x-input id="hidden" class="block mt-1 w-full" type="checkbox"
-                                                checked="{{ $configurableOption->hidden }}" name="hidden"
+                                                :checked="$configurableOption->hidden == 1 ? true : false" name="hidden"
                                                 label="Hidden" placeholder="Hidden" value="1" />
                                         </div>
 
@@ -128,7 +128,7 @@
                                                 <div class="items-center flex" class="block mt-1 w-full">
                                                     <x-input label="Hidden" type="checkbox"
                                                         name="option[{{ $option->id }}][hidden]"
-                                                        checked="{{ $option->hidden }}" placeholder="hidden"
+                                                        :checked="$option->hidden == 1 ? true : false"
                                                         value="1" />
                                                 </div>
                                             </div>

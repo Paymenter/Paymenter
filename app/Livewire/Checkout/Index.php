@@ -64,13 +64,18 @@ class Index extends Component
     #[Computed()]
     public function products()
     {
-        $products = session('cart');
-
+        $cart = session('cart');
         $total = 0;
         $totalSetup = 0;
         $discount = 0;
-        if ($products) {
-            foreach ($products as $product) {
+        $products = [];
+        if ($cart) {
+            foreach ($cart as $product2) {
+                $product = Product::where('id', $product2['product_id'])->first();
+                $product->quantity = $product2['quantity'];
+                $product->price = isset($product2['billing_cycle']) ? $product->prices()->get()->first()->{$product2['billing_cycle']} : $product->prices()->get()->first()->monthly;
+                $product->billing_cycle = $product2['billing_cycle'] ?? null;
+                $product->setup_fee = isset($product2['billing_cycle']) ? $product->prices()->get()->first()->{$product2['billing_cycle'] . '_setup'} : $product->prices()->get()->first()->monthly_setup;
                 $total += $product->price * $product->quantity;
                 $totalSetup += $product->setup_fee * $product->quantity;
                 if ($this->coupon) {
@@ -107,10 +112,12 @@ class Index extends Component
                     $product->discount_fee = $product->setup_fee;
                 }
                 $discount += ($product->discount + $product->discount_fee) * $product->quantity;
+
+                $products[] = $product;
             }
         }
 
-        $this->total = $total;
+        $this->total = $total + $totalSetup;
         $this->totalSetup = $totalSetup;
         $this->discount = $discount;
 
@@ -140,7 +147,8 @@ class Index extends Component
     public function updateQuantity($product, $value)
     {
         $cart = session()->get('cart');
-        $cart[$product]->quantity = $value;
+        $key = array_search($product, array_column($cart, 'product_id'));
+        $cart[$key]['quantity'] = $value;
         session()->put('cart', $cart);
         $this->updateCart();
     }
@@ -148,7 +156,8 @@ class Index extends Component
     public function removeProduct($product)
     {
         $cart = session()->get('cart');
-        unset($cart[$product]);
+        $key = array_search($product, array_column($cart, 'product_id'));
+        unset($cart[$key]);
         session()->put('cart', $cart);
         $this->updateCart();
     }

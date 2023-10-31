@@ -22,37 +22,11 @@ class CheckoutController extends Controller
     {
         $server = $product->extension;
         $userConfig = ExtensionHelper::getUserConfig($product);
-        if (!$server && $product->prices()->get()->first()->type != 'recurring' && count($product->configurableGroups()) == 0 && empty($userConfig)) {
+        if (!$server && $product->prices->type != 'recurring' && count($product->configurableGroups()) == 0 && empty($userConfig)) {
             return redirect()->back()->with('error', 'Config Not Found');
         }
 
-        $prices = $product->prices()->get()->first();
-        $customConfig = $product->configurableGroups();
-        // If billing_cycle isn't set, set it to the lowest billing cycle available
-        $billing_cycle = $request->input('billing_cycle') ?? 'monthly';
-        if (!in_array($billing_cycle, ['monthly', 'quarterly', 'semi_annually', 'annually', 'biennially', 'triennially'])) {
-            $billing_cycle = 'monthly';
-        }
-        if ($billing_cycle == 'monthly' && !$prices->monthly) {
-            $billing_cycle = 'quarterly';
-        }
-        if ($billing_cycle == 'quarterly' && !$prices->quarterly) {
-            $billing_cycle = 'semi_annually';
-        }
-        if ($billing_cycle == 'semi_annually' && !$prices->semi_annually) {
-            $billing_cycle = 'annually';
-        }
-        if ($billing_cycle == 'annually' && !$prices->annually) {
-            $billing_cycle = 'biennially';
-        }
-        if ($billing_cycle == 'biennially' && !$prices->biennially) {
-            $billing_cycle = 'triennially';
-        }
-        if ($billing_cycle == 'triennially' && !$prices->triennially) {
-            $billing_cycle = 'monthly';
-        }
-
-        return view('checkout.config', compact('product', 'userConfig', 'prices', 'customConfig', 'billing_cycle'));
+        return view('checkout.config', compact('product'));
     }
 
     public function configPost(Request $request, Product $product)
@@ -64,10 +38,16 @@ class CheckoutController extends Controller
             return redirect()->back()->with('error', 'Config Not Found');
         }
 
+        foreach($userConfig as $key => $value) {
+            $request->merge([$key => $value]);
+        }
+
         $config = ExtensionHelper::validateUserConfig($product, $request);
         if ($config instanceof \Illuminate\Http\RedirectResponse) {
             return $config;
         }
+
+        $product->config = $config;
 
         $product->config = $config;
 

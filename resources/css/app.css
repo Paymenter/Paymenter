@@ -1,11 +1,11 @@
-@import 'datatables.css';
+@import "datatables.css";
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-@layer components{
+@layer components {
     .form-label {
-        @apply absolute left-[9px] top-px text-sm text-gray-500 transition-all duration-300 px-1 transform -translate-y-1/2 pointer-events-none peer-placeholder-shown:top-1/2 peer-placeholder-shown:text-base group-focus-within:!top-px group-focus-within:!text-sm group-focus-within:!text-logo rounded-md dark:text-darkmodetext dark:bg-darkmode bg-white ;
+        @apply absolute left-[9px] top-px text-sm text-gray-500 transition-all duration-300 px-1 transform -translate-y-1/2 pointer-events-none peer-placeholder-shown:top-1/2 peer-placeholder-shown:text-base group-focus-within:!top-px group-focus-within:!text-sm group-focus-within:!text-logo rounded-md dark:text-darkmodetext dark:bg-darkmode bg-white;
     }
 
     .form-input {
@@ -23,65 +23,64 @@
     .prose {
         @apply prose-code:before:content-none prose-code:after:content-none;
     }
+
+    .button {
+        @apply inline-block py-2 px-4 rounded-md text-center font-sans font-medium duration-300;
+    }
+
+    .button-primary {
+        @apply bg-primary-400 text-primary-50 hover:bg-primary-300 hover:text-white focus:bg-primary-300 focus:text-white focus:ring-2 ring-primary-300 ring-offset-2 ring-offset-secondary-50 dark:ring-offset-secondary-100;
+    }
+
+    .button-secondary {
+        @apply bg-secondary-200 text-secondary-800 hover:bg-secondary-300 hover:text-secondary-900 focus:bg-secondary-300 focus:text-secondary-900 focus:ring-2 ring-secondary-300 ring-offset-2 ring-offset-secondary-50 dark:ring-offset-secondary-100;
+    }
+
+    .button-danger {
+        @apply bg-danger-400 text-danger-50 hover:bg-danger-300 hover:text-white focus:bg-danger-300 focus:text-white focus:ring-2 ring-danger-300 ring-offset-2 ring-offset-secondary-50 dark:ring-offset-secondary-100;
+    }
+
+    .button-success {
+        @apply bg-success-400 text-success-50 hover:bg-success-300 hover:text-white focus:bg-success-300 focus:text-white focus:ring-2 ring-success-300 ring-offset-2 ring-offset-secondary-50 dark:ring-offset-secondary-100;
+    }
+
+    .button-primary-outline {
+        @apply text-primary-400 hover:bg-primary-400 hover:text-white focus:bg-primary-400 focus:text-white focus:ring-2 ring-primary-400 ring-offset-2 ring-offset-secondary-50 dark:ring-offset-secondary-100;
+    }
+
+    .button-secondary-outline {
+        @apply text-secondary-800 hover:bg-secondary-200 hover:text-secondary-900 focus:bg-secondary-200 focus:text-secondary-900 focus:ring-2 ring-secondary-200 ring-offset-2 ring-offset-secondary-50 dark:ring-offset-secondary-100;
+    }
+
+    .button-danger-outline {
+        @apply text-danger-400 hover:bg-danger-400 hover:text-white focus:bg-danger-400 focus:text-white focus:ring-2 ring-danger-400 ring-offset-2 ring-offset-secondary-50 dark:ring-offset-secondary-100;
+    }
+
+    .button-success-outline {
+        @apply text-success-400 hover:bg-success-400 hover:text-white focus:bg-success-400 focus:text-white focus:ring-2 ring-success-400 ring-offset-2 ring-offset-secondary-50 dark:ring-offset-secondary-100;
+    }
+
+    .content {
+        @apply container mx-auto items-center px-4 mt-8;
+    }
+
+    .content-box {
+        @apply bg-secondary-50 dark:bg-secondary-100 px-6 py-5 rounded-2xl border-2 dark:border-secondary-100 border-secondary-200 duration-300;
+    }
 }
 
-:root{
-    --danger-50: #FFEBEB;
-    --danger-100: #FDCFCF;
-    --danger-200: #EF9595;
-    --danger-300: #DB5858;
-    --danger-400: #DC3A3A;
+:root {
+    --danger-50: #ffebeb;
+    --danger-100: #fdcfcf;
+    --danger-200: #ef9595;
+    --danger-300: #db5858;
+    --danger-400: #dc3a3a;
 
-    --success-50: #EBFFF1;
-    --success-100: #B5EFCE;
-    --success-200: #86DEA0;
-    --success-300: #82CE91;
-    --success-400: #4EB165;
-}
-
-
-.button {
-    @apply inline-block py-2 px-4 rounded-md text-center font-sans font-medium duration-300;
-}
-
-.button-primary {
-    @apply bg-primary-400 text-primary-50 hover:bg-primary-300 hover:text-white focus:bg-primary-300 focus:text-white focus:ring-2 ring-primary-300 ring-offset-2 ring-offset-secondary-50 dark:ring-offset-secondary-100;
-}
-
-.button-secondary {
-    @apply bg-secondary-200 text-secondary-800 hover:bg-secondary-300 hover:text-secondary-900 focus:bg-secondary-300 focus:text-secondary-900 focus:ring-2 ring-secondary-300 ring-offset-2 ring-offset-secondary-50 dark:ring-offset-secondary-100;
-}
-
-.button-danger {
-    @apply bg-danger-400 text-danger-50 hover:bg-danger-300 hover:text-white focus:bg-danger-300 focus:text-white focus:ring-2 ring-danger-300 ring-offset-2 ring-offset-secondary-50 dark:ring-offset-secondary-100;
-}
-
-.button-success {
-    @apply bg-success-400 text-success-50 hover:bg-success-300 hover:text-white focus:bg-success-300 focus:text-white focus:ring-2 ring-success-300 ring-offset-2 ring-offset-secondary-50 dark:ring-offset-secondary-100;
-}
-
-.button-primary-outline {
-    @apply text-primary-400 hover:bg-primary-400 hover:text-white focus:bg-primary-400 focus:text-white focus:ring-2 ring-primary-400 ring-offset-2 ring-offset-secondary-50 dark:ring-offset-secondary-100;
-}
-
-.button-secondary-outline {
-    @apply text-secondary-800 hover:bg-secondary-200 hover:text-secondary-900 focus:bg-secondary-200 focus:text-secondary-900 focus:ring-2 ring-secondary-200 ring-offset-2 ring-offset-secondary-50 dark:ring-offset-secondary-100;
-}
-
-.button-danger-outline {
-    @apply text-danger-400 hover:bg-danger-400 hover:text-white focus:bg-danger-400 focus:text-white focus:ring-2 ring-danger-400 ring-offset-2 ring-offset-secondary-50 dark:ring-offset-secondary-100;
-}
-
-.button-success-outline {
-    @apply text-success-400 hover:bg-success-400 hover:text-white focus:bg-success-400 focus:text-white focus:ring-2 ring-success-400 ring-offset-2 ring-offset-secondary-50 dark:ring-offset-secondary-100;
-}
-
-.content{
-    @apply container mx-auto items-center px-4 mt-8;
-}
-
-.content-box{
-    @apply bg-secondary-50 dark:bg-secondary-100 px-6 py-5 rounded-2xl border-2 dark:border-secondary-100 border-secondary-200 duration-300;
+    --success-50: #ebfff1;
+    --success-100: #b5efce;
+    --success-200: #86dea0;
+    --success-300: #82ce91;
+    --success-400: #4eb165;
 }
 
 .dataTables_wrapper .dt-buttons {
@@ -124,7 +123,7 @@ table.dataTable tfoot th {
     @apply p-2 float-right;
 }
 
-.dataTables_filter label{
+.dataTables_filter label {
     @apply flex items-center space-x-4 text-gray-900 dark:text-white;
 }
 
@@ -132,7 +131,7 @@ table.dataTable tfoot th {
     @apply ml-2 block p-2 sm:w-80 w-auto text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500;
 }
 
-.dataTables_info{
+.dataTables_info {
     @apply p-2 bg-white dark:bg-secondary-100 float-left text-gray-500 dark:text-gray-400;
 }
 
@@ -141,19 +140,19 @@ table.dataTable tfoot th {
 }
 
 .dataTables_paginate span a {
-	@apply py-2 px-3 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-secondary-100 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white;
+    @apply py-2 px-3 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-secondary-100 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white;
 }
 
 .dataTables_paginate span a.current {
-	@apply z-10 py-2 px-3 leading-tight text-blue-600 bg-blue-50 border border-blue-300 hover:bg-blue-100 hover:text-blue-700 dark:border-gray-700 dark:bg-gray-700 dark:text-white;
+    @apply z-10 py-2 px-3 leading-tight text-blue-600 bg-blue-50 border border-blue-300 hover:bg-blue-100 hover:text-blue-700 dark:border-gray-700 dark:bg-gray-700 dark:text-white;
 }
 
 .dataTables_paginate .next {
- 	@apply py-2 px-3 leading-tight text-gray-500 bg-white rounded-r-lg border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-secondary-100 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white;
+    @apply py-2 px-3 leading-tight text-gray-500 bg-white rounded-r-lg border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-secondary-100 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white;
 }
 
 .dataTables_paginate .previous {
-	@apply py-2 px-3 ml-0 leading-tight text-gray-500 bg-white rounded-l-lg border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-secondary-100 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white;
+    @apply py-2 px-3 ml-0 leading-tight text-gray-500 bg-white rounded-l-lg border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-secondary-100 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white;
 }
 
 .dataTables_wrapper {
@@ -168,10 +167,12 @@ table.dataTable tfoot th {
 *::-webkit-scrollbar {
     width: 15px;
     box-shadow: 0 0 0 1px var(--secondary-50);
+        border-radius: 10px;
 }
 
 *::-webkit-scrollbar-track {
     background: var(--secondary-50);
+    border-radius: 10px;
 }
 
 *::-webkit-scrollbar-thumb {
