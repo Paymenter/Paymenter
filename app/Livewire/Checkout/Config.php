@@ -21,7 +21,7 @@ class Config extends Component
 
     public $prices;
 
-    public $total = 5.00;
+    public $total = 0;
 
     #[Url]
     public $config = [];
@@ -64,6 +64,27 @@ class Config extends Component
                 }
             }
         }
+
+        // Calculate total
+        $this->total = $prices->{$this->billing_cycle} ?? $prices->monthly;
+        foreach ($customConfig as $group) {
+            foreach ($group->configurableOptions()->orderBy('order')->get() as $option) {
+                $configItemInput = $option->configurableOptionInputs()->get();
+                foreach ($configItemInput as $configItemInput) {
+                    if ($configItemInput->id != $this->config[$option->id] && ($option->type == 'select' || $option->type == 'radio' || $option->type == 'slider')) continue;
+                    $configItemPrice = $configItemInput->configurableOptionInputPrice;
+                    if ($configItemPrice) {
+                        if ($option->type == 'quantity') {
+                            $this->total += $configItemPrice->{$this->billing_cycle} * $this->config[$option->id];
+                        } else {
+                            $this->total += $configItemPrice->{$this->billing_cycle};
+                        }
+                    }
+                }
+            }
+        }
+
+        
     }
 
 
