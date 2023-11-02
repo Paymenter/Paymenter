@@ -111,7 +111,7 @@
                         </div>
                     </button>
                 @else
-                    <a href="{{ route('login') }}" class="button button-primary md:flex-none flex-1 p-4">
+                    <a href="{{ route('login') }}" class="button button-primary md:flex-none flex-1">
                         {{ __('Log In') }}
                     </a>
                 @endauth
