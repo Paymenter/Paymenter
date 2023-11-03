@@ -315,6 +315,18 @@ class Proxmox extends Server
                 'friendlyName' => 'Swap (MB)',
                 'description' => 'The amount of swap of the wanted VM',
             ],
+            [
+                'type' => 'text',
+                'name' => 'ips',
+                'friendlyName' => 'IPs',
+                'description' => 'Available IPs to assign to the VM\'s. Separate IPs with a comma',
+            ],
+            [
+                'type' => 'text',
+                'name' => 'gateway',
+                'friendlyName' => 'Gateway',
+                'description' => 'The gateway of the VM',
+            ],
 
             [
                 'type' => 'title',
@@ -691,14 +703,13 @@ class Proxmox extends Server
         if ($currentConfig->where('name', 'clone')->first()->value == '1') {
             $postData = [
                 'newid' => $vmid,
-                'name' => $parmas['config']['hostname'],
                 'target' => $node,
                 'full' => 1,
             ];
             isset($parmas['pool']) && $postData['pool'] = $parmas['pool'];
             $response = $this->postRequest('/nodes/' . $node . '/' . $vmType . '/' . $parmas['vmId'] . '/clone', $postData);
             if (!$response->json()) throw new Exception('Unable to clone server');
-            
+
             // Update hardware
             $postData = [
                 'cores' => $cores,
@@ -732,8 +743,26 @@ class Proxmox extends Server
                 'hostname' => $parmas['config']['hostname'],
                 'password' => $parmas['config']['password'],
                 'swap' => $swap ?? 512,
+                'unprivileged' => isset($parmas['unprivileged']) ? 1 : 0,
                 'net0' => 'name=test' . ',bridge=' . $parmas['bridge'] . ',' . (isset($parmas['firewall']) ? 'firewall=1' : 'firewall=0') . (isset($network_limit) ? ',rate=' . $network_limit : ''),
             ];
+            $ips = isset($configurableOptions['ips']) ? $configurableOptions['ips'] : ($parmas['ips'] ?? null);
+            if (isset($ips)) {
+                $ips = explode(',', $ips);
+                // Get all ips which are not used
+                $usedIps = OrderProduct::where('product_id', $product->product->id)->where('status', '!=', 'terminated')->with('config')->get();
+                $usedIps = $usedIps->map(function ($orderProduct) {
+                    return $orderProduct->config->where('key', 'ips')->first()->value ?? false;
+                })->toArray();
+                $ips = array_diff($ips, $usedIps);
+                if (count($ips) == 0) throw new Exception('No more IPs available');
+                // Only one
+                $ips = $ips[0];
+                ExtensionHelper::setOrderProductConfig('ips', $ips, $product->id);
+                $postData['net0'] .= ',ip=' . $ips . '/24';
+            }
+            $gateway = isset($configurableOptions['gateway']) ? $configurableOptions['gateway'] : ($parmas['gateway'] ?? null);
+            isset($gateway) ? $postData['net0'] .= ',gw=' . $gateway : null;
             isset($pool) ? $postData['pool'] = $pool : null;
             $response = $this->postRequest('/nodes/' . $node . '/lxc', $postData);
         } else {
