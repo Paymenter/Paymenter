@@ -52,7 +52,7 @@
                                                     </span>
                                                 </div>
                                             </div>
-                                            <div class="justify-end flex text-center text-primary-400 my-auto button button-primary text-md w-fit py-[5px] px-[8px]">
+                                            <div class="justify-end flex text-center text-primary-50 my-auto button button-primary text-md w-fit py-[5px] px-[8px]">
                                                 <b>{{__('View')}}</b>
                                             </div>
                                         </div>
