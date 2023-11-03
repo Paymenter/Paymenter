@@ -72,6 +72,8 @@ class Index extends Component
         if ($cart) {
             foreach ($cart as $product2) {
                 $product = Product::where('id', $product2['product_id'])->first();
+                $product->config = $product2['config'] ?? [];
+                $product->configurableOptions = $product2['configurableOptions'] ?? [];
                 $product->quantity = $product2['quantity'];
                 $product->price = isset($product2['billing_cycle']) ? $product->prices()->get()->first()->{$product2['billing_cycle']} : $product->prices()->get()->first()->monthly;
                 $product->billing_cycle = $product2['billing_cycle'] ?? null;
