@@ -223,18 +223,6 @@ class Pterodactyl extends Server
         ];
     }
 
-    public function getUserConfig($options){
-        return [
-            [
-                'name' => 'hostname',
-                'type' => 'text',   
-                'friendlyName' => 'Hostname',
-                'description' => 'The hostname of the VM',
-                'validation' => 'required|domain',
-            ],
-        ];
-    }
-
     public function createServer($user, $params, $order, $orderProduct, $configurableOptions): bool
     {
         if ($this->serverExists($orderProduct->id)) {
