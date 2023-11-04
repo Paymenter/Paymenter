@@ -25,7 +25,7 @@
                             @elseif($subSetting->type == 'checkbox')
                                 <input type="hidden" name="{{ $subSetting->name }}" value="0">
                                 <x-input :name="$subSetting->name" :type="$subSetting->type" :value="1" :label="$subSetting->label"
-                                    :checked="config('settings::theme:' . $subSetting->name, $subSetting->default ?? false) ? 1 : 0" :id="$subSetting->name" />
+                                    :checked="config('settings::theme:' . $subSetting->name, $subSetting->default ?? false) == 1" :id="$subSetting->name" />
                             @else
                                 <x-input :name="$subSetting->name" :type="$subSetting->type" :value="config('settings::theme:' . $subSetting->name, $subSetting->default ?? null)" :label="$subSetting->label"
                                     :id="$subSetting->name" />
@@ -40,7 +40,7 @@
                         @elseif($setting->type == 'checkbox')
                             <input type="hidden" name="{{ $setting->name }}" value="0">
                             <x-input :name="$setting->name" :type="$setting->type" :value="1" :label="$setting->label"
-                                :checked="config('settings::theme:' . $setting->name, $setting->default ?? false) ? 1 : 0" :id="$setting->name" />
+                                :checked="config('settings::theme:' . $setting->name, $setting->default ?? false) == 1" :id="$setting->name" />
                         @else
                             <x-input :name="$setting->name" :type="$setting->type" :value="config('settings::theme:' . $setting->name, $setting->default ?? null)" :label="$setting->label"
                                 :id="$setting->name" />
