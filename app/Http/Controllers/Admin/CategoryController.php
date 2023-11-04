@@ -20,34 +20,8 @@ class CategoryController extends Controller
      */
     public function index(): View
     {
-        $categories = Category::all()->sortBy('order');
-
-        return view('admin.categories.index', compact('categories'));
+        return view('admin.categories.index');
     }
-
-    /**
-     * Reorder the categories
-     * 
-     * @param Request $request
-     * @return void
-     */
-    public function reorder(Request $request)
-    {
-        $request->validate([
-            'categories' => 'required|array',
-        ]);
-
-        $categories = collect($request->get('categories'));
-        $dbCategories = Category::all()->sortBy('order');
-        foreach ($dbCategories as $category) {
-            $category->order = $categories->where('id', $category->id)->first()['order'];
-            $category->save();
-        }
-
-
-        return response()->json(['success' => true]);
-    }
-
 
     /**
      * Display the create form

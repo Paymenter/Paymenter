@@ -24,32 +24,9 @@ class ProductController extends Controller
      */
     public function index(): View
     {
-        $categories = Category::with('products')->orderBy('order', 'asc')->get();
+        $categories = Category::orderBy('order', 'asc')->get();
 
         return view('admin.products.index', compact('categories'));
-    }
-
-    /**
-     * Reorder a product
-     *
-     * @param Request $request
-     *
-     * @return void
-     */
-    public function reorder(Request $request)
-    {
-        $request->validate([
-            'products' => 'required|array',
-            'category' => 'required|integer|exists:categories,id',
-        ]);
-        $products = collect($request->get('products'));
-        $categoryProducts = Category::find($request->get('category'))->products;
-        foreach ($categoryProducts as $categoryProduct) {
-            $categoryProduct->order = $products->where('id', $categoryProduct->id)->first()['order'];
-            $categoryProduct->save();
-        }
-
-        return response()->json(['success' => true]);
     }
 
     /**

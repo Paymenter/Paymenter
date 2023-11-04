@@ -1,4 +1,4 @@
-<x-guest-layout>
+<x-app-layout>
     <div id="app"
         class="flex flex-col items-center min-h-screen pt-6 bg-gray-100 dark:text-darkmodetext dark:bg-darkmode sm:justify-center sm:pt-0">
         <div
@@ -64,4 +64,4 @@
             </form>
         </div>
     </div>
-</x-guest-layout>
+</x-app-layout>

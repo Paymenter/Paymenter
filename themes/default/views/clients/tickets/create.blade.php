@@ -131,7 +131,7 @@
                                     @endif
                                     <div class="flex items-center justify-end mt-4">
                                         <button id="submit"
-                                            class="form-submit">
+                                            class="button button-primary">
                                             {{ __('Create') }}
                                         </button>
                                     </div>

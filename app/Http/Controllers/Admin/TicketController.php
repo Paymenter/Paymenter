@@ -9,17 +9,12 @@ use App\Models\Ticket;
 use Illuminate\Http\Request;
 use App\Models\TicketMessage;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Validator;
 
 class TicketController extends Controller
 {
     public function index()
     {
-        $tickets = Ticket::where('status', '!=', 'closed')->get();
-        $closed = Ticket::where('status', 'closed')->get();
-
-        return view('admin.tickets.index', compact('tickets', 'closed'));
+        return view('admin.tickets.index');
     }
 
     public function create()

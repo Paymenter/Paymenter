@@ -5,9 +5,11 @@ module.exports = {
     content: [
         "./vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php",
         "./storage/framework/views/*.php",
+        './app/**/*.php',
         "./resources/views/**/*.blade.php",
         "./themes/**/**/**/*.{blade.php,js,vue,ts,jsx,tsx}",
-        "./node_modules/flowbite/**/*.js"
+        "./node_modules/flowbite/**/*.js",
+        './vendor/rappasoft/laravel-livewire-tables/resources/views/**/*.blade.php',
     ],
 
     theme: {
