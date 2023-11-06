@@ -51,7 +51,7 @@
                 <label for="value" class="block dark:text-darkmodetext">
                     {{ __('Value') }} {{ config('settings::currency_sign') }}
                 </label>
-                <input type="number" name="value" id="value" value="{{ $coupon->value }}"
+                <input name="value" id="value" value="{{ $coupon->value }}"
                     class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm dark:bg-darkmode rounded-md"
                     required />
             </div>
