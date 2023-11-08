@@ -84,7 +84,7 @@ class TicketController extends Controller
     public function update(Request $request, Ticket $ticket)
     {
         $request->validate([
-            'title' => 'required|string|regex:/^[a-zA-Z0-9\s]+$/u',
+            'title' => 'required|string',
             'status' => 'required|in:open,closed',
             'priority' => 'required|in:low,medium,high',
             'assigned_to' => 'nullable|exists:users,id',
