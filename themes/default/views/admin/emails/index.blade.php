@@ -17,7 +17,7 @@
             </div>
         </div>
     </div>
-    <h1 class="text-3xl font-semibold text-secondary-900 dark:text-darkmodetext">{{ __('Sended Emails') }}</h1>
+    <h1 class="text-3xl font-semibold text-secondary-900 dark:text-darkmodetext">{{ __('Sent Emails') }}</h1>
     <div class="flex flex-col gap-4 mt-4" id="email" data-accordion="collapse">
         @foreach ($emails as $email)
             <h2 id="email-heading-{{ $email->id }}">
