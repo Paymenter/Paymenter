@@ -4,7 +4,7 @@
 
     @if (config('settings::registrationAbillity_disable') == 1)
             <div class="max-w-lg w-full text-center  pb-7 pt-7 mb-5 bg-red-400 rounded-lg">
-                <h1 class="text-red-800" >REGISTRATION IS CURRENTLY DISABLED</h1>
+                <h1 class="font-bold text-red-800" >REGISTRATION IS CURRENTLY DISABLED</h1>
             </div>
         @else
 
