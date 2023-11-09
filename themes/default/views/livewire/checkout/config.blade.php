@@ -220,15 +220,15 @@
                                     @if ($item->type == 'quantity')
                                         x
                                         @if ($config[$item->id])
-                                            {{ $item->configurableOptionInputs->where('id', $config[$item->id])->first()->configurableOptionInputPrice->{$billing_cycle} }}
+                                            <x-money :amount="$item->configurableOptionInputs->where('id', $config[$item->id])->first()->configurableOptionInputPrice->{$billing_cycle}" />
                                         @else
-                                            {{ $item->configurableOptionInputs->first()->configurableOptionInputPrice->{$billing_cycle} }}
+                                            <x-money :amount="$item->configurableOptionInputs->first()->configurableOptionInputPrice->{$billing_cycle}" />
                                         @endif
                                     @else
                                         @if ($config[$item->id] && $item->type !== 'text')
-                                            {{ $item->configurableOptionInputs->where('id', $config[$item->id])->first()->configurableOptionInputPrice->{$billing_cycle} }}
+                                            <x-money :amount="$item->configurableOptionInputs->where('id', $config[$item->id])->first()->configurableOptionInputPrice->{$billing_cycle}" />
                                         @else
-                                            {{ $item->configurableOptionInputs->first()->configurableOptionInputPrice->{$billing_cycle} }}
+                                            <x-money :amount="$item->configurableOptionInputs->first()->configurableOptionInputPrice->{$billing_cycle}" />
                                         @endif
                                     @endif
                                 </div>
