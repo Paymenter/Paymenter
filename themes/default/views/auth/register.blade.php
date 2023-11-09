@@ -1,10 +1,18 @@
 <x-app-layout>
 
     <div class="content min-h-[50vh] flex items-center justify-center flex-col">
+
+    @if (config('settings::registrationAbillity_disable') == 1)
+            <div class="max-w-lg w-full text-center  pb-7 pt-7 mb-5 bg-red-400 rounded-lg">
+                <h1 class="text-red-800" >REGISTRATION IS CURRENTLY DISABLED</h1>
+            </div>
+        @else
+
         <div class="flex items-center text-secondary-900 font-semibold text-lg py-4 gap-x-2">
             <x-application-logo class="w-10" />
             {{ config('app.name', 'Paymenter') }}
         </div>
+
         <div class="content-box max-w-lg w-full">
             <form method="POST" action="{{ route('register') }}" id="register">
                 @csrf
@@ -37,6 +45,7 @@
                 </div>
             </form>
         </div>
+        @endif
     </div>
 
 </x-app-layout>
