@@ -29,6 +29,12 @@ class Config extends Component
     public function mount($product)
     {
         $this->product = $product;
+        $this->calculate();
+    }
+
+    public function calculate()
+    {
+        $product = $this->product;
 
         $prices = $product->prices;
         $customConfig = $product->configurableGroups();
@@ -83,8 +89,6 @@ class Config extends Component
                 }
             }
         }
-
-        
     }
 
 
@@ -99,9 +103,11 @@ class Config extends Component
             // Check if item exists in userConfig
             $key = array_search($item, array_column($this->userConfig, 'name'));
             $this->userConfig[$key]->value = $value;
+            $this->calculate();
             return;
         }
         $this->config[$item] = $value;
+        $this->calculate();
     }
 
     public function checkout()
@@ -116,7 +122,7 @@ class Config extends Component
         $config = [];
         foreach ($userConfig as $uconfig) {
             $key = array_search($uconfig->name, array_column($this->userConfig, 'name'));
-            
+
             $this->validateConfigItem($uconfig, $this->userConfig[$key]->value);
             $config[$uconfig->name] = $this->userConfig[$key]->value;
         }
@@ -168,7 +174,7 @@ class Config extends Component
         $product['product_id'] = $this->product->id;
         $product['quantity'] = 1;
 
-        
+
         // Add to cart
         $cart = session()->get('cart', []);
         $cart[] = $product;

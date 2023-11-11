@@ -75,7 +75,7 @@
                 <div class="content-box">
                     @if (empty($coupon))
                         <div class="flex flex-row items-start gap-x-2 place-content-stretch">
-                            <div class="flex flex-col">
+                            <div class="flex flex-col w-full">
                                 <x-input type="text" placeholder="{{ __('Coupon') }}" name="couponCode"
                                     wire:model="couponCode" icon="ri-coupon-2-line" class="w-full" />
                             </div>
@@ -201,7 +201,12 @@
                         @endif
                         <div class="flex justify-end mt-4">
                             <button class="button button-primary" type="submit">
-                                {{ __('Checkout') }}
+                                <span wire:loading wire:target="pay">
+                                    <i class="ri-loader-4-line animate-spin"></i>
+                                </span>
+                                <span wire:loading.remove wire:target="pay">
+                                    {{ __('Checkout') }}
+                                </span>
                             </button>
                         </div>
                     </form>

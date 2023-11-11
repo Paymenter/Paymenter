@@ -269,17 +269,18 @@ class Index extends Component
                     $i < $product->quantity;
                     ++$i
                 ) {
-                    $this->createOrderProduct($order, $product, $invoice, false);
+                    $orderProductCreated = $this->createOrderProduct($order, $product, $invoice, false);
                 }
             else if ($product->allow_quantity == 2)
-                $this->createOrderProduct($order, $product, $invoice);
+                $orderProductCreated = $this->createOrderProduct($order, $product, $invoice);
             else
-                $this->createOrderProduct($order, $product, $invoice);
+                $orderProductCreated = $this->createOrderProduct($order, $product, $invoice);
             if ($product->setup_fee > 0) {
                 $invoiceItem = new InvoiceItem();
                 $invoiceItem->invoice_id = $invoice->id;
                 $invoiceItem->description = $product->name . ' Setup Fee';
-                $invoiceItem->total = ($product->setup_fee - $product->discount_fee) * $product->quantity;
+                $invoiceItem->product_id = $orderProductCreated->id;
+                $invoiceItem->total = $product->setup_fee * $product->quantity;
                 $invoiceItem->save();
             }
         }
@@ -404,6 +405,8 @@ class Index extends Component
         $description = $orderProduct->billing_cycle ? '(' . now()->format('Y-m-d') . ' - ' . date('Y-m-d', strtotime($orderProduct->expiry_date)) . ')' : '';
         $invoiceProduct->description = $product->name . ' ' . $description;
         $invoiceProduct->save();
+
+        return $orderProduct;
     }
 
 

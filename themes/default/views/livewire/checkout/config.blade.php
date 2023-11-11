@@ -22,7 +22,7 @@
                                             <button type="button"
                                                 class="button button-secondary flex flex-col items-center p-4 px-5 ring-offset-primary-400 ring-primary-400 @if ($billing_cycle == $priceType) ring-2 @endif"
                                                 wire:click="setBillingCycle('{{ $priceType }}')">
-                                                <h3 class="text-lg">{{ ucfirst($priceType) }}</h3>
+                                                <h3 class="text-lg">{{ ucfirst($priceType == 'semi_annually' ? 'semi annually' : $priceType) }}</h3>
                                                 <x-money :amount="$prices->{$priceType}" /></h3>
                                                 @if($prices->{$priceType.'_setup'})
                                                     <div class="text-sm text-secondary-600">{{ __('Setup fee') }}: <x-money :amount="$prices->{$priceType.'_setup'}" /></div>
@@ -177,7 +177,7 @@
                 <h1 class="text-xl font-bold">{{ __('Order Summary') }}</h1>
                 <div class="mt-2">
                     <div class="flex flex-row justify-between">
-                        <div class="text-sm text-secondary-600">{{ __('Product') }}</div>
+                        <div class="text-sm text-secondary-600">{{ $product->name }}</div>
                         <div class="text-sm text-secondary-600">
                             <x-money :amount="$prices->{$billing_cycle}" />
                         </div>
