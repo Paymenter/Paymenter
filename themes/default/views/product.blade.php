@@ -35,7 +35,9 @@
             <div class="@if ($categories->count() > 0) lg:col-span-9 @endif col-span-12">
                 <div class="content-box">
                     <h1 class="text-3xl font-semibold text-secondary-900">{{ $category->name }}</h1>
-                    <p>{{ $category->description }}</p>
+                    <div class="prose dark:prose-invert">
+                        @markdownify($category->description)
+                    </div>
                 </div>
                 <div class="grid grid-cols-3 gap-4 mt-4">
                     @foreach ($category->products()->with('prices')->orderBy('order')->get() as $product)

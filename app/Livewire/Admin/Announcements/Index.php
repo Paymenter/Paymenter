@@ -67,7 +67,7 @@ class Index extends DataTableComponent
 
     public function configure(): void
     {
-        $this->setPrimaryKey('id')->setTableRowUrl(fn ($row) => route('admin.tickets.show', $row));
+        $this->setPrimaryKey('id')->setTableRowUrl(fn ($row) => route('admin.announcements.edit', $row));
     }
 
     public function columns(): array

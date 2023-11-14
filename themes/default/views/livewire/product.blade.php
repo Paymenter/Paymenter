@@ -13,8 +13,9 @@
                 </p>
             </div>
         </div>
-        <p>@markdownify($product->description)
-        </p>
+        <div class="prose dark:prose-invert">
+            @markdownify($product->description)
+        </div>
         <div class="pt-3 mt-auto">
             @if ($product->stock_enabled && $product->stock <= 0)
                 <a class="button bg-secondary-200 text-white w-full hover:cursor-not-allowed">
