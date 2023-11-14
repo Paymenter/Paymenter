@@ -54,7 +54,7 @@ class Config extends Component
 
         $this->billing_cycle = $billing_cycle;
 
-        $this->userConfig = ExtensionHelper::getUserConfig($product);
+        $this->userConfig = empty($this->userConfig) ? ExtensionHelper::getUserConfig($product) : $this->userConfig;
         $this->customConfig = $customConfig;
         $this->prices = $prices;
 

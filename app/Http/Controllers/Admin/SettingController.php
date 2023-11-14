@@ -7,6 +7,7 @@ use App\Models\Setting;
 use Qirolab\Theme\Theme;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Crypt;
 
 class SettingController extends Controller
@@ -129,6 +130,7 @@ class SettingController extends Controller
         if (!$request->get('must_verify_email')) {
             Setting::updateOrCreate(['key' => 'must_verify_email'], ['value' => null]);
         }
+        Artisan::call('queue:restart');
 
         return redirect('/admin/settings#mail')->with('success', 'Settings updated successfully');
     }

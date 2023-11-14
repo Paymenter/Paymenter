@@ -117,8 +117,6 @@ class AppServiceProvider extends ServiceProvider
                         'auth_mode' => null,
                     ]]);
                     config(['mail.from' => ['address' => config('settings::mail_from_address'), 'name' => config('settings::mail_from_name')]]);
-
-                    Artisan::call('queue:restart');
                 }
             }
             if (config('settings::timezone') !== config('app.timezone')) {
