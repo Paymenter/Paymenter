@@ -46,7 +46,7 @@ class Config extends Component
         $billing_cycles = ['monthly', 'quarterly', 'semi_annually', 'annually', 'biennially', 'triennially'];
 
         foreach ($billing_cycles as $cycle) {
-            if ($billing_cycle == $cycle && !$prices->$cycle) {
+            while ($billing_cycle == $cycle && !$prices->$cycle) {
                 $billing_cycle = next($billing_cycles) ?: 'monthly';
                 break;
             }
@@ -95,6 +95,7 @@ class Config extends Component
     public function setBillingCycle($billing_cycle)
     {
         $this->billing_cycle = $billing_cycle;
+        $this->calculate();
     }
 
     public function update($item, $value, $userdConfig = false)
