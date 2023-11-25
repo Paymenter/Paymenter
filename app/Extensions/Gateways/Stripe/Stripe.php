@@ -30,21 +30,14 @@ class Stripe extends Gateway
     {
         $subscription = ExtensionHelper::getConfig('Stripe', 'stripe_subscriptions_or_payment') == 'subscriptions' ? true : false;
         $client = $this->stripeClient();
-        // Create array with all the products
-        $items = [];
+        // Define if all items are subscriptions
+        $allSubscriptions = true;
         foreach ($products as $product) {
-            $items[] = [
-                'price_data' => [
-                    'currency' => ExtensionHelper::getCurrency(),
-                    'product_data' => [
-                        'name' => $product->name,
-                    ],
-                    'unit_amount' => round($product->price / $product->quantity * 100, 0),
-                ],
-                'quantity' => $product->quantity,
-            ];
+            if (!$product->billing_cycle && !Str::contains($product->name, 'Setup Fee')) {
+                $allSubscriptions = false;
+            }
         }
-        if ($subscription) {
+        if ($subscription && $allSubscriptions) {
             $order = $client->checkout->sessions->create([
                 // 'line_items' => $items,'
                 'currency' => ExtensionHelper::getCurrency(),
@@ -59,6 +52,20 @@ class Stripe extends Gateway
                 ],
             ]);
         } else {
+            // Create array with all the products
+            $items = [];
+            foreach ($products as $product) {
+                $items[] = [
+                    'price_data' => [
+                        'currency' => ExtensionHelper::getCurrency(),
+                        'product_data' => [
+                            'name' => $product->name,
+                        ],
+                        'unit_amount' => round($product->price / $product->quantity * 100, 0),
+                    ],
+                    'quantity' => $product->quantity,
+                ];
+            }
             $order = $client->checkout->sessions->create([
                 'line_items' => $items,
                 'currency' => ExtensionHelper::getCurrency(),
