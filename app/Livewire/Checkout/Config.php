@@ -73,6 +73,7 @@ class Config extends Component
 
         // Calculate total
         $this->total = $prices->{$this->billing_cycle} ?? $prices->monthly;
+        $this->total += $prices->{$this->billing_cycle . '_setup'} ?? 0;
         foreach ($customConfig as $group) {
             foreach ($group->configurableOptions()->orderBy('order')->get() as $option) {
                 $configItemInput = $option->configurableOptionInputs()->get();
