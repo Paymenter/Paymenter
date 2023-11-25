@@ -32,7 +32,7 @@
                     </path>
                 </svg>
             </button>
-            <div class="absolute hidden w-max origin-top-right bg-white rounded-md shadow-lg dark:bg-darkmode ring-1 ring-black ring-opacity-5 z-[1]"
+            <div class="absolute hidden w-max origin-top-right bg-white rounded-md shadow-lg dark:bg-darkmode ring-1 ring-black ring-opacity-5 z-20"
                 role="menu" aria-orientation="vertical" aria-labelledby="menu-button" tabindex="-1"
                 id="moreOptions">
                 <div class="py-1 grid grid-cols-1" role="none">

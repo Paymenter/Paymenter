@@ -85,7 +85,7 @@
                     <button type="button" aria-expanded="true" aria-haspopup="true" data-dropdown-placement="top"
                     data-dropdown-toggle="account" class="ml-auto button button-secondary-outline relatve">
                         <i class="ri-more-2-line"></i>
-                        <div class="absolute left-0 hidden w-60 mt-2 origin-top-right bg-secondary-200 border border-secondary-300 rounded-md text-secondary-700 font-normal text-start"
+                        <div class="absolute left-0 hidden w-60 mt-2 origin-top-right bg-secondary-200 border border-secondary-300 rounded-md text-secondary-700 font-normal text-start z-10"
                         role="menu" aria-orientation="vertical" aria-labelledby="product" tabindex="-1" id="account">
                             <div class="px-2 py-2">
                                 {{-- <a href="#" class="px-2 py-2 hover:bg-secondary-300 flex items-center gap-x-2 rounded"><i class="ri-instance-line"></i> {{ __('Services') }}</a> --}}
