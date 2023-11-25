@@ -4,12 +4,12 @@ module.exports = {
     darkMode: 'class',
     content: [
         "./vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php",
+        './vendor/rappasoft/laravel-livewire-tables/resources/views/**/*.blade.php',
+        "./node_modules/flowbite/**/*.js",
         "./storage/framework/views/*.php",
         './app/**/*.php',
         "./resources/views/**/*.blade.php",
-        "./themes/**/**/**/*.{blade.php,js,vue,ts,jsx,tsx}",
-        "./node_modules/flowbite/**/*.js",
-        './vendor/rappasoft/laravel-livewire-tables/resources/views/**/*.blade.php',
+        "./themes/default/**/*.{blade.php,js,vue,ts,jsx,tsx}",
     ],
 
     theme: {

@@ -5,7 +5,7 @@ import path from "path";
 export default defineConfig({
     plugins: [
         laravel({
-            input: ['resources/css/app.css', 'resources/js/app.js'],
+            input: ['themes/default/css/app.css', 'themes/default/js/app.js'],
             refresh: true,
             reload: true,
         }),

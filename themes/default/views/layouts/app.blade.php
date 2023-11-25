@@ -86,7 +86,12 @@
     <!-- Fonts -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;600;700&display=swap">
 
-    @vite(['resources/js/app.js', 'resources/css/app.css'])
+    @php
+        $activeTheme = config('settings::theme-active');
+    @endphp
+
+    @vite(['themes/' . $activeTheme . '/js/app.js', 'themes/' . $activeTheme . '/css/app.css'])
+
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/remixicon@3.2.0/fonts/remixicon.css" rel="stylesheet">
     @if (config('settings::app_logo'))
@@ -107,8 +112,8 @@
 
 <body class="font-sans bg-secondary-100 dark:bg-secondary-50 text-secondary-700">
 
-    @if(config('settings::theme:snow') == 1)
-    <canvas class="snow" id="snow" width="1920" height="1080"></canvas>
+    @if (config('settings::theme:snow') == 1)
+        <canvas class="snow" id="snow" width="1920" height="1080"></canvas>
     @endif
     <div id="app" class="min-h-screen">
         <x-paymenter-update />
@@ -116,10 +121,11 @@
             @include('layouts.navigation')
         @endif
         <div class="@if (config('settings::sidebar') == 1) flex md:flex-nowrap flex-wrap @endif">
-            @if($clients)
+            @if ($clients)
                 @include('layouts.subnavigation')
             @endif
-            <div class="w-full flex flex-col @if($clients) min-h-[calc(100vh-105px)] @else min-h-[calc(100vh-64px)] @endif">
+            <div
+                class="w-full flex flex-col @if ($clients) min-h-[calc(100vh-105px)] @else min-h-[calc(100vh-64px)] @endif">
 
                 <main class="grow">
                     {{ $slot }}
