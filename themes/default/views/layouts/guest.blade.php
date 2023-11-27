@@ -16,7 +16,7 @@
         $activeTheme = config('settings::theme-active');
     @endphp
 
-    @vite(['themes/' . $activeTheme . '/js/app.js'])
+    @vite(['themes/' . $activeTheme . '/js/app.js'], $activeTheme)
 
     <link href="https://cdn.jsdelivr.net/npm/remixicon@2.5.0/fonts/remixicon.css" rel="stylesheet">
     <link rel="apple-touch-icon" sizes="180x180" href="/img/apple-touch-icon.png">
