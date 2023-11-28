@@ -162,7 +162,7 @@
                             <div
                                 class="my-auto text-gray-500 break-all dark:text-darkmodetext ml-2 w-fit rounded-2xl bg-gray-200 dark:bg-darkmode p-2 px-4">
                                 <div
-                                    class="w-full hyphens-auto supports-[overflow-wrap:anywhere]:[overflow-wrap:anywhere] supports-[not(overflow-wrap:anywhere)]:[word-break:normal] text-white dark:text-white-400 rounded-2xl bg-primary-400 p-2 px-4 mr-2">
+                                    class="w-full hyphens-auto supports-[overflow-wrap:anywhere]:[overflow-wrap:anywhere] supports-[not(overflow-wrap:anywhere)]:[word-break:normal] text-white dark:text-white-400 rounded-2xl p-2 px-4 mr-2">
                                     @markdownify($message->message)
 
                                     @if($message->files()->count() > 0)
