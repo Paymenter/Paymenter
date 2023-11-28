@@ -7,6 +7,7 @@ use App\Models\Product;
 use App\Helpers\ExtensionHelper;
 
 use App\Extensions\Servers\Virtualizor\Virtualizor_Admin_API;
+use App\Extensions\Servers\Virtualizor\Virtualizor_EndUser_API;
 
 class Virtualizor extends Server
 {
@@ -47,6 +48,12 @@ class Virtualizor extends Server
                 'friendlyName' => 'Port',
                 'required' => true,
             ],
+            [
+                'name' => 'client_port',
+                'type' => 'text',
+                'friendlyName' => 'Client Port (normally 4083)',
+                'required' => true,
+            ]
         ];
     }
 
@@ -264,5 +271,21 @@ class Virtualizor extends Server
         $admin->delete_vs($params['config']['external_id']);
 
         return true;
+    }
+
+    public function getLink($user, $params)
+    {
+        $key = ExtensionHelper::getConfig('virtualizor', 'key');
+        $pass = ExtensionHelper::getConfig('virtualizor', 'pass');
+        $ip = ExtensionHelper::getConfig('virtualizor', 'ip');
+        $port = ExtensionHelper::getConfig('virtualizor', 'client_port');
+        $enduser = new Virtualizor_EndUser_API($ip, $key, $pass, $port, 1);
+        $url = $enduser->sso($params['config']['external_id']);
+        if (!$url) {
+            ExtensionHelper::error('Virtualizor', 'Failed to get SSO link');
+            return;
+        }
+
+        return $url;
     }
 }
