@@ -16,7 +16,7 @@
     <div class="bg-white dark:bg-secondary-100 justify-between flex flex-row">
         <h1 class="text-2xl font-bold text-gray-500 dark:text-darkmodetext">{{ __('View Ticket #') }}{{ $ticket->id }}
         </h1>
-        <button class="button button-primary text-sm" data-modal-target="{{ $ticket->id }}"
+        <button class="button button-primary text-sm flex flex-row gap-2" data-modal-target="{{ $ticket->id }}"
             data-modal-toggle="{{ $ticket->id }}">
             <i class="ri-edit-line"></i> <span class="hidden md:flex">{{ __('View/Edit Ticket details') }}</span>
         </button>
@@ -161,15 +161,14 @@
                                 ({{$message->messageDate()}})</span>
                             <div
                                 class="my-auto text-gray-500 break-all dark:text-darkmodetext ml-2 w-fit rounded-2xl bg-gray-200 dark:bg-darkmode p-2 px-4">
-                                <span class="text-end" style="color: white !important;">
-                                    {!! Str::Markdown(str_replace("\n", " \n", $message->message), ['html_input' =>
-                                    'escape']) !!}
+                                <div
+                                    class="w-full hyphens-auto supports-[overflow-wrap:anywhere]:[overflow-wrap:anywhere] supports-[not(overflow-wrap:anywhere)]:[word-break:normal] text-white dark:text-white-400 rounded-2xl bg-primary-400 p-2 px-4 mr-2">
+                                    @markdownify($message->message)
 
                                     @if($message->files()->count() > 0)
                                     <br>
                                     <hr class="border-slate-100">
-                                    <span class="text-slate-100 ">{{ __('Attachments') }} ({{ $message->files()->count()
-                                        }})</span>
+                                    <span class="text-slate-100 ">{{ __('Attachments') }} ({{ $message->files()->count() }})</span>
                                     <div class="flex flex-row flex-wrap gap-4">
                                         @foreach($message->files as $attachment)
                                         <div class="col-span-1">
@@ -196,7 +195,7 @@
                                         @endforeach
                                     </div>
                                     @endif
-                                </span>
+                                </div>
                             </div>
                         </div>
                     </div>
