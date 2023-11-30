@@ -493,6 +493,7 @@ class ExtensionHelper
             $option->original_name = $option->name;
             $option->name = explode('|', $option->name)[0] ?? $option->name;
             $value = ConfigurableOptionInput::where('id', $config2->value)->first();
+            $value->name = explode('|', $value->name)[0] ?? $value->name;
             $configurableOptions[$option->name] = $value ? $value->name : $config2->value;
         }
         return $configurableOptions;
