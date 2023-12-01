@@ -15,7 +15,7 @@
                     {{ old('description') }}
                 </x-input>
 
-                <x-input type="select" id="user" name="user" :label="__('User')" icon="ri-user-line"
+                <x-input type="searchselect" id="user" name="user" :label="__('User')" icon="ri-user-line"
                     class="mt-4">
                     @foreach ($users as $user)
                         <option value="{{ $user->id }}" @if ($user->id == old('user')) selected @endif>

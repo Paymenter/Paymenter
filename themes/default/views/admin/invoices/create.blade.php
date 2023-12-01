@@ -3,19 +3,11 @@
     <form action="{{ route('admin.invoices.store') }}" method="POST">
         @csrf
         <div class="grid grid-cols-2 gap-4 mt-4">
-            <div class="w-full">
-                <label class="block dark:text-darkmodetext" for="code">
-                    {{ __('Code') }}
-                </label>
-                <select name="user_id" id="user_id"
-                    class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm dark:bg-darkmode rounded-md"
-                    required>
-                    <option value="" disabled selected>{{ __('Select User') }}</option>
+                <x-input type="searchselect" name="user" required placeholder="Select User" label="User">
                     @foreach ($users as $user)
                         <option value="{{ $user->id }}">{{ $user->name }} ({{ $user->email }})</option>
                     @endforeach
-                </select>
-            </div>
+                </x-input>
             <div class="w-full col-span-2">
                 <label class="block dark:text-darkmodetext" for="code">
                     {{ __('Items') }}
