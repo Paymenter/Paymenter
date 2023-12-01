@@ -1,9 +1,9 @@
 {
     "private": true,
     "scripts": {
-        "dev": "vite --config themes/${THEME-default}/vite.config.js",
-        "build": "vite build --config themes/${THEME-default}/vite.config.js",
-        "lang": "laravel-language-extractor --theme ${THEME-default}"
+        "dev": "node tools/dev.js",
+        "build": "node tools/build.js",
+        "lang": "laravel-language-extractor"
     },
     "devDependencies": {
         "@popperjs/core": "^2.10.2",
