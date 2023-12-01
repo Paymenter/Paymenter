@@ -80,9 +80,9 @@ class MakeTheme extends Command implements PromptsForMissingInput
         $this->newLine();
 
         $this->comment("You can now start developing your theme by running:");
-        $this->comment("    `THEME=\"$theme_name\" npm run dev`");
+        $this->comment("    `npm run dev $theme_name`");
         $this->comment("After you have finished developing, you can build your theme by running:");
-        $this->comment("    `THEME=\"$theme_name\" npm run build`");
+        $this->comment("    `npm run build $theme_name`");
 
         return Command::SUCCESS;
     }
