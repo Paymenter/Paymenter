@@ -157,7 +157,7 @@ class AppServiceProvider extends ServiceProvider
                 \$environment->addExtension(new League\CommonMark\Extension\GithubFlavoredMarkdownExtension());
                 \$converter = new League\CommonMark\MarkdownConverter(\$environment);
                 \$value2 = \Stevebauman\Purify\Facades\Purify::clean($value);
-                echo \$converter->convertToHtml(\$value2);    
+                echo nl2br(\$converter->convertToHtml(\$value2));
             ?>";
         });
     }
