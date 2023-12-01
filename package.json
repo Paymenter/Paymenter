@@ -1,8 +1,8 @@
 {
     "private": true,
     "scripts": {
-        "dev": "node tools/dev.js",
-        "build": "node tools/build.js",
+        "dev": "node tools/vite.js dev",
+        "build": "node tools/vite.js",
         "lang": "laravel-language-extractor"
     },
     "devDependencies": {
