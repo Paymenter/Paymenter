@@ -137,7 +137,7 @@
                                             </div>
                                         </div>
                                     @elseif($item->type == 'select')
-                                        <x-input type="{{ $item->type }}" placeholder="{{ ucfirst($item->name) }}"
+                                        <x-input type="{{ $item->type }}" placeholder="{{ ucfirst($name) }}"
                                             name="{{ $item->id }}" id="{{ $item->id }}"
                                             label="{{ ucfirst($name) }}" required
                                             wire:change="update({{ $item->id }}, $event.target.value)">
