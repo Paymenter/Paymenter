@@ -22,6 +22,9 @@ class Pterodactyl extends Server
     {
         $config = ExtensionHelper::getConfig('Pterodactyl', $key);
         if ($config) {
+            if ($key == 'host') {
+                return rtrim($config, '/');
+            }
             return $config;
         }
 
@@ -276,7 +279,7 @@ class Pterodactyl extends Server
         $environment = $port_array->environment ?? $environment;
 
         if ($node) {
-            $allocations = $this->getRequest($this->config('host') . '/api/application/nodes/' . $params['node'] . '/allocations');
+            $allocations = $this->getRequest($this->config('host') . '/api/application/nodes/' . $node . '/allocations');
             $allocations = $allocations->json();
             while (!isset($allocation)) {
                 foreach ($allocations['data'] as $key => $val) {

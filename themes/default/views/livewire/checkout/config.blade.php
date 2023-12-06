@@ -210,9 +210,12 @@
                         @foreach ($configItems as $item)
                             <div class="flex flex-row justify-between ml-2">
                                 <div class="text-sm text-secondary-600">
-                                    {{ $item->name }}@if ($config[$item->id] && $item->type !== 'text'):
-                                        {{ $item->configurableOptionInputs->where('id', $config[$item->id])->first()->name }}
-                                    @elseif($config[$item->id]):
+                                    @php $name = explode('|', $item->name)[1] ?? $item->name; @endphp
+                                    {{ $name }}:
+                                    @if ($config[$item->id] && $item->type !== 'text')
+                                        @php $configName = explode('|', $item->configurableOptionInputs->where('id', $config[$item->id])->first()->name)[1] ?? $item->configurableOptionInputs->where('id', $config[$item->id])->first()->name; @endphp
+                                        {{ $configName }}
+                                    @elseif($config[$item->id])
                                         {{ $config[$item->id] }}
                                     @endif
                                 </div>
