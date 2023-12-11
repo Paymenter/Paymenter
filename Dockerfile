@@ -11,11 +11,6 @@ COPY        --chown=1001:0 package.json .
 COPY        --chown=1001:0 vite.js .
 
 
-# Install npm
-RUN         /usr/bin/npm install \
-    && /usr/bin/npm run build \
-    && rm -rf resources/scripts package.json node_modules
-
 USER        1001
 
 COPY        --chown=1001:0 app ./app
@@ -68,6 +63,11 @@ ENV         USER=caddy
 RUN         composer install --no-dev --optimize-autoloader \
     && rm -rf bootstrap/cache/*.php \
     && rm -rf storage/logs/*.log
+
+RUN         /usr/bin/npm install \
+    && /usr/bin/npm run build \
+    && rm -rf resources/scripts package.json node_modules
+
 
 COPY        --from=docker.io/library/caddy:latest /usr/bin/caddy /usr/local/bin/caddy
 COPY        .github/docker/Caddyfile /etc/caddy/Caddyfile
