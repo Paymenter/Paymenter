@@ -28,25 +28,28 @@
 
                 <x-input class="mt-3" label="{{ __('Email') }}" type="email" placeholder="{{ __('Email..') }}" required
                     name="email" id="email" icon="ri-at-line" />
-                @if(config('settings::requiredClientDetails_address') && config('settings::requiredClientDetails_city'))
-                    <div class="flex flex-row gap-4">
-                        <x-input class="mt-3 w-full" label="{{ __('Address') }}" type="text" placeholder="{{ __('Address..') }}"
-                            name="address" id="address" icon="ri-home-4-line" />
-                        <x-input class="mt-3 w-full" label="{{ __('City') }}" type="text" placeholder="{{ __('City..') }}" required
-                            name="city" id="city" icon="ri-building-2-line" />
-                    </div>
-                @else
+                <div class="flex flex-row gap-4">
                     @if(config('settings::requiredClientDetails_address') == 1)
-                        <x-input class="mt-3" label="{{ __('Address') }}" type="text" placeholder="{{ __('Address..') }}"
+                        <x-input class="mt-3 w-full" label="{{ __('Address') }}" type="text" placeholder="{{ __('Address..') }}"
                             name="address" id="address" icon="ri-home-4-line" />
                     @endif
                     @if(config('settings::requiredClientDetails_city') == 1)
-                        <x-input class="mt-3" label="{{ __('City') }}" type="text" placeholder="{{ __('City..') }}" required
+                        <x-input class="mt-3 w-full" label="{{ __('City') }}" type="text" placeholder="{{ __('City..') }}" required
                             name="city" id="city" icon="ri-building-2-line" />
                     @endif
-                @endif
+                </div>
+                <div class="flex flex-row gap-4">
+                    @if(config('settings::requiredClientDetails_phone') == 1)
+                        <x-input class="mt-3 w-full" label="{{ __('Phone') }}" type="text" placeholder="{{ __('Phone..') }}" required
+                            name="phone" id="phone" icon="ri-phone-line" />
+                    @endif
+                    @if(config('settings::requiredClientDetails_zip') == 1)
+                        <x-input class="mt-3 w-full" label="{{ __('Zip') }}" type="text" placeholder="{{ __('Zip..') }}" required
+                            name="zip" id="zip" icon="ri-building-2-line" />
+                    @endif
+                </div>
                 @if(config('settings::requiredClientDetails_country') == 1)
-                    <x-input type="select" class="mt-3" placeholder="{{ __('Country') }}" name="country"
+                    <x-input type="select" class="mt-3 w-full" placeholder="{{ __('Country') }}" name="country"
                         id="country" label="{{ __('Country') }}" required="required">
                         @foreach (App\Classes\Constants::countries() as $country)
                             <option value="{{ $country }}">
@@ -54,10 +57,6 @@
                             </option>
                         @endforeach
                     </x-input>
-                @endif
-                @if(config('settings::requiredClientDetails_phone') == 1)
-                    <x-input class="mt-3" label="{{ __('Phone') }}" type="text" placeholder="{{ __('Phone..') }}" required
-                        name="phone" id="phone" icon="ri-phone-line" />
                 @endif
                 <div class="flex flex-row gap-4">
                     <x-input type="password" required class="mt-3 w-full" label="{{ __('Password') }}"

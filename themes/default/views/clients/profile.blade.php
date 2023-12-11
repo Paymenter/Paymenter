@@ -57,6 +57,8 @@
                                     value="{{ Auth::user()->last_name }}" required/>
                                 <x-input type="text" class="mt-4" placeholder="{{ __('Address') }}" name="address"
                                     id="address" label="{{ __('Address') }}" value="{{ Auth::user()->address }}" :required="config('settings::requiredClientDetails_address') == 1"/>
+                                <x-input type="text" class="mt-4" placeholder="{{ __('Zip') }}" name="zip"
+                                    id="zip" label="{{ __('Zip') }}" value="{{ Auth::user()->zip }}" :required="config('settings::requiredClientDetails_zip') == 1" />
                                 <x-input type="text" class="mt-4" placeholder="{{ __('City') }}" name="city"
                                     id="city" label="{{ __('City') }}" value="{{ Auth::user()->city }}" :required="config('settings::requiredClientDetails_city') == 1"/>
                                 <x-input type="select" class="mt-4" placeholder="{{ __('Country') }}" name="country"

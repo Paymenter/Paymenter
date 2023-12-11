@@ -92,3 +92,5 @@ function snow() {
     window.onload = init;
 }
 window.snow = snow;
+
+import '../../../vendor/rappasoft/laravel-livewire-tables/resources/imports/laravel-livewire-tables-all.js';

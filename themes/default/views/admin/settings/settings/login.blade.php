@@ -90,6 +90,12 @@
                 <x-input type="hidden" value="0" name="requiredClientDetails_city" />
                 <x-input type="checkbox" name="requiredClientDetails_city" value="1" :checked="config('settings::requiredClientDetails_city') == 1" :label="__('City')" />
             </div>
+
+            <div class="relative m-4 group">
+                <x-input type="hidden" value="0" name="requiredClientDetails_zip" />
+                <x-input type="checkbox" name="requiredClientDetails_zip" value="1" :checked="config('settings::requiredClientDetails_zip') == 1" :label="__('ZIP')" />
+            </div>
+
             <div class="relative m-4 group">
                 <x-input type="hidden" value="0" name="requiredClientDetails_country" />
                 <x-input type="checkbox" name="requiredClientDetails_country" value="1" :checked="config('settings::requiredClientDetails_country') == 1" :label="__('Country')" />
