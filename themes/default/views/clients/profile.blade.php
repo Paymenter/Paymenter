@@ -59,8 +59,17 @@
                                     id="address" label="{{ __('Address') }}" value="{{ Auth::user()->address }}" :required="config('settings::requiredClientDetails_address') == 1"/>
                                 <x-input type="text" class="mt-4" placeholder="{{ __('City') }}" name="city"
                                     id="city" label="{{ __('City') }}" value="{{ Auth::user()->city }}" :required="config('settings::requiredClientDetails_city') == 1"/>
-                                <x-input type="text" class="mt-4" placeholder="{{ __('Country') }}" name="country"
-                                    id="country" label="{{ __('Country') }}" value="{{ Auth::user()->country }}" :required="config('settings::requiredClientDetails_country') == 1"/>
+                                <x-input type="select" class="mt-4" placeholder="{{ __('Country') }}" name="country"
+                                    id="country" label="{{ __('Country') }}" :required="config('settings::requiredClientDetails_country') == 1">
+                                    @if(!config('settings::requiredClientDetails_country') == 1)
+                                        <option value="">{{ __('Select a country') }}</option>
+                                    @endif
+                                    @foreach (App\Classes\Constants::countries() as $country)
+                                        <option value="{{ $country }}" @if (Auth::user()->country == $country) selected @endif>
+                                            {{ $country }}
+                                        </option>
+                                    @endforeach
+                                </x-input>
                                 <x-input type="text" class="mt-4" placeholder="{{ __('Phone') }}" name="phone"
                                     id="phone" label="{{ __('Phone') }}" value="{{ Auth::user()->phone }}" :required="config('settings::requiredClientDetails_phone') == 1"/>
                                 <div class="flex justify-end mt-6">

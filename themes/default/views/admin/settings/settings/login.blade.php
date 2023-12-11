@@ -77,7 +77,7 @@
             
             <h1 class=" ml-6 text-xl col-span-2">The abillity to disable the registration of a new account.</h1>
             <div class="relative m-4 group">
-                <x-input type="hidden" value="0" name="requiredClientDetails_address" />
+                <x-input type="hidden" value="0" name="registrationAbillity_disable" />
                 <x-input type="checkbox" name="registrationAbillity_disable" value="1" :checked="config('settings::registrationAbillity_disable') == 1" :label="__('Disable')" />
             </div>
 

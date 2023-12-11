@@ -54,6 +54,9 @@ class BasisController extends Controller
 
     public function downloadFile(FileUpload $fileUpload)
     {
+        if(!Storage::exists('uploads/' . $fileUpload->uuid . '.' . $fileUpload->extension)) {
+            abort(404);
+        }
         return response()->download(storage_path('app/uploads/' . $fileUpload->uuid . '.' . $fileUpload->extension), $fileUpload->filename);
     }
 }

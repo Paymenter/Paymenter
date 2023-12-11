@@ -122,12 +122,13 @@ class HomeController extends Controller
      */
     public function update(Request $request)
     {
+        $countries = \App\Classes\Constants::countries();
         $request->validate([
             'first_name' => 'required|string',
             'last_name' => 'required|string',
             'address' => (config('settings::requiredClientDetails_address') == 1 ? 'required|': 'nullable|') . 'string',
             'city' => (config('settings::requiredClientDetails_city') == 1 ? 'required|': 'nullable|') . 'string',
-            'country' => (config('settings::requiredClientDetails_country') == 1 ? 'required|': 'nullable|') . 'string',
+            'country' => (config('settings::requiredClientDetails_country') == 1 ? 'required|': 'nullable|') . 'string|in:' . implode(',', array_values($countries)),
             'phone' => (config('settings::requiredClientDetails_phone') == 1 ? 'required|': 'nullable|') . 'numeric',
         ]);
 
