@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\Models\Affiliate;
 use App\Models\Setting;
+use App\Models\User;
 use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Support\Facades\Route;
 use Qirolab\Theme\Theme;
@@ -157,7 +158,7 @@ class AppServiceProvider extends ServiceProvider
                 \$environment->addExtension(new League\CommonMark\Extension\GithubFlavoredMarkdownExtension());
                 \$converter = new League\CommonMark\MarkdownConverter(\$environment);
                 \$value2 = \Stevebauman\Purify\Facades\Purify::clean($value);
-                echo nl2br(\$converter->convertToHtml(\$value2));
+                echo preg_replace('/(<br \/>)+$/', '', nl2br(\$converter->convertToHtml(\$value2)));
             ?>";
         });
     }

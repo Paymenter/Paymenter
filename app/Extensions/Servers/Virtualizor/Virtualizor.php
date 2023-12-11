@@ -15,7 +15,7 @@ class Virtualizor extends Server
     {
         return [
             'display_name' => 'Virtualizor',
-            'version' => '1.0.0',
+            'version' => '1.1.0',
             'author' => 'Paymenter',
             'website' => 'https://paymenter.org',
         ];

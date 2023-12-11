@@ -20,12 +20,15 @@ class Show extends Component
     public function reply()
     {
         $this->validate([
-            'message' => 'required|min:3',
+            'message' => 'required_without:attachments',
+            'attachments.*' => 'nullable|file',
+        ], [
+            'message.required_without' => 'Either message or attachment is required',
         ]);
 
         $message = $this->ticket->messages()->create([
             'user_id' => auth()->id(),
-            'message' => $this->message,
+            'message' => $this->message, 
         ]);
 
         foreach ($this->attachments as $attachment) {
@@ -34,7 +37,7 @@ class Show extends Component
         }
 
         $this->ticket->update([
-            'status' => 'waiting',
+            'status' => 'replied',
         ]);
 
         $this->message = '';

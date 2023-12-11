@@ -3,6 +3,7 @@
 namespace App\Livewire\Admin\Tickets;
 
 use App\Helpers\FileUploadHelper;
+use App\Models\Ticket;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Livewire\Attributes\On; 
@@ -10,8 +11,8 @@ use Livewire\Attributes\On;
 class Messages extends Component
 {
     use WithFileUploads;
-    public $ticket;
-    public $messages;
+    public Ticket $ticket;
+    public  $messages;
 
 
     public function mount()

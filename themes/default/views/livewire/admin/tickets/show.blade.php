@@ -12,6 +12,9 @@
 
                     <div id="attachments-list" class="flex flex-row gap-x-4 mb-3"></div>
 
+                    @error('message')
+                        <div class="text-red-500 text-xs mb-1">{{ $message }}</div>
+                    @enderror
                     <div class="flex flex-row">
                         <label for="attachments"
                             class="button-secondary rounded-full cursor-pointer flex w-10 h-10 mr-2 transition-all ease-in-out">
@@ -19,15 +22,16 @@
                         </label>
                         <textarea id="message" wire:model="message"
                             class="block my-auto w-full rounded-2xl shadow-sm focus:ring-indigo-500 focus:border-indigo-500 border-indigo-300 dark:border-0 sm:text-sm dark:bg-secondary-200"
-                            rows="1" name="message" placeholder="Aa" required></textarea>
+                            rows="1" name="message" placeholder="Aa"></textarea>
+                        
                         <button type="button" id="submit-button"
                             class="button-primary rounded-full w-10 ml-2 h-10 float-right transition-all ease-in-out">
                             <i class="ri-send-plane-fill"></i>
                         </button>
                     </div>
+                    <div class="bg-primary-400 h-[1px]" style="width: 0%;display:none" id="progress"></div>
                     <x-input type="file" id="attachments" :label="__('Attachments')" name="attachments[]" multiple
                         class="hidden" />
-                    <x-recaptcha form="reply" />
                     <br>
                 </div>
             </div>
@@ -39,7 +43,6 @@
         const content = document.getElementById('content');
         const contentHeight = content.scrollHeight;
         content.scroll(0, contentHeight);
-
     }
 
     window.addEventListener('load', slideDown);
@@ -109,12 +112,15 @@
             @this.call('reply');
             return;
         }
-        @this.uploadMultiple('attachments', files, function(){
+        @this.uploadMultiple('attachments', files, (paths) => {
             @this.call('reply');
             // Reset the files array
             files.splice(0, files.length);
         });
-        
+
+        setTimeout(() => {
+            slideDown();
+        }, 500);
     });
 
     const tx = document.getElementsByTagName("textarea");

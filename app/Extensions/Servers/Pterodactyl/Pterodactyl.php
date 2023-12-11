@@ -12,7 +12,7 @@ class Pterodactyl extends Server
     {
         return [
             'display_name' => 'Pterodactyl',
-            'version' => '1.1.6',
+            'version' => '1.1.7',
             'author' => 'Paymenter',
             'website' => 'https://paymenter.org',
         ];
