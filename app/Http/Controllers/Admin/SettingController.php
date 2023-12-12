@@ -96,7 +96,7 @@ class SettingController extends Controller
             'company_zip' => 'max:255',
             'company_phone' => 'max:255',
             'company_email' => 'max:255|email',
-            'company_tin' => 'max:255',
+            'company_vat' => 'max:255',
         ]);
         foreach ($request->except(['_token', 'app_logo', 'app_favicon']) as $key => $value) {
             Setting::updateOrCreate(['key' => $key], ['value' => $value]);

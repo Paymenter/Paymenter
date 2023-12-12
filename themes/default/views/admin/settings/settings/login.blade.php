@@ -77,7 +77,7 @@
             
             <h1 class=" ml-6 text-xl col-span-2">The abillity to disable the registration of a new account.</h1>
             <div class="relative m-4 group">
-                <x-input type="hidden" value="0" name="requiredClientDetails_address" />
+                <x-input type="hidden" value="0" name="registrationAbillity_disable" />
                 <x-input type="checkbox" name="registrationAbillity_disable" value="1" :checked="config('settings::registrationAbillity_disable') == 1" :label="__('Disable')" />
             </div>
 
@@ -90,6 +90,12 @@
                 <x-input type="hidden" value="0" name="requiredClientDetails_city" />
                 <x-input type="checkbox" name="requiredClientDetails_city" value="1" :checked="config('settings::requiredClientDetails_city') == 1" :label="__('City')" />
             </div>
+
+            <div class="relative m-4 group">
+                <x-input type="hidden" value="0" name="requiredClientDetails_zip" />
+                <x-input type="checkbox" name="requiredClientDetails_zip" value="1" :checked="config('settings::requiredClientDetails_zip') == 1" :label="__('ZIP')" />
+            </div>
+
             <div class="relative m-4 group">
                 <x-input type="hidden" value="0" name="requiredClientDetails_country" />
                 <x-input type="checkbox" name="requiredClientDetails_country" value="1" :checked="config('settings::requiredClientDetails_country') == 1" :label="__('Country')" />

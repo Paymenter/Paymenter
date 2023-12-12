@@ -114,7 +114,6 @@ class Config extends Component
 
     public function checkout()
     {
-        $server = $this->product->extension;
         $prices = $this->product->prices;
         $userConfig = ExtensionHelper::getUserConfig($this->product);
 
@@ -130,7 +129,7 @@ class Config extends Component
         }
 
         $product['config'] = $config;
-
+        $product['setup_fee'] = 0;
         if ($prices->type == 'recurring') {
             $product['price'] = $prices->{$this->billing_cycle} ?? $prices->monthly;
             $product['billing_cycle'] = $this->billing_cycle;

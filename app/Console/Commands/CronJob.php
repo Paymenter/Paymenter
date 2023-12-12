@@ -78,7 +78,7 @@ class CronJob extends Command
             }
             // FIXME: Why do we need to call it twice?
             $order->getOpenInvoices();
-            
+
             // Get all InvoiceItems for this product
             if ($order->getOpenInvoices()->count() > 0) {
                 continue;
@@ -117,6 +117,11 @@ class CronJob extends Command
             $invoiceItem->save();
 
             NotificationHelper::sendNewInvoiceNotification($invoice, $order->order->user);
+
+            if ($invoice->total() == 0) {
+                ExtensionHelper::paymentDone($invoice->id);
+                $this->info('Invoice ' . $invoice->id . ' status changed to ' . $invoice->status);
+            }
             $invoiceProcessed++;
             $this->info('Sended Invoice: ' . $invoice->id);
         }
