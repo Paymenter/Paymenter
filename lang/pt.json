@@ -565,5 +565,15 @@
     "Your cart is empty": "O seu carrinho está vazio",
     "Your Profile": "O seu perfil",
     "Z-A": "Z-A",
-    "Zip": "Zip"
+    "Zip": "Zip",
+    "general": "general",
+    "affiliate": "affiliate",
+    "company": "company",
+    "credits": "credits",
+    "cronjob": "cronjob",
+    "login": "login",
+    "mail": "mail",
+    "security": "security",
+    "theme": "theme",
+    "upgrade": "upgrade"
 }

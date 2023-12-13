@@ -9,7 +9,7 @@
                     <a href="#{{ str_replace('admin.settings.settings.', '', $tab) }}"
                         class="inline-flex justify-center w-full p-4 px-2 py-2 text-xs font-bold text-gray-900 uppercase border-b-2 dark:text-darkmodetext dark:hover:bg-darkbutton border-y-transparent hover:border-logo hover:text-logo"
                         id="{{ str_replace('admin.settings.settings.', '', $tab) }}">
-                        {{ str_replace('admin.settings.settings.', '', $tab) }}
+                        {{ __(str_replace('admin.settings.settings.', '', $tab)) }}
                     </a>
                 </div>
             @endforeach
