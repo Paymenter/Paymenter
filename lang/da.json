@@ -564,5 +564,15 @@
     "Your cart is empty": "Din indkøbskurv er tom",
     "Your Profile": "Din profil",
     "Z-A": "Å-A",
-    "Zip": "Postnummer"
+    "Zip": "Postnummer",
+    "general": "general",
+    "affiliate": "affiliate",
+    "company": "company",
+    "credits": "credits",
+    "cronjob": "cronjob",
+    "login": "login",
+    "mail": "mail",
+    "security": "security",
+    "theme": "theme",
+    "upgrade": "upgrade"
 }
