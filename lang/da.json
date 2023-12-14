@@ -565,14 +565,14 @@
     "Your Profile": "Din profil",
     "Z-A": "Å-A",
     "Zip": "Postnummer",
-    "general": "general",
+    "general": "generel",
     "affiliate": "affiliate",
-    "company": "company",
-    "credits": "credits",
+    "company": "firma",
+    "credits": "kreditter",
     "cronjob": "cronjob",
-    "login": "login",
+    "login": "Log på",
     "mail": "mail",
-    "security": "security",
-    "theme": "theme",
-    "upgrade": "upgrade"
+    "security": "sikkerhed",
+    "theme": "tema",
+    "upgrade": "opgradering"
 }
