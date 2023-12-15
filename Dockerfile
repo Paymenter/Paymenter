@@ -66,11 +66,15 @@ RUN         composer install --no-dev --optimize-autoloader \
 
 FROM builder
 
+USER       0
+
+
 # Nodejs
 RUN /usr/bin/npm install \
     && /usr/bin/npm run build \
     && rm -rf resources/scripts package.json node_modules
 
+USER       caddy
 
 COPY        --from=docker.io/library/caddy:latest /usr/bin/caddy /usr/local/bin/caddy
 COPY        .github/docker/Caddyfile /etc/caddy/Caddyfile
