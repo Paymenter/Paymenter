@@ -42,7 +42,12 @@ RUN         microdnf update -y \
     && wget -O /usr/local/bin/yacron https://github.com/gjcarneiro/yacron/releases/download/0.17.0/yacron-0.17.0-x86_64-unknown-linux-gnu \
     && chmod 755 /usr/local/bin/yacron \
     && microdnf remove -y tar wget \
-    && microdnf clean all
+    && microdnf clean all \
+    # Nodejs install
+    && curl -fsSL https://rpm.nodesource.com/setup_16.x | bash - \
+    && microdnf install -y nodejs \
+    && npm install -g npm@latest
+
 
 COPY        --chown=caddy:caddy --from=builder /var/www/paymenter /var/www/paymenter
 
@@ -64,7 +69,8 @@ RUN         composer install --no-dev --optimize-autoloader \
     && rm -rf bootstrap/cache/*.php \
     && rm -rf storage/logs/*.log
 
-RUN         /usr/bin/npm install \
+# Nodejs
+RUN /usr/bin/npm install \
     && /usr/bin/npm run build \
     && rm -rf resources/scripts package.json node_modules
 
