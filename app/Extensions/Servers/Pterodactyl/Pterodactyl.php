@@ -12,7 +12,7 @@ class Pterodactyl extends Server
     {
         return [
             'display_name' => 'Pterodactyl',
-            'version' => '1.1.7',
+            'version' => '1.1.8',
             'author' => 'Paymenter',
             'website' => 'https://paymenter.org',
         ];
@@ -275,6 +275,7 @@ class Pterodactyl extends Server
         $servername = $configurableOptions['servername'] ?? $params['servername'] ?? false;
         $servername = empty($servername) ? $orderProduct->product->name . ' #' . $orderProduct->id : $servername;
         $port_array = (object) $this->portArrays($port_array, $environment, $location, $node, $orderProduct);
+        $default = $port_array->default ?? null;
         $allocationed = $port_array->allocations ?? [];
         $environment = $port_array->environment ?? $environment;
 
@@ -318,7 +319,7 @@ class Pterodactyl extends Server
                     'backups' => (int) $backups,
                 ],
                 'allocation' => [
-                    'default' => (int) $allocation,
+                    'default' => isset($default) ? (int) $default : $allocation,
                     'additional' => $allocationed ?? [],
                 ],
                 'environment' => $environment,
