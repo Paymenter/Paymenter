@@ -148,4 +148,11 @@ Route::group(['prefix' => 'admin', 'middleware' => 'permission:ADMINISTRATOR'], 
         Route::get('/templates/{template}', [App\Http\Controllers\Admin\EmailController::class, 'template'])->middleware(['permission:EDIT_EMAIL'])->name('admin.email.template');
         Route::post('/templates/{template}/update', [App\Http\Controllers\Admin\EmailController::class, 'update'])->middleware(['permission:EDIT_EMAIL'])->name('admin.email.template.update');
     });
+
+    Route::group(['prefix' => 'taxes'], function() {
+        Route::get('/', [App\Http\Controllers\Admin\TaxController::class, 'index'])->middleware(['permission:VIEW_TAXES'])->name('admin.taxes');
+        Route::post('/', [App\Http\Controllers\Admin\TaxController::class, 'update'])->middleware(['permission:EDIT_TAXES'])->name('admin.taxes.update');
+
+        Route::post('/create', [App\Http\Controllers\Admin\TaxController::class, 'store'])->middleware(['permission:CREATE_TAXES'])->name('admin.taxes.create');
+    }); 
 });

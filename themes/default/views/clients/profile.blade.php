@@ -66,8 +66,8 @@
                                     @if(!config('settings::requiredClientDetails_country') == 1)
                                         <option value="">{{ __('Select a country') }}</option>
                                     @endif
-                                    @foreach (App\Classes\Constants::countries() as $country)
-                                        <option value="{{ $country }}" @if (Auth::user()->country == $country) selected @endif>
+                                    @foreach (App\Classes\Constants::countries() as $key => $country)
+                                        <option value="{{ $key }}" @if (Auth::user()->country == $key) selected @endif>
                                             {{ $country }}
                                         </option>
                                     @endforeach

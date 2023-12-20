@@ -42,7 +42,7 @@ class RegisteredUserController extends Controller
             'password' => 'required|string|confirmed|min:8',
             'address' => (config('settings::requiredClientDetails_address') == 1 ? 'required|': 'nullable|') . 'string',
             'city' => (config('settings::requiredClientDetails_city') == 1 ? 'required|': 'nullable|') . 'string',
-            'country' => (config('settings::requiredClientDetails_country') == 1 ? 'required|': 'nullable|') . 'string|in:' . implode(',', array_values($countries)),
+            'country' => (config('settings::requiredClientDetails_country') == 1 ? 'required|': 'nullable|') . 'string|in:' . implode(',', array_keys($countries)),
             'phone' => (config('settings::requiredClientDetails_phone') == 1 ? 'required|': 'nullable|') . 'numeric',
             'g-recaptcha-response' => 'recaptcha',
             'cf-turnstile-response' => 'recaptcha',

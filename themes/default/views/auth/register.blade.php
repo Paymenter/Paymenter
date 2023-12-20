@@ -51,8 +51,8 @@
                 @if(config('settings::requiredClientDetails_country') == 1)
                     <x-input type="select" class="mt-3 w-full" placeholder="{{ __('Country') }}" name="country"
                         id="country" label="{{ __('Country') }}" required="required">
-                        @foreach (App\Classes\Constants::countries() as $country)
-                            <option value="{{ $country }}">
+                        @foreach (App\Classes\Constants::countries() as $key => $country)
+                            <option value="{{ $key }}">
                                 {{ $country }}
                             </option>
                         @endforeach

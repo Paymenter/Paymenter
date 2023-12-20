@@ -12,6 +12,7 @@ use App\Models\Order;
 use App\Models\OrderProduct;
 use App\Models\OrderProductConfig;
 use App\Models\Product;
+use App\Models\TaxRate;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
@@ -113,6 +114,15 @@ class Index extends Component
                 if ($product->discount_fee > $product->setup_fee) {
                     $product->discount_fee = $product->setup_fee;
                 }
+                $price = $this->calculateTax($product->price * $product->quantity - $product->discount);
+                $setupFee = $this->calculateTax($product->setup_fee * $product->quantity - $product->discount_fee);
+                if (config('settings::tax_type') == 'exclusive') {
+                    $total += $price;
+                    $totalSetup += $setupFee;
+                }
+                $product->tax = $price;
+                $product->taxSetup = $setupFee;
+                $this->tax->amount += $price + $setupFee;
                 $discount += ($product->discount + $product->discount_fee) * $product->quantity;
 
                 $products[] = $product;
@@ -124,6 +134,23 @@ class Index extends Component
         $this->discount = $discount;
 
         return $products;
+    }
+
+    public $tax;
+
+    public function calculateTax($amount)
+    {
+        if (!config('settings::tax_enabled')) return 0;
+        if (!$this->tax) {
+            if (!auth()->check()) {
+                $this->tax = TaxRate::where('country', 'all')->first();
+            } else {
+                $this->tax = TaxRate::whereIn('country', [auth()->user()->country, 'all'])->get()->sortBy(function ($taxRate) {
+                    return $taxRate->country == 'all';
+                })->first();
+            }
+        }
+        return $amount * ($this->tax->rate / 100);
     }
 
 

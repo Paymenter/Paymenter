@@ -11,8 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('ticket_messages', function (Blueprint $table) {
-            $table->text('message')->nullable()->change();
+        Schema::create('tax_rates', function (Blueprint $table) {
+            $table->id();
+            $table->string('name')->nullable();
+            $table->decimal('rate', 5, 2)->default(0.00);
+            $table->string('country')->nullable();
+            $table->timestamps();
         });
     }
 
@@ -21,8 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('ticket_messages', function (Blueprint $table) {
-            $table->text('message')->change();
-        });
+        Schema::dropIfExists('tax_rates');
     }
 };

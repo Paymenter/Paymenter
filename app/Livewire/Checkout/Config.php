@@ -71,6 +71,13 @@ class Config extends Component
             }
         }
 
+        foreach ($this->userConfig as $key => $config) {
+            // If its select, radio or slider, set the default value to the first option
+            if ($config->type == 'dropdown' || $config->type == 'radio' || $config->type == 'slider') {
+                $this->userConfig[$key]->value = $config->options[0]->value;
+            }
+        }
+
         // Calculate total
         $this->total = $prices->{$this->billing_cycle} ?? $prices->monthly;
         $this->total += $prices->{$this->billing_cycle . '_setup'} ?? 0;

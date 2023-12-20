@@ -298,7 +298,7 @@ class Pterodactyl extends Server
                     $allocations = $allocations->json();
                 }
             }
-            error_log($allocation);
+
             $json = [
                 'name' => $servername,
                 'user' => (int) $this->getUser($user, $orderProduct),

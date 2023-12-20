@@ -158,7 +158,7 @@
                                             @endforeach
                                         </x-input>
                                     @else
-                                        <x-input type="{{ $item->type }}" placeholder="{{ ucfirst($item->name) }}"
+                                        <x-input type="{{ $item->type }}" placeholder="{{ ucfirst($name) }}"
                                             name="{{ $item->id }}" id="{{ $item->id }}"
                                             value="{{ old($item->name) ?? $config[$item->id] }}"
                                             label="{{ ucfirst($name) }}" required

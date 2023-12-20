@@ -111,8 +111,13 @@
                         </div>
 
                         <div class="grid grid-cols-2 gap-4 mt-4">
-                            <x-input name="country" id="country" label="{{ __('Country') }}" type="text"
-                                value="{{ $user->country }}" />
+                            <x-input name="country" id="country" label="{{ __('Country') }}" type="select">
+                                @foreach (App\Classes\Constants::countries() as $key => $country)
+                                    <option value="{{ $key }}" @if ($user->country == $key) selected @endif>
+                                        {{ $country }}
+                                    </option>
+                                @endforeach
+                            </x-input>
 
                             <x-input name="zip" id="zip" label="{{ __('Zip') }}" type="text"
                                 value="{{ $user->zip }}" />

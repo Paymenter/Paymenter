@@ -97,13 +97,13 @@
                     <hr class="my-4 border-secondary-300">
                     @foreach ($this->products as $product)
                         @if ($product->price > 0)
-                            <span class="text-sm uppercase font-light text-gray-500 -mb-3">
+                            <span class=" -mb-3">
                                 {{ ucfirst($product->name) }}
                             </span>
-                            <div class="flex flex-row items-center justify-between -mt-1">
+                            <div class="flex flex-row items-center justify-between -mt-1 text-gray-500 text-sm">
                                 <div class="flex flex-row items-center">
                                     <span>
-                                        {{ ucfirst($product->billing_cycle) ?? 'One time' }}
+                                        {{ ucfirst($product->billing_cycle ?? 'One time') }}
                                     </span>
                                 </div>
                                 <div class="flex flex-col">
@@ -127,17 +127,13 @@
                             </div>
                         @endif
                         @if ($product->setup_fee > 0)
-                            <div class="flex flex-row items-center justify-between">
+                            <div class="flex flex-row items-center justify-between text-gray-500 text-sm">
                                 <div class="flex flex-row items-center">
-                                    <span class="text-lg">
-                                        {{ __('Setup fee') }}
-                                    </span>
+                                    {{ __('Setup fee') }}
                                 </div>
                                 <div class="flex flex-col">
-                                    <span class="text-lg">
-                                        {{ $quantity }}
-                                        <x-money :amount="$product->setup_fee - $product->discount_fee" />
-                                    </span>
+                                    {{ $quantity }}
+                                    <x-money :amount="$product->setup_fee - $product->discount_fee" />
                                 </div>
                             </div>
                         @endif
@@ -157,11 +153,30 @@
                             </div>
                         </div>
                     @endif
+                    <hr class="my-4 border-secondary-300">
+                    @if($tax)
+                        <div class="flex flex-row items-center justify-between mt-2">
+                            <div class="flex flex-row items-center">
+                                Subtotal
+                            </div>
+                            <div class="flex flex-col items-end">
+                                <x-money :amount="number_format($total-$tax->amount, 2)" />
+                            </div>
+                        </div>
+                        <div class="flex flex-row items-center justify-between mt-2">
+                            <div class="flex flex-row items-center">
+                                {{ $tax->name }}&#64;{{ $tax->rate }}%
+                            </div>
+                            <div class="flex flex-col items-end">
+                                <x-money :amount="$tax->amount" />
+                            </div>
+                        </div>
+                    @endif
                     <div class="flex flex-row items-center justify-between mt-2">
                         <div class="flex flex-row items-center">
                             <span class="text-lg font-bold">{{ __('Total Today') }}</span>
                         </div>
-                        <div class="flex flex-col">
+                        <div class="flex flex-col items-end">
                             <span class="text-lg font-bold">{{ config('settings::currency_sign') }}
                                 @if (!empty($discount))
                                     {{ number_format(round($total - $discount, 2), 2) }}
@@ -202,7 +217,10 @@
                         <div class="flex justify-end mt-4">
                             <button class="button button-primary" type="submit">
                                 <span wire:loading wire:target="pay">
-                                    <i class="ri-loader-4-line animate-spin"></i>
+                                    <svg class="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="#9095A0" stroke-width="4"></circle>
+                                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                    </svg>
                                 </span>
                                 <span wire:loading.remove wire:target="pay">
                                     {{ __('Checkout') }}

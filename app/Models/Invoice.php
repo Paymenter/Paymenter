@@ -60,7 +60,7 @@ class Invoice extends Model
     public function getItemsWithProducts()
     {
         $products = [];
-        $total = 0; 
+        $total = 0;
         foreach ($this->items as $item) {
             if ($item->product) {
                 $product = $item->product;
@@ -73,7 +73,7 @@ class Invoice extends Model
                             $coupon = null;
                         }
                     }
-                    if ($coupon && $coupon->status !== 'active'){
+                    if ($coupon && $coupon->status !== 'active') {
                         $coupon = null;
                     }
                     if ($coupon && $coupon->end_at && $coupon->end_at < now()) {
@@ -124,10 +124,33 @@ class Invoice extends Model
                 $total += ($product->price - $product->discount);
             }
         }
+        $tax = $this->getTax($total);
+        if ($tax->amount > 0 && config('settings::tax_type') == 'exclusive') {
+            $total += $tax->amount;
+        }
         // Return total and products as object
         return (object) [
             'total' => $total,
-            'products' => $products
+            'products' => $products,
+            'tax' => $tax,
         ];
+    }
+
+    public function getTax($total)
+    {
+        if (!config('settings::tax_enabled')) return 0;
+        $tax = 0;
+        if (!auth()->check()) {
+            $taxrate = TaxRate::where('country', 'all')->first();
+        } else {
+            $taxrate = TaxRate::whereIn('country', [auth()->user()->country, 'all'])->get()->sortBy(function ($taxRate) {
+                return $taxRate->country == 'all';
+            })->first();
+        }
+        if ($taxrate) {
+            $tax = $total * ($taxrate->rate / 100);
+        }
+        $taxrate->amount = $tax;
+        return $taxrate;
     }
 }
