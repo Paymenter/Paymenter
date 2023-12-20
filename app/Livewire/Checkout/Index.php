@@ -122,7 +122,7 @@ class Index extends Component
                 }
                 $product->tax = $price;
                 $product->taxSetup = $setupFee;
-                $this->tax->amount += $price + $setupFee;
+                $this->tax->amount ?? $this->tax->amount += $price + $setupFee;
                 $discount += ($product->discount + $product->discount_fee) * $product->quantity;
 
                 $products[] = $product;
@@ -140,7 +140,10 @@ class Index extends Component
 
     public function calculateTax($amount)
     {
-        if (!config('settings::tax_enabled')) return 0;
+        if (!config('settings::tax_enabled')) {
+            if(!isset($this->tax)) $this->tax = new TaxRate();
+            return 0;
+        }
         if (!$this->tax) {
             if (!auth()->check()) {
                 $this->tax = TaxRate::where('country', 'all')->first();

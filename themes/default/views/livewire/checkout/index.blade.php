@@ -154,7 +154,7 @@
                         </div>
                     @endif
                     <hr class="my-4 border-secondary-300">
-                    @if($tax)
+                    @if($tax->amount > 0)
                         <div class="flex flex-row items-center justify-between mt-2">
                             <div class="flex flex-row items-center">
                                 Subtotal

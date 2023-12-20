@@ -27,16 +27,20 @@ class TaxController extends Controller
             'taxrate.*.name' => 'required|string|max:255',
             'taxrate.*.rate' => 'required|numeric|min:0|max:100',
             'taxrate.*.country' => 'required|string|in:' . implode(',', array_keys(Constants::countries())),
-
+            'taxrate.*.delete' => 'nullable|boolean',
         ]);
         
         $taxrates = $request->taxrates;
         foreach ($taxrates as $taxrate) {
-            TaxRate::where('id', $taxrate['id'])->update([
-                'name' => $taxrate['name'],
-                'rate' => $taxrate['rate'],
-                'country' => $taxrate['country'],
-            ]);
+            if (isset($taxrate['delete']) && $taxrate['delete'] == true) {
+                TaxRate::where('id', $taxrate['id'])->delete();
+            } else {
+                TaxRate::where('id', $taxrate['id'])->update([
+                    'name' => $taxrate['name'],
+                    'rate' => $taxrate['rate'],
+                    'country' => $taxrate['country'],
+                ]);
+            }
         }
         
         Setting::updateOrCreate(['key' => 'tax_enabled'], ['value' => $request->tax_enabled]);

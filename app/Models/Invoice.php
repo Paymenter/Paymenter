@@ -138,7 +138,7 @@ class Invoice extends Model
 
     public function getTax($total)
     {
-        if (!config('settings::tax_enabled')) return 0;
+        if (!config('settings::tax_enabled')) return new TaxRate();
         $tax = 0;
         if (!auth()->check()) {
             $taxrate = TaxRate::where('country', 'all')->first();

@@ -16,10 +16,11 @@
                     <x-input name="taxrates[{{ $key }}][name]" :value="old('taxrates.'.$taxrate->id.'.name', $taxrate->name) ?? $taxrate->name" label="Name" type="text" class="w-full" />
                     <x-input name="taxrates[{{ $key }}][rate]" :value="old('taxrates.'.$taxrate->id.'.rate', $taxrate->rate) ?? $taxrate->rate" label="Rate" type="text" class="w-full" />
                     <x-input name="taxrates[{{ $key }}][country]" :value="old('taxrates.'.$taxrate->id.'.country', $taxrate->country) ?? $taxrate->country" label="Country" type="select" class="w-full">
-                        @foreach ($countries as $key => $country)
-                            <option value="{{ $key }}" @if ($taxrate->country == $key) selected @endif>{{ $country }}</option>
+                        @foreach ($countries as $key2 => $country)
+                            <option value="{{ $key2 }}" @if ($taxrate->country == $key2) selected @endif>{{ $country }}</option>
                         @endforeach
                     </x-input>
+                    <x-input name="taxrates[{{ $key }}][delete]" label="Delete" type="checkbox" value="1" class="w-fit mt-6" />
                 </div>
             @endforeach
             <button class="button button-primary w-fit">{{ __('Save') }}</button>
