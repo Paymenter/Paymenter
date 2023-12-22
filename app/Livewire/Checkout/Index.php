@@ -6,6 +6,7 @@ use App\Helpers\ExtensionHelper;
 use App\Helpers\NotificationHelper;
 use App\Jobs\Servers\CreateServer;
 use App\Models\Coupon;
+use App\Models\Extension;
 use App\Models\Invoice;
 use App\Models\InvoiceItem;
 use App\Models\Order;
@@ -60,6 +61,8 @@ class Index extends Component
         $this->coupon = $coupon;
 
         $this->products;
+
+        $this->payment_method = Extension::where('type', 'gateway')->where('enabled', true)->get()->first()->id ?? null;
     }
 
     #[Computed()]
@@ -291,7 +294,8 @@ class Index extends Component
             $invoice->status = 'pending';
         }
         $invoice->order()->associate($order);
-        $invoice->save();
+        // As the ->total() isn't available for events yet, we trigger it manually
+        $invoice->saveQuietly();
         foreach ($products as $product) {
             if ($product->allow_quantity == 1)
                 for (
@@ -314,6 +318,8 @@ class Index extends Component
                 $invoiceItem->save();
             }
         }
+        // Trigger event
+        event(new \App\Events\Invoice\InvoiceCreated($invoice));
 
         session()->forget('cart');
         session()->forget('coupon');
@@ -338,6 +344,12 @@ class Index extends Component
             $invoiceTotalAndProducts = $invoice->getItemsWithProducts();
             $products = $invoiceTotalAndProducts->products;
             $total = $invoiceTotalAndProducts->total;
+
+            if ($invoiceTotalAndProducts->tax->amount > 0 && config('settings::tax_type') == 'exclusive') {
+                foreach ($products as $product) {
+                    $product->price = $product->price + ($product->price * $invoiceTotalAndProducts->tax->rate / 100);
+                }
+            }
 
             if ($total == 0) {
                 $invoice->status = 'paid';

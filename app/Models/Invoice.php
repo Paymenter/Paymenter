@@ -90,14 +90,14 @@ class Invoice extends Model
                             $product->discount = 0;
                         } else {
                             if ($coupon->type == 'percent') {
-                                $product->discount = $product->price * $coupon->value / 100;
+                                $product->discount = $item->total * $coupon->value / 100;
                             } else {
                                 $product->discount = $coupon->value;
                             }
                         }
                     } else {
                         if ($coupon->type == 'percent') {
-                            $product->discount = $product->price * $coupon->value / 100;
+                            $product->discount = $item->total * $coupon->value / 100;
                         } else {
                             $product->discount = $coupon->value;
                         }

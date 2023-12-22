@@ -20,13 +20,13 @@ class Stripe extends Gateway
     {
         return [
             'display_name' => 'Stripe',
-            'version' => '1.0.0',
+            'version' => '2.0.0',
             'author' => 'Paymenter',
             'website' => 'https://paymenter.org',
         ];
     }
 
-    public function getUrl($total, $products, $orderId)
+    public function getUrl($_, $products, $orderId)
     {
         $subscription = ExtensionHelper::getConfig('Stripe', 'stripe_subscriptions_or_payment') == 'subscriptions' ? true : false;
         $client = $this->stripeClient();
@@ -346,12 +346,12 @@ class Stripe extends Gateway
                 'type' => 'dropdown',
                 'options' => [
                     [
-                        'name' => 'Subscriptions',
-                        'value' => 'subscriptions',
-                    ],
-                    [
                         'name' => 'Payment',
                         'value' => 'payment',
+                    ],
+                    [
+                        'name' => 'Subscriptions',
+                        'value' => 'subscriptions',
                     ]
                 ],
                 'description' => 'Stripe subscriptions or payment',

@@ -233,3 +233,14 @@ Breadcrumbs::for('admin.announcements.create', function (BreadcrumbTrail $trail)
     $trail->parent('admin.announcements');
     $trail->push(__('Create'), route('admin.announcements.create'));
 });
+
+/*
+* < Announcements 
+*/
+/*
+* Taxes >
+*/
+Breadcrumbs::for('admin.taxes', function (BreadcrumbTrail $trail) {
+    $trail->parent('admin');
+    $trail->push(__('Taxes'), route('admin.taxes'));
+});

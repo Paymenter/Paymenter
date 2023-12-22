@@ -52,6 +52,16 @@ class OrderProduct extends Model
         return $lastInvoiceItem->invoice;
     }
 
+    public function cancellation()
+    {
+        return $this->hasOne(Cancellation::class, 'order_product_id', 'id');
+    }
+
+    public function getCancellableAttribute()
+    {
+        return $this->status == 'paid' && $this->expiry_date > now();
+    }
+
     public function getInvoices()
     {
         return $this->hasManyThrough(Invoice::class, InvoiceItem::class, 'product_id', 'id', 'id', 'invoice_id');
