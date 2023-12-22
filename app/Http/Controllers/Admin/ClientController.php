@@ -165,12 +165,13 @@ class ClientController extends Controller
     public function updateProductConfig(User $user, OrderProduct $orderProduct, OrderProductConfig $orderProductConfig, Request $request): \Illuminate\Http\RedirectResponse
     {
         $request->validate([
-            'key' => 'required',
+            'key' => 'sometimes',
             'value' => 'required',
         ]);
 
         $orderProductConfig->value = $request->input('value');
-        $orderProductConfig->key = $request->input('key');
+        if(!$orderProductConfig->configurableOption()->exists())
+            $orderProductConfig->key = $request->input('key');
         $orderProductConfig->save();
 
         return redirect()->route('admin.clients.products', [$user->id, $orderProduct->id])->with('success', 'Product updated');
