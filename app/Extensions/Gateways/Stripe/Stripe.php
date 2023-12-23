@@ -146,22 +146,6 @@ class Stripe extends Gateway
                 'description' => 'Stripe test key',
                 'required' => false,
             ],
-            [
-                'name' => 'stripe_subscriptions_or_payment',
-                'friendlyName' => 'Stripe subscriptions or payment',
-                'type' => 'dropdown',
-                'options' => [
-                    [
-                        'name' => 'Payment',
-                        'value' => 'payment',
-                    ],
-                    [
-                        'name' => 'Subscriptions',
-                        'value' => 'subscriptions',
-                    ]
-                ],
-                'description' => 'Stripe subscriptions or payment',
-            ]
         ];
     }
 }
