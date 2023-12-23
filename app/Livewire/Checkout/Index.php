@@ -40,6 +40,8 @@ class Index extends Component
 
     public $discount;
 
+    public $gateways;
+
     protected $casts = [
         'products' => 'collection',
     ];
@@ -62,7 +64,9 @@ class Index extends Component
 
         $this->products;
 
-        $this->payment_method = Extension::where('type', 'gateway')->where('enabled', true)->get()->first()->id ?? null;
+        $this->gateways = ExtensionHelper::getAvailableGateways($this->total, $this->products);
+
+        if(!isset($this->payment_method) || !in_array($this->payment_method, $this->gateways->pluck('id')->toArray())) $this->payment_method = $this->gateways->first()->id ?? null;
     }
 
     #[Computed()]

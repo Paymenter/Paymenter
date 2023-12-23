@@ -517,6 +517,29 @@ class ExtensionHelper
         return $gateways;
     }
 
+    public static function getAvailableGateways($total, $products)
+    {
+        $gateways = [];
+        foreach (self::getGateways() as $gateway) {
+            $module = 'App\Extensions\Gateways\\' . $gateway->name . '\\' . $gateway->name;
+            if (!class_exists($module)) {
+                continue;
+            }
+            $module = new $module($gateway);
+            // Check if function exists
+            if (!method_exists($module, 'canUse')) {
+                $gateways[] = $gateway;
+                continue;
+            }
+
+            if ($module->canUse($total, $products)) {
+                $gateways[] = $gateway;
+            }
+        }
+
+        return collect($gateways);
+    }
+
     public static function createServer(OrderProduct $product2)
     {
         $order = $product2->order()->first();
