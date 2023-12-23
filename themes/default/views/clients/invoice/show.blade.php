@@ -248,7 +248,7 @@
                                                         {{__('Pay with credits')}}
                                                     </option>
                                                 @endif
-                                                @foreach (App\Models\Extension::where('type', 'gateway')->where('enabled', true)->get() as $gateway)
+                                                @foreach ($gateways as $gateway)
                                                     <option class="dark:bg-darkmode dark:text-darkmodetext"
                                                             value="{{ $gateway->id }}">
                                                         {{ isset($gateway->display_name) ? $gateway->display_name : $gateway->name }}

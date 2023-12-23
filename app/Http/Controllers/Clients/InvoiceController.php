@@ -34,7 +34,9 @@ class InvoiceController extends Controller
         $tax = $invoiceItems->tax;
         $currency_sign = config('settings::currency_sign');
 
-        return view('clients.invoice.show', compact('invoice', 'products', 'currency_sign', 'total', 'tax'));
+        $gateways = ExtensionHelper::getAvailableGateways($total, $products);
+
+        return view('clients.invoice.show', compact('invoice', 'products', 'currency_sign', 'total', 'tax', 'gateways'));
     }
 
     public function pay(Request $request, Invoice $invoice)
