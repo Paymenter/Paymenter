@@ -170,7 +170,7 @@ class ClientController extends Controller
         ]);
 
         $orderProductConfig->value = $request->input('value');
-        if(!$orderProductConfig->configurableOption()->exists())
+        if(!$orderProductConfig->configurableOption() || !$orderProductConfig->configurableOption()->exists())
             $orderProductConfig->key = $request->input('key');
         $orderProductConfig->save();
 
