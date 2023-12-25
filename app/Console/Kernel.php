@@ -16,9 +16,11 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        $schedule->command('p:cronjob')->everyMinute();
+        $schedule->command('p:cronjob')->dailyAt(config('settings::run_cronjob_at', '00:00'));
         $schedule->command('p:check-updates')->daily();
         $schedule->command('p:stats')->dailyAt($this->registerStatsCommand());
+
+        Setting::updateOrCreate(['key' => 'cronjob_last_run'], ['value' => now()]);
     }
 
     /**

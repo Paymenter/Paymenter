@@ -135,7 +135,6 @@ class CronJob extends Command
         }
         $this->info('Sended Number of Invoices: ' . $invoiceProcessed);
         $this->info('Cron Job Finished');
-        Setting::updateOrCreate(['key' => 'cronjob_last_run'], ['value' => now()]);
 
         return Command::SUCCESS;
     }
