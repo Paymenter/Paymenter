@@ -114,6 +114,7 @@
                             <a href="{{ route('admin.announcements')}}" class="block px-4 py-2 text-base text-gray-700 dark:text-darkmodetext dark:hover:bg-secondary-200 hover:bg-gray-100 hover:text-gray-900" role="menuitem" tabindex="-1">{{ __('Announcements') }}</a>                            
                             <a href="{{ route('admin.roles') }}" class="block px-4 py-2 text-base text-gray-700 dark:text-darkmodetext dark:hover:bg-secondary-200 hover:bg-gray-100 hover:text-gray-900" role="menuitem" tabindex="-1">{{ __('Roles') }}</a>
                             <a href="{{ route('admin.taxes') }}" class="block px-4 py-2 text-base text-gray-700 dark:text-darkmodetext dark:hover:bg-secondary-200 hover:bg-gray-100 hover:text-gray-900" role="menuitem" tabindex="-1">{{ __('Taxes') }}</a>
+                            <a href="{{ route('admin.logs') }}" class="block px-4 py-2 text-base text-gray-700 dark:text-darkmodetext dark:hover:bg-secondary-200 hover:bg-gray-100 hover:text-gray-900" role="menuitem" tabindex="-1">{{ __('Logs') }}</a>
                             <a href="{{ route('admin.configurable-options')}}" class="block px-4 py-2 text-base text-gray-700 dark:text-darkmodetext dark:hover:bg-secondary-200 hover:bg-gray-100 hover:text-gray-900 col-span-3" role="menuitem" tabindex="-1">{{ __('Configurable Options') }}</a>
                         </div>
                     </div>

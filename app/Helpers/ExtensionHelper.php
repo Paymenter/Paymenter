@@ -10,6 +10,7 @@ use App\Models\User;
 use App\Models\Invoice;
 use App\Models\Product;
 use App\Models\Extension;
+use App\Models\Log as ModelsLog;
 use App\Models\OrderProduct;
 use App\Models\OrderProductConfig;
 use Carbon\Carbon;
@@ -257,15 +258,33 @@ class ExtensionHelper
      *
      * @return void
      */
-    public static function error($extension, $message)
+    public static function error($extension, $message, $data = null)
     {
         // Convert message to string
         if (is_array($message)) {
             $message = json_encode($message);
         }
         Log::error($extension . ': ' . $message);
+
+        ModelsLog::create([
+            'type' => 'error',
+            'message' => $extension . ': ' . $message,
+        ]);
     }
 
+    /**
+     * Debug function
+     * 
+     * @return void
+     */
+    public static function debug($extension, $message, $data = null)
+    {
+        ModelsLog::create([
+            'type' => 'debug',
+            'message' => $extension . ': ' . $message,
+            'data' => $data,
+        ]);
+    }
     /**
      * Called when a new order is accepted
      * ```php
@@ -563,7 +582,7 @@ class ExtensionHelper
         try {
             $module->createServer($user, $config, $order, $product2, $configurableOptions);
         } catch (\Exception $e) {
-            self::error($extensionName, 'Error creating server: ' . $e->getMessage() . ' on line ' . $e->getLine() . ' in file ' . $e->getFile() . ' on line ' . $e->getLine() . ' in file ' . $e->getFile());
+            self::error($extensionName, 'Error creating server: ' . $e->getMessage() . ' on line ' . $e->getLine() . ' in file ' . $e->getFile() . ' on line ' . $e->getLine(), $e->getTraceAsString());
         }
     }
 
@@ -590,7 +609,7 @@ class ExtensionHelper
         try {
             $module->suspendServer($user, $config, $order, $product2, $configurableOptions);
         } catch (\Exception $e) {
-            self::error($extension->name, 'Error suspending server: ' . $e->getMessage() . ' on line ' . $e->getLine() . ' in file ' . $e->getFile());
+            self::error($extension->name, 'Error suspending server: ' . $e->getMessage() . ' on line ' . $e->getLine() . ' in file ' . $e->getFile(), $e->getTraceAsString());
         }
     }
 
@@ -617,7 +636,7 @@ class ExtensionHelper
         try {
             $module->unsuspendServer($user, $config, $order, $product2, $configurableOptions);
         } catch (\Exception $e) {
-            self::error($extension->name, 'Error unsuspending server: ' . $e->getMessage() . ' on line ' . $e->getLine() . ' in file ' . $e->getFile());
+            self::error($extension->name, 'Error unsuspending server: ' . $e->getMessage() . ' on line ' . $e->getLine() . ' in file ' . $e->getFile(), $e->getTraceAsString());
         }
     }
 
@@ -645,7 +664,7 @@ class ExtensionHelper
         try {
             $module->terminateServer($user, $config, $order, $product2, $configurableOptions);
         } catch (\Exception $e) {
-            self::error($extension->name, 'Error when terminating server: ' . $e->getMessage() . ' on line ' . $e->getLine() . ' in file ' . $e->getFile());
+            self::error($extension->name, 'Error when terminating server: ' . $e->getMessage() . ' on line ' . $e->getLine() . ' in file ' . $e->getFile(), $e->getTraceAsString());
         }
     }
 
@@ -761,7 +780,7 @@ class ExtensionHelper
         try {
             return $module->getCustomPages($user, $config, $order, $product2, $configurableOptions);
         } catch (\Exception $e) {
-            ExtensionHelper::error($extension->name, 'Error getting pages ' . $e->getMessage() . ' on line ' . $e->getLine() . ' in file ' . $e->getFile() . ' on line ' . $e->getLine() . ' in file ' . $e->getFile());
+            ExtensionHelper::error($extension->name, 'Error getting pages ' . $e->getMessage() . ' on line ' . $e->getLine() . ' in file ' . $e->getFile() . ' on line ' . $e->getLine(), $e->getTraceAsString());
             return [];
         }
     }

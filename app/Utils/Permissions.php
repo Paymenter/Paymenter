@@ -69,6 +69,8 @@ class Permissions extends BitField
         'VIEW_TAXES' => 1 << 47,
         'EDIT_TAXES' => 1 << 48,
         'CREATE_TAXES' => 1 << 49,
+
+        'VIEW_LOGS' => 1 << 50,
     ];
 
     public function __construct(int $bits)

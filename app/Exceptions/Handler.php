@@ -2,6 +2,7 @@
 
 namespace App\Exceptions;
 
+use App\Models\Log;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 
 class Handler extends ExceptionHandler
@@ -41,6 +42,15 @@ class Handler extends ExceptionHandler
     public function register()
     {
         $this->reportable(function (\Throwable $e) {
+            try {
+                Log::create([
+                    'type' => 'error',
+                    'message' => $e->getMessage(),
+                    'data' => $e->getTraceAsString(),
+                ]);
+            } catch (\Throwable $e) {
+                // Do nothing
+            }
         });
     }
 }
