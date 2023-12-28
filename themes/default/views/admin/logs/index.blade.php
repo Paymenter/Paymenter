@@ -18,6 +18,7 @@
             </div>
         </div>
     </div>
+    <livewire:admin.logs.upload />
     @if (request()->input('level') == 'debug')
         @if (config('settings::debug_logs_enabled') == 'true')
             <form action="{{ route('admin.logs.debug') }}" method="POST">
