@@ -17,11 +17,18 @@
             <div class="grid grid-cols-12 gap-4">
 
                 @foreach ($categories as $category)
-                    @if ($category->products->count() > 0)
+                    @if (($category->products->count() > 0 && !$category->category_id) || $category->children()->count() > 0)
                         <div class="lg:col-span-3 md:col-span-6 col-span-12">
                             <div class="content-box h-full flex flex-col">
-                                <h3 class="font-semibold text-lg">{{ $category->name }}</h3>
-                                <div class="prose dark:prose-invert">@markdownify($category->description)</div>
+                                <div class="flex flex-row gap-x-3">
+                                    @if($category->image)
+                                        <img src="/storage/categories/{{ $category->image }}" class="w-14 rounded-md" onerror="removeElement(this);" />
+                                    @endif
+                                    <div>
+                                        <h3 class="font-semibold text-lg">{{ $category->name }}</h3>
+                                        <div class="prose dark:prose-invert">@markdownify($category->description)</div>
+                                    </div>
+                                </div>
                                 <div class="pt-3 mt-auto">
                                     <a href="{{ route('products', $category->slug) }}"
                                     class="button button-secondary w-full">{{ __('Browse Category') }}</a>
@@ -30,7 +37,6 @@
                         </div>
                     @endif
                 @endforeach
-
             </div>
         </div>
     @endif

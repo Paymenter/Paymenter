@@ -9,45 +9,23 @@
         </div>
 
         <div class="w-full">
-            <form method="POST" action="{{ route('admin.categories.store') }}">
+            <form method="POST" action="{{ route('admin.categories.store') }}" enctype="multipart/form-data">
                 @csrf
-                <div class="mt-4">
-                    <label class="block dark:text-darkmodetext text-sm font-medium text-gray-700">
-                        {{ __('Name') }}
-                    </label>
-                    <input id="name" type="text" class="form-input w-full @error('name') border-red-500 @enderror"
-                        name="name" value="{{ old('name') }}" required autocomplete="name" autofocus>
-                </div>
-                <div class="mt-4">
-                    <label class="dark:text-darkmodetext block text-sm font-medium text-gray-700">
-                        {{ __('Description') }}
-                    </label>
-                    <textarea id="description" type="text" class="form-input w-full @error('description') border-red-500 @enderror"
-                        name="description" value="{{ old('description') }}" required autocomplete="description" autofocus></textarea>
-                </div>
-                <!-- slug -->
-                <div class="mt-4">
-                    <label class="dark:text-darkmodetext block text-sm font-medium text-gray-700">
-                        {{ __('Slug') }}
-                    </label>
-                    <p>
-                        <span class="text-gray-500" id="slugd"></span>
-                    </p>
-                    <input id="slug" type="text"
-                        class="form-input w-full @error('slug') border-red-500 @enderror" name="slug"
-                        value="{{ old('slug') }}" required autocomplete="slug" autofocus>
-                </div>
-                <script>
-                    var slug = document.getElementById('slugd');
-                    var name = document.getElementById('name');
-                    slug.addEventListener('keyup', function() {
-                        document.getElementById('slugd').textContent = '/category/' + slug.value;
-                    });
-                    name.addEventListener('keyup', function() {
-                        slug.value = name.value.toLowerCase().replace(/ /g, '-').replace(/[^\w-]+/g, '');
-                        document.getElementById('slugd').textContent = '/category/' + name.value;
-                    });
-                </script>
+                <x-input type="text" name="name" id="name" :value="old('name')" :placeholder="__('Name')" required class="mt-4" :label="__('Name')" />
+
+                <x-input type="textarea" name="description" :value="old('description')" :placeholder="__('Description')" required :label="__('Description')" />
+
+                <x-input type="slug" name="slug" :value="old('slug')" :placeholder="__('Slug')" required  :label="__('Slug')" />
+
+                <x-input type="file" name="image" :value="old('image')" :placeholder="__('Image')" :label="__('Image')" id="image" />
+    
+                <x-input type="select" name="parent_id" :value="old('parent_id')" :placeholder="__('Parent')" :label="__('Parent')">
+                    <option value="">{{ __('None') }}</option>
+                    @foreach ($categories as $category)
+                        <option value="{{ $category->id }}">{{ $category->name }}</option>
+                    @endforeach
+                </x-input>
+
                 <div class="flex items-center justify-end mt-4">
                     <button type="submit" class="inline-flex justify-center w-max float-right button button-primary">
                         {{ __('Create') }}

@@ -20,12 +20,31 @@
                         </div>
                         <div class="flex flex-col gap-2 mt-2">
                             @foreach ($categories as $categoryItem)
-                                @if ($categoryItem->products->count() > 0)
-                                    <a href="{{ route('products', $categoryItem->slug) }}"
-                                        class="@if ($category->name == $categoryItem->name) text-secondary-900 pl-3 !border-primary-400 @endif border-l-2 border-transparent duration-300 hover:text-secondary-900 hover:pl-3 hover:border-primary-400 focus:text-secondary-900 focus:pl-3 focus:border-primary-400">
-                                        {{ $categoryItem->name }}
-                                    </a>
+                                @php $hasActiveChild = false; @endphp
+                                @if ($categoryItem->children->count() > 0)
+                                    @foreach ($categoryItem->children as $childCategory)
+                                        @if ($category->name == $childCategory->name)
+                                            @php $hasActiveChild = true; @endphp
+                                        @endif
+                                    @endforeach
                                 @endif
+                                <div class="flex flex-col gap-1 group duration-150">
+                                    @if ($categoryItem->products->count() > 0 || $categoryItem->children->count() > 0)
+                                        <a href="{{ route('products', $categoryItem->slug) }}"
+                                            class="@if ($category->name == $categoryItem->name || $hasActiveChild) text-secondary-900 pl-3 !border-primary-400 @endif border-l-2 border-transparent duration-300 hover:text-secondary-900 hover:pl-3 hover:border-primary-400 focus:text-secondary-900 focus:pl-3 focus:border-primary-400">
+                                            {{ $categoryItem->name }}
+                                        </a>
+                                        <!-- List all child categories -->
+                                    @endif
+                                    <div class="flex flex-col gap-1 @if(!$hasActiveChild) hidden @endif group-hover:block transition ease-in-out duration-300	">
+                                        @foreach ($categoryItem->children as $childCategory)
+                                            <a href="{{ route('products', $childCategory->slug) }}"
+                                                class="pl-6 text-sm @if ($category->name == $childCategory->name) text-secondary-900 pl-3 !border-primary-400 @endif border-l-2 border-transparent duration-300 hover:text-secondary-900 hover:pl-8 hover:border-primary-400 focus:text-secondary-900 focus:pl-3 focus:border-primary-400">
+                                                {{ $childCategory->name }}
+                                            </a>
+                                        @endforeach
+                                    </div>
+                                </div>
                             @endforeach
                         </div>
                     </div>
@@ -34,10 +53,38 @@
 
             <div class="@if ($categories->count() > 0) lg:col-span-9 @endif col-span-12">
                 <div class="content-box">
-                    <h1 class="text-3xl font-semibold text-secondary-900">{{ $category->name }}</h1>
-                    <div class="prose dark:prose-invert">
-                        @markdownify($category->description)
+                    <div class="flex flex-row">
+                        @if($category->image)
+                            <img src="/storage/categories/{{ $category->image }}" class="w-20 h-full rounded-md mr-4" />
+                        @endif
+                        <div>
+                            <h1 class="text-3xl font-semibold text-secondary-900">{{ $category->name }}</h1>
+                            <div class="prose dark:prose-invert">
+                                @markdownify($category->description)
+                            </div>
+                        </div>
                     </div>
+                </div>
+                <div class="grid grid-cols-12 gap-4 mt-4">
+                @foreach($category->children as $childCat)
+                    <div class="lg:col-span-3 md:col-span-6 col-span-12">
+                        <div class="content-box h-full flex flex-col">
+                            <div class="flex flex-row gap-x-3">
+                                @if($childCat->image)
+                                    <img src="/storage/categories/{{ $childCat->image }}" class="w-14 rounded-md" onerror="removeElement(this);" />
+                                @endif
+                                <div>
+                                    <h3 class="font-semibold text-lg">{{ $childCat->name }}</h3>
+                                    <div class="prose dark:prose-invert">@markdownify($childCat->description)</div>
+                                </div>
+                            </div>
+                            <div class="pt-3 mt-auto">
+                                <a href="{{ route('products', $childCat->slug) }}"
+                                class="button button-secondary w-full">{{ __('Browse Category') }}</a>
+                            </div>
+                        </div>
+                    </div>
+                @endforeach
                 </div>
                 <div class="grid grid-cols-3 gap-4 mt-4">
                     @foreach ($category->products()->with('prices')->orderBy('order')->get() as $product)

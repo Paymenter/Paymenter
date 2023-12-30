@@ -184,13 +184,37 @@
             <textarea {{ $attributes->except('class') }} id={{ $id ?? $name }}
                 @isset($required) {{ $required ? 'required' : '' }} @endisset
                 class="bg-secondary-200 text-secondary-800 font-medium rounded-md placeholder-secondary-500 outline-none w-full border focus:ring-2 focus:ring-offset-2 ring-offset-secondary-50 dark:ring-offset-secondary-100 duration-300
-            @error($name) border-danger-300 focus:border-danger-400 focus:ring-danger-300 @else border-secondary-300 focus:border-secondary-400 focus:ring-primary-400 @enderror">{{ $slot }}</textarea>
+            @error($name) border-danger-300 focus:border-danger-400 focus:ring-danger-300 @else border-secondary-300 focus:border-secondary-400 focus:ring-primary-400 @enderror">{{ $value ?? $slot }}</textarea>
         </div>
         @error($name)
             <label for="{{ $id ?? $name }}" class="text-sm text-danger-300">{{ $message }}</label>
         @enderror
     </div>
-@else
+@elseif($type == 'file')
+    <div @isset($class) class="{{ $class }}" @endisset>
+        {{ $slot }}
+        @isset($label)
+            <label for="{{ $id ?? $name }}" class="text-sm text-secondary-600">{{ $label }}</label>
+        @endisset
+        <div class="relative">
+            @isset($icon)
+                <div class="absolute pointer-events-none top-0 left-0 py-2 px-4">
+                    <i class="{{ $icon }}"></i>
+                </div>
+            @endisset
+            <input type={{ $type }} {{ $attributes->except('class') }}
+                @isset($value) value="{{ $value }}" @else value="{{ old($name) }}" @endisset
+                id={{ $id ?? $name }}
+                @isset($required) {{ $required ? 'required' : '' }} @endisset
+                class="bg-secondary-200 text-secondary-800 font-medium rounded-md placeholder-secondary-500 outline-none w-full border focus:ring-2 focus:ring-offset-2 ring-offset-secondary-50 dark:ring-offset-secondary-100 duration-300 disabled:opacity-50
+            @isset($icon) pl-10 pr-4 @else px-4 @endisset
+            @error($name) border-danger-300 focus:border-danger-400 focus:ring-danger-300 @else border-secondary-300 focus:border-secondary-400 focus:ring-primary-400 @enderror">
+        </div>
+        @error($name)
+            <label for={{ $id ?? $name }} class="text-sm text-danger-300">{{ $message }}</label>
+        @enderror
+    </div>
+@else 
     <div @isset($class) class="{{ $class }}" @endisset>
         {{ $slot }}
         @isset($label)

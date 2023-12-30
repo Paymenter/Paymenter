@@ -21,7 +21,8 @@ class Index extends DataTableComponent
 
     public function builder(): Builder
     {
-        return Category::query();
+        // Also select the order 
+        return Category::query()->with('parent');
     }
 
     public function configure(): void
@@ -30,6 +31,7 @@ class Index extends DataTableComponent
         $this->setReorderStatus(true);
         $this->setDefaultReorderSort('order');
         $this->setDefaultSort('order', 'asc');
+        $this->setAdditionalSelects('categories.order');
     }
 
     public function deleteCategories(): void
@@ -62,6 +64,8 @@ class Index extends DataTableComponent
                 ->sortable()->searchable(),
             Column::make('Slug', 'slug')
                 ->sortable()->searchable(), 
+            Column::make('Parent', 'parent.name')
+                ->sortable()->searchable(),
             Column::make('Created At', 'created_at')
                 ->sortable()->searchable(),
 

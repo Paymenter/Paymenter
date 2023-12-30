@@ -30,7 +30,7 @@ class BasisController extends Controller
             }
         }
 
-        $categories = Category::with('products')->orderBy('order')->get();
+        $categories = Category::whereNull('category_id')->with('products')->orderBy('order')->get();
         return view('product', compact('categories', 'category'));
     }
 

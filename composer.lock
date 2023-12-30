@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "4c410d2d253f8283ad09eec06c66aa89",
+    "content-hash": "09ed070a6a5587c11c75299652a8a7f7",
     "packages": [
         {
             "name": "blade-ui-kit/blade-heroicons",
@@ -4271,16 +4271,16 @@
         },
         {
             "name": "rappasoft/laravel-livewire-tables",
-            "version": "v3.1.5",
+            "version": "v3.1.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/rappasoft/laravel-livewire-tables.git",
-                "reference": "2bfe6df78d0e9d286b31176131a95b2041ba36cb"
+                "reference": "669269f638397b03da806a45fe4ad9494706bcda"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/rappasoft/laravel-livewire-tables/zipball/2bfe6df78d0e9d286b31176131a95b2041ba36cb",
-                "reference": "2bfe6df78d0e9d286b31176131a95b2041ba36cb",
+                "url": "https://api.github.com/repos/rappasoft/laravel-livewire-tables/zipball/669269f638397b03da806a45fe4ad9494706bcda",
+                "reference": "669269f638397b03da806a45fe4ad9494706bcda",
                 "shasum": ""
             },
             "require": {
@@ -4335,7 +4335,7 @@
             ],
             "support": {
                 "issues": "https://github.com/rappasoft/laravel-livewire-tables/issues",
-                "source": "https://github.com/rappasoft/laravel-livewire-tables/tree/v3.1.5"
+                "source": "https://github.com/rappasoft/laravel-livewire-tables/tree/v3.1.8"
             },
             "funding": [
                 {
@@ -4343,7 +4343,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2023-12-09T23:55:56+00:00"
+            "time": "2023-12-29T22:34:13+00:00"
         },
         {
             "name": "robthree/twofactorauth",
