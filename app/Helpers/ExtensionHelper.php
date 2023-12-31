@@ -698,7 +698,12 @@ class ExtensionHelper
         $config = self::loadConfiguration($product, $product2);
         $configurableOptions = self::loadConfigurableOptions($product2);
         $user = $order->user;
-        $link = $module->getLink($user, $config, $order, $product2, $configurableOptions);
+
+        try {
+            $link = $module->getLink($user, $config, $order, $product2, $configurableOptions);
+        } catch (\Exception $e) {
+            self::error($extension->name, 'Error getting link: ' . $e->getMessage() . ' on line ' . $e->getLine() . ' in file ' . $e->getFile(), $e->getTraceAsString());
+        }
 
         return $link;
     }
