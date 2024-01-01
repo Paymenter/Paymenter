@@ -703,6 +703,8 @@ class ExtensionHelper
             $link = $module->getLink($user, $config, $order, $product2, $configurableOptions);
         } catch (\Exception $e) {
             self::error($extension->name, 'Error getting link: ' . $e->getMessage() . ' on line ' . $e->getLine() . ' in file ' . $e->getFile(), $e->getTraceAsString());
+
+            return false;
         }
 
         return $link;
