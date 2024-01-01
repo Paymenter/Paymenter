@@ -18,7 +18,7 @@ class Proxmox extends Server
     {
         return [
             'display_name' => 'Proxmox',
-            'version' => '1.0.0',
+            'version' => '1.0.1',
             'author' => 'Paymenter',
             'website' => 'https://paymenter.org',
         ];

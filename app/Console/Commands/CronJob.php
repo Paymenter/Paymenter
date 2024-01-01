@@ -2,15 +2,11 @@
 
 namespace App\Console\Commands;
 
-use App\Models\Order;
 use Illuminate\Console\Command;
 use App\Helpers\ExtensionHelper;
 use App\Helpers\NotificationHelper;
-use App\Mail\Invoices\NewInvoice;
 use App\Models\OrderProduct;
-use App\Models\Setting;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Http;
 
 class CronJob extends Command
 {
@@ -96,7 +92,7 @@ class CronJob extends Command
             $invoice->order_id = $order->order->id;
             $invoice->status = 'pending';
             $invoice->user_id = $order->order->user_id;
-            $invoice->save();
+            $invoice->saveQuietly();
             $date;
             if ($order->billing_cycle == 'monthly') {
                 $date = date('Y-m-d', strtotime('+1 month', strtotime($order->expiry_date)));
@@ -126,6 +122,8 @@ class CronJob extends Command
 
             NotificationHelper::sendNewInvoiceNotification($invoice, $order->order->user);
 
+            event(new \App\Events\Invoice\InvoiceCreated($invoice));
+
             if ($invoice->total() == 0) {
                 ExtensionHelper::paymentDone($invoice->id);
                 $this->info('Invoice ' . $invoice->id . ' status changed to ' . $invoice->status);
@@ -134,6 +132,27 @@ class CronJob extends Command
             $this->info('Sended Invoice: ' . $invoice->id);
         }
         $this->info('Sended Number of Invoices: ' . $invoiceProcessed);
+
+        // Check all extensions for updates
+        $extensions = \App\Models\Extension::all();
+        foreach ($extensions as $extension) {
+            if (!$extension->version){
+                continue;
+            }
+            $url = config('app.marketplace') . 'extensions?version=' . config('app.version') . '&search=' . $extension->name;
+            $response = Http::get($url)->json();
+
+            if (isset($response['error']) || count($response['data']) == 0) {
+                continue;
+            }
+
+            $response['data'][0]['versions'] = array_reverse($response['data'][0]['versions']);
+            if (version_compare($extension->version, $response['data'][0]['versions'][0]['version'], '<')) {
+                $extension->update_available = $response['data'][0]['versions'][0]['version'];
+                $extension->save();
+                $this->info('Update available for ' . $extension->name . ' to version ' . $response['data'][0]['versions'][0]['version']);
+            }
+        }
         $this->info('Cron Job Finished');
 
         return Command::SUCCESS;
