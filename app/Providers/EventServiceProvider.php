@@ -45,7 +45,7 @@ class EventServiceProvider extends ServiceProvider
         Announcement::observe(\App\Observers\AnnouncementObserver::class);
         try {
             foreach (Extension::where('enabled', true)->get() as $extension) {
-                $module = $extension->namespace . '\\' . $extension->name . 'Listeners';
+                $module = $extension->namespace . 'Listeners';
                 if (!class_exists($module)) {
                     continue;
                 }
