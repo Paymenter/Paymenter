@@ -93,4 +93,7 @@ function snow() {
 }
 window.snow = snow;
 
-import '../../../vendor/rappasoft/laravel-livewire-tables/resources/imports/laravel-livewire-tables-all.js';
+const fs = require('fs');
+if (fs.existsSync('../../../vendor/rappasoft/laravel-livewire-tables/resources/imports/laravel-livewire-tables-all.js')) {
+    import '../../../vendor/rappasoft/laravel-livewire-tables/resources/imports/laravel-livewire-tables-all.js';
+}
