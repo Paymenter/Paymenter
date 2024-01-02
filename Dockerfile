@@ -1,5 +1,5 @@
 # Stage 1 - Builder
-FROM        --platform=$TARGETOS/$TARGETARCH registry.access.redhat.com/ubi9/nodejs-18-minimal AS builder
+FROM        --platform=$TARGETOS/$TARGETARCH registry.access.redhat.com/ubi9/ubi-minimal
 
 USER        0
 
@@ -43,20 +43,11 @@ RUN         microdnf update -y \
     && microdnf remove -y tar wget \
     && microdnf clean all
 
-FROM builder
-
-USER       0
-
-# Nodejs
-RUN /usr/bin/npm install \
-    && /usr/bin/npm run build \
-    && rm -rf resources/scripts package.json node_modules
+FROM       --platform=$TARGETOS/$TARGETARCH registry.access.redhat.com/ubi9/nodejs-18-minimal AS builder
 
 COPY        --chown=caddy:caddy --from=builder /var/www/paymenter /var/www/paymenter
 
 USER        1001
-
-WORKDIR     /var/www/paymenter
 
 RUN         mkdir -p /tmp/paymenter/cache /tmp/paymenter/framework/{cache,sessions,views} storage/framework \
     && rm -rf bootstrap/cache storage/framework/sessions storage/framework/views storage/framework/cache \
@@ -73,6 +64,16 @@ ENV         USER=caddy
 RUN         composer install --no-dev --optimize-autoloader \
     && rm -rf bootstrap/cache/*.php \
     && rm -rf storage/logs/*.log
+
+USER       0
+
+WORKDIR     /var/www/paymenter
+
+# Nodejs
+RUN /usr/bin/npm install \
+    && /usr/bin/npm run build \
+    && rm -rf resources/scripts package.json node_modules
+
 
 
 USER       caddy
