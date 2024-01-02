@@ -8,7 +8,7 @@ WORKDIR     /var/www/paymenter
 COPY        --chown=1001:0 public ./public
 COPY        --chown=1001:0 themes ./themes
 COPY        --chown=1001:0 package.json .
-
+COPY        --chown=1001:0 vite.js .
 
 USER        1001
 
