@@ -50,9 +50,6 @@ RUN         composer install --no-dev --optimize-autoloader \
     && rm -rf bootstrap/cache/*.php \
     && rm -rf storage/logs/*.log
 
-USER       0
-
-WORKDIR     /var/www/paymenter
 
 # Nodejs
 FROM builder
