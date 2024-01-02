@@ -71,6 +71,8 @@ WORKDIR     /var/www/paymenter
 # Nodejs
 FROM builder
 
+USER       0
+
 RUN /usr/bin/npm install \
     && /usr/bin/npm run build \
     && rm -rf resources/scripts package.json node_modules
