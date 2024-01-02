@@ -43,6 +43,26 @@ RUN         microdnf update -y \
     && microdnf remove -y tar wget \
     && microdnf clean all
 
+USER        caddy
+ENV         USER=caddy
+
+RUN         composer install --no-dev --optimize-autoloader \
+    && rm -rf bootstrap/cache/*.php \
+    && rm -rf storage/logs/*.log
+
+USER       0
+
+WORKDIR     /var/www/paymenter
+
+# Nodejs
+FROM builder
+
+USER       0
+
+RUN /usr/bin/npm install \
+    && /usr/bin/npm run build \
+    && rm -rf resources/scripts package.json node_modules
+
 COPY        --chown=caddy:caddy --from=builder /var/www/paymenter /var/www/paymenter
 
 USER        1001
@@ -55,29 +75,6 @@ RUN         mkdir -p /tmp/paymenter/cache /tmp/paymenter/framework/{cache,sessio
     && ln -s /tmp/paymenter/framework/views /var/www/paymenter/storage/framework/views \
     && chmod -R 755 /var/www/paymenter/storage/* /tmp/paymenter/cache \
     && chown -R caddy:caddy /var/www/paymenter /tmp/paymenter/{cache,framework}
-
-USER        caddy
-ENV         USER=caddy
-
-RUN         composer install --no-dev --optimize-autoloader \
-    && rm -rf bootstrap/cache/*.php \
-    && rm -rf storage/logs/*.log
-
-USER       0
-
-WORKDIR     /var/www/paymenter
-
-
-# Nodejs
-FROM builder
-
-USER       0
-
-RUN /usr/bin/npm install \
-    && /usr/bin/npm run build \
-    && rm -rf resources/scripts package.json node_modules
-
-
 
 USER       caddy
 
