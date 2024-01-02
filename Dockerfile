@@ -1,5 +1,5 @@
 # Stage 1 - Builder
-FROM        --platform=$TARGETOS/$TARGETARCH registry.access.redhat.com/ubi9/ubi-minimal
+FROM       --platform=$TARGETOS/$TARGETARCH registry.access.redhat.com/ubi9/nodejs-18-minimal AS builder
 
 USER        0
 
@@ -43,8 +43,6 @@ RUN         microdnf update -y \
     && microdnf remove -y tar wget \
     && microdnf clean all
 
-FROM       --platform=$TARGETOS/$TARGETARCH registry.access.redhat.com/ubi9/nodejs-18-minimal AS builder
-
 COPY        --chown=caddy:caddy --from=builder /var/www/paymenter /var/www/paymenter
 
 USER        1001
@@ -69,7 +67,10 @@ USER       0
 
 WORKDIR     /var/www/paymenter
 
+
 # Nodejs
+FROM builder
+
 RUN /usr/bin/npm install \
     && /usr/bin/npm run build \
     && rm -rf resources/scripts package.json node_modules
