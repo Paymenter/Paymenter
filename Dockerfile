@@ -8,7 +8,6 @@ WORKDIR     /var/www/paymenter
 COPY        --chown=1001:0 public ./public
 COPY        --chown=1001:0 themes ./themes
 COPY        --chown=1001:0 package.json .
-COPY        --chown=1001:0 vite.js .
 
 
 USER        1001
@@ -44,7 +43,18 @@ RUN         microdnf update -y \
     && microdnf remove -y tar wget \
     && microdnf clean all
 
+FROM builder
+
+USER       0
+
+# Nodejs
+RUN /usr/bin/npm install \
+    && /usr/bin/npm run build \
+    && rm -rf resources/scripts package.json node_modules
+
 COPY        --chown=caddy:caddy --from=builder /var/www/paymenter /var/www/paymenter
+
+USER        1001
 
 WORKDIR     /var/www/paymenter
 
@@ -64,15 +74,6 @@ RUN         composer install --no-dev --optimize-autoloader \
     && rm -rf bootstrap/cache/*.php \
     && rm -rf storage/logs/*.log
 
-FROM builder
-
-USER       0
-
-
-# Nodejs
-RUN /usr/bin/npm install \
-    && /usr/bin/npm run build \
-    && rm -rf resources/scripts package.json node_modules
 
 USER       caddy
 
