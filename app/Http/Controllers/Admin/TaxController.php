@@ -26,7 +26,7 @@ class TaxController extends Controller
             'tax_type' => 'required|string|in:inclusive,exclusive',
             'taxrate.*.name' => 'required|string|max:255',
             'taxrate.*.rate' => 'required|numeric|min:0|max:100',
-            'taxrate.*.country' => 'required|string|in:' . implode(',', array_keys(Constants::countries())),
+            'taxrate.*.country' => 'required|string|in:all,' . implode(',', array_keys(Constants::countries())),
             'taxrate.*.delete' => 'nullable|boolean',
         ]);
         
@@ -54,7 +54,7 @@ class TaxController extends Controller
         $request->validate([
             'name' => 'required|string|max:255|unique:tax_rates',
             'rate' => 'required|numeric|min:0|max:100',
-            'country' => 'required|string|in:' . implode(',', array_keys(Constants::countries())),
+            'country' => 'required|string|in:all,' . implode(',', array_keys(Constants::countries())),
         ]);
 
         TaxRate::create([
