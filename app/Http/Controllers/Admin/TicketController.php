@@ -63,6 +63,10 @@ class TicketController extends Controller
             'attachments' => 'nullable|array',
         ]);
 
+        if ($ticket->status == 'closed') {
+            return redirect()->route('admin.tickets.show', $ticket)->with('error', 'Ticket is closed');
+        }
+
         $ticket->status = 'replied';
         $ticket->save();
         $ticketMessage = $ticket->messages()->create([
