@@ -9,23 +9,16 @@
     <div class="mt-6 text-gray-500 dark:text-darkmodetext">
         <form method="POST" action="{{ route('admin.products.store') }}" enctype="multipart/form-data">
             @csrf
-            <div>
-                <label for="name">{{ __('Name') }}</label>
+            <x-input type="text" name="name" label="{{ __('Name') }}" placeholder="{{ __('Name') }}"
+                value="{{ old('name') }}" required autofocus />
 
-                <input id="name" class="block w-full mt-1 rounded-lg dark:bg-darkmode" type="text" name="name"
-                    value="{{ old('name') }}" required autofocus />
-            </div>
-            <div class="mt-4">
-                <label for="description">{{ __('Description') }}</label>
+            <x-input type="textarea" name="description" label="{{ __('Description') }}"
+                placeholder="{{ __('Description') }}" value="{{ old('description') }}" required rows="4" class="mt-2" />
 
-                <textarea id="description" class="block w-full mt-1 rounded-lg dark:bg-darkmode" name="description" required>{{ old('description') }}</textarea>
-            </div>
-            <div class="mt-4">
-                <label for="price">{{ __('Price') }}</label>
+            <x-input type="text" name="price" label="{{ __('Price') }}" placeholder="{{ __('Price') }}"
+                value="{{ old('price') }}" required />
+                
 
-                <input id="price" class="block w-full mt-1 rounded-lg dark:bg-darkmode" type="number"
-                    name="price" min="0" step="any" value="{{ old('price') }}" required min="0" />
-            </div>
             <div class="mt-4">
                 <label for="image">{{ __('Image') }}</label>
 
@@ -44,21 +37,15 @@
                 </div>
             </div>
             <div class="mt-4">
-                <label for="category">{{ __('Category') }}</label>
-                <select id="category" class="block w-full mt-1 rounded-lg dark:bg-darkmode" name="category_id"
-                    required>
-                    @if ($categories->count())
-                        @foreach ($categories as $category)
-                            <option value="{{ $category->id }}">{{ $category->name }}</option>
-                        @endforeach
-                    @else
-                        <option value="">No categories found</option>
-                    @endif
-                </select>
+                <x-input type="select" name="category_id" label="{{ __('Category') }}">
+                    @foreach ($categories as $category)
+                        <option value="{{ $category->id }}">{{ $category->name }}</option>
+                    @endforeach
+                </x-input>
+
                 <div class="flex items-center justify-end mt-4 text-blue-700">
                     <a href="{{ route('admin.categories.create') }}">Create Category</a>
                 </div>
-
             </div>
             <div class="flex items-center justify-end mt-4">
                 <button type="submit" class="inline-flex justify-center w-max float-right button button-primary">

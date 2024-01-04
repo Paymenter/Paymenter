@@ -1,7 +1,4 @@
-<x-app-layout clients title="{{ __('Product') }}">
-    <x-slot name="title">
-        {{ __('Product: ') }} {{ $product->name }}
-    </x-slot>
+<x-app-layout clients title="{{ __('Product') }} {{ $product->name }}">
     <div class="content">
         <div class="content-box">
             <div class="mb-4">
@@ -23,8 +20,8 @@
                     </div>
                 </div>
 
-                @if ($orderProduct->expiry_date)
-                    <div class="w-full md:w-1/2 px-2">
+                <div class="w-full md:w-1/2 px-2">
+                    @if ($orderProduct->expiry_date)
                         <div class="mb-4">
                             <h2 class="text-lg font-bold">{{ __('Status') }}</h2>
                         </div>
@@ -41,7 +38,7 @@
                                 {{ ucfirst($orderProduct->billing_cycle) }}
                             </p>
                         </div>
-                        @if($orderProduct->cancellable && !$orderProduct->cancellation()->exists())
+                        @if ($orderProduct->cancellable && !$orderProduct->cancellation()->exists())
                             <x-modal id="cancellationModal">
                                 <x-slot name="title">
                                     {{ __('Cancel') }} {{ $product->name }}
@@ -88,12 +85,12 @@
                                 </x-slot>
                             </x-modal>
 
-                            <button class="button button-primary"  data-modal-target="cancellationModal"
+                            <button class="button button-danger"  data-modal-target="cancellationModal"
                                 data-modal-toggle="cancellationModal">
                                 {{ __('Cancel Product') }}
                             </button>
                         @endif
-                        @if($orderProduct->cancellation()->exists())
+                        @if ($orderProduct->cancellation()->exists())
                             <div class="mt-4">
                                 <p class="text-sm text-gray-500 dark:text-gray-400">
                                     @if($orderProduct->status == 'cancelled')
@@ -110,8 +107,14 @@
                                 </p>
                             </div>
                         @endif
-                    </div>
-                @endif
+                    @endif
+                    
+                    @if($orderProduct->upgradable)
+                        <a class="button button-success" href="{{ route('clients.active-products.upgrade', $orderProduct->id) }}">
+                            {{ __('Upgrade Product') }}
+                        </a>
+                    @endif
+                </div>
             </div>
             <div class="sm:flex">
                 @if ($link)

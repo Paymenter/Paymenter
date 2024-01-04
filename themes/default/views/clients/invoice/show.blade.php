@@ -203,11 +203,11 @@
                                         <tr>
                                             <th scope="row" colspan="3"
                                                 class="hidden pt-4 pl-6 pr-3 text-sm font-light text-right text-slate-500 sm:table-cell md:pl-0">
-                                                {{ $tax->name }}&#64;{{ $tax->rate }}%
+                                                {{ $tax->name }}({{ $tax->rate }}%)
                                             </th>
                                             <th scope="row"
                                                 class="pt-4 pl-4 pr-3 text-sm font-light text-left text-slate-500 sm:hidden">
-                                                {{ $tax->name }}&#64;{{ $tax->rate }}%
+                                                {{ $tax->name }}({{ $tax->rate }}%)
                                             </th>
                                             <td class="pt-4 pl-3 pr-4 text-sm text-right text-slate-500 sm:pr-6 md:pr-0">
                                                 <x-money :amount="$tax->amount" />

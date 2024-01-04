@@ -23,6 +23,12 @@
                         {{ __('Extension') }}
                     </a>
                 </div>
+                <div class="flex-none">
+                    <a href="{{ route('admin.products.upgrade', $product->id) }}"
+                        class="inline-flex justify-center w-full p-4 px-2 py-2 text-xs font-bold text-gray-900 uppercase border-b-2 dark:text-darkmodetext dark:hover:bg-darkbutton border-y-transparent hover:border-logo hover:text-logo">
+                        {{ __('Upgrades') }}
+                    </a>
+                </div>
             </div>
         </div>
     </div>

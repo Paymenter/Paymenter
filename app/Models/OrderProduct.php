@@ -57,6 +57,23 @@ class OrderProduct extends Model
         return $this->hasOne(Cancellation::class, 'order_product_id', 'id');
     }
 
+    public function availableUpgrades()
+    {
+        $upgrades = $this->product->upgrades->pluck('upgrade_product_id')->toArray();
+        return Product::whereIn('id', $upgrades)->get();
+    }
+
+    public function getUpgradableAttribute()
+    {
+        return $this->availableUpgrades()->count() > 0;
+        // return $this->availableUpgrades()->count() > 0 || $this->product->upgrade_configurable_options;
+    }
+
+    public function upgrade()
+    {
+        return $this->hasOne(OrderProductUpgrade::class, 'order_product_id', 'id');
+    }
+
     public function getCancellableAttribute()
     {
         return $this->status == 'paid' && $this->expiry_date > now();

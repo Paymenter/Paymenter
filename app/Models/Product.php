@@ -20,6 +20,8 @@ class Product extends Model
         'allow_quantity',
         'order',
         'limit',
+        'hidden',
+        'upgrade_configurable_options',
     ];
 
     public function category()
@@ -40,6 +42,11 @@ class Product extends Model
     public function prices()
     {
         return $this->hasOne(ProductPrice::class);
+    }
+
+    public function upgrades()
+    {
+        return $this->hasMany(ProductUpgrade::class, 'product_id');
     }
 
     public function price($type = null)

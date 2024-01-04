@@ -42,6 +42,8 @@ Route::group(['prefix' => 'admin', 'middleware' => 'permission:ADMINISTRATOR'], 
         Route::get('/{product}/extension/export', [App\Http\Controllers\Admin\ProductController::class, 'extensionExport'])->middleware(['permission:EDIT_PRODUCTS'])->name('admin.products.extension.export');
         Route::post('/{product}/extension/import', [App\Http\Controllers\Admin\ProductController::class, 'extensionImport'])->middleware(['permission:EDIT_PRODUCTS'])->name('admin.products.extension.import');
         Route::post('/{product}/duplicate', [App\Http\Controllers\Admin\ProductController::class, 'duplicate'])->middleware(['permission:CREATE_PRODUCTS'])->name('admin.products.duplicate');
+        Route::get('/{product}/upgrades', [App\Http\Controllers\Admin\ProductController::class, 'upgrade'])->middleware(['permission:VIEW_PRODUCTS'])->name('admin.products.upgrade');
+        Route::post('/{product}/upgrades', [App\Http\Controllers\Admin\ProductController::class, 'upgradeUpdate'])->middleware(['permission:EDIT_PRODUCTS'])->name('admin.products.upgrade.update');
         Route::delete('/{product}/delete', [App\Http\Controllers\Admin\ProductController::class, 'destroy'])->middleware(['permission:DELETE_PRODUCTS'])->name('admin.products.destroy');
     });
 

@@ -65,6 +65,12 @@ Breadcrumbs::for('admin.products.extension', function (BreadcrumbTrail $trail, $
     $trail->push(__('Extension'), route('admin.products.extension', $product));
 });
 
+Breadcrumbs::for('admin.products.upgrade', function (BreadcrumbTrail $trail, $product) {
+    $trail->parent('admin.products.edit', $product);
+    $trail->push(__('Upgrades'), route('admin.products.upgrade', $product));
+});
+
+
 /*
 * < Products 
 */

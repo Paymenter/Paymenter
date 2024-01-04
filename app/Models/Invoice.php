@@ -52,6 +52,11 @@ class Invoice extends Model
         return $this->getItemsWithProducts()->total;
     }
 
+    public function upgrade()
+    {
+        return $this->hasOne(OrderProductUpgrade::class, 'invoice_id', 'id');
+    }
+
     public function items()
     {
         return $this->hasMany(InvoiceItem::class, 'invoice_id', 'id');

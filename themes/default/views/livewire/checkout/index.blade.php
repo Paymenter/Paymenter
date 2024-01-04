@@ -165,7 +165,7 @@
                         </div>
                         <div class="flex flex-row items-center justify-between mt-2">
                             <div class="flex flex-row items-center">
-                                {{ $tax->name }}&#64;{{ $tax->rate }}%
+                                {{ $tax->name }} ({{ $tax->rate }}%)
                             </div>
                             <div class="flex flex-col items-end">
                                 <x-money :amount="$tax->amount" />
@@ -177,11 +177,11 @@
                             <span class="text-lg font-bold">{{ __('Total Today') }}</span>
                         </div>
                         <div class="flex flex-col items-end">
-                            <span class="text-lg font-bold">{{ config('settings::currency_sign') }}
+                            <span class="text-lg font-bold">
                                 @if (!empty($discount))
-                                    {{ number_format(round($total - $discount, 2), 2) }}
+                                    <x-money :amount="$total - $discount" />
                                 @else
-                                    {{ number_format($total, 2) }}
+                                    <x-money :amount="$total" />
                                 @endif
                             </span>
                         </div>

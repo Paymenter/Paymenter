@@ -5,7 +5,9 @@ namespace App\Console\Commands;
 use Illuminate\Console\Command;
 use App\Helpers\ExtensionHelper;
 use App\Helpers\NotificationHelper;
+use App\Models\Invoice;
 use App\Models\OrderProduct;
+use App\Models\OrderProductUpgrade;
 use Illuminate\Support\Facades\Http;
 
 class CronJob extends Command
@@ -93,7 +95,7 @@ class CronJob extends Command
             $invoice->status = 'pending';
             $invoice->user_id = $order->order->user_id;
             $invoice->saveQuietly();
-            $date;
+
             if ($order->billing_cycle == 'monthly') {
                 $date = date('Y-m-d', strtotime('+1 month', strtotime($order->expiry_date)));
             } elseif ($order->billing_cycle == 'quarterly') {
@@ -133,10 +135,23 @@ class CronJob extends Command
         }
         $this->info('Sended Number of Invoices: ' . $invoiceProcessed);
 
+        foreach (OrderProductUpgrade::with('orderProduct')->get() as $orderProductUpgrade) {
+            if ($orderProductUpgrade->orderProduct->expiry_date < now()) {
+                $orderProductUpgrade->delete();
+            } else {
+                // Update the price
+                $invoiceItem = $orderProductUpgrade->invoice->items->first();
+                $invoiceItem->total = $this->calculateAmount($orderProductUpgrade->product, $orderProductUpgrade->orderProduct);
+                $invoiceItem->save();
+
+                $this->info('Updated Invoice Item: ' . $invoiceItem->id);
+            }
+        }
+
         // Check all extensions for updates
         $extensions = \App\Models\Extension::all();
         foreach ($extensions as $extension) {
-            if (!$extension->version){
+            if (!$extension->version) {
                 continue;
             }
             $url = config('app.marketplace') . 'extensions?version=' . config('app.version') . '&search=' . $extension->name;
@@ -156,5 +171,21 @@ class CronJob extends Command
         $this->info('Cron Job Finished');
 
         return Command::SUCCESS;
+    }
+
+    private function calculateAmount($product, $orderProduct)
+    {
+        $cycleToDays = [
+            'monthly' => 30,
+            'quarterly' => 90,
+            'semi-annually' => 180,
+            'annually' => 365,
+            'biennially' => 730,
+            'triennially' => 1095,
+        ];
+
+        $amount = $product->price($orderProduct->billing_cycle) - ($orderProduct->product->price($orderProduct->billing_cycle) / $cycleToDays[$orderProduct->billing_cycle] * $orderProduct->expiry_date->diffInDays());
+
+        return $amount;
     }
 }

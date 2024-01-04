@@ -89,6 +89,7 @@ class ProductController extends Controller
             'image' => 'image|mimes:jpeg,png,jpg,gif,svg|max:5242',
             'stock' => 'integer|required_if:stock_enabled,true',
             'stock_enabled' => 'boolean',
+            'hidden' => 'boolean',
         ]);
 
         if ($request->hasFile('image') && !$request->get('no_image')) {
@@ -103,6 +104,7 @@ class ProductController extends Controller
             }
         }
         $product->stock_enabled = $request->get('stock_enabled') ?? false;
+        $product->hidden = $request->get('hidden') ?? false;
 
         if ($request->get('no_image')) {
             $data['image'] = 'null';
@@ -374,5 +376,45 @@ class ProductController extends Controller
         }
 
         return redirect()->route('admin.products.edit', $newProduct->id)->with('success', 'Product duplicated successfully');
+    }
+
+    public function upgrade(Product $product)
+    {
+        $products = Product::where('id', '!=', $product->id)->get();
+
+        return view('admin.products.upgrade', compact('product', 'products'));
+    }
+
+    public function upgradeUpdate(Request $request, Product $product)
+    {
+        $request->validate([
+            'upgrades' => 'array',
+            'upgrade_configurable_options' => 'boolean'
+        ]);
+
+        $product->update([
+            'upgrade_configurable_options' => $request->get('upgrade_configurable_options', 0),
+        ]);
+
+        foreach ($product->upgrades as $upgrade) {
+            if (!in_array($upgrade->upgrade_product_id, $request->get('upgrades', []))) {
+                $upgrade->delete();
+            }
+        }
+
+        foreach ($request->get('upgrades', []) as $upgrade) {
+            $product->upgrades()->updateOrCreate(
+                [
+                    'product_id' => $product->id,
+                    'upgrade_product_id' => $upgrade,
+                ],
+                [
+                    'product_id' => $product->id,
+                    'upgrade_product_id' => $upgrade,
+                ]
+            );
+        }
+
+        return redirect()->route('admin.products.upgrade', $product->id)->with('success', 'Product upgrades updated successfully');
     }
 }

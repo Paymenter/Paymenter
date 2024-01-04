@@ -34,16 +34,17 @@
                                             class="@if ($category->name == $categoryItem->name || $hasActiveChild) text-secondary-900 pl-3 !border-primary-400 @endif border-l-2 border-transparent duration-300 hover:text-secondary-900 hover:pl-3 hover:border-primary-400 focus:text-secondary-900 focus:pl-3 focus:border-primary-400">
                                             {{ $categoryItem->name }}
                                         </a>
-                                        <!-- List all child categories -->
                                     @endif
-                                    <div class="flex flex-col gap-1 @if(!$hasActiveChild) hidden @endif group-hover:block transition ease-in-out duration-300	">
-                                        @foreach ($categoryItem->children as $childCategory)
-                                            <a href="{{ route('products', $childCategory->slug) }}"
-                                                class="pl-6 text-sm @if ($category->name == $childCategory->name) text-secondary-900 pl-3 !border-primary-400 @endif border-l-2 border-transparent duration-300 hover:text-secondary-900 hover:pl-8 hover:border-primary-400 focus:text-secondary-900 focus:pl-3 focus:border-primary-400">
-                                                {{ $childCategory->name }}
-                                            </a>
-                                        @endforeach
-                                    </div>
+                                    @if($categoryItem->children->count() > 0)
+                                        <div class="flex flex-col gap-1 @if(!$hasActiveChild) hidden @endif group-hover:flex transition ease-in-out duration-300">
+                                            @foreach ($categoryItem->children as $childCategory)
+                                                <a href="{{ route('products', $childCategory->slug) }}"
+                                                    class="pl-6 text-sm @if ($category->name == $childCategory->name) text-secondary-900 pl-3 !border-primary-400 @endif border-l-2 border-transparent duration-300 hover:text-secondary-900 hover:pl-8 hover:border-primary-400 focus:text-secondary-900 focus:pl-3 focus:border-primary-400">
+                                                    {{ $childCategory->name }}
+                                                </a>
+                                            @endforeach
+                                        </div>
+                                    @endif
                                 </div>
                             @endforeach
                         </div>
