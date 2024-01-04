@@ -83,7 +83,7 @@ class Index extends Component
                 $product->config = $product2['config'] ?? [];
                 $product->configurableOptions = $product2['configurableOptions'] ?? [];
                 $product->quantity = $product2['quantity'];
-                $product->price = $product2['price'];
+                $product->price = $product2['price'] ?? 0;
                 $product->billing_cycle = $product2['billing_cycle'] ?? null;
                 $product->setup_fee = $product2['setup_fee'] ?? 0;
                 $total += $product->price * $product->quantity;
