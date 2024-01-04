@@ -18,22 +18,22 @@ return [
     /**
      * Enable or Disable automatic injection of core assets
      */
-    'inject_core_assets_enabled' => false,
+    'inject_core_assets_enabled' => true,
 
     /**
      * Enable or Disable automatic injection of third-party assets
      */
-    'inject_third_party_assets_enabled' => false,
+    'inject_third_party_assets_enabled' => true,
 
     /**
      * Enable Blade Directives (Not required if automatically injecting or using bundler approaches)
      */
-    'enable_blade_directives ' => false,
+    'enable_blade_directives' => false,
 
     /**
      * Customise Script & Styles Paths
      */
-    'script_base_path' => '/rappasoft/laravel-livewire-tables',
+    'script_base_path' => '/paymenter/tables',
 
     /**
      * Filter Default Configuration Options
