@@ -83,9 +83,9 @@ class Index extends Component
                 $product->config = $product2['config'] ?? [];
                 $product->configurableOptions = $product2['configurableOptions'] ?? [];
                 $product->quantity = $product2['quantity'];
-                $product->price = isset($product2['billing_cycle']) ? $product->prices()->get()->first()->{$product2['billing_cycle']} : $product->prices()->get()->first()->monthly;
+                $product->price = $product2['price'];
                 $product->billing_cycle = $product2['billing_cycle'] ?? null;
-                $product->setup_fee = isset($product2['billing_cycle']) ? $product->prices()->get()->first()->{$product2['billing_cycle'] . '_setup'} : $product->prices()->get()->first()->monthly_setup;
+                $product->setup_fee = $product2['setup_fee'] ?? 0;
                 $total += $product->price * $product->quantity;
                 $totalSetup += $product->setup_fee * $product->quantity;
                 if ($this->coupon) {

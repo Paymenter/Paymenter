@@ -9,117 +9,86 @@
                 </p>
                 <hr class="my-2 border-secondary-300">
                 <div>
-                    <form method="POST" action="{{ route('checkout.config', $product->id) }}">
-                        @csrf
-                        @if ($prices->type == 'recurring')
-                            <div class="mt-4">
-                                <h3>{{ __('Billing cycle') }}</h3>
-
-                                <div class="flex flex-row flex-wrap mt-2 mb-4 gap-4">
-                                    @php $priceTypes = ['monthly', 'quarterly', 'semi_annually', 'annually', 'biennially', 'triennially']; @endphp
-                                    @foreach ($priceTypes as $priceType)
-                                        @if ($prices->{$priceType})
-                                            <button type="button"
-                                                class="button button-secondary flex flex-col items-center p-4 px-5 ring-offset-primary-400 ring-primary-400 @if ($billing_cycle == $priceType) ring-2 @endif"
-                                                wire:click="setBillingCycle('{{ $priceType }}')">
-                                                <h3 class="text-lg">{{ ucfirst($priceType == 'semi_annually' ? 'semi annually' : $priceType) }}</h3>
-                                                <x-money :amount="$prices->{$priceType}" /></h3>
-                                                @if($prices->{$priceType.'_setup'})
-                                                    <div class="text-sm text-secondary-600">{{ __('Setup fee') }}: <x-money :amount="$prices->{$priceType.'_setup'}" /></div>
-                                                @endif
-                                            </button>
-                                        @endif
-                                    @endforeach
-                                </div>
+                    @if ($prices->type == 'recurring')
+                        <div class="mt-4">
+                            <h3>{{ __('Billing cycle') }}</h3>
+                            <div class="flex flex-row flex-wrap mt-2 mb-4 gap-4">
+                                @php $priceTypes = ['monthly', 'quarterly', 'semi_annually', 'annually', 'biennially', 'triennially']; @endphp
+                                @foreach ($priceTypes as $priceType)
+                                    @if ($prices->{$priceType})
+                                        <button type="button"
+                                            class="button button-secondary flex flex-col items-center p-4 px-5 ring-offset-primary-400 ring-primary-400 @if ($billing_cycle == $priceType) ring-2 @endif"
+                                            wire:click="setBillingCycle('{{ $priceType }}')">
+                                            <h3 class="text-lg">{{ ucfirst($priceType == 'semi_annually' ? 'semi annually' : $priceType) }}</h3>
+                                            <x-money :amount="$prices->{$priceType}" /></h3>
+                                            @if($prices->{$priceType.'_setup'})
+                                                <div class="text-sm text-secondary-600">{{ __('Setup fee') }}: <x-money :amount="$prices->{$priceType.'_setup'}" /></div>
+                                            @endif
+                                        </button>
+                                    @endif
+                                @endforeach
                             </div>
-                        @endif
-                        @if (count($customConfig) > 0)
-                            <h1 class="text-xl font-bold mt-6">{{ __('Configurable Options') }}</h1>
-                        @endif
-                        @foreach ($userConfig as $uconfig)
-                            <x-config-item :config="$uconfig" wire:change="update('{{ $uconfig->name }}', $event.target.value, true)" />
-                        @endforeach
-                        @foreach ($customConfig as $cconfig)
-                            @php
-                                $configItems = $cconfig
-                                    ->configurableOptions()
-                                    ->orderBy('order', 'asc')
-                                    ->get();
-                            @endphp
-                            @foreach ($configItems as $item)
-                                @if ($item->hidden)
-                                    @continue
-                                @endif
-                                <div class="mt-2">
-                                    @php $name = explode('|', $item->name)[1] ?? $item->name; @endphp
-                                    @if ($item->type == 'quantity')
-                                        <!-- Display the quantity input with plus and minus buttons -->
-                                        <div class="flex flex-row h-10 w-full rounded-lg relative bg-transparent mt-2">
-                                            <button
-                                                onclick="if (this.parentNode.querySelector('input[type=number]').value > 0) this.parentNode.querySelector('input[type=number]').stepDown()"
-                                                type="button"
-                                                class="bg-secondary-200 text-secondary-500 hover:text-secondary-700 hover:bg-secondary-300 h-full w-20 rounded-l cursor-pointer outline-none">
-                                                <span class="m-auto text-2xl font-thin">−</span>
-                                            </button>
-                                            <x-input type="number" name="{{ $item->id }}" id="{{ $item->id }}"
-                                                placeholder="{{ ucfirst($name) }}" value="{{ $config[$item->id] }}"
-                                                wire:change="update({{ $item->id }}, $event.target.value)"
-                                                required />
-                                            <button
-                                                onclick="this.parentNode.querySelector('input[type=number]').stepUp()"
-                                                type="button"
-                                                class="bg-secondary-200 text-secondary-500 hover:text-secondary-700 hover:bg-secondary-300 h-full w-20 rounded-r cursor-pointer">
-                                                <span class="m-auto text-2xl font-thin">+</span>
-                                            </button>
-                                            <div class="flex items-center ml-1">
-                                                x {{ ucfirst($name) }}
-                                                @if ($item->configurableOptionInputs->first()->configurableOptionInputPrice->{$billing_cycle})
-                                                    <x-money :amount="$item->configurableOptionInputs->first()
-                                                        ->configurableOptionInputPrice->{$billing_cycle}" />
-                                                @else
-                                                    free
+                        </div>
+                    @endif
+                    @if (count($customConfig) > 0)
+                        <h1 class="text-xl font-bold mt-6">{{ __('Configurable Options') }}</h1>
+                    @endif
+                    @foreach ($userConfig as $uconfig)
+                        <x-config-item :config="$uconfig" wire:change="update('{{ $uconfig->name }}', $event.target.value, true)" />
+                    @endforeach
+                    @foreach ($customConfig as $cconfig)
+                        @php
+                            $configItems = $cconfig
+                                ->configurableOptions()
+                                ->orderBy('order', 'asc')
+                                ->get();
+                        @endphp
+                        @foreach ($configItems as $item)
+                            @if ($item->hidden)
+                                @continue
+                            @endif
+                            <div class="mt-2">
+                                @php $name = explode('|', $item->name)[1] ?? $item->name; @endphp
+                                @if ($item->type == 'quantity')
+                                    <!-- Display the quantity input with plus and minus buttons -->
+                                    <div class="flex flex-row h-10 w-full rounded-lg relative bg-transparent mt-2">
+                                        <button
+                                            onclick="if (this.parentNode.querySelector('input[type=number]').value > 0) this.parentNode.querySelector('input[type=number]').stepDown()"
+                                            type="button"
+                                            class="bg-secondary-200 text-secondary-500 hover:text-secondary-700 hover:bg-secondary-300 h-full w-20 rounded-l cursor-pointer outline-none">
+                                            <span class="m-auto text-2xl font-thin">−</span>
+                                        </button>
+                                        <x-input type="number" name="{{ $item->id }}" id="{{ $item->id }}"
+                                            placeholder="{{ ucfirst($name) }}" value="{{ $config[$item->id] }}"
+                                            wire:change="update({{ $item->id }}, $event.target.value)"
+                                            required />
+                                        <button
+                                            onclick="this.parentNode.querySelector('input[type=number]').stepUp()"
+                                            type="button"
+                                            class="bg-secondary-200 text-secondary-500 hover:text-secondary-700 hover:bg-secondary-300 h-full w-20 rounded-r cursor-pointer">
+                                            <span class="m-auto text-2xl font-thin">+</span>
+                                        </button>
+                                        <div class="flex items-center ml-1">
+                                            x {{ ucfirst($name) }}
+                                            @if ($item->configurableOptionInputs->first()->configurableOptionInputPrice->{$billing_cycle})
+                                                <x-money :amount="$item->configurableOptionInputs->first()
+                                                    ->configurableOptionInputPrice->{$billing_cycle}" />
+                                            @else
+                                                free
+                                            @endif
+                                        </div>
+                                    </div>
+                                @elseif($item->type == 'radio')
+                                    <div class="mt-2">
+                                        <label for="{{ $item->id }}"
+                                            class="text-sm text-secondary-600">{{ ucfirst($name) }}</label>
+                                        <div class="flex flex-col radios">
+                                            @foreach ($item->configurableOptionInputs()->orderBy('order', 'asc')->get() as $key => $option)
+                                                @php $name = explode('|', $option->name)[1] ?? $option->name; @endphp
+                                                @if ($option->hidden)
+                                                    @continue
                                                 @endif
-                                            </div>
-                                        </div>
-                                    @elseif($item->type == 'radio')
-                                        <div class="mt-2">
-                                            <label for="{{ $item->id }}"
-                                                class="text-sm text-secondary-600">{{ ucfirst($name) }}</label>
-                                            <div class="flex flex-col radios">
-                                                @foreach ($item->configurableOptionInputs()->orderBy('order', 'asc')->get() as $key => $option)
-                                                    @php $name = explode('|', $option->name)[1] ?? $option->name; @endphp
-                                                    @if ($option->hidden)
-                                                        @continue
-                                                    @endif
-                                                    <div class="inline-flex">
-                                                        <input type="radio" id="{{ $option->id }}"
-                                                            name="{{ $item->id }}" value="{{ $option->id }}"
-                                                            @if (old($item->name) == $option || $config[$item->id] == $option->id) checked @elseif(!$key) checked @endif
-                                                            wire:change="update({{ $item->id }}, $event.target.value)">
-                                                        <label class="ml-2  inline-flex items-center"
-                                                            for="{{ $option->id }}">
-                                                            {{ ucfirst($name) }}
-                                                            @if ($option->configurableOptionInputPrice->{$billing_cycle})
-                                                                -
-                                                                <x-money :amount="$option->configurableOptionInputPrice
-                                                                    ->{$billing_cycle}" />
-                                                            @endif
-                                                        </label>
-                                                    </div>
-                                                @endforeach
-                                            </div>
-                                        </div>
-                                    @elseif($item->type == 'slider')
-                                        <div class="mt-2">
-                                            @php $includeJs = true; @endphp
-                                            <label for="{{ $item->id }}"
-                                                class="text-sm text-secondary-600">{{ ucfirst($name) }}</label>
-                                            <div class="flex flex-col radios">
-                                                @foreach ($item->configurableOptionInputs()->orderBy('order', 'asc')->get() as $key => $option)
-                                                    @php $name = explode('|', $option->name)[1] ?? $option->name; @endphp
-                                                    @if ($option->hidden)
-                                                        @continue
-                                                    @endif
+                                                <div class="inline-flex">
                                                     <input type="radio" id="{{ $option->id }}"
                                                         name="{{ $item->id }}" value="{{ $option->id }}"
                                                         @if (old($item->name) == $option || $config[$item->id] == $option->id) checked @elseif(!$key) checked @endif
@@ -133,42 +102,69 @@
                                                                 ->{$billing_cycle}" />
                                                         @endif
                                                     </label>
-                                                @endforeach
-                                            </div>
+                                                </div>
+                                            @endforeach
                                         </div>
-                                    @elseif($item->type == 'select')
-                                        <x-input type="{{ $item->type }}" placeholder="{{ ucfirst($name) }}"
-                                            name="{{ $item->id }}" id="{{ $item->id }}"
-                                            label="{{ ucfirst($name) }}" required
-                                            wire:change="update({{ $item->id }}, $event.target.value)">
-                                            @foreach ($item->configurableOptionInputs()->orderBy('order', 'asc')->get() as $option)
+                                    </div>
+                                @elseif($item->type == 'slider')
+                                    <div class="mt-2">
+                                        @php $includeJs = true; @endphp
+                                        <label for="{{ $item->id }}"
+                                            class="text-sm text-secondary-600">{{ ucfirst($name) }}</label>
+                                        <div class="flex flex-col radios">
+                                            @foreach ($item->configurableOptionInputs()->orderBy('order', 'asc')->get() as $key => $option)
+                                                @php $name = explode('|', $option->name)[1] ?? $option->name; @endphp
                                                 @if ($option->hidden)
                                                     @continue
                                                 @endif
-                                                @php $name = explode('|', $option->name)[1] ?? $option->name; @endphp
-                                                <option value="{{ $option->id }}"
-                                                    @if (old($item->name) == $option || $config[$item->id] == $option->id) selected @endif>
+                                                <input type="radio" id="{{ $option->id }}"
+                                                    name="{{ $item->id }}" value="{{ $option->id }}"
+                                                    @if (old($item->name) == $option || $config[$item->id] == $option->id) checked @elseif(!$key) checked @endif
+                                                    wire:change="update({{ $item->id }}, $event.target.value)">
+                                                <label class="ml-2  inline-flex items-center"
+                                                    for="{{ $option->id }}">
                                                     {{ ucfirst($name) }}
                                                     @if ($option->configurableOptionInputPrice->{$billing_cycle})
                                                         -
                                                         <x-money :amount="$option->configurableOptionInputPrice
                                                             ->{$billing_cycle}" />
                                                     @endif
-                                                </option>
+                                                </label>
                                             @endforeach
-                                        </x-input>
-                                    @else
-                                        <x-input type="{{ $item->type }}" placeholder="{{ ucfirst($name) }}"
-                                            name="{{ $item->id }}" id="{{ $item->id }}"
-                                            value="{{ old($item->name) ?? $config[$item->id] }}"
-                                            label="{{ ucfirst($name) }}" required
-                                            wire:change="update({{ $item->id }}, $event.target.value)">
-                                        </x-input>
-                                    @endif
-                                </div>
-                            @endforeach
+                                        </div>
+                                    </div>
+                                @elseif($item->type == 'select')
+                                    <x-input type="{{ $item->type }}" placeholder="{{ ucfirst($name) }}"
+                                        name="{{ $item->id }}" id="{{ $item->id }}"
+                                        label="{{ ucfirst($name) }}" required
+                                        wire:change="update({{ $item->id }}, $event.target.value)">
+                                        @foreach ($item->configurableOptionInputs()->orderBy('order', 'asc')->get() as $option)
+                                            @if ($option->hidden)
+                                                @continue
+                                            @endif
+                                            @php $name = explode('|', $option->name)[1] ?? $option->name; @endphp
+                                            <option value="{{ $option->id }}"
+                                                @if (old($item->name) == $option || $config[$item->id] == $option->id) selected @endif>
+                                                {{ ucfirst($name) }}
+                                                @if ($option->configurableOptionInputPrice->{$billing_cycle})
+                                                    -
+                                                    <x-money :amount="$option->configurableOptionInputPrice
+                                                        ->{$billing_cycle}" />
+                                                @endif
+                                            </option>
+                                        @endforeach
+                                    </x-input>
+                                @else
+                                    <x-input type="{{ $item->type }}" placeholder="{{ ucfirst($name) }}"
+                                        name="{{ $item->id }}" id="{{ $item->id }}"
+                                        value="{{ old($item->name) ?? $config[$item->id] }}"
+                                        label="{{ ucfirst($name) }}" required
+                                        wire:change="update({{ $item->id }}, $event.target.value)">
+                                    </x-input>
+                                @endif
+                            </div>
                         @endforeach
-                    </form>
+                    @endforeach
                 </div>
             </div>
         </div>

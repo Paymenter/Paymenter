@@ -144,7 +144,7 @@ class Config extends Component
         } else if (
             $prices->type == 'one-time'
         ) {
-            $product['price'] = $product->prices()->get()->first()->monthly;
+            $product['price'] = $this->product->prices()->get()->first()->monthly;
         } else {
             $product['price'] = 0;
         }
@@ -181,7 +181,6 @@ class Config extends Component
         $product['config'] = $config;
         $product['product_id'] = $this->product->id;
         $product['quantity'] = 1;
-
 
         // Add to cart
         $cart = session()->get('cart', []);
