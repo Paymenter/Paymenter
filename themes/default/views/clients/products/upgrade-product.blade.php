@@ -36,14 +36,16 @@
                     <x-money :amount="$amount - $tax['amount']" />
                 </div>
             </div>
-            <div class="flex flex-row items-center justify-between mt-2">
-                <div class="flex flex-row items-center">
-                    {{ $tax['tax']['name'] }} ({{ $tax['tax']['rate'] }}%)
+            @if($tax['tax'])
+                <div class="flex flex-row items-center justify-between mt-2">
+                    <div class="flex flex-row items-center">
+                        {{ $tax['tax']['name'] }} ({{ $tax['tax']['rate'] }}%)
+                    </div>
+                    <div class="flex flex-col items-end">
+                        <x-money :amount="$tax['amount']" />
+                    </div>
                 </div>
-                <div class="flex flex-col items-end">
-                    <x-money :amount="$tax['amount']" />
-                </div>
-            </div>
+            @endif
             <div class="flex flex-row items-center justify-between mt-2">
                 <div class="flex flex-row items-center">
                     <span class="text-lg font-bold">{{ __('Total Today') }}</span>

@@ -159,7 +159,10 @@ class ProductController extends Controller
     private function calculateTax($amount)
     {
         if (!config('settings::tax_enabled')) {
-            return 0;
+            return [
+                'amount' => 0,
+                'tax' => null,
+            ];
         }
         if (!auth()->check()) {
             $tax = TaxRate::where('country', 'all')->first();
