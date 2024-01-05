@@ -21,7 +21,10 @@ class Upload extends Component
 
         $data .= "\n";
 
-        foreach(Log::all() as $log){
+        foreach(Log::orderBy('id', 'desc')->get() as $log){
+            if (strlen($data) > 1000000 || strlen($data . $log->created_at . ' - ' . $log->type . ' - ' . $log->message . "\n") > 1000000) {
+               break;
+            }
             $data .= $log->created_at . ' - ' . $log->type . ' - ' . $log->message . "\n";
             $data .= $log->data . "\n";
             $data .= "\n";
