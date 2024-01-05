@@ -25,7 +25,7 @@ class BasisController extends Controller
         $category = null;
         if ($slug != null) {
             $category = Category::where('slug', $slug)->first();
-            if(!$category) {
+            if (!$category && $category->products()->where('hidden', 0)->count() == 0 && $category->children()->count() > 0) {
                 abort(404);
             }
         }
