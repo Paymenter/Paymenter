@@ -59,6 +59,7 @@
                         <option value="suspend">{{ __('Suspend') }}</option>
                         <option value="unsuspend">{{ __('Unsuspend') }}</option>
                         <option value="terminate">{{ __('Terminate') }}</option>
+                        <option value="upgrade">{{ __('Upgrade') }}</option>
                     </x-input>
                     <button class="button button-primary h-fit self-end"
                         onclick="event.preventDefault(); document.getElementById('changestatus').submit();">{{ __('Go') }}</button>

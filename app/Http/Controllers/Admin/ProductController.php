@@ -306,21 +306,9 @@ class ProductController extends Controller
         $server = Extension::where('name', $json->server)->first();
         if (!$server)
             return redirect()->route('admin.products.extension', $product->id)->with('error', 'Invalid server');
-        if (!file_exists(base_path('app/Extensions/Servers/' . $server->name . '/index.php'))) {
-            $server = null;
-            $extension = null;
-
-            return redirect()->route('admin.products.extension', $product->id)->with('error', 'Extension not found');
-        }
         if ($product->extension_id != $server->id)
             $product->update(['extension_id' => $server->id]);
-
-        include_once base_path('app/Extensions/Servers/' . $server->name . '/index.php');
-        $extension = new \stdClass();
-        $function = $server->name . '_getProductConfig';
-        $extension2 = json_decode(json_encode($function()));
-        $extension->productConfig = $extension2;
-        $extension->name = $server->name;
+        
         if (!$json) {
             return redirect()->route('admin.products.extension', $product->id)->with('error', 'Invalid JSON');
         }
@@ -333,8 +321,9 @@ class ProductController extends Controller
 
         // Delete all product settings
         ProductSetting::where('product_id', $product->id)->delete();
+        $econfig = ExtensionHelper::getProductConfiguration($product);
 
-        foreach ($extension->productConfig as $config) {
+        foreach ($econfig as $config) {
             if (isset($json->config->{$config->name})) {
                 ProductSetting::updateOrCreate(
                     [
