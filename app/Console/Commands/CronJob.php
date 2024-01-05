@@ -6,6 +6,7 @@ use Illuminate\Console\Command;
 use App\Helpers\ExtensionHelper;
 use App\Helpers\NotificationHelper;
 use App\Models\Invoice;
+use App\Models\Log;
 use App\Models\OrderProduct;
 use App\Models\OrderProductUpgrade;
 use Illuminate\Support\Facades\Http;
@@ -168,6 +169,10 @@ class CronJob extends Command
                 $this->info('Update available for ' . $extension->name . ' to version ' . $response['data'][0]['versions'][0]['version']);
             }
         }
+
+        $this->info('Deleted Logs: ' . Log::where('created_at', '<', now()->subDays(7))->count());
+        Log::where('created_at', '<', now()->subDays(7))->delete();
+        
         $this->info('Cron Job Finished');
 
         return Command::SUCCESS;
