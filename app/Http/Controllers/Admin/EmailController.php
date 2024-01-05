@@ -59,6 +59,6 @@ class EmailController extends Controller
     public function update(EmailTemplate $template, Request $request)
     {
         $template->update($request->only('subject', 'html_template', 'text_template'));
-        return redirect()->route('admin.emails.templates')->with('success', 'Template updated');
+        return redirect()->route('admin.email.templates')->with('success', 'Template updated');
     }
 }
