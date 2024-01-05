@@ -93,7 +93,7 @@ class ClientController extends Controller
     public function products(User $user, OrderProduct $orderProduct = null)
     {
         if (!$orderProduct) {
-            $orderProduct = $user->orderProducts()->with(['product', 'invoices.items.product.order.coupon', 'invoices.items.product.product'])->first();
+            $orderProduct = $user->orderProducts()->with(['product'])->first();
             if (!$orderProduct) {
                 return redirect()->route('admin.clients.edit', $user->id)->with('error', 'No orders found');
             }
