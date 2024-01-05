@@ -112,6 +112,7 @@
 
                         <div class="grid grid-cols-2 gap-4 mt-4">
                             <x-input name="country" id="country" label="{{ __('Country') }}" type="select">
+                                <option value="">{{ __('None') }}</option>
                                 @foreach (App\Classes\Constants::countries() as $key => $country)
                                     <option value="{{ $key }}" @if ($user->country == $key) selected @endif>
                                         {{ $country }}
