@@ -22,7 +22,7 @@ class Upload extends Component
         $data .= "\n";
 
         foreach(Log::orderBy('id', 'desc')->get() as $log){
-            if (strlen($data) > 1000000 || strlen($data . $log->created_at . ' - ' . $log->type . ' - ' . $log->message . "\n") > 1000000) {
+            if (strlen($data) > 1000000 || strlen($data . $log->created_at . ' - ' . $log->type . ' - ' . $log->message . "\n" . $log->data . "\n" . "\n") > 1000000) {
                break;
             }
             $data .= $log->created_at . ' - ' . $log->type . ' - ' . $log->message . "\n";
@@ -31,7 +31,7 @@ class Upload extends Component
         }
 
         $this->uploaded = true;
-
+    
         $this->link = Http::post('https://logs.paymenter.org/api/upload-logs', [
             'data' => $data
         ])->json()['url'];
