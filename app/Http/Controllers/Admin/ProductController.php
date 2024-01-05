@@ -117,7 +117,7 @@ class ProductController extends Controller
     public function destroy(Product $product): \Illuminate\Http\RedirectResponse
     {
         OrderProduct::where('product_id', $product->id)->delete();
-        $product->prices->delete();
+        ProductPrice::where('product_id', $product->id)->delete();
         $product->delete();
 
         return redirect()->route('admin.products')->with('success', 'Product deleted successfully');
