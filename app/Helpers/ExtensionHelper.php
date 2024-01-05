@@ -57,6 +57,7 @@ class ExtensionHelper
             $product = $upgrade->product;
             $orderProduct = $upgrade->orderProduct;
             $orderProduct->product_id = $product->id;
+            $orderProduct->price = $product->price($orderProduct->billing_cycle);;
             $orderProduct->save();
 
             UpgradeServer::dispatch($orderProduct);

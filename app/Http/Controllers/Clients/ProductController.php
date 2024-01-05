@@ -116,15 +116,17 @@ class ProductController extends Controller
 
         if($amount <= 0) {
             $user = Auth::user();
-            $user->credits = $user->credits + $amount;
+            //
+            $user->credits += $amount * -1;
             $user->save();
 
             $orderProduct->product_id = $product->id;
+            $orderProduct->price = $product->price($orderProduct->billing_cycle);
             $orderProduct->save();
 
             UpgradeServer::dispatch($orderProduct);
                 
-            return redirect()->route('client.products.view', $orderProduct)->with('success', 'Product upgraded successfully.');
+            return redirect()->route('clients.active-products.show', $orderProduct)->with('success', 'Product upgraded successfully.');
         }
         $orderProductUpgrade = new OrderProductUpgrade();
         $orderProductUpgrade->order_product_id = $orderProduct->id;

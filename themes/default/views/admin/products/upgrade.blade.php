@@ -42,7 +42,9 @@
                 @endforeach
             </x-input>
 
-            <x-input class="mt-2" type="checkbox" value="1" name="upgrade_configurable_options" label="{{ __('Allow upgrade of configurable options') }}" :checked="$product->upgrade_configurable_options ? true : false" />
+            <div class="hidden tobereleased">
+                <x-input class="mt-2" type="checkbox" value="1" name="upgrade_configurable_options" label="{{ __('Allow upgrade of configurable options') }}" :checked="$product->upgrade_configurable_options ? true : false" />
+            </div>
 
             <button class="button button-primary mt-4">{{ __('Save') }}</button>
         </div>

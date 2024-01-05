@@ -58,25 +58,30 @@
             <form action="{{ route('clients.active-products.upgrade-product.post', [$orderProduct, $product->id]) }}"
                 method="POST">
                 @csrf
-                <div class="flex flex-col">
-                    <label for="payment_method" class="text-sm text-secondary-600">{{ __('Payment method') }}</label>
-                    <select id="payment_method" name="payment_method" autocomplete="payment_method"
-                        class="py-2 bg-secondary-200 text-secondary-800 font-medium rounded-md placeholder-secondary-500 outline-none w-full border focus:ring-2 focus:ring-offset-2 ring-offset-secondary-50 dark:ring-offset-secondary-100 duration-300 border-secondary-300 focus:border-secondary-400 focus:ring-primary-400">
-                        @foreach (App\Helpers\ExtensionHelper::getAvailableGateways($amount, [$product]) as $gateway)
-                            <option value="{{ $gateway->id }}">
-                                {{ isset($gateway->display_name) ? $gateway->display_name : $gateway->name }}
-                            </option>
-                        @endforeach
-                        @if (config('settings::credits') && auth()->user() && auth()->user()->credits > 0)
-                            <option value="credits">
-                                {{ __('Pay with credits') }}
-                            </option>
-                        @endif
-                    </select>
-                </div>
+                @if($amount <= 0)
+                    <input type="hidden" name="payment_method" value="free" />
+                    <h1 class="text-lg font-semibold text-secondary-900">{{ __('Remaining balance will be credited to your account') }}</h1>
+                @else 
+                    <div class="flex flex-col">
+                        <label for="payment_method" class="text-sm text-secondary-600">{{ __('Payment method') }}</label>
+                        <select id="payment_method" name="payment_method" autocomplete="payment_method"
+                            class="py-2 bg-secondary-200 text-secondary-800 font-medium rounded-md placeholder-secondary-500 outline-none w-full border focus:ring-2 focus:ring-offset-2 ring-offset-secondary-50 dark:ring-offset-secondary-100 duration-300 border-secondary-300 focus:border-secondary-400 focus:ring-primary-400">
+                            @foreach (App\Helpers\ExtensionHelper::getAvailableGateways($amount, [$product]) as $gateway)
+                                <option value="{{ $gateway->id }}">
+                                    {{ isset($gateway->display_name) ? $gateway->display_name : $gateway->name }}
+                                </option>
+                            @endforeach
+                            @if (config('settings::credits') && auth()->user() && auth()->user()->credits > 0)
+                                <option value="credits">
+                                    {{ __('Pay with credits') }}
+                                </option>
+                            @endif
+                        </select>
+                    </div>
+                @endif
                 <button type="submit"
                     class="button button-primary bg-primary-300 hover:bg-primary-400 text-white w-full mt-4">
-                    {{ __('Pay') }} <i class="ri-shopping-cart-2-line"></i>
+                    {{ __('Upgrade') }} <i class="ri-shopping-cart-2-line"></i>
                 </button>
             </form>
         </div>
