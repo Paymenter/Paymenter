@@ -114,18 +114,18 @@ class ProductController extends Controller
         // Calculate amount for today
         $amount = $this->calculateAmount($product, $orderProduct);
 
-        if($amount <= 0) {
+        if ($amount <= 0) {
             $user = Auth::user();
-            //
             $user->credits += $amount * -1;
             $user->save();
 
             $orderProduct->product_id = $product->id;
-            $orderProduct->price = $product->price($orderProduct->billing_cycle);
+            $orderProduct->price -= $orderProduct->product->price($orderProduct->billing_cycle);
+            $orderProduct->price += $product->price($orderProduct->billing_cycle);
             $orderProduct->save();
 
             UpgradeServer::dispatch($orderProduct);
-                
+
             return redirect()->route('clients.active-products.show', $orderProduct)->with('success', 'Product upgraded successfully.');
         }
         $orderProductUpgrade = new OrderProductUpgrade();
@@ -170,6 +170,12 @@ class ProductController extends Controller
             $tax = TaxRate::whereIn('country', [auth()->user()->country, 'all'])->get()->sortBy(function ($taxRate) {
                 return $taxRate->country == 'all';
             })->first();
+        }
+        if (!$tax) {
+            return [
+                'amount' => 0,
+                'tax' => null,
+            ];
         }
 
         return [

@@ -13,9 +13,10 @@
                         <p><span class="font-bold">{{ __('Product Name') }}: </span>{{ $product->name }}</p>
                         <p><span class="font-bold">{{ __('Product Description') }}: </span>@markdownify($product->description)
                         </p>
-                        <p><span class="font-bold">{{ __('Product Price') }}:
+                        <p>
+                            <span class="font-bold">{{ __('Product Price') }}:
                             </span>
-                            <x-money :amount="$product->price()" showFree="true" />
+                            <x-money :amount="$orderProduct->price" showFree="true" />
                         </p>
                     </div>
                 </div>
