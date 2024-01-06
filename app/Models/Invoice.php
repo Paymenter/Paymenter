@@ -152,6 +152,9 @@ class Invoice extends Model
                 return $taxRate->country == 'all';
             })->first();
         }
+        if(!$taxrate) {
+            $taxrate = new TaxRate();
+        }
         if ($taxrate) {
             $tax = $total * ($taxrate->rate / 100);
         }
