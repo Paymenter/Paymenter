@@ -12,7 +12,7 @@ class Pterodactyl extends Server
     {
         return [
             'display_name' => 'Pterodactyl',
-            'version' => '1.1.8',
+            'version' => '1.2.0',
             'author' => 'Paymenter',
             'website' => 'https://paymenter.org',
         ];
@@ -643,6 +643,8 @@ class Pterodactyl extends Server
             'image' => $server['attributes']['container']['image'] ?? $eggData['attributes']['docker_image'],
             'skip_scripts' => false,
         ];
+
+        $url = $this->config('host') . '/api/application/servers/' . $serverId . '/startup';
 
         $response = $this->patchRequest($url, $json);
         if(!$response->successful()) {

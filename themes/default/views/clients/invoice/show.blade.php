@@ -199,7 +199,7 @@
                                     </tr>
                                 -->
 
-                                    @if(config('settings::tax_enabled'))
+                                    @if(config('settings::tax_enabled') && $tax->amount > 0)
                                         <tr>
                                             <th scope="row" colspan="3"
                                                 class="hidden pt-4 pl-6 pr-3 text-sm font-light text-right text-slate-500 sm:table-cell md:pl-0">

@@ -70,15 +70,15 @@
                     @foreach($category->children as $childCat)
                         <div class="lg:col-span-4 md:col-span-6 col-span-12">
                             <div class="content-box h-full flex flex-col">
-                                <div class="flex flex-row gap-x-3">
+                                <div class="flex items-center gap-x-3 mb-2">
                                     @if($childCat->image)
                                         <img src="/storage/categories/{{ $childCat->image }}" class="w-14 rounded-md" onerror="removeElement(this);" />
                                     @endif
                                     <div>
                                         <h3 class="font-semibold text-lg">{{ $childCat->name }}</h3>
-                                        <div class="prose dark:prose-invert">@markdownify($childCat->description)</div>
                                     </div>
                                 </div>
+                                <div class="prose dark:prose-invert">@markdownify($childCat->description)</div>
                                 <div class="pt-3 mt-auto">
                                     <a href="{{ route('products', $childCat->slug) }}"
                                     class="button button-secondary w-full">{{ __('Browse Category') }}</a>
