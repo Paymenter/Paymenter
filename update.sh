@@ -101,6 +101,10 @@ php artisan migrate --force --seed
 echo '$upgrader> php artisan storage:link'
 php artisan storage:link
 
+# Change to default theme.
+echo '$upgrader> php artisan p:settings:change-theme default'
+php artisan p:settings:change-theme default
+
 # Clear config and view caches.
 echo '$upgrader> php artisan config:clear'
 php artisan config:clear
