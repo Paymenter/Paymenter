@@ -42,7 +42,7 @@
                                             </div>
                                         @else
                                             <div class="flex h-full">
-                                                <a href="{{ config('app.marketplace') . '/extension/' . $extension->id  . '/' . $extension->name }}" class="button button-primary">
+                                                <a href="{{'https://market.paymenter.org/extensions/' . $extension->id  . '/' . $extension->name }}" class="button button-primary">
                                                     <i class="ri-wallet-3-fill text-xs"></i>
                                                     <span class="hidden 2xl:inline-flex">{{ __('Buy') }}</span>
                                                 </a>
