@@ -15,7 +15,7 @@
         <div class="content-box h-full">
             <h1 class="text-xl font-semibold text-secondary-900">Upgrading to {{ $product->name }}</h1>
             @if ($product->image !== 'null')
-                <img src="/storage/products/{{ $product->image }}" class="w-20 h-full rounded-md mr-4" />
+                <img src="/storage/products/{{ $product->image }}" class="w-20 h-full rounded-md mr-4" onerror="removeElement(this);" />
             @endif
             <div class="prose dark:prose-invert">
                 @markdownify($product->description)
