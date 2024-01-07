@@ -20,7 +20,8 @@ class Index extends DataTableComponent
 
     public function configure(): void
     {
-        $this->setPrimaryKey('id')->setTableRowUrl(fn ($row) => route('admin.clients.edit', $row));
+        $this->setPrimaryKey('id')->setTableRowUrl(fn ($row) => route('admin.clients.edit', $row))
+        ->setDefaultSort('id', 'desc');
     }
 
     public function columns(): array
