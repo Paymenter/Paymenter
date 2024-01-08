@@ -26,7 +26,8 @@ class Index extends DataTableComponent
 
     public function configure(): void
     {
-        $this->setPrimaryKey('id')->setTableRowUrl(fn ($row) => route('admin.orders.show', $row));
+        $this->setPrimaryKey('id')->setTableRowUrl(fn ($row) => route('admin.orders.show', $row))
+        ->setDefaultSort('id', 'desc');
     }
 
     public function deleteOrders(): void
