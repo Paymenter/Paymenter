@@ -20,7 +20,7 @@
     }
 
     .prose {
-        @apply prose-code:before:content-none prose-code:after:content-none;
+        @apply prose-code:before:content-none prose-code:after:content-none min-w-full space-y-0;
     }
 
     .button {
