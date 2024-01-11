@@ -22,6 +22,15 @@ Introducing an advanced payment system for your hosting company, Paymenter!  Pay
 - Built in support center
 - Generate coupons to give your customers discounts
 
+## Sponsors
+
+Thanks to all sponsors for helping fund Paymenter's development.
+[Interested in becoming a sponsor?](https://github.com/sponsors/CorwinDev)
+
+<a href="https://macerna.com">
+    <img src="https://github.com/Paymenter/Paymenter/assets/88144943/9f9c164c-5b43-401a-83da-77754a51416e" width="350">
+</a>
+
 ## Wanna take a look?
 Visit our demo at: https://demo.paymenter.org
 
