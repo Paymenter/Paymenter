@@ -54,16 +54,16 @@ class Index extends DataTableComponent
     {
         return [
             Column::make('ID', 'id')
-                ->sortable(),
+                ->sortable()->searchable(),
             Column::make('User', 'user.first_name')
-                ->sortable(),
+                ->sortable()->searchable(),
             ComponentColumn::make('Total', 'id')
                 ->component('money')
                 ->attributes(fn ($_, $row) => [
                     'amount' => $row->total(),
                 ]),
             Column::make('Created At', 'created_at')
-                ->sortable(),
+                ->sortable()->searchable(),
 
         ];
     }
