@@ -78,6 +78,8 @@
             --secondary-900: {{ config('settings::theme:secondary-900-dark', '#ffffff') }};
         }
     </style>
+    @rappasoftTableStyles
+    @rappasoftTableThirdPartyStyles
 </head>
 
 <body class="font-sans bg-secondary-100 dark:bg-secondary-50 text-secondary-700">
@@ -108,6 +110,8 @@
         <x-footer />
     </div>
     <x-success />
+    @rappasoftTableScripts
+    @rappasoftTableThirdPartyScripts
 </body>
 
 </html>

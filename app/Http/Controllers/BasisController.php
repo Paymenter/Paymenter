@@ -25,7 +25,10 @@ class BasisController extends Controller
         $category = null;
         if ($slug != null) {
             $category = Category::where('slug', $slug)->first();
-            if (!$category && $category->products()->where('hidden', 0)->count() == 0 && $category->children()->count() == 0) {
+            if (!$category) {
+                abort(404);
+            }
+            if ($category->products()->where('hidden', 0)->count() == 0 && $category->children()->count() == 0) {
                 abort(404);
             }
         }
@@ -41,12 +44,12 @@ class BasisController extends Controller
             $request->merge([$key => $value]);
         }
         $json = json_encode($request->all(), JSON_UNESCAPED_SLASHES);
-        echo $json; 
+        echo $json;
     }
 
     public function tos()
     {
-        if(!config('settings::tos_text')) {
+        if (!config('settings::tos_text')) {
             abort(404);
         }
         return view('tos');
@@ -54,7 +57,7 @@ class BasisController extends Controller
 
     public function downloadFile(FileUpload $fileUpload)
     {
-        if(!Storage::exists('uploads/' . $fileUpload->uuid . '.' . $fileUpload->extension)) {
+        if (!Storage::exists('uploads/' . $fileUpload->uuid . '.' . $fileUpload->extension)) {
             abort(404);
         }
         return response()->download(storage_path('app/uploads/' . $fileUpload->uuid . '.' . $fileUpload->extension), $fileUpload->filename);
