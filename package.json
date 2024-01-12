@@ -5,6 +5,9 @@
         "build": "node vite.js",
         "lang": "laravel-language-extractor"
     },
+    "engines": {
+        "node": ">=18.0.0"
+    },
     "devDependencies": {
         "@popperjs/core": "^2.10.2",
         "@tailwindcss/forms": "^0.5.2",
