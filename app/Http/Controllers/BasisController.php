@@ -19,7 +19,7 @@ class BasisController extends Controller
     public function products(string $slug = null, Product $product = null)
     {
         if ($product) {
-            return redirect()->route('checkout.add', $product->id);
+            return redirect()->route('checkout.config', $product);
         }
 
         $category = null;

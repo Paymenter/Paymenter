@@ -45,7 +45,6 @@ Route::group(['prefix' => 'checkout'], function () {
     Route::post('/coupon', [App\Http\Controllers\CheckoutController::class, 'coupon'])->name('checkout.coupon');
     Route::post('/{id}', [App\Http\Controllers\CheckoutController::class, 'remove'])->name('checkout.remove');
     Route::post('/{product}/update', [App\Http\Controllers\CheckoutController::class, 'update'])->name('checkout.update');
-    Route::get('/add/{product}', [App\Http\Controllers\CheckoutController::class, 'add'])->name('checkout.add');
 });
 
 Route::group(['prefix' => 'tickets', 'middleware' => 'auth'], function () {
