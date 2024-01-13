@@ -29,6 +29,11 @@ jobs:
 
       - name: Build
         run: npm run build
+      
+      - name: remove vendor and node_modules
+        run: |
+          rm -rf vendor
+          rm -rf node_modules
 
       - id: get_latest_release
         uses: pozetroninc/github-action-get-latest-release@master
