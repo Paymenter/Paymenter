@@ -159,6 +159,7 @@ class Index extends Component
                     return $taxRate->country == 'all';
                 })->first();
             }
+            $this->tax = $this->tax ?? new TaxRate();
         }
         return $amount * ($this->tax->rate / 100);
     }
