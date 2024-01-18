@@ -60,7 +60,9 @@ class OrderProduct extends Model
     public function availableUpgrades()
     {
         $upgrades = $this->product->upgrades->pluck('upgrade_product_id')->toArray();
-        return Product::whereIn('id', $upgrades)->get();
+        return Product::whereIn('id', $upgrades)->get()->filter(function ($product) {
+            return $product->prices->{$this->billing_cycle};
+        });
     }
 
     public function getUpgradableAttribute()

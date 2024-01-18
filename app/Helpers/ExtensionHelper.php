@@ -35,6 +35,9 @@ class ExtensionHelper
     public static function paymentDone($id, $paymentMethod = 'unknown', $paymentReference = null)
     {
         $invoice = Invoice::findOrFail($id);
+        if ($invoice->status == 'paid') {
+            return;
+        }
         $user = User::findOrFail($invoice->user_id);
 
         if ($invoice->credits > 0) {

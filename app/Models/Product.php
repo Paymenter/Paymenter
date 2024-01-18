@@ -52,22 +52,22 @@ class Product extends Model
     public function price($type = null)
     {
         $prices = $this->prices;
-        
+
         if ($prices->type == 'one-time') {
-            if($type == 'setup')
+            if ($type == 'setup')
                 return $prices->monthly_setup;
             else
                 return $prices->monthly;
         } else if ($prices->type == 'free') {
             return 0;
         } else {
-            if($type == 'setup')
+            if ($type == 'setup')
                 return $prices->{$prices->type . '_setup'};
             else if ($type)
                 return $prices->{$type};
             else
                 return $prices->monthly ?? $prices->quarterly ?? $prices->semi_annually ?? $prices->annually ?? $prices->biennially ?? $prices->triennially;
-            }
+        }
     }
 
     public function configurableGroups()

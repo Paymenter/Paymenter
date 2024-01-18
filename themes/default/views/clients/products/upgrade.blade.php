@@ -16,7 +16,7 @@
         <div class="mt-4 content-box">
             <h2 class="text-xl font-semibold text-secondary-900">Choose a product to upgrade to</h2>
             <div class="grid grid-cols-4 gap-4 mt-4">
-                @foreach ($product->upgrades as $product2)
+                @foreach ($orderProduct->availableUpgrades() as $product2)
                     @if ($product2->id == $product->id)
                         @continue
                     @endif

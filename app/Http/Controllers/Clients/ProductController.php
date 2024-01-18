@@ -73,6 +73,9 @@ class ProductController extends Controller
             return abort(404, 'Order not found');
         }
         $orderProduct = $product;
+        if (!$orderProduct->availableUpgrades()->count()) {
+            return redirect()->back()->with('error', 'No upgrades available.');
+        }
         $product = $product->product;
 
         return view('clients.products.upgrade', compact('product', 'orderProduct'));
@@ -87,6 +90,11 @@ class ProductController extends Controller
         }
 
         if (!$orderProduct->product->upgrades()->where('upgrade_product_id', $product->id)->exists()) {
+            return abort(404, 'Product not found');
+        }
+
+        if (!$product->prices->{$orderProduct->billing_cycle}) {
+            // Couldn't find the same price, exit
             return abort(404, 'Product not found');
         }
 
@@ -108,6 +116,11 @@ class ProductController extends Controller
         }
 
         if (!$orderProduct->product->upgrades()->where('upgrade_product_id', $product->id)->exists()) {
+            return abort(404, 'Product not found');
+        }
+
+        if (!$product->prices->{$orderProduct->billing_cycle}) {
+            // Couldn't find the same price, exit
             return abort(404, 'Product not found');
         }
 
@@ -185,18 +198,18 @@ class ProductController extends Controller
     }
 
 
+    private $cycleToDays = [
+        'monthly' => 30,
+        'quarterly' => 90,
+        'semi-annually' => 180,
+        'annually' => 365,
+        'biennially' => 730,
+        'triennially' => 1095,
+    ];
+
     private function calculateAmount($product, $orderProduct)
     {
-        $cycleToDays = [
-            'monthly' => 30,
-            'quarterly' => 90,
-            'semi-annually' => 180,
-            'annually' => 365,
-            'biennially' => 730,
-            'triennially' => 1095,
-        ];
-
-        $amount = $product->price($orderProduct->billing_cycle) - ($orderProduct->product->price($orderProduct->billing_cycle) / $cycleToDays[$orderProduct->billing_cycle] * $orderProduct->expiry_date->diffInDays());
+        $amount =  ($product->price($orderProduct->billing_cycle) - $orderProduct->product->price($orderProduct->billing_cycle)) / $this->cycleToDays[$orderProduct->billing_cycle] * $orderProduct->expiry_date->diffInDays();
 
         return $amount;
     }
