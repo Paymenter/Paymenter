@@ -9,7 +9,7 @@
         <div class="content-box h-full">
             <h1 class="text-xl font-semibold text-secondary-900">Upgrading from {{ $orderProduct->product->name }}</h1>
             @if ($orderProduct->product->image !== 'null')
-                <img src="{{ $orderProduct->product->image }}" class="w-20 h-full rounded-md mr-4" onerror="removeElement(this);" />
+                <img src="{{ $orderProduct->product->image }}" class="w-20 rounded-md mr-4" onerror="removeElement(this);" />
             @endif
             <div class="prose dark:prose-invert">
                 @markdownify($orderProduct->product->description)
@@ -21,7 +21,7 @@
         <div class="content-box h-full">
             <h1 class="text-xl font-semibold text-secondary-900">Upgrading to {{ $product->name }}</h1>
             @if ($product->image !== 'null')
-                <img src="{{ $product->image }}" class="w-20 h-full rounded-md mr-4" onerror="removeElement(this);" />
+                <img src="{{ $product->image }}" class="w-20 rounded-md mr-4" onerror="removeElement(this);" />
             @endif
             <div class="prose dark:prose-invert">
                 @markdownify($product->description)
