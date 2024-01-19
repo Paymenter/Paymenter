@@ -20,9 +20,6 @@
                     @if ($product2->id == $product->id)
                         @continue
                     @endif
-                    @php
-                        $product2 = $product2->upgradeProduct;
-                    @endphp
                     <div class="md:col-span-2 lg:col-span-1 col-span-4">
                         <div class="content-box h-full flex flex-col bg-secondary-200 dark:bg-secondary-200">
                             <div class="flex gap-x-3 items-center mb-2">
