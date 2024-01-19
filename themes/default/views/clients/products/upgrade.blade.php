@@ -1,9 +1,15 @@
 <x-app-layout clients title="{{ __('Product') }} {{ $product->name }}">
+    <script>
+        function removeElement(element) {
+            element.remove();
+            this.error = true;
+        }
+    </script>
     <div class="content">
         <div class="content-box">
             <h1 class="text-2xl font-semibold text-secondary-900">Upgrading {{ $product->name }}</h1>
             @if ($product->image !== 'null')
-                <img src="/storage/products/{{ $product->image }}" class="w-20 h-full rounded-md mr-4" />
+                <img src="{{ $product->image }}" class="w-20 h-full rounded-md mr-4" onerror="removeElement(this);">
             @endif
             <div class="prose dark:prose-invert">
                 @markdownify($product->description)
