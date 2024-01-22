@@ -7,7 +7,7 @@
 
 [Discord](https://discord.gg/xB4UUT3XQg), [Demo](https://demo.paymenter.org), [Docs](https://paymenter.org/docs/getting-started/introduction/), [Website](https://paymenter.org)
 
-## A advanced payment system for your hosting company
+## An advanced payment system for your hosting company
 ### About
 
 Introducing an advanced payment system for your hosting company, Paymenter!  Paymenter is designed to be easy to use and install, with a user-friendly client and admin area. It's also highly customizable, with the ability to install a range of addons and themes from our marketplace created by talented developers and designers.
