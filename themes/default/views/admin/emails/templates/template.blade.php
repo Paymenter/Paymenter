@@ -1,6 +1,6 @@
 <x-admin-layout>
     <div class="w-full h-full rounded mb-4">
-        <div class="px-6 mx-auto">
+        <div class="mx-auto">
             <div class="flex flex-row overflow-x-auto lg:flex-wrap lg:space-x-1">
                 <div class="flex-none">
                     <a href="{{ route('admin.email') }}"
