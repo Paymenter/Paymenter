@@ -18,6 +18,9 @@ class Routing
             $themeData = file_get_contents(base_path() . "/themes/{$themeName}/theme.json");
             $themeConfig = json_decode($themeData, true);
         } catch (\Exception $e) {
+            if (php_sapi_name() === 'cli') {
+                return true;
+            }
             throw new \Exception("Unable to read current theme's config file", 500, $e);
         }
 

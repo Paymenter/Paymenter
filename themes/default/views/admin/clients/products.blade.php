@@ -36,11 +36,16 @@
     <h1 class="text-2xl my-2">Order Product Details:</h1>
     @if($orderProduct->cancellation)
         <h3 class="text-lg border-b mb-1 border-gray-500 fon">Cancellation Request:</h3>
-        <div class="flex flex-row gap-4 flex-wrap mb-2">
+        <div class="flex flex-row gap-4 flex-wrap mb-2 items-center">
             <x-input type="text" disabled name="created_at" id="created_at"
                 value="{{ $orderProduct->cancellation->created_at }}" label="Created At" />
             <x-input type="text" disabled name="reason" id="reason" value="{{ $orderProduct->cancellation->reason }}"
                 label="Reason" />
+            <form action="{{ route('admin.clients.products.removecancellation', [$user->id, $orderProduct->id]) }}"
+                class="mt-6" method="POST">
+                @csrf
+                <button class="button button-danger">{{ __('Remove Cancellation Request') }}</button>
+            </form>
         </div>
     @endif
     <form action="{{ route('admin.clients.products.update', [$user->id, $orderProduct->id]) }}" method="POST"

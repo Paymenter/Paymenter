@@ -127,6 +127,16 @@ class ClientController extends Controller
         return redirect()->route('admin.clients.products', [$user->id, $orderProduct->id])->with('success', 'Product updated');
     }
 
+    public function removeCancellation(User $user, OrderProduct $orderProduct): \Illuminate\Http\RedirectResponse
+    {
+        if(!$orderProduct->cancellation()->exists())
+            return redirect()->route('admin.clients.products', [$user->id, $orderProduct->id])->with('error', 'No cancellation found');
+
+        $orderProduct->cancellation()->delete();
+
+        return redirect()->route('admin.clients.products', [$user->id, $orderProduct->id])->with('success', 'Cancellation removed');
+    }
+
     /**
      * Create/Suspend/Unsuspend/Terminate the order product
      *
