@@ -129,6 +129,12 @@ class SettingController extends Controller
         }
         if (!$request->get('must_verify_email')) {
             Setting::updateOrCreate(['key' => 'must_verify_email'], ['value' => null]);
+        } else {
+            $user = auth()->user();
+            if (!$user->email_verified_at) {
+                $user->email_verified_at = now();   
+                $user->save();
+            }
         }
         Artisan::call('queue:restart');
 
