@@ -114,16 +114,14 @@
                                             class="text-sm text-secondary-600">{{ ucfirst($name) }}</label>
                                         <div class="flex flex-row justify-evenly">
                                             @php
-                                                $selectKey = array_search($config[$item->id], array_column($item->configurableOptionInputs->sortBy('order')->toArray(), 'id'));
+                                                $items = $item->configurableOptionInputs()->where('hidden', '!=', 1)->orderBy('order', 'asc')->get();
+                                                $selectKey = array_search($config[$item->id], array_column($items->toArray(), 'id'));
                                             @endphp
-                                            @foreach ($item->configurableOptionInputs->sortBy('order') as $key => $option)
+                                            @foreach ($items as $key => $option)
                                                 @php $name = explode('|', $option->name)[1] ?? $option->name; @endphp
-                                                @if ($option->hidden)
-                                                    @continue
-                                                @endif
                                                 <div class="flex flex-col w-full gap-1">
                                                     <div class="flex flex-col overflow-visible relative w-full justify-center items-center bg-secondary-400
-                                                        @if($key == 0) rounded-l-full @elseif($key == count($item->configurableOptionInputs->sortBy('order')->toArray()) - 1) rounded-r-full @endif"
+                                                        @if($key == 0) rounded-l-full @elseif($key == count($items->toArray()) - 1) rounded-r-full @endif"
                                                         @if($config[$item->id] == $option->id) style="background: linear-gradient(to left, var(--secondary-400) 50%, var(--primary-400) 50%);" @elseif($selectKey > $key) style="background: var(--primary-400);" @endif>
                                                         <div class="rounded-full h-6 w-6 cursor-pointer hover:bg-secondary-400 @if ($config[$item->id] != $option->id) bg-secondary-500 @else bg-white @endif"
                                                             wire:click="update({{ $item->id }}, {{ $option->id }})">
