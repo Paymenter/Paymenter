@@ -17,7 +17,7 @@ class StripeSubscriptions extends Gateway {
     {
         return [
             'display_name' => 'Stripe Subscriptions',
-            'version' => '2.0.0',
+            'version' => '2.0.1',
             'author' => 'Paymenter',
             'website' => 'https://paymenter.org',
         ];
