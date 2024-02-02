@@ -198,7 +198,6 @@ class StripeSubscriptions extends Gateway {
                     'metadata' => [
                         'order_product_id' => $product->id,
                     ],
-                    'iterations' => $product->product->price($billing_cycle . '_setup') > 0 ? 1 : 0,
                 ];
                 $client->subscriptionSchedules->create([
                     'customer' => $paymentMethod->customer,
