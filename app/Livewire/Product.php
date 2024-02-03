@@ -74,6 +74,7 @@ class Product extends Component
         $this->product->price = $this->product->prices()->get()->first()->type == 'one-time' ? $this->product->prices()->get()->first()->monthly : 0;
         $cart[] = [
             'product_id' => $this->product->id,
+            'price' => $this->product->price,
             'quantity' => 1,
         ];
         session()->put('cart', $cart);
