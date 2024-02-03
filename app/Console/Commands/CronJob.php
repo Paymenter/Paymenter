@@ -52,7 +52,7 @@ class CronJob extends Command
                 $order->status = 'suspended';
                 $order->save();
                 ExtensionHelper::suspendServer($order);
-                $invoice = $order->lastInvoice();
+                $invoice = $order->getOpenInvoices()->first();
                 // Free products don't have invoices
                 if ($invoice) {
                     NotificationHelper::sendUnpaidInvoiceNotification($invoice, $order->order->user);
@@ -64,7 +64,7 @@ class CronJob extends Command
                     $order->status = 'cancelled';
                     NotificationHelper::sendDeletedOrderNotification($order->order, $order->order->user);
                     $order->save();
-                    $invoice = $order->lastInvoice();
+                    $invoice = $order->getOpenInvoices()->first();
 
                     if ($invoice) {
                         if ($invoice->status !== 'paid') {

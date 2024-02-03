@@ -31,11 +31,11 @@ class EmailTemplateSeeder extends Seeder
                 'html_template' => $html,
             ]);
         }
-        if (!EmailTemplate::where('mailable', \App\Mail\Invoices\UnpaidInvoiceReminder::class)->exists()) {
+        if (!EmailTemplate::where('mailable', \App\Mail\Invoices\UnpaidInvoice::class)->exists()) {
             $html = file_get_contents(__DIR__ . '/EmailTemplates/invoices/new.blade.php');
 
             EmailTemplate::create([
-                'mailable' => \App\Mail\Invoices\UnpaidInvoiceReminder::class,
+                'mailable' => \App\Mail\Invoices\UnpaidInvoice::class,
                 'subject' => 'Unpaid invoice reminder',
                 'html_template' => $html,
             ]);
