@@ -60,7 +60,7 @@ if [ -t 0 ]; then
         fi 
     fi
     
-    if [ -z $INSTALL ]; then
+    if [ -z "$INSTALL" ]; then
         read -p "Are you sure you want to run the upgrade process for your Panel? [y/N]: " -r
         if [[ ! $REPLY =~ ^[Yy]$ ]]; then
             echo "Upgrade aborted."
@@ -76,53 +76,45 @@ else
     DEFAULT_URL="$URL"
 fi
 
+RUN() {
+    echo -e "\x1b[34m\$\x1b[34;1mupgrader>\x1b[0m $*"
+    "${@}"
+}
 
 # Download the latest release from GitHub.
-echo "\$upgrader> curl -L \"$(printf $DEFAULT_URL)\" | tar -xzv"
-curl -L "$(printf $DEFAULT_URL)" | tar -xzv
+RUN curl -L "$(printf "%s" "$DEFAULT_URL")" | tar -xzv
 
 # Set application down for maintenance.
-echo '$upgrader> php artisan down'
-php artisan down
+RUN php artisan down
 
 # Setup correct permissions on the new files.
-echo '$upgrader> chmod -R 755 storage bootstrap/cache'
-chmod -R 755 storage bootstrap/cache
+RUN chmod -R 755 storage bootstrap/cache
 
 # Run the composer install command.
-echo '$upgrader> composer install --no-dev --optimize-autoloader'
-composer install --no-dev --optimize-autoloader
+RUN composer install --no-dev --optimize-autoloader
 
 # Run the database migrations.
-echo '$upgrader> php artisan migrate --force --seed'
-php artisan migrate --force --seed
+RUN php artisan migrate --force --seed
 
 # Link the storage directory.
-echo '$upgrader> php artisan storage:link'
-php artisan storage:link
+RUN php artisan storage:link
 
 # Change to default theme.
-echo '$upgrader> php artisan p:settings:change-theme default'
-php artisan p:settings:change-theme default
+RUN php artisan p:settings:change-theme default
 
 # Clear config and view caches.
-echo '$upgrader> php artisan config:clear'
-php artisan config:clear
-echo '$upgrader> php artisan view:clear'
-php artisan view:clear
+RUN php artisan config:clear
+RUN php artisan view:clear
 
 # Remove the old log files.
-echo '$upgrader> rm -rf storage/logs/*.log'
-rm -rf storage/logs/*.log
+RUN rm -rf storage/logs/*.log
 
 # Setup correct permissions on the new files.
-echo '$upgrader> chown -R '$PERMUSER':'$PERMGROUP '.'
-chown -R $PERMUSER:$PERMGROUP .
+RUN chown -R "$PERMUSER":"$PERMGROUP" .
 
 php artisan p:check-updates
 
 # Set application up for maintenance.
-echo '$upgrader> php artisan up'
-php artisan up
+RUN php artisan up
 
 echo "Upgrade completed."
