@@ -78,7 +78,13 @@ RUN() {
 }
 
 # Download the latest release from GitHub.
-RUN curl -L "$(printf "%s" "$URL")" | tar -xzv
+RUN curl -L -o paymenter.tar.gz "$DEFAULT_URL"
+
+# Extract the tarball.
+RUN tar -xzf paymenter.tar.gz
+
+# Remove the tarball.
+RUN rm -f paymenter.tar.gz
 
 # Set application down for maintenance.
 RUN php artisan down
