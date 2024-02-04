@@ -78,7 +78,7 @@ RUN() {
 }
 
 # Download the latest release from GitHub.
-RUN curl -L -o paymenter.tar.gz "$DEFAULT_URL"
+RUN curl -L -o paymenter.tar.gz "$URL"
 
 # Extract the tarball.
 RUN tar -xzf paymenter.tar.gz
