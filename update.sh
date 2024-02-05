@@ -5,9 +5,12 @@ URL='https://github.com/paymenter/paymenter/releases/latest/download/paymenter.t
 echo "Starting upgrade process..."
 
 if [ "$(php -r 'echo version_compare(PHP_VERSION, "8.1.0");')" -lt 0 ]; then
-    echo "Cannot execute self-upgrade process. The minimum required PHP version required is 8.1, you have [$(php -r 'echo PHP_VERSION;')]."
+    echo -e "\x1b[31;1mCannot execute self-upgrade process. The minimum required PHP version required is 8.1, you have [$(php -r 'echo PHP_VERSION;')].\x1b[0m"
     exit 1
 fi
+
+# Exit if release URL is empty or underfined
+if [[ $URL == "" ]]; then echo -e "\x1b[31;1mRelease URL not defined.\x1b[0m"; exit 1; fi
 
 for i in "$@"
 do
@@ -69,20 +72,13 @@ if [ -t 0 ]; then
     fi
 fi
 
-# Set URL to the default URL if not set.
-if [ -z "$URL" ]; then
-    DEFAULT_URL="https://github.com/paymenter/paymenter/releases/latest/download/paymenter.tar.gz"
-else
-    DEFAULT_URL="$URL"
-fi
-
 RUN() {
     echo -e "\x1b[34m\$\x1b[34;1mupgrader>\x1b[0m $*"
     "${@}"
 }
 
 # Download the latest release from GitHub.
-RUN curl -L -o paymenter.tar.gz "$DEFAULT_URL"
+RUN curl -L -o paymenter.tar.gz "$URL"
 
 # Extract the tarball.
 RUN tar -xzf paymenter.tar.gz
