@@ -151,38 +151,10 @@
                     </div>
                 </button>
                 @else
-                <a href="{{ route('login') }}" class="button button-primary md:flex-none flex-1">
+                <a href="{{ route('login') }}" class="button button-primary rounded-full font-bold md:flex-none flex-1 mr-4">
                     {{ __('Log In') }}
                 </a>
                 @endauth
-                <!-- <script>
-                    // Change the icons inside the button based on previous settings
-                    if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia(
-                        '(prefers-color-scheme: dark)').matches));
-
-                    var themeToggleBtn = document.getElementById('theme-toggle');
-                    themeToggleBtn.addEventListener('click', function () {
-                        // if set via local storage previously
-                        if (localStorage.getItem('theme')) {
-                            if (localStorage.getItem('theme') === 'light') {
-                                document.documentElement.classList.add('dark');
-                                localStorage.setItem('theme', 'dark');
-                            } else {
-                                document.documentElement.classList.remove('dark');
-                                localStorage.setItem('theme', 'light');
-                            }
-                            // if NOT set via local storage previously
-                        } else {
-                            if (document.documentElement.classList.contains('dark')) {
-                                document.documentElement.classList.remove('dark');
-                                localStorage.setItem('theme', 'light');
-                            } else {
-                                document.documentElement.classList.add('dark');
-                                localStorage.setItem('theme', 'dark');
-                            }
-                        }
-                    });
-                </script> -->
             </div>
         </div>
     </nav>
