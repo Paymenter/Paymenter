@@ -28,7 +28,7 @@
     }
 
     .button {
-        @apply inline-block py-2 px-4 rounded-md text-center font-sans font-medium duration-300;
+        @apply inline-block py-2 px-4 rounded-md text-center font-medium duration-300;
     }
 
     .button-primary {
@@ -64,7 +64,7 @@
     }
 
     .content {
-        @apply container mx-auto items-center px-4 mt-8;
+        @apply mx-auto w-full max-w-[1620px] pb-24;
     }
 
     .content-box {
@@ -86,7 +86,6 @@
     --success-400: #4eb165;
 }
 
-
 * {
     scrollbar-width: thin;
     scrollbar-color: var(--primary-400) var(--secondary-50);
@@ -107,4 +106,17 @@
     background-color: var(--primary-400);
     border-radius: 20px;
     border: 3px solid var(--secondary-50);
+}
+
+html {
+    display: flex;
+}
+
+html, body {
+    height: 100%;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+    font-family: 'Plus Jakarta Sans', sans-serif;
 }

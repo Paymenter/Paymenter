@@ -1,5 +1,6 @@
 <div class="content">
     <x-success />
+    <!-- <h1 class="z-10 mt-4 text-[60px] font-extrabold leading-[98%] tracking-[-0.25rem] md:text-[109px] md:tracking-[-0.35rem] ">Awesome choice. One more step.</h1> -->
     <div class="grid grid-cols-12 gap-4">
         <div class="lg:col-span-8 col-span-12">
             <div class="content-box overflow-hidden">

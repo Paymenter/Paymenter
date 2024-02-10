@@ -13,7 +13,7 @@
 
     @if ($categories->count() > 0)
         <div class="content">
-            <h2 class="font-semibold text-2xl mb-2 text-secondary-900">{{ __('Categories') }}</h2>
+            <!-- <h2 class="font-semibold text-2xl mb-2 text-secondary-900">{{ __('Categories') }}</h2> -->
             <div class="grid grid-cols-12 gap-4">
 
                 @foreach ($categories as $category)

@@ -82,7 +82,7 @@
     @rappasoftTableThirdPartyStyles
 </head>
 
-<body class="font-sans bg-secondary-100 dark:bg-secondary-50 text-secondary-700">
+<body class="bg-secondary-100 dark:bg-secondary-50 text-secondary-700">
     <div id="app" class="min-h-screen">
         <x-paymenter-update />
         @if (config('settings::sidebar') == 1)

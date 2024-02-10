@@ -29,7 +29,7 @@
     </script>
 </head>
 
-<body class="font-sans antialiased">
+<body class="antialiased">
     <div id="app" class="min-h-screen bg-gray-100 dark:bg-darkmode">
         {{ $slot }}
     </div>

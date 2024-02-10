@@ -84,7 +84,9 @@
     @endempty
 
     <!-- Fonts -->
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;600;700&display=swap">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;1,200;1,300;1,400;1,500;1,600;1,700;1,800&display=swap" rel="stylesheet">
 
     @vite(['themes/' . config('settings::theme-active') . '/js/app.js', 'themes/' . config('settings::theme-active') . '/css/app.css'], config('settings::theme-active'))
 
@@ -106,29 +108,15 @@
     <meta name="theme-color" content="#5270FD">
 </head>
 
-<body class="font-sans bg-secondary-100 dark:bg-secondary-50 text-secondary-700">
-
-    @if (config('settings::theme:snow') == 1)
-        <canvas class="snow" id="snow" width="1920" height="1080"></canvas>
-    @endif
-    <div id="app" class="min-h-screen">
+<body class="bg-secondary-100 dark:bg-secondary-50 text-secondary-700">
+    <div id="app" class="flex flex-col h-full w-full overflow-x-hidden">
         <x-paymenter-update />
-        @if (!$clients || config('settings::sidebar') == 0)
+        <!-- @if (!$clients || config('settings::sidebar') == 0) -->
             @include('layouts.navigation')
-        @endif
-        <div class="@if (config('settings::sidebar') == 1) flex md:flex-nowrap flex-wrap @endif">
-            @if ($clients)
-                @include('layouts.subnavigation')
-            @endif
-            <div class="w-full flex flex-col @if ($clients) min-h-[calc(100vh-105px)] @else min-h-[calc(100vh-64px)] @endif">
-                
-                <main class="grow">
+        <!-- @endif -->
+            <main class="w-full mt-4 md:px-16 flex flex-col h-full">
                     {{ $slot }}
-                </main>
-
-                <x-footer />
-            </div>
-        </div>
+            </main>
     </div>
 </body>
 
