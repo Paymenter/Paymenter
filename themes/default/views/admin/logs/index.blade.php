@@ -43,7 +43,7 @@
             <div class="flex flex-col gap-1">
                 <h2 id="log-heading-{{ $log->id }}">
                     <button type="button"
-                        class="flex items-center justify-between p-5 w-full h-10 rounded-md bg-secondary-200 dark:bg-secondary-50 text-gray-900 dark:text-white"
+                        class="flex items-center justify-between p-5 w-full h-auto rounded-md bg-secondary-200 dark:bg-secondary-50 text-gray-900 dark:text-white"
                         data-accordion-target="#log-body-{{ $log->id }}" aria-expanded="true"
                         aria-controls="log-body-{{ $log->id }}">
                         <span class="w-full text-left transition-all ease-in-out "> {{ $log->message }} -
