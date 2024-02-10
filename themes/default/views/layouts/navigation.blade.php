@@ -73,39 +73,17 @@
             </script>
         </div>
         <div class="w-full justify-between gap-4 md:flex hidden" id="mobile-menu">
-            <a href="{{ route('index') }}"
-                class="md:px-2 py-3 flex items-center gap-x-1 hover:text-secondary-800 duration-300">
-                {{ __('Home') }}
-            </a>
             @auth
             <a href="{{ route('clients.home') }}"
                 class="md:px-2 py-3 flex items-center gap-x-1 hover:text-secondary-800 duration-300">
                 {{ __('Customer Area') }}
             </a>
             @endauth
-            <!-- <button type="button" aria-expanded="true" data-dropdown-placement="bottom-start" aria-haspopup="true"
-                data-dropdown-toggle="orders"
-                class="relative md:px-2 py-3 flex items-center gap-x-1 hover:text-secondary-800 duration-300">
-                {{ __('Shop') }} <i class="ri-arrow-down-s-line"></i>
-
-                <div class="absolute left-0 hidden w-56 mt-2 origin-top-right bg-secondary-200 border border-secondary-300 rounded-md z-10"
-                    role="menu" aria-orientation="vertical" aria-labelledby="product" tabindex="-1" id="orders">
-                    @foreach (App\Models\Category::whereNull('category_id')->orderBy('order')->get() as $category)
-                    @if ($category->products()->where('hidden', false)->count() > 0 || $category->children->count()
-                    > 0)
-                    <a href="{{ route('products', $category->slug) }}"
-                        class="flex px-4 py-2 rounded text-secondary-700 hover:bg-secondary-100 hover:text-secondary-900"
-                        role="menuitem" tabindex="-1" id="menu-item-0">{{ $category->name }}</a>
-                    @endif
-                    @endforeach
-                </div>
-
-            </button>
-            <a href="{{ route('announcements.index') }}"
-                class="md:px-2 py-3 flex items-center gap-x-1 hover:text-secondary-800 duration-300">
-                {{ __('Announcements') }}
-            </a> -->
             <div class="ml-auto flex items-center gap-x-1 justify-center md:pb-0 pb-4">
+                <!-- <button class="m-1.5 button button-secondary-outline !font-normal" id="theme-toggle">
+                    <i class="ri-sun-line hidden dark:block"></i>
+                    <i class="ri-moon-line dark:hidden"></i>
+                </button> -->
                 <livewire:cart-count />
 
                 @auth
@@ -177,11 +155,7 @@
                     {{ __('Log In') }}
                 </a>
                 @endauth
-                <button class="m-1.5 button button-secondary-outline !font-normal" id="theme-toggle">
-                    <i class="ri-sun-line hidden dark:block"></i>
-                    <i class="ri-moon-line dark:hidden"></i>
-                </button>
-                <script>
+                <!-- <script>
                     // Change the icons inside the button based on previous settings
                     if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia(
                         '(prefers-color-scheme: dark)').matches));
@@ -208,7 +182,7 @@
                             }
                         }
                     });
-                </script>
+                </script> -->
             </div>
         </div>
     </nav>

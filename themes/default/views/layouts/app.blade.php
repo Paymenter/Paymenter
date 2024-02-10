@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<html class="dark" lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <!-- Software build by https://paymenter.org -->
 
 <head>
