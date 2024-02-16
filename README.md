@@ -42,3 +42,6 @@ The requirements for Paymenter are the following:
 ## Installation & Documentation
 For a detailed explanation of how to install and configure Paymenter, take a look at our [documentation here](https://paymenter.org/docs/getting-started/introduction/)!
 - Or, get additional help via [Community Discord](https://discord.gg/xB4UUT3XQg).
+
+## Local Development
+Local development on windows is handled thorugh [vagrant](https://www.vagrantup.com/) a *expermental* helper script can be found at `start.ps1`. Running it requires Virtualbox and vagrant.

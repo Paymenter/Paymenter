@@ -22,3 +22,4 @@ app/Extensions/Servers/Minecraft/*
 app/Extensions/Gateways/RazorPay/*
 themes/theme-clear/*
 .php-cs-fixer.cache
+.vagrant
