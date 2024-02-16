@@ -20,6 +20,16 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'role_id',
+        'tfa_secret',
+        'credits',
+        'address',
+        'city',
+        'state',
+        'zip',
+        'country',
+        'phone',
+        'company_name',
     ];
 
     /**
@@ -30,6 +40,7 @@ class User extends Authenticatable
     protected $hidden = [
         'password',
         'remember_token',
+        'tfa_secret',
     ];
 
     /**
@@ -42,6 +53,7 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'tfa_secret' => 'encrypted',
         ];
     }
 }

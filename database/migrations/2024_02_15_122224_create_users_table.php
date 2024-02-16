@@ -15,8 +15,18 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('email')->unique();
+            $table->foreignId('role_id')->index()->default(1);
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
+            $table->string('tfa_secret')->nullable();
+            $table->integer('credits')->default(0);
+            $table->string('address')->nullable();
+            $table->string('city')->nullable();
+            $table->string('state')->nullable();
+            $table->string('zip')->nullable();
+            $table->string('country')->nullable();
+            $table->string('phone')->nullable();
+            $table->string('company_name')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });
