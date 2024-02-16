@@ -34,6 +34,7 @@ trait Encrypted
         });
     }
 
+    // Check if attribute is encrypted
     public function isEncrypted(string $key): bool
     {
         return $this->encrypted && $this->isFillable($key);

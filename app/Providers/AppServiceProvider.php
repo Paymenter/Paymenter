@@ -20,6 +20,11 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        config(['settings' => Setting::where('settingable_type', null)->get()->pluck('value', 'key')]);
+        try {
+            // Load settings from database
+            config(['settings' => Setting::where('settingable_type', null)->get()->pluck('value', 'key')]);
+        } catch (\Exception $e) {
+            // Catch exception if database is not available (e.g. during migration)
+        }
     }
 }
