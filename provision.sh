@@ -86,8 +86,32 @@ server {
 EOF
 
 mv ~/Paymenter.conf /etc/nginx/conf.d/pay.conf
-# are you stupid? you can't just delete the file like that
-# rm ~/Paymenter.conf
+
+cat > ~/paymenter.service << EOF
+[Unit]
+Description=Paymenter Queue Worker
+
+[Service]
+# On some systems the user and group might be different.
+# Some systems use `apache` or `nginx` as the user and group.
+User=www-data
+Group=www-data
+Restart=always
+ExecStart=/usr/bin/php /var/www/paymenter/artisan queue:work
+StartLimitInterval=180
+StartLimitBurst=30
+RestartSec=5s
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+mv ~/paymenter.service /etc/systemd/system/paymenter.service
+
+systemctl daemon-reload
+systemctl enable --now paymenter
+
+(crontab -l 2>/dev/null; echo "* * * * * php /var/www/paymenter/artisan schedule:run >> /dev/null 2>&1") | crontab -
 
 setenforce 0
 
