@@ -1,0 +1,24 @@
+#!/usr/bin/expect -f
+
+exec cd /var/www/paymenter
+
+# Define the responses
+set responses {
+    "What is his/her email?:" "dev@pyro.host"
+    "Password for this new user?:" "password"
+    "What is his/her first name?:" "Developer"
+    "What is his/her last name?:" "User"
+    "What is his/her role? \[user\]:" "0"
+}
+
+# Run the command and respond to prompts
+spawn php artisan p:user:create
+
+# Loop through the responses and send them when prompted
+foreach {prompt response} $responses {
+    expect $prompt
+    send "$response\r"
+}
+
+# Wait for the command to finish
+expect eof
