@@ -2,6 +2,8 @@ param (
     [bool]$fullBuild = $false
 )
 
+vagrant.exe up
+
 $full = if($fullBuild) { "--full" } else { "" }
 
 # Define the spinner
@@ -25,6 +27,7 @@ $job = Start-Job -ScriptBlock {
     "
 } -ArgumentList $pwd
 
+Write-Host "`n Building... `n"
 # Loop until the job is complete, displaying a spinner
 while ($job.State -eq 'Running') {
     Write-Host -NoNewline "`r"
@@ -38,4 +41,6 @@ $output = Receive-Job $job
 
 if ($null -ne $output) {
     Write-Host $output
+} else {
+    Write-Host "`n Build complete! `n"
 }
