@@ -1,3 +1,10 @@
+#!/bin/bash
+
+if [-d /provisioned]; then
+    echo "Already provisioned. Exiting."
+    exit 0
+fi
+
 dnf install -y epel-release gnupg
 dnf config-manager --set-enabled crb
 dnf install -y \
@@ -26,6 +33,10 @@ mysql \
     -e "FLUSH PRIVILEGES;"
 
 cd /vagrant
+
+curl -fsSL https://raw.githubusercontent.com/tj/n/master/bin/n | bash -s lts
+
+npm install
 
 cp .env.example .env
 

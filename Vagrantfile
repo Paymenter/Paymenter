@@ -62,6 +62,9 @@ Vagrant.configure("2") do |config|
   end
 
   config.vm.network "forwarded_port", guest: 80, host: 3000
+
+  config.vm.provision "shell",
+    inline: "chmod +x /vagrant/provision.sh && /vagrant/provision.sh"
   #
   # View the documentation for the provider you are using for more
   # information on available options.

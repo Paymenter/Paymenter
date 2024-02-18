@@ -1,6 +1,7 @@
 {
     "private": true,
     "scripts": {
+        "win-dev": "powershell -ExecutionPolicy Bypass -NoProfile -Command .\\build.ps1",
         "dev": "node vite.js dev",
         "build": "node vite.js",
         "lang": "laravel-language-extractor"
