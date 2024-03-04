@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Auth\Events\Registered;
 use App\Providers\RouteServiceProvider;
+use App\Validators\ReCaptcha;
 
 class RegisteredUserController extends Controller
 {
@@ -35,6 +36,7 @@ class RegisteredUserController extends Controller
     public function store(Request $request)
     {
         $countries = \App\Classes\Constants::countries();
+        (new ReCaptcha())->verify($request);
         $request->validate([
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
@@ -44,9 +46,6 @@ class RegisteredUserController extends Controller
             'city' => (config('settings::requiredClientDetails_city') == 1 ? 'required|': 'nullable|') . 'string',
             'country' => (config('settings::requiredClientDetails_country') == 1 ? 'required|': 'nullable|') . 'string|in:' . implode(',', array_keys($countries)),
             'phone' => (config('settings::requiredClientDetails_phone') == 1 ? 'required|': 'nullable|') . 'string',
-            'g-recaptcha-response' => 'recaptcha',
-            'cf-turnstile-response' => 'recaptcha',
-            'h-captcha-response' => 'recaptcha',
         ]);
 
 

@@ -3,12 +3,14 @@
 namespace App\Validators;
 
 use GuzzleHttp\Client;
-use GuzzelHttp\RequestOptions;
+use Illuminate\Http\Request;
+use Illuminate\Validation\ValidationException;
 
 class ReCaptcha
 {
-    public function validate($attribute, $value, $parameters, $validator)
+    public function validate(Request $request)
     {
+        $value = $request->get('g-recaptcha-response') ?? $request->get('h-captcha-response') ?? $request->get('cf-turnstile-response');
         if (!config('settings::recaptcha')) {
             return true;
         }
@@ -76,5 +78,12 @@ class ReCaptcha
             return $body->success;
         }
         return false;
+    }
+
+    public function verify(Request $request)
+    {
+        if (!$this->validate($request)) {
+            throw ValidationException::withMessages(['recaptcha' => __('validation.recaptcha')]);
+        }
     }
 }

@@ -10,6 +10,7 @@ use App\Models\Ticket;
 use Illuminate\Http\Request;
 use App\Models\TicketMessage;
 use App\Http\Controllers\Controller;
+use App\Validators\ReCaptcha;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\RateLimiter;
@@ -42,13 +43,11 @@ class TicketController extends Controller
     public function store(Request $request)
     {
         $user = $request->user();
+        (new ReCaptcha())->verify($request);
         $body = $request->validate([
-            'g-recaptcha-response' => 'recaptcha',
-            'cf-turnstile-response' => 'recaptcha',
             'title' => 'required',
             'description' => 'required',
             'priority' => 'required',
-            'h-captcha-response' => 'recaptcha',
         ]);
 
         if (RateLimiter::tooManyAttempts("create-ticket:$user->id", $perMinute = 1)) {
@@ -98,10 +97,8 @@ class TicketController extends Controller
     public function reply(Request $request, Ticket $ticket)
     {
         $user = $request->user();
+        (new ReCaptcha())->verify($request);
         $request->validate([
-            'g-recaptcha-response' => 'recaptcha',
-            'cf-turnstile-response' => 'recaptcha',
-            'h-captcha-response' => 'recaptcha',
             'message' => 'required',
             'attachments' => 'nullable|array',
         ]);
