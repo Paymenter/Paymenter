@@ -60,7 +60,7 @@ class ProductController extends Controller
         }
 
         $product->cancellation()->create([
-            'reason' => $request->reason,
+            'reason' => $request->cancellation_reason,
         ]);
 
         return redirect()->back()->with('success', 'Product cancelled successfully.');
