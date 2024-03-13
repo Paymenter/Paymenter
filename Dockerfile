@@ -1,18 +1,18 @@
 # Stage 0:
 # Build the assets that are needed for the frontend. This build stage is then discarded
 # since we won't need NodeJS anymore in the future.
-FROM --platform=$TARGETOS/$TARGETARCH node:18-alpine
+FROM --platform=$TARGETOS/$TARGETARCH registry.access.redhat.com/ubi9/nodejs-18-minimal AS builder
 WORKDIR /app
 COPY . ./
-RUN yarn install \
-    && yarn run build
+RUN npm install \
+    && npm run build
 
 # Stage 1:
 # Build the actual container with all of the needed PHP dependencies that will run the application.
 FROM --platform=$TARGETOS/$TARGETARCH php:8.1-fpm-alpine
 WORKDIR /app
 COPY . ./
-COPY --from=0 /app/public/assets ./public/assets
+COPY --from=0 /app/public/default /app/public/default
 RUN apk add --no-cache --update ca-certificates dcron curl git supervisor tar unzip nginx libpng-dev libxml2-dev libzip-dev certbot certbot-nginx \
     && docker-php-ext-configure zip \
     && docker-php-ext-install bcmath gd pdo_mysql zip \
