@@ -2,15 +2,14 @@ version: '3.8'
 x-common:
   database:
     &db-env
-    MYSQL_PASSWORD: &db-password "YOUR_DB_PASSWORD"
-    MYSQL_ROOT_PASSWORD: "YOUR_ROOT_PASSWORD"
+    MYSQL_PASSWORD: &db-password "CHANGE_ME"
+    MYSQL_ROOT_PASSWORD: "CHANGE_ME_TOO"
   panel:
     &pm-env
     APP_NAME: Paymenter
     APP_ENV: production
-    APP_KEY: YOUR_APP_KEY
-    APP_DEBUG: false
-    APP_URL: https://domain.tld
+    APP_URL: http://example.com
+    LE_EMAIL: "admin@example.com"
     LOG_CHANNEL: stack
     LOG_DEPRECATIONS_CHANNEL: null
     LOG_LEVEL: debug
@@ -33,7 +32,7 @@ services:
     restart: always
     command: --default-authentication-plugin=mysql_native_password
     volumes:
-      - "/opt/paymenter/database:/var/lib/mysql"
+      - "mysql:/var/lib/mysql"
     environment:
       <<: *db-env
       MYSQL_DATABASE: "paymenter"
@@ -42,29 +41,28 @@ services:
     image: redis:alpine
     restart: always
   paymenter:
-    image: ghcr.io/paymenter/paymenter:latest
+    image: paymenter:latest
     restart: always
     ports:
-      - "8080:8080"
+      - "80:80"
+      - "443:443"
     links:
       - database
       - cache
     volumes:
-      - "/opt/paymenter/var/:/app/var/"
-      - "/opt/paymenter/logs/:/app/storage/logs"
+      - "var:/app/var/"
+      - "nginx:/etc/nginx/http.d"
+      - "certs:/etc/letsencrypt/"
+      - "logs:/app/storage/logs"
     environment:
       <<: *pm-env
-      DB_PASSWORD: *db-password
-  proxy:
-    image: nginx:stable-alpine3.17-slim
-    restart: always
-    links:
-      - paymenter
-    ports:
-      - "443:443"
-    volumes:
-      - "/opt/paymenter/nginx/:/etc/nginx/http.d"
-      - "/opt/paymenter/certs/:/etc/certs/"
+      DB_PASSWORD: *db-password 
+volumes:
+  mysql:
+  var:
+  nginx:
+  certs:
+  logs:
 networks:
   default:
     ipam:
