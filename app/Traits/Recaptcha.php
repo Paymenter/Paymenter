@@ -8,7 +8,7 @@ use Illuminate\Validation\ValidationException;
 
 trait Recaptcha
 {
-    public string $recaptcha;
+    public string $recaptcha = '';
 
     private $is_valid = false;
 
@@ -22,6 +22,10 @@ trait Recaptcha
     {
         if (!config('settings.recaptcha') || config('settings.recaptcha') == 'disabled' || $this->is_valid) {
             return;
+        }
+
+        if (!$this->recaptcha) {
+            throw ValidationException::withMessages(['recaptcha' => 'The reCAPTCHA field is required.']);
         }
 
         if (config('settings.recaptcha') == 'turnstile') {

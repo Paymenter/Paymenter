@@ -17,7 +17,7 @@
 
                 <x-recaptcha :form="'login'" />
 
-                <x-button.primary class="w-full">{{ __('Sign in') }}</x-button.primary>
+                <x-button.primary class="w-full" type="submit">{{ __('Sign in') }}</x-button.primary>
 
                 @if (config('settings.oauth_github') || config('settings.oauth_google') || config('settings.oauth_facebook') || config('settings.oauth_discord'))
                     <div class="flex flex-col items-center mt-4">
