@@ -56,4 +56,14 @@ class User extends Authenticatable
             'tfa_secret' => 'encrypted',
         ];
     }
+
+    /**
+     * Get the display name for the user. 
+     *
+     * @return string
+     */
+    public function displayName(): string
+    {
+        return ($this->first_name . ' ' . $this->last_name) ?: $this->email;
+    }
 }
