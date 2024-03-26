@@ -73,7 +73,7 @@ class ProductController extends Controller
             return abort(404, 'Order not found');
         }
         $orderProduct = $product;
-        if (!$orderProduct->availableUpgrades()->count()) {
+        if (!$orderProduct->upgradable) {
             return redirect()->back()->with('error', 'No upgrades available.');
         }
         $product = $product->product;
@@ -85,7 +85,7 @@ class ProductController extends Controller
     {
         $orderProduct->load(['product', 'order', 'order.user']);
 
-        if ($orderProduct->order->user != Auth::user()) {
+        if ($orderProduct->order->user != Auth::user() || !$orderProduct->upgradable) {
             return abort(404, 'Order not found');
         }
 
@@ -111,7 +111,7 @@ class ProductController extends Controller
     {
         $orderProduct->load(['product', 'order', 'order.user']);
 
-        if ($orderProduct->order->user != Auth::user()) {
+        if ($orderProduct->order->user != Auth::user() || !$orderProduct->upgradable) {
             return abort(404, 'Order not found');
         }
 

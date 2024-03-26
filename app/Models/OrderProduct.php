@@ -67,7 +67,7 @@ class OrderProduct extends Model
 
     public function getUpgradableAttribute()
     {
-        return $this->availableUpgrades()->count() > 0;
+        return $this->availableUpgrades()->count() > 0 && $this->status == 'paid';
         // return $this->availableUpgrades()->count() > 0 || $this->product->upgrade_configurable_options;
     }
 
