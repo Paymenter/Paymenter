@@ -161,8 +161,9 @@ return [
                 'zip' => 'Zip',
                 'country' => 'Country',
             ],
-            'default' => "['address2', 'phone']",
+            'default' => ["address2", "phone"],
             'required' => false,
+            'database_type' => 'array',
         ]
     ]
 ];

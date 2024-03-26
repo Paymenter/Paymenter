@@ -13,7 +13,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        // Service provider for settings
+        $this->app->register(SettingsProvider::class);
     }
 
     /**
@@ -21,14 +22,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        try {
-            // Load settings from database
-            config(['settings' => Setting::where('settingable_type', null)->get()->pluck('value', 'key')]);
-
-            // Set active theme
-            Theme::set(config('settings.theme', 'default'));
-        } catch (\Exception $e) {
-            // Catch exception if database is not available (e.g. during migration)
-        }
+        //
     }
 }

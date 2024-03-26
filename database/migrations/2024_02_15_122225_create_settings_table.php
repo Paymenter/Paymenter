@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->text('key');
             $table->text('value');
+            $table->string('type')->default('string');
             $table->boolean('encrypted')->default(false);
             $table->nullableMorphs('settingable');
             $table->timestamps();

@@ -16,8 +16,8 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         // User::factory(10)->create();
-        Role::updateOrCreate(['name' => 'user', 'permissions' => []]);
-        Role::updateOrCreate(['name' => 'admin', 'permissions' => ['*']]);
+        Role::updateOrCreate(['name' => 'user'], ['permissions' => []]);
+        Role::updateOrCreate(['name' => 'admin'], ['permissions' => ['*']]);
 
         foreach (config('available-settings') as $group => $settings) {
             foreach ($settings as $setting) {
@@ -26,7 +26,9 @@ class DatabaseSeeder extends Seeder
                 }
                 Setting::firstOrCreate([
                     'key' => $setting['name'],
+                ], [
                     'value' => $setting['default'],
+                    'type' => $setting['database_type'] ?? 'string',
                 ]);
             }
         }
