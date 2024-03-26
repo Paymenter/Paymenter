@@ -6,34 +6,34 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\ValidationException;
 
-trait Recaptcha
+trait Captchable
 {
-    public string $recaptcha = '';
+    public string $captcha = '';
 
     private $is_valid = false;
 
     public function updated()
     {
-        $this->recaptcha();
+        $this->captcha();
     }
 
-    // Recaptcha
-    private function recaptcha()
+    // Captchable
+    private function captcha()
     {
-        if (!config('settings.recaptcha') || config('settings.recaptcha') == 'disabled' || $this->is_valid) {
+        if (!config('settings.captcha') || config('settings.captcha') == 'disabled' || $this->is_valid) {
             return;
         }
 
-        if (!$this->recaptcha) {
-            throw ValidationException::withMessages(['recaptcha' => 'The reCAPTCHA field is required.']);
+        if (!$this->captcha) {
+            throw ValidationException::withMessages(['captcha' => 'The CAPTCHA is required.']);
         }
 
-        if (config('settings.recaptcha') == 'turnstile') {
-            $this->turnstile($this->recaptcha);
-        } elseif (config('settings.recaptcha') == 'hcaptcha') {
-            $this->hcaptcha($this->recaptcha);
+        if (config('settings.captcha') == 'turnstile') {
+            $this->turnstile($this->captcha);
+        } elseif (config('settings.captcha') == 'hcaptcha') {
+            $this->hcaptcha($this->captcha);
         } else {
-            $this->google($this->recaptcha);
+            $this->google($this->captcha);
         }
     }
 
@@ -43,7 +43,7 @@ trait Recaptcha
         $itempotencyKey = uniqid();
 
         $response = Http::asForm()->acceptJson()->post('https://challenges.cloudflare.com/turnstile/v0/siteverify', [
-            'secret' => config('settings.recaptcha_secret'),
+            'secret' => config('settings.captcha_secret'),
             'response' => $value,
             'remoteip' => request()->ip(),
             'idempotency_key' => $itempotencyKey,
@@ -54,7 +54,7 @@ trait Recaptcha
         }
 
         $subResponse = Http::asForm()->acceptJson()->post('https://challenges.cloudflare.com/turnstile/v0/siteverify', [
-            'secret' => config('settings.recaptcha_secret'),
+            'secret' => config('settings.captcha_secret'),
             'response' => $value,
             'remoteip' => request()->ip(),
             'idempotency_key' => $itempotencyKey,
@@ -64,8 +64,8 @@ trait Recaptcha
             return $this->is_valid = true;
         }
 
-        Log::error('The reCAPTCHA was invalid.' . $value, $response->json(), $subResponse->json());
-        throw ValidationException::withMessages(['recaptcha' => 'The reCAPTCHA was invalid.']);
+        Log::error('The CAPTCHA was invalid.' . $value, $response->json(), $subResponse->json());
+        throw ValidationException::withMessages(['captcha' => 'The CAPTCHA was invalid.']);
 
         return $this->is_valid = true;
     }

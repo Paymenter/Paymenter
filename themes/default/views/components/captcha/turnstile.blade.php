@@ -7,17 +7,17 @@
         // On livewire validation error reset turnstile
         Livewire.hook('morph.updated', () => {
             turnstile.render('#cf-turnstile', {
-                sitekey: '{{ config('settings.recaptcha_site_key') }}',
+                sitekey: '{{ config('settings.captcha_site_key') }}',
                 callback: function(token) {
-                    @this.set('recaptcha', token, false)
+                    @this.set('captcha', token, false)
                 },
             });
         });
 
         turnstile.render('#cf-turnstile', {
-            sitekey: '{{ config('settings.recaptcha_site_key') }}',
+            sitekey: '{{ config('settings.captcha_site_key') }}',
             callback: function(token) {
-                @this.set('recaptcha', token, false)
+                @this.set('captcha', token, false)
             },
         });
     });

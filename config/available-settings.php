@@ -8,14 +8,14 @@ return [
             'label' => 'Timezone',
             'type' => 'select',
             'options' => [
-            // Read timezones from PHP
+                // Read timezones from PHP
                 DateTimeZone::listIdentifiers(DateTimeZone::ALL),
             ],
             'default' => 'UTC',
             'required' => true,
         ],
         [
-            'name' => 'app_locale', 
+            'name' => 'app_locale',
             'label' => 'App Locale',
             'default' => 'en',
             'type' => 'select',
@@ -52,32 +52,32 @@ return [
     ],
 
 
-    // Security (recaptcha, rate limiting, etc.)
+    // Security (captcha, rate limiting, etc.)
     'security' => [
         [
 
-            'name' => 'recaptcha',
-            'label' => 'Recaptcha',
+            'name' => 'captcha',
+            'label' => 'Captcha',
             'type' => 'select',
             'options' => [
                 'disabled' => 'Disabled',
                 'google-v2' => 'Google reCAPTCHA v2',
-                'google-v2' => 'Google reCAPTCHA v3',
+                'google-v3' => 'Google reCAPTCHA v3',
                 'turnstile' => 'Cloudflare Turnstile',
                 'hcaptcha' => 'hCaptcha',
             ],
             'default' => 'turnstile',
         ],
         [
-            'name' => 'recaptcha_site_key',
-            'label' => 'Recaptcha Site Key',
+            'name' => 'captcha_site_key',
+            'label' => 'Captcha Site Key',
             'type' => 'text',
             'required' => false,
             'default' => '0x4AAAAAAAC-bTN5KkqiyxNM',
         ],
         [
-            'name' => 'recaptcha_secret',
-            'label' => 'Recaptcha Secret',
+            'name' => 'captcha_secret',
+            'label' => 'Captcha Secret',
             'type' => 'text',
             'required' => false,
             'default' => '0x4AAAAAAAC-baD1IX6FMxXxEduRXcmCtuM',
