@@ -61,8 +61,8 @@ return [
             'type' => 'select',
             'options' => [
                 'disabled' => 'Disabled',
-                'google-v2' => 'Google reCAPTCHA v2',
-                'google-v3' => 'Google reCAPTCHA v3',
+                'recaptcha-v2' => 'Google reCAPTCHA v2',
+                'recaptcha-v3' => 'Google reCAPTCHA v3',
                 'turnstile' => 'Cloudflare Turnstile',
                 'hcaptcha' => 'hCaptcha',
             ],

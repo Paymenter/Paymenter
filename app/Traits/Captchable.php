@@ -32,8 +32,8 @@ trait Captchable
             $this->turnstile($this->captcha);
         } elseif (config('settings.captcha') == 'hcaptcha') {
             $this->hcaptcha($this->captcha);
-        } else {
-            $this->google($this->captcha);
+        } elseif (config('settings.captcha') == 'recaptcha-v2' || config('settings.captcha') == 'recaptcha-v3') {
+            $this->recaptcha($this->captcha);
         }
     }
 
@@ -65,6 +65,27 @@ trait Captchable
         }
 
         Log::error('The CAPTCHA was invalid.' . $value, $response->json(), $subResponse->json());
+        throw ValidationException::withMessages(['captcha' => 'The CAPTCHA was invalid.']);
+
+        return $this->is_valid = true;
+    }
+
+    // Google Recaptcha
+    private function recaptcha($value)
+    {
+        $response = Http::asForm()->acceptJson()->post('https://www.google.com/recaptcha/api/siteverify', [
+            'secret' => config('settings.captcha_secret'),
+            'response' => $value,
+            'remoteip' => request()->ip(),
+        ]);
+
+        if ($response->json()['success']) {
+            return $this->is_valid = true;
+        }
+
+        dd($response->json());
+
+        Log::error('The CAPTCHA was invalid.' . $value, $response->json());
         throw ValidationException::withMessages(['captcha' => 'The CAPTCHA was invalid.']);
 
         return $this->is_valid = true;

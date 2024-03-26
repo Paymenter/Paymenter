@@ -3,14 +3,9 @@
 
 <script>
     function captchaOnload() {
-        // On livewire validation error reset turnstile
+        // On livewire validation error reset captcha
         Livewire.hook('morph.updated', () => {
-            grecaptcha.render('g-recaptcha', {
-                sitekey: '{{ config('settings.captcha_site_key') }}',
-                callback: function(token) {
-                    @this.set('captcha', token, false)
-                },
-            });
+            grecaptcha.reset();
         });
 
         grecaptcha.render('g-recaptcha', {
