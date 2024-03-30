@@ -4,9 +4,10 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\LoginController;
 use App\Livewire\Auth\Login;
 use App\Livewire\Auth\Register;
+use App\Livewire\Admin\Settings;
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('home');
 });
 
 
@@ -16,8 +17,11 @@ Route::get('/', function () {
 Route::group(['middleware' => ['web', 'guest']], function () {
     Route::get('login', Login::class)->name('login');
     Route::get('register', Register::class)->name('register');
-    
     // Todo
     Route::get('password/reset')->name('password.reset');
     Route::get('/oauth/{provider}')->name('oauth');
+
+    Route::prefix('admin')->name('admin.')->group(function () {
+        Route::get('settings', Settings::class)->name('settings');
+    });
 });

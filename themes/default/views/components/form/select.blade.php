@@ -15,7 +15,8 @@
         {{ $attributes->only(['required', 'wire:model']) }}
         class="block px-2.5 py-2.5 w-full text-sm text-dark-text dark:text-light-text bg-white dark:bg-primary-800 border-2 border-primary-300 dark:border-primary-700 rounded-md outline-none focus:outline-none focus:border-secondary dark:focus:border-secondary transition-all duration-300 ease-in-out">
         @foreach ($options as $key => $option)
-            <option {{ ($multiple ? in_array($key, $selected) : $selected == $option) ? 'selected' : '' }}>
+            <option value="{{ gettype($options) == 'array' ? $option : $key }}"
+                {{ ($multiple ? in_array($key, $selected) : $selected == $option) ? 'selected' : '' }}>
                 {{ $option }}</option>
         @endforeach
     </select>

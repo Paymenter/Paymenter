@@ -7,10 +7,8 @@ return [
             'name' => 'timezone',
             'label' => 'Timezone',
             'type' => 'select',
-            'options' => [
-                // Read timezones from PHP
-                DateTimeZone::listIdentifiers(DateTimeZone::ALL),
-            ],
+            // Read timezones from PHP
+            'options' => DateTimeZone::listIdentifiers(DateTimeZone::ALL),
             'default' => 'UTC',
             'required' => true,
         ],
@@ -19,10 +17,9 @@ return [
             'label' => 'App Locale',
             'default' => 'en',
             'type' => 'select',
-            'options' => [
-                // Read languages from resources/lang directory
-                array_map('basename', glob(resource_path('lang/*'), GLOB_ONLYDIR)),
-            ],
+            // Read languages from resources/lang directory
+            // The ternary operator is only present for now. Since there are no lang files, it returns [], which breaks the frontend, so we return ['en']
+            'options' => glob(resource_path('lang/*'), GLOB_ONLYDIR) ? array_map('basename', glob(resource_path('lang/*'), GLOB_ONLYDIR)) : ['en'],
             'required' => true,
         ],
         [
@@ -36,10 +33,8 @@ return [
             'name' => 'theme',
             'default' => 'default',
             'type' => 'select',
-            'options' => [
-                // Read themes from themes directory
-                array_map('basename', glob(base_path('themes/*'), GLOB_ONLYDIR)),
-            ],
+            // Read themes from themes directory
+            'options' => array_map('basename', glob(base_path('themes/*'), GLOB_ONLYDIR)),
         ],
         [
             'name' => 'logo',
@@ -162,6 +157,7 @@ return [
                 'country' => 'Country',
             ],
             'default' => ["address2", "phone"],
+            'multiple' => true,
             'required' => false,
             'database_type' => 'array',
         ]
