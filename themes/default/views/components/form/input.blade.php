@@ -1,10 +1,19 @@
+@props([
+    'name',
+    'label' => null,
+    'required' => false,
+    'divClass' => null,
+    'placeholder' => null,
+    'id' => null,
+    'hideRequiredIndicator' => false,
+])
 <fieldset class="flex flex-col relative mt-3 w-full {{ $divClass ?? '' }}">
     @if ($label)
         <legend>
             <label for="{{ $name }}"
                 class="text-sm text-dark-text dark:text-light-text absolute -translate-y-1/2 start-1 ml-1 bg-white dark:bg-primary-800 px-2">
                 {{ $label }}
-                @if (isset($required) && $required)
+                @if ($required && !$hideRequiredIndicator)
                     <span class="text-red-500">*</span>
                 @endif
             </label>
