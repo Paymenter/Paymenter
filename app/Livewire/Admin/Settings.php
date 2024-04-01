@@ -3,6 +3,8 @@
 namespace App\Livewire\Admin;
 
 use App\Models\Setting;
+use App\Providers\SettingsProvider;
+use Livewire\Attributes\Locked;
 use Livewire\Component;
 
 class Settings extends Component
@@ -10,17 +12,20 @@ class Settings extends Component
     public $fields;
 
     private $availableSettings;
-    private $settingsObject;
+
+    #[Locked]
+    public $settings;
 
     public function boot()
     {
         $this->availableSettings = config('available-settings');
-        $this->settingsObject = json_decode(json_encode($this->availableSettings));
+        $this->settings = json_decode(json_encode($this->availableSettings));
     }
 
     public function save()
     {
         $this->validate();
+
         foreach ($this->fields as $group => $settings) {
             foreach ($settings as $key => $setting) {
                 // Get only the settings that have changed
@@ -29,6 +34,10 @@ class Settings extends Component
                 }
             }
         }
+
+        SettingsProvider::flushCache();
+
+        $this->dispatch('saved');
     }
 
     public function validationAttributes()
@@ -48,7 +57,7 @@ class Settings extends Component
 
         $rules = [];
 
-        foreach ($this->settingsObject as $group => $setting) {
+        foreach ($this->settings as $group => $setting) {
             foreach ($setting as $item) {
                 if (isset($item->required) && $item->required) {
                     $rules["fields.{$group}.{$item->name}"] = 'required';
@@ -56,7 +65,7 @@ class Settings extends Component
                         $rules["fields.{$group}.{$item->name}"] .= '|' . $item->validation;
                     }
                 } else if (isset($item->validation)) {
-                    $rules["fields.{$group}.{$item->name}"] = $item->validation;
+                    $rules["fields.{$group}.{$item->name}"] = 'nullable|' . $item->validation;
                 }
             }
         }
@@ -78,6 +87,6 @@ class Settings extends Component
 
     public function render()
     {
-        return view('admin.settings', ['settings' => $this->settingsObject]);
+        return view('admin.settings');
     }
 }

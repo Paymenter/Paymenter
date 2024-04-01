@@ -5,6 +5,7 @@
     'divClass' => null,
     'placeholder' => null,
     'id' => null,
+    'type' => null,
     'hideRequiredIndicator' => false,
 ])
 <fieldset class="flex flex-col relative mt-3 w-full {{ $divClass ?? '' }}">

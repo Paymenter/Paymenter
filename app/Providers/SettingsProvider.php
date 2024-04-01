@@ -23,10 +23,29 @@ class SettingsProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        // Load settings from cache
-        $settings = Cache::get('settings', Setting::where('settingable_type', null)->get()->pluck('value', 'key'));
-        config(['settings' => $settings]);
+        $this->getSettings();
+    }
 
-        Theme::set(config('settings.theme', 'default'), 'default');
+    public static function getSettings()
+    {
+        try {
+            // Load settings from cache
+            $settings = Cache::get('settings', []);
+            if (empty($settings)) {
+                $settings = Setting::where('settingable_type', null)->get()->pluck('value', 'key');
+                Cache::put('settings', $settings);
+            }
+            config(['settings' => $settings]);
+        
+            Theme::set(config('settings.theme', 'default'), 'default');
+        } catch (\Exception $e) {
+            // Do nothing
+        }
+    }
+
+    public static function flushCache()
+    {
+        Cache::forget('settings');
+        self::getSettings();
     }
 }

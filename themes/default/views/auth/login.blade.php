@@ -8,9 +8,10 @@
                     <x-logo />
                     <h1 class="text-2xl text-center dark:text-white mt-2">{{ __('Sign in to your account') }} </h1>
                 </div>
-                <x-form.input name="email" type="email" :label="__('Email')" :placeholder="__('Your email')" wire:model="email" />
-                <x-form.input name="password" type="password" :label="__('Password')" :placeholder="__('Your password')"
-                    wire:model="password" />
+                <x-form.input name="email" type="email" :label="__('Email')" :placeholder="__('Your email')" wire:model="email"
+                    hideRequiredIndicator required />
+                <x-form.input name="password" type="password" :label="__('Password')" :placeholder="__('Your password')" required
+                    hideRequiredIndicator wire:model="password" />
                 <div class="flex flex-row">
                     <x-form.checkbox name="remember" label="Remember me" wire:model="remember" />
                     <a class="text-sm text-secondary-500 text-secondary hover:underline ml-auto"

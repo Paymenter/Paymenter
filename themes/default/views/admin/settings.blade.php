@@ -48,6 +48,6 @@
         @endforeach
     @endforeach
     <div class="w-min">
-        <x-button.primary type="submit">{{ __('Save') }}</x-button.primary>
+        <x-button.save type="submit">{{ __('Save') }}</x-button.save>
     </div>
 </form>

@@ -21,7 +21,15 @@ Route::group(['middleware' => ['web', 'guest']], function () {
     Route::get('password/reset')->name('password.reset');
     Route::get('/oauth/{provider}')->name('oauth');
 
-    Route::prefix('admin')->name('admin.')->group(function () {
-        Route::get('settings', Settings::class)->name('settings');
-    });
+});
+
+Route::group(['middleware' => ['web', 'auth']], function () {
+    Route::get('dashboard', function () {
+        return view('dashboard');
+    })->name('dashboard');
+    //Route::get('logout', [LoginController::class, 'logout'])->name('logout');
+});
+
+Route::group(['middleware' => ['web', 'auth'/*, 'admin'*/], 'prefix' => 'admin', 'as' => 'admin.'], function () {
+    Route::get('settings', Settings::class)->name('settings');
 });

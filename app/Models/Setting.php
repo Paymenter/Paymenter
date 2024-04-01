@@ -44,6 +44,7 @@ class Setting extends Model
                     return;
             }
         });
+
         // When retrieving a setting, decrypt the value
         static::retrieved(function ($setting) {
             if ($setting->encrypted)
@@ -62,7 +63,10 @@ class Setting extends Model
                 default:
                     return;
             }
+        });
 
+        static::updated(function ($setting) {
+            \App\Providers\SettingsProvider::flushCache();
         });
     }
 }

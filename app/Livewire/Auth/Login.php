@@ -19,7 +19,6 @@ class Login extends Component
 
     public $remember = false;
 
-
     public function submit()
     {
         // todo: Can we remove this? 
@@ -35,7 +34,7 @@ class Login extends Component
         RateLimiter::increment('login:' . $this->email);
 
 
-        if (!auth()->attempt($this->only('email', 'password'))) {
+        if (!auth()->attempt($this->only('email', 'password'), $this->remember)) {
             $this->addError('email', 'These credentials do not match our records.');
 
             return;

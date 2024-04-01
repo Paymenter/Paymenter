@@ -21,6 +21,7 @@ return [
             // The ternary operator is only present for now. Since there are no lang files, it returns [], which breaks the frontend, so we return ['en']
             'options' => glob(resource_path('lang/*'), GLOB_ONLYDIR) ? array_map('basename', glob(resource_path('lang/*'), GLOB_ONLYDIR)) : ['en'],
             'required' => true,
+            'validation' => 'in:'.implode(',', glob(resource_path('lang/*'), GLOB_ONLYDIR) ? array_map('basename', glob(resource_path('lang/*'), GLOB_ONLYDIR)) : ['en']),
         ],
         [
             'name' => 'app_url',
@@ -28,6 +29,7 @@ return [
             'default' => 'http://localhost',
             'type' => 'text',
             'required' => true,
+            'validation' => 'url',
         ],
         [
             'name' => 'theme',
@@ -35,6 +37,7 @@ return [
             'type' => 'select',
             // Read themes from themes directory
             'options' => array_map('basename', glob(base_path('themes/*'), GLOB_ONLYDIR)),
+            'validation' => 'in:'.implode(',', array_map('basename', glob(base_path('themes/*'), GLOB_ONLYDIR))),
         ],
         [
             'name' => 'logo',
@@ -61,7 +64,7 @@ return [
                 'turnstile' => 'Cloudflare Turnstile',
                 'hcaptcha' => 'hCaptcha',
             ],
-            'default' => 'turnstile',
+            'default' => 'disabled',
         ],
         [
             'name' => 'captcha_site_key',
@@ -157,7 +160,6 @@ return [
                 'country' => 'Country',
             ],
             'default' => ["address2", "phone"],
-            'multiple' => true,
             'required' => false,
             'database_type' => 'array',
         ]
