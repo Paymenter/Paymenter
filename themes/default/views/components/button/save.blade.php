@@ -1,11 +1,11 @@
 
 <!-- Show saved! when the form is saved -->
 <div class="flex flex-row items-center">
-    <x-button.primary {{ $attributes->merge(['class' => 'mt-0']) }}>
+    <x-button.primary {{ $attributes }}>
         {{ $slot }}
     </x-button.primary>
 
-    <div class="flex items-center justify-center ml-2 text-green-500 hidden opacity-0 transition-opacity ease-in-out delay-150 duration-300" id="saved">
+    <div class="flex items-center justify-center ml-2 text-green-500 hidden opacity-0 transition-opacity ease-in-out delay-150 duration-300 mt-4" id="saved">
         {{ __('Saved!') }}
     </div>
     @script

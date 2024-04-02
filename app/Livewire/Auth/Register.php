@@ -29,7 +29,7 @@ class Register extends Component
 
     public function mount()
     {
-        $this->country = config('app.countries')[0];
+        $this->country = config('app.countries')[config('settings.company_country')] ?? config('app.countries')['US'];
     }
 
     public function rules()

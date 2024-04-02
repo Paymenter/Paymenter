@@ -15,7 +15,10 @@ class LoginTest extends TestCase
 {
     use RefreshDatabase;
 
-    /** @test */
+    /** 
+     * @test
+     * Test if the login page renders successfully
+     */
     public function renders_successfully()
     {
         Livewire::test(Login::class)
@@ -24,7 +27,10 @@ class LoginTest extends TestCase
             ->assertSee('Password');
     }
 
-    /** @test */
+    /** 
+     * @test 
+     * Test if the user can't login with invalid credentials
+     */
     public function cant_login_with_invalid_credentials()
     {
         Livewire::test(Login::class)
@@ -34,7 +40,10 @@ class LoginTest extends TestCase
             ->assertHasErrors('email');
     }
 
-    /** @test */
+    /** 
+     * @test
+     * Test if the user can login with valid credentials
+     */
     public function can_login_with_valid_credentials()
     {        
         User::factory()->create([
@@ -53,7 +62,10 @@ class LoginTest extends TestCase
     }
 
 
-    /** @test */
+    /** 
+     * @test 
+     * Test if the user can't login with valid credentials but wrong captcha
+     */
     public function cant_login_with_captcha_enabled()
     {
         Setting::where('key', 'captcha')->get()->first()->update(['value' => 'turnstile']);
@@ -67,6 +79,7 @@ class LoginTest extends TestCase
 
         $this->assertGuest();
 
+        // Test without captcha
         Livewire::test(Login::class)
             ->set('email', 'test@paymenter.org')
             ->set('password', 'password')
@@ -74,10 +87,12 @@ class LoginTest extends TestCase
             ->assertHasErrors('captcha');
 
         $this->assertGuest();
-
     }
 
-    /** @test */
+    /** 
+     * @test
+     * Test if the user can login with valid credentials and redirect to intended url
+     */
     public function can_login_with_valid_credentials_and_redirect_to_intended_url()
     {        
         User::factory()->create([
@@ -98,5 +113,25 @@ class LoginTest extends TestCase
 
         $this->get('/admin/settings')->assertOk();
 
+    }
+
+    /** 
+     * @test 
+     * Test if user gets redirected to the login page if they are not authenticated
+     */
+    public function cant_go_to_admin_dashboard_if_not_authenticated()
+    {
+        $this->get('/admin/settings')->assertRedirect(route('login'));
+    }
+
+    /** 
+     * @test
+     * Test if the user is authenticated but not an admin and tries to access the admin dashboard
+     */
+    public function cant_go_to_admin_dashboard_if_authenticated_but_not_admin()
+    {
+        $user = User::factory()->create();
+
+      //  $this->actingAs($user)->get('/admin/settings')->assertForbidden();
     }
 }

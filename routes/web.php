@@ -28,6 +28,10 @@ Route::group(['middleware' => ['web', 'auth']], function () {
         return view('dashboard');
     })->name('dashboard');
     //Route::get('logout', [LoginController::class, 'logout'])->name('logout');
+
+    Route::get('profile', function () {
+        return view('profile');
+    })->name('profile');
 });
 
 Route::group(['middleware' => ['web', 'auth'/*, 'admin'*/], 'prefix' => 'admin', 'as' => 'admin.'], function () {

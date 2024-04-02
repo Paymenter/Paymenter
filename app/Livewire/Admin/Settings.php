@@ -30,7 +30,14 @@ class Settings extends Component
             foreach ($settings as $key => $setting) {
                 // Get only the settings that have changed
                 if ($setting !== config("settings.$key")) {
-                    Setting::where('settingable_type', null)->where('key', $key)->update(['value' => $setting]);
+                    $modelSetting = Setting::where('settingable_type', null)->where('key', $key)->update(['value' => $setting]);
+                    if (!$modelSetting) {
+                        Setting::create([
+                            'key' => $key,
+                            'value' => $setting,
+                            'settingable_type' => null,
+                        ]);
+                    }
                 }
             }
         }

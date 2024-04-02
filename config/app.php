@@ -54,7 +54,7 @@ return [
     |
     */
 
-    'url' => config('general.app_url', env('APP_URL', 'http://localhost')),
+    'url' => env('APP_URL', 'http://localhost'),
 
     /*
     |--------------------------------------------------------------------------
@@ -67,7 +67,7 @@ return [
     |
     */
 
-    'timezone' => config('general.timezone', env('APP_TIMEZONE', 'UTC')),
+    'timezone' => env('APP_TIMEZONE', 'UTC'),
 
     /*
     |--------------------------------------------------------------------------
@@ -80,7 +80,7 @@ return [
     |
     */
 
-    'locale' => config('general.locale', env('APP_LOCALE', 'en')),
+    'locale' => env('APP_LOCALE', 'en'),
 
     'fallback_locale' => env('APP_FALLBACK_LOCALE', 'en'),
 

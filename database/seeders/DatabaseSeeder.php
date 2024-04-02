@@ -32,5 +32,7 @@ class DatabaseSeeder extends Seeder
                 ]);
             }
         }
+
+        \App\Providers\SettingsProvider::flushCache();
     }
 }

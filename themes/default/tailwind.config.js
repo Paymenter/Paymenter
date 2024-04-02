@@ -5,7 +5,6 @@ import tailwindcsstypography from '@tailwindcss/typography';
 import tailwindcssforms from '@tailwindcss/forms';
 
 module.exports = {
-    darkMode: "class",
     content: [
         path.resolve(__dirname, "./**/*.{blade.php,js,vue,ts}"),
     ],
@@ -17,12 +16,6 @@ module.exports = {
             },
             colors: {
                 'test': '#111827',
-                
-                'dark-text': '#111827',
-                'light-text': '#F3F4F6',
-                'light-bg': '#F3F4F6',
-                'dark-bg': '#111827',
-
 
                 'primary': {
                     '100': '#F3F4F6',

@@ -2,9 +2,7 @@
 
 namespace App\Providers;
 
-use App\Models\Setting;
 use Illuminate\Support\ServiceProvider;
-use Qirolab\Theme\Theme;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -22,6 +20,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        // Change livewire url
+        \Livewire\Livewire::setUpdateRoute(function ($handle) {
+            return \Illuminate\Support\Facades\Route::post('/paymenter/update', $handle)->middleware('web');
+        });    
     }
 }

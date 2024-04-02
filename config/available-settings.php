@@ -11,6 +11,7 @@ return [
             'options' => DateTimeZone::listIdentifiers(DateTimeZone::ALL),
             'default' => 'UTC',
             'required' => true,
+            'override' => 'app.timezone',
         ],
         [
             'name' => 'app_locale',
@@ -22,6 +23,7 @@ return [
             'options' => glob(resource_path('lang/*'), GLOB_ONLYDIR) ? array_map('basename', glob(resource_path('lang/*'), GLOB_ONLYDIR)) : ['en'],
             'required' => true,
             'validation' => 'in:'.implode(',', glob(resource_path('lang/*'), GLOB_ONLYDIR) ? array_map('basename', glob(resource_path('lang/*'), GLOB_ONLYDIR)) : ['en']),
+            'override' => 'app.locale',
         ],
         [
             'name' => 'app_url',
@@ -30,6 +32,7 @@ return [
             'type' => 'text',
             'required' => true,
             'validation' => 'url',
+            'override' => 'app.url',
         ],
         [
             'name' => 'theme',
@@ -124,6 +127,7 @@ return [
         [
             'name' => 'oauth_discord',
             'label' => 'Discord Enabled',
+            'description' => 'Be sure to enable the OAuth2 redirect URL in your Discord application settings. Point it to: ',
             'type' => 'checkbox',
             'default' => false,
             'required' => false,
@@ -140,6 +144,62 @@ return [
             'type' => 'text',
             'required' => false,
         ],
+    ],
+
+    'company-details' => [
+        [
+            'name' => 'show_in_footer',
+            'label' => 'Show in Footer',
+            'type' => 'checkbox',
+            'default' => true,	
+        ],
+        [
+            'name' => 'company_name',
+            'label' => 'Company Name',
+            'type' => 'text',
+            'override' => 'app.name',
+        ],
+        [
+            'name' => 'company_email',
+            'label' => 'Company Email',
+            'type' => 'email',
+        ],
+        [
+            'name' => 'company_phone',
+            'label' => 'Company Phone',
+            'type' => 'text',
+        ],
+        [
+            'name' => 'company_address',
+            'label' => 'Company Address',
+            'type' => 'text',
+        ],
+        [
+            'name' => 'company_address2',
+            'label' => 'Company Address 2',
+            'type' => 'text',
+        ],
+        [
+            'name' => 'company_city',
+            'label' => 'Company City',
+            'type' => 'text',
+        ],
+        [
+            'name' => 'company_state',
+            'label' => 'Company State',
+            'type' => 'text',
+        ],
+        [
+            'name' => 'company_zip',
+            'label' => 'Company Zip',
+            'type' => 'text',
+        ],
+        [
+            'name' => 'company_country',
+            'label' => 'Company Country',
+            'type' => 'select',
+            'options' => array_merge(['' => 'None'], config('app.countries')),
+        ]
     ],
 
     'other' => [
@@ -162,6 +222,23 @@ return [
             'default' => ["address2", "phone"],
             'required' => false,
             'database_type' => 'array',
+        ],
+        [
+            'name' => 'gravatar_default',
+            'label' => 'Gravatar Default',
+            'description' => 'Default image to use when a user does not have a Gravatar. ',
+            'link' => 'https://docs.gravatar.com/general/images/#default-image',
+            'type' => 'select',
+            'options' => [
+                'mp' => 'Mystery Person',
+                'identicon' => 'Identicon',
+                'monsterid' => 'Monster',
+                'wavatar' => 'Wavatar',
+                'retro' => 'Retro',
+                'robohash' => 'Robohash',
+                'blank' => 'Blank',
+            ],
+            'default' => 'wavatar',	
         ]
     ]
 ];

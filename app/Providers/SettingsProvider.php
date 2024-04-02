@@ -15,7 +15,6 @@ class SettingsProvider extends ServiceProvider
      */
     public function register(): void
     {
-
     }
 
     /**
@@ -36,7 +35,16 @@ class SettingsProvider extends ServiceProvider
                 Cache::put('settings', $settings);
             }
             config(['settings' => $settings]);
-        
+            foreach (config('available-settings') as $group => $settings) {
+                foreach ($settings as $setting) {
+                    if (isset($setting['override']) && config("settings.$setting[name]") !== null) {
+                        config([$setting['override'] => config("settings.$setting[name]")]);
+                    }
+                }
+            }
+
+            date_default_timezone_set(config('settings.timezone', 'UTC'));
+            
             Theme::set(config('settings.theme', 'default'), 'default');
         } catch (\Exception $e) {
             // Do nothing
