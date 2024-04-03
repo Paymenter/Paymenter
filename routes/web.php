@@ -20,7 +20,6 @@ Route::group(['middleware' => ['web', 'guest']], function () {
     // Todo
     Route::get('password/reset')->name('password.reset');
     Route::get('/oauth/{provider}')->name('oauth');
-
 });
 
 Route::group(['middleware' => ['web', 'auth']], function () {
@@ -34,6 +33,6 @@ Route::group(['middleware' => ['web', 'auth']], function () {
     })->name('profile');
 });
 
-Route::group(['middleware' => ['web', 'auth'/*, 'admin'*/], 'prefix' => 'admin', 'as' => 'admin.'], function () {
-    Route::get('settings', Settings::class)->name('settings');
+Route::group(['middleware' => ['web', 'auth'], 'prefix' => 'admin', 'as' => 'admin.'], function () {
+    Route::get('settings', Settings::class)->name('settings')->middleware('has:admin.settings.view');
 });

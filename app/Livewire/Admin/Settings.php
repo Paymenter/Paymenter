@@ -23,6 +23,7 @@ class Settings extends Component
 
     public function save()
     {
+        $this->authorize('admin.settings.update');
         $this->validate();
 
         foreach ($this->fields as $group => $settings) {

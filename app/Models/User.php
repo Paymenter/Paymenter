@@ -95,4 +95,23 @@ class User extends Authenticatable
             get: fn () => ($this->first_name . ' ' . $this->last_name) ?: $this->email,
         );
     }
+
+    public function hasPermission($permission): bool
+    {
+        if (is_null($this->role)) {
+            return false;
+        }
+
+        // If the user has all permissions, return true
+        if (in_array('*', $this->role->permissions)) {
+            return true;
+        }
+
+        return in_array($permission, $this->role->permissions);
+    }
+
+    public function role()
+    {
+        return $this->belongsTo(Role::class);
+    }
 }
