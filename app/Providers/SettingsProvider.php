@@ -35,7 +35,7 @@ class SettingsProvider extends ServiceProvider
                 Cache::put('settings', $settings);
             }
             config(['settings' => $settings]);
-            foreach (config('available-settings') as $group => $settings) {
+            foreach (\App\Classes\Settings::settings() as $settings) {
                 foreach ($settings as $setting) {
                     if (isset($setting['override']) && config("settings.$setting[name]") !== null) {
                         config([$setting['override'] => config("settings.$setting[name]")]);

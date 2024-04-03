@@ -22,11 +22,11 @@
     @endif
 
     <select id="{{ $id ?? $name }}" {{ $multiple ? 'multiple' : '' }}
-        {{ $attributes->only(['required', 'wire:model']) }}
+        {{ $attributes->only(['required', 'wire:model', 'wire:dirty.class']) }}
         class="block px-2.5 py-2.5 w-full text-sm text-primary-100 bg-white dark:bg-primary-800 border-2 border-primary-300 dark:border-primary-700 rounded-md outline-none focus:outline-none focus:border-secondary dark:focus:border-secondary transition-all duration-300 ease-in-out">
         @foreach ($options as $key => $option)
             <option value="{{ gettype($options) == 'array' ? $option : $key }}"
-                {{ ($multiple ? in_array($key, $selected) : $selected == $option) ? 'selected' : '' }}>
+                {{ ($multiple && $selected ? in_array($key, $selected) : $selected == $option) ? 'selected' : '' }}>
                 {{ $option }}</option>
         @endforeach
     </select>

@@ -19,7 +19,7 @@ class DatabaseSeeder extends Seeder
         Role::updateOrCreate(['name' => 'user'], ['permissions' => []]);
         Role::updateOrCreate(['name' => 'admin'], ['permissions' => ['*']]);
 
-        foreach (config('available-settings') as $group => $settings) {
+        foreach (\App\Classes\Settings::settings() as $settings) {
             foreach ($settings as $setting) {
                 if (!isset($setting['default'])) {
                     continue;

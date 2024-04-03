@@ -23,7 +23,7 @@
     <input type="{{ $type ?? 'text' }}" id="{{ $id ?? $name }}" name="{{ $name }}"
         class="block px-2.5 py-2.5 w-full text-sm text-primary-100 bg-white dark:bg-primary-800 border-2 border-primary-300 dark:border-primary-700 rounded-md outline-none focus:outline-none focus:border-secondary dark:focus:border-secondary transition-all duration-300 ease-in-out"
         placeholder="{{ $placeholder ?? ($label ?? '') }}"
-        {{ $attributes->only(['wire:model', 'required', 'value']) }} />
+        {{ $attributes->only(['wire:model', 'required', 'value', 'wire:dirty.class']) }} />
     @error($name)
         <p class="text-red-500 text-xs">{{ $message }}</p>
     @enderror

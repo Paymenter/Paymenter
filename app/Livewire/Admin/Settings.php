@@ -18,8 +18,7 @@ class Settings extends Component
 
     public function boot()
     {
-        $this->availableSettings = config('available-settings');
-        $this->settings = json_decode(json_encode($this->availableSettings));
+        $this->settings = \App\Classes\Settings::settingsObject();
     }
 
     public function save()
@@ -32,10 +31,13 @@ class Settings extends Component
                 if ($setting !== config("settings.$key")) {
                     $modelSetting = Setting::where('settingable_type', null)->where('key', $key)->update(['value' => $setting]);
                     if (!$modelSetting) {
+                        $avSetting = \App\Classes\Settings::getSetting($key);
                         Setting::create([
                             'key' => $key,
                             'value' => $setting,
                             'settingable_type' => null,
+                            'type' => $avSetting['database_type'] ?? 'string',
+                            'encrypted' => $avSetting['encrypted'] ?? false,
                         ]);
                     }
                 }
@@ -50,7 +52,7 @@ class Settings extends Component
     public function validationAttributes()
     {
         $attributes = [];
-        foreach ($this->availableSettings as $group => $settings) {
+        foreach (\App\Classes\Settings::settings() as $group => $settings) {
             foreach ($settings as $setting) {
                 $attributes += ["fields.{$group}.{$setting['name']}" => __($setting['label'] ?? $setting['name'])];
             }
@@ -83,7 +85,7 @@ class Settings extends Component
 
     public function mount()
     {
-        foreach ($this->availableSettings as $group => $settings) {
+        foreach (\App\Classes\Settings::settings() as $group => $settings) {
             foreach ($settings as $setting) {
                 $this->fill([
                     "fields.{$group}.{$setting['name']}" => config("settings.{$setting['name']}")
