@@ -12,7 +12,7 @@ class Pterodactyl extends Server
     {
         return [
             'display_name' => 'Pterodactyl',
-            'version' => '1.2.0',
+            'version' => '1.2.1',
             'author' => 'Paymenter',
             'website' => 'https://paymenter.org',
         ];
@@ -289,22 +289,22 @@ class Pterodactyl extends Server
         $environment = $port_array->environment ?? $environment;
 
         if ($node) {
-            $allocations = $this->getRequest($this->config('host') . '/api/application/nodes/' . $node . '/allocations');
-            $allocations = $allocations->json();
+            $allocationss = $this->getRequest($this->config('host') . '/api/application/nodes/' . $node . '/allocations');
+            $allocationss = $allocationss->json();
             while (!isset($allocation)) {
-                foreach ($allocations['data'] as $key => $val) {
+                foreach ($allocationss['data'] as $key => $val) {
                     if (!$val['attributes']['assigned']) {
                         $allocation = $val['attributes']['id'];
                         break;
                     }
                 }
                 if (!isset($allocation)) {
-                    if (!isset($allocations['meta']['pagination']['links']['next'])) {
+                    if (!isset($allocationss['meta']['pagination']['links']['next'])) {
                         ExtensionHelper::error('Pterodactyl', 'Failed to find allocation for order ' . $orderProduct->id . ' skipping server creation');
                         return false;
                     }
-                    $allocations = $this->getRequest($allocations['meta']['pagination']['links']['next']);
-                    $allocations = $allocations->json();
+                    $allocationss = $this->getRequest($allocationss['meta']['pagination']['links']['next']);
+                    $allocationss = $allocationss->json();
                 }
             }
 
