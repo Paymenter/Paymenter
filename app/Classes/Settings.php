@@ -23,8 +23,8 @@ class Settings
                     'override' => 'app.timezone',
                 ],
                 [
-                    'name' => 'app_locale',
-                    'label' => 'App Locale',
+                    'name' => 'app_language',
+                    'label' => 'App Language',
                     'default' => 'en',
                     'type' => 'select',
                     // Read languages from resources/lang directory
