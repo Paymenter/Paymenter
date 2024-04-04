@@ -43,10 +43,7 @@
                                     <a href="{{ route('oauth', $provider) }}"
                                         class="flex items-center justify-center px-4 h-10 border border-primary-700 rounded-md text-primary-100">
                                         <img src="/assets/images/{{ $provider }}-dark.svg" alt="{{ $provider }}"
-                                            class="w-5 h-5 mr-2 text-secondary hidden dark:block">
-                                        <img src="/assets/images/{{ $provider }}-light.svg"
-                                            alt="{{ $provider }}"
-                                            class="w-5 h-5 mr-2 text-secondary block dark:hidden">
+                                            class="w-5 h-5 mr-2 text-secondary">
                                         {{ __(ucfirst($provider)) }}
                                     </a>
                                 @endif
@@ -54,7 +51,7 @@
                         </div>
                     </div>
                 @endif
-                <div class="dark:text-white text-center rounded-md py-2 mt-6 text-sm">
+                <div class="text-white text-center rounded-md py-2 mt-6 text-sm">
                     {{ __('Don\'t have an account yet?') }}
                     <a class="text-sm text-secondary-500 text-secondary hover:underline" href="{{ route('register') }}"
                         wire:navigate>

@@ -23,7 +23,7 @@
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
                     </svg>
                 </button>
-                <div class="absolute right-0 mt-2 w-48 bg-white dark:bg-primary-800 rounded-md shadow-lg z-10 border border-primary-700 "
+                <div class="absolute right-0 mt-2 w-48 bg-primary-800 rounded-md shadow-lg z-10 border border-primary-700 "
                     x-show="profileMenuOpen" x-transition:enter="transition ease-out duration-150"
                     x-transition:enter-start="opacity-0 scale-90" x-transition:enter-end="opacity-100 scale-100"
                     x-transition:leave="transition ease-in duration-75" x-transition:leave-start="opacity-100 scale-100"
@@ -33,6 +33,6 @@
                     <livewire:auth.logout />
                 </div>
             </div>
-
         </div>
+    </div>
 </nav>

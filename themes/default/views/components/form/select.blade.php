@@ -12,7 +12,7 @@
     @if ($label)
         <legend>
             <label for="{{ $name }}"
-                class="text-sm text-primary-100 absolute -translate-y-1/2 start-1 ml-1 bg-white dark:bg-primary-800 px-2">
+                class="text-sm text-primary-100 absolute -translate-y-1/2 start-1 ml-1 bg-primary-800 px-2">
                 {{ $label }}
                 @if ($required && !$hideRequiredIndicator)
                     <span class="text-red-500">*</span>
@@ -23,7 +23,7 @@
 
     <select id="{{ $id ?? $name }}" {{ $multiple ? 'multiple' : '' }}
         {{ $attributes->only(['required', 'wire:model', 'wire:dirty.class']) }}
-        class="block px-2.5 py-2.5 w-full text-sm text-primary-100 bg-white dark:bg-primary-800 border-2 border-primary-300 dark:border-primary-700 rounded-md outline-none focus:outline-none focus:border-secondary dark:focus:border-secondary transition-all duration-300 ease-in-out">
+        class="block px-2.5 py-2.5 w-full text-sm text-primary-100 bg-primary-800 border-2 border-primary-700 rounded-md outline-none focus:outline-none focus:border-secondary transition-all duration-300 ease-in-out">
         @foreach ($options as $key => $option)
             <option value="{{ gettype($options) == 'array' ? $option : $key }}"
                 {{ ($multiple && $selected ? in_array($key, $selected) : $selected == $option) ? 'selected' : '' }}>

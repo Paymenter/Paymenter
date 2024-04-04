@@ -2,7 +2,7 @@
     <form class="flex flex-col gap-2" wire:submit.prevent="submit" id="register">
         <div class="flex flex-col items-center mt-4 mb-10">
             <x-logo />
-            <h1 class="text-2xl text-center dark:text-white mt-2">{{ __('Create an account') }} </h1>
+            <h1 class="text-2xl text-center text-white mt-2">{{ __('Create an account') }} </h1>
         </div>
         <div class="grid grid-cols-2 gap-4">
             <x-form.input name="first_name" type="text" :label="__('First name')" :placeholder="__('Your first name')" wire:model="first_name"
@@ -43,7 +43,7 @@
 
         <x-button.primary class="w-full">{{ __('Sign up') }}</x-button.primary>
 
-        <div class="dark:text-white text-center rounded-md py-2 mt-6 text-sm">
+        <div class="text-white text-center rounded-md py-2 mt-6 text-sm">
             {{ __('Already have an account?') }}
             <a class="text-sm text-secondary-500 text-secondary hover:underline" href="{{ route('login') }}"
                 wire:navigate>
