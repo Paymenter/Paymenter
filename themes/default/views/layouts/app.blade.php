@@ -7,7 +7,7 @@
         <title>{{ config('app.name', 'Paymenter') }}</title>
         @vite(['themes/' . config('settings.theme') . '/js/app.js'], config('settings.theme'))
     </head>
-    <body class="w-full bg-primary-100 dark:bg-primary-900">
+    <body class="w-full bg-primary-900">
         <main>
             {{ $slot }}
         </main>
