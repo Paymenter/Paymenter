@@ -13,7 +13,7 @@ class AnnouncementController extends Controller
      */
     public function getAnnouncements()
     {
-        $announcements = Announcement::paginate(25);
+        $announcements = Announcement::where('published', 1)->paginate(25);
 
         return response()->json([
             'announcements' => API::repaginate($announcements),
@@ -25,8 +25,13 @@ class AnnouncementController extends Controller
      */
     public function getAnnouncement(string $id)
     {
+        if (!$announcement = Announcement::where('id', $id)->where('published', 1)->first()) {
+            return response()->json([
+                'error' => 'Announcement not found.',
+            ], 404);
+        }
         return response()->json([
-            'announcement' => Announcement::findOrFail($id),
+            'announcement' => $announcement,
         ], 200);
     }
 }
