@@ -9,7 +9,9 @@
 
     <title>{{ 'Admin - ' . $title }}</title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap">
-    @vite(['resources/js/app.js', 'resources/css/app.css'])
+
+    @vite(['themes/' . config('settings::theme-active') . '/js/app.js', 'themes/' . config('settings::theme-active') . '/css/app.css'], config('settings::theme-active'))
+
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
     @if (config('settings::app_logo'))
@@ -76,6 +78,8 @@
             --secondary-900: {{ config('settings::theme:secondary-900-dark', '#ffffff') }};
         }
     </style>
+    @rappasoftTableStyles
+    @rappasoftTableThirdPartyStyles
 </head>
 
 <body class="font-sans bg-secondary-100 dark:bg-secondary-50 text-secondary-700">
@@ -87,10 +91,11 @@
             @include('layouts.adminnavigation')
         @endif
         <main class="grow">
-            @if (!request()->routeIs('admin.index') && !request()->routeIs('admin.settings*'))
-                <div class="py-12">
+            @if (!request()->routeIs('admin.index'))
+                <div class="py-6 pb-12">
                     <div class="mx-auto max-w-8xl sm:px-6 lg:px-8">
                         <div class="overflow-hidden content">
+                            {{ Breadcrumbs::render() }}
                             <div class="content-box">
                                 {{ $slot }}
                             </div>
@@ -105,6 +110,8 @@
         <x-footer />
     </div>
     <x-success />
+    @rappasoftTableScripts
+    @rappasoftTableThirdPartyScripts
 </body>
 
 </html>

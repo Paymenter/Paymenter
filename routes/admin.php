@@ -42,6 +42,8 @@ Route::group(['prefix' => 'admin', 'middleware' => 'permission:ADMINISTRATOR'], 
         Route::get('/{product}/extension/export', [App\Http\Controllers\Admin\ProductController::class, 'extensionExport'])->middleware(['permission:EDIT_PRODUCTS'])->name('admin.products.extension.export');
         Route::post('/{product}/extension/import', [App\Http\Controllers\Admin\ProductController::class, 'extensionImport'])->middleware(['permission:EDIT_PRODUCTS'])->name('admin.products.extension.import');
         Route::post('/{product}/duplicate', [App\Http\Controllers\Admin\ProductController::class, 'duplicate'])->middleware(['permission:CREATE_PRODUCTS'])->name('admin.products.duplicate');
+        Route::get('/{product}/upgrades', [App\Http\Controllers\Admin\ProductController::class, 'upgrade'])->middleware(['permission:VIEW_PRODUCTS'])->name('admin.products.upgrade');
+        Route::post('/{product}/upgrades', [App\Http\Controllers\Admin\ProductController::class, 'upgradeUpdate'])->middleware(['permission:EDIT_PRODUCTS'])->name('admin.products.upgrade.update');
         Route::delete('/{product}/delete', [App\Http\Controllers\Admin\ProductController::class, 'destroy'])->middleware(['permission:DELETE_PRODUCTS'])->name('admin.products.destroy');
     });
 
@@ -62,6 +64,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'permission:ADMINISTRATOR'], 
         Route::post('/download', [App\Http\Controllers\Admin\ExtensionController::class, 'download'])->middleware(['password.confirm', 'permission:EDIT_EXTENSIONS'])->name('admin.extensions.download');
         Route::get('/edit/{sort}/{name}', [App\Http\Controllers\Admin\ExtensionController::class, 'edit'])->middleware(['password.confirm', 'permission:VIEW_EXTENSIONS'])->name('admin.extensions.edit');
         Route::post('/edit/{sort}/{name}', [App\Http\Controllers\Admin\ExtensionController::class, 'update'])->middleware(['password.confirm', 'permission:EDIT_EXTENSIONS'])->name('admin.extensions.update');
+        Route::post('/update/{extension}', [App\Http\Controllers\Admin\ExtensionController::class, 'updateExtension'])->middleware(['password.confirm', 'permission:EDIT_EXTENSIONS'])->name('admin.extensions.updateExtension');
     });
 
     Route::group(['prefix' => 'clients'], function () {
@@ -74,6 +77,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'permission:ADMINISTRATOR'], 
         Route::delete('/{user}/delete', [App\Http\Controllers\Admin\ClientController::class, 'destroy'])->middleware(['permission:DELETE_CLIENTS'])->name('admin.clients.delete');
         Route::get('/{user}/{orderProduct?}', [App\Http\Controllers\Admin\ClientController::class, 'products'])->middleware(['permission:VIEW_CLIENTS'])->name('admin.clients.products');
         Route::post('/{user}/{orderProduct}/update', [App\Http\Controllers\Admin\ClientController::class, 'updateProduct'])->middleware(['permission:EDIT_CLIENTS'])->name('admin.clients.products.update');
+        Route::post('/{user}/{orderProduct}/remove-cancellation', [App\Http\Controllers\Admin\ClientController::class, 'removeCancellation'])->middleware(['permission:EDIT_CLIENTS'])->name('admin.clients.products.removecancellation');
         Route::post('/{user}/{orderProduct}/changeProductStatus', [App\Http\Controllers\Admin\ClientController::class, 'changeProductStatus'])->middleware(['permission:EDIT_CLIENTS'])->name('admin.clients.products.changestatus');
         Route::post('/{user}/{orderProduct}/newProductConfig', [App\Http\Controllers\Admin\ClientController::class, 'newProductConfig'])->middleware(['permission:EDIT_CLIENTS'])->name('admin.clients.products.config.create');
         Route::post('/{user}/{orderProduct}/{orderProductConfig}/update', [App\Http\Controllers\Admin\ClientController::class, 'updateProductConfig'])->middleware(['permission:EDIT_CLIENTS'])->name('admin.clients.products.config.update');
@@ -147,5 +151,16 @@ Route::group(['prefix' => 'admin', 'middleware' => 'permission:ADMINISTRATOR'], 
         Route::get('/templates', [App\Http\Controllers\Admin\EmailController::class, 'templates'])->middleware(['permission:EDIT_EMAIL'])->name('admin.email.templates');
         Route::get('/templates/{template}', [App\Http\Controllers\Admin\EmailController::class, 'template'])->middleware(['permission:EDIT_EMAIL'])->name('admin.email.template');
         Route::post('/templates/{template}/update', [App\Http\Controllers\Admin\EmailController::class, 'update'])->middleware(['permission:EDIT_EMAIL'])->name('admin.email.template.update');
+    });
+
+    Route::group(['prefix' => 'taxes'], function() {
+        Route::get('/', [App\Http\Controllers\Admin\TaxController::class, 'index'])->middleware(['permission:VIEW_TAXES'])->name('admin.taxes');
+        Route::post('/', [App\Http\Controllers\Admin\TaxController::class, 'update'])->middleware(['permission:EDIT_TAXES'])->name('admin.taxes.update');
+        Route::post('/create', [App\Http\Controllers\Admin\TaxController::class, 'store'])->middleware(['permission:CREATE_TAXES'])->name('admin.taxes.create');
+    }); 
+
+    Route::group(['prefix' => 'logs'], function() {
+        Route::get('/', [App\Http\Controllers\Admin\LogController::class, 'index'])->middleware(['permission:VIEW_LOGS'])->name('admin.logs');
+        Route::post('/debug', [App\Http\Controllers\Admin\LogController::class, 'debug'])->middleware(['permission:VIEW_LOGS'])->name('admin.logs.debug');
     });
 });

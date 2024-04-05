@@ -16,4 +16,9 @@ class EmailTemplate extends Model
         'html_template',
         'text_template',
     ];
+
+    public function getNameAttribute()
+    {
+        return class_basename($this->mailable);
+    }
 }

@@ -34,6 +34,20 @@
         </x-input>
     </div>
     <h1 class="text-2xl my-2">Order Product Details:</h1>
+    @if($orderProduct->cancellation)
+        <h3 class="text-lg border-b mb-1 border-gray-500 fon">Cancellation Request:</h3>
+        <div class="flex flex-row gap-4 flex-wrap mb-2 items-center">
+            <x-input type="text" disabled name="created_at" id="created_at"
+                value="{{ $orderProduct->cancellation->created_at }}" label="Created At" />
+            <x-input type="text" disabled name="reason" id="reason" value="{{ $orderProduct->cancellation->reason }}"
+                label="Reason" />
+            <form action="{{ route('admin.clients.products.removecancellation', [$user->id, $orderProduct->id]) }}"
+                class="mt-6" method="POST">
+                @csrf
+                <button class="button button-danger">{{ __('Remove Cancellation Request') }}</button>
+            </form>
+        </div>
+    @endif
     <form action="{{ route('admin.clients.products.update', [$user->id, $orderProduct->id]) }}" method="POST"
         class="flex flex-col gap-2">
         @csrf
@@ -50,6 +64,7 @@
                         <option value="suspend">{{ __('Suspend') }}</option>
                         <option value="unsuspend">{{ __('Unsuspend') }}</option>
                         <option value="terminate">{{ __('Terminate') }}</option>
+                        <option value="upgrade">{{ __('Upgrade') }}</option>
                     </x-input>
                     <button class="button button-primary h-fit self-end"
                         onclick="event.preventDefault(); document.getElementById('changestatus').submit();">{{ __('Go') }}</button>
@@ -112,7 +127,8 @@
                                 <td class="border-b border-gray-500">{{ $invoice->status }}</td>
                                 <td class="border-b border-gray-500">{{ $invoice->created_at }}</td>
                                 <td class="border-b border-gray-500">
-                                    {{ config('settings::currency_sign') }}{{ $invoice->total() }}</td>
+                                    <x-money :amount="$invoice->total()" />
+                                </td>
                                 <td class="border-b border-gray-500">
                                     <a href="{{ route('admin.invoices.show', $invoice->id) }}"
                                         class="button button-primary">{{ __('View') }}</a>
@@ -135,7 +151,7 @@
             </div>
             @foreach ($configurableOptions as $configurableOption)
                 <div class="flex flex-col md:flex-row justify-between items-center border-b border-gray-500 py-2">
-                    @if ($configurableOption->configurableOption())
+                    @if ($configurableOption->configurableOption() && $configurableOption->configurableOption->type !== 'text')
                         <form
                             action="{{ route('admin.clients.products.config.update', [$user->id, $orderProduct->id, $configurableOption->id]) }}"
                             method="POST" class="flex-row flex items-center w-full gap-6">

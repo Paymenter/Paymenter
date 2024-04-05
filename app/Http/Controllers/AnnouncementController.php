@@ -15,6 +15,9 @@ class AnnouncementController extends Controller
 
     public function view(Announcement $announcement)
     {
+        if (!$announcement->published) {
+            abort(404);
+        }
         return view('announcement.view', compact('announcement'));
     }
 }

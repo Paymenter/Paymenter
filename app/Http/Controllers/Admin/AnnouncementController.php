@@ -19,9 +19,7 @@ class AnnouncementController extends Controller
      */
     public function index(): View
     {
-        $announcements = Announcement::all();
-
-        return view('admin.announcements.index', compact('announcements'));
+        return view('admin.announcements.index');
     }
 
     /**

@@ -63,8 +63,15 @@
                                 {{ __('No') }}
                             @endif
                         </td>
-                        <td class="dark:text-darkmodetext px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        <td class="dark:text-darkmodetext px-6 py-4 whitespace-nowrap text-sm text-gray-500 flex flex-row items-center gap-4">
                             {{ $metadata->version ?? 'Unknown Version' }}
+
+                            @if($extension->update_available)
+                                <form action="{{ route('admin.extensions.updateExtension', $extension) }}" method="POST">
+                                    @csrf
+                                    <button type="submit" class="button button-success animate-pulse">{{ __('Update') }}</button>
+                                </form>
+                            @endif
                         </td>
                         <td class="dark:text-darkmodetext px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                             <a href="{{ route('admin.extensions.edit', ['server', $extensio]) }}"

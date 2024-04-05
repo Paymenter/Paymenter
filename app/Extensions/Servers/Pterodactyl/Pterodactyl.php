@@ -12,7 +12,7 @@ class Pterodactyl extends Server
     {
         return [
             'display_name' => 'Pterodactyl',
-            'version' => '1.1.6',
+            'version' => '1.2.1',
             'author' => 'Paymenter',
             'website' => 'https://paymenter.org',
         ];
@@ -22,6 +22,9 @@ class Pterodactyl extends Server
     {
         $config = ExtensionHelper::getConfig('Pterodactyl', $key);
         if ($config) {
+            if ($key == 'host') {
+                return rtrim($config, '/');
+            }
             return $config;
         }
 
@@ -54,6 +57,15 @@ class Pterodactyl extends Server
             'Accept' => 'Application/vnd.Pterodactyl.v1+json',
             'Content-Type' => 'application/json',
         ])->post($url, $data);
+    }
+
+    private function patchRequest($url, $data): \GuzzleHttp\Promise\PromiseInterface|\Illuminate\Http\Client\Response
+    {
+        return Http::withHeaders([
+            'Authorization' => 'Bearer ' . $this->config('apiKey'),
+            'Accept' => 'Application/vnd.Pterodactyl.v1+json',
+            'Content-Type' => 'application/json',
+        ])->patch($url, $data);
     }
 
     private function getRequest($url): \GuzzleHttp\Promise\PromiseInterface|\Illuminate\Http\Client\Response
@@ -272,29 +284,30 @@ class Pterodactyl extends Server
         $servername = $configurableOptions['servername'] ?? $params['servername'] ?? false;
         $servername = empty($servername) ? $orderProduct->product->name . ' #' . $orderProduct->id : $servername;
         $port_array = (object) $this->portArrays($port_array, $environment, $location, $node, $orderProduct);
+        $default = $port_array->default ?? null;
         $allocationed = $port_array->allocations ?? [];
         $environment = $port_array->environment ?? $environment;
 
         if ($node) {
-            $allocations = $this->getRequest($this->config('host') . '/api/application/nodes/' . $params['node'] . '/allocations');
-            $allocations = $allocations->json();
+            $allocationss = $this->getRequest($this->config('host') . '/api/application/nodes/' . $node . '/allocations');
+            $allocationss = $allocationss->json();
             while (!isset($allocation)) {
-                foreach ($allocations['data'] as $key => $val) {
+                foreach ($allocationss['data'] as $key => $val) {
                     if (!$val['attributes']['assigned']) {
                         $allocation = $val['attributes']['id'];
                         break;
                     }
                 }
                 if (!isset($allocation)) {
-                    if (!isset($allocations['meta']['pagination']['links']['next'])) {
+                    if (!isset($allocationss['meta']['pagination']['links']['next'])) {
                         ExtensionHelper::error('Pterodactyl', 'Failed to find allocation for order ' . $orderProduct->id . ' skipping server creation');
                         return false;
                     }
-                    $allocations = $this->getRequest($allocations['meta']['pagination']['links']['next']);
-                    $allocations = $allocations->json();
+                    $allocationss = $this->getRequest($allocationss['meta']['pagination']['links']['next']);
+                    $allocationss = $allocationss->json();
                 }
             }
-            error_log($allocation);
+
             $json = [
                 'name' => $servername,
                 'user' => (int) $this->getUser($user, $orderProduct),
@@ -315,7 +328,7 @@ class Pterodactyl extends Server
                     'backups' => (int) $backups,
                 ],
                 'allocation' => [
-                    'default' => (int) $allocation,
+                    'default' => isset($default) ? (int) $default : $allocation,
                     'additional' => $allocationed ?? [],
                 ],
                 'environment' => $environment,
@@ -545,6 +558,101 @@ class Pterodactyl extends Server
         }
 
         return false;
+    }
+
+    
+    public function upgradeServer($user, $params, $order, $orderProduct, $configurableOptions): bool
+    {
+        $serverId = $this->serverExists($orderProduct->id);
+        if (!$serverId) {
+            ExtensionHelper::error('Pterodactyl', 'Server does not exist for order ' . $orderProduct->id);
+
+            return false;
+        }
+        $url = $this->config('host') . '/api/application/servers/external/' . $orderProduct->id;
+        $server = $this->getRequest($url)->json();
+        
+        $cpu = $configurableOptions['cpu'] ?? $params['cpu'];
+        $cpu_pinning = $configurableOptions['cpu_pinning'] ?? $params['cpu_pinning'] ?? null;
+        $io = $configurableOptions['io'] ?? $params['io'];
+        $disk = $configurableOptions['disk'] ?? $params['disk'];
+        $swap = $configurableOptions['swap'] ?? $params['swap'];
+        $memory = $configurableOptions['memory'] ?? $params['memory'];
+        $allocations = $configurableOptions['allocation'] ?? $params['allocation'];
+        $databases = $configurableOptions['databases'] ?? $params['databases'];
+        $backups = $configurableOptions['backups'] ?? $params['backups'];
+
+        $url = $this->config('host') . '/api/application/servers/' . $serverId . '/build';
+        $json = [
+            'allocation' => $server['attributes']['allocation'],
+            'memory' => (int) $memory,
+            'swap' => (int) $swap,
+            'disk' => (int) $disk,
+            'io' => (int) $io,
+            'cpu' => (int) $cpu,
+            'threads' => $cpu_pinning,
+            'feature_limits' => [
+                'databases' => $databases ? (int) $databases : null,
+                'allocations' => (int) $allocations,
+                'backups' => (int) $backups,
+            ],
+        ];
+
+        $response = $this->patchRequest($url, $json);
+        
+        if(!$response->successful()) {
+            ExtensionHelper::error('Pterodactyl', 'Failed to upgrade server for order ' . $orderProduct->id . ' with error ' . $response->body());
+            return false;
+        }
+
+        $nest_id = $configurableOptions['nest_id'] ?? $params['nest'];
+        $egg_id = $configurableOptions['egg'] ?? $params['egg'];
+        $eggData = $this->getRequest($this->config('host') . '/api/application/nests/' . $nest_id . '/eggs/' . $egg_id . '?include=variables');
+        if(!$eggData->successful()) {
+            ExtensionHelper::error('Pterodactyl', 'Failed to get egg data for order ' . $orderProduct->id . ' with error ' . $eggData->body());
+            return false;
+        }
+
+        $eggData = $eggData->json();
+        if (!isset($eggData['attributes'])) {
+            ExtensionHelper::error('Pterodactyl', 'No egg data found for ' . $params['egg']);
+            return false;
+        }
+
+        $environment = [];
+
+        foreach ($eggData['attributes']['relationships']['variables']['data'] as $key => $val) {
+            $attr = $val['attributes'];
+            $var = $attr['env_variable'];
+            $default = $attr['default_value'];
+            // If the variable is configurable, get the value from the configurable options
+            if (isset($configurableOptions[$var])) {
+                $environment[$var] = $configurableOptions[$var];
+            }
+            if(isset($server['attributes']['container']['environment'][$var])) {
+                $environment[$var] = $server['attributes']['container']['environment'][$var];
+            } else {    
+               $environment[$var] = $default;
+            }
+        }
+
+        $json = [
+            'environment' => $environment,
+            'startup' => $server['attributes']['container']['startup_command'] ?? $configurableOptions['startup'] ?? $eggData['attributes']['startup'],
+            'egg' => (int) $egg_id,
+            'image' => $server['attributes']['container']['image'] ?? $eggData['attributes']['docker_image'],
+            'skip_scripts' => false,
+        ];
+
+        $url = $this->config('host') . '/api/application/servers/' . $serverId . '/startup';
+
+        $response = $this->patchRequest($url, $json);
+        if(!$response->successful()) {
+            ExtensionHelper::error('Pterodactyl', 'Failed to upgrade server for order ' . $orderProduct->id . ' with error ' . $response->body());
+            return false;
+        }
+
+        return true;
     }
 
     public function suspendServer($user, $params, $order, $orderProduct, $configurableOptions): bool

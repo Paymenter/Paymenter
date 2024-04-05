@@ -35,6 +35,7 @@ Route::get('/credits', [App\Http\Controllers\Clients\HomeController::class, 'cre
 Route::post('/credits', [App\Http\Controllers\Clients\HomeController::class, 'addCredits'])->name('clients.credits.add')->middleware(['auth']);
 Route::get('/change-password', [App\Http\Controllers\Clients\HomeController::class, 'password'])->name('clients.password.change-password')->middleware(['auth']);
 Route::get('/tos', [App\Http\Controllers\BasisController::class, 'tos'])->name('tos');
+Route::get('/file/{fileUpload:uuid}', [App\Http\Controllers\BasisController::class, 'downloadFile'])->name('file')->middleware('auth');
 
 Route::group(['prefix' => 'checkout'], function () {
     Route::get('/', [App\Http\Controllers\CheckoutController::class, 'index'])->name('checkout.index');
@@ -44,7 +45,6 @@ Route::group(['prefix' => 'checkout'], function () {
     Route::post('/coupon', [App\Http\Controllers\CheckoutController::class, 'coupon'])->name('checkout.coupon');
     Route::post('/{id}', [App\Http\Controllers\CheckoutController::class, 'remove'])->name('checkout.remove');
     Route::post('/{product}/update', [App\Http\Controllers\CheckoutController::class, 'update'])->name('checkout.update');
-    Route::get('/add/{product}', [App\Http\Controllers\CheckoutController::class, 'add'])->name('checkout.add');
 });
 
 Route::group(['prefix' => 'tickets', 'middleware' => 'auth'], function () {
@@ -70,6 +70,11 @@ Route::group(['prefix' => 'announcements'], function () {
 Route::group(['prefix' => 'client/products', 'middleware' => 'auth'], function () {
     Route::get('/', [App\Http\Controllers\Clients\ProductController::class, 'index'])->name('clients.active-products.index');
     Route::get('/{product}', [App\Http\Controllers\Clients\ProductController::class, 'index'])->name('clients.active-products.show');
+    Route::post('/{product}/cancel', [App\Http\Controllers\Clients\ProductController::class, 'cancel'])->name('clients.active-products.cancel');
+    Route::get('/{product}/upgrade', [App\Http\Controllers\Clients\ProductController::class, 'upgrade'])->name('clients.active-products.upgrade');
+    Route::get('/{orderProduct}/upgrade/{product}', [App\Http\Controllers\Clients\ProductController::class, 'upgradeProduct'])->name('clients.active-products.upgrade-product');
+    Route::post('/{orderProduct}/upgrade/{product}', [App\Http\Controllers\Clients\ProductController::class, 'upgradeProductPost'])->name('clients.active-products.upgrade-product.post');
+
     Route::get('/{product}/{url}', [App\Http\Controllers\Clients\ProductController::class, 'show'])->name('clients.active-products.extension');
 });
 

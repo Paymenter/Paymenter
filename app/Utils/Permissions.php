@@ -65,6 +65,12 @@ class Permissions extends BitField
 
         'VIEW_EMAIL' => 1 << 45,
         'EDIT_EMAIL' => 1 << 46,
+
+        'VIEW_TAXES' => 1 << 47,
+        'EDIT_TAXES' => 1 << 48,
+        'CREATE_TAXES' => 1 << 49,
+
+        'VIEW_LOGS' => 1 << 50,
     ];
 
     public function __construct(int $bits)

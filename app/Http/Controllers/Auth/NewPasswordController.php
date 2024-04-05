@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Auth;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Validators\ReCaptcha;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Auth\Events\PasswordReset;
@@ -30,13 +31,11 @@ class NewPasswordController extends Controller
      */
     public function store(Request $request)
     {
+        (new ReCaptcha())->verify($request);
         $request->validate([
             'token' => 'required',
             'email' => 'required|email',
             'password' => 'required|string|confirmed|min:8',
-            'g-recaptcha-response' => 'recaptcha',
-            'cf-turnstile-response' => 'recaptcha',
-            'h-captcha-response' => 'recaptcha',
         ]);
 
         // Here we will attempt to reset the user's password. If it is successful we

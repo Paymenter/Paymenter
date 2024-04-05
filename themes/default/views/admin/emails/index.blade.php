@@ -1,6 +1,6 @@
 <x-admin-layout title="Emails">
     <div class="w-full h-full rounded mb-4">
-        <div class="px-6 mx-auto">
+        <div class="mx-auto">
             <div class="flex flex-row overflow-x-auto lg:flex-wrap lg:space-x-1">
                 <div class="flex-none">
                     <a href="{{ route('admin.email') }}"
@@ -17,7 +17,7 @@
             </div>
         </div>
     </div>
-    <h1 class="text-3xl font-semibold text-secondary-900 dark:text-darkmodetext">{{ __('Sended Emails') }}</h1>
+    <h1 class="text-3xl font-semibold text-secondary-900 dark:text-darkmodetext">{{ __('Sent Emails') }}</h1>
     <div class="flex flex-col gap-4 mt-4" id="email" data-accordion="collapse">
         @foreach ($emails as $email)
             <h2 id="email-heading-{{ $email->id }}">

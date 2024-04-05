@@ -63,6 +63,11 @@
                        placeholder=" " name="remove_unpaid_order_after" value="{{ config('settings::remove_unpaid_order_after') }}" />
                 <label class="form-label">{{ __('Days after which an unpaid server will remove itself') }}</label>
             </div>
+            <div class="relative m-4 group">
+                <input type="time" class="form-input peer @error('run_cronjob_at') is-invalid @enderror"
+                       placeholder=" " name="run_cronjob_at" value="{{ config('settings::run_cronjob_at') }}" />
+                <label class="form-label">{{ __('Run cronjob at') }}</label>
+            </div>
             <h2 class="col-span-1 md:col-span-2 text-xl text-gray-900 dark:text-darkmodetext ">{{ __('Currency') }}
             </h2>
             <div class="relative m-4 group">
@@ -74,6 +79,16 @@
                 <input type="text" class="form-input peer @error('currency') is-invalid @enderror" placeholder=" "
                        name="currency" value="{{ config('settings::currency') }}" />
                 <label class="form-label">{{ __('Currency Code') }}</label>
+            </div>
+            <div class="relative m-4 group">
+                <select name="currency_position" class="form-input peer @error('currency_position') is-invalid @enderror"
+                        placeholder=" " name="currency_position" required>
+                    <option value="left" {{ config('settings::currency_position') == 'left' ? 'selected' : '' }}>
+                        {{ __('Left') }}</option>
+                    <option value="right" {{ config('settings::currency_position') == 'right' ? 'selected' : '' }}>
+                        {{ __('Right') }}</option>
+                </select>
+                <label class="form-label">{{ __('Currency Position') }}</label>
             </div>
             <h2 class="col-span-1 md:col-span-2 text-xl text-gray-900 dark:text-darkmodetext ">{{ __('Language') }}
             </h2>

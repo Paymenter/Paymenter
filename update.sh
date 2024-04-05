@@ -5,9 +5,12 @@ URL='https://github.com/paymenter/paymenter/releases/latest/download/paymenter.t
 echo "Starting upgrade process..."
 
 if [ "$(php -r 'echo version_compare(PHP_VERSION, "8.1.0");')" -lt 0 ]; then
-    echo "Cannot execute self-upgrade process. The minimum required PHP version required is 8.1, you have [$(php -r 'echo PHP_VERSION;')]."
+    echo -e "\x1b[31;1mCannot execute self-upgrade process. The minimum required PHP version required is 8.1, you have [$(php -r 'echo PHP_VERSION;')].\x1b[0m"
     exit 1
 fi
+
+# Exit if release URL is empty or underfined
+if [[ $URL == "" ]]; then echo -e "\x1b[31;1mRelease URL not defined.\x1b[0m"; exit 1; fi
 
 for i in "$@"
 do
@@ -60,7 +63,7 @@ if [ -t 0 ]; then
         fi 
     fi
     
-    if [ -z $INSTALL ]; then
+    if [ -z "$INSTALL" ]; then
         read -p "Are you sure you want to run the upgrade process for your Panel? [y/N]: " -r
         if [[ ! $REPLY =~ ^[Yy]$ ]]; then
             echo "Upgrade aborted."
@@ -69,56 +72,51 @@ if [ -t 0 ]; then
     fi
 fi
 
-# Set URL to the default URL if not set.
-if [ -z "$URL" ]; then
-    DEFAULT_URL="https://github.com/paymenter/paymenter/releases/latest/download/paymenter.tar.gz"
-else
-    DEFAULT_URL="$URL"
-fi
-
+RUN() {
+    echo -e "\x1b[34m\$\x1b[34;1mupgrader>\x1b[0m $*"
+    "${@}"
+}
 
 # Download the latest release from GitHub.
-echo "\$upgrader> curl -L \"$(printf $DEFAULT_URL)\" | tar -xzv"
-curl -L "$(printf $DEFAULT_URL)" | tar -xzv
+RUN curl -L -o paymenter.tar.gz "$URL"
+
+# Extract the tarball.
+RUN tar -xzf paymenter.tar.gz
+
+# Remove the tarball.
+RUN rm -f paymenter.tar.gz
 
 # Set application down for maintenance.
-echo '$upgrader> php artisan down'
-php artisan down
+RUN php artisan down
 
 # Setup correct permissions on the new files.
-echo '$upgrader> chmod -R 755 storage bootstrap/cache'
-chmod -R 755 storage bootstrap/cache
+RUN chmod -R 755 storage bootstrap/cache
 
 # Run the composer install command.
-echo '$upgrader> composer install --no-dev --optimize-autoloader'
-composer install --no-dev --optimize-autoloader
+RUN composer install --no-dev --optimize-autoloader
 
 # Run the database migrations.
-echo '$upgrader> php artisan migrate --force --seed'
-php artisan migrate --force --seed
+RUN php artisan migrate --force --seed
 
 # Link the storage directory.
-echo '$upgrader> php artisan storage:link'
-php artisan storage:link
+RUN php artisan storage:link
+
+# Change to default theme.
+RUN php artisan p:settings:change-theme default
 
 # Clear config and view caches.
-echo '$upgrader> php artisan config:clear'
-php artisan config:clear
-echo '$upgrader> php artisan view:clear'
-php artisan view:clear
+RUN php artisan config:clear
+RUN php artisan view:clear
 
 # Remove the old log files.
-echo '$upgrader> rm -rf storage/logs/*.log'
-rm -rf storage/logs/*.log
+RUN rm -rf storage/logs/*.log
 
 # Setup correct permissions on the new files.
-echo '$upgrader> chown -R '$PERMUSER':'$PERMGROUP '.'
-chown -R $PERMUSER:$PERMGROUP .
+RUN chown -R "$PERMUSER":"$PERMGROUP" .
 
 php artisan p:check-updates
 
 # Set application up for maintenance.
-echo '$upgrader> php artisan up'
-php artisan up
+RUN php artisan up
 
 echo "Upgrade completed."

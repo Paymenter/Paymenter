@@ -20,34 +20,8 @@ class CategoryController extends Controller
      */
     public function index(): View
     {
-        $categories = Category::all()->sortBy('order');
-
-        return view('admin.categories.index', compact('categories'));
+        return view('admin.categories.index');
     }
-
-    /**
-     * Reorder the categories
-     * 
-     * @param Request $request
-     * @return void
-     */
-    public function reorder(Request $request)
-    {
-        $request->validate([
-            'categories' => 'required|array',
-        ]);
-
-        $categories = collect($request->get('categories'));
-        $dbCategories = Category::all()->sortBy('order');
-        foreach ($dbCategories as $category) {
-            $category->order = $categories->where('id', $category->id)->first()['order'];
-            $category->save();
-        }
-
-
-        return response()->json(['success' => true]);
-    }
-
 
     /**
      * Display the create form
@@ -56,7 +30,8 @@ class CategoryController extends Controller
      */
     public function create(): View
     {
-        return view('admin.categories.create');
+        $categories = Category::all();
+        return view('admin.categories.create', compact('categories'));
     }
 
     /**
@@ -66,13 +41,31 @@ class CategoryController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
-        $validatedRequest = Validator::make($request->all(), [
+        $request->validate([
             'name' => 'required',
             'description' => 'required',
             'slug' => 'required|unique:categories,slug',
+            'parent_id' => 'nullable|exists:categories,id',
+            'image' => 'nullable|image',
         ]);
 
-        Category::create($validatedRequest->validated());
+        if ($request->hasFile('image')) {
+            $request->validate([
+                'image' => 'image|mimes:jpeg,png,jpg,gif,svg|max:5242',
+            ]);
+            // Public
+            $request->image->store('categories', 'public');
+
+        }
+
+        Category::create([
+            'name' => $request['name'],
+            'description' => $request['description'],
+            'slug' => $request['slug'],
+            'category_id' => $request['parent_id'],
+            'image' => $request->image ? $request->image->hashName() : null,
+        ]);
+        
 
         return redirect()->route('admin.categories');
     }
@@ -85,7 +78,8 @@ class CategoryController extends Controller
      */
     public function edit(Category $category): View
     {
-        return view('admin.categories.edit', compact('category'));
+        $categories = Category::where('id', '!=', $category->id)->get();
+        return view('admin.categories.edit', compact('category', 'categories'));
     }
 
     /**
@@ -98,15 +92,38 @@ class CategoryController extends Controller
      */
     public function update(Category $category, Request $request): RedirectResponse
     {
-        $validatedRequest = Validator::make($request->all(), [
+        $request->validate([
             'name' => 'required',
             'description' => 'required',
             'slug' => 'required|unique:categories,slug,' . $category->id,
+            'parent_id' => 'nullable|exists:categories,id',
+            'image' => 'nullable|image',
+            'remove_image' => 'nullable',
         ]);
 
-        $category->update($validatedRequest->validated());
+        if ($request->hasFile('image')) {
+            $request->validate([
+                'image' => 'image|mimes:jpeg,png,jpg,gif,svg|max:5242',
+            ]);
+            // Public
+            $request->image->store('categories', 'public');
 
-        return redirect()->route('admin.categories');
+        }
+
+        if ($request->remove_image == 'on') {
+            $category->image = null;
+        } else {
+            $category->image = $request->image ? $request->image->hashName() : $category->image;
+        }
+
+        $category->update([
+            'name' => $request['name'],
+            'description' => $request['description'],
+            'slug' => $request['slug'],
+            'category_id' => $request['parent_id'],
+        ]);
+
+        return redirect()->route('admin.categories.edit', $category);
     }
 
     /**

@@ -92,3 +92,4 @@ function snow() {
     window.onload = init;
 }
 window.snow = snow;
+

@@ -23,8 +23,7 @@ class CouponController extends Controller
      */
     public function index(): View
     {
-        $coupons = Coupon::all();
-        return view('admin.coupons.index', compact('coupons'));
+        return view('admin.coupons.index');
     }
 
     /**

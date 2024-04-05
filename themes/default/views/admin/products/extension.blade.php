@@ -23,6 +23,12 @@
                         {{ __('Extension') }}
                     </a>
                 </div>
+                <div class="flex-none">
+                    <a href="{{ route('admin.products.upgrade', $product->id) }}"
+                        class="inline-flex justify-center w-full p-4 px-2 py-2 text-xs font-bold text-gray-900 uppercase border-b-2 dark:text-darkmodetext dark:hover:bg-darkbutton border-y-transparent hover:border-logo hover:text-logo">
+                        {{ __('Upgrades') }}
+                    </a>
+                </div>
             </div>
         </div>
     </div>
@@ -41,7 +47,7 @@
                     </path>
                 </svg>
             </button>
-            <div class="absolute hidden w-max origin-top-right bg-white rounded-md shadow-lg dark:bg-darkmode ring-1 ring-black ring-opacity-5 z-[1]"
+            <div class="absolute hidden w-max origin-top-right bg-white rounded-md shadow-lg dark:bg-darkmode ring-1 ring-black ring-opacity-5 z-20"
                 role="menu" aria-orientation="vertical" aria-labelledby="menu-button" tabindex="-1"
                 id="moreOptions">
                 <div class="py-1 grid grid-cols-1" role="none">

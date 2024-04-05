@@ -50,19 +50,30 @@
                             <form method="POST" action="{{ route('clients.profile.update') }}">
                                 @csrf
                                 <x-input type="text" class="mt-4" placeholder="{{ __('First name') }}"
-                                    name="first_name" id="first_name" label="{{ __('Name') }}"
-                                    value="{{ Auth::user()->first_name }}" />
+                                    name="first_name" id="first_name" label="{{ __('First Name') }}"
+                                    value="{{ Auth::user()->first_name }}" required/>
                                 <x-input type="text" class="mt-4" placeholder="{{ __('Last name') }}"
-                                    name="last_name" id="last_name" label="{{ __('Name') }}"
-                                    value="{{ Auth::user()->last_name }}" />
+                                    name="last_name" id="last_name" label="{{ __('Last Name') }}"
+                                    value="{{ Auth::user()->last_name }}" required/>
                                 <x-input type="text" class="mt-4" placeholder="{{ __('Address') }}" name="address"
-                                    id="address" label="{{ __('Address') }}" value="{{ Auth::user()->address }}" />
+                                    id="address" label="{{ __('Address') }}" value="{{ Auth::user()->address }}" :required="config('settings::requiredClientDetails_address') == 1"/>
+                                <x-input type="text" class="mt-4" placeholder="{{ __('Zip') }}" name="zip"
+                                    id="zip" label="{{ __('Zip') }}" value="{{ Auth::user()->zip }}" :required="config('settings::requiredClientDetails_zip') == 1" />
                                 <x-input type="text" class="mt-4" placeholder="{{ __('City') }}" name="city"
-                                    id="city" label="{{ __('City') }}" value="{{ Auth::user()->city }}" />
-                                <x-input type="text" class="mt-4" placeholder="{{ __('Country') }}" name="country"
-                                    id="country" label="{{ __('Country') }}" value="{{ Auth::user()->country }}" />
+                                    id="city" label="{{ __('City') }}" value="{{ Auth::user()->city }}" :required="config('settings::requiredClientDetails_city') == 1"/>
+                                <x-input type="select" class="mt-4" placeholder="{{ __('Country') }}" name="country"
+                                    id="country" label="{{ __('Country') }}" :required="config('settings::requiredClientDetails_country') == 1">
+                                    @if(!config('settings::requiredClientDetails_country') == 1)
+                                        <option value="">{{ __('Select a country') }}</option>
+                                    @endif
+                                    @foreach (App\Classes\Constants::countries() as $key => $country)
+                                        <option value="{{ $key }}" @if (Auth::user()->country == $key) selected @endif>
+                                            {{ $country }}
+                                        </option>
+                                    @endforeach
+                                </x-input>
                                 <x-input type="text" class="mt-4" placeholder="{{ __('Phone') }}" name="phone"
-                                    id="phone" label="{{ __('Phone') }}" value="{{ Auth::user()->phone }}" />
+                                    id="phone" label="{{ __('Phone') }}" value="{{ Auth::user()->phone }}" :required="config('settings::requiredClientDetails_phone') == 1"/>
                                 <div class="flex justify-end mt-6">
                                     <button type="submit" class="button button-primary">
                                         {{ __('Update') }}
@@ -142,7 +153,7 @@
                         </div>
                     @else
                         <button data-modal-target="tfa" data-modal-toggle="tfa"
-                            class="block text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 mt-2"
+                            class="button button-danger"
                             type="button">
                             {{ __('Disable Two Factor Authentication') }}
                         </button>

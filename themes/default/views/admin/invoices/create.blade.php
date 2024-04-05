@@ -3,19 +3,11 @@
     <form action="{{ route('admin.invoices.store') }}" method="POST">
         @csrf
         <div class="grid grid-cols-2 gap-4 mt-4">
-            <div class="w-full">
-                <label class="block dark:text-darkmodetext" for="code">
-                    {{ __('Code') }}
-                </label>
-                <select name="user_id" id="user_id"
-                    class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm dark:bg-darkmode rounded-md"
-                    required>
-                    <option value="" disabled selected>{{ __('Select User') }}</option>
+                <x-input type="searchselect" name="user_id" required placeholder="Select User" label="User">
                     @foreach ($users as $user)
                         <option value="{{ $user->id }}">{{ $user->name }} ({{ $user->email }})</option>
                     @endforeach
-                </select>
-            </div>
+                </x-input>
             <div class="w-full col-span-2">
                 <label class="block dark:text-darkmodetext" for="code">
                     {{ __('Items') }}
@@ -27,8 +19,7 @@
                         </label>
                         <input
                             class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm dark:bg-darkmode rounded-md"
-                            type="text" name="item_name[]" id="item_name" required placeholder="Item Name"
-                            value="{{ old('item_name') }}">
+                            type="text" name="item_name[]" id="item_name" required placeholder="Item Name">
                     </div>
                     <div class="w-full">
                         <label class="block dark:text-darkmodetext" for="code">
@@ -36,8 +27,7 @@
                         </label>
                         <input
                             class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm dark:bg-darkmode rounded-md"
-                            type="number" name="item_price[]" id="item_price" required placeholder="Item Price" step="0.01" min="0"
-                            value="{{ old('item_price') }}">
+                            type="number" name="item_price[]" id="item_price" required placeholder="Item Price" step="0.01" min="0">
                     </div>
                 </div>
                 <div class="grid-cols-2">
@@ -55,8 +45,7 @@
                             </label>
                             <input
                                 class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm dark:bg-darkmode rounded-md"
-                                type="text" name="item_name[]" id="item_name" required placeholder="Item Name"
-                                value="{{ old('item_name') }}">
+                                type="text" name="item_name[]" id="item_name" required placeholder="Item Name">
                         `
                         document.getElementById('items').appendChild(item);
                         item = document.createElement('div');
@@ -67,8 +56,7 @@
                             </label>
                             <input
                                 class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm dark:bg-darkmode rounded-md"
-                                type="number" name="item_price[]" id="item_price" required placeholder="Item Price" step="0.01" min="0"
-                                value="{{ old('item_price') }}">
+                                type="number" name="item_price[]" id="item_price" required placeholder="Item Price" step="0.01" min="0">
                         `;
                         document.getElementById('items').appendChild(item);
                     });

@@ -23,7 +23,7 @@
                 class="md:px-2 py-3 flex items-center gap-x-1 hover:text-secondary-800 duration-300">
                 {{ __('Home') }}
             </a>
-            @auth 
+            @auth
                 <a href="{{ route('clients.home') }}"
                     class="md:px-2 py-3 flex items-center gap-x-1 hover:text-secondary-800 duration-300">
                     {{ __('Customer Area') }}
@@ -36,8 +36,8 @@
 
                 <div class="absolute left-0 hidden w-56 mt-2 origin-top-right bg-secondary-200 border border-secondary-300 rounded-md z-10"
                     role="menu" aria-orientation="vertical" aria-labelledby="product" tabindex="-1" id="orders">
-                    @foreach (App\Models\Category::withCount('products')->orderBy('order')->get() as $category)
-                        @if ($category->products_count > 0)
+                    @foreach (App\Models\Category::whereNull('category_id')->orderBy('order')->get() as $category)
+                        @if ($category->products()->where('hidden', false)->count() > 0 || $category->children->count() > 0)
                             <a href="{{ route('products', $category->slug) }}"
                                 class="flex px-4 py-2 rounded text-secondary-700 hover:bg-secondary-100 hover:text-secondary-900"
                                 role="menuitem" tabindex="-1" id="menu-item-0">{{ $category->name }}</a>
@@ -50,28 +50,23 @@
                 class="md:px-2 py-3 flex items-center gap-x-1 hover:text-secondary-800 duration-300">
                 {{ __('Announcements') }}
             </a>
-            <a href="{{ route('clients.tickets.index') }}"
-                class="md:px-2 py-3 flex items-center gap-x-1 hover:text-secondary-800 duration-300">
-                {{ __('Help Center') }}
-            </a>
             <div class="ml-auto flex items-center gap-x-1 justify-center md:pb-0 pb-4">
-                @if (count(session()->get('cart', [])) > 0)
-                    <a href="{{ route('checkout.index') }}" class="button button-secondary-outline !font-normal">
-                        <i class="ri-shopping-bag-line"></i>
-                        {{ count(session()->get('cart')) }}
-                    </a>
-                @endif
+                <livewire:cart-count />
 
                 @auth
                     @if(Auth::user()->credits > 0 && config('settings::credits'))
                         <div class="ml-auto items-center justify-end hidden md:flex">
                             <a href="{{ route('clients.credits') }}" class="text-md mr-2">
-                                <i class="ri-wallet-3-line"></i> {{__('Your Balance:')}} <span class="font-semibold">{{ Auth::user()->formattedCredits() }} {{ config('settings::currency_sign') }}</span>
+                                <i class="ri-wallet-3-line"></i> {{__('Your Balance:')}} <span class="font-semibold">
+                                    <x-money :amount="Auth::user()->credits" />
+                                </span>
                             </a>
                         </div>
                         <div class="ml-auto flex items-center justify-end md:hidden">
                             <a href="{{ route('clients.credits') }}" class="text-md mr-2">
-                                <i class="ri-wallet-3-line"></i> <span class="font-semibold">{{ Auth::user()->formattedCredits() }} {{ config('settings::currency_sign') }}</span>
+                                <i class="ri-wallet-3-line"></i> <span class="font-semibold">
+                                    <x-money :amount="Auth::user()->credits" />
+                                </span>
                             </a>
                         </div>
                     @endif
@@ -120,7 +115,7 @@
                         {{ __('Log In') }}
                     </a>
                 @endauth
-                <button class="button button-secondary-outline !font-normal" id="theme-toggle">
+                <button class="m-1.5 button button-secondary-outline !font-normal" id="theme-toggle">
                     <i class="ri-sun-line hidden dark:block"></i>
                     <i class="ri-moon-line dark:hidden"></i>
                 </button>

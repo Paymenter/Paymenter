@@ -104,7 +104,7 @@
                                         <div class="items-center flex" class="block mt-1 w-full">
                                             <x-input type="hidden" value="0" name="hidden" />
                                             <x-input id="hidden" class="block mt-1 w-full" type="checkbox"
-                                                checked="{{ $configurableOption->hidden }}" name="hidden"
+                                                :checked="$configurableOption->hidden == 1 ? true : false" name="hidden"
                                                 label="Hidden" placeholder="Hidden" value="1" />
                                         </div>
 
@@ -128,7 +128,7 @@
                                                 <div class="items-center flex" class="block mt-1 w-full">
                                                     <x-input label="Hidden" type="checkbox"
                                                         name="option[{{ $option->id }}][hidden]"
-                                                        checked="{{ $option->hidden }}" placeholder="hidden"
+                                                        :checked="$option->hidden == 1 ? true : false"
                                                         value="1" />
                                                 </div>
                                             </div>
@@ -143,7 +143,7 @@
                                                 <x-input label="Semi-Annually" type="text"
                                                     name="option[{{ $option->id }}][pricing][semi_annually]"
                                                     placeholder="Semi-Annually"
-                                                    value="{{ $pricing['semiannually'] ?? '' }}" />
+                                                    value="{{ $pricing['semi_annually'] ?? '' }}" />
                                                 <x-input label="Annually" type="text"
                                                     name="option[{{ $option->id }}][pricing][annually]"
                                                     placeholder="Annually"
@@ -241,21 +241,5 @@
                 }, 500);
             });
         }
-    </script>
-
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/pdfmake.min.js"></script>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/vfs_fonts.js"></script>
-    <script type="text/javascript"
-        src="https://cdn.datatables.net/v/dt/jszip-2.5.0/dt-1.12.1/b-2.2.3/b-colvis-2.2.3/b-html5-2.2.3/b-print-2.2.3/r-2.3.0/rr-1.2.8/datatables.min.js">
-    </script>
-    <script>
-        $(document).ready(function() {
-            var table = $('#clientdatatable').DataTable({
-                dom: 'Bfrtip',
-                buttons: [
-                    'copy', 'csv', 'excel', 'pdf', 'print'
-                ]
-            });
-        });
     </script>
 </x-admin-layout>

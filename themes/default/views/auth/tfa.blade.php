@@ -1,50 +1,28 @@
-<x-guest-layout>
-    <div class="flex flex-col items-center min-h-screen pt-6 bg-gray-100 dark:bg-darkmode sm:justify-center sm:pt-0">
-        <div>
-            <a href="/">
-                <x-application-logo class="w-20 h-20 text-gray-500 fill-current" />
-            </a>
+<x-app-layout>
+    <div class="content min-h-[50vh] flex items-center justify-center flex-col">
+        <div class="flex items-center text-secondary-900 font-semibold text-lg py-4 gap-x-2">
+            <x-application-logo class="w-10" />
+            {{ config('app.name', 'Paymenter') }}
         </div>
 
-        <div class="w-full px-6 py-4 mt-6 overflow-hidden bg-white shadow-md sm:max-w-md sm:rounded-lg content-box">
-
-
-            <x-auth-session-status class="mb-4" :status="session('status')" />
-
-            <x-auth-validation-errors class="mb-4" :errors="$errors" />
-
+        <div class="content-box max-w-lg w-full">
             <form method="POST" action="{{ route('tfa') }}" id="tfa">
                 @csrf
+                <h2 class="text-lg font-semibold">{{ __('Two Factor Authentication') }}</h2>
                 <h4 class="text-base text-gray-600 dark:text-darkmodetext">
                     {{ __('Please enter the code from your authenticator app.') }}
                 </h4>
 
-                <div class="mt-4">
-                    <label class="block text-sm font-medium text-gray-700 dark:text-darkmodetext">
-                        {{ __('Code') }}
-                    </label>
-
-                    <input id="code" type="text"
-                        class="dark:text-darkmodetext dark:bg-darkmode rounded-lg form-input w-full @error('code') border-red-500 @enderror"
-                        name="code" required>
-
-                    @error('code')
-                        <p class="mt-1 text-xs italic text-red-500 dark:text-darkmodetext">
-                            {{ $message }}
-                        </p>
-                    @enderror
-                </div>
-                <br>
+                <x-input id="code" type="text" label="{{ __('Code') }}" name="code" required class="mt-3" />
                 <div class="flex items-center justify-center">
                     <x-recaptcha form="tfa" />
                 </div>
                 <div class="flex items-center justify-end mt-4">
-                    <button type="submit"
-                        class="inline-flex items-center px-4 py-2 ml-4 text-xs font-semibold tracking-widest uppercase transition duration-150 ease-in-out bg-gray-800 border border-transparent rounded-md dark:text-darkmodetext hover:bg-gray-700 active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:ring ring-gray-300 disabled:opacity-25">
+                    <button type="submit" class="button button-primary">
                         {{ __('Submit') }}
                     </button>
                 </div>
             </form>
         </div>
     </div>
-</x-guest-layout>
+</x-app-layout>

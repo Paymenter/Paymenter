@@ -28,8 +28,7 @@
                                 <div class="flex flex-col">
                                     <h1 class="text-lg text-gray-500 dark:text-darkmodetext">{{ __('Revenue Total') }}</h1>
                                     <p class="text-xl font-bold text-black dark:text-darkmodetext">
-                                        {{ $revenueTotal }}
-                                        {{ config('settings::currency_sign') }}
+                                        <x-money :amount="$revenueTotal" />
                                     </p>
                                 </div>
                             </div>
@@ -56,7 +55,7 @@
                         </span>
                     </div>
                     <div class="p-6 bg-white border-2 dark:bg-secondary-100 dark:border-darkmodehover rounded-xl">
-                        <div class="grid grid-cols-1 xl:grid-cols-3 gap-4 p-4 mt-1 rounded-md dark:bg-secondary-200 bg-normal">
+                        <div class="grid grid-cols-1 2xl:grid-cols-3 gap-4 p-4 mt-1 rounded-md dark:bg-secondary-200 bg-normal">
 
                             <div class="flex">
                                 <i class="ri-coupon-line p-4 bg-blue-400 text-blue-900 text-2xl items-center text-center h-16 w-16 rounded-lg mr-4"></i>

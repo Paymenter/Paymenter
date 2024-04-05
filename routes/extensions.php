@@ -8,7 +8,7 @@ Route::group(['prefix' => 'extensions'], function () {
     foreach ($extensions as $extension) {
         $routesFile = $extension . '/routes.php';
         if (file_exists($routesFile)) {
-            if(file_exists($extension . '/views')) View::addNamespace(basename($extension), $extension . '/views');
+            if (file_exists($extension . '/views')) View::addNamespace(basename($extension), $extension . '/views');
             include_once $routesFile;
         }
     }

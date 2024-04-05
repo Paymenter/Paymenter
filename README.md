@@ -1,4 +1,4 @@
-![Paymenter Logo](https://cdn.discordapp.com/attachments/935234707015229511/1028031007573680318/unknown.png)
+![Paymenter Logo](https://paymenter.org/image/textlogo.png)
 
 [![Discord](https://img.shields.io/discord/882318291014651924.svg?logo=discord)](https://discord.gg/xB4UUT3XQg)
 [![GitHub](https://img.shields.io/github/license/paymenter/paymenter)](https://github.com/Paymenter/paymenter/blob/master/LICENSE)
@@ -7,7 +7,7 @@
 
 [Discord](https://discord.gg/xB4UUT3XQg), [Demo](https://demo.paymenter.org), [Docs](https://paymenter.org/docs/getting-started/introduction/), [Website](https://paymenter.org)
 
-## A advanced payment system for your hosting company
+## An advanced payment system for your hosting company
 ### About
 
 Introducing an advanced payment system for your hosting company, Paymenter!  Paymenter is designed to be easy to use and install, with a user-friendly client and admin area. It's also highly customizable, with the ability to install a range of addons and themes from our marketplace created by talented developers and designers.
@@ -21,6 +21,19 @@ Introducing an advanced payment system for your hosting company, Paymenter!  Pay
 - Automatically bill your customers
 - Built in support center
 - Generate coupons to give your customers discounts
+
+## Sponsors
+
+Thanks to all sponsors for helping fund Paymenter's development.
+[Interested in becoming a sponsor?](https://github.com/sponsors/CorwinDev)
+
+<a href="https://macarne.com">
+    <img src="https://github.com/Paymenter/Paymenter/assets/88144943/9f9c164c-5b43-401a-83da-77754a51416e" width="350">
+</a>
+
+<a href="https://scorpiohosting.net">
+    <img src="https://paymenter.org/docs/getting-started/sponsors/scorpiohosting.png" width="350">
+</a>
 
 ## Wanna take a look?
 Visit our demo at: https://demo.paymenter.org

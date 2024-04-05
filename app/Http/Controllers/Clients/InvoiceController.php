@@ -31,9 +31,12 @@ class InvoiceController extends Controller
         $invoiceItems = $invoice->getItemsWithProducts();
         $products = $invoiceItems->products;
         $total = $invoiceItems->total;
+        $tax = $invoiceItems->tax;
         $currency_sign = config('settings::currency_sign');
 
-        return view('clients.invoice.show', compact('invoice', 'products', 'currency_sign', 'total'));
+        $gateways = ExtensionHelper::getAvailableGateways($total, $products);
+
+        return view('clients.invoice.show', compact('invoice', 'products', 'currency_sign', 'total', 'tax', 'gateways'));
     }
 
     public function pay(Request $request, Invoice $invoice)
@@ -61,6 +64,11 @@ class InvoiceController extends Controller
                 $user->save();
                 ExtensionHelper::paymentDone($invoice->id);
                 return redirect()->route('clients.invoice.show', $invoice->id)->with('success', 'Payment done');
+            }
+            if ($invoiceItems->tax->amount > 0 && config('settings::tax_type') == 'exclusive') {
+                foreach ($products as $product) {
+                    $product->price = $product->price + ($product->price * $invoiceItems->tax->rate / 100);
+                }
             }
             $payment_method = ExtensionHelper::getPaymentMethod($payment_method, $total, $products, $invoice->id);
             if ($payment_method) {

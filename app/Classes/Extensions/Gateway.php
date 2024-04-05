@@ -14,4 +14,17 @@ class Gateway extends Extension {
     {
         return '';
     }
+
+
+    /**
+     * Get the URL to redirect to
+     * 
+     * @param int $total
+     * @param array $products
+     * @return string
+     */
+    public function canUse($total, $products)
+    {
+        return true;
+    }
 }

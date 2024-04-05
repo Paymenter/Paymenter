@@ -5,7 +5,10 @@ namespace App\Extensions\Gateways\Stripe;
 use App\Classes\Extensions\Gateway;
 use Stripe\StripeClient;
 use App\Helpers\ExtensionHelper;
+use App\Models\Extension;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
+
 
 class Stripe extends Gateway
 {
@@ -13,15 +16,14 @@ class Stripe extends Gateway
     {
         return [
             'display_name' => 'Stripe',
-            'version' => '1.0.0',
+            'version' => '2.0.0',
             'author' => 'Paymenter',
             'website' => 'https://paymenter.org',
         ];
     }
-    
-    public function getUrl($total, $products, $orderId)
+
+    public function getUrl($_, $products, $orderId, $client)
     {
-        $client = $this->stripeClient();
         // Create array with all the products
         $items = [];
         foreach ($products as $product) {
@@ -31,22 +33,25 @@ class Stripe extends Gateway
                     'product_data' => [
                         'name' => $product->name,
                     ],
-                    'unit_amount' => round($product->price / $product->quantity * 100, 0)
+                    'unit_amount' => round($product->price / $product->quantity * 100, 0),
                 ],
                 'quantity' => $product->quantity,
             ];
         }
         $order = $client->checkout->sessions->create([
             'line_items' => $items,
+            'currency' => ExtensionHelper::getCurrency(),
             'mode' => 'payment',
             'success_url' => route('clients.invoice.show', $orderId),
             'cancel_url' => route('clients.invoice.show', $orderId),
             'customer_email' => auth()->user()->email,
+            'customer_creation' => 'always',
             'metadata' => [
                 'user_id' => auth()->user()->id,
                 'order_id' => $orderId,
             ],
         ]);
+
 
         return $order;
     }
@@ -74,10 +79,17 @@ class Stripe extends Gateway
             exit;
         }
         if ($event->type == 'checkout.session.completed') {
-            $order = $event->data->object;
-            $order_id = $order->metadata->order_id;
-            ExtensionHelper::paymentDone($order_id, 'Stripe', $order->payment_intent);
+            if ($event->data->object->mode == 'payment') {
+                $order = $event->data->object;
+                $order_id = $order->metadata->order_id;
+                ExtensionHelper::paymentDone($order_id, 'Stripe', $order->payment_intent);
+            }
         }
+        if (class_exists('App\Extensions\Gateways\StripeSubscriptions\StripeSubscriptions')) {
+            (new \App\Extensions\Gateways\StripeSubscriptions\StripeSubscriptions(Extension::where('name', 'StripeSubscriptions')->first()))->webhook($event);
+        }
+
+        return response()->json(['success' => true]);
     }
 
     public function stripeClient()
@@ -98,7 +110,7 @@ class Stripe extends Gateway
     public function pay($total, $products, $orderId)
     {
         $stripe = $this->stripeClient();
-        $order = $this->getUrl($total, $products, $orderId);
+        $order = $this->getUrl($total, $products, $orderId, $stripe);
 
         return $stripe->checkout->sessions->retrieve($order->id, [])->url;
     }

@@ -14,6 +14,7 @@ class Extension extends Model
         'enabled',
         'type',
         'display_name',
+        'update_available'
     ];
 
     public function getConfig()
@@ -33,6 +34,17 @@ class Extension extends Model
 
     public function getNamespaceAttribute()
     {
-        return 'App\\Extensions\\' . ucfirst($this->type) . 's' . '\\' . $this->name;
+        return 'App\\Extensions\\' . ucfirst($this->type) . 's' . '\\' . $this->name . '\\' . $this->name;
+    }
+
+    public function getVersionAttribute()
+    {
+        $module = $this->namespace;
+        try {
+            $module = new $module($this);
+            return $module->getMetadata()['version'];
+        } catch (\Throwable $th) {
+            return false;
+        }
     }
 }

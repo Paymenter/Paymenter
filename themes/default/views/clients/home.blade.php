@@ -47,10 +47,12 @@
                                                 <span class="font-semibold">{{ __('Invoice ID') }}:</span>
                                                 <span class="font-semibold">{{ $invoice->id }}</span>
                                                 <div class="w-full text-sm text-gray-400 truncate">
-                                                    <span class="font-semibold">{{__('Amount to pay')}} - {{ $invoice->total() }} {{ config('settings::currency_sign') }}</span>
+                                                    <span class="font-semibold">{{__('Amount to pay')}} -
+                                                        <x-money :amount="$invoice->total()" />
+                                                    </span>
                                                 </div>
                                             </div>
-                                            <div class="justify-end flex text-center text-primary-400 my-auto button button-primary text-md w-fit py-[5px] px-[8px]">
+                                            <div class="justify-end flex text-center my-auto button button-primary text-md w-fit py-[5px] px-[8px]">
                                                 <b>{{__('View')}}</b>
                                             </div>
                                         </div>
@@ -79,20 +81,15 @@
                                 </tr>
                             </thead>
                             <tbody>
-                            @php
-                                $i = 0
-                            @endphp
                                 @if (count($services) > 0)
                                     @foreach ($services as $service)
+                                        @php($loop1 = $loop)
                                         @foreach ($service->products as $product2)
-                                            @php
-                                                $product = $product2->product;
-                                                $i++
-                                            @endphp
+                                            @php($product = $product2->product)
                                             @if($product2->status === 'cancelled')
                                                 @continue
                                             @endif
-                                            <tr class="@if(count($services) > $i) border-b-2 border-secondary-200 @endif">
+                                            <tr class="@if($loop1->index < ($loop1->count - $loop->count )) border-b-2 border-secondary-200 @endif">
                                                 <td class="pl-6 py-3 items-center break-all max-w-fit">
                                                     <div class="flex">
                                                         <img src="{{ $product->image }}" alt="{{ $product->name }}" class="w-8 h-8 md:w-12 md:h-12 my-auto rounded-md"
@@ -101,10 +98,10 @@
                                                     </div>
                                                 </td>
                                                 <td class="py-3 hidden md:table-cell" data-order="0.00">
-                                                    {{ $product2->price !== '0.00' && $product2->price ? $product2->price . " " . config('settings::currency_sign') : __('Free') }}
+                                                    <x-money :amount="$product2->price" />
                                                 </td>
                                                 <td class="py-3 hidden md:table-cell">
-                                                    {{ $product2->expiry_date ? $product2->expiry_date->toDateString() : __('Never') }}
+                                                    {{ $product2->expiry_date ? $product2->expiry_date->toDateString() : __('Doesn\'t Expire') }}
                                                 </td>
                                                 <td class="py-3 hidden md:table-cell">
                                                     <div class="font-bold rounded-md text-left">
@@ -145,7 +142,7 @@
 
                                     </tr>
                                     <tr class="w-full">
-                                        <td colspan="4" class="w-full dark:text-primary-400 font-bold text-lg text-center dark:bg-secondary-100">
+                                        <td colspan="4" class=" pt-5 w-full dark:text-primary-400 font-bold text-lg text-center dark:bg-secondary-100">
                                             {{ __('No services found.') }}
                                         </td>
                                     </tr>

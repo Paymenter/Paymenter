@@ -69,8 +69,8 @@
                             <span class="text-xl font-semibold">{{ __('Earnings') }}</span>
                             <span class="text-gray-500">{{ __('Total earnings') }}</span>
                             <span class="text-2xl font-semibold">
-                                {{ config('settings::currency_sign') }}
-                                {{ $affiliate->earnings() }}</span>
+                                <x-money :amount="$affiliate->earnings()" />
+                            </span>
                         </div>
                         <div class="col-span-3 flex flex-col mt-4">
                             <span class="text-xl font-semibold">{{ __('Affiliate') }}</span>

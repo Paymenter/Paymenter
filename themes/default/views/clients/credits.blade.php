@@ -44,8 +44,9 @@
                     <h1 class="text-2xl font-semibold">{{ __('Current Balance') }}</h1>
                     <div class="flex flex-row items-center justify-between">
                         <div class="flex flex-col gap-2">
-                            <span class="text-2xl font-semibold">{{ config('settings::currency_sign') }}
-                                {{ Auth::user()->formattedCredits() }}</span>
+                            <span class="text-2xl font-semibold">
+                                <x-money :amount="Auth::user()->credits" />
+                            </span>
                         </div>
                     </div>
                 </div>
@@ -77,6 +78,52 @@
                             </div>
                         </form>
                     @endif
+                </div>
+
+                <div class="content-box mt-4">
+                    <h1 class="text-2xl font-semibold">{{ __('History of the payments') }}</h1>
+
+                    <table class="w-full pt-2">
+                        <thead class="border-b-2 border-secondary-200 dark:border-secondary-200 text-secondary-600">
+                        <tr>
+                            <th scope="col" class="text-start pl-6 py-2 text-sm font-normal">{{ __('Date') }}</th>
+                            <th scope="col" class="text-start pl-6 py-2 text-sm font-normal">{{ __('Amount') }}</th>
+                            <th scope="col" class="text-start pl-6 py-2 text-sm font-normal">{{ __('Type') }}</th>
+                            <th scope="col" class="text-start pl-6 py-2 text-sm font-normal">{{ __('Status') }}</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        @forelse ($userInvoices as $invoice)
+                            <tr>
+                                <td class="pl-6 py-3 items-center break-all max-w-fit">{{ $invoice->created_at }}</td>
+                                <td class="pl-6 py-3 items-center break-all max-w-fit">@if($invoice->credits > 0) + @else @if($invoice->paid_with == 'manual') - @endif @endif <x-money :amount="$invoice->total() + $invoice->credits" /> </td>
+                                <td class="pl-6 py-3 items-center break-all max-w-fit">
+                                    @if($invoice->credits > 0)
+                                        {{ __('Charge') }}
+                                    @else
+                                        {{ __('Invoice') }} #{{ $invoice->id }}
+                                        @if($invoice->paid_with !== 'manual' && $invoice->paid_with !== "unknown") ({{ $invoice->paid_with }}) @endif
+                                    @endif
+
+                                </td>
+                                <td class="pl-6 py-3 items-center break-all max-w-fit">
+                                    @if ($invoice->status == 'pending')
+                                        <span class="text-yellow-400 dark:text-yellow-200">{{ __('Pending') }}</span>
+                                    @elseif($invoice->status == 'paid')
+                                        <span class="text-success-400 dark:text-success-200">{{ __('Completed') }}</span>
+                                    @elseif($invoice->status == 'failed')
+                                        <span class="text-danger-400 dark:text-danger-200">{{ __('Failed') }}</span>
+                                    @endif
+                                </td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="4" class="text-center py-3">{{ __('No records found.') }}</td>
+                            </tr>
+                        @endforelse
+                        </tbody>
+                    </table>
+
                 </div>
             </div>
         </div>

@@ -26,7 +26,12 @@ class FileUpload extends Model
 
     public function getUrlAttribute()
     {
-        return asset('storage/uploads/' . $this->uuid . '.' . File::extension($this->filename));
+        return route('file', $this->uuid);
+    }
+
+    public function getExtensionAttribute()
+    {
+        return File::extension($this->filename);
     }
 
     public function isImage()

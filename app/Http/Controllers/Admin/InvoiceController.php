@@ -13,9 +13,7 @@ class InvoiceController extends Controller
 {
     public function index()
     {
-        $invoices = Invoice::with(['items.product.order.coupon', 'items.product.product', 'user'])->get();
-
-        return view('admin.invoices.index', compact('invoices'));
+        return view('admin.invoices.index');
     }
 
     public function show(Invoice $invoice)
@@ -55,7 +53,7 @@ class InvoiceController extends Controller
         $invoice = new Invoice();
         $invoice->user_id = $request->user_id;
         $invoice->status = 'pending';
-        $invoice->save();
+        $invoice->saveQuietly();
         foreach ($request->item_name as $key => $item) {
             $invoiceItem = new InvoiceItem();
             $invoiceItem->invoice_id = $invoice->id;
@@ -63,6 +61,8 @@ class InvoiceController extends Controller
             $invoiceItem->description = $item;
             $invoiceItem->save();
         }
+
+        event(new \App\Events\Invoice\InvoiceCreated($invoice));
         NotificationHelper::sendNewInvoiceNotification($invoice, User::find($request->user_id));
         return redirect()->route('admin.invoices.show', $invoice);
     }

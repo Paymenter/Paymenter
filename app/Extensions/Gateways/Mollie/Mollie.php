@@ -5,6 +5,7 @@ namespace App\Extensions\Gateways\Mollie;
 use App\Classes\Extensions\Gateway;
 use App\Helpers\ExtensionHelper;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Http\Request;
 
 class Mollie extends Gateway
 {
@@ -12,7 +13,7 @@ class Mollie extends Gateway
     {
         return [
             'display_name' => 'Mollie',
-            'version' => '1.0.0',
+            'version' => '1.0.1',
             'author' => 'Paymenter',
             'website' => 'https://paymenter.org',
         ];
@@ -45,7 +46,7 @@ class Mollie extends Gateway
         return $response->json()['_links']['checkout']['href'];
     }
 
-    public function webhook($request)
+    public function webhook(Request $request)
     {
         $url = 'https://api.mollie.com/v2/payments/' . $request->id;
         $client_id = ExtensionHelper::getConfig('Mollie', 'api_key');

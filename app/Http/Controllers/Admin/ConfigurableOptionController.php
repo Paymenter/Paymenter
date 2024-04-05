@@ -19,9 +19,7 @@ class ConfigurableOptionController extends Controller
      */
     public function index(): \Illuminate\View\View
     {
-        $configurableGroups = ConfigurableGroup::all();
-
-        return view('admin.configurable-options.index', compact('configurableGroups'));
+        return view('admin.configurable-options.index');
     }
 
     /**

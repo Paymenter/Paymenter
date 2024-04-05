@@ -30,4 +30,17 @@
             {{ __('Click here to learn how to setup cronjob.') }}
         </a>
     @endisset
+
+
+    @if(\Illuminate\Support\Facades\DB::table('jobs')->where('available_at', '<=', now()->timestamp)->count() > 0)
+        <h2 class="col-span-1 md:col-span-2 text-xl text-gray-900 dark:text-darkmodetext mt-4">{{ __('Queued Jobs') }}:
+            {{ \Illuminate\Support\Facades\DB::table('jobs')->where('available_at', '<=', now()->timestamp)->count() }}</h2>
+        <p class="col-span-1 md:col-span-2 text-lg text-gray-900 dark:text-darkmodetext ">
+            {{ __('There are some jobs queued. Please check your queue worker.') }}
+        </p>
+        <a href="https://paymenter.org/docs/getting-started/installation/#create-queue-worker" target="_blank"
+            class="col-span-1 md:col-span-2 text-lg text-gray-900 dark:text-darkmodetext hover:text-primary-400 underline">
+            {{ __('Click here to learn how to setup queue worker.') }}
+        </a>
+    @endif
 </div>

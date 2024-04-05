@@ -1,6 +1,6 @@
 <x-admin-layout title="Edit client">
     <div class="w-full h-full rounded mb-4">
-        <div class="px-6 mx-auto">
+        <div class="mx-auto">
             <div class="flex flex-row overflow-x-auto lg:flex-wrap lg:space-x-1">
                 <div class="flex-none">
                     <a href="{{ route('admin.clients.edit', $user->id) }}"
@@ -32,7 +32,7 @@
                     </path>
                 </svg>
             </button>
-            <div class="absolute hidden w-max origin-top-right bg-white rounded-md shadow-lg dark:bg-darkmode ring-1 ring-black ring-opacity-5 z-[1]"
+            <div class="absolute hidden w-max origin-top-right bg-white rounded-md shadow-lg dark:bg-darkmode ring-1 ring-black ring-opacity-5 z-20"
                 role="menu" aria-orientation="vertical" aria-labelledby="menu-button" tabindex="-1"
                 id="moreOptions">
                 <div class="py-1 grid grid-cols-1" role="none">
@@ -111,8 +111,14 @@
                         </div>
 
                         <div class="grid grid-cols-2 gap-4 mt-4">
-                            <x-input name="country" id="country" label="{{ __('Country') }}" type="text"
-                                value="{{ $user->country }}" />
+                            <x-input name="country" id="country" label="{{ __('Country') }}" type="select">
+                                <option value="">{{ __('None') }}</option>
+                                @foreach (App\Classes\Constants::countries() as $key => $country)
+                                    <option value="{{ $key }}" @if ($user->country == $key) selected @endif>
+                                        {{ $country }}
+                                    </option>
+                                @endforeach
+                            </x-input>
 
                             <x-input name="zip" id="zip" label="{{ __('Zip') }}" type="text"
                                 value="{{ $user->zip }}" />

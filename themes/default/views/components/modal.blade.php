@@ -1,5 +1,5 @@
 
-<div id=@isset($id) "{{ $id }}" @else "defaultModal"  @endisset tabindex="-1" aria-hidden="true" class="fixed top-0 left-0 right-0 z-50 @isset($open) open @else hidden @endisset w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full">
+<div id=@isset($id) "{{ $id }}" @else "defaultModal" @endisset tabindex="-1" aria-hidden="true" class="fixed top-0 hidden left-0 right-0 z-50 w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full">
     <div class="relative w-full max-h-full @isset($fullWidth) max-w-7xl @else max-w-3xl @endisset mx-auto my-6">
         <!-- Modal content -->
         <div class="relative bg-secondary-100 rounded-lg shadow dark:bg-secondary-200">
@@ -28,3 +28,13 @@
         </div>
     </div>
 </div>
+@isset($open)
+    <script>
+        let id = @js($id ?? "defaultModal");
+        const target = document.getElementById(id);
+        const modal = new Modal(target, {}, {
+            override: true
+        });
+        modal.show();
+    </script>
+@endisset

@@ -12,6 +12,7 @@ use Illuminate\Support\Str;
 use RobThree\Auth\TwoFactorAuth;
 use App\Models\User;
 use App\Providers\RouteServiceProvider;
+use App\Validators\ReCaptcha;
 use Illuminate\Support\Facades\Crypt;
 
 class AuthenticatedSessionController extends Controller
@@ -33,6 +34,7 @@ class AuthenticatedSessionController extends Controller
      */
     public function store(LoginRequest $request)
     {
+        (new ReCaptcha())->verify($request);
         $request->authenticate();
 
         if (Auth::user()->tfa_secret) {

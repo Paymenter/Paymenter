@@ -17,8 +17,7 @@ class RoleController extends Controller
      */
     public function index(): \Illuminate\Contracts\View\View
     {
-        $roles = Role::all();
-        return view('admin.roles.index', compact('roles'));
+        return view('admin.roles.index');
     }
 
     /**
@@ -55,7 +54,7 @@ class RoleController extends Controller
             'permissions' => 'required|array',
         ]);
         $permissions = $request->permissions;
-        $permissions[] = 'ADMINISTRATOR'; 
+        $permissions[] = 'ADMINISTRATOR';
         Role::create([
             'name' => $request->name,
             'permissions' => Permissions::create($permissions),
@@ -75,7 +74,7 @@ class RoleController extends Controller
             'permissions' => 'required|array',
         ]);
         $permissions = $request->permissions;
-        $permissions[] = 'ADMINISTRATOR'; 
+        $permissions[] = 'ADMINISTRATOR';
         $role->update([
             'name' => $request->name,
             'permissions' => Permissions::create($permissions),

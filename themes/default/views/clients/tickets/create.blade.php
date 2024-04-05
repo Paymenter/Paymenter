@@ -15,7 +15,7 @@
                             </div>
                         </div>
                         <div class="flex">
-                            <form method="POST" action="{{ route('clients.tickets.store') }}" class="w-full">
+                            <form method="POST" action="{{ route('clients.tickets.store') }}" class="w-full" id="create-ticket">
                                 @csrf
                                 <div class="float-left w-6/12">
                                     <div class="mt-4">
@@ -125,13 +125,10 @@
                                         <textarea class="block w-full mt-1 rounded-md shadow-sm form-input dark:text-darkmodetext dark:bg-darkmode"
                                             style="height: 288px" id="description" name="description" required>{{ old('description') }}</textarea>
                                     </div>
-                                    @if (config('settings::recaptcha') == 1)
-                                        <div class="g-recaptcha mt-4"
-                                            data-sitekey="{{ config('settings::recaptcha_site_key') }}"></div>
-                                    @endif
+                                    <x-recaptcha form="create-ticket" />
                                     <div class="flex items-center justify-end mt-4">
                                         <button id="submit"
-                                            class="form-submit">
+                                            class="button button-primary">
                                             {{ __('Create') }}
                                         </button>
                                     </div>

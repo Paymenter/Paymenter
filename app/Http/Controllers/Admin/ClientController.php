@@ -15,9 +15,7 @@ class ClientController extends Controller
 {
     public function index()
     {
-        $users = User::all();
-
-        return view('admin.clients.index', compact('users'));
+        return view('admin.clients.index');
     }
 
     public function create()
@@ -78,6 +76,9 @@ class ClientController extends Controller
 
     public function destroy(User $user)
     {
+        if ($user->id === auth()->user()->id) {
+            return redirect()->back()->with('error', 'You cannot delete yourself.');
+        }
         $user->delete();
 
         return redirect()->route('admin.clients');
@@ -92,7 +93,7 @@ class ClientController extends Controller
     public function products(User $user, OrderProduct $orderProduct = null)
     {
         if (!$orderProduct) {
-            $orderProduct = $user->orderProducts()->with(['product', 'invoices.items.product.order.coupon', 'invoices.items.product.product'])->first();
+            $orderProduct = $user->orderProducts()->with(['product'])->first();
             if (!$orderProduct) {
                 return redirect()->route('admin.clients.edit', $user->id)->with('error', 'No orders found');
             }
@@ -126,6 +127,16 @@ class ClientController extends Controller
         return redirect()->route('admin.clients.products', [$user->id, $orderProduct->id])->with('success', 'Product updated');
     }
 
+    public function removeCancellation(User $user, OrderProduct $orderProduct): \Illuminate\Http\RedirectResponse
+    {
+        if(!$orderProduct->cancellation()->exists())
+            return redirect()->route('admin.clients.products', [$user->id, $orderProduct->id])->with('error', 'No cancellation found');
+
+        $orderProduct->cancellation()->delete();
+
+        return redirect()->route('admin.clients.products', [$user->id, $orderProduct->id])->with('success', 'Cancellation removed');
+    }
+
     /**
      * Create/Suspend/Unsuspend/Terminate the order product
      *
@@ -134,7 +145,7 @@ class ClientController extends Controller
     public function changeProductStatus(User $user, OrderProduct $orderProduct, Request $request): \Illuminate\Http\RedirectResponse
     {
         $request->validate([
-            'status' => 'required|in:create,suspend,unsuspend,terminate',
+            'status' => 'required|in:create,suspend,unsuspend,terminate,upgrade',
         ]);
 
         switch ($request->input('status')) {
@@ -150,6 +161,9 @@ class ClientController extends Controller
             case 'terminate':
                 ExtensionHelper::terminateServer($orderProduct);
                 break;
+            case 'upgrade':
+                ExtensionHelper::upgradeServer($orderProduct);
+                break;
         }
 
 
@@ -164,12 +178,13 @@ class ClientController extends Controller
     public function updateProductConfig(User $user, OrderProduct $orderProduct, OrderProductConfig $orderProductConfig, Request $request): \Illuminate\Http\RedirectResponse
     {
         $request->validate([
-            'key' => 'required',
+            'key' => 'sometimes',
             'value' => 'required',
         ]);
 
         $orderProductConfig->value = $request->input('value');
-        $orderProductConfig->key = $request->input('key');
+        if(!$orderProductConfig->configurableOption() || !$orderProductConfig->configurableOption()->exists())
+            $orderProductConfig->key = $request->input('key');
         $orderProductConfig->save();
 
         return redirect()->route('admin.clients.products', [$user->id, $orderProduct->id])->with('success', 'Product updated');

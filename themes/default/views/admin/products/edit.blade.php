@@ -24,6 +24,12 @@
                         {{ __('Extension') }}
                     </a>
                 </div>
+                <div class="flex-none">
+                    <a href="{{ route('admin.products.upgrade', $product->id) }}"
+                        class="inline-flex justify-center w-full p-4 px-2 py-2 text-xs font-bold text-gray-900 uppercase border-b-2 dark:text-darkmodetext dark:hover:bg-darkbutton border-y-transparent hover:border-logo hover:text-logo">
+                        {{ __('Upgrades') }}
+                    </a>
+                </div>
             </div>
         </div>
     </div>
@@ -42,7 +48,7 @@
                     </path>
                 </svg>
             </button>
-            <div class="absolute hidden w-max origin-top-right bg-white rounded-md shadow-lg dark:bg-darkmode ring-1 ring-black ring-opacity-5 z-[1]"
+            <div class="absolute hidden w-max origin-top-right bg-white rounded-md shadow-lg dark:bg-darkmode ring-1 ring-black ring-opacity-5 z-20"
                 role="menu" aria-orientation="vertical" aria-labelledby="menu-button" tabindex="-1"
                 id="moreOptions">
                 <div class="py-1 grid grid-cols-1" role="none">
@@ -72,29 +78,26 @@
     <div class="mt-6 text-gray-500 dark:text-darkmodetext dark:bg-secondary-100">
         <form method="POST" action="{{ route('admin.products.update', $product->id) }}" enctype="multipart/form-data">
             @csrf
-            <div>
-                <label for="name">{{ __('Name') }}</label>
+            <x-input type="text" name="name" label="{{ __('Name') }}" placeholder="{{ __('Name') }}"
+                value="{{ $product->name }}" required autofocus />
 
-                <input id="name" class="block w-full mt-1 rounded-lg dark:bg-darkmode" type="text"
-                    name="name" value="{{ $product->name }} " required autofocus />
-            </div>
-            <div class="mt-4 ">
-                <label for="description">{{ __('Description') }}</label>
+            <x-input type="checkbox" label="{{ __('Hidden') }}" name="hidden" id="hidden" value="1" class="mt-2"
+                :checked="$product->hidden ? true : false" />
+                
+            <x-input type="textarea" name="description" label="{{ __('Description') }}"
+                placeholder="{{ __('Description') }}" value="{{ $product->description }}" required rows="4" />
 
-                <textarea id="description" class="block w-full mt-1 rounded-lg dark:bg-darkmode" name="description" required
-                    rows="4">{{ $product->description }}</textarea>
+
+            <x-input type="checkbox" label="{{ __('Stock enabled') }}" name="stock_enabled" id="stock_enabled"
+                value="1"
+                onchange="if(this.checked) { document.getElementById('stock').classList.remove('hidden'); } else { document.getElementById('stock').classList.add('hidden'); }"
+                :checked="$product->stock_enabled ? true : false" />
+
+            <div class="@if (!$product->stock_enabled) hidden @endif" id="stock">
+                <x-input type="number" name="stock" label="{{ __('Stock') }}" placeholder="{{ __('Stock') }}"
+                    value="{{ $product->stock }}" required min="0" />
             </div>
-            <div class="mt-4">
-                <label for="stock_enabled">{{ __('Enable Stock') }}</label>
-                <input type="checkbox" name="stock_enabled" id="stock_enabled" value="1"
-                    onchange="if(this.checked) { document.getElementById('stock').classList.remove('hidden'); document.getElementById('image').disabled = false; } else { document.getElementById('stock').classList.add('hidden'); document.getElementById('image').disabled = true; }"
-                    class="form-input w-4 h-4" @if ($product->stock_enabled) checked @endif />
-            </div>
-            <div class="mt-4 @if (!$product->stock_enabled) hidden @endif" id="stock">
-                <label for="stocki">{{ __('Stock') }}</label>
-                <input id="stocki" class="block w-full mt-1 rounded-lg dark:bg-darkmode" type="number"
-                    name="stock" min="0" value="{{ $product->stock }}" required />
-            </div>
+
             <div class="mt-4">
                 <label for="image">{{ __('Image') }}</label>
                 <p>Only upload a new image if you want to replace the existing one</p>
@@ -129,26 +132,22 @@
                     </script>
                 </div>
             </div>
-            <div class="mt-4">
-                <label for="category">{{ __('Category') }}</label>
-                <select id="category" class="block w-full mt-1 rounded-lg dark:bg-darkmode" name="category_id"
-                    required>
-                    @if ($categories->count())
-                        @foreach ($categories as $category)
-                            @if ($category->id == $product->category_id)
-                                <option value="{{ $category->id }}" selected>{{ $category->name }}
-                                </option>
-                            @else
-                                <option value="{{ $category->id }}">{{ $category->name }}</option>
-                            @endif
-                        @endforeach
-                    @else
-                        <option value="">No categories found</option>
-                    @endif
-                </select>
-                <div class="flex items-center justify-end mt-4 text-blue-700">
-                    <a href="{{ route('admin.categories.create') }}">Create Category</a>
-                </div>
+            <x-input type="select" name="category_id" label="{{ __('Category') }}">
+                @if ($categories->count())
+                    @foreach ($categories as $category)
+                        @if ($category->id == $product->category_id)
+                            <option value="{{ $category->id }}" selected>{{ $category->name }}
+                            </option>
+                        @else
+                            <option value="{{ $category->id }}">{{ $category->name }}</option>
+                        @endif
+                    @endforeach
+                @else
+                    <option value="">No categories found</option>
+                @endif
+            </x-input>
+            <div class="flex items-center justify-end mt-4 text-blue-700">
+                <a href="{{ route('admin.categories.create') }}">Create Category</a>
             </div>
             <div class="flex items-center justify-end mt-4">
                 <button type="submit" class="inline-flex justify-center w-max float-right button button-primary">

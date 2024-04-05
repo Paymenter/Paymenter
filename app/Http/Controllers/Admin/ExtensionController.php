@@ -88,7 +88,7 @@ class ExtensionController extends Controller
      *
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function install(Request $request, $id)
+    public function install($id)
     {
         $url = config('app.marketplace') . 'extensions/' . $id . '?version=' . config('app.version');
         $response = Http::get($url);
@@ -97,6 +97,9 @@ class ExtensionController extends Controller
         }
         $extension = $response->json();
         $path = base_path('app/Extensions/' . ucfirst($extension['type']) . 's/' . $extension['name']);
+        if ($extension['type'] == 'theme') {
+            $path = base_path('themes/' . $extension['name']);
+        }
         if (file_exists($path)) {
             //Remove the folder
             $this->deleteDir($path);
@@ -235,5 +238,23 @@ class ExtensionController extends Controller
 
 
         return redirect()->route('admin.extensions.edit', ['sort' => $sort, 'name' => $name])->with('success', 'Extension updated successfully');
+    }
+
+    public function updateExtension(Extension $extension){
+        // Get ID from the marketplace
+        $url = config('app.marketplace') . 'extensions?version=' . config('app.version') . '&search=' . $extension->name;
+        $response = Http::get($url)->json();
+
+        if (isset($response['error']) || count($response['data']) == 0) {
+            return redirect()->route('admin.extensions')->with('error', 'Extension not found');
+        }
+        $extensionId = $response['data'][0]['id'];
+
+        $this->install($extensionId);
+
+        $extension->update_available = null;
+        $extension->save();
+
+        return redirect()->route('admin.extensions')->with('success', 'Extension updated successfully');
     }
 }

@@ -6,16 +6,15 @@ USER        0
 WORKDIR     /var/www/paymenter
 
 COPY        --chown=1001:0 public ./public
-COPY        --chown=1001:0 resources/js ./resources/js
-COPY        --chown=1001:0 resources/css ./resources/css
 COPY        --chown=1001:0 themes ./themes
-COPY        --chown=1001:0 package.json tailwind.config.js vite.config.js .
+COPY        --chown=1001:0 package.json .
+COPY        --chown=1001:0 vite.js .
 
 
 # Install npm
 RUN         /usr/bin/npm install \
     && /usr/bin/npm run build \
-    && rm -rf resources/scripts package.json tailwind.config.js vite.config.js node_modules
+    && rm -rf resources/scripts package.json node_modules
 
 USER        1001
 
@@ -27,7 +26,7 @@ COPY        --chown=1001:0 lang ./lang
 COPY        --chown=1001:0 resources/views ./resources/views
 COPY        --chown=1001:0 routes ./routes
 COPY        --chown=1001:0 .env.example ./.env
-COPY        --chown=1001:0 artisan composer.json composer.lock LICENSE README.md SECURITY.md .
+COPY        --chown=1001:0 artisan composer.json composer.lock LICENSE README.md SECURITY.md vite.js .
 
 # Stage 2 - Final
 FROM        --platform=$TARGETOS/$TARGETARCH registry.access.redhat.com/ubi9/ubi-minimal

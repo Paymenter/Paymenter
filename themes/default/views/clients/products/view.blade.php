@@ -1,7 +1,4 @@
-<x-app-layout clients title="{{ __('Product') }}">
-    <x-slot name="title">
-        {{ __('Product: ') }} {{ $product->name }}
-    </x-slot>
+<x-app-layout clients title="{{ __('Product') }} {{ $product->name }}">
     <div class="content">
         <div class="content-box">
             <div class="mb-4">
@@ -14,20 +11,23 @@
                     </div>
                     <div class="mb-4">
                         <p><span class="font-bold">{{ __('Product Name') }}: </span>{{ $product->name }}</p>
-                        <p><span class="font-bold">{{ __('Product Description') }}: </span>{{ $product->description }}
+                        <p><span class="font-bold">{{ __('Product Description') }}: </span>@markdownify($product->description)
                         </p>
-                        <p><span class="font-bold">{{ __('Product Price') }}:
-                            </span>{{ config('settings::currency_sign') }}{{ $orderProduct->price }}
+                        <p>
+                            <span class="font-bold">{{ __('Product Price') }}:
+                            </span>
+                            <x-money :amount="$orderProduct->price" showFree="true" />
                         </p>
                     </div>
                 </div>
-                @if ($orderProduct->expiry_date)
-                    <div class="w-full md:w-1/2 px-2">
+
+                <div class="w-full md:w-1/2 px-2">
+                    @if ($orderProduct->expiry_date)
                         <div class="mb-4">
                             <h2 class="text-lg font-bold">{{ __('Status') }}</h2>
                         </div>
                         <div class="mb-4">
-                            <p><span class="font-bold">{{ __('Due Date') }}: </span>{{ $orderProduct->expiry_date }}
+                            <p><span class="font-bold">{{ __('Due Date') }}: </span>{{ $orderProduct->expiry_date->toDateString() }}
                             </p>
                             <p><span class="font-bold">{{ __('Status') }}:
                                 </span>{{ $orderProduct->status == 'paid' ? __('Active') : ucfirst($orderProduct->status) }}
@@ -39,8 +39,83 @@
                                 {{ ucfirst($orderProduct->billing_cycle) }}
                             </p>
                         </div>
-                    </div>
-                @endif
+                        @if ($orderProduct->cancellable && !$orderProduct->cancellation()->exists())
+                            <x-modal id="cancellationModal">
+                                <x-slot name="title">
+                                    {{ __('Cancel') }} {{ $product->name }}
+                                </x-slot>
+                                <form action="{{ route('clients.active-products.cancel', $orderProduct->id) }}"
+                                    method="POST" id="cancellationForm">
+                                    @csrf
+                                    <x-input type="textarea" name="cancellation_reason" label="{{ __('Reason (optional)') }}"
+                                        placeholder="{{ __('Reason for cancellation') }}" />
+
+                                    <x-input type="select" name="cancellation_type" label="{{ __('Cancellation Type') }}">
+                                        <option value="end_of_billing_period">{{ __('End of Billing Period') }} ({{ $orderProduct->expiry_date->toDateString() }})</option>
+                                        <option value="immediate">{{ __('Immediate') }}</option>
+                                    </x-input>
+
+                                    <button class="button button-primary mt-4" type="button" data-modal-toggle="confimrationModal" data-modal-hide="cancellationModal">
+                                        {{ __('Cancel') }} {{ $product->name }}
+                                    </button>
+                                </form>
+                                <x-slot name="footer">
+                                    <p class="text-sm text-gray-500 dark:text-gray-400">
+                                        {{ __('This will cancel the product and any associated services.') }}
+                                    </p>
+                                </x-slot>
+                            </x-modal>
+
+                            <x-modal id="confimrationModal">
+                                <x-slot name="title">
+                                    {{ __('Confirm Cancellation') }}
+                                </x-slot>
+                                <p class="text-sm text-gray-500 dark:text-gray-400">
+                                    {{ __('Are you sure you want to cancel this product?') }}
+                                    <br />
+                                    {{ __('This will cancel (delete) the product and any associated services. This is irreversible.') }}
+                                </p>
+                                <x-slot name="footer">
+                                    <button class="button button-secondary" data-modal-toggle="confimrationModal">
+                                        {{ __('No') }}
+                                    </button>
+                                    <button class="button button-danger"
+                                        onclick="document.getElementById('cancellationForm').submit();">
+                                        {{ __('Yes') }}
+                                    </button>
+                                </x-slot>
+                            </x-modal>
+
+                            <button class="button button-danger"  data-modal-target="cancellationModal"
+                                data-modal-toggle="cancellationModal">
+                                {{ __('Cancel Product') }}
+                            </button>
+                        @endif
+                        @if ($orderProduct->cancellation()->exists())
+                            <div class="mt-4">
+                                <p class="text-sm text-gray-500 dark:text-gray-400">
+                                    @if($orderProduct->status == 'cancelled')
+                                        {{ __('This product has been cancelled.') }}
+                                    @else
+                                        {{ __('This product is pending cancellation.') }}
+                                    @endif
+                                </p>
+                                <p class="text-sm text-gray-500 dark:text-gray-400">
+                                    {{ __('Cancellation Reason: ') }} {{ $orderProduct->cancellation->reason ?? __('No reason provided') }}
+                                </p>
+                                <p class="text-sm text-gray-500 dark:text-gray-400">
+                                    {{ __('Cancellation Date: ') }} {{ $orderProduct->cancellation->created_at->toDateString() }}
+                                </p>
+                            </div>
+                        @endif
+                    @endif
+                    
+                    @if($orderProduct->upgradable)
+                        <a class="button button-success" href="{{ route('clients.active-products.upgrade', $orderProduct->id) }}">
+                            {{ __('Upgrade Product') }}
+                        </a>
+                    @endif
+                </div>
             </div>
             <div class="sm:flex">
                 @if ($link)

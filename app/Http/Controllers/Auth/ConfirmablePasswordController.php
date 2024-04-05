@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use App\Providers\RouteServiceProvider;
+use App\Validators\ReCaptcha;
 use Illuminate\Validation\ValidationException;
 
 class ConfirmablePasswordController extends Controller
@@ -27,11 +28,7 @@ class ConfirmablePasswordController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
-            'g-recaptcha-response' => 'recaptcha',
-            'cf-turnstile-response' => 'recaptcha',
-            'h-captcha-response' => 'recaptcha',
-        ]);
+        (new ReCaptcha())->verify($request);
         if (!Auth::guard('web')->validate([
             'email' => $request->user()->email,
             'password' => $request->password,

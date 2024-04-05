@@ -22,12 +22,12 @@
                 </a>
                 <div class="relative inline-block text-left">
                     <button type="button" class="dark:bg-secondary-100 dark:text-darkmodetext dark:hover:bg-secondary-200 inline-flex w-full justify-center bg-secondary-50 px-2 py-2 text-base font-medium rounded-md text-gray-700  @if (request()->routeIs('admin.clients*')) bg-gray-200 @endif" id="menu-button" aria-expanded="true" aria-haspopup="true" data-dropdown-toggle="clients">
-                        <i class="pr-1 ri-group-line mr-1" @if (request()->routeIs('admin.clients*')) style="color: #5270FD" @endif></i> Clients
+                        <i class="pr-1 ri-group-line mr-1" @if (request()->routeIs('admin.clients*')) style="color: #5270FD" @endif></i> {{ __('Clients') }}
                         <svg class="w-5 h-5 ml-1 -mr-1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
                             <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clip-rule="evenodd" />
                         </svg>
                     </button>
-                    <div class="absolute right-0 hidden w-56 mt-2 origin-top-right bg-secondary-50 rounded-lg shadow-lg dark:bg-secondary-300 ring-1 ring-black ring-opacity-5" role="menu" aria-orientation="vertical" aria-labelledby="menu-button" tabindex="-1" id="clients">
+                    <div class="absolute right-0 hidden w-56 mt-2 origin-top-right bg-secondary-50 rounded-lg shadow-lg dark:bg-secondary-300 ring-1 ring-black ring-opacity-5 z-10" role="menu" aria-orientation="vertical" aria-labelledby="menu-button" tabindex="-1" id="clients">
                         <div class="py-1" role="none">
                             <a href="{{ route('admin.clients') }}" class="block px-4 py-2 text-base text-gray-700 dark:text-darkmodetext dark:hover:bg-secondary-200 hover:bg-gray-100 hover:text-gray-900" role="menuitem" tabindex="-1">{{__('All Clients')}}</a>
                             <a href="{{ route('admin.clients.create') }}" class="block px-4 py-2 text-base text-gray-700 dark:text-darkmodetext dark:hover:bg-secondary-200 hover:bg-gray-100 hover:text-gray-900" role="menuitem" tabindex="-1" id="menu-item-1">{{__('Create Client')}}</a>
@@ -51,7 +51,7 @@
                             <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clip-rule="evenodd" />
                         </svg>
                     </button>
-                    <div class="absolute right-0 hidden w-56 mt-2 origin-top-right bg-secondary-50 rounded-lg shadow-lg dark:bg-secondary-300 ring-1 ring-black ring-opacity-5" role="menu" aria-orientation="vertical" aria-labelledby="menu-button" tabindex="-1" id="products">
+                    <div class="absolute right-0 hidden w-56 mt-2 origin-top-right bg-secondary-50 rounded-lg shadow-lg dark:bg-secondary-300 ring-1 ring-black ring-opacity-5 z-10" role="menu" aria-orientation="vertical" aria-labelledby="menu-button" tabindex="-1" id="products">
                         <div class="py-1" role="none">
                             <a href="{{ route('admin.products') }}" class="block px-4 py-2 text-base text-gray-700 dark:text-darkmodetext dark:hover:bg-secondary-200 hover:bg-gray-100 hover:text-gray-900" role="menuitem" tabindex="-1">{{ __('All Products') }}</a>
                             <a href="{{ route('admin.products.create') }}" class="block px-4 py-2 text-base text-gray-700 dark:text-darkmodetext dark:hover:bg-secondary-200 hover:bg-gray-100 hover:text-gray-900" role="menuitem" tabindex="-1" id="menu-item-1">{{ __('Create Product') }}</a>
@@ -73,7 +73,7 @@
                             <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clip-rule="evenodd" />
                         </svg>
                     </button>
-                    <div class="absolute right-0 hidden w-56 mt-2 origin-top-right bg-secondary-50 rounded-lg shadow-lg dark:bg-secondary-300 ring-1 ring-black ring-opacity-5" role="menu" aria-orientation="vertical" aria-labelledby="menu-button" tabindex="-1" id="support">
+                    <div class="absolute right-0 hidden w-56 mt-2 origin-top-right bg-secondary-50 rounded-lg shadow-lg dark:bg-secondary-300 ring-1 ring-black ring-opacity-5 z-10" role="menu" aria-orientation="vertical" aria-labelledby="menu-button" tabindex="-1" id="support">
                         <div class="py-1" role="none">
                             <a href="{{ route('admin.tickets') }}" class="block px-4 py-2 text-base text-gray-700 dark:text-darkmodetext dark:hover:bg-secondary-200 hover:bg-gray-100 hover:text-gray-900" role="menuitem" tabindex="-1">{{ __('All Support') }}
                                 @if ($unread > 0)
@@ -93,7 +93,7 @@
                             <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clip-rule="evenodd" />
                         </svg>
                     </button>
-                    <div class="absolute right-0 hidden w-56 mt-2 origin-top-right bg-secondary-50 rounded-lg shadow-lg dark:bg-secondary-300 ring-1 ring-black ring-opacity-5" role="menu" aria-orientation="vertical" aria-labelledby="menu-button" tabindex="-1" id="email">
+                    <div class="absolute right-0 hidden w-56 mt-2 origin-top-right bg-secondary-50 rounded-lg shadow-lg dark:bg-secondary-300 ring-1 ring-black ring-opacity-5 z-10" role="menu" aria-orientation="vertical" aria-labelledby="menu-button" tabindex="-1" id="email">
                         <div class="py-1" role="none">
                             <a href="{{ route('admin.email') }}" class="block px-4 py-2 text-base text-gray-700 dark:text-darkmodetext dark:hover:bg-secondary-200 hover:bg-gray-100 hover:text-gray-900" role="menuitem" tabindex="-1" id="menu-item-1">{{ __('Logs') }}</a>
                         </div>
@@ -106,13 +106,15 @@
                             <path d="M6 10a2 2 0 11-4 0 2 2 0 014 0zM12 10a2 2 0 11-4 0 2 2 0 014 0zM16 12a2 2 0 100-4 2 2 0 000 4z"></path>
                         </svg>
                     </button>
-                    <div class="absolute right-0 hidden w-max mt-2 origin-top-right bg-secondary-50 rounded-md shadow-lg dark:bg-secondary-300 ring-1 ring-black ring-opacity-5 z-[1]" role="menu" aria-orientation="vertical" aria-labelledby="menu-button" tabindex="-1" id="other">
+                    <div class="absolute right-0 hidden w-max mt-2 origin-top-right bg-secondary-50 rounded-md shadow-lg dark:bg-secondary-300 ring-1 ring-black ring-opacity-5 z-10" role="menu" aria-orientation="vertical" aria-labelledby="menu-button" tabindex="-1" id="other">
                         <div class="py-1 grid grid-cols-3" role="none">
                             <a href="{{ route('admin.settings') }}" class="block px-4 py-2 text-base text-gray-700 dark:text-darkmodetext dark:hover:bg-secondary-200 hover:bg-gray-100 hover:text-gray-900" role="menuitem" tabindex="-1">{{ __('Settings') }}</a>
                             <a href="{{ route('admin.extensions') }}" class="block px-4 py-2 text-base text-gray-700 dark:text-darkmodetext dark:hover:bg-secondary-200 hover:bg-gray-100 hover:text-gray-900" role="menuitem" tabindex="-1" id="menu-item-1">{{ __('Extensions') }}</a>
                             <a href="{{ route('admin.coupons') }}" class="block px-4 py-2 text-base text-gray-700 dark:text-darkmodetext dark:hover:bg-secondary-200 hover:bg-gray-100 hover:text-gray-900" role="menuitem" tabindex="-1">{{ __('Coupons') }}</a>
                             <a href="{{ route('admin.announcements')}}" class="block px-4 py-2 text-base text-gray-700 dark:text-darkmodetext dark:hover:bg-secondary-200 hover:bg-gray-100 hover:text-gray-900" role="menuitem" tabindex="-1">{{ __('Announcements') }}</a>                            
                             <a href="{{ route('admin.roles') }}" class="block px-4 py-2 text-base text-gray-700 dark:text-darkmodetext dark:hover:bg-secondary-200 hover:bg-gray-100 hover:text-gray-900" role="menuitem" tabindex="-1">{{ __('Roles') }}</a>
+                            <a href="{{ route('admin.taxes') }}" class="block px-4 py-2 text-base text-gray-700 dark:text-darkmodetext dark:hover:bg-secondary-200 hover:bg-gray-100 hover:text-gray-900" role="menuitem" tabindex="-1">{{ __('Taxes') }}</a>
+                            <a href="{{ route('admin.logs') }}" class="block px-4 py-2 text-base text-gray-700 dark:text-darkmodetext dark:hover:bg-secondary-200 hover:bg-gray-100 hover:text-gray-900" role="menuitem" tabindex="-1">{{ __('Logs') }}</a>
                             <a href="{{ route('admin.configurable-options')}}" class="block px-4 py-2 text-base text-gray-700 dark:text-darkmodetext dark:hover:bg-secondary-200 hover:bg-gray-100 hover:text-gray-900 col-span-3" role="menuitem" tabindex="-1">{{ __('Configurable Options') }}</a>
                         </div>
                     </div>
@@ -127,7 +129,7 @@
                             {{ Auth::user()->name }}
                         </p>
                     </button>
-                    <div class="absolute right-0 hidden w-56 mt-2 origin-top-right bg-secondary-50 rounded-md shadow-lg dark:bg-secondary-300 ring-1 ring-black ring-opacity-5 z-[1]" id="user-menu">
+                    <div class="absolute right-0 hidden w-56 mt-2 origin-top-right bg-secondary-50 rounded-md shadow-lg dark:bg-secondary-300 ring-1 ring-black ring-opacity-5 z-10" id="user-menu">
                         <div class="py-1 shadow-xl bg-secondary-50 rounded-md dark:bg-secondary-100" role="menu" aria-orientation="vertical" aria-labelledby="user-menu-mobile">
                             <a href="{{ route('clients.profile') }}" class="block px-4 py-2 text-base text-gray-700 dark:hover:bg-darkbutton dark:text-darkmodetext hover:bg-gray-100" role="menuitem"><i class="ri-user-line"></i> {{ __('Your Profile') }}</a>
                             <a href="{{ route('admin.settings') }}" class="block px-4 py-2 text-base text-gray-700 dark:hover:bg-darkbutton dark:text-darkmodetext hover:bg-gray-100" role="menuitem"><i class="ri-settings-3-line"></i> {{ __('Settings') }}</a>

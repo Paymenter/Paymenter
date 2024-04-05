@@ -122,13 +122,15 @@ class HomeController extends Controller
      */
     public function update(Request $request)
     {
+        $countries = \App\Classes\Constants::countries();
         $request->validate([
             'first_name' => 'required|string',
             'last_name' => 'required|string',
-            'address' => 'required|string',
-            'city' => 'required|string',
-            'country' => 'required|string',
-            'phone' => 'required|numeric',
+            'address' => (config('settings::requiredClientDetails_address') == 1 ? 'required|': 'nullable|') . 'string',
+            'city' => (config('settings::requiredClientDetails_city') == 1 ? 'required|': 'nullable|') . 'string',
+            'country' => (config('settings::requiredClientDetails_country') == 1 ? 'required|': 'nullable|') . 'string|in:' . implode(',', array_keys($countries)),
+            'phone' => (config('settings::requiredClientDetails_phone') == 1 ? 'required|': 'nullable|') . 'string',
+            'zip' => (config('settings::requiredClientDetails_zip') == 1 ? 'required|': 'nullable|') . 'string',
         ]);
 
         $user = $request->user();
@@ -138,6 +140,7 @@ class HomeController extends Controller
         $user->city = $request->city;
         $user->country = $request->country;
         $user->phone = $request->phone;
+        $user->zip = $request->zip;
         $user->save();
 
         return redirect()->back()->with('success', 'Profile updated successfully');
@@ -154,7 +157,8 @@ class HomeController extends Controller
             return abort(404, 'Credits are disabled');
         }
         $gateways = ExtensionHelper::getGateways();
-        return view('clients.credits', compact('gateways'));
+        $userInvoices = Invoice::where('user_id', Auth::user()->id)->with(['items.product.order.coupon', 'items.product.product'])->get();
+        return view('clients.credits', compact('gateways', 'userInvoices'));
     }
 
     /**
