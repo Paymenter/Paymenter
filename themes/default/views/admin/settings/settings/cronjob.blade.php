@@ -19,7 +19,7 @@
             </a>
         @endif
     @else
-        <h2 class="col-span-1 md:col-span-2 text-xl text-danger-400 dark:text-danger-300">{{ __('Last Ran At') }}: Never
+        <h2 class="col-span-1 md:col-span-2 text-xl text-danger-400 dark:text-danger-300">{{ __('Last Ran At') }}: {{ __('Never') }}
         </h2>
         <p class="col-span-1 md:col-span-2 text-lg text-gray-900 dark:text-darkmodetext ">
             {{ __('Cronjob is not running. Please setup cronjob to run every minute.') }}<br />

@@ -75,13 +75,13 @@
 
             <x-input type="text" class="m-4" name="github_client_secret" :value="config('settings::github_client_secret')" :label="__('Github Client Secret')" />
             
-            <h1 class=" ml-6 text-xl col-span-2">The abillity to disable the registration of a new account.</h1>
+            <h1 class=" ml-6 text-xl col-span-2">{{ __('The ability to disable the registration of a new account.') }}</h1>
             <div class="relative m-4 group">
                 <x-input type="hidden" value="0" name="registrationAbillity_disable" />
                 <x-input type="checkbox" name="registrationAbillity_disable" value="1" :checked="config('settings::registrationAbillity_disable') == 1" :label="__('Disable')" />
             </div>
 
-            <h1 class=" ml-6 text-xl col-span-2">Set your required information before being able to purchase any products.</h1>
+            <h1 class=" ml-6 text-xl col-span-2">{{ __('Set your required information before being able to purchase any products.') }}</h1>
             <div class="relative m-4 group">
                 <x-input type="hidden" value="0" name="requiredClientDetails_address" />
                 <x-input type="checkbox" name="requiredClientDetails_address" value="1" :checked="config('settings::requiredClientDetails_address') == 1" :label="__('Address')" />
