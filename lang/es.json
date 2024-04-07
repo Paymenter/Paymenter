@@ -627,6 +627,15 @@
     "Your cart is empty": "El carrito está vacío",
     "Your Profile": "Perfil",
     "Z-A": "Z-A",
-    "Zip": "Zip",
-    "Zip..": "Zip.."
+    "Zip": "Código postal",
+    "Zip..": "Código postal..",
+    "Gateways": "Pasarelas de pago",
+    "Events": "Eventos",
+    "Unknown Version": "Versión desconocida",
+    "Servers": "Servidores",
+    "The ability to disable the registration of a new account.": "La opción de desactivar el registro de nuevas cuentas.",
+    "Disable": "Desactivar",
+    "Set your required information before being able to purchase any products.": "Defina la información requerida antes de poder comprar cualquier producto.",
+    "ZIP": "Código postal",
+    "Never": "Nunca"
 }
