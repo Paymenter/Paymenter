@@ -1,6 +1,6 @@
-<form class="flex flex-col gap-2 shadow-sm p-6 m-8 bg-primary-800 rounded-md" id="settings"
+<form id="settings"
     wire:submit.prevent="save" x-data="{ tab: 'general' }">
-    <h1 class="text-2xl text-center text-white mt-2">{{ __('Settings') }} </h1>
+    <h1 class="text-2xl text-center mt-2">{{ __('Settings') }} </h1>
 
     <div
         class="text-sm font-medium text-center border-b text-gray-400 border-gray-700">
@@ -19,7 +19,7 @@
             @endforeach
         </ul>
     </div>
-    <div class="grid md:grid-cols-2 gap-x-4 gap-y-2">
+    <div class="grid md:grid-cols-2 gap-x-4 gap-y-2 mt-2">
         @foreach ($settings as $key => $categories)
             @foreach ($categories as $setting)
                 <div x-cloak x-show="tab == '{{ $key }}'" class="{{ $setting->type == 'checkbox' ? 'col-span-2' : '' }}">

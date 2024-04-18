@@ -270,6 +270,10 @@ class Settings
             ]
         ];
 
+
+        // Set theme settings
+        $settings['theme'] = \App\Classes\Theme::getSettings();
+
         return $settings;
     }
 

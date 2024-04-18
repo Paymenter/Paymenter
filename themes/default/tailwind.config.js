@@ -7,6 +7,7 @@ import tailwindcssforms from '@tailwindcss/forms';
 module.exports = {
     content: [
         path.resolve(__dirname, "./**/*.{blade.php,js,vue,ts}"),
+        './vendor/rappasoft/laravel-livewire-tables/resources/views/**/*.blade.php',
     ],
 
     theme: {
@@ -15,21 +16,18 @@ module.exports = {
                 sans: ["Nunito", ...defaultTheme.fontFamily.sans],
             },
             colors: {
-                'test': '#111827',
-
                 'primary': {
-                    '100': '#F3F4F6',
-                    '200': '#E5E7EB',
-                    '300': '#D1D5DB',
-                    '400': '#9CA3AF',
-                    '500': '#6B7280',
-                    '600': '#4B5563',
-                    '700': '#374151',
-                    '800': '#1F2937',
-                    '900': '#111827',
+                    100: 'var(--primary-100, #F3F4F6)',
+                    200: 'var(--primary-200, #E5E7EB)',
+                    300: 'var(--primary-300, #D1D5DB)',
+                    400: 'var(--primary-400, #9CA3AF)',
+                    500: 'var(--primary-500, #6B7280)',
+                    600: 'var(--primary-600, #4B5563)',
+                    700: 'var(--primary-700, #374151)',
+                    800: 'var(--primary-800, #1F2937)',
+                    900: 'var(--primary-900, #111827)',
                 },
-                'secondary': '#5270FD',
-
+                'secondary': 'var(--secondary, #5270FD)',
             }
         },
     },

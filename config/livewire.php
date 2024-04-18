@@ -26,7 +26,7 @@ return [
     |
     */
 
-    'view_path' => resource_path('views'),
+    'view_path' => base_path('themes/default/views'),
 
     /*
     |---------------------------------------------------------------------------

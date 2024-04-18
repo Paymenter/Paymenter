@@ -2,7 +2,7 @@
     @switch($setting->type)
         @case('select')
             <x-form.select name="fields.{{ $key }}.{{ $setting->name }}" :label="__($setting->label ?? $setting->name)" :required="$setting->required ?? false"
-                wire:dirty.class="!border-yellow-600" :options="$setting->options" :selected="config('settings.' . $setting->name)" :multiple="$setting->multiple ?? false"
+                :options="$setting->options" :selected="config('settings.' . $setting->name)" :multiple="$setting->multiple ?? false"
                 wire:model="fields.{{ $key }}.{{ $setting->name }}" />
         @break
 
@@ -12,16 +12,15 @@
         @case('email')
         @case('number')
 
+        @case('color')
         @case('file')
             <x-form.input name="fields.{{ $key }}.{{ $setting->name }}" :type="$setting->type" :label="__($setting->label ?? $setting->name)"
-                wire:dirty.class="!border-yellow-600" :placeholder="$setting->default ?? ''" :required="$setting->required ?? false"
-                wire:model="fields.{{ $key }}.{{ $setting->name }}" />
+                :placeholder="$setting->default ?? ''" :required="$setting->required ?? false" wire:model="fields.{{ $key }}.{{ $setting->name }}" />
         @break
 
         @case('checkbox')
             <x-form.checkbox name="fields.{{ $key }}.{{ $setting->name }}" type="checkbox" :label="__($setting->label ?? $setting->name)"
-                wire:dirty.class="!border-yellow-600" :required="$setting->required ?? false" :checked="config('settings.' . $setting->name) ? true : false"
-                wire:model="fields.{{ $key }}.{{ $setting->name }}" />
+                :required="$setting->required ?? false" :checked="config('settings.' . $setting->name) ? true : false" wire:model="fields.{{ $key }}.{{ $setting->name }}" />
         @break
 
         @default

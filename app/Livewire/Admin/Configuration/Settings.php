@@ -1,14 +1,17 @@
 <?php
 
-namespace App\Livewire\Admin;
+namespace App\Livewire\Admin\Configuration;
 
 use App\Models\Setting;
 use App\Providers\SettingsProvider;
 use Livewire\Attributes\Locked;
 use Livewire\Component;
+use Livewire\Features\SupportFileUploads\WithFileUploads;
 
 class Settings extends Component
 {
+    use WithFileUploads;
+
     public $fields;
 
     private $availableSettings;
@@ -30,15 +33,20 @@ class Settings extends Component
             foreach ($settings as $key => $setting) {
                 // Get only the settings that have changed
                 if ($setting !== config("settings.$key")) {
+                    $avSetting = \App\Classes\Settings::getSetting($key);
+
+                    if ($avSetting->type == 'file') {
+                        $setting = '/storage/' . $setting->store('settings', 'public');
+                    }
+                    
                     $modelSetting = Setting::where('settingable_type', null)->where('key', $key)->update(['value' => $setting]);
                     if (!$modelSetting) {
-                        $avSetting = \App\Classes\Settings::getSetting($key);
                         Setting::create([
                             'key' => $key,
                             'value' => $setting,
                             'settingable_type' => null,
-                            'type' => $avSetting['database_type'] ?? 'string',
-                            'encrypted' => $avSetting['encrypted'] ?? false,
+                            'type' => $avSetting->database_type ?? 'string',
+                            'encrypted' => $avSetting->encrypted ?? false,
                         ]);
                     }
                 }
@@ -89,7 +97,7 @@ class Settings extends Component
         foreach (\App\Classes\Settings::settings() as $group => $settings) {
             foreach ($settings as $setting) {
                 $this->fill([
-                    "fields.{$group}.{$setting['name']}" => config("settings.{$setting['name']}")
+                    "fields.{$group}.{$setting['name']}" => config("settings.{$setting['name']}", $setting['default'] ?? null),
                 ]);
             }
         }
@@ -97,6 +105,6 @@ class Settings extends Component
 
     public function render()
     {
-        return view('admin.settings');
+        return view('admin.configuration.settings')->layoutData(['title' => __('Settings')]);
     }
 }

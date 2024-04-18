@@ -1,4 +1,4 @@
-<footer class="flex flex-col md:flex-row md:justify-between md:items-center p-2 px-4 bg-primary-800">
+<footer class="flex flex-col md:flex-row md:justify-between md:items-center p-2 px-4 bg-primary-800 z-20 relative">
     <div class="flex flex-col md:flex-row md:gap-4">
         <p class="text-sm text-primary-400">
             Powered by <a href="https://paymenter.org" target="_blank"
