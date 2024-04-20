@@ -26,6 +26,8 @@
         </script>
         @vite(['themes/' . config('settings.theme') . '/js/app.js'], config('settings.theme'))
         @include('layouts.colors')
+        
+        <link rel="icon" href="{{ asset(config('settings.logo')) }}" type="image/png">
     </head>
     <body class="w-full bg-primary-900">
         <x-navigation.admin />
