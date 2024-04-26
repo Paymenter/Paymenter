@@ -18,7 +18,7 @@ class CPanel extends Server
     {
         return [
             'display_name' => 'CPanel',
-            'version' => '1.0.0',
+            'version' => '1.0.1',
             'author' => 'Paymenter',
             'website' => 'https://paymenter.org',
         ];
@@ -51,6 +51,13 @@ class CPanel extends Server
                 'friendlyName' => 'Hostname',
                 'validation' => 'url:http,https',
                 'required' => true,
+            ],
+            [
+                'name' => 'hostaccess',
+                'type' => 'text',
+                'friendlyName' => 'Access for users hostname',
+                'validation' => 'url:http,https',
+                'required' => false,
             ],
             [
                 'name' => 'username',
@@ -112,6 +119,13 @@ class CPanel extends Server
                 'validation' => 'domain',
                 'friendlyName' => 'Domain',
                 'required' => true,
+            ],
+            [
+                'name' => 'password',
+                'type' => 'text',
+                'validation' => 'max:6|regex:/^[a-zA-Z0-9]+$/i',
+                'friendlyName' => 'Password (max 6 characters and only letters and numbers)', 
+                'required' => false, //if left empty we will create a password at creation
             ]
         ];
     }
@@ -129,6 +143,12 @@ class CPanel extends Server
     public function createServer($user, $params, $order, $orderProduct, $configurableOptions)
     {
         $username = Str::random();
+        if(empty($params['config']['password'])){
+            $password = Str::random();
+        } else {
+            $password = $params['config']['password'];
+        }
+
         // If first one is a number, add a letter
         if (is_numeric($username[0])) {
             $username = 'a' . substr($username, 1);
@@ -139,6 +159,7 @@ class CPanel extends Server
             [
                 'api.version' => 1,
                 'username' => $username,
+                'password' => $password,
                 'contactemail' => $user->email,
                 'domain' => $params['config']['domain'],
                 'plan' => $params['package']
@@ -146,6 +167,8 @@ class CPanel extends Server
         );
 
         ExtensionHelper::setOrderProductConfig('username', strtolower($username), $orderProduct->id);
+        ExtensionHelper::setOrderProductConfig('password', strtolower($password), $orderProduct->id);
+
 
         return true;
     }
@@ -220,5 +243,14 @@ class CPanel extends Server
         );
 
         return true;
+    }
+/**
+ * Get link for user Cpanel
+ * 
+ * @param User $user
+ * @param array $params
+ */
+    public function getLink($user, $params){
+        return ExtensionHelper::getConfig('cpanel', 'hostaccess');
     }
 }
