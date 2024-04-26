@@ -1236,9 +1236,13 @@ class Virtualizor_EndUser_API {
 	 * @param        int $vid The VMs ID	 
 	 * @return       String login url
 	 */	
-	function sso($vid){
+	function sso($vid, $friendly){
 		$resp = $this->call('index.php?svs='.$vid.'&act=sso');
-		$url = 'https://'.$this->ip.':'.$this->port.'/'.$resp['token_key'].'/?as='.$resp['sid'].'&svs='.$vid;
+		if(!empty($friendly)){
+			$url = 'https://'.$friendly.'/'.$resp['token_key'].'/?as='.$resp['sid'].'&svs='.$vid;
+		} else {
+			$url = 'https://'.$this->ip.':'.$this->port.'/'.$resp['token_key'].'/?as='.$resp['sid'].'&svs='.$vid;
+		}
 		
 		if(!empty($resp['token_key']) && !empty($resp['sid'])){
 			return $url;
