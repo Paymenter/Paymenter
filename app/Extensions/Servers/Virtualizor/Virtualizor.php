@@ -15,7 +15,7 @@ class Virtualizor extends Server
     {
         return [
             'display_name' => 'Virtualizor',
-            'version' => '1.1.0',
+            'version' => '1.1.1',
             'author' => 'Paymenter',
             'website' => 'https://paymenter.org',
         ];
@@ -53,7 +53,13 @@ class Virtualizor extends Server
                 'type' => 'text',
                 'friendlyName' => 'Client Port (normally 4083)',
                 'required' => true,
-            ]
+            ],
+            [
+                'name' => 'friendly_url',
+                'type' => 'text',
+                'friendlyName' => 'Friendly URL to Virtualizor for clients',
+                'required' => false,
+            ],
         ];
     }
 
@@ -279,8 +285,9 @@ class Virtualizor extends Server
         $pass = ExtensionHelper::getConfig('virtualizor', 'pass');
         $ip = ExtensionHelper::getConfig('virtualizor', 'ip');
         $port = ExtensionHelper::getConfig('virtualizor', 'client_port');
+        $friendly = ExtensionHelper::getConfig('virtualizor', 'friendly_url');
         $enduser = new Virtualizor_EndUser_API($ip, $key, $pass, $port, 1);
-        $url = $enduser->sso($params['config']['external_id']);
+        $url = $enduser->sso($params['config']['external_id'], $friendly);
         if (!$url) {
             ExtensionHelper::error('Virtualizor', 'Failed to get SSO link');
             return;
