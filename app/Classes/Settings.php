@@ -55,17 +55,17 @@ class Settings
                     'name' => 'logo',
                     'label' => 'Logo',
                     'type' => 'file',
-                    'required' => false,
+                    'required' => true,
                     'default' => 'https://paymenter.org/image/textlogo.png',
-                    'accept' => 'image/*',
+                    'accept' => ['image/*'],
                 ],
             ],
-    
-    
+
+
             // Security (captcha, rate limiting, etc.)
             'security' => [
                 [
-    
+
                     'name' => 'captcha',
                     'label' => 'Captcha',
                     'type' => 'select',
@@ -93,7 +93,7 @@ class Settings
                     'default' => '0x4AAAAAAAC-baD1IX6FMxXxEduRXcmCtuM',
                 ],
             ],
-    
+
             'social-login' => [
                 [
                     'name' => 'oauth_google',
@@ -154,7 +154,7 @@ class Settings
                     'required' => false,
                 ],
             ],
-    
+
             'company-details' => [
                 [
                     'name' => 'show_in_footer',
@@ -210,7 +210,7 @@ class Settings
                     'options' => array_merge(['' => 'None'], config('app.countries')),
                 ]
             ],
-    
+
             'other' => [
                 [
                     'name' => 'optional_fields',
