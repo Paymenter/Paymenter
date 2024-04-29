@@ -9,7 +9,7 @@ class Theme
         try {
             $theme = require base_path('themes/' . config('settings.theme', 'default') . '/theme.php');
         } catch (\Throwable $th) {
-            throw new \Exception('Theme file could not be read.');
+            throw new \Exception('Theme file could not be read. ' . $th);
         }
 
         // Add theme settings prefix to name <theme_name>_<setting_name>

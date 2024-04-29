@@ -58,6 +58,7 @@ class Settings
                     'required' => true,
                     'default' => 'https://paymenter.org/image/textlogo.png',
                     'accept' => ['image/*'],
+                    'file_name' => 'logo.webp'
                 ],
             ],
 

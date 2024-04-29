@@ -14,6 +14,7 @@ use Filament\Forms\Components\TextInput;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
 use Filament\Forms\Form;
+use Filament\Notifications\Notification;
 use Filament\Pages\Page;
 
 class Settings extends Page implements HasForms
@@ -52,7 +53,16 @@ class Settings extends Page implements HasForms
                             case ('select'):
                                 $inputs[] = Select::make($setting->name)
                                     ->label($setting->label ?? $setting->name)
-                                    ->options((array) $setting->options)
+                                    ->options(function () use ($setting) {
+                                        // Check if options are associative array or sequential array
+                                        if (array_is_list((array) $setting->options)) {
+                                            // If yes, then return array which has the keys same as the values
+                                            $options_with_keys = array_merge(...array_map(fn ($item) => [$item => $item], $setting->options));
+                                            return $options_with_keys;
+                                        } else {
+                                            return (array) $setting->options;
+                                        }
+                                    })
                                     ->native(true)
                                     ->multiple($setting->multiple ?? false)
                                     ->searchable()
@@ -101,11 +111,19 @@ class Settings extends Page implements HasForms
                                     ->rules($setting->validation ?? []);
                                 break;
                             case ('file'):
-                                $inputs[] = FileUpload::make($setting->name)
+                                $input =  FileUpload::make($setting->name)
                                     ->label($setting->label ?? $setting->name)
                                     ->required($setting->required ?? false)
                                     ->acceptedFileTypes($setting->accept)
                                     ->rules($setting->validation ?? []);
+
+                                if (isset($setting->file_name)) {
+                                    $input->getUploadedFileNameForStorageUsing(
+                                        fn (): string => (string) $setting->file_name,
+                                    );
+                                }
+                                $inputs[] = $input;
+
                                 break;
 
                             case ('checkbox'):
@@ -155,6 +173,11 @@ class Settings extends Page implements HasForms
         }
 
         SettingsProvider::flushCache();
+
+        Notification::make()
+            ->title('Saved successfully!')
+            ->success()
+            ->send();
     }
 
     public static function canAccess(): bool
