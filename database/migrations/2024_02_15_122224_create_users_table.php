@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('first_name')->nullable();
             $table->string('last_name')->nullable();
             $table->string('email')->unique();
-            $table->foreignId('role_id')->index()->default(1);
+            $table->foreignId('role_id')->index()->nullable();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->string('tfa_secret')->nullable();
