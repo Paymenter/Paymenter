@@ -30,6 +30,7 @@ class AdminPanelProvider extends PanelProvider
             ->colors([
                 'primary' => Color::Blue,
             ])
+            ->brandLogo(config('settings.logo'))
             ->discoverResources(in: app_path('Admin/Resources'), for: 'App\\Admin\\Resources')
             ->discoverPages(in: app_path('Admin/Pages'), for: 'App\\Admin\\Pages')
             ->pages([

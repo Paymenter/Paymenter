@@ -10,7 +10,10 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use App\Observers\UserObserver;
+use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 
+#[ObservedBy([UserObserver::class])]
 class User extends Authenticatable implements FilamentUser
 {
     use HasFactory, Notifiable;
@@ -29,6 +32,7 @@ class User extends Authenticatable implements FilamentUser
         'tfa_secret',
         'credits',
         'address',
+        'address2',
         'city',
         'state',
         'zip',
@@ -71,7 +75,7 @@ class User extends Authenticatable implements FilamentUser
     {
         return Attribute::make(
             get: fn () => strtoupper(substr($this->first_name, 0, 1) . substr($this->last_name, 0, 1)),
-        );
+        );    
     }
 
     /**
@@ -112,9 +116,38 @@ class User extends Authenticatable implements FilamentUser
         return in_array($permission, $this->role->permissions);
     }
 
+    /** Relationships */
+    /**
+     * Get the role that the user belongs to.
+     * Can be null if the user is a normal user (non-admin).
+     */
     public function role()
     {
         return $this->belongsTo(Role::class);
+    }
+
+    /**
+     * Get the user's sessions.
+     */
+    public function sessions()
+    {
+        return $this->hasMany(Session::class);
+    }
+
+    /**
+     * Get the user's services.
+     */
+    public function services()
+    {
+        return $this->hasMany(Service::class);
+    }
+
+    /**
+     * Get the user's audit logs.
+     */
+    public function audits()
+    {
+        return $this->morphMany(AuditLog::class, 'model');
     }
 
     public function canAccessPanel(Panel $panel): bool

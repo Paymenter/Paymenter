@@ -13,12 +13,11 @@ return new class extends Migration
     {
         Schema::create('extensions', function (Blueprint $table) {
             $table->id();
-            $table->enum('type', ['server_backend', 'payment_gateway']);
             $table->string('name');
-            $table->text('description')->nullable();
-            $table->json('settings');
+            $table->string('extension');
+            $table->string('type');
             $table->boolean('enabled')->default(false);
-            $table->boolean('update_available')->default(false);
+            $table->timestamps();
         });
     }
 

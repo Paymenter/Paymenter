@@ -133,6 +133,7 @@ return [
 
 
     'countries' => [
+        '' => 'Select a country',
         'AF' => 'Afghanistan',
         'AX' => 'Aland Islands',
         'AL' => 'Albania',
