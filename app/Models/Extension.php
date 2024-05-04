@@ -19,4 +19,12 @@ class Extension extends Model
 
     protected $guarded = [];
 
+
+    /**
+     * Get the extension's settings.
+     */
+    public function settings()
+    {
+        return $this->morphMany(Setting::class, 'settingable');
+    }
 }

@@ -16,14 +16,15 @@ use Filament\Forms\Contracts\HasForms;
 use Filament\Forms\Form;
 use Filament\Notifications\Notification;
 use Filament\Pages\Page;
+use App\Classes\FilamentInput;
 
 class Settings extends Page implements HasForms
 {
     use InteractsWithForms;
 
-    protected static ?string $navigationGroup = 'Settings';
+    protected static ?string $navigationGroup = 'Configuration';
 
-    protected static ?string $title = 'Configuration';
+    protected static ?string $title = 'Settings';
 
     protected static ?string $navigationIcon = 'heroicon-o-cog-6-tooth';
 
@@ -53,92 +54,7 @@ class Settings extends Page implements HasForms
                 ->schema(function () use ($categories, $key) {
                     $inputs = [];
                     foreach ($categories as $setting) {
-                        switch ($setting->type) {
-                            case ('select'):
-                                $inputs[] = Select::make($setting->name)
-                                    ->label($setting->label ?? $setting->name)
-                                    ->options(function () use ($setting) {
-                                        // Check if options are associative array or sequential array
-                                        if (array_is_list((array) $setting->options)) {
-                                            // If yes, then return array which has the keys same as the values
-                                            $options_with_keys = array_merge(...array_map(fn ($item) => [$item => $item], $setting->options));
-                                            return $options_with_keys;
-                                        } else {
-                                            return (array) $setting->options;
-                                        }
-                                    })
-                                    ->native(true)
-                                    ->multiple($setting->multiple ?? false)
-                                    ->searchable()
-                                    ->rules($setting->validation ?? []);
-                                break;
-
-                            case ('text'):
-                                $inputs[] = TextInput::make($setting->name)
-                                    ->label($setting->label ?? $setting->name)
-                                    ->placeholder($setting->default ?? "")
-                                    ->required($setting->required ?? false)
-                                    ->rules($setting->validation ?? []);
-                                break;
-                            case ('password'):
-                                $inputs[] = TextInput::make($setting->name)
-                                    ->label($setting->label ?? $setting->name)
-                                    ->placeholder($setting->default ?? "")
-                                    ->required($setting->required ?? false)
-                                    ->password()
-                                    ->revealable()
-                                    ->rules($setting->validation ?? []);
-                                break;
-                            case ('email'):
-                                $inputs[] = TextInput::make($setting->name)
-                                    ->label($setting->label ?? $setting->name)
-                                    ->placeholder($setting->default ?? "")
-                                    ->required($setting->required ?? false)
-                                    ->email()
-                                    ->rules($setting->validation ?? []);
-                                break;
-                            case ('number'):
-                                $inputs[] = TextInput::make($setting->name)
-                                    ->label($setting->label ?? $setting->name)
-                                    ->placeholder($setting->default ?? "")
-                                    ->required($setting->required ?? false)
-                                    ->numeric()
-                                    ->rules($setting->validation ?? []);
-
-                                break;
-                            case ('color'):
-                                $inputs[] = ColorPicker::make($setting->name)
-                                    ->label($setting->label ?? $setting->name)
-                                    ->placeholder($setting->default ?? "")
-                                    ->required($setting->required ?? false)
-                                    ->hexColor()
-                                    ->rules($setting->validation ?? []);
-                                break;
-                            case ('file'):
-                                $input =  FileUpload::make($setting->name)
-                                    ->label($setting->label ?? $setting->name)
-                                    ->required($setting->required ?? false)
-                                    ->acceptedFileTypes($setting->accept)
-                                    ->rules($setting->validation ?? []);
-
-                                if (isset($setting->file_name)) {
-                                    $input->getUploadedFileNameForStorageUsing(
-                                        fn (): string => (string) $setting->file_name,
-                                    );
-                                }
-                                $inputs[] = $input;
-
-                                break;
-
-                            case ('checkbox'):
-                                $inputs[] = Checkbox::make($setting->name)
-                                    ->label($setting->label ?? $setting->name)
-                                    ->required($setting->required ?? false)
-                                    ->rules($setting->validation ?? []);
-                                break;
-
-                            default;
-                        }
+                        $inputs[] = FilamentInput::convert($setting);
                     }
                     return $inputs;
                 });
