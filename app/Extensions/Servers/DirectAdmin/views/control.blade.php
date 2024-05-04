@@ -164,4 +164,3 @@
         xhr.send('_token={{ csrf_token() }}');
     }
 </script>
-@include('directadmin::stats')
