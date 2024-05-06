@@ -45,7 +45,7 @@ class GatewayResource extends Resource
                     ->label('Name')
                     ->required()
                     ->maxLength(255)
-                    ->unique(static::getModel(), 'name')
+                    ->unique(static::getModel(), 'name', ignoreRecord: true)
                     ->placeholder('Enter the name of the gateway'),
                 Forms\Components\Select::make('extension')
                     ->label('Gateway')
