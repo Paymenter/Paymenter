@@ -25,6 +25,7 @@ class FilamentInput
             case ('select'):
                 return Select::make($setting->name)
                     ->label($setting->label ?? $setting->name)
+                    ->helperText($setting->description ?? '')
                     ->options(function () use ($setting) {
                         // Check if options are associative array or sequential array
                         if (array_is_list((array) $setting->options)) {
@@ -44,6 +45,7 @@ class FilamentInput
             case ('text'):
                 return TextInput::make($setting->name)
                     ->label($setting->label ?? $setting->name)
+                    ->helperText($setting->description ?? '')
                     ->placeholder($setting->default ?? "")
                     ->required($setting->required ?? false)
                     ->rules($setting->validation ?? []);
@@ -51,6 +53,7 @@ class FilamentInput
             case ('password'):
                 return TextInput::make($setting->name)
                     ->label($setting->label ?? $setting->name)
+                    ->helperText($setting->description ?? '')
                     ->placeholder($setting->default ?? "")
                     ->required($setting->required ?? false)
                     ->password()
@@ -60,6 +63,7 @@ class FilamentInput
             case ('email'):
                 return TextInput::make($setting->name)
                     ->label($setting->label ?? $setting->name)
+                    ->helperText($setting->description ?? '')
                     ->placeholder($setting->default ?? "")
                     ->required($setting->required ?? false)
                     ->email()
@@ -68,6 +72,7 @@ class FilamentInput
             case ('number'):
                 return TextInput::make($setting->name)
                     ->label($setting->label ?? $setting->name)
+                    ->helperText($setting->description ?? '')
                     ->placeholder($setting->default ?? "")
                     ->required($setting->required ?? false)
                     ->numeric()
@@ -77,6 +82,7 @@ class FilamentInput
             case ('color'):
                 return ColorPicker::make($setting->name)
                     ->label($setting->label ?? $setting->name)
+                    ->helperText($setting->description ?? '')
                     ->placeholder($setting->default ?? "")
                     ->required($setting->required ?? false)
                     ->hexColor()
@@ -85,6 +91,7 @@ class FilamentInput
             case ('file'):
                 $input =  FileUpload::make($setting->name)
                     ->label($setting->label ?? $setting->name)
+                    ->helperText($setting->description ?? '')
                     ->required($setting->required ?? false)
                     ->acceptedFileTypes($setting->accept)
                     ->rules($setting->validation ?? []);
@@ -101,6 +108,7 @@ class FilamentInput
             case ('checkbox'):
                 return Checkbox::make($setting->name)
                     ->label($setting->label ?? $setting->name)
+                    ->helperText($setting->description ?? '')
                     ->required($setting->required ?? false)
                     ->rules($setting->validation ?? []);
                 break;
