@@ -37,7 +37,7 @@ class ExtensionHelper
      */
     public static function getExtension($type, $extension)
     {
-        $extension = '\\App\\Extensions\\' . $type . 's\\' . $extension . '\\' . $extension;
+        $extension = '\\App\\Extensions\\' . ucfirst($type) . 's\\' . $extension . '\\' . $extension;
 
         if (!class_exists($extension)) {
             throw new Exception('Extension not found');
