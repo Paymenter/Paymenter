@@ -13,10 +13,14 @@ return new class extends Migration
     {
         Schema::create('prices', function (Blueprint $table) {
             $table->id();
+            $table->string('name')->nullable();
             $table->morphs('priceable');
             $table->enum('type', ['free', 'one-time', 'recurring']);
-            $table->string('every')->nullable();
-            $table->decimal('price');
+            $table->integer('billing_period')->nullable();
+            $table->enum('billing_unit', ['hour', 'day', 'week', 'month', 'year'])->nullable();
+            $table->decimal('price', 20, 2)->nullable();
+            $table->unsignedTinyInteger('sort')->nullable();
+            $table->timestamps();
         });
     }
 
@@ -25,6 +29,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('price');
+        Schema::dropIfExists('prices');
     }
 };

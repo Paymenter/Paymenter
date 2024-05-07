@@ -18,11 +18,15 @@ use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\AuthenticateSession;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
+use Filament\Notifications\Livewire\Notifications;
+use Filament\Support\Enums\Alignment;
 
 class AdminPanelProvider extends PanelProvider
 {
     public function panel(Panel $panel): Panel
     {
+        Notifications::alignment(Alignment::Center);
+
         return $panel
             ->default()
             ->id('admin')
