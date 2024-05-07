@@ -10,8 +10,6 @@ class Price extends Model
 {
     use HasFactory;
 
-    public $timestamps = false;
-
     protected $guarded = [];
 
     public function priceable(): MorphTo

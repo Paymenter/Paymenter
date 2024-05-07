@@ -107,17 +107,17 @@ class ProductResource extends Resource
                                             })
                                             ->placeholder('Select the type of the price')
                                             ->default('free'),
+
                                         Forms\Components\TextInput::make('price')
                                             ->required()
+                                            ->hidden(fn (Get $get) => $get('type') === 'free')
                                             ->numeric(),
                                         
-                                            // This is stored in 
                                         Forms\Components\TextInput::make('billing_period')
                                             ->required()
                                             ->label('Time Interval')
                                             ->default(1)
                                             ->hidden(fn (Get $get) => $get('type') !== 'recurring'),
-                                        // Hourly, Daily, Weekly, Monthly, Yearly
                                         Forms\Components\Select::make('billing_unit')
                                             ->options([
                                                 'hour' => 'Hour',

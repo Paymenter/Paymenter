@@ -18,7 +18,7 @@ return new class extends Migration
             $table->enum('type', ['free', 'one-time', 'recurring']);
             $table->integer('billing_period')->nullable();
             $table->enum('billing_unit', ['hour', 'day', 'week', 'month', 'year'])->nullable();
-            $table->decimal('price', 20, 2)->nullable();
+            $table->decimal('price', 19, 4)->nullable();
             $table->unsignedTinyInteger('sort')->nullable();
             $table->timestamps();
         });
