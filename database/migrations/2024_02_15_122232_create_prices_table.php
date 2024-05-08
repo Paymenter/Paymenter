@@ -19,6 +19,7 @@ return new class extends Migration
             $table->integer('billing_period')->nullable();
             $table->enum('billing_unit', ['hour', 'day', 'week', 'month', 'year'])->nullable();
             $table->decimal('price', 19, 4)->nullable();
+            $table->decimal('setup_fee', 19, 4)->nullable();
             $table->unsignedTinyInteger('sort')->nullable();
             $table->timestamps();
         });

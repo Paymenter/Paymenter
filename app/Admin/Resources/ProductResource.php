@@ -88,7 +88,6 @@ class ProductResource extends Resource
                                     ->schema([
                                         Forms\Components\TextInput::make('name')
                                             ->required()
-                                            ->columnSpanFull()
                                             ->live(onBlur: true)
                                             ->maxLength(255),
                                         Forms\Components\Select::make('type')
@@ -108,8 +107,14 @@ class ProductResource extends Resource
                                             ->placeholder('Select the type of the price')
                                             ->default('free'),
 
+                                        
                                         Forms\Components\TextInput::make('price')
                                             ->required()
+                                            ->hidden(fn (Get $get) => $get('type') === 'free')
+                                            ->numeric(),
+
+                                        Forms\Components\TextInput::make('setup_fee')
+                                            ->nullable()
                                             ->hidden(fn (Get $get) => $get('type') === 'free')
                                             ->numeric(),
                                         
@@ -128,6 +133,7 @@ class ProductResource extends Resource
                                             ])
                                             ->label('Billing period')
                                             ->required()
+                                            ->default('month')
                                             ->hidden(fn (Get $get) => $get('type') !== 'recurring'),
                                     ]),
                             ]),
