@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('currencies', function (Blueprint $table) {
             $table->string('code', 3)->primary();
-            $table->string('prefix');
-            $table->string('suffix');
+            $table->string('prefix')->nullable();
+            $table->string('suffix')->nullable();
             $table->integer('conversion_rate');
         });
     }

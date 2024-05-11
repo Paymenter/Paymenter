@@ -7,11 +7,13 @@ use Illuminate\Database\Eloquent\Model;
 
 class Currency extends Model
 {
+    use HasFactory;
+
     public $timestamps = false;
 
     public $incrementing = false;
 
     protected $keyType = 'string';
 
-    use HasFactory;
+    protected $primaryKey = 'code';
 }

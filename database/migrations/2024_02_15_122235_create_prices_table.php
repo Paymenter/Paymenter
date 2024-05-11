@@ -13,15 +13,10 @@ return new class extends Migration
     {
         Schema::create('prices', function (Blueprint $table) {
             $table->id();
-            $table->string('name')->nullable();
-            $table->morphs('priceable');
-            $table->enum('type', ['free', 'one-time', 'recurring']);
-            $table->integer('billing_period')->nullable();
-            $table->enum('billing_unit', ['hour', 'day', 'week', 'month', 'year'])->nullable();
             $table->decimal('price', 19, 4)->nullable();
             $table->decimal('setup_fee', 19, 4)->nullable();
-            $table->unsignedTinyInteger('sort')->nullable();
-            $table->timestamps();
+            $table->string('currency_code', 3);
+            $table->foreignIdFor(\App\Models\Plan::class)->nullable();
         });
     }
 

@@ -34,10 +34,10 @@ class Product extends Model
     }
 
     /**
-     * Get the prices of the product.
+     * Get the plans (prices) of the product.
      */
-    public function prices(): MorphMany
+    public function plans(): MorphMany
     {
-        return $this->morphMany(Price::class, 'priceable');
+        return $this->morphMany(Plan::class, 'priceable');
     }
 }

@@ -4,6 +4,7 @@ namespace App\Admin\Resources;
 
 use App\Admin\Resources\ProductResource\Pages;
 use App\Admin\Resources\ProductResource\RelationManagers;
+use App\Models\Currency;
 use App\Models\Product;
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -46,7 +47,7 @@ class ProductResource extends Resource
                                 Forms\Components\TextInput::make('slug')->required(),
                                 Forms\Components\TextInput::make('stock')->integer()->nullable(),
                                 Forms\Components\TextInput::make('per_user_limit')->integer()->nullable(),
-                                Forms\Components\Textarea::make('description')->nullable(),
+                                Forms\Components\RichEditor::make('description')->nullable()->columnSpanFull(),
                                 Forms\Components\FileUpload::make('image_url')->label('Image')->nullable()->acceptedFileTypes(['image/*']),
                                 Forms\Components\Select::make('category_id')
                                     ->relationship('category', 'name')
@@ -73,12 +74,13 @@ class ProductResource extends Resource
                             ]),
                         Tabs\Tab::make('Pricing')
                             ->schema([
-                                Forms\Components\Repeater::make('prices')
+                                Forms\Components\Repeater::make('plan')
                                     ->label('')
-                                    ->addActionLabel('Add New Price')
-                                    ->relationship('prices')
+                                    ->addActionLabel('Add new plan')
+                                    ->relationship('plans')
                                     ->name('name')
                                     ->reorderable()
+                                    ->cloneable()
                                     ->collapsible()
                                     ->collapsed()
                                     ->orderColumn()
@@ -107,17 +109,6 @@ class ProductResource extends Resource
                                             ->placeholder('Select the type of the price')
                                             ->default('free'),
 
-                                        
-                                        Forms\Components\TextInput::make('price')
-                                            ->required()
-                                            ->hidden(fn (Get $get) => $get('type') === 'free')
-                                            ->numeric(),
-
-                                        Forms\Components\TextInput::make('setup_fee')
-                                            ->nullable()
-                                            ->hidden(fn (Get $get) => $get('type') === 'free')
-                                            ->numeric(),
-                                        
                                         Forms\Components\TextInput::make('billing_period')
                                             ->required()
                                             ->label('Time Interval')
@@ -135,6 +126,33 @@ class ProductResource extends Resource
                                             ->required()
                                             ->default('month')
                                             ->hidden(fn (Get $get) => $get('type') !== 'recurring'),
+                                        Forms\Components\Repeater::make('Pricing')
+                                            ->hidden(fn (Get $get) => $get('type') === 'free')
+                                            ->columns(3)
+                                            ->name('currency_code')
+                                            ->addActionLabel('Add new price')
+                                            ->reorderable(false)
+                                            ->relationship('prices')
+                                            ->columnSpanFull()
+                                            ->maxItems(Currency::count())
+                                            ->schema([
+                                                Forms\Components\Select::make('currency_code')
+                                                    ->relationship('currency' , 'code')
+                                                    ->searchable()
+                                                    ->preload()
+                                                    ->required(),
+                                                Forms\Components\TextInput::make('price')
+                                                    ->required()
+                                                    ->label('Price')
+                                                    ->live(onBlur: true)
+                                                    ->hidden(fn (Get $get) => $get('type') === 'free'),
+
+                                                Forms\Components\TextInput::make('setup_fee')
+                                                    ->required()
+                                                    ->label('Setup fee')
+                                                    ->live(onBlur: true)
+                                                    ->hidden(fn (Get $get) => $get('type') === 'free'),
+                                            ]),
                                     ]),
                             ]),
                     ]),
