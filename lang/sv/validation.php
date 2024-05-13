@@ -89,7 +89,7 @@ return [
         'file' => ':attribute måste vara åtminstone :min kilobyte.',
         'string' => ':attribute måste vara åtminstone :min tecken.',
         // Again with the items...
-        'array' => ':attribute must have at least :min artiklar.',
+        'array' => ':attribute måste ha åtminstone :min artiklar.',
     ],
     'multiple_of' => ':attribute måste vara en multipel av :value.',
     'not_in' => 'valt :attribute är ogiltigt.',
