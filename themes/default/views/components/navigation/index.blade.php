@@ -1,12 +1,12 @@
 <nav class="w-full px-4 bg-primary-800 h-14 flex flex-row justify-between">
-    <a href="{{ route('admin.index') }}" class="flex flex-row items-center" wire:navigate>
+    <a href="{{ route('home') }}" class="flex flex-row items-center" wire:navigate>
         <x-logo class="h-10" />
         <span class="text-xl text-white ml-2">{{ config('app.name') }}</span>
     </a>
 
     <div class="flex flex-row justify-between w-fit items-center" x-data="{ profileMenuOpen: false, mobileMenuOpen: false }">
         <div class="flex flex-row">
-            @foreach (\App\Classes\Navigation::getAdmin() as $nav)
+            @foreach (\App\Classes\Navigation::get() as $nav)
                 @if (isset($nav['children']) && count($nav['children']) > 0)
                     <div class="relative" x-data="{ open: false }">
                         <button class="flex flex-row items-center p-3" x-on:click="open = !open">
@@ -26,13 +26,13 @@
                             x-transition:leave-start="opacity-100 scale-100" x-transition:leave-end="opacity-0 scale-90"
                             x-on:click.outside="open = false">
                             @foreach ($nav['children'] as $child)
-                                <x-navigation.link :href="route($child['route'])"
+                                <x-navigation.link :href="route($child['route'], $child['params'])"
                                     class="text-sm">{{ $child['name'] }}</x-navigation.link>
                             @endforeach
                         </div>
                     </div>
                 @else
-                    <x-navigation.link :href="route($nav['route'])" class="text-sm">{{ $nav['name'] }}</x-navigation.link>
+                    <x-navigation.link :href="route($nav['route'], $nav['params'] ?? null)" class="text-sm">{{ $nav['name'] }}</x-navigation.link>
                 @endif
             @endforeach
         </div>

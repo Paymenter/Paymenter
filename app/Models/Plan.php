@@ -18,11 +18,13 @@ class Plan extends Model
         'billing_unit',
     ];
 
+    public $with = ['prices'];
+
     /**
      * Get the available prices of the plan.
      */
     public function prices()
     {
-        return $this->hasMany(Price::class);
+        return $this->hasMany(Price::class)->where('currency_code', 'USD');
     }
 }

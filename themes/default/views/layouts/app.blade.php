@@ -11,8 +11,9 @@
         <link rel="icon" href="{{ asset(config('settings.logo')) }}" type="image/png">
 
     </head>
-    <body class="w-full bg-primary-900">
-        <main>
+    <body class="w-full bg-primary-900 text-white">
+        <x-navigation />
+        <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
             {{ $slot }}
         </main>
     </body>

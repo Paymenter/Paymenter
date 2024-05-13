@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('category_id')->constrained();
             $table->string('name');
-            $table->string('image_url')->nullable();
+            $table->string('image')->nullable();
             $table->string('slug')->nullable();
             $table->text('description')->nullable();
             $table->integer('stock')->nullable();

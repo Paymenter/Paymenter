@@ -17,6 +17,13 @@ class Product extends Model
 
     protected $guarded = [];
 
+    protected $fillable = [
+        'name',
+        'description',
+        'image',
+        'category_id',
+    ];
+
     /**
      * Get the category of the product.
      */
@@ -36,8 +43,27 @@ class Product extends Model
     /**
      * Get the plans (prices) of the product.
      */
-    public function plans(): MorphMany
+    public function plans()
     {
-        return $this->morphMany(Plan::class, 'priceable');
+        return $this->morphMany(Plan::class, 'priceable')->orderBy('sort');
+    }
+
+    /**
+     * Get first price of the plan.
+     */
+    public function price()
+    {
+        $price = 0;
+
+        foreach ($this->plans as $plan) {
+            foreach ($plan->prices as $price) {
+                if ($price->price < $price) {
+                    $price = $price->price;
+                    break 2;
+                }
+            }
+        }
+
+        return $price;
     }
 }

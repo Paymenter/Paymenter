@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('prices', function (Blueprint $table) {
             $table->id();
-            $table->decimal('price', 19, 4)->nullable();
-            $table->decimal('setup_fee', 19, 4)->nullable();
+            $table->decimal('price', 17, 2)->nullable();
+            $table->decimal('setup_fee', 17, 2)->nullable();
             $table->string('currency_code', 3);
             $table->foreignIdFor(\App\Models\Plan::class)->nullable();
         });
