@@ -15,6 +15,11 @@ class ProductController extends Controller
     {
         $products = Product::paginate(config('app.pagination'));
 
+        foreach($products as $product) 
+        {
+            $product->prices = ProductPrice::where('product_id', $product->id)->first();
+        }
+        
         return $this->success('Products successfully retrieved.', API::repaginate($products));
     }
 }
