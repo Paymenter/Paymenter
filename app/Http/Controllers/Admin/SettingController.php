@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Facades\Storage;
 
 class SettingController extends Controller
 {
@@ -57,7 +58,7 @@ class SettingController extends Controller
             'seo_title' => 'required|max:255',
             'seo_description' => 'required|max:255',
             'seo_twitter_card' => 'boolean',
-            'app_logo' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'app_logo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'currency' => 'required|max:10',
             'currency_sign' => 'required|max:4',
             'currency_position' => 'required|in:left,right',
@@ -66,23 +67,38 @@ class SettingController extends Controller
             'timezone' => 'required',
             'remove_unpaid_order_after' => 'required|numeric|min:0',
         ]);
+    
         if ($request->hasFile('app_logo')) {
             $imageName = time() . '.' . $request->app_logo->extension();
-            $request->app_logo->move(public_path('images'), $imageName);
-            $path = '/images/' . $imageName;
+    
+            // Определение файлового хранилища в зависимости от переменной окружения
+            $disk = env('FILESYSTEM_DISK', 'local');
+    
+            if ($disk === 's3') {
+                // Загрузка изображения в S3 и получение его URL
+                $path = Storage::disk('s3')->putFileAs('images', $request->file('app_logo'), $imageName, 'public');
+                $path = Storage::disk('s3')->url($path);
+            } else {
+                // Загрузка изображения в локальное хранилище и получение его URL
+                $request->app_logo->move(public_path('images'), $imageName);
+                $path = '/images/' . $imageName;
+            }
+    
             Setting::updateOrCreate(['key' => 'app_logo'], ['value' => $path]);
         }
+    
         foreach ($request->except(['_token', 'app_logo', 'app_favicon']) as $key => $value) {
             Setting::updateOrCreate(['key' => $key], ['value' => $value]);
         }
-        // Needs to manually do this because otherwise it isn't sended
+
+        // Обработка allow_auto_lang и seo_twitter_card
         if (!$request->get('allow_auto_lang')) {
             Setting::updateOrCreate(['key' => 'allow_auto_lang'], ['value' => 0]);
         }
         if (!$request->get('seo_twitter_card')) {
             Setting::updateOrCreate(['key' => 'seo_twitter_card'], ['value' => 0]);
         }
-
+    
         return redirect('/admin/settings#general')->with('success', 'Settings updated successfully');
     }
 

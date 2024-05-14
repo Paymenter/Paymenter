@@ -13,6 +13,7 @@ use App\Http\Controllers\Controller;
 use App\Models\OrderProduct;
 use App\Models\ProductPrice;
 use Illuminate\View\View;
+use Illuminate\Support\Facades\Storage;
 
 class ProductController extends Controller
 {
@@ -54,14 +55,24 @@ class ProductController extends Controller
             'description' => 'required|string',
             'price' => 'required',
             'category_id' => 'required|integer',
-            'image' => 'image|mimes:jpeg,png,jpg,gif,svg|max:5242',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:5242',
         ]);
         if ($request->get('no_image')) {
             $data['image'] = 'null';
         } else {
             $imageName = time() . $request->get('category_id') . '.' . $request->image->extension();
-            $request->image->move(public_path('images'), $imageName);
-            $data['image'] = '/images/' . $imageName;
+            $disk = env('FILESYSTEM_DISK', 'local');
+            if ($disk === 's3') {
+                // Загрузка изображения в S3 и получение его URL
+                $path = Storage::disk('s3')->putFileAs('images', $request->file('image'), $imageName, 'public');
+                // Установление публичных прав
+                Storage::disk('s3')->setVisibility($path, 'public');
+                $data['image'] = Storage::disk('s3')->url($path);
+            } else {
+                // Загрузка изображения в локальное хранилище и получение его URL
+                $request->image->move(public_path('images'), $imageName);
+                $data['image'] = '/images/' . $imageName;
+            }
         }
         $product = Product::create($data);
         ProductPrice::create([
@@ -73,36 +84,52 @@ class ProductController extends Controller
         return redirect()->route('admin.products.edit', $product->id)->with('success', 'Product created successfully');
     }
 
-    public function edit(Product $product)
+    public function edit(Product $product): View
     {
         $categories = Category::all();
 
         return view('admin.products.edit', compact('product', 'categories'));
     }
 
-    public function update(Request $request, Product $product)
+    public function update(Request $request, Product $product): RedirectResponse
     {
-        $data = request()->validate([
+        $data = $request->validate([
             'name' => 'required|string',
             'description' => 'required|string',
             'category_id' => 'required|integer',
-            'image' => 'image|mimes:jpeg,png,jpg,gif,svg|max:5242',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:5242',
             'stock' => 'integer|required_if:stock_enabled,true',
             'stock_enabled' => 'boolean',
             'hidden' => 'boolean',
         ]);
-
         if ($request->hasFile('image') && !$request->get('no_image')) {
             $imageName = time() . '-' . $product->id . '.' . $request->image->extension();
-            $request->image->move(public_path('images'), $imageName);
-            $data['image'] = '/images/' . $imageName;
-            if (file_exists(public_path() . $product->image)) {
-                $image = unlink(public_path() . $product->image);
-                if (!$image) {
-                    error_log('Failed to delete image: ' . public_path() . $product->image);
+            $disk = env('FILESYSTEM_DISK', 'local');
+            if ($disk === 's3') {
+                // Загрузка изображения в S3 и получение его URL
+                $path = Storage::disk('s3')->putFileAs('images', $request->file('image'), $imageName, 'public');
+                // Установление публичных прав
+                Storage::disk('s3')->setVisibility($path, 'public');
+                $data['image'] = Storage::disk('s3')->url($path);
+            } else {
+                // Загрузка изображения в локальное хранилище и получение его URL
+                $request->image->move(public_path('images'), $imageName);
+                $data['image'] = '/images/' . $imageName;
+            }
+
+            // Удаление старого изображения
+            if ($product->image) {
+                if ($disk === 's3') {
+                    $imagePath = str_replace(Storage::disk('s3')->url(''), '', $product->image);
+                    Storage::disk('s3')->delete($imagePath);
+                } else {
+                    if (file_exists(public_path($product->image))) {
+                        unlink(public_path($product->image));
+                    }
                 }
             }
         }
+
         $product->stock_enabled = $request->get('stock_enabled') ?? false;
         $product->hidden = $request->get('hidden') ?? false;
 
@@ -114,7 +141,7 @@ class ProductController extends Controller
         return redirect()->route('admin.products.edit', $product->id)->with('success', 'Product updated successfully');
     }
 
-    public function destroy(Product $product): \Illuminate\Http\RedirectResponse
+    public function destroy(Product $product): RedirectResponse
     {
         OrderProduct::where('product_id', $product->id)->delete();
         ProductPrice::where('product_id', $product->id)->delete();
@@ -123,13 +150,13 @@ class ProductController extends Controller
         return redirect()->route('admin.products')->with('success', 'Product deleted successfully');
     }
 
-    public function pricing(Product $product)
+    public function pricing(Product $product): View
     {
         $pricing = $product->prices;
         return view('admin.products.pricing', compact('product', 'pricing'));
     }
 
-    public function pricingUpdate(Request $request, Product $product)
+    public function pricingUpdate(Request $request, Product $product): RedirectResponse
     {
         $request->validate([
             'pricing' => 'required|in:recurring,free,one-time',
@@ -137,14 +164,9 @@ class ProductController extends Controller
             'limit' => 'nullable|integer',
         ]);
         if ($request->get('pricing') !== $product->prices->type) {
-            $request->validate([
-                'pricing' => 'required|in:recurring,free,one-time'
-            ]);
-            // Update it
             $product->prices->update([
                 'type' => $request->get('pricing')
             ]);
-
             return redirect()->route('admin.products.pricing', $product->id)->with('success', 'Product pricing updated successfully');
         }
         $product->prices->update(
@@ -171,7 +193,7 @@ class ProductController extends Controller
         return redirect()->route('admin.products.pricing', $product->id)->with('success', 'Product pricing updated successfully');
     }
 
-    public function extension(Product $product)
+    public function extension(Product $product): View
     {
         $extensions = Extension::where('type', 'server')->where('enabled', true)->get();
         if ($product->extension_id != null) {
@@ -186,26 +208,22 @@ class ProductController extends Controller
             }
             $extension->productConfig = $config;
         } else {
-            $server = null;
             $extension = null;
         }
         return view('admin.products.extension', compact('product', 'extensions', 'extension'));
     }
 
-    public function extensionUpdate(Request $request, Product $product)
+    public function extensionUpdate(Request $request, Product $product): RedirectResponse
     {
-        $data = request()->validate([
+        $data = $request->validate([
             'extension_id' => 'required|integer',
         ]);
-        // Check if only the server has been changed
         if ($product->extension_id != $request->input('extension_id')) {
-            // Delete all product settings
             ProductSetting::where('product_id', $product->id)->delete();
             $product->update($data);
             return redirect()->route('admin.products.extension', $product->id)->with('success', 'Server changed successfully');
         }
         $extension = Extension::findOrFail($product->extension_id);
-
         $config = ExtensionHelper::getProductConfiguration($product);
         $extension->productConfig = $config;
 
@@ -243,7 +261,6 @@ class ProductController extends Controller
         $config = ExtensionHelper::getProductConfiguration($product);
         $extension->productConfig = $config;
 
-
         $productSettings = ProductSetting::where('product_id', $product->id)->get();
         $settings = [];
         $settings['!NOTICE!'] = 'This file was generated by Paymenter. Do not edit this file manually.';
@@ -277,38 +294,29 @@ class ProductController extends Controller
             }
         }
 
-        // Export it as JSON
         $json = json_encode($settings, JSON_PRETTY_PRINT);
         $filename = $product->name . '.json';
-        // Save the file
-        return response(
-            $json,
-            200,
-            [
-                'Content-Disposition' => 'attachment; filename="' . $filename . '"'
-            ]
-        );
+        return response($json, 200, ['Content-Disposition' => 'attachment; filename="' . $filename . '"']);
     }
 
-    public function extensionImport(Request $request, Product $product)
+    public function extensionImport(Request $request, Product $product): RedirectResponse
     {
         $request->validate([
             'json' => 'required|file|mimes:json',
         ]);
-        // Move the file to the temp directory
         $file = $request->file('json');
         $file->move(storage_path('app/temp'), $file->getClientOriginalName());
 
-        // Read the file
         $json = json_decode(file_get_contents(storage_path('app/temp/' . $file->getClientOriginalName())));
-        // Delete the file
         unlink(storage_path('app/temp/' . $file->getClientOriginalName()));
         $server = Extension::where('name', $json->server)->first();
-        if (!$server)
+        if (!$server) {
             return redirect()->route('admin.products.extension', $product->id)->with('error', 'Invalid server');
-        if ($product->extension_id != $server->id)
+        }
+
+        if ($product->extension_id != $server->id) {
             $product->update(['extension_id' => $server->id]);
-        
+        }
         if (!$json) {
             return redirect()->route('admin.products.extension', $product->id)->with('error', 'Invalid JSON');
         }
@@ -318,7 +326,6 @@ class ProductController extends Controller
         if (!isset($json->config)) {
             return redirect()->route('admin.products.extension', $product->id)->with('error', 'Invalid config');
         }
-
         // Delete all product settings
         ProductSetting::where('product_id', $product->id)->delete();
         $econfig = ExtensionHelper::getProductConfiguration($product);
@@ -344,7 +351,7 @@ class ProductController extends Controller
         return redirect()->route('admin.products.extension', $product->id)->with('success', 'Product updated successfully');
     }
 
-    public function duplicate(Product $product)
+    public function duplicate(Product $product): RedirectResponse
     {
         $newProduct = $product->replicate();
         $newProduct->name = $newProduct->name . ' (copy)';
@@ -367,14 +374,14 @@ class ProductController extends Controller
         return redirect()->route('admin.products.edit', $newProduct->id)->with('success', 'Product duplicated successfully');
     }
 
-    public function upgrade(Product $product)
+    public function upgrade(Product $product): View
     {
         $products = Product::where('id', '!=', $product->id)->get();
 
         return view('admin.products.upgrade', compact('product', 'products'));
     }
 
-    public function upgradeUpdate(Request $request, Product $product)
+    public function upgradeUpdate(Request $request, Product $product): RedirectResponse
     {
         $request->validate([
             'upgrades' => 'array',

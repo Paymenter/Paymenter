@@ -17,6 +17,7 @@
     ],
     "require": {
         "php": "^8.1 || ^8.2 || ^8.3",
+        "aws/aws-sdk-php": "^3.306",
         "diglactic/laravel-breadcrumbs": "^8.1",
         "doctrine/dbal": "^3.5",
         "fakerphp/faker": "^1.20",
@@ -25,6 +26,7 @@
         "laravel/sanctum": "^3.2",
         "laravel/socialite": "^5.5",
         "laravel/tinker": "^2.7",
+        "league/flysystem-aws-s3-v3": "^3.0",
         "livewire/livewire": "^3.0",
         "qirolab/laravel-themer": "^2.0",
         "rappasoft/laravel-livewire-tables": "^3.1",

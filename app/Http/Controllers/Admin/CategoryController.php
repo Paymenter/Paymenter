@@ -5,10 +5,11 @@ namespace App\Http\Controllers\Admin;
 use App\Models\Category;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
 use Illuminate\View\View;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Storage;
 
 class CategoryController extends Controller
 {
@@ -35,40 +36,49 @@ class CategoryController extends Controller
     }
 
     /**
-     * Store a new announcement
+     * Store a new category
      *
      * @return RedirectResponse
      */
-    public function store(Request $request): RedirectResponse
-    {
-        $request->validate([
-            'name' => 'required',
-            'description' => 'required',
-            'slug' => 'required|unique:categories,slug',
-            'parent_id' => 'nullable|exists:categories,id',
-            'image' => 'nullable|image',
-        ]);
-
-        if ($request->hasFile('image')) {
-            $request->validate([
-                'image' => 'image|mimes:jpeg,png,jpg,gif,svg|max:5242',
-            ]);
-            // Public
-            $request->image->store('categories', 'public');
-
-        }
-
-        Category::create([
-            'name' => $request['name'],
-            'description' => $request['description'],
-            'slug' => $request['slug'],
-            'category_id' => $request['parent_id'],
-            'image' => $request->image ? $request->image->hashName() : null,
-        ]);
-        
-
-        return redirect()->route('admin.categories');
-    }
+     public function store(Request $request): RedirectResponse
+     {
+         $request->validate([
+             'name' => 'required',
+             'description' => 'required',
+             'slug' => 'required|unique:categories,slug',
+             'parent_id' => 'nullable|exists:categories,id',
+             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:5242',
+         ]);
+ 
+         $imageUrl = null;
+         if ($request->hasFile('image')) {
+             $disk = env('FILESYSTEM_DISK', 'local');
+ 
+             if ($disk === 's3') {
+                 // Загрузка изображения в S3
+                 $imagePath = $request->file('image')->store('categories', 's3');
+                 // Установление публичных прав
+                 Storage::disk('s3')->setVisibility($imagePath, 'public');
+                 // Получение полного URL загруженного изображения
+                 $imageUrl = Storage::disk('s3')->url($imagePath);
+             } else {
+                 // Загрузка изображения в локальное хранилище
+                 $imagePath = $request->file('image')->store('categories', 'public');
+                 // Получение полного URL загруженного изображения
+                 $imageUrl = Storage::disk('public')->url($imagePath);
+             }
+         }
+ 
+         Category::create([
+             'name' => $request->input('name'),
+             'description' => $request->input('description'),
+             'slug' => $request->input('slug'),
+             'category_id' => $request->input('parent_id'),
+             'image' => $imageUrl,
+         ]);
+ 
+         return redirect()->route('admin.categories')->with('success', 'Category created successfully');
+     }
 
     /**
      * Display edit form
@@ -90,41 +100,54 @@ class CategoryController extends Controller
      * @return RedirectResponse
      * @throws ValidationException
      */
-    public function update(Category $category, Request $request): RedirectResponse
-    {
-        $request->validate([
-            'name' => 'required',
-            'description' => 'required',
-            'slug' => 'required|unique:categories,slug,' . $category->id,
-            'parent_id' => 'nullable|exists:categories,id',
-            'image' => 'nullable|image',
-            'remove_image' => 'nullable',
-        ]);
-
-        if ($request->hasFile('image')) {
-            $request->validate([
-                'image' => 'image|mimes:jpeg,png,jpg,gif,svg|max:5242',
-            ]);
-            // Public
-            $request->image->store('categories', 'public');
-
-        }
-
-        if ($request->remove_image == 'on') {
-            $category->image = null;
-        } else {
-            $category->image = $request->image ? $request->image->hashName() : $category->image;
-        }
-
-        $category->update([
-            'name' => $request['name'],
-            'description' => $request['description'],
-            'slug' => $request['slug'],
-            'category_id' => $request['parent_id'],
-        ]);
-
-        return redirect()->route('admin.categories.edit', $category);
-    }
+     public function update(Category $category, Request $request): RedirectResponse
+     {
+         $request->validate([
+             'name' => 'required',
+             'description' => 'required',
+             'slug' => 'required|unique:categories,slug,' . $category->id,
+             'parent_id' => 'nullable|exists:categories,id',
+             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:5242',
+             'remove_image' => 'nullable',
+         ]);
+ 
+         // Обновление полей категории
+         $category->name = $request->input('name');
+         $category->description = $request->input('description');
+         $category->slug = $request->input('slug');
+         $category->category_id = $request->input('parent_id');
+ 
+         $disk = env('FILESYSTEM_DISK', 'local');
+ 
+         if ($request->hasFile('image')) {
+             // Валидация загружаемого изображения
+             $request->validate([
+                 'image' => 'image|mimes:jpeg,png,jpg,gif,svg|max:5242',
+             ]);
+ 
+             // Загрузка нового изображения в выбранное хранилище
+             if ($disk === 's3') {
+                 $imagePath = $request->file('image')->store('categories', 's3');
+                 // Установление публичных прав
+                 Storage::disk('s3')->setVisibility($imagePath, 'public');
+                 $imageUrl = Storage::disk('s3')->url($imagePath);
+             } else {
+                 $imagePath = $request->file('image')->store('categories', 'public');
+                 $imageUrl = Storage::disk('public')->url($imagePath);
+             }
+             // Обновление поля изображения с полным URL
+             $category->image = $imageUrl;
+ 
+         } elseif ($request->has('remove_image')) {
+             // Обработка удаления изображения
+             $category->image = null;
+         }
+ 
+         // Сохранение обновленной категории
+         $category->save();
+ 
+         return redirect()->route('admin.categories.edit', $category)->with('success', 'Category updated successfully');
+     }
 
     /**
      * Delete the category
@@ -136,6 +159,6 @@ class CategoryController extends Controller
     {
         $category->delete();
 
-        return redirect()->route('admin.categories');
+        return redirect()->route('admin.categories')->with('success', 'Category deleted successfully');
     }
 }

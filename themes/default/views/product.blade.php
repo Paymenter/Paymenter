@@ -56,7 +56,7 @@
                 <div class="content-box">
                     <div class="flex flex-row">
                         @if($category->image)
-                            <img src="/storage/categories/{{ $category->image }}" class="w-20 h-full rounded-md mr-4" />
+                            <img src="{{ $category->image }}" class="w-20 h-full rounded-md mr-4" />
                         @endif
                         <div class="w-full">
                             <h1 class="text-3xl font-semibold text-secondary-900">{{ $category->name }}</h1>
@@ -72,7 +72,7 @@
                             <div class="content-box h-full flex flex-col">
                                 <div class="flex items-center gap-x-3 mb-2">
                                     @if($childCat->image)
-                                        <img src="/storage/categories/{{ $childCat->image }}" class="w-14 rounded-md" onerror="removeElement(this);" />
+                                        <img src="{{ $childCat->image }}" class="w-14 rounded-md" onerror="removeElement(this);" />
                                     @endif
                                     <div>
                                         <h3 class="font-semibold text-lg">{{ $childCat->name }}</h3>

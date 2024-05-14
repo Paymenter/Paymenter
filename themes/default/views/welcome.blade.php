@@ -22,7 +22,7 @@
                             <div class="content-box h-full flex flex-col">
                                 <div class="flex gap-x-3 items-center mb-2">
                                     @if($category->image)
-                                        <img src="/storage/categories/{{ $category->image }}" class="w-14 h-full rounded-md" onerror="removeElement(this);" />
+                                        <img src="{{ $category->image }}" class="w-14 h-full rounded-md" onerror="removeElement(this);" />
                                     @endif
                                     <div>
                                         <h3 class="font-semibold text-lg">{{ $category->name }}</h3>
