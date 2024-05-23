@@ -8,8 +8,10 @@
         "php": "^8.2",
         "filament/filament": "^3.2",
         "laravel/framework": "^11.0",
+        "laravel/socialite": "^5.14",
         "laravel/tinker": "^2.9",
-        "rappasoft/laravel-livewire-tables": "*"
+        "rappasoft/laravel-livewire-tables": "*",
+        "socialiteproviders/discord": "^4.2"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",

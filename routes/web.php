@@ -2,12 +2,13 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\SocialLoginController;
 use App\Livewire\Auth;
 use App\Livewire\Admin;
 
 Route::get('/', function () {
     return view('home');
-});
+})->name('home');
 
 
 // Destroy the session and log out the user.
@@ -18,7 +19,8 @@ Route::group(['middleware' => ['web', 'guest']], function () {
     Route::get('register', Auth\Register::class)->name('register');
     // Todo
     Route::get('password/reset')->name('password.reset');
-    Route::get('/oauth/{provider}')->name('oauth');
+    Route::get('/oauth/{provider}', [SocialLoginController::class, 'redirect'])->name('oauth.redirect');
+    Route::get('/oauth/{provider}/callback', [SocialLoginController::class, 'handle'])->name('oauth.handle');
 });
 
 Route::group(['middleware' => ['web', 'auth']], function () {
