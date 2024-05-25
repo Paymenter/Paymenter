@@ -22,7 +22,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($this->products as $product)
+                            @foreach ($this->products as $key => $product)
                                 <tr
                                     class="{{ $loop->last ? '' : 'border-b-2 border-secondary-200 dark:border-secondary-50' }}">
                                     <td class="pl-6 py-3">
@@ -60,7 +60,7 @@
                                             {{ __('each') }}
                                         @endif
                                     </td>
-                                    <td class="py-3 pr-6" wire:click="removeProduct({{ $product->id }})">
+                                    <td class="py-3 pr-6" wire:click="removeProduct({{ $key }})">
                                         <button class="button button-danger-outline">
                                             <i class="ri-delete-bin-2-line"></i>
                                         </button>
