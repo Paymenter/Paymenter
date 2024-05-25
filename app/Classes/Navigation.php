@@ -2,41 +2,32 @@
 
 namespace App\Classes;
 
+use App\Models\Category;
 
 class Navigation
 {
-    public static function getAdmin()
+    public static function get()
     {
+        $categories = Category::whereNull('parent_id')->get();
+
+
         $routes =  [
             [
                 'name' => 'Dashboard',
-                'route' => 'admin.index',
+                'route' => 'home',
                 'children' => [],
             ],
             [
-                'name' => 'Users',
-                'route' => 'admin.users.index',
-                'children' => []
+                'name' => 'Shop',
+                'route' => 'home',
+                'children' => $categories->map(function ($category) {
+                    return [
+                        'name' => $category->name,
+                        'route' => 'category.show',
+                        'params' => ['category' => $category->slug],
+                    ];
+                })->toArray(),
             ],
-            [
-                'name' => 'Configuration',
-                'route' => 'admin.settings',
-                'children' => [
-                    [
-                        'name' => 'Settings',
-                        'route' => 'admin.settings',
-                    ],
-                    [
-                        'name' => 'System Health',
-                        'route' => 'admin.health',
-                    ],
-                ]
-            ],
-            // [
-            //     'name' => 'Users',
-            //     'route' => 'admin.users',
-            //     'children' => []
-            // ],
         ];
 
         // Check which one is active
@@ -60,7 +51,7 @@ class Navigation
     public static function getCurrent()
     {
         $route = request()->route()->getName();
-        $admin = self::getAdmin();
+        $admin = self::get();
         // Get current parnet of the route
         $parent = null;
         foreach ($admin as $item) {

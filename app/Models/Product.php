@@ -17,8 +17,11 @@ class Product extends Model
 
     protected $guarded = [];
 
+    public $with = ['plans'];
+
     protected $fillable = [
         'name',
+        'slug',
         'description',
         'image',
         'category_id',
@@ -59,7 +62,6 @@ class Product extends Model
             foreach ($plan->prices as $price) {
                 if ($price->price < $price) {
                     $price = $price->price;
-                    break 2;
                 }
             }
         }

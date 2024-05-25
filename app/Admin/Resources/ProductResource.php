@@ -69,14 +69,16 @@ class ProductResource extends Resource
                                         Forms\Components\TextInput::make('slug'),
                                         Forms\Components\Textarea::make('description')
                                             ->required(),
-
+                                        Forms\Components\Select::make('parent_id')
+                                            ->relationship('categories', 'name')
+                                            ->searchable()
+                                            ->preload(),
                                     ])
                                     ->required(),
                             ]),
                         Tabs\Tab::make('Pricing')
                             ->schema([
                                 Forms\Components\Repeater::make('plan')
-                                    ->label('')
                                     ->addActionLabel('Add new plan')
                                     ->relationship('plans')
                                     ->name('name')
@@ -140,16 +142,20 @@ class ProductResource extends Resource
                                             ->itemLabel(fn (array $state) => $state['currency_code'])
                                             ->schema([
                                                 Forms\Components\Select::make('currency_code')
-                                                    ->options(function (Get $get, Set $set, ?string $state) {
+                                                    ->options(function (Get $get, ?string $state) {
                                                         $pricing = collect($get('../../pricing'))->pluck('currency_code');
                                                         if ($state !== null) {
                                                             $pricing = $pricing->filter(function ($code) use ($state) {
                                                                 return $code !== $state;
                                                             });
                                                         }
+                                                        $pricing = $pricing->filter(function ($code) use ($state) {
+                                                            return $code !== null;
+                                                        });
+
                                                         return Currency::whereNotIn('code', $pricing)->pluck('code', 'code');                                                    
                                                     })
-                                                    ->live(onBlur: true)
+                                                    ->live()
                                                     ->required(),
                                                 Forms\Components\TextInput::make('price')
                                                     ->required()
@@ -158,7 +164,6 @@ class ProductResource extends Resource
                                                     ->prefix(fn (Get $get) => Currency::where('code', $get('currency_code'))->first()?->prefix)
                                                     ->live(onBlur: true)
                                                     ->hidden(fn (Get $get) => $get('type') === 'free'),
-
                                                 Forms\Components\TextInput::make('setup_fee')
                                                     ->label('Setup fee')
                                                     ->live(onBlur: true)
@@ -176,7 +181,6 @@ class ProductResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('name')->searchable(),
                 Tables\Columns\TextColumn::make('slug'),
-                Tables\Columns\TextColumn::make('description'),
                 Tables\Columns\TextColumn::make('category.name')->searchable(),
             ])
             ->filters([
@@ -192,7 +196,7 @@ class ProductResource extends Resource
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
-            ]);
+            ])->defaultGroup('category.name');
     }
 
     public static function getRelations(): array

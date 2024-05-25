@@ -17,6 +17,8 @@ return new class extends Migration
             $table->string('name');
             $table->text('description')->nullable();
             $table->string('image_url')->nullable();
+            $table->foreignId('parent_id')->nullable()->constrained('categories');
+            $table->text('full_slug')->nullable();
             $table->timestamps();
         });
     }
