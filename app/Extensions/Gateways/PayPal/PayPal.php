@@ -12,7 +12,7 @@ class PayPal extends Gateway
     {
         return [
             'display_name' => 'PayPal',
-            'version' => '1.0.0',
+            'version' => '1.0.1',
             'author' => 'Paymenter',
             'website' => 'https://paymenter.org',
         ];
@@ -91,7 +91,36 @@ class PayPal extends Gateway
             $data = json_decode($body, true);
             if ($data['event_type'] == 'CHECKOUT.ORDER.APPROVED') {
                 $orderId = $data['resource']['purchase_units'][0]['reference_id'];
-                ExtensionHelper::paymentDone($orderId, 'PayPal', $data['resource']['id'] ?? null);
+                // Capture order
+                $client_id = ExtensionHelper::getConfig('PayPal', 'client_id');
+                $client_secret = ExtensionHelper::getConfig('PayPal', 'client_secret');
+                $live = ExtensionHelper::getConfig('PayPal', 'live');
+                if ($live) {
+                    $url = 'https://api-m.paypal.com';
+                } else {
+                    $url = 'https://api-m.sandbox.paypal.com';
+                }
+
+                $response = Http::withHeaders([
+                    'Content-Type' => 'application/x-www-form-urlencoded',
+                    'Authorization' => 'Basic ' . base64_encode($client_id . ':' . $client_secret),
+                ])->asForm()->post($url . '/v1/oauth2/token', [
+                    'grant_type' => 'client_credentials',
+                ]);
+        
+                $token = $response->json()['access_token'];
+                $response = Http::withHeaders([
+                    'Content-Type' => 'application/json',
+                    'Authorization' => 'Bearer ' . $token,
+                ])->post($url . '/v2/checkout/orders/' . $data['resource']['id'] . '/capture', [
+                    'note_to_payer' => 'Thank you for your payment!',
+                ]);
+
+                if ($response->failed()) {
+                    ExtensionHelper::error('PayPal', $response->json());
+                }
+
+                ExtensionHelper::paymentDone($orderId, 'PayPal', $data['resource']['id']);
             }
         }
     }
