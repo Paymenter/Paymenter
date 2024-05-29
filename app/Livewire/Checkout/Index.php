@@ -78,7 +78,7 @@ class Index extends Component
         $discount = 0;
         $products = [];
         if ($cart) {
-            foreach ($cart as $product2) {
+            foreach ($cart as $key => $product2) {
                 $product = Product::where('id', $product2['product_id'])->first();
                 $product->config = $product2['config'] ?? [];
                 $product->configurableOptions = $product2['configurableOptions'] ?? [];
@@ -132,7 +132,7 @@ class Index extends Component
                 $this->tax->amount ?? $this->tax->amount += $price + $setupFee;
                 $discount += ($product->discount + $product->discount_fee) * $product->quantity;
 
-                $products[] = $product;
+                $products[$key] = $product;
             }
         }
 
@@ -193,10 +193,9 @@ class Index extends Component
         $this->updateCart();
     }
 
-    public function removeProduct($product)
+    public function removeProduct($key)
     {
         $cart = session()->get('cart');
-        $key = array_search($product, array_column($cart, 'product_id'));
         unset($cart[$key]);
         session()->put('cart', $cart);
         $this->updateCart();
