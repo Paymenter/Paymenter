@@ -41,7 +41,7 @@
                 <tr class="bg-secondary-100">
                     <td colspan="3"
                         class="dark:text-darkmodetext px-6 py-4 whitespace-nowrap text-gray-500 font-bold text-lg text-center">
-                        Servers</td>
+                        {{ __('Servers') }}</td>
                 </tr>
                 @foreach ($servers as $extensio)
                     @if ($extensio == '.' || $extensio == '..')
@@ -64,7 +64,7 @@
                             @endif
                         </td>
                         <td class="dark:text-darkmodetext px-6 py-4 whitespace-nowrap text-sm text-gray-500 flex flex-row items-center gap-4">
-                            {{ $metadata->version ?? 'Unknown Version' }}
+                            {{ $metadata->version ?? __('Unknown Version') }}
 
                             @if($extension->update_available)
                                 <form action="{{ route('admin.extensions.updateExtension', $extension) }}" method="POST">
@@ -82,7 +82,7 @@
                 <tr class="bg-secondary-100">
                     <td colspan="3"
                         class="dark:text-darkmodetext px-6 py-4 whitespace-nowrap text-gray-500 font-bold text-lg text-center">
-                        Gateways</td>
+                        {{ __('Gateways') }}</td>
                 </tr>
                 @foreach ($gateways as $gateway)
                     @if ($gateway == '.' || $gateway == '..')
@@ -105,7 +105,7 @@
                             @endif
                         </td>
                         <td class="dark:text-darkmodetext px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                            {{ $metadata->version ?? 'Unknown Version' }}
+                            {{ $metadata->version ?? __('Unknown Version') }}
                         </td>
                         <td class="dark:text-darkmodetext px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                             <a href="{{ route('admin.extensions.edit', ['gateway', $gateway]) }}"
@@ -116,7 +116,7 @@
                 <tr class="bg-secondary-100">
                     <td colspan="3"
                         class="dark:text-darkmodetext px-6 py-4 whitespace-nowrap text-gray-500 font-bold text-lg text-center">
-                        Events</td>
+                        {{ __('Events') }}</td>
                 </tr>
                 @foreach ($events as $event)
                     @if ($event == '.' || $event == '..')
@@ -139,7 +139,7 @@
                             @endif
                         </td>
                         <td class="dark:text-darkmodetext px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                            {{ $metadata->version ?? 'Unknown Version' }}
+                            {{ $metadata->version ?? __('Unknown Version') }}
                         </td>
                         <td class="dark:text-darkmodetext px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                             <a href="{{ route('admin.extensions.edit', ['event', $event]) }}"
