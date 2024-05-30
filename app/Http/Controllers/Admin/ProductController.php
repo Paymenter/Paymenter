@@ -3,24 +3,21 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Helpers\ExtensionHelper;
-use App\Models\Product;
+use App\Http\Controllers\Controller;
 use App\Models\Category;
 use App\Models\Extension;
+use App\Models\OrderProduct;
+use App\Models\Product;
+use App\Models\ProductPrice;
+use App\Models\ProductSetting;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use App\Models\ProductSetting;
-use App\Http\Controllers\Controller;
-use App\Models\OrderProduct;
-use App\Models\ProductPrice;
 use Illuminate\View\View;
 
 class ProductController extends Controller
 {
-
     /**
      *  Display a listing of the view
-     *
-     * @return View
      */
     public function index(): View
     {
@@ -31,8 +28,6 @@ class ProductController extends Controller
 
     /**
      * Display the creating form
-     *
-     * @return View
      */
     public function create(): View
     {
@@ -43,9 +38,6 @@ class ProductController extends Controller
 
     /**
      * Store a new product
-     *
-     * @param Request $request
-     * @return RedirectResponse
      */
     public function store(Request $request): RedirectResponse
     {
@@ -59,9 +51,9 @@ class ProductController extends Controller
         if ($request->get('no_image')) {
             $data['image'] = 'null';
         } else {
-            $imageName = time() . $request->get('category_id') . '.' . $request->image->extension();
+            $imageName = time().$request->get('category_id').'.'.$request->image->extension();
             $request->image->move(public_path('images'), $imageName);
-            $data['image'] = '/images/' . $imageName;
+            $data['image'] = '/images/'.$imageName;
         }
         $product = Product::create($data);
         ProductPrice::create([
@@ -92,14 +84,14 @@ class ProductController extends Controller
             'hidden' => 'boolean',
         ]);
 
-        if ($request->hasFile('image') && !$request->get('no_image')) {
-            $imageName = time() . '-' . $product->id . '.' . $request->image->extension();
+        if ($request->hasFile('image') && ! $request->get('no_image')) {
+            $imageName = time().'-'.$product->id.'.'.$request->image->extension();
             $request->image->move(public_path('images'), $imageName);
-            $data['image'] = '/images/' . $imageName;
-            if (file_exists(public_path() . $product->image)) {
-                $image = unlink(public_path() . $product->image);
-                if (!$image) {
-                    error_log('Failed to delete image: ' . public_path() . $product->image);
+            $data['image'] = '/images/'.$imageName;
+            if (file_exists(public_path().$product->image)) {
+                $image = unlink(public_path().$product->image);
+                if (! $image) {
+                    error_log('Failed to delete image: '.public_path().$product->image);
                 }
             }
         }
@@ -126,6 +118,7 @@ class ProductController extends Controller
     public function pricing(Product $product)
     {
         $pricing = $product->prices;
+
         return view('admin.products.pricing', compact('product', 'pricing'));
     }
 
@@ -138,11 +131,11 @@ class ProductController extends Controller
         ]);
         if ($request->get('pricing') !== $product->prices->type) {
             $request->validate([
-                'pricing' => 'required|in:recurring,free,one-time'
+                'pricing' => 'required|in:recurring,free,one-time',
             ]);
             // Update it
             $product->prices->update([
-                'type' => $request->get('pricing')
+                'type' => $request->get('pricing'),
             ]);
 
             return redirect()->route('admin.products.pricing', $product->id)->with('success', 'Product pricing updated successfully');
@@ -181,7 +174,8 @@ class ProductController extends Controller
                 $config = ExtensionHelper::getProductConfiguration($product);
             } catch (\Exception $error) {
                 $extension->productConfig = [];
-                session()->flash('error', $extension->name . ' threw an error: ' . $error->getMessage() . ' (are your extension settings correct?)');
+                session()->flash('error', $extension->name.' threw an error: '.$error->getMessage().' (are your extension settings correct?)');
+
                 return view('admin.products.extension', compact('product', 'extensions', 'extension'));
             }
             $extension->productConfig = $config;
@@ -189,6 +183,7 @@ class ProductController extends Controller
             $server = null;
             $extension = null;
         }
+
         return view('admin.products.extension', compact('product', 'extensions', 'extension'));
     }
 
@@ -202,6 +197,7 @@ class ProductController extends Controller
             // Delete all product settings
             ProductSetting::where('product_id', $product->id)->delete();
             $product->update($data);
+
             return redirect()->route('admin.products.extension', $product->id)->with('success', 'Server changed successfully');
         }
         $extension = Extension::findOrFail($product->extension_id);
@@ -210,7 +206,9 @@ class ProductController extends Controller
         $extension->productConfig = $config;
 
         foreach ($extension->productConfig as $config) {
-            if ($config->type == 'title') continue;
+            if ($config->type == 'title') {
+                continue;
+            }
             $config->required = isset($config->required) ? $config->required : false;
             if ($config->required && $request->input($config->name) == null) {
                 return redirect()->route('admin.products.extension', $product->id)->with('error', 'Please fill in all required fields');
@@ -236,13 +234,12 @@ class ProductController extends Controller
     public function extensionExport(Product $product)
     {
         $extension = Extension::findOrFail($product->extension_id);
-        if (!$extension) {
+        if (! $extension) {
             return view('admin.products.extension', compact('product', 'extensions', 'server', 'extension'))->with('error', 'Extension not found');
         }
 
         $config = ExtensionHelper::getProductConfiguration($product);
         $extension->productConfig = $config;
-
 
         $productSettings = ProductSetting::where('product_id', $product->id)->get();
         $settings = [];
@@ -250,42 +247,47 @@ class ProductController extends Controller
         $settings['server'] = $extension->name;
 
         foreach ($extension->productConfig as $config) {
-            if ($config->type == 'title') continue;
+            if ($config->type == 'title') {
+                continue;
+            }
             $productSettings2 = $productSettings->where('name', $config->name)->first();
             if ($productSettings2) {
                 if (empty($productSettings2->value)) {
-                    if ($config->type == 'text')
+                    if ($config->type == 'text') {
                         $settings['config'][$config->name] = '';
-                    else if ($config->type == 'number')
+                    } elseif ($config->type == 'number') {
                         $settings['config'][$config->name] = 0;
-                    else if ($config->type == 'boolean')
+                    } elseif ($config->type == 'boolean') {
                         $settings['config'][$config->name] = false;
-                    else if ($config->type == 'select')
+                    } elseif ($config->type == 'select') {
                         $settings['config'][$config->name] = $config->options[0];
+                    }
                 } else {
                     $settings['config'][$config->name] = $productSettings2->value;
                 }
             } else {
-                if ($config->type == 'text')
+                if ($config->type == 'text') {
                     $settings['config'][$config->name] = '';
-                else if ($config->type == 'number')
+                } elseif ($config->type == 'number') {
                     $settings['config'][$config->name] = 0;
-                else if ($config->type == 'boolean')
+                } elseif ($config->type == 'boolean') {
                     $settings['config'][$config->name] = false;
-                else if ($config->type == 'select')
+                } elseif ($config->type == 'select') {
                     $settings['config'][$config->name] = $config->options[0];
+                }
             }
         }
 
         // Export it as JSON
         $json = json_encode($settings, JSON_PRETTY_PRINT);
-        $filename = $product->name . '.json';
+        $filename = $product->name.'.json';
+
         // Save the file
         return response(
             $json,
             200,
             [
-                'Content-Disposition' => 'attachment; filename="' . $filename . '"'
+                'Content-Disposition' => 'attachment; filename="'.$filename.'"',
             ]
         );
     }
@@ -300,22 +302,24 @@ class ProductController extends Controller
         $file->move(storage_path('app/temp'), $file->getClientOriginalName());
 
         // Read the file
-        $json = json_decode(file_get_contents(storage_path('app/temp/' . $file->getClientOriginalName())));
+        $json = json_decode(file_get_contents(storage_path('app/temp/'.$file->getClientOriginalName())));
         // Delete the file
-        unlink(storage_path('app/temp/' . $file->getClientOriginalName()));
+        unlink(storage_path('app/temp/'.$file->getClientOriginalName()));
         $server = Extension::where('name', $json->server)->first();
-        if (!$server)
+        if (! $server) {
             return redirect()->route('admin.products.extension', $product->id)->with('error', 'Invalid server');
-        if ($product->extension_id != $server->id)
+        }
+        if ($product->extension_id != $server->id) {
             $product->update(['extension_id' => $server->id]);
-        
-        if (!$json) {
+        }
+
+        if (! $json) {
             return redirect()->route('admin.products.extension', $product->id)->with('error', 'Invalid JSON');
         }
-        if (!isset($json->server) || $json->server != $server->name) {
+        if (! isset($json->server) || $json->server != $server->name) {
             return redirect()->route('admin.products.extension', $product->id)->with('error', 'Invalid server');
         }
-        if (!isset($json->config)) {
+        if (! isset($json->config)) {
             return redirect()->route('admin.products.extension', $product->id)->with('error', 'Invalid config');
         }
 
@@ -347,7 +351,7 @@ class ProductController extends Controller
     public function duplicate(Product $product)
     {
         $newProduct = $product->replicate();
-        $newProduct->name = $newProduct->name . ' (copy)';
+        $newProduct->name = $newProduct->name.' (copy)';
         $newProduct->save();
 
         $productSettings = ProductSetting::where('product_id', $product->id)->get();
@@ -378,7 +382,7 @@ class ProductController extends Controller
     {
         $request->validate([
             'upgrades' => 'array',
-            'upgrade_configurable_options' => 'boolean'
+            'upgrade_configurable_options' => 'boolean',
         ]);
 
         $product->update([
@@ -386,7 +390,7 @@ class ProductController extends Controller
         ]);
 
         foreach ($product->upgrades as $upgrade) {
-            if (!in_array($upgrade->upgrade_product_id, $request->get('upgrades', []))) {
+            if (! in_array($upgrade->upgrade_product_id, $request->get('upgrades', []))) {
                 $upgrade->delete();
             }
         }

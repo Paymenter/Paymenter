@@ -15,6 +15,7 @@ class Show extends Component
     public Ticket $ticket;
 
     public $attachments = [];
+
     public $message;
 
     public function reply()
@@ -28,12 +29,12 @@ class Show extends Component
 
         $message = $this->ticket->messages()->create([
             'user_id' => auth()->id(),
-            'message' => $this->message, 
+            'message' => $this->message,
         ]);
 
         foreach ($this->attachments as $attachment) {
             FileUploadHelper::upload($attachment, $message, TicketMessage::class);
-            
+
         }
 
         $this->ticket->update([
@@ -45,7 +46,7 @@ class Show extends Component
 
         $this->dispatch('refreshMessages');
     }
-    
+
     public function render()
     {
         return view('livewire.admin.tickets.show');

@@ -3,12 +3,10 @@
 namespace App\Extensions\Gateways\Stripe;
 
 use App\Classes\Extensions\Gateway;
-use Stripe\StripeClient;
 use App\Helpers\ExtensionHelper;
 use App\Models\Extension;
 use Illuminate\Http\Request;
-use Illuminate\Support\Str;
-
+use Stripe\StripeClient;
 
 class Stripe extends Gateway
 {
@@ -52,7 +50,6 @@ class Stripe extends Gateway
             ],
         ]);
 
-
         return $order;
     }
 
@@ -94,7 +91,7 @@ class Stripe extends Gateway
 
     public function stripeClient()
     {
-        if (!ExtensionHelper::getConfig('Stripe', 'stripe_test_mode')) {
+        if (! ExtensionHelper::getConfig('Stripe', 'stripe_test_mode')) {
             $stripe = new StripeClient(
                 ExtensionHelper::getConfig('Stripe', 'stripe_secret_key')
             );

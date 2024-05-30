@@ -11,7 +11,7 @@ class CPanel extends Server
 {
     /**
      * Get the extension metadata
-     * 
+     *
      * @return array
      */
     public function getMetadata()
@@ -28,18 +28,19 @@ class CPanel extends Server
     {
         $host = rtrim(ExtensionHelper::getConfig('CPanel', 'host'), '/');
         $response = Http::withHeaders([
-            'Authorization' => 'whm ' . ExtensionHelper::getConfig('CPanel', 'username') . ':' . ExtensionHelper::getConfig('CPanel', 'apikey'),
-        ])->$method($host . '/json-api' . $endpoint, $data);
+            'Authorization' => 'whm '.ExtensionHelper::getConfig('CPanel', 'username').':'.ExtensionHelper::getConfig('CPanel', 'apikey'),
+        ])->$method($host.'/json-api'.$endpoint, $data);
         if ($response->failed()) {
             dd($response->body(), $response->status());
             throw new \Exception('Error while requesting API');
         }
+
         return $response;
     }
 
     /**
      * Get all the configuration for the extension
-     * 
+     *
      * @return array
      */
     public function getConfig()
@@ -69,8 +70,8 @@ class CPanel extends Server
 
     /**
      * Get product config
-     * 
-     * @param array $options
+     *
+     * @param  array  $options
      * @return array
      */
     public function getProductConfig($options)
@@ -100,7 +101,7 @@ class CPanel extends Server
     /**
      * Get configurable options for users
      *
-     * @param array $options
+     * @param  array  $options
      * @return array
      */
     public function getUserConfig()
@@ -112,18 +113,18 @@ class CPanel extends Server
                 'validation' => 'domain',
                 'friendlyName' => 'Domain',
                 'required' => true,
-            ]
+            ],
         ];
     }
 
     /**
      * Create a server
-     * 
-     * @param User $user
-     * @param array $params
-     * @param Order $order
-     * @param OrderProduct $orderProduct
-     * @param array $configurableOptions
+     *
+     * @param  User  $user
+     * @param  array  $params
+     * @param  Order  $order
+     * @param  OrderProduct  $orderProduct
+     * @param  array  $configurableOptions
      * @return bool
      */
     public function createServer($user, $params, $order, $orderProduct, $configurableOptions)
@@ -131,7 +132,7 @@ class CPanel extends Server
         $username = Str::random();
         // If first one is a number, add a letter
         if (is_numeric($username[0])) {
-            $username = 'a' . substr($username, 1);
+            $username = 'a'.substr($username, 1);
         }
         $this->request(
             'get',
@@ -141,7 +142,7 @@ class CPanel extends Server
                 'username' => $username,
                 'contactemail' => $user->email,
                 'domain' => $params['config']['domain'],
-                'plan' => $params['package']
+                'plan' => $params['package'],
             ]
         );
 
@@ -152,12 +153,12 @@ class CPanel extends Server
 
     /**
      * Suspend a server
-     * 
-     * @param User $user
-     * @param array $params
-     * @param Order $order
-     * @param OrderProduct $orderProduct
-     * @param array $configurableOptions
+     *
+     * @param  User  $user
+     * @param  array  $params
+     * @param  Order  $order
+     * @param  OrderProduct  $orderProduct
+     * @param  array  $configurableOptions
      * @return bool
      */
     public function suspendServer($user, $params, $order, $orderProduct, $configurableOptions)
@@ -176,12 +177,12 @@ class CPanel extends Server
 
     /**
      * Unsuspend a server
-     * 
-     * @param User $user
-     * @param array $params
-     * @param Order $order
-     * @param OrderProduct $orderProduct
-     * @param array $configurableOptions
+     *
+     * @param  User  $user
+     * @param  array  $params
+     * @param  Order  $order
+     * @param  OrderProduct  $orderProduct
+     * @param  array  $configurableOptions
      * @return bool
      */
     public function unsuspendServer($user, $params, $order, $orderProduct, $configurableOptions)
@@ -200,12 +201,12 @@ class CPanel extends Server
 
     /**
      * Terminate a server
-     * 
-     * @param User $user
-     * @param array $params
-     * @param Order $order
-     * @param OrderProduct $orderProduct
-     * @param array $configurableOptions
+     *
+     * @param  User  $user
+     * @param  array  $params
+     * @param  Order  $order
+     * @param  OrderProduct  $orderProduct
+     * @param  array  $configurableOptions
      * @return bool
      */
     public function terminateServer($user, $params, $order, $orderProduct, $configurableOptions)

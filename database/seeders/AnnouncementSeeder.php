@@ -3,7 +3,6 @@
 namespace Database\Seeders;
 
 use App\Models\Announcement;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
 class AnnouncementSeeder extends Seeder
@@ -20,7 +19,7 @@ class AnnouncementSeeder extends Seeder
         }
         Announcement::create([
             'title' => 'Welcome to your new panel!',
-            'announcement' => 'Welcome to your new panel! Manage the announcement in the admin area'
+            'announcement' => 'Welcome to your new panel! Manage the announcement in the admin area',
         ]);
     }
 }

@@ -4,20 +4,18 @@ namespace App\Providers;
 
 use App\Models\Affiliate;
 use App\Models\Setting;
-use App\Models\User;
 use Illuminate\Contracts\Encryption\DecryptException;
-use Illuminate\Support\Facades\Route;
-use Qirolab\Theme\Theme;
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Blade;
-use Illuminate\Support\ServiceProvider;
-use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\URL;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Str;
 use Livewire\Livewire;
+use Qirolab\Theme\Theme;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -54,7 +52,7 @@ class AppServiceProvider extends ServiceProvider
             $affiliate = Affiliate::where('code', request()->ref)->first();
             if ($affiliate) {
                 $affiliate->increment('visitors');
-                if (!auth()->check()) {
+                if (! auth()->check()) {
                     // Set affiliate cookie
                     cookie()->queue('affiliate', $affiliate->code, 60 * 24 * 90);
                 }
@@ -63,7 +61,7 @@ class AppServiceProvider extends ServiceProvider
         try {
             $settings = Setting::all();
             foreach ($settings as $setting) {
-                config(['settings::' . $setting->key => $setting->value]);
+                config(['settings::'.$setting->key => $setting->value]);
             }
             if (config('settings::app_name') !== config('app.name')) {
                 config(['app.name' => config('settings::app_name')]);
@@ -98,7 +96,7 @@ class AppServiceProvider extends ServiceProvider
                 config(['settings::mail_disabled' => true]);
             }
 
-            if (!config('settings::mail_disabled')) {
+            if (! config('settings::mail_disabled')) {
                 if (
                     config('mail.mailers.smtp.host') != config('settings::mail_host') ||
                     config('mail.mailers.smtp.port') != config('settings::mail_port') ||

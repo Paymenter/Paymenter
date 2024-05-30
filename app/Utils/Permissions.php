@@ -80,9 +80,6 @@ class Permissions extends BitField
 
     /**
      * Check if permission flag equals bit-field
-     *
-     * @param string $permission
-     * @return bool
      */
     public function has(string $permission): bool
     {
@@ -91,15 +88,14 @@ class Permissions extends BitField
 
     /**
      * Check available permissions with bit-field
-     *
-     * @return array
      */
     public function available(): array
     {
         $available = [];
         foreach (self::$flags as $key => $flag) {
-            if ($this->hasBit($flag))
+            if ($this->hasBit($flag)) {
                 $available[] = $key;
+            }
         }
 
         return $available;

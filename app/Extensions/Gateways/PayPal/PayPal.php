@@ -1,10 +1,11 @@
 <?php
+
 namespace App\Extensions\Gateways\PayPal;
 
 use App\Classes\Extensions\Gateway;
 use App\Helpers\ExtensionHelper;
-use Illuminate\Support\Facades\Http;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
 
 class PayPal extends Gateway
 {
@@ -17,7 +18,7 @@ class PayPal extends Gateway
             'website' => 'https://paymenter.org',
         ];
     }
-    
+
     public function pay($total, $products, $orderId)
     {
         $client_id = ExtensionHelper::getConfig('PayPal', 'client_id');
@@ -31,24 +32,24 @@ class PayPal extends Gateway
 
         $response = Http::withHeaders([
             'Content-Type' => 'application/x-www-form-urlencoded',
-            'Authorization' => 'Basic ' . base64_encode($client_id . ':' . $client_secret),
-        ])->asForm()->post($url . '/v1/oauth2/token', [
+            'Authorization' => 'Basic '.base64_encode($client_id.':'.$client_secret),
+        ])->asForm()->post($url.'/v1/oauth2/token', [
             'grant_type' => 'client_credentials',
         ]);
 
         $token = $response->json()['access_token'];
         $response = Http::withHeaders([
             'Content-Type' => 'application/json',
-            'Authorization' => 'Bearer ' . $token,
+            'Authorization' => 'Bearer '.$token,
             'PayPal-Request-Id' => $orderId,
-        ])->post($url . '/v2/checkout/orders', [
+        ])->post($url.'/v2/checkout/orders', [
             'intent' => 'CAPTURE',
             'purchase_units' => [
                 [
                     'reference_id' => $orderId,
                     'amount' => [
                         'currency_code' => ExtensionHelper::getCurrency(),
-                        'value' => round($total, 2)
+                        'value' => round($total, 2),
                     ],
                 ],
             ],
@@ -57,12 +58,12 @@ class PayPal extends Gateway
                     'experience_context' => [
                         'cancel_url' => route('clients.invoice.show', $orderId),
                         'return_url' => route('clients.invoice.show', $orderId),
-                        'brand_name' =>  config('app.name', 'Paymenter'),
-                        'shipping_preference'  => 'NO_SHIPPING',
+                        'brand_name' => config('app.name', 'Paymenter'),
+                        'shipping_preference' => 'NO_SHIPPING',
                         'user_action' => 'PAY_NOW',
                         'payment_method_preference' => 'IMMEDIATE_PAYMENT_REQUIRED',
-                    ]
-                ]
+                    ],
+                ],
             ],
         ]);
 
@@ -76,7 +77,7 @@ class PayPal extends Gateway
     public function webhook(Request $request)
     {
         $body = $request->getContent();
-        $sigString = $request->header('PAYPAL-TRANSMISSION-ID') . '|' . $request->header('PAYPAL-TRANSMISSION-TIME') . '|' . ExtensionHelper::getConfig('PayPal', 'webhookId') . '|' . crc32($body);
+        $sigString = $request->header('PAYPAL-TRANSMISSION-ID').'|'.$request->header('PAYPAL-TRANSMISSION-TIME').'|'.ExtensionHelper::getConfig('PayPal', 'webhookId').'|'.crc32($body);
         $pubKey = openssl_pkey_get_public(file_get_contents($request->header('PAYPAL-CERT-URL')));
         $details = openssl_pkey_get_details($pubKey);
         $verifyResult = openssl_verify(
@@ -103,16 +104,16 @@ class PayPal extends Gateway
 
                 $response = Http::withHeaders([
                     'Content-Type' => 'application/x-www-form-urlencoded',
-                    'Authorization' => 'Basic ' . base64_encode($client_id . ':' . $client_secret),
-                ])->asForm()->post($url . '/v1/oauth2/token', [
+                    'Authorization' => 'Basic '.base64_encode($client_id.':'.$client_secret),
+                ])->asForm()->post($url.'/v1/oauth2/token', [
                     'grant_type' => 'client_credentials',
                 ]);
-        
+
                 $token = $response->json()['access_token'];
                 $response = Http::withHeaders([
                     'Content-Type' => 'application/json',
-                    'Authorization' => 'Bearer ' . $token,
-                ])->post($url . '/v2/checkout/orders/' . $data['resource']['id'] . '/capture', [
+                    'Authorization' => 'Bearer '.$token,
+                ])->post($url.'/v2/checkout/orders/'.$data['resource']['id'].'/capture', [
                     'note_to_payer' => 'Thank you for your payment!',
                 ]);
 

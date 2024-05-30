@@ -2,20 +2,16 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Models\Announcement;
 use App\Http\Controllers\Controller;
+use App\Models\Announcement;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
 use Illuminate\View\View;
 
 class AnnouncementController extends Controller
 {
-
     /**
      * Display a listing of the announcements
-     *
-     * @return View
      */
     public function index(): View
     {
@@ -24,8 +20,6 @@ class AnnouncementController extends Controller
 
     /**
      * Display creating form
-     *
-     * @return View
      */
     public function create(): View
     {
@@ -34,9 +28,6 @@ class AnnouncementController extends Controller
 
     /**
      * Store a new announcement
-     *
-     * @param Request $request
-     * @return RedirectResponse
      */
     public function store(Request $request): RedirectResponse
     {
@@ -55,9 +46,6 @@ class AnnouncementController extends Controller
 
     /**
      * Display the announcement edit form
-     *
-     * @param Announcement $announcement
-     * @return View
      */
     public function edit(Announcement $announcement): View
     {
@@ -66,10 +54,6 @@ class AnnouncementController extends Controller
 
     /**
      * Update the announcement
-     *
-     * @param Announcement $announcement
-     * @param Request $request
-     * @return RedirectResponse
      */
     public function update(Announcement $announcement, Request $request): RedirectResponse
     {
@@ -88,9 +72,6 @@ class AnnouncementController extends Controller
 
     /**
      * Delete the announcement
-     *
-     * @param Announcement $announcement
-     * @return RedirectResponse
      */
     public function destroy(Announcement $announcement): RedirectResponse
     {

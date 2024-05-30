@@ -104,7 +104,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'permission:ADMINISTRATOR'], 
         Route::post('/{invoice}/paid', [App\Http\Controllers\Admin\InvoiceController::class, 'paid'])->middleware(['permission:EDIT_INVOICES'])->name('admin.invoices.paid');
     });
 
-    Route::group(['prefix' => 'coupon'], function() {
+    Route::group(['prefix' => 'coupon'], function () {
         Route::get('/', [App\Http\Controllers\Admin\CouponController::class, 'index'])->middleware(['permission:VIEW_COUPONS'])->name('admin.coupons');
         Route::get('/create', [App\Http\Controllers\Admin\CouponController::class, 'create'])->middleware(['permission:EDIT_INVOICES'])->name('admin.coupons.create');
         Route::post('/create', [App\Http\Controllers\Admin\CouponController::class, 'store'])->middleware(['permission:EDIT_INVOICES'])->name('admin.coupons.store');
@@ -113,7 +113,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'permission:ADMINISTRATOR'], 
         Route::delete('/{coupon}/delete', [App\Http\Controllers\Admin\CouponController::class, 'destroy'])->middleware(['permission:EDIT_INVOICES'])->name('admin.coupons.delete');
     });
 
-    Route::group(['prefix' => 'announcements'], function() {
+    Route::group(['prefix' => 'announcements'], function () {
         Route::get('/', [App\Http\Controllers\Admin\AnnouncementController::class, 'index'])->middleware(['permission:VIEW_ANNOUNCEMENTS'])->name('admin.announcements');
         Route::get('/create', [App\Http\Controllers\Admin\AnnouncementController::class, 'create'])->middleware(['permission:CREATE_ANNOUNCEMENTS'])->name('admin.announcements.create');
         Route::post('/create', [App\Http\Controllers\Admin\AnnouncementController::class, 'store'])->middleware(['permission:CREATE_ANNOUNCEMENTS'])->name('admin.announcements.store');
@@ -122,7 +122,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'permission:ADMINISTRATOR'], 
         Route::delete('/{announcement}/delete', [App\Http\Controllers\Admin\AnnouncementController::class, 'destroy'])->middleware(['permission:DELETE_ANNOUNCEMENTS'])->name('admin.announcements.delete');
     });
 
-    Route::group(['prefix' => 'roles'], function() {
+    Route::group(['prefix' => 'roles'], function () {
         Route::get('/', [App\Http\Controllers\Admin\RoleController::class, 'index'])->middleware(['permission:VIEW_ROLES'])->name('admin.roles');
         Route::get('/create', [App\Http\Controllers\Admin\RoleController::class, 'create'])->middleware(['permission:CREATE_ROLES'])->name('admin.roles.create');
         Route::post('/create', [App\Http\Controllers\Admin\RoleController::class, 'store'])->middleware(['permission:CREATE_ROLES'])->name('admin.roles.store');
@@ -131,7 +131,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'permission:ADMINISTRATOR'], 
         Route::delete('/{role}/delete', [App\Http\Controllers\Admin\RoleController::class, 'destroy'])->middleware(['permission:DELETE_ROLES'])->name('admin.roles.delete');
     });
 
-    Route::group(['prefix' => 'configurable-options'], function() {
+    Route::group(['prefix' => 'configurable-options'], function () {
         Route::get('/', [App\Http\Controllers\Admin\ConfigurableOptionController::class, 'index'])->middleware(['permission:VIEW_CONFIGURABLE_OPTIONS'])->name('admin.configurable-options');
         Route::get('/create', [App\Http\Controllers\Admin\ConfigurableOptionController::class, 'create'])->middleware(['permission:CREATE_CONFIGURABLE_OPTIONS'])->name('admin.configurable-options.create');
         Route::post('/create', [App\Http\Controllers\Admin\ConfigurableOptionController::class, 'store'])->middleware(['permission:CREATE_CONFIGURABLE_OPTIONS'])->name('admin.configurable-options.store');
@@ -146,20 +146,20 @@ Route::group(['prefix' => 'admin', 'middleware' => 'permission:ADMINISTRATOR'], 
         Route::delete('/{configurableOptionGroup}/options/{configurableOption}/inputs/{configurableOptionInput}/delete', [App\Http\Controllers\Admin\ConfigurableOptionController::class, 'destroyOptionInput'])->middleware(['permission:DELETE_CONFIGURABLE_OPTIONS'])->name('admin.configurable-options.options.inputs.destroy');
     });
 
-    Route::group(['prefix' => 'email'], function() {
+    Route::group(['prefix' => 'email'], function () {
         Route::get('/', [App\Http\Controllers\Admin\EmailController::class, 'index'])->middleware(['permission:VIEW_EMAIL'])->name('admin.email');
         Route::get('/templates', [App\Http\Controllers\Admin\EmailController::class, 'templates'])->middleware(['permission:EDIT_EMAIL'])->name('admin.email.templates');
         Route::get('/templates/{template}', [App\Http\Controllers\Admin\EmailController::class, 'template'])->middleware(['permission:EDIT_EMAIL'])->name('admin.email.template');
         Route::post('/templates/{template}/update', [App\Http\Controllers\Admin\EmailController::class, 'update'])->middleware(['permission:EDIT_EMAIL'])->name('admin.email.template.update');
     });
 
-    Route::group(['prefix' => 'taxes'], function() {
+    Route::group(['prefix' => 'taxes'], function () {
         Route::get('/', [App\Http\Controllers\Admin\TaxController::class, 'index'])->middleware(['permission:VIEW_TAXES'])->name('admin.taxes');
         Route::post('/', [App\Http\Controllers\Admin\TaxController::class, 'update'])->middleware(['permission:EDIT_TAXES'])->name('admin.taxes.update');
         Route::post('/create', [App\Http\Controllers\Admin\TaxController::class, 'store'])->middleware(['permission:CREATE_TAXES'])->name('admin.taxes.create');
-    }); 
+    });
 
-    Route::group(['prefix' => 'logs'], function() {
+    Route::group(['prefix' => 'logs'], function () {
         Route::get('/', [App\Http\Controllers\Admin\LogController::class, 'index'])->middleware(['permission:VIEW_LOGS'])->name('admin.logs');
         Route::post('/debug', [App\Http\Controllers\Admin\LogController::class, 'debug'])->middleware(['permission:VIEW_LOGS'])->name('admin.logs.debug');
     });

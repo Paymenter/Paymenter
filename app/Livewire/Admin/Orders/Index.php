@@ -27,7 +27,7 @@ class Index extends DataTableComponent
     public function configure(): void
     {
         $this->setPrimaryKey('id')->setTableRowUrl(fn ($row) => route('admin.orders.show', $row))
-        ->setDefaultSort('id', 'desc');
+            ->setDefaultSort('id', 'desc');
     }
 
     public function deleteOrders(): void
@@ -45,7 +45,6 @@ class Index extends DataTableComponent
             $order->invoices()->delete();
             $order->delete();
         }
-
 
         $this->clearSelected();
     }

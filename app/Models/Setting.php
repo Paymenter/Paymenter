@@ -2,15 +2,18 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Cache;
 
 class Setting extends Model
 {
     use HasFactory;
+
     protected $table = 'settings';
+
     protected $primaryKey = 'key';
+
     public $incrementing = false;
 
     protected $fillable = [
@@ -23,7 +26,7 @@ class Setting extends Model
     {
         parent::boot();
         static::saved(function ($setting) {
-            Cache::forget('settings::' . $setting->key);
+            Cache::forget('settings::'.$setting->key);
         });
     }
 }

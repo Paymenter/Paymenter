@@ -2,7 +2,6 @@
 
 namespace App\Console\Commands\User;
 
-use App\Models\Setting;
 use App\Models\User;
 use Illuminate\Console\Command;
 
@@ -32,21 +31,21 @@ class Disable2FA extends Command
 
         $email = $this->argument('email');
 
-        if (!$email) {
+        if (! $email) {
             $email = $this->ask('What is the email of the user?');
         }
 
-        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        if (! filter_var($email, FILTER_VALIDATE_EMAIL)) {
             exit($this->error('Invalid email address stublifer.'));
         }
-        
+
         $user = User::where('email', $email)->first();
 
-        if (!$user) {
+        if (! $user) {
             exit($this->error('User does not exist.'));
         }
 
-        if(!$user->tfa_secret) {
+        if (! $user->tfa_secret) {
             exit($this->error('2FA is not enabled for this user.'));
         }
 

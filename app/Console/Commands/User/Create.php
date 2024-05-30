@@ -30,7 +30,7 @@ class Create extends Command
     {
         $email = $this->ask('Create a user. What is his/her email?');
 
-        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        if (! filter_var($email, FILTER_VALIDATE_EMAIL)) {
             exit($this->error('Invalid email address stublifer.'));
         }
 

@@ -16,5 +16,5 @@ return [
     'sent' => 'Elküldtük a jelszó visszaállitási hivatkozást emailben!',
     'throttled' => 'Kérlek várj egy kicsit, majd próbáld ujra',
     'token' => 'Ez a jelszó helyreállitási token helytelen',
-    'user' => "A megadott e-mail cim nem található.",
+    'user' => 'A megadott e-mail cim nem található.',
 ];

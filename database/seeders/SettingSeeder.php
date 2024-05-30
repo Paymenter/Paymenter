@@ -3,9 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\Setting;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
 
 class SettingSeeder extends Seeder
 {
@@ -44,7 +42,7 @@ class SettingSeeder extends Seeder
             ['key' => 'timezone', 'value' => 'UTC'],
             ['key' => 'latest_version', 'value' => config('app.version')],
             ['key' => 'remove_unpaid_order_after', 'value' => 7],
-            ['key' => 'run_cronjob_at', 'value' => '00:00']
+            ['key' => 'run_cronjob_at', 'value' => '00:00'],
         ];
         foreach ($settings as $setting) {
             $setting['created_at'] = now();

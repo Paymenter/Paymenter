@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Models\Extension;
-use Illuminate\Http\Request;
 use App\Helpers\ExtensionHelper;
 use App\Http\Controllers\Controller;
+use App\Models\Extension;
 use Illuminate\Contracts\Encryption\DecryptException;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Http;
 
@@ -23,7 +23,7 @@ class ExtensionController extends Controller
             }
             // Check if the extension is enabled
             $extension = Extension::where('name', $server)->first();
-            if (!$extension) {
+            if (! $extension) {
                 $extension = new Extension();
                 $extension->name = $server;
                 $extension->type = 'server';
@@ -37,7 +37,7 @@ class ExtensionController extends Controller
             }
             // Check if the extension is enabled
             $extension = Extension::where('name', $gateway)->first();
-            if (!$extension) {
+            if (! $extension) {
                 $extension = new Extension();
                 $extension->name = $gateway;
                 $extension->type = 'gateway';
@@ -51,7 +51,7 @@ class ExtensionController extends Controller
             }
             // Check if the extension is enabled
             $extension = Extension::where('name', $event)->first();
-            if (!$extension) {
+            if (! $extension) {
                 $extension = new Extension();
                 $extension->name = $event;
                 $extension->type = 'event';
@@ -65,7 +65,6 @@ class ExtensionController extends Controller
 
     /**
      * Browse extensions via the marketplace API
-     *
      */
     public function browse(Request $request)
     {
@@ -74,7 +73,7 @@ class ExtensionController extends Controller
         } else {
             $page = 1;
         }
-        $url = config('app.marketplace') . 'extensions?page=' . $page . '&version=' . config('app.version') . '&search=' . $request->search;
+        $url = config('app.marketplace').'extensions?page='.$page.'&version='.config('app.version').'&search='.$request->search;
         $response = Http::get($url)->json();
         $extensions = $response['data'];
 
@@ -84,21 +83,20 @@ class ExtensionController extends Controller
     /**
      * Install extension from the marketplace
      *
-     * @param Request $request
-     *
+     * @param  Request  $request
      * @return \Illuminate\Http\RedirectResponse
      */
     public function install($id)
     {
-        $url = config('app.marketplace') . 'extensions/' . $id . '?version=' . config('app.version');
+        $url = config('app.marketplace').'extensions/'.$id.'?version='.config('app.version');
         $response = Http::get($url);
-        if (!$response->successful()) {
+        if (! $response->successful()) {
             return redirect()->route('admin.extensions.browse')->with('error', 'Extension not found');
         }
         $extension = $response->json();
-        $path = base_path('app/Extensions/' . ucfirst($extension['type']) . 's/' . $extension['name']);
+        $path = base_path('app/Extensions/'.ucfirst($extension['type']).'s/'.$extension['name']);
         if ($extension['type'] == 'theme') {
-            $path = base_path('themes/' . $extension['name']);
+            $path = base_path('themes/'.$extension['name']);
         }
         if (file_exists($path)) {
             //Remove the folder
@@ -106,13 +104,13 @@ class ExtensionController extends Controller
         }
         mkdir($path, 0777, true);
         // Check if temp folder exists
-        if (!file_exists(base_path('storage/app/temp'))) {
+        if (! file_exists(base_path('storage/app/temp'))) {
             mkdir(base_path('storage/app/temp'), 0777, true);
         }
         // Download zip to temp folder
-        $zip = Http::get(config('app.marketplace') . 'extensions/' . $id . '/download?version=' . config('app.version'));
+        $zip = Http::get(config('app.marketplace').'extensions/'.$id.'/download?version='.config('app.version'));
         $zip = $zip->body();
-        $zipPath = base_path('storage/app/temp/' . $extension['name'] . '.zip');
+        $zipPath = base_path('storage/app/temp/'.$extension['name'].'.zip');
         file_put_contents($zipPath, $zip);
         // Unzip
         $zip = new \ZipArchive();
@@ -126,14 +124,14 @@ class ExtensionController extends Controller
         $subfolder = scandir($path);
         if (count($subfolder) == 3) {
             $subfolder = $subfolder[2];
-            if (is_dir($path . '/' . $subfolder)) {
-                $subfolderPath = $path . '/' . $subfolder;
+            if (is_dir($path.'/'.$subfolder)) {
+                $subfolderPath = $path.'/'.$subfolder;
                 $files = scandir($subfolderPath);
                 foreach ($files as $file) {
                     if ($file == '.' || $file == '..') {
                         continue;
                     }
-                    rename($subfolderPath . '/' . $file, $path . '/' . $file);
+                    rename($subfolderPath.'/'.$file, $path.'/'.$file);
                 }
                 rmdir($subfolderPath);
             }
@@ -144,49 +142,49 @@ class ExtensionController extends Controller
 
         // Check if the extension is enabled
         $extensionModel = Extension::where('name', $extension['name'])->first();
-        if (!$extensionModel) {
+        if (! $extensionModel) {
             $extensionModel = new Extension();
             $extensionModel->name = $extension['name'];
             $extensionModel->type = $extension['type'];
             $extensionModel->enabled = 0;
             $extensionModel->save();
         }
+
         return redirect()->route('admin.extensions')->with('success', 'Extension downloaded successfully');
     }
 
     /**
      * Delete a directory recursively
      *
-     * @param $dir
      *
      * @return bool
      */
     private function deleteDir($dir)
     {
-        if (!file_exists($dir)) {
+        if (! file_exists($dir)) {
             return true;
         }
-        if (!is_dir($dir)) {
+        if (! is_dir($dir)) {
             return unlink($dir);
         }
         foreach (scandir($dir) as $item) {
             if ($item == '.' || $item == '..') {
                 continue;
             }
-            if (!$this->deleteDir($dir . DIRECTORY_SEPARATOR . $item)) {
+            if (! $this->deleteDir($dir.DIRECTORY_SEPARATOR.$item)) {
                 return false;
             }
         }
+
         return rmdir($dir);
     }
-
 
     public function edit($sort, $name)
     {
         $extension = Extension::where('name', $name)->first();
-        if (!$extension) {
+        if (! $extension) {
             // Check if class exists
-            if (!class_exists('App\Extensions\\' . ucfirst($sort) . 's\\' . $name . '\\' . $name)) {
+            if (! class_exists('App\Extensions\\'.ucfirst($sort).'s\\'.$name.'\\'.$name)) {
                 return redirect()->route('admin.extensions')->with('error', 'Extension not found');
             }
             Extension::create([
@@ -196,7 +194,7 @@ class ExtensionController extends Controller
             ]);
             $extension = Extension::where('name', $name)->first();
         }
-        $namespace = "App\Extensions\\" . ucfirst($sort) . "s\\" . $name . "\\" . $name;
+        $namespace = "App\Extensions\\".ucfirst($sort).'s\\'.$name.'\\'.$name;
 
         $extension->config = json_decode(json_encode((new $namespace($extension))->getConfig()));
         $extension->name = $name;
@@ -218,9 +216,9 @@ class ExtensionController extends Controller
     public function update(Request $request, $sort, $name)
     {
         $extension = Extension::where('name', $name)->first();
-        if (!$extension) {
+        if (! $extension) {
             // Check if class exists
-            if (!class_exists('App\\Extensions\\' . ucfirst($sort) . 's\\' . $name . '\\' . $name)) {
+            if (! class_exists('App\\Extensions\\'.ucfirst($sort).'s\\'.$name.'\\'.$name)) {
                 return redirect()->route('admin.extensions')->with('error', 'Extension not found');
             }
             Extension::create([
@@ -236,13 +234,13 @@ class ExtensionController extends Controller
             return $config;
         }
 
-
         return redirect()->route('admin.extensions.edit', ['sort' => $sort, 'name' => $name])->with('success', 'Extension updated successfully');
     }
 
-    public function updateExtension(Extension $extension){
+    public function updateExtension(Extension $extension)
+    {
         // Get ID from the marketplace
-        $url = config('app.marketplace') . 'extensions?version=' . config('app.version') . '&search=' . $extension->name;
+        $url = config('app.marketplace').'extensions?version='.config('app.version').'&search='.$extension->name;
         $response = Http::get($url)->json();
 
         if (isset($response['error']) || count($response['data']) == 0) {

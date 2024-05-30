@@ -118,7 +118,6 @@ return [
     'url' => 'Format pola :attribute jest niepoprawny.',
     'uuid' => 'Pole :attribute musi być poprawnym identyfikatorem UUID.',
 
-
     /*
     |--------------------------------------------------------------------------
     | Custom Validation Language Lines

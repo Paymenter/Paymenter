@@ -2,11 +2,10 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Models\Order;
 use App\Helpers\ExtensionHelper;
 use App\Http\Controllers\Controller;
+use App\Models\Order;
 use App\Models\OrderProduct;
-use App\Models\Product;
 use Illuminate\Http\Request;
 
 class OrderController extends Controller
@@ -54,7 +53,6 @@ class OrderController extends Controller
         return redirect()->route('admin.orders.show', $order);
     }
 
-
     public function destroy(Order $order)
     {
         foreach ($order->products()->get() as $product) {
@@ -74,7 +72,6 @@ class OrderController extends Controller
             $product->status = 'suspended';
             $product->save();
         }
-
 
         return redirect()->route('admin.orders.show', $order);
     }

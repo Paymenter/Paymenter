@@ -5,7 +5,6 @@ namespace App\Jobs\Servers;
 use App\Helpers\ExtensionHelper;
 use App\Models\OrderProduct;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
@@ -22,7 +21,8 @@ class UpgradeServer implements ShouldQueue
      */
     public function __construct(
         public OrderProduct $orderProduct
-    ) {}
+    ) {
+    }
 
     /**
      * Execute the job.

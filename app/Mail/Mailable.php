@@ -4,9 +4,7 @@ namespace App\Mail;
 
 use App\Models\EmailTemplate;
 use Illuminate\Mail\Mailable as TemplateMailable;
-use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\View;
-use Illuminate\Support\Str;
 use Illuminate\View\Compilers\BladeCompiler;
 
 class Mailable extends TemplateMailable
@@ -14,7 +12,7 @@ class Mailable extends TemplateMailable
     public function build()
     {
         $emailTemplate = EmailTemplate::where('mailable', get_class($this))->first();
-        if (!$emailTemplate) {
+        if (! $emailTemplate) {
             return $this;
         }
         $html_template = $emailTemplate->html_template;

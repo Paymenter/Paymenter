@@ -47,13 +47,13 @@ class Index extends DataTableComponent
         $this->clearSelected();
     }
 
-
     public function builder(): Builder
     {
         if ($this->status == 'open') {
             return Ticket::query()
                 ->where('status', '!=', 'closed');
         }
+
         return Ticket::query()
             ->where('status', 'closed');
     }
@@ -68,22 +68,23 @@ class Index extends DataTableComponent
                         'default' => true,
                         'class' => '!text-green-500 !dark:text-green-400',
                     ];
-                } else if ($column->isField('status') && $row->status == 'closed') {
+                } elseif ($column->isField('status') && $row->status == 'closed') {
                     return [
                         'default' => true,
                         'class' => '!text-red-500 !dark:text-red-400',
                     ];
-                } else if ($column->isField('status') && $row->status == 'closed') {
+                } elseif ($column->isField('status') && $row->status == 'closed') {
                     return [
                         'default' => true,
                         'class' => '!text-red-500 !dark:text-red-400',
                     ];
-                } else if ($column->isField('status') && $row->status == 'replied') {
+                } elseif ($column->isField('status') && $row->status == 'replied') {
                     return [
                         'default' => true,
                         'class' => '!text-blue-500 !dark:text-blue-400',
                     ];
                 }
+
                 return [
                     'default' => true,
                 ];

@@ -3,7 +3,6 @@
 namespace Database\Seeders;
 
 use App\Models\EmailTemplate;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
 class EmailTemplateSeeder extends Seeder
@@ -13,8 +12,8 @@ class EmailTemplateSeeder extends Seeder
      */
     public function run(): void
     {
-        if (!EmailTemplate::where('mailable', \App\Mail\Test::class)->exists()) {
-            $html = file_get_contents(__DIR__ . '/EmailTemplates/test.blade.php');
+        if (! EmailTemplate::where('mailable', \App\Mail\Test::class)->exists()) {
+            $html = file_get_contents(__DIR__.'/EmailTemplates/test.blade.php');
 
             EmailTemplate::create([
                 'mailable' => \App\Mail\Test::class,
@@ -22,8 +21,8 @@ class EmailTemplateSeeder extends Seeder
                 'html_template' => $html,
             ]);
         }
-        if (!EmailTemplate::where('mailable', \App\Mail\Invoices\NewInvoice::class)->exists()) {
-            $html = file_get_contents(__DIR__ . '/EmailTemplates/invoices/new.blade.php');
+        if (! EmailTemplate::where('mailable', \App\Mail\Invoices\NewInvoice::class)->exists()) {
+            $html = file_get_contents(__DIR__.'/EmailTemplates/invoices/new.blade.php');
 
             EmailTemplate::create([
                 'mailable' => \App\Mail\Invoices\NewInvoice::class,
@@ -31,8 +30,8 @@ class EmailTemplateSeeder extends Seeder
                 'html_template' => $html,
             ]);
         }
-        if (!EmailTemplate::where('mailable', \App\Mail\Invoices\UnpaidInvoice::class)->exists()) {
-            $html = file_get_contents(__DIR__ . '/EmailTemplates/invoices/new.blade.php');
+        if (! EmailTemplate::where('mailable', \App\Mail\Invoices\UnpaidInvoice::class)->exists()) {
+            $html = file_get_contents(__DIR__.'/EmailTemplates/invoices/new.blade.php');
 
             EmailTemplate::create([
                 'mailable' => \App\Mail\Invoices\UnpaidInvoice::class,
@@ -40,8 +39,8 @@ class EmailTemplateSeeder extends Seeder
                 'html_template' => $html,
             ]);
         }
-        if (!EmailTemplate::where('mailable', \App\Mail\Orders\DeletedOrder::class)->exists()) {
-            $html = file_get_contents(__DIR__ . '/EmailTemplates/orders/deleted.blade.php');
+        if (! EmailTemplate::where('mailable', \App\Mail\Orders\DeletedOrder::class)->exists()) {
+            $html = file_get_contents(__DIR__.'/EmailTemplates/orders/deleted.blade.php');
 
             EmailTemplate::create([
                 'mailable' => \App\Mail\Orders\DeletedOrder::class,
@@ -49,8 +48,8 @@ class EmailTemplateSeeder extends Seeder
                 'html_template' => $html,
             ]);
         }
-        if (!EmailTemplate::where('mailable', \App\Mail\Orders\NewOrder::class)->exists()) {
-            $html = file_get_contents(__DIR__ . '/EmailTemplates/orders/new.blade.php');
+        if (! EmailTemplate::where('mailable', \App\Mail\Orders\NewOrder::class)->exists()) {
+            $html = file_get_contents(__DIR__.'/EmailTemplates/orders/new.blade.php');
 
             EmailTemplate::create([
                 'mailable' => \App\Mail\Orders\NewOrder::class,
@@ -58,8 +57,8 @@ class EmailTemplateSeeder extends Seeder
                 'html_template' => $html,
             ]);
         }
-        if (!EmailTemplate::where('mailable', \App\Mail\Tickets\NewTicket::class)->exists()) {
-            $html = file_get_contents(__DIR__ . '/EmailTemplates/tickets/new.blade.php');
+        if (! EmailTemplate::where('mailable', \App\Mail\Tickets\NewTicket::class)->exists()) {
+            $html = file_get_contents(__DIR__.'/EmailTemplates/tickets/new.blade.php');
 
             EmailTemplate::create([
                 'mailable' => \App\Mail\Tickets\NewTicket::class,
@@ -67,8 +66,8 @@ class EmailTemplateSeeder extends Seeder
                 'html_template' => $html,
             ]);
         }
-        if (!EmailTemplate::where('mailable', \App\Mail\Tickets\NewTicketMessage::class)->exists()) {
-            $html = file_get_contents(__DIR__ . '/EmailTemplates/tickets/new-message.blade.php');
+        if (! EmailTemplate::where('mailable', \App\Mail\Tickets\NewTicketMessage::class)->exists()) {
+            $html = file_get_contents(__DIR__.'/EmailTemplates/tickets/new-message.blade.php');
 
             EmailTemplate::create([
                 'mailable' => \App\Mail\Tickets\NewTicketMessage::class,

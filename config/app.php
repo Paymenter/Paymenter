@@ -22,7 +22,6 @@ return [
     // Marketplace API
     'marketplace' => 'https://market.paymenter.org/api/v1/',
 
-
     /*
     |--------------------------------------------------------------------------
     | Pagination

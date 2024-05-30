@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Cancellation extends Model
 {
     use HasFactory;
-    
+
     public $fillable = [
         'order_product_id',
         'reason',

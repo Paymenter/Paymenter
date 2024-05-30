@@ -1,13 +1,15 @@
 <?php
+
 namespace App\Classes\Extensions;
 
-class Gateway extends Extension {
+class Gateway extends Extension
+{
     /**
      * Get the URL to redirect to
-     * 
-     * @param int $total
-     * @param array $products
-     * @param int $invoiceId
+     *
+     * @param  int  $total
+     * @param  array  $products
+     * @param  int  $invoiceId
      * @return string
      */
     public function pay($total, $products, $invoiceId)
@@ -15,12 +17,11 @@ class Gateway extends Extension {
         return '';
     }
 
-
     /**
      * Get the URL to redirect to
-     * 
-     * @param int $total
-     * @param array $products
+     *
+     * @param  int  $total
+     * @param  array  $products
      * @return string
      */
     public function canUse($total, $products)

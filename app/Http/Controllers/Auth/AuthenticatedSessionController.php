@@ -2,18 +2,18 @@
 
 namespace App\Http\Controllers\Auth;
 
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\Auth\LoginRequest;
-use Carbon\CarbonImmutable;
-use Illuminate\Support\Str;
-use RobThree\Auth\TwoFactorAuth;
 use App\Models\User;
 use App\Providers\RouteServiceProvider;
 use App\Validators\ReCaptcha;
+use Carbon\CarbonImmutable;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
+use RobThree\Auth\TwoFactorAuth;
 
 class AuthenticatedSessionController extends Controller
 {
@@ -54,23 +54,24 @@ class AuthenticatedSessionController extends Controller
         return redirect(RouteServiceProvider::HOME);
     }
 
-    /** 
+    /**
      * Return view for 2FA
-     * 
+     *
      * @return \Illuminate\View\View
      */
     public function twoFactorChallenge()
     {
         // Check if auth_confirmation_token exists
-        if (!session()->has('auth_confirmation_token')) {
+        if (! session()->has('auth_confirmation_token')) {
             return redirect()->route('login');
         }
+
         return view('auth.tfa');
     }
 
     /**
      * Handle 2FA
-     * 
+     *
      * @return \Illuminate\Http\RedirectResponse
      */
     public function twoFactorAuthenticate(Request $request)
@@ -79,12 +80,13 @@ class AuthenticatedSessionController extends Controller
 
         $token = $request->session()->get('auth_confirmation_token');
 
-        if (!$token) {
+        if (! $token) {
             return redirect()->route('login');
         }
 
         if (CarbonImmutable::now()->greaterThan($token['expires_at'])) {
             $request->session()->forget('auth_confirmation_token');
+
             return redirect()->route('login')->withErrors(['code' => 'The 2FA code you entered has expired.']);
         }
 
@@ -94,6 +96,7 @@ class AuthenticatedSessionController extends Controller
             Auth::loginUsingId($token['user_id'], $token['remember']);
             $request->session()->regenerate();
             $request->session()->forget('auth_confirmation_token');
+
             return redirect()->route('clients.home');
         } else {
             return back()->withErrors(['code' => 'The 2FA code you entered is incorrect.']);

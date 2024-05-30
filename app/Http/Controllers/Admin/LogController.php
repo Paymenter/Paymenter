@@ -18,7 +18,7 @@ class LogController extends Controller
 
     public function debug(Request $request)
     {
-        if($request->get('disable') == 'true') {
+        if ($request->get('disable') == 'true') {
             Setting::updateOrCreate(['key' => 'debug_logs_enabled'], ['value' => 'false']);
         } else {
             Setting::updateOrCreate(['key' => 'debug_logs_enabled'], ['value' => 'true']);

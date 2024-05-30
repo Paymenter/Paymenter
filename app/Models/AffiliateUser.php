@@ -28,8 +28,9 @@ class AffiliateUser extends Model
     {
         $earnings = 0;
         foreach ($this->invoices as $invoice) {
-            if (!$invoice->isPaid())
+            if (! $invoice->isPaid()) {
                 continue;
+            }
             $earnings += $invoice->total() * $this->affiliate->commission / 100;
         }
         // Round to 2 decimal places

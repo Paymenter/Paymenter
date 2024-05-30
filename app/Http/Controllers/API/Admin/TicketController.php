@@ -3,17 +3,16 @@
 namespace App\Http\Controllers\API\Admin;
 
 use App\Classes\API;
-use Illuminate\Http\Request;
 use App\Http\Controllers\API\Controller;
 use App\Models\Ticket;
 use App\Models\TicketMessage;
-use App\Models\User;
+use Illuminate\Http\Request;
 
 class TicketController extends Controller
 {
     /**
      * Get all tickets.
-     * 
+     *
      * @return \Illuminate\Http\JsonResponse
      */
     public function getTickets(Request $request)
@@ -25,7 +24,7 @@ class TicketController extends Controller
 
     /**
      * Get a ticket by ID.
-     * 
+     *
      * @return \Illuminate\Http\JsonResponse
      */
     public function getTicket(Request $request, int $ticketId)
@@ -39,7 +38,7 @@ class TicketController extends Controller
 
     /**
      * Get ticket messages by ticket ID.
-     * 
+     *
      * @return \Illuminate\Http\JsonResponse
      */
     public function getTicketMessages(Request $request, int $ticketId)
@@ -53,7 +52,7 @@ class TicketController extends Controller
 
     /**
      * Create a new ticket.
-     * 
+     *
      * @return \Illuminate\Http\JsonResponse
      */
     public function createTicket(Request $request)
@@ -85,7 +84,7 @@ class TicketController extends Controller
 
     /**
      * Update ticket status.
-     * 
+     *
      * @return \Illuminate\Http\JsonResponse
      */
     public function updateTicketStatus(Request $request, int $ticketId)
@@ -106,7 +105,7 @@ class TicketController extends Controller
 
     /**
      * Reply to a ticket.
-     * 
+     *
      * @return \Illuminate\Http\JsonResponse
      */
     public function replyTicket(Request $request, int $ticketId)

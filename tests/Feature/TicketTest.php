@@ -2,16 +2,19 @@
 
 namespace Tests\Feature;
 
-use Tests\TestCase;
+use App\Models\Ticket;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use App\Models\{User, Ticket};
+use Tests\TestCase;
 
 class TicketTest extends TestCase
 {
     use RefreshDatabase;
 
     protected $user;
+
     protected $categorie;
+
     protected $product;
 
     public function setUp(): void
@@ -73,7 +76,7 @@ class TicketTest extends TestCase
 
     /**
      * Test if user can reply to a ticket.
-     * 
+     *
      * @return void
      */
     public function testCanReplyToTicket()
@@ -100,7 +103,7 @@ class TicketTest extends TestCase
 
     /**
      * Test if user can close a ticket.
-     * 
+     *
      * @return void
      */
     public function testCanCloseTicket()
@@ -122,6 +125,3 @@ class TicketTest extends TestCase
         ]);
     }
 }
-
-
-

@@ -2,17 +2,16 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\Models\User;
-use Illuminate\Support\Str;
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Affiliate;
 use App\Models\AffiliateUser;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Auth\Events\Registered;
+use App\Models\User;
 use App\Providers\RouteServiceProvider;
 use App\Validators\ReCaptcha;
+use Illuminate\Auth\Events\Registered;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 class RegisteredUserController extends Controller
 {
@@ -42,12 +41,11 @@ class RegisteredUserController extends Controller
             'last_name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|confirmed|min:8',
-            'address' => (config('settings::requiredClientDetails_address') == 1 ? 'required|': 'nullable|') . 'string',
-            'city' => (config('settings::requiredClientDetails_city') == 1 ? 'required|': 'nullable|') . 'string',
-            'country' => (config('settings::requiredClientDetails_country') == 1 ? 'required|': 'nullable|') . 'string|in:' . implode(',', array_keys($countries)),
-            'phone' => (config('settings::requiredClientDetails_phone') == 1 ? 'required|': 'nullable|') . 'string',
+            'address' => (config('settings::requiredClientDetails_address') == 1 ? 'required|' : 'nullable|').'string',
+            'city' => (config('settings::requiredClientDetails_city') == 1 ? 'required|' : 'nullable|').'string',
+            'country' => (config('settings::requiredClientDetails_country') == 1 ? 'required|' : 'nullable|').'string|in:'.implode(',', array_keys($countries)),
+            'phone' => (config('settings::requiredClientDetails_phone') == 1 ? 'required|' : 'nullable|').'string',
         ]);
-
 
         Auth::login($user = User::create([
             'first_name' => $request->first_name,
@@ -60,7 +58,7 @@ class RegisteredUserController extends Controller
             'phone' => $request->phone,
         ]));
         // Send email to user
-        if (!config('settings::mail_disabled')) {
+        if (! config('settings::mail_disabled')) {
             try {
                 $user->sendEmailVerificationNotification();
             } catch (\Exception $e) {

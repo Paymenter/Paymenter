@@ -9,7 +9,6 @@ class AffiliateObserver
     /**
      * Handle the Affiliate "created" event.
      *
-     * @param  \App\Models\Affiliate  $affiliate
      * @return void
      */
     public function created(Affiliate $affiliate)
@@ -20,7 +19,6 @@ class AffiliateObserver
     /**
      * Handle the Affiliate "updated" event.
      *
-     * @param  \App\Models\Affiliate  $affiliate
      * @return void
      */
     public function updated(Affiliate $affiliate)
@@ -31,7 +29,6 @@ class AffiliateObserver
     /**
      * Handle the Affiliate "deleted" event.
      *
-     * @param  \App\Models\Affiliate  $affiliate
      * @return void
      */
     public function deleted(Affiliate $affiliate)
@@ -42,7 +39,6 @@ class AffiliateObserver
     /**
      * Handle the Affiliate "restored" event.
      *
-     * @param  \App\Models\Affiliate  $affiliate
      * @return void
      */
     public function restored(Affiliate $affiliate)
@@ -53,7 +49,6 @@ class AffiliateObserver
     /**
      * Handle the Affiliate "force deleted" event.
      *
-     * @param  \App\Models\Affiliate  $affiliate
      * @return void
      */
     public function forceDeleted(Affiliate $affiliate)

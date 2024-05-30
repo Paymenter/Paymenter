@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers\Clients;
 
-use Illuminate\Http\Request;
 use App\Helpers\ExtensionHelper;
 use App\Http\Controllers\Controller;
 use App\Models\Invoice;
 use App\Models\User;
+use Illuminate\Http\Request;
 
 class InvoiceController extends Controller
 {
@@ -63,6 +63,7 @@ class InvoiceController extends Controller
                 $user->credits = $user->credits - $total;
                 $user->save();
                 ExtensionHelper::paymentDone($invoice->id);
+
                 return redirect()->route('clients.invoice.show', $invoice->id)->with('success', 'Payment done');
             }
             if ($invoiceItems->tax->amount > 0 && config('settings::tax_type') == 'exclusive') {

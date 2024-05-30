@@ -14,8 +14,8 @@ return new class extends Migration
     public function up()
     {
         Schema::table('invoices', function (Blueprint $table) {
-            $table->string("paid_with")->default('unknown');
-            $table->string("paid_reference")->nullable();
+            $table->string('paid_with')->default('unknown');
+            $table->string('paid_reference')->nullable();
         });
     }
 
@@ -27,8 +27,8 @@ return new class extends Migration
     public function down()
     {
         Schema::table('invoices', function (Blueprint $table) {
-            $table->removeColumn("paid_with");
-            $table->removeColumn("paid_reference");
+            $table->removeColumn('paid_with');
+            $table->removeColumn('paid_reference');
         });
     }
 };

@@ -92,7 +92,7 @@ return [
     'multiple_of' => ' :attribute musí byť násobkom :value.',
     'not_in' => ' vybraný :attribute neplatný.',
     'not_regex' => ' :attribute format invalid',
-    'numeric' => ' :attribute musí byť číslo' ,
+    'numeric' => ' :attribute musí byť číslo',
     'password' => ' heslo neplatné.',
     'present' => ' :attribute musí byť prítomný.',
     'regex' => ' :attribute neplatný formát.',
@@ -123,7 +123,7 @@ return [
     | Custom Validation Language Lines
     |--------------------------------------------------------------------------
     |
-    | Here you may specify custom validation messages for attributes using 
+    | Here you may specify custom validation messages for attributes using
     | convention "attribute.rule" to name  lines. This makes it quick to
     | specify a specific custom language line for a given attribute rule.
     |

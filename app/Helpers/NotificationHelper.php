@@ -4,14 +4,13 @@ namespace App\Helpers;
 
 use App\Mail\Invoices\NewInvoice;
 use App\Mail\Invoices\UnpaidInvoice;
+use App\Mail\Mailable;
 use App\Mail\Orders\DeletedOrder;
 use App\Mail\Orders\NewOrder;
 use App\Mail\Test;
 use App\Mail\Tickets\NewTicket;
 use App\Mail\Tickets\NewTicketMessage;
 use App\Models\EmailLog;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use App\Mail\Mailable;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 
@@ -19,13 +18,18 @@ class NotificationHelper
 {
     public static function bcc()
     {
-        if (config('settings::bcc') == null) return [];
+        if (config('settings::bcc') == null) {
+            return [];
+        }
+
         return explode(',', config('settings::bcc')) ?? [];
     }
 
     protected static function sendMail($user, Mailable $mail)
     {
-        if (config('settings::mail_disabled')) return;
+        if (config('settings::mail_disabled')) {
+            return;
+        }
         $emailLog = EmailLog::create([
             'user_id' => $user->id,
             'body' => $mail->render(),
@@ -44,9 +48,8 @@ class NotificationHelper
     }
 
     /**
-     * @param $order \App\Models\Order
-     * @param $user \App\Models\User
-     *
+     * @param  $order  \App\Models\Order
+     * @param  $user  \App\Models\User
      * @return void
      */
     public static function sendNewOrderNotification($order, $user)
@@ -55,9 +58,8 @@ class NotificationHelper
     }
 
     /**
-     * @param $invoice \App\Models\Invoice
-     * @param $user \App\Models\User
-     *
+     * @param  $invoice  \App\Models\Invoice
+     * @param  $user  \App\Models\User
      * @return void
      */
     public static function sendNewInvoiceNotification($invoice, $user)
@@ -66,9 +68,8 @@ class NotificationHelper
     }
 
     /**
-     * @param $invoice \App\Models\Invoice
-     * @param $user \App\Models\User
-     *
+     * @param  $invoice  \App\Models\Invoice
+     * @param  $user  \App\Models\User
      * @return void
      */
     public static function sendUnpaidInvoiceNotification($invoice, $user)
@@ -77,9 +78,8 @@ class NotificationHelper
     }
 
     /**
-     * @param $invoice \App\Models\Invoice
-     * @param $user \App\Models\User
-     *
+     * @param  $invoice  \App\Models\Invoice
+     * @param  $user  \App\Models\User
      * @return void
      */
     public static function sendDeletedOrderNotification($order, $user)
@@ -88,8 +88,7 @@ class NotificationHelper
     }
 
     /**
-     * @param $user \App\Models\User
-     *
+     * @param  $user  \App\Models\User
      * @return void
      */
     public static function sendTestNotification($user)
@@ -98,9 +97,8 @@ class NotificationHelper
     }
 
     /**
-     * @param $ticket \App\Models\Ticket
-     * @param $user \App\Models\User
-     *
+     * @param  $ticket  \App\Models\Ticket
+     * @param  $user  \App\Models\User
      * @return void
      */
     public static function sendNewTicketNotification($ticket, $user)
@@ -109,9 +107,8 @@ class NotificationHelper
     }
 
     /**
-     * @param $ticket \App\Models\Ticket
-     * @param $user \App\Models\User
-     *
+     * @param  $ticket  \App\Models\Ticket
+     * @param  $user  \App\Models\User
      * @return void
      */
     public static function sendNewTicketMessageNotification($ticket, $user)

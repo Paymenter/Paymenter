@@ -10,7 +10,6 @@ class AnnouncementObserver
     /**
      * Handle the Announcement "created" event.
      *
-     * @param  \App\Models\Announcement  $announcement
      * @return void
      */
     public function created(Announcement $announcement)
@@ -21,7 +20,6 @@ class AnnouncementObserver
     /**
      * Handle the Announcement "updated" event.
      *
-     * @param  \App\Models\Announcement  $announcement
      * @return void
      */
     public function updated(Announcement $announcement)
@@ -32,7 +30,6 @@ class AnnouncementObserver
     /**
      * Handle the Announcement "deleted" event.
      *
-     * @param  \App\Models\Announcement  $announcement
      * @return void
      */
     public function deleted(Announcement $announcement)
@@ -43,7 +40,6 @@ class AnnouncementObserver
     /**
      * Handle the Announcement "restored" event.
      *
-     * @param  \App\Models\Announcement  $announcement
      * @return void
      */
     public function restored(Announcement $announcement)
@@ -54,7 +50,6 @@ class AnnouncementObserver
     /**
      * Handle the Announcement "force deleted" event.
      *
-     * @param  \App\Models\Announcement  $announcement
      * @return void
      */
     public function forceDeleted(Announcement $announcement)

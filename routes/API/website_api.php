@@ -1,9 +1,10 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\API\Website\ProductController;
 use App\Http\Controllers\API\Website\AnnouncementController;
 use App\Http\Controllers\API\Website\CategoryController;
+use App\Http\Controllers\API\Website\ProductController;
+use Illuminate\Support\Facades\Route;
+
 // Products
 Route::group(['prefix' => 'v1/products'], function () {
     Route::get('/', [ProductController::class, 'getProducts'])->name('api.website.v1.products.getProducts');

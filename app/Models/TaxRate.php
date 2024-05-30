@@ -14,6 +14,4 @@ class TaxRate extends Model
         'rate',
         'country',
     ];
-
-    
 }

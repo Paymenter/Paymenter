@@ -4,19 +4,18 @@ namespace App\Extensions\Servers\Enhance;
 
 use App\Classes\Extensions\Server;
 use App\Helpers\ExtensionHelper;
-use Doctrine\DBAL\Schema\Table;
 use Illuminate\Support\Facades\Http;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Str;
 
 class Enhance extends Server
 {
     private $host;
+
     private $apikey;
 
     /**
      * Get metadata
-     * 
+     *
      * @return array
      */
     public function getMetadata()
@@ -36,21 +35,21 @@ class Enhance extends Server
         $this->apikey = ExtensionHelper::getConfig('Enhance', 'apikey');
     }
 
-
     private function request($method, $endpoint, $data = [])
     {
         $response = Http::withHeaders([
-            'Authorization' => 'Bearer ' . $this->apikey,
-        ])->$method($this->host . '/api' . $endpoint, $data);
+            'Authorization' => 'Bearer '.$this->apikey,
+        ])->$method($this->host.'/api'.$endpoint, $data);
         if ($response->failed()) {
             throw new \Exception('Error while requesting API');
         }
+
         return $response;
     }
 
     /**
      * Get all the configuration for the extension
-     * 
+     *
      * @return array
      */
     public function getConfig()
@@ -74,19 +73,19 @@ class Enhance extends Server
                 'type' => 'text',
                 'friendlyName' => 'Organization ID',
                 'required' => true,
-            ]
+            ],
         ];
     }
 
     /**
      * Get product config
-     * 
-     * @param array $options
+     *
+     * @param  array  $options
      * @return array
      */
     public function getProductConfig($options)
     {
-        $plans = $this->request('get', '/orgs/' . ExtensionHelper::getConfig('Enhance', 'orgId') . '/plans')->json();
+        $plans = $this->request('get', '/orgs/'.ExtensionHelper::getConfig('Enhance', 'orgId').'/plans')->json();
         $plans = array_map(function ($plan) {
             return [
                 'value' => $plan['id'],
@@ -107,8 +106,8 @@ class Enhance extends Server
 
     /**
      * Get user config
-     * 
-     * @param array $options
+     *
+     * @param  array  $options
      * @return array
      */
     public function getUserConfig($options)
@@ -124,43 +123,43 @@ class Enhance extends Server
         ];
     }
 
-
     /**
      * Create a server
-     * 
-     * @param User $user
-     * @param array $params
-     * @param Order $order
-     * @param OrderProduct $orderProduct
-     * @param array $configurableOptions
+     *
+     * @param  User  $user
+     * @param  array  $params
+     * @param  Order  $order
+     * @param  OrderProduct  $orderProduct
+     * @param  array  $configurableOptions
      * @return bool
      */
     public function createServer($user, $params, $order, $orderProduct, $configurableOptions)
     {
         // Check if customer exists
-        $cresponse = $this->request('get', '/orgs/' . ExtensionHelper::getConfig('Enhance', 'orgId') . '/customers?email=' . $user->email)->json();
+        $cresponse = $this->request('get', '/orgs/'.ExtensionHelper::getConfig('Enhance', 'orgId').'/customers?email='.$user->email)->json();
         foreach ($cresponse['items'] as $customer) {
-            if (!isset($customer['ownerEmail'])) continue;
+            if (! isset($customer['ownerEmail'])) {
+                continue;
+            }
             if ($customer['ownerEmail'] == $user->email) {
                 $orgUUID = $customer['id'];
                 $loginUUID = $customer['ownerId'];
                 break;
             }
         }
-        if (!isset($orgUUID)) {
-            $cresponse = $this->request('post', '/orgs/' . ExtensionHelper::getConfig('Enhance', 'orgId') . '/customers', [
+        if (! isset($orgUUID)) {
+            $cresponse = $this->request('post', '/orgs/'.ExtensionHelper::getConfig('Enhance', 'orgId').'/customers', [
                 'name' => $user->name,
             ])->json();
             $orgUUID = $cresponse['id'];
         }
         // Check if website exists
-        $domainExists = $this->request('get', '/orgs/' . $orgUUID . '/websites?search=' . $params['config']['domain'])->json();
+        $domainExists = $this->request('get', '/orgs/'.$orgUUID.'/websites?search='.$params['config']['domain'])->json();
         if ($domainExists['total'] > 0) {
             throw new \Exception('Domain already exists');
         }
 
-
-        $sresponse = $this->request('post', '/orgs/' . ExtensionHelper::getConfig('Enhance', 'orgId') . '/customers/' . $orgUUID . '/subscriptions', [
+        $sresponse = $this->request('post', '/orgs/'.ExtensionHelper::getConfig('Enhance', 'orgId').'/customers/'.$orgUUID.'/subscriptions', [
             'planId' => (int) $params['plan'],
         ])->json();
         // CHeck if login exists
@@ -173,10 +172,10 @@ class Enhance extends Server
             }
         }
 
-        if (!isset($loginUUID)) {
+        if (! isset($loginUUID)) {
             $randomPassword = Str::password();
 
-            $lresponse = $this->request('post', '/logins?orgId=' . $orgUUID, [
+            $lresponse = $this->request('post', '/logins?orgId='.$orgUUID, [
                 'email' => $user->email,
                 'password' => $randomPassword,
                 'name' => $user->name,
@@ -184,13 +183,13 @@ class Enhance extends Server
 
             $loginUUID = $lresponse['id'];
 
-            $this->request('post', '/orgs/' . $orgUUID . '/members', [
+            $this->request('post', '/orgs/'.$orgUUID.'/members', [
                 'loginId' => $loginUUID,
                 'roles' => ['Owner'],
             ])->json();
         }
 
-        $response = $this->request('post', '/orgs/' . $orgUUID . '/websites', [
+        $response = $this->request('post', '/orgs/'.$orgUUID.'/websites', [
             'domain' => $params['config']['domain'],
             'subscriptionId' => $sresponse['id'],
         ])->json();
@@ -200,35 +199,37 @@ class Enhance extends Server
 
     /**
      * Suspend a server
-     * 
-     * @param User $user
-     * @param array $params
-     * @param Order $order
-     * @param OrderProduct $orderProduct
-     * @param array $configurableOptions
+     *
+     * @param  User  $user
+     * @param  array  $params
+     * @param  Order  $order
+     * @param  OrderProduct  $orderProduct
+     * @param  array  $configurableOptions
      * @return bool
      */
     public function suspendServer($user, $params, $order, $orderProduct, $configurableOptions)
     {
-        $cresponse = $this->request('get', '/orgs/' . ExtensionHelper::getConfig('Enhance', 'orgId') . '/customers?email=' . $user->email)->json();
+        $cresponse = $this->request('get', '/orgs/'.ExtensionHelper::getConfig('Enhance', 'orgId').'/customers?email='.$user->email)->json();
         foreach ($cresponse['items'] as $customer) {
-            if (!isset($customer['ownerEmail'])) continue;
+            if (! isset($customer['ownerEmail'])) {
+                continue;
+            }
             if ($customer['ownerEmail'] == $user->email) {
                 $orgUUID = $customer['id'];
                 break;
             }
         }
-        if (!isset($orgUUID)) {
-            $cresponse = $this->request('post', '/orgs/' . ExtensionHelper::getConfig('Enhance', 'orgId') . '/customers', [
+        if (! isset($orgUUID)) {
+            $cresponse = $this->request('post', '/orgs/'.ExtensionHelper::getConfig('Enhance', 'orgId').'/customers', [
                 'name' => $user->name,
             ])->json();
             $orgUUID = $cresponse['id'];
         }
 
-        $response = $this->request('get', '/orgs/' . $orgUUID . '/websites?search=' . $params['config']['domain'])->json();
+        $response = $this->request('get', '/orgs/'.$orgUUID.'/websites?search='.$params['config']['domain'])->json();
         $websiteUUID = $response['items'][0]['id'];
 
-        $this->request('patch', '/orgs/' . $orgUUID . '/websites/' . $websiteUUID, [
+        $this->request('patch', '/orgs/'.$orgUUID.'/websites/'.$websiteUUID, [
             'isSuspended' => true,
         ])->json();
 
@@ -237,79 +238,80 @@ class Enhance extends Server
 
     /**
      * Unsuspend a server
-     * 
-     * @param User $user
-     * @param array $params
-     * @param Order $order
-     * @param OrderProduct $orderProduct
-     * @param array $configurableOptions
+     *
+     * @param  User  $user
+     * @param  array  $params
+     * @param  Order  $order
+     * @param  OrderProduct  $orderProduct
+     * @param  array  $configurableOptions
      * @return bool
      */
     public function unsuspendServer($user, $params, $order, $orderProduct, $configurableOptions)
     {
-        $cresponse = $this->request('get', '/orgs/' . ExtensionHelper::getConfig('Enhance', 'orgId') . '/customers?email=' . $user->email)->json();
+        $cresponse = $this->request('get', '/orgs/'.ExtensionHelper::getConfig('Enhance', 'orgId').'/customers?email='.$user->email)->json();
         foreach ($cresponse['items'] as $customer) {
-            if (!isset($customer['ownerEmail'])) continue;
+            if (! isset($customer['ownerEmail'])) {
+                continue;
+            }
             if ($customer['ownerEmail'] == $user->email) {
                 $orgUUID = $customer['id'];
                 break;
             }
         }
-        if (!isset($orgUUID)) {
-            $cresponse = $this->request('post', '/orgs/' . ExtensionHelper::getConfig('Enhance', 'orgId') . '/customers', [
+        if (! isset($orgUUID)) {
+            $cresponse = $this->request('post', '/orgs/'.ExtensionHelper::getConfig('Enhance', 'orgId').'/customers', [
                 'name' => $user->name,
             ])->json();
             $orgUUID = $cresponse['id'];
         }
 
-        $response = $this->request('get', '/orgs/' . $orgUUID . '/websites?search=' . $params['config']['domain'])->json();
+        $response = $this->request('get', '/orgs/'.$orgUUID.'/websites?search='.$params['config']['domain'])->json();
         $websiteUUID = $response['items'][0]['id'];
 
-        $this->request('patch', '/orgs/' . $orgUUID . '/websites/' . $websiteUUID, [
+        $this->request('patch', '/orgs/'.$orgUUID.'/websites/'.$websiteUUID, [
             'isSuspended' => false,
         ])->json();
-        
+
         return false;
     }
 
     /**
      * Terminate a server
-     * 
-     * @param User $user
-     * @param array $params
-     * @param Order $order
-     * @param OrderProduct $orderProduct
-     * @param array $configurableOptions
+     *
+     * @param  User  $user
+     * @param  array  $params
+     * @param  Order  $order
+     * @param  OrderProduct  $orderProduct
+     * @param  array  $configurableOptions
      * @return bool
      */
     public function terminateServer($user, $params, $order, $orderProduct, $configurableOptions)
     {
-        $cresponse = $this->request('get', '/orgs/' . ExtensionHelper::getConfig('Enhance', 'orgId') . '/customers?email=' . $user->email)->json();
+        $cresponse = $this->request('get', '/orgs/'.ExtensionHelper::getConfig('Enhance', 'orgId').'/customers?email='.$user->email)->json();
         foreach ($cresponse['items'] as $customer) {
-            if (!isset($customer['ownerEmail'])) continue;
+            if (! isset($customer['ownerEmail'])) {
+                continue;
+            }
             if ($customer['ownerEmail'] == $user->email) {
                 $orgUUID = $customer['id'];
                 $loginUUID = $customer['ownerId'];
                 break;
             }
         }
-        if (!isset($orgUUID)) {
-            $cresponse = $this->request('post', '/orgs/' . ExtensionHelper::getConfig('Enhance', 'orgId') . '/customers', [
+        if (! isset($orgUUID)) {
+            $cresponse = $this->request('post', '/orgs/'.ExtensionHelper::getConfig('Enhance', 'orgId').'/customers', [
                 'name' => $user->name,
             ])->json();
             $orgUUID = $cresponse['id'];
         }
 
-        $response = $this->request('get', '/orgs/' . $orgUUID . '/websites?search=' . $params['config']['domain'])->json();
+        $response = $this->request('get', '/orgs/'.$orgUUID.'/websites?search='.$params['config']['domain'])->json();
         $website = $response['items'][0];
 
-        
-        
         // Delete subscription
         $subscriptionUUID = $website['subscriptionId'];
-        $this->request('delete', '/orgs/' . $orgUUID . '/subscriptions/' . $subscriptionUUID)->json();
-        $this->request('delete', '/orgs/' . $orgUUID . '/websites/' . $website['id'])->json();
-
+        $this->request('delete', '/orgs/'.$orgUUID.'/subscriptions/'.$subscriptionUUID)->json();
+        $this->request('delete', '/orgs/'.$orgUUID.'/websites/'.$website['id'])->json();
 
         return false;
     }

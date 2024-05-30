@@ -7,11 +7,14 @@ use Illuminate\View\Component;
 class AppLayout extends Component
 {
     public $title;
+
     public $clients;
+
     public $description;
+
     public $image;
 
-    public function __construct($title = '', $clients =false, $description = null, $image = null)
+    public function __construct($title = '', $clients = false, $description = null, $image = null)
     {
         $this->title = $title;
         $this->clients = $clients ? true : false;

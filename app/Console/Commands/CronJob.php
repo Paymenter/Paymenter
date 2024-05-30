@@ -2,13 +2,13 @@
 
 namespace App\Console\Commands;
 
-use Illuminate\Console\Command;
 use App\Helpers\ExtensionHelper;
 use App\Helpers\NotificationHelper;
 use App\Models\Invoice;
 use App\Models\Log;
 use App\Models\OrderProduct;
 use App\Models\OrderProductUpgrade;
+use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Http;
 
 class CronJob extends Command
@@ -46,6 +46,7 @@ class CronJob extends Command
                 $order->save();
                 ExtensionHelper::terminateServer($order);
                 NotificationHelper::sendDeletedOrderNotification($order->order, $order->order->user, $cancellation);
+
                 continue;
             }
             if ($order->status == 'paid') {
@@ -57,9 +58,9 @@ class CronJob extends Command
                 if ($invoice) {
                     NotificationHelper::sendUnpaidInvoiceNotification($invoice, $order->order->user);
                 }
-                $this->info('Suspended server: ' . $order->id);
+                $this->info('Suspended server: '.$order->id);
             } elseif ($order->status == 'suspended' || $order->status == 'pending') {
-                if (strtotime($order->expiry_date) < strtotime('-' . config('settings::remove_unpaid_order_after', 7) . ' days')) {
+                if (strtotime($order->expiry_date) < strtotime('-'.config('settings::remove_unpaid_order_after', 7).' days')) {
                     ExtensionHelper::terminateServer($order);
                     $order->status = 'cancelled';
                     NotificationHelper::sendDeletedOrderNotification($order->order, $order->order->user);
@@ -71,7 +72,7 @@ class CronJob extends Command
                             $invoice->status = 'cancelled';
                             $invoice->cancelled_at = now()->format('Y-m-d H:i:s');
                             $invoice->save();
-                            $this->info('Invoice ' . $invoice->id . ' status changed to ' . $invoice->status);
+                            $this->info('Invoice '.$invoice->id.' status changed to '.$invoice->status);
                         }
                     }
                 }
@@ -118,8 +119,8 @@ class CronJob extends Command
             $invoiceItem = new \App\Models\InvoiceItem();
             $invoiceItem->invoice_id = $invoice->id;
             $invoiceItem->product_id = $order->id;
-            $description = $order->billing_cycle ? '(' . date('Y-m-d', strtotime($order->expiry_date)) . ' - ' . date('Y-m-d', strtotime($date)) . ')' : '';
-            $invoiceItem->description = $order->product()->get()->first() ? $order->product()->get()->first()->name . ' ' . $description : '' . $description;
+            $description = $order->billing_cycle ? '('.date('Y-m-d', strtotime($order->expiry_date)).' - '.date('Y-m-d', strtotime($date)).')' : '';
+            $invoiceItem->description = $order->product()->get()->first() ? $order->product()->get()->first()->name.' '.$description : ''.$description;
             $invoiceItem->total = $order->price;
             $invoiceItem->save();
 
@@ -129,12 +130,12 @@ class CronJob extends Command
 
             if ($invoice->total() == 0) {
                 ExtensionHelper::paymentDone($invoice->id);
-                $this->info('Invoice ' . $invoice->id . ' status changed to ' . $invoice->status);
+                $this->info('Invoice '.$invoice->id.' status changed to '.$invoice->status);
             }
             $invoiceProcessed++;
-            $this->info('Sended Invoice: ' . $invoice->id);
+            $this->info('Sended Invoice: '.$invoice->id);
         }
-        $this->info('Sended Number of Invoices: ' . $invoiceProcessed);
+        $this->info('Sended Number of Invoices: '.$invoiceProcessed);
 
         foreach (OrderProductUpgrade::with('orderProduct')->get() as $orderProductUpgrade) {
             if ($orderProductUpgrade->orderProduct->expiry_date < now()) {
@@ -145,17 +146,17 @@ class CronJob extends Command
                 $invoiceItem->total = $this->calculateAmount($orderProductUpgrade->product, $orderProductUpgrade->orderProduct);
                 $invoiceItem->save();
 
-                $this->info('Updated Invoice Item: ' . $invoiceItem->id);
+                $this->info('Updated Invoice Item: '.$invoiceItem->id);
             }
         }
 
         // Check all extensions for updates
         $extensions = \App\Models\Extension::all();
         foreach ($extensions as $extension) {
-            if (!$extension->version) {
+            if (! $extension->version) {
                 continue;
             }
-            $url = config('app.marketplace') . 'extensions?version=' . config('app.version') . '&search=' . $extension->name;
+            $url = config('app.marketplace').'extensions?version='.config('app.version').'&search='.$extension->name;
             $response = Http::get($url)->json();
 
             if (isset($response['error']) || count($response['data']) == 0) {
@@ -166,13 +167,13 @@ class CronJob extends Command
             if (version_compare($extension->version, $response['data'][0]['versions'][0]['version'], '<')) {
                 $extension->update_available = $response['data'][0]['versions'][0]['version'];
                 $extension->save();
-                $this->info('Update available for ' . $extension->name . ' to version ' . $response['data'][0]['versions'][0]['version']);
+                $this->info('Update available for '.$extension->name.' to version '.$response['data'][0]['versions'][0]['version']);
             }
         }
 
-        $this->info('Deleted Logs: ' . Log::where('created_at', '<', now()->subDays(7))->count());
+        $this->info('Deleted Logs: '.Log::where('created_at', '<', now()->subDays(7))->count());
         Log::where('created_at', '<', now()->subDays(7))->delete();
-        
+
         $this->info('Cron Job Finished');
 
         return Command::SUCCESS;

@@ -2,12 +2,15 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 
-class Coupon extends Model {
+class Coupon extends Model
+{
     use HasFactory;
+
     protected $table = 'coupons';
+
     protected $fillable = [
         'code',
         'type',
@@ -18,13 +21,13 @@ class Coupon extends Model {
         'end_date',
         'status',
         'products',
-        'time'
+        'time',
     ];
 
     protected $casts = [
         'products' => 'array',
     ];
-    
+
     public function getDiscount($subtotal)
     {
         if ($this->type === 'percent') {

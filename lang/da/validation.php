@@ -54,7 +54,7 @@ return [
         'file' => ':attribute skal være større end eller lig med :value kilobytes.',
         'string' => ':attribute skal være længere end eller lig med :value tegn.',
         'array' => ':attribute skal have :value elementer eller flere.',
-    ],    
+    ],
     'image' => ':attribute skal være et billede.',
     'in' => 'Den valgte :attribute er ugyldig.',
     'in_array' => ':attribute feltet eksisterer ikke i :other.',

@@ -2,17 +2,22 @@
 
 namespace Tests\Feature;
 
-use Tests\TestCase;
+use App\Models\Category;
+use App\Models\Product;
+use App\Models\ProductPrice;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use App\Models\{Category, Invoice, Order, Product, ProductPrice, User};
 use Livewire\Livewire;
+use Tests\TestCase;
 
 class OrderTest extends TestCase
 {
     use RefreshDatabase;
 
     protected $user;
+
     protected $categorie;
+
     protected $product;
 
     public function setUp(): void
@@ -54,6 +59,6 @@ class OrderTest extends TestCase
         Livewire::actingAs($this->user)
             ->test('checkout', ['product' => $this->product])
             ->call('pay')->assertRedirect(route('clients.home'));
-        
+
     }
 }

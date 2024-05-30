@@ -1,13 +1,19 @@
 <?php
+
 namespace App\Extensions\Servers\Virtualizor;
 
 class Virtualizor_Admin_API
 {
     public $key = '';
+
     public $pass = '';
+
     public $ip = '';
+
     public $port = 4085;
+
     public $protocol = 'https';
+
     public $error = [];
 
     /**
@@ -15,11 +21,10 @@ class Virtualizor_Admin_API
      *
      * @author       Pulkit Gupta
      *
-     * @param string $ip IP of the NODE
-     * @param string $key The API KEY of your NODE
-     * @param string $pass The API Password of your NODE
-     * @param int $port (Optional) The port to connect to. Port 4085 is the default. 4084 is non-SSL
-     *
+     * @param  string  $ip  IP of the NODE
+     * @param  string  $key  The API KEY of your NODE
+     * @param  string  $pass  The API Password of your NODE
+     * @param  int  $port  (Optional) The port to connect to. Port 4085 is the default. 4084 is non-SSL
      * @return null
      */
     public function Virtualizor_Admin_API($ip, $key, $pass, $port = 4085)
@@ -38,8 +43,7 @@ class Virtualizor_Admin_API
      *
      * @author       Pulkit Gupta
      *
-     * @param array $re the Array or any other variable
-     *
+     * @param  array  $re  the Array or any other variable
      * @return null
      */
     public function r($re)
@@ -54,8 +58,7 @@ class Virtualizor_Admin_API
      *
      * @author       Pulkit Gupta
      *
-     * @param string $str The serialized string
-     *
+     * @param  string  $str  The serialized string
      * @return array The unserialized array on success OR false on failure
      */
     public function _unserialize($str)
@@ -65,7 +68,7 @@ class Virtualizor_Admin_API
         if (empty($var)) {
             preg_match_all('!s:(\d+):"(.*?)";!s', $str, $matches);
             foreach ($matches[2] as $mk => $mv) {
-                $tmp_str = 's:' . strlen($mv) . ':"' . $mv . '";';
+                $tmp_str = 's:'.strlen($mv).':"'.$mv.'";';
                 $str = str_replace($matches[0][$mk], $tmp_str, $str);
             }
             $var = @unserialize($str);
@@ -84,14 +87,13 @@ class Virtualizor_Admin_API
      *
      * @author       Pulkit Gupta
      *
-     * @param string $key An 8 bit random string
-     * @param string $pass The API Password of your NODE
-     *
+     * @param  string  $key  An 8 bit random string
+     * @param  string  $pass  The API Password of your NODE
      * @return string The new APIKEY which will be used to query
      */
     public function make_apikey($key, $pass)
     {
-        return $key . md5($pass . $key);
+        return $key.md5($pass.$key);
     }
 
     /**
@@ -99,14 +101,13 @@ class Virtualizor_Admin_API
      *
      * @author       Pulkit Gupta
      *
-     * @param int $length The length of the random string to be generated
-     *
+     * @param  int  $length  The length of the random string to be generated
      * @return string The generated random string
      */
     public function generateRandStr($length)
     {
         $randstr = '';
-        for ($i = 0; $i < $length; ++$i) {
+        for ($i = 0; $i < $length; $i++) {
             $randnum = mt_rand(0, 61);
             if ($randnum < 10) {
                 $randstr .= chr($randnum + 48);
@@ -125,10 +126,9 @@ class Virtualizor_Admin_API
      *
      * @author       Pulkit Gupta
      *
-     * @param string $path The action you want to do
-     * @param array $post An array of DATA that should be posted
-     * @param array $cookies An array FOR SENDING COOKIES
-     *
+     * @param  string  $path  The action you want to do
+     * @param  array  $post  An array of DATA that should be posted
+     * @param  array  $cookies  An array FOR SENDING COOKIES
      * @return array The unserialized array on success OR false on failure
      */
     public function call($path, $data = [], $post = [], $cookies = [])
@@ -136,13 +136,13 @@ class Virtualizor_Admin_API
         $key = $this->generateRandStr(8);
         $apikey = $this->make_apikey($key, $this->pass);
 
-        $url = $this->protocol . '://' . $this->ip . ':' . $this->port . '/' . $path;
+        $url = $this->protocol.'://'.$this->ip.':'.$this->port.'/'.$path;
         $url .= (strstr($url, '?') ? '' : '?');
-        $url .= '&api=serialize&apikey=' . rawurlencode($apikey);
+        $url .= '&api=serialize&apikey='.rawurlencode($apikey);
 
         // Pass some data if there
-        if (!empty($data)) {
-            $url .= '&apidata=' . rawurlencode(base64_encode(serialize($data)));
+        if (! empty($data)) {
+            $url .= '&apidata='.rawurlencode(base64_encode(serialize($data)));
         }
         // Set the curl parameters.
         $ch = curl_init();
@@ -159,12 +159,12 @@ class Virtualizor_Admin_API
         curl_setopt($ch, CURLOPT_USERAGENT, 'Corwinus');
 
         // Cookies
-        if (!empty($cookies)) {
+        if (! empty($cookies)) {
             curl_setopt($ch, CURLOPT_COOKIESESSION, true);
             curl_setopt($ch, CURLOPT_COOKIE, http_build_query($cookies, '', '; '));
         }
 
-        if (!empty($post)) {
+        if (! empty($post)) {
             curl_setopt($ch, CURLOPT_POST, 1);
             curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($post));
         }
@@ -196,10 +196,9 @@ class Virtualizor_Admin_API
      *
      * @author       Pulkit Gupta
      *
-     * @param string $path The action you want to do
-     * @param array $post An array of DATA that should be posted
-     * @param array $cookies An array FOR SENDING COOKIES
-     *
+     * @param  string  $path  The action you want to do
+     * @param  array  $post  An array of DATA that should be posted
+     * @param  array  $cookies  An array FOR SENDING COOKIES
      * @return array The unserialized array on success OR false on failure
      */
     public function addippool($post)
@@ -251,7 +250,7 @@ class Virtualizor_Admin_API
             $path = 'index.php?act=mediagroups';
             $ret = $this->call($path, [], $post);
         } else {
-            $path = 'index.php?act=mediagroups&mgid=' . $post['mgid'] . '&mg_name=' . $post['mg_name'] . '&page=' . $page . '&reslen=' . $reslen;
+            $path = 'index.php?act=mediagroups&mgid='.$post['mgid'].'&mg_name='.$post['mg_name'].'&page='.$page.'&reslen='.$reslen;
             $ret = $this->call($path, [], $post);
         }
 
@@ -297,9 +296,8 @@ class Virtualizor_Admin_API
      *
      * @author       Pulkit Gupta
      *
-     * @param array $post An array of DATA that should be posted
-     * @param array $cookies An array FOR SENDING COOKIES
-     *
+     * @param  array  $post  An array of DATA that should be posted
+     * @param  array  $cookies  An array FOR SENDING COOKIES
      * @return array The unserialized array on success OR false on failure
      */
     public function addvs($post, $cookies = '')
@@ -321,9 +319,8 @@ class Virtualizor_Admin_API
      *
      * @author       Pulkit Gupta
      *
-     * @param array $post An array of DATA that should be posted
-     * @param array $cookies An array FOR SENDING COOKIES
-     *
+     * @param  array  $post  An array of DATA that should be posted
+     * @param  array  $cookies  An array FOR SENDING COOKIES
      * @return array The unserialized array on success OR false on failure
      */
     public function addvs_v2($post, $cookies = '')
@@ -352,7 +349,7 @@ class Virtualizor_Admin_API
 
     public function editiprange($post)
     {
-        $path = 'index.php?act=editiprange&ipid=' . $post['ipid'];
+        $path = 'index.php?act=editiprange&ipid='.$post['ipid'];
         $ret = $this->call($path, [], $post);
 
         return $ret;
@@ -361,13 +358,13 @@ class Virtualizor_Admin_API
     public function iprange($page, $reslen, $post)
     {
         if (empty($post)) {
-            $path = 'index.php?act=ipranges&page=' . $page . '&reslen=' . $reslen;
+            $path = 'index.php?act=ipranges&page='.$page.'&reslen='.$reslen;
             $ret = $this->call($path, [], $post);
         } elseif (isset($post['delete'])) {
             $path = 'index.php?act=ipranges';
             $ret = $this->call($path, [], $post);
         } else {
-            $path = 'index.php?act=ipranges&ipsearch=' . $post['ipsearch'] . '&ippoolsearch=' . $post['ippoolsearch'] . '&lockedsearch=' . $post['lockedsearch'] . '&page=' . $page . '&reslen=' . $reslen;
+            $path = 'index.php?act=ipranges&ipsearch='.$post['ipsearch'].'&ippoolsearch='.$post['ippoolsearch'].'&lockedsearch='.$post['lockedsearch'].'&page='.$page.'&reslen='.$reslen;
             $ret = $this->call($path, [], $post);
         }
 
@@ -386,7 +383,7 @@ class Virtualizor_Admin_API
     public function editsg($post)
     {
         $post['editsg'] = 1;
-        $path = 'index.php?act=editsg&sgid=' . $post['sgid'];
+        $path = 'index.php?act=editsg&sgid='.$post['sgid'];
         $ret = $this->call($path, [], $post);
 
         return $ret;
@@ -402,7 +399,7 @@ class Virtualizor_Admin_API
 
     public function listbackupplans($page = 1, $reslen = 50, $post = [])
     {
-        $path = 'index.php?act=backup_plans&page=' . $page . '&reslen=' . $reslen;
+        $path = 'index.php?act=backup_plans&page='.$page.'&reslen='.$reslen;
         $ret = $this->call($path, [], $post);
 
         return $ret;
@@ -437,7 +434,7 @@ class Virtualizor_Admin_API
 
     public function backupservers($page = 1, $reslen = 50, $post = [])
     {
-        $path = 'index.php?act=backupservers&page=' . $page . '&reslen=' . $reslen;
+        $path = 'index.php?act=backupservers&page='.$page.'&reslen='.$reslen;
         $ret = $this->call($path, [], $post);
 
         return $ret;
@@ -471,7 +468,7 @@ class Virtualizor_Admin_API
     public function editbackupserver($post)
     {
         $post['editbackupserver'] = 1;
-        $path = 'index.php?act=editbackupserver&id=' . $post['id'];
+        $path = 'index.php?act=editbackupserver&id='.$post['id'];
         $ret = $this->call($path, [], $post);
 
         return $ret;
@@ -488,7 +485,7 @@ class Virtualizor_Admin_API
 
     public function storages($post = [], $page = 1, $reslen = 50)
     {
-        $path = 'index.php?act=storage&page=' . $page . '&reslen=' . $reslen;
+        $path = 'index.php?act=storage&page='.$page.'&reslen='.$reslen;
         $ret = $this->call($path, [], $post);
 
         return $ret;
@@ -497,7 +494,7 @@ class Virtualizor_Admin_API
     public function editstorage($post)
     {
         $post['editstorage'] = 1;
-        $path = 'index.php?act=editstorage&stid=' . $post['stid'];
+        $path = 'index.php?act=editstorage&stid='.$post['stid'];
         $ret = $this->call($path, [], $post);
 
         return $ret;
@@ -522,11 +519,11 @@ class Virtualizor_Admin_API
 
     public function listdnsplans($page = 1, $reslen = 50, $post = [])
     {
-        if (!isset($post['planname'])) {
+        if (! isset($post['planname'])) {
             $path = 'index.php?act=dnsplans';
             $ret = $this->call($path, [], $post);
         } else {
-            $path = 'index.php?act=dnsplans&planname=' . $post['planname'] . '&page=' . $page . '&reslen=' . $reslen;
+            $path = 'index.php?act=dnsplans&planname='.$post['planname'].'&page='.$page.'&reslen='.$reslen;
             $ret = $this->call($path, [], $post);
         }
 
@@ -536,7 +533,7 @@ class Virtualizor_Admin_API
     public function edit_dnsplans($post = [])
     {
         $post['editdnsplan'] = 1;
-        $path = 'index.php?act=editdnsplan&dnsplid=' . $post['dnsplid'];
+        $path = 'index.php?act=editdnsplan&dnsplid='.$post['dnsplid'];
         $ret = $this->call($path, [], $post);
 
         return $ret;
@@ -573,7 +570,7 @@ class Virtualizor_Admin_API
 
     public function edit_admin_acl($post = [])
     {
-        $path = 'index.php?act=edit_admin_acl&aclid=' . $post['aclid'];
+        $path = 'index.php?act=edit_admin_acl&aclid='.$post['aclid'];
         $ret = $this->call($path, [], $post);
 
         return $ret;
@@ -591,7 +588,7 @@ class Virtualizor_Admin_API
     public function editmg($post)
     {
         $post['editmg'] = 1;
-        $path = 'index.php?act=editmg&mgid=' . $post['mgid'];
+        $path = 'index.php?act=editmg&mgid='.$post['mgid'];
         $ret = $this->call($path, [], $post);
 
         return $ret;
@@ -599,7 +596,7 @@ class Virtualizor_Admin_API
 
     public function delete_mg($post)
     {
-        $path = 'index.php?act=mediagroups&delete=' . $post['delete'];
+        $path = 'index.php?act=mediagroups&delete='.$post['delete'];
         $ret = $this->call($path);
 
         return $ret;
@@ -617,7 +614,7 @@ class Virtualizor_Admin_API
     public function edit_distro($post)
     {
         $post['add_distro'] = 1;
-        $path = 'index.php?act=add_distro&edit=' . $post['edit'];
+        $path = 'index.php?act=add_distro&edit='.$post['edit'];
         $ret = $this->call($path, [], $post);
 
         return $ret;
@@ -629,7 +626,7 @@ class Virtualizor_Admin_API
             $path = 'index.php?act=list_distros';
             $ret = $this->call($path, [], $post);
         } else {
-            $path = 'index.php?act=list_distros&delete=' . $post['delete'];
+            $path = 'index.php?act=list_distros&delete='.$post['delete'];
             $ret = $this->call($path);
         }
 
@@ -638,7 +635,7 @@ class Virtualizor_Admin_API
 
     public function list_euiso($page = 1, $reslen = 50, $post = [])
     {
-        $path = 'index.php?act=euiso&page=' . $page . '&reslen=' . $reslen;
+        $path = 'index.php?act=euiso&page='.$page.'&reslen='.$reslen;
         $ret = $this->call($path, [], $post);
 
         return $ret;
@@ -654,11 +651,11 @@ class Virtualizor_Admin_API
 
     public function list_recipes($page = 1, $reslen = 50, $post = [])
     {
-        if (!isset($post['rid'])) {
-            $path = 'index.php?act=recipes&page=' . $page . '&reslen=' . $reslen;
+        if (! isset($post['rid'])) {
+            $path = 'index.php?act=recipes&page='.$page.'&reslen='.$reslen;
             $ret = $this->call($path, [], $post);
         } else {
-            $path = 'index.php?act=recipes&rid=' . $post['rid'] . '&rname=' . $post['rname'] . '&page=' . $page . '&reslen=' . $reslen;
+            $path = 'index.php?act=recipes&rid='.$post['rid'].'&rname='.$post['rname'].'&page='.$page.'&reslen='.$reslen;
             $ret = $this->call($path, [], $post);
         }
 
@@ -677,7 +674,7 @@ class Virtualizor_Admin_API
     public function editrecipe($post)
     {
         $post['editrecipe'] = 1;
-        $path = 'index.php?act=editrecipe&rid=' . $post['rid'];
+        $path = 'index.php?act=editrecipe&rid='.$post['rid'];
         $ret = $this->call($path, [], $post);
 
         return $ret;
@@ -696,11 +693,11 @@ class Virtualizor_Admin_API
     {
         if (empty($post)) {
             $path = 'index.php?act=tasks';
-        // $ret = $this->call($path);
+            // $ret = $this->call($path);
         } elseif (isset($post['showlogs'])) {
             $path = 'index.php?act=tasks';
         } else {
-            $path = 'index.php?act=tasks&actid=' . $post['actid'] . '&vpsid=' . $post['vpsid'] . '&username=' . $post['username'] . '&action=' . $post['action'] . '&status=' . $post['status'] . '&order=' . $post['order'] . '&page=' . $page . '&reslen=' . $reslen;
+            $path = 'index.php?act=tasks&actid='.$post['actid'].'&vpsid='.$post['vpsid'].'&username='.$post['username'].'&action='.$post['action'].'&status='.$post['status'].'&order='.$post['order'].'&page='.$page.'&reslen='.$reslen;
         }
         $ret = $this->call($path, [], $post);
 
@@ -742,7 +739,7 @@ class Virtualizor_Admin_API
             $path = 'index.php?act=bandwidth';
             $ret = $this->call($path);
         } else {
-            $path = 'index.php?act=bandwidth&show=' . $post['show'];
+            $path = 'index.php?act=bandwidth&show='.$post['show'];
             $ret = $this->call($path, [], $post);
         }
 
@@ -754,53 +751,52 @@ class Virtualizor_Admin_API
      *
      * @author       Pulkit Gupta
      *
-     * @param array $post An array of DATA that should be posted
-     * @param array $cookies An array FOR SENDING COOKIES
-     *
+     * @param  array  $post  An array of DATA that should be posted
+     * @param  array  $cookies  An array FOR SENDING COOKIES
      * @return array The unserialized array on success OR false on failure
      */
     public function clean_post(&$post, $edit = 0)
     {
-        $post['serid'] = !isset($post['serid']) ? 0 : (int) $post['serid'];
-        $post['uid'] = !isset($post['uid']) ? 0 : (int) $post['uid'];
-        $post['plid'] = !isset($post['plid']) ? 0 : (int) $post['plid'];
-        $post['osid'] = !isset($post['osid']) ? 0 : (int) $post['osid'];
-        $post['iso'] = !isset($post['iso']) ? 0 : (int) $post['iso'];
-        $post['space'] = !isset($post['space']) ? 10 : $post['space'];
-        $post['ram'] = !isset($post['ram']) ? 512 : (int) $post['ram'];
-        $post['swapram'] = !isset($post['swapram']) ? 1024 : (int) $post['swapram'];
-        $post['bandwidth'] = !isset($post['bandwidth']) ? 0 : (int) $post['bandwidth'];
-        $post['network_speed'] = !isset($post['network_speed']) ? 0 : (int) $post['network_speed'];
-        $post['cpu'] = !isset($post['cpu']) ? 1000 : (int) $post['cpu'];
-        $post['cores'] = !isset($post['cores']) ? 4 : (int) $post['cores'];
-        $post['cpu_percent'] = !isset($post['cpu_percent']) ? 100 : (int) $post['cpu_percent'];
-        $post['vnc'] = !isset($post['vnc']) ? 1 : (int) $post['vnc'];
-        $post['vncpass'] = !isset($post['vncpass']) ? 'test' : $post['vncpass'];
-        $post['sec_iso'] = !isset($post['sec_iso']) ? 0 : $post['sec_iso'];
-        $post['kvm_cache'] = !isset($post['kvm_cache']) ? 0 : $post['kvm_cache'];
-        $post['io_mode'] = !isset($post['io_mode']) ? 0 : $post['io_mode'];
-        $post['vnc_keymap'] = !isset($post['vnc_keymap']) ? 'en-us' : $post['vnc_keymap'];
-        $post['nic_type'] = !isset($post['nic_type']) ? 'default' : $post['nic_type'];
-        $post['osreinstall_limit'] = !isset($post['osreinstall_limit']) ? 0 : (int) $post['osreinstall_limit'];
-        $post['mgs'] = !isset($post['mgs']) ? 0 : $post['mgs'];
-        $post['tuntap'] = !isset($post['tuntap']) ? 0 : $post['tuntap'];
-        $post['virtio'] = !isset($post['virtio']) ? 0 : $post['virtio'];
+        $post['serid'] = ! isset($post['serid']) ? 0 : (int) $post['serid'];
+        $post['uid'] = ! isset($post['uid']) ? 0 : (int) $post['uid'];
+        $post['plid'] = ! isset($post['plid']) ? 0 : (int) $post['plid'];
+        $post['osid'] = ! isset($post['osid']) ? 0 : (int) $post['osid'];
+        $post['iso'] = ! isset($post['iso']) ? 0 : (int) $post['iso'];
+        $post['space'] = ! isset($post['space']) ? 10 : $post['space'];
+        $post['ram'] = ! isset($post['ram']) ? 512 : (int) $post['ram'];
+        $post['swapram'] = ! isset($post['swapram']) ? 1024 : (int) $post['swapram'];
+        $post['bandwidth'] = ! isset($post['bandwidth']) ? 0 : (int) $post['bandwidth'];
+        $post['network_speed'] = ! isset($post['network_speed']) ? 0 : (int) $post['network_speed'];
+        $post['cpu'] = ! isset($post['cpu']) ? 1000 : (int) $post['cpu'];
+        $post['cores'] = ! isset($post['cores']) ? 4 : (int) $post['cores'];
+        $post['cpu_percent'] = ! isset($post['cpu_percent']) ? 100 : (int) $post['cpu_percent'];
+        $post['vnc'] = ! isset($post['vnc']) ? 1 : (int) $post['vnc'];
+        $post['vncpass'] = ! isset($post['vncpass']) ? 'test' : $post['vncpass'];
+        $post['sec_iso'] = ! isset($post['sec_iso']) ? 0 : $post['sec_iso'];
+        $post['kvm_cache'] = ! isset($post['kvm_cache']) ? 0 : $post['kvm_cache'];
+        $post['io_mode'] = ! isset($post['io_mode']) ? 0 : $post['io_mode'];
+        $post['vnc_keymap'] = ! isset($post['vnc_keymap']) ? 'en-us' : $post['vnc_keymap'];
+        $post['nic_type'] = ! isset($post['nic_type']) ? 'default' : $post['nic_type'];
+        $post['osreinstall_limit'] = ! isset($post['osreinstall_limit']) ? 0 : (int) $post['osreinstall_limit'];
+        $post['mgs'] = ! isset($post['mgs']) ? 0 : $post['mgs'];
+        $post['tuntap'] = ! isset($post['tuntap']) ? 0 : $post['tuntap'];
+        $post['virtio'] = ! isset($post['virtio']) ? 0 : $post['virtio'];
         if (isset($post['hvm'])) {
             $post['hvm'] = $post['hvm'];
         }
-        $post['noemail'] = !isset($post['noemail']) ? 0 : $post['noemail'];
-        $post['boot'] = !isset($post['boot']) ? 'dca' : $post['boot'];
-        $post['band_suspend'] = !isset($post['band_suspend']) ? 0 : $post['band_suspend'];
-        $post['vif_type'] = !isset($post['vif_type']) ? 'netfront' : $post['vif_type'];
+        $post['noemail'] = ! isset($post['noemail']) ? 0 : $post['noemail'];
+        $post['boot'] = ! isset($post['boot']) ? 'dca' : $post['boot'];
+        $post['band_suspend'] = ! isset($post['band_suspend']) ? 0 : $post['band_suspend'];
+        $post['vif_type'] = ! isset($post['vif_type']) ? 'netfront' : $post['vif_type'];
         if ($edit == 0) {
-            $post['addvps'] = !isset($post['addvps']) ? 1 : (int) $post['addvps'];
+            $post['addvps'] = ! isset($post['addvps']) ? 1 : (int) $post['addvps'];
         } else {
-            $post['editvps'] = !isset($post['editvps']) ? 1 : $post['editvps'];
-            $post['acpi'] = !isset($post['acpi']) ? 1 : $post['acpi'];
-            $post['apic'] = !isset($post['apic']) ? 1 : $post['apic'];
-            $post['pae'] = !isset($post['pae']) ? 1 : $post['pae'];
-            $post['dns'] = !isset($post['dns']) ? ['4.2.2.1', '4.2.2.2'] : $post['dns'];
-            $post['editvps'] = !isset($post['editvps']) ? 1 : (int) $post['editvps'];
+            $post['editvps'] = ! isset($post['editvps']) ? 1 : $post['editvps'];
+            $post['acpi'] = ! isset($post['acpi']) ? 1 : $post['acpi'];
+            $post['apic'] = ! isset($post['apic']) ? 1 : $post['apic'];
+            $post['pae'] = ! isset($post['pae']) ? 1 : $post['pae'];
+            $post['dns'] = ! isset($post['dns']) ? ['4.2.2.1', '4.2.2.2'] : $post['dns'];
+            $post['editvps'] = ! isset($post['editvps']) ? 1 : (int) $post['editvps'];
         }
 
         return $post;
@@ -836,7 +832,7 @@ class Virtualizor_Admin_API
      */
     public function cpu($serverid = 0)
     {
-        $path = 'index.php?act=manageserver&changeserid=' . $serverid;
+        $path = 'index.php?act=manageserver&changeserid='.$serverid;
         $ret = $this->call($path);
 
         return $ret['usage']['cpu'];
@@ -877,7 +873,7 @@ class Virtualizor_Admin_API
 
     public function server_stats($post)
     {
-        $path = 'index.php?act=server_stats' . (!empty($post['serid']) ? '&changeserid=' . (int) $post['serid'] : '');
+        $path = 'index.php?act=server_stats'.(! empty($post['serid']) ? '&changeserid='.(int) $post['serid'] : '');
         $ret = $this->call($path, [], $post);
 
         return $ret;
@@ -885,7 +881,7 @@ class Virtualizor_Admin_API
 
     public function vps_stats($post)
     {
-        $path = 'index.php?act=vps_stats' . (!empty($post['serid']) ? '&changeserid=' . (int) $post['serid'] : '');
+        $path = 'index.php?act=vps_stats'.(! empty($post['serid']) ? '&changeserid='.(int) $post['serid'] : '');
         $ret = $this->call($path, [], $post);
 
         return $ret;
@@ -917,7 +913,7 @@ class Virtualizor_Admin_API
 
     public function vps_backup_list($post)
     {
-        $path = 'index.php?act=vpsrestore&op=get_vps&vpsid=' . $post['vpsid'];
+        $path = 'index.php?act=vpsrestore&op=get_vps&vpsid='.$post['vpsid'];
         $res = $this->call($path, [], $post);
 
         return $res;
@@ -943,16 +939,16 @@ class Virtualizor_Admin_API
     public function pdns($page, $reslen, $post = [])
     {
         if (empty($post)) {
-            $path = 'index.php?act=pdns&page=' . $page . '&reslen=' . $reslen;
+            $path = 'index.php?act=pdns&page='.$page.'&reslen='.$reslen;
             $ret = $this->call($path, [], $post);
         } elseif (isset($post['test'])) {
-            $path = 'index.php?act=pdns&test=' . $post['test'];
+            $path = 'index.php?act=pdns&test='.$post['test'];
             $ret = $this->call($path);
         } elseif (isset($post['delete'])) {
             $path = 'index.php?act=pdns';
             $ret = $this->call($path, [], $post);
         } else {
-            $path = 'index.php?act=pdns&pdns_name=' . $post['pdns_name'] . '&pdns_ipaddress=' . $post['pdns_ipaddress'] . '&page=' . $page . '&reslen=' . $reslen;
+            $path = 'index.php?act=pdns&pdns_name='.$post['pdns_name'].'&pdns_ipaddress='.$post['pdns_ipaddress'].'&page='.$page.'&reslen='.$reslen;
             $ret = $this->call($path, [], $post);
         }
 
@@ -969,11 +965,11 @@ class Virtualizor_Admin_API
 
     public function domains($page = 1, $reslen = 50, $post = [])
     {
-        if (!isset($post['del'])) {
-            $path = 'index.php?act=domains&pdnsid=' . $post['pdnsid'] . '&page=' . $page . '&reslen=' . $reslen;
+        if (! isset($post['del'])) {
+            $path = 'index.php?act=domains&pdnsid='.$post['pdnsid'].'&page='.$page.'&reslen='.$reslen;
             $ret = $this->call($path);
         } else {
-            $path = 'index.php?act=domains&pdnsid=' . $post['pdnsid'] . '&page=' . $page . '&reslen=' . $reslen;
+            $path = 'index.php?act=domains&pdnsid='.$post['pdnsid'].'&page='.$page.'&reslen='.$reslen;
             $ret = $this->call($path, [], $post);
         }
 
@@ -982,7 +978,7 @@ class Virtualizor_Admin_API
 
     public function delete_dnsrecords($post = [])
     {
-        $path = 'index.php?act=dnsrecords&pdnsid=' . $post['pdnsid'];
+        $path = 'index.php?act=dnsrecords&pdnsid='.$post['pdnsid'];
         $ret = $this->call($path, [], $post);
 
         return $ret;
@@ -990,11 +986,11 @@ class Virtualizor_Admin_API
 
     public function dnsrecords($page = 1, $reslen = 50, $post = [])
     {
-        if (!isset($post['del'])) {
-            $path = 'index.php?act=dnsrecords&pdnsid=' . $post['pdnsid'] . '&domain_id=' . $post['domain_id'] . '&page=' . $page . '&reslen=' . $reslen;
+        if (! isset($post['del'])) {
+            $path = 'index.php?act=dnsrecords&pdnsid='.$post['pdnsid'].'&domain_id='.$post['domain_id'].'&page='.$page.'&reslen='.$reslen;
             $ret = $this->call($path);
         } else {
-            $path = 'index.php?act=dnsrecords&pdnsid=' . $post['pdnsid'] . '&domain_id=' . $post['domain_id'];
+            $path = 'index.php?act=dnsrecords&pdnsid='.$post['pdnsid'].'&domain_id='.$post['domain_id'];
             $ret = $this->call($path, [], $post);
         }
 
@@ -1003,7 +999,7 @@ class Virtualizor_Admin_API
 
     public function search_dnsrecords($page = 1, $reslen = 50, $post = [])
     {
-        $path = 'index.php?act=dnsrecords&pdnsid=' . $post['pdnsid'] . '&domain_id=' . $post['domain_id'] . '&dns_name=' . $post['dns_name'] . '&dns_domain=' . $post['dns_domain'] . '&record_type=' . $post['record_type'] . '&page=' . $page . '&reslen=' . $reslen;
+        $path = 'index.php?act=dnsrecords&pdnsid='.$post['pdnsid'].'&domain_id='.$post['domain_id'].'&dns_name='.$post['dns_name'].'&dns_domain='.$post['dns_domain'].'&record_type='.$post['record_type'].'&page='.$page.'&reslen='.$reslen;
         $ret = $this->call($path, [], $post);
 
         return $ret;
@@ -1012,7 +1008,7 @@ class Virtualizor_Admin_API
     public function add_dnsrecord($post = [])
     {
         $post['add_dnsrecord'] = 1;
-        $path = 'index.php?act=add_dnsrecord&pdnsid=' . $post['pdnsid'];
+        $path = 'index.php?act=add_dnsrecord&pdnsid='.$post['pdnsid'];
         $ret = $this->call($path, [], $post);
 
         return $ret;
@@ -1021,7 +1017,7 @@ class Virtualizor_Admin_API
     public function edit_dnsrecord($post = [])
     {
         $post['add_dnsrecord'] = 1;
-        $path = 'index.php?act=add_dnsrecord&pdnsid=' . $post['pdnsid'] . '&edit=' . $post['edit'];
+        $path = 'index.php?act=add_dnsrecord&pdnsid='.$post['pdnsid'].'&edit='.$post['edit'];
         $ret = $this->call($path, [], $post);
 
         return $ret;
@@ -1030,7 +1026,7 @@ class Virtualizor_Admin_API
     public function editpdns($post = [])
     {
         $post['editpdns'] = 1;
-        $path = 'index.php?act=editpdns&pdnsid=' . $post['pdnsid'];
+        $path = 'index.php?act=editpdns&pdnsid='.$post['pdnsid'];
         $ret = $this->call($path, [], $post);
 
         return $ret;
@@ -1049,13 +1045,12 @@ class Virtualizor_Admin_API
      *
      * @author       Pulkit Gupta
      *
-     * @param array $post An array of DATA that should be posted
-     *
+     * @param  array  $post  An array of DATA that should be posted
      * @return bool 1 on success OR 0 on failure
      */
     public function delete_vs($vid)
     {
-        $path = 'index.php?act=vs&delete=' . (int) $vid;
+        $path = 'index.php?act=vs&delete='.(int) $vid;
         $res = $this->call($path);
 
         return $res;
@@ -1071,7 +1066,7 @@ class Virtualizor_Admin_API
      */
     public function disk($serverid = 0)
     {
-        $path = 'index.php?act=manageserver&changeserid=' . $serverid;
+        $path = 'index.php?act=manageserver&changeserid='.$serverid;
         $ret = $this->call($path);
 
         return $ret['usage']['disk'];
@@ -1096,7 +1091,7 @@ class Virtualizor_Admin_API
 
     public function editemailtemp($post)
     {
-        $path = 'index.php?act=editemailtemp&temp=' . $post['temp'];
+        $path = 'index.php?act=editemailtemp&temp='.$post['temp'];
         $ret = $this->call($path, [], $post);
 
         return $ret;
@@ -1104,7 +1099,7 @@ class Virtualizor_Admin_API
 
     public function resetemailtemp($post)
     {
-        $path = 'index.php?act=editemailtemp&temp=' . $post['temp'] . '&reset=' . $post['reset'];
+        $path = 'index.php?act=editemailtemp&temp='.$post['temp'].'&reset='.$post['reset'];
         $ret = $this->call($path);
 
         return $ret;
@@ -1140,7 +1135,7 @@ class Virtualizor_Admin_API
     public function editinvoice($post = [])
     {
         $post['editinvoice'] = 1;
-        $path = 'index.php?act=editinvoice&invoid=' . $post['invoid'];
+        $path = 'index.php?act=editinvoice&invoid='.$post['invoid'];
         $ret = $this->call($path, [], $post);
 
         return $ret;
@@ -1148,7 +1143,7 @@ class Virtualizor_Admin_API
 
     public function listinvoice($page = 1, $reslen = 50, $post = [])
     {
-        $path = 'index.php?act=invoices&page=' . $page . '&reslen=' . $reslen;
+        $path = 'index.php?act=invoices&page='.$page.'&reslen='.$reslen;
         $ret = $this->call($path, [], $post);
 
         return $ret;
@@ -1174,7 +1169,7 @@ class Virtualizor_Admin_API
     public function edittransaction($post = [])
     {
         $post['edittransaction'] = 1;
-        $path = 'index.php?act=edittransaction&trid=' . $post['trid'];
+        $path = 'index.php?act=edittransaction&trid='.$post['trid'];
         $ret = $this->call($path, [], $post);
 
         return $ret;
@@ -1182,7 +1177,7 @@ class Virtualizor_Admin_API
 
     public function listtransaction($page = 1, $reslen = 50, $post = [])
     {
-        $path = 'index.php?act=transactions&page=' . $page . '&reslen=' . $reslen;
+        $path = 'index.php?act=transactions&page='.$page.'&reslen='.$reslen;
         $ret = $this->call($path, [], $post);
 
         return $ret;
@@ -1199,7 +1194,7 @@ class Virtualizor_Admin_API
     public function editippool($post)
     {
         $post['editippool'] = 1;
-        $path = 'index.php?act=editippool&ippid=' . $post['ippid'];
+        $path = 'index.php?act=editippool&ippid='.$post['ippid'];
         $res = $this->call($path, [], $post);
 
         return $res;
@@ -1232,7 +1227,7 @@ class Virtualizor_Admin_API
     public function editplan($post)
     {
         $post['editplan'] = 1;
-        $path = 'index.php?act=editplan&plid=' . $post['plid'];
+        $path = 'index.php?act=editplan&plid='.$post['plid'];
         $res = $this->call($path, [], $post);
 
         return $res;
@@ -1241,7 +1236,7 @@ class Virtualizor_Admin_API
     public function editserver($post)
     {
         $post['editserver'] = 1;
-        $path = 'index.php?act=editserver&serid=' . $post['serid'];
+        $path = 'index.php?act=editserver&serid='.$post['serid'];
         $res = $this->call($path, [], $post);
 
         return $res;
@@ -1257,7 +1252,7 @@ class Virtualizor_Admin_API
 
     public function edituser($post)
     {
-        $path = 'index.php?act=edituser&uid=' . $post['uid'];
+        $path = 'index.php?act=edituser&uid='.$post['uid'];
         $res = $this->call($path, [], $post);
 
         return $res;
@@ -1268,13 +1263,12 @@ class Virtualizor_Admin_API
      *
      * @author       Pulkit Gupta
      *
-     * @param array $post An array of DATA that should be posted
-     *
+     * @param  array  $post  An array of DATA that should be posted
      * @return array The unserialized array on success OR false on failure
      */
     public function editvs($post, $cookies = [])
     {
-        $path = 'index.php?act=editvs&vpsid=' . $post['vpsid'];
+        $path = 'index.php?act=editvs&vpsid='.$post['vpsid'];
         // $post = $this->clean_post($post, 1);
         $ret = $this->call($path, '', $post, $cookies);
 
@@ -1290,7 +1284,7 @@ class Virtualizor_Admin_API
     {
         $post['theme_edit'] = 1;
         $post['editvps'] = 1;
-        $path = 'index.php?act=managevps&vpsid=' . $post['vpsid'];
+        $path = 'index.php?act=managevps&vpsid='.$post['vpsid'];
         $ret = $this->call($path, [], $post);
 
         return [
@@ -1360,10 +1354,10 @@ class Virtualizor_Admin_API
     public function ippool($page = 1, $reslen = 50, $post = [])
     {
         if (empty($post)) {
-            $path = 'index.php?act=ippool&page=' . $page . '&reslen=' . $reslen;
+            $path = 'index.php?act=ippool&page='.$page.'&reslen='.$reslen;
             $res = $this->call($path);
         } else {
-            $path = 'index.php?act=ippool&poolname=' . $post['poolname'] . '&poolgateway=' . $post['poolgateway'] . '&netmask=' . $post['netmask'] . '&nameserver=' . $post['nameserver'] . '&page=' . $page . '&reslen=' . $reslen;
+            $path = 'index.php?act=ippool&poolname='.$post['poolname'].'&poolgateway='.$post['poolgateway'].'&netmask='.$post['netmask'].'&nameserver='.$post['nameserver'].'&page='.$page.'&reslen='.$reslen;
             $res = $this->call($path);
         }
 
@@ -1380,10 +1374,10 @@ class Virtualizor_Admin_API
     public function ips($page, $reslen, $post)
     {
         if (empty($post)) {
-            $path = 'index.php?act=ips&page=' . $page . '&reslen=' . $reslen;
+            $path = 'index.php?act=ips&page='.$page.'&reslen='.$reslen;
             $ret = $this->call($path);
         } else {
-            $path = 'index.php?act=ips&ipsearch=' . $post['ipsearch'] . '&ippoolsearch=' . $post['ippoolsearch'] . '&macsearch=' . $post['macsearch'] . '&vps_search=' . $post['vps_search'] . '&servers_search=' . $post['servers_search'] . '&lockedsearch=' . $post['lockedsearch'] . '&page=' . $page . '&reslen=' . $reslen;
+            $path = 'index.php?act=ips&ipsearch='.$post['ipsearch'].'&ippoolsearch='.$post['ippoolsearch'].'&macsearch='.$post['macsearch'].'&vps_search='.$post['vps_search'].'&servers_search='.$post['servers_search'].'&lockedsearch='.$post['lockedsearch'].'&page='.$page.'&reslen='.$reslen;
             $ret = $this->call($path);
         }
 
@@ -1420,15 +1414,14 @@ class Virtualizor_Admin_API
      * @author       Pulkit Gupta
      *
      * @param        int page number, if not specified then only 50 records are returned
-     *
      * @return array The unserialized array on success OR false on failure
      */
     public function listvs($page = 1, $reslen = 50, $search = [])
     {
         if (empty($search)) {
-            $path = 'index.php?act=vs&page=' . $page . '&reslen=' . $reslen;
+            $path = 'index.php?act=vs&page='.$page.'&reslen='.$reslen;
         } else {
-            $path = 'index.php?act=vs&vpsid=' . $search['vpsid'] . '&vpsname=' . $search['vpsname'] . '&vpsip=' . $search['vpsip'] . '&vpshostname=' . $search['vpshostname'] . '&vsstatus=' . $search['vsstatus'] . '&vstype=' . $search['vstype'] . '&user=' . $search['user'] . '&serid=' . $search['serid'] . '&search=' . $search['search'];
+            $path = 'index.php?act=vs&vpsid='.$search['vpsid'].'&vpsname='.$search['vpsname'].'&vpsip='.$search['vpsip'].'&vpshostname='.$search['vpshostname'].'&vsstatus='.$search['vsstatus'].'&vstype='.$search['vstype'].'&user='.$search['user'].'&serid='.$search['serid'].'&search='.$search['search'];
         }
 
         $result = $this->call($path);
@@ -1444,13 +1437,13 @@ class Virtualizor_Admin_API
     public function loginlogs($page = 1, $reslen = 50, $post = [])
     {
         if (empty($post)) {
-            $path = 'index.php?act=loginlogs&page=' . $page . '&reslen=' . $reslen;
+            $path = 'index.php?act=loginlogs&page='.$page.'&reslen='.$reslen;
             $ret = $this->call($path);
         } else {
-            $path = 'index.php?act=loginlogs&username=' . $post['username'] . '&ip=' . $post['ip'] . '&page=' . $page . '&reslen=' . $reslen;
+            $path = 'index.php?act=loginlogs&username='.$post['username'].'&ip='.$post['ip'].'&page='.$page.'&reslen='.$reslen;
             $ret = $this->call($path, [], $post);
         }
-        error_log('loginlogs: ' . print_r($ret, true));
+        error_log('loginlogs: '.print_r($ret, true));
 
         return $ret;
     }
@@ -1458,10 +1451,10 @@ class Virtualizor_Admin_API
     public function logs($page = 1, $reslen = 50, $post = [])
     {
         if (empty($post)) {
-            $path = 'index.php?act=logs&page=' . $page . '&reslen=' . $reslen;
+            $path = 'index.php?act=logs&page='.$page.'&reslen='.$reslen;
             $ret = $this->call($path);
         } else {
-            $path = 'index.php?act=logs&id=' . $post['id'] . '&email=' . $post['email'] . '&page=' . $page . '&reslen=' . $reslen;
+            $path = 'index.php?act=logs&id='.$post['id'].'&email='.$post['email'].'&page='.$page.'&reslen='.$reslen;
             $ret = $this->call($path, [], $post);
         }
 
@@ -1485,7 +1478,7 @@ class Virtualizor_Admin_API
         if (empty($post)) {
             $path = 'index.php?act=os';
         } else {
-            $path = 'index.php?act=os&getos=' . $post['osids'][0];
+            $path = 'index.php?act=os&getos='.$post['osids'][0];
         }
         $result = $this->call($path, [], $post);
 
@@ -1494,8 +1487,9 @@ class Virtualizor_Admin_API
 
     public function ostemplates($page = 1, $reslen = 50)
     {
-        $path = 'index.php?act=ostemplates&page=' . $page . '&reslen=' . $reslen;
+        $path = 'index.php?act=ostemplates&page='.$page.'&reslen='.$reslen;
         $result = $this->call($path);
+
         // $ret['title'] = $result['title'];
         // $ret['ostemplates'] = $result['ostemplates'];
         return $result;
@@ -1503,7 +1497,7 @@ class Virtualizor_Admin_API
 
     public function delostemplates($post = [])
     {
-        $path = 'index.php?act=ostemplates&delete=' . $post['delete'];
+        $path = 'index.php?act=ostemplates&delete='.$post['delete'];
         $result = $this->call($path);
         $ret['title'] = $result['title'];
         $ret['done'] = $result['done'];
@@ -1527,10 +1521,10 @@ class Virtualizor_Admin_API
     public function plans($page = 1, $reslen = 50, $search = [])
     {
         if (empty($search)) {
-            $path = 'index.php?act=plans&page=' . $page . '&reslen=' . $reslen;
+            $path = 'index.php?act=plans&page='.$page.'&reslen='.$reslen;
             $ret = $this->call($path);
         } else {
-            $path = 'index.php?act=plans&planname=' . $search['planname'] . '&ptype=' . $search['ptype'] . '&page=' . $page . '&reslen=' . $reslen;
+            $path = 'index.php?act=plans&planname='.$search['planname'].'&ptype='.$search['ptype'].'&page='.$page.'&reslen='.$reslen;
             $ret = $this->call($path);
         }
 
@@ -1539,7 +1533,7 @@ class Virtualizor_Admin_API
 
     public function sort_plans($page = 1, $reslen = 50, $sort = [])
     {
-        $path = 'index.php?act=plans&sortcolumn=' . $sort['sortcolumn'] . '&sortby=' . $sort['sortby'] . '&page=' . $page . '&reslen=' . $reslen;
+        $path = 'index.php?act=plans&sortcolumn='.$sort['sortcolumn'].'&sortby='.$sort['sortby'].'&page='.$page.'&reslen='.$reslen;
         $ret = $this->call($path);
 
         return $ret;
@@ -1547,7 +1541,7 @@ class Virtualizor_Admin_API
 
     public function delete_plans($post)
     {
-        $path = 'index.php?act=plans&delete=' . $post['delete'];
+        $path = 'index.php?act=plans&delete='.$post['delete'];
         $ret = $this->call($path);
 
         return $ret;
@@ -1555,7 +1549,7 @@ class Virtualizor_Admin_API
 
     public function list_user_plans($post = [], $page = 1, $reslen = 50)
     {
-        $path = 'index.php?act=user_plans&page=' . $page . '&reslen=' . $reslen;
+        $path = 'index.php?act=user_plans&page='.$page.'&reslen='.$reslen;
         $ret = $this->call($path, [], $post);
 
         return $ret;
@@ -1573,7 +1567,7 @@ class Virtualizor_Admin_API
     public function edit_user_plans($post)
     {
         $post['edituser_plans'] = 1;
-        $path = 'index.php?act=edituser_plans&uplid=' . $post['uplid'];
+        $path = 'index.php?act=edituser_plans&uplid='.$post['uplid'];
         $ret = $this->call($path, [], $post);
 
         return $ret;
@@ -1592,14 +1586,13 @@ class Virtualizor_Admin_API
      *
      * @author       Pulkit Gupta
      *
-     * @param int $vid The VMs ID
-     *
+     * @param  int  $vid  The VMs ID
      * @return bool TRUE on success or FALSE on failure
      */
     public function poweroff($vid)
     {
         // Make the Request
-        $res = $this->call('index.php?act=vs&action=poweroff&serid=0&vpsid=' . (int) $vid);
+        $res = $this->call('index.php?act=vs&action=poweroff&serid=0&vpsid='.(int) $vid);
 
         return $res;
     }
@@ -1622,7 +1615,7 @@ class Virtualizor_Admin_API
      */
     public function ram($serverid = 0)
     {
-        $path = 'index.php?act=manageserver&changeserid=' . $serverid;
+        $path = 'index.php?act=manageserver&changeserid='.$serverid;
         $ret = $this->call($path);
 
         return $ret['usage']['ram'];
@@ -1633,14 +1626,13 @@ class Virtualizor_Admin_API
      *
      * @author       Pulkit Gupta
      *
-     * @param array $post An array of DATA that should be posted
-     *
+     * @param  array  $post  An array of DATA that should be posted
      * @return array The unserialized array on success OR false on failure
      */
     public function rebuild($post)
     {
         $post['reos'] = 1;
-        $path = 'index.php?act=rebuild' . (!empty($post['serid']) ? '&changeserid=' . (int) $post['serid'] : '');
+        $path = 'index.php?act=rebuild'.(! empty($post['serid']) ? '&changeserid='.(int) $post['serid'] : '');
 
         return $this->call($path, '', $post);
     }
@@ -1650,14 +1642,13 @@ class Virtualizor_Admin_API
      *
      * @author       Pulkit Gupta
      *
-     * @param int $vid The VMs ID
-     *
+     * @param  int  $vid  The VMs ID
      * @return bool TRUE on success or FALSE on failure
      */
     public function restart($vid)
     {
         // Make the Request
-        $res = $this->call('index.php?act=vs&action=restart&serid=0&vpsid=' . (int) $vid);
+        $res = $this->call('index.php?act=vs&action=restart&serid=0&vpsid='.(int) $vid);
 
         return $res;
     }
@@ -1665,7 +1656,7 @@ class Virtualizor_Admin_API
     public function restartservices($post)
     {
         $post['do'] = 1;
-        $path = 'index.php?act=restartservices&service=' . $post['service'] . '&do=' . $post['do'];
+        $path = 'index.php?act=restartservices&service='.$post['service'].'&do='.$post['do'];
         $res = $this->call($path, [], $post);
 
         return $res;
@@ -1708,7 +1699,7 @@ class Virtualizor_Admin_API
         if ($del_serid == 0) {
             $path = 'index.php?act=servers';
         } else {
-            $path = 'index.php?act=servers&delete=' . $del_serid;
+            $path = 'index.php?act=servers&delete='.$del_serid;
         }
 
         return $this->call($path);
@@ -1719,7 +1710,7 @@ class Virtualizor_Admin_API
         if ($del_serid == 0) {
             $path = 'index.php?act=servers';
         } else {
-            $path = 'index.php?act=servers&force=' . $del_serid;
+            $path = 'index.php?act=servers&force='.$del_serid;
         }
 
         return $this->call($path);
@@ -1767,13 +1758,12 @@ class Virtualizor_Admin_API
      *
      * @author       Pulkit Gupta
      *
-     * @param int $vid The VMs ID
-     *
+     * @param  int  $vid  The VMs ID
      * @return bool TRUE on success or FALSE on failure
      */
     public function start($vid)
     {
-        $res = $this->call('index.php?act=vs&action=start&serid=0&vpsid=' . (int) $vid);
+        $res = $this->call('index.php?act=vs&action=start&serid=0&vpsid='.(int) $vid);
 
         return $res;
     }
@@ -1783,14 +1773,13 @@ class Virtualizor_Admin_API
      *
      * @author       Pulkit Gupta
      *
-     * @param int $vid The VMs ID
-     *
+     * @param  int  $vid  The VMs ID
      * @return bool TRUE on success or FALSE on failure
      */
     public function stop($vid)
     {
         // Make the Request
-        $res = $this->call('index.php?act=vs&action=stop&serid=0&vpsid=' . (int) $vid);
+        $res = $this->call('index.php?act=vs&action=stop&serid=0&vpsid='.(int) $vid);
 
         return $res;
     }
@@ -1800,14 +1789,13 @@ class Virtualizor_Admin_API
      *
      * @author       Pulkit Gupta
      *
-     * @param array $vids array of IDs of VMs
-     *
+     * @param  array  $vids  array of IDs of VMs
      * @return array Contains the status info of the VMs
      */
     public function status($vids)
     {
         // Make the Request
-        $res = $this->call('index.php?act=vs&vs_status=' . implode(',', $vids));
+        $res = $this->call('index.php?act=vs&vs_status='.implode(',', $vids));
 
         return $res['status'];
     }
@@ -1817,13 +1805,12 @@ class Virtualizor_Admin_API
      *
      * @author       Pulkit Gupta
      *
-     * @param int $vid The VMs ID
-     *
+     * @param  int  $vid  The VMs ID
      * @return int 1 if the VM is ON, 0 if its OFF
      */
     public function suspend($vid)
     {
-        $path = 'index.php?act=vs&suspend=' . (int) $vid;
+        $path = 'index.php?act=vs&suspend='.(int) $vid;
         $res = $this->call($path);
 
         return $res;
@@ -1834,13 +1821,12 @@ class Virtualizor_Admin_API
      *
      * @author       Pulkit Gupta
      *
-     * @param int $vid The VMs ID
-     *
+     * @param  int  $vid  The VMs ID
      * @return int 1 if the VM is ON, 0 if its OFF
      */
     public function unsuspend($vid)
     {
-        $path = 'index.php?act=vs&unsuspend=' . (int) $vid;
+        $path = 'index.php?act=vs&unsuspend='.(int) $vid;
         $res = $this->call($path);
 
         return $res;
@@ -1848,7 +1834,7 @@ class Virtualizor_Admin_API
 
     public function suspend_net($vid)
     {
-        $path = 'index.php?act=vs&suspend_net=' . $vid;
+        $path = 'index.php?act=vs&suspend_net='.$vid;
         $res = $this->call($path);
 
         return $res;
@@ -1856,7 +1842,7 @@ class Virtualizor_Admin_API
 
     public function unsuspend_net($vid)
     {
-        $path = 'index.php?act=vs&unsuspend_net=' . $vid;
+        $path = 'index.php?act=vs&unsuspend_net='.$vid;
         $res = $this->call($path);
 
         return $res;
@@ -1885,10 +1871,10 @@ class Virtualizor_Admin_API
     public function userlogs($page = 1, $reslen = 50, $post = [])
     {
         if (empty($post)) {
-            $path = 'index.php?act=userlogs&page=' . $page . '&reslen=' . $reslen;
+            $path = 'index.php?act=userlogs&page='.$page.'&reslen='.$reslen;
             $res = $this->call($path);
         } else {
-            $path = 'index.php?act=userlogs&vpsid=' . $post['vpsid'] . '&email=' . $post['email'] . '&page=' . $page . '&reslen=' . $reslen;
+            $path = 'index.php?act=userlogs&vpsid='.$post['vpsid'].'&email='.$post['email'].'&page='.$page.'&reslen='.$reslen;
             $res = $this->call($path, [], $post);
         }
 
@@ -1898,10 +1884,10 @@ class Virtualizor_Admin_API
     public function iplogs($page = 1, $reslen = 50, $post = [])
     {
         if (empty($post)) {
-            $path = 'index.php?act=iplogs&page=' . $page . '&reslen=' . $reslen;
+            $path = 'index.php?act=iplogs&page='.$page.'&reslen='.$reslen;
             $res = $this->call($path);
         } else {
-            $path = 'index.php?act=iplogs&vpsid=' . $post['vpsid'] . '&ip=' . $post['ip'] . '&page=' . $page . '&reslen=' . $reslen;
+            $path = 'index.php?act=iplogs&vpsid='.$post['vpsid'].'&ip='.$post['ip'].'&page='.$page.'&reslen='.$reslen;
             $res = $this->call($path, [], $post);
         }
 
@@ -1910,7 +1896,7 @@ class Virtualizor_Admin_API
 
     public function deleteiplogs($post)
     {
-        if (!empty($post)) {
+        if (! empty($post)) {
             $path = 'index.php?act=iplogs';
             $res = $this->call($path, [], $post);
         }
@@ -1921,10 +1907,10 @@ class Virtualizor_Admin_API
     public function users($page = 1, $reslen = 50, $post = [])
     {
         if (empty($post)) {
-            $path = 'index.php?act=users&page=' . $page . '&reslen=' . $reslen;
+            $path = 'index.php?act=users&page='.$page.'&reslen='.$reslen;
             $res = $this->call($path, [], $post);
         } else {
-            $path = 'index.php?act=users&uid=' . $post['uid'] . '&email=' . $post['email'] . '&type=' . $post['type'] . '&page=' . $page . '&reslen=' . $reslen;
+            $path = 'index.php?act=users&uid='.$post['uid'].'&email='.$post['email'].'&type='.$post['type'].'&page='.$page.'&reslen='.$reslen;
             $res = $this->call($path, [], $post);
         }
 
@@ -1941,7 +1927,7 @@ class Virtualizor_Admin_API
 
     public function vnc($post)
     {
-        $path = 'index.php?act=vnc&novnc=' . $post['novnc'];
+        $path = 'index.php?act=vnc&novnc='.$post['novnc'];
         $res = $this->call($path, [], $post);
 
         return $res;
@@ -1949,7 +1935,7 @@ class Virtualizor_Admin_API
 
     public function vs($page = 1, $reslen = 50)
     {
-        $path = 'index.php?act=vs&page=' . $page . '&reslen=' . $reslen;
+        $path = 'index.php?act=vs&page='.$page.'&reslen='.$reslen;
         $res = $this->call($path);
 
         return $res;
@@ -2008,9 +1994,9 @@ class Virtualizor_Admin_API
     public function listhaproxy($search = [], $page = 1, $reslen = 50)
     {
         if (empty($search)) {
-            $path = 'index.php?act=haproxy&page=' . $page . '&reslen=' . $reslen;
+            $path = 'index.php?act=haproxy&page='.$page.'&reslen='.$reslen;
         } else {
-            $path = 'index.php?act=haproxy&s_id=' . $search['s_id'] . '&s_serid=' . (empty($search['s_serid']) ? '-1' : $search['s_serid']) . '&s_vpsid=' . $search['s_vpsid'] . '&s_protocol=' . (empty($search['s_protocol']) ? '-1' : $search['s_protocol']) . '&s_src_hostname=' . $search['s_src_hostname'] . '&s_src_port=' . $search['s_src_port'] . '&s_dest_ip=' . $search['s_dest_ip'] . '&s_dest_port=' . $search['s_dest_port'] . '&haproxysearch=' . $search['haproxysearch'];
+            $path = 'index.php?act=haproxy&s_id='.$search['s_id'].'&s_serid='.(empty($search['s_serid']) ? '-1' : $search['s_serid']).'&s_vpsid='.$search['s_vpsid'].'&s_protocol='.(empty($search['s_protocol']) ? '-1' : $search['s_protocol']).'&s_src_hostname='.$search['s_src_hostname'].'&s_src_port='.$search['s_src_port'].'&s_dest_ip='.$search['s_dest_ip'].'&s_dest_port='.$search['s_dest_port'].'&haproxysearch='.$search['haproxysearch'];
         }
 
         $result = $this->call($path);

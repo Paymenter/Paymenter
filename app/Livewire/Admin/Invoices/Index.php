@@ -2,7 +2,6 @@
 
 namespace App\Livewire\Admin\Invoices;
 
-use App\Helpers\ExtensionHelper;
 use App\Models\Invoice;
 use App\Traits\Tables\DesignTrait;
 use Illuminate\Database\Eloquent\Builder;
@@ -27,8 +26,8 @@ class Index extends DataTableComponent
     public function configure(): void
     {
         $this->setPrimaryKey('id')
-             ->setTableRowUrl(fn ($row) => route('admin.invoices.show', $row))
-             ->setDefaultSort('id', 'desc');
+            ->setTableRowUrl(fn ($row) => route('admin.invoices.show', $row))
+            ->setDefaultSort('id', 'desc');
     }
 
     public function deleteInvoices(): void

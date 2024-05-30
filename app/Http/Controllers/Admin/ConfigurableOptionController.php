@@ -14,8 +14,6 @@ class ConfigurableOptionController extends Controller
 {
     /**
      * Display a listing of the configurable options.
-     *
-     * @return \Illuminate\View\View
      */
     public function index(): \Illuminate\View\View
     {
@@ -24,20 +22,16 @@ class ConfigurableOptionController extends Controller
 
     /**
      * Show the form for creating a new configurable option.
-     *
-     * @return \Illuminate\View\View
      */
     public function create(): \Illuminate\View\View
     {
         $products = Product::all();
+
         return view('admin.configurable-options.create', compact('products'));
     }
 
     /**
      * Store a newly created configurable option in storage.
-     * 
-     * @param  Request  $request
-     * @return \Illuminate\Http\RedirectResponse
      */
     public function store(Request $request): \Illuminate\Http\RedirectResponse
     {
@@ -57,29 +51,22 @@ class ConfigurableOptionController extends Controller
 
     /**
      * Show the form for editing the specified configurable option.
-     * 
-     * @param  ConfigurableGroup  $configurableOptionGroup
-     * @return \Illuminate\View\View
      */
     public function edit(ConfigurableGroup $configurableOptionGroup): \Illuminate\View\View
     {
         $products = Product::all();
         $configurableOptions = $configurableOptionGroup->configurableOptions;
+
         return view('admin.configurable-options.edit', compact('configurableOptionGroup', 'products', 'configurableOptions'));
     }
 
-
     /**
      * Update the specified configurable option group in database.
-     * 
-     * @param  Request  $request
-     * @param  ConfigurableGroup  $configurableOptionGroup
-     * @return \Illuminate\Http\RedirectResponse
      */
     public function update(Request $request, ConfigurableGroup $configurableOptionGroup): \Illuminate\Http\RedirectResponse
     {
         $data = $request->validate([
-            'name' => 'required|unique:configurable_option_groups,name,' . $configurableOptionGroup->id,
+            'name' => 'required|unique:configurable_option_groups,name,'.$configurableOptionGroup->id,
             'description' => 'required|string',
             'products' => 'sometimes|array',
         ]);
@@ -88,14 +75,12 @@ class ConfigurableOptionController extends Controller
             'description' => $data['description'],
             'products' => $data['products'] ?? [],
         ]);
+
         return redirect()->route('admin.configurable-options.edit', $configurableOptionGroup->id)->with('success', 'Configurable Option Group updated successfully');
     }
 
     /**
      * Remove the specified configurable option group from database.
-     * 
-     * @param  ConfigurableGroup  $configurableOptionGroup
-     * @return \Illuminate\Http\RedirectResponse
      */
     public function destroy(ConfigurableGroup $configurableOptionGroup): \Illuminate\Http\RedirectResponse
     {
@@ -128,13 +113,8 @@ class ConfigurableOptionController extends Controller
         return redirect()->route('admin.configurable-options')->with('success', 'Configurable Option Group deleted successfully');
     }
 
-
     /**
      * Create new configurable option.
-     * 
-     * @param  Request  $request
-     * @param  ConfigurableGroup  $configurableOptionGroup
-     * @return \Illuminate\Http\RedirectResponse
      */
     public function createOption(Request $request, ConfigurableGroup $configurableOptionGroup): \Illuminate\Http\RedirectResponse
     {
@@ -161,11 +141,6 @@ class ConfigurableOptionController extends Controller
 
     /**
      * Update the specified configurable option in database.
-     * 
-     * @param  Request  $request
-     * @param  ConfigurableGroup  $configurableOptionGroup
-     * @param  ConfigurableOption  $configurableOption
-     * @return \Illuminate\Http\RedirectResponse
      */
     public function updateOption(Request $request, ConfigurableGroup $configurableOptionGroup, ConfigurableOption $configurableOption): \Illuminate\Http\RedirectResponse
     {
@@ -182,7 +157,9 @@ class ConfigurableOptionController extends Controller
             'order' => $data['order'],
             'hidden' => $data['hidden'],
         ]);
-        if (!isset($data['option'])) $data['option'] = [];
+        if (! isset($data['option'])) {
+            $data['option'] = [];
+        }
         foreach ($data['option'] as $optionInputId => $optionInputData) {
             $configurableOption->configurableOptionInputs()->find($optionInputId)->update([
                 'name' => $optionInputData['name'],
@@ -211,10 +188,6 @@ class ConfigurableOptionController extends Controller
 
     /**
      * Delete the specified configurable option from database.
-     * 
-     * @param  ConfigurableGroup  $configurableOptionGroup
-     * @param  ConfigurableOption  $configurableOption
-     * @return \Illuminate\Http\RedirectResponse
      */
     public function destroyOption(ConfigurableGroup $configurableOptionGroup, ConfigurableOption $configurableOption): \Illuminate\Http\RedirectResponse
     {
@@ -236,18 +209,13 @@ class ConfigurableOptionController extends Controller
             $configurableOptionInput->delete();
         }
 
-
         $configurableOption->delete();
+
         return redirect()->route('admin.configurable-options.edit', $configurableOptionGroup->id)->with('success', 'Configurable Option deleted successfully');
     }
 
     /**
      * Create new configurable option input.
-     * 
-     * @param  Request  $request
-     * @param  ConfigurableGroup  $configurableOptionGroup
-     * @param  ConfigurableOption  $configurableOption
-     * @return \Illuminate\Http\RedirectResponse
      */
     public function createOptionInput(Request $request, ConfigurableGroup $configurableOptionGroup, ConfigurableOption $configurableOption): \Illuminate\Http\RedirectResponse
     {
@@ -257,20 +225,16 @@ class ConfigurableOptionController extends Controller
             'order' => 0,
         ]);
         $optionInput->configurableOptionInputPrice()->create();
+
         return redirect()->route('admin.configurable-options.edit', $configurableOptionGroup->id)->with('success', 'Configurable Option Input created successfully')->with('open', $configurableOption->id);
     }
 
     /**
      * Delete the specified configurable option input from database.
-     * 
-     * @param  ConfigurableGroup  $configurableOptionGroup
-     * @param  ConfigurableOption  $configurableOption
-     * @param  ConfigurableOptionInput  $configurableOptionInput
-     * @return \Illuminate\Http\RedirectResponse
      */
     public function destroyOptionInput(ConfigurableGroup $configurableOptionGroup, ConfigurableOption $configurableOption, ConfigurableOptionInput $configurableOptionInput): \Illuminate\Http\RedirectResponse
     {
-        // If the option input is lower then 1  
+        // If the option input is lower then 1
         if ($configurableOption->configurableOptionInputs()->count() < 2) {
             return redirect()->route('admin.configurable-options.edit', $configurableOptionGroup->id)->with('error', 'You can not delete the last option input');
         }
@@ -284,6 +248,7 @@ class ConfigurableOptionController extends Controller
         }
 
         $configurableOptionInput->delete();
+
         return redirect()->route('admin.configurable-options.edit', $configurableOptionGroup->id)->with('success', 'Configurable Option Input deleted successfully')->with('open', $configurableOption->id);
     }
 }

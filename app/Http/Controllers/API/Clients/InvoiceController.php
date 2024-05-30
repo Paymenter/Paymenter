@@ -3,19 +3,17 @@
 namespace App\Http\Controllers\API\Clients;
 
 use App\Classes\API;
-use App\Models\Order;
-use App\Models\Invoice;
-use App\Models\Product;
-use Illuminate\Http\Request;
 use App\Helpers\ExtensionHelper;
 use App\Http\Controllers\API\Controller;
 use App\Models\Extension;
+use App\Models\Invoice;
+use Illuminate\Http\Request;
 
 class InvoiceController extends Controller
 {
     /**
      * Get all invoices of current user.
-     * 
+     *
      * @return \Illuminate\Http\JsonResponse
      */
     public function getInvoices(Request $request)
@@ -23,19 +21,20 @@ class InvoiceController extends Controller
         $user = $request->user();
 
         $invoices = $user->invoices()->where('credits', null)->paginate(25);
+
         return $this->success('Invoices successfully retrieved.', API::repaginate($invoices));
     }
 
     /**
      * Get invoice by ID.
-     * 
+     *
      * @return \Illuminate\Http\JsonResponse
      */
     public function getInvoice(Request $request, int $invoiceId)
     {
         $user = $request->user();
 
-        if (!$user->tokenCan('invoice:read')) {
+        if (! $user->tokenCan('invoice:read')) {
             return $this->error('You do not have permission to read invoices.', 403);
         }
 
@@ -48,7 +47,7 @@ class InvoiceController extends Controller
 
     /**
      * Pay invoice by ID.
-     * 
+     *
      * @return \Illuminate\Http\JsonResponse
      */
     public function payInvoice(Request $request, int $invoiceId)
@@ -78,6 +77,7 @@ class InvoiceController extends Controller
             $user->save();
             $invoice->status = 'paid';
             $invoice->save();
+
             return $this->success('Invoice successfully paid.', [
                 'invoice' => $invoice,
             ]);
@@ -85,7 +85,7 @@ class InvoiceController extends Controller
 
         $payment_method = Extension::where('type', 'gateway')->where('name', $payment_method)->first();
 
-        if (!$payment_method || !$payment_method->enabled) {
+        if (! $payment_method || ! $payment_method->enabled) {
             return $this->error('Payment method is not enabled.', 400);
         }
 

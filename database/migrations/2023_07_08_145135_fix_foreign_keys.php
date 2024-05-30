@@ -25,8 +25,9 @@ return new class extends Migration
 
         // We first want to check if there are any loose orders without a client
         foreach ($orders as $order) {
-            if (!User::find($order->client)) {
+            if (! User::find($order->client)) {
                 $order->delete();
+
                 continue;
             }
         }
@@ -45,13 +46,14 @@ return new class extends Migration
             $order->save();
         }
 
-
         $orderProducts = OrderProduct::all();
         foreach ($orderProducts as $orderProduct) {
-            if (!$orderProduct->product()->exists())
+            if (! $orderProduct->product()->exists()) {
                 $orderProduct->delete();
-            if (!$orderProduct->order()->exists())
+            }
+            if (! $orderProduct->order()->exists()) {
                 $orderProduct->delete();
+            }
         }
 
         Schema::table('order_products', function (Blueprint $table) {
@@ -63,8 +65,9 @@ return new class extends Migration
 
         $orderProductsConfig = OrderProductConfig::all();
         foreach ($orderProductsConfig as $orderProductConfig) {
-            if (!$orderProductConfig->product()->exists())
+            if (! $orderProductConfig->product()->exists()) {
                 $orderProductConfig->delete();
+            }
         }
 
         Schema::table('order_products_config', function (Blueprint $table) {
@@ -74,8 +77,9 @@ return new class extends Migration
 
         $extensionSettings = ExtensionSetting::all();
         foreach ($extensionSettings as $extensionSetting) {
-            if (!Extension::find($extensionSetting->extension))
+            if (! Extension::find($extensionSetting->extension)) {
                 $extensionSetting->delete();
+            }
         }
 
         Schema::table('extension_settings', function (Blueprint $table) {
@@ -97,10 +101,12 @@ return new class extends Migration
 
         $products = Product::all();
         foreach ($products as $product) {
-            if ($product->server_id == null)
+            if ($product->server_id == null) {
                 continue;
-            if (!Extension::find($product->server_id))
+            }
+            if (! Extension::find($product->server_id)) {
                 $product->delete();
+            }
         }
 
         Schema::table('products', function (Blueprint $table) {
@@ -117,8 +123,9 @@ return new class extends Migration
 
         $tickets = Ticket::all();
         foreach ($tickets as $ticket) {
-            if (!User::find($ticket->client))
+            if (! User::find($ticket->client)) {
                 $ticket->delete();
+            }
         }
 
         Schema::table('tickets', function (Blueprint $table) {

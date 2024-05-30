@@ -36,9 +36,8 @@ class MainController extends Controller
             ->join('invoice_items', 'invoices.id', '=', 'invoice_items.invoice_id')
             ->groupBy('day')
             ->get();
-                
-        $invoiceCounts = $invoices->pluck('count', 'day')->toArray();
 
+        $invoiceCounts = $invoices->pluck('count', 'day')->toArray();
 
         return view('admin.index', compact('revenueTotal', 'orderCounts', 'userCounts', 'invoiceCounts'));
     }

@@ -2,9 +2,9 @@
 
 namespace App\Mail\Invoices;
 
+use App\Mail\Mailable;
 use App\Models\Invoice;
 use Illuminate\Bus\Queueable;
-use App\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 
 class NewInvoice extends Mailable
@@ -21,7 +21,7 @@ class NewInvoice extends Mailable
 
     /**
      * The products instance.
-     * 
+     *
      * @var \App\Models\Products
      */
     public $products;

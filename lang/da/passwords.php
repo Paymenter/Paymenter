@@ -16,5 +16,5 @@ return [
     'sent' => 'Vi har sendt dit link til nulstilling af adgangskode via e-mail!',
     'throttled' => 'Vent, før du prøver igen.',
     'token' => 'Denne token til nulstilling af adgangskode er ugyldigt.',
-    'user' => "Vi kan ikke finde en bruger med denne e-mailadresse.    ",
+    'user' => 'Vi kan ikke finde en bruger med denne e-mailadresse.    ',
 ];

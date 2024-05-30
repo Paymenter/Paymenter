@@ -2,14 +2,15 @@
 
 namespace Tests\Feature\Admin;
 
-use Tests\TestCase;
-use App\Models\User;
 use App\Models\Coupon;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\TestCase;
 
 class CouponTest extends TestCase
 {
     use RefreshDatabase;
+
     protected $user;
 
     public function setUp(): void
@@ -18,8 +19,7 @@ class CouponTest extends TestCase
         $this->user = User::factory()->create(['role_id' => 1]);
     }
 
-
-    /** 
+    /**
      * Test if admin can view all the coupon pages
      */
     public function testIfAdminCanViewAllTheCouponPages()
@@ -34,7 +34,7 @@ class CouponTest extends TestCase
             'code' => 'TEST',
             'type' => 'fixed',
             'value' => 100,
-            'time' => 'lifetime'
+            'time' => 'lifetime',
         ]);
 
         $response = $this->actingAs($this->user)->get(route('admin.coupons.edit', $coupon));
@@ -55,7 +55,7 @@ class CouponTest extends TestCase
             'code' => 'TEST',
             'type' => 'fixed',
             'value' => '100',
-            'time' => 'lifetime'
+            'time' => 'lifetime',
         ]);
 
         $response->assertStatus(302);
@@ -64,7 +64,7 @@ class CouponTest extends TestCase
             'code' => 'TEST',
             'type' => 'fixed',
             'value' => '100',
-            'time' => 'lifetime'
+            'time' => 'lifetime',
         ]);
     }
 
@@ -79,7 +79,7 @@ class CouponTest extends TestCase
             'code' => 'TEST',
             'type' => 'fixed',
             'value' => '100',
-            'time' => 'lifetime'
+            'time' => 'lifetime',
         ]);
 
         $response = $this->actingAs($this->user)->put(route('admin.coupons.update', $coupon), [
@@ -116,7 +116,7 @@ class CouponTest extends TestCase
             'code' => 'TEST',
             'type' => 'fixed',
             'value' => '100',
-            'time' => 'lifetime'
+            'time' => 'lifetime',
         ]);
 
         $response = $this->actingAs($this->user)->delete(route('admin.coupons.delete', $coupon));
@@ -127,7 +127,7 @@ class CouponTest extends TestCase
             'code' => 'TEST',
             'type' => 'fixed',
             'value' => '100',
-            'time' => 'lifetime'
+            'time' => 'lifetime',
         ]);
     }
 }

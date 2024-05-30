@@ -30,13 +30,13 @@ class Kernel extends ConsoleKernel
      */
     protected function commands()
     {
-        $this->load(__DIR__ . '/Commands');
+        $this->load(__DIR__.'/Commands');
     }
 
     protected function registerStatsCommand()
     {
         $uuid = config('settings::stats.token');
-        if (!$uuid) {
+        if (! $uuid) {
             $uuid = Str::uuid();
             Setting::updateOrCreate(['key' => 'stats.token'], ['value' => $uuid]);
         }

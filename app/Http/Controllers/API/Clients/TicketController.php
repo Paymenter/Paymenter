@@ -3,11 +3,10 @@
 namespace App\Http\Controllers\API\Clients;
 
 use App\Classes\API;
-use App\Models\Ticket;
-use Illuminate\Http\Request;
-use App\Models\TicketMessage;
 use App\Http\Controllers\API\Controller;
-use App\Http\Requests\API\TicketRequest;
+use App\Models\Ticket;
+use App\Models\TicketMessage;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\RateLimiter;
 
 class TicketController extends Controller
@@ -38,14 +37,14 @@ class TicketController extends Controller
         $user = $request->user();
 
         $executed = RateLimiter::attempt(
-            'create-ticket:' . $user->id,
+            'create-ticket:'.$user->id,
             $perMinute = 1,
             function () {
                 return true;
             }
         );
 
-        if (!$executed) {
+        if (! $executed) {
             return $this->error('You are creating too many tickets. Please wait a few minutes and try again.', 429);
         }
 
@@ -90,7 +89,7 @@ class TicketController extends Controller
 
         $ticket = Ticket::where('user_id', $user->id)->where('id', $ticketId)->firstOrFail();
 
-        //Get ticket messages with user id and name 
+        //Get ticket messages with user id and name
         $messages = $ticket->messages()->with('user')->paginate(config('app.pagination'));
 
         return $this->success('Messages successfully retrieved.', API::repaginate($messages));
@@ -129,14 +128,14 @@ class TicketController extends Controller
         }
 
         $executed = RateLimiter::attempt(
-            'send-message:' . $ticket->id,
+            'send-message:'.$ticket->id,
             $perMinute = 3,
             function () {
                 return true;
             }
         );
 
-        if (!$executed) {
+        if (! $executed) {
             return $this->error('You are sending too many messages. Please wait a few minutes and try again.', 429);
         }
 

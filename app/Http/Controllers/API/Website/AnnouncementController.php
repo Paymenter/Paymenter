@@ -25,11 +25,12 @@ class AnnouncementController extends Controller
      */
     public function getAnnouncement(string $id)
     {
-        if (!$announcement = Announcement::where('id', $id)->where('published', 1)->first()) {
+        if (! $announcement = Announcement::where('id', $id)->where('published', 1)->first()) {
             return response()->json([
                 'error' => 'Announcement not found.',
             ], 404);
         }
+
         return response()->json([
             'announcement' => $announcement,
         ], 200);

@@ -3,10 +3,13 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Helpers\ExtensionHelper;
+use App\Http\Controllers\Controller;
+use App\Models\Order;
+use App\Models\OrderProduct;
+use App\Models\OrderProductConfig;
+use App\Models\Role;
 use App\Models\User;
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
-use App\Models\{Invoice, Order, OrderProduct, OrderProductConfig, Role, Ticket};
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\View;
@@ -43,7 +46,6 @@ class ClientController extends Controller
         $user = User::create($request->all());
         isset($sendPassword) && $sendPassword ? Password::sendResetLink(['email' => $user->email]) : null;
 
-
         return redirect()->route('admin.clients.edit', $user->id);
     }
 
@@ -51,6 +53,7 @@ class ClientController extends Controller
     {
         $user = $user->load('role');
         $roles = Role::all();
+
         return view('admin.clients.edit', compact('user', 'roles'));
     }
 
@@ -71,6 +74,7 @@ class ClientController extends Controller
             $user->role_id = $request->input('role');
             $user->save();
         }
+
         return redirect()->route('admin.clients.edit', $user->id)->with('success', 'User updated successfully');
     }
 
@@ -84,17 +88,16 @@ class ClientController extends Controller
         return redirect()->route('admin.clients');
     }
 
-
     /**
      * Display the Products
      *
      * @return View
      */
-    public function products(User $user, OrderProduct $orderProduct = null)
+    public function products(User $user, ?OrderProduct $orderProduct = null)
     {
-        if (!$orderProduct) {
+        if (! $orderProduct) {
             $orderProduct = $user->orderProducts()->with(['product'])->first();
-            if (!$orderProduct) {
+            if (! $orderProduct) {
                 return redirect()->route('admin.clients.edit', $user->id)->with('error', 'No orders found');
             }
         }
@@ -129,8 +132,9 @@ class ClientController extends Controller
 
     public function removeCancellation(User $user, OrderProduct $orderProduct): \Illuminate\Http\RedirectResponse
     {
-        if(!$orderProduct->cancellation()->exists())
+        if (! $orderProduct->cancellation()->exists()) {
             return redirect()->route('admin.clients.products', [$user->id, $orderProduct->id])->with('error', 'No cancellation found');
+        }
 
         $orderProduct->cancellation()->delete();
 
@@ -166,7 +170,6 @@ class ClientController extends Controller
                 break;
         }
 
-
         return redirect()->route('admin.clients.products', [$user->id, $orderProduct->id])->with('success', 'Product status changed');
     }
 
@@ -183,8 +186,9 @@ class ClientController extends Controller
         ]);
 
         $orderProductConfig->value = $request->input('value');
-        if(!$orderProductConfig->configurableOption() || !$orderProductConfig->configurableOption()->exists())
+        if (! $orderProductConfig->configurableOption() || ! $orderProductConfig->configurableOption()->exists()) {
             $orderProductConfig->key = $request->input('key');
+        }
         $orderProductConfig->save();
 
         return redirect()->route('admin.clients.products', [$user->id, $orderProduct->id])->with('success', 'Product updated');
@@ -192,7 +196,7 @@ class ClientController extends Controller
 
     /**
      * Add a product configurable option
-     * 
+     *
      * @return Redirect
      */
     public function newProductConfig(User $user, OrderProduct $orderProduct, Request $request): \Illuminate\Http\RedirectResponse
@@ -208,7 +212,7 @@ class ClientController extends Controller
 
     /**
      * Delete a product configurable option
-     * 
+     *
      * @return Redirect
      */
     public function deleteProductConfig(User $user, OrderProduct $orderProduct, OrderProductConfig $orderProductConfig): \Illuminate\Http\RedirectResponse

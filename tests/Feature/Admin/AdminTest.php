@@ -2,14 +2,15 @@
 
 namespace Tests\Feature\Admin;
 
-use Tests\TestCase;
 use App\Models\User;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\TestCase;
 
 class AdminTest extends TestCase
 {
     use RefreshDatabase;
+
     protected $user;
 
     public function setUp(): void

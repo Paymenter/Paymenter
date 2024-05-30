@@ -1,13 +1,16 @@
 <?php
+
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 
 class ConfigurableOptionInput extends Model
 {
     use HasFactory;
+
     protected $table = 'configurable_option_inputs';
+
     protected $fillable = [
         'name',
         'order',

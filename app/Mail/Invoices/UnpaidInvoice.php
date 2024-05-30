@@ -2,10 +2,9 @@
 
 namespace App\Mail\Invoices;
 
+use App\Mail\Mailable;
 use App\Models\Invoice;
 use Illuminate\Bus\Queueable;
-use App\Mail\Mailable;
-use Illuminate\Mail\Mailables\Content;
 use Illuminate\Queue\SerializesModels;
 
 class UnpaidInvoice extends Mailable
@@ -22,11 +21,10 @@ class UnpaidInvoice extends Mailable
 
     /**
      * The products instance.
-     * 
+     *
      * @var \App\Models\Products
      */
     public $products;
-     
 
     /**
      * Create a new message instance.

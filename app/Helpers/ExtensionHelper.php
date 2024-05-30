@@ -7,20 +7,20 @@ use App\Jobs\Servers\UnsuspendServer;
 use App\Jobs\Servers\UpgradeServer;
 use App\Models\ConfigurableOption;
 use App\Models\ConfigurableOptionInput;
-use App\Models\User;
-use App\Models\Invoice;
-use App\Models\Product;
 use App\Models\Extension;
+use App\Models\Invoice;
 use App\Models\Log as ModelsLog;
 use App\Models\OrderProduct;
 use App\Models\OrderProductConfig;
+use App\Models\Product;
+use App\Models\User;
 use Carbon\Carbon;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Crypt;
 use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Contracts\Encryption\EncryptException;
-use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\View;
 
 class ExtensionHelper
@@ -28,8 +28,7 @@ class ExtensionHelper
     /**
      * Called when a new invoice is accepted.
      *
-     * @param int $id ID of the invoice
-     *
+     * @param  int  $id  ID of the invoice
      * @return void
      */
     public static function paymentDone($id, $paymentMethod = 'unknown', $paymentReference = null)
@@ -46,6 +45,7 @@ class ExtensionHelper
 
             $invoice->status = 'paid';
             $invoice->save();
+
             return;
         }
 
@@ -71,7 +71,7 @@ class ExtensionHelper
 
         foreach ($invoice->items()->get() as $item) {
             $product = $item->product()->get()->first();
-            if (!$product) {
+            if (! $product) {
                 continue;
             }
 
@@ -122,26 +122,24 @@ class ExtensionHelper
     /**
      * Get metadata of an extension
      *
-     * @param Extension $extension
      *
      * @return array
      */
     public static function getMetadata(Extension $extension)
     {
-        $namespace = 'App\Extensions\\' . ucfirst($extension->type) . 's\\' . $extension->name . '\\' . $extension->name;        // As it autoloads, we need to wrap it in a try/catch
+        $namespace = 'App\Extensions\\'.ucfirst($extension->type).'s\\'.$extension->name.'\\'.$extension->name;        // As it autoloads, we need to wrap it in a try/catch
         try {
-            if (!class_exists($namespace)) {
+            if (! class_exists($namespace)) {
                 return [];
             }
         } catch (\Exception $e) {
             return [];
         }
         $namespace = new $namespace($extension);
-        if (!method_exists($namespace, 'getMetadata')) {
+        if (! method_exists($namespace, 'getMetadata')) {
             return [];
         }
         $metadata = json_decode(json_encode($namespace->getMetadata()));
-
 
         return $metadata ?? [];
     }
@@ -149,50 +147,48 @@ class ExtensionHelper
     /**
      * Get userConfig
      *
-     * @param Product $product
      *
      * @return array
      */
     public static function getUserConfig(Product $product)
     {
-        if (!$product->extension_id) {
+        if (! $product->extension_id) {
             return [];
         }
         $server = $product->extension;
-        $module = "App\\Extensions\\Servers\\" . $server->name . "\\" . $server->name;
-        if (!class_exists($module)) {
+        $module = 'App\\Extensions\\Servers\\'.$server->name.'\\'.$server->name;
+        if (! class_exists($module)) {
             return [];
         }
         $module = new $module($server);
-        if (!method_exists($module, 'getUserConfig')) {
+        if (! method_exists($module, 'getUserConfig')) {
             return [];
         }
         if (method_exists($module, 'getUserConfig')) {
             $userConfig = json_decode(json_encode($module->getUserConfig($product)));
         }
+
         return $userConfig ?? [];
     }
 
     /**
      * Validate userConfig
      *
-     * @param Product $product
-     * @param Request $request
      *
      * @return void
      */
     public static function validateUserConfig(Product $product, Request $request)
     {
-        if (!$product->extension_id) {
+        if (! $product->extension_id) {
             return [];
         }
         $server = $product->extension;
-        $module = "App\\Extensions\\Servers\\" . $server->name . "\\" . $server->name;
-        if (!class_exists($module)) {
+        $module = 'App\\Extensions\\Servers\\'.$server->name.'\\'.$server->name;
+        if (! class_exists($module)) {
             return [];
         }
         $module = new $module($server);
-        if (!method_exists($module, 'getUserConfig')) {
+        if (! method_exists($module, 'getUserConfig')) {
             return [];
         }
         if (method_exists($module, 'getUserConfig')) {
@@ -201,7 +197,7 @@ class ExtensionHelper
         $options = [];
         foreach ($userConfig as $config) {
             $validate = self::validateConfigItem($config, $request);
-            if ($validate !== true && !is_array($validate)) {
+            if ($validate !== true && ! is_array($validate)) {
                 return $validate;
             }
             $value = $request->get($config->name);
@@ -214,19 +210,17 @@ class ExtensionHelper
     /**
      * Update extension config
      *
-     * @param Extension $extension
-     * @param Request $request
      *
      * @return void
      */
     public static function updateConfig(Extension $extension, Request $request)
     {
-        $namespace = 'App\Extensions\\' . ucfirst($extension->type) . 's\\' . $extension->name . '\\' . $extension->name;
+        $namespace = 'App\Extensions\\'.ucfirst($extension->type).'s\\'.$extension->name.'\\'.$extension->name;
         $extension->config = json_decode(json_encode((new $namespace($extension))->getConfig()));
 
         foreach ($extension->config as $config) {
             $validate = self::validateConfigItem($config, $request);
-            if ($validate !== true && !is_array($validate)) {
+            if ($validate !== true && ! is_array($validate)) {
                 return $validate;
             }
             $value = $request->get($config->name);
@@ -247,15 +241,13 @@ class ExtensionHelper
     /**
      * Validate config item
      *
-     * @param object $config
-     * @param Request $request
-     *
+     * @param  object  $config
      * @return void
      */
     public static function validateConfigItem($config, Request $request)
     {
         if (isset($config->required) && $config->required) {
-            if (!isset($config->validation)) {
+            if (! isset($config->validation)) {
                 $config->validation = 'required';
             } else {
                 $config->validation .= '|required';
@@ -282,42 +274,42 @@ class ExtensionHelper
         if (is_array($message)) {
             $message = json_encode($message);
         }
-        Log::error($extension . ': ' . $message);
+        Log::error($extension.': '.$message);
 
         ModelsLog::create([
             'type' => 'error',
-            'message' => $extension . ': ' . $message,
+            'message' => $extension.': '.$message,
         ]);
     }
 
     /**
      * Debug function
-     * 
+     *
      * @return void
      */
     public static function debug($extension, $message, $data = null)
     {
         ModelsLog::create([
             'type' => 'debug',
-            'message' => $extension . ': ' . $message,
+            'message' => $extension.': '.$message,
             'data' => $data,
         ]);
     }
+
     /**
      * Called when a new order is accepted
      * ```php
      * ExtensionHelper::getConfig('paymenter', 'paymenter');
      * ```
      *
-     * @param string $name Name of the extension
-     * @param string $key Name of the config
-     *
+     * @param  string  $name  Name of the extension
+     * @param  string  $key  Name of the config
      * @return string
      */
     public static function getConfig($name, $key)
     {
         $extension = Extension::where('name', $name)->first();
-        if (!$extension) {
+        if (! $extension) {
             Extension::create([
                 'name' => $name,
                 'enabled' => false,
@@ -326,7 +318,7 @@ class ExtensionHelper
             $extension = Extension::where('name', $name)->first();
         }
         $config = $extension->getConfig()->where('key', $key)->first();
-        if (!$config) {
+        if (! $config) {
             return;
         }
         try {
@@ -342,16 +334,15 @@ class ExtensionHelper
      * ExtensionHelper::setConfig('paymenter', 'paymenter', 'paypal');
      * ```
      *
-     * @param string $name Name of the extension
-     * @param string $key Name of the config
-     * @param string $value Value of the config
-     *
+     * @param  string  $name  Name of the extension
+     * @param  string  $key  Name of the config
+     * @param  string  $value  Value of the config
      * @return void
      */
     public static function setConfig($name, $key, $value)
     {
         $extension = Extension::where('name', $name)->first();
-        if (!$extension) {
+        if (! $extension) {
             Extension::create([
                 'name' => $name,
                 'enabled' => false,
@@ -363,7 +354,7 @@ class ExtensionHelper
 
         $value = Crypt::encryptString($value);
 
-        if (!$config) {
+        if (! $config) {
             $extension->getConfig()->create([
                 'key' => $key,
                 'value' => $value,
@@ -387,7 +378,7 @@ class ExtensionHelper
     public static function getProductConfig($name, $key, $id)
     {
         $extension = Extension::where('name', $name)->first();
-        if (!$extension) {
+        if (! $extension) {
             Extension::create([
                 'name' => $name,
                 'enabled' => false,
@@ -397,7 +388,7 @@ class ExtensionHelper
         }
 
         $config = $extension->getServer()->where('product_id', $id)->where('extension', $extension->id)->where('name', $key)->first();
-        if (!$config) {
+        if (! $config) {
             $extension->getServer()->create([
                 'name' => $key,
                 'value' => '',
@@ -418,7 +409,7 @@ class ExtensionHelper
     public static function setOrderProductConfig($key, $value, $id)
     {
         $config = OrderProductConfig::where('order_product_id', $id)->where('key', $key)->first();
-        if (!$config) {
+        if (! $config) {
             OrderProductConfig::create([
                 'order_product_id' => $id,
                 'key' => $key,
@@ -433,21 +424,20 @@ class ExtensionHelper
     /**
      * Get link to redirect the user to for payment
      *
-     * @param int $id ID of the extension
-     * @param int $total Total price
-     * @param array $products Array of products
-     * @param int $orderId ID of the order
-     *
+     * @param  int  $id  ID of the extension
+     * @param  int  $total  Total price
+     * @param  array  $products  Array of products
+     * @param  int  $orderId  ID of the order
      * @return string
      */
     public static function getPaymentMethod($id, $total, $products, $orderId)
     {
         $extension = Extension::where('id', $id)->first();
-        if (!$extension) {
+        if (! $extension) {
             return false;
         }
-        $module = 'App\Extensions\Gateways\\' . $extension->name . '\\' . $extension->name;
-        if (!class_exists($module)) {
+        $module = 'App\Extensions\Gateways\\'.$extension->name.'\\'.$extension->name;
+        if (! class_exists($module)) {
             return false;
         }
         $module = new $module($extension);
@@ -459,18 +449,16 @@ class ExtensionHelper
     /**
      * Redirect to payment url, when a user adds credits
      *
-     * @param Extension $extension
-     * @param Invoice $invoice
      *
      * @return string
      */
     public static function addCredits(Extension $extension, Invoice $invoice)
     {
-        if (!$extension) {
+        if (! $extension) {
             return false;
         }
-        $module = 'App\Extensions\Gateways\\' . $extension->name . '\\' . $extension->name;
-        if (!class_exists($module)) {
+        $module = 'App\Extensions\Gateways\\'.$extension->name.'\\'.$extension->name;
+        if (! class_exists($module)) {
             return false;
         }
         $module = new $module($extension);
@@ -489,7 +477,6 @@ class ExtensionHelper
         return $pay;
     }
 
-
     public static function loadConfiguration(Product $product, OrderProduct $product2)
     {
         $settings = $product->settings ?? collect();
@@ -505,14 +492,13 @@ class ExtensionHelper
             }
             $config['config'][$config2->key] = $config2->value;
         }
+
         return $config;
     }
-
 
     /**
      * Load configurable options by product
      *
-     * @param OrderProduct $product2
      *
      * @return array
      */
@@ -520,11 +506,11 @@ class ExtensionHelper
     {
         $configurableOptions = [];
         foreach ($product2->config as $config2) {
-            if (!$config2->is_configurable_option) {
+            if (! $config2->is_configurable_option) {
                 continue;
             }
             $option = ConfigurableOption::where('id', $config2->key)->first();
-            if (!$option) {
+            if (! $option) {
                 continue;
             }
             $option->original_name = $option->name;
@@ -536,6 +522,7 @@ class ExtensionHelper
             }
             $configurableOptions[$option->name] = $value ? $value->name : $config2->value;
         }
+
         return $configurableOptions;
     }
 
@@ -551,6 +538,7 @@ class ExtensionHelper
         foreach ($extensions as $extension) {
             $gateways[] = $extension;
         }
+
         return $gateways;
     }
 
@@ -558,14 +546,15 @@ class ExtensionHelper
     {
         $gateways = [];
         foreach (self::getGateways() as $gateway) {
-            $module = 'App\Extensions\Gateways\\' . $gateway->name . '\\' . $gateway->name;
-            if (!class_exists($module)) {
+            $module = 'App\Extensions\Gateways\\'.$gateway->name.'\\'.$gateway->name;
+            if (! class_exists($module)) {
                 continue;
             }
             $module = new $module($gateway);
             // Check if function exists
-            if (!method_exists($module, 'canUse')) {
+            if (! method_exists($module, 'canUse')) {
                 $gateways[] = $gateway;
+
                 continue;
             }
 
@@ -581,16 +570,16 @@ class ExtensionHelper
     {
         $order = $product2->order()->first();
         $product = Product::findOrFail($product2->product_id);
-        if (!isset($product->extension_id)) {
+        if (! isset($product->extension_id)) {
             return;
         }
         $extension = $product->extension;
-        if (!$extension) {
+        if (! $extension) {
             return false;
         }
-        $module = 'App\Extensions\\Servers\\' . $extension->name . '\\' . $extension->name;
+        $module = 'App\Extensions\\Servers\\'.$extension->name.'\\'.$extension->name;
         $extensionName = $extension->name;
-        if (!class_exists($module)) {
+        if (! class_exists($module)) {
             return false;
         }
         $module = new $module($extension);
@@ -600,7 +589,7 @@ class ExtensionHelper
         try {
             $module->createServer($user, $config, $order, $product2, $configurableOptions);
         } catch (\Exception $e) {
-            self::error($extensionName, 'Error creating server: ' . $e->getMessage() . ' on line ' . $e->getLine() . ' in file ' . $e->getFile() . ' on line ' . $e->getLine(), $e->getTraceAsString());
+            self::error($extensionName, 'Error creating server: '.$e->getMessage().' on line '.$e->getLine().' in file '.$e->getFile().' on line '.$e->getLine(), $e->getTraceAsString());
         }
     }
 
@@ -608,15 +597,15 @@ class ExtensionHelper
     {
         $order = $product2->order()->first();
         $product = Product::findOrFail($product2->product_id);
-        if (!isset($product->extension_id)) {
+        if (! isset($product->extension_id)) {
             return;
         }
         $extension = $product->extension;
-        if (!$extension) {
+        if (! $extension) {
             return false;
         }
-        $module = 'App\Extensions\\Servers\\' . $extension->name . '\\' . $extension->name;
-        if (!class_exists($module)) {
+        $module = 'App\Extensions\\Servers\\'.$extension->name.'\\'.$extension->name;
+        if (! class_exists($module)) {
             return false;
         }
         $module = new $module($extension);
@@ -627,7 +616,7 @@ class ExtensionHelper
         try {
             $module->suspendServer($user, $config, $order, $product2, $configurableOptions);
         } catch (\Exception $e) {
-            self::error($extension->name, 'Error suspending server: ' . $e->getMessage() . ' on line ' . $e->getLine() . ' in file ' . $e->getFile(), $e->getTraceAsString());
+            self::error($extension->name, 'Error suspending server: '.$e->getMessage().' on line '.$e->getLine().' in file '.$e->getFile(), $e->getTraceAsString());
         }
     }
 
@@ -636,15 +625,15 @@ class ExtensionHelper
         $order = $product2->order()->first();
 
         $product = Product::findOrFail($product2->product_id);
-        if (!isset($product->extension_id)) {
+        if (! isset($product->extension_id)) {
             return;
         }
         $extension = $product->extension;
-        if (!$extension) {
+        if (! $extension) {
             return false;
         }
-        $module = 'App\Extensions\\Servers\\' . $extension->name . '\\' . $extension->name;
-        if (!class_exists($module)) {
+        $module = 'App\Extensions\\Servers\\'.$extension->name.'\\'.$extension->name;
+        if (! class_exists($module)) {
             return false;
         }
         $module = new $module($extension);
@@ -654,7 +643,7 @@ class ExtensionHelper
         try {
             $module->unsuspendServer($user, $config, $order, $product2, $configurableOptions);
         } catch (\Exception $e) {
-            self::error($extension->name, 'Error unsuspending server: ' . $e->getMessage() . ' on line ' . $e->getLine() . ' in file ' . $e->getFile(), $e->getTraceAsString());
+            self::error($extension->name, 'Error unsuspending server: '.$e->getMessage().' on line '.$e->getLine().' in file '.$e->getFile(), $e->getTraceAsString());
         }
     }
 
@@ -663,15 +652,15 @@ class ExtensionHelper
         $order = $product2->order()->first();
 
         $product = Product::findOrFail($product2->product_id);
-        if (!isset($product->extension_id)) {
+        if (! isset($product->extension_id)) {
             return;
         }
         $extension = $product->extension;
-        if (!$extension) {
+        if (! $extension) {
             return false;
         }
-        $module = 'App\Extensions\\Servers\\' . $extension->name . '\\' . $extension->name;
-        if (!class_exists($module)) {
+        $module = 'App\Extensions\\Servers\\'.$extension->name.'\\'.$extension->name;
+        if (! class_exists($module)) {
             return false;
         }
         $module = new $module($extension);
@@ -682,7 +671,7 @@ class ExtensionHelper
         try {
             $module->terminateServer($user, $config, $order, $product2, $configurableOptions);
         } catch (\Exception $e) {
-            self::error($extension->name, 'Error when terminating server: ' . $e->getMessage() . ' on line ' . $e->getLine() . ' in file ' . $e->getFile(), $e->getTraceAsString());
+            self::error($extension->name, 'Error when terminating server: '.$e->getMessage().' on line '.$e->getLine().' in file '.$e->getFile(), $e->getTraceAsString());
         }
     }
 
@@ -691,15 +680,15 @@ class ExtensionHelper
         $order = $product2->order()->first();
 
         $product = Product::findOrFail($product2->product_id);
-        if (!isset($product->extension_id)) {
+        if (! isset($product->extension_id)) {
             return;
         }
         $extension = $product->extension;
-        if (!$extension) {
+        if (! $extension) {
             return false;
         }
-        $module = 'App\Extensions\\Servers\\' . $extension->name . '\\' . $extension->name;
-        if (!class_exists($module)) {
+        $module = 'App\Extensions\\Servers\\'.$extension->name.'\\'.$extension->name;
+        if (! class_exists($module)) {
             return false;
         }
         $module = new $module($extension);
@@ -710,15 +699,14 @@ class ExtensionHelper
         try {
             $module->upgradeServer($user, $config, $order, $product2, $configurableOptions);
         } catch (\Exception $e) {
-            self::error($extension->name, 'Error when terminating server: ' . $e->getMessage() . ' on line ' . $e->getLine() . ' in file ' . $e->getFile(), $e->getTraceAsString());
+            self::error($extension->name, 'Error when terminating server: '.$e->getMessage().' on line '.$e->getLine().' in file '.$e->getFile(), $e->getTraceAsString());
         }
     }
 
     /**
      * Get a (login) link for the client and admin area
      *
-     * @param OrderProduct $product
-     *
+     * @param  OrderProduct  $product
      * @return string
      */
     public static function getLink(OrderProduct $product2)
@@ -726,19 +714,19 @@ class ExtensionHelper
         $order = $product2->order;
 
         $product = $product2->product;
-        if (!isset($product->extension_id)) {
+        if (! isset($product->extension_id)) {
             return false;
         }
         $extension = $extension = $product->extension;
-        if (!$extension) {
+        if (! $extension) {
             return false;
         }
-        $module = 'App\Extensions\\Servers\\' . $extension->name . '\\' . $extension->name;
-        if (!class_exists($module)) {
+        $module = 'App\Extensions\\Servers\\'.$extension->name.'\\'.$extension->name;
+        if (! class_exists($module)) {
             return false;
         }
         $module = new $module($extension);
-        if (!method_exists($module, 'getLink')) {
+        if (! method_exists($module, 'getLink')) {
             return false;
         }
         $config = self::loadConfiguration($product, $product2);
@@ -748,7 +736,7 @@ class ExtensionHelper
         try {
             $link = $module->getLink($user, $config, $order, $product2, $configurableOptions);
         } catch (\Exception $e) {
-            self::error($extension->name, 'Error getting link: ' . $e->getMessage() . ' on line ' . $e->getLine() . ' in file ' . $e->getFile(), $e->getTraceAsString());
+            self::error($extension->name, 'Error getting link: '.$e->getMessage().' on line '.$e->getLine().' in file '.$e->getFile(), $e->getTraceAsString());
 
             return false;
         }
@@ -759,25 +747,24 @@ class ExtensionHelper
     /**
      * Get the product configuration for the admin area
      *
-     * @param Product $product
      *
      * @return array
      */
     public static function getProductConfiguration(Product $product)
     {
-        if (!isset($product->extension_id)) {
+        if (! isset($product->extension_id)) {
             return [];
         }
         $extension = $product->extension;
-        if (!$extension) {
+        if (! $extension) {
             return [];
         }
-        $module = 'App\Extensions\\Servers\\' . $extension->name . '\\' . $extension->name;
-        if (!class_exists($module)) {
+        $module = 'App\Extensions\\Servers\\'.$extension->name.'\\'.$extension->name;
+        if (! class_exists($module)) {
             return [];
         }
         $module = new $module($extension);
-        if (!method_exists($module, 'getProductConfig')) {
+        if (! method_exists($module, 'getProductConfig')) {
             return [];
         }
         $settings = $product->settings;
@@ -795,14 +782,14 @@ class ExtensionHelper
                 }
             }
         }
+
         return json_decode(json_encode($config));
     }
 
     /**
      * Get custom pages for client area
      *
-     * @param OrderProduct $product
-     *
+     * @param  OrderProduct  $product
      * @return array
      */
     public static function getCustomPages(OrderProduct $product2)
@@ -810,40 +797,39 @@ class ExtensionHelper
         $order = $product2->order()->first();
 
         $product = Product::findOrFail($product2->product_id);
-        if (!isset($product->extension_id)) {
+        if (! isset($product->extension_id)) {
             return [];
         }
         $extension = $product->extension;
-        if (!$extension) {
+        if (! $extension) {
             return [];
         }
-        $module = 'App\Extensions\\Servers\\' . $extension->name . '\\' . $extension->name;
-        if (!class_exists($module)) {
+        $module = 'App\Extensions\\Servers\\'.$extension->name.'\\'.$extension->name;
+        if (! class_exists($module)) {
             return [];
         }
         $module = new $module($extension);
-        if (!method_exists($module, 'getCustomPages')) {
+        if (! method_exists($module, 'getCustomPages')) {
             return [];
         }
         $config = self::loadConfiguration($product, $product2);
         $configurableOptions = self::loadConfigurableOptions($product2);
         $user = $order->user;
 
-        View::addNamespace(strtolower($extension->name), app_path() . '/Extensions/Servers/' . $extension->name . '/views');
+        View::addNamespace(strtolower($extension->name), app_path().'/Extensions/Servers/'.$extension->name.'/views');
         try {
             return $module->getCustomPages($user, $config, $order, $product2, $configurableOptions);
         } catch (\Exception $e) {
-            ExtensionHelper::error($extension->name, 'Error getting pages ' . $e->getMessage() . ' on line ' . $e->getLine() . ' in file ' . $e->getFile() . ' on line ' . $e->getLine(), $e->getTraceAsString());
+            ExtensionHelper::error($extension->name, 'Error getting pages '.$e->getMessage().' on line '.$e->getLine().' in file '.$e->getFile().' on line '.$e->getLine(), $e->getTraceAsString());
+
             return [];
         }
     }
 
-
     /**
      * Get all parameters for a order product
      *
-     * @param OrderProduct $product
-     *
+     * @param  OrderProduct  $product
      * @return object
      */
     public static function getParameters(OrderProduct $product2)
@@ -865,8 +851,6 @@ class ExtensionHelper
     /**
      * Check if user may access the server
      *
-     * @param OrderProduct $product
-     * @param User $user
      *
      * @return bool
      */

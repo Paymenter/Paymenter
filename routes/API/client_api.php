@@ -1,10 +1,9 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\API\Clients\TicketController;
 use App\Http\Controllers\API\Clients\APIController;
-use App\Http\Controllers\API\Clients\UserController;
 use App\Http\Controllers\API\Clients\InvoiceController;
+use App\Http\Controllers\API\Clients\TicketController;
+use Illuminate\Support\Facades\Route;
 
 // API
 Route::group(['prefix' => 'v1/'], function () {
@@ -28,4 +27,3 @@ Route::group(['prefix' => 'v1/invoices'], function () {
     Route::get('/{invoiceId}', [InvoiceController::class, 'getInvoice'])->name('api.client.v1.invoices.getInvoice')->middleware('api.permission:invoice:read');
     Route::post('/{invoiceId}/pay', [InvoiceController::class, 'payInvoice'])->name('api.client.v1.invoices.payInvoice')->middleware('api.permission:invoice:update');
 });
-
