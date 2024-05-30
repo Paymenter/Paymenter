@@ -4,15 +4,13 @@ namespace App\Http\Controllers\Clients;
 
 use App\Helpers\FileUploadHelper;
 use App\Helpers\NotificationHelper;
-use App\Models\User;
-use App\Models\Order;
-use App\Models\Ticket;
-use Illuminate\Http\Request;
-use App\Models\TicketMessage;
 use App\Http\Controllers\Controller;
+use App\Models\Ticket;
+use App\Models\TicketMessage;
+use App\Models\User;
 use App\Validators\ReCaptcha;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\RateLimiter;
 
 class TicketController extends Controller
@@ -116,8 +114,8 @@ class TicketController extends Controller
             'message' => $request->get('message'),
         ]);
 
-        if($request->hasFile('attachments')) {
-            foreach($request->file('attachments') as $file) {
+        if ($request->hasFile('attachments')) {
+            foreach ($request->file('attachments') as $file) {
                 FileUploadHelper::upload($file, $ticketMessage, TicketMessage::class);
             }
         }

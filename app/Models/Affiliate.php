@@ -16,7 +16,7 @@ class Affiliate extends Model
 
     public function getCommissionAttribute()
     {
-        return config('settings::affiliate_percentage',0);
+        return config('settings::affiliate_percentage', 0);
     }
 
     public function user()
@@ -32,7 +32,7 @@ class Affiliate extends Model
     public function earnings()
     {
         $earnings = 0;
-        foreach($this->affiliateUsers as $affiliateUser) {
+        foreach ($this->affiliateUsers as $affiliateUser) {
             $earnings += $affiliateUser->earnings();
         }
 

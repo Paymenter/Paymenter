@@ -2,10 +2,19 @@
 
 namespace App\Console\Commands;
 
-use App\Models\{Order, Role, Setting, User, Invoice, Product, Ticket, Extension, Category, Coupon};
-use Illuminate\Support\Str;
+use App\Models\Category;
+use App\Models\Coupon;
+use App\Models\Extension;
+use App\Models\Invoice;
+use App\Models\Order;
+use App\Models\Product;
+use App\Models\Role;
+use App\Models\Setting;
+use App\Models\Ticket;
+use App\Models\User;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Str;
 
 class Stats extends Command
 {
@@ -37,7 +46,7 @@ class Stats extends Command
         }
         $this->info('Posting Stats to Paymenter API');
         $token = config('settings::stats.token');
-        if (!$token) {
+        if (! $token) {
             $token = Str::uuid();
             Setting::updateOrCreate(['key' => 'stats.token'], ['value' => $token]);
         }
@@ -89,7 +98,7 @@ class Stats extends Command
                 ],
                 'php_version' => phpversion(),
                 'paymenter_version' => config('app.version'),
-            ]
+            ],
         ];
         $response = Http::post($this->url, $data);
         if ($response->successful()) {

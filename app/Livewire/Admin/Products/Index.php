@@ -2,23 +2,19 @@
 
 namespace App\Livewire\Admin\Products;
 
-use App\Helpers\ExtensionHelper;
 use App\Models\Category;
-use App\Models\Order;
 use App\Models\OrderProduct;
 use App\Models\Product;
 use App\Traits\Tables\DesignTrait;
 use Illuminate\Database\Eloquent\Builder;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
-use Rappasoft\LaravelLivewireTables\Views\Columns\ComponentColumn;
 
 class Index extends DataTableComponent
 {
     use DesignTrait;
 
     public Category $category;
-
 
     public array $bulkActions = [
         'deleteProducts' => 'Delete Products',
@@ -51,14 +47,13 @@ class Index extends DataTableComponent
             $product->delete();
         }
 
-
         $this->clearSelected();
     }
 
     public function reorder(array $items): void
     {
         foreach ($items as $item) {
-            Product::find($item[$this->getPrimaryKey()])->update(['order' => (int)$item[$this->getDefaultReorderColumn()]]);
+            Product::find($item[$this->getPrimaryKey()])->update(['order' => (int) $item[$this->getDefaultReorderColumn()]]);
         }
     }
 

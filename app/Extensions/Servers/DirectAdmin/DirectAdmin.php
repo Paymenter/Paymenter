@@ -3,9 +3,8 @@
 namespace App\Extensions\Servers\DirectAdmin;
 
 use App\Classes\Extensions\Server;
-use App\Models\Product;
 use App\Helpers\ExtensionHelper;
-use App\Extensions\Servers\DirectAdmin\DAHTTPSocket;
+use App\Models\Product;
 
 class DirectAdmin extends Server
 {
@@ -24,7 +23,7 @@ class DirectAdmin extends Server
         $host = ExtensionHelper::getConfig('DirectAdmin', 'host');
         $sock = new DAHTTPSocket();
         if (ExtensionHelper::getConfig('DirectAdmin', 'ssl')) {
-            $sock->connect('ssl://' . $host, '2222');
+            $sock->connect('ssl://'.$host, '2222');
         } else {
             $sock->connect($host, '2222');
         }
@@ -32,7 +31,7 @@ class DirectAdmin extends Server
         $server_pass = ExtensionHelper::getConfig('DirectAdmin', 'password');
         $sock->set_login($server_login, $server_pass);
         // Generate random username with 8 characters
-        $password = substr(str_shuffle(str_repeat($x = 'abcdefghijklmnopqrstuvwxyz', ceil(10/ strlen($x)))), 1, 10);
+        $password = substr(str_shuffle(str_repeat($x = 'abcdefghijklmnopqrstuvwxyz', ceil(10 / strlen($x)))), 1, 10);
         $username = substr(str_shuffle(str_repeat($x = 'abcdefghijklmnopqrstuvwxyz', ceil(8 / strlen($x)))), 1, 8);
 
         if (isset($params['ip'])) {
@@ -50,7 +49,7 @@ class DirectAdmin extends Server
                 'username' => $username,
                 'email' => $user->email,
                 'passwd' => $password,
-                'passwd2' => $password  ,
+                'passwd2' => $password,
                 'domain' => $params['config']['domain'],
                 'package' => $params['package'],
                 'ip' => $ip,
@@ -74,7 +73,7 @@ class DirectAdmin extends Server
         $host = ExtensionHelper::getConfig('DirectAdmin', 'host');
         $sock = new DAHTTPSocket();
         if (ExtensionHelper::getConfig('DirectAdmin', 'ssl')) {
-            $sock->connect('ssl://' . $host, '2222');
+            $sock->connect('ssl://'.$host, '2222');
         } else {
             $sock->connect($host, '2222');
         }
@@ -103,7 +102,7 @@ class DirectAdmin extends Server
         $host = ExtensionHelper::getConfig('DirectAdmin', 'host');
         $sock = new DAHTTPSocket();
         if (ExtensionHelper::getConfig('DirectAdmin', 'ssl')) {
-            $sock->connect('ssl://' . $host, '2222');
+            $sock->connect('ssl://'.$host, '2222');
         } else {
             $sock->connect($host, '2222');
         }
@@ -134,7 +133,7 @@ class DirectAdmin extends Server
         $host = ExtensionHelper::getConfig('DirectAdmin', 'host');
         $sock = new DAHTTPSocket();
         if (ExtensionHelper::getConfig('DirectAdmin', 'ssl')) {
-            $sock->connect('ssl://' . $host, '2222');
+            $sock->connect('ssl://'.$host, '2222');
         } else {
             $sock->connect($host, '2222');
         }
@@ -217,17 +216,17 @@ class DirectAdmin extends Server
         $ssl = ExtensionHelper::getConfig('DirectAdmin', 'ssl');
         $sock = new DAHTTPSocket();
         if ($ssl) {
-            $sock->connect('ssl://' . $host, '2222');
+            $sock->connect('ssl://'.$host, '2222');
         } else {
             $sock->connect($host, '2222');
         }
         $sock->set_login($user, $pass);
         $sock->query('/CMD_API_PACKAGES_USER');
         $result = $sock->fetch_parsed_body();
-        if(!isset($result['list'])) {
+        if (! isset($result['list'])) {
             throw new \Exception('No packages found or could not connect to DirectAdmin server');
         }
-        
+
         foreach ($result['list'] as $package) {
             $packages[] = [
                 'name' => $package,

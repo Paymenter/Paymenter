@@ -18,7 +18,7 @@ return new class extends Migration
             $table->unsignedBigInteger('order_id')->nullable()->change();
             $table->date('due_date')->nullable()->after('paid_at');
             $table->string('total')->nullable()->after('due_date');
-        });	
+        });
     }
 
     /**

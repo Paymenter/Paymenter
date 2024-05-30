@@ -3,11 +3,8 @@
 namespace App\Extensions\Servers\Virtualizor;
 
 use App\Classes\Extensions\Server;
-use App\Models\Product;
 use App\Helpers\ExtensionHelper;
-
-use App\Extensions\Servers\Virtualizor\Virtualizor_Admin_API;
-use App\Extensions\Servers\Virtualizor\Virtualizor_EndUser_API;
+use App\Models\Product;
 
 class Virtualizor extends Server
 {
@@ -20,7 +17,7 @@ class Virtualizor extends Server
             'website' => 'https://paymenter.org',
         ];
     }
-    
+
     public function getConfig()
     {
         return [
@@ -53,7 +50,7 @@ class Virtualizor extends Server
                 'type' => 'text',
                 'friendlyName' => 'Client Port (normally 4083)',
                 'required' => true,
-            ]
+            ],
         ];
     }
 
@@ -68,7 +65,7 @@ class Virtualizor extends Server
         // Get os list
         $os = $admin->ostemplates();
         $allos = [];
-        if (!$os || !key($os['oslist']) || !key($os['oslist'][$product->settings()->get()->where('name', 'virt')->first()->value])) {
+        if (! $os || ! key($os['oslist']) || ! key($os['oslist'][$product->settings()->get()->where('name', 'virt')->first()->value])) {
             throw new \Exception('No OS found');
         }
         foreach ($os['oslist'][$product->settings()->get()->where('name', 'virt')->first()->value] as $osid => $osname) {
@@ -117,7 +114,7 @@ class Virtualizor extends Server
 
         // Get Plan list
         $plans = $admin->plans();
-        if (!$plans) {
+        if (! $plans) {
             throw new \Exception('No plans found');
         }
         $allplans = [];
@@ -175,8 +172,9 @@ class Virtualizor extends Server
         $post['planname'] = $params['planname'];
         $post['ptype'] = $params['virt'];
         $plans = $admin->plans($page, $reslen, $post);
-        if (!$plans || !key($plans['plans'])) {
+        if (! $plans || ! key($plans['plans'])) {
             ExtensionHelper::error('Virtualizor', 'Plan not found');
+
             return;
         }
         $plan = $plans['plans'][key($plans['plans'])];
@@ -211,8 +209,9 @@ class Virtualizor extends Server
 
         $output = $admin->addvs_v2($post);
 
-        if (isset($output['error']) && !empty($output['error'])) {
+        if (isset($output['error']) && ! empty($output['error'])) {
             ExtensionHelper::error('Virtualizor', $output['error']);
+
             return;
         }
         // Set server ID
@@ -230,8 +229,9 @@ class Virtualizor extends Server
         $port = ExtensionHelper::getConfig('virtualizor', 'port');
         $admin = new Virtualizor_Admin_API();
         $admin->Virtualizor_Admin_API($ip, $key, $pass, $port);
-        if (!isset($params['config']['external_id'])) {
-            ExtensionHelper::error('Virtualizor', 'Server not found for order #' . $order->id . '.');
+        if (! isset($params['config']['external_id'])) {
+            ExtensionHelper::error('Virtualizor', 'Server not found for order #'.$order->id.'.');
+
             return;
         }
         $admin->suspend($params['config']['external_id']);
@@ -247,8 +247,9 @@ class Virtualizor extends Server
         $port = ExtensionHelper::getConfig('virtualizor', 'port');
         $admin = new Virtualizor_Admin_API();
         $admin->Virtualizor_Admin_API($ip, $key, $pass, $port);
-        if (!isset($params['config']['external_id'])) {
-            ExtensionHelper::error('Virtualizor', 'Server not found for order #' . $order->id . '.');
+        if (! isset($params['config']['external_id'])) {
+            ExtensionHelper::error('Virtualizor', 'Server not found for order #'.$order->id.'.');
+
             return;
         }
         $admin->unsuspend($params['config']['external_id']);
@@ -264,8 +265,9 @@ class Virtualizor extends Server
         $port = ExtensionHelper::getConfig('virtualizor', 'port');
         $admin = new Virtualizor_Admin_API();
         $admin->Virtualizor_Admin_API($ip, $key, $pass, $port);
-        if (!isset($params['config']['external_id'])) {
-            ExtensionHelper::error('Virtualizor', 'Server not found for order #' . $order->id . '.');
+        if (! isset($params['config']['external_id'])) {
+            ExtensionHelper::error('Virtualizor', 'Server not found for order #'.$order->id.'.');
+
             return;
         }
         $admin->delete_vs($params['config']['external_id']);
@@ -281,8 +283,9 @@ class Virtualizor extends Server
         $port = ExtensionHelper::getConfig('virtualizor', 'client_port');
         $enduser = new Virtualizor_EndUser_API($ip, $key, $pass, $port, 1);
         $url = $enduser->sso($params['config']['external_id']);
-        if (!$url) {
+        if (! $url) {
             ExtensionHelper::error('Virtualizor', 'Failed to get SSO link');
+
             return;
         }
 

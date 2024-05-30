@@ -2,9 +2,9 @@
 
 namespace App\Http\Requests\API;
 
+use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
-use Illuminate\Contracts\Validation\Validator;
 
 class TicketRequest extends FormRequest
 {
@@ -20,8 +20,8 @@ class TicketRequest extends FormRequest
     public function failedValidation(Validator $validator)
     {
         throw new HttpResponseException(response()->json([
-            'message'   => 'The given data was invalid.',
-            'data'      => $validator->errors()
+            'message' => 'The given data was invalid.',
+            'data' => $validator->errors(),
         ]));
     }
 }

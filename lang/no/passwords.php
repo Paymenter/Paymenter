@@ -16,5 +16,5 @@ return [
     'sent' => 'Vi har sendt deg en e-post med en lenke for å resette passordet ditt!',
     'throttled' => 'Vennligst vent før du prøver igjen.',
     'token' => 'Denne lenken for å resette passordet er ugyldig.',
-    'user' => "Vi kan ikke finne en bruker med dette e-post adresset",
+    'user' => 'Vi kan ikke finne en bruker med dette e-post adresset',
 ];

@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\API\Clients;
 
 use App\Classes\API;
-use Illuminate\Http\Request;
 use App\Http\Controllers\API\Controller;
+use Illuminate\Http\Request;
 
 class APIController extends Controller
 {
@@ -31,10 +31,9 @@ class APIController extends Controller
         ], 201);
     }
 
-
     /**
      * Get authenticated user.
-     * 
+     *
      * @return \Illuminate\Http\JsonResponse
      */
     public function getMe(Request $request)

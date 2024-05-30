@@ -9,11 +9,8 @@ use Illuminate\Http\Request;
 
 class RoleController extends Controller
 {
-
     /**
      * Get all roles.
-     * 
-     * @return \Illuminate\Contracts\View\View
      */
     public function index(): \Illuminate\Contracts\View\View
     {
@@ -22,30 +19,26 @@ class RoleController extends Controller
 
     /**
      * Edit role.
-     * 
-     * @return \Illuminate\Contracts\View\View
      */
     public function edit(Role $role): \Illuminate\Contracts\View\View
     {
         $permissions = Permissions::$flags;
+
         return view('admin.roles.edit', compact('role', 'permissions'));
     }
 
     /**
      * Create role.
-     * 
-     * @return \Illuminate\Contracts\View\View
      */
     public function create(): \Illuminate\Contracts\View\View
     {
         $permissions = Permissions::$flags;
+
         return view('admin.roles.create', compact('permissions'));
     }
 
     /**
      * Store role.
-     * 
-     * @return \Illuminate\Http\RedirectResponse
      */
     public function store(Request $request): \Illuminate\Http\RedirectResponse
     {
@@ -59,13 +52,12 @@ class RoleController extends Controller
             'name' => $request->name,
             'permissions' => Permissions::create($permissions),
         ]);
+
         return redirect()->route('admin.roles')->with('success', 'Role created successfully');
     }
 
     /**
      * Update role.
-     * 
-     * @return \Illuminate\Http\RedirectResponse
      */
     public function update(Request $request, Role $role): \Illuminate\Http\RedirectResponse
     {
@@ -79,6 +71,7 @@ class RoleController extends Controller
             'name' => $request->name,
             'permissions' => Permissions::create($permissions),
         ]);
+
         return redirect()->route('admin.roles')->with('success', 'Role updated successfully');
     }
 }

@@ -3,8 +3,8 @@
 namespace App\Extensions\Servers\Plesk;
 
 use App\Classes\Extensions\Server;
-use Illuminate\Support\Facades\Http;
 use App\Helpers\ExtensionHelper;
+use Illuminate\Support\Facades\Http;
 
 class Plesk extends Server
 {
@@ -24,8 +24,9 @@ class Plesk extends Server
         $password = ExtensionHelper::getConfig('Plesk', 'password');
         $host = ExtensionHelper::getConfig('Plesk', 'host');
         // Use without verify ssl
-        $response = Http::withBasicAuth($username, $password)->withoutVerifying()->post($host . '/api/v2/auth/keys');
+        $response = Http::withBasicAuth($username, $password)->withoutVerifying()->post($host.'/api/v2/auth/keys');
         $response = json_decode($response->body(), true);
+
         return $response['key'];
     }
 
@@ -52,7 +53,7 @@ class Plesk extends Server
                 'type' => 'text',
                 'required' => true,
                 'description' => 'The password of the Plesk server',
-            ]
+            ],
         ];
     }
 
@@ -65,7 +66,7 @@ class Plesk extends Server
                 'friendlyName' => 'Plan',
                 'required' => true,
                 'description' => 'The plan name of the wanted service plan',
-            ]
+            ],
         ];
     }
 
@@ -89,18 +90,18 @@ class Plesk extends Server
         $clientCheck = Http::withHeaders([
             'Content-Type' => 'application/json',
             'Accept' => 'application/json',
-            'X-API-Key' => $apiKey
-        ])->withoutVerifying()->get($host . '/api/v2/clients/' . $user->id);
+            'X-API-Key' => $apiKey,
+        ])->withoutVerifying()->get($host.'/api/v2/clients/'.$user->id);
         $clientCheck = json_decode($clientCheck->body(), true);
         // Remove spaces and special characters from username
         $username = preg_replace('/[^A-Za-z0-9\-]/', '', $user->name);
-        $uuid;
+
         if (isset($clientCheck['code'])) {
             $newClient = Http::withHeaders([
                 'Content-Type' => 'application/json',
                 'Accept' => 'application/json',
-                'X-API-Key' => $apiKey
-            ])->withoutVerifying()->post($host . '/api/v2/clients', [
+                'X-API-Key' => $apiKey,
+            ])->withoutVerifying()->post($host.'/api/v2/clients', [
                 'username' => $username,
                 'email' => $user->email,
                 'password' => $params['password'] ?? $user->password,
@@ -119,8 +120,8 @@ class Plesk extends Server
         $domain = Http::withHeaders([
             'Content-Type' => 'application/json',
             'Accept' => 'application/json',
-            'X-API-Key' => $apiKey
-        ])->withoutVerifying()->post($host . '/api/v2/domains', [
+            'X-API-Key' => $apiKey,
+        ])->withoutVerifying()->post($host.'/api/v2/domains', [
             'name' => $params['config']['domain'],
             'external_id' => $order->id,
             'client' => $uuid,
@@ -131,9 +132,10 @@ class Plesk extends Server
             ],
             'plan' => [
                 'name' => $params['plan'],
-            ]
+            ],
         ]);
         $domain = json_decode($domain->body(), true);
+
         return $domain;
     }
 
@@ -144,11 +146,12 @@ class Plesk extends Server
         $domain = Http::withHeaders([
             'Content-Type' => 'application/json',
             'Accept' => 'application/json',
-            'X-API-Key' => $apiKey
-        ])->withoutVerifying()->put($host . '/api/v2/domains/' . $this->getDomainID($params['config']['domain']) . '/status', [
-            'status' => 'suspended'
+            'X-API-Key' => $apiKey,
+        ])->withoutVerifying()->put($host.'/api/v2/domains/'.$this->getDomainID($params['config']['domain']).'/status', [
+            'status' => 'suspended',
         ]);
         $domain = json_decode($domain->body(), true);
+
         return $domain;
     }
 
@@ -159,9 +162,10 @@ class Plesk extends Server
         $domain = Http::withHeaders([
             'Content-Type' => 'application/json',
             'Accept' => 'application/json',
-            'X-API-Key' => $apiKey
-        ])->withoutVerifying()->get($host . '/api/v2/domains?name=' . $domain);
+            'X-API-Key' => $apiKey,
+        ])->withoutVerifying()->get($host.'/api/v2/domains?name='.$domain);
         $domain = json_decode($domain->body(), true);
+
         return $domain[0]['id'];
     }
 
@@ -172,11 +176,12 @@ class Plesk extends Server
         $domain = Http::withHeaders([
             'Content-Type' => 'application/json',
             'Accept' => 'application/json',
-            'X-API-Key' => $apiKey
-        ])->withoutVerifying()->put($host . '/api/v2/domains/' . $this->getDomainID($params['config']['domain']) . '/status', [
-            'status' => 'active'
+            'X-API-Key' => $apiKey,
+        ])->withoutVerifying()->put($host.'/api/v2/domains/'.$this->getDomainID($params['config']['domain']).'/status', [
+            'status' => 'active',
         ]);
         $domain = json_decode($domain->body(), true);
+
         return $domain;
     }
 
@@ -187,15 +192,17 @@ class Plesk extends Server
         $domain = Http::withHeaders([
             'Content-Type' => 'application/json',
             'Accept' => 'application/json',
-            'X-API-Key' => $apiKey
-        ])->withoutVerifying()->delete($host . '/api/v2/domains/' . $this->getDomainID($params['config']['domain']));
+            'X-API-Key' => $apiKey,
+        ])->withoutVerifying()->delete($host.'/api/v2/domains/'.$this->getDomainID($params['config']['domain']));
         $domain = json_decode($domain->body(), true);
+
         return $domain;
     }
 
     public function getLink($user, $params)
     {
         $host = ExtensionHelper::getConfig('Plesk', 'host');
-        return $host . '/smb/web/overview/id/' . $this->getDomainID($params['config']['domain']) . '/type/domain';
+
+        return $host.'/smb/web/overview/id/'.$this->getDomainID($params['config']['domain']).'/type/domain';
     }
 }

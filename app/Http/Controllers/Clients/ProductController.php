@@ -2,17 +2,17 @@
 
 namespace App\Http\Controllers\Clients;
 
-use App\Models\OrderProduct;
 use App\Helpers\ExtensionHelper;
 use App\Helpers\NotificationHelper;
 use App\Http\Controllers\Controller;
 use App\Jobs\Servers\TerminateServer;
 use App\Jobs\Servers\UpgradeServer;
+use App\Models\OrderProduct;
 use App\Models\OrderProductUpgrade;
 use App\Models\Product;
 use App\Models\TaxRate;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ProductController extends Controller
 {
@@ -47,6 +47,7 @@ class ProductController extends Controller
                 return view('clients.products.view', compact('product', 'link', 'orderProduct', 'views', 'extensionLink'));
             }
         }
+
         return abort(404, 'Page not found');
     }
 
@@ -73,7 +74,7 @@ class ProductController extends Controller
             return abort(404, 'Order not found');
         }
         $orderProduct = $product;
-        if (!$orderProduct->upgradable) {
+        if (! $orderProduct->upgradable) {
             return redirect()->back()->with('error', 'No upgrades available.');
         }
         $product = $product->product;
@@ -85,15 +86,15 @@ class ProductController extends Controller
     {
         $orderProduct->load(['product', 'order', 'order.user']);
 
-        if ($orderProduct->order->user != Auth::user() || !$orderProduct->upgradable) {
+        if ($orderProduct->order->user != Auth::user() || ! $orderProduct->upgradable) {
             return abort(404, 'Order not found');
         }
 
-        if (!$orderProduct->product->upgrades()->where('upgrade_product_id', $product->id)->exists()) {
+        if (! $orderProduct->product->upgrades()->where('upgrade_product_id', $product->id)->exists()) {
             return abort(404, 'Product not found');
         }
 
-        if (!$product->prices->{$orderProduct->billing_cycle}) {
+        if (! $product->prices->{$orderProduct->billing_cycle}) {
             // Couldn't find the same price, exit
             return abort(404, 'Product not found');
         }
@@ -103,7 +104,6 @@ class ProductController extends Controller
 
         $tax = $this->calculateTax($amount);
 
-
         return view('clients.products.upgrade-product', compact('product', 'orderProduct', 'amount', 'tax'));
     }
 
@@ -111,15 +111,15 @@ class ProductController extends Controller
     {
         $orderProduct->load(['product', 'order', 'order.user']);
 
-        if ($orderProduct->order->user != Auth::user() || !$orderProduct->upgradable) {
+        if ($orderProduct->order->user != Auth::user() || ! $orderProduct->upgradable) {
             return abort(404, 'Order not found');
         }
 
-        if (!$orderProduct->product->upgrades()->where('upgrade_product_id', $product->id)->exists()) {
+        if (! $orderProduct->product->upgrades()->where('upgrade_product_id', $product->id)->exists()) {
             return abort(404, 'Product not found');
         }
 
-        if (!$product->prices->{$orderProduct->billing_cycle}) {
+        if (! $product->prices->{$orderProduct->billing_cycle}) {
             // Couldn't find the same price, exit
             return abort(404, 'Product not found');
         }
@@ -155,7 +155,7 @@ class ProductController extends Controller
         $invoiceItem = new \App\Models\InvoiceItem();
         $invoiceItem->invoice_id = $invoice->id;
         $invoiceItem->product_id = $orderProduct->id;
-        $invoiceItem->description = 'Upgrade ' . $orderProduct->product->name . ' to ' . $product->name;
+        $invoiceItem->description = 'Upgrade '.$orderProduct->product->name.' to '.$product->name;
         $invoiceItem->total = $amount;
         $invoiceItem->save();
 
@@ -171,20 +171,20 @@ class ProductController extends Controller
 
     private function calculateTax($amount)
     {
-        if (!config('settings::tax_enabled')) {
+        if (! config('settings::tax_enabled')) {
             return [
                 'amount' => 0,
                 'tax' => null,
             ];
         }
-        if (!auth()->check()) {
+        if (! auth()->check()) {
             $tax = TaxRate::where('country', 'all')->first();
         } else {
             $tax = TaxRate::whereIn('country', [auth()->user()->country, 'all'])->get()->sortBy(function ($taxRate) {
                 return $taxRate->country == 'all';
             })->first();
         }
-        if (!$tax) {
+        if (! $tax) {
             return [
                 'amount' => 0,
                 'tax' => null,
@@ -197,7 +197,6 @@ class ProductController extends Controller
         ];
     }
 
-
     private $cycleToDays = [
         'monthly' => 30,
         'quarterly' => 90,
@@ -209,7 +208,7 @@ class ProductController extends Controller
 
     private function calculateAmount($product, $orderProduct)
     {
-        $amount =  ($product->price($orderProduct->billing_cycle) - $orderProduct->product->price($orderProduct->billing_cycle)) / $this->cycleToDays[$orderProduct->billing_cycle] * $orderProduct->expiry_date->diffInDays();
+        $amount = ($product->price($orderProduct->billing_cycle) - $orderProduct->product->price($orderProduct->billing_cycle)) / $this->cycleToDays[$orderProduct->billing_cycle] * $orderProduct->expiry_date->diffInDays();
 
         return $amount;
     }

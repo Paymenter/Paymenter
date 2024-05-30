@@ -1,8 +1,11 @@
 <?php
+
 namespace App\Classes;
 
-class Constants {
-    public static function countries(){
+class Constants
+{
+    public static function countries()
+    {
         return [
             'AF' => 'Afghanistan',
             'AX' => 'Aland Islands',
@@ -251,7 +254,7 @@ class Constants {
             'EH' => 'Western Sahara',
             'YE' => 'Yemen',
             'ZM' => 'Zambia',
-            'ZW' => 'Zimbabwe'
+            'ZW' => 'Zimbabwe',
         ];
     }
 }

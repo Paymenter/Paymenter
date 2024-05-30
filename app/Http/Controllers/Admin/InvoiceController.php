@@ -5,8 +5,9 @@ namespace App\Http\Controllers\Admin;
 use App\Helpers\ExtensionHelper;
 use App\Helpers\NotificationHelper;
 use App\Http\Controllers\Controller;
-use App\Mail\Invoices\NewInvoice;
-use App\Models\{Invoice, InvoiceItem, User};
+use App\Models\Invoice;
+use App\Models\InvoiceItem;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class InvoiceController extends Controller
@@ -22,7 +23,7 @@ class InvoiceController extends Controller
         $products = $invoiceData->products;
         $total = $invoiceData->total;
 
-        return view('admin.invoices.show', compact('invoice', 'products', 'total') );
+        return view('admin.invoices.show', compact('invoice', 'products', 'total'));
     }
 
     public function paid(Invoice $invoice, Request $request)
@@ -31,7 +32,7 @@ class InvoiceController extends Controller
             'paid_with' => 'required',
             'paid_reference' => 'nullable|string',
         ]);
-        
+
         ExtensionHelper::paymentDone($invoice->id, $request->paid_with, $request->paid_reference);
 
         return redirect()->route('admin.invoices.show', $invoice);
@@ -40,6 +41,7 @@ class InvoiceController extends Controller
     public function create()
     {
         $users = User::all();
+
         return view('admin.invoices.create', compact('users'));
     }
 
@@ -64,6 +66,7 @@ class InvoiceController extends Controller
 
         event(new \App\Events\Invoice\InvoiceCreated($invoice));
         NotificationHelper::sendNewInvoiceNotification($invoice, User::find($request->user_id));
+
         return redirect()->route('admin.invoices.show', $invoice);
     }
 }

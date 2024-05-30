@@ -19,7 +19,7 @@ class VirtFusion extends Server
             'website' => 'https://paymenter.org',
         ];
     }
-    
+
     public function getConfig()
     {
         return [
@@ -48,6 +48,7 @@ class VirtFusion extends Server
                 'value' => $p['id'],
             ];
         }
+
         return [
             [
                 'name' => 'package',
@@ -87,8 +88,9 @@ class VirtFusion extends Server
         );
         if (isset($response->json()['errors'])) {
             // Array to string conversion
-            $error = implode(" ", $response->json()['errors']);
-            ExtensionHelper::error('VirtFusion', 'Failed to create server' . $error);
+            $error = implode(' ', $response->json()['errors']);
+            ExtensionHelper::error('VirtFusion', 'Failed to create server'.$error);
+
             return;
         }
         ExtensionHelper::setOrderProductConfig('server_id', $response->json()['data']['id'], $product->id);
@@ -102,12 +104,13 @@ class VirtFusion extends Server
         $host = ExtensionHelper::getConfig('VirtFusion', 'host');
 
         $response = Http::withHeaders([
-            'Authorization' => 'Bearer ' . $apikey,
+            'Authorization' => 'Bearer '.$apikey,
             'Accept' => 'Application/json',
             'Content-Type' => 'application/json',
         ])->get(
-            $host . $url
+            $host.$url
         );
+
         return $response;
     }
 
@@ -117,19 +120,20 @@ class VirtFusion extends Server
         $host = ExtensionHelper::getConfig('VirtFusion', 'host');
 
         $response = Http::withHeaders([
-            'Authorization' => 'Bearer ' . $apikey,
+            'Authorization' => 'Bearer '.$apikey,
             'Accept' => 'Application/json',
             'Content-Type' => 'application/json',
         ])->post(
-            $host . $url,
+            $host.$url,
             $data
         );
+
         return $response;
     }
 
     private function getUser($user)
     {
-        $response = $this->getRequest('/api/v1/users/' . $user->id . '/byExtRelation');
+        $response = $this->getRequest('/api/v1/users/'.$user->id.'/byExtRelation');
 
         if (isset($response->json()['data'])) {
             return $response->json()['data']['id'];
@@ -147,7 +151,7 @@ class VirtFusion extends Server
             if ($response->successful()) {
                 return $response->json()['data']['id'];
             } else {
-                ExtensionHelper::error('VirtFusion', 'Failed to create user ', (string) $response->json() . ' ' . $response->status());
+                ExtensionHelper::error('VirtFusion', 'Failed to create user ', (string) $response->json().' '.$response->status());
 
                 return;
             }
@@ -158,17 +162,17 @@ class VirtFusion extends Server
     {
         $apikey = ExtensionHelper::getConfig('VirtFusion', 'apikey');
         $host = ExtensionHelper::getConfig('VirtFusion', 'host');
-        if (!isset($params['config']['server_id'])) {
+        if (! isset($params['config']['server_id'])) {
             return;
         }
         $server = $params['config']['server_id'];
 
         $response = Http::withHeaders([
-            'Authorization' => 'Bearer ' . $apikey,
+            'Authorization' => 'Bearer '.$apikey,
             'Accept' => 'Application/json',
             'Content-Type' => 'application/json',
         ])->post(
-            $host . '/api/v1/servers/' . $server . '/suspend'
+            $host.'/api/v1/servers/'.$server.'/suspend'
         );
         if ($response->status() == 204) {
             return true;
@@ -185,17 +189,17 @@ class VirtFusion extends Server
     {
         $apikey = ExtensionHelper::getConfig('VirtFusion', 'apikey');
         $host = ExtensionHelper::getConfig('VirtFusion', 'host');
-        if (!isset($params['config']['server_id'])) {
+        if (! isset($params['config']['server_id'])) {
             return;
         }
         $server = $params['config']['server_id'];
 
         $response = Http::withHeaders([
-            'Authorization' => 'Bearer ' . $apikey,
+            'Authorization' => 'Bearer '.$apikey,
             'Accept' => 'Application/json',
             'Content-Type' => 'application/json',
         ])->post(
-            $host . '/api/v1/servers/' . $server . '/unsuspend'
+            $host.'/api/v1/servers/'.$server.'/unsuspend'
         );
         if ($response->status() == 204) {
             return true;
@@ -212,17 +216,17 @@ class VirtFusion extends Server
     {
         $apikey = ExtensionHelper::getConfig('VirtFusion', 'apikey');
         $host = ExtensionHelper::getConfig('VirtFusion', 'host');
-        if (!isset($params['config']['server_id'])) {
+        if (! isset($params['config']['server_id'])) {
             return;
         }
         $server = $params['config']['server_id'];
 
         $response = Http::withHeaders([
-            'Authorization' => 'Bearer ' . $apikey,
+            'Authorization' => 'Bearer '.$apikey,
             'Accept' => 'Application/json',
             'Content-Type' => 'application/json',
         ])->delete(
-            $host . '/api/v1/servers/' . $server . '?delay=5'
+            $host.'/api/v1/servers/'.$server.'?delay=5'
         );
         if ($response->status() == 204) {
             return true;
@@ -239,17 +243,17 @@ class VirtFusion extends Server
     {
         $apikey = ExtensionHelper::getConfig('VirtFusion', 'apikey');
         $host = ExtensionHelper::getConfig('VirtFusion', 'host');
-        if (!isset($params['config']['server_id'])) {
+        if (! isset($params['config']['server_id'])) {
             return;
         }
         $server = $params['config']['server_id'];
 
         $response = Http::withHeaders([
-            'Authorization' => 'Bearer ' . $apikey,
+            'Authorization' => 'Bearer '.$apikey,
             'Accept' => 'Application/json',
             'Content-Type' => 'application/json',
         ])->get(
-            $host . '/api/v1/servers/' . $server
+            $host.'/api/v1/servers/'.$server
         );
 
         if ($response->status() !== 200) {
@@ -270,18 +274,18 @@ class VirtFusion extends Server
     public function login(OrderProduct $id, Request $request)
     {
 
-        if (!ExtensionHelper::hasAccess($id, auth()->user())) {
+        if (! ExtensionHelper::hasAccess($id, auth()->user())) {
             return response()->json(['error' => 'You do not have access to this server'], 403);
         }
         $params = ExtensionHelper::getParameters($id)->config;
 
         $loginLink = $this->postRequest(
-            '/api/v1/users/' . auth()->user()->id . '/serverAuthenticationTokens/' . $params['config']['server_id'],
+            '/api/v1/users/'.auth()->user()->id.'/serverAuthenticationTokens/'.$params['config']['server_id'],
             []
         );
 
         $loginLink = $loginLink->json()['data']['authentication']['endpoint_complete'];
 
-        return redirect(ExtensionHelper::getConfig('VirtFusion', 'host') . $loginLink);
+        return redirect(ExtensionHelper::getConfig('VirtFusion', 'host').$loginLink);
     }
 }

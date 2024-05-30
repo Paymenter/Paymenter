@@ -16,5 +16,5 @@ return [
     'sent' => 'Odeslali jsme vám odkaz k resetování hesla!',
     'throttled' => 'Počkejte prosím, než budete pokračovat.',
     'token' => 'Tento token pro resetování hesla je neplatný.',
-    'user' => "Nemůžeme najít uživatele s touto e-mailovou adresou.",
+    'user' => 'Nemůžeme najít uživatele s touto e-mailovou adresou.',
 ];

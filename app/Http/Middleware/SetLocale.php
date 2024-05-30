@@ -13,21 +13,20 @@ class SetLocale
      * Handle an incoming request.
      *
      * @param  Request  $request
-     * @param  Closure  $next
      * @return mixed
      */
     public function handle($request, Closure $next)
     {
         if (Session::has('locale')) {
             $locale = Session::get('locale', config('settings::language'));
-            if (!config('settings::allow_auto_lang')) {
+            if (! config('settings::allow_auto_lang')) {
                 if ($locale !== config('settings::language')) {
                     $locale = config('settings::language');
                     Session::put('locale', $locale);
                 }
             }
         } else {
-            if (!config('settings::allow_auto_lang')) {
+            if (! config('settings::allow_auto_lang')) {
                 $locale = config('settings::language');
                 Session::put('locale', $locale);
             } else {
@@ -38,7 +37,7 @@ class SetLocale
                         unset($languages[$key]);
                     }
                 }
-                if (!in_array($locale, $languages)) {
+                if (! in_array($locale, $languages)) {
                     $locale = config('settings::language');
                 }
                 Session::put('locale', $locale);

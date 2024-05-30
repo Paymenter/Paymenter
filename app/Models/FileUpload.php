@@ -18,7 +18,7 @@ class FileUpload extends Model
         'mime_type',
         'size',
     ];
-    
+
     public function fileable()
     {
         return $this->morphTo();

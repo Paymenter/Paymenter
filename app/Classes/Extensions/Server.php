@@ -6,8 +6,8 @@ class Server extends Extension
 {
     /**
      * Get product config
-     * 
-     * @param array $options
+     *
+     * @param  array  $options
      * @return array
      */
     public function getProductConfig($options)
@@ -17,12 +17,12 @@ class Server extends Extension
 
     /**
      * Create a server
-     * 
-     * @param User $user
-     * @param array $params
-     * @param Order $order
-     * @param OrderProduct $orderProduct
-     * @param array $configurableOptions
+     *
+     * @param  User  $user
+     * @param  array  $params
+     * @param  Order  $order
+     * @param  OrderProduct  $orderProduct
+     * @param  array  $configurableOptions
      * @return bool
      */
     public function createServer($user, $params, $order, $orderProduct, $configurableOptions)
@@ -32,12 +32,12 @@ class Server extends Extension
 
     /**
      * Suspend a server
-     * 
-     * @param User $user
-     * @param array $params
-     * @param Order $order
-     * @param OrderProduct $orderProduct
-     * @param array $configurableOptions
+     *
+     * @param  User  $user
+     * @param  array  $params
+     * @param  Order  $order
+     * @param  OrderProduct  $orderProduct
+     * @param  array  $configurableOptions
      * @return bool
      */
     public function suspendServer($user, $params, $order, $orderProduct, $configurableOptions)
@@ -47,12 +47,12 @@ class Server extends Extension
 
     /**
      * Unsuspend a server
-     * 
-     * @param User $user
-     * @param array $params
-     * @param Order $order
-     * @param OrderProduct $orderProduct
-     * @param array $configurableOptions
+     *
+     * @param  User  $user
+     * @param  array  $params
+     * @param  Order  $order
+     * @param  OrderProduct  $orderProduct
+     * @param  array  $configurableOptions
      * @return bool
      */
     public function unsuspendServer($user, $params, $order, $orderProduct, $configurableOptions)
@@ -62,12 +62,12 @@ class Server extends Extension
 
     /**
      * Terminate a server
-     * 
-     * @param User $user
-     * @param array $params
-     * @param Order $order
-     * @param OrderProduct $orderProduct
-     * @param array $configurableOptions
+     *
+     * @param  User  $user
+     * @param  array  $params
+     * @param  Order  $order
+     * @param  OrderProduct  $orderProduct
+     * @param  array  $configurableOptions
      * @return bool
      */
     public function terminateServer($user, $params, $order, $orderProduct, $configurableOptions)

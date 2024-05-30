@@ -14,7 +14,7 @@ class TaxController extends Controller
     {
         $countries = ['all' => 'All Countries'] + Constants::countries();
         $taxrates = TaxRate::all();
-        
+
         return view('admin.tax.index', compact('taxrates', 'countries'));
     }
 
@@ -26,10 +26,10 @@ class TaxController extends Controller
             'tax_type' => 'required|string|in:inclusive,exclusive',
             'taxrate.*.name' => 'required|string|max:255',
             'taxrate.*.rate' => 'required|numeric|min:0|max:100',
-            'taxrate.*.country' => 'required|string|in:all,' . implode(',', array_keys(Constants::countries())),
+            'taxrate.*.country' => 'required|string|in:all,'.implode(',', array_keys(Constants::countries())),
             'taxrate.*.delete' => 'nullable|boolean',
         ]);
-        
+
         $taxrates = $request->taxrates;
         foreach ($taxrates as $taxrate) {
             if (isset($taxrate['delete']) && $taxrate['delete'] == true) {
@@ -42,7 +42,7 @@ class TaxController extends Controller
                 ]);
             }
         }
-        
+
         Setting::updateOrCreate(['key' => 'tax_enabled'], ['value' => $request->tax_enabled]);
         Setting::updateOrCreate(['key' => 'tax_type'], ['value' => $request->tax_type]);
 
@@ -54,7 +54,7 @@ class TaxController extends Controller
         $request->validate([
             'name' => 'required|string|max:255|unique:tax_rates',
             'rate' => 'required|numeric|min:0|max:100',
-            'country' => 'required|string|in:all,' . implode(',', array_keys(Constants::countries())),
+            'country' => 'required|string|in:all,'.implode(',', array_keys(Constants::countries())),
         ]);
 
         TaxRate::create([
@@ -66,4 +66,3 @@ class TaxController extends Controller
         return redirect()->route('admin.taxes')->with('success', 'Tax rate created successfully');
     }
 }
-

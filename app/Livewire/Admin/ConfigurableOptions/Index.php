@@ -2,14 +2,12 @@
 
 namespace App\Livewire\Admin\ConfigurableOptions;
 
-use App\Helpers\ExtensionHelper;
 use App\Models\ConfigurableGroup;
 use App\Models\OrderProductConfig;
 use App\Traits\Tables\DesignTrait;
 use Illuminate\Database\Eloquent\Builder;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
-use Rappasoft\LaravelLivewireTables\Views\Columns\ComponentColumn;
 
 class Index extends DataTableComponent
 {

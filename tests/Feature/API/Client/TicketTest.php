@@ -4,13 +4,12 @@ namespace Tests\Feature\API\Client;
 
 use App\Models\Ticket;
 use App\Models\User;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
 class TicketTest extends TestCase
 {
     protected $user;
+
     protected $ticket;
 
     public function setUp(): void
@@ -50,7 +49,7 @@ class TicketTest extends TestCase
     public function test_if_user_cant_create_a_ticket_without_a_body()
     {
         $response = $this->actingAs($this->user)->postJson(route('api.client.v1.tickets.createTicket'), [
-            
+
         ]);
         $response->assertStatus(422);
     }
@@ -83,7 +82,7 @@ class TicketTest extends TestCase
         ]);
         $response->assertStatus(201);
     }
-    
+
     /**
      * Test if user can close a ticket.
      */
@@ -92,5 +91,4 @@ class TicketTest extends TestCase
         $response = $this->actingAs($this->user)->deleteJson(route('api.client.v1.tickets.closeTicket', $this->ticket));
         $response->assertStatus(200);
     }
-    
 }

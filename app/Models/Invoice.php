@@ -2,13 +2,15 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 
 class Invoice extends Model
 {
     use HasFactory;
+
     protected $table = 'invoices';
+
     protected $fillable = [
         'user_id',
         'order_id',
@@ -90,8 +92,8 @@ class Invoice extends Model
                 }
                 $productId = $product->product;
                 if ($coupon) {
-                    if (!empty($coupon->products)) {
-                        if (!in_array($productId->id, $coupon->products)) {
+                    if (! empty($coupon->products)) {
+                        if (! in_array($productId->id, $coupon->products)) {
                             $product->discount = 0;
                         } else {
                             if ($coupon->type == 'percent') {
@@ -133,6 +135,7 @@ class Invoice extends Model
         if ($tax->amount > 0 && config('settings::tax_type') == 'exclusive') {
             $total += $tax->amount;
         }
+
         // Return total and products as object
         return (object) [
             'total' => $total,
@@ -143,18 +146,23 @@ class Invoice extends Model
 
     public function getTax($total)
     {
-        if (!config('settings::tax_enabled')) return new TaxRate();
+        if (! config('settings::tax_enabled')) {
+            return new TaxRate();
+        }
         $tax = 0;
-        if (!auth()->check()) {
+        if (! auth()->check()) {
             $taxrate = TaxRate::where('country', 'all')->first();
         } else {
             $taxrate = TaxRate::whereIn('country', [auth()->user()->country, 'all'])->get()->sortBy(function ($taxRate) {
                 return $taxRate->country == 'all';
             })->first();
         }
-        if(!$taxrate) return new TaxRate();
-        
+        if (! $taxrate) {
+            return new TaxRate();
+        }
+
         $taxrate->amount = $total * ($taxrate->rate / 100);
+
         return $taxrate;
     }
 }

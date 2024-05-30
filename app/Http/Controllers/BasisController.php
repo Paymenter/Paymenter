@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\{Announcement, Category, FileUpload, Product};
+use App\Models\Announcement;
+use App\Models\Category;
+use App\Models\FileUpload;
+use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -16,7 +19,7 @@ class BasisController extends Controller
         return view('welcome', compact('categories', 'announcements'));
     }
 
-    public function products(string $slug = null, Product $product = null)
+    public function products(?string $slug = null, ?Product $product = null)
     {
         if ($product) {
             return redirect()->route('checkout.config', $product);
@@ -25,7 +28,7 @@ class BasisController extends Controller
         $category = null;
         if ($slug != null) {
             $category = Category::where('slug', $slug)->first();
-            if (!$category) {
+            if (! $category) {
                 abort(404);
             }
             if ($category->products()->where('hidden', 0)->count() == 0 && $category->children()->count() == 0) {
@@ -34,6 +37,7 @@ class BasisController extends Controller
         }
 
         $categories = Category::whereNull('category_id')->with('products')->orderBy('order')->get();
+
         return view('product', compact('categories', 'category'));
     }
 
@@ -49,17 +53,19 @@ class BasisController extends Controller
 
     public function tos()
     {
-        if (!config('settings::tos_text')) {
+        if (! config('settings::tos_text')) {
             abort(404);
         }
+
         return view('tos');
     }
 
     public function downloadFile(FileUpload $fileUpload)
     {
-        if (!Storage::exists('uploads/' . $fileUpload->uuid . '.' . $fileUpload->extension)) {
+        if (! Storage::exists('uploads/'.$fileUpload->uuid.'.'.$fileUpload->extension)) {
             abort(404);
         }
-        return response()->download(storage_path('app/uploads/' . $fileUpload->uuid . '.' . $fileUpload->extension), $fileUpload->filename);
+
+        return response()->download(storage_path('app/uploads/'.$fileUpload->uuid.'.'.$fileUpload->extension), $fileUpload->filename);
     }
 }

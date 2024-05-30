@@ -10,7 +10,6 @@ class TicketMessageObserver
     /**
      * Handle the TicketMessage "created" event.
      *
-     * @param  \App\Models\TicketMessage  $ticketMessage
      * @return void
      */
     public function created(TicketMessage $ticketMessage)
@@ -21,7 +20,6 @@ class TicketMessageObserver
     /**
      * Handle the TicketMessage "updated" event.
      *
-     * @param  \App\Models\TicketMessage  $ticketMessage
      * @return void
      */
     public function updated(TicketMessage $ticketMessage)
@@ -32,7 +30,6 @@ class TicketMessageObserver
     /**
      * Handle the TicketMessage "deleted" event.
      *
-     * @param  \App\Models\TicketMessage  $ticketMessage
      * @return void
      */
     public function deleted(TicketMessage $ticketMessage)
@@ -43,7 +40,6 @@ class TicketMessageObserver
     /**
      * Handle the TicketMessage "restored" event.
      *
-     * @param  \App\Models\TicketMessage  $ticketMessage
      * @return void
      */
     public function restored(TicketMessage $ticketMessage)
@@ -54,7 +50,6 @@ class TicketMessageObserver
     /**
      * Handle the TicketMessage "force deleted" event.
      *
-     * @param  \App\Models\TicketMessage  $ticketMessage
      * @return void
      */
     public function forceDeleted(TicketMessage $ticketMessage)

@@ -1,8 +1,8 @@
 <?php
+
 namespace App\Http\Controllers;
 
-use App\Models\{Announcement, Category, Product};
-use Illuminate\Http\Request;
+use App\Models\Announcement;
 
 class AnnouncementController extends Controller
 {
@@ -15,9 +15,10 @@ class AnnouncementController extends Controller
 
     public function view(Announcement $announcement)
     {
-        if (!$announcement->published) {
+        if (! $announcement->published) {
             abort(404);
         }
+
         return view('announcement.view', compact('announcement'));
     }
 }

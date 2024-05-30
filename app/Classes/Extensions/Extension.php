@@ -8,7 +8,7 @@ class Extension
 {
     /**
      * The extension model
-     * 
+     *
      * @var Extension
      */
     public $extension;
@@ -20,7 +20,7 @@ class Extension
 
     /**
      * Returns metadata about the extension
-     * 
+     *
      * @return array
      */
     public function getMetadata()
@@ -35,7 +35,7 @@ class Extension
 
     /**
      * Get all the configuration for the extension
-     * 
+     *
      * @return array
      */
     public function getConfig()

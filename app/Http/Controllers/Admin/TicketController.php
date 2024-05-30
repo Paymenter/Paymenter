@@ -4,11 +4,11 @@ namespace App\Http\Controllers\Admin;
 
 use App\Helpers\FileUploadHelper;
 use App\Helpers\NotificationHelper;
-use App\Models\User;
-use App\Models\Ticket;
-use Illuminate\Http\Request;
-use App\Models\TicketMessage;
 use App\Http\Controllers\Controller;
+use App\Models\Ticket;
+use App\Models\TicketMessage;
+use App\Models\User;
+use Illuminate\Http\Request;
 
 class TicketController extends Controller
 {
@@ -74,8 +74,8 @@ class TicketController extends Controller
             'message' => $request->get('message'),
         ]);
 
-        if($request->hasFile('attachments')) {
-            foreach($request->file('attachments') as $file) {
+        if ($request->hasFile('attachments')) {
+            foreach ($request->file('attachments') as $file) {
                 FileUploadHelper::upload($file, $ticketMessage, TicketMessage::class);
             }
         }

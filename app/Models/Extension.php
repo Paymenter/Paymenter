@@ -2,19 +2,21 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 
 class Extension extends Model
 {
     use HasFactory;
+
     protected $table = 'extensions';
+
     protected $fillable = [
         'name',
         'enabled',
         'type',
         'display_name',
-        'update_available'
+        'update_available',
     ];
 
     public function getConfig()
@@ -29,12 +31,12 @@ class Extension extends Model
 
     public function getPathAttribute()
     {
-        return app_path('Extensions/' . ucfirst($this->type) . 's' . '/' . $this->name);
+        return app_path('Extensions/'.ucfirst($this->type).'s'.'/'.$this->name);
     }
 
     public function getNamespaceAttribute()
     {
-        return 'App\\Extensions\\' . ucfirst($this->type) . 's' . '\\' . $this->name . '\\' . $this->name;
+        return 'App\\Extensions\\'.ucfirst($this->type).'s'.'\\'.$this->name.'\\'.$this->name;
     }
 
     public function getVersionAttribute()
@@ -42,6 +44,7 @@ class Extension extends Model
         $module = $this->namespace;
         try {
             $module = new $module($this);
+
             return $module->getMetadata()['version'];
         } catch (\Throwable $th) {
             return false;

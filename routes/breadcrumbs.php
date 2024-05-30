@@ -34,7 +34,7 @@ Breadcrumbs::for('admin.clients.create', function (BreadcrumbTrail $trail) {
     $trail->push(__('Create'), route('admin.clients.create'));
 });
 /*
-* < Clients 
+* < Clients
 */
 
 /*
@@ -70,9 +70,8 @@ Breadcrumbs::for('admin.products.upgrade', function (BreadcrumbTrail $trail, $pr
     $trail->push(__('Upgrades'), route('admin.products.upgrade', $product));
 });
 
-
 /*
-* < Products 
+* < Products
 */
 /*
 * Orders >
@@ -84,11 +83,11 @@ Breadcrumbs::for('admin.orders', function (BreadcrumbTrail $trail) {
 
 Breadcrumbs::for('admin.orders.show', function (BreadcrumbTrail $trail, $order) {
     $trail->parent('admin.orders');
-    $trail->push($order->id . ' - ' . $order->user->first_name, route('admin.orders.show', $order));
+    $trail->push($order->id.' - '.$order->user->first_name, route('admin.orders.show', $order));
 });
 
 /*
-* < Orders 
+* < Orders
 */
 /*
 * Invoices >
@@ -100,7 +99,7 @@ Breadcrumbs::for('admin.invoices', function (BreadcrumbTrail $trail) {
 
 Breadcrumbs::for('admin.invoices.show', function (BreadcrumbTrail $trail, $invoice) {
     $trail->parent('admin.invoices');
-    $trail->push($invoice->id . ' - ' . $invoice->user->first_name, route('admin.invoices.show', $invoice));
+    $trail->push($invoice->id.' - '.$invoice->user->first_name, route('admin.invoices.show', $invoice));
 });
 
 Breadcrumbs::for('admin.invoices.create', function (BreadcrumbTrail $trail) {
@@ -109,7 +108,7 @@ Breadcrumbs::for('admin.invoices.create', function (BreadcrumbTrail $trail) {
 });
 
 /*
-* < Invoices 
+* < Invoices
 */
 /*
 * Configurable Options >
@@ -129,7 +128,7 @@ Breadcrumbs::for('admin.configurable-options.create', function (BreadcrumbTrail 
     $trail->push(__('Create'), route('admin.configurable-options.create'));
 });
 /*
-* < Configurable Options 
+* < Configurable Options
 */
 /*
 * Tickets >
@@ -141,7 +140,7 @@ Breadcrumbs::for('admin.tickets', function (BreadcrumbTrail $trail) {
 
 Breadcrumbs::for('admin.tickets.show', function (BreadcrumbTrail $trail, $ticket) {
     $trail->parent('admin.tickets');
-    $trail->push($ticket->id . ' - ' . $ticket->title, route('admin.tickets.show', $ticket));
+    $trail->push($ticket->id.' - '.$ticket->title, route('admin.tickets.show', $ticket));
 });
 
 Breadcrumbs::for('admin.tickets.create', function (BreadcrumbTrail $trail) {
@@ -150,7 +149,7 @@ Breadcrumbs::for('admin.tickets.create', function (BreadcrumbTrail $trail) {
 });
 
 /*
-* < Tickets 
+* < Tickets
 */
 /*
 * Emails >
@@ -170,7 +169,7 @@ Breadcrumbs::for('admin.email.template', function (BreadcrumbTrail $trail, $temp
     $trail->push($template->name, route('admin.email.template', $template));
 });
 /*
-* < Emails 
+* < Emails
 */
 /*
 * Settings >
@@ -180,7 +179,7 @@ Breadcrumbs::for('admin.settings', function (BreadcrumbTrail $trail) {
     $trail->push(__('Settings'), route('admin.settings'));
 });
 /*
-* < Settings 
+* < Settings
 */
 /*
 * Coupons >
@@ -200,7 +199,7 @@ Breadcrumbs::for('admin.coupons.create', function (BreadcrumbTrail $trail) {
     $trail->push(__('Create'), route('admin.coupons.create'));
 });
 /*
-* < Coupons 
+* < Coupons
 */
 /*
 * Roles >
@@ -220,7 +219,7 @@ Breadcrumbs::for('admin.roles.create', function (BreadcrumbTrail $trail) {
     $trail->push(__('Create'), route('admin.roles.create'));
 });
 /*
-* < Roles 
+* < Roles
 */
 /*
 * Announcements >
@@ -241,7 +240,7 @@ Breadcrumbs::for('admin.announcements.create', function (BreadcrumbTrail $trail)
 });
 
 /*
-* < Announcements 
+* < Announcements
 */
 /*
 * Taxes >

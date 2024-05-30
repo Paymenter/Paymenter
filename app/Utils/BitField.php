@@ -13,9 +13,6 @@ class BitField
 
     /**
      * Check if given bit-value has permission value
-     *
-     * @param int $flag
-     * @return bool
      */
     public function hasBit(int $flag): bool
     {

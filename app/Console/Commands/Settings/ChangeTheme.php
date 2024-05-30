@@ -30,19 +30,20 @@ class ChangeTheme extends Command
     {
         $currentTheme = Setting::where('key', 'theme')->first();
         // List all theme from the themes folder
-        $themes = array_diff(scandir(base_path('themes')), array('.', '..'));
+        $themes = array_diff(scandir(base_path('themes')), ['.', '..']);
         // Remove count from the array
         $themes = array_values($themes);
         // If the theme is not specified, list all themes and ask the user to choose one
-        if (!$this->argument('theme')) {
-            $this->info('Current theme: ' . $currentTheme->value);
+        if (! $this->argument('theme')) {
+            $this->info('Current theme: '.$currentTheme->value);
             $theme = $this->choice('Which theme do you want to use?', $themes);
         } else {
             $theme = $this->argument('theme');
         }
         // Check if the theme exists
-        if (!in_array($theme, $themes)) {
-            $this->error('The theme ' . $theme . ' does not exist');
+        if (! in_array($theme, $themes)) {
+            $this->error('The theme '.$theme.' does not exist');
+
             return Command::FAILURE;
         }
         // Change the theme

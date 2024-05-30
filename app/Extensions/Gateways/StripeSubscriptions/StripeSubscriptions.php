@@ -1,18 +1,18 @@
 <?php
+
 namespace App\Extensions\Gateways\StripeSubscriptions;
 
 use App\Classes\Extensions\Gateway;
-use Illuminate\Http\Request;
 use App\Extensions\Gateways\Stripe\Stripe;
 use App\Helpers\ExtensionHelper;
 use App\Models\Extension;
 use App\Models\Order;
 use App\Models\OrderProduct;
-use Stripe\StripeClient;
 use Illuminate\Support\Str;
+use Stripe\StripeClient;
 
-class StripeSubscriptions extends Gateway {
-
+class StripeSubscriptions extends Gateway
+{
     public function getMetadata()
     {
         return [
@@ -23,7 +23,8 @@ class StripeSubscriptions extends Gateway {
         ];
     }
 
-    public function getConfig(){
+    public function getConfig()
+    {
         return [];
     }
 
@@ -31,10 +32,11 @@ class StripeSubscriptions extends Gateway {
     {
         $allSubscriptions = true;
         foreach ($products as $product) {
-            if (!$product->billing_cycle && !Str::contains($product->name, 'Setup Fee')) {
+            if (! $product->billing_cycle && ! Str::contains($product->name, 'Setup Fee')) {
                 $allSubscriptions = false;
             }
         }
+
         return $allSubscriptions;
     }
 
@@ -44,7 +46,7 @@ class StripeSubscriptions extends Gateway {
         // Define if all items are subscriptions
         $allSubscriptions = true;
         foreach ($products as $product) {
-            if (!$product->billing_cycle && !Str::contains($product->name, 'Setup Fee')) {
+            if (! $product->billing_cycle && ! Str::contains($product->name, 'Setup Fee')) {
                 $allSubscriptions = false;
             }
         }
@@ -64,6 +66,7 @@ class StripeSubscriptions extends Gateway {
             ]);
         } else {
             $stripe = new Stripe(Extension::where('name', 'Stripe')->first());
+
             return $stripe->pay($_, $products, $orderId);
         }
 
@@ -72,7 +75,7 @@ class StripeSubscriptions extends Gateway {
 
     public function stripeClient()
     {
-        if (!ExtensionHelper::getConfig('Stripe', 'stripe_test_mode')) {
+        if (! ExtensionHelper::getConfig('Stripe', 'stripe_test_mode')) {
             return new StripeClient(
                 ExtensionHelper::getConfig('Stripe', 'stripe_secret_key')
             );
@@ -83,7 +86,8 @@ class StripeSubscriptions extends Gateway {
         }
     }
 
-    public function webhook($event){
+    public function webhook($event)
+    {
         $client = $this->stripeClient();
         // Listen for setup subscription events
         if ($event->type == 'checkout.session.completed') {
@@ -104,7 +108,7 @@ class StripeSubscriptions extends Gateway {
                 []
             );
 
-            if (!isset($customer->data[0]->id)) {
+            if (! isset($customer->data[0]->id)) {
                 return response()->json(['success' => false]);
             }
 
@@ -120,7 +124,7 @@ class StripeSubscriptions extends Gateway {
 
             foreach (Order::find($products)->products as $product) {
                 $sproduct = $client->products->search([
-                    'query' => 'metadata[\'product_id\']:\'' . $product->product->id . '\'',
+                    'query' => 'metadata[\'product_id\']:\''.$product->product->id.'\'',
                 ]);
                 if (count($sproduct->data) == 0) {
                     $sproduct = $client->products->create([
@@ -132,18 +136,18 @@ class StripeSubscriptions extends Gateway {
                 } else {
                     $sproduct = $sproduct->data[0];
                 }
-                $recurring  = [];
+                $recurring = [];
                 $billing_cycle = $product->billing_cycle;
                 if ($billing_cycle == 'monthly') {
                     $recurring = [
                         'interval' => 'month',
                     ];
-                } else if ($billing_cycle == 'quarterly') {
+                } elseif ($billing_cycle == 'quarterly') {
                     $recurring = [
                         'interval' => 'month',
                         'interval_count' => 3,
                     ];
-                } else if ($billing_cycle == 'semi_annually') {
+                } elseif ($billing_cycle == 'semi_annually') {
                     $recurring = [
                         'interval' => 'month',
                         'interval_count' => 6,
@@ -164,14 +168,14 @@ class StripeSubscriptions extends Gateway {
                     ];
                 }
                 $phases = [];
-                if ($product->product->price($billing_cycle . '_setup') > 0) {
+                if ($product->product->price($billing_cycle.'_setup') > 0) {
                     $phases[] = [
                         'items' => [
                             [
                                 'price_data' => [
                                     'currency' => ExtensionHelper::getCurrency(),
                                     'product' => $sproduct->id,
-                                    'unit_amount' => round(($product->product->price($product->billing_cycle) + $product->product->price($product->billing_cycle . '_setup')) / $product->quantity * 100, 0),
+                                    'unit_amount' => round(($product->product->price($product->billing_cycle) + $product->product->price($product->billing_cycle.'_setup')) / $product->quantity * 100, 0),
                                     'recurring' => $recurring,
                                 ],
                                 'quantity' => $product->quantity,

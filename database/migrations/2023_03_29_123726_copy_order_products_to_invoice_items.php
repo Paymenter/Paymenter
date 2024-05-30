@@ -4,8 +4,6 @@ use App\Models\Invoice;
 use App\Models\InvoiceItem;
 use App\Models\OrderProduct;
 use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
@@ -19,7 +17,7 @@ return new class extends Migration
         $orderProducts = OrderProduct::all();
 
         foreach ($orderProducts as $orderProduct) {
-            if(Invoice::where('order_id', $orderProduct->order_id)->latest()->exists() == false) {
+            if (Invoice::where('order_id', $orderProduct->order_id)->latest()->exists() == false) {
                 continue;
             }
             if ($orderProduct->product()->exists() == false) {
@@ -33,8 +31,8 @@ return new class extends Migration
             $invoiceItem->description = $orderProduct->product()->get() ? 'Unknown' : $orderProduct->product()->get()->first()->name;
             $invoiceItem->save();
         }
-        foreach(Invoice::all() as $invoice) {
-            if($invoice->order()->exists() == false) {
+        foreach (Invoice::all() as $invoice) {
+            if ($invoice->order()->exists() == false) {
                 $invoice->delete();
             }
         }

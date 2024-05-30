@@ -25,6 +25,7 @@ class Pterodactyl extends Server
             if ($key == 'host') {
                 return rtrim($config, '/');
             }
+
             return $config;
         }
 
@@ -49,11 +50,10 @@ class Pterodactyl extends Server
         ];
     }
 
-
     private function postRequest($url, $data): \GuzzleHttp\Promise\PromiseInterface|\Illuminate\Http\Client\Response
     {
         return Http::withHeaders([
-            'Authorization' => 'Bearer ' . $this->config('apiKey'),
+            'Authorization' => 'Bearer '.$this->config('apiKey'),
             'Accept' => 'Application/vnd.Pterodactyl.v1+json',
             'Content-Type' => 'application/json',
         ])->post($url, $data);
@@ -62,7 +62,7 @@ class Pterodactyl extends Server
     private function patchRequest($url, $data): \GuzzleHttp\Promise\PromiseInterface|\Illuminate\Http\Client\Response
     {
         return Http::withHeaders([
-            'Authorization' => 'Bearer ' . $this->config('apiKey'),
+            'Authorization' => 'Bearer '.$this->config('apiKey'),
             'Accept' => 'Application/vnd.Pterodactyl.v1+json',
             'Content-Type' => 'application/json',
         ])->patch($url, $data);
@@ -71,7 +71,7 @@ class Pterodactyl extends Server
     private function getRequest($url): \GuzzleHttp\Promise\PromiseInterface|\Illuminate\Http\Client\Response
     {
         return Http::withHeaders([
-            'Authorization' => 'Bearer ' . $this->config('apiKey'),
+            'Authorization' => 'Bearer '.$this->config('apiKey'),
             'Accept' => 'Application/vnd.Pterodactyl.v1+json',
             'Content-Type' => 'application/json',
         ])->get($url);
@@ -80,7 +80,7 @@ class Pterodactyl extends Server
     public function deleteRequest($url): \GuzzleHttp\Promise\PromiseInterface|\Illuminate\Http\Client\Response
     {
         return Http::withHeaders([
-            'Authorization' => 'Bearer ' . $this->config('apiKey'),
+            'Authorization' => 'Bearer '.$this->config('apiKey'),
             'Accept' => 'Application/vnd.Pterodactyl.v1+json',
             'Content-Type' => 'application/json',
         ])->delete($url);
@@ -88,7 +88,7 @@ class Pterodactyl extends Server
 
     public function getProductConfig($options): array
     {
-        $nodes =  $this->getRequest($this->config('host') . '/api/application/nodes');
+        $nodes = $this->getRequest($this->config('host').'/api/application/nodes');
         $nodeList = [
             [
                 'name' => 'None',
@@ -102,7 +102,7 @@ class Pterodactyl extends Server
             ];
         }
 
-        $location =  $this->getRequest($this->config('host') . '/api/application/locations');
+        $location = $this->getRequest($this->config('host').'/api/application/locations');
         $locationList = [];
         foreach ($location->json()['data'] as $location) {
             $locationList[] = [
@@ -111,7 +111,7 @@ class Pterodactyl extends Server
             ];
         }
 
-        $nests =  $this->getRequest($this->config('host') . '/api/application/nests');
+        $nests = $this->getRequest($this->config('host').'/api/application/nests');
         $nestList = [];
         foreach ($nests->json()['data'] as $nest) {
             $nestList[] = [
@@ -119,8 +119,6 @@ class Pterodactyl extends Server
                 'value' => $nest['attributes']['id'],
             ];
         }
-
-
 
         return [
             [
@@ -231,25 +229,25 @@ class Pterodactyl extends Server
                 'type' => 'text',
                 'required' => false,
                 'description' => 'List of ports + their egg variable name. Example: {"SERVER_PORT": 7777, "NONE": 7778, "QUERY_PORT": 27015, "RCON_PORT": 27020}',
-            ]
+            ],
         ];
     }
 
     public function createServer($user, $params, $order, $orderProduct, $configurableOptions): bool
     {
         if ($this->serverExists($orderProduct->id)) {
-            ExtensionHelper::error('Pterodactyl', 'Server already exists for order ' . $orderProduct->id);
+            ExtensionHelper::error('Pterodactyl', 'Server already exists for order '.$orderProduct->id);
 
             return true;
         }
 
-        $url = $this->config('host') . '/api/application/servers';
+        $url = $this->config('host').'/api/application/servers';
         $nest_id = $configurableOptions['nest_id'] ?? $params['nest'];
         $egg_id = $configurableOptions['egg'] ?? $params['egg'];
-        $eggData = $this->getRequest($this->config('host') . '/api/application/nests/' . $nest_id . '/eggs/' . $egg_id . '?include=variables')->json();
+        $eggData = $this->getRequest($this->config('host').'/api/application/nests/'.$nest_id.'/eggs/'.$egg_id.'?include=variables')->json();
 
-        if (!isset($eggData['attributes'])) {
-            ExtensionHelper::error('Pterodactyl', 'No egg data found for ' . $params['egg']);
+        if (! isset($eggData['attributes'])) {
+            ExtensionHelper::error('Pterodactyl', 'No egg data found for '.$params['egg']);
 
             return false;
         }
@@ -282,25 +280,26 @@ class Pterodactyl extends Server
         $port_range = $configurableOptions['port_range'] ?? $params['port_range'] ?? null;
         $port_array = $configurableOptions['port_array'] ?? $params['port_array'] ?? null;
         $servername = $configurableOptions['servername'] ?? $params['servername'] ?? false;
-        $servername = empty($servername) ? $orderProduct->product->name . ' #' . $orderProduct->id : $servername;
+        $servername = empty($servername) ? $orderProduct->product->name.' #'.$orderProduct->id : $servername;
         $port_array = (object) $this->portArrays($port_array, $environment, $location, $node, $orderProduct);
         $default = $port_array->default ?? null;
         $allocationed = $port_array->allocations ?? [];
         $environment = $port_array->environment ?? $environment;
 
         if ($node) {
-            $allocationss = $this->getRequest($this->config('host') . '/api/application/nodes/' . $node . '/allocations');
+            $allocationss = $this->getRequest($this->config('host').'/api/application/nodes/'.$node.'/allocations');
             $allocationss = $allocationss->json();
-            while (!isset($allocation)) {
+            while (! isset($allocation)) {
                 foreach ($allocationss['data'] as $key => $val) {
-                    if (!$val['attributes']['assigned']) {
+                    if (! $val['attributes']['assigned']) {
                         $allocation = $val['attributes']['id'];
                         break;
                     }
                 }
-                if (!isset($allocation)) {
-                    if (!isset($allocationss['meta']['pagination']['links']['next'])) {
-                        ExtensionHelper::error('Pterodactyl', 'Failed to find allocation for order ' . $orderProduct->id . ' skipping server creation');
+                if (! isset($allocation)) {
+                    if (! isset($allocationss['meta']['pagination']['links']['next'])) {
+                        ExtensionHelper::error('Pterodactyl', 'Failed to find allocation for order '.$orderProduct->id.' skipping server creation');
+
                         return false;
                     }
                     $allocationss = $this->getRequest($allocationss['meta']['pagination']['links']['next']);
@@ -355,15 +354,15 @@ class Pterodactyl extends Server
                     'backups' => (int) $backups,
                 ],
                 'allocation' => [
-                    'default' => isset($port_array->default) ? (int)  $port_array->default : null,
+                    'default' => isset($port_array->default) ? (int) $port_array->default : null,
                     'additional' => isset($allocationed) ? $allocationed : [],
                 ],
                 'environment' => $environment,
                 'external_id' => (string) $orderProduct->id,
             ];
 
-            if (!$allocationed && !isset($port_range->default)) {
-                $json['deploy'] =  [
+            if (! $allocationed && ! isset($port_range->default)) {
+                $json['deploy'] = [
                     'locations' => [(int) $location],
                     'dedicated_ip' => false,
                     'port_range' => $port_range ? [$port_range] : [],
@@ -372,8 +371,8 @@ class Pterodactyl extends Server
         }
         $response = $this->postRequest($url, $json);
 
-        if (!$response->successful()) {
-            ExtensionHelper::error('Pterodactyl', 'Failed to create server for order ' . $orderProduct->id . ' with error ' . $response->body());
+        if (! $response->successful()) {
+            ExtensionHelper::error('Pterodactyl', 'Failed to create server for order '.$orderProduct->id.' with error '.$response->body());
 
             return false;
         }
@@ -384,23 +383,31 @@ class Pterodactyl extends Server
     private function portArrays($port_array, $environment, $location, $node, $orderProduct)
     {
         // example {"SERVER_PORT": 7777, "NONE": [7778, 7779] "QUERY_PORT": 2701, "RCON_PORT": 27020}
-        if (!isset($port_array)) return [];
+        if (! isset($port_array)) {
+            return [];
+        }
         try {
             $port_array = json_decode($port_array, true);
         } catch (\Exception $e) {
-            ExtensionHelper::error('Pterodactyl', 'Failed to decode port array for order ' . $orderProduct->id . ' with error ' . $e->getMessage());
+            ExtensionHelper::error('Pterodactyl', 'Failed to decode port array for order '.$orderProduct->id.' with error '.$e->getMessage());
+
             return [];
         }
-        if (!$port_array) return [];
-        if (!is_array($port_array)) return [];
-        if (!$node) {
+        if (! $port_array) {
+            return [];
+        }
+        if (! is_array($port_array)) {
+            return [];
+        }
+        if (! $node) {
             // If no node is selected, we need to get the node id from the location
-            $node = $this->getRequest($this->config('host') . '/api/application/nodes?per_page=100');
+            $node = $this->getRequest($this->config('host').'/api/application/nodes?per_page=100');
             $node = $node->json();
             $node = collect($node['data'])->where('attributes.location_id', $location);
-            while (!$node) {
-                if (!isset($node['meta']['pagination']['links']['next'])) {
-                    ExtensionHelper::error('Pterodactyl', 'Failed to find node for order ' . $orderProduct->id . ' skipping port array');
+            while (! $node) {
+                if (! isset($node['meta']['pagination']['links']['next'])) {
+                    ExtensionHelper::error('Pterodactyl', 'Failed to find node for order '.$orderProduct->id.' skipping port array');
+
                     return [];
                 }
                 $node = $this->getRequest($node['meta']['pagination']['links']['next']);
@@ -409,7 +416,9 @@ class Pterodactyl extends Server
             }
             // Search for the emptiest node
             foreach ($node as $key => $val) {
-                if ($val['attributes']['maintenance_mode']) continue;
+                if ($val['attributes']['maintenance_mode']) {
+                    continue;
+                }
                 // Node has *infinity* resources
                 if ($val['attributes']['memory_overallocate'] == -1 && $val['attributes']['disk_overallocate'] == -1) {
                     $node = $val['attributes']['id'];
@@ -421,13 +430,14 @@ class Pterodactyl extends Server
                 }
             }
         }
-        if (!$node) {
-            ExtensionHelper::error('Pterodactyl', 'Failed to find node for order ' . $orderProduct->id . ' skipping port array');
+        if (! $node) {
+            ExtensionHelper::error('Pterodactyl', 'Failed to find node for order '.$orderProduct->id.' skipping port array');
+
             return [];
         }
 
         $availableAllocations = [];
-        $allocationData = $this->getRequest($this->config('host') . '/api/application/nodes/' . $node . '/allocations?per_page=100');
+        $allocationData = $this->getRequest($this->config('host').'/api/application/nodes/'.$node.'/allocations?per_page=100');
         $allocationData = $allocationData->json();
 
         while (isset($allocationData['meta']['pagination']['links']['next'])) {
@@ -435,11 +445,11 @@ class Pterodactyl extends Server
                 if ($val['attributes']['assigned'] == false) {
                     $availableAllocations[] = [
                         'id' => $val['attributes']['id'],
-                        'port' => $val['attributes']['port']
+                        'port' => $val['attributes']['port'],
                     ];
                 }
             }
-            $allocationData = $this->getRequest($allocationData['meta']['pagination']['links']['next'] . '&per_page=100');
+            $allocationData = $this->getRequest($allocationData['meta']['pagination']['links']['next'].'&per_page=100');
             $allocationData = $allocationData->json();
         }
 
@@ -447,7 +457,7 @@ class Pterodactyl extends Server
             if ($val['attributes']['assigned'] == false) {
                 $availableAllocations[] = [
                     'id' => $val['attributes']['id'],
-                    'port' => $val['attributes']['port']
+                    'port' => $val['attributes']['port'],
                 ];
             }
         }
@@ -459,9 +469,9 @@ class Pterodactyl extends Server
             if (is_array($val)) {
                 foreach ($val as $key2 => $val2) {
                     $allocation = $availableAllocations->where('port', $val2)->first();
-                    while (!$allocation) {
+                    while (! $allocation) {
                         // Check if there are even ports higher than the one we are looking for
-                        if (!$availableAllocations->where('port', '>', $val2)->first()) {
+                        if (! $availableAllocations->where('port', '>', $val2)->first()) {
                             // Just pick the first one
                             $allocation = $availableAllocations->random();
                         } else {
@@ -472,16 +482,19 @@ class Pterodactyl extends Server
                     $allocations[] = $allocation['id'];
                     $availableAllocations->forget($availableAllocations->search($allocation));
                     if ($key !== 'NONE' || $key !== 'SERVER_PORT') {
-                        if (isset($environment[$key])) $environment[$key] = $allocation['port'];
+                        if (isset($environment[$key])) {
+                            $environment[$key] = $allocation['port'];
+                        }
                     }
                 }
+
                 continue;
             }
             // Check if port is available
             $allocation = $availableAllocations->where('port', $val)->first();
-            while (!$allocation) {
+            while (! $allocation) {
                 // Check if there are even ports higher than the one we are looking for
-                if (!$availableAllocations->where('port', '>', $val)->first()) {
+                if (! $availableAllocations->where('port', '>', $val)->first()) {
                     // Just pick the first one
                     $allocation = $availableAllocations->random();
                 } else {
@@ -489,11 +502,15 @@ class Pterodactyl extends Server
                     $val++;
                 }
             }
-            if ($key !== 'SERVER_PORT') $allocations[] = $allocation['id'];
+            if ($key !== 'SERVER_PORT') {
+                $allocations[] = $allocation['id'];
+            }
             $availableAllocations->forget($availableAllocations->search($allocation));
 
             if ($key !== 'NONE' && $key !== 'SERVER_PORT') {
-                if (isset($environment[$key])) $environment[$key] = $allocation['port'];
+                if (isset($environment[$key])) {
+                    $environment[$key] = $allocation['port'];
+                }
             }
             if ($key === 'SERVER_PORT') {
                 $default = $allocation['id'];
@@ -512,7 +529,7 @@ class Pterodactyl extends Server
         $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
         $charactersLength = strlen($characters);
         $randomString = '';
-        for ($i = 0; $i < $length; ++$i) {
+        for ($i = 0; $i < $length; $i++) {
             $randomString .= $characters[mt_rand(0, $charactersLength - 1)];
         }
 
@@ -521,26 +538,26 @@ class Pterodactyl extends Server
 
     public function getUser($user, $product = null)
     {
-        $url = $this->config('host') . '/api/application/users?filter%5Bemail%5D=' . $user->email;
+        $url = $this->config('host').'/api/application/users?filter%5Bemail%5D='.$user->email;
         $response = $this->getRequest($url);
         $users = $response->json();
         if (count($users['data']) > 0) {
             return $users['data'][0]['attributes']['id'];
         } else {
-            $url = $this->config('host') . '/api/application/users';
+            $url = $this->config('host').'/api/application/users';
             $sanitized = preg_replace('/[^a-zA-Z0-9]/', '', strtolower($user->name));
             if (empty($sanitized)) {
                 $sanitized = $this->random_string(8); // Ta funkcja musi być dostępna w twoim kodzie
             }
             $json = [
-                'username' => $sanitized . '_' . $this->random_string(3) ?? $this->random_string(8),
+                'username' => $sanitized.'_'.$this->random_string(3) ?? $this->random_string(8),
                 'email' => $user->email,
                 'first_name' => $user->name,
                 'last_name' => $user->lastname ?? 'User',
             ];
             $response = $this->postRequest($url, $json);
-            if (!$response->successful()) {
-                ExtensionHelper::error('Pterodactyl', 'Failed to create user for order ' . $product->id . ' with error ' . $response->body());
+            if (! $response->successful()) {
+                ExtensionHelper::error('Pterodactyl', 'Failed to create user for order '.$product->id.' with error '.$response->body());
             }
             $user = $response->json();
 
@@ -550,7 +567,7 @@ class Pterodactyl extends Server
 
     private function serverExists($order)
     {
-        $url = $this->config('host') . '/api/application/servers/external/' . $order;
+        $url = $this->config('host').'/api/application/servers/external/'.$order;
         $response = $this->getRequest($url);
         $code = $response->status();
         if ($code == 200) {
@@ -560,18 +577,17 @@ class Pterodactyl extends Server
         return false;
     }
 
-    
     public function upgradeServer($user, $params, $order, $orderProduct, $configurableOptions): bool
     {
         $serverId = $this->serverExists($orderProduct->id);
-        if (!$serverId) {
-            ExtensionHelper::error('Pterodactyl', 'Server does not exist for order ' . $orderProduct->id);
+        if (! $serverId) {
+            ExtensionHelper::error('Pterodactyl', 'Server does not exist for order '.$orderProduct->id);
 
             return false;
         }
-        $url = $this->config('host') . '/api/application/servers/external/' . $orderProduct->id;
+        $url = $this->config('host').'/api/application/servers/external/'.$orderProduct->id;
         $server = $this->getRequest($url)->json();
-        
+
         $cpu = $configurableOptions['cpu'] ?? $params['cpu'];
         $cpu_pinning = $configurableOptions['cpu_pinning'] ?? $params['cpu_pinning'] ?? null;
         $io = $configurableOptions['io'] ?? $params['io'];
@@ -582,7 +598,7 @@ class Pterodactyl extends Server
         $databases = $configurableOptions['databases'] ?? $params['databases'];
         $backups = $configurableOptions['backups'] ?? $params['backups'];
 
-        $url = $this->config('host') . '/api/application/servers/' . $serverId . '/build';
+        $url = $this->config('host').'/api/application/servers/'.$serverId.'/build';
         $json = [
             'allocation' => $server['attributes']['allocation'],
             'memory' => (int) $memory,
@@ -599,23 +615,26 @@ class Pterodactyl extends Server
         ];
 
         $response = $this->patchRequest($url, $json);
-        
-        if(!$response->successful()) {
-            ExtensionHelper::error('Pterodactyl', 'Failed to upgrade server for order ' . $orderProduct->id . ' with error ' . $response->body());
+
+        if (! $response->successful()) {
+            ExtensionHelper::error('Pterodactyl', 'Failed to upgrade server for order '.$orderProduct->id.' with error '.$response->body());
+
             return false;
         }
 
         $nest_id = $configurableOptions['nest_id'] ?? $params['nest'];
         $egg_id = $configurableOptions['egg'] ?? $params['egg'];
-        $eggData = $this->getRequest($this->config('host') . '/api/application/nests/' . $nest_id . '/eggs/' . $egg_id . '?include=variables');
-        if(!$eggData->successful()) {
-            ExtensionHelper::error('Pterodactyl', 'Failed to get egg data for order ' . $orderProduct->id . ' with error ' . $eggData->body());
+        $eggData = $this->getRequest($this->config('host').'/api/application/nests/'.$nest_id.'/eggs/'.$egg_id.'?include=variables');
+        if (! $eggData->successful()) {
+            ExtensionHelper::error('Pterodactyl', 'Failed to get egg data for order '.$orderProduct->id.' with error '.$eggData->body());
+
             return false;
         }
 
         $eggData = $eggData->json();
-        if (!isset($eggData['attributes'])) {
-            ExtensionHelper::error('Pterodactyl', 'No egg data found for ' . $params['egg']);
+        if (! isset($eggData['attributes'])) {
+            ExtensionHelper::error('Pterodactyl', 'No egg data found for '.$params['egg']);
+
             return false;
         }
 
@@ -629,10 +648,10 @@ class Pterodactyl extends Server
             if (isset($configurableOptions[$var])) {
                 $environment[$var] = $configurableOptions[$var];
             }
-            if(isset($server['attributes']['container']['environment'][$var])) {
+            if (isset($server['attributes']['container']['environment'][$var])) {
                 $environment[$var] = $server['attributes']['container']['environment'][$var];
-            } else {    
-               $environment[$var] = $default;
+            } else {
+                $environment[$var] = $default;
             }
         }
 
@@ -644,11 +663,12 @@ class Pterodactyl extends Server
             'skip_scripts' => false,
         ];
 
-        $url = $this->config('host') . '/api/application/servers/' . $serverId . '/startup';
+        $url = $this->config('host').'/api/application/servers/'.$serverId.'/startup';
 
         $response = $this->patchRequest($url, $json);
-        if(!$response->successful()) {
-            ExtensionHelper::error('Pterodactyl', 'Failed to upgrade server for order ' . $orderProduct->id . ' with error ' . $response->body());
+        if (! $response->successful()) {
+            ExtensionHelper::error('Pterodactyl', 'Failed to upgrade server for order '.$orderProduct->id.' with error '.$response->body());
+
             return false;
         }
 
@@ -659,7 +679,7 @@ class Pterodactyl extends Server
     {
         $server = $this->serverExists($orderProduct->id);
         if ($server) {
-            $url = $this->config('host') . '/api/application/servers/' . $server . '/suspend';
+            $url = $this->config('host').'/api/application/servers/'.$server.'/suspend';
             $this->postRequest($url, []);
 
             return true;
@@ -672,7 +692,7 @@ class Pterodactyl extends Server
     {
         $server = $this->serverExists($orderProduct->id);
         if ($server) {
-            $url = $this->config('host') . '/api/application/servers/' . $server . '/unsuspend';
+            $url = $this->config('host').'/api/application/servers/'.$server.'/unsuspend';
             $this->postRequest($url, []);
 
             return true;
@@ -685,7 +705,7 @@ class Pterodactyl extends Server
     {
         $server = $this->serverExists($orderProduct->id);
         if ($server) {
-            $url = $this->config('host') . '/api/application/servers/' . $server;
+            $url = $this->config('host').'/api/application/servers/'.$server;
             $this->deleteRequest($url);
 
             return true;
@@ -698,11 +718,11 @@ class Pterodactyl extends Server
     {
         $server = $this->serverExists($orderProduct->id);
         if ($server) {
-            $url = $this->config('host') . '/api/application/servers/' . $server;
+            $url = $this->config('host').'/api/application/servers/'.$server;
             $response = $this->getRequest($url);
             $server = $response->json();
 
-            return $this->config('host') . '/server/' . $server['attributes']['identifier'];
+            return $this->config('host').'/server/'.$server['attributes']['identifier'];
         }
 
         return false;

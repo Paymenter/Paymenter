@@ -2,10 +2,9 @@
 
 namespace App\Mail\Orders;
 
+use App\Mail\Mailable;
 use App\Models\Order;
 use Illuminate\Bus\Queueable;
-use App\Mail\Mailable;
-use Illuminate\Mail\Mailables\Content;
 use Illuminate\Queue\SerializesModels;
 
 class NewOrder extends Mailable
@@ -30,8 +29,7 @@ class NewOrder extends Mailable
     /**
      * Create a new message instance.
      *
-     * @param \App\Models\Order $invoice
-     *
+     * @param  \App\Models\Order  $invoice
      * @return void
      */
     public function __construct(Order $order)

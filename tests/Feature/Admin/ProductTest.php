@@ -2,19 +2,22 @@
 
 namespace Tests\Feature\Admin;
 
-use Tests\TestCase;
-use App\Models\User;
-use App\Models\Product;
 use App\Models\Category;
+use App\Models\Product;
 use App\Models\ProductPrice;
-use Illuminate\Http\UploadedFile;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Http\UploadedFile;
+use Tests\TestCase;
 
 class ProductTest extends TestCase
 {
     use RefreshDatabase;
+
     protected $user;
+
     protected $category;
+
     protected $product;
 
     public function setUp(): void
@@ -34,7 +37,7 @@ class ProductTest extends TestCase
 
     /**
      * Test if admin can view all the product pages.
-     * 
+     *
      * @return void
      */
     public function testIfAdminCanViewAllTheProductPages()

@@ -3,12 +3,12 @@
 use App\Classes\Routing;
 use Illuminate\Support\Facades\Route;
 
-require __DIR__ . '/admin.php';
-require __DIR__ . '/extensions.php';
+require __DIR__.'/admin.php';
+require __DIR__.'/extensions.php';
 
-if (!Routing::useLaravelRouting()) {
+if (! Routing::useLaravelRouting()) {
     Route::view('/{path?}', 'app')
-    ->where('path', '^(?!(\/)?(api|static|images)).+');
+        ->where('path', '^(?!(\/)?(api|static|images)).+');
 }
 
 /*
@@ -84,6 +84,6 @@ Route::group(['prefix' => 'api', 'middleware' => 'auth'], function () {
     Route::delete('/{id}', [App\Http\Controllers\Clients\APIController::class, 'delete'])->name('clients.api.delete');
 });
 
-require __DIR__ . '/auth.php';
+require __DIR__.'/auth.php';
 
 Route::get('/{slug?}/{product?}', [App\Http\Controllers\BasisController::class, 'products'])->name('products');

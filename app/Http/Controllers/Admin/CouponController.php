@@ -1,25 +1,20 @@
 <?php
+
 namespace App\Http\Controllers\Admin;
 
+use App\Http\Controllers\Controller;
 use App\Models\Coupon;
-use Illuminate\Contracts\Foundation\Application;
+use App\Models\Product;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use App\Helpers\ExtensionHelper;
-use App\Http\Controllers\Controller;
-use App\Models\Product;
-use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
 use Illuminate\View\View;
 
 class CouponController extends Controller
 {
-
     /**
      * Display a listing of the coupons
-     *
-     * @return View
      */
     public function index(): View
     {
@@ -28,20 +23,17 @@ class CouponController extends Controller
 
     /**
      * Display the create form
-     *
-     * @return View
      */
     public function create(): View
     {
         $products = Product::all();
+
         return view('admin.coupons.create', compact('products'));
     }
 
     /**
      * Store a coupon
      *
-     * @param Request $request
-     * @return RedirectResponse
      * @throws ValidationException
      */
     public function store(Request $request): RedirectResponse
@@ -62,12 +54,8 @@ class CouponController extends Controller
         return redirect()->route('admin.coupons.edit', $coupon->id)->with('success', 'Coupon created successfully!');
     }
 
-
     /**
      * Display the edit form
-     *
-     * @param Coupon $coupon
-     * @return View
      */
     public function edit(Coupon $coupon): View
     {
@@ -78,10 +66,6 @@ class CouponController extends Controller
 
     /**
      * Update the coupon
-     *
-     * @param Request $request
-     * @param Coupon $coupon
-     * @return RedirectResponse
      */
     public function update(Request $request, Coupon $coupon): RedirectResponse
     {
@@ -98,24 +82,21 @@ class CouponController extends Controller
 
         $coupon->update($validatedRequest->validated());
 
-        if(!$request->has('products')){
+        if (! $request->has('products')) {
             $coupon->products = [];
             $coupon->save();
         }
-
 
         return redirect()->route('admin.coupons.edit', $coupon->id)->with('success', 'Coupon updated successfully!');
     }
 
     /**
      * Delete the coupon
-     *
-     * @param Coupon $coupon
-     * @return RedirectResponse
      */
     public function destroy(Coupon $coupon): RedirectResponse
     {
         $coupon->delete();
+
         return redirect()->route('admin.coupons')->with('success', 'Coupon deleted successfully!');
     }
 }

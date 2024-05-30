@@ -20,7 +20,9 @@ class RoleFactory extends Factory
         $available = Permissions::$flags;
         $permissions = [];
         foreach ($available as $permission) {
-            if(fake()->boolean()) $permissions[$permission];
+            if (fake()->boolean()) {
+                $permissions[$permission];
+            }
         }
         $permission = Permissions::create($permissions);
 

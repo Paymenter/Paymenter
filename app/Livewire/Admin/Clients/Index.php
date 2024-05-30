@@ -7,7 +7,6 @@ use App\Traits\Tables\DesignTrait;
 use Illuminate\Database\Eloquent\Builder;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
-use Rappasoft\LaravelLivewireTables\Views\Columns\ComponentColumn;
 
 class Index extends DataTableComponent
 {

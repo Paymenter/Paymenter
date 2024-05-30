@@ -8,7 +8,7 @@ class API
 {
     /**
      * All available API permissions.
-     * 
+     *
      * @return array
      */
     public static $permissions = [
@@ -28,7 +28,7 @@ class API
 
     /**
      * All available admin API permissions.
-     * 
+     *
      * @return array
      */
     public static $adminPermissions = [
@@ -42,7 +42,6 @@ class API
         'admin:invoice:update',
     ];
 
-
     public static $adminPermissionsDifference = [
         'admin:ticket:read' => 'VIEW_TICKETS',
         'admin:ticket:create' => 'CREATE_TICKETS',
@@ -54,22 +53,22 @@ class API
         'admin:invoice:update' => 'EDIT_INVOICES',
     ];
 
-    /** 
+    /**
      * Check if user has permission.
-     * 
+     *
      * @return bool
      */
     public static function hasPermission($user, $permission)
     {
         $permission = self::$adminPermissionsDifference[$permission];
         $permissions = new Permissions($user->role->permissions);
+
         return $permissions->has($permission);
     }
 
-
     /**
      * Repaginate the data for API.
-     * 
+     *
      * @return array
      */
     public static function repaginate(mixed $data)

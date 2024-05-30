@@ -23,14 +23,14 @@ class RolePermissionSeeder extends Seeder
         foreach ($availablePermissions as $permission => $value) {
             $permissions[] = $permission;
         }
-        if (!Role::where('name', 'admin')->exists()) {
+        if (! Role::where('name', 'admin')->exists()) {
             Role::create(['name' => 'admin', 'permissions' => Permissions::create($permissions), 'id' => 1]);
         } else {
             $admin = Role::where('name', 'admin')->first();
             $admin->permissions = Permissions::create($permissions);
             $admin->save();
         }
-        if (!Role::where('name', 'user')->exists()) {
+        if (! Role::where('name', 'user')->exists()) {
             Role::create(['name' => 'user', 'permissions' => 0, 'id' => 2]);
         } else {
             $user = Role::where('name', 'user')->first();
@@ -38,7 +38,7 @@ class RolePermissionSeeder extends Seeder
             $user->save();
         }
         User::all()->each(function ($user) {
-            if (!$user->role_id) {
+            if (! $user->role_id) {
                 $user->role_id = 2;
             }
             $user->save();

@@ -1,10 +1,10 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\API\Admin\APIController;
 use App\Http\Controllers\API\Admin\InvoiceController;
 use App\Http\Controllers\API\Admin\TicketController;
 use App\Http\Controllers\API\Admin\UserController;
+use Illuminate\Support\Facades\Route;
 
 // Users
 Route::group(['prefix' => 'v1/users'], function () {

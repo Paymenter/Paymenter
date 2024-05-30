@@ -14,7 +14,7 @@ return new class extends Migration
     {
         $orders = \App\Models\Order::all();
         foreach ($orders as $order) {
-            if (!Coupon::find($order->coupon)) {
+            if (! Coupon::find($order->coupon)) {
                 $order->coupon = null;
                 $order->save();
             }

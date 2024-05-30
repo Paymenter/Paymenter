@@ -2,13 +2,15 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 
 class OrderProduct extends Model
 {
     use HasFactory;
+
     protected $table = 'order_products';
+
     protected $fillable = [
         'order_id',
         'product_id',
@@ -60,6 +62,7 @@ class OrderProduct extends Model
     public function availableUpgrades()
     {
         $upgrades = $this->product->upgrades->pluck('upgrade_product_id')->toArray();
+
         return Product::whereIn('id', $upgrades)->get()->filter(function ($product) {
             return $product->prices->{$this->billing_cycle};
         });
@@ -89,8 +92,10 @@ class OrderProduct extends Model
     public function getOpenInvoices()
     {
         return $this->getInvoices->filter(function ($invoice) {
-            if ($invoice->total() == 0)
+            if ($invoice->total() == 0) {
                 return false;
+            }
+
             return $invoice->status == 'pending';
         });
     }

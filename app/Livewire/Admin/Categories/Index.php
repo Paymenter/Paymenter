@@ -3,7 +3,6 @@
 namespace App\Livewire\Admin\Categories;
 
 use App\Models\Category;
-use App\Models\OrderProduct;
 use App\Models\Product;
 use App\Traits\Tables\DesignTrait;
 use Illuminate\Database\Eloquent\Builder;
@@ -14,14 +13,13 @@ class Index extends DataTableComponent
 {
     use DesignTrait;
 
-
     public array $bulkActions = [
         'deleteCategories' => 'Delete Categories',
     ];
 
     public function builder(): Builder
     {
-        // Also select the order 
+        // Also select the order
         return Category::query()->with('parent');
     }
 
@@ -51,7 +49,7 @@ class Index extends DataTableComponent
     public function reorder(array $items): void
     {
         foreach ($items as $item) {
-            Category::find($item[$this->getPrimaryKey()])->update(['order' => (int)$item[$this->getDefaultReorderColumn()]]);
+            Category::find($item[$this->getPrimaryKey()])->update(['order' => (int) $item[$this->getDefaultReorderColumn()]]);
         }
     }
 
@@ -63,7 +61,7 @@ class Index extends DataTableComponent
             Column::make('Name', 'name')
                 ->sortable()->searchable(),
             Column::make('Slug', 'slug')
-                ->sortable()->searchable(), 
+                ->sortable()->searchable(),
             Column::make('Parent', 'parent.name')
                 ->sortable()->searchable(),
             Column::make('Created At', 'created_at')

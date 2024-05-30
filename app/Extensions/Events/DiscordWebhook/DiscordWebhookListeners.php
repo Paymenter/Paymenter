@@ -16,7 +16,7 @@ class DiscordWebhookListeners
         $data = [
             'embeds' => [
                 [
-                    'title' =>  $title,
+                    'title' => $title,
                     'description' => $message,
                     'color' => hexdec($color),
                     'fields' => $fields,
@@ -24,16 +24,16 @@ class DiscordWebhookListeners
             ],
         ];
         $url = ExtensionHelper::getConfig('DiscordWebhook', 'webhook_url');
-        if (!$url) {
+        if (! $url) {
             return;
         }
         if (ExtensionHelper::getConfig('DiscordWebhook', 'ping_type') == 'user') {
-            $data['content'] = '<@' . ExtensionHelper::getConfig('DiscordWebhook', 'ping_id') . '>';
-        } else if (ExtensionHelper::getConfig('DiscordWebhook', 'ping_type') == 'role') {
-            $data['content'] = '<@&' . ExtensionHelper::getConfig('DiscordWebhook', 'ping_id') . '>';
+            $data['content'] = '<@'.ExtensionHelper::getConfig('DiscordWebhook', 'ping_id').'>';
+        } elseif (ExtensionHelper::getConfig('DiscordWebhook', 'ping_type') == 'role') {
+            $data['content'] = '<@&'.ExtensionHelper::getConfig('DiscordWebhook', 'ping_id').'>';
         }
         $curl = curl_init($url);
-        curl_setopt($curl, CURLOPT_HTTPHEADER, array('Content-type: application/json'));
+        curl_setopt($curl, CURLOPT_HTTPHEADER, ['Content-type: application/json']);
         curl_setopt($curl, CURLOPT_POST, 1);
         curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($data));
         curl_setopt($curl, CURLOPT_FOLLOWLOCATION, 1);
@@ -49,16 +49,16 @@ class DiscordWebhookListeners
     public function handleInvoiceCreated(InvoiceCreated $event): void
     {
         $invoice = $event->invoice;
-        $message = " ";
+        $message = ' ';
         $fields = [
             [
                 'name' => 'Invoice ID',
-                'value' => '[#' . $invoice->id . '](' . route('admin.invoices.show', $invoice->id) . ')',
+                'value' => '[#'.$invoice->id.']('.route('admin.invoices.show', $invoice->id).')',
                 'inline' => true,
             ],
             [
                 'name' => 'Invoice total',
-                'value' => config('settings::currency_sign') . $invoice->total(),
+                'value' => config('settings::currency_sign').$invoice->total(),
                 'inline' => true,
             ],
             [
@@ -68,7 +68,7 @@ class DiscordWebhookListeners
             ],
             [
                 'name' => 'Invoice user',
-                'value' => '[' . $invoice->user->name . '](' . route('admin.clients.edit', $invoice->user->id) . ')',
+                'value' => '['.$invoice->user->name.']('.route('admin.clients.edit', $invoice->user->id).')',
                 'inline' => true,
             ],
         ];
@@ -81,10 +81,9 @@ class DiscordWebhookListeners
     public function handleInvoicePaid(InvoicePaid $event): void
     {
         $invoice = $event->invoice;
-        $message = "Invoice paid: {$invoice->id} - {$invoice->user->name} -  " . config('settings::currency_sign') . "{$invoice->total()}";
+        $message = "Invoice paid: {$invoice->id} - {$invoice->user->name} -  ".config('settings::currency_sign')."{$invoice->total()}";
         $this->sendWebhook('Invoice paid', $message);
     }
-
 
     public function newTicketMessage($event)
     {
@@ -94,7 +93,7 @@ class DiscordWebhookListeners
         $fields = [
             [
                 'name' => 'Ticket ID',
-                'value' => '[#' . $ticket->id . '](' . route('admin.tickets.show', $ticket->id) . ')',
+                'value' => '[#'.$ticket->id.']('.route('admin.tickets.show', $ticket->id).')',
                 'inline' => true,
             ],
             [
@@ -114,7 +113,7 @@ class DiscordWebhookListeners
             ],
             [
                 'name' => 'Ticket user',
-                'value' => '[' . $message->user->name . '](' . route('admin.clients.edit', $message->user->id) . ')',
+                'value' => '['.$message->user->name.']('.route('admin.clients.edit', $message->user->id).')',
                 'inline' => true,
             ],
         ];
@@ -124,11 +123,11 @@ class DiscordWebhookListeners
     public function newUser($event)
     {
         $user = $event->user;
-        $message = " ";
+        $message = ' ';
         $fields = [
             [
                 'name' => 'User ID',
-                'value' => '[#' . $user->id . '](' . route('admin.clients.edit', $user->id) . ')',
+                'value' => '[#'.$user->id.']('.route('admin.clients.edit', $user->id).')',
                 'inline' => true,
             ],
             [
@@ -148,11 +147,11 @@ class DiscordWebhookListeners
     public function newTicket($event)
     {
         $ticket = $event->ticket;
-        $message = " ";
+        $message = ' ';
         $fields = [
             [
                 'name' => 'Ticket ID',
-                'value' => '[#' . $ticket->id . '](' . route('admin.tickets.show', $ticket->id) . ')',
+                'value' => '[#'.$ticket->id.']('.route('admin.tickets.show', $ticket->id).')',
                 'inline' => true,
             ],
             [
@@ -172,7 +171,7 @@ class DiscordWebhookListeners
             ],
             [
                 'name' => 'Ticket user',
-                'value' => '[' . $ticket->user->name . '](' . route('admin.clients.edit', $ticket->user->id) . ')',
+                'value' => '['.$ticket->user->name.']('.route('admin.clients.edit', $ticket->user->id).')',
                 'inline' => true,
             ],
         ];

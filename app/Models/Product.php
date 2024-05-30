@@ -2,13 +2,15 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 
 class Product extends Model
 {
     use HasFactory;
+
     protected $table = 'products';
+
     protected $fillable = [
         'name',
         'description',
@@ -54,19 +56,21 @@ class Product extends Model
         $prices = $this->prices;
 
         if ($prices->type == 'one-time') {
-            if ($type == 'setup')
+            if ($type == 'setup') {
                 return $prices->monthly_setup;
-            else
+            } else {
                 return $prices->monthly;
-        } else if ($prices->type == 'free') {
+            }
+        } elseif ($prices->type == 'free') {
             return 0;
         } else {
-            if ($type == 'setup')
-                return $prices->{$prices->type . '_setup'};
-            else if ($type)
+            if ($type == 'setup') {
+                return $prices->{$prices->type.'_setup'};
+            } elseif ($type) {
                 return $prices->{$type};
-            else
+            } else {
                 return $prices->monthly ?? $prices->quarterly ?? $prices->semi_annually ?? $prices->annually ?? $prices->biennially ?? $prices->triennially;
+            }
         }
     }
 
@@ -81,6 +85,7 @@ class Product extends Model
                 $configurableGroups[] = $group;
             }
         }
+
         return $configurableGroups;
     }
 }

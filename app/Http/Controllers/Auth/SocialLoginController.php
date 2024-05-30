@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\Models\User;
 use App\Http\Controllers\Controller;
+use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Laravel\Socialite\Facades\Socialite;
 
@@ -26,11 +26,11 @@ class SocialLoginController extends Controller
     {
         if ($provider == 'discord') {
             $user = Socialite::driver($provider)->user();
-            if($user->user["verified"] == false) {
+            if ($user->user['verified'] == false) {
                 return redirect()->route('login')->with('error', 'Your Discord account is not verified.');
             }
             $user = User::where('email', $user->email)->first();
-            if (!$user) {
+            if (! $user) {
                 return redirect()->route('register')->with('error', 'You are not registered on this site.');
             } else {
                 Auth::login($user, true);
@@ -40,7 +40,7 @@ class SocialLoginController extends Controller
         } elseif ($provider == 'google') {
             $user = Socialite::driver($provider)->user();
             $user = User::where('email', $user->email)->first();
-            if (!$user) {
+            if (! $user) {
                 return redirect()->route('register')->with('error', 'You are not registered on this site.');
             } else {
                 Auth::login($user, true);
@@ -50,7 +50,7 @@ class SocialLoginController extends Controller
         } elseif ($provider == 'github') {
             $user = Socialite::driver($provider)->user();
             $user = User::where('email', $user->email)->first();
-            if (!$user) {
+            if (! $user) {
                 return redirect()->route('register')->with('error', 'You are not registered on this site.');
             } else {
                 Auth::login($user, true);

@@ -2,13 +2,15 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 
 class OrderProductConfig extends Model
 {
     use HasFactory;
+
     protected $table = 'order_products_config';
+
     protected $fillable = [
         'order_product_id',
         'is_configurable_option',
@@ -23,25 +25,29 @@ class OrderProductConfig extends Model
 
     /**
      * Get the configurable option that owns the OrderProductConfig
-     * 
+     *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function configurableOption()
     {
-        if (!$this->is_configurable_option)
+        if (! $this->is_configurable_option) {
             return null;
+        }
+
         return $this->belongsTo(ConfigurableOption::class, 'key', 'id');
     }
 
     /**
      * Get the configurable option input that owns the OrderProductConfig
-     * 
+     *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function configurableOptionInput()
     {
-        if (!$this->is_configurable_option)
+        if (! $this->is_configurable_option) {
             return null;
+        }
+
         return $this->belongsTo(ConfigurableOptionInput::class, 'value', 'id');
     }
 }

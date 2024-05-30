@@ -9,10 +9,10 @@ use App\Models\Invoice;
 use App\Models\Ticket;
 use App\Models\TicketMessage;
 use App\Models\User;
-use Illuminate\Support\Facades\Event;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
+use Illuminate\Support\Facades\Event;
 
 class EventServiceProvider extends ServiceProvider
 {
@@ -26,7 +26,7 @@ class EventServiceProvider extends ServiceProvider
             SendEmailVerificationNotification::class,
         ],
         \SocialiteProviders\Manager\SocialiteWasCalled::class => [
-            \SocialiteProviders\Discord\DiscordExtendSocialite::class . '@handle',
+            \SocialiteProviders\Discord\DiscordExtendSocialite::class.'@handle',
         ],
     ];
 
@@ -45,8 +45,8 @@ class EventServiceProvider extends ServiceProvider
         Announcement::observe(\App\Observers\AnnouncementObserver::class);
         try {
             foreach (Extension::where('enabled', true)->get() as $extension) {
-                $module = $extension->namespace . 'Listeners';
-                if (!class_exists($module)) {
+                $module = $extension->namespace.'Listeners';
+                if (! class_exists($module)) {
                     continue;
                 }
                 Event::subscribe(new $module);

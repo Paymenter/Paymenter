@@ -16,5 +16,5 @@ return [
     'sent' => 'Vi har skickat ett mail med en länk för att återställa ditt lösenord!',
     'throttled' => 'Vänligen vänta innan du försöker igen.',
     'token' => 'Denna lösenordsåterställningsnyckel är ogiltig.',
-    'user' => "Vi kan inte hitta en användare med den e-postadressen.",
+    'user' => 'Vi kan inte hitta en användare med den e-postadressen.',
 ];

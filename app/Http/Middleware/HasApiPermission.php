@@ -11,7 +11,6 @@ class HasApiPermission
     /**
      * Handle an incoming request.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @param  \Closure(\Illuminate\Http\Request): (\Illuminate\Http\Response|\Illuminate\Http\RedirectResponse)  $next
      * @param  string  $permission
      * @return \Illuminate\Http\Response|\Illuminate\Http\RedirectResponse
@@ -20,19 +19,19 @@ class HasApiPermission
     {
         $user = $request->user();
 
-        if (!$user->tokenCan($permission)) {
+        if (! $user->tokenCan($permission)) {
             return response()->json([
                 'success' => false,
-                'message' => 'You do not have permission to ' . $permission . '.',
+                'message' => 'You do not have permission to '.$permission.'.',
             ], 403);
         }
 
         // Additional check if the user role has also the api permission
         if (strpos($request->route()->uri, 'api/admin') !== false) {
-            if (!API::hasPermission($user, $permission)) {
+            if (! API::hasPermission($user, $permission)) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'You do not have permission to ' . $permission . '.',
+                    'message' => 'You do not have permission to '.$permission.'.',
                 ], 403);
             }
         }

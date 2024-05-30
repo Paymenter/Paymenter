@@ -6,7 +6,6 @@ use App\Helpers\ExtensionHelper;
 use App\Helpers\NotificationHelper;
 use App\Jobs\Servers\CreateServer;
 use App\Models\Coupon;
-use App\Models\Extension;
 use App\Models\Invoice;
 use App\Models\InvoiceItem;
 use App\Models\Order;
@@ -16,7 +15,6 @@ use App\Models\Product;
 use App\Models\TaxRate;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Session;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Rule;
@@ -66,7 +64,9 @@ class Index extends Component
 
         $this->gateways = ExtensionHelper::getAvailableGateways($this->total, $this->products);
 
-        if(!isset($this->payment_method) || !in_array($this->payment_method, $this->gateways->pluck('id')->toArray())) $this->payment_method = $this->gateways->first()->id ?? null;
+        if (! isset($this->payment_method) || ! in_array($this->payment_method, $this->gateways->pluck('id')->toArray())) {
+            $this->payment_method = $this->gateways->first()->id ?? null;
+        }
     }
 
     #[Computed()]
@@ -90,7 +90,7 @@ class Index extends Component
                 $totalSetup += $product->setup_fee * $product->quantity;
                 if ($this->coupon) {
                     if (isset($this->coupon->products)) {
-                        if (!in_array($product->id, $this->coupon->products) && !empty($this->coupon->products)) {
+                        if (! in_array($product->id, $this->coupon->products) && ! empty($this->coupon->products)) {
                             $product->discount = 0;
                             $product->discount_fee = 0;
                         } else {
@@ -147,12 +147,15 @@ class Index extends Component
 
     public function calculateTax($amount)
     {
-        if (!config('settings::tax_enabled')) {
-            if(!isset($this->tax)) $this->tax = new TaxRate();
+        if (! config('settings::tax_enabled')) {
+            if (! isset($this->tax)) {
+                $this->tax = new TaxRate();
+            }
+
             return 0;
         }
-        if (!$this->tax) {
-            if (!auth()->check()) {
+        if (! $this->tax) {
+            if (! auth()->check()) {
                 $this->tax = TaxRate::where('country', 'all')->first();
             } else {
                 $this->tax = TaxRate::whereIn('country', [auth()->user()->country, 'all'])->get()->sortBy(function ($taxRate) {
@@ -161,9 +164,9 @@ class Index extends Component
             }
             $this->tax = $this->tax ?? new TaxRate();
         }
+
         return $amount * ($this->tax->rate / 100);
     }
-
 
     public function validateCoupon()
     {
@@ -203,13 +206,21 @@ class Index extends Component
 
     public function pay()
     {
-        if (!auth()->check()) {
+        if (! auth()->check()) {
             return redirect()->route('login');
         }
-        if (config('settings::requiredClientDetails_address') && !auth()->user()->address) return redirect()->route('clients.profile')->with(['error' => 'Please define your address.']);
-        if (config('settings::requiredClientDetails_city') && !auth()->user()->city) return redirect()->route('clients.profile')->with(['error' => 'Please define your city.']);
-        if (config('settings::requiredClientDetails_country') && !auth()->user()->country) return redirect()->route('clients.profile')->with(['error' => 'Please define your country.']);
-        if (config('settings::requiredClientDetails_phone') && !auth()->user()->phone) return redirect()->route('clients.profile')->with(['error' => 'Please define your phone number.']);
+        if (config('settings::requiredClientDetails_address') && ! auth()->user()->address) {
+            return redirect()->route('clients.profile')->with(['error' => 'Please define your address.']);
+        }
+        if (config('settings::requiredClientDetails_city') && ! auth()->user()->city) {
+            return redirect()->route('clients.profile')->with(['error' => 'Please define your city.']);
+        }
+        if (config('settings::requiredClientDetails_country') && ! auth()->user()->country) {
+            return redirect()->route('clients.profile')->with(['error' => 'Please define your country.']);
+        }
+        if (config('settings::requiredClientDetails_phone') && ! auth()->user()->phone) {
+            return redirect()->route('clients.profile')->with(['error' => 'Please define your phone number.']);
+        }
 
         if (config('settings::tos') == 1) {
             $this->validateOnly('tos', [
@@ -225,9 +236,9 @@ class Index extends Component
         $products = [];
         foreach ($this->products as $product) {
             if ($product->stock_enabled && $product->stock <= 0) {
-                return $this->addError('product.' . $product->id, 'Out of stock');
+                return $this->addError('product.'.$product->id, 'Out of stock');
             } elseif ($product->stock_enabled && $product->stock < $product->quantity) {
-                return $this->addError('product.' . $product->id, 'Only ' . $product->stock . ' left in stock');
+                return $this->addError('product.'.$product->id, 'Only '.$product->stock.' left in stock');
             }
             if ($product->limit) {
                 $orderProducts = 0;
@@ -240,13 +251,15 @@ class Index extends Component
                         unset($cart[$product->id]);
                         session()->put('cart', $cart);
                     }
-                    return $this->addError('product.' . $product->id, 'You can only order ' . $product->limit . ' of this product');
+
+                    return $this->addError('product.'.$product->id, 'You can only order '.$product->limit.' of this product');
                 }
             }
             if ($coupon) {
                 if (isset($coupon->products)) {
-                    if (!in_array($product->id, $coupon->products) && !empty($coupon->products)) {
+                    if (! in_array($product->id, $coupon->products) && ! empty($coupon->products)) {
                         $product->discount = 0;
+
                         continue;
                     } else {
                         if ($coupon->type == 'percent') {
@@ -301,22 +314,22 @@ class Index extends Component
         // As the ->total() isn't available for events yet, we trigger it manually
         $invoice->saveQuietly();
         foreach ($products as $product) {
-            if ($product->allow_quantity == 1)
+            if ($product->allow_quantity == 1) {
                 for (
                     $i = 0;
                     $i < $product->quantity;
-                    ++$i
-                ) {
+                    $i++) {
                     $orderProductCreated = $this->createOrderProduct($order, $product, $invoice, false);
                 }
-            else if ($product->allow_quantity == 2)
+            } elseif ($product->allow_quantity == 2) {
                 $orderProductCreated = $this->createOrderProduct($order, $product, $invoice);
-            else
+            } else {
                 $orderProductCreated = $this->createOrderProduct($order, $product, $invoice);
+            }
             if ($product->setup_fee > 0) {
                 $invoiceItem = new InvoiceItem();
                 $invoiceItem->invoice_id = $invoice->id;
-                $invoiceItem->description = $product->name . ' Setup Fee';
+                $invoiceItem->description = $product->name.' Setup Fee';
                 $invoiceItem->product_id = $orderProductCreated->id;
                 $invoiceItem->total = $product->setup_fee * $product->quantity;
                 $invoiceItem->save();
@@ -371,6 +384,7 @@ class Index extends Component
                     $user->credits = $user->credits - $total;
                     $user->save();
                     ExtensionHelper::paymentDone($invoice->id);
+
                     return redirect()->route('clients.invoice.show', $invoice->id)->with('success', 'Payment done');
                 }
                 $payment_method = ExtensionHelper::getPaymentMethod($this->payment_method, $total, $products, $invoice->id);
@@ -386,7 +400,6 @@ class Index extends Component
 
         return redirect()->route('clients.home')->with('success', 'Order created successfully');
     }
-
 
     private function createOrderProduct(Order $order, Product $product, Invoice $invoice, $setQuantity = true)
     {
@@ -413,8 +426,11 @@ class Index extends Component
             $orderProduct->save();
         }
 
-        if ($setQuantity) $orderProduct->quantity = $product->quantity ?? 1;
-        else $orderProduct->quantity = 1;
+        if ($setQuantity) {
+            $orderProduct->quantity = $product->quantity ?? 1;
+        } else {
+            $orderProduct->quantity = 1;
+        }
         $orderProduct->save();
         if (isset($product->config)) {
             foreach ($product->config as $key => $value) {
@@ -439,6 +455,7 @@ class Index extends Component
             $orderProduct->status = 'paid';
             $orderProduct->save();
             CreateServer::dispatch($orderProduct);
+
             return;
         } else {
             $orderProduct->status = 'pending';
@@ -448,13 +465,12 @@ class Index extends Component
         $invoiceProduct->invoice_id = $invoice->id;
         $invoiceProduct->product_id = $orderProduct->id;
         $invoiceProduct->total = $orderProduct->price * $orderProduct->quantity;
-        $description = $orderProduct->billing_cycle ? '(' . now()->format('Y-m-d') . ' - ' . date('Y-m-d', strtotime($orderProduct->expiry_date)) . ')' : '';
-        $invoiceProduct->description = $product->name . ' ' . $description;
+        $description = $orderProduct->billing_cycle ? '('.now()->format('Y-m-d').' - '.date('Y-m-d', strtotime($orderProduct->expiry_date)).')' : '';
+        $invoiceProduct->description = $product->name.' '.$description;
         $invoiceProduct->save();
 
         return $orderProduct;
     }
-
 
     public function render()
     {

@@ -38,18 +38,18 @@ class APIController extends Controller
             $permissions = array_diff($permissions, API::$adminPermissions);
         } else {
             foreach ($permissions as $permission) {
-                if(!Str::startsWith($permission, 'admin:')) {
+                if (! Str::startsWith($permission, 'admin:')) {
                     continue;
                 }
-                if (!API::hasPermission($user, $permission)) {
-                    return redirect('/api')->with('error', 'You do not have permission to create API tokens with the permission "' . $permission . '".');
+                if (! API::hasPermission($user, $permission)) {
+                    return redirect('/api')->with('error', 'You do not have permission to create API tokens with the permission "'.$permission.'".');
                 }
             }
         }
 
         $token = $user->createToken(request('name'), $permissions)->plainTextToken;
 
-        return redirect('/api')->with('success', 'Here is your API token: "' . $token . '" Please save it somewhere safe. You will not be able to see it again.');
+        return redirect('/api')->with('success', 'Here is your API token: "'.$token.'" Please save it somewhere safe. You will not be able to see it again.');
     }
 
     public function delete(Request $request, string $id)

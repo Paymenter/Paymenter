@@ -16,5 +16,5 @@ return [
     'sent' => 'Odoslali sme inštrukcie na obnovu hesla cez email',
     'throttled' => 'Chvíľu počkajte a skúste to znova',
     'token' => 'Tento token na obnovenie hesla je nesprávny',
-    'user' => "Zadaná e-mailová adresa sa nenašla.",
+    'user' => 'Zadaná e-mailová adresa sa nenašla.',
 ];

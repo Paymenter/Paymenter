@@ -2,16 +2,17 @@
 
 namespace Tests\Feature\Admin;
 
-use Tests\TestCase;
-use App\Models\User;
 use App\Models\Ticket;
-use Illuminate\Http\UploadedFile;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\TestCase;
 
 class TicketTest extends TestCase
 {
     use RefreshDatabase;
+
     protected $user;
+
     protected $client;
 
     public function setUp(): void
@@ -21,8 +22,7 @@ class TicketTest extends TestCase
         $this->client = User::factory()->create();
     }
 
-
-    /** 
+    /**
      * Test if admin can view all the ticket pages
      *
      * @return void
@@ -96,7 +96,7 @@ class TicketTest extends TestCase
 
         $response->assertStatus(302);
         $response->assertRedirect(route('admin.tickets.show', $ticket));
-        
+
         $this->assertDatabaseHas('tickets', [
             'title' => 'TEST',
             'status' => 'closed',
@@ -107,7 +107,7 @@ class TicketTest extends TestCase
 
     /**
      * Test if admin can reply to a ticket
-     * 
+     *
      * @return void
      */
     public function testIfAdminCanReplyToATicket()
@@ -125,7 +125,7 @@ class TicketTest extends TestCase
 
         $response->assertStatus(302);
         $response->assertRedirect(route('admin.tickets.show', $ticket));
-        
+
         $this->assertDatabaseHas('ticket_messages', [
             'message' => 'Test Message',
             'ticket_id' => $ticket->id,

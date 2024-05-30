@@ -2,18 +2,21 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 
 class ConfigurableGroup extends Model
 {
     use HasFactory;
+
     protected $table = 'configurable_option_groups';
+
     protected $fillable = [
         'name',
         'description',
         'products',
     ];
+
     protected $casts = [
         'products' => 'array',
     ];
@@ -22,8 +25,9 @@ class ConfigurableGroup extends Model
     protected static function booted()
     {
         static::created(function ($group) {
-            if (!$group->products)
+            if (! $group->products) {
                 $group->products = [];
+            }
             $group->save();
         });
     }
