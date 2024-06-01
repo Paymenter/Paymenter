@@ -40,6 +40,8 @@ class API
         'admin:invoice:create',
         'admin:invoice:delete',
         'admin:invoice:update',
+        'admin:credits:read',
+        'admin:credits:update',
     ];
 
 
@@ -52,6 +54,8 @@ class API
         'admin:invoice:create' => 'CREATE_INVOICES',
         'admin:invoice:delete' => 'DELETE_INVOICES',
         'admin:invoice:update' => 'EDIT_INVOICES',
+        'admin:credits:read' => 'VIEW_CREDITS',
+        'admin:credits:update' => 'EDIT_CREDITS',
     ];
 
     /** 

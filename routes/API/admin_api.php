@@ -27,6 +27,12 @@ Route::group(['prefix' => 'v1/invoices'], function () {
     Route::get('/{invoiceId}', [InvoiceController::class, 'getInvoice'])->name('api.admin.v1.invoices.getInvoice')->middleware('api.permission:admin:invoice:read');
 });
 
+// Credits
+Route::group(['prefix' => 'v1/credits'], function () {
+    Route::get('/{userId}', [UserController::class, 'getCredits'])->name('api.admin.v1.credits.getCredits')->middleware('api.permission:admin:credits:read');
+    Route::put('/{userId}', [UserController::class, 'setCredits'])->name('api.admin.v1.credits.setCredit')->middleware('api.permission:admin:credits:update');
+});
+
 // API
 Route::group(['prefix' => 'v1'], function () {
     Route::get('/permissions', [APIController::class, 'getPermissions'])->name('api.admin.v1.api.getPermissions');
