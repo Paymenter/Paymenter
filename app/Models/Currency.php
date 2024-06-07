@@ -16,4 +16,11 @@ class Currency extends Model
     protected $keyType = 'string';
 
     protected $primaryKey = 'code';
+
+    protected $fillable = [
+        'code',
+        'prefix',
+        'suffix',
+    ];
+    
 }

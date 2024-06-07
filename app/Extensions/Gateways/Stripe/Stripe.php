@@ -2,6 +2,7 @@
 
 namespace App\Extensions\Gateways\Stripe;
 
+use App\Classes\Extension\Gateway;
 use Stripe\StripeClient;
 use App\Helpers\ExtensionHelper;
 use App\Models\Extension;
@@ -9,16 +10,16 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
 
-class Stripe
+class Stripe extends Gateway
 {
-    public function getConfig()
+    public function getConfig($values = [])
     {
         return [
             [
                 'name' => 'stripe_secret_key',
                 'label' => 'Stripe Secret Key',
                 'type' => 'text',
-                'description' => 'Stripe secret key',
+                'description' => 'Find your API keys at https://dashboard.stripe.com/apikeys',
                 'required' => true,
             ],
             [

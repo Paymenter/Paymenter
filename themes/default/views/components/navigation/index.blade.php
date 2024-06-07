@@ -36,7 +36,7 @@
                 @endif
             @endforeach
         </div>
-
+        @if(auth()->check())
         <div class="flex flex-row">
             <!-- Has notifications? (updates, errors, etc) (TODO) -->
             <div class="relative">
@@ -64,5 +64,11 @@
                 </div>
             </div>
         </div>
+        @else
+        <div class="flex flex-row">
+            <x-navigation.link :href="route('login')" class="text-sm">Login</x-navigation.link>
+            <x-navigation.link :href="route('register')" class="text-sm">Register</x-navigation.link>
+        </div>
+        @endif
     </div>
 </nav>

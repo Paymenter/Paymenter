@@ -8,7 +8,9 @@
         @vite(['themes/' . config('settings.theme') . '/js/app.js'], config('settings.theme'))
         @include('layouts.colors')
 
-        <link rel="icon" href="{{ asset(config('settings.logo')) }}" type="image/png">
+        @if(config('settings.logo'))
+            <link rel="icon" href="{{ asset(config('settings.logo')) }}" type="image/png">
+        @endif
 
     </head>
     <body class="w-full bg-primary-900 text-white">
@@ -16,5 +18,6 @@
         <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
             {{ $slot }}
         </main>
+        <x-navigation.footer />
     </body>
 </html>

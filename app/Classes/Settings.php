@@ -9,6 +9,12 @@ class Settings
 {
     public static function settings()
     {
+        try {
+            // Only code is needed
+            $currencies = \App\Models\Currency::pluck('code')->toArray();
+        } catch (\Exception $e) {
+            $currencies = [];
+        }
         $settings = [
             // Split settings into groups (only used in the settings page for organization)
             'general' => [
@@ -55,8 +61,7 @@ class Settings
                     'name' => 'logo',
                     'label' => 'Logo',
                     'type' => 'file',
-                    'required' => true,
-                    'default' => 'https://paymenter.org/image/textlogo.png',
+                    'required' => false,
                     'accept' => ['image/*'],
                     'file_name' => 'logo.webp'
                 ],
@@ -267,7 +272,15 @@ class Settings
                         'blank' => 'Blank',
                     ],
                     'default' => 'wavatar',
-                ]
+                ],
+                [
+                    'name' => 'default_currency',
+                    'label' => 'Default Currency',
+                    'type' => 'select',
+                    'options' => $currencies,
+                    'default' => 'USD',
+                    'required' => true,
+                ],
             ]
         ];
 

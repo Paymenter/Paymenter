@@ -5,10 +5,13 @@ namespace App\Livewire\Products;
 use App\Models\Category;
 use App\Models\Product;
 use Livewire\Component;
+use App\Livewire\Traits\CurrencyChanged;
 
-class Show extends Component
+class Show extends Component 
 {
-    public  $product;
+    use CurrencyChanged;
+
+    public $product;
 
     public Category $category;
 

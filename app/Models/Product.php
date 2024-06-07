@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Classes\Price;
 use App\Models\Traits\Priceable;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -25,6 +26,8 @@ class Product extends Model
         'description',
         'image',
         'category_id',
+        // Either disabled = no quantity, separated = allow multiple products but separate products on checkout, combined = allow multiple products but combine products on checkout
+        'allow_quantity'
     ];
 
     /**
@@ -56,16 +59,24 @@ class Product extends Model
      */
     public function price()
     {
-        $price = 0;
+        $priceAndCurrency = [
+            'price' => null,
+            'currency' => null,
+        ];
+
+        $currency = \Auth::user()->currency ?? session('currency') ?? null;
 
         foreach ($this->plans as $plan) {
-            foreach ($plan->prices as $price) {
-                if ($price->price < $price) {
-                    $price = $price->price;
+            foreach ($plan->prices->when($currency, function ($query) use ($currency) {
+                return $query->where('currency_code', $currency);
+            }) as $price) {
+                if ($price->price > $priceAndCurrency['price']) {
+                    $priceAndCurrency['price'] = $price->price;
+                    $priceAndCurrency['currency'] = $price->currency;
                 }
             }
         }
 
-        return $price;
+        return new Price((object) $priceAndCurrency);
     }
 }
