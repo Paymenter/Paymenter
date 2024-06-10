@@ -28,31 +28,30 @@
     <div class="flex">
 
         <div class="flex-col ml-4">
-                <?php
-                $ipv4_addresses = array_map(function ($ipv4) {
-                    return $ipv4['address'] ?? 'N/A';
-                }, $details->network['interfaces'][0]['ipv4']);
-
-                $ipv6_addresses = [];
-                foreach ($details->network['interfaces'][0]['ipv6'] as $ipv6) {
-                    if (!empty($ipv6['addresses'])) {
-                        $ipv6_addresses = array_merge($ipv6_addresses, $ipv6['addresses']);
-                    }
+        @php
+            $ipv4_addresses = array_map(function ($ipv4) {
+                return $ipv4['address'] ?? 'N/A';
+            }, $details->network['interfaces'][0]['ipv4']);
+            $ipv6_addresses = [];
+            foreach ($details->network['interfaces'][0]['ipv6'] as $ipv6) {
+                if (!empty($ipv6['addresses'])) {
+                    $ipv6_addresses = array_merge($ipv6_addresses, $ipv6['addresses']);
                 }
-                $ipv4_string = implode('<br/>', $ipv4_addresses);
-                $ipv6_string = implode('<br/>', $ipv6_addresses);
-                ?>
+            }
+            $ipv4_string = implode('<br/>', $ipv4_addresses);
+            $ipv6_string = implode('<br/>', $ipv6_addresses);
+        @endphp
 
-            <div>
-                <p>
-                <div class="font-bold">IPv4:</div>
-                    <?php echo $ipv4_string; ?></p>
-            </div>
-            <div>
-                <p>
-                <div class="font-bold">IPv6:</div>
-                    <?php echo $ipv6_string; ?></p>
-            </div>
+        <div>
+            <p>
+            <div class="font-bold">IPv4:</div>
+                {!! $ipv4_string !!}</p>
+        </div>
+        <div>
+            <p>
+            <div class="font-bold">IPv6:</div>
+                {!! $ipv6_string !!}</p>
+        </div>
 
         </div>
     </div>
@@ -65,4 +64,3 @@
    target="_blank">
     Login to control panel
 </a>
-
