@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Classes\Price as PriceClass;
 
 class Plan extends Model
 {
@@ -25,6 +26,21 @@ class Plan extends Model
      */
     public function prices()
     {
-        return $this->hasMany(Price::class)->where('currency_code', 'USD');
+        return $this->hasMany(Price::class);
+    }
+
+    /**
+     * Get the price of the plan.
+     */
+    public function price()
+    {
+        $currency = session('currency', config('settings.default_currency'));;
+        $price = $this->prices->where('currency_code', $currency)->first();
+        
+        return new PriceClass((object) [
+            'price' => $price,
+            'setup_fee' => $price->setup_fee,
+            'currency' => $price->currency,
+        ]);
     }
 }

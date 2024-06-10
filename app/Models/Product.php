@@ -55,23 +55,39 @@ class Product extends Model
     }
 
     /**
+     * Get available plans of the product.
+     */
+    public function availablePlans()
+    {
+        $currency = session('currency', config('settings.default_currency'));
+
+        return $this->plans->filter(function ($plan) use ($currency) {
+            return $plan->prices->when($currency, function ($query) use ($currency) {
+                return $query->where('currency_code', $currency);
+            })->isNotEmpty();
+        });
+    }
+
+    /**
      * Get first price of the plan.
      */
-    public function price()
+    public function price($plan = null)
     {
         $priceAndCurrency = [
             'price' => null,
             'currency' => null,
         ];
 
-        $currency = \Auth::user()->currency ?? session('currency') ?? null;
+        $currency = session('currency', config('settings.default_currency'));
 
-        foreach ($this->plans as $plan) {
+        foreach ($this->availablePlans()->when($plan, function ($query) use ($plan) {
+            return $query->where('id', $plan);
+        }) as $plan) {
             foreach ($plan->prices->when($currency, function ($query) use ($currency) {
                 return $query->where('currency_code', $currency);
             }) as $price) {
-                if ($price->price > $priceAndCurrency['price']) {
-                    $priceAndCurrency['price'] = $price->price;
+                if ($price->price < $priceAndCurrency['price'] || $priceAndCurrency['price'] === null) {
+                    $priceAndCurrency['price'] = $price;
                     $priceAndCurrency['currency'] = $price->currency;
                 }
             }

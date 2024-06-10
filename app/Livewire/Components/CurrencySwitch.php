@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Components;
 
+use App\Classes\Cart;
 use App\Models\Currency;
 use Livewire\Component;
 
@@ -12,8 +13,8 @@ class CurrencySwitch extends Component
     public function mount()
     {
         $this->currentCurrency = session('currency', 'USD');
-        // Dont render the component if the user is not logged in
-        if (auth()->check()) {
+
+        if(Cart::get()->isNotEmpty()) {
             $this->skipRender();
         }
     }

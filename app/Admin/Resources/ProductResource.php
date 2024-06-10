@@ -156,12 +156,14 @@ class ProductResource extends Resource
                                                         return Currency::whereNotIn('code', $pricing)->pluck('code', 'code');                                                    
                                                     })
                                                     ->live()
+                                                    ->default(config('settings.default_currency'))
                                                     ->required(),
                                                 Forms\Components\TextInput::make('price')
                                                     ->required()
                                                     ->label('Price')
                                                     // Suffix based on chosen currency
                                                     ->prefix(fn (Get $get) => Currency::where('code', $get('currency_code'))->first()?->prefix)
+                                                    ->suffix(fn (Get $get) => Currency::where('code', $get('currency_code'))->first()?->suffix)
                                                     ->live(onBlur: true)
                                                     ->hidden(fn (Get $get) => $get('type') === 'free'),
                                                 Forms\Components\TextInput::make('setup_fee')

@@ -9,7 +9,7 @@ use Livewire\Component;
 use App\Livewire\Traits\CurrencyChanged;
 use Livewire\Attributes\On;
 
-class Show extends Component 
+class Checkout extends Component 
 {
     use CurrencyChanged;
 
@@ -24,6 +24,6 @@ class Show extends Component
 
     public function render()
     {
-        return view('product.show');
+        return view('product.checkout');
     }
 }
