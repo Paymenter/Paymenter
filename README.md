@@ -31,10 +31,6 @@ Thanks to all sponsors for helping fund Paymenter's development.
     <img src="https://github.com/Paymenter/Paymenter/assets/88144943/9f9c164c-5b43-401a-83da-77754a51416e" width="350">
 </a>
 
-<a href="https://scorpiohosting.net">
-    <img src="https://paymenter.org/docs/getting-started/sponsors/scorpiohosting.png" width="350">
-</a>
-
 ## Wanna take a look?
 Visit our demo at: https://demo.paymenter.org
 
