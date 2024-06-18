@@ -10,7 +10,7 @@
         "laravel/framework": "^11.0",
         "laravel/socialite": "^5.14",
         "laravel/tinker": "^2.9",
-        "rappasoft/laravel-livewire-tables": "*",
+        "owen-it/laravel-auditing": "^13.6",
         "socialiteproviders/discord": "^4.2"
     },
     "require-dev": {

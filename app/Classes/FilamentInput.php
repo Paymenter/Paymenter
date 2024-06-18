@@ -37,8 +37,12 @@ class FilamentInput
                         }
                     })
                     ->native(true)
+                    ->preload()
                     ->multiple($setting->multiple ?? false)
                     ->searchable()
+                    ->required($setting->required ?? false)
+                    ->hint($setting->hint ?? '')
+                    ->hintColor('primary')
                     ->rules($setting->validation ?? []);
                 break;
 
@@ -47,7 +51,10 @@ class FilamentInput
                     ->label($setting->label ?? $setting->name)
                     ->helperText($setting->description ?? '')
                     ->placeholder($setting->default ?? "")
+                    ->hint($setting->hint ?? '')
+                    ->hintColor('primary')
                     ->required($setting->required ?? false)
+                    ->live(condition: $setting->live ?? false)
                     ->rules($setting->validation ?? []);
                 break;
             case ('password'):

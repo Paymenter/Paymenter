@@ -31,10 +31,10 @@ class Price
      */
     public function __construct($priceAndCurrency)
     {
-        $this->price = $priceAndCurrency->price->price;
+        $this->price = $priceAndCurrency->price->price ?? null;
         $this->currency = $priceAndCurrency->currency;
-        $this->setup_fee = $priceAndCurrency->price->setup_fee;
-        $this->has_setup_fee = $priceAndCurrency->price->setup_fee > 0;
+        $this->setup_fee = $priceAndCurrency->price->setup_fee ?? null;
+        $this->has_setup_fee = isset($priceAndCurrency->price->setup_fee) ? $priceAndCurrency->price->setup_fee > 0 : false;
     }
 
     public function format($price)

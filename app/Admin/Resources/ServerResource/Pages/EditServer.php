@@ -1,22 +1,21 @@
 <?php
 
-namespace App\Admin\Resources\ProductResource\Pages;
+namespace App\Admin\Resources\ServerResource\Pages;
 
-use App\Admin\Actions\AuditAction;
-
-use App\Admin\Resources\ProductResource;
+use App\Admin\Resources\ServerResource;
+use App\Helpers\ExtensionHelper;
 use Filament\Actions;
+use Filament\Forms\Get;
 use Filament\Resources\Pages\EditRecord;
 use Illuminate\Database\Eloquent\Model;
 
-class EditProduct extends EditRecord
+class EditServer extends EditRecord
 {
-    protected static string $resource = ProductResource::class;
+    protected static string $resource = ServerResource::class;
 
     protected function getHeaderActions(): array
     {
         return [
-            AuditAction::make()->auditChildren(['plans']),
             Actions\DeleteAction::make(),
         ];
     }

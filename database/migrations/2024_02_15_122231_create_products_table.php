@@ -21,6 +21,7 @@ return new class extends Migration
             $table->integer('stock')->nullable();
             $table->integer('per_user_limit')->nullable();
             $table->enum('allow_quantity', ['disabled', 'separated', 'combined'])->default('disabled');
+            $table->foreignIdFor(\App\Models\Server::class, 'server_id')->nullable();
             $table->timestamps();
         });
     }

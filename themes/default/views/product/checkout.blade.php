@@ -1,25 +1,42 @@
-<div class="grid grid-cols-2">
-    <div class="flex flex-col gap-4">
-        <div class="flex flex-row">
+<div class="grid grid-cols-4">
+    <div class="flex flex-col gap-4 w-full col-span-3">
+        <h1 class="text-3xl font-bold">{{ $product->name }}</h1>
+        <div class="flex flex-row w-full gap-4">
             @if ($product->image)
-                <img src="{{ url()->to($product->image) }}" alt="{{ $product->name }}"
-                    class="w-full h-96 object-cover object-center rounded-md">
+                <img src="{{ url()->to($product->image) }}" alt="{{ $product->name }}" class="max-w-40 h-fit">
             @endif
-            <article class="my-4 prose prose-invert">
+            <article class="prose prose-invert prose-sm">
                 {!! $product->description !!}
             </article>
         </div>
-        <select wire:model.live="plan" class="mt-2 text-white bg-primary-800 px-2.5 py-2.5 rounded-md">
-            @foreach ($product->availablePlans() as $plan)
-                <option value="{{ $plan->id }}">
-                    {{ $plan->name }} -
-                    {{ $plan->price() }}
-                    @if ($plan->price()->has_setup_fee)
-                        + {{ $plan->price()->setup_fee }} setup fee
-                    @endif
-                </option>
-            @endforeach
-        </select>
+        <div class="flex flex-col">
+            <label for="plan" class="text-sm font-medium my-2">Select a plan</label>
+            <select wire:model.live="plan" class="text-white bg-primary-800 px-2.5 py-2.5 rounded-md w-fit">
+                @foreach ($product->availablePlans() as $availablePlan)
+                    <option value="{{ $availablePlan->id }}">
+                        {{ $availablePlan->name }} -
+                        {{ $availablePlan->price() }}
+                        @if ($availablePlan->price()->has_setup_fee)
+                            + {{ $availablePlan->price()->setup_fee }} setup fee
+                        @endif
+                    </option>
+                @endforeach
+            </select>
+        </div>
+    </div>
+    <div class="flex flex-col gap-4 w-full col-span-1">
+        <h2 class="text-2xl font-semibold">Price</h2>
+
+        <h3 class="text-xl font-semibold">
+            {{ $product->price($plan) }}
+        </h3>
+        @if (($product->stock > 0 || !$product->stock) && $product->price()->available)
+            <div>
+                <x-button.primary>
+                    Checkout
+                </x-button.primary>
+            </div>
+        @endif
         {{-- 
         <div class="flex flex-col"> 
             @if ($product->stock === 0) not sure if it will work etc, recently got acces to the beta though. but to many options and im wayy to lazy to check them all out with no guides

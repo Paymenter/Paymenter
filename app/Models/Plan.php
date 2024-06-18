@@ -5,10 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Classes\Price as PriceClass;
+use OwenIt\Auditing\Contracts\Auditable;
 
-class Plan extends Model
+class Plan extends Model implements Auditable
 {
-    use HasFactory;
+    use HasFactory, \OwenIt\Auditing\Auditable;
 
     public $timestamps = false;
 
@@ -27,6 +28,14 @@ class Plan extends Model
     public function prices()
     {
         return $this->hasMany(Price::class);
+    }
+
+    /**
+     * Get the priceable model of the plan.
+     */
+    public function priceable()
+    {
+        return $this->morphTo();
     }
 
     /**

@@ -8,6 +8,21 @@ namespace App\Classes\Extension;
  */
 class Extension
 {
+    public function __construct(public $config = [])
+    {
+    }
+
+    /**
+     * Get a configuration value
+     * 
+     * @param string $key
+     * @return mixed
+     */
+    public function config($key)
+    {
+        return $this->config[$key] ?? null;
+    }
+
     /**
      * Get the configuration fields for the extension
      * 

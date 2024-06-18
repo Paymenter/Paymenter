@@ -30,14 +30,7 @@ class GatewayResource extends Resource
     public static function form(Form $form): Form
     {
         $gateways = \App\Helpers\ExtensionHelper::getAvailableGateways();
-        $options = [];
-        $gatewaySettings = ['default' => []];
-        foreach ($gateways as $gateway) {
-            $options[$gateway['name']] = $gateway['name'];
-            foreach ($gateway['settings'] as $setting) {
-                $gatewaySettings[$gateway['name']][] = FilamentInput::convert($setting);
-            }
-        }
+        $options = \App\Helpers\ExtensionHelper::convertToOptions($gateways);
 
         return $form
             ->schema([
@@ -51,7 +44,7 @@ class GatewayResource extends Resource
                     ->label('Gateway')
                     ->required()
                     ->searchable()
-                    ->options($options)
+                    ->options($options->options)
                     ->live(onBlur: true)
                     ->afterStateUpdated(fn (Select $component) => $component
                         ->getContainer()
@@ -62,7 +55,7 @@ class GatewayResource extends Resource
                 Section::make('Gateway Settings')
                     ->description('Specific settings for the selected gateway')
                     ->schema([
-                        Grid::make()->schema(fn (Get $get): array => $gatewaySettings[$get('extension')] ?? $gatewaySettings['default'])->key('settings')
+                        Grid::make()->schema(fn (Get $get): array => $options->settings[$get('extension')] ?? $options->settings['default'])->key('settings')
                     ]),
             ]);
     }

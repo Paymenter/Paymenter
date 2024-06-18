@@ -22,6 +22,7 @@ use Filament\Notifications\Livewire\Notifications;
 use Filament\Support\Enums\Alignment;
 use Filament\View\PanelsRenderHook;
 use Illuminate\Support\Facades\Blade;
+use Filament\Support\Enums\Platform;
 
 class AdminPanelProvider extends PanelProvider
 {
@@ -37,6 +38,7 @@ class AdminPanelProvider extends PanelProvider
             ->colors([
                 'primary' => Color::Blue,
             ])
+            ->globalSearchKeyBindings(['command+k', 'ctrl+k'])
             ->favicon('/logo.webp')
             ->discoverResources(in: app_path('Admin/Resources'), for: 'App\\Admin\\Resources')
             ->discoverPages(in: app_path('Admin/Pages'), for: 'App\\Admin\\Pages')
@@ -59,6 +61,7 @@ class AdminPanelProvider extends PanelProvider
                 DisableBladeIconComponents::class,
                 DispatchServingFilamentEvent::class,
             ])
+            ->theme(asset('css/filament/admin/theme.css'))
             ->authMiddleware([
                 Authenticate::class,
             ]);

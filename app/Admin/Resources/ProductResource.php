@@ -4,9 +4,13 @@ namespace App\Admin\Resources;
 
 use App\Admin\Resources\ProductResource\Pages;
 use App\Admin\Resources\ProductResource\RelationManagers;
+use App\Classes\FilamentInput;
+use App\Helpers\ExtensionHelper;
 use App\Models\Currency;
 use App\Models\Product;
+use App\Models\Server;
 use Filament\Forms;
+use Filament\Forms\Components\Grid;
 use Filament\Forms\Form;
 use Filament\Forms\Get;
 use Filament\Forms\Set;
@@ -17,12 +21,15 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Illuminate\Support\Str;
 use Filament\Forms\Components\Tabs;
+use Filament\Infolists;
+use Illuminate\Support\Facades\Cache;
 
 class ProductResource extends Resource
 {
     protected static ?string $model = Product::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $recordTitleAttribute = 'name';
 
     public static function form(Form $form): Form
     {
@@ -153,7 +160,7 @@ class ProductResource extends Resource
                                                             return $code !== null;
                                                         });
 
-                                                        return Currency::whereNotIn('code', $pricing)->pluck('code', 'code');                                                    
+                                                        return Currency::whereNotIn('code', $pricing)->pluck('code', 'code');
                                                     })
                                                     ->live()
                                                     ->default(config('settings.default_currency'))
@@ -172,6 +179,42 @@ class ProductResource extends Resource
                                                     ->hidden(fn (Get $get) => $get('type') === 'free'),
                                             ]),
                                     ]),
+                            ]),
+
+                        Tabs\Tab::make('Server')
+                            ->schema([
+                                Forms\Components\Select::make('server_id')
+                                    ->relationship('server', 'name')
+                                    ->searchable()
+                                    ->preload()
+                                    ->live(),
+
+                                Grid::make()
+                                    ->hidden(fn (Get $get) => $get('server_id') === null)
+                                    ->schema(
+                                        function (Get $get) {
+                                            $server = $get('server_id');
+                                            \Debugbar::info('test');
+                                            if ($server == null) {
+                                                return [];
+                                            }
+                                            $settings = [];
+
+                                            try {
+
+                                                foreach (ExtensionHelper::getProductConfig(Server::findOrFail($server), $get('settings')) as $setting) {
+                                                    // Easier to use dot notation for settings
+                                                    $setting['name'] = 'settings.' . $setting['name'];
+                                                    $settings[] = FilamentInput::convert($setting, true);
+                                                }
+                                            } catch (\Exception $e) {
+                                                $settings[] = Forms\Components\Placeholder::make('error')->content($e->getMessage());
+                                            }
+
+                                            return $settings;
+                                        }
+                                    ),
+
                             ]),
                     ]),
             ])->columns(1);
@@ -199,13 +242,6 @@ class ProductResource extends Resource
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
             ])->defaultGroup('category.name');
-    }
-
-    public static function getRelations(): array
-    {
-        return [
-            //
-        ];
     }
 
     public static function getPages(): array
