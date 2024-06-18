@@ -36,13 +36,16 @@ class FilamentInput
                             return (array) $setting->options;
                         }
                     })
-                    ->native(true)
                     ->preload()
                     ->multiple($setting->multiple ?? false)
                     ->searchable()
                     ->required($setting->required ?? false)
                     ->hint($setting->hint ?? '')
                     ->hintColor('primary')
+                    ->live(condition: $setting->live ?? false)
+                    ->default($setting->default ?? '')
+                    ->suffix($setting->suffix ?? null)
+                    ->prefix($setting->prefix ?? null)
                     ->rules($setting->validation ?? []);
                 break;
 
@@ -55,6 +58,9 @@ class FilamentInput
                     ->hintColor('primary')
                     ->required($setting->required ?? false)
                     ->live(condition: $setting->live ?? false)
+                    ->default($setting->default ?? '')
+                    ->suffix($setting->suffix ?? null)
+                    ->prefix($setting->prefix ?? null)
                     ->rules($setting->validation ?? []);
                 break;
             case ('password'):
@@ -65,6 +71,10 @@ class FilamentInput
                     ->required($setting->required ?? false)
                     ->password()
                     ->revealable()
+                    ->live(condition: $setting->live ?? false)
+                    ->default($setting->default ?? '')
+                    ->suffix($setting->suffix ?? null)
+                    ->prefix($setting->prefix ?? null)
                     ->rules($setting->validation ?? []);
                 break;
             case ('email'):
@@ -74,6 +84,10 @@ class FilamentInput
                     ->placeholder($setting->default ?? "")
                     ->required($setting->required ?? false)
                     ->email()
+                    ->live(condition: $setting->live ?? false)
+                    ->default($setting->default ?? '')
+                    ->suffix($setting->suffix ?? null)
+                    ->prefix($setting->prefix ?? null)
                     ->rules($setting->validation ?? []);
                 break;
             case ('number'):
@@ -83,6 +97,12 @@ class FilamentInput
                     ->placeholder($setting->default ?? "")
                     ->required($setting->required ?? false)
                     ->numeric()
+                    ->minValue($setting->min_value ?? null)
+                    ->maxValue($setting->max_value ?? null)
+                    ->live(condition: $setting->live ?? false)
+                    ->default($setting->default ?? '')
+                    ->suffix($setting->suffix ?? null)
+                    ->prefix($setting->prefix ?? null)
                     ->rules($setting->validation ?? []);
 
                 break;
@@ -93,14 +113,22 @@ class FilamentInput
                     ->placeholder($setting->default ?? "")
                     ->required($setting->required ?? false)
                     ->hexColor()
+                    ->live(condition: $setting->live ?? false)
+                    ->default($setting->default ?? '')
+                    ->suffix($setting->suffix ?? null)
+                    ->prefix($setting->prefix ?? null)
                     ->rules($setting->validation ?? []);
                 break;
             case ('file'):
-                $input =  FileUpload::make($setting->name)
+                $input = FileUpload::make($setting->name)
                     ->label($setting->label ?? $setting->name)
                     ->helperText($setting->description ?? '')
                     ->required($setting->required ?? false)
                     ->acceptedFileTypes($setting->accept)
+                    ->live(condition: $setting->live ?? false)
+                    ->default($setting->default ?? '')
+                    ->suffix($setting->suffix ?? null)
+                    ->prefix($setting->prefix ?? null)
                     ->rules($setting->validation ?? []);
 
                 if (isset($setting->file_name)) {
@@ -117,6 +145,8 @@ class FilamentInput
                     ->label($setting->label ?? $setting->name)
                     ->helperText($setting->description ?? '')
                     ->required($setting->required ?? false)
+                    ->live(condition: $setting->live ?? false)
+                    ->default($setting->default ?? '')
                     ->rules($setting->validation ?? []);
                 break;
 

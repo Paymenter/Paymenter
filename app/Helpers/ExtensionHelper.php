@@ -4,6 +4,7 @@ namespace App\Helpers;
 
 use App\Classes\FilamentInput;
 use Exception;
+use Illuminate\Support\Facades\Cache;
 
 class ExtensionHelper
 {
@@ -128,6 +129,34 @@ class ExtensionHelper
         return self::getExtension('server', $server->extension, self::settingsToArray($server->settings))->getProductConfig($values);
     }
 
+    /**
+     * Get available settings
+     * 
+     * @return array
+     */
+    public static function getProductConfigOnce($server, $values = [])
+    {
+        static $config = [];
+
+        $config = Cache::get('product_config', []);
+        
+        $key = $server->extension . $server->id . md5(serialize($values));
+
+        if (!isset($config[$key])) {
+            $config[$key] = self::getProductConfig($server, $values);
+        }
+
+        Cache::put('product_config', $config, 60);
+
+        return $config[$key];
+    }
+
+    /**
+     * Convert settings to array
+     * 
+     * @param mixed $settings
+     * @return array
+     */
     public static function settingsToArray($settings)
     {
         $settingsArray = [];

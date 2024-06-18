@@ -10,6 +10,7 @@ use App\Models\Currency;
 use App\Models\Product;
 use App\Models\Server;
 use Filament\Forms;
+use Filament\Forms\Components\Actions\Action;
 use Filament\Forms\Components\Grid;
 use Filament\Forms\Form;
 use Filament\Forms\Get;
@@ -187,6 +188,11 @@ class ProductResource extends Resource
                                     ->relationship('server', 'name')
                                     ->searchable()
                                     ->preload()
+                                    ->hintAction(Action::make('refresh')
+                                        ->label('Refresh')
+                                        ->action(fn () => Cache::set('product_config', null, 0))
+                                        ->hidden(fn (Get $get) => $get('server_id') === null)
+                                    )
                                     ->live(),
 
                                 Grid::make()
@@ -194,15 +200,13 @@ class ProductResource extends Resource
                                     ->schema(
                                         function (Get $get) {
                                             $server = $get('server_id');
-                                            \Debugbar::info('test');
                                             if ($server == null) {
                                                 return [];
                                             }
                                             $settings = [];
 
                                             try {
-
-                                                foreach (ExtensionHelper::getProductConfig(Server::findOrFail($server), $get('settings')) as $setting) {
+                                                foreach (ExtensionHelper::getProductConfigOnce(Server::findOrFail($server), $get('settings')) as $setting) {
                                                     // Easier to use dot notation for settings
                                                     $setting['name'] = 'settings.' . $setting['name'];
                                                     $settings[] = FilamentInput::convert($setting, true);

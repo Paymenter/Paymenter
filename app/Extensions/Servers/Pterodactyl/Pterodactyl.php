@@ -63,9 +63,7 @@ class Pterodactyl extends Server
     public function getProductConfig($values = []): array
     {
         $nodes =  $this->request('/api/application/nodes');
-        $nodeList = [
-            '0' => 'None',
-        ];
+        $nodeList = [];
         foreach ($nodes['data'] as $node) {
             $nodeList[$node['attributes']['id']] = $node['attributes']['name'];
         }
@@ -96,10 +94,9 @@ class Pterodactyl extends Server
                 'name' => 'location_id',
                 'label' => 'Location',
                 'type' => 'select',
-                'description' => 'Location',
+                'description' => 'Location where the server will be installed',
                 'options' => $locationList,
                 'required' => true,
-                'hint' => new HtmlString('<a href="https://docs.paymenter.org/docs/servers/pterodactyl" target="_blank">Documentation</a>'),
             ],
             [
                 'name' => 'node',
@@ -125,7 +122,83 @@ class Pterodactyl extends Server
                 'options' => $eggList,
                 'required' => true,
             ],
-
+            [
+                'name' => 'memory',
+                'label' => 'Memory',
+                'type' => 'number',
+                'suffix' => 'MiB',
+                'required' => true,
+                'validation' => 'numeric'
+            ],
+            [
+                'name' => 'swap',
+                'label' => 'Swap',
+                'type' => 'number',
+                'min_value' => 0,
+                'suffix' => 'MiB',
+                'required' => true,
+            ],
+            [
+                'name' => 'disk',
+                'label' => 'Disk',
+                'type' => 'number',
+                'suffix' => 'MiB',
+                'required' => true,
+            ],
+            [
+                'name' => 'io',
+                'label' => 'IO',
+                'type' => 'number',
+                'required' => true,
+                'default' => 500,
+                'description' => 'The IO performance of the server',
+            ],
+            [
+                'name' => 'cpu',
+                'label' => 'CPU Limit',
+                'type' => 'number',
+                'required' => true,
+                'min_value' => 0,
+                'suffix' => '%',
+            ],
+            [
+                'name' => 'cpu_pinning',
+                'label' => 'CPU Pinning',
+                'type' => 'text',
+            ],
+            [
+                'name' => 'databases',
+                'label' => 'Databases',
+                'type' => 'number',
+                'required' => true,
+                'min_value' => 0,
+            ],
+            [
+                'name' => 'backups',
+                'label' => 'Backups',
+                'type' => 'number',
+                'required' => true,
+                'min_value' => 0,
+            ],
+            [
+                'name' => 'allocations',
+                'label' => 'Allocations',
+                'type' => 'number',
+                'required' => true,
+                'min_value' => 0,
+            ],
+            [
+                'name' => 'skip_scripts',
+                'label' => 'Skip Scripts',
+                'type' => 'checkbox',
+            ],
+            [
+                'name' => 'port_arrayt',
+                'label' => 'Port Array',
+                'type' => 'text',
+                'description' => new HtmlString('Used to assign ports to egg variables.'),
+                'hint' => new HtmlString('<a href="https://docs.paymenter.org/docs/servers/pterodactyl" target="_blank">Documentation</a>'),
+            ],
         ];
     }
 }

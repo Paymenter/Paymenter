@@ -39,7 +39,7 @@ class EditProduct extends EditRecord
         }
 
         foreach ($data['settings'] as $key => $value) {
-            if (!$value) continue;
+            if (is_null($value)) continue;
             $record->settings()->updateOrCreate([
                 'key' => $key,
             ], [
