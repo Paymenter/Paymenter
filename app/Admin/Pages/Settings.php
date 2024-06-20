@@ -12,6 +12,7 @@ use Filament\Forms\Form;
 use Filament\Notifications\Notification;
 use Filament\Pages\Page;
 use App\Classes\FilamentInput;
+use Filament\Forms\Components\Actions;
 
 class Settings extends Page implements HasForms
 {
@@ -61,11 +62,12 @@ class Settings extends Page implements HasForms
             ->schema([
                 Tabs::make('Tabs')
                     ->tabs($tabs)
+                    ->persistTabInQueryString()
             ])
             ->statePath('data');
     }
 
-    public function create(): void
+    public function save(): void
     {
         $this->authorize('admin.settings.update');
         $data = $this->form->getState();
@@ -93,6 +95,14 @@ class Settings extends Page implements HasForms
             ->title('Saved successfully!')
             ->success()
             ->send();
+    }
+
+    public static function getFormActions(): array
+    {
+        return [
+            Actions\Action::make('save')
+                ->submit('settings'),
+        ];
     }
 
     public static function canAccess(): bool
