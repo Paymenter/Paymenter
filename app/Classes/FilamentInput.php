@@ -127,8 +127,6 @@ class FilamentInput
                     ->acceptedFileTypes($setting->accept)
                     ->live(condition: $setting->live ?? false)
                     ->default($setting->default ?? '')
-                    ->suffix($setting->suffix ?? null)
-                    ->prefix($setting->prefix ?? null)
                     ->rules($setting->validation ?? []);
 
                 if (isset($setting->file_name)) {
