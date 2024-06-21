@@ -2,15 +2,13 @@
 
 namespace App\Models;
 
-use App\Models\Traits\Priceable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
 
 class Option extends Model
 {
-    use HasFactory;
-    use Priceable;
+    use HasFactory, HasPlans;
 
     public $timestamps = false;
 

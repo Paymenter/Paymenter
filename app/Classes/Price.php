@@ -24,11 +24,21 @@ class Price
 
     public $has_setup_fee;
 
+    public $is_free;
+
     /**
      * Price constructor.
      */
-    public function __construct($priceAndCurrency)
+    public function __construct($priceAndCurrency = null, $free = false)
     {
+        if ($free) {
+            $this->price = 0;
+            $this->currency = null;
+            $this->is_free = true;
+
+            return;
+        }
+
         $this->price = $priceAndCurrency->price->price ?? null;
         $this->currency = $priceAndCurrency->currency;
         $this->setup_fee = $priceAndCurrency->price->setup_fee ?? null;
@@ -37,6 +47,9 @@ class Price
 
     public function format($price)
     {
+        if ($this->is_free) {
+            return 'Free';
+        }
         if (!$this->currency) {
             return 'Not available in your currency';
         }
@@ -51,7 +64,6 @@ class Price
 
     public function __get($name)
     {
-        \Debugbar::info('Property ' . $name . ' not found');
         if ($name == 'price') {
             return $this->price;
         }
@@ -59,7 +71,7 @@ class Price
             return $this->currency;
         }
         if ($name == 'available') {
-            return $this->currency ? true : false;
+            return $this->currency || $this->is_free ? true : false;
         }
         if ($name == 'setup_fee') {
             return $this->format($this->setup_fee);

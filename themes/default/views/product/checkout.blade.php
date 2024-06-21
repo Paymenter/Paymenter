@@ -9,20 +9,22 @@
                 {!! $product->description !!}
             </article>
         </div>
-        <div class="flex flex-col">
-            <label for="plan" class="text-sm font-medium my-2">Select a plan</label>
-            <select wire:model.live="plan" class="text-white bg-primary-800 px-2.5 py-2.5 rounded-md w-fit">
-                @foreach ($product->availablePlans() as $availablePlan)
-                    <option value="{{ $availablePlan->id }}">
-                        {{ $availablePlan->name }} -
-                        {{ $availablePlan->price() }}
-                        @if ($availablePlan->price()->has_setup_fee)
-                            + {{ $availablePlan->price()->setup_fee }} setup fee
-                        @endif
-                    </option>
-                @endforeach
-            </select>
-        </div>
+        @if ($product->availablePlans()->count() > 1)
+            <div class="flex flex-col">
+                <label for="plan" class="text-sm font-medium my-2">Select a plan</label>
+                <select wire:model.live="plan" class="text-white bg-primary-800 px-2.5 py-2.5 rounded-md w-fit">
+                    @foreach ($product->availablePlans() as $availablePlan)
+                        <option value="{{ $availablePlan->id }}">
+                            {{ $availablePlan->name }} -
+                            {{ $availablePlan->price() }}
+                            @if ($availablePlan->price()->has_setup_fee)
+                                + {{ $availablePlan->price()->setup_fee }} setup fee
+                            @endif
+                        </option>
+                    @endforeach
+                </select>
+            </div>
+        @endif
     </div>
     <div class="flex flex-col gap-4 w-full col-span-1">
         <h2 class="text-2xl font-semibold">Price</h2>

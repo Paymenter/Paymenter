@@ -1,0 +1,135 @@
+<?php
+
+namespace App\Admin\Resources;
+
+use App\Admin\Resources\ConfigOptionResource\Pages;
+use App\Models\ConfigOption;
+use Filament\Forms;
+use Filament\Forms\Form;
+use Filament\Resources\Resource;
+use Filament\Tables;
+use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
+
+class ConfigOptionResource extends Resource
+{
+    protected static ?string $model = ConfigOption::class;
+
+    protected static ?string $navigationGroup = 'Configuration';
+
+    protected static ?string $navigationIcon = 'heroicon-o-cog';
+
+    public static function form(Form $form): Form
+    {
+        return $form
+            ->schema([
+                Forms\Components\Tabs::make()
+                    ->columnSpanFull()
+                    ->schema([
+                        Forms\Components\Tabs\Tab::make('General')->schema([
+                            Forms\Components\TextInput::make('name')
+                                ->label('Name')
+                                ->required()
+                                ->maxLength(255)
+                                ->placeholder('Enter the name of the configuration option'),
+                            Forms\Components\TextInput::make('env_variable')
+                                ->label('Environment Variable')
+                                ->maxLength(255)
+                                ->placeholder('Enter the environment variable name'),
+                            Forms\Components\Select::make('type')
+                                ->label('Type')
+                                ->native(false)
+                                ->required()
+                                ->options([
+                                    'select' => 'Select',
+                                    'slider' => 'Slider',
+                                    'radio' => 'Radio',
+                                    'checkbox' => 'Checkbox',
+                                    'number' => 'Number',
+                                    'text' => 'Text',
+
+                                ]),
+                            Forms\Components\Checkbox::make('hidden')
+                                ->label('Hidden'),
+
+                        ]),
+                        Forms\Components\Tabs\Tab::make('Options')->schema([
+                            Forms\Components\Repeater::make('Options')
+                                ->relationship('children')
+                                ->columnSpanFull()
+                                ->itemLabel(fn (array $state) => $state['name'])
+                                ->collapsible()
+                                ->collapsed()
+                                ->cloneable()
+                                ->reorderable()
+                                ->columns(2)
+                                ->schema([
+                                    Forms\Components\TextInput::make('name')
+                                        ->label('Name')
+                                        ->required()
+                                        ->live()
+                                        ->maxLength(255)
+                                        ->placeholder('Enter the name of the configuration option'),
+                                    Forms\Components\TextInput::make('env_variable')
+                                        ->label('Environment Variable')
+                                        ->required()
+                                        ->maxLength(255)
+                                        ->placeholder('Enter the environment variable name'),
+                                    ProductResource::plan()->columnSpanFull()->label('Pricing')->reorderable(false),
+                                ]),
+                        ]),
+                    ]),
+            ]);
+    }
+
+    public static function table(Table $table): Table
+    {
+        return $table
+            ->columns([
+                Tables\Columns\TextColumn::make('name')
+                    ->label('Name')
+                    ->searchable()
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('env_variable')
+                    ->label('Environment Variable')
+                    ->searchable()
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('type')
+                    ->label('Type')
+                    ->searchable()
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('hidden')
+                    ->badge()
+                    ->label('Hidden')
+                    ->sortable(),
+            ])
+            ->modifyQueryUsing(fn (Builder $query) => $query->where('parent_id', null))
+            ->filters([
+                //
+            ])
+            ->actions([
+                Tables\Actions\EditAction::make(),
+            ])
+            ->bulkActions([
+                Tables\Actions\BulkActionGroup::make([
+                    Tables\Actions\DeleteBulkAction::make(),
+                ]),
+            ]);
+    }
+
+    public static function getRelations(): array
+    {
+        return [
+            //
+        ];
+    }
+
+    public static function getPages(): array
+    {
+        return [
+            'index' => Pages\ListConfigOptions::route('/'),
+            'create' => Pages\CreateConfigOption::route('/create'),
+            'edit' => Pages\EditConfigOption::route('/{record}/edit'),
+        ];
+    }
+}

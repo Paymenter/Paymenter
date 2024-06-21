@@ -29,6 +29,7 @@ class CreateServer extends CreateRecord
             }
             $model->settings()->create([
                 'key' => $key,
+            ], [
                 'value' => $value,
             ]);
         }

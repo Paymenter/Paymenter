@@ -82,102 +82,7 @@ class ProductResource extends Resource
                                     ->required(),
                             ]),
                         Tabs\Tab::make('Pricing')
-                            ->schema([
-                                Forms\Components\Repeater::make('plan')
-                                    ->addActionLabel('Add new plan')
-                                    ->relationship('plans')
-                                    ->name('name')
-                                    ->reorderable()
-                                    ->cloneable()
-                                    ->collapsible()
-                                    ->collapsed()
-                                    ->orderColumn()
-                                    ->defaultItems(0)
-                                    ->columns(2)
-                                    ->itemLabel(fn (array $state) => $state['name'])
-                                    ->schema([
-                                        Forms\Components\TextInput::make('name')
-                                            ->required()
-                                            ->live(onBlur: true)
-                                            ->maxLength(255),
-                                        Forms\Components\Select::make('type')
-                                            ->options([
-                                                'free' => 'Free',
-                                                'one-time' => 'One Time',
-                                                'recurring' => 'Recurring',
-                                            ])
-                                            ->required()
-                                            ->live(debounce: 300)
-                                            ->afterStateUpdated(function (Get $get, Set $set, ?string $old, ?string $state) {
-                                                if ($state === 'free') {
-                                                    $set('every', null);
-                                                    $set('price', 0);
-                                                }
-                                            })
-                                            ->placeholder('Select the type of the price')
-                                            ->default('free'),
-
-                                        Forms\Components\TextInput::make('billing_period')
-                                            ->required()
-                                            ->label('Time Interval')
-                                            ->default(1)
-                                            ->hidden(fn (Get $get) => $get('type') !== 'recurring'),
-
-                                        Forms\Components\Select::make('billing_unit')
-                                            ->options([
-                                                'hour' => 'Hour',
-                                                'day' => 'Day',
-                                                'week' => 'Week',
-                                                'month' => 'Month',
-                                                'year' => 'Year',
-                                            ])
-                                            ->label('Billing period')
-                                            ->required()
-                                            ->default('month')
-                                            ->hidden(fn (Get $get) => $get('type') !== 'recurring'),
-                                        Forms\Components\Repeater::make('pricing')
-                                            ->hidden(fn (Get $get) => $get('type') === 'free')
-                                            ->columns(3)
-                                            ->addActionLabel('Add new price')
-                                            ->reorderable(false)
-                                            ->relationship('prices')
-                                            ->columnSpanFull()
-                                            ->maxItems(Currency::count())
-                                            ->defaultItems(1)
-                                            ->itemLabel(fn (array $state) => $state['currency_code'])
-                                            ->schema([
-                                                Forms\Components\Select::make('currency_code')
-                                                    ->options(function (Get $get, ?string $state) {
-                                                        $pricing = collect($get('../../pricing'))->pluck('currency_code');
-                                                        if ($state !== null) {
-                                                            $pricing = $pricing->filter(function ($code) use ($state) {
-                                                                return $code !== $state;
-                                                            });
-                                                        }
-                                                        $pricing = $pricing->filter(function ($code) {
-                                                            return $code !== null;
-                                                        });
-
-                                                        return Currency::whereNotIn('code', $pricing)->pluck('code', 'code');
-                                                    })
-                                                    ->live()
-                                                    ->default(config('settings.default_currency'))
-                                                    ->required(),
-                                                Forms\Components\TextInput::make('price')
-                                                    ->required()
-                                                    ->label('Price')
-                                                    // Suffix based on chosen currency
-                                                    ->prefix(fn (Get $get) => Currency::where('code', $get('currency_code'))->first()?->prefix)
-                                                    ->suffix(fn (Get $get) => Currency::where('code', $get('currency_code'))->first()?->suffix)
-                                                    ->live(onBlur: true)
-                                                    ->hidden(fn (Get $get) => $get('type') === 'free'),
-                                                Forms\Components\TextInput::make('setup_fee')
-                                                    ->label('Setup fee')
-                                                    ->live(onBlur: true)
-                                                    ->hidden(fn (Get $get) => $get('type') === 'free'),
-                                            ]),
-                                    ]),
-                            ]),
+                            ->schema([self::plan()]),
 
                         Tabs\Tab::make('Server')
                             ->schema([
@@ -185,10 +90,11 @@ class ProductResource extends Resource
                                     ->relationship('server', 'name')
                                     ->searchable()
                                     ->preload()
-                                    ->hintAction(Action::make('refresh')
-                                        ->label('Refresh')
-                                        ->action(fn () => Cache::set('product_config', null, 0))
-                                        ->hidden(fn (Get $get) => $get('server_id') === null)
+                                    ->hintAction(
+                                        Action::make('refresh')
+                                            ->label('Refresh')
+                                            ->action(fn () => Cache::set('product_config', null, 0))
+                                            ->hidden(fn (Get $get) => $get('server_id') === null)
                                     )
                                     ->live(),
 
@@ -219,6 +125,105 @@ class ProductResource extends Resource
                             ]),
                     ]),
             ])->columns(1);
+    }
+
+    public static function plan()
+    {
+        return Forms\Components\Repeater::make('plan')
+            ->addActionLabel('Add new plan')
+            ->relationship('plans')
+            ->name('name')
+            ->reorderable()
+            ->cloneable()
+            ->collapsible()
+            ->collapsed()
+            ->orderColumn()
+            ->defaultItems(1)
+            ->minItems(1)
+            ->columns(2)
+            ->itemLabel(fn (array $state) => $state['name'])
+            ->schema([
+                Forms\Components\TextInput::make('name')
+                    ->required()
+                    ->live(onBlur: true)
+                    ->maxLength(255),
+                Forms\Components\Select::make('type')
+                    ->options([
+                        'free' => 'Free',
+                        'one-time' => 'One Time',
+                        'recurring' => 'Recurring',
+                    ])
+                    ->required()
+                    ->live(debounce: 300)
+                    ->afterStateUpdated(function (Get $get, Set $set, ?string $old, ?string $state) {
+                        if ($state === 'free') {
+                            $set('every', null);
+                            $set('price', 0);
+                        }
+                    })
+                    ->placeholder('Select the type of the price')
+                    ->default('free'),
+
+                Forms\Components\TextInput::make('billing_period')
+                    ->required()
+                    ->label('Time Interval')
+                    ->default(1)
+                    ->hidden(fn (Get $get) => $get('type') !== 'recurring'),
+
+                Forms\Components\Select::make('billing_unit')
+                    ->options([
+                        'hour' => 'Hour',
+                        'day' => 'Day',
+                        'week' => 'Week',
+                        'month' => 'Month',
+                        'year' => 'Year',
+                    ])
+                    ->label('Billing period')
+                    ->required()
+                    ->default('month')
+                    ->hidden(fn (Get $get) => $get('type') !== 'recurring'),
+                Forms\Components\Repeater::make('pricing')
+                    ->hidden(fn (Get $get) => $get('type') === 'free')
+                    ->columns(3)
+                    ->addActionLabel('Add new price')
+                    ->reorderable(false)
+                    ->relationship('prices')
+                    ->columnSpanFull()
+                    ->maxItems(Currency::count())
+                    ->defaultItems(1)
+                    ->itemLabel(fn (array $state) => $state['currency_code'])
+                    ->schema([
+                        Forms\Components\Select::make('currency_code')
+                            ->options(function (Get $get, ?string $state) {
+                                $pricing = collect($get('../../pricing'))->pluck('currency_code');
+                                if ($state !== null) {
+                                    $pricing = $pricing->filter(function ($code) use ($state) {
+                                        return $code !== $state;
+                                    });
+                                }
+                                $pricing = $pricing->filter(function ($code) {
+                                    return $code !== null;
+                                });
+
+                                return Currency::whereNotIn('code', $pricing)->pluck('code', 'code');
+                            })
+                            ->live()
+                            ->default(config('settings.default_currency'))
+                            ->required(),
+                        Forms\Components\TextInput::make('price')
+                            ->required()
+                            ->label('Price')
+                            // Suffix based on chosen currency
+                            ->prefix(fn (Get $get) => Currency::where('code', $get('currency_code'))->first()?->prefix)
+                            ->suffix(fn (Get $get) => Currency::where('code', $get('currency_code'))->first()?->suffix)
+                            ->live(onBlur: true)
+                            ->hidden(fn (Get $get) => $get('type') === 'free'),
+                        Forms\Components\TextInput::make('setup_fee')
+                            ->label('Setup fee')
+                            ->live(onBlur: true)
+                            ->hidden(fn (Get $get) => $get('type') === 'free'),
+                    ]),
+            ]);
     }
 
     public static function table(Table $table): Table
