@@ -19,21 +19,23 @@ class CreateServer extends CreateRecord
 
     protected function handleRecordCreation(array $data): Model
     {
-        $gatewaySettings = \Arr::except($data, ['name', 'extension', 'type']);
+        $record = static::getModel()::create(\Arr::except($data, ['settings']));
 
-        $model = static::getModel()::create(\Arr::only($data, ['name', 'extension', 'type']));
+        if (!isset($data['settings'])) {
+            return $record;
+        }
 
-        foreach ($gatewaySettings as $key => $value) {
-            if (!$value) {
+        foreach ($data['settings'] as $key => $value) {
+            if (is_null($value)) {
                 continue;
             }
-            $model->settings()->create([
+            $record->settings()->updateOrCreate([
                 'key' => $key,
             ], [
                 'value' => $value,
             ]);
         }
 
-        return $model;
+        return $record;
     }
 }
