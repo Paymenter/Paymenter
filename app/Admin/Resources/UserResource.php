@@ -4,6 +4,7 @@ namespace App\Admin\Resources;
 
 use App\Admin\Resources\UserResource\Pages;
 use App\Models\User;
+use Filament\Forms\Components\KeyValue;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
@@ -45,20 +46,7 @@ class UserResource extends Resource
                 Select::make('role_id')->translateLabel()->relationship('role', 'name')->searchable()->preload(),
                 TextInput::make('tfa_secret')->translateLabel()->password()->revealable(),
                 TextInput::make('credits')->translateLabel()->numeric(),
-                Section::make('Additional Details')
-                    ->columns(2)
-                    ->schema([
-                        TextInput::make('address')->translateLabel(),
-                        TextInput::make('address2')->translateLabel(),
-                        TextInput::make('city')->translateLabel(),
-                        TextInput::make('state')->translateLabel(),
-                        TextInput::make('zip')->translateLabel(),
-                        TextInput::make('country')->translateLabel(),
-                        TextInput::make('phone')->translateLabel(),
-                        TextInput::make('company_name')->translateLabel(),
-                    ])
-                    ->collapsible()
-                    ->collapsed()
+                KeyValue::make('properties')->columnSpanFull()
             ]);
     }
 

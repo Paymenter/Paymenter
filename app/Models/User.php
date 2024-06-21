@@ -32,14 +32,7 @@ class User extends Authenticatable implements FilamentUser, HasAvatar
         'role_id',
         'tfa_secret',
         'credits',
-        'address',
-        'address2',
-        'city',
-        'state',
-        'zip',
-        'country',
-        'phone',
-        'company_name',
+        'properties',
     ];
 
     /**
@@ -64,6 +57,7 @@ class User extends Authenticatable implements FilamentUser, HasAvatar
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
             'tfa_secret' => 'encrypted',
+            'properties' => 'array'
         ];
     }
 
@@ -76,7 +70,7 @@ class User extends Authenticatable implements FilamentUser, HasAvatar
     {
         return Attribute::make(
             get: fn () => strtoupper(substr($this->first_name, 0, 1) . substr($this->last_name, 0, 1)),
-        );    
+        );
     }
 
     /**
