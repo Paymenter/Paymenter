@@ -35,7 +35,7 @@ class Pterodactyl extends Server
     public function testConfig(): bool|string
     {
         try {
-            $this->request($this->config('host') . '/api/application/servers', 'GET');
+            $this->request('/api/application/servers', 'GET');
         } catch (\Exception $e) {
             return $e->getMessage();
         }

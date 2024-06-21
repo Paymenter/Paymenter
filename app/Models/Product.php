@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use App\Models\Traits\Priceable;
+use App\Models\Traits\HasPlans;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -12,7 +12,7 @@ use OwenIt\Auditing\Contracts\Auditable;
 
 class Product extends Model implements Auditable
 {
-    use HasFactory, \OwenIt\Auditing\Auditable, Priceable;
+    use HasFactory, HasPlans, \OwenIt\Auditing\Auditable;
 
     protected $guarded = [];
 
@@ -39,14 +39,6 @@ class Product extends Model implements Auditable
     public function options(): BelongsToMany
     {
         return $this->belongsToMany(Option::class)->withPivot('enabled');
-    }
-
-    /**
-     * Get the plans (prices) of the product.
-     */
-    public function plans()
-    {
-        return $this->morphMany(Plan::class, 'priceable')->orderBy('sort');
     }
 
     /**
