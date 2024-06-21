@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
-use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Laravel\Socialite\Facades\Socialite;
 use Laravel\Socialite\Two\GithubProvider;
@@ -13,7 +12,9 @@ use SocialiteProviders\Discord\Provider as DiscordProvider;
 class SocialLoginController extends Controller
 {
     protected $discord_driver;
+
     protected $github_driver;
+
     protected $google_driver;
 
     public function __construct()
@@ -56,7 +57,7 @@ class SocialLoginController extends Controller
         if ($provider == 'discord') {
             $oauth_user = $this->discord_driver->user();
 
-            if ($oauth_user->user["verified"] == false) {
+            if ($oauth_user->user['verified'] == false) {
                 return redirect()->route('login')->with('error', __('auth.oauth.unverified_discord_account'));
             }
 
@@ -66,6 +67,7 @@ class SocialLoginController extends Controller
             }
 
             Auth::login($user, true);
+
             return redirect()->route('home');
         } elseif ($provider == 'google') {
             $oauth_user = $this->google_driver->user();
@@ -76,6 +78,7 @@ class SocialLoginController extends Controller
             }
 
             Auth::login($user, true);
+
             return redirect()->route('home');
         } elseif ($provider == 'github') {
             $oauth_user = $this->github_driver->user();
@@ -86,6 +89,7 @@ class SocialLoginController extends Controller
             }
 
             Auth::login($user, true);
+
             return redirect()->route('home');
         } else {
             return redirect()->route('login');

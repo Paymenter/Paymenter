@@ -2,9 +2,9 @@
 
 namespace App\Models;
 
+use App\Classes\Price as PriceClass;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use App\Classes\Price as PriceClass;
 use OwenIt\Auditing\Contracts\Auditable;
 
 class Plan extends Model implements Auditable
@@ -43,9 +43,9 @@ class Plan extends Model implements Auditable
      */
     public function price()
     {
-        $currency = session('currency', config('settings.default_currency'));;
+        $currency = session('currency', config('settings.default_currency'));
         $price = $this->prices->where('currency_code', $currency)->first();
-        
+
         return new PriceClass((object) [
             'price' => $price,
             'setup_fee' => $price->setup_fee,

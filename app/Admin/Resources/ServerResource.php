@@ -3,27 +3,22 @@
 namespace App\Admin\Resources;
 
 use App\Admin\Resources\ServerResource\Pages;
-use App\Admin\Resources\ServerResource\RelationManagers;
-use App\Classes\FilamentInput;
 use App\Helpers\ExtensionHelper;
 use App\Models\Server;
-use Filament\Forms\Components\Actions\Action;
 use Filament\Forms;
+use Filament\Forms\Components\Actions\Action;
 use Filament\Forms\Components\Grid;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Form;
 use Filament\Forms\Get;
+use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
-use Filament\Notifications\Notification;
 
 class ServerResource extends Resource
 {
-
     protected static ?string $model = Server::class;
 
     protected static ?string $navigationGroup = 'Configuration';
@@ -81,7 +76,7 @@ class ServerResource extends Resource
                 Section::make('Server Settings')
                     ->description('Specific settings for the selected server')
                     ->schema([
-                        Grid::make()->schema(fn (Get $get): array => $options->settings[$get('extension')] ?? $options->settings['default'])->key('settings')
+                        Grid::make()->schema(fn (Get $get): array => $options->settings[$get('extension')] ?? $options->settings['default'])->key('settings'),
                     ]),
             ]);
     }

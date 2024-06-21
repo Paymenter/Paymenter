@@ -2,15 +2,11 @@
 
 namespace App\Livewire\Products;
 
-use App\Classes\Cart;
-use App\Models\Category;
-use App\Models\Product;
-use Livewire\Component;
 use App\Livewire\Traits\CurrencyChanged;
-use App\Models\Plan;
-use Livewire\Attributes\On;
+use App\Models\Category;
+use Livewire\Component;
 
-class Checkout extends Component 
+class Checkout extends Component
 {
     use CurrencyChanged;
 

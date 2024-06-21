@@ -11,7 +11,7 @@ return [
             'label' => 'Background Color',
             'type' => 'color',
             'default' => '#111827',
-        ],        
+        ],
         [
             'name' => 'primary-800',
             'label' => 'Background 2 Color',
@@ -25,5 +25,5 @@ return [
             'type' => 'color',
             'default' => '#5270FD',
         ],
-    ]
+    ],
 ];

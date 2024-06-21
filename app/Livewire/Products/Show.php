@@ -2,14 +2,11 @@
 
 namespace App\Livewire\Products;
 
-use App\Classes\Cart;
-use App\Models\Category;
-use App\Models\Product;
-use Livewire\Component;
 use App\Livewire\Traits\CurrencyChanged;
-use Livewire\Attributes\On;
+use App\Models\Category;
+use Livewire\Component;
 
-class Show extends Component 
+class Show extends Component
 {
     use CurrencyChanged;
 

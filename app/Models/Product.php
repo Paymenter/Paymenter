@@ -4,7 +4,6 @@ namespace App\Models;
 
 use App\Classes\Price;
 use App\Models\Traits\Priceable;
-
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -14,13 +13,13 @@ use OwenIt\Auditing\Contracts\Auditable;
 
 class Product extends Model implements Auditable
 {
-    use HasFactory, Priceable, \OwenIt\Auditing\Auditable;
+    use HasFactory, \OwenIt\Auditing\Auditable, Priceable;
 
     protected $guarded = [];
 
     public $with = ['plans'];
 
-    protected  $auditInclude = [
+    protected $auditInclude = [
         'name',
         'description',
         'category_id',
@@ -40,7 +39,7 @@ class Product extends Model implements Auditable
      */
     public function options(): BelongsToMany
     {
-        return $this->belongsToMany(Option::class)->withPivot('enabled');;
+        return $this->belongsToMany(Option::class)->withPivot('enabled');
     }
 
     /**

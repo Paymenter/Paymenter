@@ -3,13 +3,11 @@
 namespace App\Extensions\Servers\Pterodactyl;
 
 use App\Classes\Extension\Server;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\HtmlString;
 
 /**
  * Class Pterodactyl
- * @package Paymenter\Extensions\Servers\Pterodactyl
  */
 class Pterodactyl extends Server
 {
@@ -47,7 +45,7 @@ class Pterodactyl extends Server
 
     public function request($url, $method = 'get', $data = []): array
     {
-        // dd($this->config('api_key'), $this->config('host'));    
+        // dd($this->config('api_key'), $this->config('host'));
         $response = Http::withHeaders([
             'Authorization' => 'Bearer ' . $this->config('api_key'),
             'Accept' => 'application/json',
@@ -62,19 +60,19 @@ class Pterodactyl extends Server
 
     public function getProductConfig($values = []): array
     {
-        $nodes =  $this->request('/api/application/nodes');
+        $nodes = $this->request('/api/application/nodes');
         $nodeList = [];
         foreach ($nodes['data'] as $node) {
             $nodeList[$node['attributes']['id']] = $node['attributes']['name'];
         }
 
-        $location =  $this->request('/api/application/locations');
+        $location = $this->request('/api/application/locations');
         $locationList = [];
         foreach ($location['data'] as $location) {
             $locationList[$location['attributes']['id']] = $location['attributes']['short'];
         }
 
-        $nests =  $this->request('/api/application/nests');
+        $nests = $this->request('/api/application/nests');
         $nestList = [];
         foreach ($nests['data'] as $nest) {
             $nestList[$nest['attributes']['id']] = $nest['attributes']['name'];
@@ -82,12 +80,11 @@ class Pterodactyl extends Server
 
         $eggList = [];
         if (isset($values['nest_id'])) {
-            $eggs =  $this->request('/api/application/nests/' . $values['nest_id'] . '/eggs');
+            $eggs = $this->request('/api/application/nests/' . $values['nest_id'] . '/eggs');
             foreach ($eggs['data'] as $egg) {
                 $eggList[$egg['attributes']['id']] = $egg['attributes']['name'];
             }
         }
-
 
         return [
             [
@@ -128,7 +125,7 @@ class Pterodactyl extends Server
                 'type' => 'number',
                 'suffix' => 'MiB',
                 'required' => true,
-                'validation' => 'numeric'
+                'validation' => 'numeric',
             ],
             [
                 'name' => 'swap',

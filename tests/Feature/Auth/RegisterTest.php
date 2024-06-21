@@ -4,7 +4,6 @@ namespace Tests\Feature\Auth;
 
 use App\Livewire\Auth\Register;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Livewire\Livewire;
 use Tests\TestCase;
 
@@ -98,5 +97,4 @@ class RegisterTest extends TestCase
             ->assertHasErrors('zip');
 
     }
-
 }

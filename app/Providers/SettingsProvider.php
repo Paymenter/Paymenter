@@ -7,7 +7,6 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\ServiceProvider;
 use Qirolab\Theme\Theme;
 
-
 class SettingsProvider extends ServiceProvider
 {
     /**
@@ -46,7 +45,7 @@ class SettingsProvider extends ServiceProvider
             include_once app_path('Classes/helpers.php');
 
             date_default_timezone_set(config('settings.timezone', 'UTC'));
-            
+
             Theme::set(config('settings.theme', 'default'), 'default');
         } catch (\Exception $e) {
             // Do nothing

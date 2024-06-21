@@ -10,8 +10,8 @@ class ExtensionHelper
 {
     /**
      * Used to read all Extensions in app/Extensions with or without type (e.g. 'gateway' or 'server')
-     * 
-     * @param string|null $type
+     *
+     * @param  string|null  $type
      * @return array
      */
     private static function getExtensions($type)
@@ -23,7 +23,7 @@ class ExtensionHelper
         foreach ($availableExtensions as $key => $extension) {
             $extensions[] = [
                 'name' => $extension,
-                'settings' => self::getConfig($type, $extension)
+                'settings' => self::getConfig($type, $extension),
             ];
         }
 
@@ -32,9 +32,9 @@ class ExtensionHelper
 
     /**
      * Get extension and return new instance
-     * 
-     * @param string $type
-     * @param string $extension
+     *
+     * @param  string  $type
+     * @param  string  $extension
      * @return object
      */
     public static function getExtension($type, $extension, $config = [])
@@ -50,7 +50,7 @@ class ExtensionHelper
 
     /**
      * Get available settings
-     * 
+     *
      * @return array
      */
     public static function getConfig($type, $extension)
@@ -60,9 +60,9 @@ class ExtensionHelper
 
     /**
      * Has function
-     * 
-     * @param object $extension
-     * @param string $function
+     *
+     * @param  object  $extension
+     * @param  string  $function
      */
     public static function hasFunction($extension, $function)
     {
@@ -71,7 +71,7 @@ class ExtensionHelper
 
     /**
      * Test connection
-     * 
+     *
      * @return string
      */
     public static function testConfig($extension, $values)
@@ -81,7 +81,7 @@ class ExtensionHelper
 
     /**
      * Get available gateways
-     * 
+     *
      * @return array
      */
     public static function getAvailableGateways()
@@ -91,7 +91,7 @@ class ExtensionHelper
 
     /**
      * Get available servers
-     * 
+     *
      * @return array
      */
     public static function getAvailableServers()
@@ -101,8 +101,8 @@ class ExtensionHelper
 
     /**
      * Convert extensions to options
-     * 
-     * @param array $extensions
+     *
+     * @param  array  $extensions
      * @return object
      */
     public static function convertToOptions($extensions)
@@ -116,12 +116,13 @@ class ExtensionHelper
                 $settings[$extension['name']][] = FilamentInput::convert($setting, true);
             }
         }
+
         return (object) ['options' => $options, 'settings' => $settings];
     }
 
     /**
      * Get available settings
-     * 
+     *
      * @return array
      */
     public static function getProductConfig($server, $values = [])
@@ -131,7 +132,7 @@ class ExtensionHelper
 
     /**
      * Get available settings
-     * 
+     *
      * @return array
      */
     public static function getProductConfigOnce($server, $values = [])
@@ -139,7 +140,7 @@ class ExtensionHelper
         static $config = [];
 
         $config = Cache::get('product_config', []);
-        
+
         $key = $server->extension . $server->id . md5(serialize($values));
 
         if (!isset($config[$key])) {
@@ -153,8 +154,8 @@ class ExtensionHelper
 
     /**
      * Convert settings to array
-     * 
-     * @param mixed $settings
+     *
+     * @param  mixed  $settings
      * @return array
      */
     public static function settingsToArray($settings)

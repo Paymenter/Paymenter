@@ -3,7 +3,6 @@
 namespace App\Admin\Resources\ProductResource\Pages;
 
 use App\Admin\Actions\AuditAction;
-
 use App\Admin\Resources\ProductResource;
 use Filament\Actions;
 use Filament\Resources\Pages\EditRecord;
@@ -39,7 +38,9 @@ class EditProduct extends EditRecord
         }
 
         foreach ($data['settings'] as $key => $value) {
-            if (is_null($value)) continue;
+            if (is_null($value)) {
+                continue;
+            }
             $record->settings()->updateOrCreate([
                 'key' => $key,
             ], [

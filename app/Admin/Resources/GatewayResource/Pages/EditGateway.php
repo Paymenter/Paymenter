@@ -34,7 +34,9 @@ class EditGateway extends EditRecord
         $record->update(\Arr::only($data, ['name', 'extension', 'type']));
 
         foreach ($gatewaySettings as $key => $value) {
-            if (!$value) continue;
+            if (!$value) {
+                continue;
+            }
             $record->settings()->updateOrCreate([
                 'key' => $key,
             ], [

@@ -1,9 +1,9 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\SocialLoginController;
 use App\Livewire\Auth;
 use App\Livewire\Products;
+use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('home');
@@ -11,7 +11,7 @@ Route::get('/', function () {
 
 // Destroy the session and log out the user.
 //auth()->logout();
-// Authorization routes 
+// Authorization routes
 Route::group(['middleware' => ['web', 'guest']], function () {
     Route::get('login', Auth\Login::class)->name('login');
     Route::get('register', Auth\Register::class)->name('register');

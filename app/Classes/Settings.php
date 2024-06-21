@@ -4,7 +4,6 @@ namespace App\Classes;
 
 use App\Models\Setting;
 
-
 class Settings
 {
     public static function settings()
@@ -63,10 +62,9 @@ class Settings
                     'type' => 'file',
                     'required' => false,
                     'accept' => ['image/*'],
-                    'file_name' => 'logo.webp'
+                    'file_name' => 'logo.webp',
                 ],
             ],
-
 
             // Security (captcha, rate limiting, etc.)
             'security' => [
@@ -214,7 +212,7 @@ class Settings
                     'label' => 'Company Country',
                     'type' => 'select',
                     'options' => array_merge(['' => 'None'], config('app.countries')),
-                ]
+                ],
             ],
 
             'other' => [
@@ -234,7 +232,7 @@ class Settings
                         'zip' => 'Zip',
                         'country' => 'Country',
                     ],
-                    'default' => ["address2", "phone"],
+                    'default' => ['address2', 'phone'],
                     'required' => false,
                     'database_type' => 'array',
                 ],
@@ -281,9 +279,8 @@ class Settings
                     'default' => 'USD',
                     'required' => true,
                 ],
-            ]
+            ],
         ];
-
 
         // Set theme settings
         $settings['theme'] = \App\Classes\Theme::getSettings();

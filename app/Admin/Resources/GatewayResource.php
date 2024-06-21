@@ -3,21 +3,16 @@
 namespace App\Admin\Resources;
 
 use App\Admin\Resources\GatewayResource\Pages;
-use App\Admin\Resources\GatewayResource\RelationManagers;
 use App\Models\Gateway;
 use Filament\Forms;
 use Filament\Forms\Components\Grid;
-use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Section;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Form;
+use Filament\Forms\Get;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
-use Filament\Forms\Get;
-use Filament\Forms\Components\Select;
-use App\Classes\FilamentInput;
-use Filament\Forms\Components\Section;
 
 class GatewayResource extends Resource
 {
@@ -55,7 +50,7 @@ class GatewayResource extends Resource
                 Section::make('Gateway Settings')
                     ->description('Specific settings for the selected gateway')
                     ->schema([
-                        Grid::make()->schema(fn (Get $get): array => $options->settings[$get('extension')] ?? $options->settings['default'])->key('settings')
+                        Grid::make()->schema(fn (Get $get): array => $options->settings[$get('extension')] ?? $options->settings['default'])->key('settings'),
                     ]),
             ]);
     }

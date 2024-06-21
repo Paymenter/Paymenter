@@ -3,7 +3,6 @@
 namespace App\Admin\Resources;
 
 use App\Admin\Resources\ProductResource\Pages;
-use App\Admin\Resources\ProductResource\RelationManagers;
 use App\Classes\FilamentInput;
 use App\Helpers\ExtensionHelper;
 use App\Models\Currency;
@@ -12,24 +11,22 @@ use App\Models\Server;
 use Filament\Forms;
 use Filament\Forms\Components\Actions\Action;
 use Filament\Forms\Components\Grid;
+use Filament\Forms\Components\Tabs;
 use Filament\Forms\Form;
 use Filament\Forms\Get;
 use Filament\Forms\Set;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
-use Illuminate\Support\Str;
-use Filament\Forms\Components\Tabs;
-use Filament\Infolists;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Str;
 
 class ProductResource extends Resource
 {
     protected static ?string $model = Product::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+
     protected static ?string $recordTitleAttribute = 'name';
 
     public static function form(Form $form): Form
@@ -157,7 +154,7 @@ class ProductResource extends Resource
                                                                 return $code !== $state;
                                                             });
                                                         }
-                                                        $pricing = $pricing->filter(function ($code) use ($state) {
+                                                        $pricing = $pricing->filter(function ($code) {
                                                             return $code !== null;
                                                         });
 
@@ -236,7 +233,7 @@ class ProductResource extends Resource
                 Tables\Filters\SelectFilter::make('category')
                     ->relationship('category', 'name')
                     ->searchable()
-                    ->preload()
+                    ->preload(),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),

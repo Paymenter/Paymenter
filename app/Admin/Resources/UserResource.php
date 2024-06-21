@@ -5,16 +5,15 @@ namespace App\Admin\Resources;
 use App\Admin\Resources\UserResource\Pages;
 use App\Models\User;
 use Filament\Forms\Components\KeyValue;
-use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Hash;
 
 class UserResource extends Resource
 {
@@ -27,7 +26,7 @@ class UserResource extends Resource
         return ['first_name', 'last_name', 'email'];
     }
 
-    public static function getGlobalSearchResultTitle(Model $record): string | Htmlable
+    public static function getGlobalSearchResultTitle(Model $record): string|Htmlable
     {
         return $record->name;
     }
@@ -46,7 +45,7 @@ class UserResource extends Resource
                 Select::make('role_id')->translateLabel()->relationship('role', 'name')->searchable()->preload(),
                 TextInput::make('tfa_secret')->translateLabel()->password()->revealable(),
                 TextInput::make('credits')->translateLabel()->numeric(),
-                KeyValue::make('properties')->columnSpanFull()
+                KeyValue::make('properties')->columnSpanFull(),
             ]);
     }
 
@@ -64,7 +63,7 @@ class UserResource extends Resource
                 Tables\Filters\SelectFilter::make('role')
                     ->relationship('role', 'name')
                     ->searchable()
-                    ->preload()
+                    ->preload(),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),

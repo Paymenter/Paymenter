@@ -3,7 +3,6 @@
 namespace App\Admin\Resources;
 
 use App\Admin\Resources\CurrencyResource\Pages;
-use App\Admin\Resources\CurrencyResource\RelationManagers;
 use App\Models\Currency;
 use Filament\Forms;
 use Filament\Forms\Form;

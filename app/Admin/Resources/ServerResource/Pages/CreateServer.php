@@ -3,7 +3,6 @@
 namespace App\Admin\Resources\ServerResource\Pages;
 
 use App\Admin\Resources\ServerResource;
-use Filament\Actions;
 use Filament\Resources\Pages\CreateRecord;
 use Illuminate\Database\Eloquent\Model;
 
@@ -18,21 +17,22 @@ class CreateServer extends CreateRecord
         return $data;
     }
 
-    
     protected function handleRecordCreation(array $data): Model
     {
         $gatewaySettings = \Arr::except($data, ['name', 'extension', 'type']);
 
         $model = static::getModel()::create(\Arr::only($data, ['name', 'extension', 'type']));
 
-        foreach($gatewaySettings as $key => $value) {
-            if (!$value) continue;
+        foreach ($gatewaySettings as $key => $value) {
+            if (!$value) {
+                continue;
+            }
             $model->settings()->create([
                 'key' => $key,
                 'value' => $value,
             ]);
         }
-        
+
         return $model;
     }
 }

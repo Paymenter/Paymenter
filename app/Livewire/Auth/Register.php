@@ -5,7 +5,6 @@ namespace App\Livewire\Auth;
 use App\Models\User;
 use App\Traits\Captchable;
 use Illuminate\Support\Facades\Hash;
-use Livewire\Attributes\Validate;
 use Livewire\Component;
 
 class Register extends Component
@@ -13,19 +12,30 @@ class Register extends Component
     use Captchable;
 
     public string $first_name = '';
-    public string $last_name = '';
-    public string $email = '';
-    public string $phone = '';
-    public string $company_name = '';
-    public string $country = '';
-    public string $address = '';
-    public string $address2 = '';
-    public string $city = '';
-    public string $state = '';
-    public string $zip = '';
-    public string $password = '';
-    public string $password_confirmation = '';
 
+    public string $last_name = '';
+
+    public string $email = '';
+
+    public string $phone = '';
+
+    public string $company_name = '';
+
+    public string $country = '';
+
+    public string $address = '';
+
+    public string $address2 = '';
+
+    public string $city = '';
+
+    public string $state = '';
+
+    public string $zip = '';
+
+    public string $password = '';
+
+    public string $password_confirmation = '';
 
     public function mount()
     {

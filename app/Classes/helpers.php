@@ -1,6 +1,6 @@
 <?php
 
-if (! function_exists('theme')) {
+if (!function_exists('theme')) {
     /**
      * Get the specified configuration value.
      *

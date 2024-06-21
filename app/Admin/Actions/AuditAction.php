@@ -18,6 +18,7 @@ class AuditAction extends Action
         // Array of children of the model to also show audits for
         return $this;
     }
+
     public static function getDefaultName(): ?string
     {
         return 'audits';

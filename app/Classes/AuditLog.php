@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Classes;
 
 use App\Models\AuditLog as AuditLogModel;
@@ -6,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class AuditLog
 {
-    public static function log(string $action, Model $model, string $description = null): void
+    public static function log(string $action, Model $model, ?string $description = null): void
     {
         $auditLog = new AuditLogModel();
         $auditLog->action = $action;
@@ -21,10 +22,11 @@ class AuditLog
         $changes = $model->getChanges();
         $changes = collect($changes)->map(function ($newValue, $key) use ($model) {
             $oldValue = $model->getOriginal($key);
+
             return ['old' => $oldValue, 'new' => $newValue];
         })->toArray();
         unset($changes['updated_at']);
-    
+
         $user_id = auth()->id();
         $ip_address = request()->ip();
         $user_agent = request()->userAgent();

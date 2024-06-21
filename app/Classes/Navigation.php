@@ -10,8 +10,7 @@ class Navigation
     {
         $categories = Category::whereNull('parent_id')->get();
 
-
-        $routes =  [
+        $routes = [
             [
                 'name' => 'Dashboard',
                 'route' => 'home',

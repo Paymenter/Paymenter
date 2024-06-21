@@ -3,9 +3,8 @@
 namespace App\Observers;
 
 use App\Classes\AuditLog;
-use App\Models\User;
 use App\Events\User as UserEvent;
-
+use App\Models\User;
 
 class UserObserver
 {

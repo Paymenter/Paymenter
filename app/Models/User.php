@@ -4,15 +4,15 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 
+use App\Observers\UserObserver;
 use Filament\Models\Contracts\FilamentUser;
+use Filament\Models\Contracts\HasAvatar;
 use Filament\Panel;
+use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use App\Observers\UserObserver;
-use Illuminate\Database\Eloquent\Attributes\ObservedBy;
-use Filament\Models\Contracts\HasAvatar;
 
 #[ObservedBy([UserObserver::class])]
 class User extends Authenticatable implements FilamentUser, HasAvatar
@@ -57,13 +57,13 @@ class User extends Authenticatable implements FilamentUser, HasAvatar
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
             'tfa_secret' => 'encrypted',
-            'properties' => 'array'
+            'properties' => 'array',
         ];
     }
 
     /**
      * Initials of the user.
-     * 
+     *
      * @return string
      */
     public function initials(): Attribute
@@ -75,7 +75,7 @@ class User extends Authenticatable implements FilamentUser, HasAvatar
 
     /**
      * Avatar URL for the user.
-     * 
+     *
      * @return string
      */
     public function avatar(): Attribute
@@ -91,7 +91,7 @@ class User extends Authenticatable implements FilamentUser, HasAvatar
     }
 
     /**
-     * Get the display name for the user. 
+     * Get the display name for the user.
      *
      * @return string
      */

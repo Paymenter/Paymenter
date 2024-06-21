@@ -14,6 +14,6 @@ class UserProperty extends Model
     public $guarded = [];
 
     public $casts = [
-        'allowed_values' => 'array'
+        'allowed_values' => 'array',
     ];
 }

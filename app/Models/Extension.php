@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Extension extends Model
 {
     use HasFactory;
-    
+
     protected $fillable = [
         'name',
         'enabled',
@@ -18,7 +18,6 @@ class Extension extends Model
     ];
 
     protected $guarded = [];
-
 
     /**
      * Get the extension's settings.

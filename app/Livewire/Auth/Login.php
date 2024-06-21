@@ -21,7 +21,7 @@ class Login extends Component
 
     public function submit()
     {
-        // todo: Can we remove this? 
+        // todo: Can we remove this?
         $this->captcha();
         $this->validate();
 
@@ -32,7 +32,6 @@ class Login extends Component
         }
 
         RateLimiter::increment('login:' . $this->email);
-
 
         if (!auth()->attempt($this->only('email', 'password'), $this->remember)) {
             $this->addError('email', 'These credentials do not match our records.');

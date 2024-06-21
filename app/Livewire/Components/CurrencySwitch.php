@@ -14,7 +14,7 @@ class CurrencySwitch extends Component
     {
         $this->currentCurrency = session('currency', 'USD');
 
-        if(Cart::get()->isNotEmpty()) {
+        if (Cart::get()->isNotEmpty()) {
             $this->skipRender();
         }
     }

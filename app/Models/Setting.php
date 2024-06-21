@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Setting extends Model
 {
-    use HasFactory, Encrypted;
+    use Encrypted, HasFactory;
 
     /**
      * The attributes that are mass assignable.
@@ -28,8 +28,9 @@ class Setting extends Model
 
         // When creating a new setting, encrypt the value
         static::creating(function ($setting) {
-            if ($setting->encrypted)
+            if ($setting->encrypted) {
                 $setting->value = encrypt($setting->value);
+            }
 
             switch ($setting->type) {
                 case 'boolean':
@@ -47,9 +48,9 @@ class Setting extends Model
 
         // When retrieving a setting, decrypt the value
         static::retrieved(function ($setting) {
-            if ($setting->encrypted)
+            if ($setting->encrypted) {
                 $setting->value = decrypt($setting->value);
-
+            }
 
             switch ($setting->type) {
                 case 'boolean':

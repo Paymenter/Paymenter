@@ -22,5 +22,4 @@ class Currency extends Model
         'prefix',
         'suffix',
     ];
-    
 }

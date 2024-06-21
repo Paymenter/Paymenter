@@ -3,15 +3,12 @@
 namespace App\Admin\Resources;
 
 use App\Admin\Resources\UserPropertyResource\Pages;
-use App\Admin\Resources\UserPropertyResource\RelationManagers;
 use App\Models\UserProperty;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class UserPropertyResource extends Resource
 {
@@ -34,7 +31,7 @@ class UserPropertyResource extends Resource
                     'select' => 'Select',
                     'checkbox' => 'Checkbox',
                     'radio' => 'Radio',
-                    'date' => 'Date'
+                    'date' => 'Date',
                 ])->required(),
                 Forms\Components\Textarea::make('description')->nullable()->columnSpanFull()->rows(2),
                 Forms\Components\TextInput::make('key')->required(),
@@ -62,7 +59,7 @@ class UserPropertyResource extends Resource
                     ->description(fn (UserProperty $record): string => mb_strimwidth(($record->description ?? ''),
                         0,
                         75,
-                        "..."
+                        '...'
                     )),
                 Tables\Columns\TextColumn::make('key'),
                 Tables\Columns\TextColumn::make('type')->formatStateUsing(fn ($state) => str($state)->title()),

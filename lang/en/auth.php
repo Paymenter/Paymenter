@@ -19,7 +19,7 @@ return [
 
     'oauth' => [
         'unverified_discord_account' => 'Your Discord account is not verified.',
-        'account_not_registered' => 'You are not registered on this site.'
-    ]
+        'account_not_registered' => 'You are not registered on this site.',
+    ],
 
 ];

@@ -4,7 +4,6 @@ namespace App\Classes;
 
 /**
  * Class Price
- * @package App\Classes
  */
 class Price
 {
@@ -27,7 +26,6 @@ class Price
 
     /**
      * Price constructor.
-     * @param $priceAndCurrency
      */
     public function __construct($priceAndCurrency)
     {
@@ -42,6 +40,7 @@ class Price
         if (!$this->currency) {
             return 'Not available in your currency';
         }
+
         return $this->currency->prefix . number_format($price, 2) . $this->currency->suffix;
     }
 

@@ -3,13 +3,11 @@
 namespace App\Livewire\Products;
 
 use App\Models\Category;
-use App\Models\Product;
 use Livewire\Component;
 
 class Index extends Component
 {
     public $products;
-
 
     public Category $category;
 

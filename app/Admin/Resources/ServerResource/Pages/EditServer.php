@@ -3,9 +3,7 @@
 namespace App\Admin\Resources\ServerResource\Pages;
 
 use App\Admin\Resources\ServerResource;
-use App\Helpers\ExtensionHelper;
 use Filament\Actions;
-use Filament\Forms\Get;
 use Filament\Resources\Pages\EditRecord;
 use Illuminate\Database\Eloquent\Model;
 
@@ -38,7 +36,9 @@ class EditServer extends EditRecord
         }
 
         foreach ($data['settings'] as $key => $value) {
-            if (!$value) continue;
+            if (!$value) {
+                continue;
+            }
             $record->settings()->updateOrCreate([
                 'key' => $key,
             ], [

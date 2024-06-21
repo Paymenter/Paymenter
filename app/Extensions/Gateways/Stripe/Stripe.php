@@ -3,12 +3,6 @@
 namespace App\Extensions\Gateways\Stripe;
 
 use App\Classes\Extension\Gateway;
-use Stripe\StripeClient;
-use App\Helpers\ExtensionHelper;
-use App\Models\Extension;
-use Illuminate\Http\Request;
-use Illuminate\Support\Str;
-
 
 class Stripe extends Gateway
 {

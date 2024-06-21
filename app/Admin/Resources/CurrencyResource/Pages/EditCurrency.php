@@ -15,6 +15,7 @@ class EditCurrency extends EditRecord
         if (config('settings.default_currency') == $this->record->code) {
             return [];
         }
+
         return [
             Actions\DeleteAction::make(),
         ];

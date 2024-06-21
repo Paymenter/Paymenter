@@ -2,17 +2,17 @@
 
 namespace App\Admin\Pages;
 
+use App\Classes\FilamentInput;
 use App\Classes\Settings as ClassesSettings;
 use App\Models\Setting;
 use App\Providers\SettingsProvider;
+use Filament\Forms\Components\Actions;
 use Filament\Forms\Components\Tabs;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
 use Filament\Forms\Form;
 use Filament\Notifications\Notification;
 use Filament\Pages\Page;
-use App\Classes\FilamentInput;
-use Filament\Forms\Components\Actions;
 
 class Settings extends Page implements HasForms
 {
@@ -47,11 +47,12 @@ class Settings extends Page implements HasForms
         foreach (ClassesSettings::settingsObject() as $key => $categories) {
             $tab = Tabs\Tab::make($key)
                 ->label(ucwords(str_replace('-', ' ', $key)))
-                ->schema(function () use ($categories, $key) {
+                ->schema(function () use ($categories) {
                     $inputs = [];
                     foreach ($categories as $setting) {
                         $inputs[] = FilamentInput::convert($setting);
                     }
+
                     return $inputs;
                 });
 
@@ -62,7 +63,7 @@ class Settings extends Page implements HasForms
             ->schema([
                 Tabs::make('Tabs')
                     ->tabs($tabs)
-                    ->persistTabInQueryString()
+                    ->persistTabInQueryString(),
             ])
             ->statePath('data');
     }
@@ -109,6 +110,7 @@ class Settings extends Page implements HasForms
     {
         /** @var \App\Models\User */
         $user = auth()->user();
+
         return $user->hasPermission('admin.settings.view');
     }
 }

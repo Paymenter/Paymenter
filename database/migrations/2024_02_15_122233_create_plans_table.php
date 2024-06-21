@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('plans', function (Blueprint $table) {
-            $table->id();            
+            $table->id();
             $table->string('name')->nullable();
             $table->morphs('priceable');
             $table->enum('type', ['free', 'one-time', 'recurring']);
