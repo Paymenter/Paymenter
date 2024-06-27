@@ -25,7 +25,7 @@ class AppServiceProvider extends ServiceProvider
     {
         // Change livewire url
         \Livewire\Livewire::setUpdateRoute(function ($handle) {
-            return \Illuminate\Support\Facades\Route::post('/paymenter/update', $handle)->middleware('web');
+            return \Illuminate\Support\Facades\Route::post('/paymenter/update', $handle)->middleware('web')->name('paymenter.update');
         });
 
         Gate::before(function (User $user, string $ability) {

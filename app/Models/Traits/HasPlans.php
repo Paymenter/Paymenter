@@ -37,7 +37,7 @@ trait HasPlans
     /**
      * Get first price of the plan.
      */
-    public function price($plan_id = null)
+    public function price($plan_id = null, $billing_period = null, $billing_unit = null)
     {
         $priceAndCurrency = [
             'price' => null,
@@ -46,7 +46,13 @@ trait HasPlans
 
         // Check for free plan
         if ($this->availablePlans()->where('type', 'free')->isNotEmpty()) {
-            return new Price(free: true);
+            return new Price(free: true, dontShowUnavailablePrice: $this->dontShowUnavailablePrice ?? false);
+        }
+
+        // If plan_id is not provided, and billing_period is provided, get the first plan with the billing period and time interval
+        if (!$plan_id && $billing_period && $billing_unit) {
+            $plan = $this->availablePlans()->where('billing_period', $billing_period)->where('billing_unit', $billing_unit)->first();
+            $plan_id = $plan->id ?? null;
         }
 
         $currency = session('currency', config('settings.default_currency'));
@@ -64,6 +70,6 @@ trait HasPlans
             }
         }
 
-        return new Price((object) $priceAndCurrency);
+        return new Price((object) $priceAndCurrency, dontShowUnavailablePrice: $this->dontShowUnavailablePrice ?? false);
     }
 }

@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use OwenIt\Auditing\Contracts\Auditable;
 
@@ -36,9 +37,9 @@ class Product extends Model implements Auditable
     /**
      * Get the configurable options of the product.
      */
-    public function options(): BelongsToMany
+    public function configOptions(): HasManyThrough
     {
-        return $this->belongsToMany(Option::class)->withPivot('enabled');
+        return $this->hasManyThrough(ConfigOption::class, ConfigOptionProduct::class, 'product_id', 'id', 'id', 'config_option_id')->where('hidden', false);
     }
 
     /**

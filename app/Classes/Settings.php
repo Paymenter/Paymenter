@@ -10,7 +10,9 @@ class Settings
     {
         try {
             // Only code is needed
-            $currencies = \App\Models\Currency::pluck('code')->toArray();
+            $currencies = once(function () {
+                return \App\Models\Currency::pluck('code')->toArray();
+            });
         } catch (\Exception $e) {
             $currencies = [];
         }

@@ -15,14 +15,13 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('env_variable')->nullable();
-            $table->string('type');
+            $table->string('type')->nullable();
             $table->unsignedTinyInteger('sort')->nullable();
             $table->boolean('hidden')->default(false);
-            $table->json('products')->nullable();
             $table->timestamps();
         });
         Schema::table('config_options', function (Blueprint $table) {
-            $table->foreignIdFor(\App\Models\ConfigOption::class, 'parent_id')->nullable()->after('hidden');
+            $table->foreignIdFor(\App\Models\ConfigOption::class, 'parent_id')->nullable()->constrained('config_options')->after('hidden');
         });
     }
 

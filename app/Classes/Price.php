@@ -26,10 +26,12 @@ class Price
 
     public $is_free;
 
+    public $dontShowUnavailablePrice;
+
     /**
      * Price constructor.
      */
-    public function __construct($priceAndCurrency = null, $free = false)
+    public function __construct($priceAndCurrency = null, $free = false, $dontShowUnavailablePrice = false)
     {
         if ($free) {
             $this->price = 0;
@@ -43,6 +45,7 @@ class Price
         $this->currency = $priceAndCurrency->currency;
         $this->setup_fee = $priceAndCurrency->price->setup_fee ?? null;
         $this->has_setup_fee = isset($priceAndCurrency->price->setup_fee) ? $priceAndCurrency->price->setup_fee > 0 : false;
+        $this->dontShowUnavailablePrice = $dontShowUnavailablePrice;
     }
 
     public function format($price)
@@ -51,6 +54,8 @@ class Price
             return 'Free';
         }
         if (!$this->currency) {
+            if ($this->dontShowUnavailablePrice)
+                return '';
             return 'Not available in your currency';
         }
 

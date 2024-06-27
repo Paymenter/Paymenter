@@ -36,14 +36,14 @@ return [
     'mailers' => [
         'smtp' => [
             'transport' => 'smtp',
-            'url' => config('settings.mail.url', env('MAIL_URL')),
-            'host' => config('settings.mail.host', env('MAIL_HOST', '127.0.0.1')),
-            'port' => config('settings.mail.port', env('MAIL_PORT', 2525)),
-            'encryption' => config('settings.mail.encryption', env('MAIL_ENCRYPTION', 'tls')),
-            'username' => config('settings.mail.username', env('MAIL_USERNAME')),
-            'password' => config('settings.mail.password', env('MAIL_PASSWORD')),
+            'url' => env('MAIL_URL'),
+            'host' => env('MAIL_HOST', '127.0.0.1'),
+            'port' => env('MAIL_PORT', 2525),
+            'encryption' => env('MAIL_ENCRYPTION', 'tls'),
+            'username' => env('MAIL_USERNAME'),
+            'password' => env('MAIL_PASSWORD'),
             'timeout' => null,
-            'local_domain' => env('MAIL_EHLO_DOMAIN'),
+            'local_domain' => env('MAIL_EHLO_DOMAIN', parse_url(env('APP_URL', 'http://localhost'), PHP_URL_HOST)),
         ],
 
         'failover' => [
@@ -67,8 +67,8 @@ return [
     */
 
     'from' => [
-        'address' => config('settings.mail.from_address', env('MAIL_FROM_ADDRESS', 'hello@example.com')),
-        'name' => config('settings.mail.from_name', env('MAIL_FROM_NAME', 'Example')),
+        'address' => env('MAIL_FROM_ADDRESS', 'hello@example.com'),
+        'name' => env('MAIL_FROM_NAME', 'Example'),
     ],
 
     /*

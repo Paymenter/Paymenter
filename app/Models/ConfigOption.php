@@ -10,6 +10,8 @@ class ConfigOption extends Model
 {
     use HasFactory, HasPlans;
 
+    protected $dontShowUnavailablePrice = true;
+
     protected $fillable = [
         'name',
         'env_variable',
@@ -28,10 +30,18 @@ class ConfigOption extends Model
     }
 
     /**
-     * Get the options that belong to the parent.
+     * Get the options that belong to the parent. (children or options)
      */
     public function children()
     {
         return $this->hasMany(ConfigOption::class, 'parent_id');
+    }
+
+    /**
+     * Get the products that belong to the option.
+     */
+    public function products()
+    {
+        return $this->belongsToMany(Product::class, 'config_option_products');
     }
 }

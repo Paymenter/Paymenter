@@ -47,15 +47,22 @@ class ConfigOptionResource extends Resource
                                     'checkbox' => 'Checkbox',
                                     'number' => 'Number',
                                     'text' => 'Text',
-
                                 ]),
                             Forms\Components\Checkbox::make('hidden')
                                 ->label('Hidden'),
-
+                            Forms\Components\Select::make('products')
+                                ->label('Products')
+                                ->relationship('products', 'name')
+                                ->multiple()
+                                ->preload()
+                                ->placeholder('Select the products that this configuration option belongs to'),
+            
                         ]),
                         Forms\Components\Tabs\Tab::make('Options')->schema([
                             Forms\Components\Repeater::make('Options')
                                 ->relationship('children')
+                                ->label('Options')
+                                ->addActionLabel('Add Option')
                                 ->columnSpanFull()
                                 ->itemLabel(fn (array $state) => $state['name'])
                                 ->collapsible()

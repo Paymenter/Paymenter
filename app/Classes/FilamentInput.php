@@ -125,7 +125,7 @@ class FilamentInput
                     ->label($setting->label ?? $setting->name)
                     ->helperText($setting->description ?? '')
                     ->required($setting->required ?? false)
-                    ->acceptedFileTypes($setting->accept)
+                    ->acceptedFileTypes($setting->accept ?? [])
                     ->live(condition: $setting->live ?? false)
                     ->default($setting->default ?? '')
                     ->rules($setting->validation ?? []);

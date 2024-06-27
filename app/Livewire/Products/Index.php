@@ -11,13 +11,13 @@ class Index extends Component
 
     public Category $category;
 
-    public function mount($product)
+    public function mount()
     {
         $this->products = $this->category->products;
     }
 
     public function render()
     {
-        return view('product.show');
+        return view('product.index');
     }
 }

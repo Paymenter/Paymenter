@@ -11,14 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('settings', function (Blueprint $table) {
+        Schema::create('config_option_products', function (Blueprint $table) {
             $table->id();
-            $table->text('key');
-            $table->text('value')->nullable();
-            $table->string('type')->default('string');
-            $table->boolean('encrypted')->default(false);
-            $table->nullableMorphs('settingable');
-            $table->timestamps();
+            $table->foreignIdFor(\App\Models\ConfigOption::class, 'config_option_id')->constrained()->cascadeOnDelete();
+            $table->foreignIdFor(\App\Models\Product::class, 'product_id')->constrained()->cascadeOnDelete();
         });
     }
 
@@ -27,6 +23,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('settings');
+        Schema::dropIfExists('config_option_products');
     }
 };

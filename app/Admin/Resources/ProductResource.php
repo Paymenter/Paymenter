@@ -16,6 +16,7 @@ use Filament\Forms\Form;
 use Filament\Forms\Get;
 use Filament\Forms\Set;
 use Filament\Resources\Resource;
+use Filament\Support\RawJs;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Support\Facades\Cache;
@@ -98,8 +99,9 @@ class ProductResource extends Resource
                                     )
                                     ->live(),
 
-                                Grid::make()
+                                Grid::make('settings')
                                     ->hidden(fn (Get $get) => $get('server_id') === null)
+                                    ->columns(2)
                                     ->schema(
                                         function (Get $get) {
                                             $server = $get('server_id');
@@ -217,10 +219,24 @@ class ProductResource extends Resource
                             ->prefix(fn (Get $get) => Currency::where('code', $get('currency_code'))->first()?->prefix)
                             ->suffix(fn (Get $get) => Currency::where('code', $get('currency_code'))->first()?->suffix)
                             ->live(onBlur: true)
+                            ->mask(RawJs::make(
+                                <<<'JS'
+                                    $money($input, '.', '', 2)
+                                JS
+                            ))
+                            ->numeric()
+                            ->minValue(0)
                             ->hidden(fn (Get $get) => $get('type') === 'free'),
                         Forms\Components\TextInput::make('setup_fee')
                             ->label('Setup fee')
                             ->live(onBlur: true)
+                            ->mask(RawJs::make(
+                                <<<'JS'
+                                    $money($input, '.', '', 2)
+                                JS
+                            ))
+                            ->numeric()
+                            ->minValue(0)
                             ->hidden(fn (Get $get) => $get('type') === 'free'),
                     ]),
             ]);

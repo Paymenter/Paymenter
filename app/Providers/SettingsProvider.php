@@ -26,12 +26,19 @@ class SettingsProvider extends ServiceProvider
 
     public static function getSettings()
     {
+        if (config('settings') && !empty(config('settings'))) {
+            return;
+        }
         try {
             // Load settings from cache
             $settings = Cache::get('settings', []);
             if (empty($settings)) {
                 $settings = Setting::where('settingable_type', null)->get()->pluck('value', 'key');
                 Cache::put('settings', $settings);
+            }
+            // Is the current command a config:cache command?
+            if (isset($_SERVER['argv']) && (in_array('config:cache', $_SERVER['argv']) || in_array('optimize', $_SERVER['argv']))) {
+                return;
             }
             config(['settings' => $settings]);
             foreach (\App\Classes\Settings::settings() as $settings) {

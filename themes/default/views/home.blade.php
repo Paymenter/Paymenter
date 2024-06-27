@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-center>
         <div class="mt-6">
-
+    @auth
             {{-- Example user property inputs in client side --}}
             @php
                 $properties = \App\Models\UserProperty::whereNot('admin_only', true)->get();
@@ -45,6 +45,7 @@
                     @default
                 @endswitch
             @endforeach
+            @endauth
         </div>
 
     </x-center>
