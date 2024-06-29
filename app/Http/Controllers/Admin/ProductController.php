@@ -63,6 +63,7 @@ class ProductController extends Controller
             $request->image->move(public_path('images'), $imageName);
             $data['image'] = '/images/' . $imageName;
         }
+        $data['price'] = str_replace(",",".",$data['price']);
         $product = Product::create($data);
         ProductPrice::create([
             'product_id' => $product->id,
@@ -147,22 +148,19 @@ class ProductController extends Controller
 
             return redirect()->route('admin.products.pricing', $product->id)->with('success', 'Product pricing updated successfully');
         }
-        $product->prices->update(
-            [
-                'monthly' => $request->get('monthly'),
-                'quarterly' => $request->get('quarterly'),
-                'semi_annually' => $request->get('semi_annually'),
-                'annually' => $request->get('annually'),
-                'biennially' => $request->get('biennially'),
-                'triennially' => $request->get('triennially'),
-                'monthly_setup' => $request->get('monthly_setup'),
-                'quarterly_setup' => $request->get('quarterly_setup'),
-                'semi_annually_setup' => $request->get('semi_annually_setup'),
-                'annually_setup' => $request->get('annually_setup'),
-                'biennially_setup' => $request->get('biennially_setup'),
-                'triennially_setup' => $request->get('triennially_setup'),
-            ]
-        );
+        $priceData = [
+            'monthly', 'quarterly', 'semi_annually', 'annually', 'biennially', 'triennially',
+            'monthly_setup', 'quarterly_setup', 'semi_annually_setup', 'annually_setup', 'biennially_setup', 'triennially_setup'
+        ];
+        $updatePriceData = [];
+        foreach ($priceData as $key) {
+            $price = $request->get($key);
+            if(str_contains($price, ',')) {
+                $price = str_replace(',', '.', $price);
+            }
+            $updatePriceData[$key] = $price;
+        }
+        $product->prices->update($updatePriceData);
         $product->update([
             'allow_quantity' => $request->get('allow_quantity'),
             'limit' => $request->get('limit'),
@@ -308,7 +306,7 @@ class ProductController extends Controller
             return redirect()->route('admin.products.extension', $product->id)->with('error', 'Invalid server');
         if ($product->extension_id != $server->id)
             $product->update(['extension_id' => $server->id]);
-        
+
         if (!$json) {
             return redirect()->route('admin.products.extension', $product->id)->with('error', 'Invalid JSON');
         }
