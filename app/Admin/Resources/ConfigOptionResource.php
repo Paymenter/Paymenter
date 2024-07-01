@@ -56,7 +56,11 @@ class ConfigOptionResource extends Resource
                                 ->multiple()
                                 ->preload()
                                 ->placeholder('Select the products that this configuration option belongs to'),
-            
+                            Forms\Components\TextInput::make('validation')
+                                ->label('Validation')
+                                ->maxLength(255)
+                                ->placeholder('Enter the validation rules for this configuration option'),
+
                         ]),
                         Forms\Components\Tabs\Tab::make('Options')->schema([
                             Forms\Components\Repeater::make('Options')
@@ -82,6 +86,7 @@ class ConfigOptionResource extends Resource
                                         ->required()
                                         ->maxLength(255)
                                         ->placeholder('Enter the environment variable name'),
+                                    // if the type is select, radio or checkbox then allow unlimited children (otherwise only allow 1)
                                     ProductResource::plan()->columnSpanFull()->label('Pricing')->reorderable(false),
                                 ]),
                         ]),

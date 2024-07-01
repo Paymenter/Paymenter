@@ -5,6 +5,4 @@ namespace App\Classes\Extension;
 /**
  * Class Gateway
  */
-class Gateway extends Extension
-{
-}
+class Gateway extends Extension {}

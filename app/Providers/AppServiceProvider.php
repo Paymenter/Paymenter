@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Classes\Synths\PriceSynth;
 use App\Models\User;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Gate;
@@ -27,6 +28,7 @@ class AppServiceProvider extends ServiceProvider
         \Livewire\Livewire::setUpdateRoute(function ($handle) {
             return \Illuminate\Support\Facades\Route::post('/paymenter/update', $handle)->middleware('web')->name('paymenter.update');
         });
+        \Livewire\Livewire::propertySynthesizer(PriceSynth::class);
 
         Gate::before(function (User $user, string $ability) {
             return $user->hasPermission($ability);

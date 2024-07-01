@@ -54,7 +54,7 @@ class AdminPanelProvider extends PanelProvider
                 // Widgets\FilamentInfoWidget::class,
             ])
             ->renderHook(
-                PanelsRenderHook::SIDEBAR_NAV_END ,
+                PanelsRenderHook::SIDEBAR_NAV_END,
                 fn (): string => Blade::render('<x-admin-footer />'),
             )
             ->middleware([

@@ -17,6 +17,23 @@ return [
     'password' => 'The provided password is incorrect.',
     'throttle' => 'Too many login attempts. Please try again in :seconds seconds.',
 
+    'sign_in' => 'Sign in',
+    'sign_in_title' => 'Sign in to your account',
+    'or_sign_in_with' => 'Or sign in with',
+    'forgot_password' => 'Forgot your password?',
+    'dont_have_account' => 'Don\'t have an account?',
+
+    'sign_up' => 'Sign up',
+    'sign_up_title' => 'Create your account',
+
+    'logout' => 'Logout',
+
+    'input' => [
+        'email' => 'Email',
+        'email_label' => 'Email Address',
+        'password' => 'Password',
+    ],
+
     'oauth' => [
         'unverified_discord_account' => 'Your Discord account is not verified.',
         'account_not_registered' => 'You are not registered on this site.',

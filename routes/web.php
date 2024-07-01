@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\SocialLoginController;
 use App\Livewire\Auth;
+use App\Livewire\Cart;
 use App\Livewire\Products;
 use Illuminate\Support\Facades\Route;
 
@@ -31,6 +32,8 @@ Route::group(['middleware' => ['web', 'auth']], function () {
         return view('profile');
     })->name('profile');
 });
+
+Route::get('cart', Cart::class)->name('cart');
 
 Route::group(['prefix' => 'products'], function () {
     Route::get('/{category:slug}', Products\Index::class)->name('category.show')/*->where('category', '[A-Za-z0-9_/-]+')*/;

@@ -24,6 +24,13 @@
             <x-form.checkbox name="{{ $name }}" type="checkbox" :label="__($config->label ?? $config->name)"
                 :required="$config->required ?? false" :checked="config('configs.' . $config->name) ? true : false" wire:model="{{ $name }}" />
         @break
+        
+        @case('radio')
+            <x-form.radio name="{{ $name }}" :label="__($config->label ?? $config->name)"
+                :selected="config('configs.' . $config->name)" :required="$config->required ?? false" wire:model="{{ $name }}">
+                {{ $slot }}
+            </x-form.radio>
+        @break
 
         @default
     @endswitch

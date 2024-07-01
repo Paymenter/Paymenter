@@ -6,30 +6,30 @@
                 wire:submit="submit" id="login">
                 <div class="flex flex-col items-center mt-4 mb-10">
                     <x-logo />
-                    <h1 class="text-2xl text-center text-white mt-2">{{ __('Sign in to your account') }} </h1>
+                    <h1 class="text-2xl text-center text-white mt-2">{{ __('auth.sign_in_title') }} </h1>
                 </div>
-                <x-form.input name="email" type="email" :label="__('Email')" :placeholder="__('Your email')" wire:model="email"
+                <x-form.input name="email" type="email" :label="__('general.input.email')" :placeholder="__('general.input.email_placeholder')" wire:model="email"
                     hideRequiredIndicator noDirty required />
-                <x-form.input name="password" type="password" :label="__('Password')" :placeholder="__('Your password')" required
+                <x-form.input name="password" type="password" :label="__('general.input.password')" :placeholder="__('general.input.password_placeholder')" required
                     hideRequiredIndicator noDirty wire:model="password" />
                 <div class="flex flex-row">
                     <x-form.checkbox name="remember" label="Remember me" wire:model="remember" />
                     <a class="text-sm text-secondary-500 text-secondary hover:underline ml-auto"
                         href="{{ route('password.reset') }}">
-                        {{ __('Forgot your password?') }}
+                        {{ __('auth.forgot_password') }}
                     </a>
                 </div>
 
                 <x-captcha :form="'login'" />
 
-                <x-button.primary class="w-full" type="submit">{{ __('Sign in') }}</x-button.primary>
+                <x-button.primary class="w-full" type="submit">{{ __('auth.sign_in') }}</x-button.primary>
 
                 @if (config('settings.oauth_github') || config('settings.oauth_google') || config('settings.oauth_discord'))
                     <div class="flex flex-col items-center mt-4">
                         <div class="my-5 flex items-center w-full">
                             <span aria-hidden="true" class="h-0.5 grow rounded bg-primary-700"></span>
                             <span class="rounded-full px-3 py-1 text-xs font-medium bg-primary-700 text-gray-200">
-                                {{ __('Or sign in with') }}
+                                {{ __('auth.or_sign_in_with') }}
                             </span>
                             <span aria-hidden="true" class="h-0.5 grow rounded bg-primary-700"></span>
                         </div>
@@ -48,10 +48,10 @@
                     </div>
                 @endif
                 <div class="text-white text-center rounded-md py-2 mt-6 text-sm">
-                    {{ __('Don\'t have an account yet?') }}
+                    {{ __('auth.dont_have_account') }}
                     <a class="text-sm text-secondary-500 text-secondary hover:underline" href="{{ route('register') }}"
                         wire:navigate>
-                        {{ __('Sign up') }}
+                        {{ __('auth.sign_up') }}
                     </a>
                 </div>
             </form>

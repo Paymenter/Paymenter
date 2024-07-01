@@ -36,6 +36,7 @@
                 @endif
             @endforeach
         </div>
+        <livewire:components.cart />
         @if(auth()->check())
              <div class="flex flex-row">
                  <!-- Has notifications? (updates, errors, etc) (TODO) -->

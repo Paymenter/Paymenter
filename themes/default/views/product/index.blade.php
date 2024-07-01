@@ -11,7 +11,7 @@
             </h3>
             <a href="{{ route('products.show', ['category' => $product->category, 'product' => $product->slug]) }}">
                 <x-button.primary>
-                    View
+                    {{ __('general.view') }}
                 </x-button.primary>
             </a>
         </div>

@@ -8,7 +8,7 @@
     'divClass' => null,
     'hideRequiredIndicator' => false,
 ])
-<fieldset class="flex flex-col relative mt-3 w-full {{ $divClass ?? '' }}">
+<fieldset class="flex flex-col relative mt-3 w-full {{ $divClass ?? '' }}" name="{{ $name }}">
     @if ($label)
         <legend>
             <label for="{{ $name }}"
@@ -21,23 +21,23 @@
         </legend>
     @endif
 
-    <select id="{{ $id ?? $name }}" {{ $multiple ? 'multiple' : '' }}
-        {{ $attributes->only(['required', 'wire:model', 'wire:dirty.class', 'wire:model.live']) }}
+    <div
         class="block px-2.5 py-2.5 w-full text-sm text-primary-100 bg-primary-800 border-2 border-primary-700 rounded-md outline-none focus:outline-none focus:border-secondary transition-all duration-300 ease-in-out">
         @if (count($options) == 0 && $slot)
             {{ $slot }}
         @else
             @foreach ($options as $key => $option)
-                <option value="{{ gettype($options) == 'array' ? $option : $key }}"
-                    {{ ($multiple && $selected ? in_array($key, $selected) : $selected == $option) ? 'selected' : '' }}>
-                    {{ $option }}</option>
+                <div class="flex items-center gap-2">
+                    <input type="radio" id="{{ $name }}_{{ $key }}" name="{{ $name }}"
+                        value="{{ gettype($options) == 'array' ? $option : $key }}"
+                        {{ ($multiple && $selected ? in_array($key, $selected) : $selected == $option) ? 'checked' : '' }} />
+                    <label for="{{ $name }}_{{ $key }}">
+                        {{ $option }}
+                    </label>
+                </div>
             @endforeach
         @endif
-    </select>
-    @if ($multiple)
-        <p class="text-xs text-gray-400">
-            {{ __('Pro tip: Hold down the Ctrl (Windows) / Command (Mac) button to select multiple options.') }}</p>
-    @endif
+    </div>
 
     @error($name)
         <p class="text-red-500 text-xs">{{ $message }}</p>

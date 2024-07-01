@@ -7,11 +7,11 @@
     <div class="flex flex-col">
         @if ($product->stock === 0)
             <span class="text-xs font-medium me-2 px-2.5 py-0.5 rounded bg-red-900 text-red-300 w-fit mb-3">
-                Out of stock
+                {{ __('product.out_of_stock') }}
             </span>
         @elseif($product->stock > 0)
             <span class="text-xs font-medium me-2 px-2.5 py-0.5 rounded bg-green-900 text-green-300 w-fit mb-3">
-                In stock
+                {{ __('product.in_stock') }}
             </span>
         @endif
         <div class="flex flex-row justify-between">
@@ -39,7 +39,7 @@
 
         @if (($product->stock > 0 || !$product->stock) && $product->price()->available)
             <a href="{{ route('products.checkout', ['category' => $category, 'product' => $product->slug]) }}">
-                <x-button.primary>Add to cart</x-button.primary>
+                <x-button.primary>{{ __('product.add_to_cart') }}</x-button.primary>
             </a>
         @endif
     </div>

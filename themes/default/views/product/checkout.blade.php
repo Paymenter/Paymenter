@@ -1,4 +1,4 @@
-<div class="grid grid-cols-4">
+<div class="grid grid-cols-4 gap-6">
     <div class="flex flex-col gap-4 w-full col-span-3">
         <h1 class="text-3xl font-bold">{{ $product->name }}</h1>
         <div class="flex flex-row w-full gap-4">
@@ -17,7 +17,7 @@
                         {{ $availablePlan->name }} -
                         {{ $availablePlan->price() }}
                         @if ($availablePlan->price()->has_setup_fee)
-                            + {{ $availablePlan->price()->setup_fee }} setup fee
+                            + {{ $availablePlan->price()->setup_fee }} {{ __('product.setup_fee') }}
                         @endif
                     </option>
                 @endforeach
@@ -26,27 +26,41 @@
 
         @foreach ($product->configOptions as $configOption)
             <x-form.configoption :config="$configOption" :name="'configOptions.' . $configOption->id">
-                @if (in_array($configOption->type, ['select', 'radio', 'slider']))
+                @if (in_array($configOption->type, ['select', 'slider']))
                     @foreach ($configOption->children as $configOptionValue)
                         <option value="{{ $configOptionValue->id }}">
                             {{ $configOptionValue->name }}
                             {{ $configOptionValue->price(billing_period: $plan->billing_period, billing_unit: $plan->billing_unit)->available ? ' - ' . $configOptionValue->price(billing_period: $plan->billing_period, billing_unit: $plan->billing_unit) : '' }}
                         </option>
                     @endforeach
+                @elseif($configOption->type == 'radio')
+                    @foreach ($configOption->children as $configOptionValue)
+                        <div class="flex items-center gap-2">
+                            <input type="radio" id="{{ $configOptionValue->id }}" name="{{ $configOption->id }}"
+                                wire:model.live="configOptions.{{ $configOption->id }}"
+                                value="{{ $configOptionValue->id }}" />
+                            <label for="{{ $configOptionValue->id }}">
+                                {{ $configOptionValue->name }}
+                                {{ $configOptionValue->price(billing_period: $plan->billing_period, billing_unit: $plan->billing_unit)->available ? ' - ' . $configOptionValue->price(billing_period: $plan->billing_period, billing_unit: $plan->billing_unit) : '' }}
+                            </label>
+                        </div>
+                    @endforeach
                 @endif
             </x-form.configoption>
         @endforeach
     </div>
     <div class="flex flex-col gap-4 w-full col-span-1">
-        <h2 class="text-2xl font-semibold">Price</h2>
+        <h2 class="text-2xl font-semibold">
+            {{ __('product.price') }}
+        </h2>
 
         <h3 class="text-xl font-semibold">
-            {{ $product->price($plan_id) }}
+            {{ $total }}
         </h3>
         @if (($product->stock > 0 || !$product->stock) && $product->price()->available)
             <div>
-                <x-button.primary>
-                    Checkout
+                <x-button.primary wire:click="checkout">
+                    {{ __('product.checkout') }}
                 </x-button.primary>
             </div>
         @endif

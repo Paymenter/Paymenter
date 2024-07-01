@@ -9,9 +9,7 @@ namespace App\Classes\Extension;
  */
 class Extension
 {
-    public function __construct(public $config = [])
-    {
-    }
+    public function __construct(public $config = []) {}
 
     /**
      * Get a configuration value

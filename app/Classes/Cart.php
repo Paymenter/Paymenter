@@ -9,17 +9,25 @@ class Cart
         return collect(session('cart', []));
     }
 
-    public static function add($product)
+    public static function add($product, $plan, $configOptions, Price $total)
     {
-        $cart = self::get();
-
-        $cart->push([
-            'id' => $product->id,
-            'name' => $product->name,
-            'price' => $product->price,
-            'quantity' => 1,
+        $cart = self::get()->push([
+            'product' => $product,
+            'plan' => $plan,
+            'configOptions' => $configOptions,
+            'price' => $total,
         ]);
 
+        session(['cart' => $cart]);
+
+        // Return index of the newly added item
+        return $cart->count() - 1;
+    }
+
+    public static function remove($index)
+    {
+        $cart = self::get();
+        $cart->forget($index);
         session(['cart' => $cart]);
     }
 }
