@@ -3,6 +3,8 @@
 namespace App\Classes;
 
 use App\Models\Setting;
+use App\Models\TaxRate;
+use Illuminate\Support\Facades\Auth;
 
 class Settings
 {
@@ -216,7 +218,24 @@ class Settings
                     'options' => array_merge(['' => 'None'], config('app.countries')),
                 ],
             ],
-
+            'tax' => [
+                [
+                    'name' => 'tax_enabled',
+                    'label' => 'Tax Enabled',
+                    'type' => 'checkbox',
+                    'default' => false,
+                ],
+                [
+                    'name' => 'tax_type',
+                    'label' => 'Tax Type',
+                    'type' => 'select',
+                    'options' => [
+                        'inclusive' => 'Inclusive (Price includes tax)',
+                        'exclusive' => 'Exclusive (Price does not include tax)',
+                    ],
+                    'default' => 'inclusive',
+                ],
+            ],
             'other' => [
                 [
                     'name' => 'optional_fields',
@@ -288,6 +307,22 @@ class Settings
         $settings['theme'] = \App\Classes\Theme::getSettings();
 
         return $settings;
+    }
+
+    public static function tax()
+    {
+        $country = Auth::user()->country ?? null;
+
+        // Use once so the query is only run once
+        return once(function () use ($country) {
+            if ($taxRate = TaxRate::where('country', $country)->first()) {
+                return $taxRate;
+            } elseif ($taxRate = TaxRate::where('country', 'all')->first()) {
+                return $taxRate;
+            }
+
+            return 0;
+        });
     }
 
     public static function settingsObject()

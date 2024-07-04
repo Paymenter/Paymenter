@@ -9,19 +9,32 @@ class Cart
         return collect(session('cart', []));
     }
 
-    public static function add($product, $plan, $configOptions, Price $total)
+    public static function add($product, $plan, $configOptions, Price $price, $quantity = 1, $key = null)
     {
-        $cart = self::get()->push([
-            'product' => $product,
-            'plan' => $plan,
-            'configOptions' => $configOptions,
-            'price' => $total,
-        ]);
+        if (isset($key)) {
+            $cart = self::get();
+            // Check if key exists
+            $cart[$key] = (object) [
+                'product' => (object) $product,
+                'plan' => (object) $plan,
+                'configOptions' => (object) $configOptions,
+                'price' => $price,
+                'quantity' => $quantity,
+            ];
+        } else {
+            $cart = self::get()->push((object) [
+                'product' => (object) $product,
+                'plan' => (object) $plan,
+                'configOptions' => (object) $configOptions,
+                'price' => $price,
+                'quantity' => $quantity,
+            ]);
+        }
 
         session(['cart' => $cart]);
 
         // Return index of the newly added item
-        return $cart->count() - 1;
+        return $key ?? $cart->count() - 1;
     }
 
     public static function remove($index)

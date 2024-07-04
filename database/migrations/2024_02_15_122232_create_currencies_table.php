@@ -15,6 +15,7 @@ return new class extends Migration
             $table->string('code', 3)->primary();
             $table->string('prefix')->nullable();
             $table->string('suffix')->nullable();
+            $table->enum('format', ['1.000,00', '1,000.00', '1 000,00', '1 000.00'])->default('1.000,00');
         });
     }
 

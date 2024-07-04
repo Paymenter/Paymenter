@@ -19,6 +19,8 @@ class UserResource extends Resource
 {
     protected static ?string $model = User::class;
 
+    protected static ?string $navigationGroup = 'Administration';
+
     protected static ?string $navigationIcon = 'heroicon-o-users';
 
     public static function getGloballySearchableAttributes(): array

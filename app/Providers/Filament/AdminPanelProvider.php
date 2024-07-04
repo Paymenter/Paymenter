@@ -57,6 +57,11 @@ class AdminPanelProvider extends PanelProvider
                 PanelsRenderHook::SIDEBAR_NAV_END,
                 fn (): string => Blade::render('<x-admin-footer />'),
             )
+            ->navigationGroups([
+                'Administration',
+                'Configuration',
+                'Extensions',
+            ])
             ->middleware([
                 EncryptCookies::class,
                 AddQueuedCookiesToResponse::class,

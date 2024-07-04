@@ -26,6 +26,8 @@ class ProductResource extends Resource
 {
     protected static ?string $model = Product::class;
 
+    protected static ?string $navigationGroup = 'Administration';
+
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
     protected static ?string $recordTitleAttribute = 'name';
@@ -54,6 +56,12 @@ class ProductResource extends Resource
                                 Forms\Components\TextInput::make('slug')->required(),
                                 Forms\Components\TextInput::make('stock')->integer()->nullable(),
                                 Forms\Components\TextInput::make('per_user_limit')->integer()->nullable(),
+                                Forms\Components\Select::make('allow_quantity')->options([
+                                    'disabled' => 'No',
+                                    'seperated' => 'Seperated',
+                                    'combined' => 'Combined',
+                                ]),
+
                                 Forms\Components\RichEditor::make('description')->nullable()->columnSpanFull(),
                                 Forms\Components\FileUpload::make('image')->label('Image')->nullable()->acceptedFileTypes(['image/*']),
                                 Forms\Components\Select::make('category_id')

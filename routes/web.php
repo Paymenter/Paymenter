@@ -37,7 +37,7 @@ Route::get('cart', Cart::class)->name('cart');
 
 Route::group(['prefix' => 'products'], function () {
     Route::get('/{category:slug}', Products\Index::class)->name('category.show')/*->where('category', '[A-Za-z0-9_/-]+')*/;
-    Route::get('/{category:slug}/{product}', Products\Show::class)->name('products.show')/*->where('category', '[A-Za-z0-9_/-]+')*/;
-    Route::get('/{category:slug}/{product}/checkout', Products\Checkout::class)->name('products.checkout')/*->where('category', '[A-Za-z0-9_/-]+')*/;
+    Route::get('/{category:slug}/{product:slug}', Products\Show::class)->name('products.show')/*->where('category', '[A-Za-z0-9_/-]+')*/;
+    Route::get('/{category:slug}/{product:slug}/checkout', Products\Checkout::class)->name('products.checkout')/*->where('category', '[A-Za-z0-9_/-]+')*/;
     // Allow for nested categories
 });

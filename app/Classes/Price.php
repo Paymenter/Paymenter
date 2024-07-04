@@ -21,6 +21,10 @@ class Price
 
     public object $formatted;
 
+    public $tax;
+
+    public $setup_fee_tax;
+
     public function __construct($priceAndCurrency = null, $free = false, $dontShowUnavailablePrice = false)
     {
         if (is_array($priceAndCurrency)) {
@@ -40,15 +44,35 @@ class Price
             $this->currency = (object) $this->currency;
         }
         $this->setup_fee = $priceAndCurrency->price->setup_fee ?? $priceAndCurrency->setup_fee ?? null;
+        // Calculate taxes
+        if (config('settings.tax_enabled')) {
+            $tax = Settings::tax();
+
+            if (config('settings.tax_type') == 'inclusive') {
+                $this->tax = number_format($this->price - ($this->price / (1 + $tax->rate / 100)), 2, '.', '');
+                if ($this->setup_fee) {
+                    $this->setup_fee_tax = number_format($this->setup_fee - ($this->setup_fee / (1 + $tax->rate / 100)), 2, '.', '');
+                }
+            } else {
+                $this->tax = number_format($this->price * $tax->rate / 100, 2, '.', '');
+                $this->price = number_format($this->price + $this->tax, 2, '.', '');
+                if ($this->setup_fee) {
+                    $this->setup_fee_tax = number_format($this->setup_fee * $tax->rate / 100, 2, '.', '');
+                    $this->setup_fee = number_format($this->setup_fee + $this->setup_fee_tax, 2, '.', '');
+                }
+            }
+        }
         $this->has_setup_fee = isset($this->setup_fee) ? $this->setup_fee > 0 : false;
         $this->dontShowUnavailablePrice = $dontShowUnavailablePrice;
         $this->formatted = (object) [
             'price' => $this->format($this->price),
             'setup_fee' => $this->format($this->setup_fee),
+            'tax' => $this->format($this->tax),
+            'setup_fee_tax' => $this->format($this->setup_fee_tax),
         ];
     }
 
-    private function format($price)
+    public function format($price)
     {
         if ($this->is_free) {
             return 'Free';
@@ -60,8 +84,24 @@ class Price
 
             return 'Not available in your currency';
         }
+        // Get the format
+        $format = $this->currency->format;
+        switch ($format) {
+            case '1.000,00':
+                $price = number_format($price, 2, ',', '.');
+                break;
+            case '1,000.00':
+                $price = number_format($price, 2, '.', ',');
+                break;
+            case '1 000,00':
+                $price = number_format($price, 2, ',', ' ');
+                break;
+            case '1 000.00':
+                $price = number_format($price, 2, '.', ' ');
+                break;
+        }
 
-        return $this->currency->prefix . number_format($price, 2) . $this->currency->suffix;
+        return $this->currency->prefix . $price . $this->currency->suffix;
     }
 
     public function __toString()

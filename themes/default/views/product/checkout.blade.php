@@ -49,14 +49,18 @@
             </x-form.configoption>
         @endforeach
     </div>
-    <div class="flex flex-col gap-4 w-full col-span-1">
-        <h2 class="text-2xl font-semibold">
-            {{ __('product.price') }}
+    <div class="flex flex-col gap-2 w-full col-span-1">
+        <h2 class="text-2xl font-semibold bg-primary-800 p-2 px-4 rounded-md mb-2">
+            {{ __('product.order_summary') }}
         </h2>
-
-        <h3 class="text-xl font-semibold">
-            {{ $total }}
-        </h3>
+        <div class="text- font-semibold flex justify-between bg-primary-800 p-2 px-4 rounded-md">
+            <h4>{{ __('product.total_today') }}:</h4> {{ $total }}
+        </div>
+        @if ($total->setup_fee && $plan->type == 'recurring')
+            <div class="text- font-semibold flex justify-between bg-primary-800 p-2 px-4 rounded-md">
+                <h4>{{ __('product.then_after_x', ['time' => $plan->billing_period . ' ' . $plan->billing_unit . ($plan->billing_period > 1 ? 's' : '')]) }}:</h4> {{ $total->format($total->price - $total->setup_fee) }}
+            </div>
+        @endif
         @if (($product->stock > 0 || !$product->stock) && $product->price()->available)
             <div>
                 <x-button.primary wire:click="checkout">

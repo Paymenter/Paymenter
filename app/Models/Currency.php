@@ -21,5 +21,6 @@ class Currency extends Model
         'code',
         'prefix',
         'suffix',
+        'format',
     ];
 }

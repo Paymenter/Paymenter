@@ -18,7 +18,7 @@ class GatewayResource extends Resource
 {
     protected static ?string $model = Gateway::class;
 
-    protected static ?string $navigationGroup = 'Configuration';
+    protected static ?string $navigationGroup = 'Extensions';
 
     protected static ?string $navigationIcon = 'heroicon-o-credit-card';
 

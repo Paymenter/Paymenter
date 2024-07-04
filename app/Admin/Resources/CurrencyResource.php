@@ -14,6 +14,8 @@ class CurrencyResource extends Resource
 {
     protected static ?string $model = Currency::class;
 
+    protected static ?string $navigationGroup = 'Configuration';
+
     protected static ?string $navigationIcon = 'heroicon-o-currency-dollar';
 
     public static function form(Form $form): Form
@@ -35,6 +37,15 @@ class CurrencyResource extends Resource
                     ->label('Suffix')
                     ->maxLength(10)
                     ->placeholder('Enter the currency suffix'),
+                Forms\Components\Select::make('format')
+                    ->label('Format')
+                    ->options([
+                        '1.000,00' => '1.000,00',
+                        '1,000.00' => '1,000.00',
+                        '1 000,00' => '1 000,00',
+                        '1 000.00' => '1 000.00',
+                    ])
+                    ->default('1.000,00'),
             ]);
     }
 
