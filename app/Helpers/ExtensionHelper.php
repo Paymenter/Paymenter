@@ -71,7 +71,7 @@ class ExtensionHelper
 
         foreach ($invoice->items()->get() as $item) {
             $product = $item->product()->get()->first();
-            if (!$product) {
+            if (!$product || str_contains($item->description, 'Setup Fee')) {
                 continue;
             }
 
