@@ -14,7 +14,7 @@ class VirtFusion extends Server
     {
         return [
             'display_name' => 'VirtFusion',
-            'version' => '1.0.0',
+            'version' => '1.2.0',
             'author' => 'Paymenter',
             'website' => 'https://paymenter.org',
         ];
@@ -59,13 +59,7 @@ class VirtFusion extends Server
             [
                 'name' => 'hypervisor',
                 'type' => 'text',
-                'friendlyName' => 'Hypervisor Group ID',
-                'required' => true,
-            ],
-            [
-                'name' => 'ips',
-                'type' => 'text',
-                'friendlyName' => 'Number IPs',
+                'friendlyName' => 'Default Hypervisor Group ID (if no hypervisorId Configurable Options)',
                 'required' => true,
             ],
         ];
@@ -73,27 +67,69 @@ class VirtFusion extends Server
 
     public function createServer($user, $params, $order, $product, $configurableOptions)
     {
-        $package = $params['package'];
+        // Determine package ID based on configurable options or fallback to default
+        $package = $configurableOptions['package'] ?? $params['package'];
 
+        // Get user ID and check for errors
         $user = $this->getUser($user);
-        $response = $this->postRequest(
-            '/api/v1/servers',
-            [
-                'packageId' => $package,
-                'userId' => $user,
-                'hypervisorId' => $params['hypervisor'],
-                'ipv4' => $params['ips'],
-            ]
-        );
-        if (isset($response->json()['errors'])) {
-            // Array to string conversion
-            $error = implode(" ", $response->json()['errors']);
-            ExtensionHelper::error('VirtFusion', 'Failed to create server' . $error);
-            return;
+        if (!$user) {
+            ExtensionHelper::error('VirtFusion', 'Failed to retrieve user.');
+            return false;
         }
-        ExtensionHelper::setOrderProductConfig('server_id', $response->json()['data']['id'], $product->id);
 
-        return true;
+        // Prepare basic data for the POST request
+        $requestData = [
+            'packageId' => $package,
+            'userId' => $user,
+            'hypervisorId' => $configurableOptions['hypervisorId'] ?? $params['hypervisor']
+        ];
+
+        // Define optional configurable options and their respective keys
+        $optionalFields = [
+            'hypervisorId',
+            'ipv4',
+            'storage',
+            'traffic',
+            'memory',
+            'cpuCores', 
+            'networkSpeedInbound',
+            'networkSpeedOutbound',
+            'storageProfile', 
+            'networkProfile',
+            'firewallRulesets',
+            'additionalStorage1Enable', 
+            'additionalStorage2Enable',
+            'additionalStorage1Profile', 
+            'additionalStorage2Profile',
+            'additionalStorage1Capacity', 
+            'additionalStorage2Capacity'
+        ];
+
+        // Filter and merge optional fields into requestData
+        $requestData = array_merge($requestData, array_filter($configurableOptions, function($key) use ($optionalFields) {
+            return in_array($key, $optionalFields);
+        }, ARRAY_FILTER_USE_KEY));
+
+        // Make the POST request to create the server
+        $response = $this->postRequest('/api/v1/servers', $requestData);
+        $responseData = $response->json();
+
+        // Check for errors in the response
+        if (isset($responseData['errors'])) {
+            // Convert errors array to a string
+            $error = implode(" ", $responseData['errors']);
+            ExtensionHelper::error('VirtFusion', 'Failed to create server: ' . $error);
+            return false; // Return false to indicate failure
+        }
+
+        // Set server_id in order product configuration
+        if (isset($responseData['data']['id'])) {
+            ExtensionHelper::setOrderProductConfig('server_id', $responseData['data']['id'], $product->id);
+            return true; // Return true to indicate success
+        } else {
+            ExtensionHelper::error('VirtFusion', 'Server created but missing ID.');
+            return false;
+        }
     }
 
     private function getRequest($url)
