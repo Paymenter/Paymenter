@@ -3,8 +3,8 @@
 namespace App\Livewire\Components;
 
 use App\Classes\Cart;
+use App\Livewire\Component;
 use App\Models\Currency;
-use Livewire\Component;
 
 class CurrencySwitch extends Component
 {

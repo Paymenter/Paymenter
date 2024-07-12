@@ -70,6 +70,6 @@ trait HasPlans
             }
         }
 
-        return new Price((object) $priceAndCurrency, dontShowUnavailablePrice: $this->dontShowUnavailablePrice ?? false);
+        return new Price($priceAndCurrency, dontShowUnavailablePrice: $this->dontShowUnavailablePrice ?? false);
     }
 }

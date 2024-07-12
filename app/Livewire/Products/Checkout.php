@@ -4,6 +4,7 @@ namespace App\Livewire\Products;
 
 use App\Classes\Cart;
 use App\Classes\Price;
+use App\Livewire\Component;
 use App\Livewire\Traits\CurrencyChanged;
 use App\Models\Category;
 use App\Models\Plan;
@@ -11,7 +12,6 @@ use App\Models\Price as ModelsPrice;
 use Livewire\Attributes\Locked;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Url;
-use Livewire\Component;
 
 class Checkout extends Component
 {

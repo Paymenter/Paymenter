@@ -3,6 +3,7 @@
 use App\Http\Controllers\SocialLoginController;
 use App\Livewire\Auth;
 use App\Livewire\Cart;
+use App\Livewire\Invoice;
 use App\Livewire\Products;
 use Illuminate\Support\Facades\Route;
 
@@ -31,6 +32,8 @@ Route::group(['middleware' => ['web', 'auth']], function () {
     Route::get('profile', function () {
         return view('profile');
     })->name('profile');
+
+    Route::get('invoices/{invoice}', Invoice\Show::class)->name('invoices.show');
 });
 
 Route::get('cart', Cart::class)->name('cart');
@@ -41,3 +44,5 @@ Route::group(['prefix' => 'products'], function () {
     Route::get('/{category:slug}/{product:slug}/checkout', Products\Checkout::class)->name('products.checkout')/*->where('category', '[A-Za-z0-9_/-]+')*/;
     // Allow for nested categories
 });
+
+include_once 'extensions.php';

@@ -83,8 +83,6 @@ trait Captchable
             return $this->is_valid = true;
         }
 
-        dd($response->json());
-
         Log::error('The CAPTCHA was invalid.' . $value, $response->json());
         throw ValidationException::withMessages(['captcha' => 'The CAPTCHA was invalid.']);
 

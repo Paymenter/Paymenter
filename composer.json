@@ -6,6 +6,7 @@
     "license": "MIT",
     "require": {
         "php": "^8.2",
+        "andreiio/blade-remix-icon": "^3.3",
         "filament/filament": "^3.2",
         "laravel/framework": "^11.0",
         "laravel/socialite": "^5.14",

@@ -2,6 +2,7 @@
 
 namespace App\Providers\Filament;
 
+use App\Admin\Widgets as AdminWidgets;
 use App\Providers\SettingsProvider;
 use Filament\Facades\Filament;
 use Filament\Http\Middleware\Authenticate;
@@ -51,6 +52,7 @@ class AdminPanelProvider extends PanelProvider
             ->discoverWidgets(in: app_path('Admin/Widgets'), for: 'App\\Admin\\Widgets')
             ->widgets([
                 Widgets\AccountWidget::class,
+                AdminWidgets\Revenue::class,
                 // Widgets\FilamentInfoWidget::class,
             ])
             ->renderHook(

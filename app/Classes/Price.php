@@ -21,11 +21,13 @@ class Price
 
     public object $formatted;
 
-    public $tax;
+    public $tax = 0;
 
-    public $setup_fee_tax;
+    public $setup_fee_tax = 0;
 
-    public function __construct($priceAndCurrency = null, $free = false, $dontShowUnavailablePrice = false)
+    public $discount = 0;
+
+    public function __construct($priceAndCurrency = null, $free = false, $dontShowUnavailablePrice = false, $coupon = null)
     {
         if (is_array($priceAndCurrency)) {
             $priceAndCurrency = (object) $priceAndCurrency;
@@ -34,6 +36,13 @@ class Price
             $this->price = 0;
             $this->currency = null;
             $this->is_free = true;
+
+            $this->formatted = (object) [
+                'price' => $this->format($this->price),
+                'setup_fee' => $this->format($this->setup_fee),
+                'tax' => $this->format($this->tax),
+                'setup_fee_tax' => $this->format($this->setup_fee_tax),
+            ];
 
             return;
         }
@@ -47,18 +56,19 @@ class Price
         // Calculate taxes
         if (config('settings.tax_enabled')) {
             $tax = Settings::tax();
-
-            if (config('settings.tax_type') == 'inclusive') {
-                $this->tax = number_format($this->price - ($this->price / (1 + $tax->rate / 100)), 2, '.', '');
-                if ($this->setup_fee) {
-                    $this->setup_fee_tax = number_format($this->setup_fee - ($this->setup_fee / (1 + $tax->rate / 100)), 2, '.', '');
-                }
-            } else {
-                $this->tax = number_format($this->price * $tax->rate / 100, 2, '.', '');
-                $this->price = number_format($this->price + $this->tax, 2, '.', '');
-                if ($this->setup_fee) {
-                    $this->setup_fee_tax = number_format($this->setup_fee * $tax->rate / 100, 2, '.', '');
-                    $this->setup_fee = number_format($this->setup_fee + $this->setup_fee_tax, 2, '.', '');
+            if ($tax) {
+                if (config('settings.tax_type') == 'inclusive') {
+                    $this->tax = number_format($this->price - ($this->price / (1 + $tax->rate / 100)), 2, '.', '');
+                    if ($this->setup_fee) {
+                        $this->setup_fee_tax = number_format($this->setup_fee - ($this->setup_fee / (1 + $tax->rate / 100)), 2, '.', '');
+                    }
+                } else {
+                    $this->tax = number_format($this->price * $tax->rate / 100, 2, '.', '');
+                    $this->price = number_format($this->price + $this->tax, 2, '.', '');
+                    if ($this->setup_fee) {
+                        $this->setup_fee_tax = number_format($this->setup_fee * $tax->rate / 100, 2, '.', '');
+                        $this->setup_fee = number_format($this->setup_fee + $this->setup_fee_tax, 2, '.', '');
+                    }
                 }
             }
         }

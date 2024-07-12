@@ -17,7 +17,7 @@ class TaxRateResource extends Resource
 
     protected static ?string $navigationGroup = 'Configuration';
 
-    protected static ?string $navigationIcon = 'heroicon-o-currency-dollar';
+    protected static ?string $navigationIcon = 'ri-wallet-3-line';
 
     public static function form(Form $form): Form
     {

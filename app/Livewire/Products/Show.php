@@ -2,9 +2,9 @@
 
 namespace App\Livewire\Products;
 
+use App\Livewire\Component;
 use App\Livewire\Traits\CurrencyChanged;
 use App\Models\Category;
-use Livewire\Component;
 
 class Show extends Component
 {

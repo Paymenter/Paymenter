@@ -182,7 +182,6 @@ class ProductResource extends Resource
 
                 Forms\Components\Select::make('billing_unit')
                     ->options([
-                        'hour' => 'Hour',
                         'day' => 'Day',
                         'week' => 'Week',
                         'month' => 'Month',

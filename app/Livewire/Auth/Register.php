@@ -2,10 +2,10 @@
 
 namespace App\Livewire\Auth;
 
+use App\Livewire\Component;
 use App\Models\User;
 use App\Traits\Captchable;
 use Illuminate\Support\Facades\Hash;
-use Livewire\Component;
 
 class Register extends Component
 {

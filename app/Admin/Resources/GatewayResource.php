@@ -39,6 +39,7 @@ class GatewayResource extends Resource
                     ->label('Gateway')
                     ->required()
                     ->searchable()
+                    ->unique(static::getModel(), 'extension', ignoreRecord: true)
                     ->options($options->options)
                     ->live(onBlur: true)
                     ->afterStateUpdated(fn (Select $component) => $component

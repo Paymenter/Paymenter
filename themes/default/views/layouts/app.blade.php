@@ -19,5 +19,6 @@
             {{ $slot }}
         </main>
         <x-navigation.footer />
+        <x-notification />
     </body>
 </html>

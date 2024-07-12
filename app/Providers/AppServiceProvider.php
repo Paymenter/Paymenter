@@ -37,5 +37,8 @@ class AppServiceProvider extends ServiceProvider
         Event::listen(function (\SocialiteProviders\Manager\SocialiteWasCalled $event) {
             $event->extendSocialite('discord', \SocialiteProviders\Discord\Provider::class);
         });
+
+        // Register views for extensions (app/Extensions/{type}/{extension}/views)
+        $this->loadViewsFrom(app_path('Extensions'), 'extensions');
     }
 }

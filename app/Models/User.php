@@ -135,11 +135,19 @@ class User extends Authenticatable implements FilamentUser, HasAvatar
     }
 
     /**
-     * Get the user's services.
+     * Get the user's orders.
      */
-    public function services()
+    public function orders()
     {
-        return $this->hasMany(Service::class);
+        return $this->hasMany(Order::class);
+    }
+
+    /**
+     * Get the user's services
+     */
+    public function orderProducts()
+    {
+        return $this->hasManyThrough(OrderProduct::class, Order::class);
     }
 
     /**

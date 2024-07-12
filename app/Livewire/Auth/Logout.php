@@ -2,7 +2,7 @@
 
 namespace App\Livewire\Auth;
 
-use Livewire\Component;
+use App\Livewire\Component;
 
 class Logout extends Component
 {

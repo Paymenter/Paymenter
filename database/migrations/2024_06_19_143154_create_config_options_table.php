@@ -21,7 +21,7 @@ return new class extends Migration
             $table->timestamps();
         });
         Schema::table('config_options', function (Blueprint $table) {
-            $table->foreignIdFor(\App\Models\ConfigOption::class, 'parent_id')->nullable()->constrained('config_options')->after('hidden');
+            $table->foreignIdFor(\App\Models\ConfigOption::class, 'parent_id')->nullable()->constrained('config_options')->after('hidden')->cascadeOnDelete();
         });
     }
 

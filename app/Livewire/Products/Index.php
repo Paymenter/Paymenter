@@ -2,8 +2,8 @@
 
 namespace App\Livewire\Products;
 
+use App\Livewire\Component;
 use App\Models\Category;
-use Livewire\Component;
 
 class Index extends Component
 {

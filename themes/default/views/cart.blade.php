@@ -30,7 +30,7 @@
                                     -
                                 </x-button.secondary>
                                 <x-form.input class="h-10 text-center" disabled
-                                    wire:model="items.{{ $key }}.quantity" divClass="mt-0 !w-14" name="quantity" noDirty />
+                                    wire:model="items.{{ $key }}.quantity" divClass="!mt-0 !w-14" name="quantity" noDirty />
                                 <x-button.secondary
                                     wire:click="updateQuantity({{ $key }}, {{ $item->quantity + 1 }});"
                                     class="h-full !w-fit">
@@ -60,12 +60,21 @@
             <div class="font-semibold flex justify-between bg-primary-800 p-2 px-4 rounded-md">
                 <h4>Subtotal:</h4> {{ $total->format($total->price - $total->tax) }}
             </div>
-            <div class="font-semibold flex justify-between bg-primary-800 p-2 px-4 rounded-md">
-                <h4>{{ \App\Classes\Settings::tax()->name }}:</h4> {{ $total->formatted->tax }}
-            </div>
+            @if($total->tax > 0)
+                <div class="font-semibold flex justify-between bg-primary-800 p-2 px-4 rounded-md">
+                    <h4>{{ \App\Classes\Settings::tax()->name }}:</h4> {{ $total->formatted->tax }}
+                </div>
+            @endif
             <div class="text-lg font-semibold flex justify-between bg-primary-800 p-2 px-4 rounded-md mt-1">
                 <h4>Total:</h4> {{ $total }}
             </div>
+
+            <x-form.select wire:model.live="gateway" name="gateway" label="Payment Gateway">
+                @foreach ($gateways as $gateway)
+                    <option value="{{ $gateway->id }}">{{ $gateway->name }}</option>
+                @endforeach
+            </x-form.select>
+
             <div class="flex flex-row justify-end gap-2">
                 <x-button.primary wire:click="checkout" class="h-fit">
                     {{ __('product.checkout') }}

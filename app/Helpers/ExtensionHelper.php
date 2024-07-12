@@ -3,8 +3,11 @@
 namespace App\Helpers;
 
 use App\Classes\FilamentInput;
+use App\Models\Gateway;
+use App\Models\Invoice;
 use Exception;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Log;
 
 class ExtensionHelper
 {
@@ -43,6 +46,10 @@ class ExtensionHelper
 
         if (!class_exists($extension)) {
             throw new Exception('Extension not found');
+        }
+
+        if (!is_array($config)) {
+            $config = self::settingsToArray($config);
         }
 
         return new $extension($config);
@@ -173,5 +180,63 @@ class ExtensionHelper
         }
 
         return $settingsArray ?? $settings;
+    }
+
+    /**
+     * Get every gateway which allows to checkout with
+     *
+     * @return array
+     */
+    public static function getCheckoutGateways($items)
+    {
+        $gateways = [];
+
+        foreach (Gateway::all() as $gateway) {
+            if (self::hasFunction($gateway, 'canUseGateway')) {
+                if (self::getExtension('gateway', $gateway, $gateway->settings)->canUseGateway($items)) {
+                    $gateways[] = $gateway;
+                }
+            } else {
+                $gateways[] = $gateway;
+            }
+        }
+
+        return $gateways;
+    }
+
+    /**
+     * Get payment url or view
+     */
+    public static function pay($gateway, $invoice)
+    {
+        return self::getExtension('gateway', $gateway->extension, $gateway->settings)->pay($invoice, $invoice->remaining);
+    }
+
+    /**
+     * Add payment to invoice
+     */
+    public static function addPayment($invoice, $gateway, $amount, $fee = null, $transactionId = null)
+    {
+        if (isset($gateway)) {
+            $gateway = Gateway::where('extension', $gateway)->first();
+        }
+        Log::debug('Add payment', [$gateway, $amount, $fee, $transactionId, $invoice]);
+
+        $invoice = Invoice::findOrFail($invoice);
+        $invoice->transactions()->updateOrCreate(
+            [
+                'transaction_id' => $transactionId,
+            ],
+            [
+                'gateway_id' => $gateway ? $gateway->id : null,
+                'amount' => $amount,
+                'fee' => $fee,
+            ]
+        );
+
+        if ($invoice->remaining <= 0) {
+            $invoice->status = 'paid';
+            $invoice->save();
+        }
     }
 }

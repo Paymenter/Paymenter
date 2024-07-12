@@ -3,8 +3,8 @@
 namespace App\Livewire\Components;
 
 use App\Classes\Cart as ClassesCart;
+use App\Livewire\Component;
 use Livewire\Attributes\On;
-use Livewire\Component;
 
 class Cart extends Component
 {

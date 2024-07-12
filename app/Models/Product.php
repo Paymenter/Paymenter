@@ -16,8 +16,6 @@ class Product extends Model implements Auditable
 
     protected $guarded = [];
 
-    public $with = ['plans'];
-
     protected $auditInclude = [
         'name',
         'description',

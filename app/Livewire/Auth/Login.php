@@ -2,10 +2,10 @@
 
 namespace App\Livewire\Auth;
 
+use App\Livewire\Component;
 use App\Traits\Captchable;
 use Illuminate\Support\Facades\RateLimiter;
 use Livewire\Attributes\Validate;
-use Livewire\Component;
 
 class Login extends Component
 {

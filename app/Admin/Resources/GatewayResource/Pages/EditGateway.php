@@ -21,7 +21,7 @@ class EditGateway extends EditRecord
     protected function mutateFormDataBeforeFill(array $data): array
     {
         foreach ($this->record->settings as $setting) {
-            $data[$setting->key] = $setting->value;
+            $data['settings'][$setting->key] = $setting->value;
         }
 
         return $data;
@@ -29,11 +29,13 @@ class EditGateway extends EditRecord
 
     protected function handleRecordUpdate(Model $record, array $data): Model
     {
-        $gatewaySettings = \Arr::except($data, ['name', 'extension', 'type']);
+        $record->update(\Arr::except($data, ['settings']));
 
-        $record->update(\Arr::only($data, ['name', 'extension', 'type']));
+        if (!isset($data['settings'])) {
+            return $record;
+        }
 
-        foreach ($gatewaySettings as $key => $value) {
+        foreach ($data['settings'] as $key => $value) {
             if (!$value) {
                 continue;
             }
