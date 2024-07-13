@@ -75,7 +75,8 @@ class CouponResource extends Resource
     {
         return $table
             ->columns([
-                //
+                Tables\Columns\TextColumn::make('code')->searchable(),
+                Tables\Columns\TextColumn::make('value')->searchable()->formatStateUsing(fn (string $state, $record) => $record->value . ($record->type === 'percentage' ? '%' : config('settings.default_currency'))),
             ])
             ->filters([
                 //

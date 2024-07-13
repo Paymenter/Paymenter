@@ -27,14 +27,14 @@ class Price
 
     public $discount = 0;
 
-    public function __construct($priceAndCurrency = null, $free = false, $dontShowUnavailablePrice = false, $coupon = null)
+    public function __construct($priceAndCurrency = null, $free = false, $dontShowUnavailablePrice = false)
     {
         if (is_array($priceAndCurrency)) {
             $priceAndCurrency = (object) $priceAndCurrency;
         }
         if ($free) {
             $this->price = 0;
-            $this->currency = null;
+            $this->currency = $priceAndCurrency->currency ?? null;
             $this->is_free = true;
 
             $this->formatted = (object) [
