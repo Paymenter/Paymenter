@@ -14,10 +14,10 @@ return new class extends Migration
     {
         Schema::create('properties', function (Blueprint $table) {
             $table->id();
-            $table->foreignIdFor(CustomProperty::class, 'custom_property_id')->nullable()->constrained()->cascadeOnDelete();
+            $table->foreignIdFor(CustomProperty::class)->nullable()->constrained()->cascadeOnDelete();
             $table->string('name')->nullable();
-            $table->string('key')->nullable();
-            $table->text('value')->nullable();
+            $table->string('key');
+            $table->text('value');
             $table->morphs('model');
             $table->timestamps();
         });

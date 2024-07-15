@@ -3,8 +3,8 @@
 namespace App\Admin\Resources;
 
 use App\Admin\Resources\UserResource\Pages;
+use App\Admin\Resources\UserResource\RelationManagers\PropertiesRelationManager;
 use App\Models\User;
-use Filament\Forms\Components\KeyValue;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
@@ -47,7 +47,6 @@ class UserResource extends Resource
                 Select::make('role_id')->translateLabel()->relationship('role', 'name')->searchable()->preload(),
                 TextInput::make('tfa_secret')->translateLabel()->password()->revealable(),
                 TextInput::make('credits')->translateLabel()->numeric(),
-                KeyValue::make('properties')->columnSpanFull(),
             ]);
     }
 
@@ -80,7 +79,7 @@ class UserResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            PropertiesRelationManager::class,
         ];
     }
 

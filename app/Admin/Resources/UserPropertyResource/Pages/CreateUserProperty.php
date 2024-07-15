@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Admin\Resources\UserPropertyResource\Pages;
+namespace App\Admin\Resources\CustomPropertyResource\Pages;
 
-use App\Admin\Resources\UserPropertyResource;
+use App\Admin\Resources\CustomPropertyResource;
 use Filament\Resources\Pages\CreateRecord;
 
 class CreateUserProperty extends CreateRecord
 {
-    protected static string $resource = UserPropertyResource::class;
+    protected static string $resource = CustomPropertyResource::class;
 }

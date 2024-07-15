@@ -1,14 +1,14 @@
 <?php
 
-namespace App\Admin\Resources\UserPropertyResource\Pages;
+namespace App\Admin\Resources\CustomPropertyResource\Pages;
 
-use App\Admin\Resources\UserPropertyResource;
+use App\Admin\Resources\CustomPropertyResource;
 use Filament\Actions;
 use Filament\Resources\Pages\EditRecord;
 
 class EditUserProperty extends EditRecord
 {
-    protected static string $resource = UserPropertyResource::class;
+    protected static string $resource = CustomPropertyResource::class;
 
     protected function getHeaderActions(): array
     {

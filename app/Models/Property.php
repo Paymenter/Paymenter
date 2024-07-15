@@ -10,4 +10,9 @@ class Property extends Model
     use HasFactory;
 
     public $guarded = [];
+
+    public function parent_property()
+    {
+        return $this->belongsTo(CustomProperty::class, 'custom_property_id');
+    }
 }

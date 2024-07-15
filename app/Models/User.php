@@ -4,6 +4,7 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 
+use App\Models\Traits\HasProperties;
 use App\Observers\UserObserver;
 use Filament\Models\Contracts\FilamentUser;
 use Filament\Models\Contracts\HasAvatar;
@@ -17,7 +18,7 @@ use Illuminate\Notifications\Notifiable;
 #[ObservedBy([UserObserver::class])]
 class User extends Authenticatable implements FilamentUser, HasAvatar
 {
-    use HasFactory, Notifiable;
+    use HasFactory, HasProperties, Notifiable;
 
     /**
      * The attributes that are mass assignable.
@@ -32,7 +33,6 @@ class User extends Authenticatable implements FilamentUser, HasAvatar
         'role_id',
         'tfa_secret',
         'credits',
-        'properties',
     ];
 
     /**
@@ -57,7 +57,6 @@ class User extends Authenticatable implements FilamentUser, HasAvatar
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
             'tfa_secret' => 'encrypted',
-            'properties' => 'array',
         ];
     }
 

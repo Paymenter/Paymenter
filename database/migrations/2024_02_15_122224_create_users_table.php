@@ -21,7 +21,6 @@ return new class extends Migration
             $table->string('password');
             $table->string('tfa_secret')->nullable();
             $table->integer('credits')->default(0);
-            $table->json('properties')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });

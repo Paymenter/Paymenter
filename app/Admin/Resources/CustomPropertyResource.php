@@ -2,17 +2,17 @@
 
 namespace App\Admin\Resources;
 
-use App\Admin\Resources\UserPropertyResource\Pages;
-use App\Models\UserProperty;
+use App\Admin\Resources\CustomPropertyResource\Pages;
+use App\Models\CustomProperty;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
 
-class UserPropertyResource extends Resource
+class CustomPropertyResource extends Resource
 {
-    protected static ?string $model = UserProperty::class;
+    protected static ?string $model = CustomProperty::class;
 
     protected static ?string $navigationGroup = 'Configuration';
 
@@ -25,6 +25,10 @@ class UserPropertyResource extends Resource
                 Forms\Components\TextInput::make('name')
                     ->required()
                     ->maxLength(255),
+                Forms\Components\TextInput::make('key')->required(),
+                Forms\Components\Select::make('model')->options([
+                    'App\Models\User' => 'User',
+                ])->required(),
                 Forms\Components\Select::make('type')->options([
                     'text' => 'Text',
                     'number' => 'Number',
@@ -34,9 +38,8 @@ class UserPropertyResource extends Resource
                     'date' => 'Date',
                 ])->required(),
                 Forms\Components\Textarea::make('description')->nullable()->columnSpanFull()->rows(2),
-                Forms\Components\TextInput::make('key')->required(),
+                Forms\Components\TagsInput::make('allowed_values')->nullable(),
                 Forms\Components\TextInput::make('validation')->nullable(),
-                Forms\Components\TagsInput::make('allowed_values')->nullable()->columnSpanFull(),
 
                 Forms\Components\Section::make()
                     ->columns([
@@ -56,7 +59,7 @@ class UserPropertyResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('name')->label('Property')
-                    ->description(fn (UserProperty $record): string => mb_strimwidth(($record->description ?? ''),
+                    ->description(fn (CustomProperty $record): string => mb_strimwidth(($record->description ?? ''),
                         0,
                         75,
                         '...'
@@ -77,7 +80,7 @@ class UserPropertyResource extends Resource
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
-            ]);
+            ])->defaultGroup('model');
     }
 
     public static function getRelations(): array
