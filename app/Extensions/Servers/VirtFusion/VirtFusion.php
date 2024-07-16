@@ -59,7 +59,7 @@ class VirtFusion extends Server
             [
                 'name' => 'hypervisor',
                 'type' => 'text',
-                'friendlyName' => 'Default Hypervisor Group ID (if no hypervisorId Configurable Options)',
+                'friendlyName' => 'Default Hypervisor Group ID',
                 'required' => true,
             ],
         ];
