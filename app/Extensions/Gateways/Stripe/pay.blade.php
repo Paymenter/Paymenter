@@ -6,137 +6,150 @@
 
     </div>
     <x-button.primary id="submit" class="mt-4">
-        Pay 
+        Pay
     </x-button.primary>
 </form>
 @script
-<script>
-    const script = document.createElement('script');
-    script.src = 'https://js.stripe.com/v3/';
-    script.async = true;
-    document.body.appendChild(script);
-    script.onload = () => {
+    <script>
+        const script = document.createElement('script');
+        script.src = 'https://js.stripe.com/v3/';
+        script.async = true;
+        document.body.appendChild(script);
+        script.onload = () => {
 
-        var stripe = Stripe(
-            "{{ $stripePublishableKey }}"
-        );
-
-        const options = {
-            clientSecret: '{{ $paymentIntent->client_secret }}',
-            appearance: {
-                theme: 'night'
-            },
-        };
-
-        const paymentElementOptions = {
-            layout: {
-                type: 'accordion',
-                defaultCollapsed: false,
-                radios: false,
-                spacedAccordionItems: true
-            },
-            defaultValues: {
-                billingDetails: {
-                    name: "{{ auth()->user()->name }}",
-                    email: "{{ auth()->user()->email }}",
-                }
-            }
-        }
-
-        // Set up Stripe.js and Elements to use in checkout form, passing the client secret obtained in a previous step
-        const elements = stripe.elements(options);
-        const paymentElement = elements.create('payment', paymentElementOptions);
-        paymentElement.mount('#payment-element');
-
-        const form = document.getElementById('payment-form');
-
-        form.addEventListener('submit', async (event) => {
-            event.preventDefault();
-            setLoading(true);
-
-            const {
-                error
-            } = await stripe.confirmPayment({
-                //`Elements` instance that was used to create the Payment Element
-                elements,
-                confirmParams: {
-                    return_url: '{{ route('invoices.show', $invoice->id) }}?checkPayment=true',
-                },
-            });
-
-            // This point will only be reached if there is an immediate error when
-            // confirming the payment. Otherwise, your customer will be redirected to
-            // your `return_url`. For some payment methods like iDEAL, your customer will
-            // be redirected to an intermediate site first to authorize the payment, then
-            // redirected to the `return_url`.
-            if (error.type === "card_error" || error.type === "validation_error") {
-                showMessage(error.message);
-            } else {
-                showMessage("An unexpected error occurred.");
-            }
-
-            setLoading(false);
-        });
-        checkStatus();
-
-
-        async function checkStatus() {
-            const clientSecret = new URLSearchParams(window.location.search).get(
-                "payment_intent_client_secret"
+            var stripe = Stripe(
+                "{{ $stripePublishableKey }}"
             );
 
-            if (!clientSecret) {
-                return;
+            const type = '{{ $type }}';
+
+            const options = {
+                clientSecret: '{{ $intent->client_secret }}',
+                appearance: {
+                    theme: 'night'
+                },
+            };
+
+            const paymentElementOptions = {
+                layout: {
+                    type: 'accordion',
+                    defaultCollapsed: false,
+                    radios: false,
+                    spacedAccordionItems: true
+                },
+                defaultValues: {
+                    billingDetails: {
+                        name: "{{ auth()->user()->name }}",
+                        email: "{{ auth()->user()->email }}",
+                    }
+                }
             }
 
-            const {
-                paymentIntent
-            } = await stripe.retrievePaymentIntent(clientSecret);
+            // Set up Stripe.js and Elements to use in checkout form, passing the client secret obtained in a previous step
+            const elements = stripe.elements(options);
+            const paymentElement = elements.create('payment', paymentElementOptions);
+            paymentElement.mount('#payment-element');
 
-            switch (paymentIntent.status) {
-                case "succeeded":
-                    window.location.href = "{{ route('invoices.show', $invoice->id) }}";
-                    break;
-                case "processing":
-                    // Show a spinner and disable the submit button
-                    setLoading(true);
-                    showMessage("Your payment is processing.");
-                    // Hide payment-element
-                    document.getElementById("payment-element").classList.add("hidden");
-                    setTimeout(checkStatus, 2000);
-                    break;
-                case "requires_payment_method":
-                    showMessage("Your payment was not successful, please try again.");
-                    break;
-                default:
-                    showMessage("Something went wrong.");
-                    break;
+            const form = document.getElementById('payment-form');
+
+            form.addEventListener('submit', async (event) => {
+                event.preventDefault();
+                setLoading(true);
+
+                if (type == 'payment') {
+                    const {
+                        error
+                    } = await stripe.confirmPayment({
+                        //`Elements` instance that was used to create the Payment Element
+                        elements,
+                        confirmParams: {
+                            return_url: '{{ route('invoices.show', $invoice->id) }}?checkPayment=true',
+                        },
+                    });
+                } else if (type == 'setup') {
+                    const {
+                        error
+                    } = await stripe.confirmSetup({
+                        elements,
+                        confirmParams: {
+                            return_url: '{{ route('invoices.show', $invoice->id) }}?checkPayment=true',
+                        },
+                    });
+                }
+
+                // This point will only be reached if there is an immediate error when
+                // confirming the payment. Otherwise, your customer will be redirected to
+                // your `return_url`. For some payment methods like iDEAL, your customer will
+                // be redirected to an intermediate site first to authorize the payment, then
+                // redirected to the `return_url`.
+                if (error.type === "card_error" || error.type === "validation_error") {
+                    showMessage(error.message);
+                } else {
+                    showMessage("An unexpected error occurred.");
+                }
+
+                setLoading(false);
+            });
+            checkStatus();
+
+
+            async function checkStatus() {
+                const clientSecret = new URLSearchParams(window.location.search).get(
+                    "payment_intent_client_secret"
+                );
+
+                if (!clientSecret) {
+                    return;
+                }
+
+                const {
+                    paymentIntent
+                } = await stripe.retrievePaymentIntent(clientSecret);
+
+                switch (paymentIntent.status) {
+                    case "succeeded":
+                        window.location.href = "{{ route('invoices.show', $invoice->id) }}";
+                        break;
+                    case "processing":
+                        // Show a spinner and disable the submit button
+                        setLoading(true);
+                        showMessage("Your payment is processing.");
+                        // Hide payment-element
+                        document.getElementById("payment-element").classList.add("hidden");
+                        setTimeout(checkStatus, 2000);
+                        break;
+                    case "requires_payment_method":
+                        showMessage("Your payment was not successful, please try again.");
+                        break;
+                    default:
+                        showMessage("Something went wrong.");
+                        break;
+                }
             }
-        }
 
-        function showMessage(messageText) {
-            const messageContainer = document.querySelector("#error-message");
+            function showMessage(messageText) {
+                const messageContainer = document.querySelector("#error-message");
 
-            messageContainer.classList.remove("hidden");
-            messageContainer.textContent = messageText;
+                messageContainer.classList.remove("hidden");
+                messageContainer.textContent = messageText;
 
-            setTimeout(function() {
-                messageContainer.classList.add("hidden");
-                messageContainer.textContent = "";
-            }, 4000);
-        }
-
-        // Show a spinner on payment submission
-        function setLoading(isLoading) {
-            if (isLoading) {
-                // Disable the button and show a spinner
-                document.querySelector("#submit").disabled = true;
-                document.querySelector("#submit").classList.add("hidden");
-            } else {
-                document.querySelector("#submit").disabled = false;
-                document.querySelector("#submit").classList.remove("hidden");
+                setTimeout(function() {
+                    messageContainer.classList.add("hidden");
+                    messageContainer.textContent = "";
+                }, 4000);
             }
-        }
-    };
-</script>
+
+            // Show a spinner on payment submission
+            function setLoading(isLoading) {
+                if (isLoading) {
+                    // Disable the button and show a spinner
+                    document.querySelector("#submit").disabled = true;
+                    document.querySelector("#submit").classList.add("hidden");
+                } else {
+                    document.querySelector("#submit").disabled = false;
+                    document.querySelector("#submit").classList.remove("hidden");
+                }
+            }
+        };
+    </script>
 @endscript

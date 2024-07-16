@@ -4,9 +4,10 @@ namespace App\Extensions\Gateways\Stripe;
 
 use App\Classes\Extension\Gateway;
 use App\Helpers\ExtensionHelper;
+use App\Models\Invoice;
+use App\Models\OrderProduct;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Log;
 
 class Stripe extends Gateway
 {
@@ -34,25 +35,56 @@ class Stripe extends Gateway
                 'description' => 'Find your API keys at https://dashboard.stripe.com/apikeys',
                 'required' => true,
             ],
+            [
+                'name' => 'stripe_use_subscriptions',
+                'label' => 'Use subscriptions',
+                'type' => 'checkbox',
+                'description' => 'Enable this option if you want to use subscriptions with Stripe (if available)',
+                'required' => false,
+            ],
         ];
+    }
+
+    private function request($method, $url, $data = [])
+    {
+        return Http::withHeaders([
+            'Authorization' => 'Bearer ' . $this->config('stripe_secret_key'),
+        ])->asForm()->$method('https://api.stripe.com/v1' . $url, $data)->object();
     }
 
     public function pay($invoice, $total)
     {
+        if ($this->config('stripe_use_subscriptions')) {
+            $stripeCustomerId = $invoice->user->properties->where('key', 'stripe_id')->first();
+            if (!$stripeCustomerId) {
+                $customer = $this->request('post', '/customers', [
+                    'email' => $invoice->user->email,
+                    'name' => $invoice->user->name,
+                    'metadata' => ['user_id' => $invoice->user->id],
+                ]);
+                $invoice->user->properties()->updateOrCreate(['key' => 'stripe_id'], ['value' => $customer->id]);
+            } else {
+                $customer = $this->request('get', '/customers/' . $stripeCustomerId->value);
+            }
 
-        $paymentIntent = Http::withHeaders([
-            'Authorization' => 'Bearer ' . $this->config('stripe_secret_key'),
-        ])->acceptJson()->asForm()->post('https://api.stripe.com/v1/payment_intents', [
-            'amount' => $total * 100,
-            'currency' => $invoice->currency_code,
-            'automatic_payment_methods' => ['enabled' => 'true'],
-            'metadata' => ['invoice_id' => $invoice->id],
-        ])->object();
-
-        Log::info('Stripe payment intent', (array) $paymentIntent);
+            $intent = $this->request('post', '/setup_intents', [
+                'metadata' => ['invoice_id' => $invoice->id],
+                'usage' => 'on_session',
+                'customer' => $customer->id,
+            ]);
+            $type = 'setup';
+        } else {
+            $intent = $this->request('post', '/payment_intents', [
+                'amount' => $total * 100,
+                'currency' => $invoice->currency_code,
+                'automatic_payment_methods' => ['enabled' => 'true'],
+                'metadata' => ['invoice_id' => $invoice->id],
+            ]);
+            $type = 'payment';
+        }
 
         // Pay the invoice using Stripe
-        return view('extensions::gateways.stripe.pay', ['invoice' => $invoice, 'total' => $total, 'paymentIntent' => $paymentIntent, 'stripePublishableKey' => $this->config('stripe_publishable_key')]);
+        return view('extensions::gateways.stripe.pay', ['invoice' => $invoice, 'total' => $total, 'intent' => $intent, 'type' => $type, 'stripePublishableKey' => $this->config('stripe_publishable_key')]);
     }
 
     public function webhook(Request $request)
@@ -65,8 +97,12 @@ class Stripe extends Gateway
 
         // Handle the event
         switch ($event->type) {
+            // Normal payment
             case 'payment_intent.succeeded':
                 $paymentIntent = $event->data->object; // contains a StripePaymentIntent
+                if (!isset($paymentIntent->metadata->invoice_id)) {
+                    return response()->json(['error' => 'Invoice ID not found in payment intent metadata'], 400);
+                }
                 // Get fee from payment intent
                 $fee = 0;
                 if (isset($paymentIntent->charges->data[0]->balance_transaction)) {
@@ -77,10 +113,46 @@ class Stripe extends Gateway
                 }
                 ExtensionHelper::addPayment($paymentIntent->metadata->invoice_id, 'Stripe', $paymentIntent->amount / 100, $fee ?? null, $paymentIntent->id);
                 break;
-            case 'payment_method.attached':
-                $paymentMethod = $event->data->object; // contains a StripePaymentMethod
+            case 'setup_intent.succeeded':
+                $setupIntent = $event->data->object; // contains a StripeSetupIntent
+                $this->setupSubscription($setupIntent);
                 break;
-                // ... handle other event types
+            case 'subscription_schedule.canceled':
+                $subscriptionSchedule = $event->data->object; // contains a StripeSubscriptionSchedule
+                $orderProduct = OrderProduct::where('subscription_id', $subscriptionSchedule->id)->first();
+                if ($orderProduct) {
+                    $orderProduct->update(['subscription_id' => null]);
+                }
+                break;
+            case 'invoice.created':
+                $invoice = $event->data->object; // contains a StripeInvoice
+                // Check if its draft and does exist in our database
+                if ($invoice->status === 'draft') {
+                    $orderProduct = OrderProduct::where('subscription_id', $invoice->subscription)->first();
+
+                    if ($orderProduct) {
+                        $this->request('post', '/invoices/' . $invoice->id . '/finalize');
+                        // Pay the invoice using Stripe
+                        $this->request('post', '/invoices/' . $invoice->id . '/pay');
+                    }
+                }
+                break;
+            case 'invoice.payment_succeeded':
+                // Mark invoice as paid
+                $invoice = $event->data->object; // contains a StripeInvoice
+
+                $orderProduct = OrderProduct::where('subscription_id', $invoice->subscription)->first();
+                if ($orderProduct) {
+                    $invoiceModel = $orderProduct->invoiceItems->sortByDesc('created_at')->first()->invoice;
+                    $paymentIntent = $this->request('get', '/payment_intents/' . $invoice->payment_intent);
+                    $fee = 0;
+                    if (isset($paymentIntent->charges->data[0]->balance_transaction)) {
+                        $balanceTransaction = $this->request('get', '/balance_transactions/' . $paymentIntent->charges->data[0]->balance_transaction);
+                        $fee = $balanceTransaction->fee / 100;
+                    }
+                    ExtensionHelper::addPayment($invoiceModel->id, 'Stripe', $invoice->amount_paid / 100, null, $invoice->payment_intent);
+                }
+                break;
             default:
                 // Unexpected event type
                 http_response_code(400);
@@ -88,6 +160,100 @@ class Stripe extends Gateway
         }
 
         http_response_code(200);
+    }
+
+    private function setupSubscription($setupIntent)
+    {
+        $invoice = Invoice::findOrFail($setupIntent->metadata->invoice_id);
+        $user = $invoice->user;
+        $stripeCustomerId = $user->properties->where('key', 'stripe_id')->first();
+        // Create customer if not exists
+        if (!$stripeCustomerId) {
+            throw new \Exception('Stripe customer not found', $user);
+        } else {
+            $customer = $this->request('get', '/customers/' . $stripeCustomerId->value);
+        }
+
+        // Make payment method default
+        $paymentMethod = $this->request('post', '/customers/' . $customer->id, [
+            'invoice_settings' => ['default_payment_method' => $setupIntent->payment_method],
+        ]);
+
+        // Create subscription
+        foreach ($invoice->items as $item) {
+            if (!$item->orderProduct) {
+                continue;
+            }
+            $orderProduct = $item->orderProduct;
+            $product = $orderProduct->product;
+
+            // Check if the orderProduct->product already exists in Stripe
+            $stripeProduct = $this->request('get', '/products/search', ['query' => 'metadata[\'product_id\']:\'' . $product->id . '\'']);
+
+            if (empty($stripeProduct->data)) {
+                // Create product
+                $stripeProduct = $this->request('post', '/products', [
+                    'name' => $product->name,
+                    'metadata' => ['product_id' => $product->id],
+                ]);
+            } else {
+                $stripeProduct = $stripeProduct->data[0];
+            }
+
+            $phases = [];
+            // Check if current invoice item price is bigger then orderProduct price (then we have a setup fee)
+            if ($item->price > $orderProduct->price) {
+                $phases[] = [
+                    'items' => [
+                        [
+                            'price_data' => [
+                                'currency' => $invoice->currency_code,
+                                'product' => $stripeProduct->id,
+                                'unit_amount' => $item->price * 100,
+                                'recurring' => [
+                                    'interval' => $orderProduct->plan->billing_unit,
+                                    'interval_count' => $orderProduct->plan->billing_period,
+                                ],
+                            ],
+                            'quantity' => 1,
+                        ],
+                    ],
+                    'iterations' => 1,
+                    'metadata' => [
+                        'order_product_id' => $product->id,
+                    ],
+                ];
+            }
+            $phases[] = [
+                'items' => [
+                    [
+                        'price_data' => [
+                            'currency' => $invoice->currency_code,
+                            'product' => $stripeProduct->id,
+                            'unit_amount' => ($orderProduct->price * $orderProduct->quantity) * 100,
+                            'recurring' => [
+                                'interval' => $orderProduct->plan->billing_unit,
+                                'interval_count' => $orderProduct->plan->billing_period,
+                            ],
+                        ],
+                        'quantity' => 1,
+                    ],
+                ],
+                'metadata' => [
+                    'order_product_id' => $product->id,
+                ],
+            ];
+
+            $subscription = $this->request('post', '/subscription_schedules', [
+                'customer' => $customer->id,
+                'start_date' => 'now',
+                'phases' => $phases,
+                'metadata' => ['order_product_id' => $orderProduct->id],
+            ]);
+
+            // Update orderProduct with subscription id
+            $orderProduct->update(['subscription_id' => $subscription->subscription]);
+        }
     }
 
     // Function to split and decode the Stripe-Signature header
