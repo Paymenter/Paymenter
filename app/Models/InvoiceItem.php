@@ -25,9 +25,9 @@ class InvoiceItem extends Model
         return $this->belongsTo(Invoice::class);
     }
 
-    public function product()
+    public function orderProduct()
     {
-        return $this->belongsTo(Product::class);
+        return $this->belongsTo(OrderProduct::class);
     }
 
     public function gateway()

@@ -27,6 +27,15 @@ class Price
 
     public $discount = 0;
 
+    public $original_price;
+
+    public $original_setup_fee;
+
+    public function setDiscount($discount)
+    {
+        $this->discount = $discount;
+    }
+
     public function __construct($priceAndCurrency = null, $free = false, $dontShowUnavailablePrice = false)
     {
         if (is_array($priceAndCurrency)) {
@@ -53,16 +62,23 @@ class Price
             $this->currency = (object) $this->currency;
         }
         $this->setup_fee = $priceAndCurrency->price->setup_fee ?? $priceAndCurrency->setup_fee ?? null;
+        // We save the original so we can revert back to it when removing a coupon
+        $this->original_price = $this->price;
+        $this->original_setup_fee = $this->setup_fee;
+
+
         // Calculate taxes
         if (config('settings.tax_enabled')) {
             $tax = Settings::tax();
             if ($tax) {
+                // Inclusive has the tax included in the price
                 if (config('settings.tax_type') == 'inclusive') {
                     $this->tax = number_format($this->price - ($this->price / (1 + $tax->rate / 100)), 2, '.', '');
                     if ($this->setup_fee) {
                         $this->setup_fee_tax = number_format($this->setup_fee - ($this->setup_fee / (1 + $tax->rate / 100)), 2, '.', '');
                     }
                 } else {
+                    // Exclusive has the tax added to the price as an extra
                     $this->tax = number_format($this->price * $tax->rate / 100, 2, '.', '');
                     $this->price = number_format($this->price + $this->tax, 2, '.', '');
                     if ($this->setup_fee) {

@@ -12,6 +12,7 @@ return [
     'order_summary' => 'Order Summary',
     'edit' => 'Edit',
 
+    'apply' => 'Apply',
     'price' => 'Price',
     'setup_fee' => 'Setup fee',
 

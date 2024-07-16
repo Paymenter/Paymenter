@@ -30,4 +30,6 @@ return [
         'password' => 'Password',
         'password_placeholder' => 'Your password',
     ],
+
+    'all_rights_reserved' => 'All rights reserved.',
 ];

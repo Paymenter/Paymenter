@@ -20,6 +20,7 @@ return new class extends Migration
             $table->decimal('price', 17, 2);
             $table->foreignIdFor(\App\Models\Plan::class)->nullable()->constrained()->cascadeOnDelete();
             $table->dateTime('expires_at')->nullable();
+            $table->string('subscription_id')->nullable();
             $table->timestamps();
         });
     }

@@ -9,7 +9,7 @@
             <h3 class="text-lg font-semibold">
                 {{ $product->price() }}
             </h3>
-            <a href="{{ route('products.show', ['category' => $product->category, 'product' => $product->slug]) }}">
+            <a href="{{ route('products.show', ['category' => $product->category, 'product' => $product->slug]) }}" wire:navigate>
                 <x-button.primary>
                     {{ __('general.view') }}
                 </x-button.primary>

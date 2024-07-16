@@ -17,6 +17,11 @@ class OrderProduct extends Model
         'quantity',
         'price',
         'expires_at',
+        'subscription_id',
+    ];
+
+    protected $hidden = [
+        'subscription_id',
     ];
 
     protected $casts = [
@@ -43,10 +48,11 @@ class OrderProduct extends Model
      */
     public function description(): Attribute
     {
-        $endDate = $this->expires_at->addDays($this->plan->billing_duration);
+        $date = $this->expires_at ?? now();
+        $endDate = $date->copy()->addDays($this->plan->billing_duration);
 
         return Attribute::make(
-            get: fn () => $this->product->name . ' (' . $this->expires_at->format('M d, Y') . ' - ' . $endDate->format('M d, Y') . ')'
+            get: fn () => $this->product->name . ' (' . $date->format('M d, Y') . ' - ' . $endDate->format('M d, Y') . ')'
         );
     }
 

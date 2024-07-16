@@ -38,7 +38,7 @@
         </article>
 
         @if (($product->stock > 0 || !$product->stock) && $product->price()->available)
-            <a href="{{ route('products.checkout', ['category' => $category, 'product' => $product->slug]) }}">
+            <a href="{{ route('products.checkout', ['category' => $category, 'product' => $product->slug]) }}" wire:navigate>
                 <x-button.primary>{{ __('product.add_to_cart') }}</x-button.primary>
             </a>
         @endif

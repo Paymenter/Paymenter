@@ -11,6 +11,7 @@ class Coupon extends Model
 
     protected $fillable = [
         'type',
+        'time',
         'code',
         'value',
         'max_uses',
@@ -19,9 +20,12 @@ class Coupon extends Model
 
     ];
 
+    /**
+     * Get the products that belong to the option.
+     */
     public function products()
     {
-        return $this->hasMany(CouponProduct::class);
+        return $this->belongsToMany(Product::class, 'coupon_products');
     }
 
     public function orders()

@@ -57,6 +57,17 @@ class CouponResource extends Resource
                         'free_setup' => 'Free setup',
                     ])
                     ->placeholder('Select the type of the coupon'),
+                
+                Forms\Components\Select::make('time')
+                    ->label('Time')
+                    ->required()
+                    ->default('forever')
+                    ->live()
+                    ->options([
+                        'lifetime' => 'Lifetime',
+                        'one_time' => 'One time',
+                    ])
+                    ->placeholder('How many times can the coupon be used?'),
 
                 Forms\Components\TextInput::make('max_uses')
                     ->label('Max Uses')
@@ -68,6 +79,14 @@ class CouponResource extends Resource
                     ->label('Starts At'),
                 Forms\Components\DatePicker::make('expires_at')
                     ->label('Expires At'),
+
+                Forms\Components\Select::make('products')
+                    ->label('Products')
+                    ->relationship('products', 'name')
+                    ->multiple()
+                    ->preload()
+                    ->placeholder('Select the products that this coupon belongs to'),
+
             ]);
     }
 
@@ -76,7 +95,7 @@ class CouponResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('code')->searchable(),
-                Tables\Columns\TextColumn::make('value')->searchable()->formatStateUsing(fn (string $state, $record) => $record->value . ($record->type === 'percentage' ? '%' : config('settings.default_currency'))),
+                Tables\Columns\TextColumn::make('value')->searchable()->formatStateUsing(fn ($record) => $record->value . ($record->type === 'percentage' ? '%' : config('settings.default_currency'))),
             ])
             ->filters([
                 //

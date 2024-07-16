@@ -1,5 +1,5 @@
-<div>
-    
+<div @if ($checkPayment) wire:poll="checkPaymentStatus" @endif>
+
     @if ($this->pay)
         <x-modal title="Payment for Invoice #{{ $invoice->id }}" open>
             <div class="mt-8">
@@ -9,7 +9,7 @@
                 <div class="flex gap-4">
                     Amount: {{ $invoice->formattedTotal }}
                     <button wire:confirm="Are you sure?" wire:click="exitPay" @click="open = false"
-                     class="text-primary-100">
+                        class="text-primary-100">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
                             stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -50,6 +50,14 @@
                 @elseif ($invoice->status == 'pending')
                     <div class="text-yellow-500 mb-6 text-lg text-center">
                         Payment pending
+                        @if ($checkPayment)
+                            <div class="mt-4">
+                                <x-button.primary wire:click="checkPaymentStatus" wire:loading.attr="disabled"
+                                    wire:target="checkPaymentStatus">
+                                    <span wire:loading wire:target="checkPaymentStatus">Checking...</span>
+                                </x-button.primary>
+                            </div>
+                        @endif
                     </div>
                     <x-form.select wire:model.live="gateway" label="Payment Gateway" class="mt-4" name="gateway">
                         @foreach ($gateways as $gateway)
@@ -122,7 +130,7 @@
             </div>
         </div>
 
-        @if($invoice->transactions->isNotEmpty())
+        @if ($invoice->transactions->isNotEmpty())
             <div class="mt-12">
                 <h2 class="text-2xl font-bold">Transactions</h2>
                 <div class="mt-4">
@@ -133,15 +141,14 @@
                                     class="p-4 text-xs font-semibold tracking-wider text-left uppercase rounded-l-lg">
                                     Date
                                 </th>
-                                <th scope="col"
-                                    class="p-4 text-xs font-semibold tracking-wider text-left uppercase">
+                                <th scope="col" class="p-4 text-xs font-semibold tracking-wider text-left uppercase">
                                     Transaction ID
                                 </th>
-                                <th scope="col"
-                                    class="p-4 text-xs font-semibold tracking-wider text-left uppercase">
+                                <th scope="col" class="p-4 text-xs font-semibold tracking-wider text-left uppercase">
                                     Gateway
                                 </th>
-                                <th scope="col" class="p-4 text-xs font-semibold tracking-wider text-left uppercase rounded-r-lg">
+                                <th scope="col"
+                                    class="p-4 text-xs font-semibold tracking-wider text-left uppercase rounded-r-lg">
                                     Amount
                                 </th>
                             </tr>
@@ -149,10 +156,14 @@
                         <tbody>
                             @foreach ($invoice->transactions as $transaction)
                                 <tr>
-                                    <td class="p-4 font-normal whitespace-nowrap">{{ $transaction->created_at->format('d M Y') }}</td>
-                                    <td class="p-4 font-normal whitespace-nowrap">{{ $transaction->transaction_id }}</td>
-                                    <td class="p-4 font-normal whitespace-nowrap">{{ $transaction->gateway?->name }}</td>
-                                    <td class="p-4 font-normal whitespace-nowrap">{{ $transaction->formattedAmount }}</td>
+                                    <td class="p-4 font-normal whitespace-nowrap">
+                                        {{ $transaction->created_at->format('d M Y H:i') }}</td>
+                                    <td class="p-4 font-normal whitespace-nowrap">{{ $transaction->transaction_id }}
+                                    </td>
+                                    <td class="p-4 font-normal whitespace-nowrap">{{ $transaction->gateway?->name }}
+                                    </td>
+                                    <td class="p-4 font-normal whitespace-nowrap">{{ $transaction->formattedAmount }}
+                                    </td>
                                 </tr>
                             @endforeach
                         </tbody>

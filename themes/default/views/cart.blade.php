@@ -19,7 +19,9 @@
                 </div>
                 <div class="flex flex-col justify-between items-end gap-4">
                     <h3 class="text-xl font-semibold p-1">
-                        {{ $item->price->format($item->price->price * $item->quantity) }} @if ($item->quantity > 1) ({{ $item->price }} each) @endif
+                        {{ $item->price->format($item->price->price * $item->quantity) }} @if ($item->quantity > 1)
+                            ({{ $item->price }} each)
+                        @endif
                     </h3>
                     <div class="flex flex-row gap-2">
                         @if ($item->product->allow_quantity == 'combined')
@@ -30,7 +32,8 @@
                                     -
                                 </x-button.secondary>
                                 <x-form.input class="h-10 text-center" disabled
-                                    wire:model="items.{{ $key }}.quantity" divClass="!mt-0 !w-14" name="quantity" noDirty />
+                                    wire:model="items.{{ $key }}.quantity" divClass="!mt-0 !w-14"
+                                    name="quantity" noDirty />
                                 <x-button.secondary
                                     wire:click="updateQuantity({{ $key }}, {{ $item->quantity + 1 }});"
                                     class="h-full !w-fit">
@@ -57,10 +60,25 @@
             <h2 class="text-2xl font-semibold bg-primary-800 p-2 px-4 rounded-md mb-3">
                 {{ __('product.order_summary') }}
             </h2>
+            <div class="font-semibold flex items-end gap-2 bg-primary-800 p-2 px-4 rounded-md">
+                @if(!$coupon)
+                    <x-form.input wire:model="coupon" name="coupon" label="Coupon" />
+                    <x-button.primary wire:click="applyCoupon" class="h-fit !w-fit mb-0.5">
+                        {{ __('product.apply') }}
+                    </x-button.primary>
+                @else
+                    <div class="flex justify-between items-center w-full">
+                        <h4 class="text-center w-full">{{ $coupon->code }}</h4>
+                        <x-button.secondary wire:click="removeCoupon" class="h-fit !w-fit">
+                            {{ __('product.remove') }}
+                        </x-button.secondary>
+                    </div>
+                @endif
+            </div>
             <div class="font-semibold flex justify-between bg-primary-800 p-2 px-4 rounded-md">
                 <h4>Subtotal:</h4> {{ $total->format($total->price - $total->tax) }}
             </div>
-            @if($total->tax > 0)
+            @if ($total->tax > 0)
                 <div class="font-semibold flex justify-between bg-primary-800 p-2 px-4 rounded-md">
                     <h4>{{ \App\Classes\Settings::tax()->name }}:</h4> {{ $total->formatted->tax }}
                 </div>

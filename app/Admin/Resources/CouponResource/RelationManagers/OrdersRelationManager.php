@@ -12,22 +12,13 @@ class OrdersRelationManager extends RelationManager
 {
     protected static string $relationship = 'orders';
 
-    public function form(Form $form): Form
-    {
-        return $form
-            ->schema([
-                Forms\Components\TextInput::make('id')
-                    ->required()
-                    ->maxLength(255),
-            ]);
-    }
-
     public function table(Table $table): Table
     {
         return $table
             ->recordTitleAttribute('id')
             ->columns([
                 Tables\Columns\TextColumn::make('id'),
+                Tables\Columns\TextColumn::make('user.name')->label('User'),
             ])
             ->filters([
                 //
@@ -37,7 +28,7 @@ class OrdersRelationManager extends RelationManager
             ->actions([
                 Tables\Actions\Action::make('view')
                     ->label('View')
-                    ->url(fn ($record) => route('admin.orders.edit', $record)),
+                    ->url(fn ($record) => route('filament.admin.resources.orders.edit', $record)),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
