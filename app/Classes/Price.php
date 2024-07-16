@@ -66,7 +66,6 @@ class Price
         $this->original_price = $this->price;
         $this->original_setup_fee = $this->setup_fee;
 
-
         // Calculate taxes
         if (config('settings.tax_enabled')) {
             $tax = Settings::tax();

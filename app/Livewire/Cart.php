@@ -86,6 +86,7 @@ class Cart extends Component
             }
             $item->price->setDiscount($discount);
             $item->price->price -= $discount;
+
             return (object) $item;
         });
         $this->updateTotal();

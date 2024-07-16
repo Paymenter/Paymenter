@@ -57,7 +57,7 @@ class CouponResource extends Resource
                         'free_setup' => 'Free setup',
                     ])
                     ->placeholder('Select the type of the coupon'),
-                
+
                 Forms\Components\Select::make('time')
                     ->label('Time')
                     ->required()
