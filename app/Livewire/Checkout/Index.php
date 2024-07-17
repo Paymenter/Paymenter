@@ -171,12 +171,8 @@ class Index extends Component
         if ($this->couponCode) {
             $coupon = Coupon::where('code', $this->couponCode)->first();
             if ($coupon) {
-                if ($coupon->uses < $coupon->max_uses) {
-                    session()->put('coupon', $coupon->id);
-                    $this->updateCart();
-                } else {
-                    $this->addError('couponCode', 'Coupon has reached its maximum usage limit.');
-                }
+                session()->put('coupon', $coupon->id);
+                $this->updateCart();
             }
         }
     }
