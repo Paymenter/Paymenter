@@ -14,7 +14,7 @@ class VirtFusion extends Server
     {
         return [
             'display_name' => 'VirtFusion',
-            'version' => '1.0.0',
+            'version' => '1.1.0',
             'author' => 'Paymenter',
             'website' => 'https://paymenter.org',
         ];
@@ -68,12 +68,49 @@ class VirtFusion extends Server
                 'friendlyName' => 'Number IPs',
                 'required' => true,
             ],
+            [
+                'name' => 'upspeed',
+                'type' => 'text',
+                'friendlyName' => 'upload speed kB/s',
+                'required' => false,
+                
+            ],
+            [
+                'name' => 'downspeed',
+                'type' => 'text',
+                'friendlyName' => 'download speed kB/s',
+                'required' => false,
+             ],
+             [
+                'name' => 'traffic',
+                'type' => 'text',
+                'friendlyName' => 'Traffic(GB)',
+                'required' => false,
+             ],
+             [
+                'name' => 'cpu',
+                'type' => 'text',
+                'friendlyName' => 'CPU(Number)',
+                'required' => false,
+             ],
+             [
+                'name' => 'ram',
+                'type' => 'text',
+                'friendlyName' => 'RAM(MB)',
+                'required' => false,
+             ],
+             [
+                'name' => 'disk',
+                'type' => 'text',
+                'friendlyName' => 'Disk(GB)',
+                'required' => false,
+             ],
         ];
     }
 
     public function createServer($user, $params, $order, $product, $configurableOptions)
     {
-        $package = $params['package'];
+        $package = $configurableOptions['package'] ?? $params['package'];
 
         $user = $this->getUser($user);
         $response = $this->postRequest(
@@ -81,8 +118,14 @@ class VirtFusion extends Server
             [
                 'packageId' => $package,
                 'userId' => $user,
-                'hypervisorId' => $params['hypervisor'],
-                'ipv4' => $params['ips'],
+                'hypervisorId' => $configurableOptions['hypervisor'] ?? $params['hypervisor'],
+                'ipv4' => $configurableOptions['ips'] ?? $params['ips'],
+                'networkSpeedInbound' => $configurableOptions['upspeed'] ?? $params['upspeed'],
+                'networkSpeedOutbound' => $configurableOptions['downspeed'] ?? $params['downspeed'],
+                'traffic' => $configurableOptions['traffic'] ?? $params['traffic'],
+                'cpu' => $configurableOptions['cpu'] ?? $params['cpu'],
+                'ram' => $configurableOptions['ram'] ?? $params['ram'],
+                'disk' => $configurableOptions['disk'] ?? $params['disk'],
             ]
         );
         if (isset($response->json()['errors'])) {
@@ -260,7 +303,7 @@ class VirtFusion extends Server
 
         return [
             'name' => 'VirtFusion',
-            'template' => 'virtfusion::control',
+            'template' => 'VirtFusion::control',
             'data' => [
                 'details' => (object) $response->json()['data'],
             ],
@@ -268,6 +311,24 @@ class VirtFusion extends Server
     }
 
     public function login(OrderProduct $id, Request $request)
+    {
+
+        if (!ExtensionHelper::hasAccess($id, auth()->user())) {
+            return response()->json(['error' => 'You do not have access to this server'], 403);
+        }
+        $params = ExtensionHelper::getParameters($id)->config;
+
+        $loginLink = $this->postRequest(
+            '/api/v1/users/' . auth()->user()->id . '/serverAuthenticationTokens/' . $params['config']['server_id'],
+            []
+        );
+
+        $loginLink = $loginLink->json()['data']['authentication']['endpoint_complete'];
+
+        return redirect(ExtensionHelper::getConfig('VirtFusion', 'host') . $loginLink);
+    }
+    
+    public function vnc(OrderProduct $id, Request $request)
     {
 
         if (!ExtensionHelper::hasAccess($id, auth()->user())) {
