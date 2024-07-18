@@ -1,6 +1,7 @@
 <div class="grid grid-cols-1 md:grid-cols-2">
     <div class="flex">
         <div class="flex-col">
+            <div class="font-bold">HostID:</div>
             <div class="font-bold">Name:</div>
             <div class="font-bold">Hostname:</div>
             <div class="font-bold">Ram:</div>
@@ -9,6 +10,7 @@
             <div class="font-bold">Traffic:</div>
         </div>
         <div class="flex-col ml-4">
+            <div>{{ $details->id ?? 'N/A'}}</div>
             <div>@empty($details->name)
                     N/A
                 @else
