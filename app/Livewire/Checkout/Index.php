@@ -171,7 +171,7 @@ class Index extends Component
         if ($this->couponCode) {
             $coupon = Coupon::where('code', $this->couponCode)->first();
             if ($coupon) {
-                if ($coupon->uses < $coupon->max_uses) {
+                if (is_null($coupon->max_uses) || $coupon->max_uses == 0 || $coupon->uses < $coupon->max_uses) {
                     session()->put('coupon', $coupon->id);
                     $this->updateCart();
                 } else {
