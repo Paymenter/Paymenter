@@ -328,21 +328,5 @@ class VirtFusion extends Server
         return redirect(ExtensionHelper::getConfig('VirtFusion', 'host') . $loginLink);
     }
     
-    public function vnc(OrderProduct $id, Request $request)
-    {
 
-        if (!ExtensionHelper::hasAccess($id, auth()->user())) {
-            return response()->json(['error' => 'You do not have access to this server'], 403);
-        }
-        $params = ExtensionHelper::getParameters($id)->config;
-
-        $loginLink = $this->postRequest(
-            '/api/v1/users/' . auth()->user()->id . '/serverAuthenticationTokens/' . $params['config']['server_id'],
-            []
-        );
-
-        $loginLink = $loginLink->json()['data']['authentication']['endpoint_complete'];
-
-        return redirect(ExtensionHelper::getConfig('VirtFusion', 'host') . $loginLink);
-    }
 }
