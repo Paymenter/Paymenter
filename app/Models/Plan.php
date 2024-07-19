@@ -72,4 +72,9 @@ class Plan extends Model implements Auditable
             get: fn () => $diffInDays * $this->billing_period
         );
     }
+
+    public function orderProducts()
+    {
+        return $this->hasMany(OrderProduct::class);
+    }
 }

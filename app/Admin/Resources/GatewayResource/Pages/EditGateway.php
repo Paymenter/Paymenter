@@ -36,7 +36,7 @@ class EditGateway extends EditRecord
         }
 
         foreach ($data['settings'] as $key => $value) {
-            if (!$value) {
+            if (is_null($value)) {
                 continue;
             }
             $record->settings()->updateOrCreate([
