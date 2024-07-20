@@ -19,6 +19,11 @@ class CouponResource extends Resource
 
     protected static ?string $navigationIcon = 'ri-coupon-line';
 
+    public static function getNavigationBadge(): ?string
+    {
+        return static::getModel()::count() ?: null;
+    }
+
     protected static ?string $navigationGroup = 'Configuration';
 
     public static function form(Form $form): Form
@@ -31,6 +36,7 @@ class CouponResource extends Resource
                     ->maxLength(255)
                     ->unique(static::getModel(), 'code', ignoreRecord: true)
                     ->placeholder('Enter the code of the coupon'),
+
                 Forms\Components\TextInput::make('value')
                     ->label('Value')
                     ->required()
@@ -77,6 +83,7 @@ class CouponResource extends Resource
 
                 Forms\Components\DatePicker::make('starts_at')
                     ->label('Starts At'),
+
                 Forms\Components\DatePicker::make('expires_at')
                     ->label('Expires At'),
 
@@ -86,7 +93,6 @@ class CouponResource extends Resource
                     ->multiple()
                     ->preload()
                     ->placeholder('Select the products that this coupon belongs to'),
-
             ]);
     }
 

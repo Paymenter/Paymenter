@@ -22,6 +22,11 @@ class InvoiceResource extends Resource
 
     protected static ?string $navigationIcon = 'ri-bill-line';
 
+    public static function getNavigationBadge(): ?string
+    {
+        return static::getModel()::where('status', 'pending')->count() ?: null;
+    }
+    
     public static ?string $navigationGroup = 'Administration';
 
     public static function form(Form $form): Form

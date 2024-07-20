@@ -16,6 +16,11 @@ class CustomPropertyResource extends Resource
 
     protected static ?string $navigationGroup = 'Configuration';
 
+    public static function getNavigationBadge(): ?string
+    {
+        return static::getModel()::count() ?: null;
+    }
+
     protected static ?string $navigationIcon = 'heroicon-o-list-bullet';
 
     public static function form(Form $form): Form

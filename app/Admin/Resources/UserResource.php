@@ -23,6 +23,11 @@ class UserResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-users';
 
+    public static function getNavigationBadge(): ?string
+    {
+        return static::getModel()::count() ?: null;
+    }
+
     public static function getGloballySearchableAttributes(): array
     {
         return ['first_name', 'last_name', 'email'];

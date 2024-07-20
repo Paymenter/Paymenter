@@ -23,6 +23,11 @@ class ServerResource extends Resource
 
     protected static ?string $navigationGroup = 'Extensions';
 
+    public static function getNavigationBadge(): ?string
+    {
+        return static::getModel()::count() ?: null;
+    }
+
     protected static ?string $navigationIcon = 'heroicon-o-server';
 
     public static function form(Form $form): Form

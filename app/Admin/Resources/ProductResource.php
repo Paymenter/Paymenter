@@ -28,6 +28,11 @@ class ProductResource extends Resource
 
     protected static ?string $navigationGroup = 'Administration';
 
+    public static function getNavigationBadge(): ?string
+    {
+        return static::getModel()::count() ?: null;
+    }
+
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
     protected static ?string $recordTitleAttribute = 'name';

@@ -20,6 +20,11 @@ class OrderResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-shopping-cart';
 
+    public static function getNavigationBadge(): ?string
+    {
+        return static::getModel()::count() ?: null;
+    }
+
     public static ?string $navigationGroup = 'Administration';
 
     public static function form(Form $form): Form
