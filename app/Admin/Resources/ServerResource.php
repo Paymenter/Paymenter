@@ -22,7 +22,7 @@ class ServerResource extends Resource
     protected static ?string $model = Server::class;
 
     protected static ?string $navigationGroup = 'Extensions';
-    
+
     protected static ?string $navigationIcon = 'heroicon-o-server';
 
     public static function form(Form $form): Form
