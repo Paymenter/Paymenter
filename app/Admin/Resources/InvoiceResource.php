@@ -26,7 +26,7 @@ class InvoiceResource extends Resource
     {
         return static::getModel()::where('status', 'pending')->count() ?: null;
     }
-    
+
     public static ?string $navigationGroup = 'Administration';
 
     public static function form(Form $form): Form
