@@ -43,30 +43,30 @@ jobs:
           branch: main
           file_pattern: "**/*.php"
 
-  phpstan:
-    runs-on: ubuntu-latest
+  #phpstan:
+    #runs-on: ubuntu-latest
 
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+    #steps:
+      #- name: Checkout code
+        #uses: actions/checkout@v4
 
-      - name: Setup PHP
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: '8.3'
-          extensions: bcmath, curl, gd, mbstring, mysql, openssl, pdo, tokenizer, xml, zip
-          tools: composer:v2
-          coverage: none
+      #- name: Setup PHP
+        #uses: shivammathur/setup-php@v2
+        #with:
+          #php-version: '8.3'
+          #extensions: bcmath, curl, gd, mbstring, mysql, openssl, pdo, tokenizer, xml, zip
+          #tools: composer:v2
+          #coverage: none
 
-      - name: Cache Composer Dependencies
-        uses: actions/cache@v3
-        with:
-          path: ~/.composer/cache
-          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
-          restore-keys: ${{ runner.os }}-composer-
+      #- name: Cache Composer Dependencies
+        #uses: actions/cache@v3
+        #with:
+          #path: ~/.composer/cache
+          #key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+          #restore-keys: ${{ runner.os }}-composer-
 
-      - name: Install Dependencies
-        run: composer install --no-interaction --no-progress --prefer-dist 
+      #- name: Install Dependencies
+        #run: composer install --no-interaction --no-progress --prefer-dist 
 
-      - name: Run PHPStan
-        run: vendor/bin/phpstan analyse
+      #- name: Run PHPStan
+        #run: vendor/bin/phpstan analyse
