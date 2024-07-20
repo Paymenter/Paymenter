@@ -14,7 +14,7 @@ return [
     |
     */
 
-    'version' => 'development',
+    'version' => '0.9.5',
 
     // Used for beta versions
     'commit' => '',
