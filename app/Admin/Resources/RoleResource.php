@@ -20,11 +20,6 @@ class RoleResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-shield-check';
 
-    public static function getNavigationBadge(): ?string
-    {
-        return static::getModel()::count() ?: null;
-    }
-
     public static function form(Form $form): Form
     {
         return $form

@@ -4,6 +4,7 @@ namespace App\Admin\Resources;
 
 use App\Admin\Resources\OrderResource\Pages;
 use App\Models\Order;
+use App\Models\OrderProduct;
 use App\Models\Product;
 use Filament\Forms;
 use Filament\Forms\Components\Component;
@@ -22,7 +23,7 @@ class OrderResource extends Resource
 
     public static function getNavigationBadge(): ?string
     {
-        return static::getModel()::count() ?: null;
+        return OrderProduct::where('status', 'pending')->count() ?: null;
     }
 
     public static ?string $navigationGroup = 'Administration';

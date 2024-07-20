@@ -19,11 +19,6 @@ class CouponResource extends Resource
 
     protected static ?string $navigationIcon = 'ri-coupon-line';
 
-    public static function getNavigationBadge(): ?string
-    {
-        return static::getModel()::count() ?: null;
-    }
-
     protected static ?string $navigationGroup = 'Configuration';
 
     public static function form(Form $form): Form
