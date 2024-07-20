@@ -18,6 +18,9 @@ return Application::configure(basePath: dirname(__DIR__))
             'has' => EnsureUserHasPermissions::class,
         ]);
     })
+    ->withEvents(discover: [
+        __DIR__ . '/../app/Extensions',
+    ])
     ->withExceptions(function (Exceptions $exceptions) {
         //
     })->create();

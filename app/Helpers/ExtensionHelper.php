@@ -5,6 +5,7 @@ namespace App\Helpers;
 use App\Classes\FilamentInput;
 use App\Models\Gateway;
 use App\Models\Invoice;
+use App\Models\OrderProduct;
 use Exception;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
@@ -238,5 +239,21 @@ class ExtensionHelper
             $invoice->status = 'paid';
             $invoice->save();
         }
+    }
+
+    /**
+     * Cancel subscription
+     */
+    public static function cancelSubscription(OrderProduct $orderProduct)
+    {
+        foreach (Gateway::all() as $gateway) {
+            if (self::hasFunction($gateway, 'cancelSubscription')) {
+                if (self::getExtension('gateway', $gateway->extension, $gateway->settings)->cancelSubscription($orderProduct)) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 }

@@ -15,10 +15,10 @@ return new class extends Migration
             $table->id();
             $table->string('status')->default('pending');
             $table->foreignIdFor(\App\Models\Order::class)->constrained()->cascadeOnDelete();
-            $table->foreignIdFor(\App\Models\Product::class)->nullable()->constrained()->cascadeOnDelete();
+            $table->foreignIdFor(\App\Models\Product::class)->nullable()->constrained()->nullOnDelete();
             $table->integer('quantity')->default(1);
             $table->decimal('price', 17, 2);
-            $table->foreignIdFor(\App\Models\Plan::class)->nullable()->constrained()->cascadeOnDelete();
+            $table->foreignIdFor(\App\Models\Plan::class)->nullable()->constrained()->nullOnDelete();
             $table->dateTime('expires_at')->nullable();
             $table->string('subscription_id')->nullable();
             $table->timestamps();

@@ -5,6 +5,7 @@ namespace App\Extensions\Gateways\PayPal;
 use App\Classes\Extension\Gateway;
 use App\Helpers\ExtensionHelper;
 use App\Models\Order;
+use App\Models\OrderProduct;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
@@ -66,7 +67,7 @@ class PayPal extends Gateway
         });
     }
 
-    private function request($method, $url, $data = [])
+    public function request($method, $url, $data = [])
     {
         return Http::withHeaders([
             'Content-Type' => 'application/json',
@@ -101,6 +102,8 @@ class PayPal extends Gateway
                 ],
             ];
 
+            $nextSum = $invoice->items->sum(fn ($item) => $item->orderProduct->price * $item->orderProduct->quantity);
+
             $billingCycles[] = [
                 'frequency' => [
                     'interval_unit' => strtoupper($invoice->items->first()->orderProduct->plan->billing_unit),
@@ -108,9 +111,10 @@ class PayPal extends Gateway
                 ],
                 'tenure_type' => 'REGULAR',
                 'sequence' => 2,
+                'total_cycles' => 0,
                 'pricing_scheme' => [
                     'fixed_price' => [
-                        'value' => $invoice->items->sum(fn ($item) => $item->price * $item->quantity),
+                        'value' => $nextSum,
                         'currency_code' => $invoice->currency_code,
                     ],
                 ],
@@ -201,9 +205,16 @@ class PayPal extends Gateway
         // Handle the subscription event
         if ($body['event_type'] === 'BILLING.SUBSCRIPTION.ACTIVATED') {
             // Its activated so we can now add the subscription to the user (custom is the order id)
-            Order::find($body['resource']['custom_id'])->orderProducts->first()->update([
-                'subscription_id' => $body['resource']['id'],
-            ]);
+            Order::find($body['resource']['custom_id'])->orderProducts->each(function ($orderProduct) use ($body) {
+                $orderProduct->subscription_id = $body['resource']['id'];
+                $orderProduct->save();
+                $orderProduct->properties()->updateOrCreate([
+                    'key' => 'has_paypal_subscription',
+                    'name' => 'Has PayPal Subscription',
+                ], [
+                    'value' => true,
+                ]);
+            });
 
             return response()->json(['status' => 'success']);
         } elseif ($body['event_type'] === 'PAYMENT.SALE.COMPLETED') {
@@ -215,5 +226,45 @@ class PayPal extends Gateway
                 ExtensionHelper::addPayment($invoiceItem->invoice_id, 'PayPal', $body['resource']['amount']['total'], $body['resource']['transaction_fee']['value'], $body['resource']['id']);
             }
         }
+    }
+
+    public function updateSubscription(OrderProduct $orderProduct)
+    {
+        if ($orderProduct->properties->where('key', 'has_paypal_subscription')->first()?->value !== '1') {
+            return false;
+        }
+        $paypal = new PayPal();
+        // Update subscription price
+        $newPrice = OrderProduct::where('subscription_id', $orderProduct->subscription_id)->sum('price');
+        //Grab currenct subscription ID
+        $subscriptionId = $orderProduct->subscription_id;
+        $url = $paypal->config('test_mode') ? 'https://api-m.sandbox.paypal.com' : 'https://api-m.paypal.com';
+
+        // Update subscription price
+        $paypal->request('PATCH', $url . '/v1/billing/subscriptions/' . $subscriptionId, [
+            [
+                'op' => 'replace',
+                'path' => '/plan/billing_cycles/@sequence==2/pricing_scheme/fixed_price',
+                'value' => [
+                    'value' => $newPrice,
+                    'currency_code' => $orderProduct->order->currency_code,
+                ],
+            ],
+        ]);
+
+        return true;
+    }
+
+    public function cancelSubscription(OrderProduct $orderProduct)
+    {
+        // Cancel subscription
+        $url = $this->config('test_mode') ? 'https://api-m.sandbox.paypal.com' : 'https://api-m.paypal.com';
+        $this->request('post', $url . '/v1/billing/subscriptions/' . $orderProduct->subscription_id . '/cancel', [
+            'reason' => 'User canceled',
+        ]);
+
+        $orderProduct->properties()->where('key', 'has_paypal_subscription')->delete();
+
+        return true;
     }
 }

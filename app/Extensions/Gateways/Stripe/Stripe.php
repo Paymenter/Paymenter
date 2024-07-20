@@ -253,7 +253,67 @@ class Stripe extends Gateway
 
             // Update orderProduct with subscription id
             $orderProduct->update(['subscription_id' => $subscription->subscription]);
+            $orderProduct->properties()->updateOrCreate(['key' => 'has_stripe_subscription'], ['value' => true]);
         }
+    }
+
+    public function updateSubscription(OrderProduct $orderProduct)
+    {
+        if (!$orderProduct->subscription_id && !$orderProduct->properties->where('key', 'has_stripe_subscription')->first()) {
+            return;
+        }
+        // Grab the schedule from Stripe
+        $scheduleId = $this->request('get', '/subscriptions/' . $orderProduct->subscription_id);
+        $oldPhases = $this->request('get', '/subscription_schedules/' . $scheduleId->schedule)->phases;
+        // Overwrite phase 2 item 0 with the new price
+        $phases = [];
+        // Only keep items and end, start date
+        foreach ($oldPhases as $phase) {
+            $phases[] = [
+                'items' => $phase->items,
+                'end_date' => $phase->end_date,
+                'start_date' => $phase->start_date,
+            ];
+        }
+        // Check if the orderProduct->product already exists in Stripe
+        $product = $orderProduct->product;
+        $stripeProduct = $this->request('get', '/products/search', ['query' => 'metadata[\'product_id\']:\'' . $product->id . '\'']);
+
+        if (empty($stripeProduct->data)) {
+            // Create product
+            $stripeProduct = $this->request('post', '/products', [
+                'name' => $product->name,
+                'metadata' => ['product_id' => $product->id],
+            ]);
+        } else {
+            $stripeProduct = $stripeProduct->data[0];
+        }
+        $phases[1]['items'][0]->price_data = [
+            'currency' => $orderProduct->currency->code,
+            'unit_amount' => $orderProduct->price * 100,
+            'product' => $stripeProduct->id,
+            'recurring' => [
+                'interval' => $orderProduct->plan->billing_unit,
+                'interval_count' => $orderProduct->plan->billing_period,
+            ],
+        ];
+        $phases[1]['items'][0]->price = null;
+        $phases[1]['items'][0]->plan = null;
+
+        // Update the schedule
+        $this->request('post', '/subscription_schedules/' . $scheduleId->schedule, [
+            'phases' => $phases,
+        ]);
+    }
+
+    public function cancelSubscription(OrderProduct $orderProduct)
+    {
+        if (!$orderProduct->subscription_id && !$orderProduct->properties->where('key', 'has_stripe_subscription')->first()) {
+            return;
+        }
+        $this->request('delete', '/subscriptions/' . $orderProduct->subscription_id);
+
+        return true;
     }
 
     // Function to split and decode the Stripe-Signature header

@@ -2,7 +2,6 @@
 
 namespace App\Observers;
 
-use App\Classes\AuditLog;
 use App\Events\User as UserEvent;
 use App\Models\User;
 
@@ -14,7 +13,6 @@ class UserObserver
     public function created(User $user): void
     {
         event(new UserEvent\Created($user));
-        AuditLog::log('registered', $user);
     }
 
     /**
@@ -23,7 +21,6 @@ class UserObserver
     public function updated(User $user): void
     {
         event(new UserEvent\Updated($user));
-        AuditLog::updated($user);
     }
 
     /**

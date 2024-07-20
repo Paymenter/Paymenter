@@ -50,9 +50,9 @@ class TransactionsRelationManager extends RelationManager
         return $table
             ->recordTitleAttribute('transaction_id')
             ->columns([
-                Tables\Columns\TextColumn::make('gateway'),
+                Tables\Columns\TextColumn::make('gateway.name')->label('Gateway'),
                 Tables\Columns\TextColumn::make('transaction_id'),
-                Tables\Columns\TextColumn::make('formattedAmount'),
+                Tables\Columns\TextColumn::make('formattedAmount')->label('Amount'),
                 Tables\Columns\TextColumn::make('formattedFee')->label('Fee'),
                 Tables\Columns\TextColumn::make('created_at'),
             ])

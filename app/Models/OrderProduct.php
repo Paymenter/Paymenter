@@ -2,13 +2,17 @@
 
 namespace App\Models;
 
+use App\Models\Traits\HasProperties;
+use App\Observers\OrderProductObserver;
+use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
+#[ObservedBy([OrderProductObserver::class])]
 class OrderProduct extends Model
 {
-    use HasFactory;
+    use HasFactory, HasProperties;
 
     protected $fillable = [
         'order_id',
@@ -17,10 +21,6 @@ class OrderProduct extends Model
         'quantity',
         'price',
         'expires_at',
-        'subscription_id',
-    ];
-
-    protected $hidden = [
         'subscription_id',
     ];
 

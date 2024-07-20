@@ -3,12 +3,15 @@
 namespace App\Admin\Resources;
 
 use App\Admin\Resources\OrderResource\Pages;
+use App\Helpers\ExtensionHelper;
 use App\Models\Order;
 use App\Models\OrderProduct;
 use App\Models\Product;
 use Filament\Forms;
+use Filament\Forms\Components\Actions\Action;
 use Filament\Forms\Components\Component;
 use Filament\Forms\Form;
+use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
 use Filament\Support\RawJs;
 use Filament\Tables;
@@ -77,6 +80,31 @@ class OrderResource extends Resource
                                 JS
                             ))
                             ->placeholder('Enter the price'),
+                        Forms\Components\TextInput::make('subscription_id')
+                            ->label('Subscription ID')
+                            ->nullable()
+                            ->placeholder('Enter the subscription ID')
+                            ->hintActions([
+                                Action::make('Cancel Subscription ID')
+                                    ->action(function (Component $component) {
+                                        if (ExtensionHelper::cancelSubscription($component->getRecord())) {
+                                            Notification::make('Subscription Cancelled')
+                                                ->title('The subscription has been successfully cancelled')
+                                                ->success()
+                                                ->send();
+                                        } else {
+                                            Notification::make('Subscription Not Cancelled')
+                                                ->title('The subscription could not be cancelled')
+                                                ->error()
+                                                ->send();
+                                        }
+                                        // Update the record to remove the subscription ID
+                                        $component->getRecord()->update(['subscription_id' => null]);
+                                    })
+                                    ->requiresConfirmation()
+                                    ->label('Cancel Subscription')
+                                    ->hidden(fn (Component $component) => !$component->getRecord()->subscription_id),
+                            ]),
                     ]),
             ]);
     }
