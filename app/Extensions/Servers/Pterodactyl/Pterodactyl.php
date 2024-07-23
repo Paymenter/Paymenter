@@ -3,7 +3,9 @@
 namespace App\Extensions\Servers\Pterodactyl;
 
 use App\Classes\Extension\Server;
+use App\Models\OrderProduct;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\HtmlString;
 
 /**
@@ -197,5 +199,11 @@ class Pterodactyl extends Server
                 'hint' => new HtmlString('<a href="https://docs.paymenter.org/docs/servers/pterodactyl" target="_blank">Documentation</a>'),
             ],
         ];
+    }
+
+    public function createServer(OrderProduct $orderProduct, $settings, $properties)
+    {
+        Log::info('Creating server for order product: ', ['settings' => $settings, 'properties' => $properties]);
+        throw new \Exception('Not implemented');
     }
 }

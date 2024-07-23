@@ -8,7 +8,6 @@ use App\Models\Invoice;
 use App\Models\OrderProduct;
 use Exception;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Log;
 
 class ExtensionHelper
 {
@@ -221,7 +220,6 @@ class ExtensionHelper
         if (isset($gateway)) {
             $gateway = Gateway::where('extension', $gateway)->first();
         }
-        Log::debug('Add payment', [$gateway, $amount, $fee, $transactionId, $invoice]);
 
         $invoice = Invoice::findOrFail($invoice);
         $invoice->transactions()->updateOrCreate(
@@ -255,5 +253,18 @@ class ExtensionHelper
         }
 
         return false;
+    }
+
+    /* SERVER RELATED FUNCTIONS */
+    /**
+     * Create server
+     */
+    public static function createServer(OrderProduct $orderProduct)
+    {
+        $server = $orderProduct->product->server;
+
+        $server = self::getExtension('server', $server->extension, $server->settings)->createServer($orderProduct, self::settingsToArray($orderProduct->product->settings), self::settingsToArray($orderProduct->properties));
+
+        return $server;
     }
 }

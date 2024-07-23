@@ -3,15 +3,18 @@
 namespace App\Models;
 
 use App\Classes\Price;
+use App\Observers\InvoiceObserver;
+use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
+#[ObservedBy([InvoiceObserver::class])]
 class Invoice extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['user_id', 'currency_code', 'issued_at', 'due_at'];
+    protected $fillable = ['user_id', 'currency_code', 'issued_at', 'due_at', 'status'];
 
     protected $casts = [
         'issued_at' => 'date',

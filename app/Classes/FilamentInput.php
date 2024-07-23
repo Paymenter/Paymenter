@@ -21,6 +21,7 @@ class FilamentInput
         if (is_array($setting)) {
             $setting = (object) $setting;
         }
+
         switch ($setting->type) {
             case 'select':
                 return Select::make($setting->name)
@@ -39,7 +40,6 @@ class FilamentInput
                     })
                     ->preload()
                     ->multiple($setting->multiple ?? false)
-                    ->searchable()
                     ->required($setting->required ?? false)
                     ->hint($setting->hint ?? '')
                     ->hintColor('primary')
