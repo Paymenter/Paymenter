@@ -51,7 +51,9 @@ class Show extends Component
         if ($this->invoice->status !== 'pending') {
             return $this->notify(__('This invoice is not pending.'), 'error');
         }
-
+        if ($this->checkPayment) {
+            $this->checkPayment = false;
+        }
         $this->pay = ExtensionHelper::pay(Gateway::where('id', $this->gateway)->first(), $this->invoice);
 
         if (is_string($this->pay)) {

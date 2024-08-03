@@ -9,6 +9,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Log;
 
 class CreateJob implements ShouldQueue
 {
@@ -27,6 +28,10 @@ class CreateJob implements ShouldQueue
      */
     public function handle(): void
     {
-        ExtensionHelper::createServer($this->orderProduct);
+        // $data is the data that will be used to send the email, data is coming from the extension itself
+        $data = ExtensionHelper::createServer($this->orderProduct);
+
+        // Send the email (TO BE MADE)
+        Log::info('Server created', $data);
     }
 }

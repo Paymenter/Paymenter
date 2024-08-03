@@ -32,6 +32,6 @@ class FailedJob extends Model
             return $e->getMessage();
         }
 
-        $this->delete();
+        // $this->delete();
     }
 }

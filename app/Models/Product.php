@@ -44,7 +44,7 @@ class Product extends Model implements Auditable
      */
     public function server()
     {
-        return $this->belongsTo(Extension::class, 'server_id')->where('type', 'server');
+        return $this->belongsTo(Server::class);
     }
 
     /**
