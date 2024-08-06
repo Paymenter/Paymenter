@@ -3,9 +3,9 @@
 namespace App\Admin\Resources;
 
 use App\Admin\Resources\OrderResource\Pages;
+use App\Admin\Resources\OrderResource\RelationManagers;
 use App\Helpers\ExtensionHelper;
 use App\Models\Order;
-use App\Models\OrderProduct;
 use App\Models\Product;
 use Filament\Forms;
 use Filament\Forms\Components\Actions\Action;
@@ -23,11 +23,6 @@ class OrderResource extends Resource
     protected static ?string $model = Order::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-shopping-cart';
-
-    public static function getNavigationBadge(): ?string
-    {
-        return OrderProduct::where('status', 'pending')->count() ?: null;
-    }
 
     public static ?string $navigationGroup = 'Administration';
 
@@ -154,7 +149,7 @@ class OrderResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            RelationManagers\OrderProductsRelationManager::class,
         ];
     }
 

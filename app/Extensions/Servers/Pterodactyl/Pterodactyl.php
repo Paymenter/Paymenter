@@ -5,7 +5,6 @@ namespace App\Extensions\Servers\Pterodactyl;
 use App\Classes\Extension\Server;
 use App\Models\OrderProduct;
 use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\HtmlString;
 
 /**
@@ -57,7 +56,7 @@ class Pterodactyl extends Server
             throw new \Exception($response->json()['errors'][0]['detail']);
         }
 
-        return $response->json();
+        return $response->json() ?? [];
     }
 
     public function getProductConfig($values = []): array
@@ -205,6 +204,9 @@ class Pterodactyl extends Server
 
     public function createServer(OrderProduct $orderProduct, $settings, $properties)
     {
+        if ($this->serverExists($orderProduct->id)) {
+            throw new \Exception('Server already exists');
+        }
         // Smash the properties into the settings
         $settings = array_merge($settings, $properties);
 
@@ -288,7 +290,6 @@ class Pterodactyl extends Server
         // Add link to return data as well as the server id
         $returnData['server'] = $server['attributes']['id'];
         $returnData['link'] = $this->config('host') . '/server/' . $server['attributes']['id'];
-
 
         return $returnData;
     }
@@ -423,5 +424,52 @@ class Pterodactyl extends Server
             $allocationIds,
             $default,
         ];
+    }
+
+    private function serverExists($id)
+    {
+        try {
+            $response = $this->request('/api/application/servers/external/' . $id);
+        } catch (\Exception $e) {
+            return false;
+        }
+
+        return $response['attributes']['id'] ?? false;
+    }
+
+    public function suspendServer(OrderProduct $orderProduct, $settings, $properties)
+    {
+        $server = $this->serverExists($orderProduct->id);
+        if (!$server) {
+            throw new \Exception('Server not found');
+        }
+
+        $this->request('/api/application/servers/' . $server . '/suspend', 'post');
+
+        return true;
+    }
+
+    public function unsuspendServer(OrderProduct $orderProduct, $settings, $properties)
+    {
+        $server = $this->serverExists($orderProduct->id);
+        if (!$server) {
+            throw new \Exception('Server not found');
+        }
+
+        $this->request('/api/application/servers/' . $server . '/unsuspend', 'post');
+
+        return true;
+    }
+
+    public function terminateServer(OrderProduct $orderProduct, $settings, $properties)
+    {
+        $server = $this->serverExists($orderProduct->id);
+        if (!$server) {
+            throw new \Exception('Server not found');
+        }
+
+        $this->request('/api/application/servers/' . $server, 'delete');
+
+        return true;
     }
 }

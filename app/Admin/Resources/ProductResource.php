@@ -33,7 +33,7 @@ class ProductResource extends Resource
         return static::getModel()::count() ?: null;
     }
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'ri-archive-stack-line';
 
     protected static ?string $recordTitleAttribute = 'name';
 

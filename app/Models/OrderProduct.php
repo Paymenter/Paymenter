@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Classes\Price;
 use App\Models\Traits\HasProperties;
 use App\Observers\OrderProductObserver;
 use Illuminate\Database\Eloquent\Attributes\ObservedBy;
@@ -40,6 +41,18 @@ class OrderProduct extends Model
     {
         return Attribute::make(
             get: fn () => $this->order->currency
+        );
+    }
+
+    /**
+     * Price of the order product.
+     *
+     * @return string
+     */
+    public function formattedPrice(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => new Price(['price' => $this->price * $this->quantity, 'currency' => $this->order->currency])
         );
     }
 
@@ -93,6 +106,6 @@ class OrderProduct extends Model
      */
     public function invoices()
     {
-        return $this->hasManyThrough(Invoice::class, InvoiceItem::class, 'order_product_id', 'id', 'order_product_id', 'invoice_id');
+        return $this->hasManyThrough(Invoice::class, InvoiceItem::class, 'order_product_id', 'id', 'id', 'invoice_id');
     }
 }

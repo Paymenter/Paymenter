@@ -8,6 +8,7 @@ use App\Models\User;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
+use Filament\Resources\Pages\Page;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -94,6 +95,18 @@ class UserResource extends Resource
             'index' => Pages\ListUsers::route('/'),
             'create' => Pages\CreateUser::route('/create'),
             'edit' => Pages\EditUser::route('/{record}/edit'),
+            'orderProducts' => Pages\ShowOrderProducts::route('/{record}/services'),
+            'invoices' => Pages\ShowInvoices::route('/{record}/invoices'),
         ];
+    }
+
+    public static function getRecordSubNavigation(Page $page): array
+    {
+
+        return $page->generateNavigationItems([
+            Pages\EditUser::class,
+            Pages\ShowOrderProducts::class,
+            Pages\ShowInvoices::class,
+        ]);
     }
 }

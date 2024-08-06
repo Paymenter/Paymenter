@@ -88,7 +88,13 @@ class InvoiceResource extends Resource
                         Forms\Components\TextInput::make('description')
                             ->label('Description')
                             ->required()
+                            ->hintAction(
+                                Forms\Components\Actions\Action::make('View Order Product')
+                                    ->url(fn (Get $get): string => OrderProductResource::getUrl('edit', ['record' => $get('order_product_id')]))
+                                    ->hidden(fn (Get $get): bool => !$get('order_product_id'))
+                            )
                             ->placeholder('Enter the description of the product'),
+                        Forms\Components\Hidden::make('order_product_id'),
                     ]),
 
             ]);

@@ -157,6 +157,14 @@ class User extends Authenticatable implements FilamentUser, HasAvatar
         return $this->morphMany(AuditLog::class, 'model');
     }
 
+    /**
+     * Get the user's invoices.
+     */
+    public function invoices()
+    {
+        return $this->hasMany(Invoice::class);
+    }
+
     public function canAccessPanel(Panel $panel): bool
     {
         if ($panel->getId() === 'admin') {

@@ -263,8 +263,36 @@ class ExtensionHelper
     {
         $server = $orderProduct->product->server;
 
-        $server = self::getExtension('server', $server->extension, $server->settings)->createServer($orderProduct, self::settingsToArray($orderProduct->product->settings), self::settingsToArray($orderProduct->properties));
+        return self::getExtension('server', $server->extension, $server->settings)->createServer($orderProduct, self::settingsToArray($orderProduct->product->settings), self::settingsToArray($orderProduct->properties));
+    }
 
-        return $server;
+    /**
+     * Suspend server
+     */
+    public static function suspendServer(OrderProduct $orderProduct)
+    {
+        $server = $orderProduct->product->server;
+
+        return self::getExtension('server', $server->extension, $server->settings)->suspendServer($orderProduct, self::settingsToArray($orderProduct->product->settings), self::settingsToArray($orderProduct->properties));
+    }
+
+    /**
+     * Unsuspend server
+     */
+    public static function unsuspendServer(OrderProduct $orderProduct)
+    {
+        $server = $orderProduct->product->server;
+
+        return self::getExtension('server', $server->extension, $server->settings)->unsuspendServer($orderProduct, self::settingsToArray($orderProduct->product->settings), self::settingsToArray($orderProduct->properties));
+    }
+
+    /**
+     * Terminate server
+     */
+    public static function terminateServer(OrderProduct $orderProduct)
+    {
+        $server = $orderProduct->product->server;
+
+        return self::getExtension('server', $server->extension, $server->settings)->terminateServer($orderProduct, self::settingsToArray($orderProduct->product->settings), self::settingsToArray($orderProduct->properties));
     }
 }
