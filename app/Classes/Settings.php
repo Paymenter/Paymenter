@@ -265,6 +265,7 @@ class Settings
                     'options' => [
                         'first_name' => 'First Name',
                         'last_name' => 'Last Name',
+                        'email' => 'Email',
                         'phone' => 'Phone',
                         'address' => 'Address',
                         'address2' => 'Address 2',

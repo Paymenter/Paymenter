@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Session as FacadesSession;
 
 class Session extends Model
 {
@@ -32,7 +33,7 @@ class Session extends Model
 
     public function getIsCurrentDeviceAttribute()
     {
-        return $this->id === session()->getId();
+        return $this->id === FacadesSession::getId();
     }
 
     public function getFormattedLastActiveAttribute()

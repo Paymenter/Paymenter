@@ -7,6 +7,7 @@ use App\Admin\Resources\UserResource\RelationManagers\PropertiesRelationManager;
 use App\Models\User;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Toggle;
 use Filament\Forms\Form;
 use Filament\Resources\Pages\Page;
 use Filament\Resources\Resource;
@@ -46,12 +47,13 @@ class UserResource extends Resource
                 TextInput::make('first_name')->translateLabel(),
                 TextInput::make('last_name')->translateLabel(),
                 TextInput::make('email')->translateLabel()->email(),
+
                 TextInput::make('password')->translateLabel()->password()->revealable()
                     ->dehydrateStateUsing(fn (string $state): string => Hash::make($state))
                     ->dehydrated(fn (?string $state): bool => filled($state))
                     ->required(fn (string $operation): bool => $operation === 'create'),
                 Select::make('role_id')->translateLabel()->relationship('role', 'name')->searchable()->preload(),
-                TextInput::make('tfa_secret')->translateLabel()->password()->revealable(),
+                Toggle::make('tfa_secret')->label('Two Factor Authentication')->disabled(),
                 TextInput::make('credits')->translateLabel()->numeric(),
             ]);
     }

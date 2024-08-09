@@ -19,7 +19,7 @@ return new class extends Migration
             $table->foreignId('role_id')->index()->nullable();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
-            $table->string('tfa_secret')->nullable();
+            $table->text('tfa_secret')->nullable();
             $table->integer('credits')->default(0);
             $table->rememberToken();
             $table->timestamps();

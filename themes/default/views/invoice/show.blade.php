@@ -1,5 +1,4 @@
 <div @if ($checkPayment) wire:poll="checkPaymentStatus" @endif>
-
     @if ($this->pay)
         <x-modal title="Payment for Invoice #{{ $invoice->id }}" open>
             <div class="mt-8">

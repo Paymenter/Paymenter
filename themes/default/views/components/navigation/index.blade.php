@@ -4,7 +4,7 @@
         <span class="text-xl text-white ml-2">{{ config('app.name') }}</span>
     </a>
 
-    <div class="flex flex-row justify-between w-fit items-center" x-data="{ profileMenuOpen: false, mobileMenuOpen: false }">
+    <div class="flex flex-row justify-between w-fit items-center" x-data="{ accountMenuOpen: false, mobileMenuOpen: false }">
         <div class="flex flex-row">
             @foreach (\App\Classes\Navigation::get() as $nav)
                 @if (isset($nav['children']) && count($nav['children']) > 0)
@@ -27,12 +27,12 @@
                             x-on:click.outside="open = false">
                             @foreach ($nav['children'] as $child)
                                 <x-navigation.link :href="route($child['route'], $child['params'])"
-                                    class="text-sm">{{ $child['name'] }}</x-navigation.link>
+                                   >{{ $child['name'] }}</x-navigation.link>
                             @endforeach
                         </div>
                     </div>
                 @else
-                    <x-navigation.link :href="route($nav['route'], $nav['params'] ?? null)" class="text-sm">{{ $nav['name'] }}</x-navigation.link>
+                    <x-navigation.link :href="route($nav['route'], $nav['params'] ?? null)">{{ $nav['name'] }}</x-navigation.link>
                 @endif
             @endforeach
         </div>
@@ -42,7 +42,7 @@
                  <!-- Has notifications? (updates, errors, etc) (TODO) -->
                  <div class="relative">
                      <button class="flex flex-row items-center border border-primary-700 rounded-md px-2 py-1"
-                         x-on:click="profileMenuOpen = !profileMenuOpen">
+                         x-on:click="accountMenuOpen = !accountMenuOpen">
                          <img src="{{ auth()->user()->avatar }}" class="w-8 h-8 rounded-full" alt="avatar" />
                          <div class="flex flex-col ml-2">
                              <span class="text-sm text-white sm:hidden">{{ auth()->user()->initials }}</span>
@@ -55,20 +55,20 @@
                          </svg>
                      </button>
                      <div class="absolute right-0 mt-2 w-48 bg-primary-800 rounded-md shadow-lg z-10 border border-primary-700 "
-                         x-show="profileMenuOpen" x-transition:enter="transition ease-out duration-150"
+                         x-show="accountMenuOpen" x-transition:enter="transition ease-out duration-150"
                          x-transition:enter-start="opacity-0 scale-90" x-transition:enter-end="opacity-100 scale-100"
                          x-transition:leave="transition ease-in duration-75" x-transition:leave-start="opacity-100 scale-100"
-                         x-transition:leave-end="opacity-0 scale-90" x-on:click.outside="profileMenuOpen = false">
-                         <x-navigation.link :href="route('profile')" class="text-sm">Profile</x-navigation.link>
-                         {{-- <x-navigation.link :href="route('settings')" class="text-sm">Settings</x-navigation.link> --}}
+                         x-transition:leave-end="opacity-0 scale-90" x-on:click.outside="accountMenuOpen = false">
+                         <x-navigation.link :href="route('account')">Account</x-navigation.link>
+                         {{-- <x-navigation.link :href="route('settings')">Settings</x-navigation.link> --}}
                          <livewire:auth.logout />
                      </div>
                  </div>
              </div>
         @else
             <div class="flex flex-row">
-                <x-navigation.link :href="route('login')" class="text-sm">Login</x-navigation.link>
-                <x-navigation.link :href="route('register')" class="text-sm">Register</x-navigation.link>
+                <x-navigation.link :href="route('login')">Login</x-navigation.link>
+                <x-navigation.link :href="route('register')">Register</x-navigation.link>
             </div>
         @endif
     </div>

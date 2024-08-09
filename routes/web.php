@@ -3,6 +3,7 @@
 use App\Http\Controllers\SocialLoginController;
 use App\Livewire\Auth;
 use App\Livewire\Cart;
+use App\Livewire\Clients;
 use App\Livewire\Invoice;
 use App\Livewire\Products;
 use Illuminate\Support\Facades\Route;
@@ -16,6 +17,7 @@ Route::get('/', function () {
 // Authorization routes
 Route::group(['middleware' => ['web', 'guest']], function () {
     Route::get('login', Auth\Login::class)->name('login');
+    Route::get('2fa', Auth\Tfa::class)->name('2fa');
     Route::get('register', Auth\Register::class)->name('register');
     // Todo
     Route::get('password/reset')->name('password.reset');
@@ -29,9 +31,8 @@ Route::group(['middleware' => ['web', 'auth']], function () {
     })->name('dashboard');
     //Route::get('logout', [LoginController::class, 'logout'])->name('logout');
 
-    Route::get('profile', function () {
-        return view('profile');
-    })->name('profile');
+    Route::get('account', Clients\Account::class)->name('account');
+    Route::get('account/security', Clients\Security::class)->name('account.security');
 
     Route::get('invoices/{invoice}', Invoice\Show::class)->name('invoices.show');
 });

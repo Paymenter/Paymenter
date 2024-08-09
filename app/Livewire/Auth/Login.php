@@ -4,7 +4,9 @@ namespace App\Livewire\Auth;
 
 use App\Livewire\Component;
 use App\Traits\Captchable;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\RateLimiter;
+use Illuminate\Support\Facades\Session;
 use Livewire\Attributes\Validate;
 
 class Login extends Component
@@ -39,7 +41,22 @@ class Login extends Component
             return;
         }
 
-        return redirect()->intended(route('dashboard'));
+        // Check 2FA
+        if (Auth::user()->tfa_secret) {
+            Session::put('2fa', [
+                'user_id' => Auth::id(),
+                'remember' => $this->remember,
+                'expires' => now()->addMinutes(5),
+            ]);
+
+            Auth::logout();
+
+            return $this->redirect(route('2fa'), true);
+        }
+
+        RateLimiter::clear('login:' . $this->email);
+
+        return $this->redirectIntended(route('dashboard'), true);
     }
 
     public function render()
