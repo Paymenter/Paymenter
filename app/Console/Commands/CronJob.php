@@ -141,9 +141,9 @@ class CronJob extends Command
                 $orderProductUpgrade->delete();
             } else {
                 // Update the price
-                $orderProductUpgrade->orderProduct->price = $this->calculateAmount($orderProductUpgrade->orderProduct->product, $orderProductUpgrade->orderProduct);
-                $orderProductUpgrade->orderProduct->product_id = $orderProductUpgrade->product_id;
-                $orderProductUpgrade->orderProduct->save();
+                $invoiceItem = $orderProductUpgrade->invoice->items->first();
+                $invoiceItem->total = $this->calculateAmount($orderProductUpgrade->product, $orderProductUpgrade->orderProduct);
+                $invoiceItem->save();
 
                 $this->info('Updated Invoice Item: ' . $invoiceItem->id);
             }
