@@ -51,7 +51,7 @@
                 <label for="value" class="block dark:text-darkmodetext">
                     {{ __('Value') }} {{ config('settings::currency_sign') }}
                 </label>
-                <input name="value" id="value" value="{{ $coupon->value }}"
+                <input type="number" name="value" id="value" value="{{ $coupon->value }}"
                     class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm dark:bg-darkmode rounded-md"
                     required />
             </div>
@@ -91,7 +91,7 @@
                 <input
                     class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm dark:bg-darkmode rounded-md"
                     type="number" name="max_uses" id="max_uses" step="1" min="0"
-                    value="{{ old('max_uses') }}">
+                    value="{{ $coupon->max_uses }}">
             </div>
             <div class="mt-4">
                 <label for="products" class="block dark:text-darkmodetext">
