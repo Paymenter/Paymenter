@@ -6,6 +6,7 @@ use Filament\Forms\Components\Checkbox;
 use Filament\Forms\Components\ColorPicker;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TagsInput;
 use Filament\Forms\Components\TextInput;
 
 class FilamentInput
@@ -31,7 +32,7 @@ class FilamentInput
                         // Check if options are associative array or sequential array
                         if (array_is_list((array) $setting->options)) {
                             // If yes, then return array which has the keys same as the values
-                            $options_with_keys = array_merge(...array_map(fn ($item) => [$item => $item], $setting->options));
+                            $options_with_keys = array_merge(...array_map(fn($item) => [$item => $item], $setting->options));
 
                             return $options_with_keys;
                         } else {
@@ -48,6 +49,12 @@ class FilamentInput
                     ->suffix($setting->suffix ?? null)
                     ->prefix($setting->prefix ?? null)
                     ->rules($setting->validation ?? []);
+                break;
+            
+            case 'tags':
+                return TagsInput::make($setting->name)
+                    ->label($setting->label ?? $setting->name)
+                    ->required($setting->required ?? false);
                 break;
 
             case 'text':
@@ -132,7 +139,7 @@ class FilamentInput
 
                 if (isset($setting->file_name)) {
                     $input->getUploadedFileNameForStorageUsing(
-                        fn (): string => (string) $setting->file_name,
+                        fn(): string => (string) $setting->file_name,
                     );
                 }
 

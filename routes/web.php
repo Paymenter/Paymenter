@@ -4,6 +4,7 @@ use App\Http\Controllers\SocialLoginController;
 use App\Livewire\Auth;
 use App\Livewire\Cart;
 use App\Livewire\Clients;
+use App\Livewire\Dashboard;
 use App\Livewire\Invoice;
 use App\Livewire\Products;
 use Illuminate\Support\Facades\Route;
@@ -26,10 +27,7 @@ Route::group(['middleware' => ['web', 'guest']], function () {
 });
 
 Route::group(['middleware' => ['web', 'auth']], function () {
-    Route::get('dashboard', function () {
-        return view('dashboard');
-    })->name('dashboard');
-    //Route::get('logout', [LoginController::class, 'logout'])->name('logout');
+    Route::get('dashboard', Dashboard::class)->name('dashboard');
 
     Route::get('account', Clients\Account::class)->name('account');
     Route::get('account/security', Clients\Security::class)->name('account.security');

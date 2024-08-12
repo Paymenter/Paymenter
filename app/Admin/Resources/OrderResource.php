@@ -32,10 +32,10 @@ class OrderResource extends Resource
             ->schema([
                 Forms\Components\Select::make('user_id')
                     ->label('User')
-                    ->required()
-                    ->relationship('user', 'name')
+                    ->relationship('user', 'id')
                     ->searchable()
-                    ->placeholder('Select the user'),
+                    ->getOptionLabelFromRecordUsing(fn($record) => $record->name)
+                    ->required(),
                 Forms\Components\Select::make('currency_code')
                     ->label('Currency')
                     ->required()
@@ -65,8 +65,8 @@ class OrderResource extends Resource
                             ->required()
                             ->placeholder('Enter the quantity'),
                         Forms\Components\TextInput::make('price')
-                            ->suffix(fn (Component $component) => $component->getRecord()->currency->suffix)
-                            ->prefix(fn (Component $component) => $component->getRecord()->currency->prefix)
+                            ->suffix(fn(Component $component) => $component->getRecord()->currency->suffix)
+                            ->prefix(fn(Component $component) => $component->getRecord()->currency->prefix)
                             ->label('Price')
                             ->required()
                             ->mask(RawJs::make(
@@ -98,7 +98,7 @@ class OrderResource extends Resource
                                     })
                                     ->requiresConfirmation()
                                     ->label('Cancel Subscription')
-                                    ->hidden(fn (Component $component) => !$component->getRecord()->subscription_id),
+                                    ->hidden(fn(Component $component) => !$component->getRecord()->subscription_id),
                             ]),
                     ]),
             ]);

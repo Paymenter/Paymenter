@@ -35,10 +35,10 @@ class InvoiceResource extends Resource
             ->schema([
                 Forms\Components\Select::make('user_id')
                     ->label('User')
-                    ->required()
-                    ->relationship('user', 'name')
+                    ->relationship('user', 'id')
                     ->searchable()
-                    ->placeholder('Select the user'),
+                    ->getOptionLabelFromRecordUsing(fn($record) => $record->name)
+                    ->required(),
                 Forms\Components\Select::make('currency_code')
                     ->label('Currency')
                     ->required()
@@ -70,8 +70,8 @@ class InvoiceResource extends Resource
                         Forms\Components\TextInput::make('price')
                             ->label('Price')
                             // Grab invoice currency
-                            ->prefix(fn (Get $get): ?string => Currency::where('code', $get('../../currency_code'))->first()->prefix)
-                            ->suffix(fn (Get $get): ?string => Currency::where('code', $get('../../currency_code'))->first()->suffix)
+                            ->prefix(fn(Get $get): ?string => Currency::where('code', $get('../../currency_code'))->first()?->prefix)
+                            ->suffix(fn(Get $get): ?string => Currency::where('code', $get('../../currency_code'))->first()?->suffix)
                             ->required()
                             ->numeric()
                             ->mask(RawJs::make(
@@ -90,8 +90,8 @@ class InvoiceResource extends Resource
                             ->required()
                             ->hintAction(
                                 Forms\Components\Actions\Action::make('View Order Product')
-                                    ->url(fn (Get $get): string => OrderProductResource::getUrl('edit', ['record' => $get('order_product_id')]))
-                                    ->hidden(fn (Get $get): bool => !$get('order_product_id'))
+                                    ->url(fn(Get $get): string => OrderProductResource::getUrl('edit', ['record' => $get('order_product_id')]))
+                                    ->hidden(fn(Get $get): bool => !$get('order_product_id'))
                             )
                             ->placeholder('Enter the description of the product'),
                         Forms\Components\Hidden::make('order_product_id'),
@@ -116,9 +116,9 @@ class InvoiceResource extends Resource
                 Tables\Columns\TextColumn::make('status')
                     ->label('Status')
                     // Make first letter uppercase
-                    ->formatStateUsing(fn (string $state): string => ucfirst($state))
+                    ->formatStateUsing(fn(string $state): string => ucfirst($state))
                     ->badge()
-                    ->color(fn (string $state): string => match ($state) {
+                    ->color(fn(string $state): string => match ($state) {
                         'paid' => 'success',
                         'pending' => 'warning',
                         default => 'danger',

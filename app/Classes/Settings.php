@@ -301,6 +301,13 @@ class Settings
                     'default' => 'USD',
                     'required' => true,
                 ],
+                [
+                    'name' => 'ticket_departments',
+                    'label' => 'Ticket Departments',
+                    'type' => 'tags',
+                    'default' => ['Support', 'Sales'],
+                    'database_type' => 'array',
+                ]
             ],
         ];
 
