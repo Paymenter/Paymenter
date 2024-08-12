@@ -54,7 +54,7 @@
                 <div class="flex flex-col items-baseline w-full">
                     <div class="flex flex-row w-full gap-x-4">
                         <x-input disabled type="text" name="paid_with" :label="__('Payment Method')" icon="ri-money-dollar-circle-line" class="w-full mt-2 lg:mt-0" value="{{ ucfirst($invoice->paid_with) }}"/>
-                        <x-input disabled type="text" name="reference" :label="__('Reference')" icon="ri-money-dollar-circle-line" class="w-full mt-2 lg:mt-0" value="{{ $invoice->reference??__('No Reference') }}"/>
+                        <x-input disabled type="text" name="reference" :label="__('Reference')" icon="ri-money-dollar-circle-line" class="w-full mt-2 lg:mt-0" value="{{ $invoice->paid_reference??__('No Reference') }}"/>
                     </div>
                     <div class="flex flex-row gap-x-4">
                         <x-input disabled type="text" name="created_at" :label="__('Created At')" icon="ri-calendar-line" class="w-full mt-2 lg:mt-0" value="{{ $invoice->created_at }}"/>
