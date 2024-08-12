@@ -7,17 +7,16 @@ use App\Admin\Resources\TicketResource;
 use App\Admin\Resources\UserResource;
 use App\Models\Ticket;
 use App\Models\TicketMessage;
-use Filament\Actions;
-use Filament\Resources\Pages\EditRecord;
 use Filament\Forms;
 use Filament\Forms\Form;
+use Filament\Forms\Get;
 use Filament\Infolists;
+use Filament\Infolists\Components\Actions\Action;
+use Filament\Infolists\Components\Actions as InfolistActions;
 use Filament\Infolists\Components\TextEntry\TextEntrySize;
 use Filament\Infolists\Infolist;
-use Filament\Infolists\Components\Actions as InfolistActions;
-use Filament\Infolists\Components\Actions\Action;
+use Filament\Resources\Pages\EditRecord;
 use Illuminate\Database\Eloquent\Builder;
-use Filament\Forms\Get;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
 
@@ -57,7 +56,6 @@ class EditTicket extends EditRecord
         $this->form->fill();
     }
 
-
     public function infolist(Infolist $infolist): Infolist
     {
         return $infolist
@@ -65,8 +63,8 @@ class EditTicket extends EditRecord
             ->schema([
                 Infolists\Components\TextEntry::make('user_id')
                     ->size(TextEntrySize::Large)
-                    ->formatStateUsing(fn($record) => $record->user->name)
-                    ->url(fn($record) => UserResource::getUrl('index', ['record' => $record->user]))
+                    ->formatStateUsing(fn ($record) => $record->user->name)
+                    ->url(fn ($record) => UserResource::getUrl('index', ['record' => $record->user]))
                     ->label('User ID'),
                 Infolists\Components\TextEntry::make('subject')
                     ->size(TextEntrySize::Large)
@@ -74,8 +72,8 @@ class EditTicket extends EditRecord
                 Infolists\Components\TextEntry::make('status')
                     ->size(TextEntrySize::Large)
                     ->badge()
-                    ->formatStateUsing(fn($state) => ucfirst($state))
-                    ->color(fn($state) => match ($state) {
+                    ->formatStateUsing(fn ($state) => ucfirst($state))
+                    ->color(fn ($state) => match ($state) {
                         'open' => 'success',
                         'closed' => 'danger',
                         'replied' => 'gray',
@@ -84,8 +82,8 @@ class EditTicket extends EditRecord
                 Infolists\Components\TextEntry::make('priority')
                     ->size(TextEntrySize::Large)
                     ->badge()
-                    ->formatStateUsing(fn($state) => ucfirst($state))
-                    ->color(fn($state) => match ($state) {
+                    ->formatStateUsing(fn ($state) => ucfirst($state))
+                    ->color(fn ($state) => match ($state) {
                         'low' => 'success',
                         'normal' => 'gray',
                         'high' => 'danger',
@@ -100,14 +98,14 @@ class EditTicket extends EditRecord
                     ->size(TextEntrySize::Large)
                     ->label('Assigned To')
                     ->placeholder('No assigned user')
-                    ->formatStateUsing(fn($record) => $record->assignedTo->name),
+                    ->formatStateUsing(fn ($record) => $record->assignedTo->name),
 
                 Infolists\Components\TextEntry::make('order_product_id')
                     ->size(TextEntrySize::Large)
                     ->label('Order Product')
-                    ->url(fn($record) => $record->orderProduct ? OrderProductResource::getUrl('edit', ['record' => $record->orderProduct]) : null)
+                    ->url(fn ($record) => $record->orderProduct ? OrderProductResource::getUrl('edit', ['record' => $record->orderProduct]) : null)
                     ->placeholder('No order product')
-                    ->formatStateUsing(fn($record) => "{$record->orderProduct->product->name} - " . ucfirst($record->orderProduct->status)),
+                    ->formatStateUsing(fn ($record) => "{$record->orderProduct->product->name} - " . ucfirst($record->orderProduct->status)),
 
                 InfolistActions::make([
                     Action::make('Edit')
@@ -141,14 +139,14 @@ class EditTicket extends EditRecord
                                         ->relationship('user', 'id')
                                         ->searchable()
                                         ->preload()
-                                        ->getOptionLabelFromRecordUsing(fn($record) => $record->name)
+                                        ->getOptionLabelFromRecordUsing(fn ($record) => $record->name)
                                         ->required(),
                                     Forms\Components\Select::make('assigned_to')
                                         ->label('Assigned To')
                                         ->relationship('assignedTo', 'id')
                                         ->searchable()
                                         ->preload()
-                                        ->getOptionLabelFromRecordUsing(fn($record) => $record->name)
+                                        ->getOptionLabelFromRecordUsing(fn ($record) => $record->name)
                                         ->required(),
                                     Forms\Components\Select::make('order_product_id')
                                         ->label('Order Product')
@@ -157,11 +155,11 @@ class EditTicket extends EditRecord
                                             $query->join('orders', 'orders.id', '=', 'order_products.order_id')
                                                 ->where('orders.user_id', $get('user_id'));
                                         })
-                                        ->getOptionLabelFromRecordUsing(fn($record) => "{$record->product->name} - " . ucfirst($record->status))
-                                        ->disabled(fn(Get $get) => !$get('user_id')),
+                                        ->getOptionLabelFromRecordUsing(fn ($record) => "{$record->product->name} - " . ucfirst($record->status))
+                                        ->disabled(fn (Get $get) => !$get('user_id')),
                                 ]);
                         })
-                        ->fillForm(fn($record) => [
+                        ->fillForm(fn ($record) => [
                             'status' => $record->status,
                             'priority' => $record->priority,
                             'department' => $record->department,
@@ -178,7 +176,7 @@ class EditTicket extends EditRecord
                         // ->url(fn($record) => TicketResource::getUrl('delete', ['record' => $record]))
                         ->icon('heroicon-o-trash'),
 
-                ])
+                ]),
             ]);
     }
 

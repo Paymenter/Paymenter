@@ -3,7 +3,6 @@
 namespace App\Admin\Resources\TicketResource\Pages;
 
 use App\Admin\Resources\TicketResource;
-use Filament\Actions;
 use Filament\Resources\Pages\CreateRecord;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;

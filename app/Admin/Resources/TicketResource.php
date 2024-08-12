@@ -3,7 +3,6 @@
 namespace App\Admin\Resources;
 
 use App\Admin\Resources\TicketResource\Pages;
-use App\Admin\Resources\TicketResource\RelationManagers;
 use App\Models\Ticket;
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -12,7 +11,6 @@ use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class TicketResource extends Resource
 {
@@ -67,7 +65,7 @@ class TicketResource extends Resource
                     ->relationship('user', 'id')
                     ->searchable()
                     ->preload()
-                    ->getOptionLabelFromRecordUsing(fn($record) => $record->name)
+                    ->getOptionLabelFromRecordUsing(fn ($record) => $record->name)
                     ->columnSpan(function ($record) {
                         return $record ? 2 : 1;
                     })
@@ -85,11 +83,11 @@ class TicketResource extends Resource
                         $query->join('orders', 'orders.id', '=', 'order_products.order_id')
                             ->where('orders.user_id', $get('user_id'));
                     })
-                    ->getOptionLabelFromRecordUsing(fn($record) => "{$record->product->name} - {ucfirst($record->status}")
+                    ->getOptionLabelFromRecordUsing(fn ($record) => "{$record->product->name} - {ucfirst($record->status}")
                     ->columnSpan(function ($record) {
                         return $record ? 2 : 1;
                     })
-                    ->disabled(fn(Get $get) => !$get('user_id')),
+                    ->disabled(fn (Get $get) => !$get('user_id')),
                 Forms\Components\MarkdownEditor::make('message')
                     ->columnSpan(2)
                     ->label('Initial Message')

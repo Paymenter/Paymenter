@@ -307,7 +307,7 @@ class Settings
                     'type' => 'tags',
                     'default' => ['Support', 'Sales'],
                     'database_type' => 'array',
-                ]
+                ],
             ],
         ];
 

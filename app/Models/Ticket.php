@@ -18,7 +18,7 @@ class Ticket extends Model
         'assigned_to',
         'order_product_id',
     ];
-    
+
     public function user()
     {
         return $this->belongsTo(User::class);
