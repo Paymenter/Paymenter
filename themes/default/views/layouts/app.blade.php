@@ -13,9 +13,9 @@
         @endif
 
     </head>
-    <body class="w-full bg-primary-900 text-white">
+    <body class="w-full bg-primary-900 text-white min-h-screen flex flex-col">
         <x-navigation />
-        <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <main class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
             {{ $slot }}
         </main>
         <x-navigation.footer />

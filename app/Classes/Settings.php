@@ -308,6 +308,14 @@ class Settings
                     'default' => ['Support', 'Sales'],
                     'database_type' => 'array',
                 ],
+                [
+                    'name' => 'pagination',
+                    'label' => 'Pagination',
+                    'type' => 'number',
+                    'default' => 10,
+                    'required' => true,
+                    'description' => 'Number of items to show per page',
+                ],
             ],
         ];
 

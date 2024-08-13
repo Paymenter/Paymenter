@@ -11,4 +11,9 @@ class Component extends \Livewire\Component
     {
         $this->dispatch('notify', ['message' => $message, 'type' => $type]);
     }
+
+    public function paginationView()
+    {
+        return 'components.pagination';
+    }
 }

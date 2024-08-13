@@ -1,4 +1,4 @@
-<div class="fixed bottom-0 w-full mb-2">
+<div class="w-full mb-2">
     <div class="container mx-auto grid grid-cols-2 items-center">
         <div class="flex flex-col gap-2">
             <x-logo class="w-32" />

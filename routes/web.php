@@ -7,6 +7,7 @@ use App\Livewire\Clients;
 use App\Livewire\Dashboard;
 use App\Livewire\Invoice;
 use App\Livewire\Products;
+use App\Livewire\Tickets;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -33,6 +34,10 @@ Route::group(['middleware' => ['web', 'auth']], function () {
     Route::get('account/security', Clients\Security::class)->name('account.security');
 
     Route::get('invoices/{invoice}', Invoice\Show::class)->name('invoices.show');
+
+    Route::get('tickets', Tickets\Index::class)->name('tickets');
+    Route::get('tickets/{ticket}', Tickets\Show::class)->name('tickets.show');
+
 });
 
 Route::get('cart', Cart::class)->name('cart');
