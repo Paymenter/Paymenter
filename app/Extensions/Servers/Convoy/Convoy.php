@@ -28,7 +28,7 @@ class Convoy extends Server
     {
         return [
             'display_name' => 'Convoy',
-            'version' => '1.3.1',
+            'version' => '1.4.0',
             'author' => 'Paymenter',
             'website' => 'https://paymenter.org',
         ];
@@ -100,9 +100,27 @@ class Convoy extends Server
             ],
             [
                 'name' => 'auto_assign_ip',
-                'type' => 'boolean',
+                'type' => 'dropdown',
                 'friendlyName' => 'Auto assign IP',
-                'required' => false
+                'required' => true,
+                'options' => [
+                    [
+                        'value' => 0,
+                        'name' => 'No IP'
+                    ],
+                    [
+                        'value' => 4,
+                        'name' => 'IPv4'
+                    ],
+                    [
+                        'value' => 6,
+                        'name' => 'IPv6'
+                    ],
+                    [
+                        'value' => 10,
+                        'name' => 'IPv4 & IPv6'
+                    ]
+                ]
             ],
         ];
     }
@@ -147,14 +165,33 @@ class Convoy extends Server
         $bandwidth = $configurableOptions['bandwidth'] ?? $params['bandwidth'];
         $snapshot = $configurableOptions['snapshot'] ?? $params['snapshot'];
         $backups = $configurableOptions['backups'] ?? $params['backups'];
-        if ($params['auto_assign_ip']) {
-            $ip = $this->request('get', 'nodes/' . $node . '/addresses?filter[server_id]');
-
-            $ip = [$ip['data'][0]['id']];
+        if ($params['auto_assign_ip'] == 10) {
+            $ipv6 = $this->request('get', 'nodes/' . $node . '/addresses?filter[server_id]&filter[type]=ipv6');
+            $ipv4 = $this->request('get', 'nodes/' . $node . '/addresses?filter[server_id]&filter[type]=ipv4');
+            $isIpv6 = $ipv6['meta']['pagination']['total'] != 0;
+            $isIpv4 = $ipv4['meta']['pagination']['total'] != 0;
+            if ($isIpv6 && $isIpv4) {
+                $ip = [$ipv6['data'][0]['id'], $ipv4['data'][0]['id']];
+            } else if ($isIpv6 && !$isIpv4) {
+                $ip = [$ipv6['data'][0]['id']];
+            } else if (!$isIpv6 && $isIpv4) {
+                $ip = [$ipv4['data'][0]['id']];
+            }
+        } else if ($params['auto_assign_ip'] == 6) {
+            $ipv6 = $this->request('get', 'nodes/' . $node . '/addresses?filter[server_id]&filter[type]=ipv6');
+            $isIpv6 = $ipv6['meta']['pagination']['total'] != 0;
+            if ($isIpv6) {
+                $ip = [$ipv6['data'][0]['id']];
+            }
+        } else if ($params['auto_assign_ip'] == 4) {
+            $ipv4 = $this->request('get', 'nodes/' . $node . '/addresses?filter[server_id]&filter[type]=ipv4');
+            $isIpv4 = $ipv4['meta']['pagination']['total'] != 0;
+            if ($isIpv4) {
+                $ip = [$ipv4['data'][0]['id']];
+            }
         } else {
             $ip = [];
         }
-
         $data = [
             'node_id' => (int) $node,
             'user_id' => $this->getUser($user, $params['config']['password']),
