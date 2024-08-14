@@ -4,12 +4,8 @@ namespace App\Extensions\Servers\Convoy;
 
 use App\Classes\Extensions\Server;
 use App\Helpers\ExtensionHelper;
-use App\Models\Order;
-use App\Models\OrderProduct;
 use App\Models\Product;
-use App\Models\User;
 use Illuminate\Support\Facades\Http;
-use CorwinDev\PaymenterDiscordLink\Console\Commands\DiscordLink;
 
 class Convoy extends Server
 {
