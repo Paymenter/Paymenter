@@ -100,7 +100,7 @@ return [
             'deleteAny' => 'Bulk Delete Servers',
         ],
         'failed_jobs' => [
-            'viewAny' => 'View Failed Jobs'
-        ]
+            'viewAny' => 'View Failed Jobs',
+        ],
     ],
 ];
