@@ -84,7 +84,16 @@
                 <input type="date" name="end_date" id="end_date" value="{{ $coupon->end_date }}"
                     class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm dark:bg-darkmode rounded-md" />
             </div>
-            <div class="w-full">
+            <div class="mt-4">
+                <label class="block dark:text-darkmodetext" for="uses">
+                    {{ __('Limit Per Client') }}
+                </label>
+                <input
+                    class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm dark:bg-darkmode rounded-md"
+                    type="number" name="limit_per_client" id="limit_per_client" step="1" min="0"
+                    value="{{ $coupon->limit_per_client }}">
+            </div>
+            <div class="mt-4">
                 <label class="block dark:text-darkmodetext" for="uses">
                     {{ __('Max Uses (not required)') }}
                 </label>

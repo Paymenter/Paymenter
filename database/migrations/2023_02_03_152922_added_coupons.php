@@ -19,6 +19,7 @@ return new class() extends Migration {
             $table->string('value');
             $table->string('max_uses')->nullable();
             $table->string('uses')->nullable();
+            $table->string('limit_per_client')->nullable();
             $table->date('start_date')->nullable();
             $table->date('end_date')->nullable();
             $table->string('status')->default('active');

@@ -73,6 +73,15 @@
                     value="{{ old('max_uses') }}">
             </div>
             <div class="w-full">
+                <label class="block dark:text-darkmodetext" for="uses">
+                    {{ __('Limit Per Client') }}
+                </label>
+                <input
+                    class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm dark:bg-darkmode rounded-md"
+                    type="number" name="limit_per_client" id="limit_per_client" step="1" min="0"
+                    value="{{ old('limit_per_client') }}">
+            </div>
+            <div class="w-full">
                 <!-- Assigned products -->
                 <label class="block dark:text-darkmodetext" for="products">
                     {{ __('Assigned Products (not required)') }}

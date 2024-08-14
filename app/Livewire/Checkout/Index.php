@@ -164,14 +164,27 @@ class Index extends Component
         return $amount * ($this->tax->rate / 100);
     }
 
-
     public function validateCoupon()
     {
+        if (!auth()->check()) {
+            return redirect()->route('login');
+        }
         $this->validateOnly('couponCode');
         if ($this->couponCode) {
             $coupon = Coupon::where('code', $this->couponCode)->first();
             if ($coupon) {
                 if (!$coupon->max_uses || $coupon->uses < $coupon->max_uses) {
+                    if ($coupon->limit_per_client) {
+                        $user = Auth::user();
+                        $userOrderCount = Order::where('user_id', $user->id)
+                                                ->where('coupon_id', $coupon->id)
+                                                ->count();
+                        
+                        if ($userOrderCount >= $coupon->limit_per_client) {
+                            $this->addError('couponCode', 'You have reached the limit for using this coupon.');
+                            return;
+                        }
+                    }
                     session()->put('coupon', $coupon->id);
                     $this->updateCart();
                 } else {

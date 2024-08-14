@@ -14,6 +14,7 @@ class Coupon extends Model {
         'value',
         'max_uses',
         'uses',
+        'limit_per_client',
         'start_date',
         'end_date',
         'status',

@@ -21,6 +21,7 @@ class CouponFactory extends Factory
             'type' => fake()->name(),
             'value' => fake()->randomFloat(2, 0, 100),
             'max_uses' => fake()->numberBetween(1, 10),
+            'limit_per_client' => fake()->numberBetween(1, 10),
             'uses' => fake()->numberBetween(1, 10),
             'start_date' => fake()->dateTime(),
             'end_date' => fake()->dateTime(),

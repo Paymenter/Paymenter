@@ -53,6 +53,7 @@ class CouponController extends Controller
             'time' => 'required|in:lifetime,onetime',
             'products' => 'nullable',
             'max_uses' => 'nullable|numeric',
+            'limit_per_client' => 'nullable|numeric',
             'start_date' => 'nullable|date',
             'end_date' => 'nullable|date|after:start_date',
         ]);
@@ -92,6 +93,7 @@ class CouponController extends Controller
             'time' => 'required|in:lifetime,onetime',
             'products' => 'nullable',
             'max_uses' => 'nullable|numeric',
+            'limit_per_client' => 'nullable|numeric',
             'start_date' => 'nullable|date',
             'end_date' => 'nullable|date|after:start_date',
         ]);
