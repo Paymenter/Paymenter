@@ -4,8 +4,8 @@
             @auth
                 {{-- Example user property inputs in client side --}}
                 @php
-                    $properties = \App\Models\CustomProperty::where('model', 'user')
-                        ->whereNot('admin_only', true)
+                    $properties = \App\Models\CustomProperty::where('model', 'App\Models\User')
+                        ->whereNot('admin_only')
                         ->get();
                     $property_values = Auth::user()
                         ->properties->mapWithKeys(function ($property) {

@@ -6,7 +6,7 @@ use App\Admin\Resources\CustomPropertyResource;
 use Filament\Actions;
 use Filament\Resources\Pages\ListRecords;
 
-class ListUserProperty extends ListRecords
+class ListCustomProperty extends ListRecords
 {
     protected static string $resource = CustomPropertyResource::class;
 

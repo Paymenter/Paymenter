@@ -6,7 +6,7 @@ use App\Admin\Resources\CustomPropertyResource;
 use Filament\Actions;
 use Filament\Resources\Pages\EditRecord;
 
-class EditUserProperty extends EditRecord
+class EditCustomProperty extends EditRecord
 {
     protected static string $resource = CustomPropertyResource::class;
 

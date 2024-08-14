@@ -93,9 +93,9 @@ class CustomPropertyResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListUserProperty::route('/'),
-            'create' => Pages\CreateUserProperty::route('/create'),
-            'edit' => Pages\EditUserProperty::route('/{record}/edit'),
+            'index' => Pages\ListCustomProperty::route('/'),
+            'create' => Pages\CreateCustomProperty::route('/create'),
+            'edit' => Pages\EditCustomProperty::route('/{record}/edit'),
         ];
     }
 }
