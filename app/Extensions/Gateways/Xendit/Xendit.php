@@ -35,7 +35,7 @@ class Xendit extends Gateway
 
     public function webhook(Request $request)
     {
-        if ($request->header('x-callback-token') != ExtensionHelper::getConfig('Xendit', 'callback')) {
+        if (!$request->header('x-callback-token') || ExtensionHelper::getConfig('Xendit', 'callback') == null || $request->header('x-callback-token') != ExtensionHelper::getConfig('Xendit', 'callback')) {
             return response()->json(['message' => 'Invalid callback token'], 403);
         }
         $json = $request->getContent();
