@@ -11,6 +11,7 @@ use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use Illuminate\Support\Arr;
 
 class RoleResource extends Resource
 {
@@ -25,8 +26,8 @@ class RoleResource extends Resource
         return $form
             ->schema([
                 TextInput::make('name'),
-                Select::make('permissions')->multiple()->options(config('permissions')),
-            ]);
+                Select::make('permissions')->multiple()->options(Arr::dot(config('permissions'))),
+            ])->columns(1);
     }
 
     public static function table(Table $table): Table
@@ -34,6 +35,7 @@ class RoleResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('name'),
+                TextColumn::make('permissions')->formatStateUsing(fn (Role $record): string => in_array('*', $record->permissions) ? 'All' : count($record->permissions)),
             ])
             ->filters([
                 //

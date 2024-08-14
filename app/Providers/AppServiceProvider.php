@@ -30,7 +30,7 @@ class AppServiceProvider extends ServiceProvider
         });
         \Livewire\Livewire::propertySynthesizer(PriceSynth::class);
 
-        Gate::before(function (User $user, string $ability) {
+        Gate::define('has-permission', function (User $user, string $ability) {
             return $user->hasPermission($ability);
         });
 

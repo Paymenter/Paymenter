@@ -13,6 +13,7 @@ use Filament\Forms\Contracts\HasForms;
 use Filament\Forms\Form;
 use Filament\Notifications\Notification;
 use Filament\Pages\Page;
+use Illuminate\Support\Facades\Gate;
 
 class Settings extends Page implements HasForms
 {
@@ -70,7 +71,8 @@ class Settings extends Page implements HasForms
 
     public function save(): void
     {
-        $this->authorize('admin.settings.update');
+        Gate::authorize('has-permission', 'admin.settings.update');
+
         $data = $this->form->getState();
 
         foreach ($data as $key => $value) {
@@ -102,7 +104,7 @@ class Settings extends Page implements HasForms
     {
         return [
             Actions\Action::make('save')
-                ->submit('settings'),
+                ->submit('save'),
         ];
     }
 
@@ -111,6 +113,6 @@ class Settings extends Page implements HasForms
         /** @var \App\Models\User */
         $user = auth()->user();
 
-        return $user->hasPermission('admin.settings.view');
+        return $user && $user->hasPermission('admin.settings.view');
     }
 }
