@@ -36,7 +36,7 @@ class PropertiesRelationManager extends RelationManager
                 Tables\Columns\TextColumn::make('name'),
                 Tables\Columns\TextColumn::make('parent_property.name'),
                 Tables\Columns\TextColumn::make('key'),
-                Tables\Columns\TextColumn::make('value'),
+                Tables\Columns\TextInputColumn::make('value'),
             ])
             ->filters([
                 //

@@ -30,7 +30,8 @@ class CustomPropertyResource extends Resource
                     'App\Models\User' => 'User',
                 ])->required(),
                 Forms\Components\Select::make('type')->options([
-                    'text' => 'Text',
+                    'string' => 'Short Text',
+                    'text' => 'Long Text',
                     'number' => 'Number',
                     'select' => 'Select',
                     'checkbox' => 'Checkbox',
@@ -47,7 +48,7 @@ class CustomPropertyResource extends Resource
                         'md' => 3,
                     ])
                     ->schema([
-                        Forms\Components\Toggle::make('admin_only')->default(false),
+                        Forms\Components\Toggle::make('non_editable')->default(false),
                         Forms\Components\Toggle::make('required')->default(false),
                         Forms\Components\Toggle::make('show_on_invoice')->default(false),
                     ]),
@@ -66,7 +67,7 @@ class CustomPropertyResource extends Resource
                     )),
                 Tables\Columns\TextColumn::make('key'),
                 Tables\Columns\TextColumn::make('type')->formatStateUsing(fn ($state) => str($state)->title()),
-                Tables\Columns\ToggleColumn::make('admin_only'),
+                Tables\Columns\ToggleColumn::make('non_editable'),
                 Tables\Columns\ToggleColumn::make('required'),
                 Tables\Columns\ToggleColumn::make('show_on_invoice'),
             ])

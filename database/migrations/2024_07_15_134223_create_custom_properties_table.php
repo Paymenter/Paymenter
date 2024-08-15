@@ -20,7 +20,7 @@ return new class extends Migration
             $table->string('model');
             $table->string('validation')->nullable();
             $table->json('allowed_values')->nullable();
-            $table->boolean('admin_only');
+            $table->boolean('non_editable');
             $table->boolean('required');
             $table->boolean('show_on_invoice');
         });
