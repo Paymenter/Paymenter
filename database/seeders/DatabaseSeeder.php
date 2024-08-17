@@ -35,6 +35,7 @@ class DatabaseSeeder extends Seeder
 
         $this->call([
             CustomPropertySeeder::class,
+            EmailTemplateSeeder::class,
         ]);
     }
 }

@@ -236,6 +236,90 @@ class Settings
                     'default' => 'inclusive',
                 ],
             ],
+            'mail' => [
+                // SMTP etc
+                [
+                    'name' => 'disable_mail',
+                    'label' => 'Disable Mail',
+                    'type' => 'checkbox',
+                    'default' => true,
+                ],
+                [
+                    'name' => 'mail_host',
+                    'label' => 'Mail Host',
+                    'type' => 'text',
+                    'required' => false,
+                    'override' => 'mail.mailers.smtp.host',
+                ],
+                [
+                    'name' => 'mail_port',
+                    'label' => 'Mail Port',
+                    'type' => 'text',
+                    'required' => false,
+                    'override' => 'mail.mailers.smtp.port',
+                ],
+                [
+                    'name' => 'mail_username',
+                    'label' => 'Mail Username',
+                    'type' => 'text',
+                    'required' => false,
+                    'override' => 'mail.mailers.smtp.username',
+                ],
+                [
+                    'name' => 'mail_password',
+                    'label' => 'Mail Password',
+                    'type' => 'password',
+                    'required' => false,
+                    'override' => 'mail.mailers.smtp.password',
+                ],
+                [
+                    'name' => 'mail_encryption',
+                    'label' => 'Mail Encryption',
+                    'type' => 'select',
+                    'options' => [
+                        'tls' => 'TLS',
+                        'ssl' => 'SSL',
+                        'null' => 'None',
+                    ],
+                    'default' => 'tls',
+                    'required' => false,
+                    'override' => 'mail.mailers.smtp.encryption',
+                ],
+                [
+                    'name' => 'mail_from_address',
+                    'label' => 'Mail From Address',
+                    'type' => 'email',
+                    'required' => false,
+                    'override' => 'mail.from.address',
+                ],
+                [
+                    'name' => 'mail_from_name',
+                    'label' => 'Mail From Name',
+                    'type' => 'text',
+                    'required' => false,
+                    'override' => 'mail.from.name',
+                ],
+
+
+
+                // Theming
+                [
+                    'name' => 'mail_header',
+                    'label' => 'Header',
+                    'type' => 'markdown',
+                    'required' => false,
+                    'default' => '',
+                    'disable_toolbar' => true,
+                ],
+                [
+                    'name' => 'mail_footer',
+                    'label' => 'Footer',
+                    'type' => 'markdown',
+                    'required' => false,
+                    'default' => '',
+                    'disable_toolbar' => true,
+                ],
+            ],
             'other' => [
                 [
                     'name' => 'gravatar_default',

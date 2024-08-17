@@ -14,7 +14,7 @@ class CustomPropertySeeder extends Seeder
     {
         // Seed custom user properties
         // for phone, company_name, country, address, address2, city, state, zip
-        DB::table('custom_properties')->insert([
+        DB::table('custom_properties')->insertOrIgnore([
             [
                 'key' => 'phone',
                 'name' => 'Phone',
