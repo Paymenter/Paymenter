@@ -14,7 +14,7 @@ class VirtFusion extends Server
     {
         return [
             'display_name' => 'VirtFusion',
-            'version' => '1.2.0',
+            'version' => '1.2.1',
             'author' => 'Paymenter',
             'website' => 'https://paymenter.org',
         ];
@@ -62,6 +62,12 @@ class VirtFusion extends Server
                 'friendlyName' => 'Default Hypervisor Group ID',
                 'required' => true,
             ],
+            [
+                'name' => 'ips',
+                'type' => 'text',
+                'friendlyName' => 'Number IPs',
+                'required' => true,
+            ],
         ];
     }
 
@@ -78,12 +84,12 @@ class VirtFusion extends Server
         $requestData = [
             'packageId' => $package,
             'userId' => $user,
-            'hypervisorId' => $configurableOptions['hypervisorId'] ?? $params['hypervisor']
+            'hypervisorId' => $configurableOptions['hypervisorId'] ?? $params['hypervisor'],
+            'ipv4' => $configurableOptions['ipv4'] ?? $params['ips'],
         ];
 
         $optionalFields = [
             'hypervisorId',
-            'ipv4',
             'storage',
             'traffic',
             'memory',
