@@ -37,7 +37,6 @@ Route::group(['middleware' => ['web', 'auth']], function () {
 
     Route::get('tickets', Tickets\Index::class)->name('tickets');
     Route::get('tickets/{ticket}', Tickets\Show::class)->name('tickets.show');
-
 });
 
 Route::get('cart', Cart::class)->name('cart');

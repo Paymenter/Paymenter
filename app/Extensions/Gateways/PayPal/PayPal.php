@@ -233,7 +233,7 @@ class PayPal extends Gateway
         if ($orderProduct->properties->where('key', 'has_paypal_subscription')->first()?->value !== '1') {
             return false;
         }
-        $paypal = new PayPal();
+        $paypal = new PayPal;
         // Update subscription price
         $newPrice = OrderProduct::where('subscription_id', $orderProduct->subscription_id)->sum('price');
         //Grab currenct subscription ID

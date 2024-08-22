@@ -3,15 +3,12 @@
 namespace App\Admin\Resources;
 
 use App\Admin\Resources\EmailTemplateResource\Pages;
-use App\Admin\Resources\EmailTemplateResource\RelationManagers;
 use App\Models\EmailTemplate;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class EmailTemplateResource extends Resource
 {

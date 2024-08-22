@@ -65,7 +65,7 @@ class Security extends Component
                 'twoFactorCode' => 'required|string',
             ]);
 
-            $tfa = new TwoFactorAuth(new EndroidQrCodeProvider(), config('app.name'));
+            $tfa = new TwoFactorAuth(new EndroidQrCodeProvider, config('app.name'));
             if ($tfa->verifyCode($this->twoFactorData['secret'], $this->twoFactorCode)) {
                 Auth::user()->update([
                     'tfa_secret' => $this->twoFactorData['secret'],
@@ -79,7 +79,7 @@ class Security extends Component
                 $this->notify(__('account.notifications.two_factor_code_incorrect'), 'error');
             }
         } else {
-            $tfa = new TwoFactorAuth(new EndroidQrCodeProvider(), config('app.name'));
+            $tfa = new TwoFactorAuth(new EndroidQrCodeProvider, config('app.name'));
             $secret = $tfa->createSecret();
             $this->twoFactorData = [
                 'secret' => $secret,

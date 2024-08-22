@@ -300,8 +300,6 @@ class Settings
                     'override' => 'mail.from.name',
                 ],
 
-
-
                 // Theming
                 [
                     'name' => 'mail_header',

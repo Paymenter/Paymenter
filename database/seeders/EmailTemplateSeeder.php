@@ -30,7 +30,7 @@ class EmailTemplateSeeder extends Seeder
                                 
                     **If this wasn't you**  
                     Please reset your password [here]({{ route('register') }}).
-                    HTML,
+                HTML,
             ],
         ]);
     }

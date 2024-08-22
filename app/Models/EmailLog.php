@@ -5,20 +5,19 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class EmailTemplate extends Model
+class EmailLog extends Model
 {
     use HasFactory;
 
     protected $fillable = [
-        'name',
+        'email_template_id',
+        'user_id',
         'subject',
         'body',
-        'cc',
-        'bcc',
-    ];
-
-    protected $casts = [
-        'cc' => 'array',
-        'bcc' => 'array',
+        'to',
+        'sent_at',
+        'status',
+        'error',
+        'job_uuid',
     ];
 }

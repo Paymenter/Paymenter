@@ -43,7 +43,7 @@ class Tfa extends Component
             return $this->redirect(route('login'), true);
         }
 
-        $tfa = new TwoFactorAuth(new EndroidQrCodeProvider(), config('app.name'));
+        $tfa = new TwoFactorAuth(new EndroidQrCodeProvider, config('app.name'));
         if (!$tfa->verifyCode($user->tfa_secret, $this->code)) {
             return $this->addError('code', 'Invalid code.');
         }

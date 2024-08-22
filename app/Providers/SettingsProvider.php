@@ -36,6 +36,8 @@ class SettingsProvider extends ServiceProvider
             }
             // Is the current command a config:cache command?
             if (isset($_SERVER['argv']) && (in_array('config:cache', $_SERVER['argv']) || in_array('optimize', $_SERVER['argv']))) {
+                dd();
+
                 return;
             }
             config(['settings' => $settings]);

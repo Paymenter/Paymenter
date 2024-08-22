@@ -4,24 +4,30 @@ namespace App\Mail;
 
 use App\Models\EmailTemplate;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Support\Facades\Auth;
 
 class Mail extends Mailable
 {
     use Queueable, SerializesModels;
 
+    public $email_log_id;
+
+    public array $data = [];
+
+    public EmailTemplate $emailTemplate;
+
     /**
      * Create a new message instance.
      */
     public function __construct(
-        public EmailTemplate $emailTemplate,
-        public array $data = [],
+        EmailTemplate $emailTemplate,
+        array $data = []
     ) {
+        $this->emailTemplate = $emailTemplate;
+        $this->data = $data;
         $this->data['body'] = $this->emailTemplate->body;
     }
 
@@ -45,5 +51,4 @@ class Mail extends Mailable
             with: $this->data,
         );
     }
-
 }

@@ -25,7 +25,7 @@ class OrderProductListener implements ShouldQueue
         if (!$event->orderProduct->isDirty('price') && $event->orderProduct->properties->where('key', 'has_paypal_subscription')->first()?->value !== '1') {
             return;
         }
-        $stripe = new Stripe();
+        $stripe = new Stripe;
         $stripe->updateSubscription($event->orderProduct);
     }
 }

@@ -3,9 +3,13 @@
 namespace App\Providers;
 
 use App\Classes\Synths\PriceSynth;
+use App\Models\EmailLog;
 use App\Models\User;
+use Illuminate\Queue\Events\JobFailed;
+use Illuminate\Queue\Events\JobProcessed;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Queue;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -40,5 +44,27 @@ class AppServiceProvider extends ServiceProvider
 
         // Register views for extensions (app/Extensions/{type}/{extension}/views)
         $this->loadViewsFrom(app_path('Extensions'), 'extensions');
+
+        Queue::after(function (JobProcessed $event) {
+            if ($event->job->resolveName() === 'App\Mail\Mail') {
+                $payload = json_decode($event->job->getRawBody());
+                $data = unserialize($payload->data->command);
+                EmailLog::where('id', $data->mailable->email_log_id)->update([
+                    'sent_at' => now(),
+                    'status' => 'sent',
+                ]);
+            }
+        });
+        Queue::failing(function (JobFailed $event) {
+            if ($event->job->resolveName() === 'App\Mail\Mail') {
+                $payload = json_decode($event->job->getRawBody());
+                $data = unserialize($payload->data->command);
+                EmailLog::where('id', $data->mailable->email_log_id)->update([
+                    'status' => 'failed',
+                    'error' => $event->exception->getMessage(),
+                    'job_uuid' => $event->job->uuid(),
+                ]);
+            }
+        });
     }
 }
