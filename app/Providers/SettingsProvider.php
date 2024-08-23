@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Models\Setting;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\ServiceProvider;
 use Qirolab\Theme\Theme;
@@ -36,8 +37,6 @@ class SettingsProvider extends ServiceProvider
             }
             // Is the current command a config:cache command?
             if (isset($_SERVER['argv']) && (in_array('config:cache', $_SERVER['argv']) || in_array('optimize', $_SERVER['argv']))) {
-                dd();
-
                 return;
             }
             config(['settings' => $settings]);
@@ -62,6 +61,8 @@ class SettingsProvider extends ServiceProvider
     public static function flushCache()
     {
         Cache::forget('settings');
+        // Restart queue worker
+        Artisan::call('queue:restart');
         self::getSettings();
     }
 }

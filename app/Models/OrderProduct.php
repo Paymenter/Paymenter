@@ -61,12 +61,30 @@ class OrderProduct extends Model
      */
     public function description(): Attribute
     {
+        if ($this->plan->type == 'free' || $this->plan->type == 'one-time') {
+            return Attribute::make(
+                get: fn () => $this->product->name
+            );
+        }
         $date = $this->expires_at ?? now();
-        $endDate = $date->copy()->addDays($this->plan->billing_duration);
+        $endDate = $date->{'add' . ucfirst($this->plan->billing_unit) . 's'}($this->plan->billing_period);
 
         return Attribute::make(
             get: fn () => $this->product->name . ' (' . $date->format('M d, Y') . ' - ' . $endDate->format('M d, Y') . ')'
         );
+    }
+
+    /**
+     * Calculate next due date.
+     */
+    public function calculateNextDueDate()
+    {
+        if ($this->plan->type == 'onetime' || $this->plan->type == 'free') {
+            return null;
+        }
+        $date = $this->expires_at ?? now();
+
+        return $date->{'add' . ucfirst($this->plan->billing_unit) . 's'}($this->plan->billing_period);
     }
 
     /**

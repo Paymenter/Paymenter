@@ -58,7 +58,7 @@ class Plan extends Model implements Auditable
     // Time between billing periods
     public function billingDuration(): Attribute
     {
-        if ($this->type === 'free') {
+        if ($this->type === 'free' || $this->type == 'one-time') {
             return Attribute::make(get: fn () => 0);
         }
         $diffInDays = match ($this->billing_unit) {

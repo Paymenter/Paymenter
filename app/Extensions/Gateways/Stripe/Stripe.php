@@ -54,7 +54,10 @@ class Stripe extends Gateway
 
     public function pay($invoice, $total)
     {
-        if ($this->config('stripe_use_subscriptions')) {
+        $eligableforSubscription = collect($invoice->items)->filter(function ($item) {
+            return $item->orderProduct && $item->orderProduct->plan->type !== 'one-time';
+        })->count() > 0;
+        if ($this->config('stripe_use_subscriptions') && $eligableforSubscription) {
             $stripeCustomerId = $invoice->user->properties->where('key', 'stripe_id')->first();
             if (!$stripeCustomerId) {
                 $customer = $this->request('post', '/customers', [

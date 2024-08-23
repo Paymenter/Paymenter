@@ -26,6 +26,7 @@ class InvoicePaidListener
                 CreateJob::dispatch($orderProduct);
                 $orderProduct->status = 'pending-setup';
             }
+            $orderProduct->expires_at = $orderProduct->calculateNextDueDate();
             $orderProduct->save();
         });
     }

@@ -9,6 +9,7 @@ use App\Livewire\Traits\CurrencyChanged;
 use App\Models\Category;
 use App\Models\Plan;
 use App\Models\Price as ModelsPrice;
+use Illuminate\Validation\Rule;
 use Livewire\Attributes\Locked;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Url;
@@ -53,6 +54,7 @@ class Checkout extends Component
         } else {
             // Set the first plan as default
             $this->plan = $this->product->plans->first();
+            $this->plan_id = $this->plan->id;
 
             // Prepare the config options
             $this->configOptions = $this->product->configOptions->mapWithKeys(function ($option) {
@@ -107,7 +109,11 @@ class Checkout extends Component
 
     public function rules()
     {
-        $rules = [];
+        $rules = [
+            'plan_id' => ['required', Rule::exists('plans', 'id')->where(function ($query) {
+                $query->where('priceable_id', $this->product->id)->where('priceable_type', get_class($this->product));
+            })],
+        ];
         foreach ($this->product->configOptions as $option) {
             if (in_array($option->type, ['text', 'number', 'checkbox'])) {
                 $rules["configOptions.{$option->id}"] = ['required'];

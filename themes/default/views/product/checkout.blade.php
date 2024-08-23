@@ -58,7 +58,8 @@
         </div>
         @if ($total->setup_fee && $plan->type == 'recurring')
             <div class="text- font-semibold flex justify-between bg-primary-800 p-2 px-4 rounded-md">
-                <h4>{{ __('product.then_after_x', ['time' => $plan->billing_period . ' ' . $plan->billing_unit . ($plan->billing_period > 1 ? 's' : '')]) }}:</h4> {{ $total->format($total->price - $total->setup_fee) }}
+                <h4>{{ __('product.then_after_x', ['time' => $plan->billing_period . ' ' . $plan->billing_unit . ($plan->billing_period > 1 ? 's' : '')]) }}:
+                </h4> {{ $total->format($total->price - $total->setup_fee) }}
             </div>
         @endif
         @if (($product->stock > 0 || !$product->stock) && $product->price()->available)
