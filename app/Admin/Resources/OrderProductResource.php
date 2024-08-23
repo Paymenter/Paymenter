@@ -64,8 +64,8 @@ class OrderProductResource extends Resource
                     ->required()
                     ->placeholder('Enter the quantity'),
                 Forms\Components\TextInput::make('price')
-                    ->suffix(fn (Component $component) => $component->getRecord()->currency->suffix)
-                    ->prefix(fn (Component $component) => $component->getRecord()->currency->prefix)
+                    ->suffix(fn (Component $component) => $component->getRecord()?->currency->suffix)
+                    ->prefix(fn (Component $component) => $component->getRecord()?->currency->prefix)
                     ->label('Price')
                     ->required()
                     ->mask(RawJs::make(
@@ -97,7 +97,7 @@ class OrderProductResource extends Resource
                             })
                             ->requiresConfirmation()
                             ->label('Cancel Subscription')
-                            ->hidden(fn (Component $component) => !$component->getRecord()->subscription_id),
+                            ->hidden(fn (Component $component) => !$component->getRecord()?->subscription_id),
                     ),
             ]);
     }
