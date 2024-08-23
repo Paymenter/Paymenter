@@ -146,8 +146,7 @@ class EditTicket extends EditRecord
                                         ->relationship('assignedTo', 'id')
                                         ->searchable()
                                         ->preload()
-                                        ->getOptionLabelFromRecordUsing(fn ($record) => $record->name)
-                                        ->required(),
+                                        ->getOptionLabelFromRecordUsing(fn ($record) => $record->name),
                                     Forms\Components\Select::make('order_product_id')
                                         ->label('Order Product')
                                         ->relationship('orderProduct', 'id', function (Builder $query, Get $get) {

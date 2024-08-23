@@ -73,6 +73,7 @@ class TicketResource extends Resource
                 Forms\Components\Select::make('assigned_to')
                     ->label('Assigned To')
                     ->relationship('user', 'id')
+                    ->getOptionLabelFromRecordUsing(fn ($record) => $record->name)
                     ->columnSpan(function ($record) {
                         return $record ? 2 : 1;
                     }),
