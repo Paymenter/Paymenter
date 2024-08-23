@@ -6,9 +6,9 @@
         </div>
         <div class="grid grid-cols-2 gap-4">
             <x-form.input name="first_name" type="text" :label="__('general.input.first_name')" :placeholder="__('general.input.first_name_placeholder')" wire:model="first_name"
-                :required="!in_array('first_name', config('settings.optional_fields'))" noDirty />
+                required noDirty />
             <x-form.input name="last_name" type="text" :label="__('general.input.last_name')" :placeholder="__('general.input.last_name_placeholder')" wire:model="last_name"
-                :required="!in_array('last_name', config('settings.optional_fields'))" noDirty />
+                required noDirty />
 
             <x-form.input name="email" type="email" :label="__('general.input.email')" :placeholder="__('general.input.email_placeholder')" required wire:model="email"
                 noDirty />
@@ -18,7 +18,7 @@
             <x-form.input name="password_confirm" type="password" :label="__('Password')" :placeholder="__('Confirm your password')"
                 wire:model="password_confirmation" required noDirty />
 
-            <x-form.properties :customProperties="$custom_properties" :properties="$properties" />
+            <x-form.properties :custom_properties="$custom_properties" :properties="$properties" />
         </div>
 
         <x-captcha :form="'register'" />
