@@ -11,7 +11,7 @@
                 required noDirty />
 
             <x-form.input name="email" type="email" :label="__('general.input.email')" :placeholder="__('general.input.email_placeholder')" required wire:model="email"
-                noDirty />
+                noDirty divClass="col-span-2" />
 
             <x-form.input name="password" type="password" :label="__('Password')" :placeholder="__('Your password')" wire:model="password"
                 required noDirty />
@@ -23,7 +23,7 @@
 
         <x-captcha :form="'register'" />
 
-        <x-button.primary class="w-full">{{ __('Sign up') }}</x-button.primary>
+        <x-button.primary class="w-full mt-2">{{ __('Sign up') }}</x-button.primary>
 
         <div class="text-white text-center rounded-md py-2 mt-6 text-sm">
             {{ __('Already have an account?') }}
