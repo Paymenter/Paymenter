@@ -12,7 +12,7 @@ class CurrencySwitch extends Component
 
     public function mount()
     {
-        $this->currentCurrency = session('currency', 'USD');
+        $this->currentCurrency = session('currency', config('settings.default_currency'));
 
         if (Cart::get()->isNotEmpty()) {
             $this->skipRender();
