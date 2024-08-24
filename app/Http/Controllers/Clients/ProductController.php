@@ -56,6 +56,8 @@ class ProductController extends Controller
             return redirect()->back()->with('error', 'This product is already cancelled.');
         }
         if ($request->cancellation_type == 'immediate') {
+            $product->status = 'cancelled';
+            $product->save();
             TerminateServer::dispatch($product);
         }
 
