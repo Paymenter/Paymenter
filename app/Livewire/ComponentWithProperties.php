@@ -2,7 +2,6 @@
 
 namespace App\Livewire;
 
-use App\Models\Property;
 use Illuminate\Database\Eloquent\Collection;
 
 class ComponentWithProperties extends Component
@@ -69,7 +68,11 @@ class ComponentWithProperties extends Component
             ];
         })->toArray();
 
-        Property::upsert($properties, uniqueBy: ['key'], update: [
+        $model->properties()->upsert($properties, uniqueBy: [
+            'key',
+            'model_id',
+            'model_type',
+        ], update: [
             'name',
             'value',
             'model_id',

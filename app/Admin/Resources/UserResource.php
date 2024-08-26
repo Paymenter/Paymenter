@@ -2,8 +2,8 @@
 
 namespace App\Admin\Resources;
 
+use App\Admin\Resources\Common\RelationManagers\PropertiesRelationManager;
 use App\Admin\Resources\UserResource\Pages;
-use App\Admin\Resources\UserResource\RelationManagers\PropertiesRelationManager;
 use App\Models\User;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;

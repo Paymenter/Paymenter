@@ -12,6 +12,7 @@ use App\Models\Invoice;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Session;
 use Livewire\Attributes\Locked;
 
@@ -154,8 +155,7 @@ class Cart extends Component
             // Lock the orderproducts
             foreach ($this->items as $item) {
                 if (
-                    $item->product->per_user_limit > 0 && (
-                        $user->orderProducts->where('product_id', $item->product->id)->count() >= $item->product->per_user_limit ||
+                    $item->product->per_user_limit > 0 && ($user->orderProducts->where('product_id', $item->product->id)->count() >= $item->product->per_user_limit ||
                         $this->items->filter(fn ($it) => $it->product->id == $item->product->id)->sum(fn ($it) => $it->quantity) + $user->orderProducts->where('product_id', $item->product->id)->count() > $item->product->per_user_limit
                     )
                 ) {
@@ -203,6 +203,17 @@ class Cart extends Component
                 ]);
 
                 foreach ($item->configOptions as $configOption) {
+                    if (in_array($configOption->option_type, ['text', 'number'])) {
+                        $orderProduct->properties()->updateOrCreate([
+                            'key' => $configOption->option_env_variable,
+                        ], [
+                            'name' => $configOption->option_name,
+                            'value' => $configOption->value,
+                        ]);
+
+                        continue;
+                    }
+
                     $orderProduct->configs()->create([
                         'config_option_id' => $configOption->option_id,
                         'config_value_id' => $configOption->value,
@@ -246,6 +257,7 @@ class Cart extends Component
             if ($e instanceof DisplayException) {
                 $this->notify($e->getMessage(), 'error');
             } else {
+                Log::error($e);
                 $this->notify('An error occurred while processing your order. Please try again later.');
             }
         }

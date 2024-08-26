@@ -41,6 +41,8 @@ class ConfigOptionResource extends Resource
                                 ->native(false)
                                 ->required()
                                 ->options([
+                                    'text' => 'Text',
+                                    'number' => 'Number',
                                     'select' => 'Select',
                                     'slider' => 'Slider',
                                     'radio' => 'Radio',

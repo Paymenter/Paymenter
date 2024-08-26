@@ -2,6 +2,7 @@
 
 namespace App\Admin\Resources;
 
+use App\Admin\Resources\Common\RelationManagers\PropertiesRelationManager;
 use App\Admin\Resources\OrderProductResource\Pages;
 use App\Admin\Resources\OrderProductResource\RelationManagers;
 use App\Helpers\ExtensionHelper;
@@ -135,6 +136,7 @@ class OrderProductResource extends Resource
     {
         return [
             RelationManagers\InvoicesRelationManager::class,
+            PropertiesRelationManager::class,
         ];
     }
 

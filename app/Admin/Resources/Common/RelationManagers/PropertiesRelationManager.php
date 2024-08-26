@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Admin\Resources\UserResource\RelationManagers;
+namespace App\Admin\Resources\Common\RelationManagers;
 
 use App\Models\CustomProperty;
 use Filament\Forms;

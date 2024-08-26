@@ -141,13 +141,13 @@ class Checkout extends Component
         // First we validate the plans
         $this->validate(attributes: $this->attributes());
 
-        // Change configOptions so they also contain the name of the option (resulting in less database calls = faster speeds) e.g. ['option_id' => 'x', 'option_name' => 'y', 'value' => 'z', 'value_name' => 'a']
+        // Change configOptions so they also contain the name of the option (resulting in less database calls = faster speeds)
         $configOptions = $this->product->configOptions->map(function ($option) {
             if (in_array($option->type, ['text', 'number', 'checkbox'])) {
-                return (object) ['option_id' => $option->id, 'option_name' => $option->name, 'value' => $this->configOptions[$option->id], 'value_name' => $this->configOptions[$option->id]];
+                return (object) ['option_id' => $option->id, 'option_name' => $option->name, 'option_type' => $option->type, 'option_env_variable' => $option->env_variable, 'value' => $this->configOptions[$option->id], 'value_name' => $this->configOptions[$option->id]];
             }
 
-            return (object) ['option_id' => $option->id, 'option_name' => $option->name, 'value' => $this->configOptions[$option->id], 'value_name' => $option->children->where('id', $this->configOptions[$option->id])->first()->name];
+            return (object) ['option_id' => $option->id, 'option_name' => $option->name, 'option_type' => $option->type, 'option_env_variable' => $option->env_variable, 'value' => $this->configOptions[$option->id], 'value_name' => $option->children->where('id', $this->configOptions[$option->id])->first()->name];
         });
 
         Cart::add($this->product, $this->plan, $configOptions, $this->total, key: $this->cartProductKey);

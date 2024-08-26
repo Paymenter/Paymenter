@@ -16,7 +16,8 @@ return new class extends Migration
             $table->id();
             $table->foreignIdFor(CustomProperty::class)->nullable()->constrained()->cascadeOnDelete();
             $table->string('name')->nullable();
-            $table->string('key')->unique()->index();
+            $table->string('key');
+            $table->unique(['key', 'model_id', 'model_type']);
             $table->text('value');
             $table->morphs('model');
             $table->timestamps();
