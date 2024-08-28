@@ -238,15 +238,14 @@ class Pterodactyl extends Server
         $user = $this->request('/api/application/users', 'get', ['filter' => ['email' => $orderUser->email]])['data'][0]['attributes']['id'] ?? null;
 
         if (!$user) {
-            $password = Str::password(12);
-
             $user = $this->request('/api/application/users', 'post', [
                 'email' => $orderUser->email,
-                'username' => (preg_replace('/[^a-zA-Z0-9]/', '', strtolower($orderUser->username)) ?? Str::random(8)) . '_' . Str::random(4),
+                'username' => (preg_replace('/[^a-zA-Z0-9]/', '', strtolower($orderUser->name)) ?? \Str::random(8)) . '_' . \Str::random(4),
                 'first_name' => $orderUser->first_name ?? '',
                 'last_name' => $orderUser->last_name ?? '',
-                'password' => $password,
             ])['attributes']['id'];
+
+            $returnData['created_user'] = true;
         }
 
         $data = [
@@ -289,7 +288,7 @@ class Pterodactyl extends Server
 
         // Add link to return data as well as the server id
         $returnData['server'] = $server['attributes']['id'];
-        $returnData['link'] = $this->config('host') . '/server/' . $server['attributes']['id'];
+        $returnData['link'] = $this->config('host') . '/server/' . $server['attributes']['identifier'];
 
         return $returnData;
     }
