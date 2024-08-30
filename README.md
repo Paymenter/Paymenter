@@ -34,6 +34,9 @@ Thanks to all sponsors for helping fund Paymenter's development.
 ## Wanna take a look?
 Visit our demo at: https://demo.paymenter.org
 
+**Username** : admin@paymenter.org
+**Password** : admin
+
 ## Requirements
 The requirements for Paymenter are the following:
 - PHP (8.1 or higher)
