@@ -256,6 +256,23 @@ class ExtensionHelper
     }
 
     /* SERVER RELATED FUNCTIONS */
+
+    /**
+     * Get both properties and config options from order product and smash them together
+     */
+    public static function getOrderProductProperties(OrderProduct $orderProduct)
+    {
+        $properties = [];
+        foreach ($orderProduct->properties as $property) {
+            $properties[$property->key] = $property->value;
+        }
+        foreach ($orderProduct->configs as $config) {
+            $properties[$config->configOption->env_variable] = $config->configValue->value;
+        }
+
+        return $properties;
+    }
+
     /**
      * Create server
      */
@@ -263,7 +280,7 @@ class ExtensionHelper
     {
         $server = $orderProduct->product->server;
 
-        return self::getExtension('server', $server->extension, $server->settings)->createServer($orderProduct, self::settingsToArray($orderProduct->product->settings), self::settingsToArray($orderProduct->properties));
+        return self::getExtension('server', $server->extension, $server->settings)->createServer($orderProduct, self::settingsToArray($orderProduct->product->settings), self::getOrderProductProperties($orderProduct));
     }
 
     /**
@@ -273,7 +290,7 @@ class ExtensionHelper
     {
         $server = $orderProduct->product->server;
 
-        return self::getExtension('server', $server->extension, $server->settings)->suspendServer($orderProduct, self::settingsToArray($orderProduct->product->settings), self::settingsToArray($orderProduct->properties));
+        return self::getExtension('server', $server->extension, $server->settings)->suspendServer($orderProduct, self::settingsToArray($orderProduct->product->settings), self::getOrderProductProperties($orderProduct));
     }
 
     /**
@@ -283,7 +300,7 @@ class ExtensionHelper
     {
         $server = $orderProduct->product->server;
 
-        return self::getExtension('server', $server->extension, $server->settings)->unsuspendServer($orderProduct, self::settingsToArray($orderProduct->product->settings), self::settingsToArray($orderProduct->properties));
+        return self::getExtension('server', $server->extension, $server->settings)->unsuspendServer($orderProduct, self::settingsToArray($orderProduct->product->settings), self::getOrderProductProperties($orderProduct));
     }
 
     /**
@@ -293,6 +310,6 @@ class ExtensionHelper
     {
         $server = $orderProduct->product->server;
 
-        return self::getExtension('server', $server->extension, $server->settings)->terminateServer($orderProduct, self::settingsToArray($orderProduct->product->settings), self::settingsToArray($orderProduct->properties));
+        return self::getExtension('server', $server->extension, $server->settings)->terminateServer($orderProduct, self::settingsToArray($orderProduct->product->settings), self::getOrderProductProperties($orderProduct));
     }
 }

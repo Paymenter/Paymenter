@@ -20,6 +20,16 @@ class TicketResource extends Resource
 
     public static ?string $navigationGroup = 'Administration';
 
+    public static function getNavigationBadge(): ?string
+    {
+        return static::getModel()::where('status', 'open')->count() ?: null;
+    }
+
+    public static function getNavigationBadgeColor(): ?string
+    {
+        return 'danger';
+    }
+
     public static function form(Form $form): Form
     {
         return $form
@@ -46,13 +56,13 @@ class TicketResource extends Resource
                     ->label('Priority')
                     ->options([
                         'low' => 'Low',
-                        'normal' => 'Normal',
+                        'medium' => 'Medium',
                         'high' => 'High',
                     ])
                     ->columnSpan(function ($record) {
                         return $record ? 2 : 1;
                     })
-                    ->default('normal')
+                    ->default('medium')
                     ->required(),
                 Forms\Components\Select::make('department')
                     ->label('Department')
@@ -115,16 +125,18 @@ class TicketResource extends Resource
                             'closed' => 'danger',
                             'replied' => 'gray',
                         };
-                    }),
+                    })
+                    ->formatStateUsing(fn (string $state) => ucfirst($state)),
                 Tables\Columns\TextColumn::make('priority')
                     ->sortable()
                     ->badge(function ($record) {
                         return match ($record->priority) {
                             'low' => 'success',
-                            'normal' => 'gray',
+                            'medium' => 'gray',
                             'high' => 'danger',
                         };
-                    }),
+                    })
+                    ->formatStateUsing(fn (string $state) => ucfirst($state)),
                 Tables\Columns\TextColumn::make('department')
                     ->sortable(),
                 Tables\Columns\TextColumn::make('user.name')

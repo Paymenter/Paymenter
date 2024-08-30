@@ -23,6 +23,7 @@ class OrderProduct extends Model
         'price',
         'expires_at',
         'subscription_id',
+        'status',
     ];
 
     protected $casts = [

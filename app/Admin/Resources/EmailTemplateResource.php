@@ -14,7 +14,9 @@ class EmailTemplateResource extends Resource
 {
     protected static ?string $model = EmailTemplate::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'ri-mail-line';
+
+    protected static ?string $navigationGroup = 'Other';
 
     public static function form(Form $form): Form
     {
@@ -48,31 +50,16 @@ class EmailTemplateResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('key')
-                    ->searchable(),
                 Tables\Columns\TextColumn::make('subject')
                     ->searchable(),
                 Tables\Columns\IconColumn::make('enabled')
                     ->boolean(),
-                Tables\Columns\TextColumn::make('created_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('updated_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
                 //
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
-            ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
-                ]),
             ]);
     }
 

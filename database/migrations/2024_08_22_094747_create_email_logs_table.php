@@ -13,7 +13,6 @@ return new class extends Migration
     {
         Schema::create('email_logs', function (Blueprint $table) {
             $table->id();
-            $table->foreignIdFor(\App\Models\EmailTemplate::class)->nullable()->constrained()->nullOnDelete();
             $table->foreignIdFor(\App\Models\User::class)->nullable()->constrained()->nullOnDelete();
             $table->string('subject');
             $table->string('to');

@@ -6,17 +6,17 @@
         </div>
         <div class="grid grid-cols-2 gap-4">
             <x-form.input name="first_name" type="text" :label="__('general.input.first_name')" :placeholder="__('general.input.first_name_placeholder')" wire:model="first_name"
-                required noDirty />
+                required />
             <x-form.input name="last_name" type="text" :label="__('general.input.last_name')" :placeholder="__('general.input.last_name_placeholder')" wire:model="last_name"
-                required noDirty />
+                required />
 
             <x-form.input name="email" type="email" :label="__('general.input.email')" :placeholder="__('general.input.email_placeholder')" required wire:model="email"
-                noDirty divClass="col-span-2" />
+                divClass="col-span-2" />
 
             <x-form.input name="password" type="password" :label="__('Password')" :placeholder="__('Your password')" wire:model="password"
-                required noDirty />
+                required />
             <x-form.input name="password_confirm" type="password" :label="__('Password')" :placeholder="__('Confirm your password')"
-                wire:model="password_confirmation" required noDirty />
+                wire:model="password_confirmation" required />
 
             <x-form.properties :custom_properties="$custom_properties" :properties="$properties" />
         </div>

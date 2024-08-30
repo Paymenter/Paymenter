@@ -23,11 +23,11 @@
     <form wire:submit="changePassword">
         <div class="grid grid-cols-2 gap-4">
             <x-form.input divClass="col-span-2" name="current_password" type="password" :label="__('account.input.current_password')" :placeholder="__('account.input.current_password_placeholder')"
-                wire:model="current_password" required noDirty />
-            <x-form.input name="password" type="password" :label="__('account.input.new_password')" :placeholder="__('account.input.new_password_placeholder')" wire:model="password" required
-                noDirty />
+                wire:model="current_password" required />
+            <x-form.input name="password" type="password" :label="__('account.input.new_password')" :placeholder="__('account.input.new_password_placeholder')" wire:model="password"
+                required />
             <x-form.input name="password_confirmation" type="password" :label="__('account.input.confirm_password')" :placeholder="__('account.input.confirm_password_placeholder')"
-                wire:model="password_confirmation" required noDirty />
+                wire:model="password_confirmation" required />
         </div>
 
         <x-button.primary type="submit" class="w-full mt-4">
@@ -57,7 +57,7 @@
                 </div>
                 <form wire:submit.prevent="enableTwoFactor">
                     <x-form.input divClass="mt-8" name="two_factor_code" type="text" :label="__('account.input.two_factor_code')" :placeholder="__('account.input.two_factor_code_placeholder')"
-                        wire:model="twoFactorCode" required noDirty />
+                        wire:model="twoFactorCode" required />
                     <x-button.primary class="w-full mt-4" type="submit">
                         {{ __('Enable two factor authentication') }}
                     </x-button.primary>

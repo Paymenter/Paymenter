@@ -1,4 +1,4 @@
-@props(['name', 'label' => null, 'required' => false, 'divClass' => null, 'class' => null,'placeholder' => null, 'id' => null, 'type' => null, 'hideRequiredIndicator' => false, 'noDirty' => false])
+@props(['name', 'label' => null, 'required' => false, 'divClass' => null, 'class' => null,'placeholder' => null, 'id' => null, 'type' => null, 'hideRequiredIndicator' => false, 'dirty' => false])
 <fieldset class="flex flex-col relative mt-3 w-full {{ $divClass ?? '' }}">
     @if ($label)
         <legend>
@@ -14,8 +14,8 @@
     <input type="{{ $type ?? 'text' }}" id="{{ $id ?? $name }}" name="{{ $name }}"
         class="block w-full text-sm text-primary-100 bg-primary-800 border-2 border-primary-700 rounded-md outline-none focus:outline-none focus:border-secondary transition-all duration-300 ease-in-out disabled:bg-primary-700 disabled:cursor-not-allowed {{ $class ?? '' }} @if ($type !== 'color') px-2.5 py-2.5 @endif"
         placeholder="{{ $placeholder ?? ($label ?? '') }}"
-        @if (!$noDirty && isset($attributes['wire:model'])) wire:dirty.class="!border-yellow-600" @endif
-        {{ $attributes->except(['placeholder', 'label', 'id', 'name', 'type', 'class', 'divClass', 'required', 'hideRequiredIndicator', 'noDirty']) }} @required($required) />
+        @if ($dirty && isset($attributes['wire:model'])) wire:dirty.class="!border-yellow-600" @endif
+        {{ $attributes->except(['placeholder', 'label', 'id', 'name', 'type', 'class', 'divClass', 'required', 'hideRequiredIndicator', 'dirty']) }} @required($required) />
     @error($name)
         <p class="text-red-500 text-xs">{{ $message }}</p>
     @enderror

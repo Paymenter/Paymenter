@@ -16,7 +16,9 @@ class FailedJobResource extends Resource
 {
     protected static ?string $model = FailedJob::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'ri-error-warning-line';
+
+    protected static ?string $navigationGroup = 'Other';
 
     public static function table(Table $table): Table
     {

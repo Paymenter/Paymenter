@@ -28,11 +28,6 @@ class ProductResource extends Resource
 
     protected static ?string $navigationGroup = 'Administration';
 
-    public static function getNavigationBadge(): ?string
-    {
-        return static::getModel()::count() ?: null;
-    }
-
     protected static ?string $navigationIcon = 'ri-archive-stack-line';
 
     protected static ?string $recordTitleAttribute = 'name';
@@ -66,6 +61,9 @@ class ProductResource extends Resource
                                     'seperated' => 'Seperated',
                                     'combined' => 'Combined',
                                 ]),
+                                Forms\Components\Textarea::make('email_template')
+                                    ->hint('This snippet will be used in the email template.')
+                                    ->nullable(),
 
                                 Forms\Components\RichEditor::make('description')->nullable()->columnSpanFull(),
                                 Forms\Components\FileUpload::make('image')->label('Image')->nullable()->acceptedFileTypes(['image/*']),

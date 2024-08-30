@@ -1,9 +1,7 @@
 <div class="bg-primary-800 p-6 rounded-lg mt-2">
-    <link rel="stylesheet" href="https://unpkg.com/easymde/dist/easymde.min.css">
-    <script src="https://unpkg.com/easymde/dist/easymde.min.js"></script>
     <h1 class="text-2xl font-semibold text-white">Ticket: {{ $ticket->subject }}</h1>
     @vite(['themes/' . config('settings.theme') . '/css/easymde.css'], config('settings.theme'))
-    <div class="grid grid-cols-4">
+    <div class="grid grid-cols-4 mt-4">
 
         <div class="col-span-3">
             <div class="flex flex-col gap-4 max-h-[60vh] overflow-y-auto pr-4" wire:poll.5s>
@@ -31,83 +29,7 @@
                         {{ __('ticket.reply') }}
                     </x-button.primary>
                 </form>
-                @script
-                    <script>
-                        const editor = new EasyMDE({
-                            element: document.getElementById('editor'),
-                            spellChecker: false,
-                            previewImagesInEditor: true,
-                            uploadImage: true,
-                            autoDownloadFontAwesome: false,
-                            status: [{
-                                className: 'upload-image',
-                                defaultValue: '',
-                            }],
-                            toolbar: [{
-                                    name: 'bold',
-                                    action: EasyMDE.toggleBold,
-                                }, {
-                                    name: 'italic',
-                                    action: EasyMDE.toggleItalic,
-                                }, {
-                                    name: 'strikethrough',
-                                    action: EasyMDE.toggleStrikethrough,
-                                }, {
-                                    name: 'link',
-                                    action: EasyMDE.drawLink,
-                                }, '|',
-                                {
-                                    name: 'heading',
-                                    action: EasyMDE.toggleHeadingSmaller,
-                                }, '|',
-                                {
-                                    name: 'quote',
-                                    action: EasyMDE.toggleBlockquote,
-                                }, {
-                                    name: 'code',
-                                    action: EasyMDE.toggleCodeBlock,
-
-                                }, {
-                                    name: 'unordered-list',
-                                    action: EasyMDE.toggleUnorderedList,
-                                }, {
-                                    name: 'ordered-list',
-                                    action: EasyMDE.toggleOrderedList,
-                                }, '|',
-                                {
-                                    name: 'upload-image',
-                                    action: EasyMDE.drawUploadedImage,
-                                    title: 'Upload Image',
-                                }, '|',
-                                {
-                                    name: 'undo',
-                                    action: EasyMDE.undo,
-                                }, {
-                                    name: 'redo',
-                                    action: EasyMDE.redo,
-                                },
-
-                            ],
-                            imageUploadFunction: async (file, onSuccess, onError) => {
-                                @this.upload('attachments', file, (url) => {
-                                    @this.completeUpload(url).then((url) => {
-                                        onSuccess(url);
-                                    });
-                                });
-                            },
-                        });
-
-                        editor.codemirror.on('change', function() {
-                            @this.set('message', editor.value(), false);
-                        });
-
-                        // Listen for event called saved
-                        $wire.on('saved', () => {
-                            editor.clearAutosavedValue();
-                            editor.value('');
-                        });
-                    </script>
-                @endscript
+                <x-easymde-editor />
             </div>
 
         </div>
@@ -117,8 +39,8 @@
                 <h2 class="text-2xl font-semibold bg-primary-800 p-2 px-4 rounded-md mb-2">
                     {{ __('ticket.ticket_details') }}
                 </h2>
-                <div class="font-semibold flex justify-between bg-primary-800 p-2 px-4 rounded-md">
-                    <h4>{{ __('ticket.subject') }}:</h4> {{ $ticket->subject }}
+                <div class="font-semibold flex justify-between bg-primary-800 p-2 px-4 rounded-md gap-2">
+                    <h4 class="h-fit">{{ __('ticket.subject') }}:</h4> {{ $ticket->subject }}
                 </div>
                 <div class="font-semibold flex justify-between bg-primary-800 p-2 px-4 rounded-md">
                     <h4>{{ __('ticket.status') }}:</h4> {{ ucfirst($ticket->status) }}

@@ -11,7 +11,7 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 
-class SuspendJob implements ShouldQueue
+class TerminateJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
@@ -29,7 +29,7 @@ class SuspendJob implements ShouldQueue
 
         // Send the email (TO BE MADE)
         if ($this->sendNotiication) {
-            NotificationHelper::serverSuspendedNotification($this->orderProduct->order->user, $this->orderProduct, $data);
+            NotificationHelper::serverTerminatedNotification($this->orderProduct->order->user, $this->orderProduct, $data);
         }
     }
 }

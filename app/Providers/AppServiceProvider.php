@@ -11,6 +11,8 @@ use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Queue;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Str;
+use League\CommonMark\Extension\Table\TableExtension;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -65,6 +67,12 @@ class AppServiceProvider extends ServiceProvider
                     'job_uuid' => $event->job->uuid(),
                 ]);
             }
+        });
+
+        Str::macro('markdown', function ($markdown) {
+            return Str::markdown($markdown, extensions: [
+                new TableExtension,
+            ]);
         });
     }
 }

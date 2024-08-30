@@ -5,6 +5,8 @@ namespace App\Helpers;
 use App\Mail\Mail;
 use App\Models\EmailLog;
 use App\Models\EmailTemplate;
+use App\Models\Invoice;
+use App\Models\OrderProduct;
 use App\Models\User;
 use Illuminate\Support\Facades\Mail as FacadesMail;
 
@@ -19,7 +21,7 @@ class NotificationHelper
         User $user
     ): void {
         $emailTemplate = EmailTemplate::where('key', $emailTemplateKey)->first();
-        if (!$emailTemplate) {
+        if (!$emailTemplate || !$emailTemplate->enabled) {
             return;
         }
         $mail = new Mail($emailTemplate, $data);
@@ -44,5 +46,34 @@ class NotificationHelper
     public static function newLoginDetectedNotification(User $user, array $data = []): void
     {
         self::sendEmailNotification('new_login_detected', $data, $user);
+    }
+
+    public static function newInvoiceCreatedNotification(User $user, Invoice $invoice): void
+    {
+        $data = [
+            'invoice' => $invoice,
+            'items' => $invoice->items,
+            'total' => $invoice->formattedTotal,
+            'has_subscription' => $invoice->items->each(fn ($item) => $item->orderProduct->order->subscription)->isNotEmpty(),
+        ];
+        self::sendEmailNotification('new_invoice_created', $data, $user);
+    }
+
+    public static function newServerCreatedNotification(User $user, OrderProduct $orderProduct, array $data = []): void
+    {
+        $data['orderProduct'] = $orderProduct;
+        self::sendEmailNotification('new_server_created', $data, $user);
+    }
+
+    public static function serverSuspendedNotification(User $user, OrderProduct $orderProduct, array $data = []): void
+    {
+        $data['orderProduct'] = $orderProduct;
+        self::sendEmailNotification('server_suspended', $data, $user);
+    }
+
+    public static function serverTerminatedNotification(User $user, OrderProduct $orderProduct, array $data = []): void
+    {
+        $data['orderProduct'] = $orderProduct;
+        self::sendEmailNotification('server_terminated', $data, $user);
     }
 }

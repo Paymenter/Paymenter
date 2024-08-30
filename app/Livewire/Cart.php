@@ -224,7 +224,6 @@ class Cart extends Component
                 if ($item->price->price > 0) {
                     $invoice->items()->create([
                         'order_product_id' => $orderProduct->id,
-                        'plan_id' => $item->plan->id,
                         'price' => $item->price->price,
                         'quantity' => $item->quantity,
                         'description' => $orderProduct->description,

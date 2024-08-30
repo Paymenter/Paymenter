@@ -17,6 +17,7 @@ use Filament\Resources\Resource;
 use Filament\Support\RawJs;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 
 class OrderProductResource extends Resource
 {
@@ -29,6 +30,11 @@ class OrderProductResource extends Resource
     public static function getNavigationBadge(): ?string
     {
         return OrderProduct::where('status', 'pending')->count() ?: null;
+    }
+
+    public static function getNavigationBadgeColor(): ?string
+    {
+        return 'warning';
     }
 
     public static ?string $navigationGroup = 'Administration';
@@ -115,13 +121,30 @@ class OrderProductResource extends Resource
                     ->searchable()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('status')
+                    ->badge()
+                    ->color(fn (OrderProduct $record) => match ($record->status) {
+                        'pending' => 'gray',
+                        'active' => 'success',
+                        'cancelled' => 'danger',
+                        'suspended' => 'warning',
+                    })
+                    ->formatStateUsing(fn (string $state) => ucfirst($state))
                     ->label('Status')
+                    ->searchable()
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('expires_at')
+                    ->label('Expires At')
+                    ->dateTime()
                     ->searchable()
                     ->sortable(),
             ])
             ->filters([
                 //
             ])
+            ->defaultSort(function (Builder $query): Builder {
+                return $query
+                    ->orderBy('id', 'desc');
+            })
             ->actions([
                 Tables\Actions\EditAction::make(),
             ])

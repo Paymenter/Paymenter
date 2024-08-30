@@ -15,6 +15,8 @@ class Index extends Component
     {
         return view('tickets.index', [
             'tickets' => Ticket::where('user_id', Auth::id())->latest()->paginate(config('settings.pagination')),
+        ])->layoutData([
+            'title' => 'Tickets',
         ]);
     }
 }

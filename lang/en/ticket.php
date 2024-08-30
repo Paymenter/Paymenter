@@ -8,4 +8,15 @@ return [
     'department' => 'Department',
     'created_at' => 'Created At',
     'reply' => 'Reply',
+
+    'create_ticket' => 'Create Ticket',
+    'select_department' => 'Select Department',
+    'select_priority' => 'Select Priority',
+    'low' => 'Low',
+    'medium' => 'Medium',
+    'high' => 'High',
+
+    'service' => 'Service',
+    'select_service' => 'Select Service',
+    'create' => 'Create',
 ];

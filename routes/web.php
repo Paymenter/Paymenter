@@ -11,6 +11,11 @@ use App\Livewire\Tickets;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
+    App\Helpers\NotificationHelper::newInvoiceCreatedNotification(
+        App\Models\User::first(),
+        App\Models\Invoice::find(16)
+    );
+
     return view('home');
 })->name('home');
 
@@ -36,6 +41,7 @@ Route::group(['middleware' => ['web', 'auth']], function () {
     Route::get('invoices/{invoice}', Invoice\Show::class)->name('invoices.show');
 
     Route::get('tickets', Tickets\Index::class)->name('tickets');
+    Route::get('tickets/create', Tickets\Create::class)->name('tickets.create');
     Route::get('tickets/{ticket}', Tickets\Show::class)->name('tickets.show');
 });
 

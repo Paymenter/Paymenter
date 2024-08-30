@@ -1,5 +1,12 @@
 <div class="bg-primary-800 p-6 rounded-lg mt-2">
-    <h1 class="text-2xl font-semibold text-white">Tickets</h1>
+    <div class="flex flex-col md:flex-row justify-between">
+        <h1 class="text-2xl font-semibold text-white">Tickets</h1>
+        <a href="{{ route('tickets.create') }}" wire:navigate>
+            <x-button.primary class="h-fit w-fit">
+                Create Ticket
+            </x-button.primary>
+        </a>
+    </div>
 
     <div class="flex flex-col gap-2 my-2">
         @foreach ($tickets as $ticket)

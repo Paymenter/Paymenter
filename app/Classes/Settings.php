@@ -318,6 +318,58 @@ class Settings
                     'disable_toolbar' => true,
                 ],
             ],
+            'cronjob' => [
+                [
+                    'name' => 'cronjob_invoice',
+                    'label' => 'Send invoice if due date is x days away',
+                    'type' => 'number',
+                    'default' => 7,
+                    'required' => true,
+                ],
+                [
+                    'name' => 'cronjob_invoice_reminder',
+                    'label' => 'Send invoice reminder if due date is x days away',
+                    'type' => 'number',
+                    'default' => 3,
+                    'required' => true,
+                ],
+                [
+                    // Cancel order is pending for x days
+                    'name' => 'cronjob_cancel',
+                    'label' => 'Cancel order if pending for x days',
+                    'type' => 'number',
+                    'default' => 7,
+                    'required' => true,
+                ],
+                [
+                    'name' => 'cronjob_suspend',
+                    'label' => 'Suspend server if invoice is x days overdue',
+                    'type' => 'number',
+                    'default' => 0,
+                    'required' => true,
+                ],
+                [
+                    'name' => 'cronjob_delete',
+                    'label' => 'Delete server if invoice is x days overdue (also cancels the invoice)',
+                    'type' => 'number',
+                    'default' => 7,
+                    'required' => true,
+                ],
+                [
+                    'name' => 'cronjob_delete_email_logs',
+                    'label' => 'Delete email logs older than x days',
+                    'type' => 'number',
+                    'default' => 90,
+                    'required' => true,
+                ],
+                [
+                    'name' => 'close_tickets',
+                    'label' => 'Close tickets if no response for x days',
+                    'type' => 'number',
+                    'default' => 7,
+                    'required' => true,
+                ],
+            ],
             'other' => [
                 [
                     'name' => 'gravatar_default',

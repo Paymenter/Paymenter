@@ -11,12 +11,15 @@ use Filament\Infolists\Infolist;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 
 class EmailLogResource extends Resource
 {
     protected static ?string $model = EmailLog::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'ri-mail-send-line';
+
+    protected static ?string $navigationGroup = 'Other';
 
     public static function infolist(Infolist $infolist): Infolist
     {
@@ -73,6 +76,10 @@ class EmailLogResource extends Resource
                     ->formatStateUsing(fn (string $state) => ucfirst($state))
                     ->searchable(),
             ])
+            ->defaultSort(function (Builder $query): Builder {
+                return $query
+                    ->orderBy('id', 'desc');
+            })
             ->filters([
                 //
             ])

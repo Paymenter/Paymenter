@@ -4,8 +4,10 @@ namespace App\Admin\Resources\OrderProductResource\Pages;
 
 use App\Admin\Resources\OrderProductResource;
 use App\Helpers\ExtensionHelper;
+use App\Helpers\NotificationHelper;
 use App\Models\OrderProduct;
 use Filament\Actions;
+use Filament\Forms\Components\Checkbox;
 use Filament\Forms\Components\Select;
 use Filament\Notifications\Notification;
 use Filament\Resources\Pages\EditRecord;
@@ -29,24 +31,31 @@ class EditOrderProduct extends EditRecord
                             'unsuspend' => 'Unsuspend server',
                             'terminate' => 'Terminate server',
                         ])->required(),
+                    Checkbox::make('sendNotification')
+                        ->label('Send Notification')
+                        ->default(false),
                 ])
                 ->action(function (array $data, OrderProduct $record, Actions\Action $action): void {
                     try {
                         switch ($data['action']) {
                             case 'create':
-                                ExtensionHelper::createServer($record);
+                                $sdata = ExtensionHelper::createServer($record);
+                                if ($data['sendNotification']) {
+                                    NotificationHelper::newServerCreatedNotification($record->order->user, $record, $sdata);
+                                }
                                 break;
                             case 'suspend':
-                                ExtensionHelper::suspendServer($record);
+                                $sdata = ExtensionHelper::suspendServer($record);
                                 break;
                             case 'unsuspend':
-                                ExtensionHelper::unsuspendServer($record);
+                                $sdata = ExtensionHelper::unsuspendServer($record);
                                 break;
                             case 'terminate':
-                                ExtensionHelper::terminateServer($record);
+                                $sdata = ExtensionHelper::terminateServer($record);
                                 break;
                         }
                     } catch (\Exception $e) {
+                        throw $e;
                         Notification::make('Error')
                             ->title('Error occured while triggering the action:')
                             ->body($e->getMessage())

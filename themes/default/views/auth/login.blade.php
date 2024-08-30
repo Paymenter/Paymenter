@@ -6,9 +6,9 @@
         <h1 class="text-2xl text-center text-white mt-2">{{ __('auth.sign_in_title') }} </h1>
     </div>
     <x-form.input name="email" type="email" :label="__('general.input.email')" :placeholder="__('general.input.email_placeholder')" wire:model="email"
-        hideRequiredIndicator noDirty required />
+        hideRequiredIndicator required />
     <x-form.input name="password" type="password" :label="__('general.input.password')" :placeholder="__('general.input.password_placeholder')" required hideRequiredIndicator
-        noDirty wire:model="password" />
+        wire:model="password" />
     <div class="flex flex-row">
         <x-form.checkbox name="remember" label="Remember me" wire:model="remember" />
         <a class="text-sm text-secondary-500 text-secondary hover:underline ml-auto"
