@@ -7,7 +7,6 @@ use App\Models\Ticket;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Facades\Storage;
-use Livewire\Attributes\Locked;
 use Livewire\Features\SupportFileUploads\WithFileUploads;
 
 class Create extends Component

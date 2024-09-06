@@ -16,6 +16,8 @@ return [
     'medium' => 'Medium',
     'high' => 'High',
 
+    'last_activity' => 'Last activity',
+
     'service' => 'Service',
     'select_service' => 'Select Service',
     'create' => 'Create',
