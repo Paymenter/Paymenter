@@ -19,13 +19,13 @@ class InvoicePaidListener
             if (!$orderProduct || $orderProduct->status == 'active' || !$orderProduct->product->server) {
                 return;
             }
-            $orderProduct->status = 'active';
             if ($orderProduct->status == 'suspended') {
                 UnsuspendJob::dispatch($orderProduct);
             } elseif ($orderProduct->status == 'pending') {
                 CreateJob::dispatch($orderProduct);
                 $orderProduct->status = 'pending-setup';
             }
+            $orderProduct->status = 'active';
             $orderProduct->expires_at = $orderProduct->calculateNextDueDate();
             $orderProduct->save();
         });
