@@ -49,13 +49,15 @@ class FilamentInput
                     ->default($setting->default ?? '')
                     ->suffix($setting->suffix ?? null)
                     ->prefix($setting->prefix ?? null)
+                    ->disabled($setting->disabled ?? false)
                     ->rules($setting->validation ?? []);
                 break;
 
             case 'tags':
                 return TagsInput::make($setting->name)
                     ->label($setting->label ?? $setting->name)
-                    ->required($setting->required ?? false);
+                    ->required($setting->required ?? false)
+                    ->disabled($setting->disabled ?? false);
                 break;
 
             case 'text':
@@ -70,6 +72,7 @@ class FilamentInput
                     ->default($setting->default ?? '')
                     ->suffix($setting->suffix ?? null)
                     ->prefix($setting->prefix ?? null)
+                    ->disabled($setting->disabled ?? false)
                     ->rules($setting->validation ?? []);
                 break;
 
@@ -84,13 +87,16 @@ class FilamentInput
                     ->live(condition: $setting->live ?? false)
                     ->default($setting->default ?? '')
                     ->disableAllToolbarButtons($setting->disable_toolbar ?? false)
-                    ->rules($setting->validation ?? []);
+                    ->rules($setting->validation ?? [])
+                    ->disabled($setting->disabled ?? false);
                 break;
             case 'password':
                 return TextInput::make($setting->name)
                     ->label($setting->label ?? $setting->name)
                     ->helperText($setting->description ?? '')
                     ->placeholder($setting->default ?? '')
+                    ->hint($setting->hint ?? '')
+                    ->hintColor('primary')
                     ->required($setting->required ?? false)
                     ->password()
                     ->revealable()
@@ -98,6 +104,7 @@ class FilamentInput
                     ->default($setting->default ?? '')
                     ->suffix($setting->suffix ?? null)
                     ->prefix($setting->prefix ?? null)
+                    ->disabled($setting->disabled ?? false)
                     ->rules($setting->validation ?? []);
                 break;
             case 'email':
@@ -105,12 +112,15 @@ class FilamentInput
                     ->label($setting->label ?? $setting->name)
                     ->helperText($setting->description ?? '')
                     ->placeholder($setting->default ?? '')
+                    ->hint($setting->hint ?? '')
+                    ->hintColor('primary')
                     ->required($setting->required ?? false)
                     ->email()
                     ->live(condition: $setting->live ?? false)
                     ->default($setting->default ?? '')
                     ->suffix($setting->suffix ?? null)
                     ->prefix($setting->prefix ?? null)
+                    ->disabled($setting->disabled ?? false)
                     ->rules($setting->validation ?? []);
                 break;
             case 'number':
@@ -118,6 +128,8 @@ class FilamentInput
                     ->label($setting->label ?? $setting->name)
                     ->helperText($setting->description ?? '')
                     ->placeholder($setting->default ?? '')
+                    ->hint($setting->hint ?? '')
+                    ->hintColor('primary')
                     ->required($setting->required ?? false)
                     ->numeric()
                     ->minValue($setting->min_value ?? null)
@@ -126,6 +138,7 @@ class FilamentInput
                     ->default($setting->default ?? '')
                     ->suffix($setting->suffix ?? null)
                     ->prefix($setting->prefix ?? null)
+                    ->disabled($setting->disabled ?? false)
                     ->rules($setting->validation ?? []);
 
                 break;
@@ -134,22 +147,28 @@ class FilamentInput
                     ->label($setting->label ?? $setting->name)
                     ->helperText($setting->description ?? '')
                     ->placeholder($setting->default ?? '')
+                    ->hint($setting->hint ?? '')
+                    ->hintColor('primary')
                     ->required($setting->required ?? false)
                     ->hexColor()
                     ->live(condition: $setting->live ?? false)
                     ->default($setting->default ?? '')
                     ->suffix($setting->suffix ?? null)
                     ->prefix($setting->prefix ?? null)
+                    ->disabled($setting->disabled ?? false)
                     ->rules($setting->validation ?? []);
                 break;
             case 'file':
                 $input = FileUpload::make($setting->name)
                     ->label($setting->label ?? $setting->name)
                     ->helperText($setting->description ?? '')
+                    ->hint($setting->hint ?? '')
+                    ->hintColor('primary')
                     ->required($setting->required ?? false)
                     ->acceptedFileTypes($setting->accept ?? [])
                     ->live(condition: $setting->live ?? false)
                     ->default($setting->default ?? '')
+                    ->disabled($setting->disabled ?? false)
                     ->rules($setting->validation ?? []);
 
                 if (isset($setting->file_name)) {
@@ -167,8 +186,11 @@ class FilamentInput
                     ->label($setting->label ?? $setting->name)
                     ->helperText($setting->description ?? '')
                     ->required($setting->required ?? false)
+                    ->hint($setting->hint ?? '')
+                    ->hintColor('primary')
                     ->live(condition: $setting->live ?? false)
                     ->default($setting->default ?? '')
+                    ->disabled($setting->disabled ?? false)
                     ->rules($setting->validation ?? []);
                 break;
 

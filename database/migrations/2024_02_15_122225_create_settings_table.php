@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('type')->default('string');
             $table->boolean('encrypted')->default(false);
             $table->nullableMorphs('settingable');
+            $table->unique(['key', 'settingable_id', 'settingable_type']);
             $table->timestamps();
         });
     }
