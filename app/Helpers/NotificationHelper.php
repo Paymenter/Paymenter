@@ -27,7 +27,6 @@ class NotificationHelper
         $mail = new Mail($emailTemplate, $data);
 
         $emailLog = EmailLog::create([
-            'email_template_id' => $emailTemplate->id,
             'user_id' => $user->id,
             'subject' => $mail->envelope()->subject,
             'to' => $user->email,
