@@ -74,8 +74,10 @@ class EmailTemplateSeeder extends Seeder
                 **Server details**
                 - Name: {{ $orderProduct->product->name }}
 
-                **Server information**
-                {!! Str::markdown(Illuminate\View\Compilers\BladeCompiler::render($body, $data)) !!}
+                @isset($orderProduct->product->email_template)
+                **Server information**  
+                {!! Str::markdown(Illuminate\View\Compilers\BladeCompiler::render($orderProduct->product->email_template, get_defined_vars()['__data'])) !!}
+                @endisset
                 HTML,
             ],
             [
