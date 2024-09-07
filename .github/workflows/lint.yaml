@@ -41,7 +41,7 @@ jobs:
         with:
           commit_message: "style: linted files with pint"
           branch: main
-          file_pattern: "**/*.php"
+          file_pattern: "*.php"
 
   #phpstan:
     #runs-on: ubuntu-latest
