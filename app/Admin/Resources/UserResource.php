@@ -44,9 +44,9 @@ class UserResource extends Resource
                 TextInput::make('email')->translateLabel()->email(),
 
                 TextInput::make('password')->translateLabel()->password()->revealable()
-                    ->dehydrateStateUsing(fn (string $state): string => Hash::make($state))
-                    ->dehydrated(fn (?string $state): bool => filled($state))
-                    ->required(fn (string $operation): bool => $operation === 'create'),
+                    ->dehydrateStateUsing(fn(string $state): string => Hash::make($state))
+                    ->dehydrated(fn(?string $state): bool => filled($state))
+                    ->required(fn(string $operation): bool => $operation === 'create'),
                 Select::make('role_id')->translateLabel()->relationship('role', 'name')->searchable()->preload(),
                 Toggle::make('tfa_secret')->label('Two Factor Authentication')->disabled(),
                 TextInput::make('credits')->translateLabel()->numeric(),
@@ -92,7 +92,7 @@ class UserResource extends Resource
             'index' => Pages\ListUsers::route('/'),
             'create' => Pages\CreateUser::route('/create'),
             'edit' => Pages\EditUser::route('/{record}/edit'),
-            'orderProducts' => Pages\ShowOrderProducts::route('/{record}/services'),
+            'services' => Pages\ShowServices::route('/{record}/services'),
             'invoices' => Pages\ShowInvoices::route('/{record}/invoices'),
         ];
     }
@@ -102,7 +102,7 @@ class UserResource extends Resource
 
         return $page->generateNavigationItems([
             Pages\EditUser::class,
-            Pages\ShowOrderProducts::class,
+            Pages\ShowServices::class,
             Pages\ShowInvoices::class,
         ]);
     }

@@ -18,13 +18,13 @@ class Order extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function orderProducts()
+    public function services()
     {
-        return $this->hasMany(OrderProduct::class);
+        return $this->hasMany(Service::class);
     }
 
     /**
-     * Get the currency corresponding to the order product.
+     * Get the currency corresponding to the service.
      */
     public function currency()
     {
@@ -39,7 +39,7 @@ class Order extends Model
     public function total(): Attribute
     {
         return Attribute::make(
-            get: fn () => $this->orderProducts->sum(fn ($orderProduct) => $orderProduct->price * $orderProduct->quantity)
+            get: fn() => $this->services->sum(fn($service) => $service->price * $service->quantity)
         );
     }
 
@@ -51,7 +51,7 @@ class Order extends Model
     public function formattedTotal(): Attribute
     {
         return Attribute::make(
-            get: fn () => new Price(['price' => $this->total, 'currency' => $this->currency])
+            get: fn() => new Price(['price' => $this->total, 'currency' => $this->currency])
         );
     }
 
@@ -60,11 +60,11 @@ class Order extends Model
      */
     public function invoices(): Attribute
     {
-        // Each orderproduct has invoices (it is a hasManyThrough relationship order -> orderProduct -> invoiceItem -> invoice)
-        $invoicesId = $this->orderProducts->map(fn ($orderProduct) => $orderProduct->invoiceItems->map(fn ($invoiceItem) => $invoiceItem->invoice_id))->flatten();
+        // Each service has invoices (it is a hasManyThrough relationship order -> service -> invoiceItem -> invoice)
+        $invoicesId = $this->services->map(fn($service) => $service->invoiceItems->map(fn($invoiceItem) => $invoiceItem->invoice_id))->flatten();
 
         return new Attribute(
-            get: fn () => Invoice::whereIn('id', $invoicesId)
+            get: fn() => Invoice::whereIn('id', $invoicesId)
         );
     }
 }

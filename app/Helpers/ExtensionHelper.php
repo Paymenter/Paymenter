@@ -5,7 +5,7 @@ namespace App\Helpers;
 use App\Classes\FilamentInput;
 use App\Models\Gateway;
 use App\Models\Invoice;
-use App\Models\OrderProduct;
+use App\Models\Service;
 use Exception;
 use Illuminate\Support\Facades\Cache;
 
@@ -242,11 +242,11 @@ class ExtensionHelper
     /**
      * Cancel subscription
      */
-    public static function cancelSubscription(OrderProduct $orderProduct)
+    public static function cancelSubscription(Service $service)
     {
         foreach (Gateway::all() as $gateway) {
             if (self::hasFunction($gateway, 'cancelSubscription')) {
-                if (self::getExtension('gateway', $gateway->extension, $gateway->settings)->cancelSubscription($orderProduct)) {
+                if (self::getExtension('gateway', $gateway->extension, $gateway->settings)->cancelSubscription($service)) {
                     return true;
                 }
             }
@@ -260,13 +260,13 @@ class ExtensionHelper
     /**
      * Get both properties and config options from order product and smash them together
      */
-    public static function getOrderProductProperties(OrderProduct $orderProduct)
+    public static function getServiceProperties(Service $service)
     {
         $properties = [];
-        foreach ($orderProduct->properties as $property) {
+        foreach ($service->properties as $property) {
             $properties[$property->key] = $property->value;
         }
-        foreach ($orderProduct->configs as $config) {
+        foreach ($service->configs as $config) {
             $properties[$config->configOption->env_variable] = $config->configValue->value;
         }
 
@@ -276,40 +276,40 @@ class ExtensionHelper
     /**
      * Create server
      */
-    public static function createServer(OrderProduct $orderProduct)
+    public static function createServer(Service $service)
     {
-        $server = $orderProduct->product->server;
+        $server = $service->product->server;
 
-        return self::getExtension('server', $server->extension, $server->settings)->createServer($orderProduct, self::settingsToArray($orderProduct->product->settings), self::getOrderProductProperties($orderProduct));
+        return self::getExtension('server', $server->extension, $server->settings)->createServer($service, self::settingsToArray($service->product->settings), self::getServiceProperties($service));
     }
 
     /**
      * Suspend server
      */
-    public static function suspendServer(OrderProduct $orderProduct)
+    public static function suspendServer(Service $service)
     {
-        $server = $orderProduct->product->server;
+        $server = $service->product->server;
 
-        return self::getExtension('server', $server->extension, $server->settings)->suspendServer($orderProduct, self::settingsToArray($orderProduct->product->settings), self::getOrderProductProperties($orderProduct));
+        return self::getExtension('server', $server->extension, $server->settings)->suspendServer($service, self::settingsToArray($service->product->settings), self::getServiceProperties($service));
     }
 
     /**
      * Unsuspend server
      */
-    public static function unsuspendServer(OrderProduct $orderProduct)
+    public static function unsuspendServer(Service $service)
     {
-        $server = $orderProduct->product->server;
+        $server = $service->product->server;
 
-        return self::getExtension('server', $server->extension, $server->settings)->unsuspendServer($orderProduct, self::settingsToArray($orderProduct->product->settings), self::getOrderProductProperties($orderProduct));
+        return self::getExtension('server', $server->extension, $server->settings)->unsuspendServer($service, self::settingsToArray($service->product->settings), self::getServiceProperties($service));
     }
 
     /**
      * Terminate server
      */
-    public static function terminateServer(OrderProduct $orderProduct)
+    public static function terminateServer(Service $service)
     {
-        $server = $orderProduct->product->server;
+        $server = $service->product->server;
 
-        return self::getExtension('server', $server->extension, $server->settings)->terminateServer($orderProduct, self::settingsToArray($orderProduct->product->settings), self::getOrderProductProperties($orderProduct));
+        return self::getExtension('server', $server->extension, $server->settings)->terminateServer($service, self::settingsToArray($service->product->settings), self::getServiceProperties($service));
     }
 }

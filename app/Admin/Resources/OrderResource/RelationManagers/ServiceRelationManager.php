@@ -2,14 +2,14 @@
 
 namespace App\Admin\Resources\OrderResource\RelationManagers;
 
-use App\Admin\Resources\OrderProductResource;
+use App\Admin\Resources\ServiceResource;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables;
 use Filament\Tables\Table;
 
-class OrderProductsRelationManager extends RelationManager
+class ServiceRelationManager extends RelationManager
 {
-    protected static string $relationship = 'orderProducts';
+    protected static string $relationship = 'services';
 
     // Renaem to Order Products
     public static string $name = 'Products/Services';
@@ -29,7 +29,7 @@ class OrderProductsRelationManager extends RelationManager
                 //
             ])
             ->actions([
-                Tables\Actions\ViewAction::make()->url(fn ($record) => OrderProductResource::getUrl('edit', ['record' => $record])),
+                Tables\Actions\ViewAction::make()->url(fn($record) => ServiceResource::getUrl('edit', ['record' => $record])),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

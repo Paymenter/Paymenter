@@ -2,7 +2,7 @@
 
 namespace App\Admin\Resources\TicketResource\Pages;
 
-use App\Admin\Resources\OrderProductResource;
+use App\Admin\Resources\ServiceResource;
 use App\Admin\Resources\TicketResource;
 use App\Admin\Resources\UserResource;
 use App\Models\Ticket;
@@ -63,8 +63,8 @@ class EditTicket extends EditRecord
             ->schema([
                 Infolists\Components\TextEntry::make('user_id')
                     ->size(TextEntrySize::Large)
-                    ->formatStateUsing(fn ($record) => $record->user->name)
-                    ->url(fn ($record) => UserResource::getUrl('index', ['record' => $record->user]))
+                    ->formatStateUsing(fn($record) => $record->user->name)
+                    ->url(fn($record) => UserResource::getUrl('index', ['record' => $record->user]))
                     ->label('User ID'),
                 Infolists\Components\TextEntry::make('subject')
                     ->size(TextEntrySize::Large)
@@ -72,8 +72,8 @@ class EditTicket extends EditRecord
                 Infolists\Components\TextEntry::make('status')
                     ->size(TextEntrySize::Large)
                     ->badge()
-                    ->formatStateUsing(fn ($state) => ucfirst($state))
-                    ->color(fn ($state) => match ($state) {
+                    ->formatStateUsing(fn($state) => ucfirst($state))
+                    ->color(fn($state) => match ($state) {
                         'open' => 'success',
                         'closed' => 'danger',
                         'replied' => 'gray',
@@ -82,8 +82,8 @@ class EditTicket extends EditRecord
                 Infolists\Components\TextEntry::make('priority')
                     ->size(TextEntrySize::Large)
                     ->badge()
-                    ->formatStateUsing(fn ($state) => ucfirst($state))
-                    ->color(fn ($state) => match ($state) {
+                    ->formatStateUsing(fn($state) => ucfirst($state))
+                    ->color(fn($state) => match ($state) {
                         'low' => 'success',
                         'normal' => 'gray',
                         'high' => 'danger',
@@ -98,14 +98,14 @@ class EditTicket extends EditRecord
                     ->size(TextEntrySize::Large)
                     ->label('Assigned To')
                     ->placeholder('No assigned user')
-                    ->formatStateUsing(fn ($record) => $record->assignedTo->name),
+                    ->formatStateUsing(fn($record) => $record->assignedTo->name),
 
-                Infolists\Components\TextEntry::make('order_product_id')
+                Infolists\Components\TextEntry::make('service_id')
                     ->size(TextEntrySize::Large)
-                    ->label('Order Product')
-                    ->url(fn ($record) => $record->orderProduct ? OrderProductResource::getUrl('edit', ['record' => $record->orderProduct]) : null)
-                    ->placeholder('No order product')
-                    ->formatStateUsing(fn ($record) => "{$record->orderProduct->product->name} - " . ucfirst($record->orderProduct->status)),
+                    ->label('Service')
+                    ->url(fn($record) => $record->service ? ServiceResource::getUrl('edit', ['record' => $record->service]) : null)
+                    ->placeholder('No service')
+                    ->formatStateUsing(fn($record) => "{$record->service->product->name} - " . ucfirst($record->service->status)),
 
                 InfolistActions::make([
                     Action::make('Edit')
@@ -139,32 +139,32 @@ class EditTicket extends EditRecord
                                         ->relationship('user', 'id')
                                         ->searchable()
                                         ->preload()
-                                        ->getOptionLabelFromRecordUsing(fn ($record) => $record->name)
+                                        ->getOptionLabelFromRecordUsing(fn($record) => $record->name)
                                         ->required(),
                                     Forms\Components\Select::make('assigned_to')
                                         ->label('Assigned To')
                                         ->relationship('assignedTo', 'id')
                                         ->searchable()
                                         ->preload()
-                                        ->getOptionLabelFromRecordUsing(fn ($record) => $record->name),
-                                    Forms\Components\Select::make('order_product_id')
-                                        ->label('Order Product')
-                                        ->relationship('orderProduct', 'id', function (Builder $query, Get $get) {
+                                        ->getOptionLabelFromRecordUsing(fn($record) => $record->name),
+                                    Forms\Components\Select::make('service_id')
+                                        ->label('Service')
+                                        ->relationship('service', 'id', function (Builder $query, Get $get) {
                                             // Join orders and match the user_id
-                                            $query->join('orders', 'orders.id', '=', 'order_products.order_id')
+                                            $query->join('orders', 'orders.id', '=', 'services.order_id')
                                                 ->where('orders.user_id', $get('user_id'));
                                         })
-                                        ->getOptionLabelFromRecordUsing(fn ($record) => "{$record->product->name} - " . ucfirst($record->status))
-                                        ->disabled(fn (Get $get) => !$get('user_id')),
+                                        ->getOptionLabelFromRecordUsing(fn($record) => "{$record->product->name} - " . ucfirst($record->status))
+                                        ->disabled(fn(Get $get) => !$get('user_id')),
                                 ]);
                         })
-                        ->fillForm(fn ($record) => [
+                        ->fillForm(fn($record) => [
                             'status' => $record->status,
                             'priority' => $record->priority,
                             'department' => $record->department,
                             'user_id' => $record->user_id,
                             'assigned_to' => $record->assigned_to,
-                            'order_product_id' => $record->order_product_id,
+                            'service_id' => $record->service_id,
                         ])
                         ->action(function (array $data, Ticket $record): void {
                             $record->update($data);

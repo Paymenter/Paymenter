@@ -3,10 +3,10 @@
 namespace App\Admin\Resources;
 
 use App\Admin\Resources\Common\RelationManagers\PropertiesRelationManager;
-use App\Admin\Resources\OrderProductResource\Pages;
-use App\Admin\Resources\OrderProductResource\RelationManagers;
+use App\Admin\Resources\ServiceResource\Pages;
+use App\Admin\Resources\ServiceResource\RelationManagers;
 use App\Helpers\ExtensionHelper;
-use App\Models\OrderProduct;
+use App\Models\Service;
 use App\Models\Product;
 use Filament\Forms;
 use Filament\Forms\Components\Actions\Action;
@@ -19,17 +19,15 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 
-class OrderProductResource extends Resource
+class ServiceResource extends Resource
 {
-    protected static ?string $model = OrderProduct::class;
+    protected static ?string $model = Service::class;
 
     protected static ?string $navigationIcon = 'ri-service-line';
 
-    public static ?string $label = 'Service';
-
     public static function getNavigationBadge(): ?string
     {
-        return OrderProduct::where('status', 'pending')->count() ?: null;
+        return Service::where('status', 'pending')->count() ?: null;
     }
 
     public static function getNavigationBadgeColor(): ?string
@@ -71,8 +69,8 @@ class OrderProductResource extends Resource
                     ->required()
                     ->placeholder('Enter the quantity'),
                 Forms\Components\TextInput::make('price')
-                    ->suffix(fn (Component $component) => $component->getRecord()?->currency->suffix)
-                    ->prefix(fn (Component $component) => $component->getRecord()?->currency->prefix)
+                    ->suffix(fn(Component $component) => $component->getRecord()?->currency->suffix)
+                    ->prefix(fn(Component $component) => $component->getRecord()?->currency->prefix)
                     ->label('Price')
                     ->required()
                     ->mask(RawJs::make(
@@ -104,7 +102,7 @@ class OrderProductResource extends Resource
                             })
                             ->requiresConfirmation()
                             ->label('Cancel Subscription')
-                            ->hidden(fn (Component $component) => !$component->getRecord()?->subscription_id),
+                            ->hidden(fn(Component $component) => !$component->getRecord()?->subscription_id),
                     ),
             ]);
     }
@@ -122,13 +120,13 @@ class OrderProductResource extends Resource
                     ->sortable(),
                 Tables\Columns\TextColumn::make('status')
                     ->badge()
-                    ->color(fn (OrderProduct $record) => match ($record->status) {
+                    ->color(fn(Service $record) => match ($record->status) {
                         'pending' => 'gray',
                         'active' => 'success',
                         'cancelled' => 'danger',
                         'suspended' => 'warning',
                     })
-                    ->formatStateUsing(fn (string $state) => ucfirst($state))
+                    ->formatStateUsing(fn(string $state) => ucfirst($state))
                     ->label('Status')
                     ->searchable()
                     ->sortable(),
@@ -166,9 +164,9 @@ class OrderProductResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListOrderProducts::route('/'),
-            'create' => Pages\CreateOrderProduct::route('/create'),
-            'edit' => Pages\EditOrderProduct::route('/{record}/edit'),
+            'index' => Pages\ListService::route('/'),
+            'create' => Pages\CreateService::route('/create'),
+            'edit' => Pages\EditService::route('/{record}/edit'),
         ];
     }
 }

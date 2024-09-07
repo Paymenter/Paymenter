@@ -3,7 +3,7 @@
 namespace App\Extensions\Servers\Pterodactyl;
 
 use App\Classes\Extension\Server;
-use App\Models\OrderProduct;
+use App\Models\Service;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\HtmlString;
 use Illuminate\Support\Str;
@@ -240,9 +240,9 @@ class Pterodactyl extends Server
         ];
     }
 
-    public function createServer(OrderProduct $orderProduct, $settings, $properties)
+    public function createServer(Service $service, $settings, $properties)
     {
-        if ($this->getServer($orderProduct->id, failIfNotFound: false)) {
+        if ($this->getServer($service->id, failIfNotFound: false)) {
             throw new \Exception('Server already exists');
         }
         // Smash the properties into the settings
@@ -257,7 +257,7 @@ class Pterodactyl extends Server
             $environment[$variable['attributes']['env_variable']] = $settings[$variable['attributes']['env_variable']] ?? $variable['attributes']['default_value'];
         }
 
-        $orderUser = $orderProduct->order->user;
+        $orderUser = $service->order->user;
         // Get the user id if one already exists...
         $user = $this->request('/api/application/users', 'get', ['filter' => ['email' => $orderUser->email]])['data'][0]['attributes']['id'] ?? null;
 
@@ -265,7 +265,8 @@ class Pterodactyl extends Server
         if (!$user) {
             $user = $this->request('/api/application/users', 'post', [
                 'email' => $orderUser->email,
-                'username' => (preg_replace('/[^a-zA-Z0-9]/', '', strtolower($orderUser->name)) ?? Str::random(8)) . '_' . Str::random(4),                'first_name' => $orderUser->first_name ?? '',
+                'username' => (preg_replace('/[^a-zA-Z0-9]/', '', strtolower($orderUser->name)) ?? Str::random(8)) . '_' . Str::random(4),
+                'first_name' => $orderUser->first_name ?? '',
                 'last_name' => $orderUser->last_name ?? '',
             ])['attributes']['id'];
 
@@ -275,8 +276,8 @@ class Pterodactyl extends Server
         $deploymentData = $this->generateDeploymentData($settings, $environment);
 
         $serverCreationData = [
-            'external_id' => (string) $orderProduct->id,
-            'name' => $orderProduct->product->name . '-' . $orderProduct->id,
+            'external_id' => (string) $service->id,
+            'name' => $service->product->name . '-' . $service->id,
             'user' => (int) $user,
             'egg' => $settings['egg_id'],
             'docker_image' => $eggData['attributes']['docker_image'],
@@ -348,7 +349,7 @@ class Pterodactyl extends Server
             'include' => ['allocations'],
         ]);
         $nodes = collect($nodes['data']);
-        $nodes_by_id = $nodes->mapWithKeys(fn ($node) => [$node['attributes']['id'] => $node['attributes']]);
+        $nodes_by_id = $nodes->mapWithKeys(fn($node) => [$node['attributes']['id'] => $node['attributes']]);
 
         if ($settings['node']) {
             // If the product's node id is not in the deployable nodes array, throw error.
@@ -359,9 +360,9 @@ class Pterodactyl extends Server
             $node = $nodes_by_id->get($settings['node']);
             $availablePorts = collect($node['relationships']['allocations']['data']);
             $availablePorts = $availablePorts
-                ->filter(fn ($port) => !$port['attributes']['assigned'])
+                ->filter(fn($port) => !$port['attributes']['assigned'])
                 ->map(
-                    fn ($port) => [
+                    fn($port) => [
                         'port' => $port['attributes']['port'],
                         'id' => $port['attributes']['id'],
                     ]
@@ -379,9 +380,9 @@ class Pterodactyl extends Server
             foreach ($nodes as $index => $node) {
                 $availablePorts = collect($node['attributes']['relationships']['allocations']['data']);
                 $availablePorts = $availablePorts
-                    ->filter(fn ($port) => !$port['attributes']['assigned'])
+                    ->filter(fn($port) => !$port['attributes']['assigned'])
                     ->map(
-                        fn ($port) => [
+                        fn($port) => [
                             'port' => $port['attributes']['port'],
                             'id' => $port['attributes']['id'],
                         ]
@@ -496,27 +497,27 @@ class Pterodactyl extends Server
         return $response['attributes']['id'] ?? false;
     }
 
-    public function suspendServer(OrderProduct $orderProduct, $settings, $properties)
+    public function suspendServer(Service $service, $settings, $properties)
     {
-        $server = $this->getServer($orderProduct->id);
+        $server = $this->getServer($service->id);
 
         $this->request('/api/application/servers/' . $server . '/suspend', 'post');
 
         return true;
     }
 
-    public function unsuspendServer(OrderProduct $orderProduct, $settings, $properties)
+    public function unsuspendServer(Service $service, $settings, $properties)
     {
-        $server = $this->getServer($orderProduct->id);
+        $server = $this->getServer($service->id);
 
         $this->request('/api/application/servers/' . $server . '/unsuspend', 'post');
 
         return true;
     }
 
-    public function terminateServer(OrderProduct $orderProduct, $settings, $properties)
+    public function terminateServer(Service $service, $settings, $properties)
     {
-        $server = $this->getServer($orderProduct->id);
+        $server = $this->getServer($service->id);
 
         $this->request('/api/application/servers/' . $server, 'delete');
 

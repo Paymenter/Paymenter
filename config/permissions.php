@@ -43,7 +43,7 @@ return [
             'delete' => 'Delete Orders',
             'deleteAny' => 'Bulk Delete Orders',
         ],
-        'order_products' => [
+        'services' => [
             'create' => 'Create Services',
             'update' => 'Update Services',
             'viewAny' => 'View Services',

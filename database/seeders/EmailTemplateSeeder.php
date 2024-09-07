@@ -72,11 +72,11 @@ class EmailTemplateSeeder extends Seeder
                 Your server has been activated.
 
                 **Server details**
-                - Name: {{ $orderProduct->product->name }}
+                - Name: {{ $service->product->name }}
 
-                @isset($orderProduct->product->email_template)
+                @isset($service->product->email_template)
                 **Server information**  
-                {!! Str::markdown(Illuminate\View\Compilers\BladeCompiler::render($orderProduct->product->email_template, get_defined_vars()['__data'])) !!}
+                {!! Str::markdown(Illuminate\View\Compilers\BladeCompiler::render($service->product->email_template, get_defined_vars()['__data'])) !!}
                 @endisset
                 HTML,
             ],
@@ -89,7 +89,7 @@ class EmailTemplateSeeder extends Seeder
                 Your server has been suspended due to a payment failure.
 
                 **Server details**
-                - Name: {{ $orderProduct->product->name }}
+                - Name: {{ $service->product->name }}
 
                 Please pay the invoice to reactivate the server.
                 HTML,
@@ -103,7 +103,7 @@ class EmailTemplateSeeder extends Seeder
                 Your server has been terminated.
 
                 **Server details**
-                - Name: {{ $orderProduct->product->name }}
+                - Name: {{ $service->product->name }}
 
                 Do you consider it a mistake?
                 <div class="action">

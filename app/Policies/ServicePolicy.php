@@ -2,25 +2,25 @@
 
 namespace App\Policies;
 
-use App\Models\OrderProduct;
+use App\Models\Service;
 use App\Models\User;
 
-class OrderProductPolicy
+class ServicePolicy
 {
     /**
      * Determine whether the user can view any models.
      */
     public function viewAny(User $user): bool
     {
-        return $user->hasPermission('admin.order_product.viewAny');
+        return $user->hasPermission('admin.services.viewAny');
     }
 
     /**
      * Determine whether the user can view the model.
      */
-    public function view(User $user, OrderProduct $orderProduct): bool
+    public function view(User $user, Service $service): bool
     {
-        return $user->hasPermission('admin.order_product.view');
+        return $user->hasPermission('admin.services.view');
     }
 
     /**
@@ -28,23 +28,23 @@ class OrderProductPolicy
      */
     public function create(User $user): bool
     {
-        return $user->hasPermission('admin.order_product.create');
+        return $user->hasPermission('admin.services.create');
     }
 
     /**
      * Determine whether the user can update the model.
      */
-    public function update(User $user, OrderProduct $orderProduct): bool
+    public function update(User $user, Service $service): bool
     {
-        return $user->hasPermission('admin.order_product.update');
+        return $user->hasPermission('admin.services.update');
     }
 
     /**
      * Determine whether the user can delete the model.
      */
-    public function delete(User $user, OrderProduct $orderProduct): bool
+    public function delete(User $user, Service $service): bool
     {
-        return $user->hasPermission('admin.order_product.delete');
+        return $user->hasPermission('admin.services.delete');
     }
 
     /**
@@ -52,6 +52,6 @@ class OrderProductPolicy
      */
     public function deleteAny(User $user): bool
     {
-        return $user->hasPermission('admin.order_product.deleteAny');
+        return $user->hasPermission('admin.services.deleteAny');
     }
 }

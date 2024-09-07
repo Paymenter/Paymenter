@@ -47,7 +47,7 @@ class Cart extends Component
 
             return;
         }
-        $this->total = new Price(['price' => $this->items->sum(fn ($item) => $item->price->price * $item->quantity), 'currency' => $this->items->first()->price->currency]);
+        $this->total = new Price(['price' => $this->items->sum(fn($item) => $item->price->price * $item->quantity), 'currency' => $this->items->first()->price->currency]);
         $this->gateways = ExtensionHelper::getCheckoutGateways($this->items, 'cart');
         if (!array_search($this->gateway, array_column($this->gateways, 'id')) !== false) {
             $this->gateway = $this->gateways[0]->id;
@@ -155,8 +155,8 @@ class Cart extends Component
             // Lock the orderproducts
             foreach ($this->items as $item) {
                 if (
-                    $item->product->per_user_limit > 0 && ($user->orderProducts->where('product_id', $item->product->id)->count() >= $item->product->per_user_limit ||
-                        $this->items->filter(fn ($it) => $it->product->id == $item->product->id)->sum(fn ($it) => $it->quantity) + $user->orderProducts->where('product_id', $item->product->id)->count() > $item->product->per_user_limit
+                    $item->product->per_user_limit > 0 && ($user->services->where('product_id', $item->product->id)->count() >= $item->product->per_user_limit ||
+                        $this->items->filter(fn($it) => $it->product->id == $item->product->id)->sum(fn($it) => $it->quantity) + $user->services->where('product_id', $item->product->id)->count() > $item->product->per_user_limit
                     )
                 ) {
                     throw new DisplayException(__('product.user_limit', ['product' => $item->product->name]));
@@ -186,16 +186,16 @@ class Cart extends Component
                 ]);
             }
 
-            // Create the order products
+            // Create the services
             foreach ($this->items as $item) {
-                // Is it a lifetime coupon, then we can adjust the price of the order product
+                // Is it a lifetime coupon, then we can adjust the price of the service
                 if ($this->coupon && $this->coupon->time === 'lifetime') {
                     $price = $item->price->price - $item->price->setup_fee;
                 } else {
                     $price = $item->price->original_price - $item->price->original_setup_fee;
                 }
-                // Create the order product
-                $orderProduct = $order->orderProducts()->create([
+                // Create the service
+                $service = $order->services()->create([
                     'product_id' => $item->product->id,
                     'plan_id' => $item->plan->id,
                     'price' => $price,
@@ -204,7 +204,7 @@ class Cart extends Component
 
                 foreach ($item->configOptions as $configOption) {
                     if (in_array($configOption->option_type, ['text', 'number'])) {
-                        $orderProduct->properties()->updateOrCreate([
+                        $service->properties()->updateOrCreate([
                             'key' => $configOption->option_env_variable,
                         ], [
                             'name' => $configOption->option_name,
@@ -214,7 +214,7 @@ class Cart extends Component
                         continue;
                     }
 
-                    $orderProduct->configs()->create([
+                    $service->configs()->create([
                         'config_option_id' => $configOption->option_id,
                         'config_value_id' => $configOption->value,
                     ]);
@@ -223,10 +223,10 @@ class Cart extends Component
                 // Create the invoice items
                 if ($item->price->price > 0) {
                     $invoice->items()->create([
-                        'order_product_id' => $orderProduct->id,
+                        'service_id' => $service->id,
                         'price' => $item->price->price,
                         'quantity' => $item->quantity,
-                        'description' => $orderProduct->description,
+                        'description' => $service->description,
                     ]);
                 }
             }

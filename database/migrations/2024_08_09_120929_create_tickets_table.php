@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('department')->nullable();
             $table->foreignIdFor(\App\Models\User::class)->constrained()->cascadeOnDelete();
             $table->foreignIdFor(\App\Models\User::class, 'assigned_to')->nullable()->constrained('users')->nullOnDelete();
-            $table->foreignIdFor(\App\Models\OrderProduct::class)->nullable()->constrained()->nullOnDelete();
+            $table->foreignIdFor(\App\Models\Service::class)->nullable()->constrained()->nullOnDelete();
             $table->timestamps();
         });
     }

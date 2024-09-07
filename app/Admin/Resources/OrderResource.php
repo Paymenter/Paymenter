@@ -34,7 +34,7 @@ class OrderResource extends Resource
                     ->label('User')
                     ->relationship('user', 'id')
                     ->searchable()
-                    ->getOptionLabelFromRecordUsing(fn ($record) => $record->name)
+                    ->getOptionLabelFromRecordUsing(fn($record) => $record->name)
                     ->required(),
                 Forms\Components\Select::make('currency_code')
                     ->label('Currency')
@@ -42,9 +42,9 @@ class OrderResource extends Resource
                     ->relationship('currency', 'code')
                     ->helperText('Does not convert the price, only displays the currency symbol')
                     ->placeholder('Select the currency'),
-                Forms\Components\Repeater::make('orderProducts')
-                    ->relationship('orderProducts')
-                    ->label('Order Products')
+                Forms\Components\Repeater::make('services')
+                    ->relationship('services')
+                    ->label('Services')
                     ->columnSpanFull()
                     ->columns(2)
                     ->schema([
@@ -65,8 +65,8 @@ class OrderResource extends Resource
                             ->required()
                             ->placeholder('Enter the quantity'),
                         Forms\Components\TextInput::make('price')
-                            ->suffix(fn (Component $component) => $component->getRecord()->currency->suffix)
-                            ->prefix(fn (Component $component) => $component->getRecord()->currency->prefix)
+                            ->suffix(fn(Component $component) => $component->getRecord()->currency->suffix)
+                            ->prefix(fn(Component $component) => $component->getRecord()->currency->prefix)
                             ->label('Price')
                             ->required()
                             ->mask(RawJs::make(
@@ -98,7 +98,7 @@ class OrderResource extends Resource
                                     })
                                     ->requiresConfirmation()
                                     ->label('Cancel Subscription')
-                                    ->hidden(fn (Component $component) => !$component->getRecord()->subscription_id),
+                                    ->hidden(fn(Component $component) => !$component->getRecord()->subscription_id),
                             ]),
                     ]),
             ]);
@@ -149,7 +149,7 @@ class OrderResource extends Resource
     public static function getRelations(): array
     {
         return [
-            RelationManagers\OrderProductsRelationManager::class,
+            RelationManagers\ServiceRelationManager::class,
         ];
     }
 

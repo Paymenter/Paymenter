@@ -5,7 +5,7 @@ namespace App\Extensions\Gateways\PayPal;
 use App\Classes\Extension\Gateway;
 use App\Helpers\ExtensionHelper;
 use App\Models\Order;
-use App\Models\OrderProduct;
+use App\Models\Service;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
@@ -79,17 +79,17 @@ class PayPal extends Gateway
     {
         $url = $this->config('test_mode') ? 'https://api-m.sandbox.paypal.com' : 'https://api-m.paypal.com';
 
-        if ($this->config('paypal_use_subscriptions') && $invoice->items->map(fn ($item) => $item->orderProduct->plan->billing_period . $item->orderProduct->plan->billing_unit)->unique()->count() === 1) {
+        if ($this->config('paypal_use_subscriptions') && $invoice->items->map(fn($item) => $item->service->plan->billing_period . $item->service->plan->billing_unit)->unique()->count() === 1) {
             $paypalProduct = $this->request('post', $url . '/v1/catalogs/products', [
-                'name' => $invoice->items->first()->orderProduct->product->name,
+                'name' => $invoice->items->first()->service->product->name,
                 'type' => 'SERVICE',
             ]);
 
             // For each item in the invoice, create a billing cycle
             $billingCycles[] = [
                 'frequency' => [
-                    'interval_unit' => strtoupper($invoice->items->first()->orderProduct->plan->billing_unit),
-                    'interval_count' => $invoice->items->first()->orderProduct->plan->billing_period,
+                    'interval_unit' => strtoupper($invoice->items->first()->service->plan->billing_unit),
+                    'interval_count' => $invoice->items->first()->service->plan->billing_period,
                 ],
                 'tenure_type' => 'TRIAL',
                 'sequence' => 1,
@@ -102,12 +102,12 @@ class PayPal extends Gateway
                 ],
             ];
 
-            $nextSum = $invoice->items->sum(fn ($item) => $item->orderProduct->price * $item->orderProduct->quantity);
+            $nextSum = $invoice->items->sum(fn($item) => $item->service->price * $item->service->quantity);
 
             $billingCycles[] = [
                 'frequency' => [
-                    'interval_unit' => strtoupper($invoice->items->first()->orderProduct->plan->billing_unit),
-                    'interval_count' => $invoice->items->first()->orderProduct->plan->billing_period,
+                    'interval_unit' => strtoupper($invoice->items->first()->service->plan->billing_unit),
+                    'interval_count' => $invoice->items->first()->service->plan->billing_period,
                 ],
                 'tenure_type' => 'REGULAR',
                 'sequence' => 2,
@@ -122,8 +122,8 @@ class PayPal extends Gateway
 
             $plan = $this->request('post', $url . '/v1/billing/plans', [
                 'product_id' => $paypalProduct->id,
-                'name' => $invoice->items->first()->orderProduct->plan->name,
-                'description' => $invoice->items->first()->orderProduct->plan->description,
+                'name' => $invoice->items->first()->service->plan->name,
+                'description' => $invoice->items->first()->service->plan->description,
                 'billing_cycles' => $billingCycles,
                 'payment_preferences' => [
                     'auto_bill_outstanding' => true,
@@ -205,10 +205,10 @@ class PayPal extends Gateway
         // Handle the subscription event
         if ($body['event_type'] === 'BILLING.SUBSCRIPTION.ACTIVATED') {
             // Its activated so we can now add the subscription to the user (custom is the order id)
-            Order::find($body['resource']['custom_id'])->orderProducts->each(function ($orderProduct) use ($body) {
-                $orderProduct->subscription_id = $body['resource']['id'];
-                $orderProduct->save();
-                $orderProduct->properties()->updateOrCreate([
+            Order::find($body['resource']['custom_id'])->services->each(function ($service) use ($body) {
+                $service->subscription_id = $body['resource']['id'];
+                $service->save();
+                $service->properties()->updateOrCreate([
                     'key' => 'has_paypal_subscription',
                     'name' => 'Has PayPal Subscription',
                 ], [
@@ -219,25 +219,25 @@ class PayPal extends Gateway
             return response()->json(['status' => 'success']);
         } elseif ($body['event_type'] === 'PAYMENT.SALE.COMPLETED') {
             $order = Order::findOrFail($body['resource']['custom']);
-            foreach ($order->orderProducts as $orderProduct) {
+            foreach ($order->services as $service) {
                 // Get last invoice item
-                $invoiceItem = $orderProduct->invoiceItems->last();
+                $invoiceItem = $service->invoiceItems->last();
                 // Add payment
                 ExtensionHelper::addPayment($invoiceItem->invoice_id, 'PayPal', $body['resource']['amount']['total'], $body['resource']['transaction_fee']['value'], $body['resource']['id']);
             }
         }
     }
 
-    public function updateSubscription(OrderProduct $orderProduct)
+    public function updateSubscription(Service $service)
     {
-        if ($orderProduct->properties->where('key', 'has_paypal_subscription')->first()?->value !== '1') {
+        if ($service->properties->where('key', 'has_paypal_subscription')->first()?->value !== '1') {
             return false;
         }
         $paypal = new PayPal;
         // Update subscription price
-        $newPrice = OrderProduct::where('subscription_id', $orderProduct->subscription_id)->sum('price');
+        $newPrice = Service::where('subscription_id', $service->subscription_id)->sum('price');
         //Grab currenct subscription ID
-        $subscriptionId = $orderProduct->subscription_id;
+        $subscriptionId = $service->subscription_id;
         $url = $paypal->config('test_mode') ? 'https://api-m.sandbox.paypal.com' : 'https://api-m.paypal.com';
 
         // Update subscription price
@@ -247,7 +247,7 @@ class PayPal extends Gateway
                 'path' => '/plan/billing_cycles/@sequence==2/pricing_scheme/fixed_price',
                 'value' => [
                     'value' => $newPrice,
-                    'currency_code' => $orderProduct->order->currency_code,
+                    'currency_code' => $service->order->currency_code,
                 ],
             ],
         ]);
@@ -255,15 +255,15 @@ class PayPal extends Gateway
         return true;
     }
 
-    public function cancelSubscription(OrderProduct $orderProduct)
+    public function cancelSubscription(Service $service)
     {
         // Cancel subscription
         $url = $this->config('test_mode') ? 'https://api-m.sandbox.paypal.com' : 'https://api-m.paypal.com';
-        $this->request('post', $url . '/v1/billing/subscriptions/' . $orderProduct->subscription_id . '/cancel', [
+        $this->request('post', $url . '/v1/billing/subscriptions/' . $service->subscription_id . '/cancel', [
             'reason' => 'User canceled',
         ]);
 
-        $orderProduct->properties()->where('key', 'has_paypal_subscription')->delete();
+        $service->properties()->where('key', 'has_paypal_subscription')->delete();
 
         return true;
     }

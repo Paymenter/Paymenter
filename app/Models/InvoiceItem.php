@@ -13,7 +13,7 @@ class InvoiceItem extends Model
 
     protected $fillable = [
         'invoice_id',
-        'order_product_id',
+        'service_id',
         'quantity',
         'price',
         'description',
@@ -25,9 +25,9 @@ class InvoiceItem extends Model
         return $this->belongsTo(Invoice::class);
     }
 
-    public function orderProduct()
+    public function service()
     {
-        return $this->belongsTo(OrderProduct::class);
+        return $this->belongsTo(Service::class);
     }
 
     public function gateway()
@@ -43,14 +43,14 @@ class InvoiceItem extends Model
     public function formattedTotal(): Attribute
     {
         return Attribute::make(
-            get: fn () => new Price(['price' => $this->total(), 'currency' => $this->invoice->currency])
+            get: fn() => new Price(['price' => $this->total(), 'currency' => $this->invoice->currency])
         );
     }
 
     public function formattedPrice(): Attribute
     {
         return Attribute::make(
-            get: fn () => new Price(['price' => $this->price, 'currency' => $this->invoice->currency])
+            get: fn() => new Price(['price' => $this->price, 'currency' => $this->invoice->currency])
         );
     }
 }

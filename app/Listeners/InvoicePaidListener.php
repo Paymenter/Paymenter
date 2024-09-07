@@ -13,21 +13,21 @@ class InvoicePaidListener
      */
     public function handle(Paid $event): void
     {
-        // Update order products if invoice is paid (suspended -> active etc.)
+        // Update services if invoice is paid (suspended -> active etc.)
         $event->invoice->items->each(function ($item) {
-            $orderProduct = $item->orderProduct;
-            if (!$orderProduct || $orderProduct->status == 'active' || !$orderProduct->product->server) {
+            $service = $item->service;
+            if (!$service || $service->status == 'active' || !$service->product->server) {
                 return;
             }
-            if ($orderProduct->status == 'suspended') {
-                UnsuspendJob::dispatch($orderProduct);
-            } elseif ($orderProduct->status == 'pending') {
-                CreateJob::dispatch($orderProduct);
-                $orderProduct->status = 'pending-setup';
+            if ($service->status == 'suspended') {
+                UnsuspendJob::dispatch($service);
+            } elseif ($service->status == 'pending') {
+                CreateJob::dispatch($service);
+                $service->status = 'pending-setup';
             }
-            $orderProduct->status = 'active';
-            $orderProduct->expires_at = $orderProduct->calculateNextDueDate();
-            $orderProduct->save();
+            $service->status = 'active';
+            $service->expires_at = $service->calculateNextDueDate();
+            $service->save();
         });
     }
 }

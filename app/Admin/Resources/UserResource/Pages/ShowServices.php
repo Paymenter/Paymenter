@@ -2,17 +2,17 @@
 
 namespace App\Admin\Resources\UserResource\Pages;
 
-use App\Admin\Resources\OrderProductResource;
+use App\Admin\Resources\ServiceResource;
 use App\Admin\Resources\UserResource;
 use Filament\Resources\Pages\ManageRelatedRecords;
 use Filament\Tables;
 use Filament\Tables\Table;
 
-class ShowOrderProducts extends ManageRelatedRecords
+class ShowServices extends ManageRelatedRecords
 {
     protected static string $resource = UserResource::class;
 
-    protected static string $relationship = 'orderProducts';
+    protected static string $relationship = 'services';
 
     protected static ?string $navigationIcon = 'heroicon-o-shopping-cart';
 
@@ -34,7 +34,7 @@ class ShowOrderProducts extends ManageRelatedRecords
                 //
             ])
             ->actions([
-                Tables\Actions\ViewAction::make()->url(fn ($record) => OrderProductResource::getUrl('edit', ['record' => $record])),
+                Tables\Actions\ViewAction::make()->url(fn($record) => ServiceResource::getUrl('edit', ['record' => $record])),
             ]);
     }
 }

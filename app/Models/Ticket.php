@@ -16,7 +16,7 @@ class Ticket extends Model
         'department',
         'user_id',
         'assigned_to',
-        'order_product_id',
+        'service_id',
     ];
 
     public function user()
@@ -29,9 +29,9 @@ class Ticket extends Model
         return $this->belongsTo(User::class, 'assigned_to');
     }
 
-    public function orderProduct()
+    public function service()
     {
-        return $this->belongsTo(OrderProduct::class);
+        return $this->belongsTo(Service::class);
     }
 
     public function messages()

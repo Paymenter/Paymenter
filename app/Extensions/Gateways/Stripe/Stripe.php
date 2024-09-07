@@ -5,7 +5,7 @@ namespace App\Extensions\Gateways\Stripe;
 use App\Classes\Extension\Gateway;
 use App\Helpers\ExtensionHelper;
 use App\Models\Invoice;
-use App\Models\OrderProduct;
+use App\Models\Service;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 
@@ -55,7 +55,7 @@ class Stripe extends Gateway
     public function pay($invoice, $total)
     {
         $eligableforSubscription = collect($invoice->items)->filter(function ($item) {
-            return $item->orderProduct && $item->orderProduct->plan->type !== 'one-time';
+            return $item->service && $item->service->plan->type !== 'one-time';
         })->count() > 0;
         if ($this->config('stripe_use_subscriptions') && $eligableforSubscription) {
             $stripeCustomerId = $invoice->user->properties->where('key', 'stripe_id')->first();
@@ -100,7 +100,7 @@ class Stripe extends Gateway
 
         // Handle the event
         switch ($event->type) {
-            // Normal payment
+                // Normal payment
             case 'payment_intent.succeeded':
                 $paymentIntent = $event->data->object; // contains a StripePaymentIntent
                 if (!isset($paymentIntent->metadata->invoice_id)) {
@@ -122,18 +122,18 @@ class Stripe extends Gateway
                 break;
             case 'subscription_schedule.canceled':
                 $subscriptionSchedule = $event->data->object; // contains a StripeSubscriptionSchedule
-                $orderProduct = OrderProduct::where('subscription_id', $subscriptionSchedule->id)->first();
-                if ($orderProduct) {
-                    $orderProduct->update(['subscription_id' => null]);
+                $service = Service::where('subscription_id', $subscriptionSchedule->id)->first();
+                if ($service) {
+                    $service->update(['subscription_id' => null]);
                 }
                 break;
             case 'invoice.created':
                 $invoice = $event->data->object; // contains a StripeInvoice
                 // Check if its draft and does exist in our database
                 if ($invoice->status === 'draft') {
-                    $orderProduct = OrderProduct::where('subscription_id', $invoice->subscription)->first();
+                    $service = Service::where('subscription_id', $invoice->subscription)->first();
 
-                    if ($orderProduct) {
+                    if ($service) {
                         $this->request('post', '/invoices/' . $invoice->id . '/finalize');
                         // Pay the invoice using Stripe
                         $this->request('post', '/invoices/' . $invoice->id . '/pay');
@@ -144,9 +144,9 @@ class Stripe extends Gateway
                 // Mark invoice as paid
                 $invoice = $event->data->object; // contains a StripeInvoice
 
-                $orderProduct = OrderProduct::where('subscription_id', $invoice->subscription)->first();
-                if ($orderProduct) {
-                    $invoiceModel = $orderProduct->invoiceItems->sortByDesc('created_at')->first()->invoice;
+                $service = Service::where('subscription_id', $invoice->subscription)->first();
+                if ($service) {
+                    $invoiceModel = $service->invoiceItems->sortByDesc('created_at')->first()->invoice;
                     $paymentIntent = $this->request('get', '/payment_intents/' . $invoice->payment_intent);
                     $fee = 0;
                     if (isset($paymentIntent->charges->data[0]->balance_transaction)) {
@@ -184,13 +184,13 @@ class Stripe extends Gateway
 
         // Create subscription
         foreach ($invoice->items as $item) {
-            if (!$item->orderProduct) {
+            if (!$item->service) {
                 continue;
             }
-            $orderProduct = $item->orderProduct;
-            $product = $orderProduct->product;
+            $service = $item->service;
+            $product = $service->product;
 
-            // Check if the orderProduct->product already exists in Stripe
+            // Check if the service->product already exists in Stripe
             $stripeProduct = $this->request('get', '/products/search', ['query' => 'metadata[\'product_id\']:\'' . $product->id . '\'']);
 
             if (empty($stripeProduct->data)) {
@@ -204,8 +204,8 @@ class Stripe extends Gateway
             }
 
             $phases = [];
-            // Check if current invoice item price is bigger then orderProduct price (then we have a setup fee)
-            if ($item->price > $orderProduct->price) {
+            // Check if current invoice item price is bigger then service price (then we have a setup fee)
+            if ($item->price > $service->price) {
                 $phases[] = [
                     'items' => [
                         [
@@ -214,8 +214,8 @@ class Stripe extends Gateway
                                 'product' => $stripeProduct->id,
                                 'unit_amount' => $item->price * 100,
                                 'recurring' => [
-                                    'interval' => $orderProduct->plan->billing_unit,
-                                    'interval_count' => $orderProduct->plan->billing_period,
+                                    'interval' => $service->plan->billing_unit,
+                                    'interval_count' => $service->plan->billing_period,
                                 ],
                             ],
                             'quantity' => 1,
@@ -223,7 +223,7 @@ class Stripe extends Gateway
                     ],
                     'iterations' => 1,
                     'metadata' => [
-                        'order_product_id' => $product->id,
+                        'service_id' => $product->id,
                     ],
                 ];
             }
@@ -233,17 +233,17 @@ class Stripe extends Gateway
                         'price_data' => [
                             'currency' => $invoice->currency_code,
                             'product' => $stripeProduct->id,
-                            'unit_amount' => ($orderProduct->price * $orderProduct->quantity) * 100,
+                            'unit_amount' => ($service->price * $service->quantity) * 100,
                             'recurring' => [
-                                'interval' => $orderProduct->plan->billing_unit,
-                                'interval_count' => $orderProduct->plan->billing_period,
+                                'interval' => $service->plan->billing_unit,
+                                'interval_count' => $service->plan->billing_period,
                             ],
                         ],
                         'quantity' => 1,
                     ],
                 ],
                 'metadata' => [
-                    'order_product_id' => $product->id,
+                    'service_id' => $product->id,
                 ],
             ];
 
@@ -251,22 +251,22 @@ class Stripe extends Gateway
                 'customer' => $customer->id,
                 'start_date' => 'now',
                 'phases' => $phases,
-                'metadata' => ['order_product_id' => $orderProduct->id],
+                'metadata' => ['service_id' => $service->id],
             ]);
 
-            // Update orderProduct with subscription id
-            $orderProduct->update(['subscription_id' => $subscription->subscription]);
-            $orderProduct->properties()->updateOrCreate(['key' => 'has_stripe_subscription'], ['value' => true]);
+            // Update service with subscription id
+            $service->update(['subscription_id' => $subscription->subscription]);
+            $service->properties()->updateOrCreate(['key' => 'has_stripe_subscription'], ['value' => true]);
         }
     }
 
-    public function updateSubscription(OrderProduct $orderProduct)
+    public function updateSubscription(Service $service)
     {
-        if (!$orderProduct->subscription_id && !$orderProduct->properties->where('key', 'has_stripe_subscription')->first()) {
+        if (!$service->subscription_id && !$service->properties->where('key', 'has_stripe_subscription')->first()) {
             return;
         }
         // Grab the schedule from Stripe
-        $scheduleId = $this->request('get', '/subscriptions/' . $orderProduct->subscription_id);
+        $scheduleId = $this->request('get', '/subscriptions/' . $service->subscription_id);
         $oldPhases = $this->request('get', '/subscription_schedules/' . $scheduleId->schedule)->phases;
         // Overwrite phase 2 item 0 with the new price
         $phases = [];
@@ -278,8 +278,8 @@ class Stripe extends Gateway
                 'start_date' => $phase->start_date,
             ];
         }
-        // Check if the orderProduct->product already exists in Stripe
-        $product = $orderProduct->product;
+        // Check if the service->product already exists in Stripe
+        $product = $service->product;
         $stripeProduct = $this->request('get', '/products/search', ['query' => 'metadata[\'product_id\']:\'' . $product->id . '\'']);
 
         if (empty($stripeProduct->data)) {
@@ -292,12 +292,12 @@ class Stripe extends Gateway
             $stripeProduct = $stripeProduct->data[0];
         }
         $phases[1]['items'][0]->price_data = [
-            'currency' => $orderProduct->currency->code,
-            'unit_amount' => $orderProduct->price * 100,
+            'currency' => $service->currency->code,
+            'unit_amount' => $service->price * 100,
             'product' => $stripeProduct->id,
             'recurring' => [
-                'interval' => $orderProduct->plan->billing_unit,
-                'interval_count' => $orderProduct->plan->billing_period,
+                'interval' => $service->plan->billing_unit,
+                'interval_count' => $service->plan->billing_period,
             ],
         ];
         $phases[1]['items'][0]->price = null;
@@ -309,12 +309,12 @@ class Stripe extends Gateway
         ]);
     }
 
-    public function cancelSubscription(OrderProduct $orderProduct)
+    public function cancelSubscription(Service $service)
     {
-        if (!$orderProduct->subscription_id && !$orderProduct->properties->where('key', 'has_stripe_subscription')->first()) {
+        if (!$service->subscription_id && !$service->properties->where('key', 'has_stripe_subscription')->first()) {
             return;
         }
-        $this->request('delete', '/subscriptions/' . $orderProduct->subscription_id);
+        $this->request('delete', '/subscriptions/' . $service->subscription_id);
 
         return true;
     }

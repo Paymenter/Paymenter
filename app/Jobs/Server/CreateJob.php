@@ -4,7 +4,7 @@ namespace App\Jobs\Server;
 
 use App\Helpers\ExtensionHelper;
 use App\Helpers\NotificationHelper;
-use App\Models\OrderProduct;
+use App\Models\Service;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -18,7 +18,7 @@ class CreateJob implements ShouldQueue
     /**
      * Create a new job instance.
      */
-    public function __construct(public OrderProduct $orderProduct, public $sendNotiication = true) {}
+    public function __construct(public Service $service, public $sendNotiication = true) {}
 
     /**
      * Execute the job.
@@ -26,15 +26,15 @@ class CreateJob implements ShouldQueue
     public function handle(): void
     {
         // $data is the data that will be used to send the email, data is coming from the extension itself
-        $data = ExtensionHelper::createServer($this->orderProduct);
+        $data = ExtensionHelper::createServer($this->service);
 
-        // Update order product
-        $this->orderProduct->status = 'active';
-        $this->orderProduct->save();
+        // Update service
+        $this->service->status = 'active';
+        $this->service->save();
 
         // Send the email (TO BE MADE)
         if ($this->sendNotiication) {
-            NotificationHelper::newServerCreatedNotification($this->orderProduct->order->user, $this->orderProduct, $data);
+            NotificationHelper::newServerCreatedNotification($this->service->order->user, $this->service, $data);
         }
     }
 }

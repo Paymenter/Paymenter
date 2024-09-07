@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Events\OrderProduct;
+namespace App\Events\Service;
 
-use App\Models\OrderProduct;
+use App\Models\Service;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
@@ -14,5 +14,5 @@ class Updated
     /**
      * Create a new event instance.
      */
-    public function __construct(public OrderProduct $orderProduct) {}
+    public function __construct(public Service $service) {}
 }

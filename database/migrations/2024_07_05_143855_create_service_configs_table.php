@@ -11,9 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('order_product_configs', function (Blueprint $table) {
+        Schema::create('service_configs', function (Blueprint $table) {
             $table->id();
-            $table->foreignIdFor(\App\Models\OrderProduct::class)->constrained()->cascadeOnDelete();
+            $table->foreignIdFor(\App\Models\Service::class)->constrained()->cascadeOnDelete();
             $table->foreignIdFor(\App\Models\ConfigOption::class)->constrained()->cascadeOnDelete();
             $table->foreignId('config_value_id')->constrained('config_options');
             $table->timestamps();
@@ -25,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('order_product_configs');
+        Schema::dropIfExists('service_configs');
     }
 };

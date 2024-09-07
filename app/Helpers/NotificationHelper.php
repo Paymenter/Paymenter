@@ -6,7 +6,7 @@ use App\Mail\Mail;
 use App\Models\EmailLog;
 use App\Models\EmailTemplate;
 use App\Models\Invoice;
-use App\Models\OrderProduct;
+use App\Models\Service;
 use App\Models\User;
 use Illuminate\Support\Facades\Mail as FacadesMail;
 
@@ -53,26 +53,26 @@ class NotificationHelper
             'invoice' => $invoice,
             'items' => $invoice->items,
             'total' => $invoice->formattedTotal,
-            'has_subscription' => $invoice->items->each(fn ($item) => $item->orderProduct->order->subscription)->isNotEmpty(),
+            'has_subscription' => $invoice->items->each(fn($item) => $item->service->order->subscription)->isNotEmpty(),
         ];
         self::sendEmailNotification('new_invoice_created', $data, $user);
     }
 
-    public static function newServerCreatedNotification(User $user, OrderProduct $orderProduct, array $data = []): void
+    public static function newServerCreatedNotification(User $user, Service $service, array $data = []): void
     {
-        $data['orderProduct'] = $orderProduct;
+        $data['service'] = $service;
         self::sendEmailNotification('new_server_created', $data, $user);
     }
 
-    public static function serverSuspendedNotification(User $user, OrderProduct $orderProduct, array $data = []): void
+    public static function serverSuspendedNotification(User $user, Service $service, array $data = []): void
     {
-        $data['orderProduct'] = $orderProduct;
+        $data['service'] = $service;
         self::sendEmailNotification('server_suspended', $data, $user);
     }
 
-    public static function serverTerminatedNotification(User $user, OrderProduct $orderProduct, array $data = []): void
+    public static function serverTerminatedNotification(User $user, Service $service, array $data = []): void
     {
-        $data['orderProduct'] = $orderProduct;
+        $data['service'] = $service;
         self::sendEmailNotification('server_terminated', $data, $user);
     }
 }

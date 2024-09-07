@@ -20,8 +20,12 @@
         <!-- Select the product -->
         <x-form.select wire:model="service" label="{{ __('ticket.service') }}" name="service">
             <option value="">{{ __('ticket.select_service') }}</option>
-            @foreach ($orderProducts as $product)
-                <option value="{{ $product->id }}">{{ $product->product->name }} ({{ ucfirst($product->status) }}) @if($product->expires_at) - {{ $product->expires_at->format('Y-m-d') }} @endif</option>
+            @foreach ($services as $product)
+                <option value="{{ $product->id }}">{{ $product->product->name }} ({{ ucfirst($product->status) }})
+                    @if ($product->expires_at)
+                        - {{ $product->expires_at->format('Y-m-d') }}
+                    @endif
+                </option>
             @endforeach
         </x-form.select>
         <div class="col-span-2">

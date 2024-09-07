@@ -4,14 +4,14 @@ namespace App\Models;
 
 use App\Classes\Price;
 use App\Models\Traits\HasProperties;
-use App\Observers\OrderProductObserver;
+use App\Observers\ServiceObserver;
 use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-#[ObservedBy([OrderProductObserver::class])]
-class OrderProduct extends Model
+#[ObservedBy([ServiceObserver::class])]
+class Service extends Model
 {
     use HasFactory, HasProperties;
 
@@ -31,7 +31,7 @@ class OrderProduct extends Model
     ];
 
     /**
-     * Get the order that owns the order product.
+     * Get the order that owns the service.
      */
     public function order()
     {
@@ -41,19 +41,19 @@ class OrderProduct extends Model
     public function currency(): Attribute
     {
         return Attribute::make(
-            get: fn () => $this->order->currency
+            get: fn() => $this->order->currency
         );
     }
 
     /**
-     * Price of the order product.
+     * Price of the service.
      *
      * @return string
      */
     public function formattedPrice(): Attribute
     {
         return Attribute::make(
-            get: fn () => new Price(['price' => $this->price * $this->quantity, 'currency' => $this->order->currency])
+            get: fn() => new Price(['price' => $this->price * $this->quantity, 'currency' => $this->order->currency])
         );
     }
 
@@ -64,14 +64,14 @@ class OrderProduct extends Model
     {
         if ($this->plan->type == 'free' || $this->plan->type == 'one-time') {
             return Attribute::make(
-                get: fn () => $this->product->name
+                get: fn() => $this->product->name
             );
         }
         $date = $this->expires_at ?? now();
         $endDate = $date->{'add' . ucfirst($this->plan->billing_unit) . 's'}($this->plan->billing_period);
 
         return Attribute::make(
-            get: fn () => $this->product->name . ' (' . $date->format('M d, Y') . ' - ' . $endDate->format('M d, Y') . ')'
+            get: fn() => $this->product->name . ' (' . $date->format('M d, Y') . ' - ' . $endDate->format('M d, Y') . ')'
         );
     }
 
@@ -89,7 +89,7 @@ class OrderProduct extends Model
     }
 
     /**
-     * Get the product corresponding to the order product.
+     * Get the product corresponding to the service.
      */
     public function product()
     {
@@ -97,7 +97,7 @@ class OrderProduct extends Model
     }
 
     /**
-     * Get the plan corresponding to the order product.
+     * Get the plan corresponding to the service.
      */
     public function plan()
     {
@@ -105,11 +105,11 @@ class OrderProduct extends Model
     }
 
     /**
-     * Get the order product's configurations.
+     * Get the service's configurations.
      */
     public function configs()
     {
-        return $this->hasMany(OrderProductConfig::class);
+        return $this->hasMany(ServiceConfig::class);
     }
 
     /**
@@ -125,6 +125,6 @@ class OrderProduct extends Model
      */
     public function invoices()
     {
-        return $this->hasManyThrough(Invoice::class, InvoiceItem::class, 'order_product_id', 'id', 'id', 'invoice_id');
+        return $this->hasManyThrough(Invoice::class, InvoiceItem::class, 'service_id', 'id', 'id', 'invoice_id');
     }
 }

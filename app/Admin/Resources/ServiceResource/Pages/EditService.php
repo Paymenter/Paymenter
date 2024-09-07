@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Admin\Resources\OrderProductResource\Pages;
+namespace App\Admin\Resources\ServiceResource\Pages;
 
-use App\Admin\Resources\OrderProductResource;
+use App\Admin\Resources\ServiceResource;
 use App\Helpers\ExtensionHelper;
 use App\Helpers\NotificationHelper;
-use App\Models\OrderProduct;
+use App\Models\Service;
 use Filament\Actions;
 use Filament\Forms\Components\Checkbox;
 use Filament\Forms\Components\Select;
@@ -13,9 +13,9 @@ use Filament\Notifications\Notification;
 use Filament\Resources\Pages\EditRecord;
 use Illuminate\Support\Facades\Log;
 
-class EditOrderProduct extends EditRecord
+class EditService extends EditRecord
 {
-    protected static string $resource = OrderProductResource::class;
+    protected static string $resource = ServiceResource::class;
 
     protected function getHeaderActions(): array
     {
@@ -36,7 +36,7 @@ class EditOrderProduct extends EditRecord
                         ->label('Send Notification')
                         ->default(false),
                 ])
-                ->action(function (array $data, OrderProduct $record, Actions\Action $action): void {
+                ->action(function (array $data, Service $record, Actions\Action $action): void {
                     try {
                         switch ($data['action']) {
                             case 'create':

@@ -6,7 +6,7 @@ use App\Helpers\NotificationHelper;
 use App\Jobs\Server\SuspendJob;
 use App\Jobs\Server\TerminateJob;
 use App\Models\EmailLog;
-use App\Models\OrderProduct;
+use App\Models\Service;
 use App\Models\Ticket;
 use Illuminate\Console\Command;
 
@@ -33,31 +33,31 @@ class CronJob extends Command
     {
         // Send invoices if due date is x days away
         $sendedInvoices = 0;
-        OrderProduct::where('status', 'active')->where('expires_at', '<', now()->addDays((int) config('settings.cronjob_invoice')))->get()->each(function ($orderProduct) use (&$sendedInvoices) {
-            // Does the order product have already a pending invoice?
-            if ($orderProduct->invoices()->where('status', 'pending')->exists()) {
+        Service::where('status', 'active')->where('expires_at', '<', now()->addDays((int) config('settings.cronjob_invoice')))->get()->each(function ($service) use (&$sendedInvoices) {
+            // Does the service have already a pending invoice?
+            if ($service->invoices()->where('status', 'pending')->exists()) {
                 return;
             }
 
             // Create invoice
-            $invoice = $orderProduct->invoices()->create([
-                'user_id' => $orderProduct->order->user_id,
+            $invoice = $service->invoices()->create([
+                'user_id' => $service->order->user_id,
                 'status' => 'pending',
                 'issued_at' => now(),
-                'due_at' => $orderProduct->expires_at,
-                'currency_code' => $orderProduct->order->currency_code,
+                'due_at' => $service->expires_at,
+                'currency_code' => $service->order->currency_code,
             ]);
 
             // Create invoice items
             $invoice->items()->create([
-                'order_product_id' => $orderProduct->id,
-                'price' => $orderProduct->price,
-                'quantity' => $orderProduct->quantity,
-                'description' => $orderProduct->description,
+                'service_id' => $service->id,
+                'price' => $service->price,
+                'quantity' => $service->quantity,
+                'description' => $service->description,
             ]);
 
             // Send email
-            NotificationHelper::newInvoiceCreatedNotification($orderProduct->order->user, $invoice);
+            NotificationHelper::newInvoiceCreatedNotification($service->order->user, $invoice);
 
             $sendedInvoices++;
         });
@@ -65,19 +65,19 @@ class CronJob extends Command
 
         // Suspend orders if due date is overdue for x days
         $ordersSuspended = 0;
-        OrderProduct::where('status', 'active')->where('expires_at', '<', now()->subDays((int) config('settings.cronjob_suspend')))->each(function ($orderProduct) use (&$ordersSuspended) {
-            SuspendJob::dispatch($orderProduct);
+        Service::where('status', 'active')->where('expires_at', '<', now()->subDays((int) config('settings.cronjob_suspend')))->each(function ($service) use (&$ordersSuspended) {
+            SuspendJob::dispatch($service);
 
-            $orderProduct->update(['status' => 'suspended']);
+            $service->update(['status' => 'suspended']);
             $ordersSuspended++;
         });
         $this->info('Suspending orders if due date is overdue for ' . config('settings.cronjob_suspend') . ' days: ' . $ordersSuspended . ' orders');
 
         // Terminate orders if due date is overdue for x days
         $ordersTerminated = 0;
-        OrderProduct::where('status', 'suspended')->where('expires_at', '<', now()->subDays((int) config('settings.cronjob_terminate')))->each(function ($orderProduct) use (&$ordersTerminated) {
-            TerminateJob::dispatch($orderProduct);
-            $orderProduct->update(['status' => 'cancelled']);
+        Service::where('status', 'suspended')->where('expires_at', '<', now()->subDays((int) config('settings.cronjob_terminate')))->each(function ($service) use (&$ordersTerminated) {
+            TerminateJob::dispatch($service);
+            $service->update(['status' => 'cancelled']);
             $ordersTerminated++;
         });
         $this->info('Terminating orders if due date is overdue for ' . config('settings.cronjob_terminate') . ' days: ' . $ordersTerminated . ' orders');
