@@ -3,7 +3,7 @@
         <h1 class="text-3xl font-bold">{{ $product->name }}</h1>
         <div class="flex flex-row w-full gap-4">
             @if ($product->image)
-                <img src="{{ url()->to($product->image) }}" alt="{{ $product->name }}" class="max-w-40 h-fit">
+                <img src="{{ Storage::url($product->image) }}" alt="{{ $product->name }}" class="max-w-40 h-fit">
             @endif
             <article class="prose prose-invert prose-sm">
                 {!! $product->description !!}

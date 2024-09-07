@@ -11,11 +11,6 @@ use App\Livewire\Tickets;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    App\Helpers\NotificationHelper::newInvoiceCreatedNotification(
-        App\Models\User::first(),
-        App\Models\Invoice::find(16)
-    );
-
     return view('home');
 })->name('home');
 

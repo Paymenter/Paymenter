@@ -11,6 +11,7 @@ use Filament\Forms\Components\Checkbox;
 use Filament\Forms\Components\Select;
 use Filament\Notifications\Notification;
 use Filament\Resources\Pages\EditRecord;
+use Illuminate\Support\Facades\Log;
 
 class EditOrderProduct extends EditRecord
 {
@@ -55,7 +56,10 @@ class EditOrderProduct extends EditRecord
                                 break;
                         }
                     } catch (\Exception $e) {
-                        throw $e;
+                        if (config('app.debug')) {
+                            throw $e;
+                        }
+                        Log::error($e);
                         Notification::make('Error')
                             ->title('Error occured while triggering the action:')
                             ->body($e->getMessage())

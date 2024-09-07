@@ -1,6 +1,6 @@
 <div class="flex flex-col @if ($product->image) md:grid grid-cols-2 gap-16 @endif">
     @if ($product->image)
-        <img src="{{ url()->to($product->image) }}" alt="{{ $product->name }}"
+        <img src="{{ Storage::url($product->image) }}" alt="{{ $product->name }}"
             class="w-full h-96 object-cover object-center rounded-md">
     @endif
     {{-- If your happiness depends on money, you will never be happy with yourself. --}}
@@ -38,7 +38,8 @@
         </article>
 
         @if (($product->stock > 0 || !$product->stock) && $product->price()->available)
-            <a href="{{ route('products.checkout', ['category' => $category, 'product' => $product->slug]) }}" wire:navigate>
+            <a href="{{ route('products.checkout', ['category' => $category, 'product' => $product->slug]) }}"
+                wire:navigate>
                 <x-button.primary>{{ __('product.add_to_cart') }}</x-button.primary>
             </a>
         @endif
