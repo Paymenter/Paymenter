@@ -75,7 +75,7 @@ class TicketResource extends Resource
                     ->relationship('user', 'id')
                     ->searchable()
                     ->preload()
-                    ->getOptionLabelFromRecordUsing(fn($record) => $record->name)
+                    ->getOptionLabelFromRecordUsing(fn ($record) => $record->name)
                     ->columnSpan(function ($record) {
                         return $record ? 2 : 1;
                     })
@@ -83,7 +83,7 @@ class TicketResource extends Resource
                 Forms\Components\Select::make('assigned_to')
                     ->label('Assigned To')
                     ->relationship('user', 'id')
-                    ->getOptionLabelFromRecordUsing(fn($record) => $record->name)
+                    ->getOptionLabelFromRecordUsing(fn ($record) => $record->name)
                     ->columnSpan(function ($record) {
                         return $record ? 2 : 1;
                     }),
@@ -94,11 +94,11 @@ class TicketResource extends Resource
                         $query->join('orders', 'orders.id', '=', 'services.order_id')
                             ->where('orders.user_id', $get('user_id'));
                     })
-                    ->getOptionLabelFromRecordUsing(fn($record) => "{$record->product->name} - {ucfirst($record->status}")
+                    ->getOptionLabelFromRecordUsing(fn ($record) => "{$record->product->name} - {ucfirst($record->status}")
                     ->columnSpan(function ($record) {
                         return $record ? 2 : 1;
                     })
-                    ->disabled(fn(Get $get) => !$get('user_id')),
+                    ->disabled(fn (Get $get) => !$get('user_id')),
                 Forms\Components\MarkdownEditor::make('message')
                     ->columnSpan(2)
                     ->label('Initial Message')
@@ -120,21 +120,21 @@ class TicketResource extends Resource
                 Tables\Columns\TextColumn::make('status')
                     ->sortable()
                     ->badge()
-                    ->color(fn(Ticket $record) => match ($record->status) {
+                    ->color(fn (Ticket $record) => match ($record->status) {
                         'open' => 'success',
                         'closed' => 'danger',
                         'replied' => 'warning',
                     })
-                    ->formatStateUsing(fn(string $state) => ucfirst($state)),
+                    ->formatStateUsing(fn (string $state) => ucfirst($state)),
                 Tables\Columns\TextColumn::make('priority')
                     ->sortable()
                     ->badge()
-                    ->color(fn(Ticket $record) => match ($record->priority) {
+                    ->color(fn (Ticket $record) => match ($record->priority) {
                         'low' => 'success',
                         'medium' => 'gray',
                         'high' => 'danger',
                     })
-                    ->formatStateUsing(fn(string $state) => ucfirst($state)),
+                    ->formatStateUsing(fn (string $state) => ucfirst($state)),
                 Tables\Columns\TextColumn::make('department')
                     ->sortable(),
                 Tables\Columns\TextColumn::make('user.name')

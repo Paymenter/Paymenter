@@ -68,7 +68,7 @@ class User extends Authenticatable implements FilamentUser, HasAvatar
     public function initials(): Attribute
     {
         return Attribute::make(
-            get: fn() => strtoupper(substr($this->first_name, 0, 1) . substr($this->last_name, 0, 1)),
+            get: fn () => strtoupper(substr($this->first_name, 0, 1) . substr($this->last_name, 0, 1)),
         );
     }
 
@@ -80,7 +80,7 @@ class User extends Authenticatable implements FilamentUser, HasAvatar
     public function avatar(): Attribute
     {
         return Attribute::make(
-            get: fn() => 'https://www.gravatar.com/avatar/' . md5(strtolower($this->email)) . '?d=' . urlencode(config('settings.gravatar_default')),
+            get: fn () => 'https://www.gravatar.com/avatar/' . md5(strtolower($this->email)) . '?d=' . urlencode(config('settings.gravatar_default')),
         );
     }
 
@@ -97,7 +97,7 @@ class User extends Authenticatable implements FilamentUser, HasAvatar
     public function name(): Attribute
     {
         return Attribute::make(
-            get: fn() => ($this->first_name . ' ' . $this->last_name) ?: $this->email,
+            get: fn () => ($this->first_name . ' ' . $this->last_name) ?: $this->email,
         );
     }
 

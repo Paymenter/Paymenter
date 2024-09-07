@@ -6,8 +6,8 @@ use App\Admin\Resources\Common\RelationManagers\PropertiesRelationManager;
 use App\Admin\Resources\ServiceResource\Pages;
 use App\Admin\Resources\ServiceResource\RelationManagers;
 use App\Helpers\ExtensionHelper;
-use App\Models\Service;
 use App\Models\Product;
+use App\Models\Service;
 use Filament\Forms;
 use Filament\Forms\Components\Actions\Action;
 use Filament\Forms\Components\Component;
@@ -69,8 +69,8 @@ class ServiceResource extends Resource
                     ->required()
                     ->placeholder('Enter the quantity'),
                 Forms\Components\TextInput::make('price')
-                    ->suffix(fn(Component $component) => $component->getRecord()?->currency->suffix)
-                    ->prefix(fn(Component $component) => $component->getRecord()?->currency->prefix)
+                    ->suffix(fn (Component $component) => $component->getRecord()?->currency->suffix)
+                    ->prefix(fn (Component $component) => $component->getRecord()?->currency->prefix)
                     ->label('Price')
                     ->required()
                     ->mask(RawJs::make(
@@ -102,7 +102,7 @@ class ServiceResource extends Resource
                             })
                             ->requiresConfirmation()
                             ->label('Cancel Subscription')
-                            ->hidden(fn(Component $component) => !$component->getRecord()?->subscription_id),
+                            ->hidden(fn (Component $component) => !$component->getRecord()?->subscription_id),
                     ),
             ]);
     }
@@ -120,13 +120,13 @@ class ServiceResource extends Resource
                     ->sortable(),
                 Tables\Columns\TextColumn::make('status')
                     ->badge()
-                    ->color(fn(Service $record) => match ($record->status) {
+                    ->color(fn (Service $record) => match ($record->status) {
                         'pending' => 'gray',
                         'active' => 'success',
                         'cancelled' => 'danger',
                         'suspended' => 'warning',
                     })
-                    ->formatStateUsing(fn(string $state) => ucfirst($state))
+                    ->formatStateUsing(fn (string $state) => ucfirst($state))
                     ->label('Status')
                     ->searchable()
                     ->sortable(),

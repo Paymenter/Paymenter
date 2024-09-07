@@ -100,7 +100,7 @@ class Stripe extends Gateway
 
         // Handle the event
         switch ($event->type) {
-                // Normal payment
+            // Normal payment
             case 'payment_intent.succeeded':
                 $paymentIntent = $event->data->object; // contains a StripePaymentIntent
                 if (!isset($paymentIntent->metadata->invoice_id)) {

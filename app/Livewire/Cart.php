@@ -47,7 +47,7 @@ class Cart extends Component
 
             return;
         }
-        $this->total = new Price(['price' => $this->items->sum(fn($item) => $item->price->price * $item->quantity), 'currency' => $this->items->first()->price->currency]);
+        $this->total = new Price(['price' => $this->items->sum(fn ($item) => $item->price->price * $item->quantity), 'currency' => $this->items->first()->price->currency]);
         $this->gateways = ExtensionHelper::getCheckoutGateways($this->items, 'cart');
         if (!array_search($this->gateway, array_column($this->gateways, 'id')) !== false) {
             $this->gateway = $this->gateways[0]->id;
@@ -156,7 +156,7 @@ class Cart extends Component
             foreach ($this->items as $item) {
                 if (
                     $item->product->per_user_limit > 0 && ($user->services->where('product_id', $item->product->id)->count() >= $item->product->per_user_limit ||
-                        $this->items->filter(fn($it) => $it->product->id == $item->product->id)->sum(fn($it) => $it->quantity) + $user->services->where('product_id', $item->product->id)->count() > $item->product->per_user_limit
+                        $this->items->filter(fn ($it) => $it->product->id == $item->product->id)->sum(fn ($it) => $it->quantity) + $user->services->where('product_id', $item->product->id)->count() > $item->product->per_user_limit
                     )
                 ) {
                     throw new DisplayException(__('product.user_limit', ['product' => $item->product->name]));

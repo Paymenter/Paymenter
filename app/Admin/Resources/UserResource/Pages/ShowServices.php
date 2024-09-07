@@ -34,7 +34,7 @@ class ShowServices extends ManageRelatedRecords
                 //
             ])
             ->actions([
-                Tables\Actions\ViewAction::make()->url(fn($record) => ServiceResource::getUrl('edit', ['record' => $record])),
+                Tables\Actions\ViewAction::make()->url(fn ($record) => ServiceResource::getUrl('edit', ['record' => $record])),
             ]);
     }
 }

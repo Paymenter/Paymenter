@@ -42,7 +42,7 @@ class InvoiceResource extends Resource
                     ->label('User')
                     ->relationship('user', 'id')
                     ->searchable()
-                    ->getOptionLabelFromRecordUsing(fn($record) => $record->name)
+                    ->getOptionLabelFromRecordUsing(fn ($record) => $record->name)
                     ->required(),
                 Forms\Components\Select::make('currency_code')
                     ->label('Currency')
@@ -75,8 +75,8 @@ class InvoiceResource extends Resource
                         Forms\Components\TextInput::make('price')
                             ->label('Price')
                             // Grab invoice currency
-                            ->prefix(fn(Get $get): ?string => Currency::where('code', $get('../../currency_code'))->first()?->prefix)
-                            ->suffix(fn(Get $get): ?string => Currency::where('code', $get('../../currency_code'))->first()?->suffix)
+                            ->prefix(fn (Get $get): ?string => Currency::where('code', $get('../../currency_code'))->first()?->prefix)
+                            ->suffix(fn (Get $get): ?string => Currency::where('code', $get('../../currency_code'))->first()?->suffix)
                             ->required()
                             ->numeric()
                             ->mask(RawJs::make(
@@ -95,8 +95,8 @@ class InvoiceResource extends Resource
                             ->required()
                             ->hintAction(
                                 Forms\Components\Actions\Action::make('View Service')
-                                    ->url(fn(Get $get): string => ServiceResource::getUrl('edit', ['record' => $get('service_id')]))
-                                    ->hidden(fn(Get $get): bool => !$get('service_id'))
+                                    ->url(fn (Get $get): string => ServiceResource::getUrl('edit', ['record' => $get('service_id')]))
+                                    ->hidden(fn (Get $get): bool => !$get('service_id'))
                             )
                             ->placeholder('Enter the description of the product'),
                         Forms\Components\Hidden::make('service_id'),
@@ -121,9 +121,9 @@ class InvoiceResource extends Resource
                 Tables\Columns\TextColumn::make('status')
                     ->label('Status')
                     // Make first letter uppercase
-                    ->formatStateUsing(fn(string $state): string => ucfirst($state))
+                    ->formatStateUsing(fn (string $state): string => ucfirst($state))
                     ->badge()
-                    ->color(fn(string $state): string => match ($state) {
+                    ->color(fn (string $state): string => match ($state) {
                         'paid' => 'success',
                         'pending' => 'warning',
                         default => 'danger',

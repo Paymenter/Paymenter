@@ -29,7 +29,7 @@ class ServiceRelationManager extends RelationManager
                 //
             ])
             ->actions([
-                Tables\Actions\ViewAction::make()->url(fn($record) => ServiceResource::getUrl('edit', ['record' => $record])),
+                Tables\Actions\ViewAction::make()->url(fn ($record) => ServiceResource::getUrl('edit', ['record' => $record])),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
