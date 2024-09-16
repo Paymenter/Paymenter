@@ -59,7 +59,7 @@ class ProductResource extends Resource
                                 Forms\Components\TextInput::make('per_user_limit')->integer()->nullable(),
                                 Forms\Components\Select::make('allow_quantity')->options([
                                     'disabled' => 'No',
-                                    'seperated' => 'Seperated',
+                                    'separated' => 'Separated',
                                     'combined' => 'Combined',
                                 ]),
                                 Forms\Components\Textarea::make('email_template')

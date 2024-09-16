@@ -21,7 +21,7 @@ class Create extends Component
 
     public string $department;
 
-    public int $service;
+    public ?int $service = null;
 
     public string $priority;
 

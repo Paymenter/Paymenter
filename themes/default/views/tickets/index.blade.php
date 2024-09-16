@@ -8,6 +8,11 @@
         </a>
     </div>
 
+    @if($tickets->isEmpty())
+        <div class="text-white text-center my-4">
+            No tickets found.
+        </div>
+    @endif
     <div class="flex flex-col gap-4 my-4">
         @foreach ($tickets as $ticket)
             <div class="flex flex-row justify-between w-full bg-primary-700 p-4 rounded-lg shadow-lg">

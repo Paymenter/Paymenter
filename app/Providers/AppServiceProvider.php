@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\Classes\Synths\PriceSynth;
 use App\Models\EmailLog;
+use App\Models\OauthClient;
 use App\Models\User;
 use Illuminate\Queue\Events\JobFailed;
 use Illuminate\Queue\Events\JobProcessed;
@@ -12,6 +13,7 @@ use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Queue;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Str;
+use Laravel\Passport\Passport;
 use League\CommonMark\Extension\Table\TableExtension;
 
 class AppServiceProvider extends ServiceProvider
@@ -74,5 +76,10 @@ class AppServiceProvider extends ServiceProvider
                 new TableExtension,
             ]);
         });
+        Passport::clientModel(OauthClient::class);
+        Passport::ignoreRoutes();
+        Passport::tokensCan([
+            'profile' => 'View your profile',
+        ]);
     }
 }

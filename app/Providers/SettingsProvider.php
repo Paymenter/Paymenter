@@ -7,6 +7,8 @@ use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\ServiceProvider;
 use Qirolab\Theme\Theme;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\URL;
 
 class SettingsProvider extends ServiceProvider
 {
@@ -53,6 +55,10 @@ class SettingsProvider extends ServiceProvider
             date_default_timezone_set(config('settings.timezone', 'UTC'));
 
             Theme::set(config('settings.theme', 'default'), 'default');
+
+            if (Str::startsWith(config('app.url') ?? '', 'https://')) {
+                URL::forceScheme('https');
+            }
         } catch (\Exception $e) {
             // Do nothing
         }

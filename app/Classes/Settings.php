@@ -175,6 +175,7 @@ class Settings
                     'label' => 'Company Name',
                     'type' => 'text',
                     'override' => 'app.name',
+                    'default' => 'Paymenter',
                 ],
                 [
                     'name' => 'company_email',
