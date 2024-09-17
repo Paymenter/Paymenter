@@ -3,7 +3,6 @@
 namespace App\Admin\Resources\OauthClientResource\Pages;
 
 use App\Admin\Resources\OauthClientResource;
-use Filament\Actions;
 use Filament\Resources\Pages\CreateRecord;
 use Illuminate\Database\Eloquent\Model;
 use Laravel\Passport\ClientRepository;
@@ -22,7 +21,7 @@ class CreateOauthClient extends CreateRecord
         ]);
         $record = static::getModel()::create($data);
 
-        $clientRepository = new ClientRepository();
+        $clientRepository = new ClientRepository;
         $clientRepository->create(null, $record->name, $record->redirect);
 
         return $record;

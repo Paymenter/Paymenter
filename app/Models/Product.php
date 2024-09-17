@@ -6,6 +6,7 @@ use App\Models\Traits\HasPlans;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use OwenIt\Auditing\Contracts\Auditable;
@@ -53,5 +54,13 @@ class Product extends Model implements Auditable
     public function settings(): MorphMany
     {
         return $this->morphMany(Setting::class, 'settingable');
+    }
+
+    /**
+     * Get all available products upgrades
+     */
+    public function upgrades()
+    {
+        return $this->belongsToMany(Product::class, 'product_upgrades', 'product_id', 'upgrade_id');
     }
 }

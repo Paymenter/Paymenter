@@ -3,16 +3,13 @@
 namespace App\Admin\Resources;
 
 use App\Admin\Resources\OauthClientResource\Pages;
-use App\Admin\Resources\OauthClientResource\RelationManagers;
 use App\Models\OauthClient;
 use Filament\Forms;
+use Filament\Forms\Components\Actions\Action;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
-use Filament\Forms\Components\Actions\Action;
 
 class OauthClientResource extends Resource
 {
@@ -33,7 +30,7 @@ class OauthClientResource extends Resource
                     ->columnSpanFull(),
                 Forms\Components\TextInput::make('secret')
                     ->disabled()
-                    ->formatStateUsing(fn($record) => $record?->secret)
+                    ->formatStateUsing(fn ($record) => $record?->secret)
                     ->hiddenOn(['create'])
                     ->suffixAction(
                         Action::make('copy')
@@ -47,7 +44,7 @@ class OauthClientResource extends Resource
                     ),
                 Forms\Components\TextInput::make('client_id')
                     ->disabled()
-                    ->formatStateUsing(fn($record) => $record?->id)
+                    ->formatStateUsing(fn ($record) => $record?->id)
                     ->hiddenOn(['create'])
                     ->suffixAction(
                         Action::make('copy')

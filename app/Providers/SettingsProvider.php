@@ -5,10 +5,10 @@ namespace App\Providers;
 use App\Models\Setting;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\ServiceProvider;
-use Qirolab\Theme\Theme;
-use Illuminate\Support\Str;
 use Illuminate\Support\Facades\URL;
+use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Str;
+use Qirolab\Theme\Theme;
 
 class SettingsProvider extends ServiceProvider
 {
