@@ -2,11 +2,9 @@
 
 namespace App\Livewire\Services;
 
-use App\Helpers\ExtensionHelper;
 use App\Livewire\Component;
 use App\Models\Service;
 use App\Models\ServiceCancellation;
-use Livewire\Attributes\Locked;
 use Livewire\Attributes\Validate;
 
 class Cancel extends Component
@@ -18,7 +16,6 @@ class Cancel extends Component
 
     #[Validate('required')]
     public $reason = '';
-
 
     public function cancelService()
     {

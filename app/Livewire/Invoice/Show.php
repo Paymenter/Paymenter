@@ -83,7 +83,7 @@ class Show extends Component
     public function render()
     {
         return view('invoices.show')->layoutData([
-            'title' =>  __('invoices.invoice', ['id' => $this->invoice->id]),
+            'title' => __('invoices.invoice', ['id' => $this->invoice->id]),
         ]);
     }
 }

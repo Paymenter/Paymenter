@@ -9,7 +9,6 @@ use App\Helpers\ExtensionHelper;
 use App\Models\Coupon;
 use App\Models\Gateway;
 use App\Models\Invoice;
-use App\Models\InvoiceItem;
 use App\Models\Service;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;

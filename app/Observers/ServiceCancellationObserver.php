@@ -2,8 +2,8 @@
 
 namespace App\Observers;
 
-use App\Models\ServiceCancellation;
 use App\Events\ServiceCancellation as ServiceCancellationEvent;
+use App\Models\ServiceCancellation;
 
 class ServiceCancellationObserver
 {
