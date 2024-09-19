@@ -5,9 +5,9 @@
     <div id="payment-element">
 
     </div>
-    <x-button.primary id="submit" class="mt-4">
+    <button id="submit" class="mt-4 bg-secondary-500 text-white hover:bg-secondary py-2 px-4 rounded-md w-full bg-gradient-to-tr from-secondary via-50% via-20% via-secondary to-[#5573FD80] duration-300">
         Pay
-    </x-button.primary>
+    </button>
 </form>
 @script
     <script>

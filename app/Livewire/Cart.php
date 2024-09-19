@@ -9,6 +9,8 @@ use App\Helpers\ExtensionHelper;
 use App\Models\Coupon;
 use App\Models\Gateway;
 use App\Models\Invoice;
+use App\Models\InvoiceItem;
+use App\Models\Service;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -49,7 +51,7 @@ class Cart extends Component
         }
         $this->total = new Price(['price' => $this->items->sum(fn ($item) => $item->price->price * $item->quantity), 'currency' => $this->items->first()->price->currency]);
         $this->gateways = ExtensionHelper::getCheckoutGateways($this->items, 'cart');
-        if (!array_search($this->gateway, array_column($this->gateways, 'id')) !== false) {
+        if (count($this->gateways) > 0 && !array_search($this->gateway, array_column($this->gateways, 'id')) !== false) {
             $this->gateway = $this->gateways[0]->id;
         }
     }
@@ -223,7 +225,8 @@ class Cart extends Component
                 // Create the invoice items
                 if ($item->price->price > 0) {
                     $invoice->items()->create([
-                        'service_id' => $service->id,
+                        'reference_id' => $service->id,
+                        'reference_type' => Service::class,
                         'price' => $item->price->price,
                         'quantity' => $item->quantity,
                         'description' => $service->description,

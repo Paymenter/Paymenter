@@ -11,13 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('invoice_items', function (Blueprint $table) {
+        Schema::create('service_cancellations', function (Blueprint $table) {
             $table->id();
-            $table->foreignIdFor(\App\Models\Invoice::class)->constrained()->cascadeOnDelete();
-            $table->decimal('price', 17, 2);
-            $table->integer('quantity')->default(1);
-            $table->string('description')->nullable();
-            $table->nullableMorphs('reference');
+            $table->foreignIdFor(\App\Models\Service::class)->constrained()->cascadeOnDelete();
+            $table->string('reason')->nullable();
+            $table->enum('type', ['immediate', 'end_of_period'])->default('immediate');
             $table->timestamps();
         });
     }
@@ -27,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('invoice_items');
+        Schema::dropIfExists('service_cancellations');
     }
 };

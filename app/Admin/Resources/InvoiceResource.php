@@ -6,6 +6,7 @@ use App\Admin\Resources\InvoiceResource\Pages;
 use App\Admin\Resources\InvoiceResource\RelationManagers;
 use App\Models\Currency;
 use App\Models\Invoice;
+use App\Models\Service;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Forms\Get;
@@ -95,11 +96,25 @@ class InvoiceResource extends Resource
                             ->required()
                             ->hintAction(
                                 Forms\Components\Actions\Action::make('View Service')
-                                    ->url(fn (Get $get): string => ServiceResource::getUrl('edit', ['record' => $get('service_id')]))
-                                    ->hidden(fn (Get $get): bool => !$get('service_id'))
+                                    ->url(function (Get $get) {
+                                        if($get('service_type') === Service::class) {
+                                            return ServiceResource::getUrl('edit', ['record' => $get('reference_id')]);
+                                        } else {
+                                            return null;
+                                        }
+                                    })
+                                    ->label(function (Get $get) {
+                                        if($get('service_type') === Service::class) {
+                                            return 'View Service';
+                                        } else {
+                                            return null;
+                                        }
+                                    })
+                                    ->hidden(fn (Get $get): bool => !$get('reference_id'))
                             )
                             ->placeholder('Enter the description of the product'),
-                        Forms\Components\Hidden::make('service_id'),
+                        Forms\Components\Hidden::make('reference_type'),
+                        Forms\Components\Hidden::make('reference_id'),
                     ]),
 
             ]);

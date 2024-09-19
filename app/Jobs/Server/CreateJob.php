@@ -26,11 +26,13 @@ class CreateJob implements ShouldQueue
     public function handle(): void
     {
         // $data is the data that will be used to send the email, data is coming from the extension itself
-        $data = ExtensionHelper::createServer($this->service);
-
-        // Update service
-        $this->service->status = 'active';
-        $this->service->save();
+        try {
+            $data = ExtensionHelper::createServer($this->service);
+        } catch (\Exception $e) {
+            if ($e->getMessage() == 'No server assigned to this product') {
+                return;
+            }
+        }
 
         // Send the email (TO BE MADE)
         if ($this->sendNotiication) {

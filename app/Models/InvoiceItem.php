@@ -18,6 +18,8 @@ class InvoiceItem extends Model
         'price',
         'description',
         'gateway_id',
+        'reference_id',
+        'reference_type',
     ];
 
     public function invoice()
@@ -25,9 +27,9 @@ class InvoiceItem extends Model
         return $this->belongsTo(Invoice::class);
     }
 
-    public function service()
+    public function reference()
     {
-        return $this->belongsTo(Service::class);
+        return $this->morphTo();
     }
 
     public function gateway()

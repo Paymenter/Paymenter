@@ -6,6 +6,7 @@ use App\Helpers\NotificationHelper;
 use App\Jobs\Server\SuspendJob;
 use App\Jobs\Server\TerminateJob;
 use App\Models\EmailLog;
+use App\Models\InvoiceItem;
 use App\Models\Service;
 use App\Models\Ticket;
 use Illuminate\Console\Command;
@@ -50,7 +51,8 @@ class CronJob extends Command
 
             // Create invoice items
             $invoice->items()->create([
-                'service_id' => $service->id,
+                'reference_id' => $service->id,
+                'reference_type' => InvoiceItem::class,
                 'price' => $service->price,
                 'quantity' => $service->quantity,
                 'description' => $service->description,

@@ -15,7 +15,9 @@ class OauthClientResource extends Resource
 {
     protected static ?string $model = OauthClient::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'ri-lock-line';
+
+    protected static ?string $navigationGroup = 'Other';
 
     public static function form(Form $form): Form
     {

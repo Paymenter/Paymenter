@@ -15,15 +15,19 @@ class InvoicePaidListener
     {
         // Update services if invoice is paid (suspended -> active etc.)
         $event->invoice->items->each(function ($item) {
-            $service = $item->service;
-            if (!$service || $service->status == 'active' || !$service->product->server) {
+            if ($item->reference_type !== 'App\Models\Service') {
                 return;
             }
-            if ($service->status == 'suspended') {
-                UnsuspendJob::dispatch($service);
-            } elseif ($service->status == 'pending') {
-                CreateJob::dispatch($service);
-                $service->status = 'pending-setup';
+            $service = $item->reference;
+            if (!$service || $service->status == 'active') {
+                return;
+            }
+            if ($service->product->server) {
+                if ($service->status == 'suspended') {
+                    UnsuspendJob::dispatch($service);
+                } elseif ($service->status == 'pending') {
+                    CreateJob::dispatch($service);
+                }
             }
             $service->status = 'active';
             $service->expires_at = $service->calculateNextDueDate();

@@ -34,7 +34,7 @@ class Show extends Component
 
         if ($this->invoice->status === 'pending') {
             $this->gateways = ExtensionHelper::getCheckoutGateways($this->invoice->products);
-            if (!array_search($this->gateway, array_column($this->gateways, 'id')) !== false) {
+            if (count($this->gateways) > 0 && !array_search($this->gateway, array_column($this->gateways, 'id')) !== false) {
                 $this->gateway = $this->gateways[0]->id;
             }
             if ($sessionGateway && Request::has('pay')) {
@@ -54,6 +54,9 @@ class Show extends Component
         if ($this->checkPayment) {
             $this->checkPayment = false;
         }
+        $this->validate([
+            'gateway' => 'required',
+        ]);
         $this->pay = ExtensionHelper::pay(Gateway::where('id', $this->gateway)->first(), $this->invoice);
 
         if (is_string($this->pay)) {
@@ -79,6 +82,8 @@ class Show extends Component
 
     public function render()
     {
-        return view('invoice.show');
+        return view('invoices.show')->layoutData([
+            'title' =>  __('invoices.invoice', ['id' => $this->invoice->id]),
+        ]);
     }
 }

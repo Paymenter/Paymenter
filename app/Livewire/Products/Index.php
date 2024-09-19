@@ -18,6 +18,6 @@ class Index extends Component
 
     public function render()
     {
-        return view('product.index');
+        return view('products.index');
     }
 }

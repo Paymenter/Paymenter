@@ -145,7 +145,7 @@
         @if ($invoice->transactions->isNotEmpty())
             <div class="mt-12">
                 <h2 class="text-2xl font-bold">Transactions</h2>
-                <div class="mt-4">
+                <div class="mt-4 overflow-x-auto">
                     <table class="w-full text-white">
                         <thead class="bg-primary-900 rounded-lg">
                             <tr>

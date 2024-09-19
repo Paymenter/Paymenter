@@ -34,6 +34,7 @@ Route::group(['middleware' => ['web', 'auth']], function () {
     Route::get('account', Clients\Account::class)->name('account');
     Route::get('account/security', Clients\Security::class)->name('account.security');
 
+    Route::get('invoices', Invoice\Index::class)->name('invoices');
     Route::get('invoices/{invoice}', Invoice\Show::class)->name('invoices.show');
 
     Route::get('tickets', Tickets\Index::class)->name('tickets');

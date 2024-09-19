@@ -169,6 +169,6 @@ class Checkout extends Component
 
     public function render()
     {
-        return view('product.checkout');
+        return view('products.checkout');
     }
 }

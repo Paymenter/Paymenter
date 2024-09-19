@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('services', function (Blueprint $table) {
             $table->id();
             $table->string('status')->default('pending');
-            $table->foreignIdFor(\App\Models\Order::class)->constrained()->cascadeOnDelete();
+            $table->foreignIdFor(\App\Models\Order::class)->nullable()->constrained()->cascadeOnDelete();
             $table->foreignIdFor(\App\Models\Product::class)->nullable()->constrained()->nullOnDelete();
             $table->integer('quantity')->default(1);
             $table->decimal('price', 17, 2);

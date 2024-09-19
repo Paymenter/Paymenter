@@ -21,6 +21,6 @@ class Show extends Component
 
     public function render()
     {
-        return view('product.show');
+        return view('products.show');
     }
 }

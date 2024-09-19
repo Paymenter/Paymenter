@@ -127,4 +127,11 @@ class Service extends Model
     {
         return $this->hasManyThrough(Invoice::class, InvoiceItem::class, 'service_id', 'id', 'id', 'invoice_id');
     }
+
+    public function cancellable(): Attribute 
+    {
+        return Attribute::make(
+            get: fn () => $this->status == 'active' && $this->plan->type != 'free' && $this->plan->type != 'onetime' && $this->expires_at > now()
+        );
+    }
 }

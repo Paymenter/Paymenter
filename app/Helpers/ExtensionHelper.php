@@ -273,12 +273,28 @@ class ExtensionHelper
         return $properties;
     }
 
+    protected static function checkServer(Service $service, $action)
+    {
+        $server = $service->product->server;
+
+        if (!$server) {
+            throw new Exception('No server assigned to this product');
+        }
+
+        // Does server support this action?
+        if (!self::hasFunction($server, $action)) {
+            throw new Exception('Server does not support the action: ' . $action);
+        }
+
+        return $server;
+    }
+
     /**
      * Create server
      */
     public static function createServer(Service $service)
     {
-        $server = $service->product->server;
+        $server = self::checkServer($service, 'createServer');
 
         return self::getExtension('server', $server->extension, $server->settings)->createServer($service, self::settingsToArray($service->product->settings), self::getServiceProperties($service));
     }
@@ -288,7 +304,7 @@ class ExtensionHelper
      */
     public static function suspendServer(Service $service)
     {
-        $server = $service->product->server;
+        $server = self::checkServer($service, 'suspendServer');
 
         return self::getExtension('server', $server->extension, $server->settings)->suspendServer($service, self::settingsToArray($service->product->settings), self::getServiceProperties($service));
     }
@@ -298,7 +314,7 @@ class ExtensionHelper
      */
     public static function unsuspendServer(Service $service)
     {
-        $server = $service->product->server;
+        $server = self::checkServer($service, 'unsuspendServer');
 
         return self::getExtension('server', $server->extension, $server->settings)->unsuspendServer($service, self::settingsToArray($service->product->settings), self::getServiceProperties($service));
     }
@@ -308,8 +324,28 @@ class ExtensionHelper
      */
     public static function terminateServer(Service $service)
     {
-        $server = $service->product->server;
+        $server = self::checkServer($service, 'terminateServer');
 
         return self::getExtension('server', $server->extension, $server->settings)->terminateServer($service, self::settingsToArray($service->product->settings), self::getServiceProperties($service));
+    }
+
+    /**
+     * Get actions for service
+     */
+    public static function getActions(Service $service)
+    {
+        $server = self::checkServer($service, 'getActions');
+
+        return self::getExtension('server', $server->extension, $server->settings)->getActions($service, self::settingsToArray($service->product->settings), self::getServiceProperties($service));
+    }
+
+    /**
+     * Get actions for service
+     */
+    public static function getView(Service $service, $view)
+    {
+        $server = self::checkServer($service, 'getView');
+
+        return self::getExtension('server', $server->extension, $server->settings)->getView($service, self::settingsToArray($service->product->settings), self::getServiceProperties($service), $view);
     }
 }
