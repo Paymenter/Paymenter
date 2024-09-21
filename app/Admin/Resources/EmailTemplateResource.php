@@ -37,11 +37,12 @@ class EmailTemplateResource extends Resource
                     ->required()
                     ->columnSpanFull(),
                 Forms\Components\TagsInput::make('cc')
+                    ->placeholder('example@mail.com')
                     ->nestedRecursiveRules(['required', 'email'])
                     ->columnSpanFull(),
                 Forms\Components\TagsInput::make('bcc')
                     ->nestedRecursiveRules(['required', 'email'])
-
+                    ->placeholder('example@mail.com')
                     ->columnSpanFull(),
             ]);
     }

@@ -20,6 +20,7 @@ class Pterodactyl extends Server
                 'name' => 'host',
                 'label' => 'Pterodactyl URL',
                 'type' => 'text',
+                'default' => 'https://example.com/',
                 'description' => 'Pterodactyl URL',
                 'required' => true,
                 'validation' => 'url',
@@ -28,12 +29,13 @@ class Pterodactyl extends Server
                 'name' => 'api_key',
                 'label' => 'Pterodactyl API Key',
                 'type' => 'text',
+                'default' => 'ptla_abcdefgh12345678',
                 'description' => 'Pterodactyl API Key',
                 'required' => true,
             ],
         ];
     }
-
+    
     public function testConfig(): bool|string
     {
         try {

@@ -4,7 +4,10 @@ namespace App\Admin\Resources\TicketResource\Pages;
 
 use App\Admin\Resources\TicketResource;
 use Filament\Actions;
+use Filament\Resources\Components\Tab;
 use Filament\Resources\Pages\ListRecords;
+use Illuminate\Database\Eloquent\Builder;
+use App\Admin\Resources\TicketResource\Widgets\TicketsOverView;
 
 class ListTickets extends ListRecords
 {
@@ -15,5 +18,34 @@ class ListTickets extends ListRecords
         return [
             Actions\CreateAction::make(),
         ];
+    }
+
+    protected function getHeaderWidgets(): array
+    {
+        return [
+            TicketsOverView::class,
+        ];
+    }
+
+    public function getTabs(): array
+    {
+        return [
+            'all' => Tab::make('All Tickets')
+            ->icon('heroicon-m-user-group'),
+            'open' => Tab::make('Open Tickets')
+                ->icon('heroicon-o-lock-open')
+                ->modifyQueryUsing(fn (Builder $query) => $query->where('status', 'open')),
+            'replied' => Tab::make('Replied Tickets')
+                ->icon('heroicon-o-chat-bubble-left-right')
+                ->modifyQueryUsing(fn (Builder $query) => $query->where('status', 'replied')),
+            'closed' => Tab::make('Closed Tickets')
+                ->icon('heroicon-o-lock-closed')
+                ->modifyQueryUsing(fn (Builder $query) => $query->where('status', 'closed')),
+        ];
+    }
+
+    public function getDefaultActiveTab(): string|int|null
+    {
+        return 'open';
     }
 }
