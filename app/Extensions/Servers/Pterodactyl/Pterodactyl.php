@@ -35,7 +35,7 @@ class Pterodactyl extends Server
             ],
         ];
     }
-    
+
     public function testConfig(): bool|string
     {
         try {
