@@ -5,7 +5,6 @@ namespace App\Extensions\Servers\Pterodactyl;
 use App\Classes\Extension\Server;
 use App\Models\Service;
 use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\View;
 use Illuminate\Support\HtmlString;
 use Illuminate\Support\Str;
 
@@ -494,7 +493,9 @@ class Pterodactyl extends Server
                 return false;
             }
         }
-        if ($raw) return $response;
+        if ($raw) {
+            return $response;
+        }
 
         return $response['attributes']['id'] ?? false;
     }
