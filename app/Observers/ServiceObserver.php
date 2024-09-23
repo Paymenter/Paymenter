@@ -12,7 +12,7 @@ class ServiceObserver
      */
     public function created(Service $service): void
     {
-        //
+        event(new ServiceEvent\Created($service));
     }
 
     /**
@@ -28,7 +28,7 @@ class ServiceObserver
      */
     public function deleted(Service $service): void
     {
-        //
+        event(new ServiceEvent\Deleted($service));
     }
 
     /**

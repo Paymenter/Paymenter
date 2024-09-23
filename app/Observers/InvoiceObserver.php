@@ -12,7 +12,7 @@ class InvoiceObserver
      */
     public function created(Invoice $invoice): void
     {
-        //
+        event(new InvoiceEvent\Created($invoice));
     }
 
     /**
@@ -23,6 +23,7 @@ class InvoiceObserver
         if ($invoice->isDirty('status') && $invoice->status == 'paid') {
             event(new InvoiceEvent\Paid($invoice));
         }
+        event(new InvoiceEvent\Updated($invoice));
     }
 
     /**
@@ -30,7 +31,7 @@ class InvoiceObserver
      */
     public function deleted(Invoice $invoice): void
     {
-        //
+        event(new InvoiceEvent\Deleted($invoice));
     }
 
     /**

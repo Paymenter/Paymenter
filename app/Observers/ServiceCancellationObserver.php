@@ -20,7 +20,7 @@ class ServiceCancellationObserver
      */
     public function updated(ServiceCancellation $serviceCancellation): void
     {
-        //
+        event(new ServiceCancellationEvent\Updated($serviceCancellation));
     }
 
     /**
@@ -28,7 +28,7 @@ class ServiceCancellationObserver
      */
     public function deleted(ServiceCancellation $serviceCancellation): void
     {
-        //
+        event(new ServiceCancellationEvent\Deleted($serviceCancellation));
     }
 
     /**
