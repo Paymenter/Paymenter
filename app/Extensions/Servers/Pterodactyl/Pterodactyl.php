@@ -5,6 +5,7 @@ namespace App\Extensions\Servers\Pterodactyl;
 use App\Classes\Extension\Server;
 use App\Models\Service;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\View;
 use Illuminate\Support\HtmlString;
 use Illuminate\Support\Str;
 
@@ -482,7 +483,7 @@ class Pterodactyl extends Server
         ];
     }
 
-    private function getServer($id, $failIfNotFound = true)
+    private function getServer($id, $failIfNotFound = true, $raw = false)
     {
         try {
             $response = $this->request('/api/application/servers/external/' . $id);
@@ -493,6 +494,7 @@ class Pterodactyl extends Server
                 return false;
             }
         }
+        if ($raw) return $response;
 
         return $response['attributes']['id'] ?? false;
     }
@@ -522,5 +524,18 @@ class Pterodactyl extends Server
         $this->request('/api/application/servers/' . $server, 'delete');
 
         return true;
+    }
+
+    public function getActions(Service $service)
+    {
+        $server = $this->getServer($service->id, raw: true);
+
+        return [
+            [
+                'type' => 'button',
+                'label' => 'Go to server',
+                'url' => $this->config('host') . '/server/' . $server['attributes']['identifier'],
+            ],
+        ];
     }
 }
