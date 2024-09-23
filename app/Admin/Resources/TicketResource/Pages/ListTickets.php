@@ -5,7 +5,7 @@ namespace App\Admin\Resources\TicketResource\Pages;
 use App\Admin\Resources\TicketResource;
 use App\Admin\Resources\TicketResource\Widgets\TicketsOverView;
 use Filament\Actions;
-use Filament\Resources\Components\Tab;
+use Filament\Forms\Components\Tabs\Tab;
 use Filament\Resources\Pages\ListRecords;
 use Illuminate\Database\Eloquent\Builder;
 
@@ -31,7 +31,7 @@ class ListTickets extends ListRecords
     {
         return [
             'all' => Tab::make('All Tickets')
-                ->icon('heroicon-m-user-group'),
+            ->icon('heroicon-m-user-group'),
             'open' => Tab::make('Open Tickets')
                 ->icon('heroicon-o-lock-open')
                 ->modifyQueryUsing(fn (Builder $query) => $query->where('status', 'open')),

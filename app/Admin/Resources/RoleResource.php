@@ -4,7 +4,7 @@ namespace App\Admin\Resources;
 
 use App\Admin\Resources\RoleResource\Pages;
 use App\Models\Role;
-use Filament\Forms\Components\CheckboxList;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -26,7 +26,7 @@ class RoleResource extends Resource
         return $form
             ->schema([
                 TextInput::make('name'),
-                CheckboxList::make('permissions')->options(Arr::dot(config('permissions')))->columns(4)->bulkToggleable()->searchable()->noSearchResultsMessage('Permission could not be found'),
+                Select::make('permissions')->multiple()->options(Arr::dot(config('permissions'))),
             ])->columns(1);
     }
 
@@ -34,8 +34,8 @@ class RoleResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('name')->sortable(),
-                TextColumn::make('permissions')->formatStateUsing(fn (Role $record): string => in_array('*', $record->permissions) ? 'All' : count($record->permissions))->sortable(),
+                TextColumn::make('name'),
+                TextColumn::make('permissions')->formatStateUsing(fn (Role $record): string => in_array('*', $record->permissions) ? 'All' : count($record->permissions)),
             ])
             ->filters([
                 //

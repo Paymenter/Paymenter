@@ -3,7 +3,6 @@
 namespace App\Admin\Resources;
 
 use App\Admin\Resources\TicketResource\Pages;
-use App\Admin\Resources\TicketResource\Widgets\TicketsOverView;
 use App\Models\Ticket;
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -155,10 +154,10 @@ class TicketResource extends Resource
             ]);
     }
 
-    public static function getWidgets(): array
+    public static function getRelations(): array
     {
         return [
-            TicketsOverView::class,
+            //
         ];
     }
 
