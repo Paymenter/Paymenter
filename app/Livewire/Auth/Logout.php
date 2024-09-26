@@ -3,12 +3,13 @@
 namespace App\Livewire\Auth;
 
 use App\Livewire\Component;
+use Illuminate\Support\Facades\Auth;
 
 class Logout extends Component
 {
     public function logout()
     {
-        auth()->logout();
+        Auth::logout();
 
         return redirect('/');
     }

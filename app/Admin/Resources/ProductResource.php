@@ -54,7 +54,7 @@ class ProductResource extends Resource
 
                                         $set('slug', Str::slug($state));
                                     }),
-                                Forms\Components\TextInput::make('slug')->required()->unique(),
+                                Forms\Components\TextInput::make('slug')->required()->unique(ignoreRecord: true),
                                 Forms\Components\TextInput::make('stock')->integer()->nullable(),
                                 Forms\Components\TextInput::make('per_user_limit')->integer()->nullable(),
                                 Forms\Components\Select::make('allow_quantity')->options([

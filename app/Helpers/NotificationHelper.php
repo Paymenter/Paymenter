@@ -7,6 +7,7 @@ use App\Models\EmailLog;
 use App\Models\EmailTemplate;
 use App\Models\Invoice;
 use App\Models\Service;
+use App\Models\TicketMessage;
 use App\Models\User;
 use Illuminate\Support\Facades\Mail as FacadesMail;
 
@@ -74,5 +75,11 @@ class NotificationHelper
     {
         $data['service'] = $service;
         self::sendEmailNotification('server_terminated', $data, $user);
+    }
+
+    public static function newTicketMessageNotification(User $user, TicketMessage $ticketMessage, array $data = []): void
+    {
+        $data['ticketMessage'] = $ticketMessage;
+        self::sendEmailNotification('new_ticket_message', $data, $user);
     }
 }

@@ -132,7 +132,7 @@ class ServiceResource extends Resource
                     ->sortable(),
                 Tables\Columns\TextColumn::make('expires_at')
                     ->label('Expires At')
-                    ->dateTime()
+                    ->date()
                     ->searchable()
                     ->sortable(),
             ])

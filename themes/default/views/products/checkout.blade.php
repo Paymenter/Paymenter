@@ -5,9 +5,11 @@
             @if ($product->image)
                 <img src="{{ Storage::url($product->image) }}" alt="{{ $product->name }}" class="max-w-40 h-fit">
             @endif
-            <article class="prose prose-invert prose-sm">
-                {!! $product->description !!}
-            </article>
+            <div class="max-h-28 overflow-y-auto w-full">
+                <article class="prose prose-invert prose-sm">
+                    {!! $product->description !!}
+                </article>
+            </div>
         </div>
         @if ($product->availablePlans()->count() > 1)
             <x-form.select wire:model.live="plan_id" class="text-white bg-primary-800 px-2.5 py-2.5 rounded-md w-full"

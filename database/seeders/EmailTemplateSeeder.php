@@ -64,6 +64,25 @@ class EmailTemplateSeeder extends Seeder
                 HTML,
             ],
             [
+                'key' => 'new_order_created',
+                'subject' => 'New order created',
+                'body' => <<<'HTML'
+                # New order created
+
+                A new order was created on your account.
+
+                **Order details**
+                <div class="table">  
+                            
+                |   Item   | Quantity |  Price   |  
+                | :------: | :------: | :------: |
+                @foreach ($items as $item)
+                | {{ $item->product->name }} | {{ $item->quantity }} | {{ $item->formattedPrice }} |
+                @endforeach
+                </div>
+                HTML,
+            ],
+            [
                 'key' => 'new_server_created',
                 'subject' => 'Server activated',
                 'body' => <<<'HTML'
@@ -113,6 +132,21 @@ class EmailTemplateSeeder extends Seeder
                 </div>
                 HTML,
             ],
+            [
+                'key' => 'new_ticket_message',
+                'subject' => 'New ticket reply',
+                'body' => <<<'HTML'
+                # New ticket reply
+
+                {{ $ticketMessage->user->name }} replied to your ticket.
+
+                **Message**
+                {!! Str::markdown($ticketMessage->message, [
+                    'html_input' => 'strip',
+                    'allow_unsafe_links' => false,
+                ]) !!}
+                HTML,
+            ],  
         ]);
     }
 }

@@ -22,6 +22,10 @@ class DatabaseSeeder extends Seeder
                 if (!isset($setting['default'])) {
                     continue;
                 }
+                if (in_array($setting['name'], ['mail_header', 'mail_footer', 'mail_css'])) {
+                    // Read from file in ./data/<name>
+                    $setting['default'] = file_get_contents(__DIR__ . '/data/' . $setting['name']);
+                }
                 Setting::firstOrCreate([
                     'key' => $setting['name'],
                 ], [

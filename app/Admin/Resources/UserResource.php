@@ -48,8 +48,8 @@ class UserResource extends Resource
                     ->dehydrated(fn (?string $state): bool => filled($state))
                     ->required(fn (string $operation): bool => $operation === 'create'),
                 Select::make('role_id')->translateLabel()->relationship('role', 'name')->searchable()->preload(),
-                Toggle::make('tfa_secret')->label('Two Factor Authentication')->disabled(),
-                TextInput::make('credits')->translateLabel()->numeric(),
+                Toggle::make('tfa_secret')->label('Two Factor Authentication')->disabled()->hiddenOn(['create']),
+                TextInput::make('credits')->translateLabel()->numeric()->default(0),
             ]);
     }
 

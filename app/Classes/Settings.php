@@ -318,6 +318,14 @@ class Settings
                     'default' => '',
                     'disable_toolbar' => true,
                 ],
+                [
+                    'name' => 'mail_css',
+                    'label' => 'Mail CSS',
+                    'type' => 'markdown',
+                    'required' => false,
+                    'default' => '',
+                    'disable_toolbar' => true,
+                ],
             ],
             'cronjob' => [
                 [
