@@ -6,8 +6,9 @@ use App\Models\Role;
 use App\Models\User;
 use Illuminate\Console\Command;
 use Illuminate\Contracts\Console\PromptsForMissingInput;
-use function Laravel\Prompts\select;
+
 use function Laravel\Prompts\password;
+use function Laravel\Prompts\select;
 
 class Create extends Command implements PromptsForMissingInput
 {
@@ -45,8 +46,8 @@ class Create extends Command implements PromptsForMissingInput
             'first_name' => 'What is the user\'s first name?',
             'last_name' => 'What is the user\'s last name?',
             'email' => 'What is the user\'s email address?',
-            'password' => fn() => password('What is the user\'s password?'),
-            'role' => fn() => select(
+            'password' => fn () => password('What is the user\'s password?'),
+            'role' => fn () => select(
                 label: 'What is the user\'s role?',
                 options: Role::all()->pluck('name', 'id')->toArray(),
                 default: 1,
