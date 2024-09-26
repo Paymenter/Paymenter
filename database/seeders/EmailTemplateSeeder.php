@@ -146,7 +146,7 @@ class EmailTemplateSeeder extends Seeder
                     'allow_unsafe_links' => false,
                 ]) !!}
                 HTML,
-            ],  
+            ],
         ]);
     }
 }

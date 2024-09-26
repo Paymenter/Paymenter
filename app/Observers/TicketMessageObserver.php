@@ -2,8 +2,8 @@
 
 namespace App\Observers;
 
-use App\Models\TicketMessage;
 use App\Events\TicketMessage as TicketEvent;
+use App\Models\TicketMessage;
 
 class TicketMessageObserver
 {

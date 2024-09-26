@@ -4,8 +4,6 @@ namespace App\Listeners;
 
 use App\Events\TicketMessage\Created;
 use App\Helpers\NotificationHelper;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Queue\InteractsWithQueue;
 
 class TicketMessageCreatedListener
 {
