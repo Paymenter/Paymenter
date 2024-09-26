@@ -20,6 +20,7 @@ return new class extends Migration
             $table->unique(['key', 'model_id', 'model_type']);
             $table->text('value');
             $table->morphs('model');
+            $table->softDeletes();
             $table->timestamps();
         });
     }

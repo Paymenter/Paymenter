@@ -54,7 +54,7 @@ class NotificationHelper
             'invoice' => $invoice,
             'items' => $invoice->items,
             'total' => $invoice->formattedTotal,
-            'has_subscription' => $invoice->items->each(fn ($item) => $item->service->order->subscription)->isNotEmpty(),
+            'has_subscription' => $invoice->items->each(fn ($item) => $item->relation_type === Service::class && $item->relation->subscription_id)->isNotEmpty(),
         ];
         self::sendEmailNotification('new_invoice_created', $data, $user);
     }

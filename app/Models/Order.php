@@ -10,12 +10,11 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 #[ObservedBy([OrderObserver::class])]
-
 class Order extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['user_id', 'currency_code', 'coupon_id'];
+    protected $fillable = ['user_id', 'currency_code'];
 
     public function user()
     {

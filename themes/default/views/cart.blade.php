@@ -87,11 +87,13 @@
                 <h4>Total:</h4> {{ $total }}
             </div>
 
-            <x-form.select wire:model.live="gateway" name="gateway" label="Payment Gateway">
-                @foreach ($gateways as $gateway)
-                    <option value="{{ $gateway->id }}">{{ $gateway->name }}</option>
-                @endforeach
-            </x-form.select>
+            @if(count($gateways) > 1)
+                <x-form.select wire:model.live="gateway" name="gateway" label="Payment Gateway">
+                    @foreach ($gateways as $gateway)
+                        <option value="{{ $gateway->id }}">{{ $gateway->name }}</option>
+                    @endforeach
+                </x-form.select>
+            @endif
 
             <div class="flex flex-row justify-end gap-2">
                 <x-button.primary wire:click="checkout" class="h-fit">

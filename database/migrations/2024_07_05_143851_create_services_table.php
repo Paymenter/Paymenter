@@ -19,8 +19,10 @@ return new class extends Migration
             $table->integer('quantity')->default(1);
             $table->decimal('price', 17, 2);
             $table->foreignIdFor(\App\Models\Plan::class)->nullable()->constrained()->nullOnDelete();
+            $table->foreignIdFor(\App\Models\Coupon::class)->nullable()->constrained()->nullOnDelete();
             $table->dateTime('expires_at')->nullable();
             $table->string('subscription_id')->nullable();
+            $table->softDeletes();
             $table->timestamps();
         });
     }

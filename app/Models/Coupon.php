@@ -17,7 +17,7 @@ class Coupon extends Model
         'max_uses',
         'starts_at',
         'expires_at',
-
+        'recurring',
     ];
 
     /**
@@ -28,8 +28,8 @@ class Coupon extends Model
         return $this->belongsToMany(Product::class, 'coupon_products');
     }
 
-    public function orders()
+    public function services()
     {
-        return $this->hasMany(Order::class);
+        return $this->hasMany(Service::class);
     }
 }

@@ -68,6 +68,15 @@ class ServiceResource extends Resource
                     ->label('Quantity')
                     ->required()
                     ->placeholder('Enter the quantity'),
+                Forms\Components\DatePicker::make('expires_at')
+                    ->label('Expires At')
+                    ->required()
+                    ->placeholder('Select the expiration date'),
+                Forms\Components\Select::make('coupon_id')
+                    ->label('Coupon')
+                    ->relationship('coupon', 'code')
+                    ->searchable()
+                    ->placeholder('Select the coupon'),
                 Forms\Components\TextInput::make('price')
                     ->suffix(fn (Component $component) => $component->getRecord()?->currency->suffix)
                     ->prefix(fn (Component $component) => $component->getRecord()?->currency->prefix)

@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignIdFor(\App\Models\Product::class)->constrained()->onDelete('cascade');
             $table->foreignIdFor(\App\Models\Product::class, 'upgrade_id')->constrained('products')->onDelete('cascade');
+            $table->softDeletes();
             $table->timestamps();
         });
     }

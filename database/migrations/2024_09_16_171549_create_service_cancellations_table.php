@@ -16,6 +16,7 @@ return new class extends Migration
             $table->foreignIdFor(\App\Models\Service::class)->constrained()->cascadeOnDelete();
             $table->string('reason')->nullable();
             $table->enum('type', ['immediate', 'end_of_period'])->default('immediate');
+            $table->softDeletes();
             $table->timestamps();
         });
     }

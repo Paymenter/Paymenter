@@ -97,14 +97,14 @@ class InvoiceResource extends Resource
                             ->hintAction(
                                 Forms\Components\Actions\Action::make('View Service')
                                     ->url(function (Get $get) {
-                                        if ($get('service_type') === Service::class) {
+                                        if ($get('reference_type') === Service::class) {
                                             return ServiceResource::getUrl('edit', ['record' => $get('reference_id')]);
                                         } else {
                                             return null;
                                         }
                                     })
                                     ->label(function (Get $get) {
-                                        if ($get('service_type') === Service::class) {
+                                        if ($get('reference_type') === Service::class) {
                                             return 'View Service';
                                         } else {
                                             return null;

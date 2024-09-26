@@ -14,8 +14,8 @@ return new class extends Migration
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
             $table->foreignIdFor(\App\Models\User::class)->constrained()->cascadeOnDelete();
-            $table->foreignIdFor(\App\Models\Coupon::class)->nullable()->constrained()->cascadeOnDelete();
             $table->string('currency_code', 3);
+            $table->softDeletes();
             $table->timestamps();
         });
     }

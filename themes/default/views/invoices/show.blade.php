@@ -71,11 +71,13 @@
                             </div>
                         @endif
                     </div>
-                    <x-form.select wire:model.live="gateway" label="Payment Gateway" class="mt-4" name="gateway">
-                        @foreach ($gateways as $gateway)
-                            <option value="{{ $gateway->id }}">{{ $gateway->name }}</option>
-                        @endforeach
-                    </x-form.select>
+                    @if(count($gateways) > 1)
+                        <x-form.select wire:model.live="gateway" label="Payment Gateway" class="mt-4" name="gateway">
+                            @foreach ($gateways as $gateway)
+                                <option value="{{ $gateway->id }}">{{ $gateway->name }}</option>
+                            @endforeach
+                        </x-form.select>
+                    @endif
                     <x-button.primary wire:click="pay" class="mt-4" wire:loading.attr="disabled" wire:target="pay">
                         <span wire:loading wire:target="pay">Processing...</span>
                         <span wire:loading.remove wire:target="pay">Pay</span>

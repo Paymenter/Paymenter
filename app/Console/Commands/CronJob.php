@@ -40,6 +40,18 @@ class CronJob extends Command
                 return;
             }
 
+            // Calculate if we should edit the price because of the coupon
+            if ($service->coupon) {
+                // Calculate what iteration of the coupon we are in
+                $iteration = $service->invoices()->count() + 1;
+                if ($iteration == $service->coupon->recurring) {
+                    // Calculate the price
+                    $price = $service->plan->prices()->where('currency_code', $service->order->currency_code)->first()->price;
+                    $service->price = $price;
+                    $service->save();
+                }
+            }
+
             // Create invoice
             $invoice = $service->invoices()->create([
                 'user_id' => $service->order->user_id,

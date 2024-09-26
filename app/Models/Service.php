@@ -24,6 +24,7 @@ class Service extends Model
         'expires_at',
         'subscription_id',
         'status',
+        'coupon_id',
     ];
 
     protected $casts = [
@@ -38,10 +39,18 @@ class Service extends Model
         return $this->belongsTo(Order::class);
     }
 
+    /**
+     * Get the coupon that owns the service.
+     */
+    public function coupon()
+    {
+        return $this->belongsTo(Coupon::class);
+    }
+
     public function currency(): Attribute
     {
         return Attribute::make(
-            get: fn () => $this->order->currency
+            get: fn() => $this->order->currency
         );
     }
 
@@ -53,7 +62,7 @@ class Service extends Model
     public function formattedPrice(): Attribute
     {
         return Attribute::make(
-            get: fn () => new Price(['price' => $this->price * $this->quantity, 'currency' => $this->order->currency])
+            get: fn() => new Price(['price' => $this->price * $this->quantity, 'currency' => $this->order->currency])
         );
     }
 
@@ -64,14 +73,14 @@ class Service extends Model
     {
         if ($this->plan->type == 'free' || $this->plan->type == 'one-time') {
             return Attribute::make(
-                get: fn () => $this->product->name
+                get: fn() => $this->product->name
             );
         }
         $date = $this->expires_at ?? now();
         $endDate = $date->{'add' . ucfirst($this->plan->billing_unit) . 's'}($this->plan->billing_period);
 
         return Attribute::make(
-            get: fn () => $this->product->name . ' (' . $date->format('M d, Y') . ' - ' . $endDate->format('M d, Y') . ')'
+            get: fn() => $this->product->name . ' (' . $date->format('M d, Y') . ' - ' . $endDate->format('M d, Y') . ')'
         );
     }
 
@@ -117,7 +126,7 @@ class Service extends Model
      */
     public function invoiceItems()
     {
-        return $this->hasMany(InvoiceItem::class);
+        return $this->morphMany(InvoiceItem::class, 'reference');
     }
 
     /**
@@ -125,20 +134,33 @@ class Service extends Model
      */
     public function invoices()
     {
-        return $this->hasManyThrough(Invoice::class, InvoiceItem::class, 'service_id', 'id', 'id', 'invoice_id');
+        return $this->hasManyThrough(Invoice::class, InvoiceItem::class, 'reference_id', 'id', 'id', 'invoice_id')->where('reference_type', Service::class);
     }
 
     public function cancellable(): Attribute
     {
         return Attribute::make(
-            get: fn () => $this->status !== 'cancelled' && $this->plan->type != 'free' && $this->plan->type != 'onetime'
+            get: fn() => $this->status !== 'cancelled' && $this->plan->type != 'free' && $this->plan->type != 'onetime'
         );
     }
 
     public function upgradable(): Attribute
     {
         return Attribute::make(
-            get: fn () => $this->product->upgrades()->count() > 0 && $this->status == 'active'
+            get: fn() => $this->product->upgrades()->count() > 0 && $this->status == 'active'
         );
+    }
+
+    public function upgrades()
+    {
+        return $this->product->upgrades->filter(function ($product) {
+            $plan = $product->plans()->where('billing_unit', $this->plan->billing_unit)->where('billing_period', $this->plan->billing_period)->get();
+            // Only get the upgrades that have the exact same billing cycle as the service
+            if ($plan->count() > 0) {
+                $product->plan = $plan->first();
+                return $product;
+            }
+            return null;
+        });
     }
 }

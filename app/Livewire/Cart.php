@@ -66,11 +66,17 @@ class Cart extends Component
         if ($coupon->max_uses && $coupon->orders->count() >= $coupon->max_uses) {
             return $this->notify('Coupon code has reached its maximum uses', 'error');
         }
+        if ($coupon->expires_at && $coupon->expires_at->isPast()) {
+            return $this->notify('Coupon code has expired', 'error');
+        }
+        if ($coupon->starts_at && $coupon->starts_at->isFuture()) {
+            return $this->notify('Coupon code is not active yet', 'error');
+        }
         Session::put(['coupon' => $coupon]);
         $this->coupon = $coupon;
         $wasSuccessful = false;
         $this->items = ClassesCart::get()->map(function ($item) use ($coupon, &$wasSuccessful) {
-            if ($coupon->products->where('id', $item->product->id)->isEmpty()) {
+            if ($coupon->products->where('id', $item->product->id)->isEmpty() && $coupon->products->isNotEmpty()) {
                 return (object) $item;
             }
             $wasSuccessful = true;
@@ -142,8 +148,8 @@ class Cart extends Component
     // Checkout
     public function checkout()
     {
-        if ($this->items->isEmpty()) {
-            return;
+        if ($this->items->isEmpty() || Session::has('cart') === false) {
+            return $this->notify('Your cart is empty', 'error');
         }
         if (!Auth::check()) {
             return redirect()->route('login');
@@ -174,7 +180,6 @@ class Cart extends Component
             // Create the order
             $order = $user->orders()->create([
                 'currency_code' => $this->total->currency->code,
-                'coupon_id' => Session::has('coupon') ? Session::get('coupon')->id : null,
             ]);
 
             // Create the invoice
@@ -190,7 +195,7 @@ class Cart extends Component
             // Create the services
             foreach ($this->items as $item) {
                 // Is it a lifetime coupon, then we can adjust the price of the service
-                if ($this->coupon && $this->coupon->time === 'lifetime') {
+                if ($this->coupon && $this->coupon->recurring != 1) {
                     $price = $item->price->price - $item->price->setup_fee;
                 } else {
                     $price = $item->price->original_price - $item->price->original_setup_fee;
@@ -201,6 +206,7 @@ class Cart extends Component
                     'plan_id' => $item->plan->id,
                     'price' => $price,
                     'quantity' => $item->quantity,
+                    'coupon_id' => Session::has('coupon') ? Session::get('coupon')->id : null,
                 ]);
 
                 foreach ($item->configOptions as $configOption) {

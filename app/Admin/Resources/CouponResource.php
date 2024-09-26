@@ -59,16 +59,13 @@ class CouponResource extends Resource
                     ])
                     ->placeholder('Select the type of the coupon'),
 
-                Forms\Components\Select::make('time')
-                    ->label('Time')
-                    ->required()
-                    ->default('forever')
-                    ->live()
-                    ->options([
-                        'lifetime' => 'Lifetime',
-                        'one_time' => 'One time',
-                    ])
-                    ->placeholder('How many times can the coupon be used?'),
+                Forms\Components\TextInput::make('recurring')
+                    ->label('Recurring')
+                    ->numeric()
+                    ->minValue(0)
+                    ->hidden(fn (Get $get) => $get('type') === 'free_setup')
+                    ->placeholder('How many billing cycles the discount will be applied')
+                    ->helperText('Enter 0 to apply it to all billing cycles, 1 to apply it only to the first billing cycle, etc.'),
 
                 Forms\Components\TextInput::make('max_uses')
                     ->label('Max Uses')
@@ -87,7 +84,8 @@ class CouponResource extends Resource
                     ->relationship('products', 'name')
                     ->multiple()
                     ->preload()
-                    ->placeholder('Select the products that this coupon belongs to'),
+                    ->placeholder('Select the products that this coupon applies to')
+                    ->hint('Leave empty to apply the coupon to all products'),
             ]);
     }
 
@@ -114,7 +112,7 @@ class CouponResource extends Resource
     public static function getRelations(): array
     {
         return [
-            RelationManagers\OrdersRelationManager::class,
+            RelationManagers\ServicesRelationManager::class,
         ];
     }
 

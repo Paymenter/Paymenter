@@ -16,6 +16,7 @@ return new class extends Migration
             $table->foreignIdFor(\App\Models\Ticket::class)->constrained()->cascadeOnDelete();
             $table->foreignIdFor(\App\Models\User::class)->constrained()->cascadeOnDelete();
             $table->text('message');
+            $table->softDeletes();
             $table->timestamps();
         });
     }
