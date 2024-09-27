@@ -85,7 +85,7 @@ class EditTicket extends EditRecord
                     ->formatStateUsing(fn ($state) => ucfirst($state))
                     ->color(fn ($state) => match ($state) {
                         'low' => 'success',
-                        'normal' => 'gray',
+                        'medium' => 'gray',
                         'high' => 'danger',
                     })
                     ->label('Priority'),

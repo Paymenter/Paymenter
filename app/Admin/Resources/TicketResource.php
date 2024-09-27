@@ -76,6 +76,7 @@ class TicketResource extends Resource
                     ->relationship('user', 'id')
                     ->searchable()
                     ->preload()
+                    ->live()
                     ->getOptionLabelFromRecordUsing(fn ($record) => $record->name)
                     ->columnSpan(function ($record) {
                         return $record ? 2 : 1;
@@ -83,7 +84,7 @@ class TicketResource extends Resource
                     ->required(),
                 Forms\Components\Select::make('assigned_to')
                     ->label('Assigned To')
-                    ->relationship('user', 'id')
+                    ->relationship('user', 'id', fn (Builder $query) => $query->where('role_id', '!=', 1))
                     ->getOptionLabelFromRecordUsing(fn ($record) => $record->name)
                     ->columnSpan(function ($record) {
                         return $record ? 2 : 1;
@@ -95,7 +96,7 @@ class TicketResource extends Resource
                         $query->join('orders', 'orders.id', '=', 'services.order_id')
                             ->where('orders.user_id', $get('user_id'));
                     })
-                    ->getOptionLabelFromRecordUsing(fn ($record) => "{$record->product->name} - {ucfirst($record->status}")
+                    ->getOptionLabelFromRecordUsing(fn ($record) => "{$record->product->name} - " . ucfirst($record->status))
                     ->columnSpan(function ($record) {
                         return $record ? 2 : 1;
                     })
