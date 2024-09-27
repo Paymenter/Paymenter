@@ -7,10 +7,13 @@ use App\Admin\Resources\OrderResource\RelationManagers;
 use App\Helpers\ExtensionHelper;
 use App\Models\Order;
 use App\Models\Product;
+use App\Models\User;
 use Filament\Forms;
 use Filament\Forms\Components\Actions\Action;
 use Filament\Forms\Components\Component;
 use Filament\Forms\Form;
+use Filament\Forms\Get;
+use Filament\Forms\Set;
 use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
 use Filament\Support\RawJs;
@@ -34,7 +37,9 @@ class OrderResource extends Resource
                     ->label('User')
                     ->relationship('user', 'id')
                     ->searchable()
+                    ->preload()
                     ->getOptionLabelFromRecordUsing(fn ($record) => $record->name)
+                    ->getSearchResultsUsing(fn (string $search): array => User::where('first_name', 'like', "%$search%")->orWhere('last_name', 'like', "%$search%")->limit(50)->pluck('name', 'id')->toArray())
                     ->required(),
                 Forms\Components\Select::make('currency_code')
                     ->label('Currency')
@@ -53,20 +58,30 @@ class OrderResource extends Resource
                             ->required()
                             ->options(Product::all()->pluck('name', 'id')->toArray())
                             ->searchable()
+                            ->live()
+                            ->afterStateUpdated(fn (Set $set) => $set('plan_id', null))
                             ->placeholder('Select the product'),
                         Forms\Components\Select::make('plan_id')
                             ->label('Plan')
                             ->required()
-                            ->relationship('plan', 'name')
+                            ->relationship('plan', 'name', fn (Builder $query, Get $get) => $query->where('priceable_type', Product::class)->where('priceable_id', $get('product_id')))
                             ->searchable()
+                            ->preload()
+                            ->live()
+                            ->disabled(fn (Get $get) => !$get('product_id') || !$get('currency_code'))
+                            ->afterStateUpdated(function (Set $set, Get $get) {
+                                // Update the price when the plan changes
+                                $plan = Product::find($get('product_id'))->plans->find($get('plan_id'))->prices->where('currency_code', $get('../currency_code'))->first();
+                                $set('price', $plan->price);
+                            })
                             ->placeholder('Select the plan'),
                         Forms\Components\TextInput::make('quantity')
                             ->label('Quantity')
                             ->required()
                             ->placeholder('Enter the quantity'),
                         Forms\Components\TextInput::make('price')
-                            ->suffix(fn (Component $component) => $component->getRecord()->currency->suffix)
-                            ->prefix(fn (Component $component) => $component->getRecord()->currency->prefix)
+                            ->suffix(fn (Component $component) => $component->getRecord()?->currency->suffix)
+                            ->prefix(fn (Component $component) => $component->getRecord()?->currency->prefix)
                             ->label('Price')
                             ->required()
                             ->mask(RawJs::make(
@@ -98,7 +113,7 @@ class OrderResource extends Resource
                                     })
                                     ->requiresConfirmation()
                                     ->label('Cancel Subscription')
-                                    ->hidden(fn (Component $component) => !$component->getRecord()->subscription_id),
+                                    ->hidden(fn (Component $component) => !$component->getRecord()?->subscription_id),
                             ]),
                     ]),
             ]);

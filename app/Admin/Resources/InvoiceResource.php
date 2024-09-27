@@ -7,6 +7,7 @@ use App\Admin\Resources\InvoiceResource\RelationManagers;
 use App\Models\Currency;
 use App\Models\Invoice;
 use App\Models\Service;
+use App\Models\User;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Forms\Get;
@@ -43,7 +44,9 @@ class InvoiceResource extends Resource
                     ->label('User')
                     ->relationship('user', 'id')
                     ->searchable()
+                    ->preload()
                     ->getOptionLabelFromRecordUsing(fn ($record) => $record->name)
+                    ->getSearchResultsUsing(fn (string $search): array => User::where('first_name', 'like', "%$search%")->orWhere('last_name', 'like', "%$search%")->limit(50)->pluck('name', 'id')->toArray())
                     ->required(),
                 Forms\Components\Select::make('currency_code')
                     ->label('Currency')
@@ -53,10 +56,12 @@ class InvoiceResource extends Resource
                 Forms\Components\DatePicker::make('issued_at')
                     ->label('Issued At')
                     ->required()
+                    ->default(now())
                     ->placeholder('Select the date and time the invoice was issued'),
                 Forms\Components\DatePicker::make('due_at')
                     ->label('Due At')
                     ->required()
+                    ->default(now()->addDays(7))
                     ->placeholder('Select the date and time the invoice is due'),
                 Forms\Components\Select::make('status')
                     ->label('Status')
@@ -66,6 +71,7 @@ class InvoiceResource extends Resource
                         'pending' => 'Pending',
                         'failed' => 'Failed',
                     ])
+                    ->default('pending')
                     ->placeholder('Select the status of the invoice'),
                 Forms\Components\Repeater::make('items')
                     ->relationship('items')

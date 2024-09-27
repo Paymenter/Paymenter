@@ -2,7 +2,6 @@
 
 namespace App\Admin\Resources\ProductResource\Pages;
 
-use App\Admin\Actions\AuditAction;
 use App\Admin\Resources\ProductResource;
 use App\Helpers\ExtensionHelper;
 use App\Models\Product;
@@ -19,7 +18,6 @@ class EditProduct extends EditRecord
     protected function getHeaderActions(): array
     {
         return [
-            AuditAction::make()->auditChildren(['plans']),
             Actions\DeleteAction::make()->after(function (Product $record) {
                 $record->settings()->delete();
             }),

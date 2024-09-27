@@ -5,6 +5,7 @@ namespace App\Admin\Resources;
 use App\Admin\Resources\TicketResource\Pages;
 use App\Admin\Resources\TicketResource\Widgets\TicketsOverView;
 use App\Models\Ticket;
+use App\Models\User;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Forms\Get;
@@ -78,6 +79,7 @@ class TicketResource extends Resource
                     ->preload()
                     ->live()
                     ->getOptionLabelFromRecordUsing(fn ($record) => $record->name)
+                    ->getSearchResultsUsing(fn (string $search): array => User::where('first_name', 'like', "%$search%")->orWhere('last_name', 'like', "%$search%")->limit(50)->pluck('name', 'id')->toArray())
                     ->columnSpan(function ($record) {
                         return $record ? 2 : 1;
                     })
@@ -86,6 +88,7 @@ class TicketResource extends Resource
                     ->label('Assigned To')
                     ->relationship('user', 'id', fn (Builder $query) => $query->where('role_id', '!=', 1))
                     ->getOptionLabelFromRecordUsing(fn ($record) => $record->name)
+                    ->getSearchResultsUsing(fn (string $search): array => User::where('first_name', 'like', "%$search%")->orWhere('last_name', 'like', "%$search%")->limit(50)->pluck('name', 'id')->toArray())
                     ->columnSpan(function ($record) {
                         return $record ? 2 : 1;
                     }),

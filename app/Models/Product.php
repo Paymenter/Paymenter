@@ -8,11 +8,10 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
-use OwenIt\Auditing\Contracts\Auditable;
 
-class Product extends Model implements Auditable
+class Product extends Model
 {
-    use HasFactory, HasPlans, \OwenIt\Auditing\Auditable;
+    use HasFactory, HasPlans;
 
     protected $guarded = [];
 

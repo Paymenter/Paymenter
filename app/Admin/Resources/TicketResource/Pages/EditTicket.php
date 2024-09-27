@@ -7,6 +7,7 @@ use App\Admin\Resources\TicketResource;
 use App\Admin\Resources\UserResource;
 use App\Models\Ticket;
 use App\Models\TicketMessage;
+use App\Models\User;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Forms\Get;
@@ -126,10 +127,10 @@ class EditTicket extends EditRecord
                                         ->label('Priority')
                                         ->options([
                                             'low' => 'Low',
-                                            'normal' => 'Normal',
+                                            'medium' => 'Medium',
                                             'high' => 'High',
                                         ])
-                                        ->default('normal')
+                                        ->default('medium')
                                         ->required(),
                                     Forms\Components\Select::make('department')
                                         ->label('Department')
@@ -140,6 +141,7 @@ class EditTicket extends EditRecord
                                         ->searchable()
                                         ->preload()
                                         ->getOptionLabelFromRecordUsing(fn ($record) => $record->name)
+                                        ->getSearchResultsUsing(fn (string $search): array => User::where('first_name', 'like', "%$search%")->orWhere('last_name', 'like', "%$search%")->limit(50)->pluck('name', 'id')->toArray())
                                         ->required(),
                                     Forms\Components\Select::make('assigned_to')
                                         ->label('Assigned To')

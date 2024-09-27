@@ -6,11 +6,10 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
-use OwenIt\Auditing\Contracts\Auditable;
 
-class Price extends Model implements Auditable
+class Price extends Model
 {
-    use HasFactory, \OwenIt\Auditing\Auditable;
+    use HasFactory;
 
     public $timestamps = false;
 

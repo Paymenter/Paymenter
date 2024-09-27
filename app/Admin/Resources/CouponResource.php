@@ -37,7 +37,7 @@ class CouponResource extends Resource
                     ->required()
                     ->numeric()
                     ->minValue(0)
-                    ->maxValue(100)
+                    ->maxValue(fn (Get $get) => $get('type') === 'percentage' ? 100 : null)
                     ->mask(RawJs::make(
                         <<<'JS'
                             $money($input, '.', '', 2)
