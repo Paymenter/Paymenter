@@ -10,6 +10,7 @@ class EmailTemplate extends Model
     use HasFactory;
 
     protected $fillable = [
+        'key',
         'name',
         'subject',
         'body',
