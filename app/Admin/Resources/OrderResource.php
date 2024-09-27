@@ -5,6 +5,7 @@ namespace App\Admin\Resources;
 use App\Admin\Resources\OrderResource\Pages;
 use App\Admin\Resources\OrderResource\RelationManagers;
 use App\Helpers\ExtensionHelper;
+use App\Models\Currency;
 use App\Models\Order;
 use App\Models\Product;
 use App\Models\User;
@@ -44,6 +45,7 @@ class OrderResource extends Resource
                 Forms\Components\Select::make('currency_code')
                     ->label('Currency')
                     ->required()
+                    ->live()
                     ->relationship('currency', 'code')
                     ->helperText('Does not convert the price, only displays the currency symbol')
                     ->placeholder('Select the currency'),
@@ -68,10 +70,10 @@ class OrderResource extends Resource
                             ->searchable()
                             ->preload()
                             ->live()
-                            ->disabled(fn (Get $get) => !$get('product_id') || !$get('currency_code'))
+                            ->disabled(fn (Get $get) => (!$get('product_id') || !$get('../../currency_code')))
                             ->afterStateUpdated(function (Set $set, Get $get) {
                                 // Update the price when the plan changes
-                                $plan = Product::find($get('product_id'))->plans->find($get('plan_id'))->prices->where('currency_code', $get('../currency_code'))->first();
+                                $plan = Product::find($get('product_id'))->plans->find($get('plan_id'))->prices->where('currency_code', $get('../../currency_code'))->first();
                                 $set('price', $plan->price);
                             })
                             ->placeholder('Select the plan'),
@@ -80,8 +82,8 @@ class OrderResource extends Resource
                             ->required()
                             ->placeholder('Enter the quantity'),
                         Forms\Components\TextInput::make('price')
-                            ->suffix(fn (Component $component) => $component->getRecord()?->currency->suffix)
-                            ->prefix(fn (Component $component) => $component->getRecord()?->currency->prefix)
+                            ->suffix(fn (Component $component, Get $get) => $component->getRecord()?->currency->suffix ?? Currency::where('code', $get('../../currency_code'))->first()?->suffix)
+                            ->prefix(fn (Component $component, Get $get) => $component->getRecord()?->currency->prefix ?? Currency::where('code', $get('../../currency_code'))->first()?->prefix)
                             ->label('Price')
                             ->required()
                             ->mask(RawJs::make(
