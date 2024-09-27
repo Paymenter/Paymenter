@@ -20,7 +20,6 @@ return new class extends Migration
             $table->integer('max_uses')->nullable();
             $table->timestamp('starts_at')->nullable();
             $table->timestamp('expires_at')->nullable();
-            $table->softDeletes();
             $table->timestamps();
         });
     }

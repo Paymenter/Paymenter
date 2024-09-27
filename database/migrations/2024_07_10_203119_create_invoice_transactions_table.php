@@ -19,7 +19,6 @@ return new class extends Migration
             $table->decimal('amount', 17, 2);
             $table->decimal('fee', 17, 2)->nullable();
             $table->string('transaction_id')->nullable();
-            $table->softDeletes();
             $table->timestamps();
         });
     }

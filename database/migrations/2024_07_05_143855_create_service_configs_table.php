@@ -16,7 +16,6 @@ return new class extends Migration
             $table->foreignIdFor(\App\Models\Service::class)->constrained()->cascadeOnDelete();
             $table->foreignIdFor(\App\Models\ConfigOption::class)->constrained()->cascadeOnDelete();
             $table->foreignId('config_value_id')->constrained('config_options');
-            $table->softDeletes();
             $table->timestamps();
         });
     }

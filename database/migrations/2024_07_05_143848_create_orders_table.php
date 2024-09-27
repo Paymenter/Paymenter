@@ -15,7 +15,6 @@ return new class extends Migration
             $table->id();
             $table->foreignIdFor(\App\Models\User::class)->constrained()->cascadeOnDelete();
             $table->string('currency_code', 3);
-            $table->softDeletes();
             $table->timestamps();
         });
     }

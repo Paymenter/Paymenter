@@ -22,7 +22,6 @@ return new class extends Migration
             $table->text('tfa_secret')->nullable();
             $table->integer('credits')->default(0);
             $table->rememberToken();
-            $table->softDeletes();
             $table->timestamps();
         });
 

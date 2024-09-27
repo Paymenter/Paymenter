@@ -22,7 +22,6 @@ return new class extends Migration
             $table->foreignIdFor(\App\Models\Coupon::class)->nullable()->constrained()->nullOnDelete();
             $table->dateTime('expires_at')->nullable();
             $table->string('subscription_id')->nullable();
-            $table->softDeletes();
             $table->timestamps();
         });
     }

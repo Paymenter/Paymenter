@@ -18,7 +18,6 @@ return new class extends Migration
             $table->date('due_at')->nullable();
             $table->string('currency_code', 3);
             $table->foreignIdFor(\App\Models\User::class)->constrained()->cascadeOnDelete();
-            $table->softDeletes();
             $table->timestamps();
         });
     }

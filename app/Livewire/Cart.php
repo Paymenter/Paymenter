@@ -58,12 +58,13 @@ class Cart extends Component
     public function applyCoupon()
     {
         $coupon = Coupon::where('code', $this->coupon)->first();
+        $this->coupon = null;
         if (!$coupon) {
             $this->notify('Invalid coupon code', 'error');
 
             return;
         }
-        if ($coupon->max_uses && $coupon->orders->count() >= $coupon->max_uses) {
+        if ($coupon->max_uses && $coupon->services->count() >= $coupon->max_uses) {
             return $this->notify('Coupon code has reached its maximum uses', 'error');
         }
         if ($coupon->expires_at && $coupon->expires_at->isPast()) {
