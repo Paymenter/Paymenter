@@ -3,7 +3,6 @@
 namespace App\Admin\Resources\EmailLogResource\Pages;
 
 use App\Admin\Resources\EmailLogResource;
-use Filament\Actions;
 use Filament\Resources\Pages\ListRecords;
 
 class ListEmailLogs extends ListRecords
