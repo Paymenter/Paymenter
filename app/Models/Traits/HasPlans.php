@@ -37,7 +37,7 @@ trait HasPlans
     /**
      * Get first price of the plan.
      */
-    public function price($plan_id = null, $billing_period = null, $billing_unit = null)
+    public function price($plan_id = null, $billing_period = null, $billing_unit = null, $currency = null)
     {
         $priceAndCurrency = [
             'price' => null,
@@ -55,7 +55,7 @@ trait HasPlans
             $plan_id = $plan->id ?? null;
         }
 
-        $currency = session('currency', config('settings.default_currency'));
+        $currency = $currency ?? session('currency', config('settings.default_currency'));
 
         foreach ($this->availablePlans()->when($plan_id, function ($query) use ($plan_id) {
             return $query->where('id', $plan_id);
