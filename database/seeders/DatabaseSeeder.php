@@ -14,7 +14,6 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         // User::factory(10)->create();
-        Role::updateOrCreate(['name' => 'user'], ['permissions' => []]);
         Role::updateOrCreate(['name' => 'admin'], ['permissions' => ['*']]);
 
         foreach (\App\Classes\Settings::settings() as $settings) {
