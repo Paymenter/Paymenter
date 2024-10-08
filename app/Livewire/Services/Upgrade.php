@@ -2,11 +2,8 @@
 
 namespace App\Livewire\Services;
 
-use App\Classes\Price as ClassesPrice;
 use App\Livewire\Component;
 use App\Models\Invoice;
-use App\Models\Plan;
-use App\Models\Price;
 use App\Models\Product;
 use App\Models\Service;
 use App\Models\ServiceUpgrade;
@@ -24,6 +21,7 @@ class Upgrade extends Component
     {
         if (!$this->service->upgradable) {
             $this->notify('This service is not upgradable.', 'error');
+
             return $this->redirect(route('services.show', $this->service), true);
         }
         $upgrade = $this->service->upgrades()->first();
@@ -48,6 +46,7 @@ class Upgrade extends Component
         // Check if the upgrade is valid
         if (!$this->service->upgrades()->contains($upgrade)) {
             $this->notify('Invalid upgrade.', 'error');
+
             return;
         }
         $this->upgradeProduct = Product::findOrFail($upgrade);
@@ -57,6 +56,7 @@ class Upgrade extends Component
     {
         if (!$this->service->upgradable) {
             $this->notify('This service is not upgradable.', 'error');
+
             return $this->redirect(route('services.show', $this->service), true);
         }
 
@@ -64,6 +64,7 @@ class Upgrade extends Component
 
         if (!$upgradePlan) {
             $this->notify('Invalid upgrade.', 'error');
+
             return;
         }
 

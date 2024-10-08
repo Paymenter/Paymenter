@@ -2,8 +2,8 @@
 
 namespace App\Observers;
 
-use App\Models\ServiceUpgrade;
 use App\Events\ServiceUpgrade as ServiceUpgradeEvent;
+use App\Models\ServiceUpgrade;
 
 class ServiceUpgradeObserver
 {

@@ -15,6 +15,7 @@ class ServiceUpgrade extends Model
     use HasFactory;
 
     public const STATUS_PENDING = 'pending';
+
     public const STATUS_COMPLETED = 'completed';
 
     public $guarded = [];

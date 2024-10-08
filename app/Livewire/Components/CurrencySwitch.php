@@ -24,6 +24,7 @@ class CurrencySwitch extends Component
         if (Cart::get()->isNotEmpty()) {
             $this->notify('You cannot change the currency while there are items in the cart.', 'error');
             $this->currentCurrency = session('currency', config('settings.default_currency'));
+
             return;
         }
         session(['currency' => $currency]);

@@ -2,9 +2,8 @@
 
 namespace App\Admin\Resources;
 
-use App\Admin\Resources\ServiceCancellationResource\Pages;
-use App\Admin\Resources\ServiceCancellationResource\RelationManagers;
 use App\Admin\Clusters\Services;
+use App\Admin\Resources\ServiceCancellationResource\Pages;
 use App\Models\ServiceCancellation;
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -12,7 +11,6 @@ use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class ServiceCancellationResource extends Resource
 {

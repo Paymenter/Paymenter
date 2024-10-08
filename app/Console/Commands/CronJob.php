@@ -78,7 +78,6 @@ class CronJob extends Command
         });
         $this->info('Sending invoices if due date is ' . config('settings.cronjob_invoice') . ' days away: ' . $sendedInvoices . ' invoices');
 
-
         // Cancel services if first invoice is not paid after x days
         $ordersCancelled = 0;
         Service::where('status', 'pending')->whereDoesntHave('invoices', function ($query) {
@@ -97,6 +96,7 @@ class CronJob extends Command
                 $upgrade->invoice->update(['status' => 'cancelled']);
 
                 $updatedUpgradeInvoices++;
+
                 return;
             }
 

@@ -32,7 +32,7 @@ class InvoicePaidListener
                 $service->status = Service::STATUS_ACTIVE;
                 $service->expires_at = $service->calculateNextDueDate();
                 $service->save();
-            } else if ($item->reference_type == ServiceUpgrade::class) {
+            } elseif ($item->reference_type == ServiceUpgrade::class) {
                 $serviceUpgrade = $item->reference;
                 if (!$serviceUpgrade || $serviceUpgrade->status !== ServiceUpgrade::STATUS_PENDING) {
                     return;

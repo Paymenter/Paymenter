@@ -16,8 +16,11 @@ class Service extends Model
     use HasFactory, HasProperties;
 
     public const STATUS_PENDING = 'pending';
+
     public const STATUS_ACTIVE = 'active';
+
     public const STATUS_CANCELLED = 'cancelled';
+
     public const STATUS_SUSPENDED = 'suspended';
 
     protected $fillable = [
@@ -55,7 +58,7 @@ class Service extends Model
     public function currency(): Attribute
     {
         return Attribute::make(
-            get: fn() => $this->order->currency
+            get: fn () => $this->order->currency
         );
     }
 
@@ -67,7 +70,7 @@ class Service extends Model
     public function formattedPrice(): Attribute
     {
         return Attribute::make(
-            get: fn() => new Price(['price' => $this->price * $this->quantity, 'currency' => $this->order->currency])
+            get: fn () => new Price(['price' => $this->price * $this->quantity, 'currency' => $this->order->currency])
         );
     }
 
@@ -78,14 +81,14 @@ class Service extends Model
     {
         if ($this->plan->type == 'free' || $this->plan->type == 'one-time') {
             return Attribute::make(
-                get: fn() => $this->product->name
+                get: fn () => $this->product->name
             );
         }
         $date = $this->expires_at ?? now();
         $endDate = $date->{'add' . ucfirst($this->plan->billing_unit) . 's'}($this->plan->billing_period);
 
         return Attribute::make(
-            get: fn() => $this->product->name . ' (' . $date->format('M d, Y') . ' - ' . $endDate->format('M d, Y') . ')'
+            get: fn () => $this->product->name . ' (' . $date->format('M d, Y') . ' - ' . $endDate->format('M d, Y') . ')'
         );
     }
 
@@ -145,14 +148,14 @@ class Service extends Model
     public function cancellable(): Attribute
     {
         return Attribute::make(
-            get: fn() => $this->status !== 'cancelled' && $this->plan->type != 'free' && $this->plan->type != 'onetime'
+            get: fn () => $this->status !== 'cancelled' && $this->plan->type != 'free' && $this->plan->type != 'onetime'
         );
     }
 
     public function upgradable(): Attribute
     {
         return Attribute::make(
-            get: fn() => $this->product->upgrades()->count() > 0 && $this->status == 'active' && $this->upgrade !== null && !$this->upgrade->exists()
+            get: fn () => $this->product->upgrades()->count() > 0 && $this->status == 'active' && $this->upgrade !== null && !$this->upgrade->exists()
         );
     }
 
