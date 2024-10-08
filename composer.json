@@ -10,6 +10,7 @@
     "require": {
         "php": "^8.2",
         "andreiio/blade-remix-icon": "^3.3",
+        "barryvdh/laravel-dompdf": "^3.0",
         "endroid/qr-code": "^5.0",
         "filament/filament": "^3.2",
         "laravel/framework": "^11.0",

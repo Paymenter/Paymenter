@@ -2,6 +2,7 @@
 
 namespace App\Admin\Resources;
 
+use App\Admin\Clusters\Services;
 use App\Admin\Resources\Common\RelationManagers\PropertiesRelationManager;
 use App\Admin\Resources\ServiceResource\Pages;
 use App\Admin\Resources\ServiceResource\RelationManagers;
@@ -35,7 +36,7 @@ class ServiceResource extends Resource
         return 'warning';
     }
 
-    public static ?string $navigationGroup = 'Administration';
+    protected static ?string $cluster = Services::class;
 
     public static function form(Form $form): Form
     {

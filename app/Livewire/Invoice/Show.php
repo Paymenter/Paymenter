@@ -49,7 +49,7 @@ class Show extends Component
     public function pay()
     {
         if ($this->invoice->status !== 'pending') {
-            return $this->notify(__('This invoice is not pending.'), 'error');
+            return $this->notify(__('This invoice cannot be paid.'), 'error');
         }
         if ($this->checkPayment) {
             $this->checkPayment = false;

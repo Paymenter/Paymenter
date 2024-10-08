@@ -30,20 +30,4 @@ class TicketMessageObserver
     {
         event(new TicketEvent\Deleted($ticketMessage));
     }
-
-    /**
-     * Handle the TicketMessage "restored" event.
-     */
-    public function restored(TicketMessage $ticketMessage): void
-    {
-        //
-    }
-
-    /**
-     * Handle the TicketMessage "force deleted" event.
-     */
-    public function forceDeleted(TicketMessage $ticketMessage): void
-    {
-        //
-    }
 }

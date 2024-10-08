@@ -30,14 +30,16 @@
                     </div>
                 </div>
             </div>
-            @if($service->cancellable || count($buttons) > 0)
+            @if($service->cancellable || $service->upgradable || count($buttons) > 0)
             <div>
                 <h4 class="text-lg font-semibold text-white">{{ __('services.actions') }}:</h4>
                 <div class="mt-2 flex flex-row gap-2 flex-wrap">
-                    {{-- <x-button.primary class="h-fit !w-fit" wire:click="openModal('services.upgrade')">
-                        <span wire:loading.remove wire:target="openModal('services.upgrade')">{{ __('services.upgrade') }}</span>
-                        <x-loading target="openModal('services.upgrade')" />
-                    </x-button.primary> --}}
+                    @if($service->upgradable)
+                        <x-button.primary class="h-fit !w-fit" wire:click="openModal('services.upgrade')">
+                            <span wire:loading.remove wire:target="openModal('services.upgrade')">{{ __('services.upgrade') }}</span>
+                            <x-loading target="openModal('services.upgrade')" />
+                        </x-button.primary>
+                    @endif
                     @if($service->cancellable)
                         <x-button.danger class="h-fit !w-fit" wire:click="openModal('services.cancel')">
                             <span wire:loading.remove wire:target="openModal('services.cancel')">{{ __('services.cancel') }}</span>
@@ -45,7 +47,7 @@
                         </x-button.danger>
                     @endif
                     @if($showModal != '')
-                        <x-modal open="true" title="{{ __('services.' . ($showModal == 'services.upgrade' ? 'upgrade' : 'cancellation'), ['service' => $service->product->name]) }}">
+                        <x-modal open="true" title="{{ __('services.' . ($showModal == 'services.upgrade' ? 'upgrade' : 'cancellation'), ['service' => $service->product->name]) }}" width="{{ $showModal == 'services.upgrade' ? 'max-w-5xl' : 'max-w-3xl' }}">
                             @if($showModal == 'services.upgrade')
                                 <livewire:services.upgrade :service="$service" />
                             @elseif($showModal == 'services.cancel')

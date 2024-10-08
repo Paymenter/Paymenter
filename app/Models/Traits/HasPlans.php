@@ -18,9 +18,9 @@ trait HasPlans
     /**
      * Get available plans of the product.
      */
-    public function availablePlans()
+    public function availablePlans($currency = null)
     {
-        $currency = session('currency', config('settings.default_currency'));
+        $currency = $currency ?? session('currency', config('settings.default_currency'));
 
         return $this->plans->filter(function ($plan) use ($currency) {
             if ($plan->type === 'free') {

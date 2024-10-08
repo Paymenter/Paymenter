@@ -48,6 +48,7 @@ class AdminPanelProvider extends PanelProvider
             ->favicon(config('settings.logo') ? Storage::url(config('settings.logo')) : null)
             ->discoverResources(in: app_path('Admin/Resources'), for: 'App\\Admin\\Resources')
             ->discoverPages(in: app_path('Admin/Pages'), for: 'App\\Admin\\Pages')
+            ->discoverClusters(in: app_path('Admin/Clusters'), for: 'App\\Admin\\Clusters')
             ->pages([
                 Pages\Dashboard::class,
             ])

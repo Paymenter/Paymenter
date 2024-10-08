@@ -30,20 +30,4 @@ class ServiceObserver
     {
         event(new ServiceEvent\Deleted($service));
     }
-
-    /**
-     * Handle the Service "restored" event.
-     */
-    public function restored(Service $service): void
-    {
-        //
-    }
-
-    /**
-     * Handle the Service "force deleted" event.
-     */
-    public function forceDeleted(Service $service): void
-    {
-        //
-    }
 }

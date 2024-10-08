@@ -8,6 +8,7 @@ use App\Jobs\Server\TerminateJob;
 use App\Models\EmailLog;
 use App\Models\InvoiceItem;
 use App\Models\Service;
+use App\Models\ServiceUpgrade;
 use App\Models\Ticket;
 use Illuminate\Console\Command;
 
@@ -76,6 +77,35 @@ class CronJob extends Command
             $sendedInvoices++;
         });
         $this->info('Sending invoices if due date is ' . config('settings.cronjob_invoice') . ' days away: ' . $sendedInvoices . ' invoices');
+
+
+        // Cancel services if first invoice is not paid after x days
+        $ordersCancelled = 0;
+        Service::where('status', 'pending')->whereDoesntHave('invoices', function ($query) {
+            $query->where('status', 'paid');
+        })->where('created_at', '<', now()->subDays((int) config('settings.cronjob_cancel')))->get()->each(function ($service) use (&$ordersCancelled) {
+            $service->update(['status' => 'cancelled']);
+
+            $ordersCancelled++;
+        });
+        $this->info('Cancelling services if first invoice is not paid after ' . config('settings.cronjob_cancel') . ' days: ' . $ordersCancelled . ' orders');
+
+        $updatedUpgradeInvoices = 0;
+        ServiceUpgrade::where('status', 'pending')->get()->each(function ($upgrade) use (&$updatedUpgradeInvoices) {
+            if ($upgrade->service->expires_at < now()) {
+                $upgrade->update(['status' => 'cancelled']);
+                $upgrade->invoice->update(['status' => 'cancelled']);
+
+                $updatedUpgradeInvoices++;
+                return;
+            }
+
+            $upgrade->invoice->items()->update([
+                'price' => $upgrade->calculatePrice(),
+            ]);
+
+            $updatedUpgradeInvoices++;
+        });
 
         // Suspend orders if due date is overdue for x days
         $ordersSuspended = 0;

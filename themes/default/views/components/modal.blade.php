@@ -18,7 +18,10 @@
                     <h2 class="text-2xl font-semibold text-primary-100">{{ $title }}</h2>
                     @if ($closable && !$closeTrigger)
                         <button @click="open = false" class="text-primary-100">
-
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                                stroke="currentColor" class="size-6">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                            </svg>
                         </button>
                     @elseif ($closable && $closeTrigger)
                         {{ $closeTrigger }}

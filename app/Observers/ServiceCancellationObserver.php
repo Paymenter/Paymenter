@@ -30,20 +30,4 @@ class ServiceCancellationObserver
     {
         event(new ServiceCancellationEvent\Deleted($serviceCancellation));
     }
-
-    /**
-     * Handle the ServiceCancellation "restored" event.
-     */
-    public function restored(ServiceCancellation $serviceCancellation): void
-    {
-        //
-    }
-
-    /**
-     * Handle the ServiceCancellation "force deleted" event.
-     */
-    public function forceDeleted(ServiceCancellation $serviceCancellation): void
-    {
-        //
-    }
 }

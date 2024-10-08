@@ -33,20 +33,4 @@ class InvoiceObserver
     {
         event(new InvoiceEvent\Deleted($invoice));
     }
-
-    /**
-     * Handle the Invoice "restored" event.
-     */
-    public function restored(Invoice $invoice): void
-    {
-        //
-    }
-
-    /**
-     * Handle the Invoice "force deleted" event.
-     */
-    public function forceDeleted(Invoice $invoice): void
-    {
-        //
-    }
 }

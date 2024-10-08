@@ -3,10 +3,13 @@
 namespace App\Livewire\Products;
 
 use App\Livewire\Component;
+use App\Livewire\Traits\CurrencyChanged;
 use App\Models\Category;
 
 class Index extends Component
 {
+    use CurrencyChanged;
+
     public $products;
 
     public Category $category;

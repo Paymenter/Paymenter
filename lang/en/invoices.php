@@ -10,4 +10,9 @@ return [
     'id' => 'ID',
     'total' => 'Total',
     'invoice' => 'Invoice #:id',
+
+    'invoice_date' => 'Invoice Date',
+    'invoice_no' => 'Invoice No',
+    'item' => 'Item',
+    'quantity' => 'Quantity',
 ];

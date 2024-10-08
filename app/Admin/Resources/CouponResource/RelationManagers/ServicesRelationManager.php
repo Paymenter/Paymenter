@@ -17,6 +17,7 @@ class ServicesRelationManager extends RelationManager
             ->columns([
                 Tables\Columns\TextColumn::make('id'),
                 Tables\Columns\TextColumn::make('order.user.name')->label('User'),
+                Tables\Columns\TextColumn::make('product.name')->label('Product'),
             ])
             ->filters([
                 //

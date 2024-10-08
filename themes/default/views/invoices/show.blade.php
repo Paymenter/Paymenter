@@ -28,7 +28,9 @@
                 <p class="text-sm">{{ $invoice->user->city }} {{ $invoice->user->zip }}</p>
                 <p class="text-sm">{{ $invoice->user->state }} {{ $invoice->user->country }}</p>
 
-                <p class="mt-4 text-gray-400">Invoice Date: {{ $invoice->issued_at->format('d M Y') }}</p>
+                @if($invoice->issued_at)
+                    <p class="mt-4 text-gray-400">Invoice Date: {{ $invoice->issued_at->format('d M Y') }}</p>
+                @endif
             </div>
         </div>
         <div class="sm:flex justify-between pr-4 pt-4">

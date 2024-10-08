@@ -72,8 +72,14 @@ class OrderResource extends Resource
                             ->live()
                             ->disabled(fn (Get $get) => (!$get('product_id') || !$get('../../currency_code')))
                             ->afterStateUpdated(function (Set $set, Get $get) {
+                                if (!$get('product_id') || !$get('plan_id') || !$get('../../currency_code')) {
+                                    return;
+                                }
                                 // Update the price when the plan changes
                                 $plan = Product::find($get('product_id'))->plans->find($get('plan_id'))->prices->where('currency_code', $get('../../currency_code'))->first();
+                                if (!$plan) {
+                                    return;
+                                }
                                 $set('price', $plan->price);
                             })
                             ->placeholder('Select the plan'),
