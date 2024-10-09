@@ -3,8 +3,8 @@
 namespace Paymenter\Extensions\Gateways\Stripe\Listeners;
 
 use App\Events\Service\Updated;
-use Paymenter\Extensions\Gateways\Stripe\Stripe;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use Paymenter\Extensions\Gateways\Stripe\Stripe;
 
 class ServiceListener implements ShouldQueue
 {

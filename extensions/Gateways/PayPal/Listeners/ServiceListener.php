@@ -3,8 +3,8 @@
 namespace Paymenter\Extensions\Gateways\PayPal\Listeners;
 
 use App\Events\Service\Updated;
-use Paymenter\Extensions\Gateways\PayPal\PayPal;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use Paymenter\Extensions\Gateways\PayPal\PayPal;
 
 class ServiceListener implements ShouldQueue
 {

@@ -79,7 +79,7 @@ class PayPal extends Gateway
     {
         $url = $this->config('test_mode') ? 'https://api-m.sandbox.paypal.com' : 'https://api-m.paypal.com';
 
-        if ($this->config('paypal_use_subscriptions') && $invoice->items->map(fn($item) => $item->service->plan->billing_period . $item->service->plan->billing_unit)->unique()->count() === 1) {
+        if ($this->config('paypal_use_subscriptions') && $invoice->items->map(fn ($item) => $item->service->plan->billing_period . $item->service->plan->billing_unit)->unique()->count() === 1) {
             $paypalProduct = $this->request('post', $url . '/v1/catalogs/products', [
                 'name' => $invoice->items->first()->service->product->name,
                 'type' => 'SERVICE',
@@ -102,7 +102,7 @@ class PayPal extends Gateway
                 ],
             ];
 
-            $nextSum = $invoice->items->sum(fn($item) => $item->service->price * $item->service->quantity);
+            $nextSum = $invoice->items->sum(fn ($item) => $item->service->price * $item->service->quantity);
 
             $billingCycles[] = [
                 'frequency' => [
