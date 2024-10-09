@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Extensions\Gateways\Stripe\Listeners;
+namespace Paymenter\Extensions\Gateways\PayPal\Listeners;
 
 use App\Events\Service\Updated;
-use App\Extensions\Gateways\Stripe\Stripe;
+use Paymenter\Extensions\Gateways\PayPal\PayPal;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
 class ServiceListener implements ShouldQueue
@@ -25,7 +25,7 @@ class ServiceListener implements ShouldQueue
         if (!$event->service->isDirty('price') && $event->service->properties->where('key', 'has_paypal_subscription')->first()?->value !== '1') {
             return;
         }
-        $stripe = new Stripe;
-        $stripe->updateSubscription($event->service);
+        $paypal = new PayPal;
+        $paypal->updateSubscription($event->service);
     }
 }

@@ -1,6 +1,6 @@
 <?php
 
-use App\Extensions\Gateways\PayPal\PayPal;
+use Paymenter\Extensions\Gateways\PayPal\PayPal;
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Support\Facades\Route;
 
