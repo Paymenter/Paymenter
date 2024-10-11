@@ -18,7 +18,7 @@ class EditInvoice extends EditRecord
             Actions\DeleteAction::make(),
             Actions\Action::make('pdf')
                 ->label('Download PDF')
-                ->action(function(Invoice $invoice) {
+                ->action(function (Invoice $invoice) {
                     return response()->streamDownload(function () use ($invoice) {
                         echo PDF::generateInvoice($invoice)->stream();
                     }, 'invoice.pdf');

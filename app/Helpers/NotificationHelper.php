@@ -2,7 +2,6 @@
 
 namespace App\Helpers;
 
-use App\Classes\MailAttachment;
 use App\Mail\Mail;
 use App\Models\EmailLog;
 use App\Models\EmailTemplate;
@@ -10,7 +9,6 @@ use App\Models\Invoice;
 use App\Models\Service;
 use App\Models\TicketMessage;
 use App\Models\User;
-use Illuminate\Mail\Mailables\Attachment;
 use Illuminate\Support\Facades\Mail as FacadesMail;
 
 class NotificationHelper
@@ -40,7 +38,7 @@ class NotificationHelper
         // Add the email log id to the payload
         $mail->email_log_id = $emailLog->id;
 
-        foreach($attachments as $attachment) {
+        foreach ($attachments as $attachment) {
             $mail->attachFromStorage($attachment['path'], $attachment['name'], $attachment['options'] ?? []);
         }
 
@@ -67,7 +65,7 @@ class NotificationHelper
             [
                 'path' => 'invoices/' . $invoice->id . '.pdf',
                 'name' => 'invoice.pdf',
-            ]
+            ],
         ];
         self::sendEmailNotification('new_invoice_created', $data, $user, $attachments);
     }
