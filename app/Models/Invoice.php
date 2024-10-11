@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Classes\PDF;
 use App\Classes\Price;
 use App\Observers\InvoiceObserver;
 use Illuminate\Database\Eloquent\Attributes\ObservedBy;
@@ -89,5 +90,12 @@ class Invoice extends Model
     public function transactions()
     {
         return $this->hasMany(InvoiceTransaction::class);
+    }
+
+    public function pdf(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => PDF::generateInvoice($this)
+        );
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Helpers;
 
+use App\Classes\MailAttachment;
 use App\Mail\Mail;
 use App\Models\EmailLog;
 use App\Models\EmailTemplate;
@@ -9,6 +10,7 @@ use App\Models\Invoice;
 use App\Models\Service;
 use App\Models\TicketMessage;
 use App\Models\User;
+use Illuminate\Mail\Mailables\Attachment;
 use Illuminate\Support\Facades\Mail as FacadesMail;
 
 class NotificationHelper
@@ -19,7 +21,8 @@ class NotificationHelper
     public static function sendEmailNotification(
         $emailTemplateKey,
         array $data,
-        User $user
+        User $user,
+        array $attachments = []
     ): void {
         $emailTemplate = EmailTemplate::where('key', $emailTemplateKey)->first();
         if (!$emailTemplate || !$emailTemplate->enabled) {
@@ -37,10 +40,14 @@ class NotificationHelper
         // Add the email log id to the payload
         $mail->email_log_id = $emailLog->id;
 
+        foreach($attachments as $attachment) {
+            $mail->attachFromStorage($attachment['path'], $attachment['name'], $attachment['options'] ?? []);
+        }
+
         FacadesMail::to($user->email)
             ->bcc($emailTemplate->bcc)
             ->cc($emailTemplate->cc)
-            ->queue($mail);
+            ->send($mail);
     }
 
     public static function newLoginDetectedNotification(User $user, array $data = []): void
@@ -54,9 +61,15 @@ class NotificationHelper
             'invoice' => $invoice,
             'items' => $invoice->items,
             'total' => $invoice->formattedTotal,
-            'has_subscription' => $invoice->items->each(fn ($item) => $item->relation_type === Service::class && $item->relation->subscription_id)->isNotEmpty(),
+            'has_subscription' => $invoice->items->filter(fn ($item) => $item->relation_type === Service::class && $item->relation->subscription_id)->isNotEmpty(),
         ];
-        self::sendEmailNotification('new_invoice_created', $data, $user);
+        $attachments = [
+            [
+                'path' => 'invoices/' . $invoice->id . '.pdf',
+                'name' => 'invoice.pdf',
+            ]
+        ];
+        self::sendEmailNotification('new_invoice_created', $data, $user, $attachments);
     }
 
     public static function newServerCreatedNotification(User $user, Service $service, array $data = []): void
