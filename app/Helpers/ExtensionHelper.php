@@ -20,7 +20,7 @@ class ExtensionHelper
     private static function getExtensions($type)
     {
         // Read app/Extensions directory
-        $availableExtensions = array_diff(scandir(app_path('Extensions/' . ucfirst($type . 's'))), ['..', '.']);
+        $availableExtensions = array_diff(scandir(base_path('extensions/' . ucfirst($type . 's'))), ['..', '.']);
 
         // Read settings
         foreach ($availableExtensions as $key => $extension) {
