@@ -47,7 +47,7 @@ class AppServiceProvider extends ServiceProvider
         });
 
         // Register views for extensions (app/Extensions/{type}/{extension}/views)
-        $this->loadViewsFrom(base_path('Extensions'), 'extensions');
+        $this->loadViewsFrom(base_path('extensions'), 'extensions');
 
         Queue::after(function (JobProcessed $event) {
             if ($event->job->resolveName() === 'App\Mail\Mail') {
