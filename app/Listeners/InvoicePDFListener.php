@@ -9,7 +9,7 @@ use App\Events\InvoiceItem\Created as InvoiceItemCreated;
 use App\Events\InvoiceItem\Updated as InvoiceItemUpdated;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
-class InvoicePDFListener implements ShouldQueue
+class InvoicePDFListener
 {
     /**
      * Handle the event.

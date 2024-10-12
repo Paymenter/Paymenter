@@ -240,10 +240,16 @@ class Settings
             'mail' => [
                 // SMTP etc
                 [
-                    'name' => 'disable_mail',
+                    'name' => 'mail_disable',
                     'label' => 'Disable Mail',
                     'type' => 'checkbox',
                     'default' => true,
+                ],                
+                [
+                    'name' => 'mail_must_verify',
+                    'label' => 'Users must verify email before buying',
+                    'type' => 'checkbox',
+                    'default' => false,
                 ],
                 [
                     'name' => 'mail_host',

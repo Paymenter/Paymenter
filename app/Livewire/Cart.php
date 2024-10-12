@@ -6,6 +6,7 @@ use App\Classes\Cart as ClassesCart;
 use App\Classes\Price;
 use App\Exceptions\DisplayException;
 use App\Helpers\ExtensionHelper;
+use App\Helpers\NotificationHelper;
 use App\Models\Coupon;
 use App\Models\Gateway;
 use App\Models\Invoice;
@@ -16,6 +17,9 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Session;
 use Livewire\Attributes\Locked;
+use App\Events\Invoice\Created as InvoiceCreated;
+use App\Events\Order\Created as OrderCreated;
+use App\Models\Order;
 
 class Cart extends Component
 {
@@ -179,18 +183,21 @@ class Cart extends Component
                 }
             }
             // Create the order
-            $order = $user->orders()->create([
+            $order = new Order([
+                'user_id' => $user->id,
                 'currency_code' => $this->total->currency->code,
             ]);
+            $order->saveQuietly();
 
             // Create the invoice
             if ($this->total->price > 0) {
-                $invoice = Invoice::create([
+                $invoice = new Invoice([
                     'user_id' => $user->id,
                     'issued_at' => now(),
                     'due_at' => now()->addDays(7),
                     'currency_code' => $this->total->currency->code,
                 ]);
+                $invoice->saveQuietly();
             }
 
             // Create the services
@@ -203,6 +210,8 @@ class Cart extends Component
                 }
                 // Create the service
                 $service = $order->services()->create([
+                    'user_id' => $user->id,
+                    'currency_code' => $this->total->currency->code,
                     'product_id' => $item->product->id,
                     'plan_id' => $item->plan->id,
                     'price' => $price,
@@ -239,6 +248,9 @@ class Cart extends Component
                     ]);
                 }
             }
+
+            event(new OrderCreated($order));
+            event(new InvoiceCreated($invoice));
 
             // Commit the transaction
             DB::commit();

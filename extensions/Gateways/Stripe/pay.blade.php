@@ -55,9 +55,11 @@
             form.addEventListener('submit', async (event) => {
                 event.preventDefault();
                 setLoading(true);
+                
+                var error;
 
                 if (type == 'payment') {
-                    const {
+                    var {
                         error
                     } = await stripe.confirmPayment({
                         //`Elements` instance that was used to create the Payment Element
@@ -67,7 +69,7 @@
                         },
                     });
                 } else if (type == 'setup') {
-                    const {
+                    var {
                         error
                     } = await stripe.confirmSetup({
                         elements,
@@ -150,6 +152,11 @@
                     document.querySelector("#submit").classList.remove("hidden");
                 }
             }
+
+            $wire.on('invoice.payment.cancelled', () => {
+                // destroy the payment element
+                paymentElement.destroy();
+            });
         };
     </script>
 @endscript

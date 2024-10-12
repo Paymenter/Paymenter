@@ -73,6 +73,10 @@ class InvoiceResource extends Resource
                     ])
                     ->default('pending')
                     ->placeholder('Select the status of the invoice'),
+                Forms\Components\Toggle::make('send_email')
+                    ->label('Send Email')
+                    ->hiddenOn('edit')
+                    ->default(true),
                 Forms\Components\Repeater::make('items')
                     ->relationship('items')
                     ->label('Items')

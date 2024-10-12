@@ -33,6 +33,8 @@ class Service extends Model
         'subscription_id',
         'status',
         'coupon_id',
+        'user_id',
+        'currency_code',
     ];
 
     protected $casts = [
@@ -55,11 +57,20 @@ class Service extends Model
         return $this->belongsTo(Coupon::class);
     }
 
-    public function currency(): Attribute
+    /**
+     * Get the currency corresponding to the service.
+     */
+    public function currency()
     {
-        return Attribute::make(
-            get: fn () => $this->order->currency
-        );
+        return $this->hasOne(Currency::class, 'code', 'currency_code');
+    }
+
+    /**
+     * Get the user that owns the service.
+     */
+    public function user()
+    {
+        return $this->belongsTo(User::class);
     }
 
     /**

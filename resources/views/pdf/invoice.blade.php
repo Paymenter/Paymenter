@@ -92,7 +92,9 @@
         </tr>
         <tr>
             <td>
-                {{ config('settings.company_address') }}, {{ config('settings.company_zip') }}
+                @if(config('settings.company_address') || config('settings.company_zip'))
+                    {{ config('settings.company_address') }}, {{ config('settings.company_zip') }}
+                @endif
             </td>
         </tr>
         <tr>
@@ -100,7 +102,9 @@
                 {{ __('invoices.invoice_date') }}: <strong>{{ $invoice->created_at->format('d/m/Y') }}</strong>
             </td>
             <td>
-                {{ config('settings.company_state') }}, {{ config('settings.company_country') }}
+                @if(config('settings.company_state') || config('settings.company_country'))
+                    {{ config('settings.company_state') }}, {{ config('settings.company_country') }}
+                @endif
             </td>
         </tr>
         <tr>

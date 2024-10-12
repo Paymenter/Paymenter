@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\SocialLoginController;
+use App\Http\Middleware\MustVerfiyEmail;
 use App\Livewire\Auth;
 use App\Livewire\Cart;
 use App\Livewire\Clients;
@@ -10,6 +11,7 @@ use App\Livewire\Products;
 use App\Livewire\Services;
 use App\Livewire\Tickets;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Foundation\Auth\EmailVerificationRequest;
 
 Route::get('/', function () {
     return view('home');
@@ -19,30 +21,42 @@ Route::get('/', function () {
 //auth()->logout();
 // Authorization routes
 Route::group(['middleware' => ['web', 'guest']], function () {
-    Route::get('login', Auth\Login::class)->name('login');
-    Route::get('2fa', Auth\Tfa::class)->name('2fa');
-    Route::get('register', Auth\Register::class)->name('register');
+    Route::get('/login', Auth\Login::class)->name('login');
+    Route::get('/2fa', Auth\Tfa::class)->name('2fa');
+    Route::get('/register', Auth\Register::class)->name('register');
     // Todo
-    Route::get('password/reset')->name('password.reset');
+    Route::get('/password/reset')->name('password.reset');
+
     Route::get('/oauth/{provider}', [SocialLoginController::class, 'redirect'])->name('oauth.redirect');
     Route::get('/oauth/{provider}/callback', [SocialLoginController::class, 'handle'])->name('oauth.handle');
 });
 
-Route::group(['middleware' => ['web', 'auth']], function () {
-    Route::get('dashboard', Dashboard::class)->name('dashboard');
+Route::group(['middleware' => ['web', 'auth', MustVerfiyEmail::class]], function () {
+    Route::get('/dashboard', Dashboard::class)->name('dashboard');
 
+    Route::get('/invoices', Invoice\Index::class)->name('invoices');
+    Route::get('/invoices/{invoice}', Invoice\Show::class)->name('invoices.show');
+
+    Route::get('/tickets', Tickets\Index::class)->name('tickets');
+    Route::get('/tickets/create', Tickets\Create::class)->name('tickets.create');
+    Route::get('/tickets/{ticket}', Tickets\Show::class)->name('tickets.show');
+
+    Route::get('/services', Services\Index::class)->name('services');
+    Route::get('/services/{service}', Services\Show::class)->name('services.show');
+});
+
+Route::group(['middleware' => ['web', 'auth']], function () {
     Route::get('account', Clients\Account::class)->name('account');
     Route::get('account/security', Clients\Security::class)->name('account.security');
 
-    Route::get('invoices', Invoice\Index::class)->name('invoices');
-    Route::get('invoices/{invoice}', Invoice\Show::class)->name('invoices.show');
+    Route::get('/email/verify', function () {
+        return view('auth.verify-email');
+    })->name('verification.notice');
+    Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $request) {
+        $request->fulfill();
 
-    Route::get('tickets', Tickets\Index::class)->name('tickets');
-    Route::get('tickets/create', Tickets\Create::class)->name('tickets.create');
-    Route::get('tickets/{ticket}', Tickets\Show::class)->name('tickets.show');
-
-    Route::get('services', Services\Index::class)->name('services');
-    Route::get('services/{service}', Services\Show::class)->name('services.show');
+        return redirect('/home');
+    })->middleware(['signed'])->name('verification.verify');
 });
 
 Route::get('cart', Cart::class)->name('cart');

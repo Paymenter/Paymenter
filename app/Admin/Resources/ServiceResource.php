@@ -9,6 +9,7 @@ use App\Admin\Resources\ServiceResource\RelationManagers;
 use App\Helpers\ExtensionHelper;
 use App\Models\Product;
 use App\Models\Service;
+use App\Models\User;
 use Filament\Forms;
 use Filament\Forms\Components\Actions\Action;
 use Filament\Forms\Components\Component;
@@ -54,6 +55,15 @@ class ServiceResource extends Resource
                     ->relationship('plan', 'name')
                     ->searchable()
                     ->placeholder('Select the plan'),
+                Forms\Components\Select::make('user_id')
+                    ->label('User')
+                    ->relationship('user', 'id')
+                    ->searchable()
+                    ->preload()
+                    ->getOptionLabelFromRecordUsing(fn ($record) => $record->name)
+                    ->getSearchResultsUsing(fn (string $search): array => User::where('first_name', 'like', "%$search%")->orWhere('last_name', 'like', "%$search%")->limit(50)->pluck('name', 'id')->toArray())
+                    ->live()
+                    ->required(),
                 Forms\Components\Select::make('status')
                     ->label('Status')
                     ->required()

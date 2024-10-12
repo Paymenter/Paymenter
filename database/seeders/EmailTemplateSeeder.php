@@ -147,6 +147,22 @@ class EmailTemplateSeeder extends Seeder
                 ]) !!}
                 HTML,
             ],
+            [
+                'key' => 'email_verification',
+                'subject' => 'Email verification',
+                'body' => <<<'HTML'
+                # Email verification
+
+                Please verify your email address by clicking the link below.
+                <div class="action">
+                	<a class="button button-blue" href="{{ $url }}">
+                		Verify email
+                	</a>
+                </div>
+
+                If you did not create an account, you can ignore this email.
+                HTML,
+            ]
         ]);
     }
 }

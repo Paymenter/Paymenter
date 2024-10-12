@@ -35,7 +35,8 @@ class Login extends Component
 
         RateLimiter::increment('login:' . $this->email);
 
-        if (!auth()->attempt($this->only('email', 'password'), $this->remember)) {
+        
+        if (!Auth::attempt($this->only('email', 'password'), $this->remember)) {
             $this->addError('email', 'These credentials do not match our records.');
 
             return;

@@ -67,6 +67,8 @@ class Show extends Component
     public function exitPay()
     {
         $this->pay = null;
+        // Dispatch event so extensions can do their thing
+        $this->dispatch('invoice.payment.cancelled', $this->invoice);
         // Refresh invoice status
         $this->redirect(route('invoices.show', $this->invoice->id), true);
     }

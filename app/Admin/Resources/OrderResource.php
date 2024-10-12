@@ -41,11 +41,20 @@ class OrderResource extends Resource
                     ->preload()
                     ->getOptionLabelFromRecordUsing(fn ($record) => $record->name)
                     ->getSearchResultsUsing(fn (string $search): array => User::where('first_name', 'like', "%$search%")->orWhere('last_name', 'like', "%$search%")->limit(50)->pluck('name', 'id')->toArray())
+                    ->afterStateUpdated(function (Set $set, Get $get) {
+                        // update all the services user_id
+                        $set('services', collect($get('services'))->map(fn ($service) => array_merge($service, ['user_id' => $get('user_id')]))->toArray());
+                    })
+                    ->live()
                     ->required(),
                 Forms\Components\Select::make('currency_code')
                     ->label('Currency')
                     ->required()
                     ->live()
+                    ->afterStateUpdated(function (Set $set, Get $get) {
+                        // update all the services currency_code
+                        $set('services', collect($get('services'))->map(fn ($service) => array_merge($service, ['currency_code' => $get('currency_code')]))->toArray());
+                    })
                     ->relationship('currency', 'code')
                     ->helperText('Does not convert the price, only displays the currency symbol')
                     ->placeholder('Select the currency'),
@@ -55,6 +64,10 @@ class OrderResource extends Resource
                     ->columnSpanFull()
                     ->columns(2)
                     ->schema([
+                        Forms\Components\Hidden::make('user_id')
+                            ->default(fn (Get $get) => $get('../../user_id')),
+                        Forms\Components\Hidden::make('currency_code')
+                            ->default(fn (Get $get) => $get('../../currency_code')),
                         Forms\Components\Select::make('product_id')
                             ->label('Product')
                             ->required()

@@ -147,7 +147,7 @@ class User extends Authenticatable implements FilamentUser, HasAvatar
      */
     public function services()
     {
-        return $this->hasManyThrough(Service::class, Order::class);
+        return $this->hasMany(Service::class);
     }
 
     /**

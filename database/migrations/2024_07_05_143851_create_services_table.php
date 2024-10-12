@@ -16,6 +16,8 @@ return new class extends Migration
             $table->string('status')->default('pending');
             $table->foreignIdFor(\App\Models\Order::class)->nullable()->constrained()->cascadeOnDelete();
             $table->foreignIdFor(\App\Models\Product::class)->nullable()->constrained()->nullOnDelete();
+            $table->foreignIdFor(\App\Models\User::class)->constrained()->cascadeOnDelete();
+            $table->string('currency_code', 3);
             $table->integer('quantity')->default(1);
             $table->decimal('price', 17, 2);
             $table->foreignIdFor(\App\Models\Plan::class)->nullable()->constrained()->nullOnDelete();

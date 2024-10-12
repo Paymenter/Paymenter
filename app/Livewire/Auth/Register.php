@@ -5,6 +5,7 @@ namespace App\Livewire\Auth;
 use App\Livewire\ComponentWithProperties;
 use App\Models\User;
 use App\Traits\Captchable;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
 class Register extends ComponentWithProperties
@@ -51,9 +52,9 @@ class Register extends ComponentWithProperties
             $this->updateProperties($user, $validatedData['properties']);
         }
 
-        auth()->login($user);
+        Auth::login($user);
 
-        return redirect()->intended(route('dashboard'));
+        return $this->redirectIntended(route('dashboard'), true);
     }
 
     public function render()
