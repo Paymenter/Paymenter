@@ -44,9 +44,9 @@ class UserResource extends Resource
                 TextInput::make('email')->translateLabel()->email()->required()->unique('users', 'email', ignoreRecord: true),
 
                 TextInput::make('password')->translateLabel()->password()->revealable()
-                    ->dehydrateStateUsing(fn(string $state): string => Hash::make($state))
-                    ->dehydrated(fn(?string $state): bool => filled($state))
-                    ->required(fn(string $operation): bool => $operation === 'create'),
+                    ->dehydrateStateUsing(fn (string $state): string => Hash::make($state))
+                    ->dehydrated(fn (?string $state): bool => filled($state))
+                    ->required(fn (string $operation): bool => $operation === 'create'),
                 TextInput::make('credits')->translateLabel()->numeric()->default(0),
 
                 Select::make('role_id')->translateLabel()->relationship('role', 'name')->searchable()->preload(),

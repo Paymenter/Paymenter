@@ -244,7 +244,7 @@ class Settings
                     'label' => 'Disable Mail',
                     'type' => 'checkbox',
                     'default' => true,
-                ],                
+                ],
                 [
                     'name' => 'mail_must_verify',
                     'label' => 'Users must verify email before buying',

@@ -18,6 +18,7 @@ class MustVerfiyEmail
         if (config('settings.mail_must_verify') && $request->user() && !$request->user()->hasVerifiedEmail()) {
             return redirect()->route('verification.notice');
         }
+
         return $next($request);
     }
 }

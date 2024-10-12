@@ -4,12 +4,14 @@ namespace App\Livewire;
 
 use App\Classes\Cart as ClassesCart;
 use App\Classes\Price;
+use App\Events\Invoice\Created as InvoiceCreated;
+use App\Events\Order\Created as OrderCreated;
 use App\Exceptions\DisplayException;
 use App\Helpers\ExtensionHelper;
-use App\Helpers\NotificationHelper;
 use App\Models\Coupon;
 use App\Models\Gateway;
 use App\Models\Invoice;
+use App\Models\Order;
 use App\Models\Service;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
@@ -17,9 +19,6 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Session;
 use Livewire\Attributes\Locked;
-use App\Events\Invoice\Created as InvoiceCreated;
-use App\Events\Order\Created as OrderCreated;
-use App\Models\Order;
 
 class Cart extends Component
 {

@@ -10,8 +10,8 @@ use App\Livewire\Invoice;
 use App\Livewire\Products;
 use App\Livewire\Services;
 use App\Livewire\Tickets;
-use Illuminate\Support\Facades\Route;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
+use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('home');

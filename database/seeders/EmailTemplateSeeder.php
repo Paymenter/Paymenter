@@ -162,7 +162,7 @@ class EmailTemplateSeeder extends Seeder
 
                 If you did not create an account, you can ignore this email.
                 HTML,
-            ]
+            ],
         ]);
     }
 }

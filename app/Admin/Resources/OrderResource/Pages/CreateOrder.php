@@ -20,7 +20,7 @@ class CreateOrder extends CreateRecord
         ]);
         $invoice->save();
 
-        foreach($this->record->services as $service) {
+        foreach ($this->record->services as $service) {
             $invoice->items()->create([
                 'description' => $service->description,
                 'price' => $service->price,
@@ -29,6 +29,6 @@ class CreateOrder extends CreateRecord
                 'reference_type' => get_class($service),
             ]);
         }
-        
+
     }
 }

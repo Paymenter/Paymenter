@@ -7,7 +7,6 @@ use App\Events\Invoice\Created;
 use App\Events\Invoice\Updated;
 use App\Events\InvoiceItem\Created as InvoiceItemCreated;
 use App\Events\InvoiceItem\Updated as InvoiceItemUpdated;
-use Illuminate\Contracts\Queue\ShouldQueue;
 
 class InvoicePDFListener
 {
