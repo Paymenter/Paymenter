@@ -4,7 +4,6 @@ namespace App\Livewire\Auth;
 
 use App\Helpers\NotificationHelper;
 use App\Livewire\Component;
-use App\Models\User;
 use App\Traits\Captchable;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\RateLimiter;
@@ -26,6 +25,7 @@ class VerifyEmail extends Component
 
         if (RateLimiter::tooManyAttempts('email-verification', 1)) {
             $this->addError('code', 'Too many attempts. Try again later.');
+
             return;
         }
 
