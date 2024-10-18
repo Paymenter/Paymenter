@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Livewire\Clients;
+namespace App\Livewire\Client;
 
 use App\Livewire\Component;
 use App\Models\Session;

@@ -4,9 +4,9 @@ use App\Http\Controllers\SocialLoginController;
 use App\Http\Middleware\MustVerfiyEmail;
 use App\Livewire\Auth;
 use App\Livewire\Cart;
-use App\Livewire\Clients;
+use App\Livewire\Client;
 use App\Livewire\Dashboard;
-use App\Livewire\Invoice;
+use App\Livewire\Invoices;
 use App\Livewire\Products;
 use App\Livewire\Services;
 use App\Livewire\Tickets;
@@ -34,8 +34,8 @@ Route::group(['middleware' => ['web', 'guest']], function () {
 Route::group(['middleware' => ['web', 'auth', MustVerfiyEmail::class]], function () {
     Route::get('/dashboard', Dashboard::class)->name('dashboard');
 
-    Route::get('/invoices', Invoice\Index::class)->name('invoices');
-    Route::get('/invoices/{invoice}', Invoice\Show::class)->name('invoices.show');
+    Route::get('/invoices', Invoices\Index::class)->name('invoices');
+    Route::get('/invoices/{invoice}', Invoices\Show::class)->name('invoices.show');
 
     Route::get('/tickets', Tickets\Index::class)->name('tickets');
     Route::get('/tickets/create', Tickets\Create::class)->name('tickets.create');
@@ -46,16 +46,14 @@ Route::group(['middleware' => ['web', 'auth', MustVerfiyEmail::class]], function
 });
 
 Route::group(['middleware' => ['web', 'auth']], function () {
-    Route::get('account', Clients\Account::class)->name('account');
-    Route::get('account/security', Clients\Security::class)->name('account.security');
+    Route::get('account', Client\Account::class)->name('account');
+    Route::get('account/security', Client\Security::class)->name('account.security');
 
-    Route::get('/email/verify', function () {
-        return view('auth.verify-email');
-    })->name('verification.notice');
+    Route::get('/email/verify', Auth\VerifyEmail::class)->name('verification.notice');
     Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $request) {
         $request->fulfill();
 
-        return redirect('/home');
+        return redirect()->route('dashboard');
     })->middleware(['signed'])->name('verification.verify');
 });
 

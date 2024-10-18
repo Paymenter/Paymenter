@@ -2,7 +2,7 @@
 
 namespace App\Classes\Extension;
 
-use App\Models\Gateway;
+use App\Models\Extension as ModelsExtension;
 
 /**
  * Base class for extensions
@@ -22,7 +22,7 @@ class Extension
     public function config($key)
     {
         if (empty($this->config)) {
-            $this->config = Gateway::where('extension', class_basename(static::class))->first()->settings->pluck('value', 'key')->toArray();
+            $this->config = ModelsExtension::where('extension', class_basename(static::class))->first()->settings->pluck('value', 'key')->toArray();
         }
 
         return $this->config[$key] ?? null;

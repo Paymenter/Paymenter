@@ -25,6 +25,5 @@ class SendMailListener
             $order = $event->order;
             NotificationHelper::newOrderCreatedNotification($order->user, $order);
         }
-
     }
 }

@@ -159,6 +159,8 @@ class EmailTemplateSeeder extends Seeder
                 		Verify email
                 	</a>
                 </div>
+                
+                This link will expire in 60 minutes.
 
                 If you did not create an account, you can ignore this email.
                 HTML,

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Livewire\Invoice;
+namespace App\Livewire\Invoices;
 
 use App\Livewire\Component;
 use Illuminate\Support\Facades\Auth;

@@ -1,26 +1,19 @@
 <div class="bg-primary-800 rounded-lg mt-2">
-    <div class="grid grid-cols-4 gap-4 p-6 pb-0">
-        <!-- Show open tickets, active services and open invoices -->
+    <div class="grid grid-cols-3 gap-4 p-6 pb-0">
         <button class="bg-primary-700 p-4 rounded-lg shadow-xl border-primary-600 border"
-            wire:click="$set('activeComponent', 'tickets')">
-            <h4 class="text-lg font-semibold text-white">{{ __('dashboard.open_tickets') }}:</h4>
+            wire:click="$set('activeComponent', 'services')">
+            <h4 class="text-lg font-semibold text-white">{{ __('dashboard.active_services') }}:</h4>
             <div class="mt-2 text-3xl">
-                {{ Auth::user()->tickets()->where('status', '!=', 'closed')->count() }}
+                {{ Auth::user()->services()->where('status', 'active')->count() }}
             </div>
         </button>
+        
         <button class="bg-primary-700 p-4 rounded-lg shadow-xl border-primary-600 border"
             wire:click="$set('activeComponent', 'invoices')">
             <h4 class="text-lg font-semibold text-white">{{ __('dashboard.unpaid_invoices') }}:</h4>
             <div
                 class="mt-2 text-3xl @if(Auth::user()->invoices()->where('status', 'unpaid')->count() > 0) text-orange-500 @else text-green-500 @endif">
                 {{ Auth::user()->invoices()->where('status', 'unpaid')->count() }}
-            </div>
-        </button>
-        <button class="bg-primary-700 p-4 rounded-lg shadow-xl border-primary-600 border"
-            wire:click="$set('activeComponent', 'services')">
-            <h4 class="text-lg font-semibold text-white">{{ __('dashboard.active_services') }}:</h4>
-            <div class="mt-2 text-3xl">
-                {{ Auth::user()->services()->where('status', 'active')->count() }}
             </div>
         </button>
 

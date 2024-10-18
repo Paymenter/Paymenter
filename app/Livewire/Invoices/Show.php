@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Livewire\Invoice;
+namespace App\Livewire\Invoices;
 
 use App\Helpers\ExtensionHelper;
 use App\Livewire\Component;
