@@ -151,7 +151,7 @@
             </div>
             @foreach ($configurableOptions as $configurableOption)
                 <div class="flex flex-col md:flex-row justify-between items-center border-b border-gray-500 py-2">
-                    @if ($configurableOption->configurableOption() && $configurableOption->configurableOption->type !== 'text')
+                    @if ($configurableOption->configurableOption() && $configurableOption->configurableOption !== null && $configurableOption->configurableOption->type !== 'text')
                         <form
                             action="{{ route('admin.clients.products.config.update', [$user->id, $orderProduct->id, $configurableOption->id]) }}"
                             method="POST" class="flex-row flex items-center w-full gap-6">
