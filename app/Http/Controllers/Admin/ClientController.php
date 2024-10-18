@@ -97,7 +97,10 @@ class ClientController extends Controller
             if (!$orderProduct) {
                 return redirect()->route('admin.clients.edit', $user->id)->with('error', 'No orders found');
             }
+        }else if ($orderProduct->order->user_id !== $user->id) {
+            return redirect()->route('admin.clients.edit', $user->id)->with('error', 'No orders found');
         }
+        
         $orderProducts = $user->orderProducts()->with('product')->get();
         $configurableOptions = $orderProduct->config;
 
