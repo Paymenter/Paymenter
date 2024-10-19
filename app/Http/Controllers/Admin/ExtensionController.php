@@ -182,6 +182,9 @@ class ExtensionController extends Controller
             $extension = Extension::where('name', $name)->first();
         }
         $namespace = "App\Extensions\\" . ucfirst($sort) . "s\\" . $name . "\\" . $name;
+        if (!class_exists('App\Extensions\\' . ucfirst($sort) . 's\\' . $name . '\\' . $name)) {
+            return redirect()->route('admin.extensions')->with('error', 'Extension not found, maybe it was removed.');
+        }
 
         $extension->config = json_decode(json_encode((new $namespace($extension))->getConfig()));
         $extension->name = $name;
