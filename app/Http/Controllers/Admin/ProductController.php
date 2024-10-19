@@ -173,7 +173,7 @@ class ProductController extends Controller
 
     public function extension(Product $product)
     {
-        $extensions = Extension::where('type', 'server')->where('enabled', true)->get();
+        $extensions = Extension::whereIn('type', ['server', 'domainRegister'])->where('enabled', true)->get();
         if ($product->extension_id != null) {
             $extension = Extension::findOrFail($product->extension_id);
             $config = [];
