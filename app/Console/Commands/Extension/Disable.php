@@ -45,7 +45,7 @@ class Disable extends Command implements PromptsForMissingInput
     protected function promptForMissingArgumentsUsing()
     {
         return [
-            'name' => fn() => select(
+            'name' => fn () => select(
                 label: 'Which extension do you want to disable?',
                 options: Extension::all()->pluck('extension', 'extension')->toArray(),
             ),

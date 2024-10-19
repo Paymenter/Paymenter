@@ -36,7 +36,7 @@ class EditGateway extends EditRecord
         if (!isset($data['settings'])) {
             return $record;
         }
-        
+
         $config = ExtensionHelper::getConfig($record->type, $record->extension);
 
         $things = array_map(function ($option) use ($data, $record) {
