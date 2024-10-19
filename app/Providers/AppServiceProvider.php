@@ -48,8 +48,12 @@ class AppServiceProvider extends ServiceProvider
             $event->extendSocialite('discord', \SocialiteProviders\Discord\Provider::class);
         });
 
-        foreach (Extension::where('enabled', true)->get() as $extension) {
-            ExtensionHelper::call($extension, 'boot', mayFail: true);
+        try {
+            foreach (Extension::where('enabled', true)->get() as $extension) {
+                ExtensionHelper::call($extension, 'boot', mayFail: true);
+            }
+        } catch (\Exception $e) {
+            // Fail silently
         }
 
         Queue::after(function (JobProcessed $event) {
