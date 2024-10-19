@@ -18,7 +18,9 @@ class ExtensionResource extends Resource
 {
     protected static ?string $model = Extension::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationGroup = 'Extensions';
+
+    protected static ?string $navigationIcon = 'ri-puzzle-line';
 
     public static function form(Form $form): Form
     {
@@ -27,7 +29,7 @@ class ExtensionResource extends Resource
 
         return $form
             ->schema([
-                Forms\Components\Toggle::make('enabled'),
+                Forms\Components\Checkbox::make('enabled'),
                 Section::make('Extension Settings')
                     ->description('Specific settings for the selected extension')
                     ->schema([
@@ -46,7 +48,10 @@ class ExtensionResource extends Resource
                 Tables\Columns\TextColumn::make('type')
                     ->searchable()
                     ->sortable(),
-
+                Tables\Columns\IconColumn::make('enabled')
+                    ->label('Enabled')
+                    ->boolean()
+                    ->sortable(),
             ])
             ->filters([
                 //

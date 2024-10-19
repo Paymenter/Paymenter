@@ -15,7 +15,6 @@ class CreateOrder extends CreateRecord
         $invoice = new Invoice([
             'user_id' => $this->record->user_id,
             'currency_code' => $this->record->currency_code,
-            'issued_at' => now(),
             'due_at' => now()->addDays(7),
         ]);
         $invoice->save();

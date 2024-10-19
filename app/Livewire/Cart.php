@@ -192,7 +192,6 @@ class Cart extends Component
             if ($this->total->price > 0) {
                 $invoice = new Invoice([
                     'user_id' => $user->id,
-                    'issued_at' => now(),
                     'due_at' => now()->addDays(7),
                     'currency_code' => $this->total->currency->code,
                 ]);

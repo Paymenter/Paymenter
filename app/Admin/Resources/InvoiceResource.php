@@ -53,7 +53,7 @@ class InvoiceResource extends Resource
                     ->required()
                     ->relationship('currency', 'code')
                     ->placeholder('Select the currency'),
-                Forms\Components\DatePicker::make('issued_at')
+                Forms\Components\DatePicker::make('created_at')
                     ->label('Issued At')
                     ->required()
                     ->default(now())
@@ -155,7 +155,7 @@ class InvoiceResource extends Resource
                     })
                     ->searchable()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('issued_at')
+                Tables\Columns\TextColumn::make('created_at')
                     ->label('Issued At')
                     ->date()
                     ->searchable()

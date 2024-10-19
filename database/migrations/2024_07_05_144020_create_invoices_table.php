@@ -14,7 +14,6 @@ return new class extends Migration
         Schema::create('invoices', function (Blueprint $table) {
             $table->id();
             $table->string('status')->default('pending');
-            $table->date('issued_at')->nullable();
             $table->date('due_at')->nullable();
             $table->string('currency_code', 3);
             $table->foreignIdFor(\App\Models\User::class)->constrained()->cascadeOnDelete();

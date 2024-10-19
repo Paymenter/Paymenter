@@ -95,7 +95,6 @@ class Upgrade extends Component
             'status' => Invoice::STATUS_PENDING,
             'due_at' => Carbon::now()->addDays(7),
             'user_id' => $this->service->order->user_id,
-            'issued_at' => Carbon::now(),
         ]);
         $invoice->save();
 

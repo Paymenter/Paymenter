@@ -57,7 +57,6 @@ class CronJob extends Command
             $invoice = $service->invoices()->create([
                 'user_id' => $service->order->user_id,
                 'status' => 'pending',
-                'issued_at' => now(),
                 'due_at' => $service->expires_at,
                 'currency_code' => $service->currency_code,
             ]);

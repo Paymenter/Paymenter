@@ -21,10 +21,9 @@ class Invoice extends Model
 
     public const STATUS_CANCELLED = 'cancelled';
 
-    protected $fillable = ['user_id', 'currency_code', 'issued_at', 'due_at', 'status'];
+    protected $fillable = ['user_id', 'currency_code',  'due_at', 'status'];
 
     protected $casts = [
-        'issued_at' => 'date',
         'due_at' => 'date',
     ];
 
