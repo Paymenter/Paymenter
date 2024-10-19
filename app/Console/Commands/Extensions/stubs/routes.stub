@@ -1,0 +1,14 @@
+<?php
+
+use Illuminate\Support\Facades\Route;
+
+//for admin Dashboard
+Route::group(['prefix' => 'extensions/{{ class }}', 'middleware' => 'permission:VIEW_SETTINGS'], function () {
+    Route::get('/', [{{ namespace }}\{{ class }}::class, 'showINDashboardAdmin'])->name('extensions.{{ class }}.show');
+});
+
+
+// for clients
+Route::group(['prefix' => '{{ class }}'], function () {
+    Route::get('/', [{{ namespace }}\{{ class }}::class, 'show'])->name('extensions.{{ class }}.show');
+});

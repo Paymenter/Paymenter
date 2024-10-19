@@ -1,0 +1,5 @@
+<x-admin-layout title="{{ class }}">
+
+    <h1>welcome to {{ class }}<h1>
+
+<x-admin-layout>

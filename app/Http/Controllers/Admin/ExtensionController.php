@@ -12,55 +12,40 @@ use Illuminate\Support\Facades\Http;
 
 class ExtensionController extends Controller
 {
+
+    function getDirectoryExtensionsContents($dir)
+    {
+        $path = base_path('app/Extensions/' . $dir);
+        return file_exists($path) && is_dir($path) ? scandir($path) : [];
+    }
     public function index()
     {
-        $servers = scandir(base_path('app/Extensions/Servers/'));
-        $gateways = scandir(base_path('app/Extensions/Gateways/'));
-        $events = scandir(base_path('app/Extensions/Events/'));
-        foreach ($servers as $key => $server) {
-            if ($server == '.' || $server == '..') {
-                continue;
-            }
-            // Check if the extension is enabled
-            $extension = Extension::where('name', $server)->first();
-            if (!$extension) {
-                $extension = new Extension();
-                $extension->name = $server;
-                $extension->type = 'server';
-                $extension->enabled = 0;
-                $extension->save();
-            }
-        }
-        foreach ($gateways as $key => $gateway) {
-            if ($gateway == '.' || $gateway == '..') {
-                continue;
-            }
-            // Check if the extension is enabled
-            $extension = Extension::where('name', $gateway)->first();
-            if (!$extension) {
-                $extension = new Extension();
-                $extension->name = $gateway;
-                $extension->type = 'gateway';
-                $extension->enabled = 0;
-                $extension->save();
-            }
-        }
-        foreach ($events as $key => $event) {
-            if ($event == '.' || $event == '..') {
-                continue;
-            }
-            // Check if the extension is enabled
-            $extension = Extension::where('name', $event)->first();
-            if (!$extension) {
-                $extension = new Extension();
-                $extension->name = $event;
-                $extension->type = 'event';
-                $extension->enabled = 0;
-                $extension->save();
+        $extensions = [
+            'server'            => $this->getDirectoryExtensionsContents('Servers'),
+            'gateway'           => $this->getDirectoryExtensionsContents('Gateways'),
+            'event'             => $this->getDirectoryExtensionsContents('Events'),
+            'domainRegister'    => $this->getDirectoryExtensionsContents('DomainRegisters'),
+            'other'             => $this->getDirectoryExtensionsContents('Others'),
+        ];
+
+        foreach ($extensions as $type => $list) {
+            foreach ($list as $key => $name) {
+                if ($name == '.' || $name == '..') {
+                    continue;
+                }
+
+                $extension = Extension::where('name', $name)->first();
+                if (!$extension) {
+                    $extension = new Extension();
+                    $extension->name = $name;
+                    $extension->type = $type;
+                    $extension->enabled = 0;
+                    $extension->save();
+                }
             }
         }
 
-        return view('admin.extensions.index', compact('servers', 'gateways', 'events'));
+        return view('admin.extensions.index', compact('extensions'));
     }
 
     /**
@@ -240,7 +225,8 @@ class ExtensionController extends Controller
         return redirect()->route('admin.extensions.edit', ['sort' => $sort, 'name' => $name])->with('success', 'Extension updated successfully');
     }
 
-    public function updateExtension(Extension $extension){
+    public function updateExtension(Extension $extension)
+    {
         // Get ID from the marketplace
         $url = config('app.marketplace') . 'extensions?version=' . config('app.version') . '&search=' . $extension->name;
         $response = Http::get($url)->json();

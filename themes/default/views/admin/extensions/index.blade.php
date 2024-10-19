@@ -14,7 +14,7 @@
             </a>
         </div>
     </div>
-    @if (!$servers)
+    @if (empty($extensions['server']))
         <p class="dark:bg-secondary-100 dark:text-darkmodetext text-gray-600 px-3 rounded-md text-xl m-4">
             {{ __('No extensions found') }}
         </p>
@@ -38,11 +38,15 @@
                 </tr>
             </thead>
             <tbody class="bg-secondary-100 divide-y divide-gray-200">
-                <tr class="bg-secondary-100">
-                    <td colspan="3"
-                        class="dark:text-darkmodetext px-6 py-4 whitespace-nowrap text-gray-500 font-bold text-lg text-center">
-                        Servers</td>
-                </tr>
+            @foreach ($extensions as $type => $servers)
+            
+                @if (!empty($servers))
+                    <tr class="bg-secondary-100">
+                        <td colspan="3"
+                            class="dark:text-darkmodetext px-6 py-4 whitespace-nowrap text-gray-500 font-bold text-lg text-center">
+                            {{$type}}</td>
+                    </tr>
+                @endif
                 @foreach ($servers as $extensio)
                     @if ($extensio == '.' || $extensio == '..')
                         @continue
@@ -74,79 +78,12 @@
                             @endif
                         </td>
                         <td class="dark:text-darkmodetext px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                            <a href="{{ route('admin.extensions.edit', ['server', $extensio]) }}"
+                            <a href="{{ route('admin.extensions.edit', [$type, $extensio]) }}"
                                 class="text-indigo-600 hover:text-indigo-900 hover:bg-button p-2 rounded-lg">{{ __('Edit') }}</a>
                         </td>
                     </tr>
                 @endforeach
-                <tr class="bg-secondary-100">
-                    <td colspan="3"
-                        class="dark:text-darkmodetext px-6 py-4 whitespace-nowrap text-gray-500 font-bold text-lg text-center">
-                        Gateways</td>
-                </tr>
-                @foreach ($gateways as $gateway)
-                    @if ($gateway == '.' || $gateway == '..')
-                        @continue
-                    @endif
-                    @php
-                        $extension = App\Models\Extension::where('name', $gateway)
-                            ->get()
-                            ->first();
-                    @endphp
-                    @php $metadata = App\Helpers\ExtensionHelper::getMetadata($extension); @endphp
-                    <tr>
-                        <td class="dark:text-darkmodetext px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                            {{ $metadata->display_name ?? $gateway }}</td>
-                        <td class="dark:text-darkmodetext px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                            @if ($extension->enabled)
-                                {{ __('Yes') }}
-                            @else
-                                {{ __('No') }}
-                            @endif
-                        </td>
-                        <td class="dark:text-darkmodetext px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                            {{ $metadata->version ?? 'Unknown Version' }}
-                        </td>
-                        <td class="dark:text-darkmodetext px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                            <a href="{{ route('admin.extensions.edit', ['gateway', $gateway]) }}"
-                                class="dark:bg-darkmodebutton text-indigo-600 hover:text-indigo-900 hover:bg-button p-2 rounded-lg">{{ __('Edit') }}</a>
-                        </td>
-                    </tr>
-                @endforeach
-                <tr class="bg-secondary-100">
-                    <td colspan="3"
-                        class="dark:text-darkmodetext px-6 py-4 whitespace-nowrap text-gray-500 font-bold text-lg text-center">
-                        Events</td>
-                </tr>
-                @foreach ($events as $event)
-                    @if ($event == '.' || $event == '..')
-                        @continue
-                    @endif
-                    @php
-                        $extension = App\Models\Extension::where('name', $event)
-                            ->get()
-                            ->first();
-                    @endphp
-                    @php $metadata = App\Helpers\ExtensionHelper::getMetadata($extension); @endphp
-                    <tr>
-                        <td class="dark:text-darkmodetext px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                            {{ $event }}</td>
-                        <td class="dark:text-darkmodetext px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                            @if ($extension->enabled)
-                                {{ __('Yes') }}
-                            @else
-                                {{ __('No') }}
-                            @endif
-                        </td>
-                        <td class="dark:text-darkmodetext px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                            {{ $metadata->version ?? 'Unknown Version' }}
-                        </td>
-                        <td class="dark:text-darkmodetext px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                            <a href="{{ route('admin.extensions.edit', ['event', $event]) }}"
-                                class="dark:bg-darkmodebutton text-indigo-600 hover:text-indigo-900 hover:bg-button p-2 rounded-lg">{{ __('Edit') }}</a>
-                        </td>
-                    </tr>
-                @endforeach
+            @endforeach 
             </tbody>
         </table>
 

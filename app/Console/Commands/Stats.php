@@ -85,6 +85,8 @@ class Stats extends Command
                 'extensions' => [
                     'servers' => Extension::where('type', 'server')->count(),
                     'gateway' => Extension::where('type', 'gateway')->count(),
+                    'domainRegister' => Extension::where('type', 'domainRegister')->count(),
+                    'other' => Extension::where('type', 'other')->count(),
                     'list' => $extensions,
                 ],
                 'php_version' => phpversion(),

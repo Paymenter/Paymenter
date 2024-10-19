@@ -1,0 +1,5 @@
+<x-app-layout clients title="{{ __('Product') }} {{ class }}">
+
+    <h1>welcome to {{ class }} <h1>
+
+</x-app-layout>
