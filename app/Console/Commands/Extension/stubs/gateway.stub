@@ -1,0 +1,31 @@
+<?php
+
+namespace {{ namespace }};
+
+use App\Classes\Extension\Gateway;
+
+class {{ class }} extends Gateway
+{
+    /**
+     * Get all the configuration for the extension
+     * 
+     * @param array $values
+     * @return array
+     */
+    public function getConfig($values = [])
+    {
+        return [];
+    }
+    
+    /**
+     * Return a view or a url to redirect to
+     * 
+     * @param Invoice $invoice
+     * @param float $total
+     * @return string
+     */
+    public function pay($invoice, $total)
+    {
+        return '';
+    }
+}

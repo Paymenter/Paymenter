@@ -24,7 +24,7 @@ class Create extends Command implements PromptsForMissingInput
      *
      * @var string
      */
-    protected $description = 'Command description';
+    protected $description = 'Create a new user';
 
     /**
      * Execute the console command.

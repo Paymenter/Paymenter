@@ -179,7 +179,6 @@ class PayPal extends Gateway
 
     public function webhook(Request $request)
     {
-        Log::info('PayPal Webhook', ['headers' => $request->headers->all()]);
         $body = $request->getContent();
         $sigString = $request->header('PAYPAL-TRANSMISSION-ID') . '|' . $request->header('PAYPAL-TRANSMISSION-TIME') . '|' . $this->config('webhook_id') . '|' . crc32($body);
         $pubKey = openssl_pkey_get_public(file_get_contents($request->header('PAYPAL-CERT-URL')));
@@ -193,12 +192,8 @@ class PayPal extends Gateway
             'sha256WithRSAEncryption'
         );
         if ($verifyResult !== 1) {
-            Log::error('PayPal Webhook', ['error' => 'Invalid signature']);
-
             return response()->json(['status' => 'error']);
         }
-
-        Log::info('PayPal Webhook', ['event' => $body]);
 
         $body = $request->json()->all();
 

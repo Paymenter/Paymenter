@@ -77,5 +77,3 @@ Route::group([
         'middleware' => 'web',
     ]);
 });
-
-include_once 'extensions.php';

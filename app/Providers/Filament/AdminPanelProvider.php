@@ -3,6 +3,7 @@
 namespace App\Providers\Filament;
 
 use App\Admin\Widgets as AdminWidgets;
+use App\Models\Extension;
 use App\Providers\SettingsProvider;
 use Filament\Facades\Filament;
 use Filament\Http\Middleware\Authenticate;
@@ -36,7 +37,7 @@ class AdminPanelProvider extends PanelProvider
 
         Notifications::alignment(Alignment::Center);
 
-        return $panel
+        $panel
             ->default()
             ->id('admin')
             ->path('admin')
@@ -67,7 +68,7 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->renderHook(
                 PanelsRenderHook::SIDEBAR_NAV_END,
-                fn (): string => Blade::render('<x-admin-footer />'),
+                fn(): string => Blade::render('<x-admin-footer />'),
             )
             ->navigationGroups([
                 'Administration',
@@ -90,5 +91,12 @@ class AdminPanelProvider extends PanelProvider
                 Authenticate::class,
             ]);
 
+        foreach (Extension::where('enabled', true)->get() as $extension) {
+            $panel->discoverResources(in: base_path('extensions' . '/' . $extension->path . '/Admin/Resources'), for: $extension->namespace . '\\Admin\\Resources');
+            $panel->discoverPages(in: base_path('extensions' . '/' . $extension->path . '/Admin/Pages'), for: $extension->namespace . '\\Admin\\Pages');
+            $panel->discoverClusters(in: base_path('extensions' . '/' . $extension->path . '/Admin/Clusters'), for: $extension->namespace . '\\Admin\\Clusters');
+        }
+
+        return $panel;
     }
 }

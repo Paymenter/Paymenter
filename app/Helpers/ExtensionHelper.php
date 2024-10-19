@@ -3,8 +3,10 @@
 namespace App\Helpers;
 
 use App\Classes\FilamentInput;
+use App\Models\Extension;
 use App\Models\Gateway;
 use App\Models\Invoice;
+use App\Models\Server;
 use App\Models\Service;
 use Exception;
 use Illuminate\Support\Facades\Cache;
@@ -62,7 +64,12 @@ class ExtensionHelper
      */
     public static function getConfig($type, $extension)
     {
-        return self::getExtension($type, $extension)->getConfig();
+        $typeClass = ($type == 'gateway') ? Gateway::class : Server::class;
+        $currentConfig = $typeClass::where('extension', $extension)->exists() 
+            ? $typeClass::where('extension', $extension)->first()->settings->pluck('value', 'key')->toArray() 
+            : [];        
+
+        return self::getExtension($type, $extension)->getConfig($currentConfig);
     }
 
     /**
@@ -107,6 +114,75 @@ class ExtensionHelper
     }
 
     /**
+     * Get all extensions which are not gateways or servers with their settings
+     *
+     * @return array
+     */
+    public static function getAvailableExtensions()
+    {
+        $extensions = [];
+
+        foreach (scandir(base_path('extensions')) as $extension) {
+            if (in_array($extension, ['.', '..', 'Gateways', 'Servers'])) {
+                continue;
+            }
+
+            $type = strtolower($extension);
+            // Remove the 's' from  end of the type
+            $type = substr($type, 0, -1);
+
+            foreach (scandir(base_path('extensions/' . $extension)) as $extension) {
+                if (in_array($extension, ['.', '..'])) {
+                    continue;
+                }
+
+                $extensions[] = [
+                    'name' => $extension,
+                    'type' => $type,
+                    'settings' => self::getConfig($type, $extension),
+                ];
+            }
+        }
+
+        return $extensions;
+    }
+
+    /**
+     * Call enable function on extension
+     *
+     * @param  object  $extension
+     */
+    public static function enableExtension(Extension $extension)
+    {
+        return self::call($extension, 'enable', mayFail: true);
+    }
+
+    /**
+     * Call disable function on extension
+     *
+     * @param  object  $extension
+     */
+    public static function disableExtension(Extension $extension)
+    {
+        return self::call($extension, 'disable', mayFail: true);
+    }
+
+    public static function call($extension, $function, $args = [], $mayFail = false)
+    {
+        try {
+            if (!self::hasFunction($extension, $function)) {
+                throw new Exception('Function not found');
+            }
+
+            return self::getExtension($extension->type, $extension->extension, $extension->settings)->$function(...$args);
+        } catch (Exception $e) {
+            if (!$mayFail) {
+                throw $e;
+            }
+        }
+    }
+
+    /**
      * Convert extensions to options
      *
      * @param  array  $extensions
@@ -134,7 +210,7 @@ class ExtensionHelper
      */
     public static function getProductConfig($server, $values = [])
     {
-        return self::getExtension('server', $server->extension, self::settingsToArray($server->settings))->getProductConfig($values);
+        return self::call($server, 'getProductConfig', [$values]);
     }
 
     /**

@@ -1,0 +1,19 @@
+<?php
+
+namespace {{ namespace }};
+
+use App\Classes\Extension\Extension;
+
+class {{ class }} extends Extension 
+{
+    /**
+     * Get all the configuration for the extension
+     * 
+     * @param array $values
+     * @return array
+     */
+    public function getConfig($values = [])
+    {
+        return [];
+    }
+}

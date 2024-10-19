@@ -6,6 +6,7 @@ use Filament\Forms\Components\Checkbox;
 use Filament\Forms\Components\ColorPicker;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\MarkdownEditor;
+use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TagsInput;
 use Filament\Forms\Components\TextInput;
@@ -33,7 +34,7 @@ class FilamentInput
                         // Check if options are associative array or sequential array
                         if (array_is_list((array) $setting->options)) {
                             // If yes, then return array which has the keys same as the values
-                            $options_with_keys = array_merge(...array_map(fn ($item) => [$item => $item], $setting->options));
+                            $options_with_keys = array_merge(...array_map(fn($item) => [$item => $item], $setting->options));
 
                             return $options_with_keys;
                         } else {
@@ -76,6 +77,20 @@ class FilamentInput
                     ->rules($setting->validation ?? []);
                 break;
 
+            case 'textarea':
+                return MarkdownEditor::make($setting->name)
+                    ->label($setting->label ?? $setting->name)
+                    ->helperText($setting->description ?? '')
+                    ->placeholder($setting->default ?? '')
+                    ->hint($setting->hint ?? '')
+                    ->hintColor('primary')
+                    ->required($setting->required ?? false)
+                    ->live(condition: $setting->live ?? false)
+                    ->default($setting->default ?? '')
+                    ->disableAllToolbarButtons($setting->disable_toolbar ?? false)
+                    ->rules($setting->validation ?? [])
+                    ->disabled($setting->disabled ?? false);
+                break;
             case 'markdown':
                 return MarkdownEditor::make($setting->name)
                     ->label($setting->label ?? $setting->name)
@@ -173,7 +188,7 @@ class FilamentInput
 
                 if (isset($setting->file_name)) {
                     $input->getUploadedFileNameForStorageUsing(
-                        fn (): string => (string) $setting->file_name,
+                        fn(): string => (string) $setting->file_name,
                     );
                 }
 
@@ -192,6 +207,14 @@ class FilamentInput
                     ->default($setting->default ?? '')
                     ->disabled($setting->disabled ?? false)
                     ->rules($setting->validation ?? []);
+                break;
+
+            case 'placeholder':
+                return Placeholder::make($setting->name)
+                    ->content($setting->label ?? null)
+                    ->helperText($setting->description ?? '')
+                    ->hint($setting->hint ?? '')
+                    ->hintColor('primary');
                 break;
 
             default:

@@ -26,7 +26,7 @@ class CronJob extends Command
      *
      * @var string
      */
-    protected $description = 'Command description';
+    protected $description = 'Run automated tasks';
 
     /**
      * Execute the console command.

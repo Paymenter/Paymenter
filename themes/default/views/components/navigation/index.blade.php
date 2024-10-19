@@ -60,7 +60,6 @@
                          x-transition:leave="transition ease-in duration-75" x-transition:leave-start="opacity-100 scale-100"
                          x-transition:leave-end="opacity-0 scale-90" x-on:click.outside="accountMenuOpen = false">
                          <x-navigation.link :href="route('account')">Account</x-navigation.link>
-                         {{-- <x-navigation.link :href="route('settings')">Settings</x-navigation.link> --}}
                          <livewire:auth.logout />
                      </div>
                  </div>

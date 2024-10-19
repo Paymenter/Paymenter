@@ -2,7 +2,9 @@
 
 namespace App\Providers;
 
+use App\Models\Extension;
 use App\Classes\Synths\PriceSynth;
+use App\Helpers\ExtensionHelper;
 use App\Models\EmailLog;
 use App\Models\OauthClient;
 use App\Models\User;
@@ -46,8 +48,9 @@ class AppServiceProvider extends ServiceProvider
             $event->extendSocialite('discord', \SocialiteProviders\Discord\Provider::class);
         });
 
-        // Register views for extensions (app/Extensions/{type}/{extension}/views)
-        $this->loadViewsFrom(base_path('extensions'), 'extensions');
+        foreach (Extension::where('enabled', true)->get() as $extension) {
+            ExtensionHelper::call($extension, 'boot', mayFail: true);
+        }
 
         Queue::after(function (JobProcessed $event) {
             if ($event->job->resolveName() === 'App\Mail\Mail') {

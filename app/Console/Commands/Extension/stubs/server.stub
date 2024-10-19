@@ -1,0 +1,93 @@
+<?php
+
+namespace {{ namespace }};
+
+use App\Classes\Extension\Server;
+use App\Models\Service;
+
+class {{ class }} extends Server
+{
+    /**
+     * Get all the configuration for the extension
+     * 
+     * @param array $values
+     * @return array
+     */
+    public function getConfig($values = []): array
+    {
+        return [];
+    }
+
+    /**
+     * Get product config
+     * 
+     * @param array $values
+     * @return array
+     */
+    public function getProductConfig($values = []): array
+    {
+        return [];
+    }
+
+    /**
+    * Check if currenct configuration is valid
+    *
+    * @return bool|string
+    */
+    public function testConfig(): bool|string
+    {
+        return true;
+    }
+
+    /**
+     * Create a server 
+     * 
+     * @param Service $service
+     * @param array $settings (product settings)
+     * @param array $properties (checkout options)
+     * @return bool
+     */
+    public function createServer(Service $service, $settings, $properties)
+    {
+        return false;
+    }
+
+    /**
+     * Suspend a server
+     * 
+     * @param Service $service
+     * @param array $settings (product settings)
+     * @param array $properties (checkout options)
+     * @return bool
+     */
+    public function suspendServer(Service $service, $settings, $properties)
+    {
+        return false;
+    }
+
+    /**
+     * Unsuspend a server
+     * 
+     * @param Service $service
+     * @param array $settings (product settings)
+     * @param array $properties (checkout options)
+     * @return bool
+     */
+    public function unsuspendServer(Service $service, $settings, $properties)
+    {
+        return false;
+    }
+
+    /**
+     * Terminate a server
+     * 
+     * @param Service $service
+     * @param array $settings (product settings)
+     * @param array $properties (checkout options)
+     * @return bool
+     */
+    public function terminateServer(Service $service, $settings, $properties)
+    {
+        return false;
+    }
+}
