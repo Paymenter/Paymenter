@@ -159,7 +159,7 @@ class ExtensionHelper
             return [];
         }
         $server = $product->extension;
-        $module = "App\\Extensions\\Servers\\" . $server->name . "\\" . $server->name;
+        $module = self::getModelExtension($server);
         if (!class_exists($module)) {
             return [];
         }
@@ -187,7 +187,7 @@ class ExtensionHelper
             return [];
         }
         $server = $product->extension;
-        $module = "App\\Extensions\\Servers\\" . $server->name . "\\" . $server->name;
+        $module = self::getModelExtension($server);
         if (!class_exists($module)) {
             return [];
         }
@@ -221,7 +221,7 @@ class ExtensionHelper
      */
     public static function updateConfig(Extension $extension, Request $request)
     {
-        $namespace = 'App\Extensions\\' . ucfirst($extension->type) . 's\\' . $extension->name . '\\' . $extension->name;
+        $namespace = self::getModelExtension($extension);
         $extension->config = json_decode(json_encode((new $namespace($extension))->getConfig()));
 
         foreach ($extension->config as $config) {
@@ -446,7 +446,7 @@ class ExtensionHelper
         if (!$extension) {
             return false;
         }
-        $module = 'App\Extensions\Gateways\\' . $extension->name . '\\' . $extension->name;
+        $module = self::getModelExtension($extension);
         if (!class_exists($module)) {
             return false;
         }
@@ -469,7 +469,7 @@ class ExtensionHelper
         if (!$extension) {
             return false;
         }
-        $module = 'App\Extensions\Gateways\\' . $extension->name . '\\' . $extension->name;
+        $module = self::getModelExtension($extension);
         if (!class_exists($module)) {
             return false;
         }
@@ -558,7 +558,7 @@ class ExtensionHelper
     {
         $gateways = [];
         foreach (self::getGateways() as $gateway) {
-            $module = 'App\Extensions\Gateways\\' . $gateway->name . '\\' . $gateway->name;
+            $module = self::getModelExtension($gateway);
             if (!class_exists($module)) {
                 continue;
             }
@@ -576,6 +576,17 @@ class ExtensionHelper
 
         return collect($gateways);
     }
+    
+    /**
+     * Returns the fully qualified name of the class that should be used to instantiate the extension
+     * 
+     * @param Extension $extension
+     * @return string 
+     */
+    public static function getModelExtension(Extension $extension)
+    {
+        return ('App\\Extensions\\' . ucfirst($extension->type) . 's\\' . $extension->name . '\\' . $extension->name);
+    }
 
     public static function createServer(OrderProduct $product2)
     {
@@ -588,7 +599,7 @@ class ExtensionHelper
         if (!$extension) {
             return false;
         }
-        $module = 'App\Extensions\\Servers\\' . $extension->name . '\\' . $extension->name;
+    $module = self::getModelExtension($extension);
         $extensionName = $extension->name;
         if (!class_exists($module)) {
             return false;
@@ -615,7 +626,7 @@ class ExtensionHelper
         if (!$extension) {
             return false;
         }
-        $module = 'App\Extensions\\Servers\\' . $extension->name . '\\' . $extension->name;
+        $module = self::getModelExtension($extension);
         if (!class_exists($module)) {
             return false;
         }
@@ -643,7 +654,7 @@ class ExtensionHelper
         if (!$extension) {
             return false;
         }
-        $module = 'App\Extensions\\Servers\\' . $extension->name . '\\' . $extension->name;
+        $module = self::getModelExtension($extension);
         if (!class_exists($module)) {
             return false;
         }
@@ -670,7 +681,7 @@ class ExtensionHelper
         if (!$extension) {
             return false;
         }
-        $module = 'App\Extensions\\Servers\\' . $extension->name . '\\' . $extension->name;
+        $module = self::getModelExtension($extension);
         if (!class_exists($module)) {
             return false;
         }
@@ -698,7 +709,7 @@ class ExtensionHelper
         if (!$extension) {
             return false;
         }
-        $module = 'App\Extensions\\Servers\\' . $extension->name . '\\' . $extension->name;
+        $module = self::getModelExtension($extension);
         if (!class_exists($module)) {
             return false;
         }
@@ -733,7 +744,7 @@ class ExtensionHelper
         if (!$extension) {
             return false;
         }
-        $module = 'App\Extensions\\Servers\\' . $extension->name . '\\' . $extension->name;
+        $module = self::getModelExtension($extension);
         if (!class_exists($module)) {
             return false;
         }
@@ -772,7 +783,7 @@ class ExtensionHelper
         if (!$extension) {
             return [];
         }
-        $module = 'App\Extensions\\Servers\\' . $extension->name . '\\' . $extension->name;
+        $module = self::getModelExtension($extension);
         if (!class_exists($module)) {
             return [];
         }
@@ -817,7 +828,7 @@ class ExtensionHelper
         if (!$extension) {
             return [];
         }
-        $module = 'App\Extensions\\Servers\\' . $extension->name . '\\' . $extension->name;
+        $module = self::getModelExtension($extension);
         if (!class_exists($module)) {
             return [];
         }
@@ -829,7 +840,7 @@ class ExtensionHelper
         $configurableOptions = self::loadConfigurableOptions($product2);
         $user = $order->user;
 
-        View::addNamespace(strtolower($extension->name), app_path() . '/Extensions/Servers/' . $extension->name . '/views');
+        View::addNamespace(strtolower($extension->name), app_path() . '/Extensions'.'/'. ucfirst($extension->type) . 's/' . $extension->name . '/views');
         try {
             return $module->getCustomPages($user, $config, $order, $product2, $configurableOptions);
         } catch (\Exception $e) {

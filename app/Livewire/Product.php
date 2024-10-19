@@ -5,6 +5,7 @@ namespace App\Livewire;
 use App\Models\Product as ModelsProduct;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
+use App\Helpers\ExtensionHelper;
 
 class Product extends Component
 {
@@ -45,7 +46,7 @@ class Product extends Component
         }
         if (isset($this->product->extension_id) && $this->product->extension) {
             $server = $this->product->extension;
-            $module = "App\\Extensions\\Servers\\" . $server->name . "\\" . $server->name;
+            $module = ExtensionHelper::getModelExtension($server);
             if (class_exists($module)) {
                 $module = new $module($server);
                 if (method_exists($module, 'getUserConfig')) {
