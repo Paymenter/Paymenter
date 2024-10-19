@@ -34,7 +34,7 @@ class FilamentInput
                         // Check if options are associative array or sequential array
                         if (array_is_list((array) $setting->options)) {
                             // If yes, then return array which has the keys same as the values
-                            $options_with_keys = array_merge(...array_map(fn($item) => [$item => $item], $setting->options));
+                            $options_with_keys = array_merge(...array_map(fn ($item) => [$item => $item], $setting->options));
 
                             return $options_with_keys;
                         } else {
@@ -188,7 +188,7 @@ class FilamentInput
 
                 if (isset($setting->file_name)) {
                     $input->getUploadedFileNameForStorageUsing(
-                        fn(): string => (string) $setting->file_name,
+                        fn (): string => (string) $setting->file_name,
                     );
                 }
 

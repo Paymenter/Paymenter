@@ -68,7 +68,7 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->renderHook(
                 PanelsRenderHook::SIDEBAR_NAV_END,
-                fn(): string => Blade::render('<x-admin-footer />'),
+                fn (): string => Blade::render('<x-admin-footer />'),
             )
             ->navigationGroups([
                 'Administration',

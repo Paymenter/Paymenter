@@ -28,6 +28,7 @@ class Create extends Command implements PromptsForMissingInput
         $type = $this->argument('type');
         if (!in_array($type, ['server', 'gateway', 'other'])) {
             $this->error('Invalid extension type. Valid types are: server, gateway, event');
+
             return;
         }
         // Read stub file contents
@@ -40,9 +41,12 @@ class Create extends Command implements PromptsForMissingInput
         $path = base_path('extensions/' . ucfirst($type) . 's/' . ucfirst($name) . '/' . ucfirst($name) . '.php');
         if (file_exists(dirname($path)) && !$this->option('force')) {
             $this->error("Extension already exists\nRerun the command with a different name or use --force to overwrite");
+
             return;
         }
-        if (!file_exists(dirname($path))) mkdir(dirname($path), 0755, true);
+        if (!file_exists(dirname($path))) {
+            mkdir(dirname($path), 0755, true);
+        }
         file_put_contents($path, $stub);
     }
 

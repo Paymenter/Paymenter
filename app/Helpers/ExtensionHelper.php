@@ -65,9 +65,9 @@ class ExtensionHelper
     public static function getConfig($type, $extension)
     {
         $typeClass = ($type == 'gateway') ? Gateway::class : Server::class;
-        $currentConfig = $typeClass::where('extension', $extension)->exists() 
-            ? $typeClass::where('extension', $extension)->first()->settings->pluck('value', 'key')->toArray() 
-            : [];        
+        $currentConfig = $typeClass::where('extension', $extension)->exists()
+            ? $typeClass::where('extension', $extension)->first()->settings->pluck('value', 'key')->toArray()
+            : [];
 
         return self::getExtension($type, $extension)->getConfig($currentConfig);
     }

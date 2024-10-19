@@ -2,10 +2,10 @@
 
 namespace App\Providers;
 
-use App\Models\Extension;
 use App\Classes\Synths\PriceSynth;
 use App\Helpers\ExtensionHelper;
 use App\Models\EmailLog;
+use App\Models\Extension;
 use App\Models\OauthClient;
 use App\Models\User;
 use Illuminate\Queue\Events\JobFailed;

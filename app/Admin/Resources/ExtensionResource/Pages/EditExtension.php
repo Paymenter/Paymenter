@@ -12,7 +12,6 @@ class EditExtension extends EditRecord
 {
     protected static string $resource = ExtensionResource::class;
 
-    
     protected function mutateFormDataBeforeFill(array $data): array
     {
         foreach ($this->record->settings as $setting) {
@@ -34,7 +33,7 @@ class EditExtension extends EditRecord
             }
         }
         $record->update(Arr::except($data, ['settings']));
-        
+
         if (!isset($data['settings'])) {
             return $record;
         }

@@ -3,7 +3,6 @@
 namespace App\Admin\Resources;
 
 use App\Admin\Resources\ExtensionResource\Pages;
-use App\Admin\Resources\ExtensionResource\RelationManagers;
 use App\Models\Extension;
 use Filament\Forms;
 use Filament\Forms\Components\Grid;
@@ -14,7 +13,6 @@ use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class ExtensionResource extends Resource
 {
@@ -33,7 +31,7 @@ class ExtensionResource extends Resource
                 Section::make('Extension Settings')
                     ->description('Specific settings for the selected extension')
                     ->schema([
-                        Grid::make()->schema(fn(Get $get): array => $options->settings[$get('extension')] ?? $options->settings['default'])->key('settings'),
+                        Grid::make()->schema(fn (Get $get): array => $options->settings[$get('extension')] ?? $options->settings['default'])->key('settings'),
                     ]),
             ]);
     }
