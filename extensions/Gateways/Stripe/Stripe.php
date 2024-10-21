@@ -8,9 +8,17 @@ use App\Models\Invoice;
 use App\Models\Service;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\View;
 
 class Stripe extends Gateway
 {
+    public function boot()
+    {
+        require __DIR__ . '/routes.php';
+        // Register webhook route
+        View::addNamespace('gateways.stripe', __DIR__ . '/resources/views');
+    }
+
     public function getConfig($values = [])
     {
         return [
@@ -87,7 +95,7 @@ class Stripe extends Gateway
         }
 
         // Pay the invoice using Stripe
-        return view('extensions::gateways.stripe.pay', ['invoice' => $invoice, 'total' => $total, 'intent' => $intent, 'type' => $type, 'stripePublishableKey' => $this->config('stripe_publishable_key')]);
+        return view('gateways.stripe::pay', ['invoice' => $invoice, 'total' => $total, 'intent' => $intent, 'type' => $type, 'stripePublishableKey' => $this->config('stripe_publishable_key')]);
     }
 
     public function webhook(Request $request)
@@ -100,7 +108,7 @@ class Stripe extends Gateway
 
         // Handle the event
         switch ($event->type) {
-            // Normal payment
+                // Normal payment
             case 'payment_intent.succeeded':
                 $paymentIntent = $event->data->object; // contains a StripePaymentIntent
                 if (!isset($paymentIntent->metadata->invoice_id)) {

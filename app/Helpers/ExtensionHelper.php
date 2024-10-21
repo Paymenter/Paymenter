@@ -6,6 +6,7 @@ use App\Classes\FilamentInput;
 use App\Models\Extension;
 use App\Models\Gateway;
 use App\Models\Invoice;
+use App\Models\Product;
 use App\Models\Server;
 use App\Models\Service;
 use Exception;
@@ -94,6 +95,21 @@ class ExtensionHelper
     }
 
     /**
+     * Get checkout configuration
+     * 
+     * @return array
+     */
+    public static function getCheckoutConfig(Product $product)
+    {
+        $server = $product->server;
+        if (!$server) {
+            return [];
+        }
+
+        return self::call($server, 'getCheckoutConfig', [$product], mayFail: true) ?? [];
+    }
+
+    /**
      * Get available gateways
      *
      * @return array
@@ -145,26 +161,6 @@ class ExtensionHelper
         }
 
         return $extensions;
-    }
-
-    /**
-     * Call enable function on extension
-     *
-     * @param  object  $extension
-     */
-    public static function enableExtension(Extension $extension)
-    {
-        return self::call($extension, 'enable', mayFail: true);
-    }
-
-    /**
-     * Call disable function on extension
-     *
-     * @param  object  $extension
-     */
-    public static function disableExtension(Extension $extension)
-    {
-        return self::call($extension, 'disable', mayFail: true);
     }
 
     public static function call($extension, $function, $args = [], $mayFail = false)
@@ -263,13 +259,13 @@ class ExtensionHelper
      *
      * @return array
      */
-    public static function getCheckoutGateways($items)
+    public static function getCheckoutGateways($items, $type)
     {
         $gateways = [];
 
         foreach (Gateway::all() as $gateway) {
             if (self::hasFunction($gateway, 'canUseGateway')) {
-                if (self::getExtension('gateway', $gateway, $gateway->settings)->canUseGateway($items)) {
+                if (self::getExtension('gateway', $gateway, $gateway->settings)->canUseGateway($items, $type)) {
                     $gateways[] = $gateway;
                 }
             } else {

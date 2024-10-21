@@ -8,9 +8,17 @@ use App\Models\Order;
 use App\Models\Service;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\View;
 
 class PayPal extends Gateway
 {
+    public function boot()
+    {
+        require __DIR__ . '/routes.php';
+        // Register webhook route
+        View::addNamespace('gateways.paypal', __DIR__ . '/resources/views');
+    }
+
     public function getConfig($values = [])
     {
         return [
@@ -151,7 +159,7 @@ class PayPal extends Gateway
             ]);
         }
 
-        return view('extensions::gateways.paypal.pay', ['invoice' => $invoice, 'total' => $total, 'order' => $order ?? null, 'plan' => $plan ?? null, 'clientId' => $this->config('client_id')]);
+        return view('gateways.paypal::pay', ['invoice' => $invoice, 'total' => $total, 'order' => $order ?? null, 'plan' => $plan ?? null, 'clientId' => $this->config('client_id')]);
     }
 
     public function capture(Request $request)

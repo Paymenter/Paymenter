@@ -3,6 +3,7 @@
 namespace App\Admin\Resources\GatewayResource\Pages;
 
 use App\Admin\Resources\GatewayResource;
+use App\Helpers\ExtensionHelper;
 use Filament\Resources\Pages\CreateRecord;
 use Illuminate\Database\Eloquent\Model;
 
@@ -19,6 +20,7 @@ class CreateGateway extends CreateRecord
 
     protected function handleRecordCreation(array $data): Model
     {
+        $data['enabled'] = true;
         $record = static::getModel()::create(\Arr::except($data, ['settings']));
 
         if (!isset($data['settings'])) {
@@ -35,6 +37,8 @@ class CreateGateway extends CreateRecord
                 'value' => $value,
             ]);
         }
+
+        ExtensionHelper::call($record, 'enabled', [$record], mayFail: true);
 
         return $record;
     }

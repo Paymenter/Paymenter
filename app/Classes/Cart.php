@@ -9,7 +9,7 @@ class Cart
         return collect(session('cart', []));
     }
 
-    public static function add($product, $plan, $configOptions, Price $price, $quantity = 1, $key = null)
+    public static function add($product, $plan, $configOptions, $checkoutConfig, Price $price, $quantity = 1, $key = null)
     {
         if (isset($key)) {
             $cart = self::get();
@@ -18,6 +18,7 @@ class Cart
                 'product' => (object) $product,
                 'plan' => (object) $plan,
                 'configOptions' => (object) $configOptions,
+                'checkoutConfig' => (object) $checkoutConfig,
                 'price' => $price,
                 'quantity' => $quantity,
             ];
@@ -26,6 +27,7 @@ class Cart
                 'product' => (object) $product,
                 'plan' => (object) $plan,
                 'configOptions' => (object) $configOptions,
+                'checkoutConfig' => (object) $checkoutConfig,
                 'price' => $price,
                 'quantity' => $quantity,
             ]);

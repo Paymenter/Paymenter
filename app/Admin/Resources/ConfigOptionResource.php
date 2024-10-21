@@ -44,7 +44,6 @@ class ConfigOptionResource extends Resource
                                     'text' => 'Text',
                                     'number' => 'Number',
                                     'select' => 'Select',
-                                    'slider' => 'Slider',
                                     'radio' => 'Radio',
                                     'checkbox' => 'Checkbox',
                                 ]),

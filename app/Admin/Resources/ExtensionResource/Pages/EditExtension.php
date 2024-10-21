@@ -27,9 +27,9 @@ class EditExtension extends EditRecord
         if ($record->enabled != $data['enabled']) {
             // if the extension is being enabled, we need to run the extension's setup method
             if ($data['enabled']) {
-                ExtensionHelper::enableExtension($record);
+                ExtensionHelper::call($record, 'enabled', [$record], mayFail: true);
             } else {
-                ExtensionHelper::disableExtension($record);
+                ExtensionHelper::call($record, 'disabled', [$record], mayFail: true);
             }
         }
 

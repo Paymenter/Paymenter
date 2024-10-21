@@ -4,5 +4,7 @@ use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Support\Facades\Route;
 use Paymenter\Extensions\Gateways\PayPal\PayPal;
 
-Route::post('/capture', [PayPal::class, 'capture'])->withoutMiddleware([VerifyCsrfToken::class])->name('capture');
-Route::post('/webhook', [PayPal::class, 'webhook'])->withoutMiddleware([VerifyCsrfToken::class])->name('webhook');
+Route::prefix('/extensions/paypal', function () {
+    Route::get('/webhook', [PayPal::class, 'webhook'])->name('extensions.gateways.paypal.webhook');
+    Route::get('/capture', [PayPal::class, 'capture'])->name('extensions.gateways.paypal.capture');
+});

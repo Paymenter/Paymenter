@@ -4,6 +4,7 @@ namespace App\Livewire\Products;
 
 use App\Classes\Cart;
 use App\Classes\Price;
+use App\Helpers\ExtensionHelper;
 use App\Livewire\Component;
 use App\Livewire\Traits\CurrencyChanged;
 use App\Models\Category;
@@ -35,6 +36,9 @@ class Checkout extends Component
     #[Url(keep: true, as: 'options')]
     public $configOptions = [];
 
+    #[Url(keep: true, as: 'config')]
+    public $checkoutConfig = [];
+
     #[Url(as: 'edit'), Locked]
     public $cartProductKey = null;
 
@@ -51,6 +55,7 @@ class Checkout extends Component
             $this->configOptions = $item->configOptions->mapWithKeys(function ($option) {
                 return [$option->option_id => $option->value];
             });
+            $this->checkoutConfig = $item->checkoutConfig;
         } else {
             // Set the first plan as default
             $this->plan = $this->product->plans->first();
@@ -64,6 +69,13 @@ class Checkout extends Component
 
                 return [$option->id => $this->configOptions[$option->id] ?? $option->children->first()->id];
             });
+            foreach ($this->getCheckoutConfig() as $config) {
+                if (in_array($config['type'], ['select', 'radio'])) {
+                    $this->checkoutConfig[$config['name']] = $this->checkoutConfig[$config['name']] ?? $config['default'] ?? array_key_first($config['options']);
+                } else {
+                    $this->checkoutConfig[$config['name']] = $this->checkoutConfig[$config['name']] ?? $config['default'] ?? null;
+                }
+            }
         }
         // Update the pricing
         $this->updatePricing();
@@ -107,6 +119,11 @@ class Checkout extends Component
         $this->updatePricing();
     }
 
+    public function getCheckoutConfig()
+    {
+        return once(fn() => ExtensionHelper::getCheckoutConfig($this->product));
+    }
+
     public function rules()
     {
         $rules = [
@@ -120,6 +137,12 @@ class Checkout extends Component
             } else {
                 $rules["configOptions.{$option->id}"] = ['required', 'exists:config_options,id'];
             }
+        }
+        foreach ($this->getCheckoutConfig() as $key => $config) {
+            if ($config['required'] ?? false)
+                $rules["checkoutConfig.{$key}"] = 'required' . ($config['validation'] ? '|' . $config['validation'] : '');
+            else
+                $rules["checkoutConfig.{$key}"] = isset($config['validation']) ? $config['validation'] : '';
         }
 
         return $rules;
@@ -150,7 +173,7 @@ class Checkout extends Component
             return (object) ['option_id' => $option->id, 'option_name' => $option->name, 'option_type' => $option->type, 'option_env_variable' => $option->env_variable, 'value' => $this->configOptions[$option->id], 'value_name' => $option->children->where('id', $this->configOptions[$option->id])->first()->name];
         });
 
-        Cart::add($this->product, $this->plan, $configOptions, $this->total, key: $this->cartProductKey);
+        Cart::add($this->product, $this->plan, $configOptions, $this->checkoutConfig, $this->total, key: $this->cartProductKey);
 
         $this->dispatch('cartUpdated');
 
