@@ -121,7 +121,7 @@ class Checkout extends Component
 
     public function getCheckoutConfig()
     {
-        return once(fn() => ExtensionHelper::getCheckoutConfig($this->product));
+        return once(fn () => ExtensionHelper::getCheckoutConfig($this->product));
     }
 
     public function rules()
@@ -139,10 +139,11 @@ class Checkout extends Component
             }
         }
         foreach ($this->getCheckoutConfig() as $key => $config) {
-            if ($config['required'] ?? false)
+            if ($config['required'] ?? false) {
                 $rules["checkoutConfig.{$key}"] = 'required' . ($config['validation'] ? '|' . $config['validation'] : '');
-            else
+            } else {
                 $rules["checkoutConfig.{$key}"] = isset($config['validation']) ? $config['validation'] : '';
+            }
         }
 
         return $rules;

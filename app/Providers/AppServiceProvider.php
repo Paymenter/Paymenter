@@ -49,7 +49,7 @@ class AppServiceProvider extends ServiceProvider
         });
 
         try {
-            foreach (collect(Extension::where(function($query) {
+            foreach (collect(Extension::where(function ($query) {
                 $query->where('enabled', true)->orWhere('type', 'server')->orWhere('type', 'gateway');
             })->get())->unique('extension') as $extension) {
                 ExtensionHelper::call($extension, 'boot', mayFail: true);

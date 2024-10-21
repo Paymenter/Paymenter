@@ -96,7 +96,7 @@ class ExtensionHelper
 
     /**
      * Get checkout configuration
-     * 
+     *
      * @return array
      */
     public static function getCheckoutConfig(Product $product)

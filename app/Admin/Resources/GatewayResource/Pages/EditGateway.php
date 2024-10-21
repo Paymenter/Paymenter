@@ -16,7 +16,7 @@ class EditGateway extends EditRecord
     protected function getHeaderActions(): array
     {
         return [
-            Actions\DeleteAction::make()->before(fn($record) => ExtensionHelper::call($record, 'disabled', [$record], mayFail: true)),
+            Actions\DeleteAction::make()->before(fn ($record) => ExtensionHelper::call($record, 'disabled', [$record], mayFail: true)),
         ];
     }
 
@@ -57,7 +57,7 @@ class EditGateway extends EditRecord
             'type',
             'value',
         ]);
-        
+
         ExtensionHelper::call($record, 'updated', [$record], mayFail: true);
 
         return $record;
