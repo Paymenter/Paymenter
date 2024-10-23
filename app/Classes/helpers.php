@@ -15,3 +15,17 @@ if (!function_exists('theme')) {
         return config('settings.theme_' . config('settings.theme', 'default') . '_' . $key, $default);
     }
 }
+
+if (!function_exists('hook')) {
+    /**
+     * Dispatch an event and return the items
+     *
+     * @param string $event
+     * @param array $items
+     * @return array
+     */
+    function hook($event)
+    {
+        return \App\Helpers\EventHelper::renderEvent($event);
+    }
+}

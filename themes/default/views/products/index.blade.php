@@ -1,6 +1,6 @@
 <div class="grid sm:grid-cols-2 md:grid-cols-4 gap-4">
     @foreach($products as $product)
-        <div class="flex flex-col bg-primary-700 p-4 rounded-md mb-4">
+        <div class="flex flex-col bg-primary-800 p-4 rounded-md mb-4">
             @if ($product->image)
                 <img src="{{ url()->to($product->image) }}" alt="{{ $product->name }}"
                     class="w-full object-cover object-center rounded-md">

@@ -165,12 +165,6 @@ class Settings
 
             'company-details' => [
                 [
-                    'name' => 'show_in_footer',
-                    'label' => 'Show in Footer',
-                    'type' => 'checkbox',
-                    'default' => true,
-                ],
-                [
                     'name' => 'company_name',
                     'label' => 'Company Name',
                     'type' => 'text',

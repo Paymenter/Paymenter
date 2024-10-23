@@ -6,6 +6,7 @@ use App\Livewire\Auth;
 use App\Livewire\Cart;
 use App\Livewire\Client;
 use App\Livewire\Dashboard;
+use App\Livewire\Home;
 use App\Livewire\Invoices;
 use App\Livewire\Products;
 use App\Livewire\Services;
@@ -13,9 +14,7 @@ use App\Livewire\Tickets;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return view('home');
-})->name('home');
+Route::get('/', Home::class)->name('home');
 
 // Destroy the session and log out the user.
 //auth()->logout();

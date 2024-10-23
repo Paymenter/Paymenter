@@ -2,13 +2,17 @@
 
 namespace App\Classes;
 
+use App\Helpers\EventHelper;
 use App\Models\Category;
+use Illuminate\Support\Facades\Event;
 
 class Navigation
 {
     public static function get()
     {
-        $categories = Category::whereNull('parent_id')->get();
+        $categories = Category::whereNull('parent_id')->where(function($query){
+            $query->whereHas('children')->orWhereHas('products');
+        })->get();
 
         $routes = [
             [
@@ -28,6 +32,45 @@ class Navigation
                 })->toArray(),
             ],
         ];
+
+        $routes = EventHelper::itemEvent('navigation', $routes);
+
+        // Check which one is active
+        foreach ($routes as $key => $route) {
+            if (isset($route['children'])) {
+                foreach ($route['children'] as $child) {
+                    if (request()->route()->getName() == $child['route']) {
+                        $routes[$key]['active'] = true;
+                    }
+                }
+            } else {
+                if (request()->route()->getName() == $route['route']) {
+                    $routes[$key]['active'] = true;
+                }
+            }
+        }
+
+        return $routes;
+    }
+
+
+    // Get authenticated user navigation
+    public static function getAuth()
+    {
+        $routes = [
+            [
+                'name' => 'Dashboard',
+                'route' => 'dashboard',
+                'children' => [],
+            ],
+            [
+                'name' => 'Account',
+                'route' => 'account',
+                'children' => [],
+            ],
+        ];
+
+        $routes = EventHelper::itemEvent('navigation.auth', $routes);
 
         // Check which one is active
         foreach ($routes as $key => $route) {

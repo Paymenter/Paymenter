@@ -1,5 +1,5 @@
-<div class="w-full mb-2">
-    <div class="container mx-auto grid grid-cols-2 items-center">
+<div class="w-full mb-2 px-2">
+    <div class="container mx-auto grid md:grid-cols-2 gap-4 items-center">
         <div class="flex flex-col gap-2">
             <x-logo />
             <div class="text-white text-sm">

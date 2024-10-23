@@ -16,7 +16,7 @@ class Index extends Component
 
     public function mount()
     {
-        $this->products = $this->category->products;
+        $this->products = $this->category->products()->with('category')->get();
     }
 
     public function render()

@@ -28,7 +28,7 @@
 
         @foreach ($product->configOptions as $configOption)
             <x-form.configoption :config="$configOption" :name="'configOptions.' . $configOption->id">
-                @if (in_array($configOption->type, ['select', 'slider']))
+                @if ($configOption->type == 'select')
                     @foreach ($configOption->children as $configOptionValue)
                         <option value="{{ $configOptionValue->id }}">
                             {{ $configOptionValue->name }}
@@ -44,6 +44,29 @@
                             <label for="{{ $configOptionValue->id }}">
                                 {{ $configOptionValue->name }}
                                 {{ $configOptionValue->price(billing_period: $plan->billing_period, billing_unit: $plan->billing_unit)->available ? ' - ' . $configOptionValue->price(billing_period: $plan->billing_period, billing_unit: $plan->billing_unit) : '' }}
+                            </label>
+                        </div>
+                    @endforeach
+                @endif
+            </x-form.configoption>
+        @endforeach
+        @foreach ($this->getCheckoutConfig() as $configOption)
+            @php $configOption = (object) $configOption; @endphp
+            <x-form.configoption :config="$configOption" :name="'checkoutConfig.' . $configOption->name">
+                @if ($configOption->type == 'select')
+                    @foreach ($configOption->options as $configOptionValue => $configOptionValueName)
+                        <option value="{{ $configOptionValue }}">
+                            {{ $configOptionValueName }}
+                        </option>
+                    @endforeach
+                @elseif($configOption->type == 'radio')
+                    @foreach ($configOption->options as $configOptionValue => $configOptionValueName)
+                        <div class="flex items-center gap-2">
+                            <input type="radio" id="{{ $configOptionValue }}" name="{{ $configOption->name }}"
+                                wire:model.live="checkoutConfig.{{ $configOption->name }}"
+                                value="{{ $configOptionValue }}" />
+                            <label for="{{ $configOptionValue }}">
+                                {{ $configOptionValueName }}
                             </label>
                         </div>
                     @endforeach

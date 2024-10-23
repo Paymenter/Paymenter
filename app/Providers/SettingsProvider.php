@@ -38,7 +38,7 @@ class SettingsProvider extends ServiceProvider
                 Cache::put('settings', $settings);
             }
             // Is the current command a config:cache command?
-            if (isset($_SERVER['argv']) && (in_array('config:cache', $_SERVER['argv']) || in_array('optimize', $_SERVER['argv']))) {
+            if (isset($_SERVER['argv']) && (in_array('config:cache', $_SERVER['argv']) || in_array('optimize', $_SERVER['argv']) || in_array('app:optimize', $_SERVER['argv']))) {
                 return;
             }
             config(['settings' => $settings]);
@@ -58,6 +58,7 @@ class SettingsProvider extends ServiceProvider
 
             if (Str::startsWith(config('app.url') ?? '', 'https://')) {
                 URL::forceScheme('https');
+                URL::forceRootUrl(config('app.url'));
             }
         } catch (\Exception $e) {
             // Do nothing

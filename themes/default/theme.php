@@ -7,6 +7,12 @@ return [
 
     'settings' => [
         [
+            'name' => 'home_page_text',
+            'label' => 'Home Page Text',
+            'type' => 'markdown',
+            'default' => 'Welcome to Paymenter!',
+        ],
+        [
             'name' => 'primary-900',
             'label' => 'Background Color',
             'type' => 'color',
@@ -18,7 +24,6 @@ return [
             'type' => 'color',
             'default' => '#1F2937',
         ],
-
         [
             'name' => 'secondary',
             'label' => 'Button/Focus Color',

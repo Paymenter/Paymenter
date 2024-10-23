@@ -25,14 +25,6 @@ class Category extends Model
     }
 
     /**
-     * Get the subcategories of the category.
-     */
-    public function categories(): HasMany
-    {
-        return $this->hasMany(Category::class, 'parent_id');
-    }
-
-    /**
      * Get the parent category of the category.
      */
     public function parent(): BelongsTo
