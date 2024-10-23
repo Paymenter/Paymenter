@@ -79,8 +79,12 @@ class Settings extends Page implements HasForms
             // Get only the settings that have changed
             $avSetting = \App\Classes\Settings::getSetting($key);
             if ($value !== $avSetting->value) {
-                $modelSetting = Setting::where('settingable_type', null)->where('key', $key)->update(['value' => $value]);
-                if (!$modelSetting) {
+                $setting = Setting::where('settingable_type', null)->where('key', $key)->first();
+                if ($setting) {
+                    $setting->update([
+                        'value' => $value,
+                    ]);
+                } else {
                     Setting::create([
                         'key' => $key,
                         'value' => $value,

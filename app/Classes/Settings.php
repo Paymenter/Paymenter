@@ -277,6 +277,7 @@ class Settings
                     'label' => 'Mail Password',
                     'type' => 'password',
                     'required' => false,
+                    'encrypted' => true,
                     'override' => 'mail.mailers.smtp.password',
                 ],
                 [

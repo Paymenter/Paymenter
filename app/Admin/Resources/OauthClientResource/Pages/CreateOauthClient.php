@@ -5,6 +5,7 @@ namespace App\Admin\Resources\OauthClientResource\Pages;
 use App\Admin\Resources\OauthClientResource;
 use Filament\Resources\Pages\CreateRecord;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 use Laravel\Passport\ClientRepository;
 
 class CreateOauthClient extends CreateRecord
@@ -13,8 +14,8 @@ class CreateOauthClient extends CreateRecord
 
     protected function handleRecordCreation(array $data): Model
     {
-        array_merge($data, [
-            'secret' => \Str::random(40),
+        $data = array_merge($data, [
+            'secret' => Str::random(40),
             'personal_access_client' => false,
             'password_client' => false,
             'revoked' => false,

@@ -2,13 +2,15 @@
 
 namespace App\Models;
 
-use App\Models\Traits\Encrypted;
+use App\Events\Setting\Retrieved;
+use App\Events\Setting\Saved;
+use App\Events\Setting\Saving;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Setting extends Model
 {
-    use Encrypted, HasFactory;
+    use HasFactory;
 
     /**
      * The attributes that are mass assignable.
@@ -19,55 +21,12 @@ class Setting extends Model
         'key',
         'value',
         'type',
+        'encrypted',
     ];
 
-    // Listen for boot event
-    protected static function boot()
-    {
-        parent::boot();
-
-        // When creating a new setting, encrypt the value
-        static::creating(function ($setting) {
-            if ($setting->encrypted) {
-                $setting->value = encrypt($setting->value);
-            }
-
-            switch ($setting->type) {
-                case 'boolean':
-                    $setting->value = (bool) $setting->value;
-                case 'integer':
-                    $setting->value = (int) $setting->value;
-                case 'float':
-                    $setting->value = (float) $setting->value;
-                case 'array':
-                    $setting->value = json_encode($setting->value);
-                default:
-                    return;
-            }
-        });
-
-        // When retrieving a setting, decrypt the value
-        static::retrieved(function ($setting) {
-            if ($setting->encrypted) {
-                $setting->value = decrypt($setting->value);
-            }
-
-            switch ($setting->type) {
-                case 'boolean':
-                    $setting->value = (bool) $setting->value;
-                case 'integer':
-                    $setting->value = (int) $setting->value;
-                case 'float':
-                    $setting->value = (float) $setting->value;
-                case 'array':
-                    $setting->value = json_decode($setting->value, true);
-                default:
-                    return;
-            }
-        });
-
-        static::updated(function ($setting) {
-            \App\Providers\SettingsProvider::flushCache();
-        });
-    }
+    protected $dispatchesEvents = [
+        'retrieved' => Retrieved::class,
+        'saving' => Saving::class,
+        'saved' => Saved::class,
+    ];
 }
