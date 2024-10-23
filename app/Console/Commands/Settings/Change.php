@@ -21,7 +21,7 @@ class Change extends Command implements PromptsForMissingInput
     }
 
     protected function promptForMissingArgumentsUsing(): array
-    {   
+    {
         return [
             'key' => 'What is the setting key? (e.g. app_url)',
             'value' => 'What is the setting value? (e.g. https://example.com)',

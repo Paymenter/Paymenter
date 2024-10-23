@@ -11,7 +11,7 @@ class Home extends Component
     {
         return view('home', [
             // Categories which have NO parent and at least one child
-            'categories' => Category::whereNull('parent_id')->where(function($query){
+            'categories' => Category::whereNull('parent_id')->where(function ($query) {
                 $query->whereHas('children')->orWhereHas('products');
             })->get(),
         ]);

@@ -4,13 +4,12 @@ namespace App\Classes;
 
 use App\Helpers\EventHelper;
 use App\Models\Category;
-use Illuminate\Support\Facades\Event;
 
 class Navigation
 {
     public static function get()
     {
-        $categories = Category::whereNull('parent_id')->where(function($query){
+        $categories = Category::whereNull('parent_id')->where(function ($query) {
             $query->whereHas('children')->orWhereHas('products');
         })->get();
 
@@ -52,7 +51,6 @@ class Navigation
 
         return $routes;
     }
-
 
     // Get authenticated user navigation
     public static function getAuth()

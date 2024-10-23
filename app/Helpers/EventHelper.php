@@ -16,6 +16,7 @@ class EventHelper
             if (is_array($item) && isset($item[0])) {
                 return array_merge($carry, $item);
             }
+
             return array_merge($carry, [$item]);
         }, []);
 
@@ -38,6 +39,7 @@ class EventHelper
             if (is_array($item) && isset($item[0])) {
                 return array_merge($carry, $item);
             }
+
             return array_merge($carry, [$item]);
         }, []);
 

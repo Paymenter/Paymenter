@@ -20,8 +20,8 @@ if (!function_exists('hook')) {
     /**
      * Dispatch an event and return the items
      *
-     * @param string $event
-     * @param array $items
+     * @param  string  $event
+     * @param  array  $items
      * @return array
      */
     function hook($event)
