@@ -79,6 +79,7 @@ class Navigation
             $routes[] = [
                 'name' => 'Admin',
                 'route' => 'filament.admin.pages.dashboard',
+                'spa' => false,
             ];
         }
 

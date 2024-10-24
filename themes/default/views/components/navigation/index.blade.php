@@ -26,13 +26,13 @@
                             x-transition:leave-start="opacity-100 scale-100" x-transition:leave-end="opacity-0 scale-90"
                             x-on:click.outside="open = false">
                             @foreach ($nav['children'] as $child)
-                                <x-navigation.link :href="route($child['route'], $child['params'])"
+                                <x-navigation.link :href="route($child['route'], $child['params'])" :spa="isset($child['spa']) && $child['spa']"
                                    >{{ $child['name'] }}</x-navigation.link>
                             @endforeach
                         </div>
                     </div>
                 @else
-                    <x-navigation.link :href="route($nav['route'], $nav['params'] ?? null)">{{ $nav['name'] }}</x-navigation.link>
+                    <x-navigation.link :href="route($nav['route'], $nav['params'] ?? null)" :spa="isset($nav['spa']) && $nav['spa']">{{ $nav['name'] }}</x-navigation.link>
                 @endif
             @endforeach
         </div>
@@ -60,7 +60,7 @@
                          x-transition:leave="transition ease-in duration-75" x-transition:leave-start="opacity-100 scale-100"
                          x-transition:leave-end="opacity-0 scale-90" x-on:click.outside="accountMenuOpen = false">
                         @foreach (\App\Classes\Navigation::getAuth() as $nav)
-                            <x-navigation.link :href="route($nav['route'], $nav['params'] ?? null)">{{ $nav['name'] }}</x-navigation.link>
+                            <x-navigation.link :href="route($nav['route'], $nav['params'] ?? null)" :spa="isset($nav['spa']) && $nav['spa']">{{ $nav['name'] }}</x-navigation.link>
                         @endforeach
                          <livewire:auth.logout />
                      </div>
