@@ -28,11 +28,6 @@ jobs:
 
       - name: Build
         run: npm run build
-      
-      - name: remove vendor and node_modules
-        run: |
-          rm -rf vendor
-          rm -rf node_modules
 
       - name: Create release branch and bump version
         run: sed -i "s/    'version' => 'development',/    'version' => 'beta',/" config/app.php
@@ -41,17 +36,11 @@ jobs:
         run: sed -i "s/    'commit' => '',/    'commit' => '${{ github.sha }}',/" config/app.php
 
       - name: Create beta archive
-        run: |
-          rm -rf node_modules tests CODE_OF_CONDUCT.md CONTRIBUTING.md flake.lock flake.nix phpstan.neon phpunit.xml shell.nix
-          tar -czf paymenter.tar.gz * .env.example .gitignore
+        run: rm -rf node_modules vendor tests CODE_OF_CONDUCT.md CONTRIBUTING.md flake.lock flake.nix phpstan.neon phpunit.xml shell.nix
 
-      - name: Create checksum and add to changelog
-        run: |
-          SUM=`sha256sum paymenter.tar.gz`
-          echo $SUM > checksum.txt
           
       # Add to action file
       - uses: actions/upload-artifact@v4
         with:
             name: paymenter
-            path: paymenter.tar.gz
+            path: .
