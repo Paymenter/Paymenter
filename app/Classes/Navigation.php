@@ -20,7 +20,9 @@ class Navigation
                 'route' => 'home',
                 'children' => [],
             ],
-            [
+        ];
+        if (count($categories) > 0) {
+            $routes[] = [
                 'name' => 'Shop',
                 'children' => $categories->map(function ($category) {
                     return [
@@ -29,8 +31,8 @@ class Navigation
                         'params' => ['category' => $category->slug],
                     ];
                 })->toArray(),
-            ],
-        ];
+            ];
+        }
 
         $routes = EventHelper::itemEvent('navigation', $routes);
 
