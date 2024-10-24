@@ -11,7 +11,9 @@ class Index extends Component
     use CurrencyChanged;
 
     public $products;
+
     public $categories;
+
     public $childCategories;
 
     public Category $category;

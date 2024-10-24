@@ -52,7 +52,6 @@ class Navigation
         return $routes;
     }
 
-
     // Get authenticated user navigation
     public static function getAuth()
     {
