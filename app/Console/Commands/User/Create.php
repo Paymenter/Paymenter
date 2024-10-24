@@ -50,7 +50,8 @@ class Create extends Command implements PromptsForMissingInput
             'role' => fn () => select(
                 label: 'What is the user\'s role?',
                 options: Role::all()->pluck('name', 'id')->toArray(),
-                default: 1,
+                default: null,
+                required: false
             ),
         ];
     }

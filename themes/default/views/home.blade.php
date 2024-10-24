@@ -8,12 +8,20 @@
                 ]) !!}
             </article>
         </div>
-        <div class="mx-auto container bg-primary-800 p-4 rounded-md">
-            <h1 class="text-2xl font-semibold text-white">Products</h1>
+        <div class="mx-auto container rounded-md grid grid-cols-4 gap-4">
             @foreach ($categories as $category)
-                
-                
-                
+                <div class="flex flex-col bg-primary-800 p-4 rounded-md mb-4">
+                    @if ($category->image)
+                        <img src="{{ url()->to($category->image) }}" alt="{{ $category->name }}"
+                            class="w-full object-cover object-center rounded-md">
+                    @endif
+                    <h2 class="text-xl font-bold mb-2">{{ $category->name }}</h2>
+                    <a href="{{ route('category.show', ['category' => $category->slug]) }}" wire:navigate>
+                        <x-button.primary>
+                            {{ __('general.view') }}
+                        </x-button.primary>
+                    </a>
+                </div>
             @endforeach
         </div>
     </div>

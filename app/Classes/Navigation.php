@@ -4,6 +4,7 @@ namespace App\Classes;
 
 use App\Helpers\EventHelper;
 use App\Models\Category;
+use Illuminate\Support\Facades\Auth;
 
 class Navigation
 {
@@ -21,7 +22,6 @@ class Navigation
             ],
             [
                 'name' => 'Shop',
-                'route' => 'home',
                 'children' => $categories->map(function ($category) {
                     return [
                         'name' => $category->name,
@@ -52,6 +52,7 @@ class Navigation
         return $routes;
     }
 
+
     // Get authenticated user navigation
     public static function getAuth()
     {
@@ -62,11 +63,23 @@ class Navigation
                 'children' => [],
             ],
             [
+                'name' => 'Tickets',
+                'route' => 'tickets',
+                'children' => [],
+            ],
+            [
                 'name' => 'Account',
                 'route' => 'account',
                 'children' => [],
             ],
         ];
+
+        if (Auth::user()->role_id) {
+            $routes[] = [
+                'name' => 'Admin',
+                'route' => 'filament.admin.pages.dashboard',
+            ];
+        }
 
         $routes = EventHelper::itemEvent('navigation.auth', $routes);
 

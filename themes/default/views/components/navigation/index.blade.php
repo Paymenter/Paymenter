@@ -59,7 +59,9 @@
                          x-transition:enter-start="opacity-0 scale-90" x-transition:enter-end="opacity-100 scale-100"
                          x-transition:leave="transition ease-in duration-75" x-transition:leave-start="opacity-100 scale-100"
                          x-transition:leave-end="opacity-0 scale-90" x-on:click.outside="accountMenuOpen = false">
-                         <x-navigation.link :href="route('account')">Account</x-navigation.link>
+                        @foreach (\App\Classes\Navigation::getAuth() as $nav)
+                            <x-navigation.link :href="route($nav['route'], $nav['params'] ?? null)">{{ $nav['name'] }}</x-navigation.link>
+                        @endforeach
                          <livewire:auth.logout />
                      </div>
                  </div>
