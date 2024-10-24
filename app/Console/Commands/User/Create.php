@@ -36,22 +36,24 @@ class Create extends Command implements PromptsForMissingInput
             'last_name' => $this->argument('last_name'),
             'email' => $this->argument('email'),
             'password' => $this->argument('password'),
-            'role_id' => $this->argument('role'),
+            'role_id' => $this->argument('role') ?? null,
         ]);
     }
 
     protected function promptForMissingArgumentsUsing(): array
     {
+        $roleOptions = Role::all()->pluck('name', 'id')->toArray();
+        $roleOptions[0] = 'None';
+
         return [
             'first_name' => 'What is the user\'s first name?',
             'last_name' => 'What is the user\'s last name?',
             'email' => 'What is the user\'s email address?',
-            'password' => fn () => password('What is the user\'s password?'),
+            'password' => fn () => password('What is the user\'s password?', required: true),
             'role' => fn () => select(
                 label: 'What is the user\'s role?',
-                options: Role::all()->pluck('name', 'id')->toArray(),
-                default: null,
-                required: false
+                options: $roleOptions,
+                default: 0,
             ),
         ];
     }
