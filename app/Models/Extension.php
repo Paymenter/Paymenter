@@ -62,14 +62,14 @@ class Extension extends Model
     public function path(): Attribute
     {
         return Attribute::make(
-            get: fn() => ucfirst($this->type) . 's/' . ucfirst($this->extension)
+            get: fn () => ucfirst($this->type) . 's/' . ucfirst($this->extension)
         );
     }
 
     public function namespace(): Attribute
     {
         return Attribute::make(
-            get: fn() => 'Paymenter\\Extensions\\' . ucfirst($this->type) . 's\\' . ucfirst($this->extension)
+            get: fn () => 'Paymenter\\Extensions\\' . ucfirst($this->type) . 's\\' . ucfirst($this->extension)
         );
     }
 }
