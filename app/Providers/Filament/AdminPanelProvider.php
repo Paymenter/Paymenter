@@ -92,7 +92,9 @@ class AdminPanelProvider extends PanelProvider
             ]);
 
         try {
-            foreach (Extension::where('enabled', true)->get() as $extension) {
+            foreach (collect(Extension::where(function ($query) {
+                $query->where('enabled', true)->orWhere('type', 'server')->orWhere('type', 'gateway');
+            })->get())->unique('extension') as $extension) {
                 $panel->discoverResources(in: base_path('extensions' . '/' . $extension->path . '/Admin/Resources'), for: $extension->namespace . '\\Admin\\Resources');
                 $panel->discoverPages(in: base_path('extensions' . '/' . $extension->path . '/Admin/Pages'), for: $extension->namespace . '\\Admin\\Pages');
                 $panel->discoverClusters(in: base_path('extensions' . '/' . $extension->path . '/Admin/Clusters'), for: $extension->namespace . '\\Admin\\Clusters');

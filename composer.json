@@ -13,7 +13,6 @@
         "ext-mbstring": "*",
         "ext-pdo": "*",
         "ext-pdo_mysql": "*",
-        "ext-posix": "*",
         "ext-zip": "*",
         "ext-intl": "*",
         "andreiio/blade-remix-icon": "^3.3",
