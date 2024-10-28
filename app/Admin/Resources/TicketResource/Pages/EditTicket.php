@@ -65,7 +65,7 @@ class EditTicket extends EditRecord
                 Infolists\Components\TextEntry::make('user_id')
                     ->size(TextEntrySize::Large)
                     ->formatStateUsing(fn ($record) => $record->user->name)
-                    ->url(fn ($record) => UserResource::getUrl('index', ['record' => $record->user]))
+                    ->url(fn ($record) => UserResource::getUrl('edit', ['record' => $record->user]))
                     ->label('User ID'),
                 Infolists\Components\TextEntry::make('subject')
                     ->size(TextEntrySize::Large)

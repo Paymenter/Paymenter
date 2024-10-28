@@ -7,7 +7,9 @@
                         class="p-4 rounded-lg w-full bg-gray-900 max-w-[80%]  {{ $message->user_id === $this->record->user_id ? 'ml-auto' : 'mr-auto' }}">
                         <div class="flex items-center justify-between">
                             <div>
-                                <h2 class="text-lg font-semibold">{{ $message->user->name }}</h2>
+                                <a class="text-lg font-semibold hover:underline" href="{{ App\Admin\Resources\UserResource::getUrl('edit', ['record' => $message->user]) }}">
+                                    {{ $message->user->name }}
+                                </a>
                                 <p class="text-sm text-gray-500">{{ $message->created_at->diffForHumans() }}</p>
                             </div>
                             <div>
