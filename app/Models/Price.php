@@ -24,4 +24,9 @@ class Price extends Model
     {
         return $this->belongsTo(Currency::class);
     }
+
+    public function plan(): BelongsTo
+    {
+        return $this->belongsTo(Plan::class);
+    }
 }

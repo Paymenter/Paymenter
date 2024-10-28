@@ -281,7 +281,7 @@ class Settings
                     'options' => [
                         'tls' => 'TLS',
                         'ssl' => 'SSL',
-                        'null' => 'None',
+                        null => 'None',
                     ],
                     'default' => 'tls',
                     'required' => false,
