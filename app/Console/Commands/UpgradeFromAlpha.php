@@ -95,50 +95,50 @@ class UpgradeFromAlpha extends Command
         // Map of settings which are just renamed
         $old_to_new_map = [
             // General
-            "timezone" => "timezone",
-            "language" => "app_language",
-            "app_logo" => "logo",
+            'timezone' => 'timezone',
+            'language' => 'app_language',
+            'app_logo' => 'logo',
 
             // Security
-            "recaptcha_site_key" => "captcha_site_key",
-            "recaptcha_secret_key" => "captcha_secret",
+            'recaptcha_site_key' => 'captcha_site_key',
+            'recaptcha_secret_key' => 'captcha_secret',
 
             // Social Login
-            "google_enabled" => "oauth_google",
-            "google_client_id" => "oauth_google_client_id",
-            "google_client_secret" => "oauth_google_client_secret",
-            "github_enabled" => "oauth_github",
-            "github_client_id" => "oauth_github_client_id",
-            "github_client_secret" => "oauth_github_client_secret",
-            "discord_enabled" => "oauth_discord",
-            "discord_client_id" => "oauth_discord_client_id",
-            "discord_client_secret" => "oauth_discord_client_secret",
+            'google_enabled' => 'oauth_google',
+            'google_client_id' => 'oauth_google_client_id',
+            'google_client_secret' => 'oauth_google_client_secret',
+            'github_enabled' => 'oauth_github',
+            'github_client_id' => 'oauth_github_client_id',
+            'github_client_secret' => 'oauth_github_client_secret',
+            'discord_enabled' => 'oauth_discord',
+            'discord_client_id' => 'oauth_discord_client_id',
+            'discord_client_secret' => 'oauth_discord_client_secret',
 
             // Company Details
-            "company_name" => "company_name",
-            "company_email" => "company_email",
-            "company_phone" => "company_phone",
-            "company_address" => "company_address",
-            "company_city" => "company_city",
-            "company_zip" => "company_zip",
+            'company_name' => 'company_name',
+            'company_email' => 'company_email',
+            'company_phone' => 'company_phone',
+            'company_address' => 'company_address',
+            'company_city' => 'company_city',
+            'company_zip' => 'company_zip',
 
             // Tax
-            "tax_enabled" => "tax_enabled",
-            "tax_type" => "tax_type",
+            'tax_enabled' => 'tax_enabled',
+            'tax_type' => 'tax_type',
 
             // Mail
-            "mail_disabled" => "mail_disable",
-            "must_verify_email" => "mail_must_verify",
-            "mail_host" => "mail_host",
-            "mail_port" => "mail_port",
-            "mail_username" => "mail_username",
-            "mail_password" => "mail_password",
-            "mail_encryption" => "mail_encryption",
-            "mail_from_address" => "mail_from_address",
-            "mail_from_name" => "mail_from_name",
+            'mail_disabled' => 'mail_disable',
+            'must_verify_email' => 'mail_must_verify',
+            'mail_host' => 'mail_host',
+            'mail_port' => 'mail_port',
+            'mail_username' => 'mail_username',
+            'mail_password' => 'mail_password',
+            'mail_encryption' => 'mail_encryption',
+            'mail_from_address' => 'mail_from_address',
+            'mail_from_name' => 'mail_from_name',
 
             // Other
-            "currency" => "default_currency",
+            'currency' => 'default_currency',
         ];
 
         $settings = [];
@@ -180,7 +180,7 @@ class UpgradeFromAlpha extends Command
                         'created_at' => $old_setting['created_at'],
                         'updated_at' => $old_setting['updated_at'],
                     ];
-                } else if ($key === 'company_country') {
+                } elseif ($key === 'company_country') {
                     $settings[] = [
                         'key' => $key,
                         'value' => array_flip((array) config('app.countries'))[$value],
@@ -191,7 +191,7 @@ class UpgradeFromAlpha extends Command
                         'created_at' => $old_setting['created_at'],
                         'updated_at' => $old_setting['updated_at'],
                     ];
-                } else if (in_array($key, [
+                } elseif (in_array($key, [
                     'requiredClientDetails_address',
                     'requiredClientDetails_city',
                     'requiredClientDetails_zip',
@@ -284,7 +284,7 @@ class UpgradeFromAlpha extends Command
                 unset($input['id']);
                 $new_id = DB::table('config_options')->insertGetId($input);
 
-                # Option is free
+                // Option is free
                 $input_plan = [
                     'name' => 'Free',
                     'type' => 'free',
@@ -308,7 +308,7 @@ class UpgradeFromAlpha extends Command
                 unset($input['id']);
                 $new_id = DB::table('config_options')->insertGetId($input);
 
-                # Option is one-time
+                // Option is one-time
                 $input_plan = [
                     'name' => 'One Time',
                     'type' => 'one-time',
@@ -339,7 +339,7 @@ class UpgradeFromAlpha extends Command
                 unset($input['id']);
                 $new_id = DB::table('config_options')->insertGetId($input);
 
-                # Option is one-time
+                // Option is one-time
                 $input_plan = [
                     'name' => 'One Time',
                     'type' => 'one-time',
@@ -489,7 +489,7 @@ class UpgradeFromAlpha extends Command
             foreach ($products as $product_id) {
                 $config_option_products[] = [
                     'config_option_id' => $record['id'],
-                    'product_id' => (int) $product_id
+                    'product_id' => (int) $product_id,
                 ];
             }
         }
@@ -789,7 +789,7 @@ class UpgradeFromAlpha extends Command
         $records = array_map(function ($record) use (&$order_product_details) {
             $order_product_details[$record['id']] = [
                 'coupon_id' => $record['coupon_id'],
-                'user_id' => $record['user_id']
+                'user_id' => $record['user_id'],
             ];
 
             return [
@@ -820,7 +820,6 @@ class UpgradeFromAlpha extends Command
 
         $records = array_map(function ($record) use ($order_product_details) {
             $order = $order_product_details[$record['order_id']];
-
 
             $billing = match ($record['billing_cycle']) {
                 'monthly' => [
@@ -864,7 +863,7 @@ class UpgradeFromAlpha extends Command
                 ]
             };
 
-            $price = Price::where('price',  $record['price'])
+            $price = Price::where('price', $record['price'])
                 ->whereHas('plan', function ($query) use ($billing) {
                     $query->where('priceable_type', 'App\Models\Product')
                         ->where('type', $billing['type'])
@@ -923,6 +922,7 @@ class UpgradeFromAlpha extends Command
                         'model_type' => 'App\Models\Service',
                         'value' => $record['value'],
                     ];
+
                     continue;
                 }
                 $service_configs[] = [
@@ -973,8 +973,6 @@ class UpgradeFromAlpha extends Command
         DB::table('users')->insert($records);
         $this->info('Migrated Users!');
     }
-
-
 
     protected function user_properties()
     {
@@ -1066,7 +1064,6 @@ class UpgradeFromAlpha extends Command
         DB::table('properties')->insert($properties);
         $this->info('Migrated all user\'s properties!');
     }
-
 
     protected function migrateTickets()
     {
