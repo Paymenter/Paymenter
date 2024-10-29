@@ -21,36 +21,6 @@ class Extension extends Model
 
     protected $guarded = [];
 
-    // Listen for created, updated, deleted events and call the boot method
-    protected static function boot()
-    {
-        parent::boot();
-
-        static::created(function ($extension) {
-            try {
-                Artisan::call('app:optimize');
-            } catch (\Exception $e) {
-                // Fail silently
-            }
-        });
-
-        static::updated(function ($extension) {
-            try {
-                Artisan::call('app:optimize');
-            } catch (\Exception $e) {
-                // Fail silently
-            }
-        });
-
-        static::deleted(function ($extension) {
-            try {
-                Artisan::call('app:optimize');
-            } catch (\Exception $e) {
-                // Fail silently
-            }
-        });
-    }
-
     /**
      * Get the extension's settings.
      */

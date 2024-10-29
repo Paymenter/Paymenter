@@ -24,7 +24,7 @@
                             x-transition:enter-start="opacity-0 scale-90" x-transition:enter-end="opacity-100 scale-100"
                             x-transition:leave="transition ease-in duration-75"
                             x-transition:leave-start="opacity-100 scale-100" x-transition:leave-end="opacity-0 scale-90"
-                            x-on:click.outside="open = false">
+                            x-on:click.outside="open = false" x-cloak>
                             @foreach ($nav['children'] as $child)
                                 <x-navigation.link :href="route($child['route'], $child['params'])" :spa="isset($child['spa']) && $child['spa']"
                                    >{{ $child['name'] }}</x-navigation.link>
@@ -58,7 +58,7 @@
                          x-show="accountMenuOpen" x-transition:enter="transition ease-out duration-150"
                          x-transition:enter-start="opacity-0 scale-90" x-transition:enter-end="opacity-100 scale-100"
                          x-transition:leave="transition ease-in duration-75" x-transition:leave-start="opacity-100 scale-100"
-                         x-transition:leave-end="opacity-0 scale-90" x-on:click.outside="accountMenuOpen = false">
+                         x-transition:leave-end="opacity-0 scale-90" x-on:click.outside="accountMenuOpen = false" x-cloak>
                         @foreach (\App\Classes\Navigation::getAuth() as $nav)
                             <x-navigation.link :href="route($nav['route'], $nav['params'] ?? null)" :spa="isset($nav['spa']) && $nav['spa']">{{ $nav['name'] }}</x-navigation.link>
                         @endforeach

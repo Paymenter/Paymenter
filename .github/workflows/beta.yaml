@@ -40,7 +40,9 @@ jobs:
 
           
       # Add to action file
-      - uses: actions/upload-artifact@v4
+      - name: Upload archive to https://api.paymenter.org/beta
+        uses: JantHsueh/upload-file-action@master
         with:
-            name: paymenter
-            path: .
+          url: https://api.paymenter.org/alpha
+          forms: '{"api_key": "${{ secrets.API_KEY }}"}'
+          fileForms: '{"file": "paymenter.tar.gz"}'
