@@ -36,8 +36,9 @@ jobs:
         run: sed -i "s/    'commit' => '',/    'commit' => '${{ github.sha }}',/" config/app.php
 
       - name: Create beta archive
-        run: rm -rf node_modules vendor tests CODE_OF_CONDUCT.md CONTRIBUTING.md flake.lock flake.nix phpstan.neon phpunit.xml shell.nix
-
+        run: | 
+            rm -rf node_modules vendor tests CODE_OF_CONDUCT.md CONTRIBUTING.md flake.lock flake.nix phpstan.neon phpunit.xml shell.nix
+            tar -czf paymenter.tar.gz * .env.example .gitignore
           
       # Add to action file
       - name: Upload archive to https://api.paymenter.org/beta
