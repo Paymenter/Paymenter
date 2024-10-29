@@ -68,6 +68,10 @@ trait HasPlans
                     $priceAndCurrency['currency'] = $price->currency;
                 }
             }
+
+            if ($priceAndCurrency['price']) {
+                break;
+            }
         }
 
         return new Price($priceAndCurrency, dontShowUnavailablePrice: $this->dontShowUnavailablePrice ?? false);

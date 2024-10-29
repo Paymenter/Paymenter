@@ -13,6 +13,7 @@ use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Actions\DeleteBulkAction;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Str;
 
 class CategoryResource extends Resource
@@ -87,7 +88,12 @@ class CategoryResource extends Resource
                         }
                     }),
                 ]),
-            ]);
+            ])
+            ->defaultSort(function (Builder $query): Builder {
+                return $query
+                    ->orderBy('sort', 'asc');
+            })
+            ->reorderable('sort');
     }
 
     public static function getRelations(): array

@@ -20,6 +20,7 @@ return new class extends Migration
             $table->text('description')->nullable();
             $table->integer('stock')->nullable();
             $table->integer('per_user_limit')->nullable();
+            $table->unsignedTinyInteger('sort')->nullable();
             $table->enum('allow_quantity', ['disabled', 'separated', 'combined'])->default('disabled');
             $table->foreignIdFor(\App\Models\Server::class, 'server_id')->nullable();
             $table->text('email_template')->nullable();

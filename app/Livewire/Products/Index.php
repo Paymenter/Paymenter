@@ -20,13 +20,13 @@ class Index extends Component
 
     public function mount()
     {
-        $this->products = $this->category->products()->with('category')->get();
+        $this->products = $this->category->products()->with('category')->orderBy('sort')->get();
         $this->childCategories = $this->category->children()->where(function ($query) {
             $query->whereHas('children')->orWhereHas('products');
-        })->get();
+        })->orderBy('sort')->get();
         $this->categories = Category::whereNull('parent_id')->where(function ($query) {
             $query->whereHas('children')->orWhereHas('products');
-        })->get();
+        })->orderBy('sort')->get();
     }
 
     public function render()

@@ -13,7 +13,7 @@ class Home extends Component
             // Categories which have NO parent and at least one child
             'categories' => Category::whereNull('parent_id')->where(function ($query) {
                 $query->whereHas('children')->orWhereHas('products');
-            })->get(),
+            })->orderBy('sort')->get(),
         ]);
     }
 }

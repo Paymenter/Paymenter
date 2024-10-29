@@ -19,6 +19,7 @@ use Filament\Resources\Resource;
 use Filament\Support\RawJs;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Str;
@@ -289,7 +290,13 @@ class ProductResource extends Resource
                         });
                     }),
                 ]),
-            ])->defaultGroup('category.name');
+            ])
+            ->defaultSort(function (Builder $query): Builder {
+                return $query
+                    ->orderBy('sort', 'asc');
+            })
+            ->reorderable('sort')
+            ->defaultGroup('category.name');
     }
 
     public static function getPages(): array

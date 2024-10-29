@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('image_url')->nullable();
             $table->foreignId('parent_id')->nullable()->constrained('categories');
             $table->text('full_slug')->nullable();
+            $table->unsignedTinyInteger('sort')->nullable();
             $table->timestamps();
         });
     }
