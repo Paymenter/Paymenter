@@ -16,7 +16,7 @@ class Navigation
 
         $routes = [
             [
-                'name' => 'Dashboard',
+                'name' => 'Home',
                 'route' => 'home',
                 'children' => [],
             ],
