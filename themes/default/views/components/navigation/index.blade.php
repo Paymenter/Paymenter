@@ -35,6 +35,10 @@
                     <x-navigation.link :href="route($nav['route'], $nav['params'] ?? null)" :spa="isset($nav['spa']) && $nav['spa']">{{ $nav['name'] }}</x-navigation.link>
                 @endif
             @endforeach
+
+            @if(auth()->check())
+                <x-navigation.link :href="route('dashboard')">Dashboard</x-navigation.link>
+            @endif
         </div>
         <livewire:components.cart />
         @if(auth()->check())
