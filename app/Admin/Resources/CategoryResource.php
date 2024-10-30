@@ -48,6 +48,7 @@ class CategoryResource extends Resource
                     ->relationship('categories', 'name')
                     ->searchable()
                     ->preload(),
+                Forms\Components\FileUpload::make('image')->label('Image')->nullable()->acceptedFileTypes(['image/*']),
             ]);
     }
 
