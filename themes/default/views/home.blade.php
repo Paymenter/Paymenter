@@ -12,7 +12,7 @@
             @foreach ($categories as $category)
                 <div class="flex flex-col bg-primary-800 p-4 rounded-md mb-4">
                     @if ($category->image)
-                        <img src="{{ url()->to($category->image) }}" alt="{{ $category->name }}"
+                        <img src="{{ Storage::url($category->image) }}" alt="{{ $category->name }}"
                             class="w-full object-cover object-center rounded-md">
                     @endif
                     <h2 class="text-xl font-bold mb-2">{{ $category->name }}</h2>

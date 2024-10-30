@@ -23,7 +23,7 @@
             @foreach($childCategories as $ccategory)
                 <div class="flex flex-col bg-primary-800 p-4 rounded-md">
                     @if ($ccategory->image)
-                        <img src="{{ url()->to($ccategory->image) }}" alt="{{ $ccategory->name }}"
+                        <img src="{{ Storage::url($ccategory->image) }}" alt="{{ $ccategory->name }}"
                             class="w-full object-cover object-center rounded-md">
                     @endif
                     <h2 class="text-xl font-bold mb-2">{{ $ccategory->name }}</h2>
@@ -39,7 +39,7 @@
             @foreach($products as $product)
                 <div class="flex flex-col bg-primary-800 p-4 rounded-md">
                     @if ($product->image)
-                        <img src="{{ url()->to($product->image) }}" alt="{{ $product->name }}"
+                        <img src="{{ Storage::url($product->image) }}" alt="{{ $product->name }}"
                             class="w-full object-cover object-center rounded-md">
                     @endif
                     <h2 class="text-xl font-bold">{{ $product->name }}</h2>
