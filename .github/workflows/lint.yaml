@@ -8,7 +8,7 @@ on:
 
 jobs:
   pint:
-    if: github.event_name == 'push' && contains(github.ref, 'refs/heads/main')
+    if: github.event_name == 'push' && contains(github.ref, 'refs/heads/master')
     runs-on: ubuntu-latest
 
     steps:
