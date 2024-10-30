@@ -4,21 +4,29 @@
 
 <script>
     document.addEventListener('livewire:init', () => {
-        // On livewire validation error reset turnstile
-        Livewire.hook('morph.updated', () => {
+        function renderTurnstile() {
+
+            const isDarkMode = document.documentElement.classList.contains('dark');
+            const theme = isDarkMode ? 'dark' : 'light';
+
             turnstile.render('#cf-turnstile', {
                 sitekey: '{{ config('settings.captcha_site_key') }}',
+                size: 'flexible',
+                theme: theme,
                 callback: function(token) {
-                    @this.set('captcha', token, false)
+                    @this.set('captcha', token, false);
                 },
+                'error-callback': function(error) {
+                    console.error('Challenge Error:', error);
+                }
             });
-        });
+        }
 
-        turnstile.render('#cf-turnstile', {
-            sitekey: '{{ config('settings.captcha_site_key') }}',
-            callback: function(token) {
-                @this.set('captcha', token, false)
-            },
+        renderTurnstile();
+
+        // On livewire validation error reset turnstile
+        Livewire.hook('morph.updated', () => {
+            renderTurnstile();
         });
     });
 </script>
