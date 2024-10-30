@@ -60,6 +60,9 @@ class EditExtension extends EditRecord
             'value',
         ]);
 
-        return $record;
+        ExtensionHelper::call($record, 'updated', [$record], mayFail: true);
+
+        // Maybe the extension changed the record, so we need to refresh it
+        return $record->refresh();
     }
 }

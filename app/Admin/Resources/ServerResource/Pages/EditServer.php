@@ -60,6 +60,7 @@ class EditServer extends EditRecord
 
         ExtensionHelper::call($record, 'updated', [$record], mayFail: true);
 
-        return $record;
+        // Maybe the extension changed the record, so we need to refresh it
+        return $record->refresh();
     }
 }
