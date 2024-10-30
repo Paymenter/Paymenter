@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('slug')->unique();
             $table->string('name');
             $table->text('description')->nullable();
-            $table->string('image_url')->nullable();
+            $table->string('image')->nullable();
             $table->foreignId('parent_id')->nullable()->constrained('categories');
             $table->text('full_slug')->nullable();
             $table->unsignedTinyInteger('sort')->nullable();
