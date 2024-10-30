@@ -6,64 +6,69 @@ use App\Models\ConfigOption;
 use App\Models\Currency;
 use App\Models\CustomProperty;
 use App\Models\Gateway;
-use App\Models\Plan;
 use App\Models\Price;
-use App\Models\User;
+use Closure;
+use Filament\Forms\Components\Placeholder;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use PDO;
 use PDOException;
+use PDOStatement;
 
-class UpgradeFromAlpha extends Command
+use function Laravel\Prompts\password;
+use function Laravel\Prompts\text;
+
+class MigrateOldData extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'migrate:old-data {host} {dbname} {username} {password}';
+    protected $signature = 'app:migrate-0.x {dbname} {username?} {host?} {port?}';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Migrate data from old database structure to new structure';
+    protected $description = 'Migrates all the data from paymenter version 0.x to 1.x';
 
+    /**
+     * The PDO connection to old database
+     *
+     * @var PDO
+     */
     protected $pdo;
 
+    /**
+     * @var string
+     */
     protected $currency_code;
+
+    /**
+     * @var int
+     */
+    protected $batchSize = 500;
 
     public function handle()
     {
-        $host = $this->argument('host');
         $dbname = $this->argument('dbname');
-        $username = $this->argument('username');
-        $password = $this->argument('password');
+        $host = $this->askOrUseENV(argument: 'host', env: 'DB_HOST', question: 'Enter the host:', placeholder: 'localhost');
+        $port = $this->askOrUseENV(argument: 'port', env: 'DB_PORT', question: 'Enter the port:', placeholder: '3306');
+        $username = $this->askOrUseENV(argument: 'username', env: 'DB_USERNAME', question: 'Enter the username:', placeholder: 'paymenter');
+        $password = password("Enter the password for user '$username':", required: true);
 
         try {
-            $this->pdo = new PDO("mysql:host=$host;dbname=$dbname", $username, $password);
+            $this->pdo = new PDO("mysql:host=$host;port=$port;dbname=$dbname", $username, $password);
             $this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            $this->pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
+            $this->info('Connected to old database, Starting migration...');
 
-            // Get default currency
-            $currency_settings = $this->pdo->query("SELECT * FROM `settings` WHERE `key` = 'currency' or `key` = 'currency_sign' or `key` = 'currency_position'")->fetchAll();
-            $currency_settings = array_combine(array_column($currency_settings, 'key'), $currency_settings);
-            $this->currency_code = $currency_settings['currency']['value'];
-
-            $currency = Currency::where('code', $this->currency_code)->first();
-            if (is_null($currency)) {
-                Currency::create([
-                    'code' => $this->currency_code,
-                    'prefix' => $currency_settings['currency_position']['value'] === 'left' ? $currency_settings['currency_sign']['value'] : null,
-                    'suffix' => $currency_settings['currency_position']['value'] === 'right' ? $currency_settings['currency_sign']['value'] : null,
-                    'format' => '1,000.00',
-                ]);
-            }
-
-            $this->info('Connected successfully');
             DB::statement('SET foreign_key_checks=0');
 
+            $this->defaultCurrency();
             $this->settings();
             $this->config_options();
             $this->migrateCoupons();
@@ -83,8 +88,45 @@ class UpgradeFromAlpha extends Command
 
             DB::statement('SET foreign_key_checks=1');
         } catch (PDOException $e) {
-            $this->error('Connection failed: ' . $e->getMessage());
+            $this->fail('Connection failed: ' . $e->getMessage());
         }
+    }
+
+    public function askOrUseENV(string $argument, string $env, string $question, string $placeholder): string
+    {
+        $arg_value = $this->argument($argument);
+        if ($arg_value) {
+            return $arg_value;
+        }
+
+        $env_value = env($env);
+        if (!is_null($env_value) && $env_value !== '') {
+            return $env_value;
+        }
+
+        return text($question, required: true, placeholder: $placeholder);
+    }
+
+    public function migrateWithProgress(string $table, Closure $processor)
+    {
+        // WIP
+    }
+
+    protected function defaultCurrency()
+    {
+        // Get default currency
+        $currency_settings = $this->pdo->query("SELECT * FROM `settings` WHERE `key` = 'currency' or `key` = 'currency_sign' or `key` = 'currency_position'")->fetchAll();
+        $currency_settings = array_combine(array_column($currency_settings, 'key'), $currency_settings);
+        $this->currency_code = $currency_settings['currency']['value'];
+
+        // Remove all the pre-existing currencies, in case the user still want's to use single currency
+        Currency::truncate();
+        Currency::create([
+            'code' => $this->currency_code,
+            'prefix' => $currency_settings['currency_position']['value'] === 'left' ? $currency_settings['currency_sign']['value'] : null,
+            'suffix' => $currency_settings['currency_position']['value'] === 'right' ? $currency_settings['currency_sign']['value'] : null,
+            'format' => '1,000.00',
+        ]);
     }
 
     protected function settings()
@@ -805,7 +847,10 @@ class UpgradeFromAlpha extends Command
         DB::table('orders')->insert($records);
         $this->info('Migrated orders!');
 
-        $stmt = $this->pdo->query('
+        /**
+         * @var PDOStatement $stmt
+         */
+        $stmt = $this->pdo->prepare('
         SELECT
             op.*,
             opc.value as stripe_subscription_id
@@ -815,87 +860,107 @@ class UpgradeFromAlpha extends Command
             order_products_config opc
             ON op.id = opc.order_product_id
             AND opc.key = \'stripe_subscription_id\'
+        LIMIT :limit OFFSET :offset
         ');
-        $records = $stmt->fetchAll();
 
-        $records = array_map(function ($record) use ($order_product_details) {
-            $order = $order_product_details[$record['order_id']];
+        $offset = 0;
+        $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
+        $stmt->bindValue(':limit', $this->batchSize, PDO::PARAM_INT);
+        $stmt->execute();
 
-            $billing = match ($record['billing_cycle']) {
-                'monthly' => [
-                    'type' => 'recurring',
-                    'unit' => 'month',
-                    'period' => 1,
-                ],
-                'quarterly' => [
-                    'type' => 'recurring',
-                    'unit' => 'month',
-                    'period' => 3,
-                ],
-                'semi_annually' => [
-                    'type' => 'recurring',
-                    'unit' => 'month',
-                    'period' => 6,
-                ],
-                'annually' => [
-                    'type' => 'recurring',
-                    'unit' => 'year',
-                    'period' => 1,
-                ],
-                'biennially' => [
-                    'type' => 'recurring',
-                    'unit' => 'year',
-                    'period' => 2,
-                ],
-                'triennially' => [
-                    'type' => 'recurring',
-                    'unit' => 'year',
-                    'period' => 3,
-                ],
-                null => $record['price'] === 0 ? [
-                    'type' => 'free',
-                    'unit' => null,
-                    'period' => null,
-                ] : [
-                    'type' => 'one-time',
-                    'unit' => null,
-                    'period' => null,
-                ]
-            };
+        $nRows = $this->pdo->query('SELECT COUNT(*) FROM order_products')->fetchColumn();
 
-            $price = Price::where('price', $record['price'])
-                ->whereHas('plan', function ($query) use ($billing) {
-                    $query->where('priceable_type', 'App\Models\Product')
-                        ->where('type', $billing['type'])
-                        ->where('billing_period', $billing['period'])
-                        ->where('billing_unit', $billing['unit']);
-                })->first();
+        $bar = $this->output->createProgressBar(round($nRows / $this->batchSize));
+        $bar->setFormat('Migrating Services, Batch: %current%/%max% [%bar%] %percent:3s%%');
+        $bar->start();
+        while ($records = $stmt->fetchAll(PDO::FETCH_ASSOC)) {
+            $offset += $this->batchSize;
+            $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
+            $stmt->execute();
 
-            return [
-                'id' => $record['id'],
-                // Active instead of Paid status, leave rest unchanged
-                'status' => match ($record['status']) {
-                    'paid' => 'active',
-                    default => $record['status']
-                },
-                'order_id' => $record['order_id'],
-                'product_id' => $record['product_id'],
-                'user_id' => $order['user_id'],
-                'currency_code' => $this->currency_code,
+            $records = array_map(function ($record) use ($order_product_details) {
+                $order = $order_product_details[$record['order_id']];
 
-                'quantity' => $record['quantity'],
-                'price' => $record['price'],
+                $billing = match ($record['billing_cycle']) {
+                    'monthly' => [
+                        'type' => 'recurring',
+                        'unit' => 'month',
+                        'period' => 1,
+                    ],
+                    'quarterly' => [
+                        'type' => 'recurring',
+                        'unit' => 'month',
+                        'period' => 3,
+                    ],
+                    'semi_annually' => [
+                        'type' => 'recurring',
+                        'unit' => 'month',
+                        'period' => 6,
+                    ],
+                    'annually' => [
+                        'type' => 'recurring',
+                        'unit' => 'year',
+                        'period' => 1,
+                    ],
+                    'biennially' => [
+                        'type' => 'recurring',
+                        'unit' => 'year',
+                        'period' => 2,
+                    ],
+                    'triennially' => [
+                        'type' => 'recurring',
+                        'unit' => 'year',
+                        'period' => 3,
+                    ],
+                    null => $record['price'] === 0 ? [
+                        'type' => 'free',
+                        'unit' => null,
+                        'period' => null,
+                    ] : [
+                        'type' => 'one-time',
+                        'unit' => null,
+                        'period' => null,
+                    ]
+                };
 
-                'plan_id' => $price ? $price->plan_id : null,
-                'coupon_id' => $order['coupon_id'],
-                'expires_at' => $record['expiry_date'],
-                'subscription_id' => $record['stripe_subscription_id'],
-                'created_at' => $record['created_at'],
-                'updated_at' => $record['updated_at'],
-            ];
-        }, $records);
+                $price = Price::where('price', $record['price'])
+                    ->whereHas('plan', function ($query) use ($billing) {
+                        $query->where('priceable_type', 'App\Models\Product')
+                            ->where('type', $billing['type'])
+                            ->where('billing_period', $billing['period'])
+                            ->where('billing_unit', $billing['unit']);
+                    })->first();
 
-        DB::table('services')->insert($records);
+                return [
+                    'id' => $record['id'],
+                    // Active instead of Paid status, leave rest unchanged
+                    'status' => match ($record['status']) {
+                        'paid' => 'active',
+                        default => $record['status']
+                    },
+                    'order_id' => $record['order_id'],
+                    'product_id' => $record['product_id'],
+                    'user_id' => $order['user_id'],
+                    'currency_code' => $this->currency_code,
+
+                    'quantity' => $record['quantity'],
+                    'price' => $record['price'],
+
+                    'plan_id' => $price ? $price->plan_id : null,
+                    'coupon_id' => $order['coupon_id'],
+                    'expires_at' => $record['expiry_date'],
+                    'subscription_id' => $record['stripe_subscription_id'],
+                    'created_at' => $record['created_at'],
+                    'updated_at' => $record['updated_at'],
+                ];
+            }, $records);
+            DB::table('services')->insert($records);
+            $bar->advance();
+        }
+
+        $bar->finish();
+        $this->info('');
+
         $this->info('Migrated services!');
     }
 
@@ -1147,7 +1212,7 @@ class UpgradeFromAlpha extends Command
                 'slug' => $record['slug'],
                 'name' => $record['name'],
                 'description' => $record['description'],
-                'image_url' => $record['image'],
+                'image' => $record['image'],
                 'parent_id' => $record['category_id'],
                 'full_slug' => $record['slug'],
 
