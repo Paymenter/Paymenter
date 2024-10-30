@@ -15,9 +15,6 @@
                 theme: theme,
                 callback: function(token) {
                     @this.set('captcha', token, false);
-                },
-                'error-callback': function(error) {
-                    console.error('Challenge Error:', error);
                 }
             });
         }
