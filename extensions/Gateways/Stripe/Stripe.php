@@ -4,6 +4,7 @@ namespace Paymenter\Extensions\Gateways\Stripe;
 
 use App\Classes\Extension\Gateway;
 use App\Helpers\ExtensionHelper;
+use App\Models\Gateway as ModelsGateway;
 use App\Models\Invoice;
 use App\Models\Service;
 use Illuminate\Http\Request;
@@ -24,24 +25,26 @@ class Stripe extends Gateway
         return [
             [
                 'name' => 'stripe_secret_key',
-                'label' => 'Stripe Secret Key',
+                'label' => 'Stripe Restricted key',
+                'placeholder' => 'Enter your Stripe Publishable API key',
+                'type' => 'text',
+                'description' => 'Find your API keys at https://dashboard.stripe.com/apikeys',
+                'required' => true,
+            ],
+            [
+                'name' => 'stripe_publishable_key',
+                'label' => 'Stripe Publishable Key',
+                'placeholder' => 'Enter your Stripe Publishable API key',
                 'type' => 'text',
                 'description' => 'Find your API keys at https://dashboard.stripe.com/apikeys',
                 'required' => true,
             ],
             [
                 'name' => 'stripe_webhook_secret',
-                'label' => 'Stripe webhook secret',
+                'label' => 'Stripe webhook secret (auto generated)',
                 'type' => 'text',
                 'description' => 'Stripe webhook secret',
-                'required' => true,
-            ],
-            [
-                'name' => 'stripe_publishable_key',
-                'label' => 'Stripe Publishable Key',
-                'type' => 'text',
-                'description' => 'Find your API keys at https://dashboard.stripe.com/apikeys',
-                'required' => true,
+                'required' => false,
             ],
             [
                 'name' => 'stripe_use_subscriptions',
@@ -51,6 +54,28 @@ class Stripe extends Gateway
                 'required' => false,
             ],
         ];
+    }
+
+    public function updated(ModelsGateway $gateway)
+    {
+        if (!empty($gateway->settings()->where('key', 'stripe_webhook_secret')->first()->value)) {
+            return;
+        }
+
+        // Create webhook on stripe
+        $webhook = $this->request('post', '/webhook_endpoints', [
+            'url' => route('extensions.gateways.stripe.webhook'),
+            'description' => 'Paymenter Stripe Webhook',
+            'enabled_events' => [
+                'payment_intent.succeeded',
+                'setup_intent.succeeded',
+                'subscription_schedule.canceled',
+                'invoice.created',
+                'invoice.payment_succeeded',
+            ],
+        ]);
+
+        $gateway->settings()->updateOrCreate(['key' => 'stripe_webhook_secret'], ['value' => $webhook->secret]);
     }
 
     private function request($method, $url, $data = [])
