@@ -12,7 +12,8 @@ if (!function_exists('theme')) {
      */
     function theme($key, $default = null)
     {
-        return config('settings.theme_' . config('settings.theme', 'default') . '_' . $key, $default);
+        $current_theme = config('settings.theme', 'default');
+        return config("settings.theme_$current_theme" . "_$key", $default) ?? $default;
     }
 }
 
