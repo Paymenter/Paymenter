@@ -21,6 +21,15 @@ class Navigation
                 'children' => [],
             ],
         ];
+
+        if (Auth::user()) {
+            $routes[] = [
+                'name' => 'Dashboard',
+                'route' => 'dashboard',
+                'children' => [],
+            ];
+        }
+
         if (count($categories) > 0) {
             $routes[] = [
                 'name' => 'Shop',
