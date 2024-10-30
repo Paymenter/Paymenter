@@ -5,6 +5,7 @@ namespace App\Admin\Resources\UserResource\Pages;
 use App\Admin\Resources\UserResource;
 use Filament\Actions;
 use Filament\Resources\Pages\EditRecord;
+use Illuminate\Support\Facades\Auth;
 
 class EditUser extends EditRecord
 {
@@ -13,7 +14,8 @@ class EditUser extends EditRecord
     protected function getHeaderActions(): array
     {
         return [
-            Actions\DeleteAction::make(),
+            Actions\DeleteAction::make()
+                ->hidden(fn ($record) => Auth::user()->id == $record->id),
         ];
     }
 }
