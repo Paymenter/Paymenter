@@ -30,7 +30,7 @@ class EditTicket extends EditRecord
     public function form(Form $form): Form
     {
         return $form
-            
+
             ->schema([
                 Forms\Components\MarkdownEditor::make('message')
                     ->label('Message')
