@@ -40,7 +40,7 @@ jobs:
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
           commit_message: "style: linted files with pint"
-          branch: main
+          branch: master
           file_pattern: "*.php"
 
   #phpstan:
