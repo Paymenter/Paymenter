@@ -2,6 +2,7 @@
 
 namespace App\Admin\Resources\CouponResource\RelationManagers;
 
+use App\Admin\Resources\ServiceResource;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -22,12 +23,11 @@ class ServicesRelationManager extends RelationManager
             ->filters([
                 //
             ])
-            ->headerActions([
-            ])
+            ->headerActions([])
             ->actions([
                 Tables\Actions\Action::make('view')
                     ->label('View')
-                    ->url(fn ($record) => route('filament.admin.resources.services.edit', $record)),
+                    ->url(fn ($record) => ServiceResource::getUrl('edit', ['record' => $record])),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
