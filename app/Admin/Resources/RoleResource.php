@@ -11,6 +11,7 @@ use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
 
 class RoleResource extends Resource
@@ -42,11 +43,6 @@ class RoleResource extends Resource
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
-            ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
-                ]),
             ]);
     }
 
@@ -55,6 +51,11 @@ class RoleResource extends Resource
         return [
             //
         ];
+    }
+
+    public static function canEdit(Model $record): bool
+    {
+        return $record->id !== 1;
     }
 
     public static function getPages(): array

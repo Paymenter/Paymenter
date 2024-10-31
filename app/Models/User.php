@@ -34,6 +34,7 @@ class User extends Authenticatable implements FilamentUser, HasAvatar
         'role_id',
         'tfa_secret',
         'credits',
+        'email_verified_at',
     ];
 
     /**

@@ -44,16 +44,28 @@ class UserResource extends Resource
                 TextInput::make('email')->translateLabel()->email()->required()->unique('users', 'email', ignoreRecord: true),
 
                 TextInput::make('password')->translateLabel()->password()->revealable()
-                    ->dehydrateStateUsing(fn (string $state): string => Hash::make($state))
-                    ->dehydrated(fn (?string $state): bool => filled($state))
-                    ->required(fn (string $operation): bool => $operation === 'create'),
+                    ->dehydrateStateUsing(fn(string $state): string => Hash::make($state))
+                    ->dehydrated(fn(?string $state): bool => filled($state))
+                    ->required(fn(string $operation): bool => $operation === 'create'),
                 TextInput::make('credits')->translateLabel()->numeric()->default(0),
 
                 Select::make('role_id')->translateLabel()->relationship('role', 'name')->searchable()->preload(),
-                Toggle::make('tfa_secret')->label('Two Factor Authentication')->disabled()->hiddenOn(['create']),
+                Toggle::make('tfa_secret')
+                    ->label('Two Factor Authentication')
+                    ->disabled(fn($record) => !$record->tfa_secret)
+                    ->dehydrateStateUsing(fn($state, $record) => $state ? $record->tfa_secret : null)
+                    ->formatStateUsing(fn($record) => $record->tfa_secret ? true : false)
+                    ->hiddenOn(['create']),
 
-                Toggle::make('email_verified_at')->label('Email Verified')->disabled()->hiddenOn(['create']),
-                TextInput::make('email_verified_at')->hidden(),
+                Toggle::make('email_verified_at')
+                    ->label('Email Verified')
+                    ->dehydrateStateUsing(function ($state, $record) {
+                        if ($state && !$record->email_verified_at) {
+                            return now();
+                        }
+                        return $state ? $record->email_verified_at : null;
+                    })
+                    ->hiddenOn(['create']),
             ]);
     }
 
