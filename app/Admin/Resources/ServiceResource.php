@@ -20,6 +20,7 @@ use Filament\Support\RawJs;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\HtmlString;
 
 class ServiceResource extends Resource
 {
@@ -60,6 +61,7 @@ class ServiceResource extends Resource
                     ->relationship('user', 'id')
                     ->searchable()
                     ->preload()
+                    ->hint(fn ($get) => $get('user_id') ? new HtmlString("<a href=\"". UserResource::getUrl('edit', ['record' => $get('user_id')]) . "\" target=\"_blank\">Go to User</a>") : null)
                     ->getOptionLabelFromRecordUsing(fn ($record) => $record->name)
                     ->getSearchResultsUsing(fn (string $search): array => User::where('first_name', 'like', "%$search%")->orWhere('last_name', 'like', "%$search%")->limit(50)->pluck('name', 'id')->toArray())
                     ->live()
