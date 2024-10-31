@@ -5,11 +5,9 @@ namespace App\Admin\Resources\OauthClientResource\Pages;
 use App\Admin\Resources\OauthClientResource;
 use Filament\Resources\Pages\CreateRecord;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Artisan;
-use Illuminate\Support\Str;
 use Laravel\Passport\ClientRepository;
-use phpseclib3\Crypt\RSA;
 use Laravel\Passport\Passport;
+use phpseclib3\Crypt\RSA;
 
 class CreateOauthClient extends CreateRecord
 {
@@ -29,7 +27,7 @@ class CreateOauthClient extends CreateRecord
             file_put_contents($publicKey, (string) $key->getPublicKey());
             file_put_contents($privateKey, (string) $key);
 
-            if (! windows_os()) {
+            if (!windows_os()) {
                 chmod($publicKey, 0660);
                 chmod($privateKey, 0600);
             }

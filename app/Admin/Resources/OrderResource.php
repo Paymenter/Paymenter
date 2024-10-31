@@ -46,7 +46,7 @@ class OrderResource extends Resource
                         // update all the services user_id
                         $set('services', collect($get('services'))->map(fn ($service) => array_merge($service, ['user_id' => $get('user_id')]))->toArray());
                     })
-                    ->hint(fn ($get) => $get('user_id') ? new HtmlString("<a href=\"". UserResource::getUrl('edit', ['record' => $get('user_id')]) . "\" target=\"_blank\">Go to User</a>") : null)
+                    ->hint(fn ($get) => $get('user_id') ? new HtmlString('<a href="' . UserResource::getUrl('edit', ['record' => $get('user_id')]) . '" target="_blank">Go to User</a>') : null)
                     ->live()
                     ->required(),
                 Forms\Components\Select::make('currency_code')

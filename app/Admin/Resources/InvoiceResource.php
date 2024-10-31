@@ -48,7 +48,7 @@ class InvoiceResource extends Resource
                     ->preload()
                     ->getOptionLabelFromRecordUsing(fn ($record) => $record->name)
                     ->getSearchResultsUsing(fn (string $search): array => User::where('first_name', 'like', "%$search%")->orWhere('last_name', 'like', "%$search%")->limit(50)->pluck('name', 'id')->toArray())
-                    ->hint(fn ($get) => $get('user_id') ? new HtmlString("<a href=\"". UserResource::getUrl('edit', ['record' => $get('user_id')]) . "\" target=\"_blank\">Go to User</a>") : null)
+                    ->hint(fn ($get) => $get('user_id') ? new HtmlString('<a href="' . UserResource::getUrl('edit', ['record' => $get('user_id')]) . '" target="_blank">Go to User</a>') : null)
                     ->live()
                     ->required(),
                 Forms\Components\Select::make('currency_code')

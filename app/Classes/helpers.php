@@ -13,6 +13,7 @@ if (!function_exists('theme')) {
     function theme($key, $default = null)
     {
         $current_theme = config('settings.theme', 'default');
+
         return config("settings.theme_$current_theme" . "_$key", $default) ?? $default;
     }
 }
