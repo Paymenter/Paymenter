@@ -22,12 +22,11 @@ class ServicesRelationManager extends RelationManager
             ->filters([
                 //
             ])
-            ->headerActions([
-            ])
+            ->headerActions([])
             ->actions([
                 Tables\Actions\Action::make('view')
                     ->label('View')
-                    ->url(fn ($record) => route('filament.admin.resources.services.edit', $record)),
+                    ->url(fn ($record) => route('filament.admin.services.resources.services.edit', $record)),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
