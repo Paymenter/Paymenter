@@ -2,29 +2,65 @@
 
 namespace App\Console\Commands\Settings;
 
+use App\Classes\Settings;
 use App\Models\Setting;
 use Illuminate\Console\Command;
 use Illuminate\Contracts\Console\PromptsForMissingInput;
 
-class Change extends Command implements PromptsForMissingInput
+use function Laravel\Prompts\form;
+use function Laravel\Prompts\select;
+use function Laravel\Prompts\suggest;
+use function Laravel\Prompts\text;
+
+class Change extends Command
 {
-    protected $signature = 'app:settings:change {key} {value}';
+    protected $signature = 'app:settings:change {key?} {value?}';
 
     protected $description = 'Change a setting';
 
     public function handle()
     {
-        Setting::updateOrCreate(
-            ['key' => $this->argument('key')],
-            ['value' => $this->argument('value')]
-        );
-    }
 
-    protected function promptForMissingArgumentsUsing(): array
-    {
-        return [
-            'key' => 'What is the setting key? (e.g. app_url)',
-            'value' => 'What is the setting value? (e.g. https://example.com)',
-        ];
+        $key = $this->argument('key');
+        $value = $this->argument('value');
+        $form = form();
+
+        if (!$key) {
+            // Settings::settings is a array with first level keys as categories and second level keys as settings, so we need to flatten it
+            $settings = collect(Settings::settings())->flatten(1)->map(function ($item) {
+                return $item['name'];
+            })->toArray();
+
+            $form->suggest('Which setting would you like to change?', $settings, name: 'key');
+        }
+
+        if (!$value) {
+            $form->add(function ($responses) use ($key) {
+                $key = $responses['key'] ?? $key;
+                $setting = Settings::getSetting($key);
+                if (!isset($setting->type)) {
+                    return text('What value should the setting have?', default: '', hint: 'Could not find setting but you can still change it');
+                }
+                // What type is the setting?
+                if ($setting->type === 'select') {
+                    return select('What value should the setting have?', $setting->options);
+                } else {
+                    return text('What value should the setting have?', default: $setting->default ?? '');
+                }
+            });
+        }
+        $form = $form->submit();
+
+        if (isset($form['key'])) {
+            $key = $form['key'];
+        }
+        if (isset($form['value'])) {
+            $value = $form['value'];
+        }
+
+        Setting::updateOrCreate(
+            ['key' => $key],
+            ['value' => $value]
+        );
     }
 }
