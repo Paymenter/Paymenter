@@ -45,9 +45,12 @@ class CategoryResource extends Resource
                 Forms\Components\Textarea::make('description')
                     ->required(),
                 Forms\Components\Select::make('parent_id')
-                    ->relationship('categories', 'name')
+                    ->relationship('parent', 'name')
                     ->searchable()
-                    ->preload(),
+                    ->preload()
+                    ->label('Parent Category')
+                    // Disallow having same category as it's own parent
+                    ->disableOptionWhen(fn (string $value, Category|null $record): bool => $record && (int) $value === $record->id),
                 Forms\Components\FileUpload::make('image')->label('Image')->nullable()->acceptedFileTypes(['image/*']),
             ]);
     }
