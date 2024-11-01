@@ -50,7 +50,7 @@ class CategoryResource extends Resource
                     ->preload()
                     ->label('Parent Category')
                     // Disallow having same category as it's own parent
-                    ->disableOptionWhen(fn (string $value, Category|null $record): bool => $record && (int) $value === $record->id),
+                    ->disableOptionWhen(fn (string $value, ?Category $record): bool => $record && (int) $value === $record->id),
                 Forms\Components\FileUpload::make('image')->label('Image')->nullable()->acceptedFileTypes(['image/*']),
             ]);
     }
