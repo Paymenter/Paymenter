@@ -7,6 +7,7 @@ use App\Helpers\ExtensionHelper;
 use App\Models\Gateway as ModelsGateway;
 use App\Models\Invoice;
 use App\Models\Service;
+use Filament\Notifications\Notification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\View;
@@ -45,6 +46,7 @@ class Stripe extends Gateway
                 'type' => 'text',
                 'description' => 'Stripe webhook secret',
                 'required' => false,
+                'disabled' => true,
             ],
             [
                 'name' => 'stripe_use_subscriptions',
@@ -62,6 +64,16 @@ class Stripe extends Gateway
             return;
         }
 
+        // Check if webhook already exists
+        $webhooks = $this->request('get', '/webhook_endpoints');
+        foreach ($webhooks->data as $webhook) {
+            if ($webhook->url === route('extensions.gateways.stripe.webhook')) {
+                $gateway->settings()->updateOrCreate(['key' => 'stripe_webhook_secret'], ['value' => $webhook->secret]);
+
+                return;
+            }
+        }
+
         // Create webhook on stripe
         $webhook = $this->request('post', '/webhook_endpoints', [
             'url' => route('extensions.gateways.stripe.webhook'),
@@ -76,6 +88,11 @@ class Stripe extends Gateway
         ]);
 
         $gateway->settings()->updateOrCreate(['key' => 'stripe_webhook_secret'], ['value' => $webhook->secret]);
+
+        Notification::make()
+            ->title('Webhook created')
+            ->body('We\'ve created a webhook for you on Stripe (refresh the page to see the secret)')
+            ->send();
     }
 
     private function request($method, $url, $data = [])
