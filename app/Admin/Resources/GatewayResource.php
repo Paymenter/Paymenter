@@ -13,6 +13,8 @@ use Filament\Forms\Get;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Illuminate\Contracts\Support\Htmlable;
+use Illuminate\Database\Eloquent\Model;
 
 class GatewayResource extends Resource
 {
@@ -21,6 +23,16 @@ class GatewayResource extends Resource
     protected static ?string $navigationGroup = 'Extensions';
 
     protected static ?string $navigationIcon = 'heroicon-o-credit-card';
+
+    public static function getGloballySearchableAttributes(): array
+    {
+        return ['name'];
+    }
+
+    public static function getGlobalSearchResultTitle(Model $record): string|Htmlable
+    {
+        return $record->name;
+    }
 
     public static function form(Form $form): Form
     {

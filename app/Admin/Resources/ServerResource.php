@@ -16,6 +16,8 @@ use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Illuminate\Contracts\Support\Htmlable;
+use Illuminate\Database\Eloquent\Model;
 
 class ServerResource extends Resource
 {
@@ -24,6 +26,16 @@ class ServerResource extends Resource
     protected static ?string $navigationGroup = 'Extensions';
 
     protected static ?string $navigationIcon = 'heroicon-o-server';
+
+    public static function getGloballySearchableAttributes(): array
+    {
+        return ['name'];
+    }
+
+    public static function getGlobalSearchResultTitle(Model $record): string|Htmlable
+    {
+        return $record->name;
+    }
 
     public static function form(Form $form): Form
     {
