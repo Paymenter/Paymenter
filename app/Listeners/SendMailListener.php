@@ -17,13 +17,13 @@ class SendMailListener
 
         if ($event instanceof InvoiceCreated) {
             $invoice = $event->invoice;
-            NotificationHelper::newInvoiceCreatedNotification($invoice->user, $invoice);
+            NotificationHelper::invoiceCreatedNotification($invoice->user, $invoice);
         } elseif ($event instanceof UserCreated) {
             $user = $event->user;
-            NotificationHelper::emailVerficationNotification($user);
+            NotificationHelper::emailVerificationNotification($user);
         } else {
             $order = $event->order;
-            NotificationHelper::newOrderCreatedNotification($order->user, $order);
+            NotificationHelper::orderCreatedNotification($order->user, $order);
         }
     }
 }

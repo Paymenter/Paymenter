@@ -42,7 +42,7 @@ class EditService extends EditRecord
                             case 'create':
                                 $sdata = ExtensionHelper::createServer($record);
                                 if ($data['sendNotification']) {
-                                    NotificationHelper::newServerCreatedNotification($record->order->user, $record, $sdata);
+                                    NotificationHelper::serverCreatedNotification($record->order->user, $record, $sdata);
                                 }
                                 break;
                             case 'suspend':

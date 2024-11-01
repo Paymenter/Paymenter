@@ -36,7 +36,7 @@ class CreateJob implements ShouldQueue
 
         // Send the email (TO BE MADE)
         if ($this->sendNotiication) {
-            NotificationHelper::newServerCreatedNotification($this->service->order->user, $this->service, $data);
+            NotificationHelper::serverCreatedNotification($this->service->order->user, $this->service, $data);
         }
     }
 }

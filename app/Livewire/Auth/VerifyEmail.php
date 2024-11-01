@@ -29,7 +29,7 @@ class VerifyEmail extends Component
             return;
         }
 
-        NotificationHelper::emailVerficationNotification(Auth::user());
+        NotificationHelper::emailVerificationNotification(Auth::user());
 
         RateLimiter::hit('email-verification', 120);
 

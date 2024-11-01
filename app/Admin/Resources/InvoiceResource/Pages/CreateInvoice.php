@@ -16,7 +16,7 @@ class CreateInvoice extends CreateRecord
         $invoice = static::getModel()::create($data);
 
         if ($data['send_email']) {
-            NotificationHelper::newInvoiceCreatedNotification($invoice->user, $invoice);
+            NotificationHelper::invoiceCreatedNotification($invoice->user, $invoice);
         }
 
         return $invoice;

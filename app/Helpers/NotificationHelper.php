@@ -52,12 +52,12 @@ class NotificationHelper
             ->queue($mail);
     }
 
-    public static function newLoginDetectedNotification(User $user, array $data = []): void
+    public static function loginDetectedNotification(User $user, array $data = []): void
     {
         self::sendEmailNotification('new_login_detected', $data, $user);
     }
 
-    public static function newInvoiceCreatedNotification(User $user, Invoice $invoice): void
+    public static function invoiceCreatedNotification(User $user, Invoice $invoice): void
     {
         $data = [
             'invoice' => $invoice,
@@ -74,7 +74,7 @@ class NotificationHelper
         self::sendEmailNotification('new_invoice_created', $data, $user, $attachments);
     }
 
-    public static function newOrderCreatedNotification(User $user, Order $order, array $data = []): void
+    public static function orderCreatedNotification(User $user, Order $order, array $data = []): void
     {
         $data = [
             'order' => $order,
@@ -84,7 +84,7 @@ class NotificationHelper
         self::sendEmailNotification('new_order_created', $data, $user);
     }
 
-    public static function newServerCreatedNotification(User $user, Service $service, array $data = []): void
+    public static function serverCreatedNotification(User $user, Service $service, array $data = []): void
     {
         $data['service'] = $service;
         self::sendEmailNotification('new_server_created', $data, $user);
@@ -102,13 +102,13 @@ class NotificationHelper
         self::sendEmailNotification('server_terminated', $data, $user);
     }
 
-    public static function newTicketMessageNotification(User $user, TicketMessage $ticketMessage, array $data = []): void
+    public static function ticketMessageNotification(User $user, TicketMessage $ticketMessage, array $data = []): void
     {
         $data['ticketMessage'] = $ticketMessage;
         self::sendEmailNotification('new_ticket_message', $data, $user);
     }
 
-    public static function emailVerficationNotification(User $user, array $data = []): void
+    public static function emailVerificationNotification(User $user, array $data = []): void
     {
         $data['user'] = $user;
         $data['url'] = URL::temporarySignedRoute(

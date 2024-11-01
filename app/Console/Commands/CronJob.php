@@ -71,7 +71,7 @@ class CronJob extends Command
             ]);
 
             // Send email
-            NotificationHelper::newInvoiceCreatedNotification($service->order->user, $invoice);
+            NotificationHelper::invoiceCreatedNotification($service->order->user, $invoice);
 
             $sendedInvoices++;
         });
