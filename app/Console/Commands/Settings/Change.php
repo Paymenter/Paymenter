@@ -5,11 +5,9 @@ namespace App\Console\Commands\Settings;
 use App\Classes\Settings;
 use App\Models\Setting;
 use Illuminate\Console\Command;
-use Illuminate\Contracts\Console\PromptsForMissingInput;
 
 use function Laravel\Prompts\form;
 use function Laravel\Prompts\select;
-use function Laravel\Prompts\suggest;
 use function Laravel\Prompts\text;
 
 class Change extends Command
