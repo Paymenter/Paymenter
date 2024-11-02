@@ -68,9 +68,9 @@ class Stripe extends Gateway
         $webhooks = $this->request('get', '/webhook_endpoints');
         foreach ($webhooks->data as $webhook) {
             if ($webhook->url === route('extensions.gateways.stripe.webhook')) {
-                $gateway->settings()->updateOrCreate(['key' => 'stripe_webhook_secret'], ['value' => $webhook->secret]);
-
-                return;
+                // Delete webhook
+                $this->request('delete', '/webhook_endpoints/' . $webhook->id);
+                break;
             }
         }
 

@@ -21,6 +21,11 @@ class EditExtension extends EditRecord
         return $data;
     }
 
+    protected function getRedirectUrl(): string
+    {
+        return $this->getResource()::getUrl('edit', ['record' => $this->record]);
+    }
+
     protected function handleRecordUpdate(Model $record, array $data): Model
     {
         // is the extension being enabled or disabled?
