@@ -178,6 +178,21 @@ class ExtensionHelper
         }
     }
 
+    public static function callService(Service $service, $function, $args = [], $mayFail = false)
+    {
+        $server = $service->product->server;
+
+        if (!$server) {
+            if ($mayFail) {
+                throw new Exception('No server assigned to this product');
+            } else {
+                return;
+            }
+        }
+
+        return self::call($server, $function, [$service, self::settingsToArray($service->product->settings), self::getServiceProperties($service), ...$args], $mayFail);
+    }
+
     /**
      * Convert extensions to options
      *

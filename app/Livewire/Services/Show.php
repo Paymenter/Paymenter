@@ -51,6 +51,16 @@ class Show extends Component
         $this->showModal = $modal;
     }
 
+    public function goto($function)
+    {
+        // Check if function is allowed
+        if (!in_array($function, array_column($this->buttons, 'function'))) {
+            $this->notify('This action is not allowed', 'error');
+            return;
+        }
+        $this->redirect(ExtensionHelper::callService($this->service, $function));
+    }
+
     public function render()
     {
         $view = null;

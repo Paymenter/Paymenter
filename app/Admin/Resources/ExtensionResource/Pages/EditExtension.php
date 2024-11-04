@@ -46,24 +46,17 @@ class EditExtension extends EditRecord
 
         $config = ExtensionHelper::getConfig($record->type, $record->extension);
 
-        $things = array_map(function ($option) use ($data, $record) {
-            return [
+        foreach ($config as $option) {
+            $record->settings()->updateOrCreate([
                 'key' => $option['name'],
                 'settingable_id' => $record->id,
                 'settingable_type' => $record->getMorphClass(),
+            ], [
                 'type' => $option['database_type'] ?? 'string',
                 'value' => isset($data['settings'][$option['name']]) ? (is_array($data['settings'][$option['name']]) ? json_encode($data['settings'][$option['name']]) : $data['settings'][$option['name']]) : null,
-            ];
-        }, $config);
-
-        $record->settings()->upsert($things, uniqueBy: [
-            'key',
-            'settingable_id',
-            'settingable_type',
-        ], update: [
-            'type',
-            'value',
-        ]);
+                'encrypted' => $option['encrypted'] ?? false,
+            ]);
+        }
 
         ExtensionHelper::call($record, 'updated', [$record], mayFail: true);
 

@@ -70,11 +70,18 @@
                 </div>
                 <div class="mt-2 flex flex-row gap-2 flex-wrap">
                     @foreach ($buttons as $button)
-                        <a href="{{ $button['url'] }}">
-                            <x-button.secondary class="h-fit !w-fit">
+                        <!-- If the button has a function then call it when clicked -->
+                        @if (isset($button['function']))
+                            <x-button.secondary class="h-fit !w-fit" wire:click="goto('{{ $button['function'] }}')">
                                 {{ $button['label'] }}
                             </x-button.secondary>
-                        </a>
+                        @else
+                            <a href="{{ $button['url'] }}">
+                                <x-button.secondary class="h-fit !w-fit">
+                                    {{ $button['label'] }}
+                                </x-button.secondary>
+                            </a>
+                        @endif
                     @endforeach
                 </div>
             </div>
