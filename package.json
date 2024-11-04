@@ -5,7 +5,8 @@
         "dev": "node vite.js dev",
         "build": "node vite.js",
         "lang": "laravel-language-extractor",
-        "build-admin": "npx tailwindcss --input ./resources/css/filament/admin/theme.css --output ./public/css/filament/admin/theme.css --config ./resources/css/filament/admin/tailwind.config.js --minify "
+        "dev:admin": "npx tailwindcss --input ./resources/css/filament/admin/theme.css --output ./public/css/filament/admin/theme.css --config ./resources/css/filament/admin/tailwind.config.js --watch",
+        "build:admin": "npx tailwindcss --input ./resources/css/filament/admin/theme.css --output ./public/css/filament/admin/theme.css --config ./resources/css/filament/admin/tailwind.config.js --minify"
     },
     "devDependencies": {
         "@tailwindcss/forms": "^0.5.7",

@@ -42,7 +42,7 @@ class Create extends Component
     {
         // Add rules for the department
         $this->validate([
-            'department' => count(config('settings.ticket_departments')) > 0 ? 'required|in:' . implode(',', array_values(config('settings.ticket_departments'))) : '',
+            'department' => count((array) config('settings.ticket_departments')) > 0 ? 'required|in:' . implode(',', array_values((array) config('settings.ticket_departments'))) : '',
             'service' => 'nullable|exists:services,id',
             'subject' => 'required|string',
             'message' => 'required|string',
@@ -80,9 +80,12 @@ class Create extends Component
 
     public function render()
     {
+        /** @var \App\Models\User */
+        $user = Auth::user();
+
         return view('tickets.create', [
-            'departments' => config('settings.ticket_departments'),
-            'services' => Auth::user()->services()->orderBy('id', 'desc')->get(),
+            'departments' => (array) config('settings.ticket_departments'),
+            'services' => $user->services()->orderBy('id', 'desc')->get(),
         ])->layoutData([
             'title' => 'Create Ticket',
         ]);

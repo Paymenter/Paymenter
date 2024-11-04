@@ -8,6 +8,7 @@ use App\Admin\Resources\UserResource;
 use App\Models\Ticket;
 use App\Models\TicketMessage;
 use App\Models\User;
+use Filament\Actions\StaticAction;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Forms\Get;
@@ -16,6 +17,7 @@ use Filament\Infolists\Components\Actions\Action;
 use Filament\Infolists\Components\Actions as InfolistActions;
 use Filament\Infolists\Components\TextEntry\TextEntrySize;
 use Filament\Infolists\Infolist;
+use Filament\Notifications\Notification;
 use Filament\Resources\Pages\EditRecord;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
@@ -69,6 +71,7 @@ class EditTicket extends EditRecord
     {
         return $infolist
             ->record($this->record)
+            ->columns(['default' => 3, 'md' => 1])
             ->schema([
                 Infolists\Components\TextEntry::make('user_id')
                     ->size(TextEntrySize::Large)
@@ -100,6 +103,7 @@ class EditTicket extends EditRecord
                     ->label('Priority'),
                 Infolists\Components\TextEntry::make('department')
                     ->size(TextEntrySize::Large)
+                    ->formatStateUsing(fn ($state) => ((array) config('settings.ticket_departments'))[$state])
                     ->placeholder('No department')
                     ->label('Department'),
 
@@ -142,7 +146,7 @@ class EditTicket extends EditRecord
                                         ->required(),
                                     Forms\Components\Select::make('department')
                                         ->label('Department')
-                                        ->options(config('settings.ticket_departments')),
+                                        ->options((array) config('settings.ticket_departments')),
                                     Forms\Components\Select::make('user_id')
                                         ->label('User')
                                         ->relationship('user', 'id')
@@ -182,10 +186,18 @@ class EditTicket extends EditRecord
                         ->icon('heroicon-o-pencil'),
                     Action::make('Delete')
                         ->color('danger')
-                        // ->url(fn($record) => TicketResource::getUrl('delete', ['record' => $record]))
-                        ->icon('heroicon-o-trash'),
+                        ->icon('heroicon-o-trash')
+                        ->requiresConfirmation()
+                        ->action(fn (Ticket $record) => $record->delete())
+                        ->after(function (StaticAction $action) {
+                            Notification::make()
+                                ->title(__('filament-actions::delete.single.notifications.deleted.title'))
+                                ->success()
+                                ->send();
 
-                ]),
+                            $action->redirect(TicketResource::getUrl('index'));
+                        }),
+                ])->columnSpan(['default' => 'full', 'md' => 1]),
             ]);
     }
 

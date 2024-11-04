@@ -73,26 +73,7 @@ class ProductResource extends Resource
                                     ->relationship('category', 'name')
                                     ->searchable()
                                     ->preload()
-                                    ->createOptionForm([
-                                        Forms\Components\TextInput::make('name')
-                                            ->required()
-                                            ->maxLength(255)
-                                            ->live(onBlur: true)
-                                            ->afterStateUpdated(function (Get $get, Set $set, ?string $old, ?string $state) {
-                                                if (($get('slug') ?? '') !== Str::slug($old)) {
-                                                    return;
-                                                }
-
-                                                $set('slug', Str::slug($state));
-                                            }),
-                                        Forms\Components\TextInput::make('slug'),
-                                        Forms\Components\Textarea::make('description')
-                                            ->required(),
-                                        Forms\Components\Select::make('parent_id')
-                                            ->relationship('categories', 'name')
-                                            ->searchable()
-                                            ->preload(),
-                                    ])
+                                    ->createOptionForm(fn (Form $form) => CategoryResource::form($form))
                                     ->required(),
                             ]),
                         Tabs\Tab::make('Pricing')

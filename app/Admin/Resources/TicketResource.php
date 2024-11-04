@@ -80,7 +80,7 @@ class TicketResource extends Resource
                     ->required(),
                 Forms\Components\Select::make('department')
                     ->label('Department')
-                    ->options(config('settings.ticket_departments'))
+                    ->options((array) config('settings.ticket_departments'))
                     ->columnSpan(function ($record) {
                         return $record ? 2 : 1;
                     }),
@@ -153,6 +153,7 @@ class TicketResource extends Resource
                     })
                     ->formatStateUsing(fn (string $state) => ucfirst($state)),
                 Tables\Columns\TextColumn::make('department')
+                    ->formatStateUsing(fn ($state) => ((array) config('settings.ticket_departments'))[$state])
                     ->sortable(),
                 Tables\Columns\TextColumn::make('user.name')
                     ->searchable()
