@@ -1,9 +1,8 @@
 <div class="bg-primary-800 p-6 rounded-lg mt-2">
     <h1 class="text-2xl font-semibold text-white">Ticket: {{ $ticket->subject }}</h1>
     @vite(['themes/' . config('settings.theme') . '/css/easymde.css'], config('settings.theme'))
-    <div class="grid grid-cols-4 mt-4">
-
-        <div class="col-span-3">
+    <div class="md:grid grid-cols-4 flex flex-col gap-4">
+        <div class="md:col-span-3">
             <div class="flex flex-col gap-4 max-h-[60vh] overflow-y-auto pr-4" wire:poll.5s>
                 @foreach ($ticket->messages()->orderBy('created_at', 'desc')->with('user')->get() as $message)
                     <div
@@ -33,27 +32,29 @@
             </div>
 
         </div>
-        <div>
+
+        <div class="md:order-last order-first w-full col-span-3 sm:col-auto">
             <!-- Show subject and status -->
             <div class="flex flex-col w-full col-span-1">
                 <h2 class="text-2xl font-semibold bg-primary-800 p-2 px-4 rounded-md mb-2">
                     {{ __('ticket.ticket_details') }}
                 </h2>
-                <div class="font-semibold flex justify-between bg-primary-800 p-2 px-4 rounded-md gap-2">
+                <div class="font-semibold flex md:flex-col justify-between bg-primary-800 p-2 px-4 rounded-md gap-2">
                     <h4 class="h-fit">{{ __('ticket.subject') }}:</h4> {{ $ticket->subject }}
                 </div>
-                <div class="font-semibold flex justify-between bg-primary-800 p-2 px-4 rounded-md">
+                <div class="font-semibold flex md:flex-col justify-between bg-primary-800 p-2 px-4 rounded-md">
                     <h4>{{ __('ticket.status') }}:</h4> {{ ucfirst($ticket->status) }}
                 </div>
-                <div class="font-semibold flex justify-between bg-primary-800 p-2 px-4 rounded-md">
+                <div class="font-semibold flex md:flex-col justify-between bg-primary-800 p-2 px-4 rounded-md">
                     <h4>{{ __('ticket.priority') }}:</h4> {{ ucfirst($ticket->priority) }}
                 </div>
-                <div class="font-semibold flex justify-between bg-primary-800 p-2 px-4 rounded-md">
+                <div class="font-semibold flex md:flex-col justify-between bg-primary-800 p-2 px-4 rounded-md">
                     <h4>{{ __('ticket.created_at') }}:</h4> {{ $ticket->created_at->diffForHumans() }}
                 </div>
                 @if ($ticket->department)
-                    <div class="font-semibold flex justify-between bg-primary-800 p-2 px-4 rounded-md">
-                        <h4>{{ __('ticket.department') }}:</h4> {{ $ticket->department }}
+                    <div class="font-semibold flex md:flex-col justify-between bg-primary-800 p-2 px-4 rounded-md">
+                        <h4>{{ __('ticket.department') }}:</h4>
+                        {{ ((array) config('settings.ticket_departments'))[$ticket->department] }}
                     </div>
                 @endif
             </div>
