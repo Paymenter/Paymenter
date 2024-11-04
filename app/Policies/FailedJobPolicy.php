@@ -11,6 +11,6 @@ class FailedJobPolicy
      */
     public function viewAny(User $user): bool
     {
-        return $user->hasPermission('admin.failed-jobs.viewAny');
+        return $user->hasPermission('admin.failed_jobs.viewAny');
     }
 }

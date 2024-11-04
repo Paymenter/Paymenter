@@ -29,6 +29,13 @@ return [
             'delete' => 'Delete Products',
             'deleteAny' => 'Bulk Delete Products',
         ],
+        'categories' => [
+            'create' => 'Create Categories',
+            'update' => 'Update Categories',
+            'viewAny' => 'View Categories',
+            'delete' => 'Delete Categories',
+            'deleteAny' => 'Bulk Delete Categories',
+        ],
         'tickets' => [
             'create' => 'Create Tickets',
             'update' => 'Update Tickets',
@@ -49,6 +56,13 @@ return [
             'viewAny' => 'View Services',
             'delete' => 'Delete Services',
             'deleteAny' => 'Bulk Delete Services',
+        ],
+        'service_cancellations' => [
+            'create' => 'Create Service Cancellations',
+            'update' => 'Update Service Cancellations',
+            'viewAny' => 'View Service Cancellations',
+            'delete' => 'Delete Service Cancellations',
+            'deleteAny' => 'Bulk Delete Service Cancellations',
         ],
         'custom_properties' => [
             'create' => 'Create Custom Properties',
@@ -99,8 +113,30 @@ return [
             'delete' => 'Delete Servers',
             'deleteAny' => 'Bulk Delete Servers',
         ],
+        'extensions' => [
+            'update' => 'Update Extensions',
+            'viewAny' => 'View Extensions',
+        ],
         'failed_jobs' => [
             'viewAny' => 'View Failed Jobs',
+        ],
+        'email_logs' => [
+            'viewAny' => 'View Email Logs',
+            'view' => 'View Email Log',
+        ],
+        'email_templates' => [
+            'create' => 'Create Email Templates',
+            'update' => 'Update Email Templates',
+            'viewAny' => 'View Email Templates',
+            'delete' => 'Delete Email Templates',
+            'deleteAny' => 'Bulk Delete Email Templates',
+        ],
+        'oauth_clients' => [
+            'create' => 'Create OAuth Clients',
+            'update' => 'Update OAuth Clients',
+            'viewAny' => 'View OAuth Clients',
+            'delete' => 'Delete OAuth Clients',
+            'deleteAny' => 'Bulk Delete OAuth Clients',
         ],
     ],
 ];
