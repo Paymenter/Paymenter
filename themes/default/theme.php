@@ -7,6 +7,13 @@ return [
 
     'settings' => [
         [
+            'name' => 'direct_checkout',
+            'label' => 'Direct Checkout',
+            'type' => 'checkbox',
+            'default' => false,
+            'description' => 'Don\'t show the product overview page, go directly to the checkout page',
+        ],
+        [
             'name' => 'home_page_text',
             'label' => 'Home Page Text',
             'type' => 'markdown',

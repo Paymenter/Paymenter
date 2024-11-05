@@ -49,12 +49,19 @@
                     <h3 class="text-lg font-semibold mb-2">
                         {{ $product->price() }}
                     </h3>
-                    <a href="{{ route('products.show', ['category' => $product->category, 'product' => $product->slug]) }}"
-                        wire:navigate>
-                        <x-button.primary>
-                            {{ __('general.view') }}
-                        </x-button.primary>
-                    </a>
+                    @if (($product->stock > 0 || !$product->stock) && $product->price()->available && theme('direct_checkout', false))
+                        <a href="{{ route('products.checkout', ['category' => $category, 'product' => $product->slug]) }}"
+                            wire:navigate>
+                            <x-button.primary>{{ __('product.add_to_cart') }}</x-button.primary>
+                        </a>
+                    @else
+                        <a href="{{ route('products.show', ['category' => $product->category, 'product' => $product->slug]) }}"
+                            wire:navigate>
+                            <x-button.primary>
+                                {{ __('general.view') }}
+                            </x-button.primary>
+                        </a>
+                    @endif
                 </div>
             @endforeach
         </div>
