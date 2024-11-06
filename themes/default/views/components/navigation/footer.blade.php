@@ -8,9 +8,5 @@
                     class="text-secondary-500 hover:underline">Paymenter</a>
             </div>
         </div>
-
-        <div class="w-40">
-            <livewire:components.currency-switch />
-        </div>
     </div>
 </div>

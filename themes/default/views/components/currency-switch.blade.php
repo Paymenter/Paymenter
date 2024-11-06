@@ -1,9 +1,9 @@
-<div>
+<div class="w-fit mr-2">
     @if(count($currencies) > 1)
-        <x-form.select name="currency" id="currency" :label="__('Currency')" wire:model.live="currentCurrency">
+        <select name="currency" id="currency" :label="__('Currency')" wire:model.live="currentCurrency" class="w-fit bg-primary-800 text-white border border-primary-700 rounded-md p-2">
             @foreach ($currencies as $currency)
                 <option value="{{ $currency->code }}" {{ $currency->code == $currentCurrency ? 'selected' : '' }}>{{ $currency->code }}</option>
             @endforeach
-        </x-form.select>
+        </select>
     @endif
 </div>

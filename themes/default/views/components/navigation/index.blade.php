@@ -37,6 +37,7 @@
             @endforeach
         </div>
         <livewire:components.cart />
+        <livewire:components.currency-switch />
         @if(auth()->check())
              <div class="flex flex-row">
                  <!-- Has notifications? (updates, errors, etc) (TODO) -->
