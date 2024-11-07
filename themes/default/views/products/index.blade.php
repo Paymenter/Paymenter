@@ -10,11 +10,11 @@
             </article>
         </div>
         <div class="flex flex-col bg-primary-800 p-4 rounded-md mb-4">
-            @foreach ($categories as $category)
+            @foreach ($categories as $ccategory)
                 <!-- List all categories simple under each other -->
-                <a href="{{ route('category.show', ['category' => $category->slug]) }}" wire:navigate
-                    @if ($category->id == $category->id) class="font-bold" @endif>
-                    {{ $category->name }}
+                <a href="{{ route('category.show', ['category' => $ccategory->slug]) }}" wire:navigate
+                    @if ($category->id == $ccategory->id) class="font-bold" @endif>
+                    {{ $ccategory->name }}
                 </a>
             @endforeach
         </div>

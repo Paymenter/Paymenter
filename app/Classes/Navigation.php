@@ -16,7 +16,7 @@ class Navigation
 
         $routes = [
             [
-                'name' => 'Home',
+                'name' => __('navigation.home'),
                 'route' => 'home',
                 'children' => [],
             ],
@@ -24,7 +24,7 @@ class Navigation
 
         if (Auth::user()) {
             $routes[] = [
-                'name' => 'Dashboard',
+                'name' => __('navigation.dashboard'),
                 'route' => 'dashboard',
                 'children' => [],
             ];
@@ -32,7 +32,7 @@ class Navigation
 
         if (count($categories) > 0) {
             $routes[] = [
-                'name' => 'Shop',
+                'name' => __('navigation.shop'),
                 'children' => $categories->map(function ($category) {
                     return [
                         'name' => $category->name,
@@ -68,17 +68,17 @@ class Navigation
     {
         $routes = [
             [
-                'name' => 'Dashboard',
+                'name' => __('navigation.dashboard'),
                 'route' => 'dashboard',
                 'children' => [],
             ],
             [
-                'name' => 'Tickets',
+                'name' => __('navigation.tickets'),
                 'route' => 'tickets',
                 'children' => [],
             ],
             [
-                'name' => 'Account',
+                'name' => __('navigation.account'),
                 'route' => 'account',
                 'children' => [],
             ],
@@ -86,7 +86,7 @@ class Navigation
 
         if (Auth::user()->role_id) {
             $routes[] = [
-                'name' => 'Admin',
+                'name' => __('navigation.admin'),
                 'route' => 'filament.admin.pages.dashboard',
                 'spa' => false,
             ];

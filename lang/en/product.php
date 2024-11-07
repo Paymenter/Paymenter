@@ -7,6 +7,8 @@ return [
     'remove' => 'Remove',
     'empty_cart' => 'Your cart is empty',
     'total_today' => 'Total today',
+    'subtotal' => 'Subtotal',
+    'total' => 'Total',
 
     'then_after_x' => 'Then after :time',
     'order_summary' => 'Order Summary',

@@ -21,19 +21,19 @@
     @endif
     <div class="bg-primary-800 p-12 rounded-lg mt-2">
         <div class="sm:flex justify-between pr-4 pt-4">
-            <h1 class="text-2xl font-bold sm:text-3xl">Invoice #{{ $invoice->id }}</h1>
+            <h1 class="text-2xl font-bold sm:text-3xl">{{ __('invoices.invoice', ['id' => $invoice->id]) }}</h1>
             <div class="mt-4 sm:mt-0 text-right">
                 <p>{{ $invoice->user->name }}</p>
                 <p class="text-sm">{{ $invoice->user->address }}</p>
                 <p class="text-sm">{{ $invoice->user->city }} {{ $invoice->user->zip }}</p>
                 <p class="text-sm">{{ $invoice->user->state }} {{ $invoice->user->country }}</p>
 
-                <p class="mt-4 text-gray-400">Invoice Date: {{ $invoice->created_at->format('d M Y') }}</p>
+                <p class="mt-4 text-gray-400">{{ __('invoices.invoice_date')}}: {{ $invoice->created_at->format('d M Y') }}</p>
             </div>
         </div>
         <div class="sm:flex justify-between pr-4 pt-4">
             <div class="mt-6">
-                <p class="uppercase font-bold">Bill To</p>
+                <p class="uppercase font-bold">{{ __('invoices.bill_to') }}</p>
                 <address class="text-gray-400 mt-4">
                     <p>{{ config('settings.company_name') }}</p>
                     <p>{{ config('settings.company_address') }}</p>
@@ -44,11 +44,11 @@
             <div class="max-w-[200px] w-full mt-6">
                 @if ($invoice->status == 'paid')
                     <div class="text-green-500 mt-6 text-lg text-center font-semibold">
-                        Paid
+                        {{ __('invoices.paid') }}
                     </div>
                 @elseif ($invoice->status == 'pending')
                     <div class="text-yellow-500 mb-6 text-lg text-center">
-                        Payment pending
+                        {{ __('invoices.payment_pending') }}
                         @if ($checkPayment)
                             <div class="mt-4">
                                 <x-button.primary wire:click="checkPaymentStatus" wire:loading.attr="disabled"
@@ -92,17 +92,17 @@
                     <tr>
                         <th scope="col"
                             class="p-4 text-xs font-semibold tracking-wider text-left uppercase rounded-l-lg">
-                            Item
+                            {{ __('invoices.item') }}
                         </th>
                         <th scope="col" class="p-4 text-xs font-semibold tracking-wider text-left uppercase">
-                            Price
+                            {{ __('invoices.price') }}
                         </th>
                         <th scope="col" class="p-4 text-xs font-semibold tracking-wider text-left uppercase">
-                            Quantity
+                            {{ __('invoices.quantity') }}
                         </th>
                         <th scope="col"
                             class="p-4 text-xs font-semibold tracking-wider text-left uppercase rounded-r-lg">
-                            Total
+                            {{ __('invoices.total') }}
                         </th>
                     </tr>
                 </thead>
@@ -122,7 +122,7 @@
         <div class="space-y-3 sm:text-right sm:ml-auto sm:w-72 mt-10">
             @if ($invoice->formattedTotal->tax > 0)
                 <div class="flex justify-between">
-                    <div class="text-sm font-medium text-gray-500 uppercase dark:text-gray-400">Subtotal</div>
+                    <div class="text-sm font-medium text-gray-500 uppercase dark:text-gray-400">{{ __('invoices.subtotal') }}</div>
                     <div class="text-base font-medium text-gray-900 dark:text-white">
                         {{ $invoice->formattedTotal->format($invoice->formattedTotal->price - $invoice->formattedTotal->tax) }}
                     </div>
@@ -146,24 +146,24 @@
 
         @if ($invoice->transactions->isNotEmpty())
             <div class="mt-12">
-                <h2 class="text-2xl font-bold">Transactions</h2>
+                <h2 class="text-2xl font-bold">{{ __('invoices.transactions') }}</h2>
                 <div class="mt-4 overflow-x-auto">
                     <table class="w-full text-white">
                         <thead class="bg-primary-900 rounded-lg">
                             <tr>
                                 <th scope="col"
                                     class="p-4 text-xs font-semibold tracking-wider text-left uppercase rounded-l-lg">
-                                    Date
+                                    {{ __('invoices.date') }}
                                 </th>
                                 <th scope="col" class="p-4 text-xs font-semibold tracking-wider text-left uppercase">
-                                    Transaction ID
+                                    {{ __('invoices.transaction_id') }}
                                 </th>
                                 <th scope="col" class="p-4 text-xs font-semibold tracking-wider text-left uppercase">
-                                    Gateway
+                                    {{ __('invoices.gateway') }}
                                 </th>
                                 <th scope="col"
                                     class="p-4 text-xs font-semibold tracking-wider text-left uppercase rounded-r-lg">
-                                    Amount
+                                    {{ __('invoices.amount') }}
                                 </th>
                             </tr>
                         </thead>

@@ -27,9 +27,9 @@
     <x-button.primary class="w-full mt-2">{{ __('Sign up') }}</x-button.primary>
 
     <div class="text-white text-center rounded-md py-2 mt-6 text-sm">
-        {{ __('Already have an account?') }}
+        {{ __('auth.already_have_account') }}
         <a class="text-sm text-secondary-500 text-secondary hover:underline" href="{{ route('login') }}" wire:navigate>
-            {{ __('Sign in') }}
+            {{ __('auth.sign_in') }}
         </a>
     </div>
 </form>

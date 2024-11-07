@@ -12,6 +12,10 @@ class EventHelper
 
         // Make multidimensional array flat
         $eventItems = array_reduce($eventItems, function ($carry, $item) {
+            // Empty array or null?
+            if (empty($item)) {
+                return $carry;
+            }
             // Is item a multidimensional array?
             if (is_array($item) && isset($item[0])) {
                 return array_merge($carry, $item);

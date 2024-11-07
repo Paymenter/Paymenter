@@ -78,8 +78,8 @@
              </div>
         @else
             <div class="flex flex-row mb-2 md:mb-0">
-                <x-navigation.link :href="route('login')">Login</x-navigation.link>
-                <x-navigation.link :href="route('register')">Register</x-navigation.link>
+                <x-navigation.link :href="route('login')">{{ __('navigation.login') }}</x-navigation.link>
+                <x-navigation.link :href="route('register')">{{ __('navigation.register') }}</x-navigation.link>
             </div>
         @endif
     </div>

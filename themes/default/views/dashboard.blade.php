@@ -12,8 +12,8 @@
             wire:click="$set('activeComponent', 'invoices')">
             <h4 class="text-lg font-semibold text-white">{{ __('dashboard.unpaid_invoices') }}:</h4>
             <div
-                class="mt-2 text-3xl @if(Auth::user()->invoices()->where('status', 'unpaid')->count() > 0) text-orange-500 @else text-green-500 @endif">
-                {{ Auth::user()->invoices()->where('status', 'unpaid')->count() }}
+                class="mt-2 text-3xl @if(Auth::user()->invoices()->where('status', 'pending')->count() > 0) text-orange-500 @else text-green-500 @endif">
+                {{ Auth::user()->invoices()->where('status', 'pending')->count() }}
             </div>
         </button>
 
