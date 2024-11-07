@@ -46,7 +46,6 @@ class Stripe extends Gateway
                 'type' => 'text',
                 'description' => 'Stripe webhook secret',
                 'required' => false,
-                'disabled' => true,
             ],
             [
                 'name' => 'stripe_use_subscriptions',
@@ -90,6 +89,7 @@ class Stripe extends Gateway
         $gateway->settings()->updateOrCreate(['key' => 'stripe_webhook_secret'], ['value' => $webhook->secret]);
 
         Notification::make()
+            ->success()
             ->title('Webhook created')
             ->body('We\'ve created a webhook for you on Stripe (refresh the page to see the secret)')
             ->send();
@@ -203,7 +203,7 @@ class Stripe extends Gateway
                         $balanceTransaction = $this->request('get', '/balance_transactions/' . $paymentIntent->charges->data[0]->balance_transaction);
                         $fee = $balanceTransaction->fee / 100;
                     }
-                    ExtensionHelper::addPayment($invoiceModel->id, 'Stripe', $invoice->amount_paid / 100, null, $invoice->payment_intent);
+                    ExtensionHelper::addPayment($invoiceModel->id, 'Stripe', $invoice->amount_paid / 100, $fee ?? null, $invoice->payment_intent);
                 }
                 break;
             default:
