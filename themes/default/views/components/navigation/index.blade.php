@@ -1,11 +1,21 @@
-<nav class="w-full px-4 bg-primary-800 h-14 flex flex-row justify-between">
-    <a href="{{ route('home') }}" class="flex flex-row items-center" wire:navigate>
-        <x-logo class="h-10" />
-        <span class="text-xl text-white ml-2">{{ config('app.name') }}</span>
-    </a>
+<nav class="w-full md:px-4 bg-primary-800 md:h-14 flex md:flex-row flex-col justify-between" x-data="{ mobileMenuOpen: false }">
+    <div class="flex flex-row items-center justify-between h-14 w-full px-4">
+        <a href="{{ route('home') }}" class="flex flex-row items-center" wire:navigate>
+            <x-logo class="h-10" />
+            <span class="text-xl text-white ml-2">{{ config('app.name') }}</span>
+        </a>
+        <button class="flex flex-col md:hidden" x-on:click="mobileMenuOpen = !mobileMenuOpen">
+            <!-- hamburger -->
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24"
+                stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M4 6h16M4 12h16m-7 6h7"></path>
+            </svg>
+        </button>
+    </div>
 
-    <div class="flex flex-row justify-between w-fit items-center" x-data="{ accountMenuOpen: false, mobileMenuOpen: false }">
-        <div class="flex flex-row">
+    <div class="flex md:flex flex-col md:flex-row justify-between md:w-fit md:items-center px-4 md:px-0 bg-primary-800 w-full z-10 shadow-lg md:shadow-none" x-data="{ accountMenuOpen: false }" :class="{ 'hidden': !mobileMenuOpen }">
+        <div class="flex flex-col md:flex-row">
             @foreach (\App\Classes\Navigation::get() as $nav)
                 @if (isset($nav['children']) && count($nav['children']) > 0)
                     <div class="relative" x-data="{ open: false }">
@@ -39,15 +49,14 @@
         <livewire:components.cart />
         <livewire:components.currency-switch />
         @if(auth()->check())
-             <div class="flex flex-row">
+             <div class="flex flex-row mb-2 md:mb-0">
                  <!-- Has notifications? (updates, errors, etc) (TODO) -->
                  <div class="relative">
                      <button class="flex flex-row items-center border border-primary-700 rounded-md px-2 py-1"
                          x-on:click="accountMenuOpen = !accountMenuOpen">
                          <img src="{{ auth()->user()->avatar }}" class="w-8 h-8 rounded-full" alt="avatar" />
-                         <div class="flex flex-col ml-2">
-                             <span class="text-sm text-white sm:hidden">{{ auth()->user()->initials }}</span>
-                             <span class="text-sm text-white hidden sm:block">{{ auth()->user()->name }}</span>
+                         <div class="flex flex-col mx-2">
+                             <span class="text-sm text-white text-nowrap">{{ auth()->user()->name }}</span>
                          </div>
                          <!-- arrow down -->
                          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-2 text-white" fill="none"
@@ -68,7 +77,7 @@
                  </div>
              </div>
         @else
-            <div class="flex flex-row">
+            <div class="flex flex-row mb-2 md:mb-0">
                 <x-navigation.link :href="route('login')">Login</x-navigation.link>
                 <x-navigation.link :href="route('register')">Register</x-navigation.link>
             </div>
