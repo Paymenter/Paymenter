@@ -2,9 +2,6 @@
 
 namespace Paymenter\Extensions\Others\Announcements\Admin\Resources;
 
-use Paymenter\Extensions\Others\Announcements\Admin\Resources\AnnouncementResource\Pages;
-use Paymenter\Extensions\Others\Announcements\Admin\Resources\AnnouncementResource\RelationManagers;
-use Paymenter\Extensions\Others\Announcements\Models\Announcement;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Forms\Get;
@@ -12,9 +9,9 @@ use Filament\Forms\Set;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Illuminate\Support\Str;
+use Paymenter\Extensions\Others\Announcements\Admin\Resources\AnnouncementResource\Pages;
+use Paymenter\Extensions\Others\Announcements\Models\Announcement;
 
 class AnnouncementResource extends Resource
 {

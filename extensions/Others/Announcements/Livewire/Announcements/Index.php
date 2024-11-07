@@ -2,7 +2,6 @@
 
 namespace Paymenter\Extensions\Others\Announcements\Livewire\Announcements;
 
-use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 use Paymenter\Extensions\Others\Announcements\Models\Announcement;
 
@@ -14,7 +13,7 @@ class Index extends Component
             return abort(404);
         }
     }
-    
+
     public function render()
     {
         return view('announcements::index', [

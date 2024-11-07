@@ -2,17 +2,17 @@
 
 namespace Paymenter\Extensions\Others\Announcements\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Announcement extends Model
 {
     protected $table = 'ext_announcements';
+
     protected $fillable = [
-        'title', 
-        'content', 
+        'title',
+        'content',
         'description',
-        'published_at', 
+        'published_at',
         'is_active',
         'slug',
     ];

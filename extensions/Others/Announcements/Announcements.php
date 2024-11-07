@@ -4,7 +4,6 @@ namespace Paymenter\Extensions\Others\Announcements;
 
 use App\Classes\Extension\Extension;
 use App\Livewire\Auth\Register;
-use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\View;
@@ -52,6 +51,7 @@ class Announcements extends Extension
             if (Announcement::where('is_active', true)->where('published_at', '<=', now())->count() == 0) {
                 return;
             }
+
             return [
                 'name' => 'Announcements',
                 'route' => 'announcements.index',

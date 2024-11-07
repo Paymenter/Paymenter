@@ -2,9 +2,9 @@
 
 namespace Paymenter\Extensions\Others\Announcements\Admin\Resources\AnnouncementResource\Pages;
 
-use Paymenter\Extensions\Others\Announcements\Admin\Resources\AnnouncementResource;
 use Filament\Actions;
 use Filament\Resources\Pages\ListRecords;
+use Paymenter\Extensions\Others\Announcements\Admin\Resources\AnnouncementResource;
 
 class ListAnnouncements extends ListRecords
 {
