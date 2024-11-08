@@ -11,12 +11,12 @@ return [
     'two_factor_authentication_enabled' => 'Two-factor authentication is enabled for your account.',
     'two_factor_authentication_enable' => 'Enable two-factor authentication',
     'two_factor_authentication_disable' => 'Disable two-factor authentication',
-    'two_factor_authentication_enable_description' => 'To enable two factor authentication, you need to scan the QR code below with an authenticator app like Google Authenticator or Authy.',
+    'two_factor_authentication_enable_description' => 'Per abilitare l\'autenticazione a due fattori, è necessario scansionare il codice QR qui sotto con un\'app di autenticazione come Google Authenticator o Authy.',
     'two_factor_authentication_qr_code' => 'Scan the QR code below with your authenticator app:',
     'two_factor_authentication_secret' => 'Or enter the following code manually:',
 
     'sessions' => 'Sessions',
-    'sessions_description' => 'Manage and log out your active sessions on other browsers and devices.',
+    'sessions_description' => 'Gestisci e disconnetti le tue sessioni attive su altri browser e dispositivi.',
     'logout_sessions' => 'Log this session out',
 
     'input' => [
