@@ -20,6 +20,16 @@ class FailedJobResource extends Resource
 
     protected static ?string $navigationGroup = 'Other';
 
+    public static function getNavigationBadge(): ?string
+    {
+        return static::getModel()::count() ?: null;
+    }
+
+    public static function getNavigationBadgeColor(): ?string
+    {
+        return 'danger';
+    }
+
     public static function table(Table $table): Table
     {
         return $table
