@@ -10,9 +10,8 @@ class Virtfusion extends Server
 {
     /**
      * Get all the configuration for the extension
-     * 
-     * @param array $values
-     * @return array
+     *
+     * @param  array  $values
      */
     public function getConfig($values = []): array
     {
@@ -30,15 +29,14 @@ class Virtfusion extends Server
                 'label' => 'API key',
                 'required' => true,
                 'encrypted' => true,
-            ]
+            ],
         ];
     }
 
     /**
      * Get product config
-     * 
-     * @param array $values
-     * @return array
+     *
+     * @param  array  $values
      */
     public function getProductConfig($values = []): array
     {
@@ -77,8 +75,6 @@ class Virtfusion extends Server
 
     /**
      * Check if currenct configuration is valid
-     *
-     * @return bool|string
      */
     public function testConfig(): bool|string
     {
@@ -93,11 +89,10 @@ class Virtfusion extends Server
 
     /**
      * Do a request to the Virtfusion API
-     * 
-     * @param string $url
-     * @param string $method
-     * @param array $data
-     * @return array
+     *
+     * @param  string  $url
+     * @param  string  $method
+     * @param  array  $data
      */
     public function request($url, $method = 'get', $data = []): array
     {
@@ -117,9 +112,6 @@ class Virtfusion extends Server
 
     /**
      * Get or create a user on VirtFusion
-     * 
-     * @param Service $service
-     * @return string
      */
     public function getUser(Service $service): string
     {
@@ -140,13 +132,11 @@ class Virtfusion extends Server
         return $response['data']['id'] ?? '';
     }
 
-
     /**
-     * Create a server 
-     * 
-     * @param Service $service
-     * @param array $settings (product settings)
-     * @param array $properties (checkout options)
+     * Create a server
+     *
+     * @param  array  $settings  (product settings)
+     * @param  array  $properties  (checkout options)
      * @return bool
      */
     public function createServer(Service $service, $settings, $properties)
@@ -181,10 +171,9 @@ class Virtfusion extends Server
 
     /**
      * Suspend a server
-     * 
-     * @param Service $service
-     * @param array $settings (product settings)
-     * @param array $properties (checkout options)
+     *
+     * @param  array  $settings  (product settings)
+     * @param  array  $properties  (checkout options)
      * @return bool
      */
     public function suspendServer(Service $service, $settings, $properties)
@@ -200,10 +189,9 @@ class Virtfusion extends Server
 
     /**
      * Unsuspend a server
-     * 
-     * @param Service $service
-     * @param array $settings (product settings)
-     * @param array $properties (checkout options)
+     *
+     * @param  array  $settings  (product settings)
+     * @param  array  $properties  (checkout options)
      * @return bool
      */
     public function unsuspendServer(Service $service, $settings, $properties)
@@ -219,10 +207,9 @@ class Virtfusion extends Server
 
     /**
      * Terminate a server
-     * 
-     * @param Service $service
-     * @param array $settings (product settings)
-     * @param array $properties (checkout options)
+     *
+     * @param  array  $settings  (product settings)
+     * @param  array  $properties  (checkout options)
      * @return bool
      */
     public function terminateServer(Service $service, $settings, $properties)
