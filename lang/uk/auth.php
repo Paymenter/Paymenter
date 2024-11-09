@@ -40,6 +40,8 @@ return [
         'account_not_registered' => 'Ви не зареєстровані на цьому сайті.',
     ],
 
+    'reset_password' => 'Reset password',
+
     'verify_2fa' => 'Підтвердити 2FA',
     'verify' => 'Підтвердити',
 
