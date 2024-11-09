@@ -40,6 +40,8 @@ return [
         'account_not_registered' => 'Du är inte registrerad på denna webbplats.',
     ],
 
+    'reset_password' => 'Reset password',
+
     'verify_2fa' => 'Verifiera 2FA',
     'verify' => 'Verifiera',
 
