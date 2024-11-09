@@ -5,9 +5,7 @@
             <p class="text-sm text-gray-400">{{ $announcement->published_at->diffForHumans() }}</p>
         </div>
         <article class="prose prose-invert mb-2 max-w-full">
-            {!! Str::markdown($announcement->content, [
-            'allow_unsafe_links' => false,
-            ]) !!}
+            {!! $announcement->content !!}
         </article>
     </div>
 </div>

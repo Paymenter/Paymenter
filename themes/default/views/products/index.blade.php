@@ -46,6 +46,11 @@
                             class="w-full object-cover object-center rounded-md">
                     @endif
                     <h2 class="text-xl font-bold">{{ $product->name }}</h2>
+                    @if(theme('direct_checkout', false) && $product->description) 
+                        <article class="prose prose-invert">
+                            {!! $product->description !!}
+                        </article>
+                    @endif
                     <h3 class="text-lg font-semibold mb-2">
                         {{ $product->price() }}
                     </h3>

@@ -55,7 +55,7 @@ class AnnouncementResource extends Resource
                 Forms\Components\Toggle::make('is_active')
                     ->label('Is Published')
                     ->default(false),
-                Forms\Components\MarkdownEditor::make('content')
+                Forms\Components\RichEditor::make('content')
                     ->columnSpanFull()
                     ->label('Content')
                     ->required()
