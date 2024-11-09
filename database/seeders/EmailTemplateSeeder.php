@@ -185,7 +185,7 @@ class EmailTemplateSeeder extends Seeder
                 If you did not request a password reset, no further action is required.
 
                 HTML,
-            ]
+            ],
         ]);
     }
 }

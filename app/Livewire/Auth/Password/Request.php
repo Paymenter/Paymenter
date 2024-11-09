@@ -3,9 +3,9 @@
 namespace App\Livewire\Auth\Password;
 
 use App\Helpers\NotificationHelper;
-use App\Traits\Captchable;
 use App\Livewire\Component;
 use App\Models\User;
+use App\Traits\Captchable;
 use Illuminate\Support\Facades\Password;
 
 class Request extends Component

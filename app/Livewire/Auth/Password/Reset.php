@@ -2,18 +2,17 @@
 
 namespace App\Livewire\Auth\Password;
 
-use App\Helpers\NotificationHelper;
-use App\Traits\Captchable;
 use App\Livewire\Component;
 use App\Models\User;
+use App\Traits\Captchable;
 use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\Request;
+use Illuminate\Support\Str;
 use Livewire\Attributes\Locked;
 use Livewire\Attributes\Url;
 use Livewire\Attributes\Validate;
-use Illuminate\Support\Str;
 
 class Reset extends Component
 {
@@ -40,6 +39,7 @@ class Reset extends Component
             return abort(404);
         }
     }
+
     public function submit()
     {
         $this->validate();
