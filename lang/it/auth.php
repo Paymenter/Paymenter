@@ -40,6 +40,8 @@ return [
         'account_not_registered' => 'You are not registered on this site.',
     ],
 
+    'reset_password' => 'Reset password',
+
     'verify_2fa' => 'Verify 2FA',
     'verify' => 'Verify',
 
