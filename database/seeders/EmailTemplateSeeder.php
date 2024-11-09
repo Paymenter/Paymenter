@@ -165,6 +165,27 @@ class EmailTemplateSeeder extends Seeder
                 If you did not create an account, you can ignore this email.
                 HTML,
             ],
+            [
+                'key' => 'password_reset',
+                'subject' => 'Password reset',
+                'body' => <<<'HTML'
+                # Password reset
+
+                You are receiving this email because we received a password reset request for your account.
+
+                **Reset password**
+                <div class="action">
+                	<a class="button button-blue" href="{{ $url }}">
+                		Reset password
+                	</a>
+                </div>
+
+                This password reset link will expire in 60 minutes.
+
+                If you did not request a password reset, no further action is required.
+
+                HTML,
+            ]
         ]);
     }
 }

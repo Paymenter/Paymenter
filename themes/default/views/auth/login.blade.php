@@ -12,7 +12,7 @@
     <div class="flex flex-row">
         <x-form.checkbox name="remember" label="Remember me" wire:model="remember" />
         <a class="text-sm text-secondary-500 text-secondary hover:underline ml-auto"
-            href="{{ route('password.reset') }}">
+            href="{{ route('password.request') }}">
             {{ __('auth.forgot_password') }}
         </a>
     </div>

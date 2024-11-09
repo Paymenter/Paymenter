@@ -1,5 +1,5 @@
 <form
-    class="flex flex-col gap-2"
+    class="flex flex-col gap-2 max-w-md mx-auto"
     wire:submit="verify">
     <div class="flex flex-col items-center mt-4 mb-10">
         <x-logo />

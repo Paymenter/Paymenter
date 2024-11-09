@@ -121,4 +121,10 @@ class NotificationHelper
         );
         self::sendEmailNotification('email_verification', $data, $user);
     }
+
+    public static function passwordResetNotification(User $user, array $data = []): void
+    {
+        $data['user'] = $user;
+        self::sendEmailNotification('password_reset', $data, $user);
+    }
 }
