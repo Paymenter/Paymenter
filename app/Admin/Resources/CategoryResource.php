@@ -41,7 +41,8 @@ class CategoryResource extends Resource
 
                         $set('slug', Str::slug($state));
                     }),
-                Forms\Components\TextInput::make('slug'),
+                Forms\Components\TextInput::make('slug')
+                    ->required(),
                 Forms\Components\Textarea::make('description')
                     ->required(),
                 Forms\Components\Select::make('parent_id')
