@@ -26,7 +26,10 @@ class RoleResource extends Resource
     {
         return $form
             ->schema([
-                TextInput::make('name'),
+                TextInput::make('name')
+                    ->unique(ignoreRecord: true)
+                    ->required()
+                    ->maxLength(255),
                 CheckboxList::make('permissions')->options(Arr::dot(config('permissions')))->columns(4)->bulkToggleable()->searchable()->noSearchResultsMessage('Permission could not be found'),
             ])->columns(1);
     }
