@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'open_tickets' => 'Open Tickets',
-    'unpaid_invoices' => 'Unpaid Invoices',
-    'active_services' => 'Active Services',
+    'open_tickets' => 'Tickets Ouverts',
+    'unpaid_invoices' => 'Factures impayées',
+    'active_services' => 'Services Actifs',
 ];
