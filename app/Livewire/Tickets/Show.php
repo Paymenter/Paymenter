@@ -22,6 +22,13 @@ class Show extends Component
     #[Rule('required', 'string')]
     public string $message;
 
+    public function mount()
+    {
+        if ($this->ticket->user_id !== Auth::id()) {
+            abort(404, 'Ticket not found');
+        }
+    }
+
     public function completeUpload($filename)
     {
         // Find the attachment by its name

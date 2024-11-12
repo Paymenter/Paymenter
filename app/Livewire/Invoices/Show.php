@@ -9,6 +9,7 @@ use App\Models\Invoice;
 use Illuminate\Support\Facades\Request;
 use Livewire\Attributes\Locked;
 use Livewire\Attributes\Url;
+use Illuminate\Support\Facades\Auth;
 
 class Show extends Component
 {
@@ -27,6 +28,9 @@ class Show extends Component
 
     public function mount()
     {
+        if ($this->invoice->user_id !== Auth::id()) {
+            abort(404, 'Invoice not found');
+        }
         $sessionGateway = session('gateway');
         if ($sessionGateway) {
             $this->gateway = $sessionGateway;

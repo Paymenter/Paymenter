@@ -6,6 +6,7 @@ use App\Helpers\ExtensionHelper;
 use App\Livewire\Component;
 use App\Models\Service;
 use Livewire\Attributes\Locked;
+use Illuminate\Support\Facades\Auth;
 
 class Show extends Component
 {
@@ -22,6 +23,9 @@ class Show extends Component
 
     public function mount()
     {
+        if ($this->service->user_id !== Auth::id()) {
+            abort(404, 'Service not found');
+        }
         $actions = [];
         try {
             $actions = ExtensionHelper::getActions($this->service);
