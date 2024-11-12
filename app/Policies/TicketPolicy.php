@@ -20,7 +20,7 @@ class TicketPolicy
      */
     public function view(User $user, Ticket $ticket): bool
     {
-        return $user->hasPermission('admin.tickets.view');
+        return $user->hasPermission('admin.tickets.view') || $ticket->user_id === $user->id;
     }
 
     /**
@@ -36,7 +36,7 @@ class TicketPolicy
      */
     public function update(User $user, Ticket $ticket): bool
     {
-        return $user->hasPermission('admin.tickets.update');
+        return $user->hasPermission('admin.tickets.update') || $ticket->user_id === $user->id;
     }
 
     /**
