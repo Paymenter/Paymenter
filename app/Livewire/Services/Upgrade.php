@@ -20,7 +20,7 @@ class Upgrade extends Component
     public function mount()
     {
         $this->authorize('view', $this->service);
-        
+
         if (!$this->service->upgradable) {
             $this->notify('This service is not upgradable.', 'error');
 
