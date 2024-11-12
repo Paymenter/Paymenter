@@ -54,7 +54,7 @@
                 @if ($ticket->department)
                     <div class="font-semibold flex md:flex-col justify-between bg-primary-800 p-2 px-4 rounded-md">
                         <h4>{{ __('ticket.department') }}:</h4>
-                        {{ ((array) config('settings.ticket_departments'))[$ticket->department] }}
+                        {{ $ticket->department }}
                     </div>
                 @endif
             </div>

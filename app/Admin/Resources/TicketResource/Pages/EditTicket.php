@@ -103,7 +103,7 @@ class EditTicket extends EditRecord
                     ->label('Priority'),
                 Infolists\Components\TextEntry::make('department')
                     ->size(TextEntrySize::Large)
-                    ->formatStateUsing(fn ($state) => ((array) config('settings.ticket_departments'))[$state])
+                    ->formatStateUsing(fn ($state) => array_combine(config('settings.ticket_departments'), config('settings.ticket_departments'))[$state])
                     ->placeholder('No department')
                     ->label('Department'),
 
@@ -146,7 +146,7 @@ class EditTicket extends EditRecord
                                         ->required(),
                                     Forms\Components\Select::make('department')
                                         ->label('Department')
-                                        ->options((array) config('settings.ticket_departments')),
+                                        ->options(array_combine(config('settings.ticket_departments'), config('settings.ticket_departments'))),
                                     Forms\Components\Select::make('user_id')
                                         ->label('User')
                                         ->relationship('user', 'id')
