@@ -59,7 +59,7 @@ class Create extends Component
 
         $ticket = Ticket::create([
             'user_id' => Auth::id(),
-            'department' => $this->department,
+            'department' => (int) array_search($this->department, config('settings.ticket_departments'), true) ,
             'service_id' => $this->service,
             'subject' => $this->subject,
             'priority' => $this->priority,
