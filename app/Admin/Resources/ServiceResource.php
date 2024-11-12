@@ -21,6 +21,8 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\HtmlString;
+use App\Models\Currency;
+use Filament\Forms\Get;
 
 class ServiceResource extends Resource
 {
@@ -90,17 +92,37 @@ class ServiceResource extends Resource
                     ->relationship('coupon', 'code')
                     ->searchable()
                     ->placeholder('Select the coupon'),
+                Forms\Components\Select::make('currency_code')
+                    ->options(function (Get $get, ?string $state) {
+                        $pricing = collect($get('../../pricing'))->pluck('currency_code');
+                        if ($state !== null) {
+                            $pricing = $pricing->filter(function ($code) use ($state) {
+                                return $code !== $state;
+                            });
+                        }
+                        $pricing = $pricing->filter(function ($code) {
+                            return $code !== null;
+                        });
+
+                        return Currency::whereNotIn('code', $pricing)->pluck('code', 'code');
+                    })
+                    ->live()
+                    ->default(config('settings.default_currency'))
+                    ->required(),
                 Forms\Components\TextInput::make('price')
-                    ->suffix(fn (Component $component) => $component->getRecord()?->currency->suffix)
-                    ->prefix(fn (Component $component) => $component->getRecord()?->currency->prefix)
-                    ->label('Price')
                     ->required()
+                    ->label('Price')
+                    // Suffix based on chosen currency
+                    ->prefix(fn (Get $get) => Currency::where('code', $get('currency_code'))->first()?->prefix)
+                    ->suffix(fn (Get $get) => Currency::where('code', $get('currency_code'))->first()?->suffix)
+                    ->live(onBlur: true)
                     ->mask(RawJs::make(
                         <<<'JS'
-                                    $money($input, '.', '', 2)
-                                JS
+                            $money($input, '.', '', 2)
+                        JS
                     ))
-                    ->placeholder('Enter the price'),
+                    ->numeric()
+                    ->minValue(0),
                 Forms\Components\TextInput::make('subscription_id')
                     ->label('Subscription ID')
                     ->nullable()
