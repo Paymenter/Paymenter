@@ -63,7 +63,7 @@ class ProductResource extends Resource
                                     'separated' => 'Separated',
                                     'combined' => 'Combined',
                                 ])->default('separated')
-                                  ->required(),
+                                    ->required(),
                                 Forms\Components\Textarea::make('email_template')
                                     ->hint('This snippet will be used in the email template.')
                                     ->nullable(),

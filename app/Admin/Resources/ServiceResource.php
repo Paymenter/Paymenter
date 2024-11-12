@@ -7,6 +7,7 @@ use App\Admin\Resources\Common\RelationManagers\PropertiesRelationManager;
 use App\Admin\Resources\ServiceResource\Pages;
 use App\Admin\Resources\ServiceResource\RelationManagers;
 use App\Helpers\ExtensionHelper;
+use App\Models\Currency;
 use App\Models\Product;
 use App\Models\Service;
 use App\Models\User;
@@ -14,6 +15,7 @@ use Filament\Forms;
 use Filament\Forms\Components\Actions\Action;
 use Filament\Forms\Components\Component;
 use Filament\Forms\Form;
+use Filament\Forms\Get;
 use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
 use Filament\Support\RawJs;
@@ -21,8 +23,6 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\HtmlString;
-use App\Models\Currency;
-use Filament\Forms\Get;
 
 class ServiceResource extends Resource
 {
