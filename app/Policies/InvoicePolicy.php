@@ -18,9 +18,9 @@ class InvoicePolicy
     /**
      * Determine whether the user can view the model.
      */
-    public function view(User $user, Invoice $model): bool
+    public function view(User $user, Invoice $invoice): bool
     {
-        return $user->hasPermission('admin.invoices.view');
+        return $user->hasPermission('admin.invoices.view') || $invoice->user_id === $user->id;
     }
 
     /**
@@ -34,9 +34,9 @@ class InvoicePolicy
     /**
      * Determine whether the user can update the model.
      */
-    public function update(User $user, Invoice $model): bool
+    public function update(User $user, Invoice $invoice): bool
     {
-        return $user->hasPermission('admin.invoices.update');
+        return $user->hasPermission('admin.invoices.update') || $invoice->user_id === $user->id;
     }
 
     /**

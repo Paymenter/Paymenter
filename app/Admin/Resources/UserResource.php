@@ -54,7 +54,7 @@ class UserResource extends Resource
                     ->label('Two Factor Authentication')
                     ->disabled(fn ($record) => !$record->tfa_secret)
                     ->dehydrateStateUsing(fn ($state, $record) => $state ? $record->tfa_secret : null)
-                    ->formatStateUsing(fn ($record) => $record->tfa_secret ? true : false)
+                    ->formatStateUsing(fn ($record) => $record && $record->tfa_secret ? true : false)
                     ->hiddenOn(['create']),
 
                 Toggle::make('email_verified_at')

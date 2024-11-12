@@ -20,7 +20,7 @@ class ServicePolicy
      */
     public function view(User $user, Service $service): bool
     {
-        return $user->hasPermission('admin.services.view');
+        return $user->hasPermission('admin.services.view') || $service->user_id === $user->id;
     }
 
     /**
@@ -36,7 +36,7 @@ class ServicePolicy
      */
     public function update(User $user, Service $service): bool
     {
-        return $user->hasPermission('admin.services.update');
+        return $user->hasPermission('admin.services.update') || $service->user_id === $user->id;
     }
 
     /**

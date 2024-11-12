@@ -19,6 +19,8 @@ class Cancel extends Component
 
     public function cancelService()
     {
+        $this->authorize('view', $this->service);
+
         $this->validate();
 
         // Event hook will handle the cancellation (if its immediate or end of period)
