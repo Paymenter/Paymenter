@@ -13,43 +13,43 @@ return [
     |
     */
 
-    'failed' => 'These credentials do not match our records.',
-    'password' => 'The provided password is incorrect.',
-    'throttle' => 'Too many login attempts. Please try again in :seconds seconds.',
+    'failed' => 'Annettuja käyttäjätietoja ei löytynyt.',
+    'password' => 'Annettu salasana on virheellinen.',
+    'throttle' => 'Liian monta kirjautumisyritystä. Yritä uudelleen :seconds sekunnin kuluttua.',
 
-    'sign_in' => 'Sign in',
-    'sign_in_title' => 'Sign in to your account',
-    'or_sign_in_with' => 'Or sign in with',
-    'forgot_password' => 'Forgot your password?',
-    'dont_have_account' => 'Don\'t have an account?',
-    'already_have_account' => 'Already have an account?',
+    'sign_in' => 'Kirjaudu sisään',
+    'sign_in_title' => 'Kirjaudu sisään tilillesi',
+    'or_sign_in_with' => 'Tai kirjaudu käyttäen',
+    'forgot_password' => 'Unohditko salasanasi?',
+    'dont_have_account' => 'Eikö sinulla ole tiliä?',
+    'already_have_account' => 'Onko sinulla jo tili?',
 
-    'sign_up' => 'Sign up',
-    'sign_up_title' => 'Create your account',
+    'sign_up' => 'Rekisteröidy',
+    'sign_up_title' => 'Luo tilisi',
 
-    'logout' => 'Logout',
+    'logout' => 'Kirjaudu ulos',
 
     'input' => [
-        'email' => 'Email',
-        'email_label' => 'Email Address',
-        'password' => 'Password',
+        'email' => 'Sähköposti',
+        'email_label' => 'Sähköpostiosoite',
+        'password' => 'Salasana',
     ],
 
     'oauth' => [
-        'unverified_discord_account' => 'Your Discord account is not verified.',
-        'account_not_registered' => 'You are not registered on this site.',
+        'unverified_discord_account' => 'Discord-tiliäsi ei ole vahvistettu.',
+        'account_not_registered' => 'Et ole rekisteröitynyt tälle sivustolle.',
     ],
 
-    'reset_password' => 'Reset password',
+    'reset_password' => 'Nollaa salasana',
 
-    'verify_2fa' => 'Verify 2FA',
-    'verify' => 'Verify',
+    'verify_2fa' => 'Vahvista 2FA',
+    'verify' => 'Vahvista',
 
     'verification' => [
-        'notice' => 'Verify your email address',
-        'sent' => 'A new verification link has been sent to your email address.',
-        'check_your_email' => 'Before proceeding, please check your email for a verification link.',
-        'not_received' => 'If you did not receive the email you can request another verification email.',
-        'request_another' => 'Resend verification email',
+        'notice' => 'Vahvista sähköpostiosoitteesi',
+        'sent' => 'Uusi vahvistuslinkki on lähetetty sinun sähköpostiosoitteeseesi.',
+        'check_your_email' => 'Ennen kuin jatkat, tarkista sähköpostisi vahvistuslinkiltä.',
+        'not_received' => 'Jos et ole saanut sähköpostia, voit pyytää toisen vahvistussähköpostin.',
+        'request_another' => 'Lähetä vahvistussähköposti uudelleen',
     ],
 ];
