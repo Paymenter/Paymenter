@@ -16,27 +16,27 @@ return [
     'two_factor_authentication_secret' => 'Tai kirjoita seuraava koodi manuaalisesti:',
 
     'sessions' => 'Istunnot',
-    'sessions_description' => 'Manage and log out your active sessions on other browsers and devices.',
-    'logout_sessions' => 'Log this session out',
+    'sessions_description' => 'Hallitse ja kirjaudu ulos aktiivisista istunnoistasi muissa selaimissa ja laitteissa.',
+    'logout_sessions' => 'Kirjaudu ulos tästä istunnosta',
 
     'input' => [
-        'current_password' => 'Current password',
-        'current_password_placeholder' => 'Your current password',
-        'new_password' => 'New password',
-        'new_password_placeholder' => 'Your new password',
-        'confirm_password' => 'Confirm password',
-        'confirm_password_placeholder' => 'Confirm your new password',
+        'current_password' => 'Nykyinen salasana',
+        'current_password_placeholder' => 'Nykyinen salasanasi',
+        'new_password' => 'Uusi salasana',
+        'new_password_placeholder' => 'Sinun uusi salasanasi',
+        'confirm_password' => 'Vahvista salasana',
+        'confirm_password_placeholder' => 'Vahvista uusi salasanasi',
 
-        'two_factor_code' => 'Enter the code from your authenticator app',
-        'two_factor_code_placeholder' => 'Your two-factor authentication code',
+        'two_factor_code' => 'Syötä todennussovelluksen näyttämä koodi',
+        'two_factor_code_placeholder' => 'Kaksivaiheinen tunnistautumiskoodi',
     ],
 
     'notifications' => [
-        'password_changed' => 'Password has been changed.',
-        'password_incorrect' => 'The current password is incorrect.',
-        'two_factor_enabled' => 'Two-factor authentication has been enabled.',
-        'two_factor_disabled' => 'Two-factor authentication has been disabled.',
-        'two_factor_code_incorrect' => 'The code is incorrect.',
-        'session_logged_out' => 'Session has been logged out.',
+        'password_changed' => 'Salasanasi on vaihdettu.',
+        'password_incorrect' => 'Nykyinen salasana on väärin.',
+        'two_factor_enabled' => 'Kaksivaiheinen tunnistautuminen on otettu käyttöön.',
+        'two_factor_disabled' => 'Kaksivaiheinen tunnistautuminen on poistettu käytöstä.',
+        'two_factor_code_incorrect' => 'Koodi on virheellinen.',
+        'session_logged_out' => 'Istunto on kirjauduttu ulos.',
     ],
 ];
