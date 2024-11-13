@@ -2,10 +2,10 @@
 
 return [
 
-    'reset' => 'Your password has been reset.',
-    'sent' => 'We have emailed your password reset link.',
-    'throttled' => 'Please wait before retrying.',
-    'token' => 'This password reset token is invalid.',
-    'user' => "We can't find a user with that email address.",
+    'reset' => 'Salasanasi on vaihdettu.',
+    'sent' => 'Olemme lähettäneet salasanan nollauslinkin sähköpostiisi.',
+    'throttled' => 'Odota hetki ennen kuin yrität uudelleen.',
+    'token' => 'Salasanan palautusavain on virheellinen.',
+    'user' => "Emme löydä käyttäjää, jolla on kyseinen sähköpostiosoite.",
 
 ];
