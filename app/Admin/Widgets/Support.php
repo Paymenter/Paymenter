@@ -2,6 +2,7 @@
 
 namespace App\Admin\Widgets;
 
+use App\Admin\Resources\TicketResource;
 use App\Models\Ticket;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -35,6 +36,8 @@ class Support extends BaseWidget
                     ->label('User'),
                 Tables\Columns\TextColumn::make('created_at')
                     ->label('Created At'),
-            ])->paginated(false);
+            ])
+            ->recordUrl(fn (Ticket $record) => TicketResource::getUrl('edit', ['record' => $record]))
+            ->paginated(false);
     }
 }
