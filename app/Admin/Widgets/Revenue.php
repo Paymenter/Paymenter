@@ -4,6 +4,7 @@ namespace App\Admin\Widgets;
 
 use App\Models\InvoiceTransaction;
 use App\Models\Order;
+use Filament\Support\RawJs;
 use Filament\Widgets\ChartWidget;
 
 class Revenue extends ChartWidget
@@ -30,10 +31,10 @@ class Revenue extends ChartWidget
             ->whereBetween('created_at', $this->getDateRange())
             ->get();
 
-        $last24Hours = collect(range(0, 23))->map(fn ($hour) => now()->subHours($hour)->format('H'))->reverse()->values();
-        $last7Days = collect(range(0, 6))->map(fn ($day) => now()->subDays($day)->format('D'))->reverse()->values();
-        $last30Days = collect(range(0, 29))->map(fn ($day) => now()->subDays($day)->format('d'))->reverse()->values();
-        $last12Months = collect(range(0, 11))->map(fn ($month) => now()->subMonths($month)->format('M'))->reverse()->values();
+        $last24Hours = collect(range(0, 23))->map(fn($hour) => now()->subHours($hour)->format('H'))->reverse()->values();
+        $last7Days = collect(range(0, 6))->map(fn($day) => now()->subDays($day)->format('D'))->reverse()->values();
+        $last30Days = collect(range(0, 29))->map(fn($day) => now()->subDays($day)->format('d'))->reverse()->values();
+        $last12Months = collect(range(0, 11))->map(fn($month) => now()->subMonths($month)->format('M'))->reverse()->values();
 
         $labels = match ($this->filter) {
             'today' => $last24Hours,
@@ -44,40 +45,40 @@ class Revenue extends ChartWidget
 
         // If today add data for every hour
         $revenue = match ($this->filter) {
-            'today' => collect($labels)->mapWithKeys(fn ($hour) => [$hour => 0])->merge(
-                $transactions->groupBy(fn ($transaction) => $transaction->created_at->format('H'))
-                    ->map(fn ($transactions) => $transactions->sum('amount'))
+            'today' => collect($labels)->mapWithKeys(fn($hour) => [$hour => 0])->merge(
+                $transactions->groupBy(fn($transaction) => $transaction->created_at->format('H'))
+                    ->map(fn($transactions) => $transactions->sum('amount'))
             )->values(),
-            'week' => collect($labels)->mapWithKeys(fn ($day) => [$day => 0])->merge(
-                $transactions->groupBy(fn ($transaction) => $transaction->created_at->format('D'))
-                    ->map(fn ($transactions) => $transactions->sum('amount'))
+            'week' => collect($labels)->mapWithKeys(fn($day) => [$day => 0])->merge(
+                $transactions->groupBy(fn($transaction) => $transaction->created_at->format('D'))
+                    ->map(fn($transactions) => $transactions->sum('amount'))
             )->values(),
-            'month' => collect($labels)->mapWithKeys(fn ($day) => [$day => 0])->merge(
-                $transactions->groupBy(fn ($transaction) => $transaction->created_at->format('d'))
-                    ->map(fn ($transactions) => $transactions->sum('amount'))
+            'month' => collect($labels)->mapWithKeys(fn($day) => [$day => 0])->merge(
+                $transactions->groupBy(fn($transaction) => $transaction->created_at->format('d'))
+                    ->map(fn($transactions) => $transactions->sum('amount'))
             )->values(),
-            'year' => collect($labels)->mapWithKeys(fn ($month) => [$month => 0])->merge(
-                $transactions->groupBy(fn ($transaction) => $transaction->created_at->format('M'))
-                    ->map(fn ($transactions) => $transactions->sum('amount'))
+            'year' => collect($labels)->mapWithKeys(fn($month) => [$month => 0])->merge(
+                $transactions->groupBy(fn($transaction) => $transaction->created_at->format('M'))
+                    ->map(fn($transactions) => $transactions->sum('amount'))
             )->values(),
         };
 
         $netRevenue = match ($this->filter) {
-            'today' => collect($labels)->mapWithKeys(fn ($hour) => [$hour => 0])->merge(
-                $transactions->groupBy(fn ($transaction) => $transaction->created_at->format('H'))
-                    ->map(fn ($transactions) => $transactions->sum('amount') - $transactions->sum('fee'))
+            'today' => collect($labels)->mapWithKeys(fn($hour) => [$hour => 0])->merge(
+                $transactions->groupBy(fn($transaction) => $transaction->created_at->format('H'))
+                    ->map(fn($transactions) => $transactions->sum('amount') - $transactions->sum('fee'))
             )->values(),
-            'week' => collect($labels)->mapWithKeys(fn ($day) => [$day => 0])->merge(
-                $transactions->groupBy(fn ($transaction) => $transaction->created_at->format('D'))
-                    ->map(fn ($transactions) => $transactions->sum('amount') - $transactions->sum('fee'))
+            'week' => collect($labels)->mapWithKeys(fn($day) => [$day => 0])->merge(
+                $transactions->groupBy(fn($transaction) => $transaction->created_at->format('D'))
+                    ->map(fn($transactions) => $transactions->sum('amount') - $transactions->sum('fee'))
             )->values(),
-            'month' => collect($labels)->mapWithKeys(fn ($day) => [$day => 0])->merge(
-                $transactions->groupBy(fn ($transaction) => $transaction->created_at->format('d'))
-                    ->map(fn ($transactions) => $transactions->sum('amount') - $transactions->sum('fee'))
+            'month' => collect($labels)->mapWithKeys(fn($day) => [$day => 0])->merge(
+                $transactions->groupBy(fn($transaction) => $transaction->created_at->format('d'))
+                    ->map(fn($transactions) => $transactions->sum('amount') - $transactions->sum('fee'))
             )->values(),
-            'year' => collect($labels)->mapWithKeys(fn ($month) => [$month => 0])->merge(
-                $transactions->groupBy(fn ($transaction) => $transaction->created_at->format('M'))
-                    ->map(fn ($transactions) => $transactions->sum('amount') - $transactions->sum('fee'))
+            'year' => collect($labels)->mapWithKeys(fn($month) => [$month => 0])->merge(
+                $transactions->groupBy(fn($transaction) => $transaction->created_at->format('M'))
+                    ->map(fn($transactions) => $transactions->sum('amount') - $transactions->sum('fee'))
             )->values(),
         };
 
@@ -86,21 +87,21 @@ class Revenue extends ChartWidget
             ->get();
 
         $newOrders = match ($this->filter) {
-            'today' => collect($labels)->mapWithKeys(fn ($hour) => [$hour => 0])->merge(
-                $newOrders->groupBy(fn ($order) => $order->created_at->format('H'))
-                    ->map(fn ($orders) => $orders->count())
+            'today' => collect($labels)->mapWithKeys(fn($hour) => [$hour => 0])->merge(
+                $newOrders->groupBy(fn($order) => $order->created_at->format('H'))
+                    ->map(fn($orders) => $orders->count())
             )->values(),
-            'week' => collect($labels)->mapWithKeys(fn ($day) => [$day => 0])->merge(
-                $newOrders->groupBy(fn ($order) => $order->created_at->format('D'))
-                    ->map(fn ($orders) => $orders->count())
+            'week' => collect($labels)->mapWithKeys(fn($day) => [$day => 0])->merge(
+                $newOrders->groupBy(fn($order) => $order->created_at->format('D'))
+                    ->map(fn($orders) => $orders->count())
             )->values(),
-            'month' => collect($labels)->mapWithKeys(fn ($day) => [$day => 0])->merge(
-                $newOrders->groupBy(fn ($order) => $order->created_at->format('d'))
-                    ->map(fn ($orders) => $orders->count())
+            'month' => collect($labels)->mapWithKeys(fn($day) => [$day => 0])->merge(
+                $newOrders->groupBy(fn($order) => $order->created_at->format('d'))
+                    ->map(fn($orders) => $orders->count())
             )->values(),
-            'year' => collect($labels)->mapWithKeys(fn ($month) => [$month => 0])->merge(
-                $newOrders->groupBy(fn ($order) => $order->created_at->format('M'))
-                    ->map(fn ($orders) => $orders->count())
+            'year' => collect($labels)->mapWithKeys(fn($month) => [$month => 0])->merge(
+                $newOrders->groupBy(fn($order) => $order->created_at->format('M'))
+                    ->map(fn($orders) => $orders->count())
             )->values(),
         };
 
@@ -126,6 +127,17 @@ class Revenue extends ChartWidget
                 ],
             ],
             'labels' => $labels,
+        ];
+    }
+
+    protected function getOptions(): array|RawJs|null
+    {
+        return [
+            'scales' => [
+                'y' => [
+                    'beginAtZero' => true,
+                ],
+            ],
         ];
     }
 
