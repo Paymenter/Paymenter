@@ -17,6 +17,7 @@ class ActiveUsers extends Widget
         return view(static::$view, [
             'sessions' => \App\Models\Session::query()
                 ->where('last_activity', '>=', now()->subMinutes(5))
+                ->where('user_id', '!=', null)
                 ->orderBy('last_activity', 'desc')
                 ->with('user')
                 ->limit(5)
