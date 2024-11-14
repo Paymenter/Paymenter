@@ -12,7 +12,7 @@ class Overview extends BaseWidget
 {
     // Poll every 5 minutes
     protected static ?string $pollingInterval = '5m';
-    
+
     protected function getStats(): array
     {
         $now = now();
@@ -47,7 +47,6 @@ class Overview extends BaseWidget
             ->whereBetween('created_at', [$now->copy()->subMonths(2), $now->copy()->subMonth()])
             ->count();
         $ticketsIncrease = $ticketsThisMonth - $ticketsLastMonth;
-
 
         // Calculate percentage increase
         $ticketsPercentageIncrease = $ticketsLastMonth > 0 ? (($ticketsThisMonth - $ticketsLastMonth) / $ticketsLastMonth) * 100 : 0;
@@ -85,19 +84,19 @@ class Overview extends BaseWidget
                 ->count() ?? 0;
         }
 
-        return   [
+        return [
             Stat::make('Revenue', number_format($revenueIncrease, 2))
                 ->description($revenueIncrease >= 0 ? 'Increased by ' . $revenuePercentageIncrease . '% (this month)' : 'Decreased by ' . $revenuePercentageIncrease . '% (this month)')
                 ->descriptionIcon($revenueIncrease >= 0 ? 'heroicon-m-arrow-trending-up' : 'heroicon-m-arrow-trending-down')
                 ->chart(array_reverse($dates))
                 ->color($revenueIncrease >= 0 ? 'success' : 'danger'),
             Stat::make('New Tickets', $ticketsIncrease)
-                ->description($ticketsIncrease >= 0 ? 'Increased by ' . $ticketsPercentageIncrease . '% (this month)': 'Decreased by ' . $revenuePercentageIncrease . '% (this month)')
+                ->description($ticketsIncrease >= 0 ? 'Increased by ' . $ticketsPercentageIncrease . '% (this month)' : 'Decreased by ' . $revenuePercentageIncrease . '% (this month)')
                 ->descriptionIcon($ticketsIncrease >= 0 ? 'heroicon-m-arrow-trending-up' : 'heroicon-m-arrow-trending-down')
                 ->chart(array_reverse($dates))
                 ->color($ticketsIncrease >= 0 ? 'success' : 'danger'),
             Stat::make('New Services', $servicesIncrease)
-                ->description($servicesIncrease >= 0 ? 'Increased by ' . $servicesPercentageIncrease . '% (this month)': 'Decreased by ' . $revenuePercentageIncrease . '% (this month)')
+                ->description($servicesIncrease >= 0 ? 'Increased by ' . $servicesPercentageIncrease . '% (this month)' : 'Decreased by ' . $revenuePercentageIncrease . '% (this month)')
                 ->descriptionIcon($servicesIncrease >= 0 ? 'heroicon-m-arrow-trending-up' : 'heroicon-m-arrow-trending-down')
                 ->chart(array_reverse($dates))
                 ->color($servicesIncrease >= 0 ? 'success' : 'danger'),

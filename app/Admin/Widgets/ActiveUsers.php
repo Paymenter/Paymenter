@@ -7,7 +7,9 @@ use Filament\Widgets\Widget;
 class ActiveUsers extends Widget
 {
     protected static string $view = 'admin.widgets.active-users';
+
     protected static ?int $sort = 2;
+
     protected static string $title = 'Active Users';
 
     public function render(): \Illuminate\View\View

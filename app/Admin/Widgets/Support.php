@@ -23,7 +23,7 @@ class Support extends BaseWidget
                 Tables\Columns\TextColumn::make('subject')
                     ->label('Subject'),
                 Tables\Columns\TextColumn::make('status')
-                    ->label('Status')                    
+                    ->label('Status')
                     ->badge()
                     ->color(fn (Ticket $record) => match ($record->status) {
                         'open' => 'success',
