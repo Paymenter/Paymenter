@@ -12,7 +12,7 @@ class Revenue extends ChartWidget
 
     public ?string $filter = 'week';
 
-    protected static ?string $pollingInterval = '60s';
+    protected static ?string $pollingInterval = null;
 
     protected function getFilters(): ?array
     {

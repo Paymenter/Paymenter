@@ -62,7 +62,7 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->discoverWidgets(in: app_path('Admin/Widgets'), for: 'App\\Admin\\Widgets')
             ->widgets([
-                Widgets\AccountWidget::class,
+                AdminWidgets\ActiveUsers::class,
                 AdminWidgets\Revenue::class,
                 // Widgets\FilamentInfoWidget::class,
             ])
