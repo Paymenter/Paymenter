@@ -27,7 +27,7 @@ class NotificationHelper
         array $attachments = []
     ): void {
         $emailTemplate = EmailTemplate::where('key', $emailTemplateKey)->first();
-        if (!$emailTemplate || !$emailTemplate->enabled || config('settings.disable_mail')) {
+        if (!$emailTemplate || !$emailTemplate->enabled || config('settings.mail_disable')) {
             return;
         }
         $mail = new Mail($emailTemplate, $data);

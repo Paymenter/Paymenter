@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('service_configs', function (Blueprint $table) {
             $table->id();
-            $table->foreignIdFor(\App\Models\Service::class)->constrained()->cascadeOnDelete();
+            $table->morphs('configurable');
             $table->foreignIdFor(\App\Models\ConfigOption::class)->constrained()->cascadeOnDelete();
             $table->foreignId('config_value_id')->constrained('config_options');
             $table->timestamps();

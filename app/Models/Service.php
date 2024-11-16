@@ -137,7 +137,7 @@ class Service extends Model
      */
     public function configs()
     {
-        return $this->hasMany(ServiceConfig::class);
+        return $this->morphMany(ServiceConfig::class, 'configurable');
     }
 
     /**
@@ -166,7 +166,7 @@ class Service extends Model
     public function upgradable(): Attribute
     {
         return Attribute::make(
-            get: fn () => $this->product->upgrades()->count() > 0 && $this->status == 'active' && $this->upgrade !== null && !$this->upgrade->exists()
+            get: fn () => $this->product->upgrades()->count() > 0 && $this->status == 'active' && !$this->upgrade?->exists()
         );
     }
 

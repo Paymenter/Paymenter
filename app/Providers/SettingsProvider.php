@@ -58,8 +58,8 @@ class SettingsProvider extends ServiceProvider
 
             if (Str::startsWith(config('app.url') ?? '', 'https://')) {
                 URL::forceScheme('https');
-                URL::forceRootUrl(config('app.url'));
             }
+            URL::forceRootUrl(config('app.url'));
         } catch (\Exception $e) {
             // Do nothing
         }
