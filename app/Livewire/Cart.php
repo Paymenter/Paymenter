@@ -256,7 +256,7 @@ class Cart extends Component
             }
 
             event(new OrderCreated($order));
-            event(new InvoiceCreated($invoice));
+            $invoice && event(new InvoiceCreated($invoice));
 
             // Commit the transaction
             DB::commit();

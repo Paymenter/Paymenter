@@ -18,6 +18,7 @@ return new class extends Migration
             $table->foreignIdFor(\App\Models\Product::class)->constrained()->cascadeOnDelete();
             $table->foreignIdFor(\App\Models\Invoice::class)->constrained()->cascadeOnDelete();
             $table->string('status')->default('pending');
+            $table->string('type')->default('product');
             $table->timestamps();
         });
     }

@@ -170,7 +170,7 @@ class Service extends Model
         );
     }
 
-    public function upgrades()
+    public function productUpgrades()
     {
         return $this->product->upgrades->filter(function ($product) {
             $plan = $product->plans()->where('billing_unit', $this->plan->billing_unit)->where('billing_period', $this->plan->billing_period)->get();

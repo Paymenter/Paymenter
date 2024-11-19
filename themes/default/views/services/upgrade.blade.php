@@ -1,6 +1,6 @@
 <div class="grid grid-cols-3 gap-6">
     <div class="grid md:grid-cols-2 gap-4 col-span-2">
-        @foreach ($service->upgrades() as $product)
+        @foreach ($service->productUpgrades() as $product)
             <div>
                 <input type="radio" name="upgrade" value="{{ $product->id }}" wire:model.live="upgrade" class="hidden peer" id="product-{{ $product->id }}">
                 <label for="product-{{ $product->id }}" class="cursor-pointer flex flex-col bg-primary-700 p-4 rounded-md mb-4 border border-primary-700 peer-checked:border-secondary">

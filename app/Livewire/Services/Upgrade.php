@@ -26,7 +26,7 @@ class Upgrade extends Component
 
             return $this->redirect(route('services.show', $this->service), true);
         }
-        $upgrade = $this->service->upgrades()->first();
+        $upgrade = $this->service->productUpgrades()->first();
         $this->upgradeProduct = $upgrade;
         $this->upgrade = $upgrade->id;
         $this->totalToday();
@@ -46,7 +46,7 @@ class Upgrade extends Component
     public function updatedUpgrade($upgrade)
     {
         // Check if the upgrade is valid
-        if (!$this->service->upgrades()->contains($upgrade)) {
+        if (!$this->service->productUpgrades()->contains($upgrade)) {
             $this->notify('Invalid upgrade.', 'error');
 
             return;
