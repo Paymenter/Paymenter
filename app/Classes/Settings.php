@@ -411,6 +411,7 @@ class Settings
                     'label' => 'Ticket Departments',
                     'type' => 'tags',
                     'default' => ['Support', 'Sales'],
+                    'required' => true,
                     'database_type' => 'array',
                 ],
                 [
