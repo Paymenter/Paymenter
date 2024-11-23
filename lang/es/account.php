@@ -1,10 +1,10 @@
 <?php
 
 return [
-    'personal_details' => 'Personal details',
-    'security' => 'Security',
+    'personal_details' => 'Datos personales',
+    'security' => 'Seguridad',
 
-    'change_password' => 'Change password',
+    'change_password' => 'Cambiar contraseña',
 
     'two_factor_authentication' => 'Two-factor authentication',
     'two_factor_authentication_description' => 'Add an extra layer of security to your account by enabling two-factor authentication.',
@@ -15,16 +15,16 @@ return [
     'two_factor_authentication_qr_code' => 'Scan the QR code below with your authenticator app:',
     'two_factor_authentication_secret' => 'Or enter the following code manually:',
 
-    'sessions' => 'Sessions',
+    'sessions' => 'Sesiones',
     'sessions_description' => 'Manage and log out your active sessions on other browsers and devices.',
     'logout_sessions' => 'Log this session out',
 
     'input' => [
-        'current_password' => 'Current password',
+        'current_password' => 'Contraseña actual',
         'current_password_placeholder' => 'Your current password',
-        'new_password' => 'New password',
+        'new_password' => 'Nueva contraseña',
         'new_password_placeholder' => 'Your new password',
-        'confirm_password' => 'Confirm password',
+        'confirm_password' => 'Confirmar la contraseña',
         'confirm_password_placeholder' => 'Confirm your new password',
 
         'two_factor_code' => 'Enter the code from your authenticator app',
