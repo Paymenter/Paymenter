@@ -89,7 +89,7 @@
         @endif
         @if (($product->stock > 0 || !$product->stock) && $product->price()->available)
             <div>
-                <x-button.primary wire:click="checkout">
+                <x-button.primary wire:click="checkout" wire:loading.attr="disabled">
                     {{ __('product.checkout') }}
                 </x-button.primary>
             </div>

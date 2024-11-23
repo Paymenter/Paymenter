@@ -96,7 +96,7 @@
             @endif
 
             <div class="flex flex-row justify-end gap-2">
-                <x-button.primary wire:click="checkout" class="h-fit">
+                <x-button.primary wire:click="checkout" class="h-fit" wire:loading.attr="disabled">
                     {{ __('product.checkout') }}
                 </x-button.primary>
             </div>
