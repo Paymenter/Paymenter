@@ -27,7 +27,7 @@ return [
     'sign_up' => 'Sign up',
     'sign_up_title' => 'Create your account',
 
-    'logout' => 'Logout',
+    'logout' => 'Cerrar sesión',
 
     'input' => [
         'email' => 'Email',
@@ -42,8 +42,8 @@ return [
 
     'reset_password' => 'Reset password',
 
-    'verify_2fa' => 'Verify 2FA',
-    'verify' => 'Verify',
+    'verify_2fa' => 'Verificar 2FA',
+    'verify' => 'Verificar',
 
     'verification' => [
         'notice' => 'Verify your email address',
