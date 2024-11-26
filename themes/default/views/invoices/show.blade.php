@@ -187,5 +187,12 @@
         @endif
 
     </div>
+    <div class="flex justify-end">
+        <div class="max-w-[200px] w-full">
+            <x-button.primary wire:click="downloadPDF" class="mt-4">
+                Download PDF
+            </x-button.primary>
+        </div>
+    </div>
 
 </div>
