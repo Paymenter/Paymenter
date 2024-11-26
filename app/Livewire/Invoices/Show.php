@@ -9,6 +9,7 @@ use App\Models\Invoice;
 use Illuminate\Support\Facades\Request;
 use Livewire\Attributes\Locked;
 use Livewire\Attributes\Url;
+use App\Classes\PDF;
 
 class Show extends Component
 {
@@ -87,5 +88,12 @@ class Show extends Component
         return view('invoices.show')->layoutData([
             'title' => __('invoices.invoice', ['id' => $this->invoice->id]),
         ]);
+    }
+
+    public function downloadPDF()
+    {
+        return response()->streamDownload(function () {
+            echo PDF::generateInvoice($this->invoice)->stream();
+        }, 'invoice-' . $this->invoice->id . '.pdf');
     }
 }
