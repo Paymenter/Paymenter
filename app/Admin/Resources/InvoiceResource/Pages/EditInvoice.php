@@ -21,7 +21,7 @@ class EditInvoice extends EditRecord
                 ->action(function (Invoice $invoice) {
                     return response()->streamDownload(function () use ($invoice) {
                         echo PDF::generateInvoice($invoice)->stream();
-                    }, 'invoice.pdf');
+                    }, 'invoice-' . $invoice->id . '.pdf');
                 }),
         ];
     }

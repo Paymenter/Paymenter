@@ -19,6 +19,14 @@
             </x-slot>
         </x-modal>
     @endif
+    <div class="flex justify-end">
+        <div class="max-w-[200px] w-full text-right">
+            <span class="cursor-pointer text-gray-400 underline" wire:click="downloadPDF">
+                Download PDF
+            </span>
+        </div>
+    </div>
+    
     <div class="bg-primary-800 p-12 rounded-lg mt-2">
         <div class="sm:flex justify-between pr-4 pt-4">
             <h1 class="text-2xl font-bold sm:text-3xl">{{ __('invoices.invoice', ['id' => $invoice->id]) }}</h1>
