@@ -7,7 +7,7 @@
                 {{ Auth::user()->services()->where('status', 'active')->count() }}
             </div>
         </button>
-        
+
         <button class="bg-primary-700 p-4 rounded-lg shadow-xl border-primary-600 border"
             wire:click="$set('activeComponent', 'invoices')">
             <h4 class="text-lg font-semibold text-white">{{ __('dashboard.unpaid_invoices') }}:</h4>
@@ -24,6 +24,7 @@
                 {{ Auth::user()->tickets()->where('status', '!=', 'closed')->count() }}
             </div>
         </button>
+        {!! hook('pages.dashboard.buttons') !!}
     </div>
 
     <div x-data="{ activeComponent: @entangle('activeComponent') }">
@@ -33,7 +34,7 @@
             x-transition:leave="transition ease-in duration-500" x-transition:leave-start="opacity-100"
             x-transition:leave-end="opacity-0">
             @if($activeComponent == 'tickets')
-                <livewire:tickets.index />
+            <livewire:tickets.index />
             @endif
         </div>
 
@@ -43,7 +44,7 @@
             x-transition:leave="transition ease-in duration-500" x-transition:leave-start="opacity-100"
             x-transition:leave-end="opacity-0">
             @if($activeComponent == 'services')
-                <livewire:services.index />
+            <livewire:services.index />
             @endif
         </div>
 
@@ -53,8 +54,10 @@
             x-transition:leave="transition ease-in duration-500" x-transition:leave-start="opacity-100"
             x-transition:leave-end="opacity-0">
             @if($activeComponent == 'invoices')
-                <livewire:invoices.index />
+            <livewire:invoices.index />
             @endif
         </div>
+
+        {!! hook('pages.dashboard') !!}
     </div>
 </div>
