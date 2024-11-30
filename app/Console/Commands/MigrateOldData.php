@@ -6,11 +6,9 @@ use App\Helpers\ExtensionHelper;
 use App\Models\ConfigOption;
 use App\Models\Currency;
 use App\Models\CustomProperty;
-use App\Models\Extension;
 use App\Models\Gateway;
 use App\Models\Price;
 use Closure;
-use Exception;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -331,7 +329,6 @@ class MigrateOldData extends Command
             DB::table('config_options')->insert($records);
         });
 
-
         $this->migrateInBatch('configurable_option_inputs', 'SELECT * FROM configurable_option_inputs LIMIT :limit OFFSET :offset', function ($option_inputs) {
             $option_inputs = array_map(function ($record) {
                 $option = explode('|', $record['name'], 2);
@@ -585,7 +582,7 @@ class MigrateOldData extends Command
 
     protected function migrateExtensions()
     {
-        $this->info("Migrating Extensions...");
+        $this->info('Migrating Extensions...');
         $stmt = $this->pdo->query('SELECT * FROM extensions');
         $records = $stmt->fetchAll();
 
@@ -596,9 +593,9 @@ class MigrateOldData extends Command
             } catch (\Throwable $th) {
                 $ext_name = $record['name'];
                 $this->warn("Not Migrating '$ext_name', Error: " . $th->getMessage());
+
                 continue;
             }
-
 
             $extensions[] = [
                 'id' => $record['id'],
@@ -619,6 +616,7 @@ class MigrateOldData extends Command
                 $extension_cfg = ExtensionHelper::getConfig($ext_type, $ext_name);
             } catch (\Throwable $th) {
                 $this->warn("Error while getting Extension '$ext_name', Not migrating ext settings: " . $th->getMessage());
+
                 continue;
             }
 

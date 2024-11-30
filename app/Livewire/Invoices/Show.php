@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Invoices;
 
+use App\Classes\PDF;
 use App\Helpers\ExtensionHelper;
 use App\Livewire\Component;
 use App\Models\Gateway;
@@ -9,7 +10,6 @@ use App\Models\Invoice;
 use Illuminate\Support\Facades\Request;
 use Livewire\Attributes\Locked;
 use Livewire\Attributes\Url;
-use App\Classes\PDF;
 
 class Show extends Component
 {
