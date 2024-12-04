@@ -256,7 +256,7 @@ class Cart extends Component
             }
 
             event(new OrderCreated($order));
-            $invoice && event(new InvoiceCreated($invoice));
+            isset($invoice) && event(new InvoiceCreated($invoice));
 
             // Commit the transaction
             DB::commit();
@@ -270,7 +270,7 @@ class Cart extends Component
 
             if ($this->total->price == 0) {
                 // Fixme: Redirect to the order page
-                return $this->notify('Order placed successfully', 'success');
+                return $this->redirect(route('dashboard'), true);
             } else {
                 return $this->redirect(route('invoices.show', $invoice) . '?gateway=' . $this->gateway . '&pay', true);
             }
@@ -286,6 +286,7 @@ class Cart extends Component
                 Log::error($e);
                 $this->notify('An error occurred while processing your order. Please try again later.');
             }
+            throw $e;
         }
     }
 
