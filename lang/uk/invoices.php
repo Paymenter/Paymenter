@@ -1,0 +1,30 @@
+<?php
+
+return [
+    'invoices' => 'Рахунки',
+    'product' => 'Продукт',
+    'price' => 'Ціна',
+    'status' => 'Статус',
+    'actions' => 'Дії',
+    'view' => 'Переглянути',
+    'id' => 'ID',
+    'total' => 'Підсумок',
+    'subtotal' => 'Проміжний підсумок',
+    'invoice' => 'Рахунок №:id',
+    'unit_price' => 'Ціна за одиницю',
+    'bill_to' => 'Bill To',
+    'paid' => 'Paid',
+    'payment_pending' => 'Payment Pending',
+
+    'invoice_date' => 'Дата рахунку',
+    'invoice_no' => 'Номер рахунку',
+    'item' => 'Позиція',
+    'quantity' => 'Кількість',
+    'transactions' => 'Transactions',
+    'transaction_id' => 'ID транзакції',
+    'gateway' => 'Платіжний шлюз',
+    'payment_date' => 'Дата оплати',
+    'payment_method' => 'Спосіб оплати',
+    'amount' => 'Сума',
+    'date' => 'Date',
+];
