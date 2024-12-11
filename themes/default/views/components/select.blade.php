@@ -4,7 +4,7 @@
     <select
         id="{{ $id ?? 'select' }}"
         name="{{ $name ?? '' }}"
-        class="relative block w-full min-h-[38px] py-2 pl-3 pr-10 text-left bg-secondary border border-border rounded-md shadow-sm cursor-pointer text-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-neutral-800 appearance-none"
+        class="relative block w-full min-h-[38px] py-2 pl-3 pr-10 text-left bg-secondary border border-neutral rounded-md shadow-sm cursor-pointer text-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-neutral-800 appearance-none"
         {{ $attributes }}
     >
         {{ $slot }}

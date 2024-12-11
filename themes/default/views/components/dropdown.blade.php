@@ -8,7 +8,7 @@
         </svg>
     </button>
 
-    <div class="absolute right-0 mt-2 w-48 p-3 bg-background-secondary rounded-md shadow-lg z-10 border border-border"
+    <div class="absolute right-0 mt-2 w-48 p-3 bg-background-secondary rounded-md shadow-lg z-10 border border-neutral"
         x-show="open" x-transition:enter="transition ease-out duration-150"
         x-transition:enter-start="opacity-0 scale-90" x-transition:enter-end="opacity-100 scale-100"
         x-transition:leave="transition ease-in duration-75" x-transition:leave-start="opacity-100 scale-100"
