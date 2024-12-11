@@ -1,14 +1,44 @@
 <style>
     :root {
-        --primary-100: {{ theme('primary-100', '#F3F4F6') }};
-        --primary-200: {{ theme('primary-200', '#E5E7EB') }};
-        --primary-300: {{ theme('primary-300', '#D1D5DB') }};
-        --primary-400: {{ theme('primary-400', '#9CA3AF') }};
-        --primary-500: {{ theme('primary-500', '#6B7280') }};
-        --primary-600: {{ theme('primary-600', '#4B5563') }};
-        --primary-700: {{ theme('primary-700', '#374151') }};
-        --primary-800: {{ theme('primary-800', '#1F2937') }};
-        --primary-900: {{ theme('primary-900', '#111827') }};
-        --secondary: {{ theme('secondary', '#5270FD') }};
+        /* Branding Colors (Light) */
+        --color-primary: {{ theme('primary', '229 100% 64%') }};
+        --color-secondary: {{ theme('secondary', '0 0% 92%') }};
+
+        /* Neutral Colors - Borders, Accents... (Light) */
+        --color-neutral: {{ theme('neutral', '220 25% 85%') }};
+
+        /* Text Colors (Light) */
+        --color-base: {{ theme('base', '0 0% 0%') }};
+        --color-muted: {{ theme('muted', '220 28% 25%') }};
+        --color-inverted: {{ theme('inverted', '100 100% 100%') }};
+
+        /* State Colors */
+        --color-success: {{ theme('success', '142 71% 45%') }};
+        --color-error: {{ theme('error', '0 75% 60%') }};
+        --color-warning: {{ theme('warning', '25 95% 53%') }};
+        --color-inactive: {{ theme('inactive', '0 0% 63%') }};
+        --color-info: {{ theme('info', '210 100% 60%') }};
+
+        /* Background Colors (Light) */
+        --color-background-secondary: {{ theme('background-secondary', '0 0% 95%') }};
+        --color-background: {{ theme('background', '100 100% 100%') }};
+    }
+
+    html.dark {
+        /* Branding Colors (Dark) */
+        --color-primary: {{ theme('dark-primary', '229 100% 64%') }};
+        --color-secondary: {{ theme('dark-secondary', '222 32% 15%') }};
+
+        /* Neutral Colors - Borders, Accents... (Dark) */
+        --color-neutral: {{ theme('dark-neutral', '220 25% 29%') }};
+
+        /* Text Colors (Dark) */
+        --color-base: {{ theme('dark-base', '100 100% 100%') }};
+        --color-muted: {{ theme('dark-muted', '220 28% 25%') }};
+        --color-inverted: {{ theme('dark-inverted', '220 14% 60%') }};
+
+        /* Background Colors (Dark) */
+        --color-background-secondary: {{ theme('dark-background-secondary', '222 32% 15%') }};
+        --color-background: {{ theme('dark-background', '221 39% 11%') }};
     }
 </style>
