@@ -1,6 +1,6 @@
 <div>
     <div class="flex flex-col gap-6">
-        <div class="mx-auto container bg-primary-800 p-4 rounded-md">
+        <div class="mx-auto container bg-background p-4 rounded-md">
             <article class="prose prose-invert">
                 {!! Str::markdown(theme('home_page_text', 'Welcome to Paymenter'), [
                 'html_input' => 'strip',
@@ -10,7 +10,7 @@
         </div>
         <div class="mx-auto container rounded-md grid md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
             @foreach ($categories as $category)
-                <div class="flex flex-col bg-primary-800 p-4 rounded-md">
+                <div class="flex flex-col bg-background-secondary p-4 rounded-md">
                     @if ($category->image)
                         <img src="{{ Storage::url($category->image) }}" alt="{{ $category->name }}"
                             class="w-full object-cover object-center rounded-md">
