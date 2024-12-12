@@ -2,7 +2,7 @@
     <div class="container mx-auto grid gap-4">
         <div class="flex flex-col gap-2 items-center">
             <x-logo />
-            <div class="text-white text-sm">
+            <div class="text-sm">
                 {{ __('© :year :app_name. | All rights reserved.', ['year' => date('Y'), 'app_name' => config('app.name')]) }}
             </div>
             <a href="https://paymenter.org" target="_blank" class="mt-4 mb-6 flex items-center gap-2 text-base/50 hover:text-base">
