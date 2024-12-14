@@ -11,7 +11,7 @@ class RegisterTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
         config(['settings.optional_fields' => [
