@@ -10,10 +10,20 @@ class Index extends Component
 {
     use WithPagination;
 
+    public $status = null;
+
     public function render()
     {
+        $query = Auth::user()->services();
+
+        if ($this->status) {
+            $query->where('status', $this->status);
+        } else {
+            $query->where('status', '!=', 'cancelled');
+        }
+
         return view('services.index', [
-            'services' => Auth::user()->services()->where('status', '!=', 'cancelled')->paginate(config('settings.pagination')),
+            'services' => $query->paginate(config('settings.pagination')),
         ])->layoutData([
             'title' => 'Services',
         ]);
