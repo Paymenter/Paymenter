@@ -1,5 +1,5 @@
 <button 
-    {{ $attributes->merge(['class' => 'bg-secondary-500 text-white hover:bg-secondary py-2 px-4 rounded-md w-full bg-gradient-to-tr from-secondary via-50% via-20% via-secondary to-[#5573FD80] duration-300']) }}>
+    {{ $attributes->merge(['class' => 'bg-primary text-white font-semibold hover:bg-primary/80 py-2 px-4 rounded-md w-full duration-300']) }}>
 
     @if (isset($type) && $type === 'submit')
         <div role="status" wire:loading>
