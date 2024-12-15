@@ -24,15 +24,15 @@ return [
     'dont_have_account' => 'Don\'t have an account?',
     'already_have_account' => 'Already have an account?',
 
-    'sign_up' => 'Sign up',
-    'sign_up_title' => 'Create your account',
+    'sign_up' => 'Regístrate',
+    'sign_up_title' => 'Crear una cuenta',
 
     'logout' => 'Cerrar sesión',
 
     'input' => [
         'email' => 'Email',
-        'email_label' => 'Email Address',
-        'password' => 'Password',
+        'email_label' => 'Correo electrónico',
+        'password' => 'Contraseña',
     ],
 
     'oauth' => [
