@@ -18,7 +18,7 @@ return [
     'price' => 'Price',
     'setup_fee' => 'Setup fee',
 
-    'in_stock' => 'In stock',
+    'in_stock' => 'En stock',
     'out_of_stock' => 'Product :product is out of stock',
     'user_limit' => 'You have reached the limit of :product',
 ];
