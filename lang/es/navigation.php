@@ -7,7 +7,7 @@ return [
     'login' => 'Login',
     'register' => 'Register',
     'account' => 'Account',
-    'dashboard' => 'Dashboard',
+    'dashboard' => 'Panel',
     'tickets' => 'Tickets',
     'admin' => 'Admin',
 ];
