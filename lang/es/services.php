@@ -1,17 +1,17 @@
 <?php
 
 return [
-    'services' => 'Services',
-    'product' => 'Product',
-    'price' => 'Price',
-    'status' => 'Status',
-    'name' => 'Name',
-    'actions' => 'Actions',
-    'view' => 'View',
+    'services' => 'Servicios',
+    'product' => 'Producto',
+    'price' => 'Precio',
+    'status' => 'Estado',
+    'name' => 'Nombre',
+    'actions' => 'Acciones',
+    'view' => 'Ver',
 
-    'product_details' => 'Product Details',
-    'billing_cycle' => 'Billing Cycle',
-    'cancel' => 'Cancel',
+    'product_details' => 'Detalles del producto',
+    'billing_cycle' => 'Ciclo de facturación',
+    'cancel' => 'Cancelar',
     'cancellation' => 'Cancellation of :service',
     'cancel_are_you_sure' => 'Are you sure you want to cancel this service?',
     'cancel_reason' => 'Reason for cancellation',
