@@ -6,11 +6,11 @@ return [
 
     'change_password' => 'Cambiar contraseña',
 
-    'two_factor_authentication' => 'Two-factor authentication',
-    'two_factor_authentication_description' => 'Add an extra layer of security to your account by enabling two-factor authentication.',
-    'two_factor_authentication_enabled' => 'Two-factor authentication is enabled for your account.',
-    'two_factor_authentication_enable' => 'Enable two-factor authentication',
-    'two_factor_authentication_disable' => 'Disable two-factor authentication',
+    'two_factor_authentication' => 'Autenticación de doble factor',
+    'two_factor_authentication_description' => 'Añade una capa adicional de seguridad a tu cuenta activando la autenticación de dos factores.',
+    'two_factor_authentication_enabled' => 'La autenticación de dos factores está activada en tu cuenta.',
+    'two_factor_authentication_enable' => 'Activar la autenticación de doble factor',
+    'two_factor_authentication_disable' => 'Desactivar la autenticación de dos factores',
     'two_factor_authentication_enable_description' => 'To enable two factor authentication, you need to scan the QR code below with an authenticator app like Google Authenticator or Authy.',
     'two_factor_authentication_qr_code' => 'Scan the QR code below with your authenticator app:',
     'two_factor_authentication_secret' => 'Or enter the following code manually:',
