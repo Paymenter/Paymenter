@@ -27,16 +27,16 @@ return [
         'confirm_password' => 'Passwort bestätigen',
         'confirm_password_placeholder' => 'Bestätigen Sie Ihr neues Passwort',
 
-        'two_factor_code' => 'Enter the code from your authenticator app',
-        'two_factor_code_placeholder' => 'Your two-factor authentication code',
+        'two_factor_code' => 'Code aus der Authenticator App eingeben',
+        'two_factor_code_placeholder' => 'Dein Zwei-Faktor-Authentifizierungscode',
     ],
 
     'notifications' => [
-        'password_changed' => 'Password has been changed.',
-        'password_incorrect' => 'The current password is incorrect.',
-        'two_factor_enabled' => 'Two-factor authentication has been enabled.',
-        'two_factor_disabled' => 'Two-factor authentication has been disabled.',
-        'two_factor_code_incorrect' => 'The code is incorrect.',
-        'session_logged_out' => 'Session has been logged out.',
+        'password_changed' => 'Das Passwort wurde erfolgreich geändert.',
+        'password_incorrect' => 'Das aktuelle Passwort ist nicht korrekt.',
+        'two_factor_enabled' => 'Die Zwei-Faktor-Authentifizierung wurde aktiviert.',
+        'two_factor_disabled' => 'Die Zwei-Faktor-Authentifizierung wurde deaktiviert.',
+        'two_factor_code_incorrect' => 'Der Code war falsch.',
+        'session_logged_out' => 'Die Sitzung wurde abgemeldet.',
     ],
 ];
