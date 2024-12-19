@@ -24,15 +24,15 @@ return [
     'dont_have_account' => 'Don\'t have an account?',
     'already_have_account' => 'Already have an account?',
 
-    'sign_up' => 'Regístrate',
-    'sign_up_title' => 'Crear una cuenta',
+    'sign_up' => 'Sign up',
+    'sign_up_title' => 'Create your account',
 
-    'logout' => 'Cerrar sesión',
+    'logout' => 'Logout',
 
     'input' => [
         'email' => 'Email',
-        'email_label' => 'Correo electrónico',
-        'password' => 'Contraseña',
+        'email_label' => 'Email Address',
+        'password' => 'Password',
     ],
 
     'oauth' => [
@@ -42,8 +42,8 @@ return [
 
     'reset_password' => 'Reset password',
 
-    'verify_2fa' => 'Verificar 2FA',
-    'verify' => 'Verificar',
+    'verify_2fa' => 'Verify 2FA',
+    'verify' => 'Verify',
 
     'verification' => [
         'notice' => 'Verify your email address',

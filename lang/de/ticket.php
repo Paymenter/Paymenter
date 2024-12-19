@@ -14,11 +14,11 @@ return [
     'select_priority' => 'Select Priority',
     'low' => 'Low',
     'medium' => 'Medium',
-    'high' => 'Alto',
+    'high' => 'High',
 
-    'last_activity' => 'Última actividad',
+    'last_activity' => 'Last activity',
 
-    'service' => 'Servicio',
-    'select_service' => 'Seleccionar servicio',
-    'create' => 'Crear',
+    'service' => 'Service',
+    'select_service' => 'Select Service',
+    'create' => 'Create',
 ];
