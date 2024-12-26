@@ -271,7 +271,7 @@ class ExtensionHelper
 
     /**
      * Register a new middleware.
-     * 
+     *
      * @param  string  $middleware
      * @param  string  $group
      * @return Router

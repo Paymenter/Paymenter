@@ -3,8 +3,6 @@
 namespace Paymenter\Extensions\Others\Announcements;
 
 use App\Classes\Extension\Extension;
-use App\Helpers\ExtensionHelper;
-use App\Http\Middleware\MustVerfiyEmail;
 use App\Livewire\Auth\Register;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Event;
