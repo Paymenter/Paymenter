@@ -270,6 +270,18 @@ class ExtensionHelper
     }
 
     /**
+     * Register a new middleware.
+     * 
+     * @param  string  $middleware
+     * @param  string  $group
+     * @return Router
+     */
+    public static function registerMiddleware($middleware, $group = 'web')
+    {
+        return app('router')->pushMiddlewareToGroup($group, $middleware);
+    }
+
+    /**
      * Get every gateway which allows to checkout with
      *
      * @return array
