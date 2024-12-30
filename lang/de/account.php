@@ -27,7 +27,7 @@ return [
         'confirm_password' => 'Passwort bestätigen',
         'confirm_password_placeholder' => 'Bestätigen Sie Ihr neues Passwort',
 
-        'two_factor_code' => 'Code aus der Authenticator App eingeben',
+        'two_factor_code' => 'Gib den Code aus deiner Authentifizierungs-App ein',
         'two_factor_code_placeholder' => 'Dein Zwei-Faktor-Authentifizierungscode',
     ],
 
