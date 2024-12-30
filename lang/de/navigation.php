@@ -1,12 +1,12 @@
 <?php
 
 return [
-    'home' => 'Home',
+    'home' => 'Startseite',
     'shop' => 'Shop',
-    'cart' => 'Cart',
+    'cart' => 'Warenkorb',
     'login' => 'Login',
-    'register' => 'Register',
-    'account' => 'Account',
+    'register' => 'Registrieren',
+    'account' => 'Benutzerkonto',
     'dashboard' => 'Dashboard',
     'tickets' => 'Tickets',
     'admin' => 'Admin',
