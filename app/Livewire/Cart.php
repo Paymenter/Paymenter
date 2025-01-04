@@ -161,7 +161,7 @@ class Cart extends Component
             return redirect()->route('login');
         }
 
-        //Start database transaction
+        // Start database transaction
         DB::beginTransaction();
         try {
             $user = User::where('id', Auth::id())->lockForUpdate()->first();
