@@ -47,6 +47,5 @@ return [
     'no_credit' => 'You have no credits.',
     'add_credit' => 'Add credit',
     'credit_deposit' => 'Credit deposit (:currency)',
-    
 
 ];

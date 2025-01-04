@@ -4,10 +4,10 @@ namespace App\Livewire\Client;
 
 use App\Exceptions\DisplayException;
 use App\Helpers\ExtensionHelper;
-use Illuminate\Support\Facades\Auth;
 use App\Livewire\Component;
 use App\Models\Credit;
 use App\Models\Invoice;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Session;
@@ -28,7 +28,9 @@ class Credits extends Component
 
     public function mount()
     {
-        if (!config('settings.credits_enabled')) return redirect()->route('account');
+        if (!config('settings.credits_enabled')) {
+            return redirect()->route('account');
+        }
 
         $this->amount = config('settings.credits_minimum_deposit');
         $this->currency = session('currency', config('settings.default_currency'));
@@ -50,6 +52,7 @@ class Credits extends Component
             // Check if the current credits + the new credits exceed the maximum credits allowed
             if (Auth::user()->credits()->where('currency_code', $this->currency)->sum('amount') + $this->amount > config('settings.credits_max')) {
                 $this->notify('You cannot exceed the maximum credits allowed.', 'error');
+
                 return;
             }
         }

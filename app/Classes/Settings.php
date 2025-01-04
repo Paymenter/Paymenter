@@ -407,7 +407,7 @@ class Settings
                     'type' => 'number',
                     'default' => 300,
                     'required' => true,
-                ]
+                ],
             ],
             'other' => [
                 [

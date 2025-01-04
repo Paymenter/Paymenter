@@ -260,7 +260,7 @@ class Cart extends Component
             event(new OrderCreated($order));
             isset($invoice) && event(new InvoiceCreated($invoice));
 
-            if($this->use_credits) {
+            if ($this->use_credits) {
                 $credit = Auth::user()->credits()->where('currency_code', $this->total->currency->code)->first();
                 if ($credit) {
                     // Is it more credits or less credits than the total price?
