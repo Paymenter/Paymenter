@@ -314,7 +314,7 @@ class ExtensionHelper
     /**
      * Add payment to invoice
      */
-    public static function addPayment($invoice, $gateway, $amount, $fee = null, $transactionId = null)
+    public static function addPayment($invoice, $gateway = null, $amount, $fee = null, $transactionId = null)
     {
         if (isset($gateway)) {
             $gateway = Gateway::where('extension', $gateway)->first();

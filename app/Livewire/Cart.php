@@ -35,6 +35,8 @@ class Cart extends Component
 
     public $coupon;
 
+    public $use_credits;
+
     public function mount()
     {
         if (Session::has('coupon')) {
@@ -257,6 +259,23 @@ class Cart extends Component
 
             event(new OrderCreated($order));
             isset($invoice) && event(new InvoiceCreated($invoice));
+
+            if($this->use_credits) {
+                $credit = Auth::user()->credits()->where('currency_code', $this->total->currency->code)->first();
+                if ($credit) {
+                    // Is it more credits or less credits than the total price?
+                    if ($credit->amount >= $this->total->price) {
+                        $credit->amount -= $this->total->price;
+                        $credit->save();
+                        ExtensionHelper::addPayment($invoice->id, null, amount: $this->total->price);
+                    } else {
+                        $this->total->price -= $credit->amount;
+                        $credit->amount = 0;
+                        $credit->save();
+                        ExtensionHelper::addPayment($invoice->id, null, amount: $credit->amount);
+                    }
+                }
+            }
 
             // Commit the transaction
             DB::commit();

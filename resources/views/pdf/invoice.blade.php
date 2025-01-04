@@ -160,7 +160,7 @@
                 <td>{{ $transaction->transaction_id }}</td>
                 <td>{{ $transaction->created_at->format('d/m/Y') }}</td>
                 <td>{{ $transaction->formattedAmount }}</td>
-                <td>{{ $transaction->gateway->name }}</td>
+                <td>{{ $transaction->gateway ? $transaction->gateway->name : '' }}</td>
             </tr>
             @endforeach
         </tbody>
