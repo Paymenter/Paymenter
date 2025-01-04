@@ -3,6 +3,7 @@
 return [
     'personal_details' => 'Persönliche Informationen',
     'security' => 'Sicherheit',
+    'credits' => 'Credits',
 
     'change_password' => 'Passwort ändern',
 
@@ -29,6 +30,9 @@ return [
 
         'two_factor_code' => 'Gib den Code aus deiner Authentifizierungs-App ein',
         'two_factor_code_placeholder' => 'Dein Zwei-Faktor-Authentifizierungscode',
+
+        'currency' => 'Currency',
+        'amount' => 'Amount',
     ],
 
     'notifications' => [
@@ -39,4 +43,9 @@ return [
         'two_factor_code_incorrect' => 'Der Code war falsch.',
         'session_logged_out' => 'Die Sitzung wurde abgemeldet.',
     ],
+
+    'no_credit' => 'You have no credits.',
+    'add_credit' => 'Add credit',
+    'credit_deposit' => 'Credit deposit (:currency)',
+
 ];
