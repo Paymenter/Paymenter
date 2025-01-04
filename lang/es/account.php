@@ -3,6 +3,7 @@
 return [
     'personal_details' => 'Datos personales',
     'security' => 'Seguridad',
+    'credits' => 'Credits',
 
     'change_password' => 'Cambiar contraseña',
 
@@ -29,6 +30,9 @@ return [
 
         'two_factor_code' => 'Ingresa el código de tu aplicación de autenticación',
         'two_factor_code_placeholder' => 'Tu código de autenticación de dos factores',
+
+        'currency' => 'Currency',
+        'amount' => 'Amount',
     ],
 
     'notifications' => [
@@ -39,4 +43,9 @@ return [
         'two_factor_code_incorrect' => 'El código es incorrecto.',
         'session_logged_out' => 'La sesión ha sido cerrada.',
     ],
+
+    'no_credit' => 'You have no credits.',
+    'add_credit' => 'Add credit',
+    'credit_deposit' => 'Credit deposit (:currency)',
+
 ];
