@@ -3,7 +3,7 @@
 return [
     'personal_details' => 'Persönliche Informationen',
     'security' => 'Sicherheit',
-    'credits' => 'Credits',
+    'credits' => 'Guthaben',
 
     'change_password' => 'Passwort ändern',
 
@@ -31,8 +31,8 @@ return [
         'two_factor_code' => 'Gib den Code aus deiner Authentifizierungs-App ein',
         'two_factor_code_placeholder' => 'Dein Zwei-Faktor-Authentifizierungscode',
 
-        'currency' => 'Currency',
-        'amount' => 'Amount',
+        'currency' => 'Währung',
+        'amount' => 'Anzahl',
     ],
 
     'notifications' => [
@@ -44,8 +44,8 @@ return [
         'session_logged_out' => 'Die Sitzung wurde abgemeldet.',
     ],
 
-    'no_credit' => 'You have no credits.',
-    'add_credit' => 'Add credit',
-    'credit_deposit' => 'Credit deposit (:currency)',
+    'no_credit' => 'Du hast kein Guthaben.',
+    'add_credit' => 'Guthaben hinzufügen',
+    'credit_deposit' => 'Guthabeneinzahlung (:currency)',
 
 ];
