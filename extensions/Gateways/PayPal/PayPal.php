@@ -238,7 +238,7 @@ class PayPal extends Gateway
         $paypal = new PayPal;
         // Update subscription price
         $newPrice = Service::where('subscription_id', $service->subscription_id)->sum('price');
-        //Grab currenct subscription ID
+        // Grab currenct subscription ID
         $subscriptionId = $service->subscription_id;
         $url = $paypal->config('test_mode') ? 'https://api-m.sandbox.paypal.com' : 'https://api-m.paypal.com';
 

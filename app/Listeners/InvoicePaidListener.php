@@ -5,6 +5,7 @@ namespace App\Listeners;
 use App\Events\Invoice\Paid;
 use App\Jobs\Server\CreateJob;
 use App\Jobs\Server\UnsuspendJob;
+use App\Models\Credit;
 use App\Models\Service;
 use App\Models\ServiceUpgrade;
 
@@ -44,6 +45,20 @@ class InvoicePaidListener
                 $service->plan_id = $serviceUpgrade->plan_id;
                 $service->price = $serviceUpgrade->price;
                 $service->save();
+            } elseif ($item->reference_type == Credit::class) {
+                // Check if user has credits in this currency
+                $user = $item->invoice->user;
+                $credit = $user->credits()->where('currency_code', $item->invoice->currency_code)->first();
+
+                if ($credit) {
+                    $credit->amount += $item->price;
+                    $credit->save();
+                } else {
+                    $user->credits()->create([
+                        'currency_code' => $item->invoice->currency_code,
+                        'amount' => $item->price,
+                    ]);
+                }
             }
         });
     }

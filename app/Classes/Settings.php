@@ -380,6 +380,35 @@ class Settings
                     'required' => true,
                 ],
             ],
+            'credits' => [
+                [
+                    'name' => 'credits_enabled',
+                    'label' => 'Credits Enabled',
+                    'type' => 'checkbox',
+                    'default' => false,
+                ],
+                [
+                    'name' => 'credits_minimum_deposit',
+                    'label' => 'Minimum Deposit',
+                    'type' => 'number',
+                    'default' => 5,
+                    'required' => true,
+                ],
+                [
+                    'name' => 'credits_maximum_deposit',
+                    'label' => 'Maximum Deposit',
+                    'type' => 'number',
+                    'default' => 100,
+                    'required' => true,
+                ],
+                [
+                    'name' => 'credits_maximum_credit',
+                    'label' => 'Maximum Credit',
+                    'type' => 'number',
+                    'default' => 300,
+                    'required' => true,
+                ],
+            ],
             'other' => [
                 [
                     'name' => 'gravatar_default',

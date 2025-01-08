@@ -1,3 +1,12 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer utilities {
+    .text-nowrap {
+        text-wrap: nowrap;
+    }
+    .text-wrap {
+        text-wrap: wrap;
+    }
+}

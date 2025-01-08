@@ -46,6 +46,12 @@ class Virtfusion extends Server
             $packages[$package['id']] = $package['name'];
         }
 
+        $apiHypervisors = $this->request('/compute/hypervisors');
+        $hypervisors = [];
+        foreach ($apiHypervisors['data'] as $hypervisor) {
+            $hypervisors[$hypervisor['id']] = $hypervisor['name'];
+        }
+
         return [
             [
                 'name' => 'package',
@@ -56,11 +62,11 @@ class Virtfusion extends Server
             ],
             [
                 'name' => 'hypervisor',
-                'type' => 'text',
+                'type' => 'select',
                 'label' => 'Hypervisor Group ID',
                 'required' => true,
                 'description' => 'The default Hypervisor group ID',
-                'validation' => 'integer|min:1',
+                'options' => $hypervisors,
             ],
             [
                 'name' => 'ipv4',

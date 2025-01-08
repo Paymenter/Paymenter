@@ -33,7 +33,6 @@ class User extends Authenticatable implements FilamentUser, HasAvatar
         'password',
         'role_id',
         'tfa_secret',
-        'credits',
         'email_verified_at',
     ];
 
@@ -182,5 +181,13 @@ class User extends Authenticatable implements FilamentUser, HasAvatar
     public function tickets()
     {
         return $this->hasMany(Ticket::class);
+    }
+
+    /**
+     * Get the user's credits
+     */
+    public function credits()
+    {
+        return $this->hasMany(Credit::class);
     }
 }
