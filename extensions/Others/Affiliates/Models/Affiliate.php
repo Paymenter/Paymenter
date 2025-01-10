@@ -7,7 +7,6 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 
 class Affiliate extends Model
 {
@@ -37,11 +36,13 @@ class Affiliate extends Model
     public function earnings(): Attribute
     {
         return Attribute::make(
-            get: function (): float {
-                $earnings = 0;
-
+            get: function (): array {
+                $earnings = [];
                 $this->referrals->each(function ($referral) use (&$earnings) {
-                    $earnings += $referral->earnings;
+                    foreach ($referral->earnings as $currency => $total) {
+                        if (!isset($earnings[$currency])) $earnings[$currency] = 0;
+                        $earnings[$currency] += $total;
+                    }
                 });
 
                 return $earnings;

@@ -3,15 +3,18 @@
 namespace Paymenter\Extensions\Others\Affiliates;
 
 use App\Classes\Extension\Extension;
+use App\Events\User\Created as UserCreated;
+use App\Events\Invoice\Paid as InvoicePaid;
 use App\Helpers\ExtensionHelper;
 use App\Models\User;
-use Illuminate\Support\Composer;
-use Paymenter\Extensions\Others\Affiliates\Providers\AffiliateServiceProvider;
-use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Event;
-use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Facades\View;
+use Livewire\Livewire;
+use Paymenter\Extensions\Others\Affiliates\Listeners\ReferUserByAffiliate;
+use Paymenter\Extensions\Others\Affiliates\Listeners\RewardAffiliate;
+use Paymenter\Extensions\Others\Affiliates\Livewire\Affiliates\Affiliate as AffiliateComponent;
 use Paymenter\Extensions\Others\Affiliates\Middleware\AffiliatesMiddleware;
 use Paymenter\Extensions\Others\Affiliates\Models\Affiliate;
 
@@ -44,8 +47,10 @@ class Affiliates extends Extension
                 'label' => 'Default Affiliate Discount',
                 'type' => 'number',
                 'suffix' => '%',
-                'description' => 'Discount percentage on products for the affiliated user.',
-                'required' => true,
+                // TODO: Remove `[WIP]`, Make it required, and enable it when this feature is implemented.
+                'description' => '[WIP] Discount percentage on products for the affiliated user.',
+                'required' => false,
+                'disabled' => true,
                 'validation' => 'integer|min:0|max:100',
             ],
             [
@@ -72,16 +77,15 @@ class Affiliates extends Extension
 
     public function disabled()
     {
-        Log::info("Disabled");
-        // Rollback Migrations - Dev only (TODO: REMOVE BEFORE PUSHING)
-        Artisan::call('migrate:rollback', ['--path' => 'extensions/Others/Affiliates/database/migrations/2024_12_25_092112_create_affiliate_referrals_table.php']);
-        Artisan::call('migrate:rollback', ['--path' => 'extensions/Others/Affiliates/database/migrations/2024_12_25_075634_create_affiliates_table.php']);
     }
 
     public function boot()
     {
         require __DIR__ . '/routes/web.php';
         View::addNamespace('affiliates', __DIR__ . '/resources/views');
+        Lang::addNamespace('affiliates', __DIR__ . '/resources/lang');
+
+        Livewire::component('affiliate', AffiliateComponent::class);
 
         User::resolveRelationUsing('affiliate', function (User $userModel) {
             return $userModel->hasOne(Affiliate::class, 'user_id');
@@ -89,9 +93,20 @@ class Affiliates extends Extension
 
         ExtensionHelper::registerMiddleware(AffiliatesMiddleware::class);
 
+        // Listen for UserCreated and InvoicePaid events
+        Event::listen(
+            UserCreated::class,
+            ReferUserByAffiliate::class,
+        );
+        Event::listen(
+            InvoicePaid::class,
+            RewardAffiliate::class,
+        );
+
+        // Hook onto account navigation
         Event::listen('navigation.account', function () {
             return [
-                'name' => 'Affiliate',
+                'name' => __('affiliates::affiliate.affiliate'),
                 'route' => 'affiliate.index',
             ];
         });

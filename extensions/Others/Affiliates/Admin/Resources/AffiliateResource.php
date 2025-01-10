@@ -76,11 +76,17 @@ class AffiliateResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('user.name'),
+                TextColumn::make('user.name')->description(function (Affiliate $affiliate) {
+                    if (count($affiliate->earnings) <= 0) return null;
+
+                    return "Earnings - " . implode(', ', array_map(function ($key, $value) {
+                        return "$key: $value";
+                    }, array_keys($affiliate->earnings), $affiliate->earnings));
+                }),
                 TextColumn::make('code')
                     ->badge(),
-                TextColumn::make('earnings')
-                    ->numeric(),
+                TextColumn::make('referrals_count')
+                    ->counts('referrals'),
                 TextColumn::make('visitors')
                     ->numeric(),
                 TextColumn::make('created_at')

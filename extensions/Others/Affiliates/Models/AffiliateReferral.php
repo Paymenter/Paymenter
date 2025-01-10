@@ -34,8 +34,8 @@ class AffiliateReferral extends Model
     public function earnings(): Attribute
     {
         return Attribute::make(
-            get: function (): float {
-                $earnings = 500;
+            get: function (): array {
+                $earnings = [];
 
                 /** @var Collection */
                 $invoices = $this->referredUser->invoices;
@@ -43,12 +43,15 @@ class AffiliateReferral extends Model
                 $reward_percentage = $this->affiliate->reward ?: $extension->config('default_reward');
 
                 $invoices->each(function ($invoice) use (&$earnings, $reward_percentage) {
-                    if (!$invoice->isPaid()) return;
-                    $earnings += $invoice->total() * $reward_percentage / 100;
+                    if ($invoice->status !== 'paid') return;
+                    if (!isset($earnings[$invoice->currency_code])) $earnings[$invoice->currency_code] = 0;
+                    $earnings[$invoice->currency_code] += $invoice->total * $reward_percentage / 100;
                 });
 
-                // Round to 2 decimal places
-                $earnings = round($earnings, 2);
+                foreach ($earnings as $currency => $total) {
+                    // Round to 2 decimal places
+                    $earnings[$currency] = round($total, 2);
+                }
 
                 return $earnings;
             },

@@ -44,7 +44,13 @@ class ReferralsRelationManager extends RelationManager
             ->recordTitleAttribute('affiliate_id')
             ->columns([
                 TextColumn::make('referredUser.name'),
-                TextColumn::make('earnings')->numeric(),
+                TextColumn::make('earnings')->formatStateUsing(function (AffiliateReferral $referral) {
+                    if (count($referral->affiliate->earnings) <= 0) return null;
+
+                    return implode(', ', array_map(function ($key, $value) {
+                        return "$key: $value";
+                    }, array_keys($referral->affiliate->earnings), $referral->affiliate->earnings));
+                }),
                 TextColumn::make('created_at')
                     ->label('Signed Up')
                     ->since()
@@ -57,7 +63,6 @@ class ReferralsRelationManager extends RelationManager
                 Tables\Actions\CreateAction::make(),
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([

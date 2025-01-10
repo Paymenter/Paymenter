@@ -3,36 +3,58 @@
 namespace Paymenter\Extensions\Others\Affiliates\Livewire\Affiliates;
 
 use App\Helpers\ExtensionHelper;
+use App\Livewire\Component;
 use Illuminate\Support\Facades\Auth;
-use Livewire\Component;
+use Illuminate\Validation\Rule;
+use Illuminate\Support\Str;
+use Paymenter\Extensions\Others\Affiliates\Models\Affiliate as AffiliateModel;
 
 class Affiliate extends Component
 {
+    public string $signup_type = 'custom';
+
+    public ?AffiliateModel $affiliate;
+
     public string $referral_code = '';
 
-    public function rules()
+    public function mount()
     {
-        return [
-            'referral_code' => 'required|string|unique|min:5|max:25',
-        ];
-    }
-
-    public function signup()
-    {
-        dd('WIP');
-        $this->validate();
-
-        $this->notify(__('affiliate.signup-success'));
+        $this->affiliate = Auth::user()->affiliate;
+        $this->signup_type = ExtensionHelper::getExtension('other', 'Affiliates')->config('type');
     }
 
     public function render()
     {
-        $affiliate = Auth::user()->affiliate;
-        $extension = ExtensionHelper::getExtension('other', 'Affiliates');
+        return view('affiliates::index');
+    }
 
-        return view('affiliates::index', [
-            'affiliate' => $affiliate,
-            'signup_type' => $extension->config('type')
+    public function signup()
+    {
+        $this->validate();
+
+        /**
+         * @var App\Models\User
+         */
+        $user = Auth::user();
+        if ($user->affiliate) {
+            $this->notify(__('affiliates::affiliate.you-are-already-affiliated'));
+            return;
+        }
+
+        $this->affiliate = $user->affiliate()->create([
+            'code' => $this->signup_type === 'custom' ? $this->referral_code : Str::random(10),
+            'visitors' => 0,
+            'reward' => null,
+            'discount' => null,
         ]);
+
+        $this->notify(__('affiliates::affiliate.signup-success'));
+    }
+
+    public function rules()
+    {
+        return [
+            'referral_code' => [Rule::requiredIf($this->signup_type === 'custom'), 'alpha_num:ascii', 'unique:affiliates,code', 'min:5', 'max:25'],
+        ];
     }
 }

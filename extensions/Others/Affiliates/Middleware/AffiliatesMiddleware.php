@@ -36,7 +36,7 @@ class AffiliatesMiddleware
             $affiliate->increment('visitors');
 
             // Set affiliate cookie
-            Cookie::queue('referral_code', request('ref'), 60 * 24 * 90);
+            Cookie::queue('referred_by', request('ref'), 60 * 24 * 90);
         } catch (ModelNotFoundException $e) {
             //
         }
