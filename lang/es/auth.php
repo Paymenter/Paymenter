@@ -13,40 +13,40 @@ return [
     |
     */
 
-    'failed' => 'These credentials do not match our records.',
-    'password' => 'The provided password is incorrect.',
-    'throttle' => 'Too many login attempts. Please try again in :seconds seconds.',
+    'failed' => 'Estas credenciales no coinciden con nuestros registros.',
+    'password' => 'La contraseña introducida es incorrecta.',
+    'throttle' => 'Demasiados intentos de inicio de sesión. Por favor, inténtalo de nuevo en :seconds segundos.',
 
-    'sign_in' => 'Sign in',
-    'sign_in_title' => 'Sign in to your account',
-    'or_sign_in_with' => 'Or sign in with',
-    'forgot_password' => 'Forgot your password?',
-    'dont_have_account' => 'Don\'t have an account?',
-    'already_have_account' => 'Already have an account?',
+    'sign_in' => 'Inicia sesión',
+    'sign_in_title' => 'Inicia sesión en tu cuenta',
+    'or_sign_in_with' => 'O inicia sesión con',
+    'forgot_password' => '¿Has olvidado tu contraseña?',
+    'dont_have_account' => '¿No tienes una cuenta?',
+    'already_have_account' => '¿Ya tienes una cuenta?',
 
-    'sign_up' => 'Sign up',
-    'sign_up_title' => 'Create your account',
+    'sign_up' => 'Regístrate',
+    'sign_up_title' => 'Crear una cuenta',
 
     'logout' => 'Cerrar sesión',
 
     'input' => [
         'email' => 'Email',
-        'email_label' => 'Email Address',
-        'password' => 'Password',
+        'email_label' => 'Correo electrónico',
+        'password' => 'Contraseña',
     ],
 
     'oauth' => [
-        'unverified_discord_account' => 'Your Discord account is not verified.',
-        'account_not_registered' => 'You are not registered on this site.',
+        'unverified_discord_account' => 'Tu cuenta de Discord no está verificada.',
+        'account_not_registered' => 'No estás registrado en este sitio.',
     ],
 
-    'reset_password' => 'Reset password',
+    'reset_password' => 'Restablecer contraseña',
 
     'verify_2fa' => 'Verificar 2FA',
     'verify' => 'Verificar',
 
     'verification' => [
-        'notice' => 'Verify your email address',
+        'notice' => 'Verificar tu dirección de correo electrónico',
         'sent' => 'A new verification link has been sent to your email address.',
         'check_your_email' => 'Before proceeding, please check your email for a verification link.',
         'not_received' => 'If you did not receive the email you can request another verification email.',
