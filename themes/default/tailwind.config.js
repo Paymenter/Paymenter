@@ -7,7 +7,6 @@ import tailwindcssforms from '@tailwindcss/forms';
 module.exports = {
     content: [
         path.resolve(__dirname, "./**/*.{blade.php,js,vue,ts}"),
-        './vendor/rappasoft/laravel-livewire-tables/resources/views/**/*.blade.php',
         './extensions/**/*.blade.php',
     ],
 
