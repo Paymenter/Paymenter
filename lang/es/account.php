@@ -3,7 +3,7 @@
 return [
     'personal_details' => 'Datos personales',
     'security' => 'Seguridad',
-    'credits' => 'Credits',
+    'credits' => 'Créditos',
 
     'change_password' => 'Cambiar contraseña',
 
@@ -31,8 +31,8 @@ return [
         'two_factor_code' => 'Ingresa el código de tu aplicación de autenticación',
         'two_factor_code_placeholder' => 'Tu código de autenticación de dos factores',
 
-        'currency' => 'Currency',
-        'amount' => 'Amount',
+        'currency' => 'Divisa',
+        'amount' => 'Importe',
     ],
 
     'notifications' => [
@@ -44,8 +44,8 @@ return [
         'session_logged_out' => 'La sesión ha sido cerrada.',
     ],
 
-    'no_credit' => 'You have no credits.',
-    'add_credit' => 'Add credit',
-    'credit_deposit' => 'Credit deposit (:currency)',
+    'no_credit' => 'No tienes créditos.',
+    'add_credit' => 'Añadir crédito',
+    'credit_deposit' => 'Depósito de crédito (:currency)',
 
 ];
