@@ -43,7 +43,7 @@ class PriceSynth extends Synth
         $price->discount = $instance['discount'];
         $price->original_price = $instance['original_price'];
         $price->original_setup_fee = $instance['original_setup_fee'];
-        
+
         return $price;
     }
 }
