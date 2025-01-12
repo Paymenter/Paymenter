@@ -54,7 +54,9 @@ class EventHelper
 
         $view = '';
         foreach ($eventItems as $item) {
-            $view .= $item['view'];
+            if (isset($item['view'])) {
+                $view .= $item['view'];
+            }
         }
 
         // Now we smash them together and return it as html

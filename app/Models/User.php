@@ -81,7 +81,7 @@ class User extends Authenticatable implements FilamentUser, HasAvatar
     public function avatar(): Attribute
     {
         return Attribute::make(
-            get: fn () => 'https://www.gravatar.com/avatar/' . md5(strtolower($this->email)) . '?d=' . urlencode(config('settings.gravatar_default')),
+            get: fn () => 'https://www.gravatar.com/avatar/' . md5(strtolower($this->email)) . '?d=' . urlencode((string) config('settings.gravatar_default')),
         );
     }
 
