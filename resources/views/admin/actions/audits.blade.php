@@ -51,7 +51,7 @@
                                 </span>
                                 @else
                             @foreach ($audit->getModified() as $key => $value)
-                                <div class="my-2 p-2 bg-gray-700 rounded">
+                                <div class="my-2 p-2 bg-background-secondary rounded">
                                     <span class="font-semibold">{{ $key }}</span> changed from
                                     <div class="flex flex-wrap items-center gap-2">
                                         <span class="text-red-300 p-1 rounded">

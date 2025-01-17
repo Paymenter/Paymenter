@@ -1,27 +1,27 @@
 <div>
     <div class="bg-primary-800 p-6 rounded-lg mt-2">
         <div class="flex flex-col md:flex-row justify-between">
-            <h1 class="text-2xl font-semibold text-white">{{ __('services.services') }}</h1>
+            <h1 class="text-2xl font-semibold">{{ __('services.services') }}</h1>
         </div>
 
         <div class="grid md:grid-cols-2 gap-4 my-4">
             <div>
-                <h4 class="text-lg font-semibold text-white">{{ __('services.product_details') }}:</h4>
+                <h4 class="text-lg font-semibold">{{ __('services.product_details') }}:</h4>
                 <div class="mt-2">
-                    <div class="flex items-center text-gray-400">
+                    <div class="flex items-center text-base">
                         <span class="mr-2">{{ __('services.name') }}:</span>
-                        <span class="text-gray-300">{{ $service->product->name }}</span>
+                        <span class="text-base/50">{{ $service->product->name }}</span>
                     </div>
-                    <div class="flex items-center text-gray-400">
+                    <div class="flex items-center text-base">
                         <span class="mr-2">{{ __('services.price') }}:</span>
-                        <span class="text-gray-300">{{ $service->formattedPrice }}</span>
+                        <span class="text-base/50">{{ $service->formattedPrice }}</span>
                     </div>
-                    <div class="flex items-center text-gray-400">
+                    <div class="flex items-center text-base">
                         <span class="mr-2">{{ __('services.billing_cycle') }}:</span>
-                        <span class="text-gray-300">Every {{ $service->plan->billing_period > 1 ? $service->plan->billing_period : '' }}
+                        <span class="text-base/50">Every {{ $service->plan->billing_period > 1 ? $service->plan->billing_period : '' }}
                             {{ Str::plural($service->plan->billing_unit, $service->plan->billing_period) }}</span>
                     </div>
-                    <div class="flex items-center text-gray-400">
+                    <div class="flex items-center text-base">
                         <span class="mr-2">{{ __('services.status') }}:</span>
                         <span
                             class="font-semibold @if ($service->status == 'active') text-green-500 @elseif($service->status == 'cancelled') text-red-500  @else text-orange-500 @endif">
@@ -32,7 +32,7 @@
             </div>
             @if($service->cancellable || $service->upgradable || count($buttons) > 0)
             <div>
-                <h4 class="text-lg font-semibold text-white">{{ __('services.actions') }}:</h4>
+                <h4 class="text-lg font-semibold">{{ __('services.actions') }}:</h4>
                 <div class="mt-2 flex flex-row gap-2 flex-wrap">
                     @if($service->upgradable)
                         <x-button.primary class="h-fit !w-fit" wire:click="openModal('services.upgrade')">
@@ -95,7 +95,7 @@
                 <div class="flex w-fit mb-2 flex-row flex-wrap">
                     @foreach ($views as $view)
                         <button wire:click="changeView('{{ $view['name'] }}')"
-                            class="px-4 py-2 -mb-px focus:outline-none {{ $view['name'] == $currentView ? 'border-b-2 border-gray-400 text-white' : 'text-gray-400 border-b border-gray-500 ' }}">
+                            class="px-4 py-2 -mb-px focus:outline-none {{ $view['name'] == $currentView ? 'border-b-2 border-gray-400 text-white' : 'text-base border-b border-gray-500 ' }}">
                             {{ $view['label'] }}
                         </button>
                     @endforeach

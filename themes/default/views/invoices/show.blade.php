@@ -21,13 +21,13 @@
     @endif
     <div class="flex justify-end">
         <div class="max-w-[200px] w-full text-right">
-            <span class="cursor-pointer text-gray-400 underline" wire:click="downloadPDF">
+            <span class="cursor-pointer text-base underline" wire:click="downloadPDF">
                 Download PDF
             </span>
         </div>
     </div>
     
-    <div class="bg-primary-800 p-12 rounded-lg mt-2">
+    <div class="bg-background-secondary p-12 rounded-lg mt-2">
         <div class="sm:flex justify-between pr-4 pt-4">
             <h1 class="text-2xl font-bold sm:text-3xl">{{ __('invoices.invoice', ['id' => $invoice->id]) }}</h1>
             <div class="mt-4 sm:mt-0 text-right">
@@ -36,13 +36,13 @@
                 <p class="text-sm">{{ $invoice->user->city }} {{ $invoice->user->zip }}</p>
                 <p class="text-sm">{{ $invoice->user->state }} {{ $invoice->user->country }}</p>
 
-                <p class="mt-4 text-gray-400">{{ __('invoices.invoice_date')}}: {{ $invoice->created_at->format('d M Y') }}</p>
+                <p class="mt-4 text-base">{{ __('invoices.invoice_date')}}: {{ $invoice->created_at->format('d M Y') }}</p>
             </div>
         </div>
         <div class="sm:flex justify-between pr-4 pt-4">
             <div class="mt-6">
                 <p class="uppercase font-bold">{{ __('invoices.bill_to') }}</p>
-                <address class="text-gray-400 mt-4">
+                <address class="text-base mt-4">
                     <p>{{ config('settings.company_name') }}</p>
                     <p>{{ config('settings.company_address') }}</p>
                     <p>{{ config('settings.company_city') }} {{ config('settings.company_zip') }}</p>
@@ -118,7 +118,7 @@
                     @foreach ($invoice->items as $item)
                         <tr>
                             <td class="p-4 font-normal whitespace-nowrap">{{ $item->description }}</td>
-                            <td class="p-4 font-normal whitespace-nowrap text-gray-400">{{ $item->formattedPrice }}
+                            <td class="p-4 font-normal whitespace-nowrap text-base">{{ $item->formattedPrice }}
                             </td>
                             <td class="p-4 font-normal whitespace-nowrap">{{ $item->quantity }}</td>
                             <td class="p-4 whitespace-nowrap font-semibold">{{ $item->formattedTotal }}</td>
@@ -130,13 +130,13 @@
         <div class="space-y-3 sm:text-right sm:ml-auto sm:w-72 mt-10">
             @if ($invoice->formattedTotal->tax > 0)
                 <div class="flex justify-between">
-                    <div class="text-sm font-medium text-gray-500 uppercase dark:text-gray-400">{{ __('invoices.subtotal') }}</div>
+                    <div class="text-sm font-medium text-gray-500 uppercase dark:text-base">{{ __('invoices.subtotal') }}</div>
                     <div class="text-base font-medium text-gray-900 dark:text-white">
                         {{ $invoice->formattedTotal->format($invoice->formattedTotal->price - $invoice->formattedTotal->tax) }}
                     </div>
                 </div>
                 <div class="flex justify-between">
-                    <div class="text-sm font-medium text-gray-500 uppercase dark:text-gray-400">
+                    <div class="text-sm font-medium text-gray-500 uppercase dark:text-base">
                         {{ \App\Classes\Settings::tax()->name }}
                     </div>
                     <div class="text-base font-medium text-gray-900 dark:text-white">

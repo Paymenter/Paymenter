@@ -9,7 +9,7 @@
                 </div>
             </div>
             <div>
-                <p class="text-sm text-gray-400 text-right">{{ $session->last_activity->diffForHumans() }}</p>
+                <p class="text-sm text-base text-right">{{ $session->last_activity->diffForHumans() }}</p>
                 <p class="text-sm text-right">{{ $session->ip_address }}</p>
             </div>  
         </a>

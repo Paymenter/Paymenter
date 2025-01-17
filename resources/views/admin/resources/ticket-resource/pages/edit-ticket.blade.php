@@ -4,7 +4,7 @@
             <div class="flex flex-col gap-4 max-h-[60vh] overflow-y-auto pr-4">
                 @foreach ($this->record->messages()->orderBy('created_at', 'desc')->with('user')->get() as $message)
                     <div
-                        class="p-4 rounded-lg w-full dark:bg-gray-900 bg-gray-100 max-w-[80%]  {{ $message->user_id === $this->record->user_id ? 'ml-auto' : 'mr-auto' }}">
+                        class="bg-background-secondary hover:bg-background-secondary/80 border border-neutral p-4 rounded-lg w-full max-w-[80%]  {{ $message->user_id === $this->record->user_id ? 'ml-auto' : 'mr-auto' }}">
                         <div class="flex justify-between">
                             <div>
                                 <a class="text-lg font-semibold hover:underline"

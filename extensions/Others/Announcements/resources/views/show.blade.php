@@ -1,10 +1,10 @@
 <div class="mx-auto container mt-4">
-    <div class="bg-background-secondary p-4 rounded-md">
+    <div class="bg-background-secondary hover:bg-background-secondary/80 border border-neutral p-4 rounded-lg">
         <div class="flex flex-row justify-between mb-6">
             <h2 class="text-xl font-bold">{{ $announcement->title }}</h2>
-            <p class="text-sm text-gray-400">{{ $announcement->published_at->diffForHumans() }}</p>
+            <p class="text-sm text-base">{{ $announcement->published_at->diffForHumans() }}</p>
         </div>
-        <article class="prose prose-invert mb-2 max-w-full">
+        <article class="prose dark:prose-invert mb-2 max-w-full">
             {!! $announcement->content !!}
         </article>
     </div>

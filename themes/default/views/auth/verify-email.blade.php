@@ -6,7 +6,7 @@
     <form class="flex flex-col gap-2 mt-4" wire:submit.prevent="resend" id="verify-email">
         <x-captcha :form="'verify-email'" />
 
-        <p class="text-gray-400">{{ __('auth.verification.not_received') }}</p>
+        <p class="text-base">{{ __('auth.verification.not_received') }}</p>
         <x-button.primary class="w-full" type="submit">{{ __('auth.verification.request_another') }}</x-button.primary>
     </form>
 </div>

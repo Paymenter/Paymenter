@@ -6,7 +6,7 @@
             <div class="flex flex-col gap-4 max-h-[60vh] overflow-y-auto pr-4" wire:poll.5s>
                 @foreach ($ticket->messages()->orderBy('created_at', 'desc')->with('user')->get() as $message)
                     <div
-                        class="p-4 rounded-lg w-full bg-gray-900 max-w-[80%]  {{ $message->user_id === $ticket->user_id ? 'ml-auto' : 'mr-auto' }}">
+                        class="bg-background-secondary hover:bg-background-secondary/80 border border-neutral p-4 rounded-lg w-full max-w-[80%]  {{ $message->user_id === $ticket->user_id ? 'ml-auto' : 'mr-auto' }}">
                         <div class="flex items-center justify-between">
                             <div>
                                 <h2 class="text-lg font-semibold">{{ $message->user->name }}</h2>

@@ -3,7 +3,7 @@
     wire:submit="submit" id="login">
     <div class="flex flex-col items-center mt-4 mb-10">
         <x-logo />
-        <h1 class="text-2xl text-center text-white mt-2">{{ __('auth.sign_in_title') }} </h1>
+        <h1 class="text-2xl text-center mt-2">{{ __('auth.sign_in_title') }} </h1>
     </div>
     <x-form.input name="email" type="email" :label="__('general.input.email')" :placeholder="__('general.input.email_placeholder')" wire:model="email"
         hideRequiredIndicator required />
@@ -44,7 +44,7 @@
             </div>
         </div>
     @endif
-    <div class="text-white text-center rounded-md py-2 mt-6 text-sm">
+    <div class="text-base text-center rounded-md py-2 mt-6 text-sm">
         {{ __('auth.dont_have_account') }}
         <a class="text-sm text-secondary-500 text-secondary hover:underline" href="{{ route('register') }}"
             wire:navigate>

@@ -13,8 +13,8 @@
     .cm-s-easymde
     .cm-formatting-code
     + .cm-comment:not(.cm-formatting-code) {
-    background-color: var(--primary-300);
-    color: var(--primary-300);
+    background-color: hsl(var(--color-background-secondary) / var(--tw-text-opacity));
+    color: hsl(var(--color-base) / var(--tw-text-opacity));
 }
 
 .EasyMDEContainer .cm-s-easymde .cm-comment {
@@ -23,11 +23,11 @@
 
 .EasyMDEContainer .cm-s-easymde .cm-formatting-code-block,
 .EasyMDEContainer .cm-s-easymde .cm-tab + .cm-comment {
-    @apply bg-gray-700 text-inherit;
+    @apply bg-background-secondary border-0 border-neutral text-inherit;
 }
 
 .EasyMDEContainer .CodeMirror {
-    @apply border-none bg-gray-700 px-3 py-1.5 text-inherit !rounded-b-lg !border-0;
+    @apply bg-background-secondary px-3 py-1.5 text-inherit !rounded-b-lg !border-0;
 }
 
 .EasyMDEContainer .CodeMirror-scroll {
@@ -35,7 +35,7 @@
 }
 
 .EasyMDEContainer .editor-toolbar {
-    @apply flex gap-x-1 overflow-x-auto rounded-none border-0 border-b px-2.5 py-2 bg-gray-700 rounded-t-lg;
+    @apply flex gap-x-1 overflow-x-auto rounded-none border-0 border-b border-neutral px-2.5 py-2 bg-background-secondary rounded-t-lg;
 }
 
 .EasyMDEContainer .editor-toolbar button {
@@ -43,11 +43,11 @@
 }
 
 .EasyMDEContainer .editor-toolbar button.active {
-    @apply bg-gray-800
+    @apply bg-neutral
 }
 
 .EasyMDEContainer .editor-toolbar button::before {
-    @apply block h-4 w-4 bg-gray-700 dark:bg-gray-300;
+    @apply block h-4 w-4 bg-background-secondary;
     content: '';
     mask-position: center;
     mask-repeat: no-repeat;
@@ -62,7 +62,7 @@
     display: block;
     height: 1rem;
     width: 1rem;
-    background-color: var(--primary-300);
+    background-color: hsl(var(--color-base) / var(--tw-text-opacity));
 }
 
 .EasyMDEContainer .editor-toolbar .bold::before {

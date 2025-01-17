@@ -9,7 +9,7 @@
                             class="w-full object-cover object-center rounded-md">
                     @endif
                     <h2 class="text-xl font-bold">{{ $product->name }}</h2>
-                    <article class="prose prose-invert">
+                    <article class="prose dark:prose-invert">
                         {!! $product->description !!}
                     </article>
                     <h3 class="text-lg font-semibold text-primary-300">

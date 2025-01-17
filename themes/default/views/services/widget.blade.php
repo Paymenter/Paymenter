@@ -1,15 +1,15 @@
 <div class="space-y-4">
     @foreach ($services as $service)
     <a href="{{ route('services.show', $service) }}" wire:navigate>
-        <div class="bg-[#1e293b] hover:bg-background-secondary/80 p-4 rounded-lg mb-4">
+        <div class="bg-background-secondary hover:bg-background-secondary/80 border border-neutral p-4 rounded-lg mb-4">
         <div class="flex items-center justify-between mb-2">
             <div class="flex items-center gap-3">
-            <div class="bg-[#2d3b4f] p-2 rounded-lg">
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-white" viewBox="0 0 24 24" fill="currentColor">
+            <div class="bg-secondary/10 p-2 rounded-lg">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-secondary" viewBox="0 0 24 24" fill="currentColor">
                     <path d="M12 1L21.5 6.5V17.5L12 23L2.5 17.5V6.5L12 1ZM5.49388 7.0777L12.0001 10.8444L18.5062 7.07774L12 3.311L5.49388 7.0777ZM4.5 8.81329V16.3469L11.0001 20.1101V12.5765L4.5 8.81329ZM13.0001 20.11L19.5 16.3469V8.81337L13.0001 12.5765V20.11Z"></path>
                 </svg>
             </div>
-            <span class="text-white font-medium">{{ $service->product->name }}</span>
+            <span class="font-medium">{{ $service->product->name }}</span>
             </div>
             <div class="w-5 h-5 rounded-md p-0.5
                 @if ($service->status == 'active') text-success bg-success/20 
@@ -31,7 +31,7 @@
                 @endif
             </div>
         </div>
-        <p class="text-gray-400 text-sm">Product(s): {{ $service->product->category->name }} - Every {{ $service->plan->billing_period > 1 ? $service->plan->billing_period : '' }}
+        <p class="text-base text-sm">Product(s): {{ $service->product->category->name }} - Every {{ $service->plan->billing_period > 1 ? $service->plan->billing_period : '' }}
                             {{ Str::plural($service->plan->billing_unit, $service->plan->billing_period) }}</p>
         </div>
     </a>
