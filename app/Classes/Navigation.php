@@ -19,19 +19,12 @@ class Navigation
                 'name' => __('navigation.home'),
                 'route' => 'home',
                 'children' => [],
-            ],
-        ];
-
-        if (Auth::user()) {
-            $routes[] = [
+            ], [
                 'name' => __('navigation.dashboard'),
                 'route' => 'dashboard',
                 'children' => [],
-            ];
-        }
-
-        if (count($categories) > 0) {
-            $routes[] = [
+                'condition' => Auth::user() !== null,
+            ], [
                 'name' => __('navigation.shop'),
                 'children' => $categories->map(function ($category) {
                     return [
@@ -40,8 +33,9 @@ class Navigation
                         'params' => ['category' => $category->slug],
                     ];
                 })->toArray(),
-            ];
-        }
+                'condition' => count($categories) > 0,
+            ],
+        ];
 
         $routes = EventHelper::itemEvent('navigation', $routes);
 
@@ -67,15 +61,13 @@ class Navigation
                 'route' => 'account',
                 'children' => [],
             ],
-        ];
-
-        if (Auth::user()->role_id) {
-            $routes[] = [
+            [
                 'name' => __('navigation.admin'),
                 'route' => 'filament.admin.pages.dashboard',
                 'spa' => false,
-            ];
-        }
+                'condition' => Auth::user()->role_id !== null
+            ],
+        ];
 
         $routes = EventHelper::itemEvent('navigation.account-dropdown', $routes);
 
@@ -89,6 +81,11 @@ class Navigation
             [
                 'name' => __('account.personal_details'),
                 'route' => 'account',
+            ],
+            [
+                'name' => __('account.credits'),
+                'route' => 'account.credits',
+                'condition' => config('settings.credits_enabled')
             ],
             [
                 'name' => __('account.security'),
