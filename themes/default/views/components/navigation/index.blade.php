@@ -41,6 +41,7 @@
                             @endforeach
                         </div>
                     </div>
+                <x-theme-toggle />
                 @else
                     <x-navigation.link :href="route($nav['route'], $nav['params'] ?? null)" :spa="isset($nav['spa']) ? $nav['spa'] : true">{{ $nav['name'] }}</x-navigation.link>
                 @endif
