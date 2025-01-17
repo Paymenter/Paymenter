@@ -80,6 +80,12 @@ class Navigation
                         'icon' => 'ri-server-fill',
                         'children' => [],
                     ],
+                    [
+                        'name' => __('invoices.invoices'),
+                        'route' => 'invoices',
+                        'icon' => 'ri-receipt-fill',
+                        'children' => [],
+                    ],
                 ]
             ];
 
