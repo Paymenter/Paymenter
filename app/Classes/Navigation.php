@@ -37,6 +37,10 @@ class Navigation
             ],
         ];
 
+        $routes = array_filter($routes, function ($route) {
+            return isset($route['condition']) ? $route['condition'] : true;
+        });
+
         $routes = EventHelper::itemEvent('navigation', $routes);
 
         return Navigation::markActiveRoute($routes);
@@ -69,6 +73,10 @@ class Navigation
             ],
         ];
 
+        $routes = array_filter($routes, function ($route) {
+            return isset($route['condition']) ? $route['condition'] : true;
+        });
+
         $routes = EventHelper::itemEvent('navigation.account-dropdown', $routes);
 
         return Navigation::markActiveRoute($routes);
@@ -92,6 +100,10 @@ class Navigation
                 'route' => 'account.security',
             ],
         ];
+
+        $routes = array_filter($routes, function ($route) {
+            return isset($route['condition']) ? $route['condition'] : true;
+        });
 
         $routes = EventHelper::itemEvent('navigation.account', $routes);
 
