@@ -20,14 +20,23 @@
     {!! hook('head') !!}
 </head>
 
-<body class="w-full bg-primary-900 text-white min-h-screen flex flex-col">
+<body class="w-full bg-background text-base min-h-screen flex flex-col">
     {!! hook('body') !!}
     <x-navigation />
-    <main class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
-        {{ $slot }}
-    </main>
-    <x-navigation.footer />
-    <x-notification />
+    <div class="w-full flex flex-grow">
+        @if (request()->routeIs('dashboard', 'services', 'services.*', 'invoices', 'invoices.*', 'tickets', 'tickets.*', 'account'))
+            <x-navigation.sidebar />
+        @endif
+        <div class="{{ request()->routeIs('dashboard', 'services', 'services.*', 'invoices', 'invoices.*', 'tickets', 'tickets.*', 'account') ? 'md:ml-64' : '' }} flex flex-col flex-grow">
+            <main class="container mt-24 mx-auto">
+                {{ $slot }}
+            </main>
+            <x-notification />
+            <div class="py-8">
+                <x-navigation.footer />
+            </div>
+        </div>
+    </div>
     {!! hook('footer') !!}
 </body>
 
