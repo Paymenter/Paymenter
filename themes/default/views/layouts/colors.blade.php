@@ -2,7 +2,7 @@
     :root {
         /* Branding Colors (Light) */
         --color-primary: {{ str_replace(',', '', theme('primary', '229 100% 64%')) }};
-        --color-secondary: {{ str_replace(',', '', theme('secondary', '0 0% 92%')) }};
+        --color-secondary: {{ str_replace(',', '', theme('secondary', '237 33% 60%')) }};
 
         /* Neutral Colors - Borders, Accents... (Light) */
         --color-neutral: {{ str_replace(',', '', theme('neutral', '220 25% 85%')) }};
@@ -21,13 +21,13 @@
 
         /* Background Colors (Light) */
         --color-background: {{ str_replace(',', '', theme('background', '100 100% 100%')) }};
-        --color-background-secondary: {{ str_replace(',', '', theme('background-secondary', '0 0% 95%')) }};
+        --color-background-secondary: {{ str_replace(',', '', theme('background-secondary', '0 0% 97%')) }};
     }
 
     html.dark {
         /* Branding Colors (Dark) */
         --color-primary: {{ str_replace(',', '', theme('dark-primary', '229 100% 64%')) }};
-        --color-secondary: {{ str_replace(',', '', theme('dark-secondary', '222 32% 15%')) }};
+        --color-secondary: {{ str_replace(',', '', theme('dark-secondary', '237 33% 60%')) }};
 
         /* Neutral Colors - Borders, Accents... (Dark) */
         --color-neutral: {{ str_replace(',', '', theme('dark-neutral', '220 25% 29%')) }};
@@ -39,6 +39,6 @@
 
         /* Background Colors (Dark) */
         --color-background: {{ str_replace(',', '', theme('dark-background', '221 39% 11%')) }};
-        --color-background-secondary: {{ str_replace(',', '', theme('dark-background-secondary', '222 32% 15%')) }};
+        --color-background-secondary: {{ str_replace(',', '', theme('dark-background-secondary', '217 33% 16%')) }};
     }
 </style>
