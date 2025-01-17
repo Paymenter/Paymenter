@@ -67,7 +67,7 @@
         x-ref="selectButton"
         @click="selectOpen = !selectOpen"
         :class="{ 'ring-2 ring-offset-2 ring-neutral-800': selectOpen }"
-        class="relative w-full min-h-[38px] py-2 pl-3 pr-10 text-left bg-secondary border border-neutral rounded-md shadow-sm cursor-pointer text-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-neutral-800"
+        class="relative w-full min-h-[38px] py-2 pl-3 pr-10 text-left bg-background-secondary border border-neutral rounded-md shadow-sm cursor-pointer text-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-neutral-800"
         type="button"
     >
         <span x-text="selectableItems.find(item => item.value === selectedValue)?.label ?? '{{ $placeholder ?? 'Select option' }}'" class="block truncate"></span>
