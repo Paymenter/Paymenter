@@ -630,7 +630,7 @@ class MigrateOldData extends Command
                     default => $old_ext_setting['key'],
                 };
 
-                $setting = array_filter($extension_cfg, fn($ext) => $ext['name'] == $old_ext_setting['key']);
+                $setting = array_filter($extension_cfg, fn ($ext) => $ext['name'] == $old_ext_setting['key']);
                 $setting = array_merge(...$setting);
 
                 $extension_settings[] = [
@@ -1264,7 +1264,7 @@ class MigrateOldData extends Command
         $this->info('Migrating Ticket Messages...');
         $this->migrateInBatch('ticket_messages', 'SELECT * FROM ticket_messages LIMIT :limit OFFSET :offset', function ($records) {
 
-            $records = array_filter($records, fn($record) => !is_null($record['message']) && $record['message'] !== '');
+            $records = array_filter($records, fn ($record) => !is_null($record['message']) && $record['message'] !== '');
 
             $records = array_map(function ($record) {
                 return [
@@ -1304,9 +1304,11 @@ class MigrateOldData extends Command
                 if (in_array($record['country'], $countries)) {
                     $this->error("Duplicate country found: {$record['country']}," .
                         " Tax Rate with ID: {$record['id']} will not be migrated.");
+
                     return false;
                 }
                 $countries[] = $record['country'];
+
                 return true;
             });
 
