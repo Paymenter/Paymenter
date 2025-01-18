@@ -741,7 +741,7 @@ class MigrateOldData extends Command
         $this->info('Migrating Invoices, Invoice Items, and Invoice Transactions...');
 
         $this->migrateInBatch('invoices', 'SELECT * FROM invoices LIMIT :limit OFFSET :offset', function ($records) {
-            $invoice_ids = implode(',', array_keys($records));
+            $invoice_ids = implode(',', array_column($records, 'id'));
             $items_stmt = $this->pdo->prepare("SELECT
                 invoice_items.*,
                 order_products.id as service_id,
@@ -783,19 +783,21 @@ class MigrateOldData extends Command
                     return $item['invoice_id'] === $record['id'];
                 }));
 
-                $gateway = Gateway::where('name', $record['paid_with'])->get()->first();
-
+                
                 // Add the transaction details to invoice_transactions
-                $invoice_transactions[] = [
-                    'invoice_id' => $record['id'],
-                    'transaction_id' => $record['paid_reference'],
-                    'gateway_id' => $gateway ? $gateway->id : null,
-                    'amount' => $transaction_amount,
-                    'fee' => null,
+                if ($transaction_amount > 0 && $record['status'] === 'paid') {
+                    $gateway = Gateway::where('name', $record['paid_with'])->get()->first();
+                    $invoice_transactions[] = [
+                        'invoice_id' => $record['id'],
+                        'transaction_id' => $record['paid_reference'],
+                        'gateway_id' => $gateway ? $gateway->id : null,
+                        'amount' => $transaction_amount,
+                        'fee' => null,
 
-                    'created_at' => $record['created_at'],
-                    'updated_at' => $record['updated_at'],
-                ];
+                        'created_at' => $record['created_at'],
+                        'updated_at' => $record['updated_at'],
+                    ];
+                }
 
                 // Add the invoice items to invoice_items
                 $invoice_items = array_merge($invoice_items, $items);
