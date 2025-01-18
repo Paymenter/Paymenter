@@ -630,7 +630,7 @@ class MigrateOldData extends Command
                     default => $old_ext_setting['key'],
                 };
 
-                $setting = array_filter($extension_cfg, fn ($ext) => $ext['name'] == $old_ext_setting['key']);
+                $setting = array_filter($extension_cfg, fn($ext) => $ext['name'] == $old_ext_setting['key']);
                 $setting = array_merge(...$setting);
 
                 $extension_settings[] = [
@@ -1117,6 +1117,7 @@ class MigrateOldData extends Command
             $companyname
         ) {
             $properties = [];
+            $credits = [];
 
             $records = array_map(function ($record) use (
                 &$properties,
@@ -1199,6 +1200,15 @@ class MigrateOldData extends Command
                         'value' => $record['companyname'],
                     ]);
                 }
+                if ($record['credits']) {
+                    array_push($credits, [
+                        'user_id' => $record['id'],
+                        'amount' => $record['credits'],
+                        'currency_code' => $this->currency_code,
+                        'created_at' => $record['created_at'],
+                        'updated_at' => $record['updated_at'],
+                    ]);
+                }
 
                 // User Details
                 return [
@@ -1211,7 +1221,6 @@ class MigrateOldData extends Command
                     'email_verified_at' => $record['email_verified_at'],
                     'password' => $record['password'],
                     'tfa_secret' => $record['tfa_secret'],
-                    'credits' => $record['credits'],
                     'created_at' => $record['created_at'],
                     'updated_at' => $record['updated_at'],
                     'remember_token' => $record['remember_token'],
@@ -1220,6 +1229,7 @@ class MigrateOldData extends Command
 
             DB::table('users')->insert($records);
             DB::table('properties')->insert($properties);
+            DB::table('credits')->insert($credits);
         });
     }
 
@@ -1253,7 +1263,7 @@ class MigrateOldData extends Command
         $this->info('Migrating Ticket Messages...');
         $this->migrateInBatch('ticket_messages', 'SELECT * FROM ticket_messages LIMIT :limit OFFSET :offset', function ($records) {
 
-            $records = array_filter($records, fn ($record) => !is_null($record['message']) && $record['message'] !== '');
+            $records = array_filter($records, fn($record) => !is_null($record['message']) && $record['message'] !== '');
 
             $records = array_map(function ($record) {
                 return [
