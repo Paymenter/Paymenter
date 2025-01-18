@@ -1121,6 +1121,7 @@ class MigrateOldData extends Command
 
             $records = array_map(function ($record) use (
                 &$properties,
+                &$credits,
                 $address,
                 $city,
                 $state,
