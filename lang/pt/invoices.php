@@ -1,0 +1,30 @@
+<?php
+
+return [
+    'invoices' => 'Faturas',
+    'product' => 'Produto',
+    'price' => 'Preço',
+    'status' => 'Status',
+    'actions' => 'Ações',
+    'view' => 'Ver',
+    'id' => 'ID',
+    'total' => 'Total',
+    'subtotal' => 'Subtotal',
+    'invoice' => 'Fatura #:id',
+    'unit_price' => 'Preço Unitário',
+    'bill_to' => 'Cobrar Para',
+    'paid' => 'Pago',
+    'payment_pending' => 'Pagamento Pendente',
+
+    'invoice_date' => 'Data da Fatura',
+    'invoice_no' => 'Número da Fatura',
+    'item' => 'Item',
+    'quantity' => 'Quantidade',
+    'transactions' => 'Transações',
+    'transaction_id' => 'ID da Transação',
+    'gateway' => 'Gateway',
+    'payment_date' => 'Data do Pagamento',
+    'payment_method' => 'Método de Pagamento',
+    'amount' => 'Valor',
+    'date' => 'Data',
+];
