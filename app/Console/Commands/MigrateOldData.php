@@ -10,6 +10,7 @@ use App\Models\Gateway;
 use App\Models\Price;
 use Closure;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
@@ -633,6 +634,14 @@ class MigrateOldData extends Command
                 $setting = array_filter($extension_cfg, fn ($ext) => $ext['name'] == $old_ext_setting['key']);
                 $setting = array_merge(...$setting);
 
+                // Check if setting is encrypted
+                try {
+                    $decrypted = Crypt::decrypt($old_ext_setting['value']);
+                    $old_ext_setting['value'] = $decrypted;
+                } catch (\Throwable $th) {
+                    // Do nothing
+                }
+
                 $extension_settings[] = [
                     'key' => $old_ext_setting['key'],
                     'value' => $old_ext_setting['value'],
@@ -784,7 +793,7 @@ class MigrateOldData extends Command
                 }));
 
                 // Add the transaction details to invoice_transactions
-                if ($transaction_amount > 0 && $record['status'] === 'paid') {
+                if ($transaction_amount > 0) {
                     $gateway = Gateway::where('name', $record['paid_with'])->get()->first();
                     $invoice_transactions[] = [
                         'invoice_id' => $record['id'],
