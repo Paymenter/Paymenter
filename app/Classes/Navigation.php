@@ -106,9 +106,21 @@ class Navigation
                 'items' => [
                     [
                         'name' => __('navigation.account'),
-                        'route' => 'account',
                         'icon' => 'ri-settings-3-fill',
-                        'children' => [],
+                        'children' => [
+                            [
+                                'name' => __('navigation.personal_details'),
+                                'route' => 'account',
+                                'icon' => '',
+                                'params' => [],
+                            ],
+                            [
+                                'name' => __('navigation.security'),
+                                'route' => 'account.security',
+                                'icon' => '',
+                                'params' => [],
+                            ],
+                        ],
                     ],
                 ]
             ];
