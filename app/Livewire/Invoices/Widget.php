@@ -13,7 +13,7 @@ class Widget extends Component
     public function render()
     {
         return view('invoices.widget', [
-            'invoices' => Auth::user()->invoices()->orderBy('id', 'desc')->paginate(config('settings.pagination')),
+            'invoices' => Auth::user()->invoices()->orderBy('id', 'desc')->where('status', '=', 'pending')->paginate(config('settings.pagination')),
         ])->layoutData([
             'title' => __('invoices.invoices'),
         ]);

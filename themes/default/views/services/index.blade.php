@@ -1,4 +1,5 @@
 <div class="space-y-4">
+    <div class="text-lg font-bold pb-4">{{ __('services.services') }}</div>
     @foreach ($services as $service)
     <a href="{{ route('services.show', $service) }}" wire:navigate>
         <div class="bg-background-secondary hover:bg-background-secondary/80 border border-neutral p-4 rounded-lg mb-4">

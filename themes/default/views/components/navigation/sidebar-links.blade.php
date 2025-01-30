@@ -13,22 +13,19 @@
                 class="flex items-center justify-between w-full p-3 text-sm font-semibold whitespace-nowrap rounded-lg hover:bg-primary/10">
                 <div class="flex flex-row gap-2">
                     @if (isset($nav['icon']))
-                    <x-dynamic-component
-                        :component="$nav['icon']"
+                    <x-dynamic-component :component="$nav['icon']"
                         class="{{ isset($nav['active']) && $nav['active'] ? 'w-5 h-5 text-primary' : 'w-5 h-5 hover:text-base/80' }}" />
                     @endif
                     <span>{{ $nav['name'] }}</span>
                 </div>
-                <x-ri-arrow-down-s-line
-                    x-bind:class="{ 'rotate-180': activeAccordion==id }"
+                <x-ri-arrow-down-s-line x-bind:class="{ 'rotate-180': activeAccordion==id }"
                     class="h-4 w-4 text-base ease-out duration-300" />
             </button>
             <div x-show="activeAccordion==id" x-collapse x-cloak>
                 <div class="p-4 pt-0 opacity-70">
                     @foreach ($nav['children'] as $child)
                     <div class="flex items-center space-x-2">
-                        <x-navigation.link
-                            :href="route($child['route'], $child['params'] ?? null)"
+                        <x-navigation.link :href="route($child['route'], $child['params'] ?? null)"
                             :spa="isset($child['spa']) ? $child['spa'] : true">
                             {{ $child['name'] }}
                         </x-navigation.link>
@@ -39,13 +36,12 @@
         </div>
     </div>
     @else
-    <div class="flex items-center rounded-lg {{ isset($nav['active']) && $nav['active'] ? 'bg-primary/10' : 'hover:bg-primary/10' }}">
-        <x-navigation.link
-            :href="route($nav['route'], $nav['params'] ?? null)"
-            :spa="isset($nav['spa']) ? $nav['spa'] : true">
+    <div
+        class="flex items-center rounded-lg {{ isset($nav['active']) && $nav['active'] ? 'bg-primary/10' : 'hover:bg-primary/10' }}">
+        <x-navigation.link :href="route($nav['route'], $nav['params'] ?? null)"
+            :spa="isset($nav['spa']) ? $nav['spa'] : true" class="w-full">
             @if (isset($nav['icon']))
-            <x-dynamic-component
-                :component="$nav['icon']"
+            <x-dynamic-component :component="$nav['icon']"
                 class="{{ isset($nav['active']) && $nav['active'] ? 'w-5 h-5 text-primary' : 'w-5 h-5 hover:text-base/80' }}" />
             @endif
             {{ $nav['name'] }}

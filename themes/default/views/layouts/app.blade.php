@@ -25,7 +25,7 @@
     <x-navigation />
     <div class="w-full flex flex-grow">
         @if (request()->routeIs('dashboard', 'services', 'services.*', 'invoices', 'invoices.*', 'tickets', 'tickets.*', 'account'))
-            <x-navigation.sidebar />
+            <x-navigation.sidebar title="$title" />
         @endif
         <div class="{{ request()->routeIs('dashboard', 'services', 'services.*', 'invoices', 'invoices.*', 'tickets', 'tickets.*', 'account') ? 'md:ml-64' : '' }} flex flex-col flex-grow">
             <main class="container mt-24 mx-auto">
