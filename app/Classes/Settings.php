@@ -53,14 +53,6 @@ class Settings
                     'override' => 'app.url',
                 ],
                 [
-                    'name' => 'theme',
-                    'default' => 'default',
-                    'type' => 'select',
-                    // Read themes from themes directory
-                    'options' => array_map('basename', glob(base_path('themes/*'), GLOB_ONLYDIR)),
-                    'validation' => 'in:' . implode(',', array_map('basename', glob(base_path('themes/*'), GLOB_ONLYDIR))),
-                ],
-                [
                     'name' => 'logo',
                     'label' => 'Logo',
                     'type' => 'file',
@@ -409,6 +401,17 @@ class Settings
                     'required' => true,
                 ],
             ],
+            'theme' => [
+                [
+                    'name' => 'theme',
+                    'label' => 'Theme',
+                    'default' => 'default',
+                    'type' => 'select',
+                    // Read themes from themes directory
+                    'options' => array_map('basename', glob(base_path('themes/*'), GLOB_ONLYDIR)),
+                    'validation' => 'in:' . implode(',', array_map('basename', glob(base_path('themes/*'), GLOB_ONLYDIR))),
+                ],
+            ],
             'other' => [
                 [
                     'name' => 'gravatar_default',
@@ -455,7 +458,7 @@ class Settings
         ];
 
         // Set theme settings
-        $settings['theme'] = \App\Classes\Theme::getSettings();
+        $settings['theme'] = [...$settings['theme'], ...\App\Classes\Theme::getSettings()];
 
         return $settings;
     }
