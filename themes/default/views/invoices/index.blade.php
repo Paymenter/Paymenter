@@ -1,5 +1,5 @@
 <div class="space-y-4">
-    <div class="text-lg font-bold pb-4">{{ __('invoices.invoices') }}</div>
+    <x-navigation.breadcrumb />
 
     @foreach ($invoices as $invoice)
     <a href="{{ route('invoices.show', $invoice) }}" wire:navigate>

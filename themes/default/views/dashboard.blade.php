@@ -1,6 +1,6 @@
 <div>
     <!-- Dashboard content -->
-    <div class="text-lg font-bold pb-4">{{ __('dashboard.dashboard_title') }}</div>
+    <x-navigation.breadcrumb />
     <span class="text-md text-base/80 text-nowrap font-semibold mt-4">{{ __('dashboard.welcome_back', ['name' =>
         auth()->user()->name]) }} 👋</span>
     <p class="text-base text-base/80 text-nowrap font mt-4">{{ __('dashboard.dashboard_description') }}</p>

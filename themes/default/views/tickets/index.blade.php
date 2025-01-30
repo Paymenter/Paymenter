@@ -1,6 +1,6 @@
 <div class="space-y-4">
     <div class="flex flex-row justify-between">
-        <div class="text-lg font-bold pb-4">{{ __('ticket.tickets') }}</div>
+        <x-navigation.breadcrumb />
         <x-navigation.link :href="route('tickets.create')" class="flex items-center gap-2">
             <x-ri-add-line class="w-5 h-5" />
             <span>{{ __('ticket.create_ticket') }}</span>

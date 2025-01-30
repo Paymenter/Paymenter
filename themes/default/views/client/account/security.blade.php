@@ -1,7 +1,6 @@
 @extends('client.account.wrapper')
 
 @section('content')
-    <h4 class="text-2xl font-bold pb-3">{{ __('account.security') }}</h4>
 
     <!-- Sessions -->
     <h5 class="text-lg font-bold pb-3 pt-4">{{ __('account.sessions') }}</h5>
