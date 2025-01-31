@@ -8,6 +8,7 @@ use App\Events\Invoice\Created as InvoiceCreated;
 use App\Events\Order\Created as OrderCreated;
 use App\Exceptions\DisplayException;
 use App\Helpers\ExtensionHelper;
+use App\Jobs\Server\CreateJob;
 use App\Models\Coupon;
 use App\Models\Gateway;
 use App\Models\Invoice;
@@ -254,6 +255,14 @@ class Cart extends Component
                         'quantity' => $item->quantity,
                         'description' => $service->description,
                     ]);
+                } else {
+                    // We'll make the service active immediately
+                    if ($service->product->server) {
+                        CreateJob::dispatch($service);
+                    }
+                    $service->status = Service::STATUS_ACTIVE;
+                    $service->expires_at = $service->calculateNextDueDate();
+                    $service->save();
                 }
             }
 

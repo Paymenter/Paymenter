@@ -26,12 +26,24 @@ class PriceSynth extends Synth
             'has_setup_fee' => $instance->has_setup_fee,
             'is_free' => $instance->is_free,
             'dontShowUnavailablePrice' => $instance->dontShowUnavailablePrice,
+            'tax' => $instance->tax,
+            'setup_fee_tax' => $instance->setup_fee_tax,
+            'discount' => $instance->discount,
+            'original_price' => $instance->original_price,
+            'original_setup_fee' => $instance->original_setup_fee,
             'formatted' => $instance->formatted,
         ], []];
     }
 
     public static function hydrate($instance)
     {
-        return new Price(['price' => $instance['price'], 'setup_fee' => $instance['setup_fee'], 'currency' => $instance['currency']], $instance['is_free'], $instance['dontShowUnavailablePrice']);
+        $price = new Price(['price' => $instance['price'], 'setup_fee' => $instance['setup_fee'], 'currency' => $instance['currency']], $instance['is_free'], $instance['dontShowUnavailablePrice']);
+        $price->tax = $instance['tax'];
+        $price->setup_fee_tax = $instance['setup_fee_tax'];
+        $price->discount = $instance['discount'];
+        $price->original_price = $instance['original_price'];
+        $price->original_setup_fee = $instance['original_setup_fee'];
+
+        return $price;
     }
 }

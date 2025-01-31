@@ -10,6 +10,7 @@ use App\Models\Gateway;
 use App\Models\Price;
 use Closure;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
@@ -633,6 +634,14 @@ class MigrateOldData extends Command
                 $setting = array_filter($extension_cfg, fn ($ext) => $ext['name'] == $old_ext_setting['key']);
                 $setting = array_merge(...$setting);
 
+                // Check if setting is encrypted
+                try {
+                    $decrypted = Crypt::decrypt($old_ext_setting['value']);
+                    $old_ext_setting['value'] = $decrypted;
+                } catch (\Throwable $th) {
+                    // Do nothing
+                }
+
                 $extension_settings[] = [
                     'key' => $old_ext_setting['key'],
                     'value' => $old_ext_setting['value'],
@@ -741,7 +750,7 @@ class MigrateOldData extends Command
         $this->info('Migrating Invoices, Invoice Items, and Invoice Transactions...');
 
         $this->migrateInBatch('invoices', 'SELECT * FROM invoices LIMIT :limit OFFSET :offset', function ($records) {
-            $invoice_ids = implode(',', array_keys($records));
+            $invoice_ids = implode(',', array_column($records, 'id'));
             $items_stmt = $this->pdo->prepare("SELECT
                 invoice_items.*,
                 order_products.id as service_id,
@@ -783,19 +792,20 @@ class MigrateOldData extends Command
                     return $item['invoice_id'] === $record['id'];
                 }));
 
-                $gateway = Gateway::where('name', $record['paid_with'])->get()->first();
-
                 // Add the transaction details to invoice_transactions
-                $invoice_transactions[] = [
-                    'invoice_id' => $record['id'],
-                    'transaction_id' => $record['paid_reference'],
-                    'gateway_id' => $gateway ? $gateway->id : null,
-                    'amount' => $transaction_amount,
-                    'fee' => null,
+                if ($transaction_amount > 0) {
+                    $gateway = Gateway::where('name', $record['paid_with'])->get()->first();
+                    $invoice_transactions[] = [
+                        'invoice_id' => $record['id'],
+                        'transaction_id' => $record['paid_reference'],
+                        'gateway_id' => $gateway ? $gateway->id : null,
+                        'amount' => $transaction_amount,
+                        'fee' => null,
 
-                    'created_at' => $record['created_at'],
-                    'updated_at' => $record['updated_at'],
-                ];
+                        'created_at' => $record['created_at'],
+                        'updated_at' => $record['updated_at'],
+                    ];
+                }
 
                 // Add the invoice items to invoice_items
                 $invoice_items = array_merge($invoice_items, $items);
@@ -1117,9 +1127,11 @@ class MigrateOldData extends Command
             $companyname
         ) {
             $properties = [];
+            $credits = [];
 
             $records = array_map(function ($record) use (
                 &$properties,
+                &$credits,
                 $address,
                 $city,
                 $state,
@@ -1199,6 +1211,15 @@ class MigrateOldData extends Command
                         'value' => $record['companyname'],
                     ]);
                 }
+                if ($record['credits']) {
+                    array_push($credits, [
+                        'user_id' => $record['id'],
+                        'amount' => $record['credits'],
+                        'currency_code' => $this->currency_code,
+                        'created_at' => $record['created_at'],
+                        'updated_at' => $record['updated_at'],
+                    ]);
+                }
 
                 // User Details
                 return [
@@ -1211,7 +1232,6 @@ class MigrateOldData extends Command
                     'email_verified_at' => $record['email_verified_at'],
                     'password' => $record['password'],
                     'tfa_secret' => $record['tfa_secret'],
-                    'credits' => $record['credits'],
                     'created_at' => $record['created_at'],
                     'updated_at' => $record['updated_at'],
                     'remember_token' => $record['remember_token'],
@@ -1220,6 +1240,7 @@ class MigrateOldData extends Command
 
             DB::table('users')->insert($records);
             DB::table('properties')->insert($properties);
+            DB::table('credits')->insert($credits);
         });
     }
 
@@ -1286,6 +1307,20 @@ class MigrateOldData extends Command
                     'updated_at' => $record['updated_at'],
                 ];
             }, $records);
+
+            // Country should be unique
+            $records = array_filter($records, function ($record) {
+                static $countries = [];
+                if (in_array($record['country'], $countries)) {
+                    $this->error("Duplicate country found: {$record['country']}," .
+                        " Tax Rate with ID: {$record['id']} will not be migrated.");
+
+                    return false;
+                }
+                $countries[] = $record['country'];
+
+                return true;
+            });
 
             DB::table('tax_rates')->insert($records);
         });

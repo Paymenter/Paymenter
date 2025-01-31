@@ -366,7 +366,7 @@ class ExtensionHelper
             $properties[$property->key] = $property->value;
         }
         foreach ($service->configs as $config) {
-            $properties[$config->configOption->env_variable] = $config->configValue->value;
+            $properties[$config->configOption->env_variable] = $config->configValue->env_variable ?? $config->configValue->name;
         }
 
         return $properties;
