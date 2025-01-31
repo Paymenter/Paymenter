@@ -62,7 +62,7 @@
     @endif
 
     @if (in_array($groupName, ['dashboard', 'support', 'account']))
-    <div class="block">
+    <div class="flex flex-col gap-2">
         @foreach ($group['items'] as $nav)
         @if (isset($nav['children']) && count($nav['children']) > 0)
         <div

@@ -3,7 +3,7 @@
     @if ($label)
         <legend>
             <label for="{{ $name }}"
-                class="text-sm text-primary-100 absolute -translate-y-1/2 start-1 ml-1 bg-primary-800 px-2 rounded-md">
+                class="text-sm text-primary-100 absolute -translate-y-1/2 start-1 ml-1 bg-background-secondary px-2 rounded-md">
                 {{ $label }}
                 @if ($required && !$hideRequiredIndicator)
                     <span class="text-red-500">*</span>

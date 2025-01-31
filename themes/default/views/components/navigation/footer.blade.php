@@ -5,6 +5,7 @@
             <div class="text-sm">
                 {{ __('© :year :app_name. | All rights reserved.', ['year' => date('Y'), 'app_name' => config('app.name')]) }}
             </div>
+            {{-- Paymenter is free and opensource, removing this link is not cool --}}
             <a href="https://paymenter.org" target="_blank" 
                 class="group mt-4 mb-6 flex items-center gap-2 text-base/50 hover:text-base">
                 <svg class="w-4 h-4 text-current group-hover:text-[#4667FF]" width="150" height="205" viewBox="0 0 150 205" fill="currentColor" xmlns="http://www.w3.org/2000/svg">

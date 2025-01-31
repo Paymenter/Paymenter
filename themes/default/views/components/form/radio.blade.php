@@ -12,7 +12,7 @@
     @if ($label)
     <legend>
         <label for="{{ $name }}"
-            class="text-sm text-primary-100 absolute -translate-y-1/2 start-1 ml-1 bg-primary-800 px-2">
+            class="text-sm text-primary-100 absolute -translate-y-1/2 start-1 ml-1 bg-background-secondary rounded-md px-2">
             {{ $label }}
             @if ($required && !$hideRequiredIndicator)
             <span class="text-red-500">*</span>
@@ -22,7 +22,7 @@
     @endif
 
     <div
-        class="block px-2.5 py-2.5 w-full text-sm text-primary-100 bg-primary-800 border-2 border-neutral rounded-md outline-none focus:outline-none focus:border-secondary transition-all duration-300 ease-in-out">
+        class="block px-2.5 py-2.5 w-full text-sm text-primary-100 bg-background-secondary border-2 border-neutral rounded-md outline-none focus:outline-none focus:border-secondary transition-all duration-300 ease-in-out">
         @if (count($options) == 0 && $slot)
         {{ $slot }}
         @else
