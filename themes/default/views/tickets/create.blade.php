@@ -1,6 +1,5 @@
 <div class="bg-primary-800 p-6 rounded-lg mt-2">
-    <h1 class="text-2xl font-semibold mb-2">{{ __('ticket.create_ticket') }}</h1>
-    @vite(['themes/' . config('settings.theme') . '/css/easymde.css'], config('settings.theme'))
+    <h1 class="text-2xl font-semibold text-white mb-2">{{ __('ticket.create_ticket') }}</h1>
     <div class="grid grid-cols-2 gap-4">
         <x-form.input wire:model="subject" label="{{ __('ticket.subject') }}" name="subject" required />
         @if (count($departments) > 0)

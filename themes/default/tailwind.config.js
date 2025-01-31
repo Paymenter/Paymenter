@@ -1,21 +1,20 @@
-const defaultTheme = require("tailwindcss/defaultTheme");
-import path from 'path';
-import autoprefixer from 'autoprefixer';
-import tailwindcsstypography from '@tailwindcss/typography';
-import tailwindcssforms from '@tailwindcss/forms';
+const defaultTheme = require('tailwindcss/defaultTheme')
+import path from 'path'
+import autoprefixer from 'autoprefixer'
+import tailwindcsstypography from '@tailwindcss/typography'
+import tailwindcssforms from '@tailwindcss/forms'
 
 module.exports = {
     darkMode: 'class',
     content: [
-        path.resolve(__dirname, "./**/*.{blade.php,js,vue,ts}"),
-        './vendor/rappasoft/laravel-livewire-tables/resources/views/**/*.blade.php',
-        './extensions/**/*.blade.php',
+        path.resolve(__dirname, './**/*.{blade.php,js,vue,ts}'),
+        './extensions/**/*.blade.php'
     ],
 
     theme: {
         extend: {
             fontFamily: {
-                sans: ["Nunito", ...defaultTheme.fontFamily.sans],
+                sans: ['Nunito', ...defaultTheme.fontFamily.sans]
             },
             colors: {
                 // Branding Colors
@@ -48,15 +47,15 @@ module.exports = {
 
     variants: {
         extend: {
-            opacity: ["disabled"],
-        },
+            opacity: ['disabled']
+        }
     },
 
     plugins: [
         tailwindcsstypography,
         autoprefixer,
         tailwindcssforms({
-            strategy: 'class',
-        }),
-    ],
-};
+            strategy: 'class'
+        })
+    ]
+}

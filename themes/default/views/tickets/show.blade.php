@@ -1,6 +1,6 @@
 <div class="bg-primary-800 p-6 rounded-lg mt-2">
     <h1 class="text-2xl font-semibold text-white">Ticket: {{ $ticket->subject }}</h1>
-    @vite(['themes/' . config('settings.theme') . '/css/easymde.css'], config('settings.theme'))
+
     <div class="md:grid grid-cols-4 flex flex-col gap-4">
         <div class="md:col-span-3">
             <div class="flex flex-col gap-4 max-h-[60vh] overflow-y-auto pr-4" wire:poll.5s>

@@ -270,6 +270,18 @@ class ExtensionHelper
     }
 
     /**
+     * Register a new middleware.
+     *
+     * @param  string  $middleware
+     * @param  string  $group
+     * @return Router
+     */
+    public static function registerMiddleware($middleware, $group = 'web')
+    {
+        return app('router')->pushMiddlewareToGroup($group, $middleware);
+    }
+
+    /**
      * Get every gateway which allows to checkout with
      *
      * @return array
@@ -354,7 +366,7 @@ class ExtensionHelper
             $properties[$property->key] = $property->value;
         }
         foreach ($service->configs as $config) {
-            $properties[$config->configOption->env_variable] = $config->configValue->value;
+            $properties[$config->configOption->env_variable] = $config->configValue->env_variable ?? $config->configValue->name;
         }
 
         return $properties;

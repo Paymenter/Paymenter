@@ -8,6 +8,7 @@ use App\Events\Invoice\Created as InvoiceCreated;
 use App\Events\Order\Created as OrderCreated;
 use App\Exceptions\DisplayException;
 use App\Helpers\ExtensionHelper;
+use App\Jobs\Server\CreateJob;
 use App\Models\Coupon;
 use App\Models\Gateway;
 use App\Models\Invoice;
@@ -34,6 +35,8 @@ class Cart extends Component
     public $gateway;
 
     public $coupon;
+
+    public $use_credits;
 
     public function mount()
     {
@@ -159,7 +162,7 @@ class Cart extends Component
             return redirect()->route('login');
         }
 
-        //Start database transaction
+        // Start database transaction
         DB::beginTransaction();
         try {
             $user = User::where('id', Auth::id())->lockForUpdate()->first();
@@ -252,11 +255,36 @@ class Cart extends Component
                         'quantity' => $item->quantity,
                         'description' => $service->description,
                     ]);
+                } else {
+                    // We'll make the service active immediately
+                    if ($service->product->server) {
+                        CreateJob::dispatch($service);
+                    }
+                    $service->status = Service::STATUS_ACTIVE;
+                    $service->expires_at = $service->calculateNextDueDate();
+                    $service->save();
                 }
             }
 
             event(new OrderCreated($order));
             isset($invoice) && event(new InvoiceCreated($invoice));
+
+            if ($this->use_credits) {
+                $credit = Auth::user()->credits()->where('currency_code', $this->total->currency->code)->first();
+                if ($credit) {
+                    // Is it more credits or less credits than the total price?
+                    if ($credit->amount >= $this->total->price) {
+                        $credit->amount -= $this->total->price;
+                        $credit->save();
+                        ExtensionHelper::addPayment($invoice->id, null, amount: $this->total->price);
+                    } else {
+                        $this->total->price -= $credit->amount;
+                        $credit->amount = 0;
+                        $credit->save();
+                        ExtensionHelper::addPayment($invoice->id, null, amount: $credit->amount);
+                    }
+                }
+            }
 
             // Commit the transaction
             DB::commit();

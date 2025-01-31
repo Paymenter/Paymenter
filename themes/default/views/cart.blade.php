@@ -87,6 +87,10 @@
                 <h4>{{ __('invoices.total') }}:</h4> {{ $total }}
             </div>
 
+            @if(Auth::user()->credits()->where('currency_code', $items->first()->price->currency->code)->exists())
+                <x-form.checkbox wire:model="use_credits" name="use_credits" label="Use Credits" />
+            @endif
+
             @if(count($gateways) > 1)
                 <x-form.select wire:model.live="gateway" name="gateway" label="Payment Gateway">
                     @foreach ($gateways as $gateway)

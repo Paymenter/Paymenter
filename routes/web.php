@@ -17,7 +17,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', Home::class)->name('home');
 
 // Destroy the session and log out the user.
-//auth()->logout();
+// auth()->logout();
 // Authorization routes
 Route::group(['middleware' => ['web', 'guest']], function () {
     Route::get('/login', Auth\Login::class)->name('login');
@@ -48,6 +48,7 @@ Route::group(['middleware' => ['web', 'auth', MustVerfiyEmail::class]], function
 Route::group(['middleware' => ['web', 'auth']], function () {
     Route::get('account', Client\Account::class)->name('account');
     Route::get('account/security', Client\Security::class)->name('account.security');
+    Route::get('account/credits', Client\Credits::class)->name('account.credits');
 
     Route::get('/email/verify', Auth\VerifyEmail::class)->name('verification.notice');
     Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $request) {
@@ -60,9 +61,9 @@ Route::group(['middleware' => ['web', 'auth']], function () {
 Route::get('cart', Cart::class)->name('cart');
 
 Route::group(['prefix' => 'products'], function () {
-    Route::get('/{category:slug}', Products\Index::class)->name('category.show')/*->where('category', '[A-Za-z0-9_/-]+')*/;
-    Route::get('/{category:slug}/{product:slug}', Products\Show::class)->name('products.show')/*->where('category', '[A-Za-z0-9_/-]+')*/;
-    Route::get('/{category:slug}/{product:slug}/checkout', Products\Checkout::class)->name('products.checkout')/*->where('category', '[A-Za-z0-9_/-]+')*/;
+    Route::get('/{category:slug}', Products\Index::class)->name('category.show')/* ->where('category', '[A-Za-z0-9_/-]+') */;
+    Route::get('/{category:slug}/{product:slug}', Products\Show::class)->name('products.show')/* ->where('category', '[A-Za-z0-9_/-]+') */;
+    Route::get('/{category:slug}/{product:slug}/checkout', Products\Checkout::class)->name('products.checkout')/* ->where('category', '[A-Za-z0-9_/-]+') */;
     // Allow for nested categories
 });
 
