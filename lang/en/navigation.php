@@ -6,6 +6,8 @@ return [
     'cart' => 'Cart',
     'login' => 'Login',
     'register' => 'Register',
+    'services' => 'Services',
+    'invoices' => 'Invoices',
     'account' => 'Account',
     'personal_details' => 'Personal Details',
     'security' => 'Security',

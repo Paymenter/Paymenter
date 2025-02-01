@@ -1,7 +1,12 @@
 @php
     $currentRoute = request()->route()->getName();
 
-    $navigation = \App\Classes\Navigation::get();
+    $navigation = [
+        \App\Classes\Navigation::getLinks(),
+        \App\Classes\Navigation::getAccountDropdownLinks(),
+        \App\Classes\Navigation::getDashboardLinks(),
+        \App\Classes\Navigation::getAccountLinks(),
+    ];
 
     function findBreadcrumb($items, $currentRoute) {
         foreach ($items as $item) {
@@ -22,11 +27,9 @@
 
     $breadcrumbs = [];
     foreach ($navigation as $group) {
-        if (isset($group['items'])) {
-            $breadcrumbs = findBreadcrumb($group['items'], $currentRoute);
-            if (!empty($breadcrumbs)) {
-                break;
-            }
+        $breadcrumbs = findBreadcrumb($group, $currentRoute);
+        if (!empty($breadcrumbs)) {
+            break;
         }
     }
 @endphp

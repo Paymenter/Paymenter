@@ -8,244 +8,231 @@ use Illuminate\Support\Facades\Auth;
 
 class Navigation
 {
-    private const GROUPS = [
-        'primary' => [
-            'order' => 1,
-            'separator' => true,
-        ],
-        'dashboard' => [
-            'order' => 2,
-            'separator' => true,
-        ],
-        'support' => [
-            'order' => 3,
-            'separator' => true,
-        ],
-        'account' => [
-            'order' => 4,
-            'separator' => false,
-        ],
-    ];
-
-    public static function get()
+    public static function getLinks()
     {
-        $categories = Category::whereNull('parent_id')
-            ->where(function ($query) {
-                $query->whereHas('children')->orWhereHas('products');
-            })->get();
+        $categories = once(fn() => Category::whereNull('parent_id')->where(function ($query) {
+            $query->whereHas('children')->orWhereHas('products');
+        })->get());
 
         $routes = [
-            'primary' => [
-                ...self::GROUPS['primary'],
-                'items' => [
-                    [
-                        'name' => __('navigation.home'),
-                        'route' => 'home',
-                        'icon' => 'ri-home-2-fill',
-                        'children' => [],
-                    ]
-                ]
-            ]
-        ];
-
-        if (count($categories) > 0) {
-            $routes['primary']['items'][] = [
+            [
+                'name' => __('navigation.home'),
+                'route' => 'home',
+                'icon' => 'ri-home-2-fill',
+            ],
+            [
                 'name' => __('navigation.shop'),
-                'icon' => 'ri-shopping-bag-fill',
                 'children' => $categories->map(function ($category) {
                     return [
                         'name' => $category->name,
                         'route' => 'category.show',
-                        'icon' => 'ri-shopping-bag-fill',
                         'params' => ['category' => $category->slug],
                     ];
                 })->toArray(),
-            ];
-        }
+                'condition' => count($categories) > 0,
+                'separator' => true,
+                'icon' => 'ri-shopping-bag-fill',
+            ],
+        ];
 
-        if (Auth::user()) {
+        $routes = EventHelper::itemEvent('navigation', $routes);
 
-            $routes['dashboard'] = [
-                ...self::GROUPS['dashboard'],
-                'items' => [
-                    [
-                        'name' => __('navigation.dashboard'),
-                        'route' => 'dashboard',
-                        'icon' => 'ri-layout-row-fill',
-                        'children' => [],
-                    ],
-                    [
-                        'name' => __('services.services'),
-                        'route' => 'services',
-                        'icon' => 'ri-server-fill',
-                        'children' => [],
-                    ],
-                    [
-                        'name' => __('invoices.invoices'),
-                        'route' => 'invoices',
-                        'icon' => 'ri-receipt-fill',
-                        'children' => [],
-                    ],
-                ]
-            ];
+        $routes = array_filter($routes, function ($route) {
+            return isset($route['condition']) ? $route['condition'] : true;
+        });
 
-            $routes['support'] = [
-                ...self::GROUPS['support'],
-                'items' => [
-                    [
-                        'name' => __('navigation.tickets'),
-                        'route' => 'tickets',
-                        'icon' => 'ri-customer-service-2-fill',
-                        'children' => [],
-                    ],
-                ]
-            ];
-
-            $routes['account'] = [
-                ...self::GROUPS['account'],
-                'items' => [
-                    [
-                        'name' => __('navigation.account'),
-                        'icon' => 'ri-settings-3-fill',
-                        'children' => [
-                            [
-                                'name' => __('navigation.personal_details'),
-                                'route' => 'account',
-                                'icon' => '',
-                                'params' => [],
-                            ],
-                            [
-                                'name' => __('navigation.security'),
-                                'route' => 'account.security',
-                                'icon' => '',
-                                'params' => [],
-                            ],
-                        ],
-                    ],
-                ]
-            ];
-        }
-
-        $events = EventHelper::itemEvent('navigation', []);
-        foreach ($events as $event) {
-            if (isset($event['group']) && isset($routes[$event['group']])) {
-                $routes[$event['group']]['items'][] = $event;
-            }
-        }
-
-        return self::markActiveRoutes($routes);
+        return Navigation::markActiveRoute($routes);
     }
 
-    public static function getAuth()
+    // Get navigation items for user dropdown menu
+    public static function getAccountDropdownLinks()
+    {
+        $routes = [
+            [
+                'name' => __('navigation.dashboard'),
+                'route' => 'dashboard',
+            ],
+            [
+                'name' => __('navigation.tickets'),
+                'route' => 'tickets',
+            ],
+            [
+                'name' => __('navigation.account'),
+                'route' => 'account',
+            ],
+            [
+                'name' => __('navigation.admin'),
+                'route' => 'filament.admin.pages.dashboard',
+                'spa' => false,
+                'condition' => Auth::user()->role_id !== null
+            ],
+        ];
+
+        $routes = EventHelper::itemEvent('navigation.account-dropdown', $routes);
+
+        $routes = array_filter($routes, function ($route) {
+            return isset($route['condition']) ? $route['condition'] : true;
+        });
+
+        return Navigation::markActiveRoute($routes);
+    }
+
+    public static function getDashboardLinks()
     {
         $routes = [
             [
                 'name' => __('navigation.dashboard'),
                 'route' => 'dashboard',
                 'icon' => 'ri-layout-row-fill',
-                'children' => [],
+            ],
+            [
+                'name' => __('navigation.services'),
+                'route' => 'services',
+                'icon' => 'ri-server-fill',
+            ],
+            [
+                'name' => __('navigation.invoices'),
+                'route' => 'invoices',
+                'icon' => 'ri-receipt-fill',
+                'separator' => true,
             ],
             [
                 'name' => __('navigation.tickets'),
                 'route' => 'tickets',
                 'icon' => 'ri-customer-service-2-fill',
-                'children' => [],
+                'separator' => true,
             ],
             [
                 'name' => __('navigation.account'),
-                'route' => 'account',
                 'icon' => 'ri-settings-3-fill',
-                'children' => [],
+                'children' => [
+                    [
+                        'name' => __('navigation.personal_details'),
+                        'route' => 'account',
+                        'params' => [],
+                    ],
+                    [
+                        'name' => __('navigation.security'),
+                        'route' => 'account.security',
+                        'params' => [],
+                    ],
+                ],
+            ]
+        ];
+
+        $routes = EventHelper::itemEvent('navigation.dashboard', $routes);
+
+        return Navigation::markActiveRoute($routes);
+    }
+
+    // Get navigation items for user account page
+    public static function getAccountLinks()
+    {
+        $routes = [
+            [
+                'name' => __('account.personal_details'),
+                'route' => 'account',
+            ],
+            [
+                'name' => __('account.credits'),
+                'route' => 'account.credits',
+                'condition' => config('settings.credits_enabled')
+            ],
+            [
+                'name' => __('account.security'),
+                'route' => 'account.security',
             ],
         ];
 
-        if (Auth::user()->role_id) {
-            $routes[] = [
-                'name' => __('navigation.admin'),
-                'route' => 'filament.admin.pages.dashboard',
-                'icon' => 'ri-admin-fill',
-                'spa' => false,
-            ];
-        }
+        $routes = array_filter($routes, function ($route) {
+            return isset($route['condition']) ? $route['condition'] : true;
+        });
 
-        return self::markActiveRoutes($routes);
+        $routes = EventHelper::itemEvent('navigation.account', $routes);
+
+        return Navigation::markActiveRoute($routes);
     }
 
-    public static function getCurrent()
+    public static function getActiveRoute()
     {
         $route = request()->route()->getName();
-        $admin = self::get();
-
+        $routes = [
+            ...self::getLinks(),
+            ...self::getAccountDropdownLinks(),
+            ...self::getDashboardLinks(),
+            ...self::getAccountLinks(),
+        ];
+        // Get current parnet of the route
         $parent = null;
-        foreach ($admin as $group) {
-            foreach ($group['items'] as $item) {
-                if (isset($item['route']) && $item['route'] == $route) {
-                    $parent = $item;
-                    break 2;
-                }
-                if (isset($item['children'])) {
-                    foreach ($item['children'] as $child) {
-                        if ($child['route'] == $route) {
-                            $parent = $item;
-                            break 3;
-                        }
+        foreach ($routes as $item) {
+            if ($item['route'] == $route) {
+                $parent = $item;
+                break;
+            }
+            if (isset($item['children'])) {
+                foreach ($item['children'] as $child) {
+                    if ($child['route'] == $route) {
+                        $parent = $item;
+                        break;
                     }
                 }
             }
         }
+
         return $parent;
     }
 
-    private static function markActiveRoutes($routes)
+    /**
+     * Set `active` to true if the route is currently active,
+     * or falce if route isn't active (prevents `Undefined array key "active"` errors)
+     *
+     * @return array routes
+     */
+    public static function markActiveRoute(array $routes): array
     {
-        $currentRoute = request()->route()->getName();
-
-        if (isset($routes['items'])) {
-            foreach ($routes['items'] as $key => $route) {
-                if (isset($route['route']) && $route['route'] === $currentRoute) {
-                    $routes['items'][$key]['active'] = true;
-                }
-                if (isset($route['children']) && !empty($route['children'])) {
-                    foreach ($route['children'] as $childKey => $child) {
-                        if (isset($child['route']) && $child['route'] === $currentRoute) {
-                            $routes['items'][$key]['active'] = true;
-                            $routes['items'][$key]['children'][$childKey]['active'] = true;
-                        }
+        foreach ($routes as $key => $route) {
+            if (isset($route['children'])) {
+                foreach ($route['children'] as $child) {
+                    if (request()->route()->getName() == $child['route']) {
+                        $routes[$key]['active'] = true;
+                        break;
+                    } else {
+                        $routes[$key]['active'] = false;
                     }
                 }
-            }
-        } else {
-            foreach ($routes as $groupKey => $group) {
-                if (isset($group['items'])) {
-                    foreach ($group['items'] as $itemKey => $item) {
-                        if (isset($item['route']) && $item['route'] === $currentRoute) {
-                            $routes[$groupKey]['items'][$itemKey]['active'] = true;
-                        }
-                        if (isset($item['children']) && !empty($item['children'])) {
-                            foreach ($item['children'] as $childKey => $child) {
-                                if (isset($child['route']) && $child['route'] === $currentRoute) {
-                                    $routes[$groupKey]['items'][$itemKey]['active'] = true;
-                                    $routes[$groupKey]['items'][$itemKey]['children'][$childKey]['active'] = true;
-                                }
-                            }
-                        }
-                    }
+            } else {
+                if (request()->route()->getName() == $route['route']) {
+                    $routes[$key]['active'] = true;
                 } else {
-                    if (isset($routes[$groupKey]['route']) && $routes[$groupKey]['route'] === $currentRoute) {
-                        $routes[$groupKey]['active'] = true;
-                    }
-                    if (isset($routes[$groupKey]['children']) && !empty($routes[$groupKey]['children'])) {
-                        foreach ($routes[$groupKey]['children'] as $childKey => $child) {
-                            if (isset($child['route']) && $child['route'] === $currentRoute) {
-                                $routes[$groupKey]['active'] = true;
-                                $routes[$groupKey]['children'][$childKey]['active'] = true;
-                            }
-                        }
-                    }
+                    $routes[$key]['active'] = false;
                 }
             }
         }
 
         return $routes;
+    }
+
+    public static function getCurrent()
+    {
+        $route = request()->route()->getName();
+        $routes = self::getLinks();
+        // Get current parnet of the route
+        $parent = null;
+        foreach ($routes as $item) {
+            if ($item['route'] == $route) {
+                $parent = $item;
+                break;
+            }
+            if (isset($item['children'])) {
+                foreach ($item['children'] as $child) {
+                    if ($child['route'] == $route) {
+                        $parent = $item;
+                        break;
+                    }
+                }
+            }
+        }
+
+        return $parent;
     }
 }

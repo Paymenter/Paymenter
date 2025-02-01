@@ -16,8 +16,7 @@
                     <span class="text-xl text-base ml-2 font-bold">{{ config('app.name') }}</span>
                 </a>
                 <div class="md:flex hidden flex-row ml-7">
-                    @foreach ([\App\Classes\Navigation::get()['primary']] as $group)
-                    @foreach ($group['items'] as $nav)
+                    @foreach (\App\Classes\Navigation::getLinks() as $nav)
                     @if (isset($nav['children']) && count($nav['children']) > 0)
                     <div class="relative">
                         <x-dropdown>
@@ -47,12 +46,11 @@
                         {{ $nav['name'] }}
                     </x-navigation.link>
                     @endif
+                    {{-- @if($nav['separator'])
+                    <div class="h-px w-full bg-neutral"></div>
+                    @endif --}}
                     @endforeach
 
-                    @if($group['separator'])
-                    <div class="h-px w-full bg-neutral"></div>
-                    @endif
-                    @endforeach
                 </div>
             </div>
 
@@ -85,7 +83,7 @@
                             <span class="text-sm text-base text-nowrap">{{ auth()->user()->name }}</span>
                             <span class="text-sm text-base text-nowrap">{{ auth()->user()->email }}</span>
                         </div>
-                        @foreach (\App\Classes\Navigation::getAuth() as $nav)
+                        @foreach (\App\Classes\Navigation::getAccountLinks() as $nav)
                         <x-navigation.link :href="route($nav['route'], $nav['params'] ?? null)" :spa="isset($nav['spa']) ? $nav['spa'] : true">
                             {{ $nav['name'] }}
                         </x-navigation.link>
