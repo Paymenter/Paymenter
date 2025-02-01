@@ -87,7 +87,7 @@
                 <h4>{{ __('invoices.total') }}:</h4> {{ $total }}
             </div>
 
-            @if(Auth::user()->credits()->where('currency_code', $items->first()->price->currency->code)->exists())
+            @if(Auth::check() && Auth::user()->credits()->where('currency_code', $items->first()->price->currency->code)->exists())
                 <x-form.checkbox wire:model="use_credits" name="use_credits" label="Use Credits" />
             @endif
 
