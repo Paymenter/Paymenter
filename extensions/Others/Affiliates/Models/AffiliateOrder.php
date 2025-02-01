@@ -7,7 +7,6 @@ use App\Models\Order;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class AffiliateOrder extends Model
 {
@@ -15,7 +14,7 @@ class AffiliateOrder extends Model
 
     protected $fillable = [
         'order_id',
-        'affiliate_id'
+        'affiliate_id',
     ];
 
     public function affiliate(): BelongsTo
@@ -45,8 +44,12 @@ class AffiliateOrder extends Model
                 $reward_percentage = $this->affiliate->reward ?: $extension->config('default_reward');
 
                 $invoices->each(function ($invoice) use (&$earnings, $reward_percentage) {
-                    if ($invoice->status !== 'paid') return;
-                    if (!isset($earnings[$invoice->currency_code])) $earnings[$invoice->currency_code] = 0;
+                    if ($invoice->status !== 'paid') {
+                        return;
+                    }
+                    if (!isset($earnings[$invoice->currency_code])) {
+                        $earnings[$invoice->currency_code] = 0;
+                    }
                     $earnings[$invoice->currency_code] += $invoice->total * $reward_percentage / 100;
                 });
 

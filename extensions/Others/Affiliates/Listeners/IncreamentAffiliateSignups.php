@@ -25,7 +25,9 @@ class IncreamentAffiliateSignups
 
         /** @var Affiliate */
         $affiliate = Affiliate::where('code', $referral_code)->first();
-        if ($affiliate) return;
+        if ($affiliate) {
+            return;
+        }
 
         $affiliate->update([
             'signups' => $affiliate->signups + 1,

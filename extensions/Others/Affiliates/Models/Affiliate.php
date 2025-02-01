@@ -15,7 +15,7 @@ class Affiliate extends Model
         'code',
         'visitors',
         'reward',
-        'discount'
+        'discount',
     ];
 
     public function user(): BelongsTo
@@ -40,7 +40,9 @@ class Affiliate extends Model
                 $earnings = [];
                 $this->orders->each(function ($order) use (&$earnings) {
                     foreach ($order->earnings as $currency => $total) {
-                        if (!isset($earnings[$currency])) $earnings[$currency] = 0;
+                        if (!isset($earnings[$currency])) {
+                            $earnings[$currency] = 0;
+                        }
                         $earnings[$currency] += $total;
                     }
                 });

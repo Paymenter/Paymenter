@@ -3,9 +3,9 @@
 namespace Paymenter\Extensions\Others\Affiliates;
 
 use App\Classes\Extension\Extension;
-use App\Events\User\Created as UserCreated;
 use App\Events\Invoice\Paid as InvoicePaid;
 use App\Events\Order\Created as OrderCreated;
+use App\Events\User\Created as UserCreated;
 use App\Helpers\ExtensionHelper;
 use App\Models\User;
 use Illuminate\Support\Facades\Artisan;
@@ -27,7 +27,7 @@ class Affiliates extends Extension
     /**
      * Get all the configuration for the extension
      *
-     * @param array $values
+     * @param  array  $values
      * @return array
      */
     public function getConfig($values = [])
@@ -61,7 +61,7 @@ class Affiliates extends Extension
                     'random' => 'Random',
                     'custom' => 'Custom',
                 ],
-            ]
+            ],
         ];
     }
 

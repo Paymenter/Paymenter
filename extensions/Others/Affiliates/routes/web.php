@@ -1,6 +1,5 @@
 <?php
 
-use App\Helpers\ExtensionHelper;
 use Illuminate\Support\Facades\Route;
 use Paymenter\Extensions\Others\Affiliates\Livewire\Affiliates\Affiliate;
 

@@ -26,11 +26,13 @@ class AssociateOrderWithAffiliate
 
         /** @var Affiliate */
         $affiliate = Affiliate::where('code', $referral_code)->first();
-        if (!$affiliate) return;
+        if (!$affiliate) {
+            return;
+        }
 
         AffiliateOrder::create([
             'order_id' => $event->order->id,
-            'affiliate_id' => $affiliate->id
+            'affiliate_id' => $affiliate->id,
         ]);
     }
 }

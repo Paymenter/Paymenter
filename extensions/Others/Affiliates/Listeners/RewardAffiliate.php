@@ -31,7 +31,9 @@ class RewardAffiliate
         $order = $invoice->items()->first()->reference->order;
         $referral = AffiliateOrder::where('order_id', $order->id)->first();
 
-        if (!$referral) return;
+        if (!$referral) {
+            return;
+        }
 
         /**
          * @var Affiliate $affiliate
@@ -52,13 +54,13 @@ class RewardAffiliate
         if ($affiliate_credits) {
             // Add reward to credits
             $affiliate->user->credits()->where('currency_code', $invoice->currency_code)->update([
-                'amount' => $affiliate_credits->amount + $reward_amount
+                'amount' => $affiliate_credits->amount + $reward_amount,
             ]);
         } else {
             // Create new credits with the invoice's currency code
             $affiliate->user->credits()->create([
                 'amount' => $reward_amount,
-                'currency_code' => $invoice->currency_code
+                'currency_code' => $invoice->currency_code,
             ]);
         }
     }

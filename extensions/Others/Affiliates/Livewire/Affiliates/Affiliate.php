@@ -5,8 +5,8 @@ namespace Paymenter\Extensions\Others\Affiliates\Livewire\Affiliates;
 use App\Helpers\ExtensionHelper;
 use App\Livewire\Component;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Validation\Rule;
 use Illuminate\Support\Str;
+use Illuminate\Validation\Rule;
 use Paymenter\Extensions\Others\Affiliates\Models\Affiliate as AffiliateModel;
 
 class Affiliate extends Component
@@ -38,6 +38,7 @@ class Affiliate extends Component
         $user = Auth::user();
         if ($user->affiliate) {
             $this->notify(__('affiliates::affiliate.you-are-already-affiliated'));
+
             return;
         }
 

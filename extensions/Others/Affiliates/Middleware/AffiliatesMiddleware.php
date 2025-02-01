@@ -5,9 +5,7 @@ namespace Paymenter\Extensions\Others\Affiliates\Middleware;
 use App\Helpers\ExtensionHelper;
 use Closure;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cookie;
-use Illuminate\Support\Facades\Log;
 use Paymenter\Extensions\Others\Affiliates\Models\Affiliate;
 use Symfony\Component\HttpFoundation\Response;
 

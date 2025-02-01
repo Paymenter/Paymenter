@@ -22,7 +22,9 @@ class AffiliatesRelationManager extends RelationManager
             ->columns([
                 TextColumn::make('order.id'),
                 TextColumn::make('earnings')->formatStateUsing(function (AffiliateOrder $affiliateOrder) {
-                    if (count($affiliateOrder->affiliate->earnings) <= 0) return null;
+                    if (count($affiliateOrder->affiliate->earnings) <= 0) {
+                        return null;
+                    }
 
                     return implode(', ', array_map(function ($key, $value) {
                         return "$key: $value";
@@ -38,7 +40,7 @@ class AffiliatesRelationManager extends RelationManager
                 //
             ])
             ->actions([
-                Tables\Actions\ViewAction::make()->url(fn($record) => OrderResource::getUrl('edit', ['record' => $record->order])),
+                Tables\Actions\ViewAction::make()->url(fn ($record) => OrderResource::getUrl('edit', ['record' => $record->order])),
                 Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
