@@ -43,17 +43,6 @@ class Affiliates extends Extension
                 'validation' => 'integer|min:0|max:100',
             ],
             [
-                'name' => 'default_discount',
-                'label' => 'Default Affiliate Discount',
-                'type' => 'number',
-                'suffix' => '%',
-                // TODO: Remove `[WIP]`, Make it required, and enable it when this feature is implemented.
-                'description' => '[WIP] Discount percentage on products for the affiliated user.',
-                'required' => false,
-                'disabled' => true,
-                'validation' => 'integer|min:0|max:100',
-            ],
-            [
                 'name' => 'cookie_max_age',
                 'label' => 'Referral Cookie Max-Age',
                 'type' => 'number',

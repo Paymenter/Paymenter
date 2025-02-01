@@ -61,14 +61,6 @@ class AffiliateResource extends Resource
                     ->minValue(0)
                     ->maxValue(100)
                     ->suffix('%'),
-                TextInput::make('discount')
-                    ->label('Affiliate Discount')
-                    ->helperText('Discount percentage on products for the affiliated user.')
-                    ->placeholder($extension->config('default_discount'))
-                    ->numeric()
-                    ->minValue(0)
-                    ->maxValue(100)
-                    ->suffix('%'),
             ]);
     }
 

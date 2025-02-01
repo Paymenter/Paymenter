@@ -21,7 +21,7 @@ class AffiliatesMiddleware
     public function handle(Request $request, Closure $next): Response
     {
         // Continue if request doesn't contain `ref` query parameter
-        if (Auth::check() || !request()->has('ref')) {
+        if (!request()->has('ref')) {
             return $next($request);
         }
 
