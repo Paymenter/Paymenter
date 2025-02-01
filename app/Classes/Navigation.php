@@ -116,6 +116,12 @@ class Navigation
                         'route' => 'account.security',
                         'params' => [],
                     ],
+                    [
+                        'name' => __('account.credits'),
+                        'route' => 'account.credits',
+                        'params' => [],
+                        'condition' => config('settings.credits_enabled'),
+                    ],
                 ],
             ],
         ];
