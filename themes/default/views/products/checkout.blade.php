@@ -6,7 +6,7 @@
                 <img src="{{ Storage::url($product->image) }}" alt="{{ $product->name }}" class="max-w-40 h-fit">
             @endif
             <div class="max-h-28 overflow-y-auto w-full">
-                <article class="prose prose-invert prose-sm">
+                <article class="prose dark:prose-invert prose-sm">
                     {!! $product->description !!}
                 </article>
             </div>

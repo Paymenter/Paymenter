@@ -165,7 +165,13 @@ class FilamentInput
                     ->hint($setting->hint ?? '')
                     ->hintColor('primary')
                     ->required($setting->required ?? false)
-                    ->hexColor()
+                    ->hsl()
+                    ->regex('/^hsl\(\s*(\d+)\s*,\s*(\d*(?:\.\d+)?%)\s*,\s*(\d*(?:\.\d+)?%)\)$/')
+                    ->dehydrateStateUsing(fn (?string $state): ?string => 
+                        $state && str_starts_with($state, 'hsl(') 
+                            ? preg_replace('/^hsl\((.+)\)$/', '$1', $state)
+                            : $state
+                    )
                     ->live(condition: $setting->live ?? false)
                     ->default($setting->default ?? '')
                     ->suffix($setting->suffix ?? null)

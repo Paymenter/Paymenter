@@ -1,12 +1,11 @@
 <?php
-
 namespace App\Livewire\Services;
 
 use App\Livewire\Component;
 use Illuminate\Support\Facades\Auth;
 use Livewire\WithPagination;
 
-class Index extends Component
+class Widget extends Component
 {
     use WithPagination;
 
@@ -22,7 +21,7 @@ class Index extends Component
             $query->where('status', '!=', 'cancelled');
         }
 
-        return view('services.index', [
+        return view('services.widget', [
             'services' => $query->paginate(config('settings.pagination')),
         ])->layoutData([
             'title' => 'Services',

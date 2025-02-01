@@ -1,10 +1,7 @@
-<div class="grid grid-cols-4">
-    @include('client.account.navigation')
+<div>
+    <x-navigation.breadcrumb />
+    <div class="px-2">
 
-
-
-    <div class="bg-primary-800 p-8 rounded-lg mt-2 col-span-3">
-        <h4 class="text-2xl font-bold pb-3">{{ __('account.personal_details') }}</h4>
         <div class="grid grid-cols-2 gap-4">
 
             <x-form.input name="first_name" type="text" :label="__('general.input.first_name')"

@@ -3,7 +3,7 @@
     wire:submit.prevent="submit" id="register">
     <div class="flex flex-col items-center mt-4 mb-10">
         <x-logo />
-        <h1 class="text-2xl text-center text-white mt-2">{{ __('auth.sign_up_title') }} </h1>
+        <h1 class="text-2xl text-center mt-2">{{ __('auth.sign_up_title') }} </h1>
     </div>
     <div class="grid grid-cols-2 gap-4">
         <x-form.input name="first_name" type="text" :label="__('general.input.first_name')"
