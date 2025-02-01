@@ -47,6 +47,11 @@ class Announcements extends Extension
         require __DIR__ . '/routes/web.php';
         View::addNamespace('announcements', __DIR__ . '/resources/views');
 
+        // Register livewire
+        \Livewire\Livewire::component('announcements.index', \Paymenter\Extensions\Others\Announcements\Livewire\Announcements\Index::class);
+        \Livewire\Livewire::component('announcements.show', \Paymenter\Extensions\Others\Announcements\Livewire\Announcements\Show::class);
+        \Livewire\Livewire::component('announcements.widget', \Paymenter\Extensions\Others\Announcements\Livewire\Announcements\Widget::class);
+
         Event::listen('navigation', function () {
             if (Announcement::where('is_active', true)->where('published_at', '<=', now())->count() == 0) {
                 return;
@@ -55,6 +60,9 @@ class Announcements extends Extension
             return [
                 'name' => 'Announcements',
                 'route' => 'announcements.index',
+                'icon' => 'ri-megaphone-fill',
+                'group' => 'primary',
+                'children' => [],
             ];
         });
 

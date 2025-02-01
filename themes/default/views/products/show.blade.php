@@ -1,4 +1,4 @@
-<div class="flex flex-col @if ($product->image) md:grid grid-cols-2 gap-16 @endif">
+<div class="flex flex-col @if ($product->image) md:grid grid-cols-2 gap-16 bg-background-secondary hover:bg-background-secondary/80 border border-neutral p-4 rounded-lg @endif">
     @if ($product->image)
         <img src="{{ Storage::url($product->image) }}" alt="{{ $product->name }}"
             class="w-full h-96 object-cover object-center rounded-md">
@@ -33,7 +33,7 @@
                 </div>
             @endif
         </div>
-        <article class="my-4 prose prose-invert">
+        <article class="my-4 prose dark:prose-invert">
             {!! $product->description !!}
         </article>
 

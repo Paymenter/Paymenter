@@ -2,7 +2,7 @@
     id="reset">
     <div class="flex flex-col items-center mt-4 mb-10">
         <x-logo />
-        <h1 class="text-2xl text-center text-white mt-2">{{ __('auth.reset_password') }} </h1>
+        <h1 class="text-2xl text-center mt-2">{{ __('auth.reset_password') }} </h1>
     </div>
     <x-form.input name="email" type="text" :label="__('auth.input.email_label')" :placeholder="__('auth.input.email')"
         wire:model="email" required disabled />

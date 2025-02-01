@@ -33,7 +33,7 @@ class Settings
                 ],
                 [
                     'name' => 'app_language',
-                    'label' => 'App Language',
+                    'label' => 'Default Language',
                     'default' => 'en',
                     'type' => 'select',
                     // Read languages from resources/lang directory
