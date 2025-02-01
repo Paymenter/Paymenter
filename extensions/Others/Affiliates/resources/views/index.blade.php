@@ -8,13 +8,13 @@
                 <div class="flex flex-col gap-2">
                     <span class="text-xl font-semibold">{{ __('affiliates::affiliate.visitors') }}</span>
                     <span class="text-gray-500">{{ __('affiliates::affiliate.total-visitors') }}</span>
-                    <span class="text-2xl font-semibold">{{ $affiliate->visitors }}</span>
+                    <span class="text-2xl font-semibold">{{ Number::format($affiliate->visitors) }}</span>
                 </div>
                 <div class="flex flex-col gap-2">
                     <span class="text-xl font-semibold">{{ __('affiliates::affiliate.signups') }}</span>
                     <span class="text-gray-500">{{ __('affiliates::affiliate.total-signups') }}</span>
                     <span class="text-2xl font-semibold">
-                        {{ $affiliate->referrals->count() }}
+                        {{ Number::format($affiliate->signups) }}
                     </span>
                 </div>
                 <div class="flex flex-col gap-2">

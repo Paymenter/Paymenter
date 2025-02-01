@@ -3,14 +3,10 @@
 namespace Paymenter\Extensions\Others\Affiliates\Listeners;
 
 use App\Events\User\Created;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
-use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Support\Facades\Cookie;
-use Illuminate\Support\Facades\Log;
 use Paymenter\Extensions\Others\Affiliates\Models\Affiliate;
 
-class ReferUserByAffiliate
+class IncreamentAffiliateSignups
 {
     /**
      * Create the event listener.
@@ -27,13 +23,12 @@ class ReferUserByAffiliate
     {
         $referral_code = Cookie::get('referred_by');
 
+        /** @var Affiliate */
         $affiliate = Affiliate::where('code', $referral_code)->first();
-        if ($affiliate) {
-            $affiliate->referrals()->create([
-                'user_id' => $event->user->id,
-            ]);
-        }
+        if ($affiliate) return;
 
-        Cookie::forget('referred_by');
+        $affiliate->update([
+            'signups' => $affiliate->signups + 1,
+        ]);
     }
 }

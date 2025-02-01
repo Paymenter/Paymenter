@@ -20,6 +20,7 @@ return new class extends Migration
             $table->integer('reward')->unsigned()->nullable();
             $table->integer('discount')->unsigned()->nullable();
             $table->integer('visitors')->unsigned()->default(0);
+            $table->integer('signups')->unsigned()->default(0);
             $table->timestamps();
         });
     }

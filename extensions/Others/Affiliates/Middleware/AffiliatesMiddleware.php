@@ -2,8 +2,8 @@
 
 namespace Paymenter\Extensions\Others\Affiliates\Middleware;
 
+use App\Helpers\ExtensionHelper;
 use Closure;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cookie;
@@ -25,20 +25,26 @@ class AffiliatesMiddleware
             return $next($request);
         }
 
-        try {
-            $affiliate = Affiliate::where('code', request('ref'))->firstOrFail();
+        $affiliate = Affiliate::where('code', request('ref'))->first();
 
-            if (Auth::check()) {
-                // User has already registered before
-                return $next($request);
-            }
+        if (!$affiliate) {
+            return $next($request);
+        }
 
+        // Increase the visitor count if a cookie is not present already, or is not the same one
+        if (!Cookie::has('referred_by') || Cookie::get('referred_by') !== $affiliate->code) {
             $affiliate->increment('visitors');
+        }
 
-            // Set affiliate cookie
-            Cookie::queue('referred_by', request('ref'), 60 * 24 * 90);
-        } catch (ModelNotFoundException $e) {
-            //
+        $extension = ExtensionHelper::getExtension('other', 'Affiliates');
+        $cookie_max_age = (int) $extension->config('cookie_max_age');
+
+        if ($cookie_max_age > 0) {
+            // Set affiliate cookie (and set it to expire after `$cookie_max_age` days)
+            Cookie::queue('referred_by', $affiliate->code, minutes: 60 * 24 * $cookie_max_age);
+        } else {
+            // Never expire
+            Cookie::queue(Cookie::forever('referred_by', $affiliate->code));
         }
 
         return $next($request);

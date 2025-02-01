@@ -5,6 +5,7 @@ namespace Paymenter\Extensions\Others\Affiliates;
 use App\Classes\Extension\Extension;
 use App\Events\User\Created as UserCreated;
 use App\Events\Invoice\Paid as InvoicePaid;
+use App\Events\Order\Created as OrderCreated;
 use App\Helpers\ExtensionHelper;
 use App\Models\User;
 use Illuminate\Support\Facades\Artisan;
@@ -12,7 +13,8 @@ use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Facades\View;
 use Livewire\Livewire;
-use Paymenter\Extensions\Others\Affiliates\Listeners\ReferUserByAffiliate;
+use Paymenter\Extensions\Others\Affiliates\Listeners\AssociateOrderWithAffiliate;
+use Paymenter\Extensions\Others\Affiliates\Listeners\IncreamentAffiliateSignups;
 use Paymenter\Extensions\Others\Affiliates\Listeners\RewardAffiliate;
 use Paymenter\Extensions\Others\Affiliates\Livewire\Affiliates\Affiliate as AffiliateComponent;
 use Paymenter\Extensions\Others\Affiliates\Middleware\AffiliatesMiddleware;
@@ -20,9 +22,7 @@ use Paymenter\Extensions\Others\Affiliates\Models\Affiliate;
 
 class Affiliates extends Extension
 {
-    public function __construct(public $config = [])
-    {
-    }
+    public function __construct(public $config = []) {}
 
     /**
      * Get all the configuration for the extension
@@ -54,6 +54,14 @@ class Affiliates extends Extension
                 'validation' => 'integer|min:0|max:100',
             ],
             [
+                'name' => 'cookie_max_age',
+                'label' => 'Referral Cookie Max-Age',
+                'type' => 'number',
+                'description' => 'Amount of days for which the referral cookie be valid. (Set 0 for infinite)',
+                'required' => true,
+                'validation' => 'integer|min:0',
+            ],
+            [
                 'name' => 'type',
                 'label' => 'Affiliate Code Type',
                 'type' => 'select',
@@ -73,11 +81,10 @@ class Affiliates extends Extension
         // Run migrations
         Artisan::call('migrate', ['--path' => 'extensions/Others/Affiliates/database/migrations/2024_12_25_075634_create_affiliates_table.php']);
         Artisan::call('migrate', ['--path' => 'extensions/Others/Affiliates/database/migrations/2024_12_25_092112_create_affiliate_referrals_table.php']);
+        Artisan::call('migrate', ['--path' => 'extensions/Others/Affiliates/database/migrations/2025_01_31_155928_create_affiliate_orders_table.php']);
     }
 
-    public function disabled()
-    {
-    }
+    public function disabled() {}
 
     public function boot()
     {
@@ -96,11 +103,15 @@ class Affiliates extends Extension
         // Listen for UserCreated and InvoicePaid events
         Event::listen(
             UserCreated::class,
-            ReferUserByAffiliate::class,
+            IncreamentAffiliateSignups::class,
         );
         Event::listen(
             InvoicePaid::class,
             RewardAffiliate::class,
+        );
+        Event::listen(
+            OrderCreated::class,
+            AssociateOrderWithAffiliate::class,
         );
 
         // Hook onto account navigation

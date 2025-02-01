@@ -42,9 +42,9 @@ class AffiliateResource extends Resource
                     ->relationship('user', 'id')
                     ->searchable()
                     ->preload()
-                    ->getOptionLabelFromRecordUsing(fn ($record) => $record->name)
-                    ->getSearchResultsUsing(fn (string $search): array => User::where('first_name', 'like', "%$search%")->orWhere('last_name', 'like', "%$search%")->limit(50)->pluck('name', 'id')->toArray())
-                    ->hint(fn ($get) => $get('user_id') ? new HtmlString('<a href="' . UserResource::getUrl('edit', ['record' => $get('user_id')]) . '" target="_blank">Go to User</a>') : null)
+                    ->getOptionLabelFromRecordUsing(fn($record) => $record->name)
+                    ->getSearchResultsUsing(fn(string $search): array => User::where('first_name', 'like', "%$search%")->orWhere('last_name', 'like', "%$search%")->limit(50)->pluck('name', 'id')->toArray())
+                    ->hint(fn($get) => $get('user_id') ? new HtmlString('<a href="' . UserResource::getUrl('edit', ['record' => $get('user_id')]) . '" target="_blank">Go to User</a>') : null)
                     ->live()
                     ->required(),
                 TextInput::make('code')
@@ -85,13 +85,16 @@ class AffiliateResource extends Resource
                 }),
                 TextColumn::make('code')
                     ->badge(),
-                TextColumn::make('referrals_count')
-                    ->counts('referrals'),
                 TextColumn::make('visitors')
-                    ->numeric(),
+                    ->numeric()
+                    ->sortable(),
+                TextColumn::make('signups')
+                    ->numeric()
+                    ->sortable(),
                 TextColumn::make('created_at')
                     ->label('Signed Up')
                     ->since()
+                    ->sortable()
                     ->dateTimeTooltip(),
             ])
             ->filters([])
@@ -108,7 +111,7 @@ class AffiliateResource extends Resource
     public static function getRelations(): array
     {
         return [
-            RelationManagers\ReferralsRelationManager::class
+            RelationManagers\AffiliatesRelationManager::class
         ];
     }
 

@@ -3,31 +3,33 @@
 namespace Paymenter\Extensions\Others\Affiliates\Models;
 
 use App\Helpers\ExtensionHelper;
-use App\Models\User;
+use App\Models\Order;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Support\Collection;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
-class AffiliateReferral extends Model
+class AffiliateOrder extends Model
 {
+    public $timestamps = false;
+
     protected $fillable = [
-        'user_id',
+        'order_id',
         'affiliate_id'
     ];
-
-    public function referredUser(): BelongsTo
-    {
-        return $this->belongsTo(User::class, 'user_id');
-    }
 
     public function affiliate(): BelongsTo
     {
         return $this->belongsTo(Affiliate::class);
     }
 
+    public function order(): BelongsTo
+    {
+        return $this->belongsTo(Order::class);
+    }
+
     /**
-     * Get the earnings made from this referral user
+     * Get the earnings made from this order
      *
      * @return string
      */
@@ -38,7 +40,7 @@ class AffiliateReferral extends Model
                 $earnings = [];
 
                 /** @var Collection */
-                $invoices = $this->referredUser->invoices;
+                $invoices = $this->order->invoices;
                 $extension = ExtensionHelper::getExtension('other', 'Affiliates');
                 $reward_percentage = $this->affiliate->reward ?: $extension->config('default_reward');
 

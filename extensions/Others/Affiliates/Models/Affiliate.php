@@ -23,9 +23,9 @@ class Affiliate extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function referrals(): HasMany
+    public function orders(): HasMany
     {
-        return $this->hasMany(AffiliateReferral::class);
+        return $this->hasMany(AffiliateOrder::class);
     }
 
     /**
@@ -38,8 +38,8 @@ class Affiliate extends Model
         return Attribute::make(
             get: function (): array {
                 $earnings = [];
-                $this->referrals->each(function ($referral) use (&$earnings) {
-                    foreach ($referral->earnings as $currency => $total) {
+                $this->orders->each(function ($order) use (&$earnings) {
+                    foreach ($order->earnings as $currency => $total) {
                         if (!isset($earnings[$currency])) $earnings[$currency] = 0;
                         $earnings[$currency] += $total;
                     }

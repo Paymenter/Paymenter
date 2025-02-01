@@ -6,7 +6,7 @@ use App\Helpers\ExtensionHelper;
 use App\Models\Invoice;
 use Illuminate\Support\Collection;
 use Paymenter\Extensions\Others\Affiliates\Models\Affiliate;
-use Paymenter\Extensions\Others\Affiliates\Models\AffiliateReferral;
+use Paymenter\Extensions\Others\Affiliates\Models\AffiliateOrder;
 
 class RewardAffiliate
 {
@@ -28,7 +28,8 @@ class RewardAffiliate
          */
         $invoice = $event->invoice;
 
-        $referral = AffiliateReferral::where('user_id', $invoice->user->id)->first();
+        $order = $invoice->items()->first()->reference->order;
+        $referral = AffiliateOrder::where('order_id', $order->id)->first();
 
         if (!$referral) return;
 
