@@ -2,6 +2,7 @@
 
 return [
     'ticket_details' => 'Détails du ticket',
+    'tickets' => 'Tickets',
     'subject' => 'Sujet',
     'status' => 'État',
     'priority' => 'Priorité',
