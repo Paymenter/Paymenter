@@ -1,6 +1,7 @@
 <?php
 
 return [
+    'account' => 'Account',
     'personal_details' => 'Особисті дані',
     'security' => 'Безпека',
     'credits' => 'Credits',
