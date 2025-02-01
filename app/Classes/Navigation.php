@@ -10,7 +10,7 @@ class Navigation
 {
     public static function getLinks()
     {
-        $categories = once(fn() => Category::whereNull('parent_id')->where(function ($query) {
+        $categories = once(fn () => Category::whereNull('parent_id')->where(function ($query) {
             $query->whereHas('children')->orWhereHas('products');
         })->get());
 
@@ -64,7 +64,7 @@ class Navigation
                 'name' => __('navigation.admin'),
                 'route' => 'filament.admin.pages.dashboard',
                 'spa' => false,
-                'condition' => Auth::user()->role_id !== null
+                'condition' => Auth::user()->role_id !== null,
             ],
         ];
 
@@ -117,7 +117,7 @@ class Navigation
                         'params' => [],
                     ],
                 ],
-            ]
+            ],
         ];
 
         $routes = EventHelper::itemEvent('navigation.dashboard', $routes);
@@ -136,7 +136,7 @@ class Navigation
             [
                 'name' => __('account.credits'),
                 'route' => 'account.credits',
-                'condition' => config('settings.credits_enabled')
+                'condition' => config('settings.credits_enabled'),
             ],
             [
                 'name' => __('account.security'),

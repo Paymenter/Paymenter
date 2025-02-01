@@ -18,16 +18,17 @@ class LanguageSwitch extends Component
         if (!array_key_exists($locale, config('app.available_locales', []))) {
             return;
         }
-        
+
         session(['locale' => $locale]);
         app()->setLocale($locale);
-        
+
         return $this->redirect(request()->header('Referer', '/'), navigate: true);
     }
 
     public function render()
     {
         $locales = config('app.available_locales');
+
         return view('components.language-switch', compact('locales'));
     }
 }

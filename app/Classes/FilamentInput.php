@@ -167,8 +167,7 @@ class FilamentInput
                     ->required($setting->required ?? false)
                     ->hsl()
                     ->regex('/^hsl\(\s*(\d+)\s*,\s*(\d*(?:\.\d+)?%)\s*,\s*(\d*(?:\.\d+)?%)\)$/')
-                    ->dehydrateStateUsing(fn (?string $state): ?string => 
-                        $state && str_starts_with($state, 'hsl(') 
+                    ->dehydrateStateUsing(fn (?string $state): ?string => $state && str_starts_with($state, 'hsl(')
                             ? preg_replace('/^hsl\((.+)\)$/', '$1', $state)
                             : $state
                     )
