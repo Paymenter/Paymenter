@@ -2,18 +2,22 @@
     <x-navigation.breadcrumb />
     <div class="px-2">
 
-        @if(Auth::user()->credits->count() > 0)
-        @foreach(Auth::user()->credits as $credit)
-        <div class="flex flex-col bg-primary-700 w-fit rounded-lg px-5 p-3 items-center gap-1">
-            <h5 class="text-lg font-bold">{{ $credit->currency->code }}</h5>
-            <p class="text-primary-100">{{ $credit->formattedAmount }}</p>
+
+
+        <h4 class="text-2xl font-bold pb-3">{{ __('account.credits') }}</h4>
+        @if (Auth::user()->credits->count() > 0)
+        <div class="flex flex-wrap gap-4">
+            @foreach (Auth::user()->credits as $credit)
+            <div class="flex flex-col bg-primary-700 w-fit rounded-lg px-5 p-3 items-center gap-1">
+                <h5 class="text-lg font-bold">{{ $credit->currency->code }}</h5>
+                <p class="text-primary-100">{{ $credit->formattedAmount }}</p>
+            </div>
+            @endforeach
         </div>
-        @endforeach
         @else
         <p>{{ __('account.no_credit') }}</p>
         @endif
-    </div>
-    <div class="bg-primary-800 p-8 rounded-lg mt-2 col-span-3">
+
         <h4 class="text-xl font-bold pb-3">{{ __('account.add_credit') }}</h4>
 
         <form wire:submit.prevent="addCredit">

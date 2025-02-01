@@ -4,9 +4,9 @@ namespace App\Admin\Resources;
 
 use App\Admin\Resources\ExtensionResource\Pages;
 use App\Models\Extension;
-use Filament\Forms;
 use Filament\Forms\Components\Grid;
 use Filament\Forms\Components\Section;
+use Filament\Forms\Components\Toggle;
 use Filament\Forms\Form;
 use Filament\Forms\Get;
 use Filament\Resources\Resource;
@@ -41,7 +41,7 @@ class ExtensionResource extends Resource
 
         return $form
             ->schema([
-                Forms\Components\Checkbox::make('enabled'),
+                Toggle::make('enabled'),
                 Section::make('Extension Settings')
                     ->description('Specific settings for the selected extension')
                     ->schema([
