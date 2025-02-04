@@ -1,8 +1,10 @@
 <?php
 
 return [
+    'account' => 'Account',
     'personal_details' => 'Особисті дані',
     'security' => 'Безпека',
+    'credits' => 'Credits',
 
     'change_password' => 'Змінити пароль',
 
@@ -29,6 +31,9 @@ return [
 
         'two_factor_code' => 'Введіть код з вашого додатка для автентифікації',
         'two_factor_code_placeholder' => 'Ваш код двофакторної автентифікації',
+
+        'currency' => 'Currency',
+        'amount' => 'Amount',
     ],
 
     'notifications' => [
@@ -39,4 +44,9 @@ return [
         'two_factor_code_incorrect' => 'Код невірний.',
         'session_logged_out' => 'Сесію завершено.',
     ],
+
+    'no_credit' => 'You have no credits.',
+    'add_credit' => 'Add credit',
+    'credit_deposit' => 'Credit deposit (:currency)',
+
 ];
