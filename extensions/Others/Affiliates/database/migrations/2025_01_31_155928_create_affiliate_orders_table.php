@@ -13,7 +13,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('affiliate_order', function (Blueprint $table) {
+        Schema::create('affiliate_orders', function (Blueprint $table) {
             $table->id();
             $table->foreignIdFor(Affiliate::class)->constrained()->cascadeOnDelete();
             $table->foreignIdFor(Order::class)->unique()->constrained()->cascadeOnDelete();
@@ -25,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('affiliate_order');
+        Schema::dropIfExists('affiliate_orders');
     }
 };
