@@ -1,9 +1,6 @@
 <div>
     <x-navigation.breadcrumb />
     <div class="px-2">
-
-
-
         <h4 class="text-2xl font-bold pb-3">{{ __('account.credits') }}</h4>
         @if (Auth::user()->credits->count() > 0)
         <div class="flex flex-wrap gap-4">

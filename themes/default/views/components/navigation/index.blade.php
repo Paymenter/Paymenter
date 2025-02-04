@@ -83,7 +83,7 @@
                             <span class="text-sm text-base text-nowrap">{{ auth()->user()->name }}</span>
                             <span class="text-sm text-base text-nowrap">{{ auth()->user()->email }}</span>
                         </div>
-                        @foreach (\App\Classes\Navigation::getAccountLinks() as $nav)
+                        @foreach (\App\Classes\Navigation::getAccountDropdownLinks() as $nav)
                         <x-navigation.link :href="route($nav['route'], $nav['params'] ?? null)" :spa="isset($nav['spa']) ? $nav['spa'] : true">
                             {{ $nav['name'] }}
                         </x-navigation.link>

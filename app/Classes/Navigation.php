@@ -131,34 +131,6 @@ class Navigation
         return Navigation::markActiveRoute($routes);
     }
 
-    // Get navigation items for user account page
-    public static function getAccountLinks()
-    {
-        $routes = [
-            [
-                'name' => __('account.personal_details'),
-                'route' => 'account',
-            ],
-            [
-                'name' => __('account.credits'),
-                'route' => 'account.credits',
-                'condition' => config('settings.credits_enabled'),
-            ],
-            [
-                'name' => __('account.security'),
-                'route' => 'account.security',
-            ],
-        ];
-
-        $routes = array_filter($routes, function ($route) {
-            return isset($route['condition']) ? $route['condition'] : true;
-        });
-
-        $routes = EventHelper::itemEvent('navigation.account', $routes);
-
-        return Navigation::markActiveRoute($routes);
-    }
-
     public static function getActiveRoute()
     {
         $route = request()->route()->getName();
@@ -166,7 +138,6 @@ class Navigation
             ...self::getLinks(),
             ...self::getAccountDropdownLinks(),
             ...self::getDashboardLinks(),
-            ...self::getAccountLinks(),
         ];
         // Get current parnet of the route
         $parent = null;

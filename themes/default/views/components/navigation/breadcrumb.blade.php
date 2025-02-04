@@ -5,7 +5,6 @@
         \App\Classes\Navigation::getLinks(),
         \App\Classes\Navigation::getAccountDropdownLinks(),
         \App\Classes\Navigation::getDashboardLinks(),
-        \App\Classes\Navigation::getAccountLinks(),
     ];
 
     function findBreadcrumb($items, $currentRoute) {

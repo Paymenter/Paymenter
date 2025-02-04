@@ -69,7 +69,6 @@ class Affiliates extends Extension
     {
         // Run migrations
         Artisan::call('migrate', ['--path' => 'extensions/Others/Affiliates/database/migrations/2024_12_25_075634_create_affiliates_table.php']);
-        Artisan::call('migrate', ['--path' => 'extensions/Others/Affiliates/database/migrations/2024_12_25_092112_create_affiliate_referrals_table.php']);
         Artisan::call('migrate', ['--path' => 'extensions/Others/Affiliates/database/migrations/2025_01_31_155928_create_affiliate_orders_table.php']);
     }
 
@@ -103,8 +102,18 @@ class Affiliates extends Extension
             AssociateOrderWithAffiliate::class,
         );
 
+        // Event::listen('navigation.dashboard', function ($routes) {
+        //     dd($routes);
+        //     return [
+        //         'name' => __('affiliates::affiliate.affiliate'),
+        //         'route' => 'affiliate.index',
+        //         'icon' => 'heroicon-o-banknotes',
+        //         'group' => 'Administration',
+        //     ];
+        // });
+
         // Hook onto account navigation
-        Event::listen('navigation.account', function () {
+        Event::listen('navigation.dashboard', function () {
             return [
                 'name' => __('affiliates::affiliate.affiliate'),
                 'route' => 'affiliate.index',

@@ -1369,7 +1369,7 @@ class MigrateOldData extends Command
                 return [
                     'id' => $record['id'],
 
-                    'type' => $record['type'],
+                    'type' => $record['type'] == 'percent' ? 'percentage' : 'fixed',
                     'recurring' => null,
                     'code' => $record['code'],
                     'value' => number_format((float) $record['value'], 2, '.', ''),
