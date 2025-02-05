@@ -793,7 +793,7 @@ class MigrateOldData extends Command
                 }));
 
                 // Add the transaction details to invoice_transactions
-                if ($transaction_amount > 0) {
+                if ($transaction_amount > 0 && $record['status'] === 'paid') {
                     $gateway = Gateway::where('name', $record['paid_with'])->get()->first();
                     $invoice_transactions[] = [
                         'invoice_id' => $record['id'],

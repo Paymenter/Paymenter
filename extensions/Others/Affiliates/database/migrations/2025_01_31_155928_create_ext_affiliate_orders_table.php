@@ -13,7 +13,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('affiliate_orders', function (Blueprint $table) {
+        Schema::create('ext_affiliate_orders', function (Blueprint $table) {
             $table->id();
             $table->foreignIdFor(Affiliate::class)->constrained()->cascadeOnDelete();
             $table->foreignIdFor(Order::class)->unique()->constrained()->cascadeOnDelete();

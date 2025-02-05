@@ -152,16 +152,13 @@ class OrderResource extends Resource
                     ->sortable(),
                 Tables\Columns\TextColumn::make('user.name')
                     ->label('User')
-                    ->searchable()
-                    ->sortable(),
+                    ->searchable(query: fn (Builder $query, $search) => $query->whereHas('user', fn (Builder $query) => $query->where('first_name', 'like', "%$search%")->orWhere('last_name', 'like', "%$search%"))),
                 Tables\Columns\TextColumn::make('currency.code')
                     ->label('Currency')
                     ->searchable()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('formattedTotal')
-                    ->label('Total')
-                    ->searchable()
-                    ->sortable(),
+                    ->label('Total'),
                 Tables\Columns\TextColumn::make('updated_at')
                     ->label('Updated At')
                     ->searchable()

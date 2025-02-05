@@ -144,8 +144,7 @@ class InvoiceResource extends Resource
 
                 Tables\Columns\TextColumn::make('user.name')
                     ->label('User')
-                    ->searchable()
-                    ->sortable(),
+                    ->searchable(true, fn (Builder $query, string $search) => $query->whereHas('user', fn (Builder $query) => $query->where('first_name', 'like', "%$search%")->orWhere('last_name', 'like', "%$search%"))),
                 Tables\Columns\TextColumn::make('status')
                     ->label('Status')
                     // Make first letter uppercase
@@ -164,13 +163,9 @@ class InvoiceResource extends Resource
                     ->searchable()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('formattedTotal')
-                    ->label('Total')
-                    ->searchable()
-                    ->sortable(),
+                    ->label('Total'),
                 Tables\Columns\TextColumn::make('formattedRemaining')
-                    ->label('Remaining')
-                    ->searchable()
-                    ->sortable(),
+                    ->label('Remaining'),
             ])
             ->defaultSort(function (Builder $query): Builder {
                 return $query

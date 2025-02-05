@@ -10,6 +10,8 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Affiliate extends Model
 {
+    protected $table = 'ext_affiliates';
+
     protected $fillable = [
         'user_id',
         'code',

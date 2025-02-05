@@ -10,6 +10,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class AffiliateOrder extends Model
 {
+    protected $table = 'ext_affiliate_orders';
+
     public $timestamps = false;
 
     protected $fillable = [
