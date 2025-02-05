@@ -68,8 +68,8 @@ class Affiliates extends Extension
     public function enabled()
     {
         // Run migrations
-        Artisan::call('migrate', ['--path' => 'extensions/Others/Affiliates/database/migrations/2024_12_25_075634_create_affiliates_table.php']);
-        Artisan::call('migrate', ['--path' => 'extensions/Others/Affiliates/database/migrations/2025_01_31_155928_create_affiliate_orders_table.php']);
+        Artisan::call('migrate', ['--path' => 'extensions/Others/Affiliates/database/migrations/2024_12_25_075634_create_ext_affiliates_table.php']);
+        Artisan::call('migrate', ['--path' => 'extensions/Others/Affiliates/database/migrations/2025_01_31_155928_create_ext_affiliate_orders_table.php']);
     }
 
     public function disabled() {}
