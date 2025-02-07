@@ -4,13 +4,13 @@ namespace App\Admin\Resources\UserResource\Pages;
 
 use App\Admin\Resources\UserResource;
 use App\Models\Currency;
-use Filament\Resources\Pages\ManageRelatedRecords;
-use Filament\Tables;
-use Filament\Tables\Table;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Forms\Get;
+use Filament\Resources\Pages\ManageRelatedRecords;
 use Filament\Support\RawJs;
+use Filament\Tables;
+use Filament\Tables\Table;
 
 class ShowCredits extends ManageRelatedRecords
 {
@@ -32,6 +32,7 @@ class ShowCredits extends ManageRelatedRecords
                 Forms\Components\Select::make('currency_code')
                     ->options(function () {
                         $existing_currencies = $this->getOwnerRecord()->credits->pluck('currency_code');
+
                         return Currency::whereNotIn('code', $existing_currencies)->pluck('code', 'code');
                     })
                     ->live()
@@ -40,8 +41,8 @@ class ShowCredits extends ManageRelatedRecords
                     ->required()
                     ->label('Amount')
                     // Suffix based on chosen currency
-                    ->prefix(fn(Get $get) => Currency::where('code', $get('currency_code'))->first()?->prefix)
-                    ->suffix(fn(Get $get) => Currency::where('code', $get('currency_code'))->first()?->suffix)
+                    ->prefix(fn (Get $get) => Currency::where('code', $get('currency_code'))->first()?->prefix)
+                    ->suffix(fn (Get $get) => Currency::where('code', $get('currency_code'))->first()?->suffix)
                     ->live(onBlur: true)
                     ->mask(RawJs::make(
                         <<<'JS'
@@ -49,7 +50,7 @@ class ShowCredits extends ManageRelatedRecords
                         JS
                     ))
                     ->numeric()
-                    ->minValue(0)
+                    ->minValue(0),
 
             ]);
     }
@@ -67,6 +68,7 @@ class ShowCredits extends ManageRelatedRecords
             ->headerActions([
                 Tables\Actions\CreateAction::make()->disabled(function () {
                     $existing_currencies = $this->getOwnerRecord()->credits->pluck('currency_code');
+
                     return count(Currency::whereNotIn('code', $existing_currencies)->pluck('code', 'code')) <= 0;
                 }),
             ])
