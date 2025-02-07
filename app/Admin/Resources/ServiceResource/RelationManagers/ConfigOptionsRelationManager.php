@@ -2,13 +2,12 @@
 
 namespace App\Admin\Resources\ServiceResource\RelationManagers;
 
-use App\Admin\Resources\InvoiceResource;
+use App\Models\ServiceConfig;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables;
 use Filament\Tables\Table;
-use App\Models\ServiceConfig;
 use Illuminate\Database\Eloquent\Builder;
 
 class ConfigOptionsRelationManager extends RelationManager

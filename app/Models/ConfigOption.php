@@ -52,5 +52,4 @@ class ConfigOption extends Model
     {
         return $this->hasMany(ServiceConfig::class, 'config_option_id');
     }
-
 }
