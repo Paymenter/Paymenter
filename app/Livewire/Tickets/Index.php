@@ -17,6 +17,7 @@ class Index extends Component
             'tickets' => Ticket::where('user_id', Auth::id())->latest()->paginate(config('settings.pagination')),
         ])->layoutData([
             'title' => 'Tickets',
+            'sidebar' => true
         ]);
     }
 }

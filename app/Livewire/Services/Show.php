@@ -80,6 +80,7 @@ class Show extends Component
 
         return view('services.show', ['extensionView' => $view])->layoutData([
             'title' => 'Services',
+            'sidebar' => true
         ]);
     }
 }

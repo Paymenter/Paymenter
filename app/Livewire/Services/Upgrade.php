@@ -120,6 +120,7 @@ class Upgrade extends Component
     {
         return view('services.upgrade')->layoutData([
             'title' => 'Upgrade Service',
+            'sidebar' => true
         ]);
     }
 }

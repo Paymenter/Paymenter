@@ -110,6 +110,8 @@ class Security extends Component
 
     public function render()
     {
-        return view('client.account.security');
+        return view('client.account.security')->layoutData([
+            'sidebar' => true,
+        ]);
     }
 }

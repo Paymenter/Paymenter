@@ -25,7 +25,9 @@ class Affiliate extends Component
 
     public function render()
     {
-        return view('affiliates::index');
+        return view('affiliates::index')->layoutData([
+            'sidebar' => true,
+        ]);
     }
 
     public function signup()
