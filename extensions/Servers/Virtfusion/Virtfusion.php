@@ -147,7 +147,7 @@ class Virtfusion extends Server
      */
     public function createServer(Service $service, $settings, $properties)
     {
-        if ($properties['server_id']) {
+        if (isset($properties['server_id'])) {
             throw new \Exception('Server already exists');
         }
 
@@ -184,7 +184,7 @@ class Virtfusion extends Server
      */
     public function suspendServer(Service $service, $settings, $properties)
     {
-        if (!$properties['server_id']) {
+        if (!isset($properties['server_id'])) {
             throw new \Exception('Server does not exist');
         }
 
@@ -202,7 +202,7 @@ class Virtfusion extends Server
      */
     public function unsuspendServer(Service $service, $settings, $properties)
     {
-        if (!$properties['server_id']) {
+        if (!isset($properties['server_id'])) {
             throw new \Exception('Server does not exist');
         }
 
@@ -220,7 +220,7 @@ class Virtfusion extends Server
      */
     public function terminateServer(Service $service, $settings, $properties)
     {
-        if (!$properties['server_id']) {
+        if (!isset($properties['server_id'])) {
             throw new \Exception('Server does not exist');
         }
 
