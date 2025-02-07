@@ -47,7 +47,7 @@ class Affiliate extends Component
             'visitors' => 0,
             'reward' => null,
             'discount' => null,
-        ]);
+        ])->refresh();
 
         $this->notify(__('affiliates::affiliate.signup-success'));
     }
