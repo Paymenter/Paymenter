@@ -44,4 +44,13 @@ class ConfigOption extends Model
     {
         return $this->belongsToMany(Product::class, 'config_option_products');
     }
+
+    /**
+     * Get the service configs that belong to the option.
+     */
+    public function serviceConfigs()
+    {
+        return $this->hasMany(ServiceConfig::class, 'config_option_id');
+    }
+
 }

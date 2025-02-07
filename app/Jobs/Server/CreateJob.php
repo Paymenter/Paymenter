@@ -18,7 +18,7 @@ class CreateJob implements ShouldQueue
     /**
      * Create a new job instance.
      */
-    public function __construct(public Service $service, public $sendNotiication = true) {}
+    public function __construct(public Service $service, public $sendNotification = true) {}
 
     /**
      * Execute the job.
@@ -35,7 +35,7 @@ class CreateJob implements ShouldQueue
         }
 
         // Send the email (TO BE MADE)
-        if ($this->sendNotiication) {
+        if ($this->sendNotification && isset($data)) {
             NotificationHelper::serverCreatedNotification($this->service->order->user, $this->service, $data);
         }
     }

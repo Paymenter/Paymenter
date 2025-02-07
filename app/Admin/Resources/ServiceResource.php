@@ -202,6 +202,7 @@ class ServiceResource extends Resource
         return [
             RelationManagers\InvoicesRelationManager::class,
             PropertiesRelationManager::class,
+            RelationManagers\ConfigOptionsRelationManager::class,
         ];
     }
 

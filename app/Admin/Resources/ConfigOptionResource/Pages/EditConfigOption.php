@@ -5,6 +5,7 @@ namespace App\Admin\Resources\ConfigOptionResource\Pages;
 use App\Admin\Resources\ConfigOptionResource;
 use Filament\Actions;
 use Filament\Resources\Pages\EditRecord;
+use App\Models\ConfigOption;
 
 class EditConfigOption extends EditRecord
 {
@@ -13,7 +14,20 @@ class EditConfigOption extends EditRecord
     protected function getHeaderActions(): array
     {
         return [
-            Actions\DeleteAction::make(),
+            // Show warning when there are child config options
+            Actions\DeleteAction::make('Delete')
+                ->requiresConfirmation()
+                ->modalDescription(
+                    fn(ConfigOption $record) => $record->children()->exists()
+                        ? 'This config option has services connected to it. Deleting it will also delete it from the services it is associated with. Are you sure you want to delete this config option?'
+                        : 'Are you sure you want to delete this config option?',
+                )
+                ->action(function() {
+                    $this->record->serviceConfigs()->delete();
+                    $this->record->delete();
+
+                    return redirect()->to($this->getResource()::generateUrl());
+                }),
         ];
     }
 }

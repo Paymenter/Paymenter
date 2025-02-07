@@ -11,7 +11,7 @@
             - {{ $title }}
         @endisset
     </title>
-    @vite(['themes/' . config('settings.theme') . '/js/app.js'], config('settings.theme'))
+    @vite(['themes/' . config('settings.theme') . '/js/app.js', 'themes/' . config('settings.theme') . '/css/app.css'], config('settings.theme'))
     @include('layouts.colors')
 
     @if (config('settings.logo'))

@@ -1,4 +1,3 @@
-import "../css/app.css";
 
 document.addEventListener('livewire:init', () => {
     Livewire.hook('request', ({ fail }) => {

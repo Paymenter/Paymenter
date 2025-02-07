@@ -1,4 +1,4 @@
-<div class="grid grid-cols-4 gap-6">
+<div class="grid grid-cols-4 gap-4">
     <div class="flex flex-col col-span-3 gap-4">
         @if ($items->isEmpty())
             <h1 class="text-2xl font-semibold">
@@ -6,7 +6,7 @@
             </h1>
         @endif
         @foreach ($items as $key => $item)
-            <div class="flex flex-row justify-between w-full bg-primary-800 p-2 px-4 rounded-md">
+            <div class="flex flex-row justify-between w-full bg-background-secondary p-3 rounded-md">
                 <div class="flex flex-col gap-1">
                     <h2 class="text-2xl font-semibold">
                         {{ $item->product->name }}
@@ -47,63 +47,66 @@
                                 {{ __('product.edit') }}
                             </x-button.primary>
                         </a>
-                        <x-button.secondary wire:click="removeProduct({{ $key }})" class="h-fit !w-fit">
+                        <x-button.danger wire:click="removeProduct({{ $key }})" class="h-fit !w-fit">
                             {{ __('product.remove') }}
-                        </x-button.secondary>
+                        </x-button.danger>
                     </div>
                 </div>
             </div>
         @endforeach
     </div>
-    <div class="flex flex-col gap-2 w-full col-span-1">
-        @if (!$items->isEmpty())
-            <h2 class="text-2xl font-semibold bg-primary-800 p-2 px-4 rounded-md mb-3">
-                {{ __('product.order_summary') }}
-            </h2>
-            <div class="font-semibold flex items-end gap-2 bg-primary-800 p-2 px-4 rounded-md">
-                @if(!$coupon)
-                    <x-form.input wire:model="coupon" name="coupon" label="Coupon" />
-                    <x-button.primary wire:click="applyCoupon" class="h-fit !w-fit mb-0.5">
-                        {{ __('product.apply') }}
-                    </x-button.primary>
-                @else
-                    <div class="flex justify-between items-center w-full">
-                        <h4 class="text-center w-full">{{ $coupon->code }}</h4>
-                        <x-button.secondary wire:click="removeCoupon" class="h-fit !w-fit">
-                            {{ __('product.remove') }}
-                        </x-button.secondary>
+    <div class="flex flex-col gap-4">
+        <div class="flex flex-col gap-2 w-full col-span-1 bg-background-secondary p-3 rounded-md">
+            @if (!$items->isEmpty())
+                <h2 class="text-2xl font-semibold mb-3">
+                    {{ __('product.order_summary') }}
+                </h2>
+                <div class="font-semibold flex items-end gap-2">
+                    @if(!$coupon)
+                        <x-form.input wire:model="coupon" name="coupon" label="Coupon" />
+                        <x-button.primary wire:click="applyCoupon" class="h-fit !w-fit mb-0.5">
+                            {{ __('product.apply') }}
+                        </x-button.primary>
+                    @else
+                        <div class="flex justify-between items-center w-full">
+                            <h4 class="text-center w-full">{{ $coupon->code }}</h4>
+                            <x-button.secondary wire:click="removeCoupon" class="h-fit !w-fit">
+                                {{ __('product.remove') }}
+                            </x-button.secondary>
+                        </div>
+                    @endif
+                </div>
+                <div class="font-semibold flex justify-between">
+                    <h4>{{ __('invoices.subtotal') }}:</h4> {{ $total->format($total->price - $total->tax) }}
+                </div>
+                @if ($total->tax > 0)
+                    <div class="font-semibold flex justify-between">
+                        <h4>{{ \App\Classes\Settings::tax()->name }}:</h4> {{ $total->formatted->tax }}
                     </div>
                 @endif
-            </div>
-            <div class="font-semibold flex justify-between bg-primary-800 p-2 px-4 rounded-md">
-                <h4>{{ __('invoices.subtotal') }}:</h4> {{ $total->format($total->price - $total->tax) }}
-            </div>
-            @if ($total->tax > 0)
-                <div class="font-semibold flex justify-between bg-primary-800 p-2 px-4 rounded-md">
-                    <h4>{{ \App\Classes\Settings::tax()->name }}:</h4> {{ $total->formatted->tax }}
+                <div class="text-lg font-semibold flex justify-between mt-1">
+                    <h4>{{ __('invoices.total') }}:</h4> {{ $total }}
                 </div>
-            @endif
-            <div class="text-lg font-semibold flex justify-between bg-primary-800 p-2 px-4 rounded-md mt-1">
-                <h4>{{ __('invoices.total') }}:</h4> {{ $total }}
             </div>
 
-            @if(Auth::check() && Auth::user()->credits()->where('currency_code', $items->first()->price->currency->code)->exists())
-                <x-form.checkbox wire:model="use_credits" name="use_credits" label="Use Credits" />
-            @endif
-
-            @if(count($gateways) > 1)
+            <div class="flex flex-col gap-2 w-full col-span-1 bg-background-secondary p-3 rounded-md">
+                @if(count($gateways) > 1)
                 <x-form.select wire:model.live="gateway" name="gateway" label="Payment Gateway">
                     @foreach ($gateways as $gateway)
-                        <option value="{{ $gateway->id }}">{{ $gateway->name }}</option>
+                    <option value="{{ $gateway->id }}">{{ $gateway->name }}</option>
                     @endforeach
                 </x-form.select>
-            @endif
+                @endif
+                @if(Auth::check() && Auth::user()->credits()->where('currency_code', $items->first()->price->currency->code)->exists())
+                    <x-form.checkbox wire:model="use_credits" name="use_credits" label="Use Credits" />
+                @endif
 
-            <div class="flex flex-row justify-end gap-2">
-                <x-button.primary wire:click="checkout" class="h-fit" wire:loading.attr="disabled">
-                    {{ __('product.checkout') }}
-                </x-button.primary>
-            </div>
-        @endif
+                <div class="flex flex-row justify-end gap-2">
+                    <x-button.primary wire:click="checkout" class="h-fit" wire:loading.attr="disabled">
+                        {{ __('product.checkout') }}
+                    </x-button.primary>
+                </div>
+            @endif
+        </div>
     </div>
 </div>

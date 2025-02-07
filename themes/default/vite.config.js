@@ -9,6 +9,7 @@ export default defineConfig({
         laravel({
             input: [
                 path.resolve(__dirname, 'js/app.js'),
+                path.resolve(__dirname, 'css/app.css'),
             ],
             buildDirectory: 'default/',
             refresh: true
