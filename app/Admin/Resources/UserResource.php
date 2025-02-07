@@ -4,6 +4,7 @@ namespace App\Admin\Resources;
 
 use App\Admin\Resources\Common\RelationManagers\PropertiesRelationManager;
 use App\Admin\Resources\UserResource\Pages;
+use App\Models\Credit;
 use App\Models\User;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
@@ -12,6 +13,7 @@ use Filament\Forms\Form;
 use Filament\Resources\Pages\Page;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Database\Eloquent\Model;
@@ -44,17 +46,15 @@ class UserResource extends Resource
                 TextInput::make('email')->translateLabel()->email()->required()->unique('users', 'email', ignoreRecord: true),
 
                 TextInput::make('password')->translateLabel()->password()->revealable()
-                    ->dehydrateStateUsing(fn (string $state): string => Hash::make($state))
-                    ->dehydrated(fn (?string $state): bool => filled($state))
-                    ->required(fn (string $operation): bool => $operation === 'create'),
-                TextInput::make('credits')->translateLabel()->numeric()->default(0),
-
+                    ->dehydrateStateUsing(fn(string $state): string => Hash::make($state))
+                    ->dehydrated(fn(?string $state): bool => filled($state))
+                    ->required(fn(string $operation): bool => $operation === 'create'),
                 Select::make('role_id')->translateLabel()->relationship('role', 'name')->searchable()->preload(),
                 Toggle::make('tfa_secret')
                     ->label('Two Factor Authentication')
-                    ->disabled(fn ($record) => !$record->tfa_secret)
-                    ->dehydrateStateUsing(fn ($state, $record) => $state ? $record->tfa_secret : null)
-                    ->formatStateUsing(fn ($record) => $record && $record->tfa_secret ? true : false)
+                    ->disabled(fn($record) => !$record->tfa_secret)
+                    ->dehydrateStateUsing(fn($state, $record) => $state ? $record->tfa_secret : null)
+                    ->formatStateUsing(fn($record) => $record && $record->tfa_secret ? true : false)
                     ->hiddenOn(['create']),
 
                 Toggle::make('email_verified_at')
@@ -74,11 +74,20 @@ class UserResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('first_name')->searchable(),
-                Tables\Columns\TextColumn::make('last_name'),
-                Tables\Columns\TextColumn::make('email'),
-                Tables\Columns\TextColumn::make('role.name'),
-                Tables\Columns\TextColumn::make('credits'),
+                TextColumn::make('first_name')
+                    ->searchable()
+                    ->description(function (User $user) {
+                        if (count($user->credits) <= 0) {
+                            return null;
+                        }
+
+                        return 'Earnings - ' . implode(', ', $user->credits->map(function (Credit $credit) {
+                            return "$credit->currency_code: $credit->amount";
+                        })->toArray());
+                    }),
+                TextColumn::make('last_name'),
+                TextColumn::make('email'),
+                TextColumn::make('role.name'),
             ])
             ->filters([
                 Tables\Filters\SelectFilter::make('role')
@@ -106,6 +115,7 @@ class UserResource extends Resource
             'edit' => Pages\EditUser::route('/{record}/edit'),
             'services' => Pages\ShowServices::route('/{record}/services'),
             'invoices' => Pages\ShowInvoices::route('/{record}/invoices'),
+            'credits' => Pages\ShowCredits::route('/{record}/credits'),
         ];
     }
 
@@ -116,6 +126,7 @@ class UserResource extends Resource
             Pages\EditUser::class,
             Pages\ShowServices::class,
             Pages\ShowInvoices::class,
+            Pages\ShowCredits::class,
         ]);
     }
 }
