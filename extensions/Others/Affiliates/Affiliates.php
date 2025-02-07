@@ -113,7 +113,7 @@ class Affiliates extends Extension
         // });
 
         // Hook onto account navigation
-        Event::listen('navigation.dashboard', function () {
+        Event::listen('navigation.account', function () {
             return [
                 'name' => __('affiliates::affiliate.affiliate'),
                 'route' => 'affiliate.index',

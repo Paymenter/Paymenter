@@ -39,7 +39,7 @@ jobs:
         run: | 
             rm -rf node_modules vendor tests CODE_OF_CONDUCT.md CONTRIBUTING.md flake.lock flake.nix phpstan.neon phpunit.xml shell.nix
             tar -czf paymenter.tar.gz * .env.example .gitignore
-          
+
       # Add to action file
       - name: Upload archive to https://api.paymenter.org/beta
         uses: JantHsueh/upload-file-action@master

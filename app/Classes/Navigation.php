@@ -122,6 +122,7 @@ class Navigation
                         'params' => [],
                         'condition' => config('settings.credits_enabled'),
                     ],
+                    ...EventHelper::itemEvent('navigation.account', []),
                 ],
             ],
         ];

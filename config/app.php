@@ -17,6 +17,10 @@ return [
 
     'name' => env('APP_NAME', 'Paymenter'),
 
+    'version' => 'development',
+
+    'commit' => '',
+
     /*
     |--------------------------------------------------------------------------
     | Application Environment
