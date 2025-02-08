@@ -542,4 +542,15 @@ class Pterodactyl extends Server
             ],
         ];
     }
+
+    public function migrateOption(string $key, ?string $value)
+    {
+        return match ($key) {
+            'egg' => ['key' => 'egg_id', 'value' => $value],
+            'nest' => ['key' => 'nest_id', 'value' => $value],
+            'allocation' => ['key' => 'additional_allocations', 'value' => $value],
+            'location' => ['key' => 'location_ids', 'value' => json_encode([$value]), 'type' => 'array'],
+            default => ['key' => $key, 'value' => $value]
+        };
+    }
 }

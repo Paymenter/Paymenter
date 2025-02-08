@@ -8,6 +8,7 @@ use App\Models\Currency;
 use App\Models\CustomProperty;
 use App\Models\Gateway;
 use App\Models\Price;
+use App\Models\Server;
 use Closure;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Crypt;
@@ -81,6 +82,7 @@ class MigrateOldData extends Command
             $this->migrateTaxRates();
             $this->migrateExtensions();
             $this->migrateProducts();
+            $this->migrateProductUpgrades();
             $this->migrateConfigOptionProducts();
             $this->migratePlans();
             $this->migrateOrdersAndServices();
@@ -634,12 +636,23 @@ class MigrateOldData extends Command
                 $setting = array_filter($extension_cfg, fn ($ext) => $ext['name'] == $old_ext_setting['key']);
                 $setting = array_merge(...$setting);
 
-                // Check if setting is encrypted
-                try {
-                    $decrypted = Crypt::decrypt($old_ext_setting['value']);
-                    $old_ext_setting['value'] = $decrypted;
-                } catch (\Throwable $th) {
-                    // Do nothing
+                // Check if the extension wants the setting to be encrypted or not
+                if ($setting['encrypted'] ?? false) {
+                    try {
+                        // Check if the setting was already encrypted, if yes don't change it
+                        Crypt::decryptString($old_ext_setting['value']);
+                    } catch (\Throwable $th) {
+                        // Else, encrypt it
+                        $old_ext_setting['value'] = Crypt::encryptString($old_ext_setting['value']);
+                    }
+                } else {
+                    try {
+                        $decrypted = Crypt::decryptString($old_ext_setting['value']);
+                        // If the setting was encrypted, decrypted it
+                        $old_ext_setting['value'] = $decrypted;
+                    } catch (\Throwable $th) {
+                        // Else, do nothing
+                    }
                 }
 
                 $extension_settings[] = [
@@ -691,26 +704,62 @@ class MigrateOldData extends Command
 
             DB::table('products')->insert($records);
         });
+
+        $this->info('Migrating Product Settings...');
+        $this->migrateInBatch('product_settings', 'SELECT * FROM product_settings LIMIT :limit OFFSET :offset', function ($product_settings) {
+
+            $records = [];
+            foreach ($product_settings as $record) {
+                try {
+                    $extension = Server::findOrFail($record['extension']);
+                } catch (\Throwable $th) {
+                    $extension = $record['extension'];
+                    $this->warn("Error while getting Extension '$extension', Not migrating ext product settings: " . $th->getMessage());
+
+                    continue;
+                }
+
+                $migratedOption = ExtensionHelper::call($extension, 'migrateOption', [
+                    'key' => $record['name'],
+                    'value' => $record['value'],
+                ]);
+                $records[] = [
+                    'key' => $migratedOption['key'] ?: $record['name'],
+                    'value' => $migratedOption['value'] ?: $record['value'],
+                    'type' => $migratedOption['type'] ?? 'string',
+                    'settingable_type' => 'App\Models\Product',
+                    'settingable_id' => $record['product_id'],
+                    'encrypted' => $migratedOption['encrypted'] ?? false,
+                    'created_at' => $record['created_at'],
+                    'updated_at' => $record['updated_at'],
+                ];
+            }
+            DB::table('settings')->insert($records);
+        });
     }
 
     protected function migrateProductUpgrades()
     {
-        $stmt = $this->pdo->query('SELECT * FROM product_upgrades');
-        $records = $stmt->fetchAll();
+        $this->info('Migrating Product Upgrades...');
 
-        $records = array_map(function ($record) {
-            return [
-                'id' => $record['id'],
-                'product_id' => $record['product_id'],
-                'upgrade_id' => $record['upgrade_product_id'],
+        $this->migrateInBatch(
+            'product_upgrades',
+            'SELECT * FROM `product_upgrades` LIMIT :limit OFFSET :offset',
+            function ($records) {
+                $records = array_map(function ($record) {
+                    return [
+                        'id' => $record['id'],
+                        'product_id' => $record['product_id'],
+                        'upgrade_id' => $record['upgrade_product_id'],
 
-                'created_at' => $record['created_at'],
-                'updated_at' => $record['updated_at'],
-            ];
-        }, $records);
+                        'created_at' => $record['created_at'],
+                        'updated_at' => $record['updated_at'],
+                    ];
+                }, $records);
 
-        DB::table('product_upgrades')->insert($records);
-        $this->info('Migrated product_upgrades!');
+                DB::table('product_upgrades')->insert($records);
+            }
+        );
     }
 
     protected function migrateServiceCancellations()
