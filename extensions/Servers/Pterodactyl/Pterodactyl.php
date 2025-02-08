@@ -24,7 +24,6 @@ class Pterodactyl extends Server
                 'description' => 'Pterodactyl URL',
                 'required' => true,
                 'validation' => 'url',
-                'encrypted' => true,
             ],
             [
                 'name' => 'api_key',
@@ -546,14 +545,12 @@ class Pterodactyl extends Server
 
     public function migrateOption(string $key, ?string $value)
     {
-        dump($key, $value);
-
         return match ($key) {
-            'egg' => ['egg_id', $value],
-            'nest' => ['nest_id', $value],
-            'allocation' => ['additional_allocations', $value],
-            'location' => ['location_ids', [$value]],
-            default => [$key, $value]
+            'egg' => ['key' => 'egg_id', 'value' => $value],
+            'nest' => ['key' => 'nest_id', 'value' => $value],
+            'allocation' => ['key' => 'additional_allocations', 'value' => $value],
+            'location' => ['key' => 'location_ids', 'value' => json_encode([$value]), 'type' => 'array'],
+            default => ['key' => $key, 'value' => $value]
         };
     }
 }

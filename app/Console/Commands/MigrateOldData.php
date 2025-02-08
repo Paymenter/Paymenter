@@ -636,19 +636,22 @@ class MigrateOldData extends Command
                 $setting = array_filter($extension_cfg, fn ($ext) => $ext['name'] == $old_ext_setting['key']);
                 $setting = array_merge(...$setting);
 
-                // Decrypt the value if it is marked as non-encrypted in new extension, otherwise leave as is
-                try {
-                    $decrypted = Crypt::decryptString($old_ext_setting['value']);
-
-                    if (!$setting['encrypted']) {
-                        $old_ext_setting['value'] = $decrypted;
+                // Check if the extension wants the setting to be encrypted or not
+                if ($setting['encrypted'] ?? false) {
+                    try {
+                        // Check if the setting was already encrypted, if yes don't change it
+                        Crypt::decryptString($old_ext_setting['value']);
+                    } catch (\Throwable $th) {
+                        // Else, encrypt it
+                        $old_ext_setting['value'] = Crypt::encryptString($old_ext_setting['value']);
                     }
-                } catch (\Throwable $th) {
-                    // Old setting's value is not encrypted
-                    // Encrypt it if new setting requires it to be encrypted
-                    if ($setting['encrypted']) {
-                        $encrypted = Crypt::encryptString($old_ext_setting['value']);
-                        $old_ext_setting['value'] = $encrypted;
+                } else {
+                    try {
+                        $decrypted = Crypt::decryptString($old_ext_setting['value']);
+                        // If the setting was encrypted, decrypted it
+                        $old_ext_setting['value'] = $decrypted;
+                    } catch (\Throwable $th) {
+                        // Else, do nothing
                     }
                 }
 
@@ -716,18 +719,17 @@ class MigrateOldData extends Command
                     continue;
                 }
 
-                [$key, $value] = ExtensionHelper::call($extension, 'migrateOption', [
+                $migratedOption = ExtensionHelper::call($extension, 'migrateOption', [
                     'key' => $record['name'],
                     'value' => $record['value'],
                 ]);
-
                 $records[] = [
-                    'key' => $key ?: $record['name'],
-                    'value' => $value ?: $record['value'],
-                    'type' => 'string',
+                    'key' => $migratedOption['key'] ?: $record['name'],
+                    'value' => $migratedOption['value'] ?: $record['value'],
+                    'type' => $migratedOption['type'] ?? 'string',
                     'settingable_type' => 'App\Models\Product',
                     'settingable_id' => $record['product_id'],
-                    'encrypted' => false,
+                    'encrypted' => $migratedOption['encrypted'] ?? false,
                     'created_at' => $record['created_at'],
                     'updated_at' => $record['updated_at'],
                 ];

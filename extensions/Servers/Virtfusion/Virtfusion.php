@@ -239,8 +239,8 @@ class Virtfusion extends Server
     public function migrateOption(string $key, ?string $value)
     {
         return match ($key) {
-            'ips' => ['ipv4', $value],
-            default => [$key, $value]
+            'ips' => ['key' => 'ipv4', 'value' => $value],
+            default => ['key' => $key, 'value' => $value]
         };
     }
 }
