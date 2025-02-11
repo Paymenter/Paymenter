@@ -3,27 +3,29 @@
 <div id="cf-turnstile"></div>
 
 <script>
-    document.addEventListener('livewire:init', () => {
-        function renderTurnstile() {
+    function renderTurnstile() {
+        const isDarkMode = document.documentElement.classList.contains('dark');
+        const theme = isDarkMode ? 'dark' : 'light';
 
-            const isDarkMode = document.documentElement.classList.contains('dark');
-            const theme = isDarkMode ? 'dark' : 'light';
+        turnstile.render('#cf-turnstile', {
+            sitekey: '{{ config('settings.captcha_site_key') }}',
+            size: 'flexible',
+            theme: theme,
+            callback: function(token) {
+                @this.set('captcha', token, false);
+            }
+        });
+    }
 
-            turnstile.render('#cf-turnstile', {
-                sitekey: '{{ config('settings.captcha_site_key') }}',
-                size: 'flexible',
-                theme: theme,
-                callback: function(token) {
-                    @this.set('captcha', token, false);
-                }
-            });
-        }
-
+    document.addEventListener('livewire:initialized', () => {
         renderTurnstile();
 
-        // On livewire validation error reset turnstile
-        Livewire.hook('morph.updated', () => {
-            renderTurnstile();
-        });
+        // On livewire validation error reset captcha
+        Livewire.hook('request', ({
+            succeed,
+            fail
+        }) => {
+            succeed(() => turnstile.reset());
+        })
     });
 </script>
