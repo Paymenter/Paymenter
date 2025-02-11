@@ -3,19 +3,19 @@
 <div id="g-recaptcha" data-sitekey="{{ config('settings.captcha_site_key') }}"></div>
 
 <script>
-    document.addEventListener('livewire:init', () => {
+    document.addEventListener('livewire:initialized', () => {
+        const submitBtn = document.querySelector('#{{ $form }} button[type="submit"]')
 
-        document.querySelector('#{{ $form }} button[type="submit"]').addEventListener("click", function(
-            event) {
+        submitBtn.addEventListener("click", function(event) {
             event.preventDefault();
             grecaptcha.ready(function() {
                 grecaptcha.execute('{{ config('settings.captcha_site_key') }}', {
                     action: 'submit'
                 }).then(function(token) {
                     @this.set('captcha', token, false)
-                    @this.submit()
+                    @this.submit();
                 });
             });
-        })
-    })
+        });
+    });
 </script>
