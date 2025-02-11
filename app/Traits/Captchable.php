@@ -3,7 +3,6 @@
 namespace App\Traits;
 
 use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\ValidationException;
 
 trait Captchable
@@ -64,10 +63,9 @@ trait Captchable
             return $this->is_valid = true;
         }
 
-        Log::error('The CAPTCHA was invalid.' . $value, $response->json(), $subResponse->json());
         throw ValidationException::withMessages(['captcha' => 'The CAPTCHA was invalid.']);
 
-        return $this->is_valid = true;
+        return $this->is_valid = false;
     }
 
     // Google Recaptcha
@@ -83,9 +81,26 @@ trait Captchable
             return $this->is_valid = true;
         }
 
-        Log::error('The CAPTCHA was invalid.' . $value, $response->json());
         throw ValidationException::withMessages(['captcha' => 'The CAPTCHA was invalid.']);
 
-        return $this->is_valid = true;
+        return $this->is_valid = false;
+    }
+
+    // hCaptcha
+    private function hcaptcha($value)
+    {
+        $response = Http::asForm()->acceptJson()->post('https://api.hcaptcha.com/siteverify', [
+            'secret' => config('settings.captcha_secret'),
+            'response' => $value,
+            'remoteip' => request()->ip(),
+        ]);
+
+        if ($response->json()['success']) {
+            return $this->is_valid = true;
+        }
+
+        throw ValidationException::withMessages(['captcha' => 'The CAPTCHA was invalid.']);
+
+        return $this->is_valid = false;
     }
 }

@@ -23,7 +23,6 @@ class Login extends Component
 
     public function submit()
     {
-        // todo: Can we remove this?
         $this->captcha();
         $this->validate();
 
@@ -56,7 +55,11 @@ class Login extends Component
 
         RateLimiter::clear('login:' . $this->email);
 
-        return $this->redirectIntended(route('dashboard'), true);
+        $intendedUrl = session()->pull('url.intended', default: route('dashboard'));
+        $isAdminRoute = str_starts_with($intendedUrl, url('/admin'));
+
+        // Redirect normally if it is an admin route, otherwise navigate using livewire
+        return $this->redirect($intendedUrl, navigate: !$isAdminRoute);
     }
 
     public function render()
