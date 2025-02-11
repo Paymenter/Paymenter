@@ -38,7 +38,7 @@ class Announcements extends Extension
     public function enabled()
     {
         // Run migrations
-        Artisan::call('migrate', ['--path' => 'extensions/Others/Announcements/database/migrations/2024_10_19_095356_create_ext_announcements_table.php']);
+        Artisan::call('migrate', ['--path' => 'extensions/Others/Announcements/database/migrations/2024_10_19_095356_create_ext_announcements_table.php', '--force' => true]);
     }
 
     public function boot()
