@@ -9,15 +9,11 @@
         "build:admin": "npx tailwindcss --input ./resources/css/filament/admin/theme.css --output ./public/css/filament/admin/theme.css --config ./resources/css/filament/admin/tailwind.config.js --minify"
     },
     "devDependencies": {
-        "@tailwindcss/forms": "^0.5.7",
-        "@tailwindcss/typography": "^0.5.13",
-        "autoprefixer": "^10.4.19",
+        "@tailwindcss/forms": "^0.5.10",
+        "@tailwindcss/typography": "^0.5.16",
+        "@tailwindcss/vite": "^4.0.6",
         "laravel-vite-plugin": "^1.0",
-        "postcss": "^8.4.38",
-        "postcss-import": "^14.1.0",
-        "postcss-nesting": "^12.1.5",
-        "tailwindcss": "^4.0.0",
-        "@tailwindcss/vite": "^4.0.1",
+        "tailwindcss": "^4.0.6",
         "vite": "^5.4"
     }
 }
