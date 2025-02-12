@@ -1,10 +1,43 @@
 @import 'tailwindcss';
+@import './easymde.css'
 
 @plugin '@tailwindcss/forms';
 @plugin '@tailwindcss/typography';
 
-@config '../tailwind.config.js';
+@custom-variant dark (&:where(.dark, .dark *));
+
 @source "../views";
+@source "../../../extensions/**/*.blade.php";
+
+@theme {
+  /* Font Family */
+  --font-sans: "Nunito", ui-sans-serif, system-ui, sans-serif;
+}
+
+@theme inline {
+  /* Branding Colors */
+  --color-primary: hsl(var(--color-primary));
+  --color-secondary: hsl(var(--color-secondary));
+  
+  /* Neutral Colors */
+  --color-neutral: hsl(var(--color-neutral));
+  
+  /* Text Colors */
+  --color-base: hsl(var(--color-base));
+  --color-muted: hsl(var(--color-muted));
+  --color-inverted: hsl(var(--color-inverted));
+  
+  /* State Colors */
+  --color-success: hsl(var(--color-success));
+  --color-error: hsl(var(--color-error));
+  --color-warning: hsl(var(--color-warning));
+  --color-inactive: hsl(var(--color-inactive));
+  --color-info: hsl(var(--color-info));
+  
+  /* Background Colors */
+  --color-background: hsl(var(--color-background));
+  --color-background-secondary: hsl(var(--color-background-secondary));
+}
 
 /*
 The default border color has changed to `currentColor` in Tailwind CSS v4,
@@ -31,5 +64,3 @@ color utility to any element that depends on these defaults.
 @utility text-wrap {
   text-wrap: wrap;
 }
-
-@import './easymde.css'

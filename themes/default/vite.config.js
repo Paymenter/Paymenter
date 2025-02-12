@@ -1,11 +1,10 @@
 import { defineConfig } from 'vite'
 import laravel from 'laravel-vite-plugin'
 import path from 'path'
-import tailwindcssVite from "@tailwindcss/vite";
+import tailwindcss from "@tailwindcss/vite";
 
 export default defineConfig({
     plugins: [
-        tailwindcssVite(),
         laravel({
             input: [
                 path.resolve(__dirname, 'js/app.js'),
@@ -14,5 +13,6 @@ export default defineConfig({
             buildDirectory: 'default/',
             refresh: true
         }),
+        tailwindcss(),
     ],
 })
