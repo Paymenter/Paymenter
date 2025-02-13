@@ -85,8 +85,8 @@ class UserResource extends Resource
                             return "$credit->currency_code: $credit->amount";
                         })->toArray());
                     }),
-                TextColumn::make('last_name'),
-                TextColumn::make('email'),
+                TextColumn::make('last_name')->searchable(),
+                TextColumn::make('email')->searchable(),
                 TextColumn::make('role.name'),
             ])
             ->filters([
