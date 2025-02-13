@@ -84,27 +84,32 @@ class Navigation
                 'name' => __('navigation.dashboard'),
                 'route' => 'dashboard',
                 'icon' => 'ri-layout-row-fill',
+                'condition' => Auth::check(),
             ],
             [
                 'name' => __('navigation.services'),
                 'route' => 'services',
                 'icon' => 'ri-server-fill',
+                'condition' => Auth::check(),
             ],
             [
                 'name' => __('navigation.invoices'),
                 'route' => 'invoices',
                 'icon' => 'ri-receipt-fill',
                 'separator' => true,
+                'condition' => Auth::check(),
             ],
             [
                 'name' => __('navigation.tickets'),
                 'route' => 'tickets',
                 'icon' => 'ri-customer-service-2-fill',
                 'separator' => true,
+                'condition' => Auth::check(),
             ],
             [
                 'name' => __('navigation.account'),
                 'icon' => 'ri-settings-3-fill',
+                'condition' => Auth::check(),
                 'children' => [
                     [
                         'name' => __('navigation.personal_details'),
@@ -128,6 +133,10 @@ class Navigation
         ];
 
         $routes = EventHelper::itemEvent('navigation.dashboard', $routes);
+
+        $routes = array_filter($routes, function ($route) {
+            return isset($route['condition']) ? $route['condition'] : true;
+        });
 
         return Navigation::markActiveRoute($routes);
     }
