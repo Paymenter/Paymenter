@@ -52,8 +52,8 @@ class Change extends Command
         if (isset($form['key'])) {
             $key = $form['key'];
         }
-        if (isset($form['value'])) {
-            $value = $form['value'];
+        if (isset($form[0]) || isset($form[1])) {
+            $value = $form[0] ?? $form[1];
         }
 
         Setting::updateOrCreate(
