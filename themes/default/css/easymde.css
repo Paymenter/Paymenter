@@ -61,7 +61,7 @@
     display: block;
     height: 1rem;
     width: 1rem;
-    background-color: hsl(var(--color-base) / var(--tw-text-opacity));
+    @apply bg-base;
 }
 
 .EasyMDEContainer .editor-toolbar .bold::before {
