@@ -722,10 +722,10 @@ class MigrateOldData extends Command
                 $migratedOption = ExtensionHelper::call($extension, 'migrateOption', [
                     'key' => $record['name'],
                     'value' => $record['value'],
-                ]);
+                ], mayFail: true);
                 $records[] = [
-                    'key' => $migratedOption['key'] ?: $record['name'],
-                    'value' => $migratedOption['value'] ?: $record['value'],
+                    'key' => $migratedOption['key'] ?? $record['name'],
+                    'value' => $migratedOption['value'] ?? $record['value'],
                     'type' => $migratedOption['type'] ?? 'string',
                     'settingable_type' => 'App\Models\Product',
                     'settingable_id' => $record['product_id'],
