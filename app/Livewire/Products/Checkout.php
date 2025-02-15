@@ -121,7 +121,7 @@ class Checkout extends Component
 
     public function getCheckoutConfig()
     {
-        return once(fn () => ExtensionHelper::getCheckoutConfig($this->product));
+        return once(fn() => ExtensionHelper::getCheckoutConfig($this->product));
     }
 
     public function rules()
@@ -132,17 +132,19 @@ class Checkout extends Component
             })],
         ];
         foreach ($this->product->configOptions as $option) {
-            if (in_array($option->type, ['text', 'number', 'checkbox'])) {
+            if (in_array($option->type, ['text', 'number'])) {
                 $rules["configOptions.{$option->id}"] = ['required'];
+            } elseif($option->type === 'checkbox') {
+
             } else {
                 $rules["configOptions.{$option->id}"] = ['required', 'exists:config_options,id'];
             }
         }
         foreach ($this->getCheckoutConfig() as $key => $config) {
-            if ($config['required'] ?? false) {
-                $rules["checkoutConfig.{$key}"] = 'required' . ($config['validation'] ? '|' . $config['validation'] : '');
-            } else {
-                $rules["checkoutConfig.{$key}"] = isset($config['validation']) ? $config['validation'] : '';
+            if (isset($config['validation'])) {
+                $rules["checkoutConfig.{$config['name']}"] = $config['validation'];
+            } elseif ($config['required'] ?? false) {
+                $rules["checkoutConfig.{$config['name']}"] = 'required';
             }
         }
 
@@ -154,6 +156,9 @@ class Checkout extends Component
         $messages = [];
         foreach ($this->product->configOptions as $option) {
             $messages["configOptions.{$option->id}"] = $option->name;
+        }
+        foreach ($this->getCheckoutConfig() as $key => $config) {
+            $messages["checkoutConfig.{$config['name']}"] = $config['label'] ?? $config['name'];
         }
 
         return $messages;

@@ -1,6 +1,6 @@
 <div>
     <div class="flex flex-col gap-6">
-        <div class="mx-auto container bg-background p-4 rounded-md">
+        <div class="mx-auto container bg-background-secondary p-4 rounded-md">
             <article class="prose dark:prose-invert">
                 {!! Str::markdown(theme('home_page_text', 'Welcome to Paymenter'), [
                 'html_input' => 'strip',

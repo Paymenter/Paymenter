@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" x-data="{darkMode: $persist(false)}" :class="{'dark': darkMode}" class="antialiased">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 
 <head>
     <meta charset="utf-8">
@@ -20,11 +20,10 @@
     {!! hook('head') !!}
 </head>
 
-<body class="w-full bg-background text-base min-h-screen flex flex-col">
+<body class="w-full bg-background text-base min-h-screen flex flex-col antialiased" x-data="{darkMode: $persist(false)}" :class="{'dark': darkMode}">
     {!! hook('body') !!}
     <x-navigation />
     <div class="w-full flex flex-grow">
-        {{-- request()->routeIs('dashboard', 'services', 'services.*', 'invoices', 'invoices.*', 'tickets', 'tickets.*', 'account', 'account.*')) --}}
         @if (isset($sidebar) && $sidebar)
             <x-navigation.sidebar title="$title" />
         @endif
