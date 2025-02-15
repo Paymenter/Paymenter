@@ -3,7 +3,7 @@
     <button class="flex flex-row items-center px-2 py-1 text-sm font-semibold whitespace-nowrap text-base hover:text-base/80"
         x-on:click="open = !open">
         {{ $trigger }}
-        <x-ri-arrow-down-s-line x-bind:class="{ '-rotate-180' : open }" class="md:block hidden h-4 w-4 ml-2 text-base ease-out duration-300" />
+        <x-ri-arrow-down-s-line x-bind:class="{ '-rotate-180' : open }" class="md:block hidden h-4 w-4 text-base ease-out duration-300" />
     </button>
 
     <div class="absolute right-0 mt-2 w-48 px-2 py-1 bg-background-secondary rounded-md shadow-lg z-10 border border-neutral"
