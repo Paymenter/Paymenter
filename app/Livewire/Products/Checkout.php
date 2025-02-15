@@ -121,7 +121,7 @@ class Checkout extends Component
 
     public function getCheckoutConfig()
     {
-        return once(fn() => ExtensionHelper::getCheckoutConfig($this->product));
+        return once(fn () => ExtensionHelper::getCheckoutConfig($this->product));
     }
 
     public function rules()
@@ -134,7 +134,7 @@ class Checkout extends Component
         foreach ($this->product->configOptions as $option) {
             if (in_array($option->type, ['text', 'number'])) {
                 $rules["configOptions.{$option->id}"] = ['required'];
-            } elseif($option->type === 'checkbox') {
+            } elseif ($option->type === 'checkbox') {
 
             } else {
                 $rules["configOptions.{$option->id}"] = ['required', 'exists:config_options,id'];
