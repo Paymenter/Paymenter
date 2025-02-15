@@ -18,8 +18,6 @@
     }
 
     document.addEventListener('livewire:initialized', () => {
-        renderTurnstile();
-
         // On livewire validation error reset captcha
         Livewire.hook('request', ({
             succeed,
@@ -29,3 +27,9 @@
         })
     });
 </script>
+
+@script
+<script>
+    renderTurnstile();
+</script>
+@endscript
