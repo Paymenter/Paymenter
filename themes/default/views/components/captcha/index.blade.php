@@ -1,5 +1,5 @@
 @if (config('settings.captcha') !== 'disabled')
-    <div class="flex flex-col items-center justify-center mt-2">
+    <div class="flex flex-col justify-center mt-2">
         <div wire:ignore>
             @if (config('settings.captcha') == 'recaptcha-v2')
                 <x-captcha.recaptcha-v2 :$form />
