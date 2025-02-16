@@ -2,6 +2,7 @@
 
 return [
     'ticket_details' => 'Tukipyynnön tiedot',
+    'tickets' => 'Tickets',
     'subject' => 'Aihe',
     'status' => 'Tilanne',
     'priority' => 'Prioriteetti',
