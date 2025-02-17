@@ -15,7 +15,7 @@
                         <span>{{ $nav['name'] }}</span>
                     </div>
                     <x-ri-arrow-down-s-line x-bind:class="{ 'rotate-180': activeAccordion }"
-                        class="h-4 w-4 text-base ease-out duration-300" />
+                        class="size-4 text-base ease-out duration-300" />
                 </button>
                 <div x-show="activeAccordion" x-collapse x-cloak>
                     <div class="p-4 pt-0 opacity-70">
@@ -68,7 +68,7 @@
                         <span>{{ $nav['name'] }}</span>
                     </div>
                     <x-ri-arrow-down-s-line x-bind:class="{ 'rotate-180': activeAccordion }"
-                        class="h-4 w-4 text-base ease-out duration-300" />
+                        class="size-4 text-base ease-out duration-300" />
                 </button>
                 <div x-show="activeAccordion" x-collapse x-cloak>
                     <div class="p-4 pt-0 opacity-70">

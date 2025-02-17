@@ -11,7 +11,7 @@
             </div>
             <span class="font-medium">{{ $service->product->name }}</span>
             </div>
-            <div class="w-5 h-5 rounded-md p-0.5
+            <div class="size-5 rounded-md p-0.5
                 @if ($service->status == 'active') text-success bg-success/20 
                 @elseif($service->status == 'suspended') text-info bg-info/20
                 @else text-warning bg-warning/20 

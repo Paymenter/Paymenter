@@ -2,7 +2,7 @@
     <div class="flex flex-row justify-between">
         <x-navigation.breadcrumb />
         <x-navigation.link :href="route('tickets.create')" class="flex items-center gap-2">
-            <x-ri-add-line class="w-5 h-5" />
+            <x-ri-add-line class="size-5" />
             <span>{{ __('ticket.create_ticket') }}</span>
         </x-navigation.link>
     </div>

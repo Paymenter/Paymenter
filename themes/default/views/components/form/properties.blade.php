@@ -21,7 +21,7 @@
                     <input type="radio" value="{{ $value }}" name="properties.{{ $property->key }}" type="radio"
                         @checked($properties[$property->key] === $value ?? false) label="{{ $value }}" @required($property->required)
                         wire:model="properties.{{ $property->key }}"
-                        class="form-radio w-4 h-4 text-primary rounded-full focus:ring-secondary hover:bg-secondary ring-offset-primary-800 focus:ring-2 bg-background-secondary border-neutral" />
+                        class="form-radio size-4 text-primary rounded-full focus:ring-secondary hover:bg-secondary ring-offset-primary-800 focus:ring-2 bg-background-secondary border-neutral" />
                     <label class="ml-2 text-sm text-primary-100"
                         for="properties.{{ $property->key }}">{{ $value }}</label>
                 </div>

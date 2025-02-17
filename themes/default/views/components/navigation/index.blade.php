@@ -9,7 +9,7 @@
 
             <div class="flex flex-row">
                 <button @click="slideOverOpen=true" class="flex md:hidden w-10 h-10 items-center justify-center rounded-lg hover:bg-neutral transition">
-                    <x-ri-menu-fill class="w-5 h-5" />
+                    <x-ri-menu-fill class="size-5" />
                 </button>
                 <a href="{{ route('home') }}" class="flex flex-row items-center" wire:navigate>
                     <x-logo class="h-10" />
@@ -76,7 +76,7 @@
                 @if(auth()->check())
                 <x-dropdown>
                     <x-slot:trigger>
-                        <img src="{{ auth()->user()->avatar }}" class="w-8 h-8 rounded-full border border-neutral bg-background" alt="avatar" />
+                        <img src="{{ auth()->user()->avatar }}" class="size-8 rounded-full border border-neutral bg-background" alt="avatar" />
                     </x-slot:trigger>
                     <x-slot:content>
                         <div class="flex flex-col p-2">
@@ -134,7 +134,7 @@
                                             </div>
                                             <div class="flex items-center h-auto ml-3">
                                                 <button @click="slideOverOpen=false" class="w-10 h-10 flex items-center justify-center rounded-lg hover:bg-neutral transition">
-                                                    <x-ri-close-fill class="w-5 h-5" />
+                                                    <x-ri-close-fill class="size-5" />
                                                 </button>
                                             </div>
                                         </div>

@@ -23,9 +23,9 @@
                     </span>
                     <span class="text-base text-sm">{{ $invoice->formattedTotal }}</span>
                 </div>
-                <div class="w-5 h-5 rounded-md p-0.5
                 @if ($invoice->status == 'active') text-success bg-success/20 
                 @elseif($invoice->status == 'suspended') text-info bg-info/20
+                <div class="size-5 rounded-md p-0.5
                 @else text-warning bg-warning/20 
                 @endif">
                     @if ($invoice->status == 'active')

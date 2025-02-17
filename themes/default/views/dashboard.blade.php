@@ -21,7 +21,7 @@
                     <h2 class="text-xl font-semibold">{{ __('dashboard.active_services') }}</h2>
                 </div>
                 <span
-                    class="bg-primary flex items-center justify-center font-semibold rounded-md w-5 h-5 text-sm text-white">{{
+                    class="bg-primary flex items-center justify-center font-semibold rounded-md size-5 text-sm text-white">{{
                     Auth::user()->services()->where('status', 'active')->count() }}</span>
             </div>
 
@@ -33,7 +33,7 @@
                 class="bg-background-secondary hover:bg-background-secondary/80 flex items-center justify-center rounded-lg"
                 :href="route('services')">
                 {{ __('dashboard.view_all') }}
-                <x-ri-arrow-right-fill class="w-5 h-5" />
+                <x-ri-arrow-right-fill class="size-5" />
             </x-navigation.link>
         </div>
         <!-- Unpaid Invoices Widget -->
@@ -51,7 +51,7 @@
                     <h2 class="text-xl font-semibold">{{ __('dashboard.unpaid_invoices') }}</h2>
                 </div>
                 <span
-                    class="bg-primary flex items-center justify-center font-semibold rounded-md w-5 h-5 text-sm text-white">{{
+                    class="bg-primary flex items-center justify-center font-semibold rounded-md size-5 text-sm text-white">{{
                     Auth::user()->invoices()->where('status', 'pending')->count() }}</span>
             </div>
             <div class="space-y-4">
@@ -61,7 +61,7 @@
                 class="bg-background-secondary hover:bg-background-secondary/80 flex items-center justify-center rounded-lg"
                 :href="route('invoices')">
                 {{ __('dashboard.view_all') }}
-                <x-ri-arrow-right-fill class="w-5 h-5" />
+                <x-ri-arrow-right-fill class="size-5" />
             </x-navigation.link>
         </div>
         <!-- Open Tickets Widget -->
@@ -78,7 +78,7 @@
                     </div>
                     <h2 class="text-xl font-semibold">{{ __('dashboard.open_tickets') }}</h2>
                     <a href="{{ route('tickets.create') }}" wire:navigate>
-                        <x-ri-add-fill class="w-5 h-5" />
+                        <x-ri-add-fill class="size-5" />
                     </a>
                 </div>
                 <span
@@ -94,7 +94,7 @@
                 class="bg-background-secondary hover:bg-background-secondary/80 flex items-center justify-center rounded-lg"
                 :href="route('services')">
                 {{ __('dashboard.view_all') }}
-                <x-ri-arrow-right-fill class="w-5 h-5" />
+                <x-ri-arrow-right-fill class="size-5" />
             </x-navigation.link>
         </div>
         {{--
@@ -122,7 +122,7 @@
                 class="bg-background-secondary hover:bg-background-secondary/80 flex items-center justify-center rounded-lg"
                 :href="route('announcements.index')">
                 {{ __('dashboard.view_all') }}
-                <x-ri-arrow-right-fill class="w-5 h-5" />
+                <x-ri-arrow-right-fill class="size-5" />
             </x-navigation.link>
         </div> --}}
     </div>

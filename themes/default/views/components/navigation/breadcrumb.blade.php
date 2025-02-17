@@ -37,7 +37,7 @@
     @if (!empty($breadcrumbs))
         @foreach ($breadcrumbs as $index => $breadcrumb)
             @if ($index > 0)
-                <x-ri-arrow-right-s-line class="h-4 w-4 text-base mx-2" />
+                <x-ri-arrow-right-s-line class="size-4 text-base mx-2" />
             @endif
 
             @if (count($breadcrumbs) === 1)
