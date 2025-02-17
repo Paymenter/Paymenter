@@ -127,7 +127,7 @@ class CronJob extends Command
 
         // Close tickets if no response for x days
         $ticketClosed = 0;
-        Ticket::where('status', 'open')->each(function ($ticket) use (&$ticketClosed) {
+        Ticket::where('status', 'replied')->each(function ($ticket) use (&$ticketClosed) {
             if ($ticket->messages()->where('user_id', '!=', $ticket->user_id)->where('created_at', '<', now()->subDays((int) config('settings.cronjob_close_ticket')))->exists()) {
                 $ticket->update(['status' => 'closed']);
                 $ticketClosed++;
