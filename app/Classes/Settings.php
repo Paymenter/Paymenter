@@ -337,21 +337,21 @@ class Settings
                 ],
                 [
                     // Cancel order is pending for x days
-                    'name' => 'cronjob_cancel',
+                    'name' => 'cronjob_order_cancel',
                     'label' => 'Cancel order if pending for x days',
                     'type' => 'number',
                     'default' => 7,
                     'required' => true,
                 ],
                 [
-                    'name' => 'cronjob_suspend',
+                    'name' => 'cronjob_order_suspend',
                     'label' => 'Suspend server if invoice is x days overdue',
                     'type' => 'number',
                     'default' => 0,
                     'required' => true,
                 ],
                 [
-                    'name' => 'cronjob_delete',
+                    'name' => 'cronjobb_order_terminate',
                     'label' => 'Delete server if invoice is x days overdue (also cancels the invoice)',
                     'type' => 'number',
                     'default' => 7,
@@ -365,7 +365,7 @@ class Settings
                     'required' => true,
                 ],
                 [
-                    'name' => 'close_tickets',
+                    'name' => 'cronjob_close_ticket',
                     'label' => 'Close tickets if no response for x days',
                     'type' => 'number',
                     'default' => 7,

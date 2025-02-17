@@ -81,12 +81,12 @@ class CronJob extends Command
         $ordersCancelled = 0;
         Service::where('status', 'pending')->whereDoesntHave('invoices', function ($query) {
             $query->where('status', 'paid');
-        })->where('created_at', '<', now()->subDays((int) config('settings.cronjob_cancel')))->get()->each(function ($service) use (&$ordersCancelled) {
+        })->where('created_at', '<', now()->subDays((int) config('settings.cronjob_order_cancel')))->get()->each(function ($service) use (&$ordersCancelled) {
             $service->update(['status' => 'cancelled']);
 
             $ordersCancelled++;
         });
-        $this->info('Cancelling services if first invoice is not paid after ' . config('settings.cronjob_cancel') . ' days: ' . $ordersCancelled . ' orders');
+        $this->info('Cancelling services if first invoice is not paid after ' . config('settings.cronjob_order_cancel') . ' days: ' . $ordersCancelled . ' orders');
 
         $updatedUpgradeInvoices = 0;
         ServiceUpgrade::where('status', 'pending')->get()->each(function ($upgrade) use (&$updatedUpgradeInvoices) {
@@ -108,22 +108,22 @@ class CronJob extends Command
 
         // Suspend orders if due date is overdue for x days
         $ordersSuspended = 0;
-        Service::where('status', 'active')->where('expires_at', '<', now()->subDays((int) config('settings.cronjob_suspend')))->each(function ($service) use (&$ordersSuspended) {
+        Service::where('status', 'active')->where('expires_at', '<', now()->subDays((int) config('settings.cronjob_order_suspend')))->each(function ($service) use (&$ordersSuspended) {
             SuspendJob::dispatch($service);
 
             $service->update(['status' => 'suspended']);
             $ordersSuspended++;
         });
-        $this->info('Suspending orders if due date is overdue for ' . config('settings.cronjob_suspend') . ' days: ' . $ordersSuspended . ' orders');
+        $this->info('Suspending orders if due date is overdue for ' . config('settings.cronjob_order_suspend') . ' days: ' . $ordersSuspended . ' orders');
 
         // Terminate orders if due date is overdue for x days
         $ordersTerminated = 0;
-        Service::where('status', 'suspended')->where('expires_at', '<', now()->subDays((int) config('settings.cronjob_terminate')))->each(function ($service) use (&$ordersTerminated) {
+        Service::where('status', 'suspended')->where('expires_at', '<', now()->subDays((int) config('settings.cronjobb_order_terminate')))->each(function ($service) use (&$ordersTerminated) {
             TerminateJob::dispatch($service);
             $service->update(['status' => 'cancelled']);
             $ordersTerminated++;
         });
-        $this->info('Terminating orders if due date is overdue for ' . config('settings.cronjob_terminate') . ' days: ' . $ordersTerminated . ' orders');
+        $this->info('Terminating orders if due date is overdue for ' . config('settings.cronjobb_order_terminate') . ' days: ' . $ordersTerminated . ' orders');
 
         // Close tickets if no response for x days
         $ticketClosed = 0;
