@@ -12,7 +12,7 @@
             </div>
             <div class="size-5 rounded-md p-0.5
                 @if ($service->status == 'active') text-success bg-success/20 
-                @elseif($service->status == 'suspended') text-info bg-info/20
+                @elseif($service->status == 'suspended') text-inactive bg-inactive/20
                 @else text-warning bg-warning/20 
                 @endif"
                 @if ($service->status == 'active')

@@ -61,7 +61,7 @@ class Announcements extends Extension
                 'name' => 'Announcements',
                 'route' => 'announcements.index',
                 'icon' => 'ri-megaphone-fill',
-                'group' => 'primary',
+                'separator' => true,
                 'children' => [],
             ];
         });
