@@ -157,7 +157,8 @@ class ServiceResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('id')
                     ->label('ID')
-                    ->sortable(),
+                    ->sortable()
+                    ->searchable(),
                 Tables\Columns\TextColumn::make('product.name')
                     ->label('Product')
                     ->searchable()
@@ -181,7 +182,14 @@ class ServiceResource extends Resource
                     ->sortable(),
             ])
             ->filters([
-                //
+                Tables\Filters\SelectFilter::make('status')
+                    ->label('Status')
+                    ->options([
+                        'active' => 'Active',
+                        'pending' => 'Pending',
+                        'suspended' => 'Suspended',
+                        'cancelled' => 'Cancelled',
+                    ]),
             ])
             ->defaultSort(function (Builder $query): Builder {
                 return $query
