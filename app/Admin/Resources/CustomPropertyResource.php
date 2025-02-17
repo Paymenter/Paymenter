@@ -16,7 +16,9 @@ class CustomPropertyResource extends Resource
 
     protected static ?string $navigationGroup = 'Configuration';
 
-    protected static ?string $navigationIcon = 'heroicon-o-list-bullet';
+    protected static ?string $navigationIcon = 'ri-list-settings-line';
+
+    protected static ?string $activeNavigationIcon = 'ri-list-settings-fill';
 
     public static function form(Form $form): Form
     {

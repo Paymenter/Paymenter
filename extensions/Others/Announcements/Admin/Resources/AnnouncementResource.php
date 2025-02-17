@@ -19,6 +19,8 @@ class AnnouncementResource extends Resource
 
     protected static ?string $navigationIcon = 'ri-megaphone-line';
 
+    protected static ?string $activeNavigationIcon = 'ri-megaphone-fill';
+
     protected static ?string $navigationGroup = 'Administration';
 
     public static function form(Form $form): Form

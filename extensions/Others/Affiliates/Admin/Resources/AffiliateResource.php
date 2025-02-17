@@ -22,7 +22,9 @@ class AffiliateResource extends Resource
 {
     protected static ?string $model = Affiliate::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-banknotes';
+    protected static ?string $navigationIcon = 'ri-hand-coin-line';
+
+    protected static ?string $activeNavigationIcon = 'ri-hand-coin-fill';
 
     protected static ?string $navigationGroup = 'Administration';
 

@@ -28,7 +28,9 @@ class ServiceResource extends Resource
 {
     protected static ?string $model = Service::class;
 
-    protected static ?string $navigationIcon = 'ri-service-line';
+    protected static ?string $navigationIcon = 'ri-function-line';
+
+    protected static ?string $activeNavigationIcon = 'ri-function-fill';
 
     public static function getNavigationBadge(): ?string
     {

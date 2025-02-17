@@ -25,7 +25,9 @@ class ServerResource extends Resource
 
     protected static ?string $navigationGroup = 'Extensions';
 
-    protected static ?string $navigationIcon = 'heroicon-o-server';
+    protected static ?string $navigationIcon = 'ri-server-line';
+
+    protected static ?string $activeNavigationIcon = 'ri-server-fill';
 
     public static function getGloballySearchableAttributes(): array
     {

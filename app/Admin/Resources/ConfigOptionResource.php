@@ -17,7 +17,9 @@ class ConfigOptionResource extends Resource
 
     protected static ?string $navigationGroup = 'Configuration';
 
-    protected static ?string $navigationIcon = 'heroicon-o-cog';
+    protected static ?string $navigationIcon = 'ri-equalizer-2-line';
+
+    protected static ?string $activeNavigationIcon = 'ri-equalizer-2-fill';
 
     public static function form(Form $form): Form
     {

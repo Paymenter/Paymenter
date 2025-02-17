@@ -16,7 +16,9 @@ class CurrencyResource extends Resource
 
     protected static ?string $navigationGroup = 'Configuration';
 
-    protected static ?string $navigationIcon = 'heroicon-o-currency-dollar';
+    protected static ?string $navigationIcon = 'ri-money-dollar-circle-line';
+
+    protected static ?string $activeNavigationIcon = 'ri-money-dollar-circle-fill';
 
     public static function form(Form $form): Form
     {
