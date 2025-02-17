@@ -1,6 +1,6 @@
 <?php
 
 use App\Console\Commands\CronJob;
-use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Schedule;
 
-Artisan::command(CronJob::class)->daily();
+Schedule::command(CronJob::class)->daily();
