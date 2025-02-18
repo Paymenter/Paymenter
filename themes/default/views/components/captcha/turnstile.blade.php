@@ -4,7 +4,7 @@
 
 <script>
     function renderTurnstile() {
-        const isDarkMode = document.documentElement.classList.contains('dark');
+        const isDarkMode = document.body.classList.contains('dark');
         const theme = isDarkMode ? 'dark' : 'light';
 
         turnstile.render('#cf-turnstile', {
