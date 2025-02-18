@@ -2,7 +2,6 @@
 
 namespace App\Console\Commands;
 
-use App\Console\Kernel;
 use Illuminate\Console\Command;
 use Symfony\Component\Process\Process;
 
@@ -88,7 +87,6 @@ class Upgrade extends Command
         $process->run(function ($type, $buffer) {
             $this->{$type === Process::ERR ? 'error' : 'line'}($buffer);
         });
-
 
         $this->info('Upgrade process completed successfully!');
 
