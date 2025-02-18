@@ -85,17 +85,17 @@ class Overview extends BaseWidget
         }
 
         return [
-            Stat::make('Revenue', number_format($revenueIncrease, 2))
+            Stat::make('Revenue', number_format($revenueThisMonth, 2))
                 ->description($revenueIncrease >= 0 ? 'Increased by ' . number_format($revenuePercentageIncrease, 2) . '% (this month)' : 'Decreased by ' . number_format($revenuePercentageIncrease, 2) . '% (this month)')
                 ->descriptionIcon($revenueIncrease >= 0 ? 'heroicon-m-arrow-trending-up' : 'heroicon-m-arrow-trending-down')
                 ->chart(array_reverse($dates))
                 ->color($revenueIncrease >= 0 ? 'success' : 'danger'),
-            Stat::make('New Tickets', number_format($ticketsIncrease, 2))
+            Stat::make('New Tickets', number_format($ticketsThisMonth, 0))
                 ->description($ticketsIncrease >= 0 ? 'Increased by ' . number_format($ticketsPercentageIncrease, 2) . '% (this month)' : 'Decreased by ' . number_format($revenuePercentageIncrease, 2) . '% (this month)')
                 ->descriptionIcon($ticketsIncrease >= 0 ? 'heroicon-m-arrow-trending-up' : 'heroicon-m-arrow-trending-down')
                 ->chart(array_reverse($dates))
                 ->color($ticketsIncrease >= 0 ? 'success' : 'danger'),
-            Stat::make('New Services', number_format($servicesIncrease, 2))
+            Stat::make('New Services', number_format($servicesThisMonth, 0))
                 ->description($servicesIncrease >= 0 ? 'Increased by ' . number_format($servicesPercentageIncrease, 2) . '% (this month)' : 'Decreased by ' . number_format($revenuePercentageIncrease, 2) . '% (this month)')
                 ->descriptionIcon($servicesIncrease >= 0 ? 'heroicon-m-arrow-trending-up' : 'heroicon-m-arrow-trending-down')
                 ->chart(array_reverse($dates))
