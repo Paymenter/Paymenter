@@ -2,16 +2,15 @@
 
 namespace App\Console\Commands;
 
+use App\Events\Invoice\Created as InvoiceCreated;
 use App\Helpers\NotificationHelper;
 use App\Jobs\Server\SuspendJob;
 use App\Jobs\Server\TerminateJob;
 use App\Models\EmailLog;
-use App\Models\InvoiceItem;
 use App\Models\Service;
 use App\Models\ServiceUpgrade;
 use App\Models\Ticket;
 use Illuminate\Console\Command;
-use App\Events\Invoice\Created as InvoiceCreated;
 
 class CronJob extends Command
 {
@@ -73,7 +72,7 @@ class CronJob extends Command
             ]);
 
             event(new InvoiceCreated($invoice));
-            
+
             // Send email
             NotificationHelper::invoiceCreatedNotification($service->order->user, $invoice);
 
