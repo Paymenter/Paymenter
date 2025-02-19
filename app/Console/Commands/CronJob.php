@@ -11,6 +11,7 @@ use App\Models\Service;
 use App\Models\ServiceUpgrade;
 use App\Models\Ticket;
 use Illuminate\Console\Command;
+use App\Events\Invoice\Created as InvoiceCreated;
 
 class CronJob extends Command
 {
@@ -54,22 +55,25 @@ class CronJob extends Command
             }
 
             // Create invoice
-            $invoice = $service->invoices()->create([
+            $invoice = $service->invoices()->make([
                 'user_id' => $service->order->user_id,
                 'status' => 'pending',
                 'due_at' => $service->expires_at,
                 'currency_code' => $service->currency_code,
             ]);
 
+            $invoice->saveQuietly();
             // Create invoice items
             $invoice->items()->create([
                 'reference_id' => $service->id,
-                'reference_type' => InvoiceItem::class,
+                'reference_type' => Service::class,
                 'price' => $service->price,
                 'quantity' => $service->quantity,
                 'description' => $service->description,
             ]);
 
+            event(new InvoiceCreated($invoice));
+            
             // Send email
             NotificationHelper::invoiceCreatedNotification($service->order->user, $invoice);
 

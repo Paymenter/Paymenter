@@ -96,7 +96,7 @@ class Service extends Model
             );
         }
         $date = $this->expires_at ?? now();
-        $endDate = $date->{'add' . ucfirst($this->plan->billing_unit) . 's'}($this->plan->billing_period);
+        $endDate = $date->copy()->{'add' . ucfirst($this->plan->billing_unit) . 's'}($this->plan->billing_period);
 
         return Attribute::make(
             get: fn () => $this->product->name . ' (' . $date->format('M d, Y') . ' - ' . $endDate->format('M d, Y') . ')'
