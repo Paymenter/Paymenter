@@ -19,6 +19,8 @@ class EmailLogResource extends Resource
 
     protected static ?string $navigationIcon = 'ri-mail-send-line';
 
+    protected static ?string $activeNavigationIcon = 'ri-mail-send-fill';
+
     protected static ?string $navigationGroup = 'Other';
 
     public static function infolist(Infolist $infolist): Infolist

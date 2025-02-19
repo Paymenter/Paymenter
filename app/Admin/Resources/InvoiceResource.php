@@ -23,7 +23,9 @@ class InvoiceResource extends Resource
 {
     protected static ?string $model = Invoice::class;
 
-    protected static ?string $navigationIcon = 'ri-bill-line';
+    protected static ?string $navigationIcon = 'ri-receipt-line';
+
+    protected static ?string $activeNavigationIcon = 'ri-receipt-fill';
 
     public static function getNavigationBadge(): ?string
     {

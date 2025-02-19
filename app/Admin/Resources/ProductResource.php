@@ -32,6 +32,8 @@ class ProductResource extends Resource
 
     protected static ?string $navigationIcon = 'ri-archive-stack-line';
 
+    protected static ?string $activeNavigationIcon = 'ri-archive-stack-fill';
+
     protected static ?string $recordTitleAttribute = 'name';
 
     public static function form(Form $form): Form

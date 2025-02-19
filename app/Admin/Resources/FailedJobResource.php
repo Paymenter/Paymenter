@@ -18,6 +18,8 @@ class FailedJobResource extends Resource
 
     protected static ?string $navigationIcon = 'ri-error-warning-line';
 
+    protected static ?string $activeNavigationIcon = 'ri-error-warning-fill';
+
     protected static ?string $navigationGroup = 'Other';
 
     public static function getNavigationBadge(): ?string

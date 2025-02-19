@@ -22,7 +22,9 @@ class CategoryResource extends Resource
 
     protected static ?string $navigationGroup = 'Administration';
 
-    protected static ?string $navigationIcon = 'ri-folder-info-line';
+    protected static ?string $navigationIcon = 'ri-folder-6-line';
+
+    protected static ?string $activeNavigationIcon = 'ri-folder-6-fill';
 
     protected static ?int $navigationSort = 1;
 

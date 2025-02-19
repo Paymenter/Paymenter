@@ -18,7 +18,7 @@ class Navigation
             [
                 'name' => __('navigation.home'),
                 'route' => 'home',
-                'icon' => 'ri-home-2-fill',
+                'icon' => 'ri-home-2',
             ],
             [
                 'name' => __('navigation.shop'),
@@ -31,7 +31,7 @@ class Navigation
                 })->toArray(),
                 'condition' => count($categories) > 0,
                 'separator' => true,
-                'icon' => 'ri-shopping-bag-fill',
+                'icon' => 'ri-shopping-bag',
             ],
         ];
 
@@ -83,32 +83,32 @@ class Navigation
             [
                 'name' => __('navigation.dashboard'),
                 'route' => 'dashboard',
-                'icon' => 'ri-layout-row-fill',
+                'icon' => 'ri-dashboard',
                 'condition' => Auth::check(),
             ],
             [
                 'name' => __('navigation.services'),
                 'route' => 'services',
-                'icon' => 'ri-server-fill',
+                'icon' => 'ri-archive-stack',
                 'condition' => Auth::check(),
             ],
             [
                 'name' => __('navigation.invoices'),
                 'route' => 'invoices',
-                'icon' => 'ri-receipt-fill',
+                'icon' => 'ri-receipt',
                 'separator' => true,
                 'condition' => Auth::check(),
             ],
             [
                 'name' => __('navigation.tickets'),
                 'route' => 'tickets',
-                'icon' => 'ri-customer-service-2-fill',
+                'icon' => 'ri-customer-service',
                 'separator' => true,
                 'condition' => Auth::check(),
             ],
             [
                 'name' => __('navigation.account'),
-                'icon' => 'ri-settings-3-fill',
+                'icon' => 'ri-settings-3',
                 'condition' => Auth::check(),
                 'children' => [
                     [
@@ -177,26 +177,40 @@ class Navigation
      */
     public static function markActiveRoute(array $routes): array
     {
-        foreach ($routes as $key => $route) {
+        $currentRoute = request()->route()->getName();
+    
+        foreach ($routes as &$route) {
+            $route['active'] = self::isActiveRoute($route, $currentRoute);
+    
+            if (isset($route['icon'])) {
+                $route['icon'] .= $route['active'] ? '-fill' : '-line';
+            }
+    
             if (isset($route['children'])) {
-                foreach ($route['children'] as $child) {
-                    if (request()->route()->getName() == $child['route']) {
-                        $routes[$key]['active'] = true;
-                        break;
-                    } else {
-                        $routes[$key]['active'] = false;
-                    }
+                foreach ($route['children'] as &$child) {
+                    $child['active'] = self::isActiveRoute($child, $currentRoute);
                 }
-            } else {
-                if (request()->route()->getName() == $route['route']) {
-                    $routes[$key]['active'] = true;
-                } else {
-                    $routes[$key]['active'] = false;
+            }
+        }
+    
+        return $routes;
+    }
+
+    private static function isActiveRoute(array $route, string $currentRoute): bool
+    {
+        if (($route['route'] ?? '') === $currentRoute) {
+            return true;
+        }
+
+        if (!empty($route['children'])) {
+            foreach ($route['children'] as $child) {
+                if (($child['route'] ?? '') === $currentRoute) {
+                    return true;
                 }
             }
         }
 
-        return $routes;
+        return false;
     }
 
     public static function getCurrent()

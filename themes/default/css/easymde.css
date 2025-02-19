@@ -38,7 +38,7 @@
 }
 
 .EasyMDEContainer .editor-toolbar button {
-    @apply grid h-8 w-8 cursor-pointer place-content-center rounded-lg border-none p-0 transition duration-75 focus-visible:bg-gray-50 hover:bg-white/5 dark:focus-visible:bg-white/5;
+    @apply grid size-8 cursor-pointer place-content-center rounded-lg border-none p-0 transition duration-75 focus-visible:bg-gray-50 hover:bg-white/5 dark:focus-visible:bg-white/5;
 }
 
 .EasyMDEContainer .editor-toolbar button.active {
@@ -46,7 +46,7 @@
 }
 
 .EasyMDEContainer .editor-toolbar button::before {
-    @apply block h-4 w-4 bg-background-secondary;
+    @apply block size-4 bg-background-secondary;
     content: '';
     mask-position: center;
     mask-repeat: no-repeat;

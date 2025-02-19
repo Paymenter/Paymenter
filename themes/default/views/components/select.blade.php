@@ -72,7 +72,7 @@
     >
         <span x-text="selectableItems.find(item => item.value === selectedValue)?.label ?? '{{ $placeholder ?? 'Select option' }}'" class="block truncate"></span>
         <span class="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
-            <x-ri-expand-up-down-line class="w-4 h-4" />
+            <x-ri-expand-up-down-line class="size-4" />
         </span>
     </button>
 
@@ -104,7 +104,7 @@
                     x-show="item.value === selectedValue"
                     class="absolute inset-y-0 left-0 flex items-center pl-2 text-neutral-400"
                 >
-                    <x-ri-check-fill class="w-4 h-4" />
+                    <x-ri-check-fill class="size-4" />
                 </span>
             </li>
         </template>

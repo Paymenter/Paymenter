@@ -36,7 +36,7 @@
             <a href="{{ route('oauth.redirect', $provider) }}"
                 class="flex items-center justify-center px-4 h-10 border border-neutral rounded-md text-primary-100">
                 <img src="/assets/images/{{ $provider }}-dark.svg" alt="{{ $provider }}"
-                    class="w-5 h-5 mr-2 text-secondary">
+                    class="size-5 mr-2 text-secondary">
                 {{ __(ucfirst($provider)) }}
             </a>
             @endif

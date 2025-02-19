@@ -60,8 +60,8 @@ class Announcements extends Extension
             return [
                 'name' => 'Announcements',
                 'route' => 'announcements.index',
-                'icon' => 'ri-megaphone-fill',
-                'group' => 'primary',
+                'icon' => 'ri-megaphone',
+                'separator' => true,
                 'children' => [],
             ];
         });
@@ -70,6 +70,17 @@ class Announcements extends Extension
             return [
                 'view' => view('announcements::index', [
                     'announcements' => Announcement::where('is_active', true)->where('published_at', '<=', now())->orderBy('published_at', 'desc')->get(),
+                ]),
+            ];
+        });
+
+        Event::listen('pages.dashboard', function () {
+            return [
+                'view' => view('announcements::widget', [
+                    'announcements' => Announcement::where('is_active', true)
+                        ->where('published_at', '<=', now())
+                        ->orderBy('published_at', 'desc')
+                        ->get(),
                 ]),
             ];
         });

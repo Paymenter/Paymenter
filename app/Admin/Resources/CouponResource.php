@@ -19,6 +19,8 @@ class CouponResource extends Resource
 
     protected static ?string $navigationIcon = 'ri-coupon-line';
 
+    protected static ?string $activeNavigationIcon = 'ri-coupon-fill';
+
     protected static ?string $navigationGroup = 'Configuration';
 
     public static function form(Form $form): Form

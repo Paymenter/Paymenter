@@ -24,6 +24,8 @@ class ExtensionResource extends Resource
 
     protected static ?string $navigationIcon = 'ri-puzzle-line';
 
+    protected static ?string $activeNavigationIcon = 'ri-puzzle-fill';
+
     public static function getGloballySearchableAttributes(): array
     {
         return ['name'];

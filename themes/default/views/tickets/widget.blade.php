@@ -5,11 +5,11 @@
         <div class="flex items-center justify-between mb-2">
             <div class="flex items-center gap-3">
             <div class="bg-secondary/10 p-2 rounded-lg">
-                <x-ri-ticket-line class="w-5 h-5 text-secondary" />
+                <x-ri-ticket-line class="size-5 text-secondary" />
             </div>
             <span class="font-medium">{{ $ticket->subject }}</span>
             </div>
-            <div class="w-5 h-5 rounded-md p-0.5
+            <div class="size-5 rounded-md p-0.5
                 @if ($ticket->status == 'open') text-success bg-success/20 
                 @elseif($ticket->status == 'closed') text-inactive bg-inactive/20
                 @else text-info bg-info/20 

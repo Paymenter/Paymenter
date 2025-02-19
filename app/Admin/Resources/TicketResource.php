@@ -20,7 +20,9 @@ class TicketResource extends Resource
 {
     protected static ?string $model = Ticket::class;
 
-    protected static ?string $navigationIcon = 'ri-chat-3-line';
+    protected static ?string $navigationIcon = 'ri-customer-service-line';
+
+    protected static ?string $activeNavigationIcon = 'ri-customer-service-fill';
 
     public static ?string $navigationGroup = 'Administration';
 

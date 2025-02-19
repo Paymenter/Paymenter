@@ -1,23 +1,37 @@
-
-<div class="space-y-4">
-    @foreach($announcements as $announcement)
-    <a href="{{ route('announcements.show', $announcement) }}" wire:navigate>
-        <div class="bg-background-secondary hover:bg-background-secondary/80 border border-neutral p-4 rounded-lg mb-4">
-        <div class="flex items-center justify-between mb-2">
-            <div class="flex items-center gap-3">
-                <div class="bg-secondary/10 p-2 rounded-lg">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-secondary" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M16 20V4H4V19C4 19.5523 4.44772 20 5 20H16ZM19 22H5C3.34315 22 2 20.6569 2 19V3C2 2.44772 2.44772 2 3 2H17C17.5523 2 18 2.44772 18 3V10H22V19C22 20.6569 20.6569 22 19 22ZM18 12V19C18 19.5523 18.4477 20 19 20C19.5523 20 20 19.5523 20 19V12H18ZM6 6H12V12H6V6ZM8 8V10H10V8H8ZM6 13H14V15H6V13ZM6 16H14V18H6V16Z"></path>
-                    </svg>
+<div class="">
+    <div class="flex items-center justify-between mb-6">
+        <div class="flex items-center gap-3">
+            <div class="bg-background-secondary border border-neutral p-2 rounded-lg">
+                <x-ri-megaphone-fill class="size-5" />
+            </div>
+            <h2 class="text-xl font-semibold">{{ __('Announcements') }}</h2>
+        </div>
+    </div>
+    <div class="space-y-4">
+        <div class="space-y-4">
+            @foreach($announcements as $announcement)
+            <a href="{{ route('announcements.show', $announcement) }}" wire:navigate>
+                <div class="bg-background-secondary hover:bg-background-secondary/80 border border-neutral p-4 rounded-lg mb-4">
+                    <div class="flex items-center justify-between mb-2">
+                        <div class="flex items-center gap-3">
+                            <div class="bg-secondary/10 p-2 rounded-lg">
+                                <x-ri-newspaper-line class="size-5 fill-secondary" />
+                            </div>
+                            <span class="font-medium">{{ $announcement->title }}</span>
+                        </div>
+                        <div class="prose dark:prose-invert text-sm">
+                            {{ $announcement->published_at->diffForHumans() }}
+                        </div>
+                    </div>
+                    <p class="prose dark:prose-invert text-sm">{{ $announcement->description }}</p>
                 </div>
-                <span class="font-medium">{{ $announcement->title }}</span>
-            </div>
-            <div class="prose dark:prose-invert text-sm">
-                {{ $announcement->published_at->diffForHumans() }}
-            </div>
+            </a>
+            @endforeach
         </div>
-        <p class="prose dark:prose-invert text-sm">{{ $announcement->description }}</p>
-        </div>
-    </a>
-    @endforeach
+    </div>
+    <x-navigation.link class="bg-background-secondary hover:bg-background-secondary/80 bg-background-secondary hover:bg-background-secondary/80 border border-neutral flex items-center justify-center rounded-lg flex items-center justify-center rounded-lg"
+        :href="route('announcements.index')">
+        {{ __('dashboard.view_all') }}
+        <x-ri-arrow-right-fill class="size-5" />
+    </x-navigation.link>
 </div>

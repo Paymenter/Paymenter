@@ -22,7 +22,9 @@ class GatewayResource extends Resource
 
     protected static ?string $navigationGroup = 'Extensions';
 
-    protected static ?string $navigationIcon = 'heroicon-o-credit-card';
+    protected static ?string $navigationIcon = 'ri-secure-payment-line';
+
+    protected static ?string $activeNavigationIcon = 'ri-secure-payment-fill';
 
     public static function getGloballySearchableAttributes(): array
     {

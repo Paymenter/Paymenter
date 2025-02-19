@@ -25,7 +25,9 @@ class UserResource extends Resource
 
     protected static ?string $navigationGroup = 'Administration';
 
-    protected static ?string $navigationIcon = 'heroicon-o-users';
+    protected static ?string $navigationIcon = 'ri-group-line';
+
+    protected static ?string $activeNavigationIcon = 'ri-group-fill';
 
     public static function getGloballySearchableAttributes(): array
     {

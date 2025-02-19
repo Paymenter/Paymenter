@@ -29,12 +29,7 @@
         @isset($setting->link)
             <a href="{{ $setting->link }}" class="text-xs text-primary-500 hover:underline hover:text-secondary group">
                 {{ $setting->description }}
-                <!-- Arrow to right top -->
-                <svg xmlns="http://www.w3.org/2000/svg"
-                    class="ml-1 h-3 w-3 inline-block -rotate-45 group-hover:rotate-0 transition" fill="none"
-                    viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
-                </svg>
+                <x-ri-arrow-right-long-line class="ml-1 size-3 inline-block -rotate-45 group-hover:rotate-0 transition" />
             </a>
         @else
             <p class="text-xs text-primary-500">{{ $setting->description }}</p>

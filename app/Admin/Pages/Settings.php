@@ -23,7 +23,9 @@ class Settings extends Page implements HasForms
 
     protected static ?string $title = 'Settings';
 
-    protected static ?string $navigationIcon = 'heroicon-o-cog-6-tooth';
+    protected static ?string $navigationIcon = 'ri-settings-3-line';
+
+    protected static ?string $activeNavigationIcon = 'ri-settings-3-fill';
 
     protected static string $view = 'admin.pages.settings';
 

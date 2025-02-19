@@ -15,7 +15,7 @@
         "ext-pdo": "*",
         "ext-pdo_mysql": "*",
         "ext-zip": "*",
-        "andreiio/blade-remix-icon": "^3.3",
+        "andreiio/blade-remix-icon": "*",
         "barryvdh/laravel-dompdf": "^3.0",
         "endroid/qr-code": "^5.0",
         "filament/filament": "^3.2",

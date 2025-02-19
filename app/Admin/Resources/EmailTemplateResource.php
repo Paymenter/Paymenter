@@ -14,7 +14,9 @@ class EmailTemplateResource extends Resource
 {
     protected static ?string $model = EmailTemplate::class;
 
-    protected static ?string $navigationIcon = 'ri-mail-line';
+    protected static ?string $navigationIcon = 'ri-mail-settings-line';
+
+    protected static ?string $activeNavigationIcon = 'ri-mail-settings-fill';
 
     protected static ?string $navigationGroup = 'Other';
 

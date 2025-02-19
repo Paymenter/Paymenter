@@ -51,7 +51,6 @@ class AdminPanelProvider extends PanelProvider
             ->discoverPages(in: app_path('Admin/Pages'), for: 'App\\Admin\\Pages')
             ->discoverClusters(in: app_path('Admin/Clusters'), for: 'App\\Admin\\Clusters')
             ->pages([
-                Pages\Dashboard::class,
             ])
             ->userMenuItems([
                 MenuItem::make()
@@ -62,8 +61,8 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->discoverWidgets(in: app_path('Admin/Widgets'), for: 'App\\Admin\\Widgets')
             ->widgets([
-                AdminWidgets\ActiveUsers::class,
-                AdminWidgets\Revenue::class,
+                // AdminWidgets\ActiveUsers::class,
+                // AdminWidgets\Revenue::class,
                 // Widgets\FilamentInfoWidget::class,
             ])
             ->renderHook(
