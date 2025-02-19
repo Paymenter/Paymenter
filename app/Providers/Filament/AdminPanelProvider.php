@@ -2,8 +2,6 @@
 
 namespace App\Providers\Filament;
 
-use App\Admin\Pages\Dashboard;
-use App\Admin\Widgets as AdminWidgets;
 use App\Models\Extension;
 use App\Providers\SettingsProvider;
 use Filament\Facades\Filament;
@@ -17,7 +15,6 @@ use Filament\PanelProvider;
 use Filament\Support\Colors\Color;
 use Filament\Support\Enums\Alignment;
 use Filament\View\PanelsRenderHook;
-use Filament\Widgets;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Cookie\Middleware\EncryptCookies;
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
