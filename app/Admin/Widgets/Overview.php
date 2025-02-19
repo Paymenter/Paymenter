@@ -10,8 +10,8 @@ use Filament\Widgets\StatsOverviewWidget\Stat;
 
 class Overview extends BaseWidget
 {
-    // Poll every 5 minutes
-    protected static ?string $pollingInterval = '5m';
+    // Poll every 5 minutes (5m doesn't work somehow)
+    protected static ?string $pollingInterval = '600s';
 
     protected function getStats(): array
     {

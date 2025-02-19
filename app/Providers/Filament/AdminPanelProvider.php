@@ -2,6 +2,7 @@
 
 namespace App\Providers\Filament;
 
+use App\Admin\Pages\Dashboard;
 use App\Admin\Widgets as AdminWidgets;
 use App\Models\Extension;
 use App\Providers\SettingsProvider;
@@ -49,8 +50,6 @@ class AdminPanelProvider extends PanelProvider
             ->discoverResources(in: app_path('Admin/Resources'), for: 'App\\Admin\\Resources')
             ->discoverPages(in: app_path('Admin/Pages'), for: 'App\\Admin\\Pages')
             ->discoverClusters(in: app_path('Admin/Clusters'), for: 'App\\Admin\\Clusters')
-            ->pages([
-            ])
             ->userMenuItems([
                 MenuItem::make()
                     ->label('Exit Admin')
@@ -59,11 +58,6 @@ class AdminPanelProvider extends PanelProvider
                     ->sort(24),
             ])
             ->discoverWidgets(in: app_path('Admin/Widgets'), for: 'App\\Admin\\Widgets')
-            ->widgets([
-                // AdminWidgets\ActiveUsers::class,
-                // AdminWidgets\Revenue::class,
-                // Widgets\FilamentInfoWidget::class,
-            ])
             ->renderHook(
                 PanelsRenderHook::SIDEBAR_NAV_END,
                 fn (): string => Blade::render('<x-admin-footer />'),

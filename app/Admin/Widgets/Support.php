@@ -10,6 +10,8 @@ use Filament\Widgets\TableWidget as BaseWidget;
 
 class Support extends BaseWidget
 {
+    protected static ?string $pollingInterval = '2m';
+
     public function table(Table $table): Table
     {
         return $table

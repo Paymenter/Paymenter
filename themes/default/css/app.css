@@ -1,5 +1,4 @@
 @import 'tailwindcss';
-@import './easymde.css'
 
 @plugin '@tailwindcss/forms' {
   strategy: class;
@@ -67,3 +66,5 @@ color utility to any element that depends on these defaults.
 @utility text-wrap {
   text-wrap: wrap;
 }
+
+@import './easymde.css'
