@@ -20,8 +20,7 @@
     {!! hook('head') !!}
 </head>
 
-<body class="w-full bg-background text-base min-h-screen flex flex-col antialiased" x-data="{darkMode: $persist(false)}" :class="{'dark': darkMode}">
-    {!! hook('body') !!}
+<body class="w-full bg-background text-base min-h-screen flex flex-col antialiased" x-data="{darkMode: $persist(window.matchMedia('(prefers-color-scheme: dark)').matches)}" :class="{'dark': darkMode}"    {!! hook('body') !!}
     <x-navigation />
     <div class="w-full flex flex-grow">
         @if (isset($sidebar) && $sidebar)
