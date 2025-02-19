@@ -60,7 +60,7 @@ class Announcements extends Extension
             return [
                 'name' => 'Announcements',
                 'route' => 'announcements.index',
-                'icon' => 'ri-megaphone-fill',
+                'icon' => 'ri-megaphone',
                 'separator' => true,
                 'children' => [],
             ];
