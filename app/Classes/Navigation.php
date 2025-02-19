@@ -178,21 +178,21 @@ class Navigation
     public static function markActiveRoute(array $routes): array
     {
         $currentRoute = request()->route()->getName();
-    
+
         foreach ($routes as &$route) {
             $route['active'] = self::isActiveRoute($route, $currentRoute);
-    
+
             if (isset($route['icon'])) {
                 $route['icon'] .= $route['active'] ? '-fill' : '-line';
             }
-    
+
             if (isset($route['children'])) {
                 foreach ($route['children'] as &$child) {
                     $child['active'] = self::isActiveRoute($child, $currentRoute);
                 }
             }
         }
-    
+
         return $routes;
     }
 
