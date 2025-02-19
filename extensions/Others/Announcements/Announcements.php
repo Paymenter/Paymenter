@@ -73,5 +73,16 @@ class Announcements extends Extension
                 ]),
             ];
         });
+
+        Event::listen('pages.dashboard', function () {
+            return [
+                'view' => view('announcements::widget', [
+                    'announcements' => Announcement::where('is_active', true)
+                        ->where('published_at', '<=', now())
+                        ->orderBy('published_at', 'desc')
+                        ->get(),
+                ]),
+            ];
+        });
     }
 }
