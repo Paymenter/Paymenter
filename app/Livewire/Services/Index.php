@@ -18,8 +18,6 @@ class Index extends Component
 
         if ($this->status) {
             $query->where('status', $this->status);
-        } else {
-            $query->where('status', '!=', 'cancelled');
         }
 
         return view('services.index', [

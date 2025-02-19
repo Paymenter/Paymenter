@@ -12,12 +12,12 @@
             </div>
             <div class="size-5 rounded-md p-0.5
                 @if ($service->status == 'active') text-success bg-success/20 
-                @elseif($service->status == 'suspended') text-inactive bg-inactive/20
+                @elseif($service->status == 'suspended' || $service->status == 'cancelled') text-inactive bg-inactive/20
                 @else text-warning bg-warning/20 
-                @endif"
+                @endif">
                 @if ($service->status == 'active')
                     <x-ri-checkbox-circle-fill />
-                @elseif($service->status == 'suspended')
+                @elseif($service->status == 'suspended' || $service->status == 'cancelled')
                     <x-ri-forbid-fill />
                 @elseif($service->status == 'pending')
                     <x-ri-error-warning-fill />
@@ -29,4 +29,6 @@
         </div>
     </a>
     @endforeach
+
+    {{ $services->links() }}
 </div>

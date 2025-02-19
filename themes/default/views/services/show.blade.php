@@ -16,11 +16,13 @@
                         <span class="mr-2">{{ __('services.price') }}:</span>
                         <span class="text-base/50">{{ $service->formattedPrice }}</span>
                     </div>
-                    <div class="flex items-center text-base">
-                        <span class="mr-2">{{ __('services.billing_cycle') }}:</span>
-                        <span class="text-base/50">Every {{ $service->plan->billing_period > 1 ? $service->plan->billing_period : '' }}
-                            {{ Str::plural($service->plan->billing_unit, $service->plan->billing_period) }}</span>
-                    </div>
+                    @if($service->plan->type == 'recurring')
+                        <div class="flex items-center text-base">
+                            <span class="mr-2">{{ __('services.billing_cycle') }}:</span>
+                            <span class="text-base/50">Every {{ $service->plan->billing_period > 1 ? $service->plan->billing_period : '' }}
+                                {{ Str::plural($service->plan->billing_unit, $service->plan->billing_period) }}</span>
+                        </div>
+                    @endif
                     <div class="flex items-center text-base">
                         <span class="mr-2">{{ __('services.status') }}:</span>
                         <span

@@ -35,4 +35,6 @@
         </div>
     </a>
     @endforeach
+
+    {{ $invoices->links() }}
 </div>

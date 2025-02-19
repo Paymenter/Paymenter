@@ -156,10 +156,18 @@ class Service extends Model
         return $this->hasManyThrough(Invoice::class, InvoiceItem::class, 'reference_id', 'id', 'id', 'invoice_id')->where('reference_type', Service::class);
     }
 
+    /**
+     * Get cancellation requests
+     */
+    public function cancellation()
+    {
+        return $this->hasOne(ServiceCancellation::class);
+    }
+
     public function cancellable(): Attribute
     {
         return Attribute::make(
-            get: fn () => $this->status !== 'cancelled' && $this->plan->type != 'free' && $this->plan->type != 'one-time'
+            get: fn () => $this->status !== 'cancelled' && $this->plan->type != 'free' && $this->plan->type != 'one-time' && !$this->cancellation?->exists()
         );
     }
 
