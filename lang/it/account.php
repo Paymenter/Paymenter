@@ -1,8 +1,10 @@
 <?php
 
 return [
+    'account' => 'Account',
     'personal_details' => 'Personal details',
     'security' => 'Security',
+    'credits' => 'Credits',
 
     'change_password' => 'Change password',
 
@@ -29,6 +31,9 @@ return [
 
         'two_factor_code' => 'Enter the code from your authenticator app',
         'two_factor_code_placeholder' => 'Your two-factor authentication code',
+
+        'currency' => 'Currency',
+        'amount' => 'Amount',
     ],
 
     'notifications' => [
@@ -39,4 +44,9 @@ return [
         'two_factor_code_incorrect' => 'The code is incorrect.',
         'session_logged_out' => 'Session has been logged out.',
     ],
+
+    'no_credit' => 'You have no credits.',
+    'add_credit' => 'Add credit',
+    'credit_deposit' => 'Credit deposit (:currency)',
+
 ];
