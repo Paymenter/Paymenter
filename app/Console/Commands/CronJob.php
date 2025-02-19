@@ -3,7 +3,6 @@
 namespace App\Console\Commands;
 
 use App\Events\Invoice\Created as InvoiceCreated;
-use App\Helpers\NotificationHelper;
 use App\Jobs\Server\SuspendJob;
 use App\Jobs\Server\TerminateJob;
 use App\Models\EmailLog;
@@ -72,7 +71,6 @@ class CronJob extends Command
             ]);
 
             event(new InvoiceCreated($invoice));
-
 
             $sendedInvoices++;
         });
