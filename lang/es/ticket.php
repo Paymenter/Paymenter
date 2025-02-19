@@ -2,6 +2,7 @@
 
 return [
     'ticket_details' => 'Ticket Details',
+    'tickets' => 'Tickets',
     'subject' => 'Subject',
     'status' => 'Status',
     'priority' => 'Priority',
@@ -14,11 +15,11 @@ return [
     'select_priority' => 'Select Priority',
     'low' => 'Low',
     'medium' => 'Medium',
-    'high' => 'High',
+    'high' => 'Alto',
 
-    'last_activity' => 'Last activity',
+    'last_activity' => 'Última actividad',
 
-    'service' => 'Service',
-    'select_service' => 'Select Service',
-    'create' => 'Create',
+    'service' => 'Servicio',
+    'select_service' => 'Seleccionar servicio',
+    'create' => 'Crear',
 ];

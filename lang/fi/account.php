@@ -1,8 +1,10 @@
 <?php
 
 return [
+    'account' => 'Account',
     'personal_details' => 'Henkilökohtaiset tiedot',
     'security' => 'Turvallisuus',
+    'credits' => 'Credits',
 
     'change_password' => 'Vaihda salasana',
 
@@ -29,6 +31,9 @@ return [
 
         'two_factor_code' => 'Syötä todennussovelluksen näyttämä koodi',
         'two_factor_code_placeholder' => 'Kaksivaiheinen tunnistautumiskoodi',
+
+        'currency' => 'Currency',
+        'amount' => 'Amount',
     ],
 
     'notifications' => [
@@ -39,4 +44,9 @@ return [
         'two_factor_code_incorrect' => 'Koodi on virheellinen.',
         'session_logged_out' => 'Istunto on kirjauduttu ulos.',
     ],
+
+    'no_credit' => 'You have no credits.',
+    'add_credit' => 'Add credit',
+    'credit_deposit' => 'Credit deposit (:currency)',
+
 ];

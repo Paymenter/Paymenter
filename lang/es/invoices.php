@@ -1,10 +1,10 @@
 <?php
 
 return [
-    'invoices' => 'Invoices',
-    'product' => 'Product',
-    'price' => 'Price',
-    'status' => 'Status',
+    'invoices' => 'Facturas',
+    'product' => 'Producto',
+    'price' => 'Precio',
+    'status' => 'Estado',
     'actions' => 'Actions',
     'view' => 'View',
     'id' => 'ID',

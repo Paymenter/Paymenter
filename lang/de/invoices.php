@@ -1,0 +1,30 @@
+<?php
+
+return [
+    'invoices' => 'Rechnungen',
+    'product' => 'Produkt',
+    'price' => 'Preis',
+    'status' => 'Status',
+    'actions' => 'Aktionen',
+    'view' => 'Anzeigen',
+    'id' => 'ID',
+    'total' => 'Gesamt',
+    'subtotal' => 'Zwischensumme',
+    'invoice' => 'Rechnung #:id',
+    'unit_price' => 'Einzelpreis',
+    'bill_to' => 'Rechnung an',
+    'paid' => 'Bezahlt',
+    'payment_pending' => 'Zahlung ausstehend',
+
+    'invoice_date' => 'Rechnungsdatum',
+    'invoice_no' => 'Rechnungsnummer',
+    'item' => 'Artikel',
+    'quantity' => 'Menge',
+    'transactions' => 'Transaktionen',
+    'transaction_id' => 'Transaktions-ID',
+    'gateway' => 'Schnittstelle',
+    'payment_date' => 'Zahlungsdatum',
+    'payment_method' => 'Zahlungsmethode',
+    'amount' => 'Anzahl',
+    'date' => 'Datum',
+];

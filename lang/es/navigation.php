@@ -1,13 +1,17 @@
 <?php
 
 return [
-    'home' => 'Home',
-    'shop' => 'Shop',
-    'cart' => 'Cart',
-    'login' => 'Login',
-    'register' => 'Register',
-    'account' => 'Account',
-    'dashboard' => 'Dashboard',
+    'home' => 'Inicio',
+    'shop' => 'Tienda',
+    'cart' => 'Carrito',
+    'login' => 'Iniciar sesión',
+    'register' => 'Registro',
+    'services' => 'Services',
+    'invoices' => 'Invoices',
+    'account' => 'Cuenta',
+    'personal_details' => 'Personal Details',
+    'security' => 'Security',
+    'dashboard' => 'Panel',
     'tickets' => 'Tickets',
     'admin' => 'Admin',
 ];
