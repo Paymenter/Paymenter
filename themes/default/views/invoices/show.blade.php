@@ -23,7 +23,7 @@
         </div>
     </div>
     
-    <div class="bg-background-secondary p-12 rounded-lg mt-2">
+    <div class="bg-background-secondary border border-neutral p-12 rounded-lg mt-2">
         <div class="sm:flex justify-between pr-4 pt-4">
             <h1 class="text-2xl font-bold sm:text-3xl">{{ __('invoices.invoice', ['id' => $invoice->id]) }}</h1>
             <div class="mt-4 sm:mt-0 text-right">
@@ -80,9 +80,9 @@
             </div>
         </div>
 
-        <div class="mt-12 border-b border-primary-500 overflow-x-auto">
-            <table class="w-full text-white">
-                <thead class="bg-primary-900 rounded-lg">
+        <div class="mt-12 border-b border-neutral overflow-x-auto">
+            <table class="w-full">
+                <thead class="bg-background border border-neutral rounded-lg">
                     <tr>
                         <th scope="col"
                             class="p-4 text-xs font-semibold tracking-wider text-left uppercase rounded-l-lg">
@@ -142,8 +142,8 @@
             <div class="mt-12">
                 <h2 class="text-2xl font-bold">{{ __('invoices.transactions') }}</h2>
                 <div class="mt-4 overflow-x-auto">
-                    <table class="w-full text-white">
-                        <thead class="bg-primary-900 rounded-lg">
+                    <table class="w-full">
+                        <thead class="bg-background border border-neutral rounded-lg">
                             <tr>
                                 <th scope="col"
                                     class="p-4 text-xs font-semibold tracking-wider text-left uppercase rounded-l-lg">
