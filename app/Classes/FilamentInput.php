@@ -229,6 +229,7 @@ class FilamentInput
                 break;
 
             default:
+                throw new \Exception("Unknown input type: {$setting->type}");
         }
     }
 }

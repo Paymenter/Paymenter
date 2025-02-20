@@ -3,7 +3,7 @@
         @case('select')
             <x-form.select name="{{ $name }}" :label="__($config->label ?? $config->name)" :required="$config->required ?? false"
                 :selected="config('configs.' . $config->name)" :multiple="$config->multiple ?? false"
-                wire:model.live="{{ $name }}">
+                wire:model.live="{{ $name }}" :placeholder="$config->placeholder ?? ''">
                 {{ $slot }}
             </x-form.select>
         @break
@@ -17,7 +17,7 @@
         @case('color')
         @case('file')
             <x-form.input name="{{ $name }}" :type="$config->type" :label="__($config->label ?? $config->name)"
-                :placeholder="$config->default ?? ''" :required="$config->required ?? false" wire:model.live="{{ $name }}" />
+                :placeholder="$config->default ?? ''" :required="$config->required ?? false" wire:model.live="{{ $name }}" :placeholder="$config->placeholder ?? ''" />
         @break
 
         @case('checkbox')

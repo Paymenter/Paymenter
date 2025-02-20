@@ -14,7 +14,7 @@ class Index extends Component
 
     public function render()
     {
-        $query = Auth::user()->services();
+        $query = Auth::user()->services()->orderBy('created_at', 'desc');
 
         if ($this->status) {
             $query->where('status', $this->status);

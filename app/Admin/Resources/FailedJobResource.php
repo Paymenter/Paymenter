@@ -36,7 +36,12 @@ class FailedJobResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('uuid'),
+                Tables\Columns\TextColumn::make('uuid')->toggleable(),
+                Tables\Columns\TextColumn::make('payload')->formatStateUsing(function ($state) {
+                    $state = json_decode($state);
+                    // List displayName
+                    return $state->displayName;
+                }),
                 Tables\Columns\TextColumn::make('exception')->formatStateUsing(function ($state) {
                     return explode("\n", $state)[0];
                 })->wrap()->tooltip(function ($state) {
@@ -86,7 +91,7 @@ class FailedJobResource extends Resource
                     }),
             ])
             ->filters([
-                //
+                
             ]);
     }
 

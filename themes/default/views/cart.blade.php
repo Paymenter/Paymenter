@@ -90,6 +90,7 @@
             </div>
 
             <div class="flex flex-col gap-2 w-full col-span-1 bg-background-secondary p-3 rounded-md">
+                @if($total->price > 0)
                 @if(count($gateways) > 1)
                 <x-form.select wire:model.live="gateway" name="gateway" label="Payment Gateway">
                     @foreach ($gateways as $gateway)
@@ -99,6 +100,7 @@
                 @endif
                 @if(Auth::check() && Auth::user()->credits()->where('currency_code', $items->first()->price->currency->code)->exists())
                     <x-form.checkbox wire:model="use_credits" name="use_credits" label="Use Credits" />
+                @endif
                 @endif
 
                 <div class="flex flex-row justify-end gap-2">

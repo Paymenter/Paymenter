@@ -1,0 +1,328 @@
+<?php
+
+namespace Paymenter\Extensions\Servers\Convoy;
+
+use App\Classes\Extension\Server;
+use App\Models\Product;
+use App\Models\Service;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Str;
+
+class Convoy extends Server
+{
+    public function request($url, $method = 'get', $data = []): array
+    {
+        // Trim any leading slashes from the base url and add the path URL to it
+        $req_url = rtrim($this->config('host'), '/') . '/api/application/' . $url;
+        $response = Http::withHeaders([
+            'Authorization' => 'Bearer ' . $this->config('api_key'),
+            'Accept' => 'application/json',
+        ])->$method($req_url, $data);
+
+        if (!$response->successful()) {
+            throw new \Exception($response->json()['message']);
+        }
+
+        return $response->json() ?? [];
+    }
+
+    /**
+     * Get all the configuration for the extension
+     * 
+     * @param array $values
+     * @return array
+     */
+    public function getConfig($values = []): array
+    {
+        return [
+            [
+                'name' => 'host',
+                'type' => 'text',
+                'label' => 'Hostname',
+                'required' => true,
+                'validation' => 'url:http,https'
+            ],
+            [
+                'name' => 'api_key',
+                'type' => 'text',
+                'label' => 'API Key',
+                'required' => true
+            ]
+        ];
+    }
+
+    /**
+     * Get product config
+     * 
+     * @param array $values
+     * @return array
+     */
+    public function getProductConfig($values = []): array
+    {
+        $nodes = $this->request('nodes');
+        $options = [];
+        foreach ($nodes['data'] as $node) {
+            $options[$node['id']] =  $node['name'];
+        }
+
+        return [
+            [
+                'name' => 'cpu',
+                'type' => 'text',
+                'label' => 'CPU Cores',
+                'required' => true
+            ],
+            [
+                'name' => 'ram',
+                'type' => 'text',
+                'label' => 'RAM (MiB)',
+                'required' => true
+            ],
+            [
+                'name' => 'disk',
+                'type' => 'text',
+                'label' => 'Disk (MiB)',
+                'required' => true
+            ],
+            [
+                'name' => 'bandwidth',
+                'type' => 'text',
+                'label' => 'Bandwidth (MiB)',
+                'required' => false
+            ],
+            [
+                'name' => 'snapshot',
+                'type' => 'text',
+                'label' => 'Amount of snapshots',
+                'required' => true
+            ],
+            [
+                'name' => 'backups',
+                'type' => 'text',
+                'label' => 'Amount of backups',
+                'required' => true
+            ],
+            [
+                'name' => 'node',
+                'type' => 'select',
+                'label' => 'Nodes',
+                'required' => true,
+                'options' => $options
+            ],
+            [
+                'name' => 'auto_assign_ip',
+                'type' => 'checkbox',
+                'label' => 'Auto assign IP from pool',
+                'required' => false
+            ],
+            [
+                'name' => 'start_on_create',
+                'type' => 'checkbox',
+                'label' => 'Start Server After Completing Installation',
+                'required' => false
+            ]
+        ];
+    }
+
+    public function getCheckoutConfig(Product $product): array
+    {
+        $node = $product->settings()->where('key', 'node')->first()->value;
+
+        $os = $this->request('nodes/' . $node . '/template-groups');
+        $options = [];
+        foreach ($os['data'] as $os) {
+            foreach ($os['templates'] as $template) {
+                foreach ($template as $template1) {
+                    $options[$template1['uuid']] = $template1['name'];
+                }
+            }
+        }
+
+        return [
+            [
+                'name' => 'os',
+                'type' => 'select',
+                'label' => 'Operating System',
+                'required' => true,
+                'options' => $options
+            ],
+            [
+                'name' => 'hostname',
+                'type' => 'text',
+                'label' => 'Hostname',
+                'placeholder' => 'server.example.com',
+                'required' => true
+            ],
+        ];
+    }
+
+    /**
+     * Check if currenct configuration is valid
+     *
+     * @return bool|string
+     */
+    public function testConfig(): bool|string
+    {
+        try {
+            $this->request('/servers');
+            return true;
+        } catch (\Exception $e) {
+            return $e->getMessage();
+        }
+        return true;
+    }
+
+    public function getOrCreateUser($user)
+    {
+        $users = $this->request('users', data: ['filter[email]' => $user->email]);
+
+        if (count($users['data']) > 0) {
+            return [
+                'created' => false,
+                'id' => $users['data'][0]['id']
+            ];
+        }
+
+        $password = Str::password();
+        $user = $this->request('users', 'post', [
+            'email' => $user->email,
+            'name' => $user->name,
+            'password' => $password,
+            'root_admin' => false
+        ]);
+
+        return [
+            'created' => true,
+            'id' => $user['data']['id'],
+            'password' => $password
+        ];
+    }
+
+    /**
+     * Create a server 
+     * 
+     * @param Service $service
+     * @param array $settings (product settings)
+     * @param array $properties (checkout options)
+     * @return bool
+     */
+    public function createServer(Service $service, $settings, $properties)
+    {
+        $node = $properties['node'] ?? $settings['node'];
+        $os = $properties['os'];
+        $hostname = $properties['hostname'];
+        $password = $properties['password'] ?? Str::password();
+        $cpu = $properties['cpu'] ?? $settings['cpu'];
+        $ram = $properties['ram'] ?? $settings['ram'];
+        $disk = $properties['disk'] ?? $settings['disk'];
+        $bandwidth = $properties['bandwidth'] ?? $settings['bandwidth'];
+        $snapshot = $properties['snapshot'] ?? $settings['snapshot'];
+        $backups = $properties['backups'] ?? $settings['backups'];
+        if ($settings['auto_assign_ip']) {
+            $ip = $this->request('nodes/' . $node . '/addresses', data: ['filter[server_id]' => '']);
+
+            $ip = [$ip['data'][0]['id']];
+        } else {
+            $ip = [];
+        }
+
+        $user = $this->getOrCreateUser($service->order->user);
+
+        $data = [
+            'node_id' => (int) $node,
+            'user_id' => $user['id'],
+            'name' => $hostname . ' ' . $service->user->name,
+            'hostname' => $hostname,
+            'vmid' => null,
+            'limits' => [
+                'cpu' => (int) $cpu,
+                'memory' => $ram * 1024 * 1024,
+                'disk' => $disk * 1024 * 1024,
+                'snapshots' => (int) $snapshot,
+                'bandwidth' => (int) $bandwidth == 0 ? null : (int) $bandwidth * 1024 * 1024,
+                'backups' => (int) $backups == 0 ? null : (int) $backups,
+                'address_ids' => $ip,
+            ],
+            'account_password' => $password,
+            'template_uuid' => $os,
+            'should_create_server' => true,
+            'start_on_completion' => false,
+        ];
+
+
+        $server = $this->request('servers', 'post', $data);
+
+        if (!isset($server['data'])) {
+            throw new \Exception('Failed to create server');
+        }
+
+
+        $service->properties()->updateOrCreate([
+            'key' => 'server_uuid',
+        ], [
+            'name' => 'Convoy Server UUID',
+            'value' => $server['data']['uuid'],
+        ]);
+
+        return [
+            'user' => $user,
+            'password' => $password,
+            'server' => $server['data']
+        ];
+    }
+
+    /**
+     * Suspend a server
+     * 
+     * @param Service $service
+     * @param array $settings (product settings)
+     * @param array $properties (checkout options)
+     * @return bool
+     */
+    public function suspendServer(Service $service, $settings, $properties)
+    {
+        if (!isset($properties['server_uuid'])) {
+            throw new \Exception('Server does not exist');
+        }
+
+
+        $this->request('servers/' . $properties['server_uuid'] . '/settings/suspend', 'post');
+    }
+
+    /**
+     * Unsuspend a server
+     * 
+     * @param Service $service
+     * @param array $settings (product settings)
+     * @param array $properties (checkout options)
+     * @return bool
+     */
+    public function unsuspendServer(Service $service, $settings, $properties)
+    {
+        if (!isset($properties['server_uuid'])) {
+            throw new \Exception('Server does not exist');
+        }
+
+        $this->request('servers/' . $properties['server_uuid'] . '/settings/unsuspend', 'post');
+    }
+
+    /**
+     * Terminate a server
+     * 
+     * @param Service $service
+     * @param array $settings (product settings)
+     * @param array $properties (checkout options)
+     * @return bool
+     */
+    public function terminateServer(Service $service, $settings, $properties)
+    {
+        if (!isset($properties['server_uuid'])) {
+            throw new \Exception('Server does not exist');
+        }
+
+        $this->request('servers/' . $properties['server_uuid'], 'delete');
+
+        // Remove the server_uuid property
+        $service->properties()->where('key', 'server_uuid')->delete();
+    }
+}

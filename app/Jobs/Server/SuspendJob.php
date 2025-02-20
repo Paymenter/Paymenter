@@ -35,7 +35,7 @@ class SuspendJob implements ShouldQueue
 
         // Send the email (TO BE MADE)
         if ($this->sendNotification && isset($data)) {
-            NotificationHelper::serverSuspendedNotification($this->service->order->user, $this->service, $data);
+            NotificationHelper::serverSuspendedNotification($this->service->order->user, $this->service, is_array($data) ? $data : []);
         }
     }
 }

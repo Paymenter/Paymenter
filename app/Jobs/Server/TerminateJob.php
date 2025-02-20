@@ -35,7 +35,7 @@ class TerminateJob implements ShouldQueue
 
         // Send the email (TO BE MADE)
         if ($this->sendNotification && isset($data)) {
-            NotificationHelper::serverTerminatedNotification($this->service->order->user, $this->service, $data);
+            NotificationHelper::serverTerminatedNotification($this->service->order->user, $this->service, is_array($data) ? $data : []);
         }
     }
 }
