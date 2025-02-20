@@ -15,8 +15,8 @@ class ProxyMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (count(config('settings.trusted_proxies')) > 0) {
-            $request->setTrustedProxies(config('settings.trusted_proxies'), -1);
+        if (count(config('settings.trusted_proxies', [])) > 0) {
+            $request->setTrustedProxies(config('settings.trusted_proxies', []), -1);
         }
 
         return $next($request);
