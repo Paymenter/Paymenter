@@ -1,4 +1,5 @@
-<div class="">
+@if($announcements->count() > 0) 
+<div>
     <div class="flex items-center justify-between mb-6">
         <div class="flex items-center gap-3">
             <div class="bg-background-secondary border border-neutral p-2 rounded-lg">
@@ -35,3 +36,4 @@
         <x-ri-arrow-right-fill class="size-5" />
     </x-navigation.link>
 </div>
+@endif

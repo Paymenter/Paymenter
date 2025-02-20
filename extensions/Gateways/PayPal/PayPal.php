@@ -86,17 +86,17 @@ class PayPal extends Gateway
     {
         $url = $this->config('test_mode') ? 'https://api-m.sandbox.paypal.com' : 'https://api-m.paypal.com';
 
-        if ($this->config('paypal_use_subscriptions') && $invoice->items->map(fn ($item) => $item->service->plan->billing_period . $item->service->plan->billing_unit)->unique()->count() === 1) {
+        if ($this->config('paypal_use_subscriptions') && $invoice->items->map(fn ($item) => $item->reference->plan->billing_period . $item->reference->plan->billing_unit)->unique()->count() === 1) {
             $paypalProduct = $this->request('post', $url . '/v1/catalogs/products', [
-                'name' => $invoice->items->first()->service->product->name,
+                'name' => $invoice->items->first()->reference->product->name,
                 'type' => 'SERVICE',
             ]);
 
             // For each item in the invoice, create a billing cycle
             $billingCycles[] = [
                 'frequency' => [
-                    'interval_unit' => strtoupper($invoice->items->first()->service->plan->billing_unit),
-                    'interval_count' => $invoice->items->first()->service->plan->billing_period,
+                    'interval_unit' => strtoupper($invoice->items->first()->reference->plan->billing_unit),
+                    'interval_count' => $invoice->items->first()->reference->plan->billing_period,
                 ],
                 'tenure_type' => 'TRIAL',
                 'sequence' => 1,
@@ -109,12 +109,12 @@ class PayPal extends Gateway
                 ],
             ];
 
-            $nextSum = $invoice->items->sum(fn ($item) => $item->service->price * $item->service->quantity);
+            $nextSum = $invoice->items->sum(fn ($item) => $item->reference->price * $item->reference->quantity);
 
             $billingCycles[] = [
                 'frequency' => [
-                    'interval_unit' => strtoupper($invoice->items->first()->service->plan->billing_unit),
-                    'interval_count' => $invoice->items->first()->service->plan->billing_period,
+                    'interval_unit' => strtoupper($invoice->items->first()->reference->plan->billing_unit),
+                    'interval_count' => $invoice->items->first()->reference->plan->billing_period,
                 ],
                 'tenure_type' => 'REGULAR',
                 'sequence' => 2,
@@ -129,8 +129,8 @@ class PayPal extends Gateway
 
             $plan = $this->request('post', $url . '/v1/billing/plans', [
                 'product_id' => $paypalProduct->id,
-                'name' => $invoice->items->first()->service->plan->name,
-                'description' => $invoice->items->first()->service->plan->description,
+                'name' => $invoice->items->first()->reference->plan->name,
+                'description' => $invoice->items->first()->reference->plan->description,
                 'billing_cycles' => $billingCycles,
                 'payment_preferences' => [
                     'auto_bill_outstanding' => true,
