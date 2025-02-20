@@ -39,6 +39,7 @@ class FailedJobResource extends Resource
                 Tables\Columns\TextColumn::make('uuid')->toggleable(),
                 Tables\Columns\TextColumn::make('payload')->formatStateUsing(function ($state) {
                     $state = json_decode($state);
+
                     // List displayName
                     return $state->displayName;
                 }),
@@ -91,7 +92,7 @@ class FailedJobResource extends Resource
                     }),
             ])
             ->filters([
-                
+
             ]);
     }
 

@@ -300,7 +300,8 @@ class Cart extends Component
                 // Is it only one item? Then redirect to the service page
                 if ($order->services->count() == 1) {
                     return $this->redirect(route('services.show', $order->services->first()), true);
-                } 
+                }
+
                 return $this->redirect(route('services'), true);
             } else {
                 return $this->redirect(route('invoices.show', $invoice) . '?gateway=' . $this->gateway . '&pay', true);
