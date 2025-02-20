@@ -2,6 +2,7 @@
 
 namespace App\Listeners;
 
+use App\Events\Auth\Login;
 use App\Events\Invoice\Created as InvoiceCreated;
 use App\Events\Order\Created as OrderCreated;
 use App\Events\User\Created as UserCreated;
@@ -12,7 +13,7 @@ class SendMailListener
     /**
      * Handle the event.
      */
-    public function handle(InvoiceCreated|OrderCreated|UserCreated $event): void
+    public function handle(InvoiceCreated|OrderCreated|UserCreated|Login $event): void
     {
 
         if ($event instanceof InvoiceCreated) {
@@ -21,9 +22,12 @@ class SendMailListener
         } elseif ($event instanceof UserCreated) {
             $user = $event->user;
             NotificationHelper::emailVerificationNotification($user);
-        } else {
+        } elseif ($event instanceof OrderCreated) {
             $order = $event->order;
             NotificationHelper::orderCreatedNotification($order->user, $order);
+        } elseif ($event instanceof Login) {
+            $user = $event->user;
+            NotificationHelper::loginDetectedNotification($user);
         }
     }
 }
