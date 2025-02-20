@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Middleware\EnsureUserHasPermissions;
+use App\Http\Middleware\ProxyMiddleware;
 use App\Http\Middleware\SetLocale;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
@@ -21,6 +22,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'scope' => CheckForAnyScope::class,
         ]);
         $middleware->web(SetLocale::class);
+        $middleware->append(ProxyMiddleware::class);
     })
     ->withEvents(discover: [
         __DIR__ . '/../app/Extensions',

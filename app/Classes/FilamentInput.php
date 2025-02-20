@@ -57,8 +57,12 @@ class FilamentInput
             case 'tags':
                 return TagsInput::make($setting->name)
                     ->label($setting->label ?? $setting->name)
+                    ->placeholder($setting->placeholder ?? '')
                     ->required($setting->required ?? false)
-                    ->disabled($setting->disabled ?? false);
+                    ->disabled($setting->disabled ?? false)
+                    ->hint($setting->hint ?? '')
+                    ->hintColor('primary')
+                    ->helperText($setting->description ?? '');
                 break;
 
             case 'text':
