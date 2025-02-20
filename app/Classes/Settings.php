@@ -99,7 +99,7 @@ class Settings
                     'type' => 'tags',
                     'database_type' => 'array',
                     'placeholder' => 'IP Addresses or CIDR (e.g. 1.1.1.1/32 or 2606:4700:4700::1111)',
-                ]
+                ],
             ],
 
             'social-login' => [
