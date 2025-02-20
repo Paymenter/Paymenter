@@ -28,9 +28,8 @@ class Convoy extends Server
 
     /**
      * Get all the configuration for the extension
-     * 
-     * @param array $values
-     * @return array
+     *
+     * @param  array  $values
      */
     public function getConfig($values = []): array
     {
@@ -40,29 +39,28 @@ class Convoy extends Server
                 'type' => 'text',
                 'label' => 'Hostname',
                 'required' => true,
-                'validation' => 'url:http,https'
+                'validation' => 'url:http,https',
             ],
             [
                 'name' => 'api_key',
                 'type' => 'text',
                 'label' => 'API Key',
-                'required' => true
-            ]
+                'required' => true,
+            ],
         ];
     }
 
     /**
      * Get product config
-     * 
-     * @param array $values
-     * @return array
+     *
+     * @param  array  $values
      */
     public function getProductConfig($values = []): array
     {
         $nodes = $this->request('nodes');
         $options = [];
         foreach ($nodes['data'] as $node) {
-            $options[$node['id']] =  $node['name'];
+            $options[$node['id']] = $node['name'];
         }
 
         return [
@@ -70,57 +68,57 @@ class Convoy extends Server
                 'name' => 'cpu',
                 'type' => 'text',
                 'label' => 'CPU Cores',
-                'required' => true
+                'required' => true,
             ],
             [
                 'name' => 'ram',
                 'type' => 'text',
                 'label' => 'RAM (MiB)',
-                'required' => true
+                'required' => true,
             ],
             [
                 'name' => 'disk',
                 'type' => 'text',
                 'label' => 'Disk (MiB)',
-                'required' => true
+                'required' => true,
             ],
             [
                 'name' => 'bandwidth',
                 'type' => 'text',
                 'label' => 'Bandwidth (MiB)',
-                'required' => false
+                'required' => false,
             ],
             [
                 'name' => 'snapshot',
                 'type' => 'text',
                 'label' => 'Amount of snapshots',
-                'required' => true
+                'required' => true,
             ],
             [
                 'name' => 'backups',
                 'type' => 'text',
                 'label' => 'Amount of backups',
-                'required' => true
+                'required' => true,
             ],
             [
                 'name' => 'node',
                 'type' => 'select',
                 'label' => 'Nodes',
                 'required' => true,
-                'options' => $options
+                'options' => $options,
             ],
             [
                 'name' => 'auto_assign_ip',
                 'type' => 'checkbox',
                 'label' => 'Auto assign IP from pool',
-                'required' => false
+                'required' => false,
             ],
             [
                 'name' => 'start_on_create',
                 'type' => 'checkbox',
                 'label' => 'Start Server After Completing Installation',
-                'required' => false
-            ]
+                'required' => false,
+            ],
         ];
     }
 
@@ -144,31 +142,31 @@ class Convoy extends Server
                 'type' => 'select',
                 'label' => 'Operating System',
                 'required' => true,
-                'options' => $options
+                'options' => $options,
             ],
             [
                 'name' => 'hostname',
                 'type' => 'text',
                 'label' => 'Hostname',
                 'placeholder' => 'server.example.com',
-                'required' => true
+                'required' => true,
             ],
         ];
     }
 
     /**
      * Check if currenct configuration is valid
-     *
-     * @return bool|string
      */
     public function testConfig(): bool|string
     {
         try {
             $this->request('/servers');
+
             return true;
         } catch (\Exception $e) {
             return $e->getMessage();
         }
+
         return true;
     }
 
@@ -179,7 +177,7 @@ class Convoy extends Server
         if (count($users['data']) > 0) {
             return [
                 'created' => false,
-                'id' => $users['data'][0]['id']
+                'id' => $users['data'][0]['id'],
             ];
         }
 
@@ -188,22 +186,21 @@ class Convoy extends Server
             'email' => $user->email,
             'name' => $user->name,
             'password' => $password,
-            'root_admin' => false
+            'root_admin' => false,
         ]);
 
         return [
             'created' => true,
             'id' => $user['data']['id'],
-            'password' => $password
+            'password' => $password,
         ];
     }
 
     /**
-     * Create a server 
-     * 
-     * @param Service $service
-     * @param array $settings (product settings)
-     * @param array $properties (checkout options)
+     * Create a server
+     *
+     * @param  array  $settings  (product settings)
+     * @param  array  $properties  (checkout options)
      * @return bool
      */
     public function createServer(Service $service, $settings, $properties)
@@ -249,13 +246,11 @@ class Convoy extends Server
             'start_on_completion' => false,
         ];
 
-
         $server = $this->request('servers', 'post', $data);
 
         if (!isset($server['data'])) {
             throw new \Exception('Failed to create server');
         }
-
 
         $service->properties()->updateOrCreate([
             'key' => 'server_uuid',
@@ -267,16 +262,15 @@ class Convoy extends Server
         return [
             'user' => $user,
             'password' => $password,
-            'server' => $server['data']
+            'server' => $server['data'],
         ];
     }
 
     /**
      * Suspend a server
-     * 
-     * @param Service $service
-     * @param array $settings (product settings)
-     * @param array $properties (checkout options)
+     *
+     * @param  array  $settings  (product settings)
+     * @param  array  $properties  (checkout options)
      * @return bool
      */
     public function suspendServer(Service $service, $settings, $properties)
@@ -285,16 +279,14 @@ class Convoy extends Server
             throw new \Exception('Server does not exist');
         }
 
-
         $this->request('servers/' . $properties['server_uuid'] . '/settings/suspend', 'post');
     }
 
     /**
      * Unsuspend a server
-     * 
-     * @param Service $service
-     * @param array $settings (product settings)
-     * @param array $properties (checkout options)
+     *
+     * @param  array  $settings  (product settings)
+     * @param  array  $properties  (checkout options)
      * @return bool
      */
     public function unsuspendServer(Service $service, $settings, $properties)
@@ -308,10 +300,9 @@ class Convoy extends Server
 
     /**
      * Terminate a server
-     * 
-     * @param Service $service
-     * @param array $settings (product settings)
-     * @param array $properties (checkout options)
+     *
+     * @param  array  $settings  (product settings)
+     * @param  array  $properties  (checkout options)
      * @return bool
      */
     public function terminateServer(Service $service, $settings, $properties)
