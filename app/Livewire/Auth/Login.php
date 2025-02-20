@@ -3,6 +3,7 @@
 namespace App\Livewire\Auth;
 
 use App\Livewire\Component;
+use App\Models\User;
 use App\Traits\Captchable;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\RateLimiter;
@@ -54,6 +55,8 @@ class Login extends Component
         }
 
         RateLimiter::clear('login:' . $this->email);
+
+        event(new \App\Events\Auth\Login(User::find(Auth::id())));
 
         $intendedUrl = session()->pull('url.intended', default: route('dashboard'));
         $isAdminRoute = str_starts_with($intendedUrl, url('/admin'));

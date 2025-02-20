@@ -7,6 +7,7 @@ use App\Events\Invoice\Created as InvoiceCreated;
 use App\Events\Order\Created as OrderCreated;
 use App\Events\User\Created as UserCreated;
 use App\Helpers\NotificationHelper;
+use App\Models\Session;
 
 class SendMailListener
 {
@@ -27,7 +28,12 @@ class SendMailListener
             NotificationHelper::orderCreatedNotification($order->user, $order);
         } elseif ($event instanceof Login) {
             $user = $event->user;
-            NotificationHelper::loginDetectedNotification($user);
+            $data = [
+                'ip' => request()->ip(),
+                'device' => (new Session(['user_agent' => request()->userAgent()]))->getFormattedDeviceAttribute(),
+                'time' => now()->format('Y-m-d H:i:s'),
+            ];
+            NotificationHelper::loginDetectedNotification($user, $data);
         }
     }
 }

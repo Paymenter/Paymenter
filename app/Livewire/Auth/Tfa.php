@@ -50,6 +50,8 @@ class Tfa extends Component
 
         Auth::loginUsingId($user->id, $session['remember']);
 
+        event(new \App\Events\Auth\Login(User::find(Auth::id())));
+
         Session::forget('2fa');
 
         RateLimiter::clear('2fa');

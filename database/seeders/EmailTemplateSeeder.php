@@ -21,15 +21,15 @@ class EmailTemplateSeeder extends Seeder
                             
                 A new login was detected on your account.
                             
-                Location: {{ $location }}  
-                IP: {{ $ip }}  
-                            
-                            
+                - IP: {{ $ip }}  
+                - Device: {{ $device }}
+                - Time: {{ $time }}
+
                 **If this was you**  
                 You can ignore this message, there is no need to take any action.
                             
                 **If this wasn't you**  
-                Please reset your password [here]({{ route('register') }}).
+                Please reset your password [here]({{ route('password.request') }}).
                 HTML,
             ],
             [

@@ -14,6 +14,10 @@ class Session extends Model
 
     public $timestamps = false;
 
+    protected $fillable = [
+        'user_agent',
+    ];
+
     /**
      * The attributes that should be cast.
      *
