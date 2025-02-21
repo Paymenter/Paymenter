@@ -44,6 +44,6 @@ jobs:
       - name: Upload archive to https://api.paymenter.org/beta
         uses: JantHsueh/upload-file-action@master
         with:
-          url: https://api.paymenter.org/alpha
+          url: https://api.paymenter.org/beta
           forms: '{"api_key": "${{ secrets.API_KEY }}"}'
           fileForms: '{"file": "paymenter.tar.gz"}'

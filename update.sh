@@ -4,8 +4,16 @@ URL='https://github.com/paymenter/paymenter/releases/latest/download/paymenter.t
 
 echo "Starting upgrade process..."
 
-if [ "$(php -r 'echo version_compare(PHP_VERSION, "8.1.0");')" -lt 0 ]; then
-    echo -e "\x1b[31;1mCannot execute self-upgrade process. The minimum required PHP version required is 8.1, you have [$(php -r 'echo PHP_VERSION;')].\x1b[0m"
+# Read config/app.php to check if someone is trying to ugprade to a major version.
+if [ -f "config/app.php" ]; then
+    if grep -q "marketplace" "config/app.php"; then
+        echo -e "\x1b[31;1mCannot execute self-upgrade process. Please follow the upgrade instructions at https://v1.paymenter.org/docs/guides/v0-migration to migrate your V0 to V1\x1b[0m"
+        exit 1
+    fi
+fi
+
+if [ "$(php -r 'echo version_compare(PHP_VERSION, "8.2.0");')" -lt 0 ]; then
+    echo -e "\x1b[31;1mCannot execute self-upgrade process. The minimum required PHP version required is 8.2, you have [$(php -r 'echo PHP_VERSION;')].\x1b[0m"
     exit 1
 fi
 
@@ -98,11 +106,8 @@ RUN composer install --no-dev --optimize-autoloader
 # Run the database migrations.
 RUN php artisan migrate --force --seed
 
-# Link the storage directory.
-RUN php artisan storage:link
-
 # Change to default theme.
-RUN php artisan p:settings:change-theme default
+RUN php artisan app:settings:change theme default
 
 # Clear config and view caches.
 RUN php artisan config:clear
@@ -115,6 +120,9 @@ RUN rm -rf storage/logs/*.log
 RUN chown -R "$PERMUSER":"$PERMGROUP" .
 
 php artisan p:check-updates
+
+# Make filament faster.
+RUN php artisan filament:optimize
 
 # Set application up for maintenance.
 RUN php artisan up
