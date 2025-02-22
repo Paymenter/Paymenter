@@ -7,5 +7,5 @@ return [
     'open_tickets' => 'Open Tickets',
     'unpaid_invoices' => 'Unpaid Invoices',
     'active_services' => 'Active Services',
-    'view_all' => 'View All',
+    'view_all' => 'Pārskatīt visu',
 ];
