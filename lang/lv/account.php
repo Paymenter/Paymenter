@@ -13,7 +13,7 @@ return [
     'two_factor_authentication_enabled' => 'Two-factor authentication is enabled for your account.',
     'two_factor_authentication_enable' => 'Enable two-factor authentication',
     'two_factor_authentication_disable' => 'Disable two-factor authentication',
-    'two_factor_authentication_enable_description' => 'To enable two factor authentication, you need to scan the QR code below with an authenticator app like Google Authenticator or Authy.',
+    'two_factor_authentication_enable_description' => 'Lai iespējotu divfaktoru autentifikāciju, jums vajag skenēt QR kodu kas norādīts zemāk ar jūsu autentifikatoru piemēram, Google Autentifikators vai Authy lietotni.',
     'two_factor_authentication_qr_code' => 'Scan the QR code below with your authenticator app:',
     'two_factor_authentication_secret' => 'Or enter the following code manually:',
 
