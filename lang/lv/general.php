@@ -32,5 +32,5 @@ return [
     ],
 
     'all_rights_reserved' => 'All rights reserved.',
-    'update' => 'Update',
+    'update' => 'Atjaunināt',
 ];
