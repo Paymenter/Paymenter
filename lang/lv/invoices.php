@@ -26,5 +26,5 @@ return [
     'payment_date' => 'Payment Date',
     'payment_method' => 'Payment Method',
     'amount' => 'Amount',
-    'date' => 'Date',
+    'date' => 'Datums',
 ];
