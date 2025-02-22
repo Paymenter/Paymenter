@@ -46,11 +46,12 @@ class Virtfusion extends Server
             $packages[$package['id']] = $package['name'];
         }
 
-        $apiHypervisors = $this->request('/compute/hypervisors');
-        $hypervisors = [];
-        foreach ($apiHypervisors['data'] as $hypervisor) {
-            $hypervisors[$hypervisor['id']] = $hypervisor['name'];
-        }
+        // We need to wait for a virtfusion update to get hypervisors
+        // $apiHypervisors = $this->request('/compute/hypervisors/groups');
+        // $hypervisors = [];
+        // foreach ($apiHypervisors['data'] as $hypervisor) {
+        //     $hypervisors[$hypervisor['id']] = $hypervisor['name'];
+        // }
 
         return [
             [
@@ -62,11 +63,12 @@ class Virtfusion extends Server
             ],
             [
                 'name' => 'hypervisor',
-                'type' => 'select',
+                // 'type' => 'select',
+                'type' => 'text',
                 'label' => 'Hypervisor Group ID',
                 'required' => true,
                 'description' => 'The default Hypervisor group ID',
-                'options' => $hypervisors,
+                // 'options' => $hypervisors,
             ],
             [
                 'name' => 'ipv4',
@@ -110,7 +112,7 @@ class Virtfusion extends Server
         ])->$method($req_url, $data);
 
         if (!$response->successful()) {
-            throw new \Exception('An error occurred, got status code ' . $response->status());
+            throw new \Exception('An error occurred, got status code ' . $response->status() . ' on ' . $req_url);
         }
 
         return $response->json() ?? [];
@@ -227,6 +229,24 @@ class Virtfusion extends Server
         $this->request('/servers/' . $properties['server_id'], 'delete');
 
         return true;
+    }
+
+    public function getActions(Service $service): array
+    {
+        return [
+            [
+                'type' => 'button',
+                'label' => 'Go to Server',
+                'function' => 'ssoLink',
+            ]
+        ];
+    }
+
+    public function ssoLink(Service $service): string
+    {
+        $data = $this->request('/users/' . $service->user->id . '/authenticationTokens', 'post');
+
+        return rtrim($this->config('host'), '/') . $data['data']['authentication']['endpoint_complete'];
     }
 
     public function migrateOption(string $key, ?string $value)
