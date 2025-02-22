@@ -13,5 +13,5 @@ return [
     'security' => 'Security',
     'dashboard' => 'Dashboard',
     'tickets' => 'Tickets',
-    'admin' => 'Admin',
+    'admin' => 'Administrators',
 ];
