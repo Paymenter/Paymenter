@@ -55,21 +55,22 @@
             </div>
 
             <div class="flex flex-row items-center">
-                <x-dropdown>
-                    <x-slot:trigger>
-                        <div class="flex flex-col">
-                            <span class="text-sm text-base font-semibold text-nowrap">{{ strtoupper(app()->getLocale()) }} <span class="text-base/50 font-semibold">|</span> {{ session('currency', 'USD') }}</span>
-                        </div>
-                    </x-slot:trigger>
-                    <x-slot:content>
-                        <strong class="block p-2 text-xs font-semibold uppercase text-base/50"> Language </strong>
-                        <livewire:components.language-switch />
-                        <strong class="block p-2 text-xs font-semibold uppercase text-base/50"> Currency </strong>
-                        <livewire:components.currency-switch />
-                    </x-slot:content>
-                </x-dropdown>
-
-                <x-theme-toggle />
+                <div class="items-center hidden md:flex">
+                    <x-dropdown>
+                        <x-slot:trigger>
+                            <div class="flex flex-col">
+                                <span class="text-sm text-base font-semibold text-nowrap">{{ strtoupper(app()->getLocale()) }} <span class="text-base/50 font-semibold">|</span> {{ session('currency', 'USD') }}</span>
+                            </div>
+                        </x-slot:trigger>
+                        <x-slot:content>
+                            <strong class="block p-2 text-xs font-semibold uppercase text-base/50"> Language </strong>
+                            <livewire:components.language-switch />
+                            <livewire:components.currency-switch />
+                        </x-slot:content>
+                    </x-dropdown>
+                
+                    <x-theme-toggle />
+                </div>
 
                 <livewire:components.cart />
 
@@ -92,7 +93,7 @@
                     </x-slot:content>
                 </x-dropdown>
                 @else
-                <div class="flex flex-row mb-2 md:mb-0">
+                <div class="flex flex-row">
                     <x-navigation.link :href="route('login')">{{ __('navigation.login') }}</x-navigation.link>
                     <x-navigation.link :href="route('register')">
                         <x-button.primary>

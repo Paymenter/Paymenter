@@ -1,4 +1,4 @@
-<div class="grid grid-cols-4 gap-4">
+<div class="flex flex-col md:grid md:grid-cols-4 gap-4">
     <div class="flex flex-col col-span-3 gap-4">
         @if ($items->isEmpty())
             <h1 class="text-2xl font-semibold">
@@ -56,8 +56,8 @@
         @endforeach
     </div>
     <div class="flex flex-col gap-4">
-        <div class="flex flex-col gap-2 w-full col-span-1 bg-background-secondary p-3 rounded-md">
-            @if (!$items->isEmpty())
+        @if (!$items->isEmpty())
+            <div class="flex flex-col gap-2 w-full col-span-1 bg-background-secondary p-3 rounded-md">
                 <h2 class="text-2xl font-semibold mb-3">
                     {{ __('product.order_summary') }}
                 </h2>
@@ -108,7 +108,7 @@
                         {{ __('product.checkout') }}
                     </x-button.primary>
                 </div>
-            @endif
-        </div>
+            </div>
+        @endif
     </div>
 </div>

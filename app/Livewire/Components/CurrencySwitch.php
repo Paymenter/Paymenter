@@ -14,7 +14,7 @@ class CurrencySwitch extends Component
     {
         $this->currentCurrency = session('currency', config('settings.default_currency'));
 
-        if (Cart::get()->isNotEmpty()) {
+        if (Cart::get()->isNotEmpty() || Currency::all()->count() <= 1) {
             $this->skipRender();
         }
     }
