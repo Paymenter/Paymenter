@@ -1,6 +1,6 @@
 <div>
     <x-navigation.breadcrumb />
-    <p class="text-base text-base/60 text-nowrap font mt-2 mb-8">
+    <p class="text-base text-base/60 font mt-2 mb-8">
         {{ __('dashboard.dashboard_description') }}
     </p>
 

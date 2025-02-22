@@ -1,3 +1,3 @@
 @if (config('settings.logo'))
-    <img src="{{ Storage::url(config('settings.logo')) }}" alt="{{ config('app.name') }}" class="h-12 w-fit" />
+    <img src="{{ Storage::url(config('settings.logo')) }}" alt="{{ config('app.name') }}" class="h-12 w-fit inline-block" />
 @endif
