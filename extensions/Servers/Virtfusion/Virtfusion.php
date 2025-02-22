@@ -238,7 +238,7 @@ class Virtfusion extends Server
                 'type' => 'button',
                 'label' => 'Go to Server',
                 'function' => 'ssoLink',
-            ]
+            ],
         ];
     }
 
