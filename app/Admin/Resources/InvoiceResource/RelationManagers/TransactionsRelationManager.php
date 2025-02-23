@@ -2,6 +2,7 @@
 
 namespace App\Admin\Resources\InvoiceResource\RelationManagers;
 
+use App\Helpers\SevDeskHelper;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\RelationManagers\RelationManager;
@@ -55,6 +56,10 @@ class TransactionsRelationManager extends RelationManager
                 Tables\Columns\TextColumn::make('formattedAmount')->label('Amount'),
                 Tables\Columns\TextColumn::make('formattedFee')->label('Fee'),
                 Tables\Columns\TextColumn::make('created_at'),
+                Tables\Columns\TextColumn::make('sevdesk_id')
+                    ->label('SevDesk ID')
+                    ->searchable()
+                    ->sortable(),
             ])
             ->filters([
                 //
@@ -70,5 +75,13 @@ class TransactionsRelationManager extends RelationManager
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
             ]);
+    }
+
+    protected function afterSave(): void
+    {
+        if (config('settings.invoice_management') === 'sevdesk') {
+            $sevDeskHelper = new SevDeskHelper();
+            $sevDeskHelper->syncTransactions($this->ownerRecord);
+        }
     }
 }

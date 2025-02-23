@@ -4,6 +4,7 @@ namespace App\Livewire\Invoices;
 
 use App\Classes\PDF;
 use App\Helpers\ExtensionHelper;
+use App\Helpers\SevDeskHelper;
 use App\Livewire\Component;
 use App\Models\Gateway;
 use App\Models\Invoice;
@@ -58,7 +59,13 @@ class Show extends Component
         $this->validate([
             'gateway' => 'required',
         ]);
-        $this->pay = ExtensionHelper::pay(Gateway::where('id', $this->gateway)->first(), $this->invoice);
+
+        if (config('settings.invoice_management') === 'sevdesk') {
+            $sevDeskHelper = new SevDeskHelper();
+            $sevDeskHelper->payInvoice($this->invoice->sevdesk_id, $this->gateway);
+        } else {
+            $this->pay = ExtensionHelper::pay(Gateway::where('id', $this->gateway)->first(), $this->invoice);
+        }
 
         if (is_string($this->pay)) {
             return redirect()->to($this->pay);
@@ -76,7 +83,15 @@ class Show extends Component
 
     public function checkPaymentStatus()
     {
-        $this->invoice->refresh();
+        if (config('settings.invoice_management') === 'sevdesk') {
+            $sevDeskHelper = new SevDeskHelper();
+            $sevDeskInvoice = $sevDeskHelper->getInvoice($this->invoice->sevdesk_id);
+            $this->invoice->status = $sevDeskInvoice['status'];
+            $this->invoice->save();
+        } else {
+            $this->invoice->refresh();
+        }
+
         if ($this->invoice->status === 'paid') {
             $this->notify(__('The invoice has been paid.'), 'success');
             $this->checkPayment = false;

@@ -463,6 +463,18 @@ class Settings
                     'description' => 'Number of items to show per page',
                 ],
             ],
+            'invoice_management' => [
+                [
+                    'name' => 'invoice_management',
+                    'label' => 'Invoice Management',
+                    'type' => 'select',
+                    'options' => [
+                        'local' => 'Local',
+                        'sevdesk' => 'SevDesk',
+                    ],
+                    'default' => 'local',
+                ],
+            ],
         ];
 
         // Set theme settings

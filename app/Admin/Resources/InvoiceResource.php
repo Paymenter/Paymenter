@@ -4,6 +4,7 @@ namespace App\Admin\Resources;
 
 use App\Admin\Resources\InvoiceResource\Pages;
 use App\Admin\Resources\InvoiceResource\RelationManagers;
+use App\Helpers\SevDeskHelper;
 use App\Models\Currency;
 use App\Models\Invoice;
 use App\Models\Service;
@@ -168,6 +169,10 @@ class InvoiceResource extends Resource
                     ->label('Total'),
                 Tables\Columns\TextColumn::make('formattedRemaining')
                     ->label('Remaining'),
+                Tables\Columns\TextColumn::make('sevdesk_id')
+                    ->label('SevDesk ID')
+                    ->searchable()
+                    ->sortable(),
             ])
             ->defaultSort(function (Builder $query): Builder {
                 return $query
