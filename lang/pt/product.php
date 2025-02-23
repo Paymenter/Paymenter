@@ -1,24 +1,24 @@
 <?php
 
 return [
-    'add_to_cart' => 'Add to cart',
-    'view' => 'View',
-    'checkout' => 'Checkout',
-    'remove' => 'Remove',
-    'empty_cart' => 'Your cart is empty',
-    'total_today' => 'Total today',
+    'add_to_cart' => 'Adicionar ao carrinho',
+    'view' => 'Visualizar',
+    'checkout' => 'Finalizar compra',
+    'remove' => 'Remover',
+    'empty_cart' => 'Seu carrinho está vazio',
+    'total_today' => 'Total hoje',
     'subtotal' => 'Subtotal',
     'total' => 'Total',
 
-    'then_after_x' => 'Then after :time',
-    'order_summary' => 'Order Summary',
-    'edit' => 'Edit',
+    'then_after_x' => 'Depois de :time',
+    'order_summary' => 'Resumo do pedido',
+    'edit' => 'Editar',
 
-    'apply' => 'Apply',
-    'price' => 'Price',
-    'setup_fee' => 'Setup fee',
+    'apply' => 'Confirmar',
+    'price' => 'Preço',
+    'setup_fee' => 'Taxa de instalação',
 
-    'in_stock' => 'In stock',
-    'out_of_stock' => 'Product :product is out of stock',
-    'user_limit' => 'You have reached the limit of :product',
+    'in_stock' => 'Em estoque',
+    'out_of_stock' => 'Produto :product está fora de estoque',
+    'user_limit' => 'Você atingiu o limite de :product',
 ];
