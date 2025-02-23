@@ -13,43 +13,43 @@ return [
     |
     */
 
-    'failed' => 'These credentials do not match our records.',
-    'password' => 'The provided password is incorrect.',
-    'throttle' => 'Too many login attempts. Please try again in :seconds seconds.',
+    'failed' => 'As credenciais de login fornecidas estão incorretas.',
+    'password' => 'A senha fornecida está incorreta.',
+    'throttle' => 'Muitas tentativas de login. Tente novamente em :seconds segundos.',
 
-    'sign_in' => 'Sign in',
-    'sign_in_title' => 'Sign in to your account',
-    'or_sign_in_with' => 'Or sign in with',
-    'forgot_password' => 'Forgot your password?',
-    'dont_have_account' => 'Don\'t have an account?',
-    'already_have_account' => 'Already have an account?',
+    'sign_in' => 'Entrar',
+    'sign_in_title' => 'Entre na sua conta',
+    'or_sign_in_with' => 'Ou entrar com',
+    'forgot_password' => 'Esqueceu sua senha?',
+    'dont_have_account' => 'Ainda não possui uma conta?',
+    'already_have_account' => 'Já tem uma conta?',
 
-    'sign_up' => 'Sign up',
-    'sign_up_title' => 'Create your account',
+    'sign_up' => 'Cadastre-se',
+    'sign_up_title' => 'Crie a sua conta',
 
-    'logout' => 'Logout',
+    'logout' => 'Sair da sua conta',
 
     'input' => [
-        'email' => 'Email',
-        'email_label' => 'Email Address',
-        'password' => 'Password',
+        'email' => 'E-mail',
+        'email_label' => 'Endereço de E-mail',
+        'password' => 'Senha',
     ],
 
     'oauth' => [
-        'unverified_discord_account' => 'Your Discord account is not verified.',
-        'account_not_registered' => 'You are not registered on this site.',
+        'unverified_discord_account' => 'Sua conta do Discord não está verificada.',
+        'account_not_registered' => 'Você não está registrado neste site.',
     ],
 
-    'reset_password' => 'Reset password',
+    'reset_password' => 'Redefinir senha',
 
-    'verify_2fa' => 'Verify 2FA',
-    'verify' => 'Verify',
+    'verify_2fa' => 'Verificar autenticação de dois fatores (2FA)',
+    'verify' => 'Verificar',
 
     'verification' => [
-        'notice' => 'Verify your email address',
-        'sent' => 'A new verification link has been sent to your email address.',
-        'check_your_email' => 'Before proceeding, please check your email for a verification link.',
-        'not_received' => 'If you did not receive the email you can request another verification email.',
-        'request_another' => 'Resend verification email',
+        'notice' => 'Verifique seu endereço de e-mail',
+        'sent' => 'Um novo link de verificação foi enviado para o seu endereço de e-mail.',
+        'check_your_email' => 'Antes de avançar, por favor clique no link de verificação enviado para o seu e-mail.',
+        'not_received' => 'Se você não recebeu o e-mail, você pode solicitar outro e-mail de verificação.',
+        'request_another' => 'Reenviar e-mail de verificação',
     ],
 ];
