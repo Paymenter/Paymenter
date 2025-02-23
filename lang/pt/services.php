@@ -27,6 +27,6 @@ return [
     'current_price' => 'Preço atual',
     'new_price' => 'Novo Preço',
     'upgrade' => 'Atualizar',
-    'upgrade_summary' => 'Upgrade Summary',
+    'upgrade_summary' => 'Resumo da atualização',
     'total_today' => 'Total hoje',
 ];
