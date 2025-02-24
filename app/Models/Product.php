@@ -35,7 +35,7 @@ class Product extends Model
      */
     public function configOptions(): HasManyThrough
     {
-        return $this->hasManyThrough(ConfigOption::class, ConfigOptionProduct::class, 'product_id', 'id', 'id', 'config_option_id')->where('hidden', false);
+        return $this->hasManyThrough(ConfigOption::class, ConfigOptionProduct::class, 'product_id', 'id', 'id', 'config_option_id')->where('hidden', false)->orderBy('sort', 'asc');
     }
 
     /**
