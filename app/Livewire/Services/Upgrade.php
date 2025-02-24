@@ -8,6 +8,7 @@ use App\Models\Product;
 use App\Models\Service;
 use App\Models\ServiceUpgrade;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
 
 class Upgrade extends Component
 {
@@ -86,6 +87,21 @@ class Upgrade extends Component
                 'price' => $upgrade->plan->price->price,
                 'product_id' => $upgrade->product_id,
             ]);
+
+            // Check if user has credits in this currency
+            /** @var \App\Models\User */
+            $user = Auth::user();
+            $credit = $user->credits()->where('currency_code', $price->currency->code)->first();
+
+            if ($credit) {
+                // Increment the credits, `abs()` ensures the amount to add is positive
+                $credit->increment('amount', abs($price->price));
+            } else {
+                $user->credits()->create([
+                    'currency_code' => $price->currency->code,
+                    'amount' => $price->price,
+                ]);
+            }
 
             if ($price->price < 0) {
                 $this->notify('The upgrade has been completed. We\'ve added the remaining amount to your account balance.', 'success');
