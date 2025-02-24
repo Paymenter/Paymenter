@@ -75,11 +75,17 @@ class Upgrade extends Component
             'product_id' => $this->upgradeProduct->id,
             'plan_id' => $upgradePlan->id,
         ]);
-
         $price = $upgrade->calculatePrice();
+
         if ($price->price <= 0) {
             $upgrade->status = ServiceUpgrade::STATUS_COMPLETED;
             $upgrade->save();
+
+            $upgrade->service()->update([
+                'plan_id' => $upgrade->plan_id,
+                'price' => $upgrade->plan->price->price,
+                'product_id' => $upgrade->product_id,
+            ]);
 
             if ($price->price < 0) {
                 $this->notify('The upgrade has been completed. We\'ve added the remaining amount to your account balance.', 'success');
@@ -87,10 +93,10 @@ class Upgrade extends Component
                 $this->notify('The upgrade has been completed.', 'success');
             }
 
-            return;
+            return $this->redirect(route('services.show', $this->service), true);
         }
 
-        $invoice = new Invoice([
+        $invoice = Invoice::create([
             'order' => $this->service->order,
             'currency_code' => $this->service->order->currency_code,
             'total' => $price->price,
@@ -98,18 +104,17 @@ class Upgrade extends Component
             'due_at' => Carbon::now()->addDays(7),
             'user_id' => $this->service->order->user_id,
         ]);
-        $invoice->save();
+
+        $upgrade->invoice_id = $invoice->id;
+        $upgrade->save();
 
         $invoice->items()->create([
             'description' => 'Upgrade ' . $this->service->product->name . ' to ' . $this->upgradeProduct->name,
             'price' => $price->price,
             'quantity' => 1,
-            'relation_id' => $upgrade->id,
-            'relation_type' => ServiceUpgrade::class,
+            'reference_id' => $upgrade->id,
+            'reference_type' => ServiceUpgrade::class,
         ]);
-
-        $upgrade->invoice_id = $invoice->id;
-        $upgrade->save();
 
         $this->notify('The upgrade has been added to your cart. Please complete the payment to proceed.', 'success');
 

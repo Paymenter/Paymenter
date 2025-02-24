@@ -30,6 +30,16 @@ class ServiceUpgrade extends Model
         return $this->belongsTo(Product::class);
     }
 
+    public function plan()
+    {
+        return $this->belongsTo(Plan::class);
+    }
+
+    public function invoice()
+    {
+        return $this->belongsTo(Invoice::class);
+    }
+
     public function calculatePrice()
     {
         // Calculate the total number of days in the billing period
