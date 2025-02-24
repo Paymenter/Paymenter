@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Services;
 
+use App\Events\Invoice\Created as InvoiceCreated;
 use App\Livewire\Component;
 use App\Models\Invoice;
 use App\Models\Product;
@@ -112,7 +113,7 @@ class Upgrade extends Component
             return $this->redirect(route('services.show', $this->service), true);
         }
 
-        $invoice = Invoice::create([
+        $invoice = new Invoice([
             'order' => $this->service->order,
             'currency_code' => $this->service->order->currency_code,
             'total' => $price->price,
@@ -120,6 +121,7 @@ class Upgrade extends Component
             'due_at' => Carbon::now()->addDays(7),
             'user_id' => $this->service->order->user_id,
         ]);
+        $invoice->saveQuietly();
 
         $upgrade->invoice_id = $invoice->id;
         $upgrade->save();
@@ -131,6 +133,8 @@ class Upgrade extends Component
             'reference_id' => $upgrade->id,
             'reference_type' => ServiceUpgrade::class,
         ]);
+
+        event(new InvoiceCreated($invoice));
 
         $this->notify('The upgrade has been added to your cart. Please complete the payment to proceed.', 'success');
 
