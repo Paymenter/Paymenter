@@ -85,7 +85,7 @@ class Upgrade extends Component
 
             $upgrade->service()->update([
                 'plan_id' => $upgrade->plan_id,
-                'price' => $upgrade->plan->price->price,
+                'price' => $upgrade->plan->price()->price,
                 'product_id' => $upgrade->product_id,
             ]);
 
