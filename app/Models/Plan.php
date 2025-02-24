@@ -39,7 +39,7 @@ class Plan extends Model
     /**
      * Get the price of the plan.
      */
-    public function price()
+    public function price(): Attribute
     {
         if ($this->type === 'free') {
             return new PriceClass(['currency' => Currency::find(session('currency', config('settings.default_currency')))], free: true);
@@ -47,11 +47,13 @@ class Plan extends Model
         $currency = session('currency', config('settings.default_currency'));
         $price = $this->prices->where('currency_code', $currency)->first();
 
-        return new PriceClass((object) [
-            'price' => $price,
-            'setup_fee' => $price->setup_fee,
-            'currency' => $price->currency,
-        ]);
+        return Attribute::make(
+            get: fn () => new PriceClass((object) [
+                'price' => $price,
+                'setup_fee' => $price->setup_fee,
+                'currency' => $price->currency,
+            ])
+        );
     }
 
     // Time between billing periods

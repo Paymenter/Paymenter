@@ -99,7 +99,7 @@ class CronJob extends Command
             }
 
             $upgrade->invoice->items()->update([
-                'price' => $upgrade->calculatePrice(),
+                'price' => $upgrade->calculatePrice()->price,
             ]);
 
             $updatedUpgradeInvoices++;

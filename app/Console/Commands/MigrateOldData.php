@@ -1078,6 +1078,25 @@ class MigrateOldData extends Command
                             ->where('billing_unit', $billing['unit']);
                     })->first();
 
+                if (!$price) {
+                    $this->warn("Price not found for order_product_id: {$record['id']}, Creating custom plan.");
+                    $plan_id = DB::table('plans')->insertGetId([
+                        'name' => "Custom - {$billing['unit']} {$billing['type']}",
+                        'type' => $billing['type'],
+                        'billing_period' => $billing['period'],
+                        'billing_unit' => $billing['unit'],
+                        'priceable_id' => $record['product_id'],
+                        'priceable_type' => 'App\Models\Product',
+                    ]);
+
+                    DB::table('prices')->insert([
+                        'plan_id' => $plan_id,
+                        'price' => $record['price'],
+                        'setup_fee' => null,
+                        'currency_code' => $this->currency_code,
+                    ]);
+                }
+
                 return [
                     'id' => $record['id'],
                     // Active instead of Paid status, leave rest unchanged
@@ -1094,7 +1113,7 @@ class MigrateOldData extends Command
                     'quantity' => $record['quantity'],
                     'price' => $record['price'],
 
-                    'plan_id' => $price ? $price->plan_id : null,
+                    'plan_id' => $price->plan_id ?? $plan_id,
                     'coupon_id' => $order['coupon_id'],
                     'expires_at' => $record['expiry_date'],
                     'subscription_id' => $record['stripe_subscription_id'],
