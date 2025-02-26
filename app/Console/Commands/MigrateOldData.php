@@ -633,7 +633,7 @@ class MigrateOldData extends Command
                     default => $old_ext_setting['key'],
                 };
 
-                $setting = array_filter($extension_cfg, fn ($ext) => $ext['name'] == $old_ext_setting['key']);
+                $setting = array_filter($extension_cfg, fn($ext) => $ext['name'] == $old_ext_setting['key']);
                 $setting = array_merge(...$setting);
 
                 // Check if the extension wants the setting to be encrypted or not
@@ -1299,7 +1299,7 @@ class MigrateOldData extends Command
                     'role_id' => $record['role_id'] === 1 ? 1 : null,
                     'email_verified_at' => $record['email_verified_at'],
                     'password' => $record['password'],
-                    'tfa_secret' => $record['tfa_secret'],
+                    'tfa_secret' => $record['tfa_secret'] ? Crypt::encryptString(Crypt::decrypt($record['tfa_secret'])) : null,
                     'created_at' => $record['created_at'],
                     'updated_at' => $record['updated_at'],
                     'remember_token' => $record['remember_token'],
@@ -1342,7 +1342,7 @@ class MigrateOldData extends Command
         $this->info('Migrating Ticket Messages...');
         $this->migrateInBatch('ticket_messages', 'SELECT * FROM ticket_messages LIMIT :limit OFFSET :offset', function ($records) {
 
-            $records = array_filter($records, fn ($record) => !is_null($record['message']) && $record['message'] !== '');
+            $records = array_filter($records, fn($record) => !is_null($record['message']) && $record['message'] !== '');
 
             $records = array_map(function ($record) {
                 return [
