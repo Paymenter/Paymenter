@@ -38,7 +38,7 @@ return [
     |
     */
 
-    'layout' => isset($_SERVER['REQUEST_URI']) && strpos($_SERVER['REQUEST_URI'], '/admin') !== false ? 'layouts.admin' : 'layouts.app',
+    'layout' => 'layouts.app',
 
     /*
     |---------------------------------------------------------------------------
