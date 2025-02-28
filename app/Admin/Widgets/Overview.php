@@ -50,7 +50,7 @@ class Overview extends BaseWidget
         return Stat::make($name, number_format($thisMonth, 0))
             ->description($increase >= 0 ? 'Increased by ' . number_format($percentageIncrease, 2) . '% (this month)' : 'Decreased by ' . number_format($percentageIncrease, 2) . '% (this month)')
             ->descriptionIcon($increase >= 0 ? 'heroicon-m-arrow-trending-up' : 'heroicon-m-arrow-trending-down')
-            ->chart($chart->map(fn(TrendValue $value) => $value->aggregate)->toArray())
+            ->chart($chart->map(fn (TrendValue $value) => $value->aggregate)->toArray())
             ->color($increase >= 0 ? 'success' : 'danger');
     }
 }
