@@ -57,7 +57,7 @@ class Affiliate extends Component
     public function rules()
     {
         return [
-            'referral_code' => [Rule::requiredIf($this->signup_type === 'custom'), 'alpha_num:ascii', 'unique:affiliates,code', 'min:5', 'max:25'],
+            'referral_code' => [Rule::requiredIf($this->signup_type === 'custom'), 'alpha_num:ascii', 'unique:ext_affiliates,code', 'min:5', 'max:25'],
         ];
     }
 }
