@@ -19,13 +19,13 @@ class Overview extends BaseWidget
     protected function getStats(): array
     {
         return [
-            $this->getData(InvoiceTransaction::class, 'Revenue'),
+            $this->getData(InvoiceTransaction::class, 'Revenue', 'amount'),
             $this->getData(Ticket::class, 'Tickets'),
             $this->getData(Service::class, 'Services'),
         ];
     }
 
-    private function getData($model, $name)
+    private function getData($model, $name, $sum = false)
     {
         $model = $model instanceof Model ? get_class($model) : $model;
 
@@ -34,8 +34,13 @@ class Overview extends BaseWidget
                 start: now()->subMonth(),
                 end: now(),
             )
-            ->perDay()
-            ->count();
+            ->perDay();
+
+        if ($sum) {
+            $chart = $chart->sum($sum);
+        } else {
+            $chart = $chart->count();
+        }
 
         $thisMonth = $chart->sum('aggregate');
 
@@ -47,10 +52,10 @@ class Overview extends BaseWidget
 
         $percentageIncrease = $lastMonth > 0 ? (($thisMonth - $lastMonth) / $lastMonth) * 100 : 0;
 
-        return Stat::make($name, number_format($thisMonth, 0))
+        return Stat::make($name, $thisMonth)
             ->description($increase >= 0 ? 'Increased by ' . number_format($percentageIncrease, 2) . '% (this month)' : 'Decreased by ' . number_format($percentageIncrease, 2) . '% (this month)')
             ->descriptionIcon($increase >= 0 ? 'heroicon-m-arrow-trending-up' : 'heroicon-m-arrow-trending-down')
-            ->chart($chart->map(fn (TrendValue $value) => $value->aggregate)->toArray())
+            ->chart($chart->map(fn(TrendValue $value) => $value->aggregate)->toArray())
             ->color($increase >= 0 ? 'success' : 'danger');
     }
 }
