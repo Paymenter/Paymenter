@@ -17,8 +17,8 @@ class PayPal_IPN extends Gateway
 
     /**
      * Get all the configuration for the extension
-     * 
-     * @param array $values
+     *
+     * @param  array  $values
      * @return array
      */
     public function getConfig($values = [])
@@ -41,9 +41,8 @@ class PayPal_IPN extends Gateway
 
     /**
      * Return a view or a url to redirect to
-     * 
-     * @param Invoice $invoice
-     * @param float $total
+     *
+     * @param  float  $total
      * @return string
      */
     public function pay(Invoice $invoice, $total)
@@ -70,7 +69,7 @@ class PayPal_IPN extends Gateway
 
     /**
      * Handle the IPN request
-     * 
+     *
      * @return void
      */
     public function webhook(Request $request)
