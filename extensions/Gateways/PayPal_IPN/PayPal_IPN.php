@@ -7,6 +7,9 @@ use App\Helpers\ExtensionHelper;
 use App\Models\Invoice;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
+
+
 
 class PayPal_IPN extends Gateway
 {
@@ -57,7 +60,7 @@ class PayPal_IPN extends Gateway
         $query = '?cmd=_xclick';
         $query .= '&item_name=' . urlencode('Invoice #' . $invoice->id);
         $query .= '&item_number=' . $invoice->id;
-        $query .= '&amount=' . $total;
+        $query .= '&amount=' . number_format($total, 2, '.', '');
         $query .= '&currency_code=' . $invoice->currency_code;
         $query .= '&business=' . $paypal_email;
         $query .= '&notify_url=' . $notify_url;
@@ -72,7 +75,7 @@ class PayPal_IPN extends Gateway
      *
      * @return void
      */
-    public function webhook(Request $request)
+    public function notify(Request $request)
     {
         // Send the request to PayPal
         $response = Http::asForm()->post($this->config('test_mode') ? 'https://ipnpb.sandbox.paypal.com/cgi-bin/webscr' : 'https://ipnpb.paypal.com/cgi-bin/webscr', [
@@ -81,7 +84,7 @@ class PayPal_IPN extends Gateway
 
         // Check if the response is verified
         if ($response->body() == 'VERIFIED') {
-            ExtensionHelper::addPayment($request->invoice, 'PayPal', $request->mc_gross, transactionId: $request->txn_id);
+            ExtensionHelper::addPayment($request->item_number, 'PayPal', $request->mc_gross, $request->mc_fee, transactionId: $request->txn_id);
         }
     }
 }
