@@ -26,7 +26,7 @@ class EditConfigOption extends EditRecord
                     $this->record->serviceConfigs()->delete();
                     $this->record->delete();
 
-                    return redirect()->to($this->getResource()::generateUrl());
+                    return redirect()->to(ConfigOptionResource::getUrl());
                 }),
         ];
     }
