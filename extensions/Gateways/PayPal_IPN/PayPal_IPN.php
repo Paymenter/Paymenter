@@ -7,9 +7,6 @@ use App\Helpers\ExtensionHelper;
 use App\Models\Invoice;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Log;
-
-
 
 class PayPal_IPN extends Gateway
 {
