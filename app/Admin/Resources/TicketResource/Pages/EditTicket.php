@@ -164,9 +164,7 @@ class EditTicket extends EditRecord
                                     Forms\Components\Select::make('service_id')
                                         ->label('Service')
                                         ->relationship('service', 'id', function (Builder $query, Get $get) {
-                                            // Join orders and match the user_id
-                                            $query->join('orders', 'orders.id', '=', 'services.order_id')
-                                                ->where('orders.user_id', $get('user_id'));
+                                            $query->where('user_id', $get('user_id'));
                                         })
                                         ->getOptionLabelFromRecordUsing(fn ($record) => "{$record->product->name} - " . ucfirst($record->status))
                                         ->disabled(fn (Get $get) => !$get('user_id')),
