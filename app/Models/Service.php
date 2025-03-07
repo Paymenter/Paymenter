@@ -81,7 +81,7 @@ class Service extends Model
     public function formattedPrice(): Attribute
     {
         return Attribute::make(
-            get: fn () => new Price(['price' => $this->price * $this->quantity, 'currency' => $this->order->currency])
+            get: fn () => new Price(['price' => $this->price * $this->quantity, 'currency' => $this->currency])
         );
     }
 
