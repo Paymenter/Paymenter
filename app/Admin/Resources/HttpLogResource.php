@@ -4,17 +4,11 @@ namespace App\Admin\Resources;
 
 use App\Admin\Resources\HttpLogResource\Pages;
 use App\Models\DebugLog;
-use Filament\Forms;
-use Filament\Forms\Form;
-use Filament\Resources\Resource;
-use Filament\Tables;
-use Filament\Tables\Filters\SelectFilter;
-use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
-use Filament\Tables\Filters\Filter;
 use Filament\Infolists;
 use Filament\Infolists\Infolist;
+use Filament\Resources\Resource;
+use Filament\Tables;
+use Filament\Tables\Table;
 
 class HttpLogResource extends Resource
 {
@@ -23,7 +17,6 @@ class HttpLogResource extends Resource
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
     protected static ?string $modelLabel = 'HTTP log';
-
 
     public static function table(Table $table): Table
     {

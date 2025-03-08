@@ -37,7 +37,6 @@ class RequestListener
     /**
      * Record a HTTP Client connection failed request event.
      *
-     * @param  \Illuminate\Http\Client\Events\ConnectionFailed  $event
      * @return void
      */
     public function recordFailedRequest(ConnectionFailed $event)
@@ -57,7 +56,6 @@ class RequestListener
     /**
      * Record a HTTP Client response.
      *
-     * @param  \Illuminate\Http\Client\Events\ResponseReceived  $event
      * @return void
      */
     public function recordResponse(ResponseReceived $event)
@@ -93,7 +91,6 @@ class RequestListener
     /**
      * Format the given response object.
      *
-     * @param  \Illuminate\Http\Client\Response  $response
      * @return array|string
      */
     protected function response(Response $response)
@@ -145,7 +142,7 @@ class RequestListener
         })->toArray();
 
         $headerValues = collect($headers)
-            ->map(fn($header) => implode(', ', $header))
+            ->map(fn ($header) => implode(', ', $header))
             ->all();
 
         $headers = array_combine($headerNames, $headerValues);
@@ -191,12 +188,11 @@ class RequestListener
     /**
      * Extract the input from the given request.
      *
-     * @param  \Illuminate\Http\Client\Request  $request
      * @return array
      */
     protected function input(Request $request)
     {
-        if (! $request->isMultipart()) {
+        if (!$request->isMultipart()) {
             return $request->data();
         }
 
@@ -232,7 +228,6 @@ class RequestListener
     /**
      * Get the request duration in milliseconds.
      *
-     * @param  \Illuminate\Http\Client\Response  $response
      * @return int|null
      */
     protected function duration(Response $response)
