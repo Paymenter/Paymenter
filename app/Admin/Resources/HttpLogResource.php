@@ -14,9 +14,11 @@ class HttpLogResource extends Resource
 {
     protected static ?string $model = DebugLog::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'ri-external-link-line';
 
     protected static ?string $modelLabel = 'HTTP log';
+
+    public static ?string $navigationGroup = 'Debug';
 
     public static function table(Table $table): Table
     {
