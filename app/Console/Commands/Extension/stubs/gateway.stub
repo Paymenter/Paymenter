@@ -3,6 +3,7 @@
 namespace {{ namespace }};
 
 use App\Classes\Extension\Gateway;
+use App\Models\Invoice;
 
 class {{ class }} extends Gateway
 {
@@ -24,7 +25,7 @@ class {{ class }} extends Gateway
      * @param float $total
      * @return string
      */
-    public function pay($invoice, $total)
+    public function pay(Invoice $invoice, $total)
     {
         return '';
     }

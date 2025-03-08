@@ -33,7 +33,7 @@ class ComponentWithProperties extends Component
     public function getRulesForProperties(): array
     {
         return $this->custom_properties->mapWithKeys(function ($property) {
-            return ["properties.$property->key" => $property->required ? 'required|' : 'nullable|' . "$property->validation"];
+            return ["properties.$property->key" => ($property->required ? 'required|' : 'nullable|') . "$property->validation"];
         })->toArray();
     }
 

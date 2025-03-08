@@ -462,6 +462,13 @@ class Settings
                     'required' => true,
                     'description' => 'Number of items to show per page',
                 ],
+                [
+                    'name' => 'debug',
+                    'label' => 'Debug Mode',
+                    'type' => 'checkbox',
+                    'default' => false,
+                    'description' => 'Enable debug mode to log HTTP requests and display errors in the browser',
+                ],
             ],
         ];
 

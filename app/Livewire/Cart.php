@@ -161,6 +161,9 @@ class Cart extends Component
         if (!Auth::check()) {
             return redirect()->route('login');
         }
+        if (config('settings.mail_must_verify') && !Auth::user()->hasVerifiedEmail()) {
+            return redirect()->route('verification.notice');
+        }
 
         // Start database transaction
         DB::beginTransaction();
