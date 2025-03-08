@@ -47,11 +47,11 @@ class Virtfusion extends Server
         }
 
         // We need to wait for a virtfusion update to get hypervisors
-        // $apiHypervisors = $this->request('/compute/hypervisors/groups');
-        // $hypervisors = [];
-        // foreach ($apiHypervisors['data'] as $hypervisor) {
-        //     $hypervisors[$hypervisor['id']] = $hypervisor['name'];
-        // }
+        $apiHypervisors = $this->request('/compute/hypervisors/groups');
+        $hypervisors = [];
+        foreach ($apiHypervisors['data'] as $hypervisor) {
+            $hypervisors[$hypervisor['id']] = $hypervisor['name'];
+        }
 
         return [
             [
@@ -63,12 +63,11 @@ class Virtfusion extends Server
             ],
             [
                 'name' => 'hypervisor',
-                // 'type' => 'select',
-                'type' => 'text',
+                'type' => 'select',
                 'label' => 'Hypervisor Group ID',
                 'required' => true,
                 'description' => 'The default Hypervisor group ID',
-                // 'options' => $hypervisors,
+                'options' => $hypervisors,
             ],
             [
                 'name' => 'ipv4',
