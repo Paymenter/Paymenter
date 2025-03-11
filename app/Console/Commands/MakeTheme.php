@@ -45,7 +45,7 @@ class MakeTheme extends Command implements PromptsForMissingInput
             $themes_directory . 'default',
             $themes_directory . $theme_name
         );
-        $this->line("[1/4] Copied files from `default` theme.");
+        $this->line('[1/4] Copied files from `default` theme.');
 
         // Replace all themes/default to themes/$theme_name in config files
         // `/` at the end is present because we don't want to replace `default` in `export default defineConfig`
@@ -55,7 +55,7 @@ class MakeTheme extends Command implements PromptsForMissingInput
             $themes_directory . $theme_name . DIRECTORY_SEPARATOR . 'vite.config.js',
         );
 
-        $this->line("[2/4] Replaced path values in vite.config.js.");
+        $this->line('[2/4] Replaced path values in vite.config.js.');
 
         // Update author and description fields in new `theme.php`
         $theme_file = $themes_directory . $theme_name . DIRECTORY_SEPARATOR . 'theme.php';
@@ -68,14 +68,14 @@ class MakeTheme extends Command implements PromptsForMissingInput
             $theme_file_contents
         );
 
-        $this->line("[3/4] Replaced variables in `theme.php`.");
+        $this->line('[3/4] Replaced variables in `theme.php`.');
 
         $this->info("[4/4] Theme \"$theme_name\" created successfully.");
         $this->newLine();
 
-        $this->comment("You can now start developing your theme by running:");
+        $this->comment('You can now start developing your theme by running:');
         $this->comment("    `npm run dev $theme_name`");
-        $this->comment("After you have finished developing, you can build your theme by running:");
+        $this->comment('After you have finished developing, you can build your theme by running:');
         $this->comment("    `npm run build $theme_name`");
 
         return Command::SUCCESS;
@@ -95,8 +95,8 @@ class MakeTheme extends Command implements PromptsForMissingInput
     protected function promptForMissingArgumentsUsing()
     {
         return [
-            'name' => ['What should be the Theme\'s name?', "E.g. My Theme"],
-            'author' => ['Who is the author of this theme?', "E.g. John Doe <johndoe@example.com>"],
+            'name' => ['What should be the Theme\'s name?', 'E.g. My Theme'],
+            'author' => ['Who is the author of this theme?', 'E.g. John Doe <johndoe@example.com>'],
         ];
     }
 }
