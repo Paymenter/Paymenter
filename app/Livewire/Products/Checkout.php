@@ -25,6 +25,7 @@ class Checkout extends Component
 
     public Plan $plan;
 
+    #[Url(keep: true, as: 'plan')]
     public $plan_id;
 
     // Don't allow the user to change the total via hacks
@@ -58,7 +59,7 @@ class Checkout extends Component
             $this->checkoutConfig = $item->checkoutConfig;
         } else {
             // Set the first plan as default
-            $this->plan = $this->product->plans->first();
+            $this->plan = $this->plan_id ? $this->product->plans->findOrFail($this->plan_id) : $this->product->plans->first();
             $this->plan_id = $this->plan->id;
 
             // Prepare the config options
