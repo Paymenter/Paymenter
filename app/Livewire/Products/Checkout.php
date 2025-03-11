@@ -103,7 +103,7 @@ class Checkout extends Component
             'price' => $total + $setup_fee,
             'currency' => $this->plan->price()->currency,
             'setup_fee' => $setup_fee,
-        ]);
+        ], apply_exclusive_tax: true);
     }
 
     // On change of the plan, update the config options

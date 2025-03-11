@@ -78,7 +78,7 @@
         <h2 class="text-2xl font-semibold  mb-2">
             {{ __('product.order_summary') }}
         </h2>
-        <div class="text- font-semibold flex justify-between ">
+        <div class="text- font-semibold flex justify-between">
             <h4>{{ __('product.total_today') }}:</h4> {{ $total }}
         </div>
         @if ($total->setup_fee && $plan->type == 'recurring')
