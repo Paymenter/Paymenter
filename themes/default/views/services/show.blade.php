@@ -105,6 +105,7 @@
             <div wire:loading.remove wire:target="changeView">
                 {!! $extensionView !!}
             </div>
+            <x-loading target="changeView" class="!fill-white" />
         </div>
     @endif
 </div>
