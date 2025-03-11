@@ -69,6 +69,9 @@ class ProductResource extends Resource
                                 Forms\Components\Textarea::make('email_template')
                                     ->hint('This snippet will be used in the email template.')
                                     ->nullable(),
+                                Forms\Components\Checkbox::make('hidden')
+                                    ->label('Hide product')
+                                    ->hint('Hide the product from the client area.'),
 
                                 Forms\Components\RichEditor::make('description')->nullable()->columnSpanFull(),
                                 Forms\Components\FileUpload::make('image')->label('Image')->nullable()->acceptedFileTypes(['image/*']),

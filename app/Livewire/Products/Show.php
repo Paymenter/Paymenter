@@ -16,7 +16,7 @@ class Show extends Component
 
     public function mount($product)
     {
-        $this->product = $this->category->products()->where('slug', $product)->firstOrFail();
+        $this->product = $this->category->products()->where('slug', $product)->where('hidden', false)->firstOrFail();
     }
 
     public function render()
