@@ -36,7 +36,7 @@ class FailedJobResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('uuid')->toggleable(),
+                Tables\Columns\TextColumn::make('uuid')->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('payload')->formatStateUsing(function ($state) {
                     $state = json_decode($state);
 
@@ -91,6 +91,7 @@ class FailedJobResource extends Resource
                             ->send();
                     }),
             ])
+            ->defaultSort('failed_at', 'desc')
             ->filters([
 
             ]);
