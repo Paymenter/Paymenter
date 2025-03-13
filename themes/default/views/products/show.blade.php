@@ -7,7 +7,7 @@
     <div class="flex flex-col">
         @if ($product->stock === 0)
             <span class="text-xs font-medium me-2 px-2.5 py-0.5 rounded bg-red-900 text-red-300 w-fit mb-3">
-                {{ __('product.out_of_stock') }}
+                {{ __('product.out_of_stock', ['product' => $product->name]) }}
             </span>
         @elseif($product->stock > 0)
             <span class="text-xs font-medium me-2 px-2.5 py-0.5 rounded bg-green-900 text-green-300 w-fit mb-3">
