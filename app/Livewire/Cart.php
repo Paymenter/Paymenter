@@ -178,7 +178,7 @@ class Cart extends Component
                 ) {
                     throw new DisplayException(__('product.user_limit', ['product' => $item->product->name]));
                 }
-                if ($item->product->stock) {
+                if ($item->product->stock !== null) {
                     if ($item->product->stock < $item->quantity) {
                         throw new DisplayException(__('product.out_of_stock', ['product' => $item->product->name]));
                     }

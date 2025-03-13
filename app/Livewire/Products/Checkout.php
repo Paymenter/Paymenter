@@ -46,6 +46,9 @@ class Checkout extends Component
     public function mount($product)
     {
         $this->product = $this->category->products()->where('slug', $product)->firstOrFail();
+        if ($this->product->stock === 0) {
+            return $this->redirect(route('products.show', ['category' => $this->category, 'product' => $this->product]), true);
+        }
 
         // Is there a existing item in the cart?
         if (Cart::get()->has($this->cartProductKey) && Cart::get()->get($this->cartProductKey)->product->id === $this->product->id) {
@@ -122,7 +125,7 @@ class Checkout extends Component
 
     public function getCheckoutConfig()
     {
-        return once(fn () => ExtensionHelper::getCheckoutConfig($this->product));
+        return once(fn() => ExtensionHelper::getCheckoutConfig($this->product));
     }
 
     public function rules()
@@ -136,7 +139,6 @@ class Checkout extends Component
             if (in_array($option->type, ['text', 'number'])) {
                 $rules["configOptions.{$option->id}"] = ['required'];
             } elseif ($option->type === 'checkbox') {
-
             } else {
                 $rules["configOptions.{$option->id}"] = ['required', 'exists:config_options,id'];
             }
