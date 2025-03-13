@@ -11,7 +11,9 @@ class Navigation
     public static function getLinks()
     {
         $categories = once(fn () => Category::whereNull('parent_id')->where(function ($query) {
-            $query->whereHas('children')->orWhereHas('products');
+            $query->whereHas('children')->orWhereHas('products', function ($query) {
+                $query->where('hidden', false);
+            });
         })->get());
 
         $routes = [
