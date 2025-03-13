@@ -1,6 +1,5 @@
 <div class="flex flex-col gap-4">
     {{ __('services.cancel_are_you_sure') }}
-    {{ __('services.cancel_warning') }}
 
     <x-form.select name="type" label="{{ __('services.cancel_type') }}" required wire:model="type">
         <option value="end_of_period">{{ __('services.cancel_end_of_period') }}</option>
