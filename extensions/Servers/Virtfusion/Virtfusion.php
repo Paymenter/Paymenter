@@ -243,9 +243,7 @@ class Virtfusion extends Server
 
     public function ssoLink(Service $service): string
     {
-        $user = $this->getUser($service);
-
-        $data = $this->request('/users/' . $user['id'] . '/authenticationTokens', 'post');
+        $data = $this->request('/users/' . $service->user->id . '/authenticationTokens', 'post');
 
         return rtrim($this->config('host'), '/') . $data['data']['authentication']['endpoint_complete'];
     }
