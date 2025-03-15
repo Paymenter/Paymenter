@@ -21,7 +21,7 @@
                     {{ $product->price() }}
                 </h3>
             </div>
-            @if ($product->stock != 0 && $product->price()->available)
+            @if ($product->stock !== 0 && $product->price()->available)
                 <div>
                     <x-button.secondary>
                         <x-ri-shopping-bag-4-fill class="size-6" />
@@ -33,7 +33,7 @@
             {!! $product->description !!}
         </article>
 
-        @if ($product->stock != 0 && $product->price()->available)
+        @if ($product->stock !== 0 && $product->price()->available)
             <a href="{{ route('products.checkout', ['category' => $category, 'product' => $product->slug]) }}"
                 wire:navigate>
                 <x-button.primary>{{ __('product.add_to_cart') }}</x-button.primary>
