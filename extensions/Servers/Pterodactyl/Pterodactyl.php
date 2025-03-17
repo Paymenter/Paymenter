@@ -280,7 +280,7 @@ class Pterodactyl extends Server
 
         $serverCreationData = [
             'external_id' => (string) $service->id,
-            'name' => $service->product->name . '-' . $service->id,
+            'name' => isset($settings['servername']) ? $settings['servername'] : $service->order->product->name . ' #' . $service->id,
             'user' => (int) $user,
             'egg' => $settings['egg_id'],
             'docker_image' => $eggData['attributes']['docker_image'],
