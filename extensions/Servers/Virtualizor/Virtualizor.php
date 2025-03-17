@@ -15,9 +15,9 @@ class Virtualizor extends Server
     {
         if ($clientApi) {
             $url = 'https://' . $this->config('ip') . ':' . $this->config('client_port') . '/index.php?api=json&adminapikey=' . $this->config('key') . '&adminapipass=' . $this->config('password') . '&act=' . $act;
-        } else
+        } else {
             $url = 'https://' . $this->config('ip') . ':' . $this->config('port') . '/index.php?api=json&adminapikey=' . $this->config('key') . '&adminapipass=' . $this->config('password') . '&act=' . $act;
-
+        }
 
         if ($method == 'get') {
             $url .= '&' . http_build_query($data);
@@ -37,9 +37,8 @@ class Virtualizor extends Server
 
     /**
      * Get all the configuration for the extension
-     * 
-     * @param array $values
-     * @return array
+     *
+     * @param  array  $values
      */
     public function getConfig($values = []): array
     {
@@ -75,15 +74,14 @@ class Virtualizor extends Server
                 'label' => 'Client Port (normally 4083)',
                 'default' => '4083',
                 'required' => true,
-            ]
+            ],
         ];
     }
 
     /**
      * Get product config
-     * 
-     * @param array $values
-     * @return array
+     *
+     * @param  array  $values
      */
     public function getProductConfig($values = []): array
     {
@@ -147,8 +145,6 @@ class Virtualizor extends Server
 
     /**
      * Check if currenct configuration is valid
-     *
-     * @return bool|string
      */
     public function testConfig(): bool|string
     {
@@ -191,11 +187,10 @@ class Virtualizor extends Server
     }
 
     /**
-     * Create a server 
-     * 
-     * @param Service $service
-     * @param array $settings (product settings)
-     * @param array $properties (checkout options)
+     * Create a server
+     *
+     * @param  array  $settings  (product settings)
+     * @param  array  $properties  (checkout options)
      * @return bool
      */
     public function createServer(Service $service, $settings, $properties)
@@ -262,10 +257,9 @@ class Virtualizor extends Server
 
     /**
      * Suspend a server
-     * 
-     * @param Service $service
-     * @param array $settings (product settings)
-     * @param array $properties (checkout options)
+     *
+     * @param  array  $settings  (product settings)
+     * @param  array  $properties  (checkout options)
      * @return bool
      */
     public function suspendServer(Service $service, $settings, $properties)
@@ -282,10 +276,9 @@ class Virtualizor extends Server
 
     /**
      * Unsuspend a server
-     * 
-     * @param Service $service
-     * @param array $settings (product settings)
-     * @param array $properties (checkout options)
+     *
+     * @param  array  $settings  (product settings)
+     * @param  array  $properties  (checkout options)
      * @return bool
      */
     public function unsuspendServer(Service $service, $settings, $properties)
@@ -302,10 +295,9 @@ class Virtualizor extends Server
 
     /**
      * Terminate a server
-     * 
-     * @param Service $service
-     * @param array $settings (product settings)
-     * @param array $properties (checkout options)
+     *
+     * @param  array  $settings  (product settings)
+     * @param  array  $properties  (checkout options)
      * @return bool
      */
     public function terminateServer(Service $service, $settings, $properties)

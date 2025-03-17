@@ -74,7 +74,7 @@ class RequestListener
             ]),
         ]);
     }
-    
+
     protected function encodeContext(array $context)
     {
         array_walk_recursive($context, function (&$item) {
@@ -82,7 +82,7 @@ class RequestListener
                 $item = mb_convert_encoding($item, 'UTF-8', 'UTF-8');
             }
         });
-    
+
         return $context;
     }
 
