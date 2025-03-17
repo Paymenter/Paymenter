@@ -172,7 +172,7 @@ class Convoy extends Server
     public function testConfig(): bool|string
     {
         try {
-            $this->request('/servers');
+            $this->request('servers');
 
             return true;
         } catch (\Exception $e) {
@@ -358,7 +358,7 @@ class Convoy extends Server
 
     public function ssoLink(Service $service): string
     {
-        $data = $this->request('/users/' . $this->getOrCreateUser($service->order->user)['id'] . '/generate-sso-token', 'post');
+        $data = $this->request('users/' . $this->getOrCreateUser($service->order->user)['id'] . '/generate-sso-token', 'post');
 
         return rtrim($this->config('host'), '/') . '/authenticate?token=' . $data['data']['token'];
     }
