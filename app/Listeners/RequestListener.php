@@ -43,13 +43,13 @@ class RequestListener
     {
         DebugLog::create([
             'type' => 'http',
-            'context' => [
+            'context' => $this->encodeContext([
                 'method' => $event->request->method(),
                 'url' => $event->request->url(),
                 'headers' => $this->headers($event->request->headers()),
                 'payload' => $this->payload($this->input($event->request)),
                 'response' => 'Connection Failed',
-            ],
+            ]),
         ]);
     }
 
@@ -62,7 +62,7 @@ class RequestListener
     {
         DebugLog::create([
             'type' => 'http',
-            'context' => [
+            'context' => $this->encodeContext([
                 'method' => $event->request->method(),
                 'url' => $event->request->url(),
                 'headers' => $this->headers($event->request->headers()),
@@ -71,8 +71,19 @@ class RequestListener
                 'response_headers' => $this->headers($event->response->headers()),
                 'response' => $this->response($event->response),
                 'duration' => $this->duration($event->response),
-            ],
+            ]),
         ]);
+    }
+    
+    protected function encodeContext(array $context)
+    {
+        array_walk_recursive($context, function (&$item) {
+            if (is_string($item)) {
+                $item = mb_convert_encoding($item, 'UTF-8', 'UTF-8');
+            }
+        });
+    
+        return $context;
     }
 
     /**
