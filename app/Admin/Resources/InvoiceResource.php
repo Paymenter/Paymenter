@@ -74,7 +74,7 @@ class InvoiceResource extends Resource
                     ->options([
                         'paid' => 'Paid',
                         'pending' => 'Pending',
-                        'failed' => 'Failed',
+                        'cancelled' => 'Cancelled',
                     ])
                     ->default('pending')
                     ->placeholder('Select the status of the invoice'),
@@ -179,7 +179,7 @@ class InvoiceResource extends Resource
                     ->options([
                         'paid' => 'Paid',
                         'pending' => 'Pending',
-                        'failed' => 'Failed',
+                        'cancelled' => 'Cancelled',
                     ]),
             ])
             ->actions([

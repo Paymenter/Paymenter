@@ -46,7 +46,7 @@ class ShowInvoices extends ManageRelatedRecords
                     ->options([
                         'paid' => 'Paid',
                         'pending' => 'Pending',
-                        'failed' => 'Failed',
+                        'cancelled' => 'Cancelled',
                     ]),
             ])
             ->actions([
