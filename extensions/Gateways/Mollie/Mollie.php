@@ -5,9 +5,8 @@ namespace Paymenter\Extensions\Gateways\Mollie;
 use App\Classes\Extension\Gateway;
 use App\Helpers\ExtensionHelper;
 use App\Models\Invoice;
-use Illuminate\Support\Facades\Http;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Http;
 
 class Mollie extends Gateway
 {
@@ -33,8 +32,8 @@ class Mollie extends Gateway
 
     /**
      * Get all the configuration for the extension
-     * 
-     * @param array $values
+     *
+     * @param  array  $values
      * @return array
      */
     public function getConfig($values = [])
@@ -51,9 +50,8 @@ class Mollie extends Gateway
 
     /**
      * Return a view or a url to redirect to
-     * 
-     * @param Invoice $invoice
-     * @param float $total
+     *
+     * @param  float  $total
      * @return string
      */
     public function pay(Invoice $invoice, $total)
