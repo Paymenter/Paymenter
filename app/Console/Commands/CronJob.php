@@ -36,7 +36,7 @@ class CronJob extends Command
         $sendedInvoices = 0;
         Service::where('status', 'active')->where('expires_at', '<', now()->addDays((int) config('settings.cronjob_invoice')))->get()->each(function ($service) use (&$sendedInvoices) {
             // Does the service have already a pending invoice?
-            if ($service->invoices()->where('status', 'pending')->exists()) {
+            if ($service->invoices()->where('status', 'pending')->exists() || $service->cancellation()->exists()) {
                 return;
             }
 
@@ -120,6 +120,8 @@ class CronJob extends Command
         Service::where('status', 'suspended')->where('expires_at', '<', now()->subDays((int) config('settings.cronjobb_order_terminate')))->each(function ($service) use (&$ordersTerminated) {
             TerminateJob::dispatch($service);
             $service->update(['status' => 'cancelled']);
+            // Cancel outstanding invoices
+            $service->invoices()->where('status', 'pending')->update(['status' => 'cancelled']);
             $ordersTerminated++;
         });
         $this->info('Terminating orders if due date is overdue for ' . config('settings.cronjobb_order_terminate') . ' days: ' . $ordersTerminated . ' orders');
