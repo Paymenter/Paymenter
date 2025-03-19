@@ -2,7 +2,6 @@
 
 namespace App\Livewire\Traits;
 
-use Barryvdh\Debugbar\Facades\Debugbar;
 use Illuminate\Support\Facades\Session;
 
 trait HasNotifications
