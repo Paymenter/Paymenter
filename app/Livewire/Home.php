@@ -3,7 +3,6 @@
 namespace App\Livewire;
 
 use App\Models\Category;
-use Livewire\Component;
 
 class Home extends Component
 {
