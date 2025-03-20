@@ -359,7 +359,7 @@ class Settings
                     'required' => true,
                 ],
                 [
-                    'name' => 'cronjobb_order_terminate',
+                    'name' => 'cronjob_order_terminate',
                     'label' => 'Delete server if invoice is x days overdue (also cancels the invoice)',
                     'type' => 'number',
                     'default' => 7,

@@ -117,14 +117,14 @@ class CronJob extends Command
 
         // Terminate orders if due date is overdue for x days
         $ordersTerminated = 0;
-        Service::where('status', 'suspended')->where('expires_at', '<', now()->subDays((int) config('settings.cronjobb_order_terminate')))->each(function ($service) use (&$ordersTerminated) {
+        Service::where('status', 'suspended')->where('expires_at', '<', now()->subDays((int) config('settings.cronjob_order_terminate')))->each(function ($service) use (&$ordersTerminated) {
             TerminateJob::dispatch($service);
             $service->update(['status' => 'cancelled']);
             // Cancel outstanding invoices
             $service->invoices()->where('status', 'pending')->update(['status' => 'cancelled']);
             $ordersTerminated++;
         });
-        $this->info('Terminating orders if due date is overdue for ' . config('settings.cronjobb_order_terminate') . ' days: ' . $ordersTerminated . ' orders');
+        $this->info('Terminating orders if due date is overdue for ' . config('settings.cronjob_order_terminate') . ' days: ' . $ordersTerminated . ' orders');
 
         // Close tickets if no response for x days
         $ticketClosed = 0;
