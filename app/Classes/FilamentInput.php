@@ -35,7 +35,7 @@ class FilamentInput
                     ->label($setting->label ?? $setting->name)
                     ->helperText($setting->description ?? '')
                     ->options(function () use ($setting) {
-                        /* Possiblities: 
+                        /* Possiblities:
                             1. ['value1', 'value2', 'value3']
                             2. ['value1' => 'label1', 'value2' => 'label2', 'value3' => 'label3']
                             3. [[
@@ -56,11 +56,13 @@ class FilamentInput
                                         $options[$value] = $value;
                                     }
                                 }
+
                                 return $options;
                             } else {
                                 return $setting->options;
                             }
                         }
+
                         return [];
                     })
                     ->preload()
