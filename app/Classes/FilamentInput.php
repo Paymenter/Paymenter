@@ -59,7 +59,7 @@ class FilamentInput
 
                                 return $options;
                             } else {
-                                return $setting->options;
+                                return (array) $setting->options;
                             }
                         }
 
