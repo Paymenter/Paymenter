@@ -22,20 +22,23 @@ class Show extends Component
 
     public function mount()
     {
-        $actions = [];
-        try {
-            $actions = ExtensionHelper::getActions($this->service);
-        } catch (\Exception $e) {
-        }
-        // separate the actions into buttons and views
-        foreach ($actions as $action) {
-            if ($action['type'] == 'button') {
-                $this->buttons[] = $action;
-            } elseif ($action['type'] == 'view') {
-                $this->views[] = $action;
+        // Only fetch the actions if the service is active
+        if ($this->service->status == Service::STATUS_ACTIVE) {
+            $actions = [];
+            try {
+                $actions = ExtensionHelper::getActions($this->service);
+            } catch (\Exception $e) {
             }
+            // separate the actions into buttons and views
+            foreach ($actions as $action) {
+                if ($action['type'] == 'button') {
+                    $this->buttons[] = $action;
+                } elseif ($action['type'] == 'view') {
+                    $this->views[] = $action;
+                }
+            }
+            $this->changeView($this->views[0]['name'] ?? null);
         }
-        $this->changeView($this->views[0]['name'] ?? null);
     }
 
     public function changeView($view)
