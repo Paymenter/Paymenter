@@ -113,7 +113,6 @@ class Virtualizor extends Server
     public function getCheckoutConfig(Product $product)
     {
         $os = $this->request('os');
-        dd($os);
         if (!isset($os['oslist'][$product->settings()->where('key', 'virt')->first()->value])) {
             throw new \Exception('Invalid OS');
         }
