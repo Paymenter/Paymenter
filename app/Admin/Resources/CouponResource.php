@@ -64,6 +64,7 @@ class CouponResource extends Resource
                 Forms\Components\TextInput::make('recurring')
                     ->label('Recurring')
                     ->numeric()
+                    ->nullable()
                     ->minValue(0)
                     ->hidden(fn (Get $get) => $get('type') === 'free_setup')
                     ->placeholder('How many billing cycles the discount will be applied')

@@ -21,6 +21,10 @@ class FilamentInput
      */
     public static function convert($setting)
     {
+        // If its already a filament component, return it
+        if (is_object($setting) && method_exists($setting, 'getName')) {
+            return $setting;
+        }
         if (is_array($setting)) {
             $setting = (object) $setting;
         }
@@ -31,15 +35,33 @@ class FilamentInput
                     ->label($setting->label ?? $setting->name)
                     ->helperText($setting->description ?? '')
                     ->options(function () use ($setting) {
-                        // Check if options are associative array or sequential array
-                        if (array_is_list((array) $setting->options)) {
-                            // If yes, then return array which has the keys same as the values
-                            $options_with_keys = array_merge(...array_map(fn ($item) => [$item => $item], $setting->options));
-
-                            return $options_with_keys;
-                        } else {
-                            return (array) $setting->options;
+                        /* Possiblities: 
+                            1. ['value1', 'value2', 'value3']
+                            2. ['value1' => 'label1', 'value2' => 'label2', 'value3' => 'label3']
+                            3. [[
+                                    'value' => 'value1',
+                                    'label' => 'label1',
+                                ], [
+                                    'value' => 'value2',
+                                    'label' => 'label2',
+                                ]]
+                        */
+                        if (isset($setting->options)) {
+                            if (is_array($setting->options)) {
+                                $options = [];
+                                foreach ($setting->options as $key => $value) {
+                                    if (is_array($value)) {
+                                        $options[$value['value']] = $value['label'];
+                                    } else {
+                                        $options[$value] = $value;
+                                    }
+                                }
+                                return $options;
+                            } else {
+                                return $setting->options;
+                            }
                         }
+                        return [];
                     })
                     ->preload()
                     ->multiple($setting->multiple ?? false)

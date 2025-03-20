@@ -20,6 +20,11 @@ class Coupon extends Model
         'recurring',
     ];
 
+    protected $casts = [
+        'starts_at' => 'datetime',
+        'expires_at' => 'datetime',
+    ];
+
     /**
      * Get the products that belong to the option.
      */

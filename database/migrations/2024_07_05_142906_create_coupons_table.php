@@ -18,8 +18,8 @@ return new class extends Migration
             $table->string('code');
             $table->decimal('value', 17, 2)->nullable();
             $table->integer('max_uses')->nullable();
-            $table->timestamp('starts_at')->nullable();
-            $table->timestamp('expires_at')->nullable();
+            $table->dateTime('starts_at')->nullable();
+            $table->dateTime('expires_at')->nullable();
             $table->timestamps();
         });
     }

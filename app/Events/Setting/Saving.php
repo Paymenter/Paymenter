@@ -37,7 +37,10 @@ class Saving
             case 'float':
                 $setting->value = (float) $setting->value;
             case 'array':
-                $setting->value = json_encode($setting->value);
+                if (!is_string($setting->value) || is_null(json_decode($setting->value))) {
+                    $setting->value = json_encode($setting->value);
+                }
+                break;
             default:
                 return $setting;
         }
