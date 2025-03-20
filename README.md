@@ -12,6 +12,29 @@
 
 Introducing an advanced payment system for your hosting company, Paymenter!  Paymenter is designed to be easy to use and install, with a user-friendly client and admin area. It's also highly customizable, with the ability to install a range of addons and themes from our marketplace created by talented developers and designers.
 
+
+
+ 
+Paymenter, ücretsiz ve açık kaynaklı bir ödeme sistemi çözümüdür. Hosting şirketleri için tasarlanmış olan Paymenter, kullanıcı dostu bir müşteri ve yönetici alanına sahiptir. Ayrıca, geliştiriciler ve tasarımcılar tarafından oluşturulan eklentiler ve temalar ile yüksek derecede özelleştirilebilir.
+
+### Temel İşlevsel Özellikler
+- Ücretsiz ve açık kaynaklı
+- Kullanıcı dostu müşteri ve yönetici alanı
+- Kolay özelleştirilebilir
+- Stripe, PayPal, Mollie gibi ödeme entegrasyonları
+- Pterodactyl, Virtualizor, Virtfusion gibi sunucu entegrasyonları
+- Müşterilerin otomatik faturalandırılması
+- Dahili destek merkezi
+- Müşterilere indirim sağlayan kuponlar oluşturma
+
+### Teknoloji Yığını
+- PHP (8.2 veya üzeri)
+- Composer
+
+### Lisans
+MIT Lisansı
+
+
 ## Features
 - Free and open-source
 - User-Friendly client and admin area
