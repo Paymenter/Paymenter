@@ -14,8 +14,7 @@
                                 <p class="text-sm text-gray-500">{{ $message->created_at->diffForHumans() }}</p>
                             </div>
                         </div>
-                        <div class="mt-2 prose dark:prose-invert">{!! Str::markdown($message->message, [
-                            'html_input' => 'strip',
+                        <div class="mt-2 prose dark:prose-invert">{!! Str::markdown(nl2br(e($message->message)), [
                             'allow_unsafe_links' => false,
                         ]) !!}</div>
                     </div>
