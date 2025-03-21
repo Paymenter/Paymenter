@@ -56,7 +56,7 @@ class FilamentInput
                                         $options[$key] = $value;
                                     }
                                 }
-    
+
                                 return $options;
                             } else {
                                 return (array) $setting->options;
@@ -223,7 +223,7 @@ class FilamentInput
 
                 if (isset($setting->file_name)) {
                     $input->getUploadedFileNameForStorageUsing(
-                        fn(): string => (string) $setting->file_name,
+                        fn (): string => (string) $setting->file_name,
                     );
                 }
 
