@@ -49,11 +49,21 @@ class FilamentInput
                         if (isset($setting->options)) {
                             if (is_array($setting->options)) {
                                 $options = [];
+                                // Check if the keys are explicitly set or sequential
+                                $keys = array_keys($setting->options);
+                                $isSequential = $keys === range(0, count($keys) - 1);
+                                
                                 foreach ($setting->options as $key => $value) {
-                                    if (is_array($value)) {
-                                        $options[$value['value']] = $value['label'];
+                                    if ($isSequential) {
+                                        // Sequential keys (e.g., [0 => 'value1', 1 => 'value2'])
+                                        $options[$value] = $value;
                                     } else {
-                                        $options[$key] = $value;
+                                        // Explicitly set keys (e.g., ['key1' => 'value1', 'key2' => 'value2'])
+                                        if (is_array($value)) {
+                                            $options[$value['value']] = $value['label'];
+                                        } else {
+                                            $options[$key] = $value;
+                                        }
                                     }
                                 }
 
@@ -223,7 +233,7 @@ class FilamentInput
 
                 if (isset($setting->file_name)) {
                     $input->getUploadedFileNameForStorageUsing(
-                        fn (): string => (string) $setting->file_name,
+                        fn(): string => (string) $setting->file_name,
                     );
                 }
 
