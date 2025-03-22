@@ -3,16 +3,12 @@
 use App\Http\Middleware\EnsureUserHasPermissions;
 use App\Http\Middleware\ProxyMiddleware;
 use App\Http\Middleware\SetLocale;
-use App\Providers\DebugServiceProvider;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 use Laravel\Passport\Http\Middleware\CheckForAnyScope;
 
 return Application::configure(basePath: dirname(__DIR__))
-    ->withProviders([
-        DebugServiceProvider::class,
-    ])
     ->withRouting(
         web: __DIR__ . '/../routes/web.php',
         api: __DIR__ . '/../routes/api.php',

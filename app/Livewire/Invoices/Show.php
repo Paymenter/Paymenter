@@ -61,7 +61,7 @@ class Show extends Component
         $this->pay = ExtensionHelper::pay(Gateway::where('id', $this->gateway)->first(), $this->invoice);
 
         if (is_string($this->pay)) {
-            return redirect()->to($this->pay);
+            $this->redirect($this->pay);
         }
     }
 
