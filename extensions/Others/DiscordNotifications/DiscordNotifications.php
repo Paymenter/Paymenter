@@ -2,24 +2,22 @@
 
 namespace Paymenter\Extensions\Others\DiscordNotifications;
 
-use App\Admin\Resources\OrderResource;
-use App\Admin\Resources\UserResource;
 use App\Admin\Resources\InvoiceResource;
+use App\Admin\Resources\OrderResource;
 use App\Admin\Resources\TicketResource;
-
+use App\Admin\Resources\UserResource;
 use App\Classes\Extension\Extension;
-use Illuminate\Support\Facades\Event;
-use App\Events\Order;
-use App\Events\User;
 use App\Events\Invoice;
-use App\Events\Ticket;
+use App\Events\Order;
 use App\Events\Service;
+use App\Events\Ticket;
 use App\Events\TicketMessage;
+use App\Events\User;
+use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Http;
 
 class DiscordNotifications extends Extension
 {
-
     private const events = [
         'Order Created' => Order\Created::class,
         'Order Updated' => Order\Updated::class,
@@ -38,8 +36,8 @@ class DiscordNotifications extends Extension
 
     /**
      * Get all the configuration for the extension
-     * 
-     * @param array $values
+     *
+     * @param  array  $values
      * @return array
      */
     public function getConfig($values = [])
@@ -88,7 +86,7 @@ class DiscordNotifications extends Extension
                 'required' => true,
                 'database_type' => 'array',
                 'options' => array_keys(self::events),
-            ]
+            ],
         ];
     }
 
@@ -129,6 +127,7 @@ class DiscordNotifications extends Extension
                 ];
             }
         }
+
         return $changedFields;
     }
 
@@ -156,9 +155,9 @@ class DiscordNotifications extends Extension
                 'inline' => true,
             ];
         }
+
         return $efields;
     }
-
 
     private function mapId($id, $name)
     {
@@ -175,34 +174,31 @@ class DiscordNotifications extends Extension
             return '[' . ucfirst($resources[$name]::getModelLabel()) . ' #' . $id . '](' . $resources[$name]::getUrl('edit', ['record' => $id]) . ')';
         }
 
-
         // If no route name is found, return the ID
         return $id;
     }
 
-
     private function sendNotification($event, $eventType)
     {
         $fields = [
-            'User Updated' => fn($event) => $this->updatedEvent($event, 'user'),
-            'User Created' => fn($event) => $this->createdEvent($event, 'user', ['id', 'first_name', 'last_name', 'email']),
-            'Order Created' => fn($event) => $this->createdEvent($event, 'order', ['id','formattedTotal', 'user_id']),
-            'Order Updated' => fn($event) => $this->updatedEvent($event, 'order'),
-            'Invoice Created' => fn($event) => $this->createdEvent($event, 'invoice', ['id', 'formattedTotal', 'user_id']),
-            'Invoice Updated' => fn($event) => $this->updatedEvent($event, 'invoice'),
-            'Invoice Paid' => fn($event) => $this->createdEvent($event, 'invoice'),
-            'Ticket Created' => fn($event) => $this->createdEvent($event, 'ticket', ['id', 'user_id']),
-            'Ticket Updated' => fn($event) => $this->updatedEvent($event, 'ticket'),
-            'Ticket Replied' => fn($event) => $this->createdEvent($event, 'ticketMessage', ['ticket_id', 'message']),
-            'Service Created' => fn($event) => $this->createdEvent($event, 'service', ['id', 'user_id', 'formattedPrice']),
-            'Service Updated' => fn($event) => $this->updatedEvent($event, 'service'),
+            'User Updated' => fn ($event) => $this->updatedEvent($event, 'user'),
+            'User Created' => fn ($event) => $this->createdEvent($event, 'user', ['id', 'first_name', 'last_name', 'email']),
+            'Order Created' => fn ($event) => $this->createdEvent($event, 'order', ['id', 'formattedTotal', 'user_id']),
+            'Order Updated' => fn ($event) => $this->updatedEvent($event, 'order'),
+            'Invoice Created' => fn ($event) => $this->createdEvent($event, 'invoice', ['id', 'formattedTotal', 'user_id']),
+            'Invoice Updated' => fn ($event) => $this->updatedEvent($event, 'invoice'),
+            'Invoice Paid' => fn ($event) => $this->createdEvent($event, 'invoice'),
+            'Ticket Created' => fn ($event) => $this->createdEvent($event, 'ticket', ['id', 'user_id']),
+            'Ticket Updated' => fn ($event) => $this->updatedEvent($event, 'ticket'),
+            'Ticket Replied' => fn ($event) => $this->createdEvent($event, 'ticketMessage', ['ticket_id', 'message']),
+            'Service Created' => fn ($event) => $this->createdEvent($event, 'service', ['id', 'user_id', 'formattedPrice']),
+            'Service Updated' => fn ($event) => $this->updatedEvent($event, 'service'),
         ];
 
         $fields = $fields[$eventType]($event);
         $webhookUrl = $this->config('webhook_url');
         $pingType = $this->config('ping_type');
         $pingId = $this->config('ping_id');
-
 
         $message = [
             'content' => ' ',
