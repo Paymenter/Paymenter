@@ -157,7 +157,7 @@ class EditTicket extends EditRecord
                                         ->required(),
                                     Forms\Components\Select::make('assigned_to')
                                         ->label('Assigned To')
-                                        ->relationship('assignedTo', 'id')
+                                        ->relationship('assignedTo', 'id', fn (Builder $query) => $query->where('role_id', '!=', null))
                                         ->searchable()
                                         ->preload()
                                         ->getOptionLabelFromRecordUsing(fn ($record) => $record->name),

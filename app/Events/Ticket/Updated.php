@@ -14,5 +14,5 @@ class Updated
     /**
      * Create a new event instance.
      */
-    public function __construct(public Ticket $ticketMessage) {}
+    public function __construct(public Ticket $ticket) {}
 }

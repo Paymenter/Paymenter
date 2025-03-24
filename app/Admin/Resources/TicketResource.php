@@ -100,19 +100,16 @@ class TicketResource extends Resource
                     ->required(),
                 Forms\Components\Select::make('assigned_to')
                     ->label('Assigned To')
-                    ->relationship('user', 'id', fn (Builder $query) => $query->where('role_id', '!=', 1))
+                    ->searchable()
+                    ->preload()
+                    ->relationship('user', 'id', fn (Builder $query) => $query->where('role_id', '!=', null))
                     ->getOptionLabelFromRecordUsing(fn ($record) => $record->name)
-                    ->getSearchResultsUsing(fn (string $search): array => User::where('first_name', 'like', "%$search%")->orWhere('last_name', 'like', "%$search%")->limit(50)->pluck('name', 'id')->toArray())
                     ->columnSpan(function ($record) {
                         return $record ? 2 : 1;
                     }),
                 Forms\Components\Select::make('service_id')
                     ->label('Service')
-                    ->relationship('service', 'id', function (Builder $query, Get $get) {
-                        // Join orders and match the user_id
-                        $query->join('orders', 'orders.id', '=', 'services.order_id')
-                            ->where('orders.user_id', $get('user_id'));
-                    })
+                    ->relationship('service', 'id')
                     ->getOptionLabelFromRecordUsing(fn ($record) => "{$record->product->name} - " . ucfirst($record->status))
                     ->columnSpan(function ($record) {
                         return $record ? 2 : 1;
@@ -171,7 +168,8 @@ class TicketResource extends Resource
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
-            ]);
+            ])
+            ->defaultSort('id', 'desc');
     }
 
     public static function getWidgets(): array
