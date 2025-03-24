@@ -6,6 +6,7 @@ use App\Exceptions\DisplayException;
 use App\Helpers\ExtensionHelper;
 use App\Livewire\Component;
 use App\Models\Credit;
+use App\Models\Gateway;
 use App\Models\Invoice;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -79,6 +80,12 @@ class Credits extends Component
             Session::put(['gateway' => $this->gateway]);
 
             // Redirect to the invoices page and pay the invoice
+            if ($this->gateway) {
+                $pay = ExtensionHelper::pay(Gateway::where('id', $this->gateway)->first(), $invoice);
+                if (is_string($pay)) {
+                    return $this->redirect($pay);
+                }
+            }
             return $this->redirect(route('invoices.show', $invoice) . '?gateway=' . $this->gateway . '&pay', true);
         } catch (\Exception $e) {
             // Rollback the transaction
