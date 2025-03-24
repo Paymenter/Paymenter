@@ -86,6 +86,7 @@ class Credits extends Component
                     return $this->redirect($pay);
                 }
             }
+
             return $this->redirect(route('invoices.show', $invoice) . '?gateway=' . $this->gateway . '&pay', true);
         } catch (\Exception $e) {
             // Rollback the transaction
