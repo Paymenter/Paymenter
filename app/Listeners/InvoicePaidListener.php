@@ -20,7 +20,7 @@ class InvoicePaidListener
         $event->invoice->items->each(function ($item) {
             if ($item->reference_type == Service::class) {
                 $service = $item->reference;
-                if (!$service || $service->status == Service::STATUS_ACTIVE) {
+                if (!$service) {
                     return;
                 }
                 if ($service->product->server) {
