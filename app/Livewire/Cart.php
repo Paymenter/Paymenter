@@ -282,9 +282,9 @@ class Cart extends Component
                         ExtensionHelper::addPayment($invoice->id, null, amount: $this->total->price);
                     } else {
                         $this->total->price -= $credit->amount;
+                        ExtensionHelper::addPayment($invoice->id, null, amount: $credit->amount);
                         $credit->amount = 0;
                         $credit->save();
-                        ExtensionHelper::addPayment($invoice->id, null, amount: $credit->amount);
                     }
                 }
             }
