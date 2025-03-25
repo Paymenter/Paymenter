@@ -1,4 +1,6 @@
+@assets
 <script src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit"></script>
+@endassets
 
 <div id="cf-turnstile"></div>
 
