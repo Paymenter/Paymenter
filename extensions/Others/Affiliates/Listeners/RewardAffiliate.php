@@ -4,6 +4,7 @@ namespace Paymenter\Extensions\Others\Affiliates\Listeners;
 
 use App\Helpers\ExtensionHelper;
 use App\Models\Invoice;
+use App\Models\Service;
 use Illuminate\Support\Collection;
 use Paymenter\Extensions\Others\Affiliates\Models\Affiliate;
 use Paymenter\Extensions\Others\Affiliates\Models\AffiliateOrder;
@@ -28,6 +29,9 @@ class RewardAffiliate
          */
         $invoice = $event->invoice;
 
+        if ($invoice->items()->first()->reference_type !== Service::class) {
+            return;
+        }
         $order = $invoice->items()->first()->reference->order;
         $referral = AffiliateOrder::where('order_id', $order->id)->first();
 
