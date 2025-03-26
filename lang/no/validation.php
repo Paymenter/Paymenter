@@ -13,14 +13,14 @@ return [
     |
     */
 
-    'accepted' => 'The :attribute field must be accepted.',
-    'accepted_if' => 'The :attribute field must be accepted when :other is :value.',
-    'active_url' => 'The :attribute field must be a valid URL.',
-    'after' => 'The :attribute field must be a date after :date.',
-    'after_or_equal' => 'The :attribute field must be a date after or equal to :date.',
-    'alpha' => 'The :attribute field must only contain letters.',
-    'alpha_dash' => 'The :attribute field must only contain letters, numbers, dashes, and underscores.',
-    'alpha_num' => 'The :attribute field must only contain letters and numbers.',
+    'accepted' => ':attribute feltet må aksepteres.',
+    'accepted_if' => 'Feltet :attribute må aksepteres når :other er :value.',
+    'active_url' => ':attribute feltet må være en gyldig URL.',
+    'after' => ':attribute feltet må være en dato etter :date.',
+    'after_or_equal' => ':attribute må være en dato etter eller lik :date.',
+    'alpha' => ':attribute må kun inneholde bokstaver.',
+    'alpha_dash' => ':attribute kan kun inneholde bokstaver, tall, bindestreker og understreker.',
+    'alpha_num' => ':attribute feltet må kun inneholde bokstaver og tall.',
     'array' => 'The :attribute field must be an array.',
     'ascii' => 'The :attribute field must only contain single-byte alphanumeric characters and symbols.',
     'before' => 'The :attribute field must be a date before :date.',
