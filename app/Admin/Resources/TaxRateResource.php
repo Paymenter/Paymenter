@@ -62,7 +62,7 @@ class TaxRateResource extends Resource
                     ->searchable()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('country')
-                    ->formatStateUsing(fn (string $state): string => config('app.countries')[$state] ?? 'All Countries')
+                    ->formatStateUsing(fn(string $state): string => config('app.countries')[$state] ?? 'All Countries')
                     ->label('Country')
                     ->searchable()
                     ->sortable(),

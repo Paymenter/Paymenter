@@ -10,6 +10,7 @@ use App\Models\Service;
 use App\Models\ServiceUpgrade;
 use App\Models\Ticket;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Http;
 
 class CronJob extends Command
 {
@@ -139,5 +140,29 @@ class CronJob extends Command
         // Delete email logs older then x
         $this->info('Deleting email logs older then ' . config('settings.cronjob_delete_email_logs') . ' days: ' . EmailLog::where('created_at', '<', now()->subDays((int) config('settings.cronjob_delete_email_logs')))->count());
         EmailLog::where('created_at', '<', now()->subDays((int) config('settings.cronjob_delete_email_logs')))->delete();
+
+        // Check for updates
+        $this->info('Checking for updates...');
+
+        if (config('app.version') == 'development') {
+            $this->info('You are using the development version. No update check available.');
+            return;
+        } elseif (config('app.version') == 'beta') {
+            // Check if app.commit is different from the latest commit
+            $latestCommit = Http::get('https://api.github.com/repos/Paymenter/Paymenter/commits')->json()[0]['sha'];
+            if (config('app.commit') != $latestCommit) {
+                $this->info('A new version is available: ' . config('app.commit'));
+            } else {
+                $this->info('You are using the latest version: ' . config('app.commit'));
+            }
+        } else {
+            // Check if app.version is different from the latest version
+            $latestVersion = Http::get('https://api.github.com/repos/Paymenter/Paymenter/releases/latest')->json()['tag_name'];
+            if (config('app.version') != $latestVersion) {
+                $this->info('A new version is available: ' . $latestVersion);
+            } else {
+                $this->info('You are using the latest version: ' . config('app.version'));
+            }
+        }
     }
 }

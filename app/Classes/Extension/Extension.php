@@ -66,7 +66,7 @@ class Extension
      *
      * @return array
      */
-    public function getMeta()
+    public function getMetadata()
     {
         return [];
     }

@@ -64,7 +64,7 @@ class ConfigOptionResource extends Resource
                                 ->label('Options')
                                 ->addActionLabel('Add Option')
                                 ->columnSpanFull()
-                                ->itemLabel(fn (array $state) => $state['name'])
+                                ->itemLabel(fn(array $state) => $state['name'])
                                 ->collapsible()
                                 ->collapsed()
                                 ->cloneable()
@@ -111,7 +111,7 @@ class ConfigOptionResource extends Resource
                     ->label('Hidden')
                     ->sortable(),
             ])
-            ->modifyQueryUsing(fn (Builder $query) => $query->where('parent_id', null))
+            ->modifyQueryUsing(fn(Builder $query) => $query->where('parent_id', null))
             ->filters([
                 //
             ])

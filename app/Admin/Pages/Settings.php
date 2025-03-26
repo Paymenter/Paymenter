@@ -19,7 +19,7 @@ class Settings extends Page implements HasForms
 {
     use InteractsWithForms;
 
-    protected static ?string $navigationGroup = 'Configuration';
+    protected static ?string $navigationGroup = 'System';
 
     protected static ?string $title = 'Settings';
 

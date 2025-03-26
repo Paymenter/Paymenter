@@ -63,6 +63,7 @@ class AdminPanelProvider extends PanelProvider
                 'Administration',
                 'Configuration',
                 'Extensions',
+                'System',
             ])
             ->middleware([
                 EncryptCookies::class,

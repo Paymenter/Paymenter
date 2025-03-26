@@ -41,7 +41,7 @@ class RoleResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('name')->sortable(),
-                TextColumn::make('permissions')->formatStateUsing(fn (Role $record): string => in_array('*', $record->permissions) ? 'All' : count($record->permissions))->sortable(),
+                TextColumn::make('permissions')->formatStateUsing(fn(Role $record): string => in_array('*', $record->permissions) ? 'All' : count($record->permissions))->sortable(),
             ])
             ->filters([
                 //
