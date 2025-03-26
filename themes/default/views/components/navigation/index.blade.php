@@ -7,7 +7,7 @@
 
         <div class="flex flex-row items-center justify-between h-14 px-4">
 
-            <div class="flex flex-row">
+            <div class="flex flex-row items-center">
                 <button @click="slideOverOpen=true" class="flex md:hidden w-10 h-10 items-center justify-center rounded-lg hover:bg-neutral transition">
                     <x-ri-menu-fill class="size-5" />
                 </button>
