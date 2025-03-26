@@ -31,7 +31,7 @@ class Updates extends Page implements HasForms
                 ->action(function () {
                     Artisan::call(CheckForUpdates::class);
                 })
-                ->label('Check for updates')
+                ->label('Check for updates'),
         ];
     }
 
