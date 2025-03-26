@@ -1,5 +1,7 @@
 <x-filament-panels::page>
-
+    @assets
+    <script src="https://cdn.jsdelivr.net/npm/ansi_up@5.0.0/ansi_up.min.js"></script>
+    @endassets
     @if(config('app.version') == 'beta')
     <div>
         <strong>Warning:</strong> You are using a beta version of the application. This can cause problems
@@ -15,14 +17,29 @@
         <div>
             <strong>Your commit:</strong> {{ config('app.commit') }}
         </div>
-        <p>See <a href="https://v1.paymenter.org/docs/installation/updating">https://v1.paymenter.org/docs/installation/updating</a> on how to update</p>
+        <p>See <a
+                href="https://v1.paymenter.org/docs/installation/updating">https://v1.paymenter.org/docs/installation/updating</a>
+            on how to update</p>
 
 
         <p class="mt-2">OR try the web updater (This is a beta feature, use at your own risk)</p>
         <div class="mt-2">
-            {{  $this->update }}
+            {{ $this->update }}
 
-            {{ $output }}
+
+            <code>
+                    <pre id="result" class="mt-2"></pre>
+                </code>
+
+            @script
+            <script>
+                const output = @js($output);
+                
+                var ansi_up = new AnsiUp();
+                const html = ansi_up.ansi_to_html(output);
+                document.getElementById('result').innerHTML = html;
+            </script>
+            @endscript
         </div>
 
 
@@ -35,10 +52,12 @@
         <div>
             <strong>Your version:</strong> {{ config('app.version') }}
         </div>
-        <p>See <a href="https://v1.paymenter.org/docs/installation/updating">https://v1.paymenter.org/docs/installation/updating</a> on how to update</p>
+        <p>See <a
+                href="https://v1.paymenter.org/docs/installation/updating">https://v1.paymenter.org/docs/installation/updating</a>
+            on how to update</p>
         {{-- <p class="mt-2">OR try the web updater (This is a beta feature, use at your own risk)</p>
         <div class="mt-2">
-            {{  $this->update }}
+            {{ $this->update }}
         </div> --}}
     </div>
     @endif

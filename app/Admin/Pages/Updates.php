@@ -23,17 +23,17 @@ class Updates extends Page implements HasForms
 
     protected static ?string $navigationGroup = 'System';
 
-    public $output = '';
+    public $output = 'trestdasfdsa';
 
     protected function getHeaderActions(): array
     {
 
-        return [ 
+        return [
             Action::make('checkUpdates')
-            ->action(function () {
-                Artisan::call(CheckForUpdates::class);
-            })
-            ->label('Check for updates')
+                ->action(function () {
+                    Artisan::call(CheckForUpdates::class);
+                })
+                ->label('Check for updates')
         ];
     }
 
@@ -43,8 +43,17 @@ class Updates extends Page implements HasForms
             ->action(function () {
                 $output = new BufferedOutput;
 
+                // Check if current chdir is the root of the project
+                if (getcwd() !== base_path()) {
+                    chdir(base_path());
+                }
+
+                if (config('app.version') == 'beta') {
+                    Artisan::call(Upgrade::class, ['--no-interaction' => true, '--url' => 'https://api.paymenter.org/beta'], $output);
+                } else {
+                    Artisan::call(Upgrade::class, ['--no-interaction' => true], $output);
+                }
                 // Execute the update command
-                Artisan::call(Upgrade::class, ['--no-interaction'], $output);
                 $outputContent = $output->fetch();
                 $this->output = $outputContent;
             })
