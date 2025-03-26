@@ -146,6 +146,7 @@ class CronJob extends Command
 
         if (config('app.version') == 'development') {
             $this->info('You are using the development version. No update check available.');
+
             return;
         } elseif (config('app.version') == 'beta') {
             // Check if app.commit is different from the latest commit

@@ -39,14 +39,14 @@ class CouponResource extends Resource
                     ->required()
                     ->numeric()
                     ->minValue(0)
-                    ->maxValue(fn(Get $get) => $get('type') === 'percentage' ? 100 : null)
+                    ->maxValue(fn (Get $get) => $get('type') === 'percentage' ? 100 : null)
                     ->mask(RawJs::make(
                         <<<'JS'
                             $money($input, '.', '', 2)
                         JS
                     ))
-                    ->hidden(fn(Get $get) => $get('type') === 'free_setup')
-                    ->suffix(fn(Get $get) => $get('type') === 'percentage' ? '%' : config('settings.default_currency'))
+                    ->hidden(fn (Get $get) => $get('type') === 'free_setup')
+                    ->suffix(fn (Get $get) => $get('type') === 'percentage' ? '%' : config('settings.default_currency'))
                     ->placeholder('Enter the value of the coupon'),
 
                 Forms\Components\Select::make('type')
@@ -66,7 +66,7 @@ class CouponResource extends Resource
                     ->numeric()
                     ->nullable()
                     ->minValue(0)
-                    ->hidden(fn(Get $get) => $get('type') === 'free_setup')
+                    ->hidden(fn (Get $get) => $get('type') === 'free_setup')
                     ->placeholder('How many billing cycles the discount will be applied')
                     ->helperText('Enter 0 to apply it to all billing cycles, 1 to apply it only to the first billing cycle, etc.'),
 
@@ -97,7 +97,7 @@ class CouponResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('code')->searchable(),
-                Tables\Columns\TextColumn::make('value')->searchable()->formatStateUsing(fn($record) => $record->value . ($record->type === 'percentage' ? '%' : config('settings.default_currency'))),
+                Tables\Columns\TextColumn::make('value')->searchable()->formatStateUsing(fn ($record) => $record->value . ($record->type === 'percentage' ? '%' : config('settings.default_currency'))),
             ])
             ->filters([
                 //
