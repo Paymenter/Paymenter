@@ -4,13 +4,11 @@ namespace App\Admin\Pages;
 
 use App\Console\Commands\CheckForUpdates;
 use App\Console\Commands\Upgrade;
-use Filament\Pages\Page;
 use Filament\Actions\Action;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
-use Filament\Forms\Form;
+use Filament\Pages\Page;
 use Illuminate\Support\Facades\Artisan;
-use Illuminate\Support\Facades\Http;
 use Symfony\Component\Console\Output\BufferedOutput;
 
 class Updates extends Page implements HasForms
@@ -28,12 +26,12 @@ class Updates extends Page implements HasForms
     protected function getHeaderActions(): array
     {
 
-        return [ 
+        return [
             Action::make('checkUpdates')
-            ->action(function () {
-                Artisan::call(CheckForUpdates::class);
-            })
-            ->label('Check for updates')
+                ->action(function () {
+                    Artisan::call(CheckForUpdates::class);
+                })
+                ->label('Check for updates'),
         ];
     }
 
