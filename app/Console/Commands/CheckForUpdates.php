@@ -31,7 +31,9 @@ class CheckForUpdates extends Command
             $this->info('You are using the development version. No update check available.');
         } elseif (config('app.version') == 'beta') {
             // Check if app.commit is different from the latest commit
-            $latestVersion = Http::get('https://api.github.com/repos/Paymenter/Paymenter/commits')->json()[0]['sha'];
+            $latestVersion = Http::get('https://api.github.com/repos/Paymenter/Paymenter/commits')->json();
+            // Is the last commit message 'style: linted files with pint'?
+            $latestVersion = collect($latestVersion)->firstWhere('commit.message', '!=', 'style: linted files with pint')['sha'];
             Setting::updateOrCreate(
                 ['key' => 'latest_commit'],
                 ['value' => $latestVersion]
