@@ -234,10 +234,10 @@ class Stripe extends Gateway
 
         // Create subscription
         foreach ($invoice->items as $item) {
-            if (!$item->service) {
+            if (!$item->reference_type === Service::class) {
                 continue;
             }
-            $service = $item->service;
+            $service = $item->reference;
             $product = $service->product;
 
             // Check if the service->product already exists in Stripe

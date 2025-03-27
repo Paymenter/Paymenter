@@ -323,7 +323,7 @@ class Cart extends Component
             // Is it a real error or a validation error?
             // If it's a validation error, you can use the $this->addError() method to display the error message to the user.
             if ($e instanceof DisplayException) {
-                $this->notify($e->getMessage(), 'error');
+                return $this->notify($e->getMessage(), 'error');
             } else {
                 Log::error($e);
                 $this->notify('An error occurred while processing your order. Please try again later.');

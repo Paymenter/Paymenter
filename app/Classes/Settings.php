@@ -355,14 +355,14 @@ class Settings
                     'name' => 'cronjob_order_suspend',
                     'label' => 'Suspend server if invoice is x days overdue',
                     'type' => 'number',
-                    'default' => 0,
+                    'default' => 2,
                     'required' => true,
                 ],
                 [
                     'name' => 'cronjob_order_terminate',
                     'label' => 'Delete server if invoice is x days overdue (also cancels the invoice)',
                     'type' => 'number',
-                    'default' => 7,
+                    'default' => 14,
                     'required' => true,
                 ],
                 [

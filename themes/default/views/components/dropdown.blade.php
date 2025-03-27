@@ -5,7 +5,7 @@
             let dropdown = $refs.dropdown;
             let rect = dropdown.getBoundingClientRect();
             let windowWidth = window.innerWidth;
-            adjustWidth = rect.right > windowWidth ? rect.right - windowWidth + 20 : 0;
+            adjustWidth = rect.right > windowWidth ? rect.width - 40 : 0;
         });
     }
 })">

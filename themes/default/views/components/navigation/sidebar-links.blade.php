@@ -48,23 +48,6 @@
         <div class="h-px w-full bg-neutral"></div>
         @endisset
         @endforeach
-        <div class="flex flex-row items-center mt-4 justify-between">
-            <x-dropdown>
-                <x-slot:trigger>
-                    <div class="flex flex-col">
-                        <span class="text-sm text-base font-semibold text-nowrap">{{ strtoupper(app()->getLocale()) }} <span class="text-base/50 font-semibold">|</span> {{ session('currency', 'USD') }}</span>
-                    </div>
-                </x-slot:trigger>
-                <x-slot:content>
-                    <strong class="block p-2 text-xs font-semibold uppercase text-base/50"> Language </strong>
-                    <livewire:components.language-switch />
-                    <livewire:components.currency-switch />
-                </x-slot:content>
-            </x-dropdown>
-
-            <x-theme-toggle />
-
-        </div>
     </div>
 
     <div class="flex flex-col gap-2">
@@ -117,5 +100,22 @@
         <div class="h-px w-full bg-neutral"></div>
         @endisset
         @endforeach
+        <div class="flex flex-row items-center mt-4 justify-between">
+            <x-dropdown>
+                <x-slot:trigger>
+                    <div class="flex flex-col">
+                        <span class="text-sm text-base font-semibold text-nowrap">{{ strtoupper(app()->getLocale()) }} <span class="text-base/50 font-semibold">|</span> {{ session('currency', 'USD') }}</span>
+                    </div>
+                </x-slot:trigger>
+                <x-slot:content>
+                    <strong class="block p-2 text-xs font-semibold uppercase text-base/50"> Language </strong>
+                    <livewire:components.language-switch />
+                    <livewire:components.currency-switch />
+                </x-slot:content>
+            </x-dropdown>
+
+            <x-theme-toggle />
+
+        </div>
     </div>
 </div>
