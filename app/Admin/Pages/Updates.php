@@ -21,7 +21,6 @@ class Updates extends Page implements HasForms
 
     protected static ?string $navigationGroup = 'System';
 
-
     protected function getHeaderActions(): array
     {
         return [
