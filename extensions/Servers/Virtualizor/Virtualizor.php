@@ -21,10 +21,10 @@ class Virtualizor extends Server
 
         if ($method == 'get') {
             $url .= '&' . http_build_query($data);
-            $response = Http::get($url)
+            $response = Http::withoutVerifying()->get($url)
                 ->throw();
         } elseif ($method == 'post') {
-            $response = Http::asForm()->$method($url, $data)
+            $response = Http::withoutVerifying()->asForm()->$method($url, $data)
                 ->throw();
         }
 
