@@ -32,13 +32,13 @@ class CheckForUpdates extends Command
         } elseif (config('app.version') == 'beta') {
             // Check if app.commit is different from the latest commit
             $latestVersion = Http::get('https://api.github.com/repos/Paymenter/Paymenter/commits')->json()[0]['sha'];
+            Setting::updateOrCreate(
+                ['key' => 'latest_commit'],
+                ['value' => $latestVersion]
+            );
             if (config('app.commit') != $latestVersion) {
                 $this->info('A new version is available: ' . $latestVersion);
                 // Save as a variable to use in the UI
-                Setting::updateOrCreate(
-                    ['key' => 'latest_commit'],
-                    ['value' => $latestVersion]
-                );
                 $this->info('Latest version saved to database.');
             } else {
                 $this->info('You are using the latest version: ' . config('app.commit'));
@@ -46,13 +46,13 @@ class CheckForUpdates extends Command
         } else {
             // Check if app.version is different from the latest version
             $latestVersion = Http::get('https://api.github.com/repos/Paymenter/Paymenter/releases/latest')->json()['tag_name'];
+            Setting::updateOrCreate(
+                ['key' => 'latest_version'],
+                ['value' => $latestVersion]
+            );
             if (config('app.version') != $latestVersion) {
                 $this->info('A new version is available: ' . $latestVersion);
                 // Save as a variable to use in the UI
-                Setting::updateOrCreate(
-                    ['key' => 'latest_version'],
-                    ['value' => $latestVersion]
-                );
                 $this->info('Latest version saved to database.');
             } else {
                 $this->info('You are using the latest version: ' . config('app.version'));

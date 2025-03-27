@@ -26,23 +26,11 @@
         <div class="mt-2">
             {{ $this->update }}
 
-
             <code>
-                    <pre id="result" class="mt-2"></pre>
-                </code>
-
-            @script
-            <script>
-                const output = @js($output);
-                
-                var ansi_up = new AnsiUp();
-                const html = ansi_up.ansi_to_html(output);
-                document.getElementById('result').innerHTML = html;
-            </script>
-            @endscript
+                <pre id="update-result" class="mt-2" x-data="{ output: '' }" x-html="output"  x-on:update-completed.window="output = (new AnsiUp()).ansi_to_html($event.detail[0].output);">
+                </pre>
+            </code>
         </div>
-
-
     </div>
     @elseif(config('app.version') != config('settings.latest_version'))
     <div class="flex flex-col gap-1">

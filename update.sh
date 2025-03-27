@@ -119,7 +119,7 @@ RUN rm -rf storage/logs/*.log
 # Setup correct permissions on the new files.
 RUN chown -R "$PERMUSER":"$PERMGROUP" .
 
-php artisan p:check-updates
+php artisan app:check-for-updates
 
 # Make filament faster.
 RUN php artisan filament:optimize

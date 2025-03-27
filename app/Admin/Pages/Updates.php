@@ -21,11 +21,9 @@ class Updates extends Page implements HasForms
 
     protected static ?string $navigationGroup = 'System';
 
-    public $output = '';
 
     protected function getHeaderActions(): array
     {
-
         return [
             Action::make('checkUpdates')
                 ->action(function () {
@@ -51,9 +49,9 @@ class Updates extends Page implements HasForms
                 } else {
                     Artisan::call(Upgrade::class, ['--no-interaction' => true], $output);
                 }
-                // Execute the update command
-                $outputContent = $output->fetch();
-                $this->output = $outputContent;
+                $this->dispatch('update-completed', [
+                    'output' => $output->fetch(),
+                ]);
             })
             ->label('Update');
     }
