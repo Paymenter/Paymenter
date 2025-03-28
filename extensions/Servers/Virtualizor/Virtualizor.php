@@ -200,6 +200,10 @@ class Virtualizor extends Server
             'ptype' => $settings['virt'],
         ];
         $plans = $this->request('plans', 'get', $data);
+        // Check if plan exists
+        if (empty($plans['plans'])) {
+            throw new \Exception('Invalid plan OR Virtualization type');
+        }
         $plan = $plans['plans'][key($plans['plans'])];
         $password = Str::random(12);
 
