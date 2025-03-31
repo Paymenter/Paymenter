@@ -31,6 +31,7 @@ class EditService extends EditRecord
                             'suspend' => 'Suspend server',
                             'unsuspend' => 'Unsuspend server',
                             'terminate' => 'Terminate server',
+                            'upgrade' => 'Upgrade server',
                         ])->required(),
                     Checkbox::make('sendNotification')
                         ->label('Send Notification')
@@ -53,6 +54,9 @@ class EditService extends EditRecord
                                 break;
                             case 'terminate':
                                 $sdata = ExtensionHelper::terminateServer($record);
+                                break;
+                            case 'upgrade':
+                                $sdata = ExtensionHelper::upgradeServer($record);
                                 break;
                         }
                     } catch (\Exception $e) {

@@ -429,6 +429,16 @@ class ExtensionHelper
     }
 
     /**
+     * Upgrade server
+     */
+    public static function upgradeServer(Service $service)
+    {
+        $server = self::checkServer($service, 'upgradeServer');
+
+        return self::getExtension('server', $server->extension, $server->settings)->upgradeServer($service, self::settingsToArray($service->product->settings), self::getServiceProperties($service));
+    }
+
+    /**
      * Get actions for service
      */
     public static function getActions(Service $service)

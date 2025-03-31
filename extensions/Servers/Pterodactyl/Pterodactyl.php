@@ -352,7 +352,7 @@ class Pterodactyl extends Server
             'include' => ['allocations'],
         ]);
         $nodes = collect($nodes['data']);
-        $nodes_by_id = $nodes->mapWithKeys(fn ($node) => [$node['attributes']['id'] => $node['attributes']]);
+        $nodes_by_id = $nodes->mapWithKeys(fn($node) => [$node['attributes']['id'] => $node['attributes']]);
 
         if ($settings['node']) {
             // If the product's node id is not in the deployable nodes array, throw error.
@@ -363,9 +363,9 @@ class Pterodactyl extends Server
             $node = $nodes_by_id->get($settings['node']);
             $availablePorts = collect($node['relationships']['allocations']['data']);
             $availablePorts = $availablePorts
-                ->filter(fn ($port) => !$port['attributes']['assigned'])
+                ->filter(fn($port) => !$port['attributes']['assigned'])
                 ->map(
-                    fn ($port) => [
+                    fn($port) => [
                         'port' => $port['attributes']['port'],
                         'id' => $port['attributes']['id'],
                     ]
@@ -383,9 +383,9 @@ class Pterodactyl extends Server
             foreach ($nodes as $index => $node) {
                 $availablePorts = collect($node['attributes']['relationships']['allocations']['data']);
                 $availablePorts = $availablePorts
-                    ->filter(fn ($port) => !$port['attributes']['assigned'])
+                    ->filter(fn($port) => !$port['attributes']['assigned'])
                     ->map(
-                        fn ($port) => [
+                        fn($port) => [
                             'port' => $port['attributes']['port'],
                             'id' => $port['attributes']['id'],
                         ]
@@ -526,6 +526,62 @@ class Pterodactyl extends Server
         $server = $this->getServer($service->id);
 
         $this->request('/api/application/servers/' . $server, 'delete');
+
+        return true;
+    }
+
+    public function upgradeServer(Service $service, $settings, $properties)
+    {
+        $server = $this->getServer($service->id, raw: true);
+
+        $settings = array_merge($settings, $properties);
+
+
+        $updateServerData = [
+            'allocation' => $server['attributes']['allocation'],
+            'memory' => (int) $settings['memory'],
+            'swap' => (int) $settings['swap'],
+            'disk' => (int) $settings['disk'],
+            'io' => (int) $settings['io'],
+            'cpu' => (int) $settings['cpu'],
+            'threads' => $settings['cpu_pinning'] ?? null,
+            'feature_limits' => [
+                'databases' => $settings['databases'],
+                'allocations' => $settings['additional_allocations'],
+                'backups' => $settings['backups'],
+            ],
+        ];
+
+        $this->request('/api/application/servers/' . $server['attributes']['id'] . '/build', 'patch', $updateServerData);
+
+        $eggData = $this->request('/api/application/nests/' . $settings['nest_id'] . '/eggs/' . $settings['egg_id'], data: ['include' => 'variables']);
+
+
+        if (!isset($eggData['attributes'])) {
+            throw new \Exception('Could not fetch egg data');
+        }
+
+        $environment = [];
+
+        foreach ($eggData['attributes']['relationships']['variables']['data'] as $variable) {
+            // Check if variable has been set on server
+            if (isset($server['attributes']['container']['environment'][$variable['attributes']['env_variable']])) {
+                $environment[$variable['attributes']['env_variable']] = $server['attributes']['container']['environment'][$variable['attributes']['env_variable']];
+            } else {
+                $environment[$variable['attributes']['env_variable']] = $settings[$variable['attributes']['env_variable']] ?? $variable['attributes']['default_value'];
+            }
+        }
+
+        $updateServerData = [
+            'environment' => $environment,
+            'skip_scripts' => $settings['skip_scripts'] ?? false,
+            'oom_disabled' => !($settings['oom_killer'] ?? false),
+            'egg' => $settings['egg_id'],
+            'image' => $server['attributes']['container']['image'] ?? $eggData['attributes']['docker_image'],
+            'startup' => $server['attributes']['container']['startup_command'] ?? $settings['startup'] ?? $eggData['attributes']['startup'],
+        ];
+
+        $this->request('/api/application/servers/' . $server['attributes']['id'] . '/startup', 'patch', $updateServerData);
 
         return true;
     }
