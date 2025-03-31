@@ -31,7 +31,6 @@ class DiscordNotifications extends Extension
         'Ticket Replied' => TicketMessage\Created::class,
         'Service Created' => Service\Created::class,
         'Service Updated' => Service\Updated::class,
-        'Service Deleted' => Service\Deleted::class,
     ];
 
     /**
@@ -194,6 +193,11 @@ class DiscordNotifications extends Extension
             'Service Created' => fn ($event) => $this->createdEvent($event, 'service', ['id', 'user_id', 'formattedPrice']),
             'Service Updated' => fn ($event) => $this->updatedEvent($event, 'service'),
         ];
+
+        // Check if the event type is valid
+        if (!array_key_exists($eventType, $fields)) {
+            return;
+        }
 
         $fields = $fields[$eventType]($event);
         $webhookUrl = $this->config('webhook_url');
