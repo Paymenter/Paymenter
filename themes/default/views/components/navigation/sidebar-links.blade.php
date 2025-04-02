@@ -100,7 +100,7 @@
         <div class="h-px w-full bg-neutral"></div>
         @endisset
         @endforeach
-        <div class="flex flex-row items-center mt-4 justify-between">
+        <div class="flex flex-row items-center mt-4 justify-between md:hidden">
             <x-dropdown>
                 <x-slot:trigger>
                     <div class="flex flex-col">
