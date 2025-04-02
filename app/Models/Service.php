@@ -174,7 +174,7 @@ class Service extends Model
     public function upgradable(): Attribute
     {
         return Attribute::make(
-            get: fn () => $this->product->upgrades()->count() > 0 && $this->status == 'active' && !$this->upgrade?->where('status', ServiceUpgrade::STATUS_PENDING)->exists()
+            get: fn () => $this->product->productUpgrades()->count() > 0 && $this->status == 'active' && !$this->upgrade?->where('status', ServiceUpgrade::STATUS_PENDING)->exists()
         );
     }
 
