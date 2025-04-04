@@ -1,6 +1,9 @@
 <x-filament-widgets::widget>
     <x-filament::section heading="Active Users">
         @foreach($sessions as $session)
+        @if(!$session->user)
+        @continue
+        @endif
         <a href="{{ \App\Admin\Resources\UserResource::getUrl('edit', ['record' => $session->user]) }}" wire:navigate class="flex flex-row justify-between w-full">
             <div>
                 <h2 class="font-bold">{{ $session->user->name }}</h2>
