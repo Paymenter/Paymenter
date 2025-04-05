@@ -17,7 +17,7 @@ return [
 
     'name' => env('APP_NAME', 'Paymenter'),
 
-    'version' => 'development',
+    'version' => '1.0.1',
 
     'commit' => '',
 
