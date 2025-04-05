@@ -4,25 +4,31 @@ namespace App\Console\Commands;
 
 use App\Models\Setting;
 use Illuminate\Console\Command;
+use Illuminate\Contracts\Console\PromptsForMissingInput;
 
 use function Laravel\Prompts\text;
 
-class Init extends Command
+class Init extends Command implements PromptsForMissingInput
 {
-    protected $signature = 'app:init';
+    protected $signature = 'app:init {name} {url}';
 
     protected $description = 'Show the application initialization steps';
 
     public function handle()
     {
-        $this->info("Thanks for installing Paymenter!\nLets gets started by providing the following information:");
+        $this->info("Thanks for installing Paymenter!");
 
-        $app_name = text('What is the name of your company?', required: true, placeholder: 'Paymenter');
-        $app_url = text('What is the URL of your application?', required: true, placeholder: 'https://paymenter.org');
+        Setting::updateOrCreate(['key' => 'company_name'], ['value' => $this->argument('name')]);
+        Setting::updateOrCreate(['key' => 'app_url'], ['value' => rtrim($this->argument('url'), '/')]);
 
-        Setting::updateOrCreate(['key' => 'company_name'], ['value' => $app_name]);
-        Setting::updateOrCreate(['key' => 'app_url'], ['value' => rtrim($app_url, '/')]);
+        $this->info("Now you're all set up!\nVisit Paymenter at " . $this->argument('url'));
+    }
 
-        $this->info("Great now you're all set up!\nVisit Paymenter at $app_url");
+    protected function promptForMissingArgumentsUsing(): array
+    {
+        return [
+            'name' => 'What is the name of your company?',
+            'url' => 'What is the URL of your application?',
+        ];
     }
 }
