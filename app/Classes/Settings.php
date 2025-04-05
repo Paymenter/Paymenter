@@ -83,14 +83,12 @@ class Settings
                     'label' => 'Captcha Site Key',
                     'type' => 'text',
                     'required' => false,
-                    'default' => '0x4AAAAAAAC-bTN5KkqiyxNM',
                 ],
                 [
                     'name' => 'captcha_secret',
                     'label' => 'Captcha Secret',
                     'type' => 'text',
                     'required' => false,
-                    'default' => '0x4AAAAAAAC-baD1IX6FMxXxEduRXcmCtuM',
                 ],
 
                 [
