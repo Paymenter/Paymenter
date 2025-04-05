@@ -6,8 +6,6 @@ use App\Models\Setting;
 use Illuminate\Console\Command;
 use Illuminate\Contracts\Console\PromptsForMissingInput;
 
-use function Laravel\Prompts\text;
-
 class Init extends Command implements PromptsForMissingInput
 {
     protected $signature = 'app:init {name} {url}';
@@ -16,7 +14,7 @@ class Init extends Command implements PromptsForMissingInput
 
     public function handle()
     {
-        $this->info("Thanks for installing Paymenter!");
+        $this->info('Thanks for installing Paymenter!');
 
         Setting::updateOrCreate(['key' => 'company_name'], ['value' => $this->argument('name')]);
         Setting::updateOrCreate(['key' => 'app_url'], ['value' => rtrim($this->argument('url'), '/')]);
