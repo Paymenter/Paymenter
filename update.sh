@@ -7,7 +7,7 @@ echo "Starting upgrade process..."
 # Read config/app.php to check if someone is trying to ugprade to a major version.
 if [ -f "config/app.php" ]; then
     if grep -q "marketplace" "config/app.php"; then
-        echo -e "\x1b[31;1mCannot execute self-upgrade process. Please follow the upgrade instructions at https://v1.paymenter.org/docs/guides/v0-migration to migrate your V0 to V1\x1b[0m"
+        echo -e "\x1b[31;1mCannot execute self-upgrade process. Please follow the upgrade instructions at https://paymenter.org/docs/guides/v0-migration to migrate your V0 to V1\x1b[0m"
         exit 1
     fi
 fi
