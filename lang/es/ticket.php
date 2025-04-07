@@ -7,7 +7,7 @@ return [
     'status' => 'Estado',
     'priority' => 'Prioridad',
     'department' => 'Departamento',
-    'created_at' => 'Created At',
+    'created_at' => 'Creado en',
     'reply' => 'Responder',
 
     'create_ticket' => 'Crear un ticket',
