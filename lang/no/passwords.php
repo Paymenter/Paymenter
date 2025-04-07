@@ -2,10 +2,10 @@
 
 return [
 
-    'reset' => 'Your password has been reset.',
-    'sent' => 'We have emailed your password reset link.',
-    'throttled' => 'Please wait before retrying.',
-    'token' => 'This password reset token is invalid.',
-    'user' => "We can't find a user with that email address.",
+    'reset' => 'Ditt passord er tilbakestilt.',
+    'sent' => 'Vi har sendt deg en epost med lenken for tilbakestilling av passord.',
+    'throttled' => 'Vennligst vent før du prøver igjen.',
+    'token' => 'Denne tilbakestillings nøkkelen er ugyldig.',
+    'user' => "Vi finner ingen bruker med den epostadressen.",
 
 ];
