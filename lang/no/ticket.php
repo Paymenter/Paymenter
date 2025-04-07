@@ -1,25 +1,25 @@
 <?php
 
 return [
-    'ticket_details' => 'Ticket Details',
-    'tickets' => 'Tickets',
-    'subject' => 'Subject',
+    'ticket_details' => 'Saksdetaljer',
+    'tickets' => 'Saker',
+    'subject' => 'Emne',
     'status' => 'Status',
-    'priority' => 'Priority',
-    'department' => 'Department',
-    'created_at' => 'Created At',
-    'reply' => 'Reply',
+    'priority' => 'Prioritet',
+    'department' => 'Avdeling',
+    'created_at' => 'Opprettet',
+    'reply' => 'Svar',
 
-    'create_ticket' => 'Create Ticket',
-    'select_department' => 'Select Department',
-    'select_priority' => 'Select Priority',
-    'low' => 'Low',
-    'medium' => 'Medium',
-    'high' => 'High',
+    'create_ticket' => 'Opprett sak',
+    'select_department' => 'Velg avdeling',
+    'select_priority' => 'Velg prioritet',
+    'low' => 'Lav',
+    'medium' => 'Middels',
+    'high' => 'Høy',
 
-    'last_activity' => 'Last activity',
+    'last_activity' => 'Siste aktivitet',
 
-    'service' => 'Service',
-    'select_service' => 'Select Service',
-    'create' => 'Create',
+    'service' => 'Tjeneste',
+    'select_service' => 'Velg tjeneste',
+    'create' => 'Opprett',
 ];
