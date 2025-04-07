@@ -98,7 +98,7 @@
                     @endforeach
                 </x-form.select>
                 @endif
-                @if(Auth::check() && Auth::user()->credits()->where('currency_code', $items->first()->price->currency->code)->exists())
+                @if(Auth::check() && Auth::user()->credits()->where('currency_code', $items->first()->price->currency->code)->exists() && Auth::user()->credits()->where('currency_code', $items->first()->price->currency->code)->first()->amount > 0)
                     <x-form.checkbox wire:model="use_credits" name="use_credits" label="Use Credits" />
                 @endif
                 @endif
