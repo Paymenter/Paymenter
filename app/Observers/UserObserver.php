@@ -8,6 +8,14 @@ use App\Models\User;
 class UserObserver
 {
     /**
+     * Handle the User "creating" event.
+     */
+    public function creating(User $user): void
+    {
+        event(new UserEvent\Creating($user));
+    }
+
+    /**
      * Handle the User "created" event.
      */
     public function created(User $user): void
