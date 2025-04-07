@@ -19,8 +19,9 @@ class Init extends Command implements PromptsForMissingInput
         $this->info('Thanks for installing Paymenter!');
 
         // Validate the URL
-        if (! str_starts_with($this->argument('url'), 'http')) {
+        if (!str_starts_with($this->argument('url'), 'http')) {
             $this->error('The URL must start with http or https.');
+
             return;
         }
 
@@ -34,8 +35,7 @@ class Init extends Command implements PromptsForMissingInput
     {
         return [
             'name' => 'What is the name of your company?',
-            'url' =>
-            fn() => text('What is the URL of your application?', required: true, validate: function ($value) {
+            'url' => fn () => text('What is the URL of your application?', required: true, validate: function ($value) {
                 return str_starts_with($value, 'http') ? true : 'The URL must start with http or https.';
             }),
         ];
