@@ -1,20 +1,20 @@
 <?php
 
 return [
-    'ticket_details' => 'Ticket Details',
+    'ticket_details' => 'Detalles del ticket',
     'tickets' => 'Tickets',
-    'subject' => 'Subject',
-    'status' => 'Status',
-    'priority' => 'Priority',
-    'department' => 'Department',
+    'subject' => 'Asunto',
+    'status' => 'Estado',
+    'priority' => 'Prioridad',
+    'department' => 'Departamento',
     'created_at' => 'Created At',
     'reply' => 'Responder',
 
     'create_ticket' => 'Crear un ticket',
-    'select_department' => 'Select Department',
-    'select_priority' => 'Select Priority',
-    'low' => 'Low',
-    'medium' => 'Medium',
+    'select_department' => 'Seleccionar Departamento',
+    'select_priority' => 'Seleccionar Prioridad',
+    'low' => 'Bajo',
+    'medium' => 'Mediano',
     'high' => 'Alto',
 
     'last_activity' => 'Última actividad',
