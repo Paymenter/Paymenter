@@ -8,9 +8,9 @@ return [
     'priority' => 'Priority',
     'department' => 'Department',
     'created_at' => 'Created At',
-    'reply' => 'Reply',
+    'reply' => 'Responder',
 
-    'create_ticket' => 'Create Ticket',
+    'create_ticket' => 'Crear un ticket',
     'select_department' => 'Select Department',
     'select_priority' => 'Select Priority',
     'low' => 'Low',
