@@ -59,7 +59,7 @@
                     <x-dropdown>
                         <x-slot:trigger>
                             <div class="flex flex-col">
-                                <span class="text-sm text-base font-semibold text-nowrap">{{ strtoupper(app()->getLocale()) }} <span class="text-base/50 font-semibold">|</span> {{ session('currency', 'USD') }}</span>
+                                <span class="text-sm text-base font-semibold text-nowrap">{{ strtoupper(app()->getLocale()) }} <span class="text-base/50 font-semibold">|</span> {{ session('currency', config('settings.default_currency')) }}</span>
                             </div>
                         </x-slot:trigger>
                         <x-slot:content>
