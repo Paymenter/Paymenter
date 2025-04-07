@@ -21,7 +21,6 @@
                 href="https://v1.paymenter.org/docs/installation/updating">https://v1.paymenter.org/docs/installation/updating</a>
             on how to update</p>
 
-
         <p class="mt-2">OR try the web updater (This is a beta feature, use at your own risk)</p>
         <div class="mt-2">
             {{ $this->update }}
@@ -43,10 +42,16 @@
         <p>See <a
                 href="https://v1.paymenter.org/docs/installation/updating">https://v1.paymenter.org/docs/installation/updating</a>
             on how to update</p>
-        {{-- <p class="mt-2">OR try the web updater (This is a beta feature, use at your own risk)</p>
+
+        <p class="mt-2">OR try the web updater (This is a beta feature, use at your own risk)</p>
         <div class="mt-2">
             {{ $this->update }}
-        </div> --}}
+
+            <code>
+                <pre id="update-result" class="mt-2" x-data="{ output: '' }" x-html="output"  x-on:update-completed.window="output = (new AnsiUp()).ansi_to_html($event.detail[0].output);">
+                </pre>
+            </code>
+        </div>
     </div>
     @endif
 </x-filament-panels::page>

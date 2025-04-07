@@ -25,7 +25,7 @@
                     {!! isset($plan)
                         ? 'async createSubscription(data, actions){return actions.subscription.create({plan_id:\'' .
                             $plan->id .
-                            '\',custom_id:\'' .
+                            '\',reference_id:\'' .
                             $invoice->items->first()->reference->order_id .
                             '\',application_context:{user_action:\'SUBSCRIBE_NOW\',payment_method:{payer_selected:\'PAYPAL\',payee_preferred:\'IMMEDIATE_PAYMENT_REQUIRED\'}},subscriber:{name:{given_name:\'' .
                             auth()->user()->name .
