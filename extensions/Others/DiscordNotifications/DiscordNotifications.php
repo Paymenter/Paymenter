@@ -186,7 +186,7 @@ class DiscordNotifications extends Extension
             'Order Updated' => fn ($event) => $this->updatedEvent($event, 'order'),
             'Invoice Created' => fn ($event) => $this->createdEvent($event, 'invoice', ['id', 'formattedTotal', 'user_id']),
             'Invoice Updated' => fn ($event) => $this->updatedEvent($event, 'invoice'),
-            'Invoice Paid' => fn ($event) => $this->createdEvent($event, 'invoice'),
+            'Invoice Paid' => fn ($event) => $this->createdEvent($event, 'invoice', ['id']),
             'Ticket Created' => fn ($event) => $this->createdEvent($event, 'ticket', ['id', 'user_id']),
             'Ticket Updated' => fn ($event) => $this->updatedEvent($event, 'ticket'),
             'Ticket Replied' => fn ($event) => $this->createdEvent($event, 'ticketMessage', ['ticket_id', 'message']),
