@@ -1,24 +1,24 @@
 <?php
 
 return [
-    'add_to_cart' => 'Add to cart',
-    'view' => 'View',
-    'checkout' => 'Checkout',
-    'remove' => 'Remove',
-    'empty_cart' => 'Your cart is empty',
-    'total_today' => 'Total today',
-    'subtotal' => 'Subtotal',
-    'total' => 'Total',
+    'add_to_cart' => 'Legg i handlekurv',
+    'view' => 'Vis',
+    'checkout' => 'Til kassen',
+    'remove' => 'Fjern',
+    'empty_cart' => 'Handlevognen er tom',
+    'total_today' => 'Totalt i dag',
+    'subtotal' => 'Delsum',
+    'total' => 'Totalt',
 
-    'then_after_x' => 'Then after :time',
-    'order_summary' => 'Order Summary',
-    'edit' => 'Edit',
+    'then_after_x' => 'Så etter :time',
+    'order_summary' => 'Ordreoversikt',
+    'edit' => 'Redigere',
 
-    'apply' => 'Apply',
-    'price' => 'Price',
-    'setup_fee' => 'Setup fee',
+    'apply' => 'Bruk',
+    'price' => 'Pris',
+    'setup_fee' => 'Oppsett gebyr',
 
-    'in_stock' => 'In stock',
-    'out_of_stock' => 'Product :product is out of stock',
-    'user_limit' => 'You have reached the limit of :product',
+    'in_stock' => 'På lager',
+    'out_of_stock' => 'Produktet :product er ikke på lager',
+    'user_limit' => 'Du har nådd grensen for :product',
 ];
