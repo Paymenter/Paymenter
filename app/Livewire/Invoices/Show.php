@@ -7,6 +7,7 @@ use App\Helpers\ExtensionHelper;
 use App\Livewire\Component;
 use App\Models\Gateway;
 use App\Models\Invoice;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Request;
 use Livewire\Attributes\Locked;
 use Livewire\Attributes\Url;
@@ -25,6 +26,8 @@ class Show extends Component
     public $checkPayment = false;
 
     private $pay = null;
+
+    public $use_credits;
 
     public function mount()
     {
@@ -49,6 +52,26 @@ class Show extends Component
 
     public function pay()
     {
+        if ($this->use_credits) {
+            $credit = Auth::user()->credits()->where('currency_code', $this->invoice->currency_code)->first();
+            if ($credit) {
+                // Is it more credits or less credits than the total price?
+                if ($credit->amount >= $this->invoice->remaining) {
+                    $credit->amount -= $this->invoice->remaining;
+                    $credit->save();
+                    ExtensionHelper::addPayment($this->invoice->id, null, amount: $this->invoice->remaining);
+
+                    return $this->redirect(route('invoices.show', $this->invoice->id), true);
+                } else {
+                    ExtensionHelper::addPayment($this->invoice->id, null, amount: $credit->amount);
+                    $credit->amount = 0;
+                    $credit->save();
+
+                    $this->invoice = $this->invoice->fresh();
+                }
+            }
+        }
+
         if ($this->invoice->status !== 'pending') {
             return $this->notify(__('This invoice cannot be paid.'), 'error');
         }
@@ -58,6 +81,7 @@ class Show extends Component
         $this->validate([
             'gateway' => 'required',
         ]);
+
         $this->pay = ExtensionHelper::pay(Gateway::where('id', $this->gateway)->first(), $this->invoice);
 
         if (is_string($this->pay)) {

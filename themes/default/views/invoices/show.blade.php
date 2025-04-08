@@ -65,6 +65,9 @@
                             </div>
                         @endif
                     </div>
+                    @if(Auth::user()->credits()->where('currency_code', $invoice->currency_code)->exists() && Auth::user()->credits()->where('currency_code', $invoice->currency_code)->first()->amount > 0)
+                        <x-form.checkbox wire:model="use_credits" name="use_credits" label="Use Credits" />
+                    @endif
                     @if(count($gateways) > 1)
                         <x-form.select wire:model.live="gateway" label="Payment Gateway" class="mt-4" name="gateway">
                             @foreach ($gateways as $gateway)
