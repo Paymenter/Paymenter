@@ -13,43 +13,43 @@ return [
     |
     */
 
-    'failed' => 'These credentials do not match our records.',
-    'password' => 'The provided password is incorrect.',
-    'throttle' => 'Too many login attempts. Please try again in :seconds seconds.',
+    'failed' => 'Disse opplysningene samsvarer ikke med våre registre.',
+    'password' => 'Oppgitt passord er feil.',
+    'throttle' => 'For mange påloggingsforsøk. Prøv igjen om :seconds sekunder.',
 
-    'sign_in' => 'Sign in',
-    'sign_in_title' => 'Sign in to your account',
-    'or_sign_in_with' => 'Or sign in with',
-    'forgot_password' => 'Forgot your password?',
-    'dont_have_account' => 'Don\'t have an account?',
-    'already_have_account' => 'Already have an account?',
+    'sign_in' => 'Logg inn',
+    'sign_in_title' => 'Logg på kontoen din',
+    'or_sign_in_with' => 'Eller logg på med',
+    'forgot_password' => 'Glemt passordet?',
+    'dont_have_account' => 'Har du ikke en konto?',
+    'already_have_account' => 'Har du allerede en konto?',
 
-    'sign_up' => 'Sign up',
-    'sign_up_title' => 'Create your account',
+    'sign_up' => 'Registrer deg',
+    'sign_up_title' => 'Opprett konto',
 
-    'logout' => 'Logout',
+    'logout' => 'Logg ut',
 
     'input' => [
-        'email' => 'Email',
-        'email_label' => 'Email Address',
-        'password' => 'Password',
+        'email' => 'Epost',
+        'email_label' => 'Epostadresse',
+        'password' => 'Passord',
     ],
 
     'oauth' => [
-        'unverified_discord_account' => 'Your Discord account is not verified.',
-        'account_not_registered' => 'You are not registered on this site.',
+        'unverified_discord_account' => 'Din Discord konto er ikke bekreftet.',
+        'account_not_registered' => 'Du er ikke registrert på dette nettstedet.',
     ],
 
-    'reset_password' => 'Reset password',
+    'reset_password' => 'Tilbakestill passord',
 
-    'verify_2fa' => 'Verify 2FA',
-    'verify' => 'Verify',
+    'verify_2fa' => 'Verifiser 2FA',
+    'verify' => 'Bekreft',
 
     'verification' => [
-        'notice' => 'Verify your email address',
-        'sent' => 'A new verification link has been sent to your email address.',
-        'check_your_email' => 'Before proceeding, please check your email for a verification link.',
-        'not_received' => 'If you did not receive the email you can request another verification email.',
-        'request_another' => 'Resend verification email',
+        'notice' => 'Bekreft eposten din',
+        'sent' => 'En bekreftelseslenke har blitt sendt til din epostadresse.',
+        'check_your_email' => 'Før du fortsetter må du sjekke eposten din for verifiseringslenken.',
+        'not_received' => 'Hvis du ikke mottok eposten kan du be om en annen bekreftelse på e-post.',
+        'request_another' => 'Send bekreftelse på nytt',
     ],
 ];
