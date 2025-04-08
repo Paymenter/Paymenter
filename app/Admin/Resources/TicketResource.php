@@ -155,8 +155,8 @@ class TicketResource extends Resource
                     ->formatStateUsing(fn ($state) => array_combine(config('settings.ticket_departments'), config('settings.ticket_departments'))[$state])
                     ->sortable(),
                 Tables\Columns\TextColumn::make('user.name')
-                    ->searchable()
-                    ->sortable(),
+                    ->searchable(['first_name', 'last_name'])
+                    ->sortable(['first_name', 'last_name']),
             ])
             ->filters([
                 //
