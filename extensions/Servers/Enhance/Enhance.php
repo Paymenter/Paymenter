@@ -11,7 +11,6 @@ use Illuminate\Support\Str;
 
 class Enhance extends Server
 {
-
     private function request($url, $method = 'get', $data = []): \Illuminate\Http\Client\Response
     {
         // Trim any leading slashes from the base url and add the path URL to it
@@ -28,12 +27,10 @@ class Enhance extends Server
         return $response;
     }
 
-
     /**
      * Get all the configuration for the extension
-     * 
-     * @param array $values
-     * @return array
+     *
+     * @param  array  $values
      */
     public function getConfig($values = []): array
     {
@@ -58,15 +55,14 @@ class Enhance extends Server
                 'type' => 'text',
                 'label' => 'Organization ID',
                 'required' => true,
-            ]
+            ],
         ];
     }
 
     /**
      * Get product config
-     * 
-     * @param array $values
-     * @return array
+     *
+     * @param  array  $values
      */
     public function getProductConfig($values = []): array
     {
@@ -85,7 +81,7 @@ class Enhance extends Server
                 'options' => $plans,
                 'label' => 'Enhance package ID',
                 'required' => true,
-            ]
+            ],
         ];
     }
 
@@ -97,7 +93,7 @@ class Enhance extends Server
                 'type' => 'text',
                 'label' => 'Domain',
                 'required' => true,
-                'validation' => [new Domain(), 'required'],
+                'validation' => [new Domain, 'required'],
                 'placeholder' => 'domain.com',
             ],
         ];
@@ -105,13 +101,12 @@ class Enhance extends Server
 
     /**
      * Check if currenct configuration is valid
-     *
-     * @return bool|string
      */
     public function testConfig(): bool|string
     {
         try {
             $this->request('/orgs/' . $this->config('orgId'));
+
             return true;
         } catch (\Exception $e) {
             return $e->getMessage();
@@ -142,7 +137,6 @@ class Enhance extends Server
             'password' => Str::password(),
         ])->json();
 
-
         // Create Org member
         $this->request('/orgs/' . $response['id'] . '/members', 'post', [
             'loginId' => $loginResponse['id'],
@@ -153,11 +147,10 @@ class Enhance extends Server
     }
 
     /**
-     * Create a server 
-     * 
-     * @param Service $service
-     * @param array $settings (product settings)
-     * @param array $properties (checkout options)
+     * Create a server
+     *
+     * @param  array  $settings  (product settings)
+     * @param  array  $properties  (checkout options)
      * @return bool
      */
     public function createServer(Service $service, $settings, $properties)
@@ -167,9 +160,8 @@ class Enhance extends Server
         }
         $user = $this->fetchUserOrg($service->user);
 
-
         $response = $this->request('/orgs/' . $this->config('orgId') . '/customers/' . $user . '/subscriptions', 'post', [
-            'planId' => (int)($properties['plan'] ?? $settings['plan']),
+            'planId' => (int) ($properties['plan'] ?? $settings['plan']),
         ])->json();
 
         if (isset($response['id'])) {
@@ -192,10 +184,9 @@ class Enhance extends Server
 
     /**
      * Suspend a server
-     * 
-     * @param Service $service
-     * @param array $settings (product settings)
-     * @param array $properties (checkout options)
+     *
+     * @param  array  $settings  (product settings)
+     * @param  array  $properties  (checkout options)
      * @return bool
      */
     public function suspendServer(Service $service, $settings, $properties)
@@ -217,10 +208,9 @@ class Enhance extends Server
 
     /**
      * Unsuspend a server
-     * 
-     * @param Service $service
-     * @param array $settings (product settings)
-     * @param array $properties (checkout options)
+     *
+     * @param  array  $settings  (product settings)
+     * @param  array  $properties  (checkout options)
      * @return bool
      */
     public function unsuspendServer(Service $service, $settings, $properties)
@@ -242,10 +232,9 @@ class Enhance extends Server
 
     /**
      * Terminate a server
-     * 
-     * @param Service $service
-     * @param array $settings (product settings)
-     * @param array $properties (checkout options)
+     *
+     * @param  array  $settings  (product settings)
+     * @param  array  $properties  (checkout options)
      * @return bool
      */
     public function terminateServer(Service $service, $settings, $properties)
@@ -267,10 +256,9 @@ class Enhance extends Server
 
     /**
      * Upgrade a server
-     * 
-     * @param Service $service
-     * @param array $settings (product settings)
-     * @param array $properties (checkout options)
+     *
+     * @param  array  $settings  (product settings)
+     * @param  array  $properties  (checkout options)
      * @return bool
      */
     public function upgradeServer(Service $service, $settings, $properties)
@@ -284,7 +272,7 @@ class Enhance extends Server
         }
 
         $this->request('/orgs/' . $service->user->properties()->where('key', 'enhance_orgId')->first()->value . '/subscriptions/' . $properties['subscription_id'], 'patch', [
-            'planId' => (int)($properties['plan'] ?? $settings['plan']),
+            'planId' => (int) ($properties['plan'] ?? $settings['plan']),
         ]);
 
         return true;
@@ -309,7 +297,7 @@ class Enhance extends Server
 
         $members = $this->request('/orgs/' . $service->user->properties()->where('key', 'enhance_orgId')->first()->value . '/members', 'get')->json();
 
-        $member = collect($members['items'])->first(function ($item) use ($service) {
+        $member = collect($members['items'])->first(function ($item) {
             // Find user where roles contains 'Owner' and loginId is equal to the user's loginId
             return collect($item['roles'])->contains('Owner');
         });
