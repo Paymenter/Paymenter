@@ -15,6 +15,7 @@ use App\Models\Invoice;
 use App\Models\Order;
 use App\Models\Service;
 use App\Models\User;
+use Exception;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -307,7 +308,8 @@ class Cart extends Component
 
                 return $this->redirect(route('services'), true);
             } else {
-                if ($this->gateway) {
+                $invoice = $invoice->fresh();
+                if ($this->gateway && $invoice->remaining > 0) {
                     $pay = ExtensionHelper::pay(Gateway::where('id', $this->gateway)->first(), $invoice);
                     if (is_string($pay)) {
                         return $this->redirect($pay);
