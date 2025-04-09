@@ -213,13 +213,10 @@ class PayPal extends Gateway
 
         $body = $request->json()->all();
 
-        if (!isset($body['resource']['reference_id'])) {
-            throw new \Exception('Reference ID not found in the webhook payload');
-        }
         // Handle the subscription event
-        if ($body['event_type'] === 'BILLING.SUBSCRIPTION.ACTIVATED') {
+        if ($body['event_type'] === 'BILLING.SUBSCRIPTION.ACTIVATED' && isset($body['resource']['custom_id'])) {
             // Its activated so we can now add the subscription to the user (custom is the order id)
-            Order::findOrFail($body['resource']['reference_id'])->services->each(function ($service) use ($body) {
+            Order::findOrFail($body['resource']['custom_id'])->services->each(function ($service) use ($body) {
                 $service->subscription_id = $body['resource']['id'];
                 $service->save();
                 $service->properties()->updateOrCreate([
@@ -231,8 +228,8 @@ class PayPal extends Gateway
             });
 
             return response()->json(['status' => 'success']);
-        } elseif ($body['event_type'] === 'PAYMENT.SALE.COMPLETED') {
-            $order = Order::findOrFail($body['resource']['reference_id']);
+        } elseif ($body['event_type'] === 'PAYMENT.SALE.COMPLETED' && isset($body['resource']['custom'])) {
+            $order = Order::findOrFail($body['resource']['custom']);
             foreach ($order->services as $service) {
                 // Get last invoice item
                 $invoiceItem = $service->invoiceItems->last();
