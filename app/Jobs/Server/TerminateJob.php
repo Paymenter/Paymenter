@@ -26,7 +26,7 @@ class TerminateJob implements ShouldQueue
     public function handle(): void
     {
         try {
-            $data = ExtensionHelper::suspendServer($this->service);
+            $data = ExtensionHelper::terminateServer($this->service);
         } catch (\Exception $e) {
             if ($e->getMessage() == 'No server assigned to this product') {
                 return;
