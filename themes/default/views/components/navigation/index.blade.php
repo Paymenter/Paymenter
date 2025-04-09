@@ -81,8 +81,8 @@
                     </x-slot:trigger>
                     <x-slot:content>
                         <div class="flex flex-col p-2">
-                            <span class="text-sm text-base text-nowrap">{{ auth()->user()->name }}</span>
-                            <span class="text-sm text-base text-nowrap">{{ auth()->user()->email }}</span>
+                            <span class="text-sm text-base break-words">{{ auth()->user()->name }}</span>
+                            <span class="text-sm text-base break-words">{{ auth()->user()->email }}{{ auth()->user()->email }}</span>
                         </div>
                         @foreach (\App\Classes\Navigation::getAccountDropdownLinks() as $nav)
                         <x-navigation.link :href="route($nav['route'], $nav['params'] ?? null)" :spa="isset($nav['spa']) ? $nav['spa'] : true">
