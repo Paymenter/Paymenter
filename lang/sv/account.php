@@ -1,10 +1,10 @@
 <?php
 
 return [
-    'account' => 'Account',
+    'account' => 'Konto',
     'personal_details' => 'Personuppgifter',
     'security' => 'Säkerhet',
-    'credits' => 'Credits',
+    'credits' => 'Krediter',
 
     'change_password' => 'Ändra lösenord',
 
@@ -32,8 +32,8 @@ return [
         'two_factor_code' => 'Ange koden från din autentiseringsapp',
         'two_factor_code_placeholder' => 'Din tvåfaktorsautentiseringskod',
 
-        'currency' => 'Currency',
-        'amount' => 'Amount',
+        'currency' => 'Valuta',
+        'amount' => 'Belopp',
     ],
 
     'notifications' => [
@@ -45,8 +45,8 @@ return [
         'session_logged_out' => 'Sessionen har loggats ut.',
     ],
 
-    'no_credit' => 'You have no credits.',
-    'add_credit' => 'Add credit',
-    'credit_deposit' => 'Credit deposit (:currency)',
+    'no_credit' => 'Du har inga krediter.',
+    'add_credit' => 'Lägg till kredit',
+    'credit_deposit' => 'Kredit insättning (:currency)',
 
 ];
