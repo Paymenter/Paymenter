@@ -53,5 +53,15 @@
             </code>
         </div>
     </div>
+    @else
+    <div class="flex flex-col gap-1">
+        <div>
+            <strong>Latest version:</strong> {{ config('settings.latest_version') }}
+        </div>
+        <div>
+            <strong>Your version:</strong> {{ config('app.version') }}
+        </div>
+        <p>You are up to date!</p>
+    </div>
     @endif
 </x-filament-panels::page>
