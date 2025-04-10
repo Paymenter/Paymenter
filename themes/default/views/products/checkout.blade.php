@@ -19,7 +19,7 @@
                         {{ $availablePlan->name }} -
                         {{ $availablePlan->price() }}
                         @if ($availablePlan->price()->has_setup_fee)
-                            + {{ $availablePlan->price()->setup_fee }} {{ __('product.setup_fee') }}
+                            + {{ $availablePlan->price()->formatted->setup_fee }} {{ __('product.setup_fee') }}
                         @endif
                     </option>
                 @endforeach
