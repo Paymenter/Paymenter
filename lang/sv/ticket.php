@@ -2,7 +2,7 @@
 
 return [
     'ticket_details' => 'Ärendeuppgifter',
-    'tickets' => 'Tickets',
+    'tickets' => 'Ärenden',
     'subject' => 'Ämne',
     'status' => 'Status',
     'priority' => 'Prioritet',

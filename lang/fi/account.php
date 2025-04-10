@@ -1,10 +1,10 @@
 <?php
 
 return [
-    'account' => 'Account',
+    'account' => 'Käyttäjä',
     'personal_details' => 'Henkilökohtaiset tiedot',
     'security' => 'Turvallisuus',
-    'credits' => 'Credits',
+    'credits' => 'Krediitit',
 
     'change_password' => 'Vaihda salasana',
 
@@ -32,8 +32,8 @@ return [
         'two_factor_code' => 'Syötä todennussovelluksen näyttämä koodi',
         'two_factor_code_placeholder' => 'Kaksivaiheinen tunnistautumiskoodi',
 
-        'currency' => 'Currency',
-        'amount' => 'Amount',
+        'currency' => 'Valuutta',
+        'amount' => 'Summa',
     ],
 
     'notifications' => [
@@ -45,8 +45,8 @@ return [
         'session_logged_out' => 'Istunto on kirjauduttu ulos.',
     ],
 
-    'no_credit' => 'You have no credits.',
-    'add_credit' => 'Add credit',
-    'credit_deposit' => 'Credit deposit (:currency)',
+    'no_credit' => 'Sinulla ei ole yhtään krediittejä.',
+    'add_credit' => 'Lisää krediittejä',
+    'credit_deposit' => 'Krediittien talletus (:currency)',
 
 ];
