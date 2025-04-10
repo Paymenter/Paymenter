@@ -48,6 +48,8 @@ class CheckForUpdates extends Command
         } else {
             // Check if app.version is different from the latest version
             $latestVersion = Http::get('https://api.github.com/repos/Paymenter/Paymenter/releases/latest')->json()['tag_name'];
+            // Remove the 'v' from the version
+            $latestVersion = str_replace('v', '', $latestVersion);
             Setting::updateOrCreate(
                 ['key' => 'latest_version'],
                 ['value' => $latestVersion]
