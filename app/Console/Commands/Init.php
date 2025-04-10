@@ -36,7 +36,7 @@ class Init extends Command implements PromptsForMissingInput
         return [
             'name' => 'What is the name of your company?',
             'url' => fn () => text('What is the URL of your application?', required: true, validate: function ($value) {
-                return str_starts_with($value, 'http') ? true : 'The URL must start with http or https.';
+                return str_starts_with($value, 'http') ? null : 'The URL must start with http or https.';
             }),
         ];
     }
