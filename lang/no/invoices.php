@@ -1,0 +1,30 @@
+<?php
+
+return [
+    'invoices' => 'Fakturaer',
+    'product' => 'Produkt',
+    'price' => 'Pris',
+    'status' => 'Status',
+    'actions' => 'Handlinger',
+    'view' => 'Vis',
+    'id' => 'ID',
+    'total' => 'Totalt',
+    'subtotal' => 'Delsum',
+    'invoice' => 'Faktura #:id',
+    'unit_price' => 'Enhetspris',
+    'bill_to' => 'Fakturer Til',
+    'paid' => 'Betalt',
+    'payment_pending' => 'Venter på betaling',
+
+    'invoice_date' => 'Fakturadato',
+    'invoice_no' => 'Faktura nr',
+    'item' => 'Produkt',
+    'quantity' => 'Antall',
+    'transactions' => 'Transaksjoner',
+    'transaction_id' => 'Transaksjons ID',
+    'gateway' => 'Betalings Løsning',
+    'payment_date' => 'Betalingsdato',
+    'payment_method' => 'Betalings metode',
+    'amount' => 'Beløp',
+    'date' => 'Dato',
+];

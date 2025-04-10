@@ -47,9 +47,9 @@ return [
 
     'verification' => [
         'notice' => 'Verificar tu dirección de correo electrónico',
-        'sent' => 'A new verification link has been sent to your email address.',
-        'check_your_email' => 'Before proceeding, please check your email for a verification link.',
-        'not_received' => 'If you did not receive the email you can request another verification email.',
-        'request_another' => 'Resend verification email',
+        'sent' => 'Un nuevo enlace de verificación ha sido enviado a tu dirección de correo electrónico.',
+        'check_your_email' => 'Antes de proceder, por favor revisa tu correo electrónico para ver un enlace de verificación.',
+        'not_received' => 'Si no recibiste el correo electrónico, puedes solicitar otro correo de verificación.',
+        'request_another' => 'Reenviar correo de verificación',
     ],
 ];
