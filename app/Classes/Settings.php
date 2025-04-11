@@ -413,6 +413,7 @@ class Settings
                     'label' => 'Theme',
                     'default' => 'default',
                     'type' => 'select',
+                    'required' => true,
                     // Read themes from themes directory
                     'options' => array_map('basename', glob(base_path('themes/*'), GLOB_ONLYDIR)),
                     'validation' => 'in:' . implode(',', array_map('basename', glob(base_path('themes/*'), GLOB_ONLYDIR))),
