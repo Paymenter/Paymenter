@@ -1,10 +1,10 @@
 <?php
 
 return [
-    'account' => 'Account',
+    'account' => 'Compte',
     'personal_details' => 'Détails personnels',
     'security' => 'Sécurité',
-    'credits' => 'Credits',
+    'credits' => 'Crédits',
 
     'change_password' => 'Modifier le mot de passe',
 
@@ -32,8 +32,8 @@ return [
         'two_factor_code' => 'Entrez le code de votre application d\'authentification',
         'two_factor_code_placeholder' => 'Votre code de double authentification',
 
-        'currency' => 'Currency',
-        'amount' => 'Amount',
+        'currency' => 'Devise',
+        'amount' => 'Montant',
     ],
 
     'notifications' => [
@@ -45,8 +45,8 @@ return [
         'session_logged_out' => 'La session a été déconnectée.',
     ],
 
-    'no_credit' => 'You have no credits.',
-    'add_credit' => 'Add credit',
-    'credit_deposit' => 'Credit deposit (:currency)',
+    'no_credit' => 'Vous n\'avez aucun crédit.',
+    'add_credit' => 'Ajouter des crédits',
+    'credit_deposit' => 'Déposer des crédits (:currency)',
 
 ];

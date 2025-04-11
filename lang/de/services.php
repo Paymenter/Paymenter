@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'services' => 'Services',
+    'services' => 'Leistungen',
     'product' => 'Produkt',
     'price' => 'Preis',
     'status' => 'Status',
@@ -11,15 +11,15 @@ return [
 
     'product_details' => 'Produktdetails',
     'billing_cycle' => 'Abrechnungszeitraum',
-    'cancel' => 'Abbrechen',
+    'cancel' => 'Kündigen',
     'cancellation' => 'Kündigung von :service',
-    'cancel_are_you_sure' => 'Sind Sie sicher, dass Sie diesen Dienst stornieren möchten?',
-    'cancel_reason' => 'Grund der Stornierung',
-    'cancel_type' => 'Stornierungsart',
-    'cancel_immediate' => 'Sofort stornieren',
-    'cancel_end_of_period' => 'Am Ende des Abrechnungszeitraums stornieren',
-    'cancel_immediate_warning' => 'Wenn Sie den folgenden Button drücken, wird der Dienst sofort storniert und du kannst ihn nicht mehr nutzen.',
-    'cancellation_requested' => 'Stornierung angefragt',
+    'cancel_are_you_sure' => 'Sind Sie sicher, dass Sie diesen Dienst kündigen möchten?',
+    'cancel_reason' => 'Grund der Kündigung',
+    'cancel_type' => 'Kündigungsart',
+    'cancel_immediate' => 'Sofort kündigen',
+    'cancel_end_of_period' => 'Am Ende des Abrechnungszeitraums kündigen',
+    'cancel_immediate_warning' => 'Wenn du den Button drückst, wird der Dienst sofort gekündigt und du kannst ihn nicht mehr nutzen.',
+    'cancellation_requested' => 'Kündigung angefragt',
 
     'current_plan' => 'Aktuelles Paket',
     'new_plan' => 'Neues Paket',
