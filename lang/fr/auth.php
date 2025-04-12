@@ -50,6 +50,6 @@ return [
         'sent' => 'Un nouveau lien de vérification a été envoyé sur votre adresse e-mail.',
         'check_your_email' => 'Avant de continuer, veuillez vérifier vos emails, vous devriez avoir reçu un lien de vérification.',
         'not_received' => 'Si vous n\'avez pas reçu l\'e-mail, vous pouvez demander un autre e-mail de vérification.',
-        'request_another' => 'Renvoyer l\'email de vérification',
+        'request_another' => 'Renvoyer un mail de vérification',
     ],
 ];
