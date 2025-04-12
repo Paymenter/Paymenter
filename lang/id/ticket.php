@@ -1,25 +1,25 @@
 <?php
 
 return [
-    'ticket_details' => 'Ticket Details',
-    'tickets' => 'Tickets',
-    'subject' => 'Subject',
+    'ticket_details' => 'Rincian Tiket',
+    'tickets' => 'Tiket',
+    'subject' => 'Subjek',
     'status' => 'Status',
-    'priority' => 'Priority',
-    'department' => 'Department',
-    'created_at' => 'Created At',
-    'reply' => 'Reply',
+    'priority' => 'Prioritas',
+    'department' => 'Departemen',
+    'created_at' => 'Dibuat Pada',
+    'reply' => 'Balas',
 
-    'create_ticket' => 'Create Ticket',
-    'select_department' => 'Select Department',
-    'select_priority' => 'Select Priority',
-    'low' => 'Low',
-    'medium' => 'Medium',
-    'high' => 'High',
+    'create_ticket' => 'Buat Tiket',
+    'select_department' => 'Pilih Departemen',
+    'select_priority' => 'Pilih Prioritas',
+    'low' => 'Rendah',
+    'medium' => 'Sedang',
+    'high' => 'Tinggi',
 
-    'last_activity' => 'Last activity',
+    'last_activity' => 'Aktivitas terakhir',
 
-    'service' => 'Service',
-    'select_service' => 'Select Service',
-    'create' => 'Create',
+    'service' => 'Layanan',
+    'select_service' => 'Pilih Layanan',
+    'create' => 'Buat',
 ];
