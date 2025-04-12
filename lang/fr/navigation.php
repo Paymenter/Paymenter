@@ -2,7 +2,7 @@
 
 return [
     'home' => 'Accueil',
-    'shop' => 'Magasin',
+    'shop' => 'Boutique',
     'cart' => 'Panier',
     'login' => 'Connexion',
     'register' => 'S\'inscrire',
