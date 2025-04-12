@@ -1,12 +1,12 @@
 <?php
 
 return [
-    'invoices' => 'Invoices',
-    'product' => 'Product',
-    'price' => 'Price',
+    'invoices' => 'Faktur',
+    'product' => 'Produk',
+    'price' => 'Harga',
     'status' => 'Status',
-    'actions' => 'Actions',
-    'view' => 'View',
+    'actions' => 'Aksi',
+    'view' => 'Lihat',
     'id' => 'ID',
     'total' => 'Total',
     'subtotal' => 'Subtotal',
