@@ -1,24 +1,24 @@
 <?php
 
 return [
-    'add_to_cart' => 'Add to cart',
-    'view' => 'View',
+    'add_to_cart' => 'Tambah ke keranjang',
+    'view' => 'Lihat',
     'checkout' => 'Checkout',
-    'remove' => 'Remove',
-    'empty_cart' => 'Your cart is empty',
-    'total_today' => 'Total today',
+    'remove' => 'Hapus',
+    'empty_cart' => 'Keranjang Anda kosong',
+    'total_today' => 'Total hari ini',
     'subtotal' => 'Subtotal',
     'total' => 'Total',
 
-    'then_after_x' => 'Then after :time',
-    'order_summary' => 'Order Summary',
-    'edit' => 'Edit',
+    'then_after_x' => 'Setelah pukul :time',
+    'order_summary' => 'Ringkasan Pesanan',
+    'edit' => 'Ubah',
 
-    'apply' => 'Apply',
-    'price' => 'Price',
-    'setup_fee' => 'Setup fee',
+    'apply' => 'Terapkan',
+    'price' => 'Harga',
+    'setup_fee' => 'Biaya Setup',
 
-    'in_stock' => 'In stock',
-    'out_of_stock' => 'Product :product is out of stock',
-    'user_limit' => 'You have reached the limit of :product',
+    'in_stock' => 'Tersedia',
+    'out_of_stock' => ':product tidak tersedia',
+    'user_limit' => 'Anda telah mencapai batas untuk :product',
 ];
