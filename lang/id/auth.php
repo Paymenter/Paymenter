@@ -13,43 +13,43 @@ return [
     |
     */
 
-    'failed' => 'These credentials do not match our records.',
-    'password' => 'The provided password is incorrect.',
-    'throttle' => 'Too many login attempts. Please try again in :seconds seconds.',
+    'failed' => 'Kredensial ini tidak sesuai dengan data di dalam sistem kami.',
+    'password' => 'Kata sandi yand diberikan salah.',
+    'throttle' => 'Terlalu banyak upaya login. Silakan coba lagi dalam :seconds detik.',
 
-    'sign_in' => 'Sign in',
-    'sign_in_title' => 'Sign in to your account',
-    'or_sign_in_with' => 'Or sign in with',
-    'forgot_password' => 'Forgot your password?',
-    'dont_have_account' => 'Don\'t have an account?',
-    'already_have_account' => 'Already have an account?',
+    'sign_in' => 'Masuk',
+    'sign_in_title' => 'Masuk ke akun Anda',
+    'or_sign_in_with' => 'Atau masuk dengan',
+    'forgot_password' => 'Lupa kata sandi Anda?',
+    'dont_have_account' => 'Tidak memiliki akun?',
+    'already_have_account' => 'Sudah memiliki akun?',
 
-    'sign_up' => 'Sign up',
-    'sign_up_title' => 'Create your account',
+    'sign_up' => 'Daftar',
+    'sign_up_title' => 'Buat akun',
 
-    'logout' => 'Logout',
+    'logout' => 'Keluar',
 
     'input' => [
         'email' => 'Email',
-        'email_label' => 'Email Address',
-        'password' => 'Password',
+        'email_label' => 'Alamat Email',
+        'password' => 'Kata Sandi',
     ],
 
     'oauth' => [
-        'unverified_discord_account' => 'Your Discord account is not verified.',
-        'account_not_registered' => 'You are not registered on this site.',
+        'unverified_discord_account' => '.',
+        'account_not_registered' => 'Anda tidak terdaftar di situs ini.',
     ],
 
-    'reset_password' => 'Reset password',
+    'reset_password' => 'Atur ulang kata sandi',
 
-    'verify_2fa' => 'Verify 2FA',
-    'verify' => 'Verify',
+    'verify_2fa' => 'Verifikasi 2FA',
+    'verify' => 'Verifikasi',
 
     'verification' => [
-        'notice' => 'Verify your email address',
-        'sent' => 'A new verification link has been sent to your email address.',
-        'check_your_email' => 'Before proceeding, please check your email for a verification link.',
-        'not_received' => 'If you did not receive the email you can request another verification email.',
-        'request_another' => 'Resend verification email',
+        'notice' => 'Verifikasi alamat email Anda',
+        'sent' => 'Tautan verifikasi baru telah dikirim ke alamat email kamu.',
+        'check_your_email' => 'Sebelum melanjutkan, periksa email kamu untuk tautan verifikasi.',
+        'not_received' => 'Jika Anda tidak menerima email, Anda dapat meminta email verifikasi baru.',
+        'request_another' => 'Kirim ulang email verifikasi',
     ],
 ];
