@@ -114,7 +114,7 @@ class DiscordNotifications extends Extension
     {
         $changedFields = [];
         foreach ($event->{$model}->getChanges() as $field => $value) {
-            if (in_array($field, ['created_at', 'updated_at', 'password'])) {
+            if (!in_array($field, ['created_at', 'updated_at', 'password'])) {
                 if (!is_string($value)) {
                     $value = json_encode($value);
                 }
