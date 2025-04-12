@@ -77,6 +77,20 @@ class CronJob extends Command
         });
         $this->info('Sending invoices if due date is ' . config('settings.cronjob_invoice') . ' days away: ' . $sendedInvoices . ' invoices');
 
+        // Send invoice reminders if due date is x days away
+        $reminderInvoices = 0;
+        Service::where('status', 'active')->whereHas('invoices', function ($query) {
+                $query->where('status', 'pending');
+        })->where('expires_at', '=', now()->addDays((int) config('settings.cronjob_invoice_reminder'))->toDateString())->whereDoesntHave('cancellation')->get()->each(function ($service) use (&$reminderInvoices) {
+                // Send reminder
+                $invoice = $service->invoices()->where('status', 'pending')->first();
+                if ($invoice) {
+                        NotificationHelper::invoiceCreatedNotification($service->order->user, $invoice);
+                        $reminderInvoices++;
+                }
+        });
+        $this->info('Sending invoice reminders for services expiring in ' . config('settings.cronjob_invoice_reminder') . ' days: ' . $reminderInvoices . ' reminders');
+
         // Cancel services if first invoice is not paid after x days
         $ordersCancelled = 0;
         Service::where('status', 'pending')->whereDoesntHave('invoices', function ($query) {
