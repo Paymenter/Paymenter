@@ -2,10 +2,10 @@
 
 return [
     'dashboard_title' => 'Dashboard',
-    'welcome_back' => 'Welcome back, :name!',
-    'dashboard_description' => 'Manage your active services, invoices, tickets, and stay updated here.',
-    'open_tickets' => 'Open Tickets',
-    'unpaid_invoices' => 'Unpaid Invoices',
+    'welcome_back' => 'Welkom terug, :name!',
+    'dashboard_description' => 'Beheer uw actieve diensten, facturen en tickets.',
+    'open_tickets' => 'Open tickets',
+    'unpaid_invoices' => 'Onbetaalde facturen',
     'active_services' => 'Active Services',
     'view_all' => 'View All',
 ];
