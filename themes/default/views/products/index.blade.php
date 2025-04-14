@@ -3,10 +3,7 @@
         <div class="mx-auto container">
             <h1 class="text-3xl font-bold">{{ $category->name }}</h1>
             <article class="prose dark:prose-invert">
-                {!! Str::markdown($category->description, [
-                    'html_input' => 'strip',
-                    'allow_unsafe_links' => false,
-                ]) !!}
+                {!! $category->description !!}
             </article>
         </div>
         <div class="flex flex-col bg-background-secondary hover:bg-background-secondary/80 border border-neutral p-4 rounded-lg">
@@ -34,6 +31,11 @@
                         <h2 class="text-xl font-bold">{{ $childCategory->name }}</h2>
                         @if(theme('small_images', false))
                             </div>
+                        @endif
+                        @if(theme('show_category_description', true))
+                            <article class="mt-2 prose dark:prose-invert">
+                                {!! $childCategory->description !!}
+                            </article>
                         @endif
                         <a href="{{ route('category.show', ['category' => $childCategory->slug]) }}" wire:navigate class="mt-2">
                             <x-button.primary>

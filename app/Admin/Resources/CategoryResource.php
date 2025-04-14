@@ -45,7 +45,7 @@ class CategoryResource extends Resource
                     }),
                 Forms\Components\TextInput::make('slug')
                     ->required(),
-                Forms\Components\Textarea::make('description')
+                Forms\Components\RichEditor::make('description')
                     ->required(),
                 Forms\Components\Select::make('parent_id')
                     ->relationship('parent', 'name')

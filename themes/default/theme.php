@@ -21,6 +21,13 @@ return [
             'description' => 'Show small images in the product overview page',
         ],
         [
+            'name' => 'show_category_description',
+            'label' => 'Show Category Description',
+            'type' => 'checkbox',
+            'default' => true,
+            'description' => 'Show the category description in the product overview page/homepage',
+        ],
+        [
             'name' => 'home_page_text',
             'label' => 'Home Page Text',
             'type' => 'markdown',

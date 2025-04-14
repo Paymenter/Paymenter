@@ -22,6 +22,11 @@
                     @if(theme('small_images', false))
                         </div>
                     @endif
+                    @if(theme('show_category_description', true))
+                        <article class="mt-2 prose dark:prose-invert">
+                            {!! $category->description !!}
+                        </article>
+                    @endif
                     <a href="{{ route('category.show', ['category' => $category->slug]) }}" wire:navigate class="mt-2">
                         <x-button.primary>
                             {{ __('general.view') }}
