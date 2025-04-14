@@ -21,4 +21,6 @@ return [
     'in_stock' => 'В наявності',
     'out_of_stock' => 'Продукт :product відсутній на складі',
     'user_limit' => 'Ви досягли ліміту для :product',
+    'payment_method' => 'Payment method',
+    'use_credits' => 'Use credits',
 ];
