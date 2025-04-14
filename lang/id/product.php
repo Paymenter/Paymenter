@@ -21,4 +21,6 @@ return [
     'in_stock' => 'Tersedia',
     'out_of_stock' => ':product tidak tersedia',
     'user_limit' => 'Anda telah mencapai batas untuk :product',
+    'payment_method' => 'Payment method',
+    'use_credits' => 'Use credits',
 ];
