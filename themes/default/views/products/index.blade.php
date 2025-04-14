@@ -24,12 +24,18 @@
             <div class="grid sm:grid-cols-2 md:grid-cols-3 gap-4 h-fit">
                 @foreach ($childCategories as $childCategory)
                     <div class="flex flex-col bg-background-secondary hover:bg-background-secondary/80 border border-neutral p-4 rounded-lg">
+                        @if(theme('small_images', false))
+                            <div class="flex gap-x-3 items-center">
+                        @endif
                         @if ($childCategory->image)
                             <img src="{{ Storage::url($childCategory->image) }}" alt="{{ $childCategory->name }}"
-                                class="w-full object-cover object-center rounded-md">
+                                class="rounded-md {{ theme('small_images', false) ? 'w-14 h-fit' : 'w-full object-cover object-center' }}">
                         @endif
-                        <h2 class="text-xl font-bold mb-2">{{ $childCategory->name }}</h2>
-                        <a href="{{ route('category.show', ['category' => $childCategory->slug]) }}" wire:navigate>
+                        <h2 class="text-xl font-bold">{{ $childCategory->name }}</h2>
+                        @if(theme('small_images', false))
+                            </div>
+                        @endif
+                        <a href="{{ route('category.show', ['category' => $childCategory->slug]) }}" wire:navigate class="mt-2">
                             <x-button.primary>
                                 {{ __('general.view') }}
                             </x-button.primary>
@@ -41,11 +47,17 @@
         <div class="grid sm:grid-cols-2 md:grid-cols-3 gap-4 h-fit">
             @foreach ($products as $product)
                 <div class="flex flex-col bg-background-secondary hover:bg-background-secondary/80 border border-neutral p-4 rounded-lg">
+                    @if(theme('small_images', false))
+                        <div class="flex gap-x-3 items-center">
+                    @endif
                     @if ($product->image)
                         <img src="{{ Storage::url($product->image) }}" alt="{{ $product->name }}"
-                            class="w-full object-cover object-center rounded-md">
+                            class="rounded-md {{ theme('small_images', false) ? 'w-14 h-fit' : 'w-full object-cover object-center' }}">
                     @endif
                     <h2 class="text-xl font-bold">{{ $product->name }}</h2>
+                    @if(theme('small_images', false))
+                        </div>
+                    @endif
                     @if(theme('direct_checkout', false) && $product->description) 
                         <article class="prose dark:prose-invert">
                             {!! $product->description !!}
