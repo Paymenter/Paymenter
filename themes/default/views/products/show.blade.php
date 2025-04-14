@@ -1,7 +1,7 @@
 <div class="flex flex-col @if ($product->image) md:grid grid-cols-2 gap-16 bg-background-secondary hover:bg-background-secondary/80 border border-neutral p-4 rounded-lg @endif">
     @if ($product->image)
         <img src="{{ Storage::url($product->image) }}" alt="{{ $product->name }}"
-            class="w-full h-96 object-cover object-center rounded-md">
+            class="w-full h-96 object-contain object-center rounded-md">
     @endif
     {{-- If your happiness depends on money, you will never be happy with yourself. --}}
     <div class="flex flex-col">
