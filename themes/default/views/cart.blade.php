@@ -1,11 +1,11 @@
 <div class="flex flex-col md:grid md:grid-cols-4 gap-4">
     <div class="flex flex-col col-span-3 gap-4">
-        @if ($items->isEmpty())
+        @if (Cart::get()->isEmpty())
             <h1 class="text-2xl font-semibold">
                 {{ __('product.empty_cart') }}
             </h1>
         @endif
-        @foreach ($items as $key => $item)
+        @foreach (Cart::get() as $key => $item)
             <div class="flex flex-row justify-between w-full bg-background-secondary p-3 rounded-md">
                 <div class="flex flex-col gap-1">
                     <h2 class="text-2xl font-semibold">
@@ -56,7 +56,7 @@
         @endforeach
     </div>
     <div class="flex flex-col gap-4">
-        @if (!$items->isEmpty())
+        @if (!Cart::get()->isEmpty())
             <div class="flex flex-col gap-2 w-full col-span-1 bg-background-secondary p-3 rounded-md">
                 <h2 class="text-2xl font-semibold mb-3">
                     {{ __('product.order_summary') }}
@@ -98,7 +98,7 @@
                     @endforeach
                 </x-form.select>
                 @endif
-                @if(Auth::check() && Auth::user()->credits()->where('currency_code', $items->first()->price->currency->code)->exists() && Auth::user()->credits()->where('currency_code', $items->first()->price->currency->code)->first()->amount > 0)
+                @if(Auth::check() && Auth::user()->credits()->where('currency_code', Cart::get()->first()->price->currency->code)->exists() && Auth::user()->credits()->where('currency_code', Cart::get()->first()->price->currency->code)->first()->amount > 0)
                     <x-form.checkbox wire:model="use_credits" name="use_credits" label="Use Credits" />
                 @endif
                 @endif

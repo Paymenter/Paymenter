@@ -19,13 +19,11 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Session;
+use Livewire\Attributes\Computed;
 use Livewire\Attributes\Locked;
 
 class Cart extends Component
 {
-    #[Locked]
-    public $items;
-
     #[Locked]
     public $total;
 
@@ -43,19 +41,18 @@ class Cart extends Component
         if (Session::has('coupon')) {
             $this->coupon = Session::get('coupon');
         }
-        $this->items = ClassesCart::get();
         $this->updateTotal();
     }
 
     private function updateTotal()
     {
-        if ($this->items->isEmpty()) {
+        if (ClassesCart::get()->isEmpty()) {
             $this->total = null;
 
             return;
         }
-        $this->total = new Price(['price' => $this->items->sum(fn ($item) => $item->price->price * $item->quantity), 'currency' => $this->items->first()->price->currency]);
-        $this->gateways = ExtensionHelper::getCheckoutGateways($this->items, 'cart');
+        $this->total = new Price(['price' => ClassesCart::get()->sum(fn($item) => $item->price->price * $item->quantity), 'currency' => ClassesCart::get()->first()->price->currency]);
+        $this->gateways = ExtensionHelper::getCheckoutGateways(ClassesCart::get(), 'cart');
         if (count($this->gateways) > 0 && !array_search($this->gateway, array_column($this->gateways, 'id')) !== false) {
             $this->gateway = $this->gateways[0]->id;
         }
@@ -63,66 +60,21 @@ class Cart extends Component
 
     public function applyCoupon()
     {
-        $coupon = Coupon::where('code', $this->coupon)->first();
-        $this->coupon = null;
-        if (!$coupon) {
-            $this->notify('Invalid coupon code', 'error');
-
+        try {
+            ClassesCart::applyCoupon($this->coupon);
+        } catch (DisplayException $e) {
+            $this->notify($e->getMessage(), 'error');
+            $this->coupon = null;
             return;
         }
-        if ($coupon->max_uses && $coupon->services->count() >= $coupon->max_uses) {
-            return $this->notify('Coupon code has reached its maximum uses', 'error');
-        }
-        if ($coupon->expires_at && $coupon->expires_at->isPast()) {
-            return $this->notify('Coupon code has expired', 'error');
-        }
-        if ($coupon->starts_at && $coupon->starts_at->isFuture()) {
-            return $this->notify('Coupon code is not active yet', 'error');
-        }
-        Session::put(['coupon' => $coupon]);
-        $this->coupon = $coupon;
-        $wasSuccessful = false;
-        $this->items = ClassesCart::get()->map(function ($item) use ($coupon, &$wasSuccessful) {
-            if ($coupon->products->where('id', $item->product->id)->isEmpty() && $coupon->products->isNotEmpty()) {
-                return (object) $item;
-            }
-            $wasSuccessful = true;
-            $discount = 0;
-            if ($coupon->type === 'percentage') {
-                $discount = $item->price->price * $coupon->value / 100;
-            } elseif ($coupon->type === 'fixed') {
-                $discount = $coupon->value;
-            } else {
-                $discount = $item->price->setup_fee;
-                $item->price->setup_fee = 0;
-            }
-            if ($item->price->price < $discount) {
-                $discount = $item->price->price;
-            }
-            $item->price->setDiscount($discount);
-            $item->price->price -= $discount;
-
-            return (object) $item;
-        });
+        $this->coupon = Session::get('coupon');
         $this->updateTotal();
-        if ($wasSuccessful) {
-            $this->notify('Coupon code applied successfully', 'success');
-        } else {
-            $this->notify('Coupon code does not apply to any of the products in your cart', 'error');
-        }
+        $this->notify('Coupon code applied successfully', 'success');
     }
 
     public function removeCoupon()
     {
-        Session::forget('coupon');
-        $this->items = ClassesCart::get()->map(function ($item) {
-            $item->price->setup_fee = $item->price->original_setup_fee;
-            $item->price->price = $item->price->original_price;
-
-            $item->price->setDiscount(0);
-
-            return (object) $item;
-        });
+        ClassesCart::removeCoupon();
         $this->coupon = null;
         $this->updateTotal();
         $this->notify('Coupon code removed successfully', 'success');
@@ -131,15 +83,12 @@ class Cart extends Component
     public function removeProduct($index)
     {
         ClassesCart::remove($index);
-        $this->items = ClassesCart::get()->map(function ($item) {
-            return (object) $item;
-        });
         $this->updateTotal();
     }
 
     public function updateQuantity($index, $quantity)
     {
-        if ($this->items->get($index)->product->allow_quantity !== 'combined') {
+        if (ClassesCart::get()->get($index)->product->allow_quantity !== 'combined') {
             return;
         }
         if ($quantity < 1) {
@@ -147,15 +96,15 @@ class Cart extends Component
 
             return;
         }
-        $this->items->get($index)->quantity = $quantity;
-        session(['cart' => $this->items->toArray()]);
+        ClassesCart::get()->get($index)->quantity = $quantity;
+        session(['cart' => ClassesCart::get()->toArray()]);
         $this->updateTotal();
     }
 
     // Checkout
     public function checkout()
     {
-        if ($this->items->isEmpty() || Session::has('cart') === false) {
+        if (ClassesCart::get()->isEmpty() || Session::has('cart') === false) {
             return $this->notify('Your cart is empty', 'error');
         }
         if (!Auth::check()) {
@@ -170,10 +119,10 @@ class Cart extends Component
         try {
             $user = User::where('id', Auth::id())->lockForUpdate()->first();
             // Lock the orderproducts
-            foreach ($this->items as $item) {
+            foreach (ClassesCart::get() as $item) {
                 if (
                     $item->product->per_user_limit > 0 && ($user->services->where('product_id', $item->product->id)->count() >= $item->product->per_user_limit ||
-                        $this->items->filter(fn ($it) => $it->product->id == $item->product->id)->sum(fn ($it) => $it->quantity) + $user->services->where('product_id', $item->product->id)->count() > $item->product->per_user_limit
+                        ClassesCart::get()->filter(fn($it) => $it->product->id == $item->product->id)->sum(fn($it) => $it->quantity) + $user->services->where('product_id', $item->product->id)->count() > $item->product->per_user_limit
                     )
                 ) {
                     throw new DisplayException(__('product.user_limit', ['product' => $item->product->name]));
@@ -205,7 +154,7 @@ class Cart extends Component
             }
 
             // Create the services
-            foreach ($this->items as $item) {
+            foreach (ClassesCart::get() as $item) {
                 // Is it a lifetime coupon, then we can adjust the price of the service
                 if ($this->coupon && $this->coupon->recurring != 1) {
                     $price = $item->price->price - $item->price->setup_fee;
