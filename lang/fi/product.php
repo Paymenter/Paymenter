@@ -21,4 +21,6 @@ return [
     'in_stock' => 'Varastossa',
     'out_of_stock' => 'Tuote :product on loppunut varastosta',
     'user_limit' => 'Olet saavuttanut :product tuotteen maksimirajan',
+    'payment_method' => 'Payment method',
+    'use_credits' => 'Use credits',
 ];
