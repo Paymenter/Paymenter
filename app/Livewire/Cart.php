@@ -19,7 +19,6 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Session;
-use Livewire\Attributes\Computed;
 use Livewire\Attributes\Locked;
 
 class Cart extends Component
@@ -51,7 +50,7 @@ class Cart extends Component
 
             return;
         }
-        $this->total = new Price(['price' => ClassesCart::get()->sum(fn($item) => $item->price->price * $item->quantity), 'currency' => ClassesCart::get()->first()->price->currency]);
+        $this->total = new Price(['price' => ClassesCart::get()->sum(fn ($item) => $item->price->price * $item->quantity), 'currency' => ClassesCart::get()->first()->price->currency]);
         $this->gateways = ExtensionHelper::getCheckoutGateways(ClassesCart::get(), 'cart');
         if (count($this->gateways) > 0 && !array_search($this->gateway, array_column($this->gateways, 'id')) !== false) {
             $this->gateway = $this->gateways[0]->id;
@@ -65,6 +64,7 @@ class Cart extends Component
         } catch (DisplayException $e) {
             $this->notify($e->getMessage(), 'error');
             $this->coupon = null;
+
             return;
         }
         $this->coupon = Session::get('coupon');
@@ -122,7 +122,7 @@ class Cart extends Component
             foreach (ClassesCart::get() as $item) {
                 if (
                     $item->product->per_user_limit > 0 && ($user->services->where('product_id', $item->product->id)->count() >= $item->product->per_user_limit ||
-                        ClassesCart::get()->filter(fn($it) => $it->product->id == $item->product->id)->sum(fn($it) => $it->quantity) + $user->services->where('product_id', $item->product->id)->count() > $item->product->per_user_limit
+                        ClassesCart::get()->filter(fn ($it) => $it->product->id == $item->product->id)->sum(fn ($it) => $it->quantity) + $user->services->where('product_id', $item->product->id)->count() > $item->product->per_user_limit
                     )
                 ) {
                     throw new DisplayException(__('product.user_limit', ['product' => $item->product->name]));
