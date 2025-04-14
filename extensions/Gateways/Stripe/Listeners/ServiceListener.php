@@ -22,7 +22,7 @@ class ServiceListener implements ShouldQueue
     public function handle(Updated $event): void
     {
         // If price isn't changed, do nothing
-        if (!$event->service->isDirty('price') && $event->service->properties->where('key', 'has_paypal_subscription')->first()?->value !== '1') {
+        if (!$event->service->isDirty('price') && $event->service->properties->where('key', 'has_stripe_subscription')->first()?->value !== '1') {
             return;
         }
         $stripe = new Stripe;
