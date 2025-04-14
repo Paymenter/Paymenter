@@ -21,4 +21,6 @@ return [
     'in_stock' => 'På lager',
     'out_of_stock' => 'Produktet :product er ikke på lager',
     'user_limit' => 'Du har nådd grensen for :product',
+    'payment_method' => 'Payment method',
+    'use_credits' => 'Use credits',
 ];
