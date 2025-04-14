@@ -32,8 +32,8 @@ class SocialLoginController extends Controller
         ]);
 
         $this->google_driver = Socialite::buildProvider(GoogleProvider::class, [
-            'client_id' => config('settings.google_client_id'),
-            'client_secret' => config('settings.google_client_secret'),
+            'client_id' => config('settings.oauth_google_client_id'),
+            'client_secret' => config('settings.oauth_google_client_secret'),
             'redirect' => '/oauth/google/callback',
         ]);
     }
