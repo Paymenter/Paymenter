@@ -21,4 +21,6 @@ return [
     'in_stock' => 'Em estoque',
     'out_of_stock' => 'Produto :product está fora de estoque',
     'user_limit' => 'Você atingiu o limite de :product',
+    'payment_method' => 'Payment method',
+    'use_credits' => 'Use credits',
 ];
