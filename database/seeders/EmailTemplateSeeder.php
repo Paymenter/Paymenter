@@ -64,6 +64,34 @@ class EmailTemplateSeeder extends Seeder
                 HTML,
             ],
             [
+                'key' => 'pending_invoice_reminder',
+                'subject' => 'Reminder: Your Invoice is Pending Payment',
+                'body' => <<<'HTML'
+                # Your Invoice is Pending Payment
+
+                This is a reminder that your invoice is still pending payment.
+
+                Total amount: **{{ $total }}**
+
+                <div class="table">
+
+                |   Item   | Quantity |  Price   |
+                | :------: | :------: | :------: |
+                @foreach ($items as $item)
+                | {{ $item->description }} | {{ $item->quantity }} | {{ $item->price }} |
+                @endforeach
+                </div>
+
+                <div class="action">
+                    <a class="button button-blue" href="{{ route('invoices.show', $invoice) }}">
+                        View Invoice
+                    </a>
+                </div>
+
+                Please make the payment before the due date to avoid service interruptions.
+                HTML,
+            ],            
+            [
                 'key' => 'new_order_created',
                 'subject' => 'New order created',
                 'body' => <<<'HTML'
