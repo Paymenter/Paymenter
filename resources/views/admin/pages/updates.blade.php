@@ -31,7 +31,7 @@
             </code>
         </div>
     </div>
-    @elseif(config('app.version') != config('settings.latest_version'))
+    @elseif(config('app.version') != config('settings.latest_version') && config('app.version') != 'beta')
     <div class="flex flex-col gap-1">
         <div>
             <strong>Latest version:</strong> {{ config('settings.latest_version') }}
