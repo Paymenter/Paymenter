@@ -66,10 +66,10 @@
                         @endif
                     </div>
                     @if(Auth::user()->credits()->where('currency_code', $invoice->currency_code)->exists() && Auth::user()->credits()->where('currency_code', $invoice->currency_code)->first()->amount > 0)
-                        <x-form.checkbox wire:model="use_credits" name="use_credits" label="Use Credits" />
+                        <x-form.checkbox wire:model="use_credits" name="use_credits" :label="__('product.use_credits')" />
                     @endif
                     @if(count($gateways) > 1)
-                        <x-form.select wire:model.live="gateway" label="Payment Gateway" class="mt-4" name="gateway">
+                        <x-form.select wire:model.live="gateway" :label="__('product.payment_method')" class="mt-4" name="gateway">
                             @foreach ($gateways as $gateway)
                                 <option value="{{ $gateway->id }}">{{ $gateway->name }}</option>
                             @endforeach

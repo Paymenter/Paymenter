@@ -47,10 +47,10 @@
         @else
         <p class="text-sm text-primary-100">{{ __('account.two_factor_authentication_description') }}</p>
         <x-button.primary wire:click="enableTwoFactor" class="w-full mt-4">
-            {{ __('Enable two factor authentication') }}
+            {{ __('account.two_factor_authentication_enable') }}
         </x-button.primary>
         @if ($showEnableTwoFactor)
-        <x-modal title="Enable two factor authentication" open="true">
+        <x-modal :title="__('account.two_factor_authentication_enable')" open="true">
             <p class="text-primary-100">{{ __('account.two_factor_authentication_enable_description') }}</p>
             <div class="flex flex-col items-center mt-4">
                 <img src="{{ $twoFactorData['image'] }}" alt="QR code" class="w-64 h-64" />
@@ -63,7 +63,7 @@
                     :placeholder="__('account.input.two_factor_code_placeholder')" wire:model="twoFactorCode"
                     required />
                 <x-button.primary class="w-full mt-4" type="submit">
-                    {{ __('Enable two factor authentication') }}
+                    {{ __('account.two_factor_authentication_enable') }}
                 </x-button.primary>
             </form>
             <x-slot name="closeTrigger">

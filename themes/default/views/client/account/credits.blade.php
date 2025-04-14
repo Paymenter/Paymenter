@@ -29,7 +29,7 @@
                     :label="__('account.input.amount')" :placeholder="__('account.input.amount_placeholder')"
                     wire:model="amount" required />
 
-                <x-form.select name="gateway" label="Payment Gateway" wire:model="gateway" required>
+                <x-form.select name="gateway" :label="__('product.payment_method')" wire:model="gateway" required>
                     @foreach(\App\Models\Gateway::all() as $gateway)
                     <option value="{{ $gateway->id }}">{{ $gateway->name }}</option>
                     @endforeach

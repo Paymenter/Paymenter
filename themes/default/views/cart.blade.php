@@ -92,7 +92,7 @@
             <div class="flex flex-col gap-2 w-full col-span-1 bg-background-secondary p-3 rounded-md">
                 @if($total->price > 0)
                 @if(count($gateways) > 1)
-                <x-form.select wire:model.live="gateway" name="gateway" label="Payment Gateway">
+                <x-form.select wire:model.live="gateway" name="gateway" :label="__('product.payment_method')">
                     @foreach ($gateways as $gateway)
                     <option value="{{ $gateway->id }}">{{ $gateway->name }}</option>
                     @endforeach
@@ -105,7 +105,10 @@
 
                 <div class="flex flex-row justify-end gap-2">
                     <x-button.primary wire:click="checkout" class="h-fit" wire:loading.attr="disabled">
-                        {{ __('product.checkout') }}
+                        <x-loading target="checkout" />
+                        <div wire:loading.remove wire:target="checkout">
+                            {{ __('product.checkout') }}
+                        </div>
                     </x-button.primary>
                 </div>
             </div>
