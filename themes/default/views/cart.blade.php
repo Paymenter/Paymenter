@@ -102,6 +102,14 @@
                     <x-form.checkbox wire:model="use_credits" name="use_credits" label="Use Credits" />
                 @endif
                 @endif
+                @if(config('settings.tos'))
+                    <x-form.checkbox wire:model="tos" name="tos">
+                        {{ __('product.tos') }}
+                        <a href="{{ config('settings.tos') }}" target="_blank" class="text-primary hover:text-primary/80">
+                            {{ __('product.tos_link') }}
+                        </a>
+                    </x-form.checkbox>
+                @endif
 
                 <div class="flex flex-row justify-end gap-2">
                     <x-button.primary wire:click="checkout" class="h-fit" wire:loading.attr="disabled">

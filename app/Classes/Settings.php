@@ -60,12 +60,18 @@ class Settings
                     'accept' => ['image/*'],
                     'file_name' => 'logo.webp',
                 ],
+                [
+                    'name' => 'tos',
+                    'label' => 'Terms of Service',
+                    'description' => 'URL to your terms of service. Leave blank to disable.',
+                    'type' => 'text',
+                    'required' => false,
+                ]
             ],
 
             // Security (captcha, rate limiting, etc.)
             'security' => [
                 [
-
                     'name' => 'captcha',
                     'label' => 'Captcha',
                     'type' => 'select',

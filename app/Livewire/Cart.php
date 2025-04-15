@@ -20,6 +20,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Session;
 use Livewire\Attributes\Locked;
+use Livewire\Attributes\Rule;
 
 class Cart extends Component
 {
@@ -34,6 +35,8 @@ class Cart extends Component
     public $coupon;
 
     public $use_credits;
+
+    public $tos;
 
     public function mount()
     {
@@ -112,6 +115,9 @@ class Cart extends Component
         }
         if (config('settings.mail_must_verify') && !Auth::user()->hasVerifiedEmail()) {
             return redirect()->route('verification.notice');
+        }
+        if (config('settings.tos') && !$this->tos) {
+            return $this->notify('You must accept the terms of service', 'error');
         }
 
         // Start database transaction
