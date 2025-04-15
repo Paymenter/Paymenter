@@ -21,6 +21,6 @@ return [
     'in_stock' => 'Op voorraad',
     'out_of_stock' => 'Product :product is niet op voorraad',
     'user_limit' => 'U heeft het limiet van :product bereikt',
-    'payment_method' => 'Payment method',
-    'use_credits' => 'Use credits',
+    'payment_method' => 'Betaalmethode',
+    'use_credits' => 'Krediet gebruiken',
 ];
