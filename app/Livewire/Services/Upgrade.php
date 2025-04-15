@@ -58,8 +58,15 @@ class Upgrade extends Component
 
     public function doUpgrade()
     {
+        $user = Auth::user();
         if (!$this->service->upgradable) {
             $this->notify('This service is not upgradable.', 'error');
+
+            return $this->redirect(route('services.show', $this->service), true);
+        }
+
+        if ($user->invoices()->where('status', Invoice::STATUS_PENDING)->exists()) {
+            $this->notify('You have a pending invoice. Please complete the payment before proceeding with the upgrade.', 'error');
 
             return $this->redirect(route('services.show', $this->service), true);
         }
