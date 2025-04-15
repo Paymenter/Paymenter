@@ -66,7 +66,7 @@ class Settings
                     'description' => 'URL to your terms of service. Leave blank to disable.',
                     'type' => 'text',
                     'required' => false,
-                ]
+                ],
             ],
 
             // Security (captcha, rate limiting, etc.)
