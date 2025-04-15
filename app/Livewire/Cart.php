@@ -33,7 +33,7 @@ class Cart extends Component
 
     public $coupon;
 
-    public $use_credits;
+    public $use_credits = true;
 
     public $tos;
 
@@ -228,7 +228,7 @@ class Cart extends Component
 
             if ($this->use_credits) {
                 $credit = Auth::user()->credits()->where('currency_code', $this->total->currency->code)->first();
-                if ($credit) {
+                if ($credit && $credit->amount > 0) {
                     // Is it more credits or less credits than the total price?
                     if ($credit->amount >= $this->total->price) {
                         $credit->amount -= $this->total->price;

@@ -27,7 +27,7 @@ class Show extends Component
 
     private $pay = null;
 
-    public $use_credits;
+    public $use_credits = true;
 
     public function mount()
     {
@@ -54,7 +54,7 @@ class Show extends Component
     {
         if ($this->use_credits) {
             $credit = Auth::user()->credits()->where('currency_code', $this->invoice->currency_code)->first();
-            if ($credit) {
+            if ($credit && $credit->amount > 0) {
                 // Is it more credits or less credits than the total price?
                 if ($credit->amount >= $this->invoice->remaining) {
                     $credit->amount -= $this->invoice->remaining;
