@@ -51,6 +51,17 @@ class ServiceUpgrade extends Model
             default => 0,
         };
 
+        // Check if the service expiration date is null
+        if ($this->service->expires_at === null) {
+            $newPrice = $this->product->price(null, $this->service->plan->billing_period, $this->service->plan->billing_unit, $this->service->order->currency_code);
+            $priceDifference = $newPrice->price - $this->service->price;
+
+            return new Price([
+                'price' => $priceDifference,
+                'currency' => $this->service->order->currency,
+            ]);
+        }
+
         // Calculate the remaining days until the service expires
         $expiresAt = $this->service->expires_at->copy()->startOfDay();
         $now = Carbon::now()->startOfDay();
