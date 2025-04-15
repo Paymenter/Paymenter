@@ -23,4 +23,7 @@ return [
     'user_limit' => 'U heeft het limiet van :product bereikt',
     'payment_method' => 'Betaalmethode',
     'use_credits' => 'Krediet gebruiken',
+    'tos' => 'I agree to the ',
+    'tos_link' => 'Terms of Service',
+    'tos_required' => 'You must agree to the Terms of Service',
 ];
