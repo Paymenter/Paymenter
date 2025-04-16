@@ -7,10 +7,10 @@ use App\Helpers\ExtensionHelper;
 use App\Models\Product;
 use App\Models\Server;
 use Filament\Actions;
+use Filament\Notifications\Notification;
 use Filament\Resources\Pages\EditRecord;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
-use Filament\Notifications\Notification;
 
 class EditProduct extends EditRecord
 {
