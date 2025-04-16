@@ -48,7 +48,7 @@ class ExtensionHelper
         $extension = '\\Paymenter\\Extensions\\' . ucfirst($type) . 's\\' . $extension . '\\' . $extension;
 
         if (!class_exists($extension)) {
-            throw new Exception('Extension not found');
+            throw new Exception('Extension "' . $extension . '" not found');
         }
 
         if (!is_array($config)) {

@@ -10,6 +10,7 @@ use Filament\Actions;
 use Filament\Resources\Pages\EditRecord;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
+use Filament\Notifications\Notification;
 
 class EditProduct extends EditRecord
 {
@@ -18,9 +19,19 @@ class EditProduct extends EditRecord
     protected function getHeaderActions(): array
     {
         return [
-            Actions\DeleteAction::make()->after(function (Product $record) {
-                $record->settings()->delete();
-            }),
+            Actions\DeleteAction::make()
+                ->before(function (Product $record, Actions\DeleteAction $action) {
+                    if ($record->services()->count() > 0) {
+                        Notification::make()
+                            ->title('Whoops!')
+                            ->body('You cannot delete this plan because it is being used by one or more services.')
+                            ->danger()
+                            ->send();
+                        $action->cancel();
+                    }
+                })->after(function (Product $record) {
+                    $record->settings()->delete();
+                }),
         ];
     }
 
