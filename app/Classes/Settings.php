@@ -5,6 +5,7 @@ namespace App\Classes;
 use App\Models\Setting;
 use App\Models\TaxRate;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\HtmlString;
 
 class Settings
 {
@@ -110,6 +111,7 @@ class Settings
                 [
                     'name' => 'oauth_google',
                     'label' => 'Google Enabled',
+                    'description' => new HtmlString('<a href="https://paymenter.org/docs/guides/OAuth#google" target="_blank">Documentation</a>'),
                     'type' => 'checkbox',
                     'default' => false,
                     'required' => false,
@@ -129,6 +131,7 @@ class Settings
                 [
                     'name' => 'oauth_github',
                     'label' => 'GitHub Enabled',
+                    'description' => new HtmlString('<a href="https://paymenter.org/docs/guides/OAuth#github" target="_blank">Documentation</a>'),
                     'type' => 'checkbox',
                     'default' => false,
                     'required' => false,
@@ -148,7 +151,7 @@ class Settings
                 [
                     'name' => 'oauth_discord',
                     'label' => 'Discord Enabled',
-                    'description' => 'Be sure to enable the OAuth2 redirect URL in your Discord application settings. Point it to: ',
+                    'description' => new HtmlString('<a href="https://paymenter.org/docs/guides/OAuth#discord" target="_blank">Documentation</a>'),
                     'type' => 'checkbox',
                     'default' => false,
                     'required' => false,
