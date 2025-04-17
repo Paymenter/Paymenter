@@ -74,24 +74,24 @@ class Revenue extends ChartWidget
             'datasets' => [
                 [
                     'label' => 'Revenue',
-                    'data' => $revenue->map(fn(TrendValue $value) => $value->aggregate)->toArray(),
+                    'data' => $revenue->map(fn (TrendValue $value) => $value->aggregate)->toArray(),
                     'backgroundColor' => '#3490dc',
                     'borderColor' => '#3490dc',
                 ],
                 [
                     'label' => 'Net Revenue',
-                    'data' => $netRevenue->map(fn(TrendValue $value) => $value->aggregate)->toArray(),
+                    'data' => $netRevenue->map(fn (TrendValue $value) => $value->aggregate)->toArray(),
                     'backgroundColor' => '#38c172',
                     'borderColor' => '#38c172',
                 ],
                 [
                     'label' => 'New Orders',
-                    'data' => $newOrders->map(fn(TrendValue $value) => $value->aggregate)->toArray(),
+                    'data' => $newOrders->map(fn (TrendValue $value) => $value->aggregate)->toArray(),
                     'backgroundColor' => '#e3342f',
                     'borderColor' => '#e3342f',
                 ],
             ],
-            'labels' => $revenue->map(fn(TrendValue $value) => $this->filter === 'today' ? Carbon::parse($value->date)->format('H:i') : Carbon::parse($value->date)->format('M d'))->toArray(),
+            'labels' => $revenue->map(fn (TrendValue $value) => $this->filter === 'today' ? Carbon::parse($value->date)->format('H:i') : Carbon::parse($value->date)->format('M d'))->toArray(),
         ];
     }
 
