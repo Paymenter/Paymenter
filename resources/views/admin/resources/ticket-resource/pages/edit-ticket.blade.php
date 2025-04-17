@@ -14,10 +14,12 @@
                                 </a>
                             </div>
                             <div>
+                                @can('delete', $message)
                                 <button wire:click="deleteMessage({{ $message->id }})"
                                     class="dark:text-danger-300 text-danger-600 p-0">
                                     Delete
                                 </button>
+                                @endcan
                             </div>
                         </div>
                         <p class="text-sm text-gray-500">{{ $message->created_at->diffForHumans() }}</p>

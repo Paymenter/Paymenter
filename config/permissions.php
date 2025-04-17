@@ -43,6 +43,9 @@ return [
             'delete' => 'Delete Tickets',
             'deleteAny' => 'Bulk Delete Tickets',
         ],
+        'ticket_messages' => [
+            'delete' => 'Delete Ticket Messages',
+        ],
         'orders' => [
             'create' => 'Create Orders',
             'update' => 'Update Orders',
@@ -98,6 +101,13 @@ return [
             'viewAny' => 'View Config Options',
             'delete' => 'Delete Config Options',
             'deleteAny' => 'Bulk Delete Config Options',
+        ],
+        'tax_rates' => [
+            'create' => 'Create Tax Rates',
+            'update' => 'Update Tax Rates',
+            'viewAny' => 'View Tax Rates',
+            'delete' => 'Delete Tax Rates',
+            'deleteAny' => 'Bulk Delete Tax Rates',
         ],
         'gateways' => [
             'create' => 'Create Gateways',

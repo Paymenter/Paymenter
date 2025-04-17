@@ -24,4 +24,9 @@ class ActiveUsers extends Widget
                 ->get(),
         ]);
     }
+
+    public static function canView(): bool
+    {
+        return auth()->user()->can('admin.users.view') && auth()->user()->can('admin.users.edit');
+    }
 }

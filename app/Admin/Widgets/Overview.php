@@ -18,11 +18,17 @@ class Overview extends BaseWidget
 
     protected function getStats(): array
     {
-        return [
-            $this->getData(InvoiceTransaction::class, 'Revenue', 'amount'),
-            $this->getData(Ticket::class, 'Tickets'),
-            $this->getData(Service::class, 'Services'),
-        ];
+        $returns = [];
+        if (auth()->user()->can('admin.invoices.view')) {
+            $returns[] = $this->getData(InvoiceTransaction::class, 'Revenue', 'amount');
+        }
+        if (auth()->user()->can('admin.tickets.view')) {
+            $returns[] = $this->getData(Ticket::class, 'Tickets');
+        }
+        if (auth()->user()->can('admin.services.view')) {
+            $returns[] = $this->getData(Service::class, 'Services');
+        }
+        return $returns;
     }
 
     private function getData($model, $name, $sum = false)
@@ -60,7 +66,12 @@ class Overview extends BaseWidget
         return Stat::make($name, $thisMonth)
             ->description($increase >= 0 ? 'Increased by ' . number_format($percentageIncrease, 2) . '% (this month)' : 'Decreased by ' . number_format($percentageIncrease, 2) . '% (this month)')
             ->descriptionIcon($increase >= 0 ? 'heroicon-m-arrow-trending-up' : 'heroicon-m-arrow-trending-down')
-            ->chart($chart->map(fn (TrendValue $value) => $value->aggregate)->toArray())
+            ->chart($chart->map(fn(TrendValue $value) => $value->aggregate)->toArray())
             ->color($increase >= 0 ? 'success' : 'danger');
+    }
+
+    public static function canView(): bool
+    {
+        return auth()->user()->can('admin.invoices.view') || auth()->user()->can('admin.tickets.view') || auth()->user()->can('admin.services.view');
     }
 }

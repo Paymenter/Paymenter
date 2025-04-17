@@ -42,4 +42,9 @@ class Support extends BaseWidget
             ->recordUrl(fn (Ticket $record) => TicketResource::getUrl('edit', ['record' => $record]))
             ->paginated(false);
     }
+
+    public static function canView(): bool
+    {
+        return auth()->user()->can('admin.tickets.view');
+    }
 }
