@@ -4,10 +4,10 @@ namespace App\Admin\Resources\FailedJobResource\Pages;
 
 use App\Admin\Resources\FailedJobResource;
 use Filament\Actions;
+use Filament\Notifications\Actions\Action;
+use Filament\Notifications\Notification;
 use Filament\Resources\Pages\ListRecords;
 use Illuminate\Support\Facades\DB;
-use Filament\Notifications\Notification;
-use Filament\Notifications\Actions\Action;
 
 class ListFailedJobs extends ListRecords
 {
@@ -32,7 +32,7 @@ class ListFailedJobs extends ListRecords
             if ($diffInMinutes > 5) {
                 Notification::make()
                     ->title('Whoops!')
-                    ->body("There are " . DB::table('jobs')->count() . " jobs in the queue.\nThis could mean that your jobs are not being processed correctly.")
+                    ->body('There are ' . DB::table('jobs')->count() . " jobs in the queue.\nThis could mean that your jobs are not being processed correctly.")
                     ->danger()
                     ->actions([
                         Action::make('view')
