@@ -89,7 +89,7 @@ class TaxRateResource extends Resource
 
     public static function canAccess(): bool
     {
-        return config('settings.tax_enabled') ? true : false;
+        return config('settings.tax_enabled') ? true && static::canViewAny() : false;
     }
 
     public static function getPages(): array
