@@ -15,6 +15,7 @@ class Home extends Component
                     $query->where('hidden', false);
                 });
             })->orderBy('sort')->get(),
+            'title' => 'Home',
         ]);
     }
 }

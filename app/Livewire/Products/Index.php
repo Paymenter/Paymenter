@@ -5,6 +5,7 @@ namespace App\Livewire\Products;
 use App\Livewire\Component;
 use App\Livewire\Traits\CurrencyChanged;
 use App\Models\Category;
+use Illuminate\Support\Facades\Storage;
 
 class Index extends Component
 {
@@ -38,6 +39,9 @@ class Index extends Component
 
     public function render()
     {
-        return view('products.index');
+        return view('products.index')->layoutData([
+            'title' => $this->category->name,
+            'image' => $this->category->image ? Storage::url($this->category->image) : null,
+        ]);
     }
 }

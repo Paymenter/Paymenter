@@ -10,6 +10,7 @@ use App\Livewire\Traits\CurrencyChanged;
 use App\Models\Category;
 use App\Models\Plan;
 use App\Models\Price as ModelsPrice;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
 use Livewire\Attributes\Locked;
 use Livewire\Attributes\On;
@@ -201,6 +202,9 @@ class Checkout extends Component
 
     public function render()
     {
-        return view('products.checkout');
+        return view('products.checkout')->layoutData([
+            'title' => $this->product->name,
+            'image' => $this->product->image ? Storage::url($this->product->image) : null,
+        ]);
     }
 }

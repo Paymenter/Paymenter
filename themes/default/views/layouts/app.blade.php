@@ -17,6 +17,21 @@
     @if (config('settings.logo'))
         <link rel="icon" href="{{ Storage::url(config('settings.logo')) }}" type="image/png">
     @endif
+    @isset($title)
+    <meta content="{{ isset($title) ? config('app.name', 'Paymenter') . ' - ' . $title : config('app.name', 'Paymenter') }}" property="og:title">
+    <meta content="{{ isset($title) ? config('app.name', 'Paymenter') . ' - ' . $title : config('app.name', 'Paymenter') }}" name="title">
+    @endisset
+    @isset($description)
+    <meta content="{{ $description }}" property="og:description">
+    <meta content="{{ $description }}" name="description">
+    @endisset
+    @isset($image)
+    <meta content='{{ $image }}" property="og:image">
+    <meta content="{{ $image }}" name="image">
+    @endisset
+   
+    <meta name="theme-color" content="{{ theme('primary') }}">
+
     {!! hook('head') !!}
 </head>
 
