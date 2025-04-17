@@ -2,7 +2,6 @@
 
 namespace App\Policies;
 
-use App\Models\Ticket;
 use App\Models\TicketMessage;
 use App\Models\User;
 
