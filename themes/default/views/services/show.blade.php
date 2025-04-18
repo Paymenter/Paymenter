@@ -70,14 +70,14 @@
                     @foreach ($buttons as $button)
                         <!-- If the button has a function then call it when clicked -->
                         @if (isset($button['function']))
-                            <x-button.secondary class="h-fit !w-fit" wire:click="goto('{{ $button['function'] }}')">
+                            <x-button.primary class="h-fit !w-fit" wire:click="goto('{{ $button['function'] }}')">
                                 {{ $button['label'] }}
-                            </x-button.secondary>
+                            </x-button.primary>
                         @else
                             <a href="{{ $button['url'] }}">
-                                <x-button.secondary class="h-fit !w-fit">
+                                <x-button.primary class="h-fit !w-fit">
                                     {{ $button['label'] }}
-                                </x-button.secondary>
+                                </x-button.primary>
                             </a>
                         @endif
                     @endforeach
