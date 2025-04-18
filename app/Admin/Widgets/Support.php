@@ -45,6 +45,6 @@ class Support extends BaseWidget
 
     public static function canView(): bool
     {
-        return auth()->user()->can('admin.tickets.view');
+        return auth()->user()->hasPermission('admin.widgets.support');
     }
 }

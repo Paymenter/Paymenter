@@ -25,7 +25,7 @@ class AffiliatesMiddleware
 
         $affiliate = Affiliate::where('code', request('ref'))->first();
 
-        if (!$affiliate) {
+        if (!$affiliate || $affiliate->user->id === auth()->id()) {
             return $next($request);
         }
 

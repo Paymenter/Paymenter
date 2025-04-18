@@ -26,7 +26,7 @@ class AssociateOrderWithAffiliate
 
         /** @var Affiliate */
         $affiliate = Affiliate::where('code', $referral_code)->first();
-        if (!$affiliate) {
+        if (!$affiliate || $affiliate->user->id === auth()->id()) {
             return;
         }
 

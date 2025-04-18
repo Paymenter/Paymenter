@@ -113,6 +113,6 @@ class Revenue extends ChartWidget
 
     public static function canView(): bool
     {
-        return auth()->user()->can('admin.invoices.view');
+        return auth()->user()->hasPermission('admin.widgets.revenue');
     }
 }

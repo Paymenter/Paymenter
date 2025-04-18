@@ -148,5 +148,11 @@ return [
             'delete' => 'Delete OAuth Clients',
             'deleteAny' => 'Bulk Delete OAuth Clients',
         ],
+        'widgets' => [
+            'revenue' => 'View Revenue Widget',
+            'overview' => 'View Overview Widget',
+            'support' => 'View Tickets Widget',
+            'active_users' => 'View Active Users Widget',
+        ]
     ],
 ];

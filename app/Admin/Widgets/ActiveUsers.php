@@ -27,6 +27,6 @@ class ActiveUsers extends Widget
 
     public static function canView(): bool
     {
-        return auth()->user()->can('admin.users.view') && auth()->user()->can('admin.users.edit');
+        return auth()->user()->hasPermission('admin.widgets.active_users');
     }
 }
