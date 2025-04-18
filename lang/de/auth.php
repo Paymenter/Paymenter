@@ -15,7 +15,7 @@ return [
 
     'failed' => 'Falscher Benutzername und/oder falsches Passwort.',
     'password' => 'Das angegebene Passwort ist falsch.',
-    'throttle' => 'Zu viele Login-Versuche. Bitte versuchen Sie es in :seconds Sekunden erneut.',
+    'throttle' => 'Zu viele Login-Versuche. Bitte versuche es in :seconds Sekunden erneut.',
 
     'sign_in' => 'Anmelden',
     'sign_in_title' => 'Mit deinem Account anmelden',
@@ -37,7 +37,7 @@ return [
 
     'oauth' => [
         'unverified_discord_account' => 'Dein Discord Account ist nicht verifiziert.',
-        'account_not_registered' => 'Sie sind nicht auf dieser Seite registriert.',
+        'account_not_registered' => 'Du bist nicht auf dieser Seite registriert.',
     ],
 
     'reset_password' => 'Passwort zurücksetzen',
@@ -46,7 +46,7 @@ return [
     'verify' => 'Überprüfen',
 
     'verification' => [
-        'notice' => 'Bestätigen Sie Ihre E-Mail-Adresse',
+        'notice' => 'Bestätige deine E-Mail-Adresse',
         'sent' => 'Ein neuer Bestätigungslink wurde an deine E-Mail-Adresse versendet.',
         'check_your_email' => 'Bitte überprüfe dein E-Mail Postfach auf eine Nachricht mit dem Bestätigungslink.',
         'not_received' => 'Wenn du die E-Mail nicht erhalten hast, kannst du eine neue anfordern.',

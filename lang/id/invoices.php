@@ -1,0 +1,30 @@
+<?php
+
+return [
+    'invoices' => 'Faktur',
+    'product' => 'Produk',
+    'price' => 'Harga',
+    'status' => 'Status',
+    'actions' => 'Aksi',
+    'view' => 'Lihat',
+    'id' => 'ID',
+    'total' => 'Total',
+    'subtotal' => 'Subtotal',
+    'invoice' => 'Faktur #:id',
+    'unit_price' => 'Harga Unit',
+    'bill_to' => 'Ditagihkan Kepada',
+    'paid' => 'Lunas',
+    'payment_pending' => 'Menunggu Pembayaran',
+
+    'invoice_date' => 'Tanggal Faktur',
+    'invoice_no' => 'No. Faktur',
+    'item' => 'Item',
+    'quantity' => 'Kuantitas',
+    'transactions' => 'Transaksi',
+    'transaction_id' => 'ID Transaksi',
+    'gateway' => 'Gateway',
+    'payment_date' => 'Tanggal Pembayaran',
+    'payment_method' => 'Metode Pembayaran',
+    'amount' => 'Jumlah',
+    'date' => 'Tanggal',
+];

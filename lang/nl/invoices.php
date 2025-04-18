@@ -1,0 +1,30 @@
+<?php
+
+return [
+    'invoices' => 'Facturen',
+    'product' => 'Product',
+    'price' => 'Prijs',
+    'status' => 'Status',
+    'actions' => 'Acties',
+    'view' => 'Weergeven',
+    'id' => 'ID',
+    'total' => 'Totaal',
+    'subtotal' => 'Subtotaal',
+    'invoice' => 'Factuur #:id',
+    'unit_price' => 'Prijs per stuk',
+    'bill_to' => 'Factuur aan',
+    'paid' => 'Betaald',
+    'payment_pending' => 'Betaling in afwachting',
+
+    'invoice_date' => 'Factuurdatum',
+    'invoice_no' => 'Factuurnummer',
+    'item' => 'Artikel',
+    'quantity' => 'Aantal',
+    'transactions' => 'Transacties',
+    'transaction_id' => 'Transactie-ID',
+    'gateway' => 'Gateway',
+    'payment_date' => 'Betaaldatum',
+    'payment_method' => 'Betaalmethode',
+    'amount' => 'Bedrag',
+    'date' => 'Datum',
+];

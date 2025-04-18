@@ -21,4 +21,9 @@ return [
     'in_stock' => 'I lager',
     'out_of_stock' => 'Produkten :product är slut i lager',
     'user_limit' => 'Du har nått gränsen för :product',
+    'payment_method' => 'Payment method',
+    'use_credits' => 'Use credits',
+    'tos' => 'I agree to the ',
+    'tos_link' => 'Terms of Service',
+    'tos_required' => 'You must agree to the Terms of Service',
 ];

@@ -21,4 +21,9 @@ return [
     'in_stock' => 'Varastossa',
     'out_of_stock' => 'Tuote :product on loppunut varastosta',
     'user_limit' => 'Olet saavuttanut :product tuotteen maksimirajan',
+    'payment_method' => 'Payment method',
+    'use_credits' => 'Use credits',
+    'tos' => 'I agree to the ',
+    'tos_link' => 'Terms of Service',
+    'tos_required' => 'You must agree to the Terms of Service',
 ];
