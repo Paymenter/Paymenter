@@ -26,7 +26,7 @@
     <meta content="{{ $description }}" name="description">
     @endisset
     @isset($image)
-    <meta content='{{ $image }}" property="og:image">
+    <meta content="{{ $image }}" property="og:image">
     <meta content="{{ $image }}" name="image">
     @endisset
    
