@@ -153,6 +153,6 @@ return [
             'overview' => 'View Overview Widget',
             'support' => 'View Tickets Widget',
             'active_users' => 'View Active Users Widget',
-        ]
+        ],
     ],
 ];
