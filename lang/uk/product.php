@@ -21,4 +21,9 @@ return [
     'in_stock' => 'В наявності',
     'out_of_stock' => 'Продукт :product відсутній на складі',
     'user_limit' => 'Ви досягли ліміту для :product',
+    'payment_method' => 'Payment method',
+    'use_credits' => 'Use credits',
+    'tos' => 'I agree to the ',
+    'tos_link' => 'Terms of Service',
+    'tos_required' => 'You must agree to the Terms of Service',
 ];

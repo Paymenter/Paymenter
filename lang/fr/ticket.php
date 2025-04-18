@@ -4,7 +4,7 @@ return [
     'ticket_details' => 'Détails du ticket',
     'tickets' => 'Tickets',
     'subject' => 'Sujet',
-    'status' => 'État',
+    'status' => 'Status',
     'priority' => 'Priorité',
     'department' => 'Service',
     'created_at' => 'Créé le',

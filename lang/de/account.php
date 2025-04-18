@@ -27,7 +27,7 @@ return [
         'new_password' => 'Neues Passwort',
         'new_password_placeholder' => 'Neues Passwort',
         'confirm_password' => 'Passwort bestätigen',
-        'confirm_password_placeholder' => 'Bestätigen Sie Ihr neues Passwort',
+        'confirm_password_placeholder' => 'Bestätige dein neues Passwort',
 
         'two_factor_code' => 'Gib den Code aus deiner Authentifizierungs-App ein',
         'two_factor_code_placeholder' => 'Dein Zwei-Faktor-Authentifizierungscode',
@@ -37,12 +37,12 @@ return [
     ],
 
     'notifications' => [
-        'password_changed' => 'Das Passwort wurde erfolgreich geändert.',
+        'password_changed' => 'Passwort wurde erfolgreich geändert.',
         'password_incorrect' => 'Das aktuelle Passwort ist nicht korrekt.',
-        'two_factor_enabled' => 'Die Zwei-Faktor-Authentifizierung wurde aktiviert.',
-        'two_factor_disabled' => 'Die Zwei-Faktor-Authentifizierung wurde deaktiviert.',
+        'two_factor_enabled' => 'Zwei-Faktor-Authentifizierung wurde aktiviert.',
+        'two_factor_disabled' => 'Zwei-Faktor-Authentifizierung wurde deaktiviert.',
         'two_factor_code_incorrect' => 'Der Code war falsch.',
-        'session_logged_out' => 'Die Sitzung wurde abgemeldet.',
+        'session_logged_out' => 'Sitzung wurde abgemeldet.',
     ],
 
     'no_credit' => 'Du hast kein Guthaben.',

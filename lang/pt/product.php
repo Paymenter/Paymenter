@@ -21,4 +21,9 @@ return [
     'in_stock' => 'Em estoque',
     'out_of_stock' => 'Produto :product está fora de estoque',
     'user_limit' => 'Você atingiu o limite de :product',
+    'payment_method' => 'Payment method',
+    'use_credits' => 'Use credits',
+    'tos' => 'I agree to the ',
+    'tos_link' => 'Terms of Service',
+    'tos_required' => 'You must agree to the Terms of Service',
 ];
