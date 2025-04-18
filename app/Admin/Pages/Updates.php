@@ -54,4 +54,9 @@ class Updates extends Page implements HasForms
             })
             ->label('Update');
     }
+
+    public static function canAccess(): bool
+    {
+        return auth()->user()->hasPermission('admin.updates.update');
+    }
 }

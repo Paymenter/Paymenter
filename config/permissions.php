@@ -154,5 +154,8 @@ return [
             'support' => 'View Tickets Widget',
             'active_users' => 'View Active Users Widget',
         ],
+        'updates' => [
+            'update' => 'View and Update Application',
+        ],
     ],
 ];
