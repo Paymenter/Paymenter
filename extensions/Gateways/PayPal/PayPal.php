@@ -3,10 +3,12 @@
 namespace Paymenter\Extensions\Gateways\PayPal;
 
 use App\Classes\Extension\Gateway;
+use App\Events\Service\Updated;
 use App\Helpers\ExtensionHelper;
 use App\Models\Order;
 use App\Models\Service;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\View;
 
@@ -17,6 +19,16 @@ class PayPal extends Gateway
         require __DIR__ . '/routes.php';
         // Register webhook route
         View::addNamespace('gateways.paypal', __DIR__ . '/resources/views');
+
+        Event::listen(Updated::class, function ($event) {
+            if (!$event->service->isDirty('price') || $event->service->properties->where('key', 'has_paypal_subscription')->first()?->value !== '1') {
+                return;
+            }
+            try {
+                $this->updateSubscription($event->service);
+            } catch (\Exception $e) {
+            }
+        });
     }
 
     public function getConfig($values = [])
@@ -95,7 +107,7 @@ class PayPal extends Gateway
             return $item->reference_type === Service::class;
         })->count() == $invoice->items->count();
 
-        if ($this->config('paypal_use_subscriptions') && $eligableforSubscription && $invoice->items->map(fn ($item) => $item->reference->plan->billing_period . $item->reference->plan->billing_unit)->unique()->count() === 1) {
+        if ($this->config('paypal_use_subscriptions') && $eligableforSubscription && $invoice->items->map(fn($item) => $item->reference->plan->billing_period . $item->reference->plan->billing_unit)->unique()->count() === 1) {
             $paypalProduct = $this->request('post', $url . '/v1/catalogs/products', [
                 'name' => $invoice->items->first()->reference->product->name,
                 'type' => 'SERVICE',
@@ -118,7 +130,7 @@ class PayPal extends Gateway
                 ],
             ];
 
-            $nextSum = $invoice->items->sum(fn ($item) => $item->reference->price * $item->reference->quantity);
+            $nextSum = $invoice->items->sum(fn($item) => $item->reference->price * $item->reference->quantity);
 
             $billingCycles[] = [
                 'frequency' => [
