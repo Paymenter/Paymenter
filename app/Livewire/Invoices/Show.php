@@ -27,7 +27,7 @@ class Show extends Component
 
     private $pay = null;
 
-    public $use_credits = true;
+    public $use_credits = false;
 
     public function mount()
     {
@@ -48,6 +48,9 @@ class Show extends Component
         if (Request::has('checkPayment') && $this->invoice->status === 'pending') {
             $this->checkPayment = true;
         }
+
+        // We don't want to toggle use_credits before $this->pay() is called, otherwise it will always paid with credits
+        $this->use_credits = true;
     }
 
     public function pay()
