@@ -15,6 +15,7 @@ return [
     'bill_to' => 'Factuur aan',
     'paid' => 'Betaald',
     'payment_pending' => 'Betaling in afwachting',
+    'checking_payment' => 'Checking Payment',
 
     'invoice_date' => 'Factuurdatum',
     'invoice_no' => 'Factuurnummer',

@@ -15,6 +15,7 @@ return [
     'bill_to' => 'Bill To',
     'paid' => 'Paid',
     'payment_pending' => 'Payment Pending',
+    'checking_payment' => 'Checking Payment',
 
     'invoice_date' => 'Дата рахунку',
     'invoice_no' => 'Номер рахунку',
