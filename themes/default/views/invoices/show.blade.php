@@ -57,7 +57,7 @@
                             <div class="mt-4">
                                 <x-button.primary wire:click="checkPaymentStatus" wire:loading.attr="disabled"
                                     class="flex items-center text-sm justify-between" wire:target="checkPaymentStatus">
-                                    Checking Payment
+                                    {{ __('invoices.checking_payment') }}
                                     <x-ri-loader-5-fill aria-hidden="true" class="size-6 me-2 fill-background animate-spin" />
                                     <span class="sr-only">Loading...</span>
 
