@@ -4,6 +4,7 @@ namespace Paymenter\Extensions\Others\DiscordNotifications;
 
 use App\Admin\Resources\InvoiceResource;
 use App\Admin\Resources\OrderResource;
+use App\Admin\Resources\ServiceResource;
 use App\Admin\Resources\TicketResource;
 use App\Admin\Resources\UserResource;
 use App\Classes\Extension\Extension;
@@ -113,7 +114,11 @@ class DiscordNotifications extends Extension
     private function updatedEvent($event, $model)
     {
         $changedFields = [];
-        $changedFields[] = $this->mapId($event->{$model}->id, $model . '_id');
+        $changedFields[] = [
+            'name' => 'ID',
+            'value' => $this->mapId($event->{$model}->id, $model . '_id'),
+            'inline' => true,
+        ];
         foreach ($event->{$model}->getChanges() as $field => $value) {
             if (!in_array($field, ['created_at', 'updated_at', 'password'])) {
                 if (!is_string($value)) {
@@ -167,6 +172,7 @@ class DiscordNotifications extends Extension
             'order_id' => OrderResource::class,
             'invoice_id' => InvoiceResource::class,
             'ticket_id' => TicketResource::class,
+            'service_id' => ServiceResource::class,
         ];
 
         // Check if the name is in the resources array

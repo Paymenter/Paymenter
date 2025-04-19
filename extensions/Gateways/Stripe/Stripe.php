@@ -3,12 +3,14 @@
 namespace Paymenter\Extensions\Gateways\Stripe;
 
 use App\Classes\Extension\Gateway;
+use App\Events\Service\Updated;
 use App\Helpers\ExtensionHelper;
 use App\Models\Gateway as ModelsGateway;
 use App\Models\Invoice;
 use App\Models\Service;
 use Filament\Notifications\Notification;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\View;
 
@@ -19,6 +21,16 @@ class Stripe extends Gateway
         require __DIR__ . '/routes.php';
         // Register webhook route
         View::addNamespace('gateways.stripe', __DIR__ . '/resources/views');
+
+        Event::listen(Updated::class, function (Updated $event) {
+            if (!$event->service->isDirty('price') || $event->service->properties->where('key', 'has_stripe_subscription')->first()?->value !== '1') {
+                return;
+            }
+            try {
+                $this->updateSubscription($event->service);
+            } catch (\Exception $e) {
+            }
+        });
     }
 
     public function getConfig($values = [])
@@ -312,7 +324,7 @@ class Stripe extends Gateway
 
     public function updateSubscription(Service $service)
     {
-        if (!$service->subscription_id && !$service->properties->where('key', 'has_stripe_subscription')->first()) {
+        if (!$service->subscription_id || !$service->properties->where('key', 'has_stripe_subscription')->first()) {
             return;
         }
         // Grab the schedule from Stripe
