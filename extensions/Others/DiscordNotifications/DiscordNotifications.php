@@ -113,6 +113,7 @@ class DiscordNotifications extends Extension
     private function updatedEvent($event, $model)
     {
         $changedFields = [];
+        $changedFields[] = $this->mapId($event->{$model}->id, $model . '_id');
         foreach ($event->{$model}->getChanges() as $field => $value) {
             if (!in_array($field, ['created_at', 'updated_at', 'password'])) {
                 if (!is_string($value)) {
