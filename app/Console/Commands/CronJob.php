@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Events\Invoice\Created as InvoiceCreated;
+use App\Events\Invoice\Reminder as InvoiceReminder;
 use App\Jobs\Server\SuspendJob;
 use App\Jobs\Server\TerminateJob;
 use App\Models\EmailLog;
@@ -76,6 +77,19 @@ class CronJob extends Command
             $sendedInvoices++;
         });
         $this->info('Sending invoices if due date is ' . config('settings.cronjob_invoice') . ' days away: ' . $sendedInvoices . ' invoices');
+
+        // Send invoice reminders if due date is x days away
+        $reminderInvoices = 0;
+        Service::where('status', 'active')->whereHas('invoices', function ($query) {
+                $query->where('status', 'pending');
+        })->where('expires_at', '=', now()->addDays((int) config('settings.cronjob_invoice_reminder'))->toDateString())->whereDoesntHave('cancellation')->get()->each(function ($service) use (&$reminderInvoices) {
+                $invoice = $service->invoices()->where('status', 'pending')->first();
+                if ($invoice) {
+                        event(new InvoiceReminder($invoice));
+                        $reminderInvoices++;
+                }
+        });
+        $this->info('Sending invoice reminders for services expiring in ' . config('settings.cronjob_invoice_reminder') . ' days: ' . $reminderInvoices . ' reminders');
 
         // Cancel services if first invoice is not paid after x days
         $ordersCancelled = 0;
