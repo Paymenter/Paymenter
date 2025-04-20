@@ -15,7 +15,7 @@ return [
     'bill_to' => 'Rechnung an',
     'paid' => 'Bezahlt',
     'payment_pending' => 'Zahlung ausstehend',
-    'checking_payment' => 'Checking Payment',
+    'checking_payment' => 'Zahlung wird geprüft',
 
     'invoice_date' => 'Rechnungsdatum',
     'invoice_no' => 'Rechnungsnummer',
