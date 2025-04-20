@@ -23,7 +23,7 @@ return [
     'user_limit' => 'Du hast das Limit von :product erreicht',
     'payment_method' => 'Payment method',
     'use_credits' => 'Use credits',
-    'tos' => 'I agree to the ',
+    'tos' => 'Ich stimme folgendem zu ',
     'tos_link' => 'Terms of Service',
     'tos_required' => 'You must agree to the Terms of Service',
 ];
