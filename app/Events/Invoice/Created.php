@@ -14,5 +14,5 @@ class Created
     /**
      * Create a new event instance.
      */
-    public function __construct(public Invoice $invoice) {}
+    public function __construct(public Invoice $invoice, public bool $sendEmail = true) {}
 }

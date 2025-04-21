@@ -12,7 +12,12 @@ class InvoiceObserver
      */
     public function created(Invoice $invoice): void
     {
-        event(new InvoiceEvent\Created($invoice));
+        $sendEmail = $invoice->send_create_email;
+
+        dispatch(function () use ($invoice, $sendEmail) {
+            $invoice->load('items');
+            event(new InvoiceEvent\Created($invoice, $sendEmail));
+        })->afterResponse();
     }
 
     /**

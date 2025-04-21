@@ -18,6 +18,10 @@ class SendMailListener
     {
 
         if ($event instanceof InvoiceCreated) {
+            if ($event->sendEmail === false) {
+                return;
+            }
+
             $invoice = $event->invoice;
             NotificationHelper::invoiceCreatedNotification($invoice->user, $invoice);
         } elseif ($event instanceof UserCreated) {
