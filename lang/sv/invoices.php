@@ -15,7 +15,7 @@ return [
     'bill_to' => 'Faktura till',
     'paid' => 'Betald',
     'payment_pending' => 'Betalning behandlas',
-    'checking_payment' => 'Checking Payment',
+    'checking_payment' => 'Kontrollerar betalning',
 
     'invoice_date' => 'Fakturadatum',
     'invoice_no' => 'Faktura nr',
