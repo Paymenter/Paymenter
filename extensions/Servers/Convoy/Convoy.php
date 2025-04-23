@@ -265,7 +265,7 @@ class Convoy extends Server
                 'disk' => $disk * 1024 * 1024,
                 'snapshots' => (int) $snapshot,
                 'bandwidth' => (int) $bandwidth == 0 ? null : (int) $bandwidth * 1024 * 1024,
-                'backups' => (int) $backups == 0 ? null : (int) $backups,
+                'backups' => (int) $backups,
                 'address_ids' => $ips,
             ],
             'account_password' => $password,
