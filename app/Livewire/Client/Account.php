@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Client;
 
+use App\Events\Account\Updated as AccountUpdated;
 use App\Livewire\ComponentWithProperties;
 use Illuminate\Support\Facades\Auth;
 
@@ -42,13 +43,15 @@ class Account extends ComponentWithProperties
     {
         $validatedData = $this->validate();
 
-        /** @var \App\Models\User */
+        /** @var \App\Models\User $user */
         $user = Auth::user();
         $user->update($validatedData);
 
         if (array_key_exists('properties', $validatedData)) {
             $this->updateProperties($user, $validatedData['properties']);
         }
+
+        event(new AccountUpdated($user));
 
         $this->notify(__('Account updated successfully.'));
     }

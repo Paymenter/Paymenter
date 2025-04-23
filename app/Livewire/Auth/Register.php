@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Auth;
 
+use App\Events\Account\Created as AccountCreated;
 use App\Livewire\ComponentWithProperties;
 use App\Models\User;
 use App\Traits\Captchable;
@@ -51,6 +52,8 @@ class Register extends ComponentWithProperties
         if (array_key_exists('properties', $validatedData)) {
             $this->updateProperties($user, $validatedData['properties']);
         }
+
+        event(new AccountCreated($user));
 
         Auth::login($user);
 
