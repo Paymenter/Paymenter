@@ -20,7 +20,7 @@ class ComponentWithProperties extends Component
      */
     public function initializeProperties($model, $morphClass)
     {
-        $this->custom_properties = \App\Models\CustomProperty::where('model', $morphClass)->get();
+        $this->custom_properties = \App\Models\CustomProperty::where('model', $morphClass)->where('hidden', false)->get();
         if ($model) {
             $this->properties = $model
                 ->properties->mapWithKeys(function ($property) {

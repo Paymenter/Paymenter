@@ -43,13 +43,13 @@ class CustomPropertyResource extends Resource
                 Forms\Components\Textarea::make('description')->nullable()->columnSpanFull()->rows(2),
                 Forms\Components\TagsInput::make('allowed_values')->nullable(),
                 Forms\Components\TextInput::make('validation')->nullable(),
-
                 Forms\Components\Section::make()
                     ->columns([
                         'sm' => 1,
-                        'md' => 3,
+                        'md' => 4,
                     ])
                     ->schema([
+                        Forms\Components\Toggle::make('hidden')->label('Hidden from user')->default(false),
                         Forms\Components\Toggle::make('non_editable')->default(false),
                         Forms\Components\Toggle::make('required')->default(false),
                         Forms\Components\Toggle::make('show_on_invoice')->default(false),
@@ -69,6 +69,7 @@ class CustomPropertyResource extends Resource
                     )),
                 Tables\Columns\TextColumn::make('key'),
                 Tables\Columns\TextColumn::make('type')->formatStateUsing(fn ($state) => str($state)->title()),
+                Tables\Columns\ToggleColumn::make('hidden'),
                 Tables\Columns\ToggleColumn::make('non_editable'),
                 Tables\Columns\ToggleColumn::make('required'),
                 Tables\Columns\ToggleColumn::make('show_on_invoice'),
