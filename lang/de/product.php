@@ -21,9 +21,9 @@ return [
     'in_stock' => 'Auf Lager',
     'out_of_stock' => 'Produkt :product ist nicht auf Lager',
     'user_limit' => 'Du hast das Limit von :product erreicht',
-    'payment_method' => 'Payment method',
-    'use_credits' => 'Use credits',
+    'payment_method' => 'Zahlungsmethode',
+    'use_credits' => 'Credits benutzen',
     'tos' => 'Ich stimme folgendem zu ',
-    'tos_link' => 'Terms of Service',
-    'tos_required' => 'You must agree to the Terms of Service',
+    'tos_link' => 'Nutzungsbedingungen',
+    'tos_required' => 'Du musst die Nutzungsbedingungen akzeptieren',
 ];
