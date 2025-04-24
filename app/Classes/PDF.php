@@ -16,7 +16,7 @@ class PDF
             mkdir(storage_path('app/invoices'));
         }
         // Save the PDF to the storage
-        $pdf->save(storage_path('app/invoices/' . $invoice->id . '.pdf'));
+        $pdf->save(storage_path('app/invoices/' . $invoice->number . '.pdf'));
 
         return $pdf;
     }

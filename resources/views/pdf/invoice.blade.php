@@ -109,7 +109,7 @@
         </tr>
         <tr>
             <td>
-                {{ __('invoices.invoice_no') }}: <strong>{{ $invoice->id }}</strong>
+                {{ __('invoices.invoice_no') }}: <strong>{{ $invoice->number }}</strong>
             </td>
             <td>
                 {{ config('settings.company_email') }}
@@ -143,7 +143,7 @@
             @endforeach
         </tbody>
     </table>
-    
+
     @if($invoice->transactions->count() > 0)
     <table style="margin-top: 80px;" class="invoice-items">
         <thead>

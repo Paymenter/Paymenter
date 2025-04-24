@@ -143,7 +143,9 @@ class InvoiceResource extends Resource
                     ->label('ID')
                     ->searchable()
                     ->sortable(),
-
+                Tables\Columns\TextColumn::make('number')
+                    ->searchable()
+                    ->sortable(),
                 Tables\Columns\TextColumn::make('user.name')
                     ->label('User')
                     ->searchable(true, fn (Builder $query, string $search) => $query->whereHas('user', fn (Builder $query) => $query->where('first_name', 'like', "%$search%")->orWhere('last_name', 'like', "%$search%"))),

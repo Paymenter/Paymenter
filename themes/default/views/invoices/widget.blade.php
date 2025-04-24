@@ -7,16 +7,16 @@
                     <div class="bg-secondary/10 p-2 rounded-lg">
                         <x-ri-bill-line class="size-5 text-secondary" />
                     </div>
-                    <span class="font-medium">Invoice #{{$invoice->id }}</span>
+                    <span class="font-medium">Invoice #{{$invoice->number }}</span>
                     <span class="text-base/50 font-semibold">
                         <x-ri-circle-fill class="size-1 text-base/20" />
                     </span>
                     <span class="text-base text-sm">{{ $invoice->formattedTotal }}</span>
                 </div>
                 <div class="size-5 rounded-md p-0.5
-                @if ($invoice->status == 'paid') text-success bg-success/20 
+                @if ($invoice->status == 'paid') text-success bg-success/20
                 @elseif($invoice->status == 'cancelled') text-info bg-info/20
-                @else text-warning bg-warning/20 
+                @else text-warning bg-warning/20
                 @endif">
                 @if ($invoice->status == 'paid')
                     <x-ri-checkbox-circle-fill />

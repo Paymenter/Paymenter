@@ -428,6 +428,24 @@ class Settings
                     'validation' => 'in:' . implode(',', array_map('basename', glob(base_path('themes/*'), GLOB_ONLYDIR))),
                 ],
             ],
+            'invoices' => [
+                [
+                    'name' => 'invoice_number_padding',
+                    'label' => 'Invoice Number Padding',
+                    'type' => 'number',
+                    'default' => 4,
+                    'required' => false,
+                    'description' => 'Number of digits to use for invoice numbers. Example: 0001, 0002, etc.',
+                ],
+                [
+                    'name' => 'invoice_number_prefix',
+                    'label' => 'Invoice Number Prefix',
+                    'type' => 'text',
+                    'default' => '',
+                    'required' => false,
+                    'description' => 'Prefix to use for invoice numbers. Use {year}, {month} and {day} placeholders to insert the current date. Example: INV-{year}-{month}-{day}- or INV-{year}',
+                ],
+            ],
             'other' => [
                 [
                     'name' => 'gravatar_default',
