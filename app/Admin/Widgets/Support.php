@@ -17,9 +17,10 @@ class Support extends BaseWidget
         return $table
             ->query(
                 Ticket::query()
-                    ->with('user')
                     ->where('status', '!=', 'closed')
-                    ->orderBy('created_at', 'desc')
+                    ->with('user')
+                    ->withMax('messages', 'created_at')
+                    ->orderByDesc('messages_max_created_at')
                     ->limit(5)
             )
             ->columns([
@@ -28,18 +29,18 @@ class Support extends BaseWidget
                 Tables\Columns\TextColumn::make('status')
                     ->label('Status')
                     ->badge()
-                    ->color(fn (Ticket $record) => match ($record->status) {
+                    ->color(fn(Ticket $record) => match ($record->status) {
                         'open' => 'success',
                         'closed' => 'danger',
                         'replied' => 'warning',
                     })
-                    ->formatStateUsing(fn (string $state) => ucfirst($state)),
+                    ->formatStateUsing(fn(string $state) => ucfirst($state)),
                 Tables\Columns\TextColumn::make('user.name')
                     ->label('User'),
                 Tables\Columns\TextColumn::make('created_at')
                     ->label('Created At'),
             ])
-            ->recordUrl(fn (Ticket $record) => TicketResource::getUrl('edit', ['record' => $record]))
+            ->recordUrl(fn(Ticket $record) => TicketResource::getUrl('edit', ['record' => $record]))
             ->paginated(false);
     }
 
