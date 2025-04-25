@@ -4,8 +4,6 @@ namespace App\Livewire;
 
 use App\Classes\Cart as ClassesCart;
 use App\Classes\Price;
-use App\Events\Invoice\Created as InvoiceCreated;
-use App\Events\Order\Created as OrderCreated;
 use App\Exceptions\DisplayException;
 use App\Helpers\ExtensionHelper;
 use App\Jobs\Server\CreateJob;
@@ -189,7 +187,7 @@ class Cart extends Component
                     if (in_array($configOption->option_type, ['text', 'number'])) {
                         $service->properties()->updateOrCreate([
                             'key' => $configOption->option_env_variable ? $configOption->option_env_variable : $configOption->option_name,
-                        ], [    
+                        ], [
                             'name' => $configOption->option_name,
                             'value' => $configOption->value,
                         ]);

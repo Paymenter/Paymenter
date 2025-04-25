@@ -2,7 +2,6 @@
 
 namespace App\Console\Commands;
 
-use App\Events\Invoice\Created as InvoiceCreated;
 use App\Jobs\Server\SuspendJob;
 use App\Jobs\Server\TerminateJob;
 use App\Models\EmailLog;
@@ -10,7 +9,6 @@ use App\Models\Service;
 use App\Models\ServiceUpgrade;
 use App\Models\Ticket;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Http;
 
 class CronJob extends Command
 {

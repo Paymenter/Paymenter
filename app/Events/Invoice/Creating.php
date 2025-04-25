@@ -14,5 +14,5 @@ class Creating
     /**
      * Create a new event instance.
      */
-    public function __construct(public Invoice $invoice,) {}
+    public function __construct(public Invoice $invoice) {}
 }

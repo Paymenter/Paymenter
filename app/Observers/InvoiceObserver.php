@@ -29,7 +29,6 @@ class InvoiceObserver
         })->afterResponse();
     }
 
-
     /**
      * Handle the Invoice "updating" event.
      */
