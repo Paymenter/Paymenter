@@ -61,7 +61,7 @@ class CronJob extends Command
                 'currency_code' => $service->currency_code,
             ]);
 
-            $invoice->saveQuietly();
+            $invoice->save();
             // Create invoice items
             $invoice->items()->create([
                 'reference_id' => $service->id,
@@ -70,8 +70,6 @@ class CronJob extends Command
                 'quantity' => $service->quantity,
                 'description' => $service->description,
             ]);
-
-            event(new InvoiceCreated($invoice));
 
             $sendedInvoices++;
         });
@@ -145,26 +143,6 @@ class CronJob extends Command
         // Check for updates
         $this->info('Checking for updates...');
 
-        if (config('app.version') == 'development') {
-            $this->info('You are using the development version. No update check available.');
-
-            return;
-        } elseif (config('app.version') == 'beta') {
-            // Check if app.commit is different from the latest commit
-            $latestCommit = Http::get('https://api.github.com/repos/Paymenter/Paymenter/commits')->json()[0]['sha'];
-            if (config('app.commit') != $latestCommit) {
-                $this->info('A new version is available: ' . config('app.commit'));
-            } else {
-                $this->info('You are using the latest version: ' . config('app.commit'));
-            }
-        } else {
-            // Check if app.version is different from the latest version
-            $latestVersion = Http::get('https://api.github.com/repos/Paymenter/Paymenter/releases/latest')->json()['tag_name'];
-            if (config('app.version') != $latestVersion) {
-                $this->info('A new version is available: ' . $latestVersion);
-            } else {
-                $this->info('You are using the latest version: ' . config('app.version'));
-            }
-        }
+        $this->call(CheckForUpdates::class);
     }
 }

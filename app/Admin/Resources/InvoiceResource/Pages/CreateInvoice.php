@@ -3,7 +3,6 @@
 namespace App\Admin\Resources\InvoiceResource\Pages;
 
 use App\Admin\Resources\InvoiceResource;
-use App\Helpers\NotificationHelper;
 use Filament\Resources\Pages\CreateRecord;
 use Illuminate\Database\Eloquent\Model;
 
@@ -13,11 +12,10 @@ class CreateInvoice extends CreateRecord
 
     protected function handleRecordCreation(array $data): Model
     {
-        $invoice = static::getModel()::create($data);
-
-        if ($data['send_email']) {
-            NotificationHelper::invoiceCreatedNotification($invoice->user, $invoice);
-        }
+        $invoice = new (static::getModel());
+        $invoice->fill($data);
+        $invoice->send_create_email = $data['send_email'] ?? true;
+        $invoice->save();
 
         return $invoice;
     }

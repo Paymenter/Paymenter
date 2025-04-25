@@ -27,6 +27,8 @@ class Invoice extends Model
         'due_at' => 'date',
     ];
 
+    public bool $send_create_email = true;
+
     /**
      * Total of the invoice.
      *

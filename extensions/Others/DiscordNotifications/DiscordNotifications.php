@@ -20,11 +20,11 @@ use Illuminate\Support\Facades\Http;
 class DiscordNotifications extends Extension
 {
     private const events = [
-        'Order Created' => Order\Created::class,
+        'Order Created' => Order\Finalized::class,
         'Order Updated' => Order\Updated::class,
         'User Created' => User\Created::class,
         'User Updated' => User\Updated::class,
-        'Invoice Created' => Invoice\Created::class,
+        'Invoice Created' => Invoice\Finalized::class,
         'Invoice Updated' => Invoice\Updated::class,
         'Invoice Paid' => Invoice\Paid::class,
         'Ticket Created' => Ticket\Created::class,

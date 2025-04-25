@@ -16,6 +16,8 @@ class Order extends Model
 
     protected $fillable = ['user_id', 'currency_code'];
 
+    public bool $send_create_email = true;
+
     public function user()
     {
         return $this->belongsTo(User::class);
