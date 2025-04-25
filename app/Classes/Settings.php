@@ -219,6 +219,16 @@ class Settings
                     'type' => 'select',
                     'options' => array_merge(['' => 'None'], config('app.countries')),
                 ],
+                [
+                    'name' => 'company_tax_id',
+                    'label' => 'Company Tax ID',
+                    'type' => 'text',
+                ],
+                [
+                    'name' => 'company_coc_id',
+                    'label' => 'Company Chamber of Commerce ID',
+                    'type' => 'text',
+                ],
             ],
             'tax' => [
                 [

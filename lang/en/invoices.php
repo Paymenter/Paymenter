@@ -16,9 +16,10 @@ return [
     'paid' => 'Paid',
     'payment_pending' => 'Payment Pending',
     'checking_payment' => 'Checking Payment',
-
     'invoice_date' => 'Invoice Date',
     'invoice_no' => 'Invoice No',
+    'tax_id' => 'Tax ID',
+    'coc_id' => 'COC ID',
     'item' => 'Item',
     'quantity' => 'Quantity',
     'transactions' => 'Transactions',

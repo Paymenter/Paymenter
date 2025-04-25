@@ -16,9 +16,10 @@ return [
     'paid' => 'Betaald',
     'payment_pending' => 'Betaling in afwachting',
     'checking_payment' => 'Checking Payment',
-
     'invoice_date' => 'Factuurdatum',
     'invoice_no' => 'Factuurnummer',
+    'tax_id' => 'BTW nummer',
+    'coc_id' => 'KVK nummer',
     'item' => 'Artikel',
     'quantity' => 'Aantal',
     'transactions' => 'Transacties',
