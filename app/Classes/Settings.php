@@ -228,7 +228,6 @@ class Settings
                     'name' => 'company_id',
                     'label' => 'Company ID',
                     'type' => 'text',
-                    'description' => 'Can be a Chamber of Commerce number, or likewise.',
                 ],
             ],
             'tax' => [
