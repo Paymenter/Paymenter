@@ -15,11 +15,7 @@ class CPanel extends Server
         $host = rtrim($this->config('host'), '/');
         $response = Http::withHeaders([
             'Authorization' => 'whm ' . $this->config('username') . ':' . $this->config('apikey'),
-        ])->$method($host . '/json-api' . $endpoint, $data);
-
-        if ($response->failed()) {
-            throw new \Exception('Error while requesting API');
-        }
+        ])->$method($host . '/json-api' . $endpoint, $data)->throw();
 
         return $response;
     }
