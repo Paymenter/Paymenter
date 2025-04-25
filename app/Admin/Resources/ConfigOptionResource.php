@@ -69,6 +69,7 @@ class ConfigOptionResource extends Resource
                                 ->collapsed()
                                 ->cloneable()
                                 ->reorderable()
+                                ->orderColumn('sort')
                                 ->columns(2)
                                 ->schema([
                                     Forms\Components\TextInput::make('name')
