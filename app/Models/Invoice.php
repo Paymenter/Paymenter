@@ -118,23 +118,4 @@ class Invoice extends Model
             $model->number = $formattedNumber;
         });
     }
-
-    /**
-     * Invoice number with padding and prefix.
-     */
-    //    public function number(): Attribute
-    //    {
-    //        return Attribute::make(
-    //            get: function () {
-    //                $prefix = config('settings.invoice_number_prefix', '');
-    //                $prefix = str_replace('{year}', $this->created_at->format('Y'), $prefix);
-    //                $prefix = str_replace('{month}', $this->created_at->format('m'), $prefix);
-    //                $prefix = str_replace('{day}', $this->created_at->format('d'), $prefix);
-    //
-    //                $number = str_pad($this->id, config('settings.invoice_number_padding', 4), '0', STR_PAD_LEFT);
-    //
-    //                return $prefix . $number;
-    //            }
-    //        );
-    //    }
 }
