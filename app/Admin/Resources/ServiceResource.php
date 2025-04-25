@@ -65,9 +65,9 @@ class ServiceResource extends Resource
                     ->relationship('user', 'id')
                     ->searchable()
                     ->preload()
-                    ->hint(fn($get) => $get('user_id') ? new HtmlString('<a href="' . UserResource::getUrl('edit', ['record' => $get('user_id')]) . '" target="_blank">Go to User</a>') : null)
-                    ->getOptionLabelFromRecordUsing(fn($record) => $record->name)
-                    ->getSearchResultsUsing(fn(string $search): array => User::where('first_name', 'like', "%$search%")->orWhere('last_name', 'like', "%$search%")->limit(50)->pluck('name', 'id')->toArray())
+                    ->hint(fn ($get) => $get('user_id') ? new HtmlString('<a href="' . UserResource::getUrl('edit', ['record' => $get('user_id')]) . '" target="_blank">Go to User</a>') : null)
+                    ->getOptionLabelFromRecordUsing(fn ($record) => $record->name)
+                    ->getSearchResultsUsing(fn (string $search): array => User::where('first_name', 'like', "%$search%")->orWhere('last_name', 'like', "%$search%")->limit(50)->pluck('name', 'id')->toArray())
                     ->live()
                     ->required(),
                 Forms\Components\Select::make('status')
@@ -115,8 +115,8 @@ class ServiceResource extends Resource
                     ->required()
                     ->label('Price')
                     // Suffix based on chosen currency
-                    ->prefix(fn(Get $get) => Currency::where('code', $get('currency_code'))->first()?->prefix)
-                    ->suffix(fn(Get $get) => Currency::where('code', $get('currency_code'))->first()?->suffix)
+                    ->prefix(fn (Get $get) => Currency::where('code', $get('currency_code'))->first()?->prefix)
+                    ->suffix(fn (Get $get) => Currency::where('code', $get('currency_code'))->first()?->suffix)
                     ->live(onBlur: true)
                     ->mask(RawJs::make(
                         <<<'JS'
@@ -148,7 +148,7 @@ class ServiceResource extends Resource
                             })
                             ->requiresConfirmation()
                             ->label('Cancel Subscription')
-                            ->hidden(fn(Component $component) => !$component->getRecord()?->subscription_id),
+                            ->hidden(fn (Component $component) => !$component->getRecord()?->subscription_id),
                     ),
             ]);
     }
@@ -163,20 +163,20 @@ class ServiceResource extends Resource
                     ->searchable(),
                 Tables\Columns\TextColumn::make('user.name')
                     ->label('User')
-                    ->searchable(true, fn(Builder $query, string $search) => $query->whereHas('user', fn(Builder $query) => $query->where('first_name', 'like', "%$search%")->orWhere('last_name', 'like', "%$search%"))),
+                    ->searchable(true, fn (Builder $query, string $search) => $query->whereHas('user', fn (Builder $query) => $query->where('first_name', 'like', "%$search%")->orWhere('last_name', 'like', "%$search%"))),
                 Tables\Columns\TextColumn::make('product.name')
                     ->label('Product')
                     ->searchable()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('status')
                     ->badge()
-                    ->color(fn(Service $record) => match ($record->status) {
+                    ->color(fn (Service $record) => match ($record->status) {
                         'pending' => 'gray',
                         'active' => 'success',
                         'cancelled' => 'danger',
                         'suspended' => 'warning',
                     })
-                    ->formatStateUsing(fn(string $state) => ucfirst($state))
+                    ->formatStateUsing(fn (string $state) => ucfirst($state))
                     ->label('Status')
                     ->searchable()
                     ->sortable(),
