@@ -1,18 +1,18 @@
 <?php
 
 return [
-    'account' => 'Account',
-    'personal_details' => 'Personal details',
-    'security' => 'Security',
+    'account' => 'Konto',
+    'personal_details' => 'Dane osobowe',
+    'security' => 'Bezpieczeństwo',
     'credits' => 'Credits',
 
-    'change_password' => 'Change password',
+    'change_password' => 'Zmień hasło',
 
-    'two_factor_authentication' => 'Two-factor authentication',
-    'two_factor_authentication_description' => 'Add an extra layer of security to your account by enabling two-factor authentication.',
-    'two_factor_authentication_enabled' => 'Two-factor authentication is enabled for your account.',
-    'two_factor_authentication_enable' => 'Enable two-factor authentication',
-    'two_factor_authentication_disable' => 'Disable two-factor authentication',
+    'two_factor_authentication' => 'Uwierzytelnianie dwuskładnikowe',
+    'two_factor_authentication_description' => 'Dodaj dodatkową warstwę zabezpieczeń do swojego konta poprzez włączenie uwierzytelniania dwuskładnikowego.',
+    'two_factor_authentication_enabled' => 'Uwierzytelnianie dwuskładnikowe jest włączone dla Twojego konta.',
+    'two_factor_authentication_enable' => 'Włącz uwierzytelnianie dwuskładnikowe',
+    'two_factor_authentication_disable' => 'Wyłącz uwierzytelnianie dwuskładnikowe',
     'two_factor_authentication_enable_description' => 'To enable two factor authentication, you need to scan the QR code below with an authenticator app like Google Authenticator or Authy.',
     'two_factor_authentication_qr_code' => 'Scan the QR code below with your authenticator app:',
     'two_factor_authentication_secret' => 'Or enter the following code manually:',
