@@ -132,8 +132,8 @@
         <tr>
             <td></td>
             <td>
-                @if(config('settings.company_coc_id'))
-                    {{ __('invoices.coc_id') }}: {{ config('settings.company_coc_id') }}
+                @if(config('settings.company_id'))
+                    {{ __('invoices.company_id') }}: {{ config('settings.company_id') }}
                 @endif
             </td>
         </tr>
