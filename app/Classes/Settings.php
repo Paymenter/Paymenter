@@ -219,6 +219,16 @@ class Settings
                     'type' => 'select',
                     'options' => array_merge(['' => 'None'], config('app.countries')),
                 ],
+                [
+                    'name' => 'company_tax_id',
+                    'label' => 'Company Tax ID',
+                    'type' => 'text',
+                ],
+                [
+                    'name' => 'company_id',
+                    'label' => 'Company ID',
+                    'type' => 'text',
+                ],
             ],
             'tax' => [
                 [
