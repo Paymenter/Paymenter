@@ -16,7 +16,11 @@ return new class extends Migration
             $table->string('number')->nullable()->unique()->after('id');
         });
 
-        DB::statement('UPDATE invoices SET number = id where number IS NULL');
+        DB::statement('UPDATE invoices SET number = id');
+
+        Schema::table('invoices', function (Blueprint $table) {
+            $table->string('number')->nullable(false)->change();
+        });
     }
 
     /**
