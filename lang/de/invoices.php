@@ -16,9 +16,10 @@ return [
     'paid' => 'Bezahlt',
     'payment_pending' => 'Zahlung ausstehend',
     'checking_payment' => 'Zahlung wird geprüft',
-
     'invoice_date' => 'Rechnungsdatum',
     'invoice_no' => 'Rechnungsnummer',
+    'tax_id' => 'Tax ID',
+    'company_id' => 'Company ID',
     'item' => 'Artikel',
     'quantity' => 'Menge',
     'transactions' => 'Transaktionen',
