@@ -146,7 +146,7 @@ class Cart extends Component
                 'user_id' => $user->id,
                 'currency_code' => $this->total->currency->code,
             ]);
-            $order->saveQuietly();
+            $order->save();
 
             // Create the invoice
             if ($this->total->price > 0) {
@@ -155,7 +155,7 @@ class Cart extends Component
                     'due_at' => now()->addDays(7),
                     'currency_code' => $this->total->currency->code,
                 ]);
-                $invoice->saveQuietly();
+                $invoice->save();
             }
 
             // Create the services
@@ -188,8 +188,8 @@ class Cart extends Component
                 foreach ($item->configOptions as $configOption) {
                     if (in_array($configOption->option_type, ['text', 'number'])) {
                         $service->properties()->updateOrCreate([
-                            'key' => $configOption->option_env_variable,
-                        ], [
+                            'key' => $configOption->option_env_variable ? $configOption->option_env_variable : $configOption->option_name,
+                        ], [    
                             'name' => $configOption->option_name,
                             'value' => $configOption->value,
                         ]);
@@ -222,9 +222,6 @@ class Cart extends Component
                     $service->save();
                 }
             }
-
-            event(new OrderCreated($order));
-            isset($invoice) && event(new InvoiceCreated($invoice));
 
             if ($this->use_credits) {
                 $credit = Auth::user()->credits()->where('currency_code', $this->total->currency->code)->first();

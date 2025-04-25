@@ -8,16 +8,34 @@ use App\Models\Invoice;
 class InvoiceObserver
 {
     /**
+     * Handle the Invoice "creating" event.
+     */
+    public function creating(Invoice $invoice): void
+    {
+        event(new InvoiceEvent\Creating($invoice));
+    }
+
+    /**
      * Handle the Invoice "created" event.
      */
     public function created(Invoice $invoice): void
     {
+        event(new InvoiceEvent\Created($invoice));
+
         $sendEmail = $invoice->send_create_email;
 
         dispatch(function () use ($invoice, $sendEmail) {
-            $invoice->load('items');
-            event(new InvoiceEvent\Created($invoice, $sendEmail));
+            event(new InvoiceEvent\Finalized($invoice, $sendEmail));
         })->afterResponse();
+    }
+
+
+    /**
+     * Handle the Invoice "updating" event.
+     */
+    public function updating(Invoice $invoice): void
+    {
+        event(new InvoiceEvent\Updating($invoice));
     }
 
     /**

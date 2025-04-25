@@ -121,7 +121,7 @@ class Upgrade extends Component
             'due_at' => Carbon::now()->addDays(7),
             'user_id' => $this->service->order->user_id,
         ]);
-        $invoice->saveQuietly();
+        $invoice->save();
 
         $upgrade->invoice_id = $invoice->id;
         $upgrade->save();
