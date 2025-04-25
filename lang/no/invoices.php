@@ -15,6 +15,7 @@ return [
     'bill_to' => 'Fakturer Til',
     'paid' => 'Betalt',
     'payment_pending' => 'Venter på betaling',
+    'checking_payment' => 'Kontrollerer betaling',
 
     'invoice_date' => 'Fakturadato',
     'invoice_no' => 'Faktura nr',

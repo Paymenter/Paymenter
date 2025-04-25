@@ -13,7 +13,7 @@ return [
     |
     */
 
-    'accepted' => 'Fältet :attribute måste accepteras.',
+    'accepted' => 'The :attribute field must be accepted.',
     'accepted_if' => 'The :attribute field must be accepted when :other is :value.',
     'active_url' => 'The :attribute field must be a valid URL.',
     'after' => 'The :attribute field must be a date after :date.',
@@ -40,7 +40,7 @@ return [
     'date_format' => 'The :attribute field must match the format :format.',
     'decimal' => 'The :attribute field must have :decimal decimal places.',
     'declined' => 'The :attribute field must be declined.',
-    'declined_if' => ':attribute fältet måste nekas när :other är :value.',
+    'declined_if' => 'The :attribute field must be declined when :other is :value.',
     'different' => 'The :attribute field and :other must be different.',
     'digits' => 'The :attribute field must be :digits digits.',
     'digits_between' => 'The :attribute field must be between :min and :max digits.',
@@ -69,15 +69,15 @@ return [
     ],
     'hex_color' => 'The :attribute field must be a valid hexadecimal color.',
     'image' => 'The :attribute field must be an image.',
-    'in' => 'Det valda :attribute är ogiltigt.',
+    'in' => 'The selected :attribute is invalid.',
     'in_array' => 'The :attribute field must exist in :other.',
-    'integer' => ':attribute fältet måste vara ett heltal.',
-    'ip' => ':attribute fältet måste vara en giltig IP-adress.',
-    'ipv4' => ':attribute fältet måste vara en giltig IPv4-adress.',
-    'ipv6' => ':attribute fältet måste vara en giltig IPv6-adress.',
-    'json' => ':attribute fältet måste vara en giltig JSON-sträng.',
-    'list' => ':attribute fältet måste vara en lista.',
-    'lowercase' => ':attribute fältet måste vara liten bokstav.',
+    'integer' => 'The :attribute field must be an integer.',
+    'ip' => 'The :attribute field must be a valid IP address.',
+    'ipv4' => 'The :attribute field must be a valid IPv4 address.',
+    'ipv6' => 'The :attribute field must be a valid IPv6 address.',
+    'json' => 'The :attribute field must be a valid JSON string.',
+    'list' => 'The :attribute field must be a list.',
+    'lowercase' => 'The :attribute field must be lowercase.',
     'lt' => [
         'array' => 'The :attribute field must have less than :value items.',
         'file' => 'The :attribute field must be less than :value kilobytes.',
@@ -156,8 +156,8 @@ return [
     'uploaded' => 'The :attribute failed to upload.',
     'uppercase' => 'The :attribute field must be uppercase.',
     'url' => 'The :attribute field must be a valid URL.',
-    'ulid' => ':attribute fältet måste vara en korrekt ULID.',
-    'uuid' => ':attribute fältet måste vara en korrekt UUID.',
+    'ulid' => 'The :attribute field must be a valid ULID.',
+    'uuid' => 'The :attribute field must be a valid UUID.',
 
     /*
     |--------------------------------------------------------------------------
@@ -172,7 +172,7 @@ return [
 
     'custom' => [
         'attribute-name' => [
-            'rule-name' => 'anpassat meddelande',
+            'rule-name' => 'custom-message',
         ],
     ],
 

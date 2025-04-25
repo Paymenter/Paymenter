@@ -15,6 +15,7 @@ return [
     'bill_to' => 'Facturar a',
     'paid' => 'Pagado',
     'payment_pending' => 'Pago pendiente',
+    'checking_payment' => 'Checking Payment',
 
     'invoice_date' => 'Fecha de factura',
     'invoice_no' => 'Número de factura',

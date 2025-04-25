@@ -15,6 +15,7 @@ return [
     'bill_to' => 'Laskutusosoite',
     'paid' => 'Maksettu',
     'payment_pending' => 'Odottaa maksua',
+    'checking_payment' => 'Checking Payment',
 
     'invoice_date' => 'Laskun päiväys',
     'invoice_no' => 'Laskun nro',
