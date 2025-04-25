@@ -113,7 +113,7 @@ class Show extends Component
     public function render()
     {
         return view('invoices.show')->layoutData([
-            'title' => __('invoices.invoice', ['id' => $this->invoice->id]),
+            'title' => __('invoices.invoice', ['id' => $this->invoice->number]),
             'sidebar' => true,
         ]);
     }
@@ -122,6 +122,6 @@ class Show extends Component
     {
         return response()->streamDownload(function () {
             echo PDF::generateInvoice($this->invoice)->stream();
-        }, 'invoice-' . $this->invoice->id . '.pdf');
+        }, 'invoice-' . $this->invoice->number . '.pdf');
     }
 }

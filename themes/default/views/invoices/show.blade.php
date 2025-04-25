@@ -1,6 +1,6 @@
 <div @if ($checkPayment) wire:poll="checkPaymentStatus" @endif>
     @if ($this->pay)
-        <x-modal title="Payment for Invoice #{{ $invoice->id }}" open>
+        <x-modal title="Payment for Invoice #{{ $invoice->number }}" open>
             <div class="mt-8">
                 {{ $this->pay }}
             </div>
@@ -22,10 +22,10 @@
             </span>
         </div>
     </div>
-    
+
     <div class="bg-background-secondary border border-neutral p-12 rounded-lg mt-2">
         <div class="sm:flex justify-between pr-4 pt-4">
-            <h1 class="text-2xl font-bold sm:text-3xl">{{ __('invoices.invoice', ['id' => $invoice->id]) }}</h1>
+            <h1 class="text-2xl font-bold sm:text-3xl">{{ __('invoices.invoice', ['id' => $invoice->number]) }}</h1>
             <div class="mt-4 sm:mt-0 text-right">
                 <p>{{ $invoice->user->name }}</p>
                 <p class="text-sm">{{ $invoice->user->address }}</p>

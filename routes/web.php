@@ -35,7 +35,7 @@ Route::group(['middleware' => ['web', 'auth', MustVerfiyEmail::class]], function
     Route::get('/dashboard', Dashboard::class)->name('dashboard');
 
     Route::get('/invoices', Invoices\Index::class)->name('invoices');
-    Route::get('/invoices/{invoice}', Invoices\Show::class)->name('invoices.show')->middleware('can:view,invoice');
+    Route::get('/invoices/{invoice:number}', Invoices\Show::class)->name('invoices.show')->middleware('can:view,invoice');
 
     Route::get('/tickets', Tickets\Index::class)->name('tickets');
     Route::get('/tickets/create', Tickets\Create::class)->name('tickets.create');

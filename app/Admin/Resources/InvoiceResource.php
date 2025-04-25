@@ -53,11 +53,10 @@ class InvoiceResource extends Resource
                     ->hint(fn ($get) => $get('user_id') ? new HtmlString('<a href="' . UserResource::getUrl('edit', ['record' => $get('user_id')]) . '" target="_blank">Go to User</a>') : null)
                     ->live()
                     ->required(),
-                Forms\Components\Select::make('currency_code')
-                    ->label('Currency')
-                    ->required()
-                    ->relationship('currency', 'code')
-                    ->placeholder('Select the currency'),
+                Forms\Components\TextInput::make('number')
+                    ->label('Invoice Number')
+                    ->helperText('The invoice number will be generated automatically')
+                    ->disabled(),
                 Forms\Components\DatePicker::make('created_at')
                     ->label('Issued At')
                     ->required()
@@ -78,6 +77,11 @@ class InvoiceResource extends Resource
                     ])
                     ->default('pending')
                     ->placeholder('Select the status of the invoice'),
+                Forms\Components\Select::make('currency_code')
+                    ->label('Currency')
+                    ->required()
+                    ->relationship('currency', 'code')
+                    ->placeholder('Select the currency'),
                 Forms\Components\Toggle::make('send_email')
                     ->label('Send Email')
                     ->hiddenOn('edit')
@@ -143,7 +147,9 @@ class InvoiceResource extends Resource
                     ->label('ID')
                     ->searchable()
                     ->sortable(),
-
+                Tables\Columns\TextColumn::make('number')
+                    ->searchable()
+                    ->sortable(),
                 Tables\Columns\TextColumn::make('user.name')
                     ->label('User')
                     ->searchable(true, fn (Builder $query, string $search) => $query->whereHas('user', fn (Builder $query) => $query->where('first_name', 'like', "%$search%")->orWhere('last_name', 'like', "%$search%"))),
