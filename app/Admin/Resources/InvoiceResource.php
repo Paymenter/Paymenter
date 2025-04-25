@@ -53,11 +53,10 @@ class InvoiceResource extends Resource
                     ->hint(fn ($get) => $get('user_id') ? new HtmlString('<a href="' . UserResource::getUrl('edit', ['record' => $get('user_id')]) . '" target="_blank">Go to User</a>') : null)
                     ->live()
                     ->required(),
-                Forms\Components\Select::make('currency_code')
-                    ->label('Currency')
+                Forms\Components\TextInput::make('number')
+                    ->label('Invoice Number')
                     ->required()
-                    ->relationship('currency', 'code')
-                    ->placeholder('Select the currency'),
+                    ->disabled(),
                 Forms\Components\DatePicker::make('created_at')
                     ->label('Issued At')
                     ->required()
@@ -78,6 +77,11 @@ class InvoiceResource extends Resource
                     ])
                     ->default('pending')
                     ->placeholder('Select the status of the invoice'),
+                Forms\Components\Select::make('currency_code')
+                    ->label('Currency')
+                    ->required()
+                    ->relationship('currency', 'code')
+                    ->placeholder('Select the currency'),
                 Forms\Components\Toggle::make('send_email')
                     ->label('Send Email')
                     ->hiddenOn('edit')

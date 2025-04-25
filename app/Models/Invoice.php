@@ -21,7 +21,7 @@ class Invoice extends Model
 
     public const STATUS_CANCELLED = 'cancelled';
 
-    protected $fillable = ['user_id', 'currency_code',  'due_at', 'status'];
+    protected $fillable = ['number', 'user_id', 'currency_code',  'due_at', 'status'];
 
     protected $casts = [
         'due_at' => 'date',
@@ -98,22 +98,43 @@ class Invoice extends Model
         );
     }
 
+    public static function boot(): void
+    {
+        parent::boot();
+
+        static::creating(function ($model) {
+            $latestInvoice = self::latest()->first();
+
+            $number = $latestInvoice ? $latestInvoice->id + 1 : 1;
+
+            $paddedNumber = str_pad($number, config('settings.invoice_number_padding', 1), '0', STR_PAD_LEFT);
+
+            $formattedNumber = config('settings.invoice_number_format', '{number}');
+            $formattedNumber = str_replace('{number}', $paddedNumber, $formattedNumber);
+            $formattedNumber = str_replace('{year}', now()->format('Y'), $formattedNumber);
+            $formattedNumber = str_replace('{month}', now()->format('m'), $formattedNumber);
+            $formattedNumber = str_replace('{day}', now()->format('d'), $formattedNumber);
+
+            $model->number = $formattedNumber;
+        });
+    }
+
     /**
      * Invoice number with padding and prefix.
      */
-    public function number(): Attribute
-    {
-        return Attribute::make(
-            get: function () {
-                $prefix = config('settings.invoice_number_prefix', '');
-                $prefix = str_replace('{year}', $this->created_at->format('Y'), $prefix);
-                $prefix = str_replace('{month}', $this->created_at->format('m'), $prefix);
-                $prefix = str_replace('{day}', $this->created_at->format('d'), $prefix);
-
-                $number = str_pad($this->id, config('settings.invoice_number_padding', 4), '0', STR_PAD_LEFT);
-
-                return $prefix . $number;
-            }
-        );
-    }
+    //    public function number(): Attribute
+    //    {
+    //        return Attribute::make(
+    //            get: function () {
+    //                $prefix = config('settings.invoice_number_prefix', '');
+    //                $prefix = str_replace('{year}', $this->created_at->format('Y'), $prefix);
+    //                $prefix = str_replace('{month}', $this->created_at->format('m'), $prefix);
+    //                $prefix = str_replace('{day}', $this->created_at->format('d'), $prefix);
+    //
+    //                $number = str_pad($this->id, config('settings.invoice_number_padding', 4), '0', STR_PAD_LEFT);
+    //
+    //                return $prefix . $number;
+    //            }
+    //        );
+    //    }
 }
