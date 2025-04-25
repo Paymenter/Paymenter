@@ -8,6 +8,14 @@ use App\Models\Invoice;
 class InvoiceObserver
 {
     /**
+     * Handle the Invoice "creating" event.
+     */
+    public function creating(Invoice $invoice): void
+    {
+        event(new InvoiceEvent\Creating($invoice));
+    }
+
+    /**
      * Handle the Invoice "created" event.
      */
     public function created(Invoice $invoice): void

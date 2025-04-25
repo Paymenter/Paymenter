@@ -97,25 +97,4 @@ class Invoice extends Model
             get: fn () => PDF::generateInvoice($this)
         );
     }
-
-    public static function boot(): void
-    {
-        parent::boot();
-
-        static::creating(function ($model) {
-            $latestInvoice = self::latest()->first();
-
-            $number = $latestInvoice ? $latestInvoice->id + 1 : 1;
-
-            $paddedNumber = str_pad($number, config('settings.invoice_number_padding', 1), '0', STR_PAD_LEFT);
-
-            $formattedNumber = config('settings.invoice_number_format', '{number}');
-            $formattedNumber = str_replace('{number}', $paddedNumber, $formattedNumber);
-            $formattedNumber = str_replace('{year}', now()->format('Y'), $formattedNumber);
-            $formattedNumber = str_replace('{month}', now()->format('m'), $formattedNumber);
-            $formattedNumber = str_replace('{day}', now()->format('d'), $formattedNumber);
-
-            $model->number = $formattedNumber;
-        });
-    }
 }
