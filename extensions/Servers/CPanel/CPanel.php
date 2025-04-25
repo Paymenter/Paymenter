@@ -4,8 +4,8 @@ namespace Paymenter\Extensions\Servers\CPanel;
 
 use App\Classes\Extension\Server;
 use App\Models\Service;
-use Illuminate\Support\Facades\Http;
 use App\Rules\Domain;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
 
 class CPanel extends Server
@@ -20,15 +20,14 @@ class CPanel extends Server
         if ($response->failed()) {
             throw new \Exception('Error while requesting API');
         }
+
         return $response;
     }
 
-
     /**
      * Get all the configuration for the extension
-     * 
-     * @param array $values
-     * @return array
+     *
+     * @param  array  $values
      */
     public function getConfig($values = []): array
     {
@@ -60,9 +59,8 @@ class CPanel extends Server
 
     /**
      * Get product config
-     * 
-     * @param array $values
-     * @return array
+     *
+     * @param  array  $values
      */
     public function getProductConfig($values = []): array
     {
@@ -89,8 +87,6 @@ class CPanel extends Server
 
     /**
      * Check if currenct configuration is valid
-     *
-     * @return bool|string
      */
     public function testConfig(): bool|string
     {
@@ -116,13 +112,11 @@ class CPanel extends Server
         ];
     }
 
-
     /**
-     * Create a server 
-     * 
-     * @param Service $service
-     * @param array $settings (product settings)
-     * @param array $properties (checkout options)
+     * Create a server
+     *
+     * @param  array  $settings  (product settings)
+     * @param  array  $properties  (checkout options)
      * @return bool
      */
     public function createServer(Service $service, $settings, $properties)
@@ -158,10 +152,9 @@ class CPanel extends Server
 
     /**
      * Suspend a server
-     * 
-     * @param Service $service
-     * @param array $settings (product settings)
-     * @param array $properties (checkout options)
+     *
+     * @param  array  $settings  (product settings)
+     * @param  array  $properties  (checkout options)
      * @return bool
      */
     public function suspendServer(Service $service, $settings, $properties)
@@ -187,10 +180,9 @@ class CPanel extends Server
 
     /**
      * Unsuspend a server
-     * 
-     * @param Service $service
-     * @param array $settings (product settings)
-     * @param array $properties (checkout options)
+     *
+     * @param  array  $settings  (product settings)
+     * @param  array  $properties  (checkout options)
      * @return bool
      */
     public function unsuspendServer(Service $service, $settings, $properties)
@@ -216,10 +208,9 @@ class CPanel extends Server
 
     /**
      * Terminate a server
-     * 
-     * @param Service $service
-     * @param array $settings (product settings)
-     * @param array $properties (checkout options)
+     *
+     * @param  array  $settings  (product settings)
+     * @param  array  $properties  (checkout options)
      * @return bool
      */
     public function terminateServer(Service $service, $settings, $properties)
@@ -239,6 +230,7 @@ class CPanel extends Server
         if ($response->json()['metadata']['result'] === 1) {
             // Delete the properties
             $service->properties()->where('key', 'cpanel_username')->delete();
+
             return true;
         }
 
