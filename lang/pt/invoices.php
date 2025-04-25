@@ -16,9 +16,10 @@ return [
     'paid' => 'Pago',
     'payment_pending' => 'Pagamento pendente',
     'checking_payment' => 'Verificando pagamento',
-
     'invoice_date' => 'Data da fatura',
     'invoice_no' => 'Fatura N.º',
+    'tax_id' => 'Tax ID',
+    'company_id' => 'Company ID',
     'item' => 'Item',
     'quantity' => 'Quantidade',
     'transactions' => 'Transações',
