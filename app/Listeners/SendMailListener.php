@@ -4,6 +4,7 @@ namespace App\Listeners;
 
 use App\Events\Auth\Login;
 use App\Events\Invoice\Created as InvoiceCreated;
+use App\Events\Invoice\Reminder as InvoiceReminder;
 use App\Events\Order\Created as OrderCreated;
 use App\Events\User\Created as UserCreated;
 use App\Helpers\NotificationHelper;
@@ -14,7 +15,7 @@ class SendMailListener
     /**
      * Handle the event.
      */
-    public function handle(InvoiceCreated|OrderCreated|UserCreated|Login $event): void
+    public function handle(InvoiceCreated|InvoiceReminder|OrderCreated|UserCreated|Login $event): void
     {
 
         if ($event instanceof InvoiceCreated) {
@@ -34,6 +35,16 @@ class SendMailListener
                 'time' => now()->format('Y-m-d H:i:s'),
             ];
             NotificationHelper::loginDetectedNotification($user, $data);
+        } elseif ($event instanceof InvoiceReminder) {
+            NotificationHelper::sendEmailNotification(
+                'pending_invoice_reminder',
+                [
+                    'invoice' => $event->invoice,
+                    'items' => $event->invoice->items,
+                    'total' => $event->invoice->formattedTotal,
+                ],
+                $event->invoice->user
+            );
         }
     }
 }
