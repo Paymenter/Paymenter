@@ -19,7 +19,7 @@ return [
     'invoice_date' => 'Factuurdatum',
     'invoice_no' => 'Factuurnummer',
     'tax_id' => 'BTW nummer',
-    'coc_id' => 'KVK nummer',
+    'company_id' => 'KVK nummer',
     'item' => 'Artikel',
     'quantity' => 'Aantal',
     'transactions' => 'Transacties',

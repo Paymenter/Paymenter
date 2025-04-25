@@ -225,9 +225,10 @@ class Settings
                     'type' => 'text',
                 ],
                 [
-                    'name' => 'company_coc_id',
-                    'label' => 'Company Chamber of Commerce ID',
+                    'name' => 'company_id',
+                    'label' => 'Company ID',
                     'type' => 'text',
+                    'description' => 'Can be a Chamber of Commerce number, or likewise.',
                 ],
             ],
             'tax' => [
