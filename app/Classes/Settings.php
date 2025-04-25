@@ -443,7 +443,8 @@ class Settings
                     'type' => 'text',
                     'default' => '{number}',
                     'required' => false,
-                    'description' => 'Format to use for invoice numbers. Use {number} to insert the zero padded number and use {year}, {month} and {day} placeholders to insert the current date. Example: INV-{year}-{month}-{day}-{number} or INV-{year}{number}',
+                    'description' => 'Format to use for invoice numbers. Use {number} to insert the zero padded number and use {year}, {month} and {day} placeholders to insert the current date. Example: INV-{year}-{month}-{day}-{number} or INV-{year}{number}. It must at least contain {number}.',
+                    'validation' => 'regex:/{number}/',
                 ],
             ],
             'other' => [

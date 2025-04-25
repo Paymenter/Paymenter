@@ -55,7 +55,7 @@ class InvoiceResource extends Resource
                     ->required(),
                 Forms\Components\TextInput::make('number')
                     ->label('Invoice Number')
-                    ->required()
+                    ->helperText('The invoice number will be generated automatically')
                     ->disabled(),
                 Forms\Components\DatePicker::make('created_at')
                     ->label('Issued At')
