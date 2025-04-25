@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('number')->nullable()->unique()->after('id');
         });
 
-        DB::statement('UPDATE invoices SET number = id');
+        DB::statement('UPDATE invoices SET number = id where number IS NULL');
     }
 
     /**
