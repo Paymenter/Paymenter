@@ -223,7 +223,8 @@ class Cart extends Component
                 }
             }
 
-            if ($this->use_credits) {
+            // We don't wanna use credits if the total price is 0, duh
+            if ($this->use_credits && $this->total->price > 0) {
                 $credit = Auth::user()->credits()->where('currency_code', $this->total->currency->code)->first();
                 if ($credit && $credit->amount > 0) {
                     // Is it more credits or less credits than the total price?
