@@ -1,11 +1,11 @@
 <?php
 
 return [
-    'invoices' => 'Invoices',
-    'product' => 'Product',
-    'price' => 'Price',
+    'invoices' => 'Faktury',
+    'product' => 'Produkt',
+    'price' => 'Cena',
     'status' => 'Status',
-    'actions' => 'Actions',
+    'actions' => 'Akcje',
     'view' => 'View',
     'id' => 'ID',
     'total' => 'Total',
