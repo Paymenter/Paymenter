@@ -52,7 +52,7 @@ class EditProduct extends EditRecord
             return $record;
         }
 
-        $product_config = ExtensionHelper::getProductConfig(Server::findOrFail($data['server_id']));
+        $product_config = ExtensionHelper::getProductConfig(Server::findOrFail($data['server_id']), $data['settings']);
 
         $things = array_map(function ($option) use ($data, $record) {
             return [
