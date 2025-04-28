@@ -39,7 +39,7 @@ class Stripe extends Gateway
             [
                 'name' => 'stripe_secret_key',
                 'label' => 'Stripe Restricted key',
-                'placeholder' => 'Enter your Stripe Publishable API key',
+                'placeholder' => 'Enter your Stripe Restricted API key',
                 'type' => 'text',
                 'description' => 'Find your API keys at https://dashboard.stripe.com/apikeys',
                 'required' => true,
