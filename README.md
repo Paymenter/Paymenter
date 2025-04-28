@@ -1,4 +1,5 @@
-![Paymenter Logo](https://paymenter.org/image/textlogo.png)
+![Paymenter Logo](https://paymenter.org/logo-test-2.svg)
+
 
 [![Discord](https://img.shields.io/discord/882318291014651924.svg?logo=discord)](https://discord.gg/xB4UUT3XQg)
 [![GitHub](https://img.shields.io/github/license/paymenter/paymenter)](https://github.com/Paymenter/paymenter/blob/master/LICENSE)
