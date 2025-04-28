@@ -2,6 +2,7 @@
 
 namespace App\Helpers;
 
+use App\Classes\PDF;
 use App\Mail\Mail;
 use App\Models\EmailLog;
 use App\Models\EmailTemplate;
@@ -43,7 +44,7 @@ class NotificationHelper
         $mail->email_log_id = $emailLog->id;
 
         foreach ($attachments as $attachment) {
-            $mail->attachFromStorage($attachment['path'], $attachment['name'], $attachment['options'] ?? []);
+            $mail->attachData($attachment['data'], $attachment['name'], $attachment['options'] ?? []);
         }
 
         FacadesMail::to($user->email)
@@ -67,8 +68,11 @@ class NotificationHelper
         ];
         $attachments = [
             [
-                'path' => 'invoices/' . $invoice->id . '.pdf',
-                'name' => 'invoice.pdf',
+                'data' => PDF::generateInvoice($invoice)->output(),
+                'name' => 'invoice_' . $invoice->id . '.pdf',
+                'options' => [
+                    'mime' => 'application/pdf',
+                ],
             ],
         ];
         self::sendEmailNotification('new_invoice_created', $data, $user, $attachments);
