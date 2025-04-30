@@ -30,8 +30,8 @@ class Register extends ComponentWithProperties
     public function rules()
     {
         return array_merge([
-            'first_name' => 'required|string|max:255',
-            'last_name' => 'required|string|max:255',
+            'first_name' => 'required|string|max:255|regex:/^[A-Za-z]+$/',
+            'last_name' => 'required|string|max:255|regex:/^[A-Za-z]+$/',
             'email' => 'required|email|max:255|unique:users',
             'password' => 'required|string|min:8|confirmed',
         ], $this->getRulesForProperties());
