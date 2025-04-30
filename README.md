@@ -1,10 +1,10 @@
 <br>
-<br>
 <p align="center">
   <a href="https://paymenter.org">
     <picture>
-      <source media="(prefers-color-scheme: dark)" srcset="https://paymenter.org/iso.svg" width="80px" height="100%" >
-      <source media="(prefers-color-scheme: light)" srcset="https://paymenter.org/iso.svg" width="80px" height="100%" >
+      <source media="(max-width: 768px)" srcset="https://paymenter.org/iso.svg" width="65px">
+      <source media="(prefers-color-scheme: dark)" srcset="https://paymenter.org/iso.svg" width="80px">
+      <source media="(prefers-color-scheme: light)" srcset="https://paymenter.org/iso.svg" width="80px">
       <img alt="Paymenter Isotype" src="https://paymenter.org/iso.svg">
     </picture>
   </a>
@@ -36,14 +36,13 @@
 </div>
 
 <div align="center">
-  <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="https://paymenter.org/landing/screenshots/dark/dashboard.webp"  height="100%" >
-    <source media="(prefers-color-scheme: light)" srcset="https://paymenter.org/landing/screenshots/light/dashboard.webp"  height="100%" >
-    <img alt="Paymenter logo" src="https://paymenter.org/landing/screenshots/dark/dashboard.webp">
-  </picture>
-      <br>
+    <picture>
+      <source media="(max-width: 768px)" srcset="https://upload.wikimedia.org/wikipedia/commons/c/ca/1x1.png">
+      <source media="(prefers-color-scheme: dark)" srcset="https://paymenter.org/landing/screenshots/dark/dashboard.webp">
+      <source media="(prefers-color-scheme: light)" srcset="https://paymenter.org/landing/screenshots/light/dashboard.webp">
+      <img alt="Paymenter Dashboard" src="https://paymenter.org/landing/screenshots/dark/dashboard.webp">
+    </picture>
     <br>
-  <br>
 </div>
 
 ## Getting Started
@@ -77,16 +76,6 @@ Paymenter is available under the MIT license, offering you the freedom to adapt 
 ## Sponsors
 
 Thanks to all sponsors for helping fund Paymenter's development. [Interested in becoming a sponsor?](https://github.com/sponsors/Paymenter)
-
-## Star History
-
-<a href="https://www.star-history.com/#Paymenter/Paymenter&Date">
-  <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=paymenter/paymenter&type=Date&theme=dark" />
-    <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=paymenter/paymenter&type=Date" />
-    <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=paymenter/paymenter&type=Date" />
-  </picture>
-</a>
 
 ## License
 
