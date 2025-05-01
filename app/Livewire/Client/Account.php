@@ -51,8 +51,6 @@ class Account extends ComponentWithProperties
             $this->updateProperties($user, $validatedData['properties']);
         }
 
-        event(new AccountUpdated($user));
-
         $this->notify(__('Account updated successfully.'));
     }
 
