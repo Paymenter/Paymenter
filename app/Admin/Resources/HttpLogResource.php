@@ -20,6 +20,12 @@ class HttpLogResource extends Resource
 
     public static ?string $navigationGroup = 'Debug';
 
+    // Edit query to only include with type 'http'
+    public static function getEloquentQuery(): \Illuminate\Database\Eloquent\Builder
+    {
+        return parent::getEloquentQuery()->where('type', 'http');
+    }
+
     public static function table(Table $table): Table
     {
         return $table
