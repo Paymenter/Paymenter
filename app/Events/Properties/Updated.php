@@ -15,5 +15,10 @@ class Updated
     /**
      * Create a new event instance.
      */
-    public function __construct(Model $model, array $properties) {}
+    public function __construct(Model $model, array $properties) {
+        Log::info('Properties updated', [
+            'model' => $model,
+            'properties' => $properties,
+        ]);
+    }
 }

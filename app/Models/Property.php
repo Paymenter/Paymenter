@@ -2,9 +2,12 @@
 
 namespace App\Models;
 
+use App\Observers\PropertyObserver;
+use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
+#[ObservedBy([PropertyObserver::class])]
 class Property extends Model
 {
     use HasFactory;
