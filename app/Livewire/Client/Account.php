@@ -2,7 +2,6 @@
 
 namespace App\Livewire\Client;
 
-use App\Events\Account\Updated as AccountUpdated;
 use App\Livewire\ComponentWithProperties;
 use Illuminate\Support\Facades\Auth;
 

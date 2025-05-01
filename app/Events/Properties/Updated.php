@@ -1,21 +1,19 @@
 <?php
 
-namespace App\Events\Account;
+namespace App\Events\Properties;
 
-use App\Models\User;
 use Illuminate\Broadcasting\InteractsWithSockets;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Log;
 
-class Created
+class Updated
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
     /**
      * Create a new event instance.
      */
-    public function __construct(public User $user)
-    {
-        //
-    }
+    public function __construct(Model $model, array $properties) {}
 }
