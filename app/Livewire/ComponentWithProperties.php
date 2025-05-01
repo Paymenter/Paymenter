@@ -2,6 +2,7 @@
 
 namespace App\Livewire;
 
+use App\Events\Properties\Updated as PropertiesUpdated;
 use Illuminate\Database\Eloquent\Collection;
 
 class ComponentWithProperties extends Component
@@ -79,5 +80,7 @@ class ComponentWithProperties extends Component
             'model_type',
             'custom_property_id',
         ]);
+
+        event(new PropertiesUpdated($model, $properties));
     }
 }
