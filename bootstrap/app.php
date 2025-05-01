@@ -31,7 +31,7 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withExceptions(function (Exceptions $exceptions) {
         $exceptions->report(function (Exception $exception) {
             try {
-                
+
                 if (!config('settings.debug', false)) {
                     return;
                 }
