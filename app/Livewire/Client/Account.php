@@ -42,7 +42,7 @@ class Account extends ComponentWithProperties
     {
         $validatedData = $this->validate();
 
-        /** @var \App\Models\User */
+        /** @var \App\Models\User $user */
         $user = Auth::user();
         $user->update($validatedData);
 
