@@ -1,9 +1,19 @@
 <nav class="w-full md:px-4 bg-background-secondary border-b border-neutral md:h-14 flex md:flex-row flex-col justify-between fixed top-0 z-20">
-    <div x-data="{ 
+<div x-data="{ 
         slideOverOpen: false 
     }"
-        x-init="$watch('slideOverOpen', value => { document.documentElement.style.overflow = value ? 'hidden' : '' })"
-        class="relative z-50 w-full h-auto">
+    x-init="
+        $watch('slideOverOpen', value => { 
+            document.documentElement.style.overflow = value ? 'hidden' : '' 
+        });
+
+        const resizeHandler = () => {
+            if (window.innerWidth >= 768 && slideOverOpen) slideOverOpen = false;
+        };
+        window.addEventListener('resize', resizeHandler);
+        resizeHandler();
+    "
+    class="relative z-50 w-full h-auto">
 
         <div class="flex flex-row items-center justify-between h-14 px-4">
 
@@ -12,9 +22,11 @@
                     <x-ri-menu-fill class="size-5" />
                 </button>
                 <a href="{{ route('home') }}" class="flex flex-row items-center" wire:navigate>
-                    <x-logo class="h-10" />
-                    <span class="text-xl text-base ml-2 font-bold">{{ config('app.name') }}</span>
-                </a>
+				   <div class="hidden md:flex flex-row items-center">
+			 		 <x-logo class="h-10" />
+					 <span class="text-xl text-base ml-2 font-bold">{{ config('app.name') }}</span>
+				   </div>
+				 </a>
                 <div class="md:flex hidden flex-row ml-7">
                     @foreach (\App\Classes\Navigation::getLinks() as $nav)
                     @if (isset($nav['children']) && count($nav['children']) > 0)
