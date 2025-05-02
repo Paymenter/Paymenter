@@ -64,7 +64,7 @@ class NotificationHelper
             'invoice' => $invoice,
             'items' => $invoice->items,
             'total' => $invoice->formattedTotal,
-            'has_subscription' => $invoice->items->filter(fn ($item) => $item->relation_type === Service::class && $item->relation->subscription_id)->isNotEmpty(),
+            'has_subscription' => $invoice->items->filter(fn ($item) => $item->reference_type === Service::class && $item->reference->subscription_id)->isNotEmpty(),
         ];
         $attachments = [
             [
