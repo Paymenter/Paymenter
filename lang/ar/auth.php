@@ -32,7 +32,7 @@ return [
     'input' => [
         'email' => 'Email',
         'email_label' => 'Email Address',
-        'password' => 'Password',
+        'password' => 'كلمة المرور',
     ],
 
     'oauth' => [
@@ -46,7 +46,7 @@ return [
     'verify' => 'Verify',
 
     'verification' => [
-        'notice' => 'Verify your email address',
+        'notice' => 'تحقق من عنوان بريدك الإلكتروني',
         'sent' => 'A new verification link has been sent to your email address.',
         'check_your_email' => 'Before proceeding, please check your email for a verification link.',
         'not_received' => 'If you did not receive the email you can request another verification email.',
