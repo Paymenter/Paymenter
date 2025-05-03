@@ -3,9 +3,9 @@
 return [
     'dashboard_title' => 'لوحة المعلومات',
     'welcome_back' => 'مرحبا بعودتك، :name!',
-    'dashboard_description' => 'Manage your active services, invoices, tickets, and stay updated here.',
-    'open_tickets' => 'Open Tickets',
-    'unpaid_invoices' => 'Unpaid Invoices',
-    'active_services' => 'Active Services',
-    'view_all' => 'View All',
+    'dashboard_description' => 'أدر خدماتك النشطة، الفواتير، التذاكر، وأبقى على اطلاع دائم بالمستجدات هنا.',
+    'open_tickets' => 'التذاكر المفتوحة',
+    'unpaid_invoices' => 'فواتير غير مدفوعة',
+    'active_services' => 'الخدمات النشطة',
+    'view_all' => 'عرض الكل',
 ];
