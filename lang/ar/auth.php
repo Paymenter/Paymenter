@@ -48,8 +48,8 @@ return [
     'verification' => [
         'notice' => 'تحقق من عنوان بريدك الإلكتروني',
         'sent' => 'تم إرسال رابط تحقق جديد إلى عنوان بريدك الإلكتروني.',
-        'check_your_email' => 'Before proceeding, please check your email for a verification link.',
-        'not_received' => 'If you did not receive the email you can request another verification email.',
+        'check_your_email' => 'قبل المتابعة، يرجى التحقق من بريدك الإلكتروني عبر الرابط المرسل.',
+        'not_received' => 'إذا لم تستلم رابط التحقق يمكنك طلب رسالة تحقق أخرى.',
         'request_another' => 'إعادة إرسال رابط التحقق إلى البريد الإلكتروني',
     ],
 ];
