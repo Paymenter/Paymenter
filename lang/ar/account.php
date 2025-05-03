@@ -9,12 +9,12 @@ return [
     'change_password' => 'تغيير كلمة المرور',
 
     'two_factor_authentication' => 'المصادقة الثنائية',
-    'two_factor_authentication_description' => '..',
+    'two_factor_authentication_description' => 'أضف طبقة إضافية من الأمان إلى حسابك بتفعيل المصادقة الثنائية.',
     'two_factor_authentication_enabled' => 'تم تمكين المصادقة الثنائية لحسابك.',
     'two_factor_authentication_enable' => 'تمكين المصادقة الثنائية',
     'two_factor_authentication_disable' => 'تعطيل المصادقة الثنائية',
-    'two_factor_authentication_enable_description' => 'لتمكين المصادقة ثنائية العاملات، تحتاج إلى مسح رمز QR أدناه باستخدام تطبيق مصادقة مثل Google Authenticator أو Authy.',
-    'two_factor_authentication_qr_code' => 'قم بمسح رمز QR أدناه باستخدام تطبيق المصادقة الخاص بك:',
+    'two_factor_authentication_enable_description' => 'لتمكين المصادقة الثنائية، تحتاج إلى مسح رمز QR أدناه باستخدام تطبيق مصادقة مثل Google Authenticator أو Authy.',
+    'two_factor_authentication_qr_code' => 'أفحص رمز QR أدناه باستخدام تطبيق المصادقة الخاص بك:',
     'two_factor_authentication_secret' => 'أو أدخل الرمز التالي يدويًا:',
 
     'sessions' => 'الجلسات',
