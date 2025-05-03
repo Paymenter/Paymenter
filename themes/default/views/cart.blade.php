@@ -19,8 +19,9 @@
                 </div>
                 <div class="flex flex-col justify-between items-end gap-4">
                     <h3 class="text-xl font-semibold p-1">
-                        {{ $item->price->format($item->price->price * $item->quantity) }} @if ($item->quantity > 1)
-                            ({{ $item->price }} each)
+                        {{ $item->price->format($item->price->price * $item->quantity) }}
+                            @if ($item->quantity > 1
+                        ({{ $item->quantity }} × {{ $item->price->format($item->price->price) }})
                         @endif
                     </h3>
                     <div class="flex flex-row gap-2">
