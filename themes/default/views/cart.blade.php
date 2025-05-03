@@ -31,9 +31,7 @@
                                     class="h-full !w-fit">
                                     -
                                 </x-button.secondary>
-                                <x-form.input class="h-10 text-center" disabled
-                                    wire:model="items.{{ $key }}.quantity" divClass="!mt-0 !w-14"
-                                    name="quantity" />
+                                <x-form.input class="h-10 text-center" disabled divClass="!mt-0 !w-14" value="{{ $item->quantity }}" name="quantity" />
                                 <x-button.secondary
                                     wire:click="updateQuantity({{ $key }}, {{ $item->quantity + 1 }});"
                                     class="h-full !w-fit">

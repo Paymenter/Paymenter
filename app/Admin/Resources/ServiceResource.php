@@ -161,6 +161,9 @@ class ServiceResource extends Resource
                     ->label('ID')
                     ->sortable()
                     ->searchable(),
+                Tables\Columns\TextColumn::make('user.name')
+                    ->label('User')
+                    ->searchable(true, fn (Builder $query, string $search) => $query->whereHas('user', fn (Builder $query) => $query->where('first_name', 'like', "%$search%")->orWhere('last_name', 'like', "%$search%"))),
                 Tables\Columns\TextColumn::make('product.name')
                     ->label('Product')
                     ->searchable()

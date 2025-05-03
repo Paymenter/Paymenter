@@ -17,9 +17,10 @@ class Support extends BaseWidget
         return $table
             ->query(
                 Ticket::query()
-                    ->with('user')
                     ->where('status', '!=', 'closed')
-                    ->orderBy('created_at', 'desc')
+                    ->with('user')
+                    ->withMax('messages', 'created_at')
+                    ->orderByDesc('messages_max_created_at')
                     ->limit(5)
             )
             ->columns([

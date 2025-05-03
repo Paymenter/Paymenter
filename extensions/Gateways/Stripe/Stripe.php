@@ -23,12 +23,15 @@ class Stripe extends Gateway
         View::addNamespace('gateways.stripe', __DIR__ . '/resources/views');
 
         Event::listen(Updated::class, function (Updated $event) {
-            if (!$event->service->isDirty('price') || $event->service->properties->where('key', 'has_stripe_subscription')->first()?->value !== '1') {
+            if ($event->service->properties->where('key', 'has_stripe_subscription')->first()?->value !== '1' || !$event->service->subscription_id) {
+                // If the service is not a stripe subscription, skip
                 return;
             }
-            try {
-                $this->updateSubscription($event->service);
-            } catch (\Exception $e) {
+            if ($event->service->isDirty('price')) {
+                try {
+                    $this->updateSubscription($event->service);
+                } catch (\Exception $e) {
+                }
             }
         });
     }
@@ -39,7 +42,7 @@ class Stripe extends Gateway
             [
                 'name' => 'stripe_secret_key',
                 'label' => 'Stripe Restricted key',
-                'placeholder' => 'Enter your Stripe Publishable API key',
+                'placeholder' => 'Enter your Stripe Restricted API key',
                 'type' => 'text',
                 'description' => 'Find your API keys at https://dashboard.stripe.com/apikeys',
                 'required' => true,
@@ -111,7 +114,7 @@ class Stripe extends Gateway
     {
         return Http::withHeaders([
             'Authorization' => 'Bearer ' . $this->config('stripe_secret_key'),
-        ])->asForm()->$method('https://api.stripe.com/v1' . $url, $data)->object();
+        ])->asForm()->$method('https://api.stripe.com/v1' . $url, $data)->throw()->object();
     }
 
     public function pay($invoice, $total)
@@ -121,15 +124,20 @@ class Stripe extends Gateway
         })->count() > 0;
         if ($this->config('stripe_use_subscriptions') && $eligableforSubscription) {
             $stripeCustomerId = $invoice->user->properties->where('key', 'stripe_id')->first();
-            if (!$stripeCustomerId) {
+            if ($stripeCustomerId) {
+                try {
+                    $customer = $this->request('get', '/customers/' . $stripeCustomerId->value);
+                } catch (\Exception $e) {
+                    // Customer not found, create a new one
+                }
+            }
+            if (!isset($customer)) {
                 $customer = $this->request('post', '/customers', [
                     'email' => $invoice->user->email,
                     'name' => $invoice->user->name,
                     'metadata' => ['user_id' => $invoice->user->id],
                 ]);
                 $invoice->user->properties()->updateOrCreate(['key' => 'stripe_id'], ['value' => $customer->id]);
-            } else {
-                $customer = $this->request('get', '/customers/' . $stripeCustomerId->value);
             }
 
             $intent = $this->request('post', '/setup_intents', [
@@ -324,51 +332,70 @@ class Stripe extends Gateway
 
     public function updateSubscription(Service $service)
     {
-        if (!$service->subscription_id || !$service->properties->where('key', 'has_stripe_subscription')->first()) {
-            return;
-        }
         // Grab the schedule from Stripe
         $scheduleId = $this->request('get', '/subscriptions/' . $service->subscription_id);
-        $oldPhases = $this->request('get', '/subscription_schedules/' . $scheduleId->schedule)->phases;
-        // Overwrite phase 2 item 0 with the new price
-        $phases = [];
-        // Only keep items and end, start date
-        foreach ($oldPhases as $phase) {
-            $phases[] = [
-                'items' => $phase->items,
-                'end_date' => $phase->end_date,
-                'start_date' => $phase->start_date,
-            ];
-        }
-        // Check if the service->product already exists in Stripe
-        $product = $service->product;
-        $stripeProduct = $this->request('get', '/products/search', ['query' => 'metadata[\'product_id\']:\'' . $product->id . '\'']);
+        if ($scheduleId->schedule) {
 
-        if (empty($stripeProduct->data)) {
-            // Create product
-            $stripeProduct = $this->request('post', '/products', [
-                'name' => $product->name,
-                'metadata' => ['product_id' => $product->id],
+            $oldPhases = $this->request('get', '/subscription_schedules/' . $scheduleId->schedule)->phases;
+            // Overwrite phase 2 item 0 with the new price
+            $phases = [];
+            // Only keep items and end, start date
+            foreach ($oldPhases as $phase) {
+                $phases[] = [
+                    'items' => $phase->items,
+                    'end_date' => $phase->end_date,
+                    'start_date' => $phase->start_date,
+                ];
+            }
+            // Check if the service->product already exists in Stripe
+            $product = $service->product;
+            $stripeProduct = $this->request('get', '/products/search', ['query' => 'metadata[\'product_id\']:\'' . $product->id . '\'']);
+
+            if (empty($stripeProduct->data)) {
+                // Create product
+                $stripeProduct = $this->request('post', '/products', [
+                    'name' => $product->name,
+                    'metadata' => ['product_id' => $product->id],
+                ]);
+            } else {
+                $stripeProduct = $stripeProduct->data[0];
+            }
+            // Latest phase is the current one
+            $key = count($phases) - 1;
+            $phases[$key]['items'][0]->price_data = [
+                'currency' => $service->currency->code,
+                'unit_amount' => $service->price * 100,
+                'product' => $stripeProduct->id,
+                'recurring' => [
+                    'interval' => $service->plan->billing_unit,
+                    'interval_count' => $service->plan->billing_period,
+                ],
+            ];
+            $phases[$key]['items'][0]->price = null;
+            $phases[$key]['items'][0]->plan = null;
+
+            // Update the schedule
+            $this->request('post', '/subscription_schedules/' . $scheduleId->schedule, [
+                'phases' => $phases,
             ]);
         } else {
-            $stripeProduct = $stripeProduct->data[0];
+            // Get subscription
+            $subscription = $this->request('get', '/subscriptions/' . $service->subscription_id);
+            // Get first item
+            $item = $subscription->items->data[0];
+            // Update price
+            $this->request('post', '/subscription_items/' . $item->id, [
+                'price_data' => [
+                    'currency' => $service->currency->code,
+                    'unit_amount' => $service->price * 100,
+                    'product' => $item->price->product,
+                    'recurring' => [
+                        'interval' => $service->plan->billing_unit,
+                        'interval_count' => $service->plan->billing_period,
+                    ],
+                ],
+            ]);
         }
-        $phases[1]['items'][0]->price_data = [
-            'currency' => $service->currency->code,
-            'unit_amount' => $service->price * 100,
-            'product' => $stripeProduct->id,
-            'recurring' => [
-                'interval' => $service->plan->billing_unit,
-                'interval_count' => $service->plan->billing_period,
-            ],
-        ];
-        $phases[1]['items'][0]->price = null;
-        $phases[1]['items'][0]->plan = null;
-
-        // Update the schedule
-        $this->request('post', '/subscription_schedules/' . $scheduleId->schedule, [
-            'phases' => $phases,
-        ]);
     }
 
     public function cancelSubscription(Service $service)

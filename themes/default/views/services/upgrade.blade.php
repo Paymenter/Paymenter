@@ -15,7 +15,7 @@
                     {!! $product->description !!}
                 </article>
                 <h3 class="text-lg font-semibold text-primary-300">
-                    {{ $product->price(currency: $service->order->currency_code) }} every {{
+                    {{ $product->price(null, $service->plan->billing_period, $service->plan->billing_unit, $service->order->currency_code) }} every {{
                     $service->plan->billing_period > 1 ? $service->plan->billing_period : '' }}
                     {{ Str::plural($service->plan->billing_unit, $service->plan->billing_period) }}
                 </h3>

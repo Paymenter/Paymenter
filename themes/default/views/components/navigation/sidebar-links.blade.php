@@ -9,7 +9,7 @@
                     class="flex items-center justify-between w-full p-3 text-sm font-semibold whitespace-nowrap rounded-lg hover:bg-primary/10">
                     <div class="flex flex-row gap-2">
                         @isset($nav['icon'])
-                            <x-dynamic-component :component="$nav['icon']"  
+                            <x-dynamic-component :component="$nav['icon']"
                             class="size-5 {{ $nav['active'] ? 'text-primary' : 'fill-base/50' }}" />
                         @endisset
                         <span>{{ $nav['name'] }}</span>
@@ -71,13 +71,15 @@
                 <div x-show="activeAccordion" x-collapse x-cloak>
                     <div class="p-4 pt-0 opacity-70">
                         @foreach ($nav['children'] as $child)
-                        <div class="flex items-center space-x-2">
-                            <x-navigation.link :href="route($child['route'], $child['params'] ?? [])"
-                                :spa="$child['spa'] ?? true"
-                                class="{{ $child['active'] ? 'text-primary font-bold' : '' }}">
-                                {{ $child['name'] }}
-                            </x-navigation.link>
-                        </div>
+                            @if ($child['condition'] ?? true)
+                            <div class="flex items-center space-x-2">
+                                <x-navigation.link :href="route($child['route'], $child['params'] ?? [])"
+                                    :spa="$child['spa'] ?? true"
+                                    class="{{ $child['active'] ? 'text-primary font-bold' : '' }}">
+                                    {{ $child['name'] }}
+                                </x-navigation.link>
+                            </div>
+                            @endif
                         @endforeach
                     </div>
                 </div>

@@ -121,6 +121,22 @@
                 {{ config('settings.company_phone') }}
             </td>
         </tr>
+        <tr>
+            <td></td>
+            <td>
+                @if(config('settings.company_tax_id'))
+                    {{ __('invoices.tax_id') }}: {{ config('settings.company_tax_id') }}
+                @endif
+            </td>
+        </tr>
+        <tr>
+            <td></td>
+            <td>
+                @if(config('settings.company_id'))
+                    {{ __('invoices.company_id') }}: {{ config('settings.company_id') }}
+                @endif
+            </td>
+        </tr>
     </table>
 
     <table style="margin-top: 40px;" class="invoice-items">

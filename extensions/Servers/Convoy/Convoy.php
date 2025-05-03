@@ -162,6 +162,7 @@ class Convoy extends Server
                 'label' => 'Hostname',
                 'placeholder' => 'server.example.com',
                 'required' => true,
+                'validation' => 'required|string|max:40',
             ],
         ];
     }
@@ -186,7 +187,7 @@ class Convoy extends Server
     private function createPassword()
     {
         $password = Str::password();
-        while (!preg_match('/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,50}$/', $password)) {
+        while (!preg_match('/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#\$%\^&\*]).{8,50}$/', $password)) {
             $password = Str::password();
         }
 

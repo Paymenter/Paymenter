@@ -11,13 +11,6 @@ class PDF
     {
         $pdf = DomPDF::loadView('pdf.invoice', ['invoice' => $invoice]);
 
-        // Create path if it doesn't exist
-        if (!is_dir(storage_path('app/invoices'))) {
-            mkdir(storage_path('app/invoices'));
-        }
-        // Save the PDF to the storage
-        $pdf->save(storage_path('app/invoices/' . $invoice->number . '.pdf'));
-
         return $pdf;
     }
 }

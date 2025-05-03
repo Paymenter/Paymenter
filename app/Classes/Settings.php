@@ -219,6 +219,16 @@ class Settings
                     'type' => 'select',
                     'options' => array_merge(['' => 'None'], config('app.countries')),
                 ],
+                [
+                    'name' => 'company_tax_id',
+                    'label' => 'Company Tax ID',
+                    'type' => 'text',
+                ],
+                [
+                    'name' => 'company_id',
+                    'label' => 'Company ID',
+                    'type' => 'text',
+                ],
             ],
             'tax' => [
                 [
@@ -494,7 +504,7 @@ class Settings
                     'label' => 'Debug Mode',
                     'type' => 'checkbox',
                     'default' => false,
-                    'description' => 'Enable debug mode to log HTTP requests and display errors in the browser',
+                    'description' => 'Enable debug mode to log HTTP requests and errors',
                 ],
             ],
         ];
