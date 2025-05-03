@@ -32,9 +32,7 @@
                                     class="h-full !w-fit">
                                     -
                                 </x-button.secondary>
-                                <x-form.input class="h-10 text-center" disabled
-                                    wire:model="items.{{ $key }}.quantity" divClass="!mt-0 !w-14"
-                                    name="quantity" />
+                                <x-form.input class="h-10 text-center" disabled divClass="!mt-0 !w-14" value="{{ $item->quantity }}" name="quantity" />
                                 <x-button.secondary
                                     wire:click="updateQuantity({{ $key }}, {{ $item->quantity + 1 }});"
                                     class="h-full !w-fit">
@@ -77,9 +75,14 @@
                         </div>
                     @endif
                 </div>
-                <div class="font-semibold flex justify-between">
-                    <h4>{{ __('invoices.subtotal') }}:</h4> {{ $total->format($total->price - $total->tax) }}
-                </div>
+				
+				@foreach (Cart::get() as $key => $item)
+				<div class="font-semibold flex justify-between">
+					<h4>{{ $item->product->name }} ({{ $item->quantity }} x {{ $item->price->format($item->price->price) }})</h4>
+					<span>{{ $item->price->format($item->price->price * $item->quantity) }}</span>
+				</div>
+				@endforeach
+				
                 @if ($total->tax > 0)
                     <div class="font-semibold flex justify-between">
                         <h4>{{ \App\Classes\Settings::tax()->name }}:</h4> {{ $total->formatted->tax }}
