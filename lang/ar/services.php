@@ -1,10 +1,10 @@
 <?php
 
 return [
-    'services' => 'Services',
-    'product' => 'Product',
-    'price' => 'Price',
-    'status' => 'Status',
+    'services' => 'الخدمات',
+    'product' => 'المنتجات',
+    'price' => 'السعر',
+    'status' => 'الحالة',
     'name' => 'Name',
     'actions' => 'Actions',
     'view' => 'View',
