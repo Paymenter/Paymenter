@@ -1,8 +1,8 @@
 <?php
 
 return [
-    'dashboard_title' => 'Dashboard',
-    'welcome_back' => 'Welcome back, :name!',
+    'dashboard_title' => 'لوحة المعلومات',
+    'welcome_back' => 'مرحبا بعودتك، :name!',
     'dashboard_description' => 'Manage your active services, invoices, tickets, and stay updated here.',
     'open_tickets' => 'Open Tickets',
     'unpaid_invoices' => 'Unpaid Invoices',
