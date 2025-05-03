@@ -12,7 +12,7 @@ return [
     'subtotal' => 'Subtotal',
     'invoice' => 'Invoice #:id',
     'unit_price' => 'Unit Price',
-    'bill_to' => 'Bill To',
+    'bill_to' => '',
     'paid' => 'Paid',
     'payment_pending' => 'Payment Pending',
     'checking_payment' => 'Checking Payment',
