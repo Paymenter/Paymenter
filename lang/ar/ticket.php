@@ -1,25 +1,25 @@
 <?php
 
 return [
-    'ticket_details' => 'Ticket Details',
-    'tickets' => 'Tickets',
-    'subject' => 'Subject',
-    'status' => 'Status',
-    'priority' => 'Priority',
-    'department' => 'Department',
-    'created_at' => 'Created At',
-    'reply' => 'Reply',
+    'ticket_details' => 'تفاصيل التذكرة',
+    'tickets' => 'التذاكر',
+    'subject' => 'الموضوع',
+    'status' => 'الحالة',
+    'priority' => 'الأولوية',
+    'department' => 'القسم',
+    'created_at' => 'أنشئت في',
+    'reply' => 'ردّ',
 
-    'create_ticket' => 'Create Ticket',
-    'select_department' => 'Select Department',
-    'select_priority' => 'Select Priority',
-    'low' => 'Low',
-    'medium' => 'Medium',
-    'high' => 'High',
+    'create_ticket' => 'إنشاء تذكرة',
+    'select_department' => 'اختر القسم',
+    'select_priority' => 'اختر الأولوية',
+    'low' => 'منخفضة',
+    'medium' => 'متوسطة',
+    'high' => 'عالية',
 
-    'last_activity' => 'Last activity',
+    'last_activity' => 'آخر نشاط',
 
-    'service' => 'Service',
-    'select_service' => 'Select Service',
-    'create' => 'Create',
+    'service' => 'الخدمة',
+    'select_service' => 'اختر الخدمة',
+    'create' => 'أنشئ',
 ];
