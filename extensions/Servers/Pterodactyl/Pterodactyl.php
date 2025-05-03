@@ -268,7 +268,7 @@ class Pterodactyl extends Server
         if (!$user) {
             $user = $this->request('/api/application/users', 'post', [
                 'email' => $orderUser->email,
-                'username' => (preg_replace('/[^a-zA-Z0-9]/', '', strtolower($orderUser->name)) ?? Str::random(8)) . '_' . Str::random(4),
+			    'username' => explode('@', $orderUser->email)[0],
                 'first_name' => $orderUser->first_name ?? '',
                 'last_name' => $orderUser->last_name ?? '',
             ])['attributes']['id'];
