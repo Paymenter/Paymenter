@@ -4,7 +4,7 @@ return [
     'add_to_cart' => 'إضافة إلى السلة',
     'view' => 'عرض',
     'checkout' => 'الدفع',
-    'remove' => 'Remove',
+    'remove' => 'إزالة',
     'empty_cart' => 'سلة التسوق فارغة',
     'total_today' => 'المجموع اليوم',
     'subtotal' => 'المجموع الجزئي',
