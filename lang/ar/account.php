@@ -1,16 +1,16 @@
 <?php
 
 return [
-    'account' => 'Account',
-    'personal_details' => 'Personal details',
-    'security' => 'Security',
-    'credits' => 'Credits',
+    'account' => 'الحساب',
+    'personal_details' => 'البيانات الشخصية',
+    'security' => 'الأمان',
+    'credits' => 'الرصيد',
 
-    'change_password' => 'Change password',
+    'change_password' => 'تغيير كلمة المرور',
 
     'two_factor_authentication' => 'المصادقة الثنائية',
     'two_factor_authentication_description' => '..',
-    'two_factor_authentication_enabled' => 'Two-factor authentication is enabled for your account.',
+    'two_factor_authentication_enabled' => 'تم تمكين المصادقة الثنائية لحسابك.',
     'two_factor_authentication_enable' => 'Enable two-factor authentication',
     'two_factor_authentication_disable' => 'Disable two-factor authentication',
     'two_factor_authentication_enable_description' => 'لتمكين المصادقة ثنائية العاملات، تحتاج إلى مسح رمز QR أدناه باستخدام تطبيق مصادقة مثل Google Authenticator أو Authy.',
