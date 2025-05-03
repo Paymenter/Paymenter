@@ -13,43 +13,43 @@ return [
     |
     */
 
-    'failed' => 'These credentials do not match our records.',
-    'password' => 'The provided password is incorrect.',
-    'throttle' => 'Too many login attempts. Please try again in :seconds seconds.',
+    'failed' => 'هذه البيانات لا تتطابق مع سجلاتنا.',
+    'password' => 'كلمة المرور المدخلة غير صحيحة.',
+    'throttle' => 'عدد كبير جدا من محاولات تسجيل الدخول. الرجاء المحاولة مرة أخرى بعد :seconds ثواني.',
 
-    'sign_in' => 'Sign in',
-    'sign_in_title' => 'Sign in to your account',
-    'or_sign_in_with' => 'Or sign in with',
-    'forgot_password' => 'Forgot your password?',
-    'dont_have_account' => 'Don\'t have an account?',
-    'already_have_account' => 'Already have an account?',
+    'sign_in' => 'تسجيل الدخول',
+    'sign_in_title' => 'قم بتسجيل الدخول إلى حسابك',
+    'or_sign_in_with' => 'أو سجل الدخول باستخدام',
+    'forgot_password' => 'نسيت كلمة المرور؟',
+    'dont_have_account' => 'ليس لديك حساب؟',
+    'already_have_account' => 'لديك حساب بالفعل؟',
 
-    'sign_up' => 'Sign up',
-    'sign_up_title' => 'Create your account',
+    'sign_up' => 'تسجيل',
+    'sign_up_title' => 'أنشئ حسابك',
 
-    'logout' => 'Logout',
+    'logout' => 'تسجيل الخروج',
 
     'input' => [
-        'email' => 'Email',
-        'email_label' => 'Email Address',
+        'email' => 'البريد الإلكتروني',
+        'email_label' => 'عنوان البريد الإلكتروني',
         'password' => 'كلمة المرور',
     ],
 
     'oauth' => [
-        'unverified_discord_account' => 'Your Discord account is not verified.',
-        'account_not_registered' => 'You are not registered on this site.',
+        'unverified_discord_account' => 'لم يتم التحقق من حساب ديسكورد الخاص بك.',
+        'account_not_registered' => 'أنت غير مسجل في هذا الموقع.',
     ],
 
-    'reset_password' => 'Reset password',
+    'reset_password' => 'إعادة تعيين كلمة المرور',
 
-    'verify_2fa' => 'Verify 2FA',
-    'verify' => 'Verify',
+    'verify_2fa' => 'التحقق عبر المصادقة الثنائية',
+    'verify' => 'التحقق',
 
     'verification' => [
         'notice' => 'تحقق من عنوان بريدك الإلكتروني',
-        'sent' => 'A new verification link has been sent to your email address.',
+        'sent' => 'تم إرسال رابط تحقق جديد إلى عنوان بريدك الإلكتروني.',
         'check_your_email' => 'Before proceeding, please check your email for a verification link.',
         'not_received' => 'If you did not receive the email you can request another verification email.',
-        'request_another' => 'Resend verification email',
+        'request_another' => 'إعادة إرسال رابط التحقق إلى البريد الإلكتروني',
     ],
 ];
