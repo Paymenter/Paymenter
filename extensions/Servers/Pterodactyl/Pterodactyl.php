@@ -265,14 +265,33 @@ class Pterodactyl extends Server
         $user = $this->request('/api/application/users', 'get', ['filter' => ['email' => $orderUser->email]])['data'][0]['attributes']['id'] ?? null;
 
         // Otherwise create a new user
-        if (!$user) {
-            $user = $this->request('/api/application/users', 'post', [
-                'email' => $orderUser->email,
-			    'username' => explode('@', $orderUser->email)[0],
-                'first_name' => $orderUser->first_name ?? '',
-                'last_name' => $orderUser->last_name ?? '',
-            ])['attributes']['id'];
-
+if (!$user) {
+            $resp = null;
+            try {
+                //Trying to create user without slag.
+                // From the user's side, it is more logical that having a username coincides with the name of the mailbox
+                $resp = $this->request('/api/application/users', 'post', [
+                    'email' => $orderUser->email,
+                    'username' => explode('@', $orderUser->email)[0],
+                    'first_name' => $orderUser->first_name ?? '',
+                    'last_name' => $orderUser->last_name ?? '',
+                ]);
+            }catch (\Exception $e) {
+                //Such user already exists. Adding some salt..
+                try{
+                    $resp = $this->request('/api/application/users', 'post', [
+                        'email' => $orderUser->email,
+                        'username' => explode('@', $orderUser->email)[0] . '_' . bin2hex(random_bytes(6 / 2)),
+                        'first_name' => $orderUser->first_name ?? '',
+                        'last_name' => $orderUser->last_name ?? '',
+                    ]);
+                }catch (\Exception $e){
+                    //if error occupied with salt,throwing it
+                    throw $e;
+                }
+            }
+            $user = $resp['attributes']['id'];
+            
             $returnData['created_user'] = true;
         }
 
