@@ -15,7 +15,7 @@ return [
     'bill_to' => '',
     'paid' => 'مدفوعة',
     'payment_pending' => 'في انتظار الدفع',
-    'checking_payment' => 'التحقق من الدفع',
+    'checking_payment' => 'الدفع قيد التحقق',
     'invoice_date' => 'تاريخ الفاتورة',
     'invoice_no' => 'رقم الفاتورة',
     'tax_id' => 'الرقم الضريبي',
