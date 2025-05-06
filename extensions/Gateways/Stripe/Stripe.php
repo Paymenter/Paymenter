@@ -395,7 +395,7 @@ class Stripe extends Gateway
                         'interval_count' => $service->plan->billing_period,
                     ],
                 ],
-                'proration_behavior' => 'none'
+                'proration_behavior' => 'none',
             ]);
         }
     }
