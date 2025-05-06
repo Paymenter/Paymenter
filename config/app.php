@@ -102,6 +102,7 @@ return [
         'no' => 'Norwegian',
         'pt' => 'Portuguese',
         'sr' => 'Serbian',
+        'zh' => 'Traditional Chinese (繁體中文)',
     ],
 
     'faker_locale' => env('APP_FAKER_LOCALE', 'en_US'),
