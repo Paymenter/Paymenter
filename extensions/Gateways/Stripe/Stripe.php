@@ -377,6 +377,7 @@ class Stripe extends Gateway
             // Update the schedule
             $this->request('post', '/subscription_schedules/' . $scheduleId->schedule, [
                 'phases' => $phases,
+                'proration_behavior' => 'none',
             ]);
         } else {
             // Get subscription
@@ -394,6 +395,7 @@ class Stripe extends Gateway
                         'interval_count' => $service->plan->billing_period,
                     ],
                 ],
+                'proration_behavior' => 'none'
             ]);
         }
     }
