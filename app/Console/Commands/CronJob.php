@@ -53,7 +53,7 @@ class CronJob extends Command
 
             // Create invoice
             $invoice = $service->invoices()->make([
-                'user_id' => $service->order->user_id,
+                'user_id' => $service->user_id,
                 'status' => 'pending',
                 'due_at' => $service->expires_at,
                 'currency_code' => $service->currency_code,
