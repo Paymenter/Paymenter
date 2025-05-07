@@ -12,7 +12,6 @@ use App\Models\Service;
 use App\Models\TicketMessage;
 use App\Models\User;
 use Carbon\Carbon;
-use Illuminate\Mail\Mailables\Attachment;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Mail as FacadesMail;
 use Illuminate\Support\Facades\URL;
