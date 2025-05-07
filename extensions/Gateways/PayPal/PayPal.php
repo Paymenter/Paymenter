@@ -172,8 +172,8 @@ class PayPal extends Gateway
                     ],
                 ],
                 'application_context' => [
-                    'return_url' => route('invoices.show', ['invoice' => $invoice->id]),
-                    'cancel_url' => route('invoices.show', ['invoice' => $invoice->id]),
+                    'return_url' => route('invoices.show', $invoice),
+                    'cancel_url' => route('invoices.show', $invoice),
                     // Disable shipping information
                     'shipping_preference' => 'NO_SHIPPING',
                 ],

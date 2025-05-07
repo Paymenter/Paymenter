@@ -65,7 +65,7 @@
                         //`Elements` instance that was used to create the Payment Element
                         elements,
                         confirmParams: {
-                            return_url: '{{ route('invoices.show', $invoice->id) }}?checkPayment=true',
+                            return_url: '{{ route('invoices.show', $invoice) }}?checkPayment=true',
                         },
                     });
                 } else if (type == 'setup') {
@@ -74,7 +74,7 @@
                     } = await stripe.confirmSetup({
                         elements,
                         confirmParams: {
-                            return_url: '{{ route('invoices.show', $invoice->id) }}?checkPayment=true',
+                            return_url: '{{ route('invoices.show', $invoice) }}?checkPayment=true',
                         },
                     });
                 }
@@ -110,7 +110,7 @@
 
                 switch (paymentIntent.status) {
                     case "succeeded":
-                        window.location.href = "{{ route('invoices.show', $invoice->id) }}";
+                        window.location.href = "{{ route('invoices.show', $invoice) }}";
                         break;
                     case "processing":
                         // Show a spinner and disable the submit button

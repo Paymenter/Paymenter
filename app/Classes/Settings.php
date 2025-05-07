@@ -440,6 +440,14 @@ class Settings
             ],
             'invoices' => [
                 [
+                    'name' => 'invoice_number',
+                    'label' => 'Invoice Number',
+                    'type' => 'number',
+                    'default' => 1,
+                    'required' => false,
+                    'description' => 'The next invoice number to use. This will be incremented automatically.',
+                ],
+                [
                     'name' => 'invoice_number_padding',
                     'label' => 'Invoice Number Padding',
                     'type' => 'number',

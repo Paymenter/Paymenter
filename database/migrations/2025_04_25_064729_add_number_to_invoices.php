@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Setting;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\DB;
@@ -21,6 +22,13 @@ return new class extends Migration
         Schema::table('invoices', function (Blueprint $table) {
             $table->string('number')->nullable(false)->change();
         });
+
+        // Set the default value for invoice_number to the current max value
+        Setting::updateOrCreate([
+            'key' => 'invoice_number',
+        ], [
+            'value' => DB::table('invoices')->max('id') ?: 0,
+        ]);
     }
 
     /**

@@ -64,7 +64,7 @@ class Show extends Component
                     $credit->save();
                     ExtensionHelper::addPayment($this->invoice->id, null, amount: $this->invoice->remaining);
 
-                    return $this->redirect(route('invoices.show', $this->invoice->id), true);
+                    return $this->redirect(route('invoices.show', $this->invoice), true);
                 } else {
                     ExtensionHelper::addPayment($this->invoice->id, null, amount: $credit->amount);
                     $credit->amount = 0;
@@ -98,7 +98,7 @@ class Show extends Component
         // Dispatch event so extensions can do their thing
         $this->dispatch('invoice.payment.cancelled', $this->invoice);
         // Refresh invoice status
-        $this->redirect(route('invoices.show', $this->invoice->id), true);
+        $this->redirect(route('invoices.show', $this->invoice), true);
     }
 
     public function checkPaymentStatus()

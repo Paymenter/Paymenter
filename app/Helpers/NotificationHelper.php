@@ -12,6 +12,7 @@ use App\Models\Service;
 use App\Models\TicketMessage;
 use App\Models\User;
 use Carbon\Carbon;
+use Illuminate\Mail\Mailables\Attachment;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Mail as FacadesMail;
 use Illuminate\Support\Facades\URL;
@@ -44,7 +45,7 @@ class NotificationHelper
         $mail->email_log_id = $emailLog->id;
 
         foreach ($attachments as $attachment) {
-            $mail->attachData($attachment['data'], $attachment['name'], $attachment['options'] ?? []);
+            $mail->attachFromStorage($attachment['path'], $attachment['name'], $attachment['options'] ?? []);
         }
 
         FacadesMail::to($user->email)
@@ -66,15 +67,21 @@ class NotificationHelper
             'total' => $invoice->formattedTotal,
             'has_subscription' => $invoice->items->filter(fn ($item) => $item->reference_type === Service::class && $item->reference->subscription_id)->isNotEmpty(),
         ];
+
+        // Generate the invoice PDF
+        $pdf = PDF::generateInvoice($invoice);
+        // Save the PDF to a temporary location
+        $pdfPath = storage_path('app/invoices/' . $invoice->number . '.pdf');
+        $pdf->save($pdfPath);
+
+        // Attach the PDF to the email
         $attachments = [
             [
-                'data' => PDF::generateInvoice($invoice)->output(),
-                'name' => 'invoice_' . $invoice->id . '.pdf',
-                'options' => [
-                    'mime' => 'application/pdf',
-                ],
+                'path' => 'invoices/' . $invoice->number . '.pdf',
+                'name' => 'invoice.pdf',
             ],
         ];
+
         self::sendEmailNotification('new_invoice_created', $data, $user, $attachments);
     }
 

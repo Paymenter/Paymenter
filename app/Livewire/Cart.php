@@ -257,15 +257,7 @@ class Cart extends Component
 
                 return $this->redirect(route('services'), true);
             } else {
-                $invoice = $invoice->fresh();
-                if ($this->gateway && $invoice->remaining > 0) {
-                    $pay = ExtensionHelper::pay(Gateway::where('id', $this->gateway)->first(), $invoice);
-                    if (is_string($pay)) {
-                        return $this->redirect($pay);
-                    }
-                }
-
-                return $this->redirect(route('invoices.show', $invoice) . '?gateway=' . $this->gateway . '&pay', true);
+                return $this->redirect(route('invoices.show', $invoice) . '?pay');
             }
         } catch (\Exception $e) {
             // Rollback the transaction
