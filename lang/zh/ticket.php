@@ -1,25 +1,25 @@
 <?php
 
 return [
-    'ticket_details' => 'Ticket Details',
-    'tickets' => 'Tickets',
-    'subject' => 'Subject',
-    'status' => 'Status',
-    'priority' => 'Priority',
-    'department' => 'Department',
-    'created_at' => 'Created At',
-    'reply' => 'Reply',
+    'ticket_details' => '服務單詳情',
+    'tickets' => '服務單',
+    'subject' => '主旨',
+    'status' => '狀態',
+    'priority' => '優先順序',
+    'department' => '部門',
+    'created_at' => '建立時間',
+    'reply' => '回覆',
 
-    'create_ticket' => 'Create Ticket',
-    'select_department' => 'Select Department',
-    'select_priority' => 'Select Priority',
-    'low' => 'Low',
-    'medium' => 'Medium',
-    'high' => 'High',
+    'create_ticket' => '建立工單',
+    'select_department' => '選擇部門',
+    'select_priority' => '選擇優先順序',
+    'low' => '低',
+    'medium' => '中',
+    'high' => '高',
 
-    'last_activity' => 'Last activity',
+    'last_activity' => '最後活動',
 
-    'service' => 'Service',
-    'select_service' => 'Select Service',
-    'create' => 'Create',
+    'service' => '服務',
+    'select_service' => '選擇服務',
+    'create' => '建立',
 ];
