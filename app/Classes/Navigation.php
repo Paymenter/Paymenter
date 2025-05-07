@@ -10,7 +10,7 @@ class Navigation
 {
     public static function getLinks()
     {
-        $categories = once(fn() => Category::whereNull('parent_id')->where(function ($query) {
+        $categories = once(fn () => Category::whereNull('parent_id')->where(function ($query) {
             $query->whereHas('children')->orWhereHas('products', function ($query) {
                 $query->where('hidden', false);
             });
@@ -138,7 +138,7 @@ class Navigation
                             'params' => [],
                             'condition' => config('settings.credits_enabled'),
                             'priority' => 30,
-                        ]
+                        ],
                     ]
                 ),
             ],
