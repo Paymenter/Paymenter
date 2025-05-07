@@ -2,10 +2,10 @@
 
 return [
 
-    'reset' => 'Your password has been reset.',
-    'sent' => 'We have emailed your password reset link.',
-    'throttled' => 'Please wait before retrying.',
-    'token' => 'This password reset token is invalid.',
-    'user' => "We can't find a user with that email address.",
+    'reset' => '您的密碼已重設。',
+    'sent' => '我們已將密碼重設連結寄至您的電子郵件信箱。',
+    'throttled' => '請稍候再試。',
+    'token' => '此密碼重設權杖無效。',
+    'user' => "我們找不到使用該電子郵件信箱的使用者。",
 
 ];
