@@ -3,7 +3,6 @@
         <div class="mx-auto container bg-background-secondary p-4 rounded-md">
             <article class="prose dark:prose-invert max-w-full">
                 {!! Str::markdown(theme('home_page_text', 'Welcome to Paymenter'), [
-                'html_input' => 'strip',
                 'allow_unsafe_links' => false,
                 ]) !!}
             </article>
