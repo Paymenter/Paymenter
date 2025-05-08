@@ -9,6 +9,7 @@ use App\Models\Service;
 use App\Models\ServiceUpgrade;
 use App\Models\Ticket;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\DB;
 
 class CronJob extends Command
 {
@@ -39,35 +40,45 @@ class CronJob extends Command
                 return;
             }
 
-            // Calculate if we should edit the price because of the coupon
-            if ($service->coupon) {
-                // Calculate what iteration of the coupon we are in
-                $iteration = $service->invoices()->count() + 1;
-                if ($iteration == $service->coupon->recurring) {
-                    // Calculate the price
-                    $price = $service->plan->prices()->where('currency_code', $service->currency_code)->first()->price;
-                    $service->price = $price;
-                    $service->save();
+            DB::beginTransaction();
+
+            try {
+                // Calculate if we should edit the price because of the coupon
+                if ($service->coupon) {
+                    // Calculate what iteration of the coupon we are in
+                    $iteration = $service->invoices()->count() + 1;
+                    if ($iteration == $service->coupon->recurring) {
+                        // Calculate the price
+                        $price = $service->plan->prices()->where('currency_code', $service->currency_code)->first()->price;
+                        $service->price = $price;
+                        $service->save();
+                    }
                 }
+
+                // Create invoice
+                $invoice = $service->invoices()->make([
+                    'user_id' => $service->user_id,
+                    'status' => 'pending',
+                    'due_at' => $service->expires_at,
+                    'currency_code' => $service->currency_code,
+                ]);
+
+                $invoice->save();
+                // Create invoice items
+                $invoice->items()->create([
+                    'reference_id' => $service->id,
+                    'reference_type' => Service::class,
+                    'price' => $service->price,
+                    'quantity' => $service->quantity,
+                    'description' => $service->description,
+                ]);
+            } catch (\Exception $e) {
+                DB::rollBack();
+                $this->error('Error creating invoice for service ' . $service->id . ': ' . $e->getMessage());
+                return;
             }
 
-            // Create invoice
-            $invoice = $service->invoices()->make([
-                'user_id' => $service->user_id,
-                'status' => 'pending',
-                'due_at' => $service->expires_at,
-                'currency_code' => $service->currency_code,
-            ]);
-
-            $invoice->save();
-            // Create invoice items
-            $invoice->items()->create([
-                'reference_id' => $service->id,
-                'reference_type' => Service::class,
-                'price' => $service->price,
-                'quantity' => $service->quantity,
-                'description' => $service->description,
-            ]);
+            DB::commit();
 
             $sendedInvoices++;
         });
