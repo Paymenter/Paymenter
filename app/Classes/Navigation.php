@@ -85,7 +85,7 @@ class Navigation
             [
                 'name' => __('navigation.dashboard'),
                 'route' => 'dashboard',
-                'icon' => 'ri-dashboard',
+                'icon' => 'ri-function',
                 'condition' => Auth::check(),
                 'priority' => 10,
             ],

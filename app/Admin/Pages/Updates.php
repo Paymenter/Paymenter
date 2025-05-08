@@ -15,7 +15,9 @@ class Updates extends Page implements HasForms
 {
     use InteractsWithForms;
 
-    protected static ?string $navigationIcon = 'heroicon-o-document-text';
+    protected static ?string $navigationIcon = 'ri-loop-left-line';
+
+    protected static ?string $activeNavigationIcon = 'ri-loop-left-fill';
 
     protected static string $view = 'admin.pages.updates';
 

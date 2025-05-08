@@ -30,9 +30,9 @@ class ProductResource extends Resource
 
     protected static ?string $navigationGroup = 'Administration';
 
-    protected static ?string $navigationIcon = 'ri-archive-stack-line';
+    protected static ?string $navigationIcon = 'ri-instance-line';
 
-    protected static ?string $activeNavigationIcon = 'ri-archive-stack-fill';
+    protected static ?string $activeNavigationIcon = 'ri-instance-fill';
 
     protected static ?string $recordTitleAttribute = 'name';
 

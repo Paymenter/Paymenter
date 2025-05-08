@@ -6,7 +6,9 @@ use Filament\Clusters\Cluster;
 
 class Services extends Cluster
 {
-    protected static ?string $navigationIcon = 'heroicon-o-squares-2x2';
+    protected static ?string $navigationIcon = 'ri-archive-stack-line';
+
+    protected static ?string $activeNavigationIcon = 'ri-archive-stack-fill';
 
     public static ?string $navigationGroup = 'Administration';
 
