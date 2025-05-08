@@ -75,6 +75,7 @@ class CronJob extends Command
             } catch (\Exception $e) {
                 DB::rollBack();
                 $this->error('Error creating invoice for service ' . $service->id . ': ' . $e->getMessage());
+
                 return;
             }
 
