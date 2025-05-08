@@ -3,6 +3,7 @@
 namespace Tests\Feature\Auth;
 
 use App\Livewire\Auth\Register;
+use App\Models\CustomProperty;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Livewire\Livewire;
 use Tests\TestCase;
@@ -14,25 +15,16 @@ class RegisterTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        config(['settings.optional_fields' => [
-            'first_name',
-            'last_name',
-            'phone',
-            'company_name',
-            'country',
-            'address',
-            'address2',
-            'city',
-            'state',
-            'zip',
-        ]]);
+        CustomProperty::each(function ($property) {
+            $property->required = false;
+            $property->save();
+        });
     }
 
     /**
-     * @test
      * Test if the register page renders successfully
      */
-    public function renders_successfully()
+    public function test_renders_successfully()
     {
         $response = $this->get(route('register'));
 
@@ -40,12 +32,13 @@ class RegisterTest extends TestCase
     }
 
     /**
-     * @test
      * Test if the user can register with valid credentials
      */
-    public function can_register_with_valid_credentials()
+    public function test_can_register_with_valid_credentials()
     {
         $response = Livewire::test(Register::class)
+            ->set('first_name', 'Corwin')
+            ->set('last_name', 'Corwin')
             ->set('email', 'corwin@paymenter.org')
             ->set('password', 'password')
             ->set('password_confirmation', 'password')
@@ -59,12 +52,13 @@ class RegisterTest extends TestCase
     }
 
     /**
-     * @test
      * Test if the user can't register with invalid credentials
      */
-    public function cant_register_with_invalid_credentials()
+    public function test_cant_register_with_invalid_credentials()
     {
         $response = Livewire::test(Register::class)
+            ->set('first_name', 'Corwin')
+            ->set('last_name', 'Corwin')
             ->set('email', 'corwin@paymenter.org')
             ->set('password', 'password')
             ->set('password_confirmation', 'pswrd')
@@ -74,27 +68,26 @@ class RegisterTest extends TestCase
     }
 
     /**
-     * @test
      * Test if non-optional fields are required
      */
-    public function optional_fields_are_required()
+    public function test_optional_fields_are_required()
     {
-        config(['settings.optional_fields' => []]);
+        CustomProperty::each(function ($property) {
+            $property->required = true;
+            $property->save();
+        });
+
         $response = Livewire::test(Register::class)
             ->set('email', 'corwin@paymenter.org')
             ->set('password', 'password')
             ->set('password_confirmation', 'password')
             ->call('submit');
 
+
         $response->assertHasErrors('first_name')
             ->assertHasErrors('last_name')
-            ->assertHasErrors('phone')
-            ->assertHasErrors('company_name')
-            ->assertHasErrors('address')
-            ->assertHasErrors('address2')
-            ->assertHasErrors('city')
-            ->assertHasErrors('state')
-            ->assertHasErrors('zip');
-
+            ->assertHasErrors(CustomProperty::all()->pluck('key')->map(function ($property) {
+                return "properties.$property";
+            })->toArray());
     }
 }
