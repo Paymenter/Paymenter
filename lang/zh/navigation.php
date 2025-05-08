@@ -11,7 +11,7 @@ return [
     'account' => '帳戶',
     'personal_details' => '個人資料',
     'security' => '安全性',
-    'dashboard' => '客戶中心',
+    'dashboard' => '控制面板',
     'tickets' => '服務單',
     'admin' => '管理員',
 ];
