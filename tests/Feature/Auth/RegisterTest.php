@@ -83,7 +83,6 @@ class RegisterTest extends TestCase
             ->set('password_confirmation', 'password')
             ->call('submit');
 
-
         $response->assertHasErrors('first_name')
             ->assertHasErrors('last_name')
             ->assertHasErrors(CustomProperty::all()->pluck('key')->map(function ($property) {
