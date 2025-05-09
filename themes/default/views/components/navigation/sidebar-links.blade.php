@@ -1,12 +1,12 @@
-<div class="px-4 py-6 flex flex-col gap-2">
-    <div class="block md:hidden">
+<div class="lg:px-4 lg:py-6 flex flex-col gap-2">
+    <div class="flex flex-col gap-2 md:hidden">
         @foreach (\App\Classes\Navigation::getLinks() as $nav)
         @if (!empty($nav['children']))
         <div x-data="{ activeAccordion: {{ $nav['active'] ? 'true' : 'false' }} }"
             class="relative w-full mx-auto overflow-hidden text-sm font-normal divide-y divide-gray-200">
             <div class="cursor-pointer">
                 <button @click="activeAccordion = !activeAccordion"
-                    class="flex items-center justify-between w-full p-3 text-sm font-semibold whitespace-nowrap rounded-lg hover:bg-primary/10">
+                    class="flex items-center justify-between w-full p-3 text-sm font-semibold whitespace-nowrap rounded-lg hover:bg-primary/5">
                     <div class="flex flex-row gap-2">
                         @isset($nav['icon'])
                             <x-dynamic-component :component="$nav['icon']"
@@ -33,7 +33,7 @@
             </div>
         </div>
         @else
-        <div class="flex items-center rounded-lg {{ $nav['active'] ? 'bg-primary/10' : 'hover:bg-primary/10' }}">
+        <div class="flex items-center rounded-lg {{ $nav['active'] ? 'bg-primary/5' : 'hover:bg-primary/5' }}">
             <x-navigation.link :href="route($nav['route'], $nav['params'] ?? [])"
                 :spa="$nav['spa'] ?? true" class="w-full">
                 @isset($nav['icon'])
@@ -57,7 +57,7 @@
             class="relative w-full mx-auto overflow-hidden text-sm font-normal divide-y divide-gray-200">
             <div class="cursor-pointer">
                 <button @click="activeAccordion = !activeAccordion"
-                    class="flex items-center justify-between w-full p-3 text-sm font-semibold whitespace-nowrap rounded-lg hover:bg-primary/10">
+                    class="flex items-center justify-between w-full p-3 text-sm font-semibold whitespace-nowrap rounded-lg hover:bg-primary/5">
                     <div class="flex flex-row gap-2">
                         @isset($nav['icon'])
                             <x-dynamic-component :component="$nav['icon']"
@@ -86,7 +86,7 @@
             </div>
         </div>
         @else
-        <div class="flex items-center rounded-lg {{ $nav['active'] ? 'bg-primary/10' : 'hover:bg-primary/10' }}">
+        <div class="flex items-center rounded-lg {{ $nav['active'] ? 'bg-primary/5' : 'hover:bg-primary/5' }}">
             <x-navigation.link :href="route($nav['route'], $nav['params'] ?? [])"
                 :spa="$nav['spa'] ?? true"
                 class="w-full">

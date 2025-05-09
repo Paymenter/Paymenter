@@ -1,8 +1,8 @@
-<footer class="w-full px-4 py-4">
+<footer class="w-full px-4 py-4 lg:mt-72 mt-44">
     <div class="container mx-auto grid gap-4">
         <div class="flex flex-col gap-2 items-center">
             <x-logo />
-            <div class="text-sm">
+            <div class="text-sm text-base/80">
                 {{ __('© :year :app_name. | All rights reserved.', ['year' => date('Y'), 'app_name' => config('app.name')]) }}
             </div>
             {{-- Paymenter is free and opensource, removing this link is not cool --}}
