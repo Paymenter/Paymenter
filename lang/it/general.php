@@ -22,15 +22,15 @@ return [
         'address_placeholder' => 'Il tuo indirizzo',
         'address2' => 'Indirizzo 2',
         'address2_placeholder' => 'Il tuo indirizzo 2',
-        'zip' => 'ZIP',
-        'zip_placeholder' => 'Your ZIP code',
-        'state' => 'State',
-        'state_placeholder' => 'Your state',
+        'zip' => 'CAP',
+        'zip_placeholder' => 'Il tuo CAP',
+        'state' => 'Stato',
+        'state_placeholder' => 'Il tuo stato',
 
         'password' => 'Password',
-        'password_placeholder' => 'Your password',
+        'password_placeholder' => 'La tua password',
     ],
 
-    'all_rights_reserved' => 'All rights reserved.',
-    'update' => 'Update',
+    'all_rights_reserved' => 'Tutti i diritti riservati.',
+    'update' => 'Aggiorna',
 ];
