@@ -366,7 +366,7 @@ class Virtualizor extends Server
             }
         }
         if (!$plid) {
-            throw new \Exception('Piano non trovato');
+            throw new \Exception('Plan not found');
         }
 
         $editData = [
