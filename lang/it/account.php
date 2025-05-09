@@ -13,12 +13,12 @@ return [
     'two_factor_authentication_enabled' => 'L\'autenticazione a più fattori è abilitata per il tuo account.',
     'two_factor_authentication_enable' => 'Abilita autenticazione 2FA',
     'two_factor_authentication_disable' => 'Disabilita l\'autenticazione a due fattori',
-    'two_factor_authentication_enable_description' => 'Per abilitare l\'autenticazione a due fattori, è necessario scansionare il codice QR qui sotto con un\'app di autenticazione come Google Authenticator o Authy.',
+    'two_factor_authentication_enable_description' => 'Per abilitare l\'autenticazione a due fattori, è necessario eseguire la scansione del codice QR qui sotto con un\'app di autenticazione come Google Authenticator o Authy.',
     'two_factor_authentication_qr_code' => 'Scansiona il codice QR qui sotto con la tua app di autenticazione:',
     'two_factor_authentication_secret' => 'Oppure inserisci manualmente il seguente codice:',
 
     'sessions' => 'Sessioni',
-    'sessions_description' => 'Gestisci e disconnetti le tue sessioni attive su altri browser e dispositivi.',
+    'sessions_description' => 'Gestisci e disconnetti le sessioni attive su altri browser e dispositivi.',
     'logout_sessions' => 'Disconnetti questa sessione',
 
     'input' => [
