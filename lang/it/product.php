@@ -1,13 +1,13 @@
 <?php
 
 return [
-    'add_to_cart' => 'Add to cart',
-    'view' => 'View',
+    'add_to_cart' => 'Aggiungi al carrello',
+    'view' => 'Visualizza',
     'checkout' => 'Checkout',
-    'remove' => 'Remove',
-    'empty_cart' => 'Your cart is empty',
-    'total_today' => 'Total today',
-    'subtotal' => 'Subtotal',
+    'remove' => 'Rimuovi',
+    'empty_cart' => 'Il tuo carrello è vuoto',
+    'total_today' => 'Totale oggi:',
+    'subtotal' => 'Subtotale',
     'total' => 'Totale',
 
     'then_after_x' => 'Poi dopo :time',
