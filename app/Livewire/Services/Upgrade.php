@@ -3,6 +3,7 @@
 namespace App\Livewire\Services;
 
 use App\Events\Invoice\Created as InvoiceCreated;
+use App\Jobs\Server\UpgradeJob;
 use App\Livewire\Component;
 use App\Models\Invoice;
 use App\Models\Product;
@@ -88,6 +89,11 @@ class Upgrade extends Component
                 'price' => $upgrade->plan->price()->price,
                 'product_id' => $upgrade->product_id,
             ]);
+
+            if ($this->service->product->server) {
+                // If the service has a server, dispatch the upgrade job
+                UpgradeJob::dispatch($this->service);
+            }
 
             // Check if user has credits in this currency
             /** @var \App\Models\User */
