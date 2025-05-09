@@ -348,7 +348,7 @@ class Virtualizor extends Server
         return 'https://' . $this->config('ip') . ':' . $this->config('client_port') . '/' . $response['token_key'] . '/?as=' . $response['sid'] . '&svs=' . $properties['server_id'];
     }
 
-        public function upgradeServer(Service $service, $settings, $properties)
+    public function upgradeServer(Service $service, $settings, $properties)
     {
         if (!isset($properties['server_id'])) {
             throw new \Exception('Server does not exist');
@@ -376,15 +376,10 @@ class Virtualizor extends Server
             'editvps' => 1, // Boolean
         ];
 
-        try {
-            $response = $this->request('managevps', 'post', $editData);
-        } catch (\Exception $e) {
-            throw $e;
-        }
+        $response = $this->request('managevps', 'post', $editData);
 
         if (empty($response['done'])) {
-            $errorMsg = isset($response['error']) ? $response['error'] : (isset($response['msg']) ? $response['msg'] : json_encode($response));
-            throw new \Exception('Failed to upgrade server' . $errorMsg);
+            throw new \Exception('Failed to upgrade server');
         }
 
         return true;
