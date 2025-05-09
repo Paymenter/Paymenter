@@ -1,11 +1,11 @@
 <?php
 
 return [
-    'invoices' => 'Invoices',
-    'product' => 'Product',
-    'price' => 'Price',
+    'invoices' => 'Faktury',
+    'product' => 'Produkt',
+    'price' => 'Cena',
     'status' => 'Status',
-    'actions' => 'Actions',
+    'actions' => 'Akcje',
     'view' => 'View',
     'id' => 'ID',
     'total' => 'Total',
@@ -16,9 +16,10 @@ return [
     'paid' => 'Paid',
     'payment_pending' => 'Payment Pending',
     'checking_payment' => 'Checking Payment',
-
     'invoice_date' => 'Invoice Date',
     'invoice_no' => 'Invoice No',
+    'tax_id' => 'Tax ID',
+    'company_id' => 'Company ID',
     'item' => 'Item',
     'quantity' => 'Quantity',
     'transactions' => 'Transactions',

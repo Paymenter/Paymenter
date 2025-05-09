@@ -16,9 +16,10 @@ return [
     'paid' => 'Paid',
     'payment_pending' => 'Payment Pending',
     'checking_payment' => 'Checking Payment',
-
     'invoice_date' => 'Дата рахунку',
     'invoice_no' => 'Номер рахунку',
+    'tax_id' => 'Tax ID',
+    'company_id' => 'Company ID',
     'item' => 'Позиція',
     'quantity' => 'Кількість',
     'transactions' => 'Transactions',

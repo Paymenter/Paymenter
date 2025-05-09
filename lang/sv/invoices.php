@@ -16,9 +16,10 @@ return [
     'paid' => 'Betald',
     'payment_pending' => 'Betalning behandlas',
     'checking_payment' => 'Kontrollerar betalning',
-
     'invoice_date' => 'Fakturadatum',
     'invoice_no' => 'Faktura nr',
+    'tax_id' => 'Tax ID',
+    'company_id' => 'Company ID',
     'item' => 'Artikel',
     'quantity' => 'Kvantitet',
     'transactions' => 'Transaktioner',

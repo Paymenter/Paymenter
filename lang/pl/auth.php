@@ -13,36 +13,36 @@ return [
     |
     */
 
-    'failed' => 'These credentials do not match our records.',
-    'password' => 'The provided password is incorrect.',
-    'throttle' => 'Too many login attempts. Please try again in :seconds seconds.',
+    'failed' => 'Błędny login lub hasło.',
+    'password' => 'Wprowadzone hasło jest nieprawidłowe.',
+    'throttle' => 'Zbyt wiele prób logowanie. Spróbuj ponownie za :seconds sekund.',
 
-    'sign_in' => 'Sign in',
-    'sign_in_title' => 'Sign in to your account',
-    'or_sign_in_with' => 'Or sign in with',
-    'forgot_password' => 'Forgot your password?',
-    'dont_have_account' => 'Don\'t have an account?',
-    'already_have_account' => 'Already have an account?',
+    'sign_in' => 'Zaloguj się',
+    'sign_in_title' => 'Zaloguj się na swoje konto',
+    'or_sign_in_with' => 'Lub zaloguj się za pomocą',
+    'forgot_password' => 'Zapomniałeś hasła?',
+    'dont_have_account' => 'Nie masz jeszcze konta?',
+    'already_have_account' => 'Posiadasz już konto?',
 
-    'sign_up' => 'Sign up',
-    'sign_up_title' => 'Create your account',
+    'sign_up' => 'Zarejestruj się',
+    'sign_up_title' => 'Utwórz swoje konto',
 
-    'logout' => 'Logout',
+    'logout' => 'Wyloguj się',
 
     'input' => [
         'email' => 'Email',
-        'email_label' => 'Email Address',
-        'password' => 'Password',
+        'email_label' => 'Adres Email',
+        'password' => 'Hasło',
     ],
 
     'oauth' => [
-        'unverified_discord_account' => 'Your Discord account is not verified.',
-        'account_not_registered' => 'You are not registered on this site.',
+        'unverified_discord_account' => 'Twoje konto Discord nie jest zweryfikowane.',
+        'account_not_registered' => 'Nie jesteś zarejestrowany na tej stronie.',
     ],
 
-    'reset_password' => 'Reset password',
+    'reset_password' => 'Zresetuj hasło',
 
-    'verify_2fa' => 'Verify 2FA',
+    'verify_2fa' => 'Zweryfikuj 2FA',
     'verify' => 'Verify',
 
     'verification' => [

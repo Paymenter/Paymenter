@@ -1,38 +1,38 @@
 <?php
 
 return [
-    'account' => 'Account',
-    'personal_details' => 'Personal details',
-    'security' => 'Security',
+    'account' => 'Konto',
+    'personal_details' => 'Dane osobowe',
+    'security' => 'Bezpieczeństwo',
     'credits' => 'Credits',
 
-    'change_password' => 'Change password',
+    'change_password' => 'Zmień hasło',
 
-    'two_factor_authentication' => 'Two-factor authentication',
-    'two_factor_authentication_description' => 'Add an extra layer of security to your account by enabling two-factor authentication.',
-    'two_factor_authentication_enabled' => 'Two-factor authentication is enabled for your account.',
-    'two_factor_authentication_enable' => 'Enable two-factor authentication',
-    'two_factor_authentication_disable' => 'Disable two-factor authentication',
-    'two_factor_authentication_enable_description' => 'To enable two factor authentication, you need to scan the QR code below with an authenticator app like Google Authenticator or Authy.',
-    'two_factor_authentication_qr_code' => 'Scan the QR code below with your authenticator app:',
-    'two_factor_authentication_secret' => 'Or enter the following code manually:',
+    'two_factor_authentication' => 'Uwierzytelnianie dwuskładnikowe',
+    'two_factor_authentication_description' => 'Dodaj dodatkową warstwę zabezpieczeń do swojego konta poprzez włączenie uwierzytelniania dwuskładnikowego.',
+    'two_factor_authentication_enabled' => 'Uwierzytelnianie dwuskładnikowe jest włączone dla Twojego konta.',
+    'two_factor_authentication_enable' => 'Włącz uwierzytelnianie dwuskładnikowe',
+    'two_factor_authentication_disable' => 'Wyłącz uwierzytelnianie dwuskładnikowe',
+    'two_factor_authentication_enable_description' => 'Aby włączyć uwierzytelnianie dwuskładnikowe, musisz zeskanować poniższy kod QR za pomocą aplikacji uwierzytelniającej, takiej jak Google Authenticator lub Authy.',
+    'two_factor_authentication_qr_code' => 'Zeskanuj poniższy kod QR za pomocą aplikacji uwierzytelniającej:',
+    'two_factor_authentication_secret' => 'Lub wprowadź ręcznie następujący kod:',
 
-    'sessions' => 'Sessions',
-    'sessions_description' => 'Manage and log out your active sessions on other browsers and devices.',
-    'logout_sessions' => 'Log this session out',
+    'sessions' => 'Sesje',
+    'sessions_description' => 'Zarządzaj i wyloguj swoje aktywne sesje na innych przeglądarkach i urządzeniach.',
+    'logout_sessions' => 'Wyloguj tę sesję',
 
     'input' => [
-        'current_password' => 'Current password',
-        'current_password_placeholder' => 'Your current password',
-        'new_password' => 'New password',
-        'new_password_placeholder' => 'Your new password',
-        'confirm_password' => 'Confirm password',
-        'confirm_password_placeholder' => 'Confirm your new password',
+        'current_password' => 'Obecne hasło',
+        'current_password_placeholder' => 'Twoje obecne hasło',
+        'new_password' => 'Nowe hasło',
+        'new_password_placeholder' => 'Twoje nowe hasło',
+        'confirm_password' => 'Potwierdź hasło',
+        'confirm_password_placeholder' => 'Potwierdź swoje nowe hasło',
 
-        'two_factor_code' => 'Enter the code from your authenticator app',
-        'two_factor_code_placeholder' => 'Your two-factor authentication code',
+        'two_factor_code' => 'Wprowadź kod z aplikacji uwierzytelniającej',
+        'two_factor_code_placeholder' => 'Twój kod uwierzytelniania dwuskładnikowego',
 
-        'currency' => 'Currency',
+        'currency' => 'Waluta',
         'amount' => 'Amount',
     ],
 

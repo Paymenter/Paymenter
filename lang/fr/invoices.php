@@ -15,10 +15,11 @@ return [
     'bill_to' => 'Facturer à',
     'paid' => 'Payé',
     'payment_pending' => 'Paiement en attente',
-    'checking_payment' => 'Checking Payment',
-
+    'checking_payment' => 'Vérification du paiement',
     'invoice_date' => 'Date de facturation',
     'invoice_no' => 'N° de facture',
+    'tax_id' => 'ID d\'impôt',
+    'company_id' => 'ID d\'entreprise',
     'item' => 'Articles',
     'quantity' => 'Quantité',
     'transactions' => 'Transactions',

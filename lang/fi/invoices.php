@@ -16,9 +16,10 @@ return [
     'paid' => 'Maksettu',
     'payment_pending' => 'Odottaa maksua',
     'checking_payment' => 'Checking Payment',
-
     'invoice_date' => 'Laskun päiväys',
     'invoice_no' => 'Laskun nro',
+    'tax_id' => 'Tax ID',
+    'company_id' => 'Company ID',
     'item' => 'Tuote',
     'quantity' => 'Määrä',
     'transactions' => 'Maksutapahtumat',
