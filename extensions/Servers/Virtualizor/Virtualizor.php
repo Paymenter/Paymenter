@@ -347,4 +347,41 @@ class Virtualizor extends Server
 
         return 'https://' . $this->config('ip') . ':' . $this->config('client_port') . '/' . $response['token_key'] . '/?as=' . $response['sid'] . '&svs=' . $properties['server_id'];
     }
+
+    public function upgradeServer(Service $service, $settings, $properties)
+    {
+        if (!isset($properties['server_id'])) {
+            throw new \Exception('Server does not exist');
+        }
+
+        $settings = array_merge($settings, $properties);
+
+        // Get plid from planname
+        $plans = $this->request('plans');
+        $plid = null;
+        foreach ($plans['plans'] as $plan) {
+            if ($plan['plan_name'] === $settings['planname']) {
+                $plid = $plan['plid'];
+                break;
+            }
+        }
+        if (!$plid) {
+            throw new \Exception('Plan not found');
+        }
+
+        $editData = [
+            'vpsid' => $properties['server_id'],
+            'plid' => $plid,
+            'theme_edit' => 1, // Boolean
+            'editvps' => 1, // Boolean
+        ];
+
+        $response = $this->request('managevps', 'post', $editData);
+
+        if (empty($response['done'])) {
+            throw new \Exception('Failed to upgrade server');
+        }
+
+        return true;
+    }
 }
