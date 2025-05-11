@@ -1,6 +1,10 @@
-<!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" @if(app()->getLocale() === 'ar') dir="rtl" @endif>
+@php
+    $rtlLocales = ['ar', 'fa', 'ur', 'ps', 'sd', 'ug', 'dv', 'ku'];
+@endphp
 
+<!DOCTYPE html>
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" @if(in_array(app()->getLocale(), $rtlLocales)) dir="rtl" @endif>
+    
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
