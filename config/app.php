@@ -105,11 +105,10 @@ return [
         'sr' => 'Serbian',
     ],
 
-    
     'rtl_locales' => [
         'ar',
     ],
-    
+
     'faker_locale' => env('APP_FAKER_LOCALE', 'en_US'),
 
     /*
