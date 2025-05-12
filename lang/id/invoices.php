@@ -16,9 +16,10 @@ return [
     'paid' => 'Lunas',
     'payment_pending' => 'Menunggu Pembayaran',
     'checking_payment' => 'Checking Payment',
-
     'invoice_date' => 'Tanggal Faktur',
     'invoice_no' => 'No. Faktur',
+    'tax_id' => 'Tax ID',
+    'company_id' => 'Company ID',
     'item' => 'Item',
     'quantity' => 'Kuantitas',
     'transactions' => 'Transaksi',

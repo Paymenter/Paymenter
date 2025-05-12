@@ -24,6 +24,6 @@ return [
     'payment_method' => 'Betaalmethode',
     'use_credits' => 'Krediet gebruiken',
     'tos' => '',
-    'tos_link' => 'Terms of Service',
-    'tos_required' => 'You must agree to the Terms of Service',
+    'tos_link' => 'Algemene voorwaarden',
+    'tos_required' => 'U moet akkoord gaan met de algemene voorwaarden',
 ];
