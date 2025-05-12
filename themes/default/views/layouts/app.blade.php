@@ -1,9 +1,5 @@
-@php
-    $rtlLocales = ['ar', 'fa', 'ur', 'ps', 'sd', 'ug', 'dv', 'ku'];
-@endphp
-
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" @if(in_array(app()->getLocale(), $rtlLocales)) dir="rtl" @endif>
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" @if(in_array(app()->getLocale(), config('app.rtl_locales'))) dir="rtl" @endif>
     
 <head>
     <meta charset="utf-8">
@@ -46,7 +42,7 @@
         @if (isset($sidebar) && $sidebar)
             <x-navigation.sidebar title="$title" />
         @endif
-        <div class="{{ (isset($sidebar) && $sidebar) ? 'md:ml-64' : '' }} flex flex-col flex-grow overflow-auto">
+        <div class="{{ (isset($sidebar) && $sidebar) ? 'md:ml-64 rtl:ml-0 rtl:md:mr-64' : '' }} flex flex-col flex-grow overflow-auto">
             <main class="container mt-24 mx-auto px-4 sm:px-6 md:px-8 lg:px-10">
                 {{ $slot }}
             </main>
