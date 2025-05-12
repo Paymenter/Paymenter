@@ -227,9 +227,7 @@ class Stripe extends Gateway
                 }
                 break;
             default:
-                // Unexpected event type
-                http_response_code(400);
-                exit();
+                // Not a event type we care about, just return 200
         }
 
         http_response_code(200);
