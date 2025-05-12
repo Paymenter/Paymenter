@@ -9,7 +9,7 @@
 
             <div class="flex flex-row items-center">
                 <a href="{{ route('home') }}" class="flex flex-row items-center h-10" wire:navigate>
-                    <x-logo class="h-10 mr-2" />
+                    <x-logo class="h-10 mr-2 rtl:ml-2" />
                     <span class="text-xl font-bold leading-none flex items-center">{{ config('app.name') }}</span>
                 </a>
                 <div class="md:flex hidden flex-row ml-7">
