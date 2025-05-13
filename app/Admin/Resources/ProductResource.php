@@ -79,7 +79,7 @@ class ProductResource extends Resource
                                     ->relationship('category', 'name')
                                     ->searchable()
                                     ->preload()
-                                    ->createOptionForm(fn(Form $form) => CategoryResource::form($form))
+                                    ->createOptionForm(fn (Form $form) => CategoryResource::form($form))
                                     ->required(),
                             ]),
                         Tabs\Tab::make('Pricing')
@@ -105,13 +105,13 @@ class ProductResource extends Resource
                                     ->hintAction(
                                         Action::make('refresh')
                                             ->label('Refresh')
-                                            ->action(fn() => Cache::set('product_config', null, 0))
-                                            ->hidden(fn(Get $get) => $get('server_id') === null)
+                                            ->action(fn () => Cache::set('product_config', null, 0))
+                                            ->hidden(fn (Get $get) => $get('server_id') === null)
                                     )
                                     ->live(),
 
                                 Grid::make('settings')
-                                    ->hidden(fn(Get $get) => $get('server_id') === null)
+                                    ->hidden(fn (Get $get) => $get('server_id') === null)
                                     ->columns(2)
                                     ->schema(
                                         function (Get $get) {
@@ -174,7 +174,7 @@ class ProductResource extends Resource
                     }
                 });
             })
-            ->itemLabel(fn(array $state) => $state['name'])
+            ->itemLabel(fn (array $state) => $state['name'])
             ->schema([
                 Forms\Components\TextInput::make('name')
                     ->required()
@@ -201,7 +201,7 @@ class ProductResource extends Resource
                     ->required()
                     ->label('Time Interval')
                     ->default(1)
-                    ->hidden(fn(Get $get) => $get('type') !== 'recurring'),
+                    ->hidden(fn (Get $get) => $get('type') !== 'recurring'),
 
                 Forms\Components\Select::make('billing_unit')
                     ->options([
@@ -213,9 +213,9 @@ class ProductResource extends Resource
                     ->label('Billing period')
                     ->required()
                     ->default('month')
-                    ->hidden(fn(Get $get) => $get('type') !== 'recurring'),
+                    ->hidden(fn (Get $get) => $get('type') !== 'recurring'),
                 Forms\Components\Repeater::make('pricing')
-                    ->hidden(fn(Get $get) => $get('type') === 'free')
+                    ->hidden(fn (Get $get) => $get('type') === 'free')
                     ->columns(3)
                     ->addActionLabel('Add new price')
                     ->reorderable(false)
@@ -223,7 +223,7 @@ class ProductResource extends Resource
                     ->columnSpanFull()
                     ->maxItems(Currency::count())
                     ->defaultItems(1)
-                    ->itemLabel(fn(array $state) => $state['currency_code'])
+                    ->itemLabel(fn (array $state) => $state['currency_code'])
                     ->schema([
                         Forms\Components\Select::make('currency_code')
                             ->options(function (Get $get, ?string $state) {
@@ -246,8 +246,8 @@ class ProductResource extends Resource
                             ->required()
                             ->label('Price')
                             // Suffix based on chosen currency
-                            ->prefix(fn(Get $get) => Currency::where('code', $get('currency_code'))->first()?->prefix)
-                            ->suffix(fn(Get $get) => Currency::where('code', $get('currency_code'))->first()?->suffix)
+                            ->prefix(fn (Get $get) => Currency::where('code', $get('currency_code'))->first()?->prefix)
+                            ->suffix(fn (Get $get) => Currency::where('code', $get('currency_code'))->first()?->suffix)
                             ->live(onBlur: true)
                             ->mask(RawJs::make(
                                 <<<'JS'
@@ -256,7 +256,7 @@ class ProductResource extends Resource
                             ))
                             ->numeric()
                             ->minValue(0)
-                            ->hidden(fn(Get $get) => $get('type') === 'free'),
+                            ->hidden(fn (Get $get) => $get('type') === 'free'),
                         Forms\Components\TextInput::make('setup_fee')
                             ->label('Setup fee')
                             ->live(onBlur: true)
@@ -267,7 +267,7 @@ class ProductResource extends Resource
                             ))
                             ->numeric()
                             ->minValue(0)
-                            ->hidden(fn(Get $get) => $get('type') === 'free'),
+                            ->hidden(fn (Get $get) => $get('type') === 'free'),
                     ]),
             ]);
     }
