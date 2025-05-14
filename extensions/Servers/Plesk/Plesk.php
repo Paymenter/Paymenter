@@ -23,9 +23,8 @@ class Plesk extends Server
 
     /**
      * Get all the configuration for the extension
-     * 
-     * @param array $values
-     * @return array
+     *
+     * @param  array  $values
      */
     public function getConfig($values = []): array
     {
@@ -50,38 +49,36 @@ class Plesk extends Server
                 'type' => 'password',
                 'required' => true,
                 'description' => 'The password of the Plesk server',
-            ]
+            ],
         ];
     }
 
     /**
      * Get product config
-     * 
-     * @param array $values
-     * @return array
+     *
+     * @param  array  $values
      */
     public function getProductConfig($values = []): array
     {
-        return  [
+        return [
             [
                 'name' => 'plan',
                 'type' => 'text',
                 'label' => 'Plan',
                 'required' => true,
                 'description' => 'The plan name of the wanted service plan',
-            ]
+            ],
         ];
     }
 
     /**
      * Check if currenct configuration is valid
-     *
-     * @return bool|string
      */
     public function testConfig(): bool|string
     {
         try {
             $this->request('/server', 'get')->json();
+
             return true;
         } catch (\Exception $e) {
             return $e->getMessage();
@@ -102,13 +99,11 @@ class Plesk extends Server
         ];
     }
 
-
     /**
-     * Create a server 
-     * 
-     * @param Service $service
-     * @param array $settings (product settings)
-     * @param array $properties (checkout options)
+     * Create a server
+     *
+     * @param  array  $settings  (product settings)
+     * @param  array  $properties  (checkout options)
      * @return bool
      */
     public function createServer(Service $service, $settings, $properties)
@@ -172,10 +167,9 @@ class Plesk extends Server
 
     /**
      * Suspend a server
-     * 
-     * @param Service $service
-     * @param array $settings (product settings)
-     * @param array $properties (checkout options)
+     *
+     * @param  array  $settings  (product settings)
+     * @param  array  $properties  (checkout options)
      * @return bool
      */
     public function suspendServer(Service $service, $settings, $properties)
@@ -187,15 +181,15 @@ class Plesk extends Server
         $this->request('/domains/' . $properties['domain_id'] . '/status', 'put', [
             'status' => 'suspended',
         ]);
+
         return true;
     }
 
     /**
      * Unsuspend a server
-     * 
-     * @param Service $service
-     * @param array $settings (product settings)
-     * @param array $properties (checkout options)
+     *
+     * @param  array  $settings  (product settings)
+     * @param  array  $properties  (checkout options)
      * @return bool
      */
     public function unsuspendServer(Service $service, $settings, $properties)
@@ -213,10 +207,9 @@ class Plesk extends Server
 
     /**
      * Terminate a server
-     * 
-     * @param Service $service
-     * @param array $settings (product settings)
-     * @param array $properties (checkout options)
+     *
+     * @param  array  $settings  (product settings)
+     * @param  array  $properties  (checkout options)
      * @return bool
      */
     public function terminateServer(Service $service, $settings, $properties)
