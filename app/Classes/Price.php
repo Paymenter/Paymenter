@@ -79,9 +79,11 @@ class Price
                 } else {
                     // Exclusive has the tax added to the price as an extra
                     $this->tax = number_format($this->price * $tax->rate / 100, 2, '.', '');
+                    $this->original_price = $this->price + $this->tax;
                     $this->price = number_format($this->price + $this->tax, 2, '.', '');
                     if ($this->setup_fee) {
                         $this->setup_fee_tax = number_format($this->setup_fee * $tax->rate / 100, 2, '.', '');
+                        $this->original_setup_fee = $this->setup_fee + $this->setup_fee_tax;
                         $this->setup_fee = number_format($this->setup_fee + $this->setup_fee_tax, 2, '.', '');
                     }
                 }
