@@ -33,6 +33,14 @@ class Stripe extends Gateway
                 } catch (\Exception $e) {
                 }
             }
+            // Check if the service is canceled
+            if ($event->service->isDirty('status') && $event->service->status === Service::STATUS_CANCELLED) {
+                try {
+                    $this->cancelSubscription($event->service);
+                } catch (\Exception $e) {
+                    // Ignore exception
+                }
+            }
         });
     }
 
