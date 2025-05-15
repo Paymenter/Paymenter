@@ -13,6 +13,7 @@ return [
     'invoice' => 'Factuur #:id',
     'unit_price' => 'Prijs per stuk',
     'bill_to' => 'Factuur aan',
+    'issued_to' => 'Issued To',
     'paid' => 'Betaald',
     'payment_pending' => 'Betaling in afwachting',
     'checking_payment' => 'Betaling controleren',
