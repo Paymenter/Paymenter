@@ -13,6 +13,7 @@ return [
     'invoice' => 'इनवॉइस #:id',
     'unit_price' => 'इकाई मूल्य',
     'bill_to' => 'बिल प्राप्तकर्ता',
+    'issued_to' => 'Issued To',
     'paid' => 'भुगतान किया गया',
     'payment_pending' => 'भुगतान लंबित',
     'checking_payment' => 'भुगतान की जाँच की जा रही है',
