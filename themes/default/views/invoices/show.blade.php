@@ -24,28 +24,31 @@
     </div>
 
     <div class="bg-background-secondary border border-neutral p-12 rounded-lg mt-2">
+        <h1 class="text-2xl font-bold sm:text-3xl">{{ __('invoices.invoice', ['id' => $invoice->number]) }}</h1>
         <div class="sm:flex justify-between pr-4 pt-4">
-            <h1 class="text-2xl font-bold sm:text-3xl">{{ __('invoices.invoice', ['id' => $invoice->number]) }}</h1>
-            <div class="mt-4 sm:mt-0 text-right">
+            <div class="mt-4">
+                <p class="uppercase font-bold">{{ __('invoices.issued_to') }}</p>
                 <p>{{ $invoice->user->name }}</p>
-                <p class="text-sm">{{ $invoice->user->address }}</p>
-                <p class="text-sm">{{ $invoice->user->city }} {{ $invoice->user->zip }}</p>
-                <p class="text-sm">{{ $invoice->user->state }} {{ $invoice->user->country }}</p>
-
-                <p class="mt-4 text-base">{{ __('invoices.invoice_date')}}: {{ $invoice->created_at->format('d M Y') }}</p>
+                @foreach($invoice->user->properties()->with('parent_property')->whereHas('parent_property', function ($query) {
+                    $query->where('show_on_invoice', true);
+                })->get() as $property)
+                    <p>{{ $property->value }}</p>
+                @endforeach
+            </div>
+            <div class="mt-4 sm:mt-0 text-right">
+                <p class="uppercase font-bold">{{ __('invoices.bill_to') }}</p>
+                <p>{{ config('settings.company_name') }}</p>
+                <p>{{ config('settings.company_address') }} {{ config('settings.company_address2') }}</p>
+                <p>{{ config('settings.company_zip') }} {{ config('settings.company_city') }}</p>
+                <p>{{ config('settings.company_state') }} {{ config('settings.company_country') }}</p>
             </div>
         </div>
-        <div class="sm:flex justify-between pr-4 pt-4">
-            <div class="mt-6">
-                <p class="uppercase font-bold">{{ __('invoices.bill_to') }}</p>
-                <address class="text-base mt-4">
-                    <p>{{ config('settings.company_name') }}</p>
-                    <p>{{ config('settings.company_address') }}</p>
-                    <p>{{ config('settings.company_city') }} {{ config('settings.company_zip') }}</p>
-                    <p>{{ config('settings.company_state') }} {{ config('settings.company_country') }}</p>
-                </address>
+        <div class="sm:flex justify-between pr-4 pt-4 mt-6">
+            <div class="">
+                <p class="text-base">{{ __('invoices.invoice_date')}}: {{ $invoice->created_at->format('d M Y') }}</p>
+                <p class="text-base">{{ __('invoices.invoice_no')}}: {{ $invoice->number }}</p>
             </div>
-            <div class="max-w-[200px] w-full mt-6">
+            <div class="max-w-[200px] w-full">
                 @if ($invoice->status == 'paid')
                     <div class="text-green-500 mt-6 text-lg text-center font-semibold">
                         {{ __('invoices.paid') }}
