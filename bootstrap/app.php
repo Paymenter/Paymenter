@@ -17,12 +17,12 @@ return Application::configure(basePath: dirname(__DIR__))
         // channels: __DIR__.'/../routes/channels.php',
     )
     ->withMiddleware(function (Middleware $middleware) {
+        $middleware->append(ProxyMiddleware::class);
         $middleware->alias([
             'has' => EnsureUserHasPermissions::class,
             'scope' => CheckForAnyScope::class,
         ]);
         $middleware->web(SetLocale::class);
-        $middleware->append(ProxyMiddleware::class);
     })
     ->withEvents(discover: [
         __DIR__ . '/../app/Extensions',

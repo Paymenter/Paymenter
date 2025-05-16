@@ -5,6 +5,7 @@ namespace App\Providers;
 use App\Models\Setting;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Str;
@@ -60,6 +61,8 @@ class SettingsProvider extends ServiceProvider
                 URL::forceScheme('https');
             }
             URL::forceRootUrl(config('app.url'));
+
+            Config::set('filesystems.disks.public.url', config('app.url') . '/storage');
         } catch (\Exception $e) {
             // Do nothing
         }
