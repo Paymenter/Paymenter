@@ -13,7 +13,7 @@ return [
     'invoice' => 'Facture #:id',
     'unit_price' => 'Prix unitaire',
     'bill_to' => 'Facturer à',
-    'issued_to' => 'Issued To',
+    'issued_to' => 'Adresser à',
     'paid' => 'Payé',
     'payment_pending' => 'Paiement en attente',
     'checking_payment' => 'Vérification du paiement',
