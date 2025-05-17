@@ -13,7 +13,8 @@ return [
     |
     */
 
-    'default' => env('QUEUE_CONNECTION', 'database'),
+    // Hardcoded to make sure the queue is always set to database.
+    'default' => 'database',
 
     /*
     |--------------------------------------------------------------------------

@@ -26,9 +26,9 @@ class SettingsProvider extends ServiceProvider
         $this->getSettings();
     }
 
-    public static function getSettings()
+    public static function getSettings($force = false): void
     {
-        if (config('settings') && !empty(config('settings'))) {
+        if (config('settings') && !empty(config('settings')) && !$force) {
             return;
         }
         try {
@@ -73,6 +73,6 @@ class SettingsProvider extends ServiceProvider
         Cache::forget('settings');
         // Restart queue worker
         Artisan::call('queue:restart');
-        self::getSettings();
+        self::getSettings(true);
     }
 }
