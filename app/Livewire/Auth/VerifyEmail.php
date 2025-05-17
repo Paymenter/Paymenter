@@ -19,7 +19,7 @@ class VerifyEmail extends Component
         }
     }
 
-    public function resend()
+    public function submit()
     {
         $this->captcha();
 

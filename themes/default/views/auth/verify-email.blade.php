@@ -3,7 +3,7 @@
     <h1 class="text-2xl">{{ __('auth.verification.notice') }}</h1>
     <p class="mt-2">{{ __('auth.verification.check_your_email') }}</p>
 
-    <form class="flex flex-col gap-2 mt-4" wire:submit.prevent="resend" id="verify-email">
+    <form class="flex flex-col gap-2 mt-4" wire:submit.prevent="submit" id="verify-email">
         <x-captcha :form="'verify-email'" />
 
         <p class="text-base">{{ __('auth.verification.not_received') }}</p>
