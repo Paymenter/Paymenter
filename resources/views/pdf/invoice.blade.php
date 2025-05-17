@@ -1,4 +1,4 @@
-<html lang="en">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" @if(in_array(app()->getLocale(), config('app.rtl_locales'))) dir="rtl" @endif>'
 
 <head>
     <meta charset="UTF-8">
@@ -27,7 +27,7 @@
         }
 
         table th {
-            text-align: left;
+            text-align: justify;
             color: #999;
             border-bottom: 2px solid #ddd;
             padding: 10px 0 15px 0;
