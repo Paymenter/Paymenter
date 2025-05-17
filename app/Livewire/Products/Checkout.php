@@ -73,7 +73,7 @@ class Checkout extends Component
                 }
 
                 return [$option->id => $this->configOptions[$option->id] ?? $option->children->first()->id];
-            });
+            })->toArray();
             foreach ($this->getCheckoutConfig() as $config) {
                 if (in_array($config['type'], ['select', 'radio'])) {
                     $this->checkoutConfig[$config['name']] = $this->checkoutConfig[$config['name']] ?? $config['default'] ?? array_key_first($config['options']);
@@ -84,6 +84,12 @@ class Checkout extends Component
         }
         // Update the pricing
         $this->updatePricing();
+
+        // As there is only one plan, config options and checkout config, we can directly call the checkout method to avoid confusion
+        // This is only done when the user is not editing the cart item
+        if ($this->product->plans->count() === 1 && empty($this->configOptions) && empty($this->checkoutConfig)) {
+            $this->checkout();
+        }
     }
 
     // Making sure its being called when the currency is changed
