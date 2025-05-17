@@ -1,25 +1,25 @@
 <?php
 
 return [
-    'ticket_details' => 'Ticket Details',
-    'tickets' => 'Tickets',
-    'subject' => 'Subject',
+    'ticket_details' => 'Szczegóły zgłoszenia',
+    'tickets' => 'Zgłoszenia',
+    'subject' => 'Temat',
     'status' => 'Status',
-    'priority' => 'Priority',
-    'department' => 'Department',
-    'created_at' => 'Created At',
-    'reply' => 'Reply',
+    'priority' => 'Priorytet',
+    'department' => 'Departament',
+    'created_at' => 'Data utworzenia',
+    'reply' => 'Odpowiedz',
 
-    'create_ticket' => 'Create Ticket',
-    'select_department' => 'Select Department',
-    'select_priority' => 'Select Priority',
-    'low' => 'Low',
-    'medium' => 'Medium',
-    'high' => 'High',
+    'create_ticket' => 'Utwórz Bilet',
+    'select_department' => 'Wybierz dział',
+    'select_priority' => 'Wybierz Priorytet',
+    'low' => 'Niski',
+    'medium' => 'Średni',
+    'high' => 'Wysoki',
 
-    'last_activity' => 'Last activity',
+    'last_activity' => 'Ostatnia aktywność',
 
-    'service' => 'Service',
-    'select_service' => 'Select Service',
-    'create' => 'Create',
+    'service' => 'Usługa',
+    'select_service' => 'Wybierz usługę',
+    'create' => 'Utwórz',
 ];

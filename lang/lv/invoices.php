@@ -13,6 +13,7 @@ return [
     'invoice' => 'Invoice #:id',
     'unit_price' => 'Unit Price',
     'bill_to' => 'Bill To',
+    'issued_to' => 'Issued To',
     'paid' => 'Paid',
     'payment_pending' => 'Payment Pending',
     'checking_payment' => 'Checking Payment',

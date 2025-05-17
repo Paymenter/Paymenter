@@ -13,6 +13,7 @@ return [
     'invoice' => 'Faktura #:id',
     'unit_price' => 'Styckpris',
     'bill_to' => 'Faktura till',
+    'issued_to' => 'Issued To',
     'paid' => 'Betald',
     'payment_pending' => 'Betalning behandlas',
     'checking_payment' => 'Kontrollerar betalning',
