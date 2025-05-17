@@ -1,4 +1,4 @@
-<html lang="en">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" @if(in_array(app()->getLocale(), config('app.rtl_locales'))) dir="rtl" @endif>'
 
 <head>
     <meta charset="UTF-8">
