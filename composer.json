@@ -16,7 +16,7 @@
         "ext-pdo_mysql": "*",
         "ext-zip": "*",
         "andreiio/blade-remix-icon": "^3.6.0",
-        "barryvdh/laravel-dompdf": "^3.0",
+        "carlos-meneses/laravel-mpdf": "^2.1",
         "endroid/qr-code": "^5.0",
         "filament/filament": "^3.2",
         "flowframe/laravel-trend": "^0.4.0",
@@ -30,6 +30,7 @@
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.13",
+        "carlos-meneses/laravel-mpdf": "^2.1",
         "fakerphp/faker": "^1.23",
         "larastan/larastan": "^3.0",
         "laravel/pint": "^1.13",
