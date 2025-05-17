@@ -5,7 +5,6 @@ namespace App\Listeners;
 use App\Events\Invoice\Creating;
 use App\Models\Invoice;
 use App\Models\Setting;
-use Illuminate\Support\Facades\Config;
 
 class InvoiceCreatingListener
 {
