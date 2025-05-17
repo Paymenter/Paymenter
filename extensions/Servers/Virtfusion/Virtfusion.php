@@ -159,7 +159,7 @@ class Virtfusion extends Server
             'ipv4' => $settings['ipv4'],
         ];
         // Allowed data to be overwritten
-        $allowed = ['ipv4', 'packageId', 'hypervisorId', 'storage', 'memory', 'traffic', 'networkSpeedInbound', 'networkSpeedOutbound', 'cpuCores', 'networkProfile', 'storageProfile'];
+        $allowed = ['ipv4', 'packageId', 'hypervisorId', 'storage', 'memory', 'traffic', 'networkSpeedInbound', 'networkSpeedOutbound', 'cpuCores', 'networkProfile', 'storageProfile', 'backups'];
         $settings = array_merge($settings, $properties);
         $settings = array_intersect_key($settings, array_flip($allowed));
         $data = array_merge($data, $settings);
@@ -173,6 +173,11 @@ class Virtfusion extends Server
             'value' => $response['data']['id'],
         ]);
 
+        if (isset($data['backups']) && $data['backups'] > 0) {
+                $backupUrl = '/servers/' . $response['data']['id'] . '/backups/plan/' . $data['backups'];
+                $backupResponse = $this->request($backupUrl, 'put');
+        }
+        
         return $response['data'];
     }
 
