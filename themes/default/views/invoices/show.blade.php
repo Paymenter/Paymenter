@@ -91,17 +91,17 @@
                 <thead class="bg-background border border-neutral rounded-lg">
                     <tr>
                         <th scope="col"
-                            class="p-4 text-xs font-semibold tracking-wider text-left uppercase rounded-l-lg">
+                            class="p-4 text-xs font-semibold tracking-wider text-justify uppercase rounded-l-lg">
                             {{ __('invoices.item') }}
                         </th>
-                        <th scope="col" class="p-4 text-xs font-semibold tracking-wider text-left uppercase">
+                        <th scope="col" class="p-4 text-xs font-semibold tracking-wider text-justify uppercase">
                             {{ __('invoices.price') }}
                         </th>
-                        <th scope="col" class="p-4 text-xs font-semibold tracking-wider text-left uppercase">
+                        <th scope="col" class="p-4 text-xs font-semibold tracking-wider text-justify uppercase">
                             {{ __('invoices.quantity') }}
                         </th>
                         <th scope="col"
-                            class="p-4 text-xs font-semibold tracking-wider text-left uppercase rounded-r-lg">
+                            class="p-4 text-xs font-semibold tracking-wider text-justify uppercase rounded-r-lg">
                             {{ __('invoices.total') }}
                         </th>
                     </tr>
@@ -152,17 +152,17 @@
                         <thead class="bg-background border border-neutral rounded-lg">
                             <tr>
                                 <th scope="col"
-                                    class="p-4 text-xs font-semibold tracking-wider text-left uppercase rounded-l-lg">
+                                    class="p-4 text-xs font-semibold tracking-wider text-justify uppercase rounded-l-lg">
                                     {{ __('invoices.date') }}
                                 </th>
-                                <th scope="col" class="p-4 text-xs font-semibold tracking-wider text-left uppercase">
+                                <th scope="col" class="p-4 text-xs font-semibold tracking-wider text-justify uppercase">
                                     {{ __('invoices.transaction_id') }}
                                 </th>
-                                <th scope="col" class="p-4 text-xs font-semibold tracking-wider text-left uppercase">
+                                <th scope="col" class="p-4 text-xs font-semibold tracking-wider text-justify uppercase">
                                     {{ __('invoices.gateway') }}
                                 </th>
                                 <th scope="col"
-                                    class="p-4 text-xs font-semibold tracking-wider text-left uppercase rounded-r-lg">
+                                    class="p-4 text-xs font-semibold tracking-wider text-justify uppercase rounded-r-lg">
                                     {{ __('invoices.amount') }}
                                 </th>
                             </tr>
