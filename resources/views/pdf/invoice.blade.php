@@ -27,7 +27,7 @@
         }
 
         table th {
-            text-align: start;
+            text-align: justify;
             color: #999;
             border-bottom: 2px solid #ddd;
             padding: 10px 0 15px 0;
