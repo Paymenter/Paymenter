@@ -34,6 +34,12 @@ class User extends Authenticatable implements FilamentUser, HasAvatar
         'role_id',
         'tfa_secret',
         'email_verified_at',
+        'coupon_usage',
+    ];
+
+    protected $casts = [
+        'email_verified_at' => 'datetime',
+        'coupon_usage' => 'array',
     ];
 
     /**
@@ -189,5 +195,47 @@ class User extends Authenticatable implements FilamentUser, HasAvatar
     public function credits()
     {
         return $this->hasMany(Credit::class);
+    }
+
+    /**
+     * Record that the user has used a coupon
+     */
+    public function recordCouponUsage($couponId, $increment = 1)
+    {
+        $couponUsage = $this->coupon_usage ?? [];
+        $couponId = (string) $couponId;
+        
+        if (!isset($couponUsage[$couponId])) {
+            $couponUsage[$couponId] = 0;
+        }
+        
+        $couponUsage[$couponId] += $increment;
+        
+        $this->coupon_usage = $couponUsage;
+        $this->save();
+    }
+
+    /**
+     * Get the number of times the user has used a specific coupon
+     */
+    public function getCouponUsageCount($couponId): int
+    {
+        $couponUsage = $this->coupon_usage ?? [];
+        $couponId = (string) $couponId;
+        
+        return $couponUsage[$couponId] ?? 0;
+    }
+
+    /**
+     * Check if the user can use a specific coupon based on max_uses_per_user
+     */
+    public function canUseCoupon($coupon): bool
+    {
+        if (!$coupon->max_uses_per_user) {
+            return true;
+        }
+        
+        $usageCount = $this->getCouponUsageCount($coupon->id);
+        return $usageCount < $coupon->max_uses_per_user;
     }
 }

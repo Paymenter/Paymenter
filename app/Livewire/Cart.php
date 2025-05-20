@@ -242,7 +242,13 @@ class Cart extends Component
             // Commit the transaction
             DB::commit();
 
-            // Clear the cart
+            // Record coupon usage if a coupon was applied
+            if (Session::has('coupon')) {
+                $coupon = Session::get('coupon');
+                auth()->user()->recordCouponUsage($coupon->id);
+            }
+
+            // Clear the cart and coupon from session
             Session::forget('cart');
             Session::forget('coupon');
 

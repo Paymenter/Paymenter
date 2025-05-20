@@ -76,6 +76,12 @@ class CouponResource extends Resource
                     ->minValue(0)
                     ->placeholder('Enter the maximum number of uses of the coupon'),
 
+                Forms\Components\TextInput::make('max_uses_per_user')
+                    ->label('Max Uses Per User')
+                    ->numeric()
+                    ->minValue(0)
+                    ->placeholder('Enter the maximum number of uses per user'),
+
                 Forms\Components\DatePicker::make('starts_at')
                     ->label('Starts At'),
 

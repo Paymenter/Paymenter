@@ -15,6 +15,7 @@ class Coupon extends Model
         'code',
         'value',
         'max_uses',
+        'max_uses_per_user',
         'starts_at',
         'expires_at',
         'recurring',

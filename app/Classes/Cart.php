@@ -61,20 +61,38 @@ class Cart
         session(['cart' => $cart]);
     }
 
+    /**
+     * Apply a coupon to the cart
+     * 
+     * @param string $code The coupon code to apply
+     * @return \Illuminate\Support\Collection
+     * @throws \App\Exceptions\DisplayException
+     */
     public static function applyCoupon($code)
     {
         $coupon = Coupon::where('code', $code)->first();
         if (!$coupon) {
             throw new DisplayException('Coupon code not found');
         }
+        
+        // Check global max uses
         if ($coupon->max_uses && $coupon->services->count() >= $coupon->max_uses) {
             throw new DisplayException('Coupon code has reached its maximum uses');
         }
+        
+        // Check expiration
         if ($coupon->expires_at && $coupon->expires_at->isPast()) {
             throw new DisplayException('Coupon code has expired');
         }
+        
+        // Check start date
         if ($coupon->starts_at && $coupon->starts_at->isFuture()) {
             throw new DisplayException('Coupon code is not active yet');
+        }
+        
+        // Check max uses per user if user is logged in
+        if (auth()->check() && !auth()->user()->canUseCoupon($coupon)) {
+            throw new DisplayException('You have reached the maximum number of uses for this coupon');
         }
         Session::put(['coupon' => $coupon]);
         $wasSuccessful = false;
