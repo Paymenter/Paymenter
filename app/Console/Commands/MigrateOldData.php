@@ -861,6 +861,7 @@ class MigrateOldData extends Command
 
                 return [
                     'id' => $record['id'],
+                    'number' => $record['id'],
                     'status' => $record['status'],
                     'due_at' => $record['due_date'],
                     'currency_code' => $this->currency_code,
@@ -874,6 +875,12 @@ class MigrateOldData extends Command
             DB::table('invoices')->insert($invoices);
             DB::table('invoice_items')->insert($invoice_items);
             DB::table('invoice_transactions')->insert($invoice_transactions);
+
+            // Update settings for invoice number
+            DB::table('settings')->updateOrInsert(
+                ['key' => 'invoice_number'],
+                ['value' => DB::table('invoices')->max('id') ?: 0]
+            );
         });
     }
 
