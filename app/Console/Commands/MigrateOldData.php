@@ -9,6 +9,7 @@ use App\Models\CustomProperty;
 use App\Models\Gateway;
 use App\Models\Price;
 use App\Models\Server;
+use App\Providers\SettingsProvider;
 use Closure;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Crypt;
@@ -91,6 +92,8 @@ class MigrateOldData extends Command
             $this->migrateInvoices();
 
             DB::statement('SET foreign_key_checks=1');
+
+            SettingsProvider::flushCache();
         } catch (PDOException $e) {
             $this->fail('Connection failed: ' . $e->getMessage());
         }
@@ -186,6 +189,7 @@ class MigrateOldData extends Command
             'timezone' => 'timezone',
             'language' => 'app_language',
             'app_logo' => 'logo',
+            'home_page_text' => 'theme_default_home_page_text',
 
             // Security
             'recaptcha_site_key' => 'captcha_site_key',
@@ -876,12 +880,12 @@ class MigrateOldData extends Command
             DB::table('invoice_items')->insert($invoice_items);
             DB::table('invoice_transactions')->insert($invoice_transactions);
 
-            // Update settings for invoice number
-            DB::table('settings')->updateOrInsert(
-                ['key' => 'invoice_number'],
-                ['value' => DB::table('invoices')->max('id') ?: 0]
-            );
         });
+        // Update settings for invoice number
+        DB::table('settings')->updateOrInsert(
+            ['key' => 'invoice_number'],
+            ['value' => DB::table('invoices')->max('id') ?: 0]
+        );
     }
 
     protected function migratePlans()
