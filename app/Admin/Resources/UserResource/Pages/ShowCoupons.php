@@ -19,14 +19,6 @@ class ShowCoupons extends ManageRelatedRecords
     protected static string $view = 'filament.resources.user-resource.pages.show-coupons';
     protected static ?string $navigationIcon = 'ri-coupon-line';
     
-    protected function getTableQuery(): Builder
-    {
-        return parent::getTableQuery()
-            ->orWhereHas('services', function ($query) {
-                $query->where('user_id', $this->getOwnerRecord()->id);
-            });
-    }
-
     public static function getNavigationLabel(): string
     {
         return 'Coupons';
@@ -37,7 +29,7 @@ class ShowCoupons extends ManageRelatedRecords
         $user = $this->getOwnerRecord();
         $usedCouponIds = array_keys($user->coupon_usage ?? []);
         
-        return Coupon::query()
+        return parent::getTableQuery()
             ->whereIn('id', $usedCouponIds)
             ->orWhereHas('services', function ($query) use ($user) {
                 $query->where('user_id', $user->id);

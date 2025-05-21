@@ -199,20 +199,19 @@ class User extends Authenticatable implements FilamentUser, HasAvatar
 
     /**
      * Record that the user has used a coupon
+     * Uses atomic update to prevent race conditions
      */
     public function recordCouponUsage($couponId, $increment = 1)
     {
-        $couponUsage = $this->coupon_usage ?? [];
         $couponId = (string) $couponId;
         
-        if (!isset($couponUsage[$couponId])) {
-            $couponUsage[$couponId] = 0;
-        }
-        
-        $couponUsage[$couponId] += $increment;
-        
-        $this->coupon_usage = $couponUsage;
-        $this->save();
+        $this->update([
+            'coupon_usage' => function ($couponUsage) use ($couponId, $increment) {
+                $couponUsage = is_array($couponUsage) ? $couponUsage : [];
+                $couponUsage[$couponId] = ($couponUsage[$couponId] ?? 0) + $increment;
+                return $couponUsage;
+            }
+        ]);
     }
 
     /**
@@ -220,7 +219,7 @@ class User extends Authenticatable implements FilamentUser, HasAvatar
      */
     public function getCouponUsageCount($couponId): int
     {
-        $couponUsage = $this->coupon_usage ?? [];
+        $couponUsage = is_array($this->coupon_usage) ? $this->coupon_usage : [];
         $couponId = (string) $couponId;
         
         return $couponUsage[$couponId] ?? 0;
