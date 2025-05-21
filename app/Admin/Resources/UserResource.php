@@ -118,17 +118,18 @@ class UserResource extends Resource
             'services' => Pages\ShowServices::route('/{record}/services'),
             'invoices' => Pages\ShowInvoices::route('/{record}/invoices'),
             'credits' => Pages\ShowCredits::route('/{record}/credits'),
+            'coupons' => Pages\ShowCoupons::route('/{record}/coupons'),
         ];
     }
 
     public static function getRecordSubNavigation(Page $page): array
     {
-
         return $page->generateNavigationItems([
             Pages\EditUser::class,
             Pages\ShowServices::class,
             Pages\ShowInvoices::class,
             Pages\ShowCredits::class,
+            Pages\ShowCoupons::class,
         ]);
     }
 }
