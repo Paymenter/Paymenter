@@ -14,6 +14,7 @@ return [
             'viewAny' => 'View Users',
             'delete' => 'Delete Users',
             'deleteAny' => 'Bulk Delete Users',
+            'impersonate' => 'Impersonate Users',
         ],
         'invoices' => [
             'create' => 'Create Invoices',
