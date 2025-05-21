@@ -15,7 +15,7 @@ class EditUser extends EditRecord
     {
         return [
             Actions\DeleteAction::make()
-                ->hidden(fn($record) => Auth::user()->id == $record->id),
+                ->hidden(fn ($record) => Auth::user()->id == $record->id),
             Actions\Action::make('impersonate')
                 ->label('Impersonate')
                 ->action(function ($record) {
@@ -23,7 +23,7 @@ class EditUser extends EditRecord
                     Auth::login($record);
                     $this->redirect('/dashboard');
                 })
-                ->hidden(fn($record) => Auth::user()->hasPermission('impersonate', $record) == false || Auth::user()->id == $record->id)
+                ->hidden(fn ($record) => Auth::user()->hasPermission('impersonate', $record) == false || Auth::user()->id == $record->id),
         ];
     }
 }

@@ -2,7 +2,6 @@
 
 namespace App\Http\Middleware;
 
-use App\Models\Session;
 use App\Models\User;
 use Closure;
 use Illuminate\Http\Request;
