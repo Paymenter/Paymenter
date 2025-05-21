@@ -15,10 +15,17 @@ use Filament\Support\Facades\Filament;
 class ShowCoupons extends ManageRelatedRecords
 {
     protected static string $resource = UserResource::class;
-
+    protected static string $relationship = 'coupons';
     protected static string $view = 'filament.resources.user-resource.pages.show-coupons';
-
     protected static ?string $navigationIcon = 'ri-coupon-line';
+    
+    protected function getTableQuery(): Builder
+    {
+        return parent::getTableQuery()
+            ->orWhereHas('services', function ($query) {
+                $query->where('user_id', $this->getOwnerRecord()->id);
+            });
+    }
 
     public static function getNavigationLabel(): string
     {
