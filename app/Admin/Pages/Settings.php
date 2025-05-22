@@ -14,6 +14,8 @@ use Filament\Forms\Form;
 use Filament\Notifications\Notification;
 use Filament\Pages\Page;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\TestMail;
 
 class Settings extends Page implements HasForms
 {
@@ -71,7 +73,7 @@ class Settings extends Page implements HasForms
             ->statePath('data');
     }
 
-    public function save(): void
+    public function save(bool $silent = false): void
     {
         Gate::authorize('has-permission', 'admin.settings.update');
 
@@ -100,18 +102,59 @@ class Settings extends Page implements HasForms
 
         SettingsProvider::flushCache();
 
-        Notification::make()
-            ->title('Saved successfully!')
-            ->success()
-            ->send();
+        if (!$silent) {
+            Notification::make()
+                ->title('Saved successfully!')
+                ->success()
+                ->send();
+        }
     }
 
-    public static function getFormActions(): array
+    public function getFormActions(): array
     {
         return [
             Actions\Action::make('save')
                 ->submit('save'),
+            Actions\Action::make('testEmail')
+                ->label('Send Test Email')
+                ->color('gray')
+                ->icon('heroicon-o-envelope')
+                ->action('sendTestEmail')
+                ->tooltip('Send a test email to verify your email settings'),
         ];
+    }
+
+    public function sendTestEmail(): void
+    {
+        Gate::authorize('has-permission', 'admin.settings.update');
+
+        $user = auth()->user();
+        
+        try {
+            // Save the form data without showing the success notification
+            $this->save(silent: true);
+            
+            // Send the test email
+            Mail::to($user->email)->send(new TestMail());
+            
+            Notification::make()
+                ->title('Test email sent successfully to ' . $user->email)
+                ->success()
+                ->send();
+        } catch (\Exception $e) {
+            Notification::make()
+                ->title('Failed to send test email. Read log for more information')
+                ->body($e->getMessage())
+                ->danger()
+                ->persistent()
+                ->send();
+                
+            // Log the error for debugging
+            \Log::error('Failed to send test email', [
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+        }
     }
 
     public static function canAccess(): bool
