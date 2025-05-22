@@ -21,7 +21,8 @@
 <h4 align="center">
   <a href="https://paymenter.org">Website</a> ·
   <a href="https://paymenter.org/docs/installation/install">Documentation</a> ·
-  <a href="https://demo.paymenter.org">Live Demo</a>
+  <a href="https://demo.paymenter.org">Live Demo</a> ·
+  <a href="https://builtbybit.com/resources/categories/paymenter.76/">Extensions</a>
 </h4>
 
  <div align="center">
