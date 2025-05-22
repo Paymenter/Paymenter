@@ -70,6 +70,11 @@ class Cart
         if ($coupon->max_uses && $coupon->services->count() >= $coupon->max_uses) {
             throw new DisplayException('Coupon code has reached its maximum uses');
         }
+        
+        // Check max uses per user if user is logged in
+        if (auth()->check() && $coupon->hasExceededMaxUsesPerUser(auth()->id())) {
+            throw new DisplayException('You have already used this coupon the maximum number of times allowed');
+        }
         if ($coupon->expires_at && $coupon->expires_at->isPast()) {
             throw new DisplayException('Coupon code has expired');
         }
