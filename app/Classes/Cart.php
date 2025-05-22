@@ -124,6 +124,36 @@ class Cart
         }
     }
 
+    /**
+     * Validates and refreshes the coupon in the session
+     * 
+     * @return bool True if coupon is valid, false otherwise
+     */
+    public static function validateAndRefreshCoupon()
+    {
+        if (!Session::has('coupon')) {
+            return false;
+        }
+
+        try {
+            $coupon = Session::get('coupon');
+            // Re-fetch the coupon to ensure we have the latest data
+            $coupon = \App\Models\Coupon::find($coupon->id);
+            if (!$coupon) {
+                throw new \Exception('Coupon no longer exists');
+            }
+            
+            self::validateCoupon($coupon);
+            // Update the coupon in session in case it was modified
+            Session::put('coupon', $coupon);
+            return true;
+        } catch (\Exception $e) {
+            // Remove Coupon if no longer valid
+            self::removeCoupon();
+            return false;
+        }
+    }
+
     public static function removeCoupon()
     {
         Session::forget('coupon');
