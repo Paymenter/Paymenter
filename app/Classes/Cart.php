@@ -61,17 +61,20 @@ class Cart
         session(['cart' => $cart]);
     }
 
-    public static function applyCoupon($code)
+    /**
+     * Validate if a coupon is valid for the current user and cart
+     * 
+     * @param \App\Models\Coupon $coupon
+     * @throws \App\Exceptions\DisplayException
+     */
+    public static function validateCoupon($coupon)
     {
-        $coupon = Coupon::where('code', $code)->first();
         if (!$coupon) {
             throw new DisplayException('Coupon code not found');
         }
         if ($coupon->max_uses && $coupon->services->count() >= $coupon->max_uses) {
             throw new DisplayException('Coupon code has reached its maximum uses');
         }
-        
-        // Check max uses per user if user is logged in
         if (auth()->check() && $coupon->hasExceededMaxUsesPerUser(auth()->id())) {
             throw new DisplayException('You have already used this coupon the maximum number of times allowed');
         }
@@ -81,6 +84,12 @@ class Cart
         if ($coupon->starts_at && $coupon->starts_at->isFuture()) {
             throw new DisplayException('Coupon code is not active yet');
         }
+    }
+    
+    public static function applyCoupon($code)
+    {
+        $coupon = Coupon::where('code', $code)->first();
+        self::validateCoupon($coupon);
         Session::put(['coupon' => $coupon]);
         $wasSuccessful = false;
         $items = self::get()->map(function ($item) use ($coupon, &$wasSuccessful) {

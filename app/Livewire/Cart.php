@@ -117,6 +117,27 @@ class Cart extends Component
             return $this->notify('You must accept the terms of service', 'error');
         }
 
+        // Re-validate coupon if one exists
+        if (Session::has('coupon')) {
+            try {
+                $coupon = Session::get('coupon');
+                // Re-fetch the coupon to ensure we have the latest data
+                $coupon = \App\Models\Coupon::find($coupon->id);
+                if (!$coupon) {
+                    throw new DisplayException('Coupon no longer exists');
+                }
+                \App\Classes\Cart::validateCoupon($coupon);
+                // Update the coupon in session in case it was modified
+                Session::put('coupon', $coupon);
+            } catch (\Exception $e) {
+                // If coupon is no longer valid, remove it and notify the user
+                Session::forget('coupon');
+                $this->coupon = null;
+                $this->updateTotal();
+                return $this->notify($e->getMessage(), 'error');
+            }
+        }
+
         // Start database transaction
         DB::beginTransaction();
         try {
