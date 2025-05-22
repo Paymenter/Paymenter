@@ -100,6 +100,13 @@ class NotificationHelper
         self::sendEmailNotification('new_server_created', $data, $user);
     }
 
+    public static function serverCancelledNotification(User $user, Service $service, \App\Models\ServiceCancellation $cancellation = null, array $data = []): void
+    {
+        $data['service'] = $service;
+        $data['cancellation'] = $cancellation;
+        self::sendEmailNotification('server_cancelled', $data, $user);
+    }
+
     public static function serverSuspendedNotification(User $user, Service $service, array $data = []): void
     {
         $data['service'] = $service;
