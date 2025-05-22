@@ -135,6 +135,9 @@ class Stripe extends Gateway
             if ($stripeCustomerId) {
                 try {
                     $customer = $this->request('get', '/customers/' . $stripeCustomerId->value);
+                    if ($customer->deleted) {
+                        throw new \Exception('Customer not found');
+                    }
                 } catch (\Exception $e) {
                     // Customer not found, create a new one
                 }
