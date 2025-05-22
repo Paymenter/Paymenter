@@ -1,4 +1,3 @@
-version: '3.8'
 x-common:
   database:
     &db-environment
@@ -16,7 +15,7 @@ x-common:
 #
 services:
   database:
-    image: mariadb:10.11
+    image: mariadb:lts
     restart: always
     command: --default-authentication-plugin=mysql_native_password
     volumes:
