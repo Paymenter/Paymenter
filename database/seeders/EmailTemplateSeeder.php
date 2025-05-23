@@ -100,6 +100,34 @@ class EmailTemplateSeeder extends Seeder
                 HTML,
             ],
             [
+                'key' => 'server_cancelled',
+                'subject' => 'Server Cancellation Processed',
+                'body' => <<<'HTML'
+                # Server Cancellation Processed
+
+                We're sorry to see you go! Your server cancellation has been successfully processed.
+
+
+                **Cancellation Details**
+                - Server: {{ $service->product->name }}
+                - Cancellation Type: {{ ucfirst(str_replace('_', ' ', $cancellation->type)) }}
+                @if($cancellation->reason)
+                - Reason: {{ $cancellation->reason }}
+                @endif
+                - Processed On: {{ now()->format('F j, Y') }}
+                
+                @if($cancellation->type === 'end_of_period')
+                Your server will remain active until {{ $service->expires_at->format('F j, Y') }} (end of your current billing period).
+                @else
+                Your server has been terminated immediately.
+                @endif
+                
+                If you have any feedback about your experience or if you've changed your mind, please don't hesitate to contact our support team.
+                
+                We hope to see you again in the future!
+                HTML,
+            ],
+            [
                 'key' => 'server_suspended',
                 'subject' => 'Server suspended',
                 'body' => <<<'HTML'

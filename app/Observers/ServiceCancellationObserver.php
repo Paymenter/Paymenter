@@ -12,6 +12,16 @@ class ServiceCancellationObserver
      */
     public function created(ServiceCancellation $serviceCancellation): void
     {
+        // Send cancellation email
+        $service = $serviceCancellation->service;
+        if ($service && $service->user) {
+            \App\Helpers\NotificationHelper::serverCancelledNotification(
+                $service->user,
+                $service,
+                $serviceCancellation
+            );
+        }
+        
         event(new ServiceCancellationEvent\Created($serviceCancellation));
     }
 
