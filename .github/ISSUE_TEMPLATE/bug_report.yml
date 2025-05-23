@@ -1,10 +1,12 @@
+name: Bug Report
+description: Use this form to submit a reproducible bug in Paymenter.
 title: "[Bug]: "
 labels: ["bug", "triage"]
 body:
   - type: markdown
     attributes:
       value: |
-        Use this form to submit a reproducible bug in Paymenter or Paymenter's UI.
+        Use this form to submit a reproducible bug in Paymenter.
 
         Before submitting your bug report, please [search the discussions][discussions], look at recent open and closed [pull requests][prs], read the [official Paymenter documentation][docs], and read the [Paymenter FAQ][faq] pinned at the Discussion page to see if your bug has already been fixed by the developers or reported by the community.
 
