@@ -61,14 +61,22 @@ class Cart
         session(['cart' => $cart]);
     }
 
-    public static function applyCoupon($code)
+    /**
+     * Validate if a coupon is valid for the current user and cart
+     * 
+     * @param \App\Models\Coupon $coupon
+     * @throws \App\Exceptions\DisplayException
+     */
+    public static function validateCoupon($coupon)
     {
-        $coupon = Coupon::where('code', $code)->first();
         if (!$coupon) {
             throw new DisplayException('Coupon code not found');
         }
         if ($coupon->max_uses && $coupon->services->count() >= $coupon->max_uses) {
             throw new DisplayException('Coupon code has reached its maximum uses');
+        }
+        if (auth()->check() && $coupon->hasExceededMaxUsesPerUser(auth()->id())) {
+            throw new DisplayException('You have already used this coupon the maximum number of times allowed');
         }
         if ($coupon->expires_at && $coupon->expires_at->isPast()) {
             throw new DisplayException('Coupon code has expired');
@@ -76,6 +84,12 @@ class Cart
         if ($coupon->starts_at && $coupon->starts_at->isFuture()) {
             throw new DisplayException('Coupon code is not active yet');
         }
+    }
+    
+    public static function applyCoupon($code)
+    {
+        $coupon = Coupon::where('code', $code)->first();
+        self::validateCoupon($coupon);
         Session::put(['coupon' => $coupon]);
         $wasSuccessful = false;
         $items = self::get()->map(function ($item) use ($coupon, &$wasSuccessful) {
@@ -107,6 +121,36 @@ class Cart
             return $items;
         } else {
             throw new DisplayException('Coupon code is not valid for any items in your cart');
+        }
+    }
+
+    /**
+     * Validates and refreshes the coupon in the session
+     * 
+     * @return bool True if coupon is valid, false otherwise
+     */
+    public static function validateAndRefreshCoupon()
+    {
+        if (!Session::has('coupon')) {
+            return false;
+        }
+
+        try {
+            $coupon = Session::get('coupon');
+            // Re-fetch the coupon to ensure we have the latest data
+            $coupon = \App\Models\Coupon::find($coupon->id);
+            if (!$coupon) {
+                throw new \Exception('Coupon no longer exists');
+            }
+            
+            self::validateCoupon($coupon);
+            // Update the coupon in session in case it was modified
+            Session::put('coupon', $coupon);
+            return true;
+        } catch (\Exception $e) {
+            // Remove Coupon if no longer valid
+            self::removeCoupon();
+            return false;
         }
     }
 

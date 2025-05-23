@@ -15,6 +15,7 @@ class Coupon extends Model
         'code',
         'value',
         'max_uses',
+        'max_uses_per_user',
         'starts_at',
         'expires_at',
         'recurring',
@@ -23,6 +24,8 @@ class Coupon extends Model
     protected $casts = [
         'starts_at' => 'datetime',
         'expires_at' => 'datetime',
+        'max_uses' => 'integer',
+        'max_uses_per_user' => 'integer',
     ];
 
     /**
@@ -37,4 +40,23 @@ class Coupon extends Model
     {
         return $this->hasMany(Service::class);
     }
+
+    /**
+     * Check if the user has exceeded the maximum allowed uses of this coupon
+     *
+     * @param int $userId
+     * @return bool
+     */
+    public function hasExceededMaxUsesPerUser($userId): bool
+    {
+        if (empty($this->max_uses_per_user)) {
+            return false;
+        }
+        
+        return $this->services()
+            ->where('user_id', $userId)
+            ->count() >= $this->max_uses_per_user;
+    }
+
+
 }
