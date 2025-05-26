@@ -118,7 +118,7 @@ class Cart extends Component
         }
 
         // Re-validate coupon if one exists
-        if (Session::has('coupon') && !\App\Classes\Cart::validateAndRefreshCoupon()) {
+        if (Session::has('coupon') && !ClassesCart::validateAndRefreshCoupon()) {
             $this->coupon = null;
             $this->updateTotal();
             return $this->notify('This coupon can no longer be used', 'error');
