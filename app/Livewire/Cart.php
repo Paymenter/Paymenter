@@ -50,7 +50,7 @@ class Cart extends Component
 
             return;
         }
-        $this->total = new Price(['price' => ClassesCart::get()->sum(fn ($item) => $item->price->price * $item->quantity), 'currency' => ClassesCart::get()->first()->price->currency]);
+        $this->total = new Price(['price' => ClassesCart::get()->sum(fn($item) => $item->price->price * $item->quantity), 'currency' => ClassesCart::get()->first()->price->currency]);
         $this->gateways = ExtensionHelper::getCheckoutGateways(ClassesCart::get(), 'cart');
         if (count($this->gateways) > 0 && !array_search($this->gateway, array_column($this->gateways, 'id')) !== false) {
             $this->gateway = $this->gateways[0]->id;
@@ -59,6 +59,9 @@ class Cart extends Component
 
     public function applyCoupon()
     {
+        if ($this->coupon && Session::has('coupon')) {
+            return $this->notify('Coupon code already applied', 'error');
+        }
         try {
             ClassesCart::applyCoupon($this->coupon);
         } catch (DisplayException $e) {
@@ -74,6 +77,9 @@ class Cart extends Component
 
     public function removeCoupon()
     {
+        if (!$this->coupon || !Session::has('coupon')) {
+            return $this->notify('No coupon code applied', 'error');
+        }
         ClassesCart::removeCoupon();
         $this->coupon = null;
         $this->updateTotal();
@@ -125,7 +131,7 @@ class Cart extends Component
             foreach (ClassesCart::get() as $item) {
                 if (
                     $item->product->per_user_limit > 0 && ($user->services->where('product_id', $item->product->id)->count() >= $item->product->per_user_limit ||
-                        ClassesCart::get()->filter(fn ($it) => $it->product->id == $item->product->id)->sum(fn ($it) => $it->quantity) + $user->services->where('product_id', $item->product->id)->count() > $item->product->per_user_limit
+                        ClassesCart::get()->filter(fn($it) => $it->product->id == $item->product->id)->sum(fn($it) => $it->quantity) + $user->services->where('product_id', $item->product->id)->count() > $item->product->per_user_limit
                     )
                 ) {
                     throw new DisplayException(__('product.user_limit', ['product' => $item->product->name]));
