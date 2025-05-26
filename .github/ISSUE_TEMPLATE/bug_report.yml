@@ -2,6 +2,7 @@ name: Bug Report
 description: Use this form to submit a reproducible bug in Paymenter.
 title: "[Bug]: "
 labels: ["bug", "triage"]
+type: bug
 body:
   - type: markdown
     attributes:
