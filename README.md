@@ -21,7 +21,8 @@
 <h4 align="center">
   <a href="https://paymenter.org">Website</a> ·
   <a href="https://paymenter.org/docs/installation/install">Documentation</a> ·
-  <a href="https://demo.paymenter.org">Live Demo</a>
+  <a href="https://demo.paymenter.org">Live Demo</a> ·
+  <a href="https://builtbybit.com/resources/categories/paymenter.76/">Extensions</a>
 </h4>
 
  <div align="center">
@@ -58,7 +59,9 @@ Or, get additional help via [Community Discord](https://discord.gg/xB4UUT3XQg).
 The requirements for Paymenter are the following:
 
 - PHP (8.2 or higher).
-- Composer.
+- Composer
+- Webserver (Apache or Nginx)
+- Database (MariaDB)
 
 ## What is Paymenter?
 

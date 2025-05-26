@@ -136,14 +136,17 @@ class Pterodactyl extends Server
                 'suffix' => 'MiB',
                 'required' => true,
                 'validation' => 'numeric',
+                'min_value' => 0,
+                'description' => 'Set to 0 for unlimited',
             ],
             [
                 'name' => 'swap',
                 'label' => 'Swap',
                 'type' => 'number',
-                'min_value' => 0,
+                'min_value' => -1,
                 'suffix' => 'MiB',
                 'required' => true,
+                'description' => 'Set to 0 for unlimited, or to -1 to disable swap',
             ],
             [
                 'name' => 'disk',
@@ -151,6 +154,8 @@ class Pterodactyl extends Server
                 'type' => 'number',
                 'suffix' => 'MiB',
                 'required' => true,
+                'min_value' => 0,
+                'description' => 'Set to 0 for unlimited',
             ],
             [
                 'name' => 'io',
@@ -170,11 +175,14 @@ class Pterodactyl extends Server
                 'required' => true,
                 'min_value' => 0,
                 'suffix' => '%',
+                'description' => 'Set to 0 for unlimited',
             ],
             [
                 'name' => 'cpu_pinning',
                 'label' => 'CPU Pinning',
                 'type' => 'text',
+                'description' => 'Leave empty for no pinning. Used to specify what threads should be used. Example: 0,2-4,5,6',
+                'validation' => 'regex:/^[0-9]+(?:-[0-9]+)?(?:,[0-9]+(?:-[0-9]+)?)*$/',
             ],
             [
                 'name' => 'databases',

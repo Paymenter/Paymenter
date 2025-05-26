@@ -98,7 +98,6 @@ class Cart
     {
         $coupon = self::validateCoupon($code);
         
-        Session::put(['coupon' => $coupon]);
         $wasSuccessful = false;
         $items = self::get()->map(function ($item) use ($coupon, &$wasSuccessful) {
             if ($coupon->products->where('id', $item->product->id)->isEmpty() && $coupon->products->isNotEmpty()) {
@@ -124,6 +123,7 @@ class Cart
         });
 
         session(['cart' => $items]);
+        Session::put(['coupon' => $coupon]);
 
         if ($wasSuccessful) {
             return $items;

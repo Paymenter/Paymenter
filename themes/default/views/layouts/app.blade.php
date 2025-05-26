@@ -51,6 +51,7 @@
                 <x-navigation.footer />
             </div>
         </div>
+        <x-impersonating />
     </div>
     {!! hook('footer') !!}
 </body>
