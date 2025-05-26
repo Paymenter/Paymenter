@@ -59,6 +59,9 @@ class Cart extends Component
 
     public function applyCoupon()
     {
+        if ($this->coupon && Session::has('coupon')) {
+            return $this->notify('Coupon code already applied', 'error');
+        }
         try {
             ClassesCart::applyCoupon($this->coupon);
         } catch (DisplayException $e) {
@@ -74,6 +77,9 @@ class Cart extends Component
 
     public function removeCoupon()
     {
+        if (!$this->coupon || !Session::has('coupon')) {
+            return $this->notify('No coupon code applied', 'error');
+        }
         ClassesCart::removeCoupon();
         $this->coupon = null;
         $this->updateTotal();
