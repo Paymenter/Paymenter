@@ -99,7 +99,7 @@ class Cart
 
             return (object) $item;
         });
-        
+
         session(['cart' => $items]);
         Session::put(['coupon' => $coupon]);
 
