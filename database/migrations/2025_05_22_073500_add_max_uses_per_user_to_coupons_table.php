@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('coupons', function (Blueprint $table) {
-            $table->unsignedInteger('max_uses_per_user')->nullable()->after('max_uses');
+            $table->integer('max_uses_per_user')->nullable()->after('max_uses');
         });
     }
 
