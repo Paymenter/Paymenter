@@ -44,19 +44,16 @@ class Coupon extends Model
     /**
      * Check if the user has exceeded the maximum allowed uses of this coupon
      *
-     * @param int $userId
-     * @return bool
+     * @param  int  $userId
      */
     public function hasExceededMaxUsesPerUser($userId): bool
     {
         if (empty($this->max_uses_per_user)) {
             return false;
         }
-        
+
         return $this->services()
             ->where('user_id', $userId)
             ->count() >= $this->max_uses_per_user;
     }
-
-
 }

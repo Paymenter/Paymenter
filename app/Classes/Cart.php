@@ -64,11 +64,11 @@ class Cart
 
     /**
      * Validate if a coupon is valid for the current user and cart
-     * 
-     * @param string $coupon_code
-     * @throws \App\Exceptions\DisplayException
-     * 
+     *
+     * @param  string  $coupon_code
      * @return \App\Models\Coupon
+     *
+     * @throws \App\Exceptions\DisplayException
      */
     public static function validateCoupon($coupon_code)
     {
@@ -93,11 +93,11 @@ class Cart
 
         return $coupon;
     }
-    
+
     public static function applyCoupon($code)
     {
         $coupon = self::validateCoupon($code);
-        
+
         $wasSuccessful = false;
         $items = self::get()->map(function ($item) use ($coupon, &$wasSuccessful) {
             if ($coupon->products->where('id', $item->product->id)->isEmpty() && $coupon->products->isNotEmpty()) {
@@ -134,7 +134,7 @@ class Cart
 
     /**
      * Validates and refreshes the coupon in the session
-     * 
+     *
      * @return bool True if coupon is valid, false otherwise
      */
     public static function validateAndRefreshCoupon()
