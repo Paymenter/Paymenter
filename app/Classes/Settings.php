@@ -500,6 +500,13 @@ class Settings
                     'database_type' => 'array',
                 ],
                 [
+                    'name' => 'registration_disabled',
+                    'label' => 'Disable User Registration',
+                    'type' => 'checkbox',
+                    'default' => false,
+                    'description' => 'Only allow existing users to log in. This will hide the registration page and prevent new users from signing up.',
+                ],
+                [
                     'name' => 'pagination',
                     'label' => 'Pagination',
                     'type' => 'number',

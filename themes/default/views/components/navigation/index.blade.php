@@ -97,11 +97,13 @@
                             {{ __('navigation.login') }}
                         </x-button.secondary>
                     </a>
+                    @if(!config('settings.registration_disabled', false))
                     <a href="{{ route('register') }}" wire:navigate>
                         <x-button.primary>
                             {{ __('navigation.register') }}
                         </x-button.primary>
                     </a>
+                    @endif
                 </div>
                 @endif
                 <button

@@ -25,6 +25,9 @@ class Register extends ComponentWithProperties
     public function mount()
     {
         $this->initializeProperties(null, User::class);
+        if (config('settings.registration_disabled', false)) {
+            abort(404, 'Registration is currently disabled.');
+        }
     }
 
     public function rules()
