@@ -37,6 +37,7 @@ class Updates extends Page implements HasForms
     public function update(): Action
     {
         return Action::make('update')
+            ->requiresConfirmation()
             ->action(function () {
                 $output = new BufferedOutput;
 
