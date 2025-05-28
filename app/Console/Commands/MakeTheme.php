@@ -67,10 +67,10 @@ class MakeTheme extends Command implements PromptsForMissingInput
             ["'name' => '$theme_name'", "'author' => '$author'"],
             $theme_file_contents
         );
-        
+
         // Save the changes back to the file
         $fs->put($theme_file, $theme_file_contents);
-        
+
         $this->line('[3/4] Replaced variables in `theme.php`.');
 
         $this->info("[4/4] Theme \"$theme_name\" created successfully.");
