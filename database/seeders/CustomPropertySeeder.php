@@ -36,16 +36,6 @@ class CustomPropertySeeder extends Seeder
                 'validation' => 'string|max:255',
             ],
             [
-                'key' => 'country',
-                'name' => 'Country',
-                'model' => 'App\Models\User',
-                'type' => 'string',
-                'non_editable' => 0,
-                'required' => 1,
-                'show_on_invoice' => 1,
-                'validation' => 'string|max:255',
-            ],
-            [
                 'key' => 'address',
                 'name' => 'Address',
                 'model' => 'App\Models\User',
@@ -93,6 +83,20 @@ class CustomPropertySeeder extends Seeder
                 'non_editable' => 0,
                 'required' => 1,
                 'show_on_invoice' => 1,
+                'validation' => 'string|max:255',
+            ],
+        ]);
+
+        DB::table('custom_properties')->insertOrIgnore([
+            [
+                'key' => 'country',
+                'name' => 'Country',
+                'model' => 'App\Models\User',
+                'type' => 'select',
+                'non_editable' => 0,
+                'required' => 1,
+                'show_on_invoice' => 1,
+                'allowed_values' => json_encode(array_values(array_slice(config('app.countries', []), 1))),
                 'validation' => 'string|max:255',
             ],
         ]);
