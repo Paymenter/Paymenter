@@ -537,8 +537,9 @@ class Settings
             $country = Auth::user()?->properties()->where('key', 'country')->value('value') ?? null;
 
             // Change country to a two-letter country code if it's not already
-            if ($country)
+            if ($country) {
                 $country = array_search($country, config('app.countries')) ?: $country;
+            }
 
             if ($taxRate = TaxRate::where('country', $country)->first()) {
                 return $taxRate;
