@@ -292,7 +292,7 @@ class ExtensionHelper
 
         foreach (Gateway::all() as $gateway) {
             if (self::hasFunction($gateway, 'canUseGateway')) {
-                if (self::getExtension('gateway', $gateway, $gateway->settings)->canUseGateway($items, $type)) {
+                if (self::getExtension('gateway',  $gateway->extension, $gateway->settings)->canUseGateway($items, $type)) {
                     $gateways[] = $gateway;
                 }
             } else {
