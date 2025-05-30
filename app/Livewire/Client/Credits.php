@@ -81,7 +81,7 @@ class Credits extends Component
 
             // Redirect to the invoices page and pay the invoice
             if ($this->gateway) {
-                $pay = ExtensionHelper::pay(Gateway::where('id', $this->gateway)->first(), $invoice);
+                $pay = ExtensionHelper::pay(Gateway::where('id', $this->gateway)->first(), $invoice->fresh());
                 if (is_string($pay)) {
                     return $this->redirect($pay);
                 }
