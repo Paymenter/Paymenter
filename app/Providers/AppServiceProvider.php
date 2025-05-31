@@ -8,11 +8,15 @@ use App\Models\EmailLog;
 use App\Models\Extension;
 use App\Models\OauthClient;
 use App\Models\User;
+use Dedoc\Scramble\Scramble;
+use Dedoc\Scramble\Support\Generator\OpenApi;
+use Dedoc\Scramble\Support\Generator\SecurityScheme;
 use Illuminate\Queue\Events\JobFailed;
 use Illuminate\Queue\Events\JobProcessed;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Queue;
+use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Str;
 use Laravel\Passport\Passport;
@@ -49,9 +53,11 @@ class AppServiceProvider extends ServiceProvider
         });
 
         try {
-            foreach (collect(Extension::where(function ($query) {
-                $query->where('enabled', true)->orWhere('type', 'server')->orWhere('type', 'gateway');
-            })->get())->unique('extension') as $extension) {
+            foreach (
+                collect(Extension::where(function ($query) {
+                    $query->where('enabled', true)->orWhere('type', 'server')->orWhere('type', 'gateway');
+                })->get())->unique('extension') as $extension
+            ) {
                 ExtensionHelper::call($extension, 'boot', mayFail: true);
             }
         } catch (\Exception $e) {
@@ -90,5 +96,12 @@ class AppServiceProvider extends ServiceProvider
         Passport::tokensCan([
             'profile' => 'View your profile',
         ]);
+
+        Scramble::configure()
+            ->withDocumentTransformers(function (OpenApi $openApi) {
+                $openApi->secure(
+                    SecurityScheme::http('bearer')
+                );
+            });
     }
 }

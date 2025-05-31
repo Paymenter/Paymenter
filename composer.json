@@ -26,10 +26,13 @@
         "laravel/tinker": "^2.9",
         "qirolab/laravel-themer": "^2.2.1",
         "robthree/twofactorauth": "^3.0",
-        "socialiteproviders/discord": "^4.2"
+        "socialiteproviders/discord": "^4.2",
+        "spatie/laravel-query-builder": "^6.3",
+        "timacdonald/json-api": "^1.0.0-beta.4"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.13",
+        "dedoc/scramble": "^0.12.19",
         "fakerphp/faker": "^1.23",
         "larastan/larastan": "^3.0",
         "laravel/pint": "^1.13",
@@ -48,7 +51,7 @@
             "Paymenter\\Extensions\\": "extensions/"
         }
     },
-    "autoload-dev": {
+    "autoload-dev": {   
         "psr-4": {
             "Tests\\": "tests/"
         }
