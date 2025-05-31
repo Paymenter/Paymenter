@@ -1,6 +1,9 @@
 <?php
 
+use App\Http\Controllers\Api\Admin\UserController;
+use App\Http\Controllers\Api\ProfileController;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 Route::post('/oauth/token', [
@@ -9,6 +12,11 @@ Route::post('/oauth/token', [
     'middleware' => 'throttle',
 ]);
 
-Route::get('/me', function () {
-    return response()->json(Auth::user());
-})->middleware(['auth:api', 'scope:profile']);
+Route::get('/me', [ProfileController::class, 'me'])->middleware(['auth:api', 'scope:profile']);
+
+
+Route::group(['middleware' => ['auth:api'], 'prefix' => 'v1/admin'], function () {
+    Route::get('/users', [UserController::class, 'index']);
+    Route::get('/users/{user}', [UserController::class, 'show']);
+    
+});
