@@ -13,6 +13,7 @@ return [
     'invoice' => 'Faktur #:id',
     'unit_price' => 'Harga Unit',
     'bill_to' => 'Ditagihkan Kepada',
+    'issued_to' => 'Issued To',
     'paid' => 'Lunas',
     'payment_pending' => 'Menunggu Pembayaran',
     'checking_payment' => 'Checking Payment',

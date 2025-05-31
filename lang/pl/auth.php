@@ -43,13 +43,13 @@ return [
     'reset_password' => 'Zresetuj hasło',
 
     'verify_2fa' => 'Zweryfikuj 2FA',
-    'verify' => 'Verify',
+    'verify' => 'Weryfikacja',
 
     'verification' => [
-        'notice' => 'Verify your email address',
-        'sent' => 'A new verification link has been sent to your email address.',
-        'check_your_email' => 'Before proceeding, please check your email for a verification link.',
-        'not_received' => 'If you did not receive the email you can request another verification email.',
-        'request_another' => 'Resend verification email',
+        'notice' => 'Zweryfikuj swój adres e-mail',
+        'sent' => 'Nowy link weryfikacyjny został wysłany na Twój adres e-mail.',
+        'check_your_email' => 'Przed kontynuowanie, sprawdź swoją pocztę w poszukiwaniu linku weryfikacyjnego.',
+        'not_received' => 'Jeśli nie otrzymałeś wiadomości e-mail, możesz poprosić o inny e-mail weryfikacyjny.',
+        'request_another' => 'Wyślij email weryfikacyjny ponownie',
     ],
 ];
