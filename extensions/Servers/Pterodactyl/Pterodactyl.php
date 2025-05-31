@@ -305,9 +305,9 @@ class Pterodactyl extends Server
                 'cpu' => (int) $settings['cpu'],
             ],
             'feature_limits' => [
-                'databases' => $settings['databases'],
-                'allocations' => $deploymentData['allocations_needed'] + $settings['additional_allocations'],
-                'backups' => $settings['backups'],
+                'databases' => (int) $settings['databases'],
+                'allocations' => $deploymentData['allocations_needed'] + (int) $settings['additional_allocations'],
+                'backups' => (int) $settings['backups'],
             ],
             'start_on_completion' => $settings['start_on_completion'] ?? false,
         ];
