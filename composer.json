@@ -32,7 +32,7 @@
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.13",
-        "dedoc/scramble": "^0.12.19",
+        "dedoc/scramble": "^0.12.21",
         "fakerphp/faker": "^1.23",
         "larastan/larastan": "^3.0",
         "laravel/pint": "^1.13",
@@ -51,7 +51,7 @@
             "Paymenter\\Extensions\\": "extensions/"
         }
     },
-    "autoload-dev": {   
+    "autoload-dev": {
         "psr-4": {
             "Tests\\": "tests/"
         }

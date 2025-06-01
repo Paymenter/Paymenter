@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "0d9290d926f6188fbc91a35f4317afc3",
+    "content-hash": "4acf40544f69df3c42adea467b86602f",
     "packages": [
         {
             "name": "andreiio/blade-remix-icon",
@@ -9640,16 +9640,16 @@
         },
         {
             "name": "dedoc/scramble",
-            "version": "v0.12.20",
+            "version": "v0.12.21",
             "source": {
                 "type": "git",
                 "url": "https://github.com/dedoc/scramble.git",
-                "reference": "283bc6a8790ffaa5ea14d2cbdba83a42b414f7f5"
+                "reference": "5b2d7d5456942e2a7c984c6d7e4690ba66c05f16"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/dedoc/scramble/zipball/283bc6a8790ffaa5ea14d2cbdba83a42b414f7f5",
-                "reference": "283bc6a8790ffaa5ea14d2cbdba83a42b414f7f5",
+                "url": "https://api.github.com/repos/dedoc/scramble/zipball/5b2d7d5456942e2a7c984c6d7e4690ba66c05f16",
+                "reference": "5b2d7d5456942e2a7c984c6d7e4690ba66c05f16",
                 "shasum": ""
             },
             "require": {
@@ -9708,7 +9708,7 @@
             ],
             "support": {
                 "issues": "https://github.com/dedoc/scramble/issues",
-                "source": "https://github.com/dedoc/scramble/tree/v0.12.20"
+                "source": "https://github.com/dedoc/scramble/tree/v0.12.21"
             },
             "funding": [
                 {
@@ -9716,7 +9716,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2025-05-28T13:13:29+00:00"
+            "time": "2025-05-31T06:35:24+00:00"
         },
         {
             "name": "fakerphp/faker",
@@ -12638,6 +12638,6 @@
         "ext-pdo_mysql": "*",
         "ext-zip": "*"
     },
-    "platform-dev": [],
+    "platform-dev": {},
     "plugin-api-version": "2.6.0"
 }

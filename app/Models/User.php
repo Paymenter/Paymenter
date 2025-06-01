@@ -6,6 +6,7 @@ namespace App\Models;
 
 use App\Models\Traits\HasProperties;
 use App\Observers\UserObserver;
+use Dedoc\Scramble\Attributes\SchemaName;
 use Filament\Models\Contracts\FilamentUser;
 use Filament\Models\Contracts\HasAvatar;
 use Filament\Panel;
@@ -16,6 +17,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Passport\HasApiTokens;
 
+#[SchemaName('UserModel')]
 #[ObservedBy([UserObserver::class])]
 class User extends Authenticatable implements FilamentUser, HasAvatar
 {
