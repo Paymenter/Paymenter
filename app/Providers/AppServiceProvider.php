@@ -97,11 +97,13 @@ class AppServiceProvider extends ServiceProvider
             'profile' => 'View your profile',
         ]);
 
-        Scramble::configure()
-            ->withDocumentTransformers(function (OpenApi $openApi) {
-                $openApi->secure(
-                    SecurityScheme::http('bearer')
-                );
-            });
+        if (class_exists(Scramble::class)) {
+            Scramble::configure()
+                ->withDocumentTransformers(function (OpenApi $openApi) {
+                    $openApi->secure(
+                        SecurityScheme::http('bearer')
+                    );
+                });
+        }
     }
 }

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\Response;
 
 abstract class ApiController extends Controller
 {
@@ -14,11 +15,25 @@ abstract class ApiController extends Controller
         $allowedIncludes = [];
 
         foreach ($includes as $include) {
-            if (Auth::user()->tokenCan("admin.{$include}.view") && Auth::user()->hasPermission("admin.{$include}.view")) {
+            // Ensure the include ends with 's', the permissions are defined in plural form but the relation might be singular
+            $relation = str_ends_with($include, 's') ? $include : $include . 's';
+
+            if (
+                Auth::user()->tokenCan("admin.{$relation}.viewAny") &&
+                Auth::user()->hasPermission("admin.{$relation}.viewAny")
+            ) {
                 $allowedIncludes[] = $include;
             }
         }
 
         return $allowedIncludes;
+    }
+
+    /**
+     * Return an HTTP/204 response for the API.
+     */
+    protected function returnNoContent(): Response
+    {
+        return new Response('', Response::HTTP_NO_CONTENT);
     }
 }
