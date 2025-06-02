@@ -16,7 +16,5 @@ Route::get('/me', [ProfileController::class, 'me'])->middleware(['auth:api', 'sc
 
 
 Route::group(['middleware' => ['auth:api'], 'prefix' => 'v1/admin'], function () {
-    Route::get('/users', [UserController::class, 'index']);
-    Route::get('/users/{user}', [UserController::class, 'show']);
-    
+    Route::apiResource('users', UserController::class);
 });

@@ -4,8 +4,11 @@ namespace App\Http\Controllers\Api\Admin;
 
 use App\Http\Controllers\Api\ApiController;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Api\Admin\Users\CreateUserRequest;
+use App\Http\Requests\Api\Admin\Users\DeleteUserRequest;
 use App\Http\Requests\Api\Admin\Users\GetUserRequest;
 use App\Http\Requests\Api\Admin\Users\GetUsersRequest;
+use App\Http\Requests\Api\Admin\Users\UpdateUserRequest;
 use App\Http\Resources\User as UserResource;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -22,6 +25,7 @@ class UserController extends ApiController
         'invoices',
         'tickets',
         'credits',
+        'role'
     ];
 
     /**
@@ -43,6 +47,18 @@ class UserController extends ApiController
     }
 
     /**
+     * Create a new user
+     */
+    public function store(CreateUserRequest $request)
+    {
+        // Validate and create the user
+        $user = User::create($request->validated());
+
+        // Return the created user as a JSON response
+        return new UserResource($user);
+    }
+
+    /**
      * Show a specific user
      */
     public function show(GetUserRequest $request, User $user)
@@ -53,5 +69,28 @@ class UserController extends ApiController
 
         // Return the user as a JSON response
         return new UserResource($user);
+    }
+
+    /**
+     * Update a specific user
+     */
+    public function update(UpdateUserRequest $request, User $user)
+    {
+        // Validate and update the user
+        $user->update($request->validated());
+
+        // Return the updated user as a JSON response
+        return new UserResource($user);
+    }
+
+    /**
+     * Delete a specific user
+     */
+    public function destroy(DeleteUserRequest $request, User $user)
+    {
+        // Delete the user
+        $user->delete();
+
+        return $this->returnNoContent();
     }
 }

@@ -20,6 +20,7 @@ class User extends JsonApiResource
             'first_name' => $this->first_name,
             'last_name' => $this->last_name,
             'email' => $this->email,
+            'email_verified_at' => $this->email_verified_at,
             'updated_at' => $this->updated_at,
             'created_at' => $this->created_at,
         ];
@@ -34,6 +35,7 @@ class User extends JsonApiResource
             'invoices' => fn() => Invoice::collection($this->invoices),
             'tickets' => fn() => Ticket::collection($this->tickets),
             'credits' => fn() => Credit::collection($this->credits),
+            'role' => fn() => Role::make($this->role),
         ];
     }
 }
