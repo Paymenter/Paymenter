@@ -15,7 +15,7 @@ use Dedoc\Scramble\Attributes\QueryParameter;
 
 class UserController extends ApiController
 {
-    protected array $includes = [
+    protected const INCLUDES = [
         'properties',
         'orders',
         'services',
@@ -34,7 +34,7 @@ class UserController extends ApiController
         // Fetch users with pagination
         $users = QueryBuilder::for(User::class)
             ->allowedFilters(['first_name', 'last_name', 'email'])
-            ->allowedIncludes($this->allowedIncludes($this->includes))
+            ->allowedIncludes($this->allowedIncludes(self::INCLUDES))
             ->allowedSorts(['id', 'first_name', 'last_name', 'email', 'created_at'])
             ->simplePaginate(request('per_page', 15));
 
@@ -48,7 +48,7 @@ class UserController extends ApiController
     public function show(GetUserRequest $request, User $user)
     {
         $user = QueryBuilder::for(User::class)
-            ->allowedIncludes($this->allowedIncludes($this->includes))
+            ->allowedIncludes($this->allowedIncludes(self::INCLUDES))
             ->findOrFail($user->id);
 
         // Return the user as a JSON response
