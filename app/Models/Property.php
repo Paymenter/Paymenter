@@ -18,4 +18,9 @@ class Property extends Model
     {
         return $this->belongsTo(CustomProperty::class, 'custom_property_id');
     }
+
+    public function model()
+    {
+        return $this->morphTo();
+    }
 }
