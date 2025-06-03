@@ -62,7 +62,12 @@ class Show extends Component
 
             return;
         }
-        $this->redirect(ExtensionHelper::callService($this->service, $function));
+        $result = ExtensionHelper::callService($this->service, $function);
+        // If its a response, return it
+        if (!is_string($result)) {
+            return $result;
+        }
+        $this->redirect($result);
     }
 
     public function render()

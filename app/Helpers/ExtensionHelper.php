@@ -224,6 +224,23 @@ class ExtensionHelper
         return self::call($server, 'getProductConfig', [$values]);
     }
 
+    protected static function prepareForSerialization($values)
+    {
+        if (is_array($values)) {
+            foreach ($values as $key => $value) {
+                $values[$key] = self::prepareForSerialization($value);
+            }
+            return $values;
+        }
+
+        if ($values instanceof \Livewire\Features\SupportFileUploads\TemporaryUploadedFile) {
+            // Store the file and use the path, or just use the filename if already stored
+            return $values->getRealPath() ?: (string) $values;
+        }
+
+        return $values;
+    }
+
     /**
      * Get available settings
      *
@@ -235,7 +252,7 @@ class ExtensionHelper
 
         $config = Cache::get('product_config', []);
 
-        $key = $server->extension . $server->id . md5(serialize($values));
+        $key = $server->extension . $server->id . md5(serialize(self::prepareForSerialization($values)));
 
         if (!isset($config[$key])) {
             $config[$key] = self::getProductConfig($server, $values);

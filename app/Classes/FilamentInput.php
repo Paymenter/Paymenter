@@ -228,12 +228,15 @@ class FilamentInput
                     ->acceptedFileTypes($setting->accept ?? [])
                     ->live(condition: $setting->live ?? false)
                     ->default($setting->default ?? '')
+                    ->disk($setting->disk ?? 'public')
+                    ->preserveFilenames($setting->preserve_filenames ?? true)
                     ->disabled($setting->disabled ?? false)
+                    ->downloadable()
                     ->rules($setting->validation ?? []);
 
                 if (isset($setting->file_name)) {
                     $input->getUploadedFileNameForStorageUsing(
-                        fn (): string => (string) $setting->file_name,
+                        fn(): string => (string) $setting->file_name,
                     );
                 }
 
