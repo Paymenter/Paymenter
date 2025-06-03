@@ -236,7 +236,7 @@ class FilamentInput
 
                 if (isset($setting->file_name)) {
                     $input->getUploadedFileNameForStorageUsing(
-                        fn(): string => (string) $setting->file_name,
+                        fn (): string => (string) $setting->file_name,
                     );
                 }
 

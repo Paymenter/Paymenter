@@ -230,6 +230,7 @@ class ExtensionHelper
             foreach ($values as $key => $value) {
                 $values[$key] = self::prepareForSerialization($value);
             }
+
             return $values;
         }
 
