@@ -63,7 +63,7 @@ class Mollie extends Gateway
             ],
             'description' => 'Invoice #' . $invoice->id,
             'redirectUrl' => route('invoices.show', $invoice) . '?checkPayment=true',
-            'webhookUrl' => str_replace('paymenter.test', '123b83d6-02b9-4654-a0b4-254afa30737a.corwindev.nl', route('extensions.gateways.mollie.webhook', $invoice)),
+            'webhookUrl' => route('extensions.gateways.mollie.webhook', $invoice),
             'metadata' => [
                 'invoice_id' => $invoice->id,
             ],
