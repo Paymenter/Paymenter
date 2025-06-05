@@ -19,7 +19,7 @@ return [
     'checking_payment' => 'Betaling controleren',
     'invoice_date' => 'Factuurdatum',
     'invoice_no' => 'Factuurnummer',
-    'tax_id' => 'BTW nummer',
+    'tax_id' => 'BTW. nummer',
     'company_id' => 'KVK nummer',
     'item' => 'Artikel',
     'quantity' => 'Aantal',
