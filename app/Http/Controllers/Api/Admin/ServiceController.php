@@ -11,11 +11,13 @@ use App\Http\Requests\Api\Admin\Services\GetServicesRequest;
 use App\Http\Requests\Api\Admin\Services\UpdateServiceRequest;
 use App\Http\Resources\ServiceResource;
 use App\Models\Service;
+use Dedoc\Scramble\Attributes\Group;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Spatie\QueryBuilder\QueryBuilder;
 use Dedoc\Scramble\Attributes\QueryParameter;
 
+#[Group(weight: 3)]
 class ServiceController extends ApiController
 {
     protected const INCLUDES = [

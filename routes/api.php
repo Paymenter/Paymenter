@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\Admin\OrderController;
 use App\Http\Controllers\Api\Admin\ServiceController;
 use App\Http\Controllers\Api\Admin\UserController;
 use App\Http\Controllers\Api\ProfileController;
@@ -20,5 +21,6 @@ Route::group(['middleware' => ['api.admin'], 'prefix' => 'v1/admin'], function (
     Route::apiResources([
         'users' => UserController::class,
         'services' => ServiceController::class,
+        'orders' => OrderController::class,
     ]);
 });

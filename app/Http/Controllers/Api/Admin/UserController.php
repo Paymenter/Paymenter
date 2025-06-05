@@ -11,11 +11,13 @@ use App\Http\Requests\Api\Admin\Users\GetUsersRequest;
 use App\Http\Requests\Api\Admin\Users\UpdateUserRequest;
 use App\Http\Resources\UserResource;
 use App\Models\User;
+use Dedoc\Scramble\Attributes\Group;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Spatie\QueryBuilder\QueryBuilder;
 use Dedoc\Scramble\Attributes\QueryParameter;
 
+#[Group(weight: 1)]
 class UserController extends ApiController
 {
     protected const INCLUDES = [
