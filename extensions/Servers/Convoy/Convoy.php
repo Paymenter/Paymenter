@@ -252,7 +252,7 @@ class Convoy extends Server
             $ips = array_merge($ips, array_column($ip['data'], 'id'));
         }
 
-        $user = $this->getOrCreateUser($service->order->user);
+        $user = $this->getOrCreateUser($service->user);
 
         $data = [
             'node_id' => (int) $node,
@@ -359,7 +359,7 @@ class Convoy extends Server
 
     public function ssoLink(Service $service): string
     {
-        $data = $this->request('users/' . $this->getOrCreateUser($service->order->user)['id'] . '/generate-sso-token', 'post');
+        $data = $this->request('users/' . $this->getOrCreateUser($service->user)['id'] . '/generate-sso-token', 'post');
 
         return rtrim($this->config('host'), '/') . '/authenticate?token=' . $data['data']['token'];
     }
