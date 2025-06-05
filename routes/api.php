@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\Admin\ServiceController;
 use App\Http\Controllers\Api\Admin\UserController;
 use App\Http\Controllers\Api\ProfileController;
 use Illuminate\Support\Facades\Auth;
@@ -15,6 +16,9 @@ Route::post('/oauth/token', [
 Route::get('/me', [ProfileController::class, 'me'])->middleware(['auth:api', 'scope:profile']);
 
 
-Route::group(['middleware' => ['auth:api'], 'prefix' => 'v1/admin'], function () {
-    Route::apiResource('users', UserController::class);
+Route::group(['middleware' => ['api.admin'], 'prefix' => 'v1/admin'], function () {
+    Route::apiResources([
+        'users' => UserController::class,
+        'services' => ServiceController::class,
+    ]);
 });

@@ -5,7 +5,7 @@ namespace App\Http\Resources;
 use Illuminate\Http\Request;
 use TiMacDonald\JsonApi\JsonApiResource;
 
-class Role extends JsonApiResource
+class Product extends JsonApiResource
 {
     public $attributes = [
         'id',
@@ -13,5 +13,9 @@ class Role extends JsonApiResource
         'permissions',
         'updated_at',
         'created_at',
+    ];
+
+    public $relationships = [
+        'category' => Category::class,
     ];
 }

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Middleware\Api\AdminApi;
 use App\Http\Middleware\EnsureUserHasPermissions;
 use App\Http\Middleware\ProxyMiddleware;
 use App\Http\Middleware\SetLocale;
@@ -21,6 +22,7 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'has' => EnsureUserHasPermissions::class,
             'scope' => CheckForAnyScope::class,
+            'api.admin' => AdminApi::class,
         ]);
         $middleware->web(SetLocale::class);
     })

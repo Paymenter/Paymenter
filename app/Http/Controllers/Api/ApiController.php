@@ -19,8 +19,7 @@ abstract class ApiController extends Controller
             $relation = str_ends_with($include, 's') ? $include : $include . 's';
 
             if (
-                Auth::user()->tokenCan("admin.{$relation}.viewAny") &&
-                Auth::user()->hasPermission("admin.{$relation}.viewAny")
+                in_array('admin.' . $relation . '.view', request()->attributes->get('api_key_permissions', []))
             ) {
                 $allowedIncludes[] = $include;
             }

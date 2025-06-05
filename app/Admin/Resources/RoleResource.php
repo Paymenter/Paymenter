@@ -32,7 +32,7 @@ class RoleResource extends Resource
                     ->unique(ignoreRecord: true)
                     ->required()
                     ->maxLength(255),
-                CheckboxList::make('permissions')->options(Arr::dot(config('permissions')))->columns(4)->bulkToggleable()->searchable()->noSearchResultsMessage('Permission could not be found'),
+                CheckboxList::make('permissions')->options(Arr::dot(config('permissions.role')))->columns(4)->bulkToggleable()->searchable()->noSearchResultsMessage('Permission could not be found'),
             ])->columns(1);
     }
 
