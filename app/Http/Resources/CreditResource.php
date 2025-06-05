@@ -5,21 +5,17 @@ namespace App\Http\Resources;
 use Illuminate\Http\Request;
 use TiMacDonald\JsonApi\JsonApiResource;
 
-class Ticket extends JsonApiResource
+class CreditResource extends JsonApiResource
 {
     public $attributes = [
         'id',
-        'subject',
-        'status',
-        'priority',
-        'department',
+        'currency_code',
+        'amount',
         'updated_at',
         'created_at',
     ];
 
     public $relationships = [
-        'messages' => TicketMessage::class,
-        'user' => User::class,
-        'assigned_to' => User::class,
+        'user' => UserResource::class,
     ];
 }

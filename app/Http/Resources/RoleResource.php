@@ -5,13 +5,12 @@ namespace App\Http\Resources;
 use Illuminate\Http\Request;
 use TiMacDonald\JsonApi\JsonApiResource;
 
-class Property extends JsonApiResource
+class RoleResource extends JsonApiResource
 {
     public $attributes = [
         'id',
         'name',
-        'key',
-        'value',
+        'permissions',
         'updated_at',
         'created_at',
     ];

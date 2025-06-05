@@ -9,7 +9,7 @@ use App\Http\Requests\Api\Admin\Users\DeleteUserRequest;
 use App\Http\Requests\Api\Admin\Users\GetUserRequest;
 use App\Http\Requests\Api\Admin\Users\GetUsersRequest;
 use App\Http\Requests\Api\Admin\Users\UpdateUserRequest;
-use App\Http\Resources\User as UserResource;
+use App\Http\Resources\UserResource;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;

@@ -9,7 +9,7 @@ use App\Http\Requests\Api\Admin\Services\DeleteServiceRequest;
 use App\Http\Requests\Api\Admin\Services\GetServiceRequest;
 use App\Http\Requests\Api\Admin\Services\GetServicesRequest;
 use App\Http\Requests\Api\Admin\Services\UpdateServiceRequest;
-use App\Http\Resources\Service as ServiceResource;
+use App\Http\Resources\ServiceResource;
 use App\Models\Service;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
