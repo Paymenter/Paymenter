@@ -12,15 +12,15 @@ class InvoiceResource extends JsonApiResource
 {
     public $attributes = [
         'id',
-        'quantity',
-        'price',
+        'status',
         'currency_code',
-        'expires_at',
+        'due_at',
         'updated_at',
         'created_at',
     ];
 
     public $relationships = [
-        'services' => ServiceResource::class,
+        'user' => UserResource::class,
+        'items' => InvoiceItemResource::class,
     ];
 }

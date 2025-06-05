@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\Admin\InvoiceController;
 use App\Http\Controllers\Api\Admin\OrderController;
 use App\Http\Controllers\Api\Admin\ServiceController;
 use App\Http\Controllers\Api\Admin\UserController;
@@ -22,5 +23,6 @@ Route::group(['middleware' => ['api.admin'], 'prefix' => 'v1/admin'], function (
         'users' => UserController::class,
         'services' => ServiceController::class,
         'orders' => OrderController::class,
+        'invoices' => InvoiceController::class,
     ]);
 });
