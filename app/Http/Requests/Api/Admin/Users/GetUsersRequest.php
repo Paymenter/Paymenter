@@ -7,5 +7,5 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class GetUsersRequest extends AdminApiRequest
 {
-    protected $permission = 'users.viewAny';
+    protected $permission = 'users.view';
 }

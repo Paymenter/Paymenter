@@ -13,7 +13,7 @@ abstract class AdminApiRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return $this->user()->tokenCan('admin.' . $this->permission) && $this->user()->hasPermission('admin.' . $this->permission);
+        return in_array('admin.' . $this->permission, $this->instance()->attributes->get('api_key_permissions', []));
     }
 
     /**
