@@ -5,17 +5,20 @@ namespace App\Http\Resources;
 use Illuminate\Http\Request;
 use TiMacDonald\JsonApi\JsonApiResource;
 
-class Credit extends JsonApiResource
+class InvoiceItemResource extends JsonApiResource
 {
     public $attributes = [
         'id',
+        'quantity',
+        'price',
         'currency_code',
-        'amount',
+        'expires_at',
         'updated_at',
         'created_at',
     ];
 
     public $relationships = [
-        'user' => User::class,
+        'services' => ServiceResource::class,
+        'invoice' => InvoiceResource::class,
     ];
 }

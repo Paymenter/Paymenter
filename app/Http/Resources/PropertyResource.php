@@ -5,17 +5,14 @@ namespace App\Http\Resources;
 use Illuminate\Http\Request;
 use TiMacDonald\JsonApi\JsonApiResource;
 
-class Category extends JsonApiResource
+class PropertyResource extends JsonApiResource
 {
     public $attributes = [
         'id',
         'name',
-        'permissions',
+        'key',
+        'value',
         'updated_at',
         'created_at',
-    ];
-
-    public $relationships = [
-        'products' => Product::class,
     ];
 }

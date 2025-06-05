@@ -5,7 +5,7 @@ namespace App\Http\Resources;
 use Illuminate\Http\Request;
 use TiMacDonald\JsonApi\JsonApiResource;
 
-class Order extends JsonApiResource
+class OrderResource extends JsonApiResource
 {
     public $attributes = [
         'id',
@@ -15,6 +15,6 @@ class Order extends JsonApiResource
     ];
 
     public $relationships = [
-        'services' => Service::class,
+        'services' => ServiceResource::class,
     ];
 }
