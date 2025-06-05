@@ -100,6 +100,7 @@ return [
         'uk' => 'Ukrainian',
         'ko' => 'Korean',
         'lv' => 'Latvian',
+        'nl' => 'Dutch',
         'no' => 'Norwegian',
         'pt' => 'Portuguese',
         'sr' => 'Serbian',
