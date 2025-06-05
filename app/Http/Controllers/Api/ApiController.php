@@ -19,7 +19,8 @@ abstract class ApiController extends Controller
             $relation = str_ends_with($include, 's') ? $include : $include . 's';
 
             if (
-                in_array('admin.' . $relation . '.view', request()->attributes->get('api_key_permissions', []))
+                in_array('admin.' . $relation . '.view', request()->attributes->get('api_key_permissions', [])) ||
+                !in_array('admin.' . $relation . '.view', config('permissions.api.admin', [])) 
             ) {
                 $allowedIncludes[] = $include;
             }
