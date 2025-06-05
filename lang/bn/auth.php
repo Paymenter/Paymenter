@@ -13,26 +13,26 @@ return [
     |
     */
 
-    'failed' => 'These credentials do not match our records.',
-    'password' => 'The provided password is incorrect.',
-    'throttle' => 'Too many login attempts. Please try again in :seconds seconds.',
+    'failed' => 'এই তথ্য আমাদের রেকর্ডের সাথে মেলে না।',
+    'password' => 'দেওয়া পাসওয়ার্ডটি ভুল।',
+    'throttle' => 'অনেকবার লগইন চেষ্টা করা হয়েছে। অনুগ্রহ করে :seconds সেকেন্ড পর আবার চেষ্টা করুন।',
 
-    'sign_in' => 'Sign in',
-    'sign_in_title' => 'Sign in to your account',
-    'or_sign_in_with' => 'Or sign in with',
-    'forgot_password' => 'Forgot your password?',
-    'dont_have_account' => 'Don\'t have an account?',
-    'already_have_account' => 'Already have an account?',
+    'sign_in' => 'সাইন ইন করুন',
+    'sign_in_title' => 'আপনার অ্যাকাউন্টে সাইন ইন করুন',
+    'or_sign_in_with' => 'অথবা দিয়ে সাইন ইন করুন',
+    'forgot_password' => 'পাসওয়ার্ড ভুলে গেছেন?',
+    'dont_have_account' => 'অ্যাকাউন্ট নেই?',
+    'already_have_account' => 'আগে থেকেই অ্যাকাউন্ট আছে?',
 
-    'sign_up' => 'Sign up',
-    'sign_up_title' => 'Create your account',
+    'sign_up' => 'সাইন আপ করুন',
+    'sign_up_title' => 'আপনার অ্যাকাউন্ট তৈরি করুন',
 
-    'logout' => 'Logout',
+    'logout' => 'লগআউট করুন',
 
     'input' => [
-        'email' => 'Email',
-        'email_label' => 'Email Address',
-        'password' => 'Password',
+        'email' => 'ইমেইল',
+        'email_label' => 'ইমেইল ঠিকানা',
+        'password' => 'পাসওয়ার্ড',
     ],
 
     'oauth' => [
