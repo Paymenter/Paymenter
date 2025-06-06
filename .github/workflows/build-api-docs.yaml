@@ -44,7 +44,7 @@ jobs:
         run: php artisan migrate --force
 
       - name: Build API docs
-        run: php artisan scramble:export --path=docs-repository/api-reference/openapi.json
+        run: php artisan scramble:export --path=docs-repository/public/openapi.json
 
       - name: Commit and push generated specification
         uses: stefanzweifel/git-auto-commit-action@v5
