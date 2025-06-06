@@ -41,7 +41,6 @@ class AdminApi
             );
         }
 
-        // Optionally, you can log the last used time or IP address
         $token->last_used_at = now();
         $token->save();
 
