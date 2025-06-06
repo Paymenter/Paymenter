@@ -3,6 +3,8 @@
 use App\Http\Controllers\Api\Admin\InvoiceController;
 use App\Http\Controllers\Api\Admin\OrderController;
 use App\Http\Controllers\Api\Admin\ServiceController;
+use App\Http\Controllers\Api\Admin\TicketController;
+use App\Http\Controllers\Api\Admin\TicketMessageController;
 use App\Http\Controllers\Api\Admin\UserController;
 use App\Http\Controllers\Api\ProfileController;
 use Illuminate\Support\Facades\Auth;
@@ -24,5 +26,7 @@ Route::group(['middleware' => ['api.admin'], 'prefix' => 'v1/admin'], function (
         'services' => ServiceController::class,
         'orders' => OrderController::class,
         'invoices' => InvoiceController::class,
+        'tickets' => TicketController::class,
+        'ticket-messages' => TicketMessageController::class,
     ]);
 });

@@ -17,7 +17,7 @@ use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Spatie\QueryBuilder\QueryBuilder;
 use Dedoc\Scramble\Attributes\QueryParameter;
 
-#[Group(weight: 3)]
+#[Group(name: "Services", weight: 3)]
 class ServiceController extends ApiController
 {
     protected const INCLUDES = [
