@@ -2,7 +2,6 @@
 
 namespace App\Http\Resources;
 
-use Illuminate\Http\Request;
 use TiMacDonald\JsonApi\JsonApiResource;
 
 class PropertyResource extends JsonApiResource

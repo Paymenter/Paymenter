@@ -3,8 +3,6 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Resources\Json\ResourceCollection;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Response;
 
 abstract class ApiController extends Controller
@@ -27,7 +25,7 @@ abstract class ApiController extends Controller
 
             if (
                 in_array('admin.' . $relation . '.view', request()->attributes->get('api_key_permissions', [])) ||
-                !in_array('admin.' . $relation . '.view', config('permissions.api.admin', [])) 
+                !in_array('admin.' . $relation . '.view', config('permissions.api.admin', []))
             ) {
                 $allowedIncludes[] = $include;
             }

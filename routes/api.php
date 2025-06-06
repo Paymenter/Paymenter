@@ -7,8 +7,6 @@ use App\Http\Controllers\Api\Admin\TicketController;
 use App\Http\Controllers\Api\Admin\TicketMessageController;
 use App\Http\Controllers\Api\Admin\UserController;
 use App\Http\Controllers\Api\ProfileController;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 Route::post('/oauth/token', [
@@ -18,7 +16,6 @@ Route::post('/oauth/token', [
 ]);
 
 Route::get('/me', [ProfileController::class, 'me'])->middleware(['auth:api', 'scope:profile']);
-
 
 Route::group(['middleware' => ['api.admin'], 'prefix' => 'v1/admin'], function () {
     Route::apiResources([

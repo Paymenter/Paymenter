@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Api\Admin;
 
 use App\Http\Controllers\Api\ApiController;
-use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\Admin\Invoices\CreateInvoiceRequest;
 use App\Http\Requests\Api\Admin\Invoices\DeleteInvoiceRequest;
 use App\Http\Requests\Api\Admin\Invoices\GetInvoiceRequest;
@@ -11,13 +10,11 @@ use App\Http\Requests\Api\Admin\Invoices\GetInvoicesRequest;
 use App\Http\Requests\Api\Admin\Invoices\UpdateInvoiceRequest;
 use App\Http\Resources\InvoiceResource;
 use App\Models\Invoice;
-use Illuminate\Http\Request;
-use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
-use Spatie\QueryBuilder\QueryBuilder;
-use Dedoc\Scramble\Attributes\QueryParameter;
 use Dedoc\Scramble\Attributes\Group;
+use Dedoc\Scramble\Attributes\QueryParameter;
+use Spatie\QueryBuilder\QueryBuilder;
 
-#[Group(name: "Invoices", weight: 4)]
+#[Group(name: 'Invoices', weight: 4)]
 class InvoiceController extends ApiController
 {
     protected const INCLUDES = [

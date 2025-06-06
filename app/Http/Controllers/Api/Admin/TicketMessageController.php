@@ -3,21 +3,17 @@
 namespace App\Http\Controllers\Api\Admin;
 
 use App\Http\Controllers\Api\ApiController;
-use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\Admin\TicketMessages\CreateTicketMessageRequest;
 use App\Http\Requests\Api\Admin\TicketMessages\DeleteTicketMessageRequest;
 use App\Http\Requests\Api\Admin\TicketMessages\GetTicketMessageRequest;
 use App\Http\Requests\Api\Admin\TicketMessages\GetTicketMessagesRequest;
-use App\Http\Requests\Api\Admin\TicketMessages\UpdateTicketMessageRequest;
 use App\Http\Resources\TicketMessageResource;
 use App\Models\TicketMessage;
-use Illuminate\Http\Request;
-use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
-use Spatie\QueryBuilder\QueryBuilder;
-use Dedoc\Scramble\Attributes\QueryParameter;
 use Dedoc\Scramble\Attributes\Group;
+use Dedoc\Scramble\Attributes\QueryParameter;
+use Spatie\QueryBuilder\QueryBuilder;
 
-#[Group(name: "Ticket Messages", weight: 6)]
+#[Group(name: 'Ticket Messages', weight: 6)]
 class TicketMessageController extends ApiController
 {
     protected const INCLUDES = [

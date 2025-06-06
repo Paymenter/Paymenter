@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Api\Admin;
 
 use App\Http\Controllers\Api\ApiController;
-use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\Admin\Tickets\CreateTicketRequest;
 use App\Http\Requests\Api\Admin\Tickets\DeleteTicketRequest;
 use App\Http\Requests\Api\Admin\Tickets\GetTicketRequest;
@@ -11,13 +10,11 @@ use App\Http\Requests\Api\Admin\Tickets\GetTicketsRequest;
 use App\Http\Requests\Api\Admin\Tickets\UpdateTicketRequest;
 use App\Http\Resources\TicketResource;
 use App\Models\Ticket;
-use Illuminate\Http\Request;
-use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
-use Spatie\QueryBuilder\QueryBuilder;
-use Dedoc\Scramble\Attributes\QueryParameter;
 use Dedoc\Scramble\Attributes\Group;
+use Dedoc\Scramble\Attributes\QueryParameter;
+use Spatie\QueryBuilder\QueryBuilder;
 
-#[Group(name: "Tickets", weight: 5)]
+#[Group(name: 'Tickets', weight: 5)]
 class TicketController extends ApiController
 {
     protected const INCLUDES = [

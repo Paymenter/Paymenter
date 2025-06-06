@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Api\Admin;
 
 use App\Http\Controllers\Api\ApiController;
-use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\Admin\Users\CreateUserRequest;
 use App\Http\Requests\Api\Admin\Users\DeleteUserRequest;
 use App\Http\Requests\Api\Admin\Users\GetUserRequest;
@@ -12,12 +11,10 @@ use App\Http\Requests\Api\Admin\Users\UpdateUserRequest;
 use App\Http\Resources\UserResource;
 use App\Models\User;
 use Dedoc\Scramble\Attributes\Group;
-use Illuminate\Http\Request;
-use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
-use Spatie\QueryBuilder\QueryBuilder;
 use Dedoc\Scramble\Attributes\QueryParameter;
+use Spatie\QueryBuilder\QueryBuilder;
 
-#[Group(name: "Users", weight: 1)]
+#[Group(name: 'Users', weight: 1)]
 class UserController extends ApiController
 {
     protected const INCLUDES = [
@@ -27,7 +24,7 @@ class UserController extends ApiController
         'invoices',
         'tickets',
         'credits',
-        'role'
+        'role',
     ];
 
     /**

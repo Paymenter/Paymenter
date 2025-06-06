@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Api\Admin;
 
 use App\Http\Controllers\Api\ApiController;
-use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\Admin\Orders\CreateOrderRequest;
 use App\Http\Requests\Api\Admin\Orders\DeleteOrderRequest;
 use App\Http\Requests\Api\Admin\Orders\GetOrderRequest;
@@ -11,13 +10,11 @@ use App\Http\Requests\Api\Admin\Orders\GetOrdersRequest;
 use App\Http\Requests\Api\Admin\Orders\UpdateOrderRequest;
 use App\Http\Resources\OrderResource;
 use App\Models\Order;
-use Illuminate\Http\Request;
-use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
-use Spatie\QueryBuilder\QueryBuilder;
-use Dedoc\Scramble\Attributes\QueryParameter;
 use Dedoc\Scramble\Attributes\Group;
+use Dedoc\Scramble\Attributes\QueryParameter;
+use Spatie\QueryBuilder\QueryBuilder;
 
-#[Group(name: "Orders", weight: 2)]
+#[Group(name: 'Orders', weight: 2)]
 class OrderController extends ApiController
 {
     protected const INCLUDES = [

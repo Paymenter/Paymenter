@@ -2,7 +2,6 @@
 
 namespace App\Http\Resources;
 
-use Illuminate\Http\Request;
 use TiMacDonald\JsonApi\JsonApiResource;
 
 class TicketMessageResource extends JsonApiResource
@@ -13,7 +12,7 @@ class TicketMessageResource extends JsonApiResource
         'updated_at',
         'created_at',
     ];
-    
+
     public $relationships = [
         'user' => UserResource::class,
         'ticket' => TicketResource::class,

@@ -3,8 +3,6 @@
 namespace App\Http\Requests\Api\Admin\Tickets;
 
 use App\Http\Requests\Api\Admin\AdminApiRequest;
-use App\Models\Product;
-use Illuminate\Foundation\Http\FormRequest;
 
 class CreateTicketRequest extends AdminApiRequest
 {

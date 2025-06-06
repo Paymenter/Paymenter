@@ -3,15 +3,12 @@
 namespace App\Admin\Resources;
 
 use App\Admin\Resources\ApiResource\Pages;
-use App\Admin\Resources\ApiResource\RelationManagers;
 use App\Models\ApiKey;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Illuminate\Support\Arr;
 
 class ApiResource extends Resource
@@ -44,8 +41,7 @@ class ApiResource extends Resource
                     ->noSearchResultsMessage('Permission could not be found'),
 
             ])
-            ->columns(1)
-        ;
+            ->columns(1);
     }
 
     public static function table(Table $table): Table

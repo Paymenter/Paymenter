@@ -3,8 +3,6 @@
 namespace App\Http\Requests\Api\Admin\Invoices;
 
 use App\Http\Requests\Api\Admin\AdminApiRequest;
-use App\Models\Product;
-use Illuminate\Foundation\Http\FormRequest;
 
 class CreateInvoiceRequest extends AdminApiRequest
 {
