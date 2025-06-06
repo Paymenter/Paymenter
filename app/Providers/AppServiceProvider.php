@@ -98,6 +98,9 @@ class AppServiceProvider extends ServiceProvider
 
         if (class_exists(Scramble::class)) {
             Scramble::configure()
+                ->routes(function (\Illuminate\Routing\Route $route) {
+                    return Str::startsWith($route->uri, 'api/v1/admin');
+                })
                 ->withDocumentTransformers(function (OpenApi $openApi) {
                     $openApi->secure(
                         SecurityScheme::http('bearer')

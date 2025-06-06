@@ -20,25 +20,18 @@ class AdminApi
     {
         // Validate bearers token
         if (!$request->bearerToken()) {
-            throw new UnauthorizedHttpException(
-                'Bearer',
-                'The request is missing a valid bearer token.'
-            );
+            return response()->json(['error' => 'The request is missing a valid bearer token.'], 401);
         }
 
         $token = ApiKey::where('token', hash('sha256', $request->bearerToken()))
             ->where('enabled', true)
             ->firstOr(function () {
-                throw new UnauthorizedException(
-                    'The provided API key is invalid or has been disabled.'
-                );
+                return response()->json(['error' => 'The provided API key is invalid or has been disabled.'], 401);
             });
 
         // Check if the token is of type 'admin'
         if ($token->type !== 'admin' || ($token->ip_addresses && !in_array($request->ip(), $token->ip_addresses))) {
-            throw new UnauthorizedException(
-                'You do not have permission to access this resource.'
-            );
+            return response()->json(['error' => 'You do not have permission to access this resource.'], 403);
         }
 
         $token->last_used_at = now();
