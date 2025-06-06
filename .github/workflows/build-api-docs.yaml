@@ -40,6 +40,9 @@ jobs:
           ref: ${{ env.DOCS_BRANCH }}
           path: 'docs-repository'
 
+      - name: Migrate database
+        run: php artisan migrate --force
+
       - name: Build API docs
         run: php artisan scramble:export --path=docs-repository/api-reference/openapi.json
 

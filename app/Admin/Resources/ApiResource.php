@@ -15,7 +15,10 @@ class ApiResource extends Resource
 {
     protected static ?string $model = ApiKey::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'ri-key-2-line';
+
+    protected static ?string $navigationGroup = 'Other';
+
 
     public static function form(Form $form): Form
     {
@@ -50,10 +53,15 @@ class ApiResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('name'),
                 Tables\Columns\TextColumn::make('ip_addresses')
-                    ->formatStateUsing(fn ($state) => is_array($state) ? implode(', ', $state) : $state)
+                    ->formatStateUsing(fn($state) => is_array($state) ? implode(', ', $state) : $state)
                     ->label('Allowed IP Addresses'),
                 Tables\Columns\IconColumn::make('enabled')
                     ->boolean(),
+                Tables\Columns\TextColumn::make('last_used_at')
+                    ->dateTime()
+                    ->label('Last Used At')
+                    ->sortable()
+                    ->toggleable(),
             ])
             ->filters([
                 //
