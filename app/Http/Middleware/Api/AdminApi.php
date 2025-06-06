@@ -5,9 +5,7 @@ namespace App\Http\Middleware\Api;
 use App\Models\ApiKey;
 use Closure;
 use Illuminate\Http\Request;
-use Illuminate\Validation\UnauthorizedException;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 
 class AdminApi
 {
