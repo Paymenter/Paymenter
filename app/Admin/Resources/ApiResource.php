@@ -19,7 +19,6 @@ class ApiResource extends Resource
 
     protected static ?string $navigationGroup = 'Other';
 
-
     public static function form(Form $form): Form
     {
         return $form
@@ -53,7 +52,7 @@ class ApiResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('name'),
                 Tables\Columns\TextColumn::make('ip_addresses')
-                    ->formatStateUsing(fn($state) => is_array($state) ? implode(', ', $state) : $state)
+                    ->formatStateUsing(fn ($state) => is_array($state) ? implode(', ', $state) : $state)
                     ->label('Allowed IP Addresses'),
                 Tables\Columns\IconColumn::make('enabled')
                     ->boolean(),
