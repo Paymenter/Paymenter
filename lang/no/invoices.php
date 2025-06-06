@@ -13,6 +13,7 @@ return [
     'invoice' => 'Faktura #:id',
     'unit_price' => 'Enhetspris',
     'bill_to' => 'Fakturer Til',
+    'issued_to' => 'Utstedt til',
     'paid' => 'Betalt',
     'payment_pending' => 'Venter på betaling',
     'checking_payment' => 'Kontrollerer betaling',
