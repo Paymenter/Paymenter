@@ -17,7 +17,7 @@ use Spatie\QueryBuilder\QueryBuilder;
 use Dedoc\Scramble\Attributes\QueryParameter;
 use Dedoc\Scramble\Attributes\Group;
 
-#[Group(weight: 2)]
+#[Group(name: "Orders", weight: 2)]
 class OrderController extends ApiController
 {
     protected const INCLUDES = [
