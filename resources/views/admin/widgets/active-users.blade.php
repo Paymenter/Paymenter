@@ -6,14 +6,14 @@
             @endif
             <div class="flex flex-row justify-between w-full">
                 <div>
-                    {{-- Username to user edit page on click --}}
+                    {{-- Username to user edit pagecopy thingy --}}
                     <a href="{{ \App\Admin\Resources\UserResource::getUrl('edit', ['record' => $session->user]) }}" wire:navigate>
                         <h2 class="font-bold hover:text-primary-500 transition-colors">
                             {{ $session->user->name }}
                         </h2>
                     </a>
                     
-                    {{-- Email copy stuff --}}
+                    <!-- Email with copy functionality -->
                     <div 
                         class="text-sm mb-2 cursor-pointer hover:text-primary-500 transition-colors"
                         x-data="{ copied: false }"
@@ -28,7 +28,7 @@
                 <div>
                     <p class="text-sm text-base text-right">{{ $session->last_activity->diffForHumans() }}</p>
                     
-                    {{-- IP address also copyable, might be a bit overkill..... --}}
+                    <!-- IP address with copy functionality -->
                     <p 
                         class="text-sm text-right cursor-pointer hover:text-primary-500 transition-colors"
                         x-data="{ copied: false }"
