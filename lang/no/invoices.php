@@ -25,9 +25,9 @@ return [
     'quantity' => 'Antall',
     'transactions' => 'Transaksjoner',
     'transaction_id' => 'Transaksjons ID',
-    'gateway' => 'Betalings Løsning',
+    'gateway' => 'Betalingsløsning',
     'payment_date' => 'Betalingsdato',
-    'payment_method' => 'Betalings metode',
+    'payment_method' => 'Betalingsløsning',
     'amount' => 'Beløp',
     'date' => 'Dato',
 ];
