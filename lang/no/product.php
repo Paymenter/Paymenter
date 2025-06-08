@@ -21,7 +21,7 @@ return [
     'in_stock' => 'På lager',
     'out_of_stock' => 'Produktet :product er ikke på lager',
     'user_limit' => 'Du har nådd grensen for :product',
-    'payment_method' => 'Betalings metode',
+    'payment_method' => 'Betalingsmetode',
     'use_credits' => 'Bruk kreditt',
     'tos' => 'Jeg samtykker til',
     'tos_link' => 'Vilkår for bruk ',
