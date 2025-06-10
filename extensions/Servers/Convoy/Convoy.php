@@ -295,7 +295,6 @@ class Convoy extends Server
         ];
     }
 
-
     public function upgradeServer(Service $service, $settings, $properties)
     {
         if (!isset($properties['server_uuid'])) {
@@ -314,7 +313,6 @@ class Convoy extends Server
             'disk' => (int) ($properties['disk'] ?? $settings['disk']) * 1024 * 1024,
         ];
 
-        
         $limitIpv4 = (int) ($properties['ipv4'] ?? $settings['ipv4']);
         $limitIpv6 = (int) ($properties['ipv6'] ?? $settings['ipv6']);
         // Check if IPv4 has increased
