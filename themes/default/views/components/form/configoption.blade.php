@@ -15,32 +15,32 @@
         @case('number')
         @case('slider')
             <div x-data="{
-                ramPlans: @js($config->children->map(fn($child) => ['ram' => $child->name, 'value' => $child->id])),
-                selectedRamIndex: 0,
-                progressRam: '0%',
-                segmentsWidthRam: '0%',
+                optionPlans: @js($config->children->map(fn($child) => ['option' => $child->name, 'value' => $child->id])),
+                selectedOptionIndex: 0,
+                progressOption: '0%',
+                segmentsWidthOption: '0%',
 
                 init() {
                     const initialValue = this.$wire.get('{{ $name }}');
-                    const foundIndex = this.ramPlans.findIndex(plan => plan.value == initialValue);
+                    const foundIndex = this.optionPlans.findIndex(plan => plan.value == initialValue);
                     if (foundIndex !== -1) {
-                        this.selectedRamIndex = foundIndex;
+                        this.selectedOptionIndex = foundIndex;
                     }
                     this.updateSliderVisuals();
                 },
 
                 updateSliderVisuals() {
-                    this.progressRam = `${(this.selectedRamIndex / (this.ramPlans.length - 1)) * 100}%`;
-                    this.segmentsWidthRam = `${100 / (this.ramPlans.length - 1)}%`;
+                    this.progressOption = `${(this.selectedOptionIndex / (this.optionPlans.length - 1)) * 100}%`;
+                    this.segmentsWidthOption = `${100 / (this.optionPlans.length - 1)}%`;
                 },
 
-                setRamValue(index) {
-                    this.selectedRamIndex = parseInt(index);
+                setOptionValue(index) {
+                    this.selectedOptionIndex = parseInt(index);
                     this.updateSliderVisuals();
-                    this.$wire.set('{{ $name }}', this.ramPlans[this.selectedRamIndex].value);
+                    this.$wire.set('{{ $name }}', this.optionPlans[this.selectedOptionIndex].value);
                 }
             }" class="flex flex-col gap-1">
-                <div class="relative flex items-center" :style="`--progress:${progressRam};--segments-width:${segmentsWidthRam}`">
+                <div class="relative flex items-center" :style="`--progress:${progressOption};--segments-width:${segmentsWidthOption}`">
                     <div class="
                         absolute left-2.5 right-2.5 h-1.5 bg-background-secondary rounded-full overflow-hidden transition-all duration-500 ease-in-out
                         before:absolute before:inset-0 before:bg-primary
@@ -53,16 +53,16 @@
                         [&::-webkit-slider-thumb]:focus:ring-0 [&::-moz-range-thumb]:h-5 [&::-moz-range-thumb]:w-5
                         [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:bg-base [&::-moz-range-thumb]:border-none
                         [&::-moz-range-thumb]:shadow-none [&::-moz-range-thumb]:focus:ring-0
-                    " type="range" min="0" :max="ramPlans.length - 1" x-model="selectedRamIndex" @input="setRamValue(selectedRamIndex)" aria-label="RAM Slider">
+                    " type="range" min="0" :max="optionPlans.length - 1" x-model="selectedOptionIndex" @input="setOptionValue(selectedOptionIndex)" aria-label="Option Slider">
                 </div>
                 <!-- Options -->
                 <div>
                     <ul class="flex justify-between text-xs font-medium text-light px-2.5">
-                        <template x-for="(plan, index) in ramPlans" :key="index">
+                        <template x-for="(plan, index) in optionPlans" :key="index">
                             <li class="relative">
-                                <button @click="setRamValue(index)" class="absolute -translate-x-1/2">
-                                    <span class="hidden lg:inline text-sm font-semibold" x-text="`${plan.ram}`"></span>
-                                    <span class="inline lg:hidden" x-text="`${plan.ram}`"></span>
+                                <button @click="setOptionValue(index)" class="absolute -translate-x-1/2">
+                                    <span class="hidden lg:inline text-sm font-semibold" x-text="`${plan.option}`"></span>
+                                    <span class="inline lg:hidden" x-text="`${plan.option}`"></span>
                                 </button>
                             </li>
                         </template>
