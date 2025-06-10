@@ -37,7 +37,7 @@
                 setOptionValue(index) {
                     this.selectedOption = parseInt(index);
                     this.updateSliderVisuals();
-                    this.$wire.set('{{ $name }}', this.options[this.selectedOption].value);
+                    Alpine.debounce(() => this.$wire.set('{{ $name }}', this.options[this.selectedOption].value), 300)();
                 }
             }" class="flex flex-col gap-1">
                 <div class="relative flex items-center" :style="`--progress:${progressOption};--segments-width:${segmentsWidthOption}`">
