@@ -15,29 +15,29 @@
         @case('number')
         @case('slider')
             <div x-data="{
-                optionPlans: @js($config->children->map(fn($child) => ['option' => $child->name, 'value' => $child->id])),
-                selectedOptionIndex: 0,
+                options: @js($config->children->map(fn($child) => ['option' => $child->name, 'value' => $child->id])),
+                selectedOption: 0,
                 progressOption: '0%',
                 segmentsWidthOption: '0%',
 
                 init() {
                     const initialValue = this.$wire.get('{{ $name }}');
-                    const foundIndex = this.optionPlans.findIndex(plan => plan.value == initialValue);
+                    const foundIndex = this.options.findIndex(plan => plan.value == initialValue);
                     if (foundIndex !== -1) {
-                        this.selectedOptionIndex = foundIndex;
+                        this.selectedOption = foundIndex;
                     }
                     this.updateSliderVisuals();
                 },
 
                 updateSliderVisuals() {
-                    this.progressOption = `${(this.selectedOptionIndex / (this.optionPlans.length - 1)) * 100}%`;
-                    this.segmentsWidthOption = `${100 / (this.optionPlans.length - 1)}%`;
+                    this.progressOption = `${(this.selectedOption / (this.options.length - 1)) * 100}%`;
+                    this.segmentsWidthOption = `${100 / (this.options.length - 1)}%`;
                 },
 
                 setOptionValue(index) {
-                    this.selectedOptionIndex = parseInt(index);
+                    this.selectedOption = parseInt(index);
                     this.updateSliderVisuals();
-                    this.$wire.set('{{ $name }}', this.optionPlans[this.selectedOptionIndex].value);
+                    this.$wire.set('{{ $name }}', this.options[this.selectedOption].value);
                 }
             }" class="flex flex-col gap-1">
                 <div class="relative flex items-center" :style="`--progress:${progressOption};--segments-width:${segmentsWidthOption}`">
@@ -53,12 +53,12 @@
                         [&::-webkit-slider-thumb]:focus:ring-0 [&::-moz-range-thumb]:h-5 [&::-moz-range-thumb]:w-5
                         [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:bg-base [&::-moz-range-thumb]:border-none
                         [&::-moz-range-thumb]:shadow-none [&::-moz-range-thumb]:focus:ring-0
-                    " type="range" min="0" :max="optionPlans.length - 1" x-model="selectedOptionIndex" @input="setOptionValue(selectedOptionIndex)" aria-label="Option Slider">
+                    " type="range" min="0" :max="options.length - 1" x-model="selectedOption" @input="setOptionValue(selectedOption)" aria-label="Option Slider">
                 </div>
                 <!-- Options -->
                 <div>
                     <ul class="flex justify-between text-xs font-medium text-light px-2.5">
-                        <template x-for="(plan, index) in optionPlans" :key="index">
+                        <template x-for="(plan, index) in options" :key="index">
                             <li class="relative">
                                 <button @click="setOptionValue(index)" class="absolute -translate-x-1/2">
                                     <span class="hidden lg:inline text-sm font-semibold" x-text="`${plan.option}`"></span>
