@@ -97,7 +97,7 @@ return [
         'numeric' => 'The :attribute field must not be greater than :max.',
         'string' => 'The :attribute field must not be greater than :max characters.',
     ],
-    'max_digits' => 'The :attribute field must not have more than :max digits.',
+    'max_digits' => 'El campo :attribute no debe tener más de :max dígitos.',
     'mimes' => 'The :attribute field must be a file of type: :values.',
     'mimetypes' => 'The :attribute field must be a file of type: :values.',
     'min' => [
