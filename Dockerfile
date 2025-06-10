@@ -23,11 +23,9 @@ RUN apk add --no-cache --update ca-certificates dcron curl git supervisor tar un
     && apk del autoconf make g++ gcc libc-dev \
     && curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer \
     && cp .env.example .env \
-    && mkdir -p bootstrap/cache/ storage/logs storage/framework/sessions storage/framework/views storage/framework/cache \
-    && chmod 777 -R bootstrap storage \
+    && chmod 777 -R bootstrap storage/* \
     && composer install --no-dev --optimize-autoloader \
     && rm -rf .env bootstrap/cache/*.php \
-    && mkdir -p /app/storage/logs/ \
     && chown -R nginx:nginx .
 
 RUN rm /usr/local/etc/php-fpm.conf \

@@ -1,16 +1,13 @@
 #!/bin/ash -e
 cd /app
 
-mkdir -p /var/log/paymenter/logs/ /var/log/supervisord/ /var/log/nginx/ \
-  && chmod 777 /var/log/paymenter/logs/ \
-  && ln -s /app/storage/logs/ /var/log/paymenter/ \
-  && ln -s /app/storage/public/ /app/public/storage
+mkdir -p /var/log/supervisord/ /var/log/nginx/ 
 
 ## check for .env file and generate app keys if missing
 if [ -f /app/var/.env ]; then
   echo "external vars exist."
   rm -rf /app/.env
-  ln -s /app/var/.env /app/
+  ln -s /app/var/.env /app/.env
 else
   echo "external vars don't exist."
   rm -rf /app/.env
@@ -27,7 +24,7 @@ else
     echo -e "APP_KEY=$APP_KEY" > /app/var/.env
   fi
 
-  ln -s /app/var/.env /app/
+  ln -s /app/var/.env /app/.env
 fi
 
 if [[ -z $DB_PORT ]]; then
@@ -43,6 +40,21 @@ do
   # wait for 1 seconds before check again
   sleep 1
 done
+
+## check if storage symlink exists, if not create it
+if [ ! -L /app/public/storage ]; then
+  echo -e "Creating storage symlink."
+  rm -rf /app/public/storage
+  ln -s /app/storage/app/public /app/public/storage
+  echo -e "Storage symlink created."
+else
+  echo -e "Storage symlink already exists."
+fi
+
+## set storage permissions to 777 and user nginx:nginx
+echo -e "Setting storage permissions."
+chmod -R 777 /app/storage/*
+chown -R nginx:nginx /app/storage
 
 ## make sure the db is set up
 echo -e "Migrating and Seeding D.B"
