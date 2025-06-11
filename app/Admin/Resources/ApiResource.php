@@ -10,6 +10,7 @@ use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Event;
 
 class ApiResource extends Resource
 {
@@ -21,6 +22,11 @@ class ApiResource extends Resource
 
     public static function form(Form $form): Form
     {
+        
+        $extensionApiPermissions = once(fn () => Arr::dot(
+            array_merge_recursive(...Event::dispatch('api.permissions', []))
+        ));
+
         return $form
             ->schema([
                 Forms\Components\TextInput::make('name')
@@ -36,7 +42,7 @@ class ApiResource extends Resource
                     ->label('Active Status'),
 
                 Forms\Components\CheckboxList::make('permissions')
-                    ->options(Arr::dot(config('permissions.api')))
+                    ->options(array_merge(Arr::dot(config('permissions.api')), $extensionApiPermissions))
                     ->columns(4)
                     ->bulkToggleable()
                     ->searchable()
@@ -52,7 +58,7 @@ class ApiResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('name'),
                 Tables\Columns\TextColumn::make('ip_addresses')
-                    ->formatStateUsing(fn ($state) => is_array($state) ? implode(', ', $state) : $state)
+                    ->formatStateUsing(fn($state) => is_array($state) ? implode(', ', $state) : $state)
                     ->label('Allowed IP Addresses'),
                 Tables\Columns\IconColumn::make('enabled')
                     ->boolean(),
