@@ -8,15 +8,11 @@
             </x-form.select>
         @break
 
-        @case('text')
-        @case('password')
-
-        @case('email')
-        @case('number')
         @case('slider')
             <div x-data="{
                 options: @js($config->children->map(fn($child) => ['option' => $child->name, 'value' => $child->id])),
                 selectedOption: 0,
+                backendOption: $wire.entangle('{{ $name }}').live,
                 progressOption: '0%',
                 segmentsWidthOption: '0%',
 
@@ -27,6 +23,7 @@
                         this.selectedOption = foundIndex;
                     }
                     this.updateSliderVisuals();
+                    $watch('selectedOption', Alpine.debounce(() => this.backendOption = this.selectedOption, 300))
                 },
 
                 updateSliderVisuals() {
@@ -37,9 +34,8 @@
                 setOptionValue(index) {
                     this.selectedOption = parseInt(index);
                     this.updateSliderVisuals();
-                    Alpine.debounce(() => this.$wire.set('{{ $name }}', this.options[this.selectedOption].value), 300)();
                 }
-            }" class="flex flex-col gap-1">
+            }" class="flex flex-col gap-1 pb-4">
                 <div class="relative flex items-center" :style="`--progress:${progressOption};--segments-width:${segmentsWidthOption}`">
                     <div class="
                         absolute left-2.5 right-2.5 h-1.5 bg-background-secondary rounded-full overflow-hidden transition-all duration-500 ease-in-out
@@ -70,6 +66,12 @@
                 </div>
             </div>
         @break
+
+        @case('text')
+        @case('password')
+
+        @case('email')
+        @case('number')
 
         @case('color')
         @case('file')
