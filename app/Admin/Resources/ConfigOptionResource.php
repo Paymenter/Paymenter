@@ -48,6 +48,7 @@ class ConfigOptionResource extends Resource
                                     'select' => 'Select',
                                     'radio' => 'Radio',
                                     'checkbox' => 'Checkbox',
+                                    'slider' => 'Slider',
                                 ]),
                             Forms\Components\Checkbox::make('hidden')
                                 ->label('Hidden'),

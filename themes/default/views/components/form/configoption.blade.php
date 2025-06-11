@@ -13,6 +13,63 @@
 
         @case('email')
         @case('number')
+        @case('slider')
+            <div x-data="{
+                options: @js($config->children->map(fn($child) => ['option' => $child->name, 'value' => $child->id])),
+                selectedOption: 0,
+                progressOption: '0%',
+                segmentsWidthOption: '0%',
+
+                init() {
+                    const initialValue = this.$wire.get('{{ $name }}');
+                    const foundIndex = this.options.findIndex(plan => plan.value == initialValue);
+                    if (foundIndex !== -1) {
+                        this.selectedOption = foundIndex;
+                    }
+                    this.updateSliderVisuals();
+                },
+
+                updateSliderVisuals() {
+                    this.progressOption = `${(this.selectedOption / (this.options.length - 1)) * 100}%`;
+                    this.segmentsWidthOption = `${100 / (this.options.length - 1)}%`;
+                },
+
+                setOptionValue(index) {
+                    this.selectedOption = parseInt(index);
+                    this.updateSliderVisuals();
+                    Alpine.debounce(() => this.$wire.set('{{ $name }}', this.options[this.selectedOption].value), 300)();
+                }
+            }" class="flex flex-col gap-1">
+                <div class="relative flex items-center" :style="`--progress:${progressOption};--segments-width:${segmentsWidthOption}`">
+                    <div class="
+                        absolute left-2.5 right-2.5 h-1.5 bg-background-secondary rounded-full overflow-hidden transition-all duration-500 ease-in-out
+                        before:absolute before:inset-0 before:bg-primary
+                        before:[mask-image:_linear-gradient(to_right,theme(colors.white),theme(colors.white)_var(--progress),transparent_var(--progress))]
+                        [&[x-cloak]]:hidden" aria-hidden="true" x-cloak></div>
+                    <input class="
+                        relative appearance-none cursor-pointer w-full bg-transparent focus:outline-none transition-all duration-500 ease-in-out
+                        [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:h-5 [&::-webkit-slider-thumb]:w-5
+                        [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-white [&::-webkit-slider-thumb]:shadow-none
+                        [&::-webkit-slider-thumb]:focus:ring-0 [&::-moz-range-thumb]:h-5 [&::-moz-range-thumb]:w-5
+                        [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:bg-base [&::-moz-range-thumb]:border-none
+                        [&::-moz-range-thumb]:shadow-none [&::-moz-range-thumb]:focus:ring-0
+                    " type="range" min="0" :max="options.length - 1" x-model="selectedOption" @input="setOptionValue(selectedOption)" aria-label="Option Slider">
+                </div>
+                <!-- Options -->
+                <div>
+                    <ul class="flex justify-between text-xs font-medium text-light px-2.5">
+                        <template x-for="(plan, index) in options" :key="index">
+                            <li class="relative">
+                                <button @click="setOptionValue(index)" class="absolute -translate-x-1/2">
+                                    <span class="hidden lg:inline text-sm font-semibold" x-text="`${plan.option}`"></span>
+                                    <span class="inline lg:hidden" x-text="`${plan.option}`"></span>
+                                </button>
+                            </li>
+                        </template>
+                    </ul>
+                </div>
+            </div>
+        @break
 
         @case('color')
         @case('file')
@@ -24,7 +81,7 @@
             <x-form.checkbox name="{{ $name }}" type="checkbox" :label="__($config->label ?? $config->name)"
                 :required="$config->required ?? false" :checked="config('configs.' . $config->name) ? true : false" wire:model="{{ $name }}" />
         @break
-        
+
         @case('radio')
             <x-form.radio name="{{ $name }}" :label="__($config->label ?? $config->name)"
                 :selected="config('configs.' . $config->name)" :required="$config->required ?? false" wire:model="{{ $name }}">
