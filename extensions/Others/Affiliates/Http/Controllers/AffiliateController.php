@@ -3,15 +3,15 @@
 namespace Paymenter\Extensions\Others\Affiliates\Http\Controllers;
 
 use App\Http\Controllers\Api\ApiController;
+use Dedoc\Scramble\Attributes\Group;
+use Dedoc\Scramble\Attributes\QueryParameter;
 use Paymenter\Extensions\Others\Affiliates\Http\Requests\CreateAffiliateRequest;
 use Paymenter\Extensions\Others\Affiliates\Http\Requests\DeleteAffiliateRequest;
 use Paymenter\Extensions\Others\Affiliates\Http\Requests\GetAffiliateRequest;
 use Paymenter\Extensions\Others\Affiliates\Http\Requests\GetAffiliatesRequest;
 use Paymenter\Extensions\Others\Affiliates\Http\Requests\UpdateAffiliateRequest;
-use Paymenter\Extensions\Others\Affiliates\Models\Affiliate;
 use Paymenter\Extensions\Others\Affiliates\Http\Resources\AffiliateResource;
-use Dedoc\Scramble\Attributes\Group;
-use Dedoc\Scramble\Attributes\QueryParameter;
+use Paymenter\Extensions\Others\Affiliates\Models\Affiliate;
 use Spatie\QueryBuilder\QueryBuilder;
 
 #[Group(name: 'Affiliates', weight: 1)]

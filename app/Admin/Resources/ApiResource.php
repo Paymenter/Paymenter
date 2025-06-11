@@ -22,7 +22,7 @@ class ApiResource extends Resource
 
     public static function form(Form $form): Form
     {
-        
+
         $extensionApiPermissions = once(fn () => Arr::dot(
             array_merge_recursive(...Event::dispatch('api.permissions', []))
         ));
@@ -58,7 +58,7 @@ class ApiResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('name'),
                 Tables\Columns\TextColumn::make('ip_addresses')
-                    ->formatStateUsing(fn($state) => is_array($state) ? implode(', ', $state) : $state)
+                    ->formatStateUsing(fn ($state) => is_array($state) ? implode(', ', $state) : $state)
                     ->label('Allowed IP Addresses'),
                 Tables\Columns\IconColumn::make('enabled')
                     ->boolean(),
