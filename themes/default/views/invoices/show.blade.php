@@ -68,7 +68,14 @@
                             </div>
                         @endif
                     </div>
-                    @if(Auth::user()->credits()->where('currency_code', $invoice->currency_code)->exists() && Auth::user()->credits()->where('currency_code', $invoice->currency_code)->first()->amount > 0)
+                    @php
+                        $credit = Auth::user()->credits()
+                                ->where('currency_code', $invoice->currency_code)
+                                ->where('amount', '>', 0)
+                                ->first();
+                        $itemHasCredit = $invoice->items()->where('reference_type', App\Models\Credit::class)->exists();
+                    @endphp
+                    @if($credit && !$itemHasCredit)
                         <x-form.checkbox wire:model="use_credits" name="use_credits" :label="__('product.use_credits')" />
                     @endif
                     @if(count($gateways) > 1)
