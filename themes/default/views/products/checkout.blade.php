@@ -27,28 +27,10 @@
         @endif
 
         @foreach ($product->configOptions as $configOption)
-            <x-form.configoption :config="$configOption" :name="'configOptions.' . $configOption->id">
-                @if ($configOption->type == 'select')
-                    @foreach ($configOption->children as $configOptionValue)
-                        <option value="{{ $configOptionValue->id }}">
-                            {{ $configOptionValue->name }}
-                            {{ $configOptionValue->price(billing_period: $plan->billing_period, billing_unit: $plan->billing_unit)->available ? ' - ' . $configOptionValue->price(billing_period: $plan->billing_period, billing_unit: $plan->billing_unit) : '' }}
-                        </option>
-                    @endforeach
-                @elseif($configOption->type == 'radio')
-                    @foreach ($configOption->children as $configOptionValue)
-                        <div class="flex items-center gap-2">
-                            <input type="radio" id="{{ $configOptionValue->id }}" name="{{ $configOption->id }}"
-                                wire:model.live="configOptions.{{ $configOption->id }}"
-                                value="{{ $configOptionValue->id }}" />
-                            <label for="{{ $configOptionValue->id }}">
-                                {{ $configOptionValue->name }}
-                                {{ $configOptionValue->price(billing_period: $plan->billing_period, billing_unit: $plan->billing_unit)->available ? ' - ' . $configOptionValue->price(billing_period: $plan->billing_period, billing_unit: $plan->billing_unit) : '' }}
-                            </label>
-                        </div>
-                    @endforeach
-                @endif
-            </x-form.configoption>
+            @php
+                $showPriceTag = $configOption->children->filter(fn ($value) => !$value->price(billing_period: $plan->billing_period, billing_unit: $plan->billing_unit)->is_free)->count() > 0;
+            @endphp
+            <x-form.configoption :config="$configOption" :name="'configOptions.' . $configOption->id" :showPriceTag="$showPriceTag" :plan="$plan" />
         @endforeach
         @foreach ($this->getCheckoutConfig() as $configOption)
             @php $configOption = (object) $configOption; @endphp

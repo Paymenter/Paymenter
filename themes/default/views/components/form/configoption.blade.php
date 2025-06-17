@@ -4,13 +4,19 @@
             <x-form.select name="{{ $name }}" :label="__($config->label ?? $config->name)" :required="$config->required ?? false"
                 :selected="config('configs.' . $config->name)" :multiple="$config->multiple ?? false"
                 wire:model.live="{{ $name }}" :placeholder="$config->placeholder ?? ''">
-                {{ $slot }}
+                @foreach ($config->children as $configOptionValue)
+                    <option value="{{ $configOptionValue->id }}">
+                        {{ $configOptionValue->name }}
+                        {{ ($showPriceTag && $configOptionValue->price(billing_period: $plan->billing_period, billing_unit: $plan->billing_unit)->available) ? ' - ' . $configOptionValue->price(billing_period: $plan->billing_period, billing_unit: $plan->billing_unit) : '' }}
+                    </option>
+                @endforeach
             </x-form.select>
         @break
 
         @case('slider')
             <div x-data="{
-                options: @js($config->children->map(fn($child) => ['option' => $child->name, 'value' => $child->id])),
+                options: @js($config->children->map(fn($child) => ['option' => $child->name, 'value' => $child->id, 'price' => ($showPriceTag && $child->price(billing_period: $plan->billing_period, billing_unit: $plan->billing_unit)->available) ? (string)$child->price(billing_period: $plan->billing_period, billing_unit: $plan->billing_unit) : ''])),
+                showPriceTag: @js($showPriceTag),
                 selectedOption: 0,
                 backendOption: $wire.entangle('{{ $name }}').live,
                 progressOption: '0%',
@@ -35,7 +41,7 @@
                     this.selectedOption = parseInt(index);
                     this.updateSliderVisuals();
                 }
-            }" class="flex flex-col gap-1 pb-4">
+            }" class="flex flex-col gap-1 relative">
                 <div class="relative flex items-center" :style="`--progress:${progressOption};--segments-width:${segmentsWidthOption}`">
                     <div class="
                         absolute left-2.5 right-2.5 h-1.5 bg-background-secondary rounded-full overflow-hidden transition-all duration-500 ease-in-out
@@ -52,18 +58,17 @@
                     " type="range" min="0" :max="options.length - 1" x-model="selectedOption" @input="setOptionValue(selectedOption)" aria-label="Option Slider">
                 </div>
                 <!-- Options -->
-                <div>
-                    <ul class="flex justify-between text-xs font-medium text-light px-2.5">
-                        <template x-for="(plan, index) in options" :key="index">
-                            <li class="relative">
-                                <button @click="setOptionValue(index)" class="absolute -translate-x-1/2">
-                                    <span class="hidden lg:inline text-sm font-semibold" x-text="`${plan.option}`"></span>
-                                    <span class="inline lg:hidden" x-text="`${plan.option}`"></span>
-                                </button>
-                            </li>
-                        </template>
-                    </ul>
-                </div>
+                <ul class="flex justify-between text-xs font-medium text-light px-2.5">
+                    <template x-for="(plan, index) in options" :key="index">
+                        <li class="relative @if($showPriceTag) pb-7 @else pb-2 @endif">
+                            <button @click="setOptionValue(index)" class="fixed flex flex-col items-center -translate-x-1/2">
+                                <span class="hidden lg:inline text-sm font-semibold" x-text="`${plan.option}`"></span>
+                                <span class="hidden lg:inline text-sm font-semibold" x-text="`${plan.price}`"></span>
+                                <span class="inline lg:hidden" x-text="`${plan.option}`"></span>
+                            </button>
+                        </li>
+                    </template>
+                </ul>
             </div>
         @break
 
@@ -87,7 +92,17 @@
         @case('radio')
             <x-form.radio name="{{ $name }}" :label="__($config->label ?? $config->name)"
                 :selected="config('configs.' . $config->name)" :required="$config->required ?? false" wire:model="{{ $name }}">
-                {{ $slot }}
+                @foreach ($config->children as $configOptionValue)
+                    <div class="flex items-center gap-2">
+                        <input type="radio" id="{{ $configOptionValue->id }}" name="{{ $config->id }}"
+                            wire:model.live="configOptions.{{ $config->id }}"
+                            value="{{ $configOptionValue->id }}" />
+                        <label for="{{ $configOptionValue->id }}">
+                            {{ $configOptionValue->name }}
+                            {{ ($showPriceTag && $configOptionValue->price(billing_period: $plan->billing_period, billing_unit: $plan->billing_unit)->available) ? ' - ' . $configOptionValue->price(billing_period: $plan->billing_period, billing_unit: $plan->billing_unit) : '' }}
+                        </label>
+                    </div>
+                @endforeach
             </x-form.radio>
         @break
 
