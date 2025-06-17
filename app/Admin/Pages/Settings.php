@@ -110,7 +110,8 @@ class Settings extends Page implements HasForms
     {
         return [
             Actions\Action::make('save')
-                ->submit('save'),
+                ->submit('save')
+                ->keyBindings(['mod+s']),
         ];
     }
 
