@@ -24,7 +24,7 @@ class ActiveUsers extends Widget
         $onlineCount = (clone $baseQuery)->count();
 
         return view(static::$view, [
-            'sessions'    => $sessions,
+            'sessions' => $sessions,
             'onlineCount' => $onlineCount,
         ]);
     }
