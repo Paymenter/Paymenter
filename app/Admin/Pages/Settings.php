@@ -50,10 +50,20 @@ class Settings extends Page implements HasForms
         foreach (ClassesSettings::settings() as $key => $categories) {
             $tab = Tabs\Tab::make($key)
                 ->label(ucwords(str_replace('-', ' ', $key)))
-                ->schema(function () use ($categories) {
+                ->schema(function () use ($categories, $key) {
                     $inputs = [];
                     foreach ($categories as $setting) {
                         $inputs[] = FilamentInput::convert($setting);
+                    }
+                    if ($key === 'theme') {
+                        $inputs[] = Actions::make([
+                            Actions\Action::make('resetColors')
+                                ->label('Reset Colors')
+                                ->color('danger')
+                                ->action(function () {
+                                    $this->js('if (confirm("Are you sure you want to reset all color values?")) {$wire.resetColors();}');
+                                })
+                        ]);
                     }
 
                     return $inputs;
@@ -102,6 +112,40 @@ class Settings extends Page implements HasForms
 
         Notification::make()
             ->title('Saved successfully!')
+            ->success()
+            ->send();
+    }
+
+    public function resetColors(): void
+    {
+        Gate::authorize('has-permission', 'admin.settings.update');
+
+        $colorSettings = [];
+        foreach (\App\Classes\Settings::settings() as $group => $settings) {
+            foreach ($settings as $setting) {
+                if (($setting['type'] ?? '') === 'color') {
+                    $colorSettings[$setting['name']] = $setting['default'] ?? '';
+                }
+            }
+        }
+
+        $currentData = $this->form->getState();
+        foreach ($colorSettings as $key => $defaultValue) {
+            $currentData[$key] = $defaultValue;
+        }
+        $this->form->fill($currentData);
+
+        foreach ($colorSettings as $key => $defaultValue) {
+            $setting = Setting::where('settingable_type', null)->where('key', $key)->first();
+            if ($setting) {
+                $setting->update(['value' => $defaultValue]);
+            }
+        }
+
+        SettingsProvider::flushCache();
+
+        Notification::make()
+            ->title('Colors has been reset!')
             ->success()
             ->send();
     }
