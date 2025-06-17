@@ -1,6 +1,6 @@
 {{-- Had to put a lot outside the <a> since it would always trigger redirect, layout shouldn't be changed at all --}}
 <x-filament-widgets::widget>
-    <x-filament::section heading="Active Users">
+    <x-filament::section heading="Active Users ({{ $onlineCount }})">
         @foreach($sessions as $session)
             @if(!$session->user)
                 @continue
