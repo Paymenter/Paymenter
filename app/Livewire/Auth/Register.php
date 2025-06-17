@@ -9,7 +9,7 @@ use App\Traits\Captchable;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
-#[DisabledIf("registration_disabled")]
+#[DisabledIf('registration_disabled')]
 class Register extends ComponentWithProperties
 {
     use Captchable;
