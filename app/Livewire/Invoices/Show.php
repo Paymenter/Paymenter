@@ -53,7 +53,7 @@ class Show extends Component
         // We don't want to toggle use_credits before $this->pay() is called, otherwise it will always paid with credits
         $this->use_credits = true;
         $hasCredits = $this->invoice->items()->where('reference_type', Credit::class)->exists();
-        if($hasCredits) {
+        if ($hasCredits) {
             $this->use_credits = false;
         }
     }
