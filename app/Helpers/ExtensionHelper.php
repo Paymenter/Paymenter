@@ -99,14 +99,14 @@ class ExtensionHelper
      *
      * @return array
      */
-    public static function getCheckoutConfig(Product $product)
+    public static function getCheckoutConfig(Product $product, $values = [])
     {
         $server = $product->server;
         if (!$server) {
             return [];
         }
 
-        return self::call($server, 'getCheckoutConfig', [$product], mayFail: true) ?? [];
+        return self::call($server, 'getCheckoutConfig', [$product, $values], mayFail: true) ?? [];
     }
 
     /**

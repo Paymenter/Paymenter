@@ -132,7 +132,7 @@ class Checkout extends Component
 
     public function getCheckoutConfig()
     {
-        return once(fn () => ExtensionHelper::getCheckoutConfig($this->product));
+        return once(fn () => ExtensionHelper::getCheckoutConfig($this->product, $this->checkoutConfig));
     }
 
     public function rules()
