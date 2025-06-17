@@ -14,16 +14,18 @@ class ActiveUsers extends Widget
 
     public function render(): \Illuminate\View\View
     {
-        $sessionsQuery = \App\Models\Session::query()
+        $baseQuery = \App\Models\Session::query()
             ->where('last_activity', '>=', now()->subMinutes(5))
             ->whereNotNull('user_id')
             ->orderBy('last_activity', 'desc')
-            ->with('user')
-            ->limit(5000);
+            ->with('user');
+
+        $sessions = (clone $baseQuery)->limit(5)->get();
+        $onlineCount = (clone $baseQuery)->count();
 
         return view(static::$view, [
-            'sessions'    => $sessionsQuery->get(),
-            'onlineCount' => $sessionsQuery->count(),
+            'sessions'    => $sessions,
+            'onlineCount' => $onlineCount,
         ]);
     }
 
