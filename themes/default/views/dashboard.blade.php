@@ -31,6 +31,7 @@
             </div>
 
             <!-- Open Tickets -->
+            @if(!config('settings.tickets_disabled', false))
             <div class="">
                 <div class="flex items-center justify-between mb-6">
                     <div class="flex items-center gap-3">
@@ -56,6 +57,7 @@
                     <x-ri-arrow-right-fill class="size-5 h-5" />
                 </x-navigation.link>
             </div>
+            @endif
         </div>
 
         <div class="grid gap-8 items-start">

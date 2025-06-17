@@ -507,6 +507,13 @@ class Settings
                     'description' => 'Only allow existing users to log in. This will hide the registration page and prevent new users from signing up.',
                 ],
                 [
+                    'name' => 'tickets_disabled',
+                    'label' => 'Disable Tickets',
+                    'type' => 'checkbox',
+                    'default' => false,
+                    'description' => 'Disable the ticket system. This will disable all client side ticket functionality, including the ability to create new tickets and view existing tickets.',
+                ],
+                [
                     'name' => 'pagination',
                     'label' => 'Pagination',
                     'type' => 'number',

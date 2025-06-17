@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Tickets;
 
+use App\Attributes\DisabledIf;
 use App\Livewire\Component;
 use App\Models\Ticket;
 use Illuminate\Support\Facades\Auth;
@@ -10,6 +11,7 @@ use Livewire\Attributes\Locked;
 use Livewire\Attributes\Rule;
 use Livewire\Features\SupportFileUploads\WithFileUploads;
 
+#[DisabledIf('tickets_disabled')]
 class Show extends Component
 {
     use WithFileUploads;

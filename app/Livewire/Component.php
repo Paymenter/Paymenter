@@ -6,7 +6,7 @@ use App\Exceptions\DisplayException;
 
 class Component extends \Livewire\Component
 {
-    use Traits\HasNotifications;
+    use Traits\HasNotifications, Traits\Disabled;
 
     public function paginationView()
     {

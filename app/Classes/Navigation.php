@@ -62,6 +62,7 @@ class Navigation
                 [
                     'name' => __('navigation.tickets'),
                     'route' => 'tickets',
+                    'condition' => !config('settings.tickets_disabled', false),
                 ],
                 [
                     'name' => __('navigation.account'),
@@ -117,7 +118,7 @@ class Navigation
                     'route' => 'tickets',
                     'icon' => 'ri-customer-service',
                     'separator' => true,
-                    'condition' => Auth::check(),
+                    'condition' => Auth::check() && !config('settings.tickets_disabled', false),
                     'priority' => 40,
                 ],
                 [

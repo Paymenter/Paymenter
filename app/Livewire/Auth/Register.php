@@ -2,12 +2,14 @@
 
 namespace App\Livewire\Auth;
 
+use App\Attributes\DisabledIf;
 use App\Livewire\ComponentWithProperties;
 use App\Models\User;
 use App\Traits\Captchable;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
+#[DisabledIf("registration_disabled")]
 class Register extends ComponentWithProperties
 {
     use Captchable;
@@ -25,9 +27,6 @@ class Register extends ComponentWithProperties
     public function mount()
     {
         $this->initializeProperties(null, User::class);
-        if (config('settings.registration_disabled', false)) {
-            abort(404, 'Registration is currently disabled.');
-        }
     }
 
     public function rules()
