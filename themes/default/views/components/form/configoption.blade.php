@@ -4,12 +4,7 @@
             <x-form.select name="{{ $name }}" :label="__($config->label ?? $config->name)" :required="$config->required ?? false"
                 :selected="config('configs.' . $config->name)" :multiple="$config->multiple ?? false"
                 wire:model.live="{{ $name }}" :placeholder="$config->placeholder ?? ''">
-                @foreach ($config->children as $configOptionValue)
-                    <option value="{{ $configOptionValue->id }}">
-                        {{ $configOptionValue->name }}
-                        {{ ($showPriceTag && $configOptionValue->price(billing_period: $plan->billing_period, billing_unit: $plan->billing_unit)->available) ? ' - ' . $configOptionValue->price(billing_period: $plan->billing_period, billing_unit: $plan->billing_unit) : '' }}
-                    </option>
-                @endforeach
+                {{ $slot }}
             </x-form.select>
         @break
 
@@ -92,17 +87,7 @@
         @case('radio')
             <x-form.radio name="{{ $name }}" :label="__($config->label ?? $config->name)"
                 :selected="config('configs.' . $config->name)" :required="$config->required ?? false" wire:model="{{ $name }}">
-                @foreach ($config->children as $configOptionValue)
-                    <div class="flex items-center gap-2">
-                        <input type="radio" id="{{ $configOptionValue->id }}" name="{{ $config->id }}"
-                            wire:model.live="configOptions.{{ $config->id }}"
-                            value="{{ $configOptionValue->id }}" />
-                        <label for="{{ $configOptionValue->id }}">
-                            {{ $configOptionValue->name }}
-                            {{ ($showPriceTag && $configOptionValue->price(billing_period: $plan->billing_period, billing_unit: $plan->billing_unit)->available) ? ' - ' . $configOptionValue->price(billing_period: $plan->billing_period, billing_unit: $plan->billing_unit) : '' }}
-                        </label>
-                    </div>
-                @endforeach
+                {{  $slot }}
             </x-form.radio>
         @break
 
