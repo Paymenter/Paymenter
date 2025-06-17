@@ -38,7 +38,7 @@ services:
     volumes:
       - "./:/app/var/"
       - "./storage/logs:/app/storage/logs"
-      - "./storage/public:/app/storage/public"
+      - "./storage/public:/app/storage/app/public"
     environment:
       DB_PASSWORD: *db-password
       APP_ENV: "production"
