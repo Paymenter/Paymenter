@@ -223,7 +223,8 @@ class FilamentInput
                     ->afterStateUpdated(function ($state, callable $set) use ($setting, $mode) {
                         try {
                             $set($setting->name, preg_replace('/,\s*/', ', ', ColorFactory::fromString(trim($state))->{'to' . ucfirst($mode)}()->__toString()));
-                        } catch (\Exception $e) {}
+                        } catch (\Exception $e) {
+                        }
                     });
                 $color->$mode();
 
