@@ -4,7 +4,7 @@ return [
     'account' => 'Konto',
     'personal_details' => 'Dane osobowe',
     'security' => 'Bezpieczeństwo',
-    'credits' => 'Credits',
+    'credits' => 'Kredyty',
 
     'change_password' => 'Zmień hasło',
 
@@ -33,20 +33,20 @@ return [
         'two_factor_code_placeholder' => 'Twój kod uwierzytelniania dwuskładnikowego',
 
         'currency' => 'Waluta',
-        'amount' => 'Amount',
+        'amount' => 'Ilość',
     ],
 
     'notifications' => [
-        'password_changed' => 'Password has been changed.',
-        'password_incorrect' => 'The current password is incorrect.',
-        'two_factor_enabled' => 'Two-factor authentication has been enabled.',
-        'two_factor_disabled' => 'Two-factor authentication has been disabled.',
-        'two_factor_code_incorrect' => 'The code is incorrect.',
-        'session_logged_out' => 'Session has been logged out.',
+        'password_changed' => 'Hasło zostało zmienione.',
+        'password_incorrect' => 'Bieżące hasło jest nieprawidłowe.',
+        'two_factor_enabled' => 'Uwierzytelnianie dwustopniowe zostało włączone.',
+        'two_factor_disabled' => 'Wyłączono uwierzytelnianie dwuetapowe.',
+        'two_factor_code_incorrect' => 'Ten kod jest nieprawidłowy.',
+        'session_logged_out' => 'Sesja została wylogowana.',
     ],
 
-    'no_credit' => 'You have no credits.',
-    'add_credit' => 'Add credit',
-    'credit_deposit' => 'Credit deposit (:currency)',
+    'no_credit' => 'Nie masz żadnych kredytów.',
+    'add_credit' => 'Dodaj środki',
+    'credit_deposit' => 'Depozyt kredytowy (:currency)',
 
 ];
