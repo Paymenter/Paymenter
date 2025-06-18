@@ -475,7 +475,7 @@ class ExtensionHelper
         $function = isset($view['function']) ? $view['function'] : 'getView';
 
         $server = self::checkServer($service, $function);
-        
+
         return self::getExtension('server', $server->extension, $server->settings)->$function($service, self::settingsToArray($service->product->settings), self::getServiceProperties($service), $view);
     }
 }
