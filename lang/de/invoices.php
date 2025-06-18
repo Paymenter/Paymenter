@@ -13,6 +13,7 @@ return [
     'invoice' => 'Rechnung #:id',
     'unit_price' => 'Einzelpreis',
     'bill_to' => 'Rechnung an',
+    'issued_to' => 'Ausgestellt auf',
     'paid' => 'Bezahlt',
     'payment_pending' => 'Zahlung ausstehend',
     'checking_payment' => 'Zahlung wird geprüft',

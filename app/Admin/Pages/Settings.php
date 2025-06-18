@@ -7,6 +7,7 @@ use App\Classes\Settings as ClassesSettings;
 use App\Models\Setting;
 use App\Providers\SettingsProvider;
 use Filament\Forms\Components\Actions;
+use Filament\Forms\Components\Group;
 use Filament\Forms\Components\Tabs;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
@@ -50,10 +51,28 @@ class Settings extends Page implements HasForms
         foreach (ClassesSettings::settings() as $key => $categories) {
             $tab = Tabs\Tab::make($key)
                 ->label(ucwords(str_replace('-', ' ', $key)))
-                ->schema(function () use ($categories) {
+                ->schema(function () use ($categories, $key) {
                     $inputs = [];
                     foreach ($categories as $setting) {
                         $inputs[] = FilamentInput::convert($setting);
+                    }
+                    if ($key === 'theme') {
+                        // Add a reset colors button if there are color settings
+                        array_unshift($inputs, Actions::make([
+                            Actions\Action::make('resetColors')
+                                ->label('Reset Colors')
+                                ->color('danger')
+                                ->action('resetColors')
+                                ->requiresConfirmation(),
+                        ]));
+                        // Wrap the first two inputs in a group if there are more than one
+                        if (count($inputs) > 1) {
+                            $inputs[0] = Group::make([
+                                $inputs[1]->columnSpan(3),
+                                $inputs[0],
+                            ])->columns(4)->columnSpanFull();
+                            unset($inputs[1]);
+                        }
                     }
 
                     return $inputs;
@@ -102,6 +121,31 @@ class Settings extends Page implements HasForms
 
         Notification::make()
             ->title('Saved successfully!')
+            ->success()
+            ->send();
+    }
+
+    public function resetColors(): void
+    {
+        Gate::authorize('has-permission', 'admin.settings.update');
+
+        $colorSettings = [];
+        foreach (\App\Classes\Settings::settings() as $group => $settings) {
+            foreach ($settings as $setting) {
+                if (($setting['type'] ?? '') === 'color') {
+                    $colorSettings[$setting['name']] = $setting['default'] ?? '';
+                }
+            }
+        }
+
+        $currentData = $this->form->getState();
+        foreach ($colorSettings as $key => $defaultValue) {
+            $currentData[$key] = $defaultValue;
+        }
+        $this->form->fill($currentData);
+
+        Notification::make()
+            ->title('Colors has been reset!')
             ->success()
             ->send();
     }

@@ -10,6 +10,7 @@ use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TagsInput;
 use Filament\Forms\Components\TextInput;
+use Spatie\Color\Factory as ColorFactory;
 
 class FilamentInput
 {
@@ -196,6 +197,7 @@ class FilamentInput
 
                 break;
             case 'color':
+                $mode = $setting->color_mode ?? 'hsl';
                 $color = ColorPicker::make($setting->name)
                     ->label($setting->label ?? $setting->name)
                     ->helperText($setting->description ?? '')
@@ -203,18 +205,28 @@ class FilamentInput
                     ->hint($setting->hint ?? '')
                     ->hintColor('primary')
                     ->required($setting->required ?? false)
-                    ->regex('/^hsl\(\s*(\d+)\s*,\s*(\d*(?:\.\d+)?%)\s*,\s*(\d*(?:\.\d+)?%)\)$/')
-                    ->live(condition: $setting->live ?? false)
+                    ->live(condition: $setting->live ?? true)
                     ->default($setting->default ?? '')
                     ->suffix($setting->suffix ?? null)
                     ->prefix($setting->prefix ?? null)
                     ->disabled($setting->disabled ?? false)
-                    ->rules($setting->validation ?? []);
-                if (isset($setting->color_mode)) {
-                    $color->{$setting->color_mode}();
-                } else {
-                    $color->hsl();
-                }
+                    ->rules($setting->validation ?? [])
+                    ->rules(function () {
+                        return function ($attribute, $value, $fail) {
+                            try {
+                                ColorFactory::fromString(trim($value));
+                            } catch (\Exception $e) {
+                                $fail('The :attribute must be a valid color.');
+                            }
+                        };
+                    })
+                    ->afterStateUpdated(function ($state, callable $set) use ($setting, $mode) {
+                        try {
+                            $set($setting->name, preg_replace('/,\s*/', ', ', ColorFactory::fromString(trim($state))->{'to' . ucfirst($mode)}()->__toString()));
+                        } catch (\Exception $e) {
+                        }
+                    });
+                $color->$mode();
 
                 return $color;
                 break;

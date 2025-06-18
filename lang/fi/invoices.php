@@ -13,6 +13,7 @@ return [
     'invoice' => 'Lasku #:id',
     'unit_price' => 'Yksikköhinta',
     'bill_to' => 'Laskutusosoite',
+    'issued_to' => 'Issued To',
     'paid' => 'Maksettu',
     'payment_pending' => 'Odottaa maksua',
     'checking_payment' => 'Checking Payment',
