@@ -37,7 +37,7 @@ class Show extends Component
                     $this->views[] = $action;
                 }
             }
-            $this->changeView($this->views[0]['name'] ?? null);
+            $this->changeView($this->views[0] ?? null);
         }
     }
 
