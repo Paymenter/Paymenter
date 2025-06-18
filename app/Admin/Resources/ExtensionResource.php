@@ -38,7 +38,7 @@ class ExtensionResource extends Resource
 
     public static function form(Form $form): Form
     {
-        $extensions = \App\Helpers\ExtensionHelper::getAvailableExtensions();
+        $extensions = \App\Helpers\ExtensionHelper::getExtensions('other');
         $options = \App\Helpers\ExtensionHelper::convertToOptions($extensions);
 
         return $form

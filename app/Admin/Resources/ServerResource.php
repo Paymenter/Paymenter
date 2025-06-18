@@ -41,7 +41,7 @@ class ServerResource extends Resource
 
     public static function form(Form $form): Form
     {
-        $servers = \App\Helpers\ExtensionHelper::getAvailableServers();
+        $servers = \App\Helpers\ExtensionHelper::getExtensions('server');
         $options = \App\Helpers\ExtensionHelper::convertToOptions($servers);
 
         return $form

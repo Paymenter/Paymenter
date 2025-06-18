@@ -62,8 +62,8 @@ class Settings extends Page implements HasForms
                             Actions\Action::make('resetColors')
                                 ->label('Reset Colors')
                                 ->color('danger')
-                                ->action('resetColors')
-                                ->requiresConfirmation(),
+                                ->requiresConfirmation()
+                                ->action(fn () => $this->resetColors())
                         ]));
                         // Wrap the first two inputs in a group if there are more than one
                         if (count($inputs) > 1) {

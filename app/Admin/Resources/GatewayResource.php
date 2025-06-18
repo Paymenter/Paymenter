@@ -38,7 +38,7 @@ class GatewayResource extends Resource
 
     public static function form(Form $form): Form
     {
-        $gateways = \App\Helpers\ExtensionHelper::getAvailableGateways();
+        $gateways = \App\Helpers\ExtensionHelper::getExtensions('gateway');
         $options = \App\Helpers\ExtensionHelper::convertToOptions($gateways);
 
         return $form

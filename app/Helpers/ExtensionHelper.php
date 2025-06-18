@@ -15,22 +15,24 @@ use Illuminate\Support\Facades\Cache;
 class ExtensionHelper
 {
     /**
-     * Used to read all Extensions in app/Extensions with or without type (e.g. 'gateway' or 'server')
+     * Used to read all Extensions in app/Extensions with or without type (e.g. 'gateway' or 'server' or 'other' (for non-gateway/server extensions))
      *
      * @param  string|null  $type
      * @return array
      */
-    private static function getExtensions($type)
+    public static function getExtensions($type = null)
     {
-        // Read app/Extensions directory
-        $availableExtensions = array_diff(scandir(base_path('extensions/' . ucfirst($type . 's'))), ['..', '.']);
-
-        // Read settings
-        foreach ($availableExtensions as $key => $extension) {
-            $extensions[] = [
-                'name' => $extension,
-                'settings' => self::getConfig($type, $extension),
-            ];
+        // Check how long this takes
+        $extensions = self::getAvailableExtensions();
+        
+        $end = microtime(true);
+        if ($type && $type == 'other') {
+            // Filter out gateways and servers
+            $extensions = array_filter($extensions, fn($extension) => !in_array($extension['type'], ['gateway', 'server']));
+            return $extensions;
+        } elseif ($type) {
+            $type = strtolower($type);
+            return array_filter($extensions, fn($extension) => $extension['type'] === $type);
         }
 
         return $extensions;
@@ -110,26 +112,6 @@ class ExtensionHelper
     }
 
     /**
-     * Get available gateways
-     *
-     * @return array
-     */
-    public static function getAvailableGateways()
-    {
-        return self::getExtensions('gateway');
-    }
-
-    /**
-     * Get available servers
-     *
-     * @return array
-     */
-    public static function getAvailableServers()
-    {
-        return self::getExtensions('server');
-    }
-
-    /**
      * Get all extensions which are not gateways or servers with their settings
      *
      * @return array
@@ -138,26 +120,35 @@ class ExtensionHelper
     {
         $extensions = [];
 
-        foreach (scandir(base_path('extensions')) as $extension) {
-            if (in_array($extension, ['.', '..', 'Gateways', 'Servers'])) {
+        // Magic code so we can also support extensions that don't reside in the extensions folder
+        foreach (get_declared_classes() as $class) {
+            if (strpos($class, 'Paymenter\\Extensions\\') !== 0) {
                 continue;
             }
 
-            $type = strtolower($extension);
-            // Remove the 's' from  end of the type
-            $type = substr($type, 0, -1);
+            // Example: Paymenter\Extensions\Whatevers\SomeExtension\SomeExtension
+            $parts = explode('\\', $class);
 
-            foreach (scandir(base_path('extensions/' . $extension)) as $extension) {
-                if (in_array($extension, ['.', '..'])) {
-                    continue;
-                }
-
-                $extensions[] = [
-                    'name' => $extension,
-                    'type' => $type,
-                    'settings' => self::getConfig($type, $extension),
-                ];
+            // Must have at least: Paymenter, Extensions, <Type>s, <Name>, <Class>
+            if (count($parts) < 5) {
+                continue;
             }
+
+            $typePlural = $parts[2];
+
+            $type = strtolower(rtrim($typePlural, 's'));
+            $name = $parts[3];
+
+            // Only add the main extension class (class name matches extension folder)
+            if ($parts[4] !== $name) {
+                continue;
+            }
+
+            $extensions[] = [
+                'name' => $name,
+                'type' => $type,
+                'settings' => self::getConfig($type, $name),
+            ];
         }
 
         return $extensions;
