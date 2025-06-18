@@ -88,7 +88,7 @@
     </div>
 
     @if (count($views) > 0)
-        <div class="bg-primary-800 p-6 rounded-lg mt-2">
+        <div class="bg-primary-800 rounded-lg mt-2">
             @if (count($views) > 1)
                 <div class="flex w-fit mb-2 flex-row flex-wrap">
                     @foreach ($views as $view)
