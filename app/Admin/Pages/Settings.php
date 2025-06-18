@@ -7,6 +7,7 @@ use App\Classes\Settings as ClassesSettings;
 use App\Models\Setting;
 use App\Providers\SettingsProvider;
 use Filament\Forms\Components\Actions;
+use Filament\Forms\Components\Group;
 use Filament\Forms\Components\Tabs;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
@@ -56,14 +57,22 @@ class Settings extends Page implements HasForms
                         $inputs[] = FilamentInput::convert($setting);
                     }
                     if ($key === 'theme') {
-                        $inputs[] = Actions::make([
+                        // Add a reset colors button if there are color settings
+                        array_unshift($inputs, Actions::make([
                             Actions\Action::make('resetColors')
                                 ->label('Reset Colors')
                                 ->color('danger')
-                                ->action(function () {
-                                    $this->js('if (confirm("Are you sure you want to reset all color values?")) {$wire.resetColors();}');
-                                })
-                        ]);
+                                ->action('resetColors')
+                                ->requiresConfirmation()
+                        ]));
+                        // Wrap the first two inputs in a group if there are more than one
+                        if (count($inputs) > 1) {
+                            $inputs[0] = Group::make([
+                                $inputs[1]->columnSpan(3),
+                                $inputs[0],
+                            ])->columns(4)->columnSpanFull();
+                            unset($inputs[1]);
+                        }
                     }
 
                     return $inputs;
@@ -134,15 +143,6 @@ class Settings extends Page implements HasForms
             $currentData[$key] = $defaultValue;
         }
         $this->form->fill($currentData);
-
-        foreach ($colorSettings as $key => $defaultValue) {
-            $setting = Setting::where('settingable_type', null)->where('key', $key)->first();
-            if ($setting) {
-                $setting->update(['value' => $defaultValue]);
-            }
-        }
-
-        SettingsProvider::flushCache();
 
         Notification::make()
             ->title('Colors has been reset!')
