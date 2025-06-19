@@ -34,7 +34,8 @@ jobs:
           git checkout -b $BRANCH
           git push -u origin $BRANCH
           sed -i "s/    'version' => 'development',/    'version' => '${REF:11}',/" config/app.php
-          git add config/app.php
+          sed -i "s/\"version\": \"dev-master\",/\"version\": \"${REF:11}\",/" composer.json
+          git add config/app.php composer.json
           git commit -m "ci(release): bump version"
           git push
 
