@@ -309,7 +309,11 @@ class Virtualizor extends Server
         }
 
         // Terminate server
-        $this->request('vs', 'post', ['delete' => $properties['server_id']]);
+        $request = $this->request('vs', 'post', ['delete' => $properties['server_id']]);
+
+        if (empty($request['done']) || !$request['done']) {
+            throw new \Exception('Failed to terminate server');
+        }
 
         // Remove server id
         $service->properties()->where('key', 'server_id')->delete();
