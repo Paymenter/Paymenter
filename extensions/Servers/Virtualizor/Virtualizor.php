@@ -241,9 +241,8 @@ class Virtualizor extends Server
 
         $response = $this->request('addvs', 'post', $data);
 
-
         if (isset($response['error']) && !empty($response['error'])) {
-            throw new \Exception('Failed to create server with error: ' . join(', ', $response['error']));
+            throw new \Exception('Failed to create server with error: ' . implode(', ', $response['error']));
         }
 
         $service->properties()->updateOrCreate([
