@@ -216,7 +216,6 @@ class Virtualizor extends Server
             'virt' => $settings['virt'],
             'uid' => $user['uid'],
             'osid' => $settings['os'],
-            'server_group' => 0,
             'hostname' => $settings['hostname'],
             'rootpass' => $password,
             'num_ips6' => isset($settings['ips6']) ? $settings['ips6'] : $plan['ips6'],
