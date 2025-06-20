@@ -2,13 +2,14 @@
 
 namespace App\Admin\Resources;
 
-use App\Admin\Resources\CustomPropertyResource\Pages;
-use App\Models\CustomProperty;
 use Filament\Forms;
-use Filament\Forms\Form;
-use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Forms\Form;
 use Filament\Tables\Table;
+use App\Models\CustomProperty;
+use Filament\Resources\Resource;
+use Illuminate\Support\Facades\File;
+use App\Admin\Resources\CustomPropertyResource\Pages;
 
 class CustomPropertyResource extends Resource
 {
@@ -22,15 +23,14 @@ class CustomPropertyResource extends Resource
 
     public static function form(Form $form): Form
     {
+        $modelOptions = self::getModelsWithTrait(\App\Models\Traits\HasProperties::class);
         return $form
             ->schema([
                 Forms\Components\TextInput::make('name')
                     ->required()
                     ->maxLength(255),
                 Forms\Components\TextInput::make('key')->required(),
-                Forms\Components\Select::make('model')->options([
-                    'App\Models\User' => 'User',
-                ])->required(),
+                Forms\Components\Select::make('model')->options($modelOptions)->required(),
                 Forms\Components\Select::make('type')->options([
                     'string' => 'Short Text',
                     'text' => 'Long Text',
@@ -100,5 +100,22 @@ class CustomPropertyResource extends Resource
             'create' => Pages\CreateCustomProperty::route('/create'),
             'edit' => Pages\EditCustomProperty::route('/{record}/edit'),
         ];
+    }
+
+    private static function getModelsWithTrait($trait)
+    {
+        $models = [];
+        $modelPath = app_path('Models');
+        $namespace = 'App\Models';
+
+        foreach (File::allFiles($modelPath) as $file) {
+            $class = $namespace . '\\' . $file->getFilenameWithoutExtension();
+            
+            if (class_exists($class) && in_array($trait, class_uses_recursive($class))) {
+                $models[$class] = class_basename($class); // 'App\Models\User' => 'User'
+            }
+        }
+
+        return $models;
     }
 }
