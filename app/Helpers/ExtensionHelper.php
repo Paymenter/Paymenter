@@ -122,8 +122,10 @@ class ExtensionHelper
     {
         $extensions = [];
 
+        $classmap = require_once base_path('vendor/composer/autoload_classmap.php');
+
         // Magic code so we can also support extensions that don't reside in the extensions folder
-        foreach (get_declared_classes() as $class) {
+        foreach ($classmap as $class => $path) {
             if (strpos($class, 'Paymenter\\Extensions\\') !== 0) {
                 continue;
             }
