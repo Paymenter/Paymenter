@@ -56,6 +56,7 @@ class Show extends Component
         if (!$this->service->cancellable) {
             $this->notify('This service cannot be cancelled', 'error');
             $this->showCancel = false;
+
             return;
         }
     }
