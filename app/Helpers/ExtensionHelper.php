@@ -28,13 +28,13 @@ class ExtensionHelper
         $end = microtime(true);
         if ($type && $type == 'other') {
             // Filter out gateways and servers
-            $extensions = array_filter($extensions, fn($extension) => !in_array($extension['type'], ['gateway', 'server']));
+            $extensions = array_filter($extensions, fn ($extension) => !in_array($extension['type'], ['gateway', 'server']));
 
             return $extensions;
         } elseif ($type) {
             $type = strtolower($type);
 
-            return array_filter($extensions, fn($extension) => $extension['type'] === $type);
+            return array_filter($extensions, fn ($extension) => $extension['type'] === $type);
         }
 
         return $extensions;

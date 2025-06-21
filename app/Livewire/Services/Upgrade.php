@@ -10,12 +10,9 @@ use App\Models\Invoice;
 use App\Models\Product;
 use App\Models\Service;
 use App\Models\ServiceUpgrade;
-use Barryvdh\Debugbar\Facades\Debugbar;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\Computed;
-use Livewire\Attributes\Url;
 
 class Upgrade extends Component
 {
@@ -98,10 +95,9 @@ class Upgrade extends Component
         $currentConfigOptions = $this->service->configs->pluck('config_value_id', 'config_option_id')->toArray();
         $this->configOptions = $this->upgradeProduct->upgradableConfigOptions->mapWithKeys(function ($option) use ($currentConfigOptions) {
             return [
-                $option->id =>
-                $currentConfigOptions[$option->id]
+                $option->id => $currentConfigOptions[$option->id]
                     ?? $this->configOptions[$option->id]
-                    ?? $option->children->first()->id
+                    ?? $option->children->first()->id,
             ];
         })->toArray();
 
@@ -121,7 +117,7 @@ class Upgrade extends Component
                     if (!$plan) {
                         $fail(__('Invalid upgrade.'));
                     }
-                }
+                },
             ],
 
         ];
@@ -158,6 +154,7 @@ class Upgrade extends Component
         // If the product did not change and the config options are the same, present the user with a message
         if ($this->upgradeProduct->id === $this->service->product_id && $this->configOptions == $configOptions) {
             $this->notify('You have not changed anything. Please select a different product or change the configuration options.', 'error');
+
             return;
         }
 

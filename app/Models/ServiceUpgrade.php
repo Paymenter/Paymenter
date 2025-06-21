@@ -78,7 +78,6 @@ class ServiceUpgrade extends Model
             $this->service->product,
             $this->product
         )->price;
-    
 
         foreach ($this->configs as $config) {
             $configValue = $config->configValue;
