@@ -341,7 +341,7 @@ class Pterodactyl extends Server
                     'include' => ['allocations'],
                 ]);
                 $nodes = collect($nodes['data']);
-                $nodes_by_id = $nodes->mapWithKeys(fn($node) => [$node['attributes']['id'] => $node['attributes']]);
+                $nodes_by_id = $nodes->mapWithKeys(fn ($node) => [$node['attributes']['id'] => $node['attributes']]);
 
                 if (!$nodes_by_id->has($settings['node'])) {
                     throw new \Exception('Node is not suitable for deployment.');
@@ -349,9 +349,9 @@ class Pterodactyl extends Server
                 $node = $nodes_by_id->get($settings['node']);
                 $availablePorts = collect($node['relationships']['allocations']['data']);
                 $availablePorts = $availablePorts
-                    ->filter(fn($port) => !$port['attributes']['assigned'])
+                    ->filter(fn ($port) => !$port['attributes']['assigned'])
                     ->map(
-                        fn($port) => [
+                        fn ($port) => [
                             'port' => $port['attributes']['port'],
                             'id' => $port['attributes']['id'],
                         ]
@@ -361,7 +361,7 @@ class Pterodactyl extends Server
                 }
                 $allocation = $availablePorts->first();
                 $environment['SERVER_PORT'] = $allocation['port'];
-                
+
                 // Return the allocation id for the SERVER_PORT
                 return [
                     'auto_deploy' => false,
@@ -373,6 +373,7 @@ class Pterodactyl extends Server
                     ],
                 ];
             }
+
             return [
                 'auto_deploy' => true,
                 'environment' => $environment,
@@ -401,7 +402,7 @@ class Pterodactyl extends Server
             'include' => ['allocations'],
         ]);
         $nodes = collect($nodes['data']);
-        $nodes_by_id = $nodes->mapWithKeys(fn($node) => [$node['attributes']['id'] => $node['attributes']]);
+        $nodes_by_id = $nodes->mapWithKeys(fn ($node) => [$node['attributes']['id'] => $node['attributes']]);
 
         if ($settings['node']) {
             // If the product's node id is not in the deployable nodes array, throw error.
@@ -412,9 +413,9 @@ class Pterodactyl extends Server
             $node = $nodes_by_id->get($settings['node']);
             $availablePorts = collect($node['relationships']['allocations']['data']);
             $availablePorts = $availablePorts
-                ->filter(fn($port) => !$port['attributes']['assigned'])
+                ->filter(fn ($port) => !$port['attributes']['assigned'])
                 ->map(
-                    fn($port) => [
+                    fn ($port) => [
                         'port' => $port['attributes']['port'],
                         'id' => $port['attributes']['id'],
                     ]
@@ -432,9 +433,9 @@ class Pterodactyl extends Server
             foreach ($nodes as $index => $node) {
                 $availablePorts = collect($node['attributes']['relationships']['allocations']['data']);
                 $availablePorts = $availablePorts
-                    ->filter(fn($port) => !$port['attributes']['assigned'])
+                    ->filter(fn ($port) => !$port['attributes']['assigned'])
                     ->map(
-                        fn($port) => [
+                        fn ($port) => [
                             'port' => $port['attributes']['port'],
                             'id' => $port['attributes']['id'],
                         ]
