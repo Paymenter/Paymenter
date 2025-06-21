@@ -6,6 +6,7 @@ use App\Helpers\ExtensionHelper;
 use App\Livewire\Component;
 use App\Models\Service;
 use Livewire\Attributes\Locked;
+use Livewire\Attributes\Url;
 
 class Show extends Component
 {
@@ -18,7 +19,8 @@ class Show extends Component
     #[Locked]
     public $currentView;
 
-    public $showModal = '';
+    #[Url('cancel')]
+    public $showCancel = false;
 
     public function mount()
     {
@@ -49,9 +51,13 @@ class Show extends Component
         $this->currentView = $view;
     }
 
-    public function openModal($modal)
+    public function updatedShowCancel($value)
     {
-        $this->showModal = $modal;
+        if (!$this->service->cancellable) {
+            $this->notify('This service cannot be cancelled', 'error');
+            $this->showCancel = false;
+            return;
+        }
     }
 
     public function goto($function)

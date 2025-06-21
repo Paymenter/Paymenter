@@ -44,18 +44,14 @@
                         </a>
                     @endif
                     @if($service->cancellable)
-                        <x-button.danger class="h-fit !w-fit" wire:click="openModal('services.cancel')">
-                            <span wire:loading.remove wire:target="openModal('services.cancel')">{{ __('services.cancel') }}</span>
-                            <x-loading target="openModal('services.cancel')" />
+                        <x-button.danger class="h-fit !w-fit" wire:click="$set('showCancel', true)">
+                            <span wire:loading.remove wire:target="$set('showCancel', true)">{{ __('services.cancel') }}</span>
+                            <x-loading target="$set('showCancel', true)" />
                         </x-button.danger>
                     @endif
-                    @if($showModal != '')
-                        <x-modal open="true" title="{{ __('services.' . ($showModal == 'services.upgrade' ? 'upgrade' : 'cancellation'), ['service' => $service->product->name]) }}" width="{{ $showModal == 'services.upgrade' ? 'max-w-5xl' : 'max-w-3xl' }}">
-                            @if($showModal == 'services.upgrade')
-                                <livewire:services.upgrade :service="$service" />
-                            @elseif($showModal == 'services.cancel')
-                                <livewire:services.cancel :service="$service" />
-                            @endif
+                    @if($showCancel)
+                        <x-modal open="true" title="{{ __('services.cancellation', ['service' => $service->product->name]) }}" width="max-w-3xl">
+                            <livewire:services.cancel :service="$service" />
                             <x-slot name="closeTrigger">
                                 <div class="flex gap-4">
                                     <button wire:confirm="Are you sure?" wire:click="openModal('')" @click="open = false"
