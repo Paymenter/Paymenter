@@ -52,6 +52,9 @@ class ConfigOptionResource extends Resource
                                 ]),
                             Forms\Components\Checkbox::make('hidden')
                                 ->label('Hidden'),
+                            Forms\Components\Checkbox::make('upgradable')
+                                ->label('Upgradable')
+                                ->helperText('If enabled, this configuration option can be upgraded in the future.'),
                             Forms\Components\Select::make('products')
                                 ->label('Products')
                                 ->relationship('products', 'name')
@@ -85,7 +88,7 @@ class ConfigOptionResource extends Resource
                                         ->maxLength(255)
                                         ->placeholder('Enter the environment variable name'),
                                     // if the type is select, radio or checkbox then allow unlimited children (otherwise only allow 1)
-                                    ProductResource::plan()->columnSpanFull()->label('Pricing')->reorderable(false),
+                                    ProductResource::plan()->columnSpanFull()->label('Pricing')->reorderable(false)->deleteAction(null),
                                 ]),
                         ]),
                     ]),

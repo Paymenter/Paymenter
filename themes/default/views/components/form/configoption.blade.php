@@ -24,7 +24,7 @@
                         this.selectedOption = foundIndex;
                     }
                     this.updateSliderVisuals();
-                    $watch('selectedOption', Alpine.debounce(() => this.backendOption = this.selectedOption, 300))
+                    $watch('selectedOption', Alpine.debounce(() => this.backendOption = this.options[this.selectedOption].value, 300))
                 },
 
                 updateSliderVisuals() {

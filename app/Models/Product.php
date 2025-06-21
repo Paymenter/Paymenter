@@ -70,4 +70,12 @@ class Product extends Model
     {
         return $this->belongsToMany(Product::class, 'product_upgrades', 'product_id', 'upgrade_id');
     }
+
+    /**
+     * Gets all upgradable config options for the product.
+     */
+    public function upgradableConfigOptions(): HasManyThrough
+    {
+        return $this->hasManyThrough(ConfigOption::class, ConfigOptionProduct::class, 'product_id', 'id', 'id', 'config_option_id')->where('hidden', false)->where('upgradable', true)->orderBy('sort', 'asc')->orderBy('id', 'desc');
+    }
 }

@@ -37,10 +37,11 @@
                 <h4 class="text-lg font-semibold">{{ __('services.actions') }}:</h4>
                 <div class="mt-2 flex flex-row gap-2 flex-wrap">
                     @if($service->upgradable)
-                        <x-button.primary class="h-fit !w-fit" wire:click="openModal('services.upgrade')">
-                            <span wire:loading.remove wire:target="openModal('services.upgrade')">{{ __('services.upgrade') }}</span>
-                            <x-loading target="openModal('services.upgrade')" />
-                        </x-button.primary>
+                        <a href="{{ route('services.upgrade', $service->id) }}">
+                            <x-button.primary class="h-fit !w-fit">
+                                <span>{{ __('services.upgrade') }}</span>
+                            </x-button.primary>
+                        </a>
                     @endif
                     @if($service->cancellable)
                         <x-button.danger class="h-fit !w-fit" wire:click="openModal('services.cancel')">

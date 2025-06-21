@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Services;
 
+use App\Classes\Price;
 use App\Events\Invoice\Created as InvoiceCreated;
 use App\Jobs\Server\UpgradeJob;
 use App\Livewire\Component;
@@ -9,8 +10,12 @@ use App\Models\Invoice;
 use App\Models\Product;
 use App\Models\Service;
 use App\Models\ServiceUpgrade;
+use Barryvdh\Debugbar\Facades\Debugbar;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Livewire\Attributes\Computed;
+use Livewire\Attributes\Url;
 
 class Upgrade extends Component
 {
@@ -19,6 +24,10 @@ class Upgrade extends Component
     public $upgrade;
 
     public Product $upgradeProduct;
+
+    public int $step = 1;
+
+    public $configOptions = [];
 
     public function mount()
     {
@@ -29,32 +38,103 @@ class Upgrade extends Component
 
             return $this->redirect(route('services.show', $this->service), true);
         }
-        $upgrade = $this->service->productUpgrades()->first();
-        $this->upgradeProduct = $upgrade;
-        $this->upgrade = $upgrade->id;
+        $this->upgradeProduct = $this->service->product;
+        $this->upgrade = $this->service->product->id;
         $this->totalToday();
+
+        // We only have upgrabble config options if the product has any
+        if ($this->service->productUpgrades()->count() === 0) {
+            $this->nextStep();
+        }
     }
 
-    private function totalToday()
+    #[Computed]
+    public function totalToday()
     {
         $upgrade = new ServiceUpgrade([
             'service' => $this->service,
             'product' => $this->upgradeProduct,
         ]);
 
-        return $upgrade->calculatePrice();
+        $total = $upgrade->calculateProratedAmount(
+            $this->service->product,
+            $this->upgradeProduct
+        )->price;
+
+        // Calculate prices for config options
+        foreach ($this->configOptions as $optionId => $value) {
+            $option = $this->upgradeProduct->upgradableConfigOptions->where('id', $optionId)->first();
+            if (!$option || !$option->children->contains('id', $value)) {
+                continue;
+            }
+
+            $ctotal = $upgrade->calculateProratedAmount(
+                $this->service->configs->where('config_option_id', $optionId)->first()->configValue,
+                $option->children->find($value)
+            );
+            $total += $ctotal->price;
+        }
+
+        return new Price([
+            'price' => $total,
+            'currency' => $this->service->currency,
+        ]);
     }
 
     // When upgrade changes, update the upgradeProduct
     public function updatedUpgrade($upgrade)
     {
         // Check if the upgrade is valid
-        if (!$this->service->productUpgrades()->contains($upgrade)) {
+        if (!$this->service->productUpgrades()->contains($upgrade) && $upgrade != $this->service->product_id) {
             $this->notify('Invalid upgrade.', 'error');
 
             return;
         }
         $this->upgradeProduct = Product::findOrFail($upgrade);
+    }
+
+    public function nextStep()
+    {
+        $currentConfigOptions = $this->service->configs->pluck('config_value_id', 'config_option_id')->toArray();
+        $this->configOptions = $this->upgradeProduct->upgradableConfigOptions->mapWithKeys(function ($option) use ($currentConfigOptions) {
+            return [
+                $option->id =>
+                $currentConfigOptions[$option->id]
+                    ?? $this->configOptions[$option->id]
+                    ?? $option->children->first()->id
+            ];
+        })->toArray();
+
+        $this->step++;
+    }
+
+    public function rules()
+    {
+        $rules = [
+            'upgradeProduct.id' => [
+                'required',
+                function ($attribute, $value, $fail) {
+                    $plan = $this->upgradeProduct->availablePlans()
+                        ->where('billing_period', $this->service->plan->billing_period)
+                        ->where('billing_unit', $this->service->plan->billing_unit)
+                        ->first();
+                    if (!$plan) {
+                        $fail(__('Invalid upgrade.'));
+                    }
+                }
+            ],
+
+        ];
+        foreach ($this->upgradeProduct->upgradableConfigOptions as $option) {
+            if (in_array($option->type, ['text', 'number'])) {
+                $rules["configOptions.{$option->id}"] = ['required'];
+            } elseif ($option->type === 'checkbox') {
+            } else {
+                $rules["configOptions.{$option->id}"] = ['required', 'exists:config_options,id'];
+            }
+        }
+
+        return $rules;
     }
 
     public function doUpgrade()
@@ -65,11 +145,19 @@ class Upgrade extends Component
             return $this->redirect(route('services.show', $this->service), true);
         }
 
+        $this->validate();
+
         $upgradePlan = $this->upgradeProduct->availablePlans()->where('billing_period', $this->service->plan->billing_period)->where('billing_unit', $this->service->plan->billing_unit)->first();
 
-        if (!$upgradePlan) {
-            $this->notify('Invalid upgrade.', 'error');
+        // The old config options must be in upgradableConfigOptions
+        $serviceConfigOptions = $this->service->configs->pluck('config_value_id', 'config_option_id')->toArray();
+        $configOptions = collect($serviceConfigOptions)->filter(function ($value, $key) use ($serviceConfigOptions) {
+            return isset($serviceConfigOptions[$key]) && $this->upgradeProduct->upgradableConfigOptions->contains('id', $key);
+        })->toArray();
 
+        // If the product did not change and the config options are the same, present the user with a message
+        if ($this->upgradeProduct->id === $this->service->product_id && $this->configOptions == $configOptions) {
+            $this->notify('You have not changed anything. Please select a different product or change the configuration options.', 'error');
             return;
         }
 
@@ -78,6 +166,16 @@ class Upgrade extends Component
             'product_id' => $this->upgradeProduct->id,
             'plan_id' => $upgradePlan->id,
         ]);
+        $upgrade->save();
+
+        if ($this->configOptions) {
+            foreach ($this->configOptions as $optionId => $value) {
+                $upgrade->configs()->create([
+                    'config_option_id' => $optionId,
+                    'config_value_id' => $value,
+                ]);
+            }
+        }
         $price = $upgrade->calculatePrice();
 
         if ($price->price <= 0) {
@@ -89,6 +187,16 @@ class Upgrade extends Component
                 'price' => $upgrade->plan->price()->price,
                 'product_id' => $upgrade->product_id,
             ]);
+
+            // Update the service configs
+            foreach ($upgrade->configs as $config) {
+                $upgrade->service->configs()->updateOrCreate(
+                    ['config_option_id' => $config->config_option_id],
+                    ['config_value_id' => $config->config_value_id]
+                );
+            }
+
+            $this->service->refresh();
 
             if ($this->service->product->server) {
                 // If the service has a server, dispatch the upgrade job

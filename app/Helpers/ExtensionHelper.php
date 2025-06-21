@@ -28,13 +28,13 @@ class ExtensionHelper
         $end = microtime(true);
         if ($type && $type == 'other') {
             // Filter out gateways and servers
-            $extensions = array_filter($extensions, fn ($extension) => !in_array($extension['type'], ['gateway', 'server']));
+            $extensions = array_filter($extensions, fn($extension) => !in_array($extension['type'], ['gateway', 'server']));
 
             return $extensions;
         } elseif ($type) {
             $type = strtolower($type);
 
-            return array_filter($extensions, fn ($extension) => $extension['type'] === $type);
+            return array_filter($extensions, fn($extension) => $extension['type'] === $type);
         }
 
         return $extensions;
@@ -153,6 +153,32 @@ class ExtensionHelper
                 'type' => $type,
                 'settings' => self::getConfig($type, $name),
             ];
+        }
+
+        // Newly created extensions sometimes don't have a classmap entry, so we also check the filesystem
+        $extensionPath = base_path('extensions');
+        $typeFolders = glob($extensionPath . '/*', GLOB_ONLYDIR);
+        foreach ($typeFolders as $typeFolder) {
+            $type = strtolower(rtrim(basename($typeFolder), 's'));
+            $extensionDirs = glob($typeFolder . '/*', GLOB_ONLYDIR);
+
+            foreach ($extensionDirs as $extensionDir) {
+                $name = basename($extensionDir);
+
+                // CHeck if already added
+                if (in_array($name, array_column($extensions, 'name')) && in_array($type, array_column($extensions, 'type'))) {
+                    continue;
+                }
+
+                // Check if the class exists
+                if (class_exists('\\Paymenter\\Extensions\\' . ucfirst($type) . 's\\' . $name . '\\' . $name)) {
+                    $extensions[] = [
+                        'name' => $name,
+                        'type' => $type,
+                        'settings' => self::getConfig($type, $name),
+                    ];
+                }
+            }
         }
 
         return $extensions;

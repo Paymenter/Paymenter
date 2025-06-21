@@ -47,6 +47,14 @@ class InvoicePaidListener
                 $service->price = $serviceUpgrade->plan->price()->price;
                 $service->product_id = $serviceUpgrade->product_id;
                 $service->save();
+
+                foreach ($serviceUpgrade->configs as $config) {
+                    $service->configs()->updateOrCreate(
+                        ['config_option_id' => $config->config_option_id],
+                        ['config_value_id' => $config->config_value_id]
+                    );
+                }
+
                 if ($service->product->server) {
                     UpgradeJob::dispatch($service);
                 }

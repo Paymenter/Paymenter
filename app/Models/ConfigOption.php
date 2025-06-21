@@ -19,6 +19,7 @@ class ConfigOption extends Model
         'sort',
         'hidden',
         'parent_id',
+        'upgradable',
     ];
 
     /**

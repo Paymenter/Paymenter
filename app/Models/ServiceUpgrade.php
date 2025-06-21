@@ -40,7 +40,12 @@ class ServiceUpgrade extends Model
         return $this->belongsTo(Invoice::class);
     }
 
-    public function calculatePrice()
+    public function configs()
+    {
+        return $this->morphMany(ServiceConfig::class, 'configurable');
+    }
+
+    public function calculateProratedAmount($oldItem, $newItem): Price
     {
         // Calculate the total number of days in the billing period
         $billingPeriodDays = match ($this->service->plan->billing_unit) {
@@ -57,13 +62,40 @@ class ServiceUpgrade extends Model
         $remainingDays = $expiresAt->diffInDays($now, true);
 
         // Calculate the prorated amount
-        $newPrice = $this->product->price(null, $this->service->plan->billing_period, $this->service->plan->billing_unit, $this->service->order->currency_code);
-        $priceDifference = $newPrice->price - $this->service->price;
+        $newPrice = $newItem->price(null, $this->service->plan->billing_period, $this->service->plan->billing_unit, $this->service->currency_code);
+        $priceDifference = $newPrice->price - $oldItem->price(null, $this->service->plan->billing_period, $this->service->plan->billing_unit, $this->service->currency_code)->price;
         $total = ($priceDifference / $billingPeriodDays) * $remainingDays;
 
         return new Price([
             'price' => $total,
-            'currency' => $this->service->order->currency,
+            'currency' => $this->service->currency,
+        ]);
+    }
+
+    public function calculatePrice(): Price
+    {
+        $total = $this->calculateProratedAmount(
+            $this->service->product,
+            $this->product
+        )->price;
+    
+
+        foreach ($this->configs as $config) {
+            $configValue = $config->configValue;
+            if (!$configValue) {
+                continue;
+            }
+
+            $ctotal = $this->calculateProratedAmount(
+                $this->service->configs->where('config_option_id', $config->config_option_id)->first()->configValue,
+                $configValue
+            );
+            $total += $ctotal->price;
+        }
+
+        return new Price([
+            'price' => $total,
+            'currency' => $currency ?? $this->service->currency,
         ]);
     }
 }

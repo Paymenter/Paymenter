@@ -29,4 +29,8 @@ return [
     'upgrade' => 'Upgrade',
     'upgrade_summary' => 'Upgrade Summary',
     'total_today' => 'Total Today',
+    'upgrade_service' => 'Upgrade Service',
+    'upgrade_choose_product' => 'Choose a product to upgrade to',
+    'upgrade_choose_config' => 'Choose the configuration for the upgrade',
+    'next_step' => 'Next Step',
 ];
