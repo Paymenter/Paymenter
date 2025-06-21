@@ -45,7 +45,7 @@ class ServiceUpgrade extends Model
         return $this->morphMany(ServiceConfig::class, 'configurable');
     }
 
-    public function calculateProratedAmount($oldItem, $newItem): Price
+    public function calculateProratedAmount($oldItem = null, $newItem): Price
     {
         // Calculate the total number of days in the billing period
         $billingPeriodDays = match ($this->service->plan->billing_unit) {
@@ -63,7 +63,12 @@ class ServiceUpgrade extends Model
 
         // Calculate the prorated amount
         $newPrice = $newItem->price(null, $this->service->plan->billing_period, $this->service->plan->billing_unit, $this->service->currency_code);
-        $priceDifference = $newPrice->price - $oldItem->price(null, $this->service->plan->billing_period, $this->service->plan->billing_unit, $this->service->currency_code)->price;
+        if (empty($oldItem)) {
+            $oldPrice = 0;
+        } else {
+            $oldPrice = $oldItem->price(null, $this->service->plan->billing_period, $this->service->plan->billing_unit, $this->service->currency_code)->price;
+        }
+        $priceDifference = $newPrice->price - $oldPrice;
         $total = ($priceDifference / $billingPeriodDays) * $remainingDays;
 
         return new Price([

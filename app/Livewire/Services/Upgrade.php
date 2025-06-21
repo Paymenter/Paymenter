@@ -65,8 +65,10 @@ class Upgrade extends Component
                 continue;
             }
 
+            $oldPrice = $this->service->configs->where('config_option_id', $optionId)->first();
+
             $ctotal = $upgrade->calculateProratedAmount(
-                $this->service->configs->where('config_option_id', $optionId)->first()->configValue,
+                $oldPrice ? $oldPrice->configValue : null,
                 $option->children->find($value)
             );
             $total += $ctotal->price;
