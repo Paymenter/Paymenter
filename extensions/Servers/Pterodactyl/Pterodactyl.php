@@ -332,6 +332,47 @@ class Pterodactyl extends Server
     private function generateDeploymentData($settings, $environment)
     {
         if (!isset($settings['port_array']) || $settings['port_array'] === '') {
+            if ($settings['node']) {
+                // Only get one allocation from the node
+                $nodes = $this->request('/api/application/nodes/deployable', 'get', [
+                    'memory' => $settings['memory'],
+                    'disk' => $settings['disk'],
+                    'location_ids' => $settings['location_ids'] ?? [],
+                    'include' => ['allocations'],
+                ]);
+                $nodes = collect($nodes['data']);
+                $nodes_by_id = $nodes->mapWithKeys(fn($node) => [$node['attributes']['id'] => $node['attributes']]);
+
+                if (!$nodes_by_id->has($settings['node'])) {
+                    throw new \Exception('Node is not suitable for deployment.');
+                }
+                $node = $nodes_by_id->get($settings['node']);
+                $availablePorts = collect($node['relationships']['allocations']['data']);
+                $availablePorts = $availablePorts
+                    ->filter(fn($port) => !$port['attributes']['assigned'])
+                    ->map(
+                        fn($port) => [
+                            'port' => $port['attributes']['port'],
+                            'id' => $port['attributes']['id'],
+                        ]
+                    );
+                if ($availablePorts->isEmpty()) {
+                    throw new \Exception('No available allocations found on the selected node.');
+                }
+                $allocation = $availablePorts->first();
+                $environment['SERVER_PORT'] = $allocation['port'];
+                
+                // Return the allocation id for the SERVER_PORT
+                return [
+                    'auto_deploy' => false,
+                    'environment' => $environment,
+                    'allocations_needed' => 1,
+                    'allocation' => [
+                        'default' => $allocation['id'],
+                        'additional' => [],
+                    ],
+                ];
+            }
             return [
                 'auto_deploy' => true,
                 'environment' => $environment,
@@ -360,7 +401,7 @@ class Pterodactyl extends Server
             'include' => ['allocations'],
         ]);
         $nodes = collect($nodes['data']);
-        $nodes_by_id = $nodes->mapWithKeys(fn ($node) => [$node['attributes']['id'] => $node['attributes']]);
+        $nodes_by_id = $nodes->mapWithKeys(fn($node) => [$node['attributes']['id'] => $node['attributes']]);
 
         if ($settings['node']) {
             // If the product's node id is not in the deployable nodes array, throw error.
@@ -371,9 +412,9 @@ class Pterodactyl extends Server
             $node = $nodes_by_id->get($settings['node']);
             $availablePorts = collect($node['relationships']['allocations']['data']);
             $availablePorts = $availablePorts
-                ->filter(fn ($port) => !$port['attributes']['assigned'])
+                ->filter(fn($port) => !$port['attributes']['assigned'])
                 ->map(
-                    fn ($port) => [
+                    fn($port) => [
                         'port' => $port['attributes']['port'],
                         'id' => $port['attributes']['id'],
                     ]
@@ -391,9 +432,9 @@ class Pterodactyl extends Server
             foreach ($nodes as $index => $node) {
                 $availablePorts = collect($node['attributes']['relationships']['allocations']['data']);
                 $availablePorts = $availablePorts
-                    ->filter(fn ($port) => !$port['attributes']['assigned'])
+                    ->filter(fn($port) => !$port['attributes']['assigned'])
                     ->map(
-                        fn ($port) => [
+                        fn($port) => [
                             'port' => $port['attributes']['port'],
                             'id' => $port['attributes']['id'],
                         ]
