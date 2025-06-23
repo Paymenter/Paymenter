@@ -90,8 +90,10 @@ class ServiceUpgrade extends Model
                 continue;
             }
 
+            $oldPrice = $this->service->configs->where('config_option_id', $config->config_option_id)->first();
+
             $ctotal = $this->calculateProratedAmount(
-                $this->service->configs->where('config_option_id', $config->config_option_id)->first()->configValue,
+                $oldPrice ? $oldPrice->configValue : null,
                 $configValue
             );
             $total += $ctotal->price;
