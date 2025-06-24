@@ -15,7 +15,7 @@ class CurrencySwitch extends Component
     public function mount()
     {
         $this->currentCurrency = session('currency', config('settings.default_currency'));
-        $this->currencies = Currency::all()->map(fn($currency) => [
+        $this->currencies = Currency::all()->map(fn ($currency) => [
             'value' => $currency->code,
             'label' => $currency->code,
         ])->values()->toArray();
@@ -29,10 +29,12 @@ class CurrencySwitch extends Component
         if (Cart::get()->isNotEmpty()) {
             $this->notify('You cannot change the currency while there are items in the cart.', 'error');
             $this->currentCurrency = session('currency', config('settings.default_currency'));
+
             return;
         }
 
         session(['currency' => $currency]);
+
         return $this->redirect(request()->header('Referer', '/'), navigate: true);
     }
 
