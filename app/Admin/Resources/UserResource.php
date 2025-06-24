@@ -54,7 +54,7 @@ class UserResource extends Resource
                 Select::make('role_id')->translateLabel()->relationship('role', 'name')->searchable()->preload(),
                 Toggle::make('tfa_secret')
                     ->label('Two Factor Authentication')
-                    ->disabled(fn ($record) => !$record->tfa_secret)
+                    ->disabled(fn ($record) => !$record?->tfa_secret)
                     ->dehydrateStateUsing(fn ($state, $record) => $state ? $record->tfa_secret : null)
                     ->formatStateUsing(fn ($record) => $record && $record->tfa_secret ? true : false)
                     ->hiddenOn(['create']),
