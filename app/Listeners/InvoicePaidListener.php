@@ -44,9 +44,9 @@ class InvoicePaidListener
 
                 $service = $serviceUpgrade->service;
                 $service->plan_id = $serviceUpgrade->plan_id;
-                $service->price = $serviceUpgrade->plan->price()->price;
                 $service->product_id = $serviceUpgrade->product_id;
                 $service->save();
+                $service->recalculatePrice();
 
                 foreach ($serviceUpgrade->configs as $config) {
                     $service->configs()->updateOrCreate(
