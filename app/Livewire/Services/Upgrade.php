@@ -186,7 +186,6 @@ class Upgrade extends Component
                 'product_id' => $upgrade->product_id,
             ]);
 
-            
             // Update the service configs
             foreach ($upgrade->configs as $config) {
                 $upgrade->service->configs()->updateOrCreate(
@@ -194,9 +193,9 @@ class Upgrade extends Component
                     ['config_value_id' => $config->config_value_id]
                 );
             }
-            
+
             $this->service->refresh();
-            
+
             $this->service->recalculatePrice();
 
             if ($this->service->product->server) {
