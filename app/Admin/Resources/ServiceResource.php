@@ -53,12 +53,16 @@ class ServiceResource extends Resource
                     ->required()
                     ->options(Product::all()->pluck('name', 'id')->toArray())
                     ->searchable()
+                    ->live()
+                    ->preload()
                     ->placeholder('Select the product'),
                 Forms\Components\Select::make('plan_id')
                     ->label('Plan')
                     ->required()
-                    ->relationship('plan', 'name')
+                    ->relationship('plan', 'name', fn (Builder $query, Get $get) => $query->where('priceable_id', $get('product_id'))->where('priceable_type', Product::class))
                     ->searchable()
+                    ->preload()
+                    ->disabled(fn (Get $get) => !$get('product_id'))
                     ->placeholder('Select the plan'),
                 Forms\Components\Select::make('user_id')
                     ->label('User')
@@ -67,7 +71,7 @@ class ServiceResource extends Resource
                     ->preload()
                     ->hint(fn ($get) => $get('user_id') ? new HtmlString('<a href="' . UserResource::getUrl('edit', ['record' => $get('user_id')]) . '" target="_blank">Go to User</a>') : null)
                     ->getOptionLabelFromRecordUsing(fn ($record) => $record->name)
-                    ->getSearchResultsUsing(fn (string $search): array => User::where('first_name', 'like', "%$search%")->orWhere('last_name', 'like', "%$search%")->limit(50)->pluck('name', 'id')->toArray())
+                    ->getSearchResultsUsing(fn (string $search): array => User::where('first_name', 'like', "%$search%")->orWhere('last_name', 'like', "%$search%")->limit(50)->pluck('first_name', 'last_name', 'id')->toArray())
                     ->live()
                     ->required(),
                 Forms\Components\Select::make('status')
