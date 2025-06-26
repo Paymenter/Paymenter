@@ -208,7 +208,7 @@ class EmailTemplateSeeder extends Seeder
                 @endif
 
                 HTML,
-            ]
+            ],
         ]);
     }
 }
