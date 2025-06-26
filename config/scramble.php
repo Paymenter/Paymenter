@@ -29,7 +29,7 @@ return [
         /*
          * Description rendered on the home page of the API documentation (`/docs/api`).
          */
-        'description' => "API documentation for Paymenter<br>Requires Paymenter v1.2.0 or higher.",
+        'description' => 'API documentation for Paymenter<br>Requires Paymenter v1.2.0 or higher.',
     ],
 
     /*
