@@ -3,14 +3,11 @@
 namespace App\Livewire\Products;
 
 use App\Livewire\Component;
-use App\Livewire\Traits\CurrencyChanged;
 use App\Models\Category;
 use Illuminate\Support\Facades\Storage;
 
 class Show extends Component
 {
-    use CurrencyChanged;
-
     public $product;
 
     public Category $category;

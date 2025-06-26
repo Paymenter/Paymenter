@@ -6,20 +6,16 @@ use App\Classes\Cart;
 use App\Classes\Price;
 use App\Helpers\ExtensionHelper;
 use App\Livewire\Component;
-use App\Livewire\Traits\CurrencyChanged;
 use App\Models\Category;
 use App\Models\Plan;
 use App\Models\Price as ModelsPrice;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
 use Livewire\Attributes\Locked;
-use Livewire\Attributes\On;
 use Livewire\Attributes\Url;
 
 class Checkout extends Component
 {
-    use CurrencyChanged;
-
     public $product;
 
     public Category $category;
@@ -92,8 +88,6 @@ class Checkout extends Component
         }
     }
 
-    // Making sure its being called when the currency is changed
-    #[On('currencyChanged')]
     public function updatePricing()
     {
         $total = $this->plan->price()->price + $this->product->configOptions->sum(function ($option) {
