@@ -64,7 +64,7 @@ class NotificationHelper
             'invoice' => $invoice,
             'items' => $invoice->items,
             'total' => $invoice->formattedTotal,
-            'has_subscription' => $invoice->items->filter(fn ($item) => $item->reference_type === Service::class && $item->reference->subscription_id)->isNotEmpty(),
+            'has_subscription' => $invoice->items->filter(fn($item) => $item->reference_type === Service::class && $item->reference->subscription_id)->isNotEmpty(),
         ];
 
         // Generate the invoice PDF
@@ -136,5 +136,12 @@ class NotificationHelper
     {
         $data['user'] = $user;
         self::sendEmailNotification('password_reset', $data, $user);
+    }
+
+    public static function serviceCancellationReceivedNotification(User $user, \App\Models\ServiceCancellation $cancellation, array $data = []): void
+    {
+        $data['cancellation'] = $cancellation;
+        $data['service'] = $cancellation->service;
+        self::sendEmailNotification('service_cancellation_received', $data, $user);
     }
 }
