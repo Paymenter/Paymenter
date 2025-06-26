@@ -9,7 +9,7 @@
                     class="flex items-center justify-between w-full p-3 text-sm font-semibold whitespace-nowrap rounded-lg hover:bg-primary/5">
                     <div class="flex flex-row gap-2">
                         @isset($nav['icon'])
-                        <x-dynamic-component :component="$nav['icon']"
+                            <x-dynamic-component :component="$nav['icon']"
                             class="size-5 {{ $nav['active'] ? 'text-primary' : 'fill-base/50' }}" />
                         @endisset
                         <span>{{ $nav['name'] }}</span>
@@ -34,11 +34,11 @@
         </div>
         @else
         <div class="flex items-center rounded-lg {{ $nav['active'] ? 'bg-primary/5' : 'hover:bg-primary/5' }}">
-            <x-navigation.link :href="route($nav['route'], $nav['params'] ?? [])" :spa="$nav['spa'] ?? true"
-                class="w-full">
+            <x-navigation.link :href="route($nav['route'], $nav['params'] ?? [])"
+                :spa="$nav['spa'] ?? true" class="w-full">
                 @isset($nav['icon'])
-                <x-dynamic-component :component="$nav['icon']"
-                    class="size-5 {{ $nav['active'] ? 'text-primary' : 'fill-base/50' }}" />
+                    <x-dynamic-component :component="$nav['icon']"
+                        class="size-5 {{ $nav['active'] ? 'text-primary' : 'fill-base/50' }}" />
                 @endisset
                 {{ $nav['name'] }}
             </x-navigation.link>
@@ -60,8 +60,8 @@
                     class="flex items-center justify-between w-full p-3 text-sm font-semibold whitespace-nowrap rounded-lg hover:bg-primary/5">
                     <div class="flex flex-row gap-2">
                         @isset($nav['icon'])
-                        <x-dynamic-component :component="$nav['icon']"
-                            class="size-5 {{ $nav['active'] ? 'text-primary' : 'fill-base/50' }}" />
+                            <x-dynamic-component :component="$nav['icon']"
+                                class="size-5 {{ $nav['active'] ? 'text-primary' : 'fill-base/50' }}" />
                         @endisset
                         <span>{{ $nav['name'] }}</span>
                     </div>
@@ -71,15 +71,15 @@
                 <div x-show="activeAccordion" x-collapse x-cloak>
                     <div class="p-4 pt-0 opacity-70">
                         @foreach ($nav['children'] as $child)
-                        @if ($child['condition'] ?? true)
-                        <div class="flex items-center space-x-2">
-                            <x-navigation.link :href="route($child['route'], $child['params'] ?? [])"
-                                :spa="$child['spa'] ?? true"
-                                class="{{ $child['active'] ? 'text-primary font-bold' : '' }}">
-                                {{ $child['name'] }}
-                            </x-navigation.link>
-                        </div>
-                        @endif
+                            @if ($child['condition'] ?? true)
+                            <div class="flex items-center space-x-2">
+                                <x-navigation.link :href="route($child['route'], $child['params'] ?? [])"
+                                    :spa="$child['spa'] ?? true"
+                                    class="{{ $child['active'] ? 'text-primary font-bold' : '' }}">
+                                    {{ $child['name'] }}
+                                </x-navigation.link>
+                            </div>
+                            @endif
                         @endforeach
                     </div>
                 </div>
@@ -87,11 +87,12 @@
         </div>
         @else
         <div class="flex items-center rounded-lg {{ $nav['active'] ? 'bg-primary/5' : 'hover:bg-primary/5' }}">
-            <x-navigation.link :href="route($nav['route'], $nav['params'] ?? [])" :spa="$nav['spa'] ?? true"
+            <x-navigation.link :href="route($nav['route'], $nav['params'] ?? [])"
+                :spa="$nav['spa'] ?? true"
                 class="w-full">
                 @isset($nav['icon'])
-                <x-dynamic-component :component="$nav['icon']"
-                    class="size-5 {{ $nav['active'] ? 'text-primary' : 'fill-base/50' }}" />
+                    <x-dynamic-component :component="$nav['icon']"
+                        class="size-5 {{ $nav['active'] ? 'text-primary' : 'fill-base/50' }}" />
                 @endisset
                 {{ $nav['name'] }}
             </x-navigation.link>
@@ -105,9 +106,7 @@
             <x-dropdown>
                 <x-slot:trigger>
                     <div class="flex flex-col">
-                        <span class="text-sm text-base font-semibold text-nowrap">{{ strtoupper(app()->getLocale()) }}
-                            <span class="text-base/50 font-semibold">|</span> {{ session('currency',
-                            config('settings.default_currency')) }}</span>
+                        <span class="text-sm text-base font-semibold text-nowrap">{{ strtoupper(app()->getLocale()) }} <span class="text-base/50 font-semibold">|</span> {{ session('currency', config('settings.default_currency')) }}</span>
                     </div>
                 </x-slot:trigger>
                 <x-slot:content>
