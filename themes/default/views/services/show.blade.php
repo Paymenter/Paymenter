@@ -17,11 +17,11 @@
                         <span class="text-base/50">{{ $service->formattedPrice }}</span>
                     </div>
                     @if($service->plan->type == 'recurring')
-                    <div class="flex items-center text-base">
-                        <span class="mr-2">{{ __('services.billing_cycle') }}:</span>
+                        <div class="flex items-center text-base">
+                            <span class="mr-2">{{ __('services.billing_cycle') }}:</span>
                             <span class="text-base/50">Every {{ $service->plan->billing_period > 1 ? $service->plan->billing_period : '' }}
-                            {{ Str::plural($service->plan->billing_unit, $service->plan->billing_period) }}</span>
-                    </div>
+                                {{ Str::plural($service->plan->billing_unit, $service->plan->billing_period) }}</span>
+                        </div>
                     @endif
                     <div class="flex items-center text-base">
                         <span class="mr-2">{{ __('services.status') }}:</span>
@@ -37,46 +37,46 @@
                 <h4 class="text-lg font-semibold">{{ __('services.actions') }}:</h4>
                 <div class="mt-2 flex flex-row gap-2 flex-wrap">
                     @if($service->upgradable)
-                    <a href="{{ route('services.upgrade', $service->id) }}">
-                        <x-button.primary class="h-fit !w-fit">
-                            <span>{{ __('services.upgrade') }}</span>
-                        </x-button.primary>
-                    </a>
+                        <a href="{{ route('services.upgrade', $service->id) }}">
+                            <x-button.primary class="h-fit !w-fit">
+                                <span>{{ __('services.upgrade') }}</span>
+                            </x-button.primary>
+                        </a>
                     @endif
                     @if($service->cancellable)
-                    <x-button.danger class="h-fit !w-fit" wire:click="$set('showCancel', true)">
+                        <x-button.danger class="h-fit !w-fit" wire:click="$set('showCancel', true)">
                             <span wire:loading.remove wire:target="$set('showCancel', true)">{{ __('services.cancel') }}</span>
-                        <x-loading target="$set('showCancel', true)" />
-                    </x-button.danger>
+                            <x-loading target="$set('showCancel', true)" />
+                        </x-button.danger>
                     @endif
                     @if($showCancel)
                         <x-modal open="true" title="{{ __('services.cancellation', ['service' => $service->product->name]) }}" width="max-w-3xl">
-                        <livewire:services.cancel :service="$service" />
-                        <x-slot name="closeTrigger">
-                            <div class="flex gap-4">
-                                <button wire:confirm="Are you sure?" wire:click="openModal('')" @click="open = false"
-                                    class="text-primary-100">
-                                    <x-ri-close-fill class="size-6" />
-                                </button>
-                            </div>
-                        </x-slot>
-                    </x-modal>
+                            <livewire:services.cancel :service="$service" />
+                            <x-slot name="closeTrigger">
+                                <div class="flex gap-4">
+                                    <button wire:confirm="Are you sure?" wire:click="openModal('')" @click="open = false"
+                                        class="text-primary-100">
+                                        <x-ri-close-fill class="size-6" />
+                                    </button>
+                                </div>
+                            </x-slot>
+                        </x-modal>
                     @endif
                 </div>
                 <div class="mt-2 flex flex-row gap-2 flex-wrap">
                     @foreach ($buttons as $button)
-                    <!-- If the button has a function then call it when clicked -->
-                    @if (isset($button['function']))
-                    <x-button.primary class="h-fit !w-fit" wire:click="goto('{{ $button['function'] }}')">
-                        {{ $button['label'] }}
-                    </x-button.primary>
-                    @else
-                    <a href="{{ $button['url'] }}">
-                        <x-button.primary class="h-fit !w-fit">
-                            {{ $button['label'] }}
-                        </x-button.primary>
-                    </a>
-                    @endif
+                        <!-- If the button has a function then call it when clicked -->
+                        @if (isset($button['function']))
+                            <x-button.primary class="h-fit !w-fit" wire:click="goto('{{ $button['function'] }}')">
+                                {{ $button['label'] }}
+                            </x-button.primary>
+                        @else
+                            <a href="{{ $button['url'] }}">
+                                <x-button.primary class="h-fit !w-fit">
+                                    {{ $button['label'] }}
+                                </x-button.primary>
+                            </a>
+                        @endif
                     @endforeach
                 </div>
             </div>
@@ -85,24 +85,24 @@
     </div>
 
     @if (count($views) > 0)
-    <div class="bg-primary-800 rounded-lg mt-2">
-        @if (count($views) > 1)
-        <div class="flex w-fit mb-2 flex-row flex-wrap">
-            @foreach ($views as $view)
-            <button wire:click="changeView('{{ $view['name'] }}')"
-                class="px-4 py-2 -mb-px focus:outline-none {{ $view['name'] == $currentView ? 'border-b-2 border-gray-400 font-semibold' : 'text-base border-b border-gray-500 ' }}">
-                {{ $view['label'] }}
-            </button>
-            @endforeach
-        </div>
-        @endif
+        <div class="bg-primary-800 rounded-lg mt-2">
+            @if (count($views) > 1)
+                <div class="flex w-fit mb-2 flex-row flex-wrap">
+                    @foreach ($views as $view)
+                        <button wire:click="changeView('{{ $view['name'] }}')"
+                            class="px-4 py-2 -mb-px focus:outline-none {{ $view['name'] == $currentView ? 'border-b-2 border-gray-400 text-white' : 'text-base border-b border-gray-500 ' }}">
+                            {{ $view['label'] }}
+                        </button>
+                    @endforeach
+                </div>
+            @endif
 
-        <!-- show loading spinner -->
-        <x-loading target="changeView" />
-        <div wire:loading.remove wire:target="changeView">
-            {!! $extensionView !!}
+            <!-- show loading spinner -->
+            <x-loading target="changeView" />
+            <div wire:loading.remove wire:target="changeView">
+                {!! $extensionView !!}
+            </div>
+            <x-loading target="changeView" class="!fill-white" />
         </div>
-        <x-loading target="changeView" class="!fill-white" />
-    </div>
     @endif
 </div>
