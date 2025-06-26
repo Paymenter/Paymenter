@@ -34,5 +34,5 @@ return [
     'upgrade_choose_config' => 'Choose the configuration for the upgrade',
     'next_step' => 'Next Step',
 
-    'upgrade_pending' => 'You cannot upgrade this service while there is a upgrade or downgrade in progress.',
+    'upgrade_pending' => 'You cannot upgrade whilst there is already an upgrade / downgrade invoice open',
 ];
