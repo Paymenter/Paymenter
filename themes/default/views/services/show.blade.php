@@ -43,6 +43,11 @@
                             </x-button.primary>
                         </a>
                     @endif
+                    @if($service->upgrade()->where('status', 'pending')->exists())
+                        <x-button.primary class="h-fit !w-fit" @click="Alpine.store('notifications').addNotification([{message: '{{ __('services.upgrade_pending') }}', type: 'error'}])">
+                            <span>{{ __('services.upgrade') }}</span>
+                        </x-button.primary>
+                    @endif
                     @if($service->cancellable)
                         <x-button.danger class="h-fit !w-fit" wire:click="$set('showCancel', true)">
                             <span wire:loading.remove wire:target="$set('showCancel', true)">{{ __('services.cancel') }}</span>

@@ -186,8 +186,6 @@ class Upgrade extends Component
                 'product_id' => $upgrade->product_id,
             ]);
 
-            $upgrade->service->recalculatePrice();
-
             // Update the service configs
             foreach ($upgrade->configs as $config) {
                 $upgrade->service->configs()->updateOrCreate(
@@ -197,6 +195,8 @@ class Upgrade extends Component
             }
 
             $this->service->refresh();
+
+            $this->service->recalculatePrice();
 
             if ($this->service->product->server) {
                 // If the service has a server, dispatch the upgrade job

@@ -33,4 +33,6 @@ return [
     'upgrade_choose_product' => 'Choose a product to upgrade to',
     'upgrade_choose_config' => 'Choose the configuration for the upgrade',
     'next_step' => 'Next Step',
+
+    'upgrade_pending' => 'You cannot upgrade whilst there is already an upgrade / downgrade invoice open',
 ];

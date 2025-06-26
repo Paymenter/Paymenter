@@ -137,4 +137,11 @@ class NotificationHelper
         $data['user'] = $user;
         self::sendEmailNotification('password_reset', $data, $user);
     }
+
+    public static function serviceCancellationReceivedNotification(User $user, \App\Models\ServiceCancellation $cancellation, array $data = []): void
+    {
+        $data['cancellation'] = $cancellation;
+        $data['service'] = $cancellation->service;
+        self::sendEmailNotification('service_cancellation_received', $data, $user);
+    }
 }
