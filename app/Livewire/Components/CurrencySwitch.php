@@ -33,7 +33,7 @@ class CurrencySwitch extends Component
             return;
         }
         session(['currency' => $currency]);
-        $this->dispatch('currencyChanged', $currency);
+        return $this->redirect(request()->header('Referer', '/'), navigate: true);
     }
 
     public function render()

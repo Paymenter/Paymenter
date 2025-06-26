@@ -90,7 +90,7 @@
                 <div class="flex w-fit mb-2 flex-row flex-wrap">
                     @foreach ($views as $view)
                         <button wire:click="changeView('{{ $view['name'] }}')"
-                            class="px-4 py-2 -mb-px focus:outline-none {{ $view['name'] == $currentView ? 'border-b-2 border-gray-400 text-white' : 'text-base border-b border-gray-500 ' }}">
+                            class="px-4 py-2 -mb-px focus:outline-none {{ $view['name'] == $currentView ? 'border-b-2 border-gray-400 font-semibold' : 'text-base border-b border-gray-500 ' }}">
                             {{ $view['label'] }}
                         </button>
                     @endforeach
