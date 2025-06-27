@@ -33,9 +33,9 @@ class CheckForUpdates extends Command
 
         }
 
-        $version = Http::get('https://api.paymenter.org/version')->json();
-
+        
         if (config('app.version') == 'beta') {
+            $version = Http::get('https://api.paymenter.org/version?beta')->json();
             Setting::updateOrCreate(
                 ['key' => 'latest_commit'],
                 ['value' => $version['beta']]
@@ -48,11 +48,12 @@ class CheckForUpdates extends Command
                 $this->info('You are using the latest version: ' . config('app.commit'));
             }
         } else {
+            $version = Http::get('https://api.paymenter.org/version')->json();
             Setting::updateOrCreate(
                 ['key' => 'latest_version'],
                 ['value' => $version['latest']]
             );
-            
+
             if (config('app.version') != $version['latest']) {
                 $this->info('A new version is available: ' . $version['latest']);
                 // Save as a variable to use in the UI
