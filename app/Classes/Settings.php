@@ -6,6 +6,7 @@ use App\Models\Setting;
 use App\Models\TaxRate;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\HtmlString;
+use Ramsey\Uuid\Uuid;
 
 class Settings
 {
@@ -569,5 +570,24 @@ class Settings
         $setting->value = Setting::where('settingable_type', null)->where('key', $key)->value('value') ?? $setting->default ?? null;
 
         return $setting;
+    }
+
+    public static function getTelemetry()
+    {
+        $uuid = config('settings.telemetry_uuid');
+        if (is_null($uuid)) {
+            $uuid = Uuid::uuid4()->toString();
+            Setting::updateOrCreate(
+                ['key' => 'telemetry_uuid'],
+                ['value' => $uuid]
+            );
+        }
+
+        // Daily fixed time based on UUID
+        $time = hexdec(str_replace('-', '', substr($uuid, 27))) % 1440;
+        $hour = floor($time / 60);
+        $minute = $time % 60;
+
+        return compact('uuid', 'hour', 'minute');
     }
 }
