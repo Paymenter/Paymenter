@@ -42,13 +42,13 @@ jobs:
 
       # Upload artifact
       - name: Upload archive
-        uses: shallwefootball/s3-upload-action@master
+        uses: ryand56/r2-upload-action@latest
         with:
-          aws_key_id: ${{ secrets.CF_R2_KEY_ID }}
-          aws_secret_access_key: ${{ secrets.CF_R2_KEY_ACCESS }}
-          aws_bucket: paymenter-api
-          endpoint: ${{ secrets.CF_R2_ENDPOINT }}
-          source_dir: paymenter.tar.gz
+          r2-account-id: ${{ secrets.CF_R2_ACCOUNT_ID }}
+          r2-access-key-id: ${{ secrets.CF_R2_KEY_ID }}
+          r2-secret-access-key: ${{ secrets.CF_R2_KEY_ACCESS }}
+          r2-bucket: paymenter-api
+          source-dir: paymenter.tar.gz
 
       # Add to action file
       - name: Upload archive to https://api.paymenter.org/beta
