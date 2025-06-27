@@ -5,7 +5,7 @@ namespace Paymenter\Extensions\Gateways\PayPal;
 use App\Classes\Extension\Gateway;
 use App\Events\Service\Updated;
 use App\Helpers\ExtensionHelper;
-use App\Models\Order;
+use App\Models\Invoice;
 use App\Models\Service;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Event;
@@ -115,7 +115,7 @@ class PayPal extends Gateway
             return $item->reference_type === Service::class;
         })->count() == $invoice->items->count();
 
-        if ($this->config('paypal_use_subscriptions') && $eligableforSubscription && $invoice->items->map(fn ($item) => $item->reference->plan->billing_period . $item->reference->plan->billing_unit)->unique()->count() === 1) {
+        if ($this->config('paypal_use_subscriptions') && $eligableforSubscription && $invoice->items->map(fn($item) => $item->reference->plan->billing_period . $item->reference->plan->billing_unit)->unique()->count() === 1) {
             $paypalProduct = $this->request('post', $url . '/v1/catalogs/products', [
                 'name' => $invoice->items->first()->reference->product->name,
                 'type' => 'SERVICE',
@@ -138,7 +138,7 @@ class PayPal extends Gateway
                 ],
             ];
 
-            $nextSum = $invoice->items->sum(fn ($item) => $item->reference->price * $item->reference->quantity);
+            $nextSum = $invoice->items->sum(fn($item) => $item->reference->price * $item->reference->quantity);
 
             $billingCycles[] = [
                 'frequency' => [
@@ -236,7 +236,7 @@ class PayPal extends Gateway
         // Handle the subscription event
         if ($body['event_type'] === 'BILLING.SUBSCRIPTION.ACTIVATED' && isset($body['resource']['custom_id'])) {
             // Its activated so we can now add the subscription to the user (custom is the order id)
-            Order::findOrFail($body['resource']['custom_id'])->services->each(function ($service) use ($body) {
+            Invoice::findOrFail($body['resource']['custom_id'])->services->each(function ($service) use ($body) {
                 $service->subscription_id = $body['resource']['id'];
                 $service->save();
                 $service->properties()->updateOrCreate([
@@ -249,13 +249,9 @@ class PayPal extends Gateway
 
             return response()->json(['status' => 'success']);
         } elseif ($body['event_type'] === 'PAYMENT.SALE.COMPLETED' && isset($body['resource']['custom'])) {
-            $order = Order::findOrFail($body['resource']['custom']);
-            foreach ($order->services as $service) {
-                // Get last invoice item
-                $invoiceItem = $service->invoiceItems->last();
-                // Add payment
-                ExtensionHelper::addPayment($invoiceItem->invoice_id, 'PayPal', $body['resource']['amount']['total'], $body['resource']['transaction_fee']['value'], $body['resource']['id']);
-            }
+            $invoice = Invoice::findOrFail($body['resource']['custom']);
+
+            ExtensionHelper::addPayment($invoice->id, 'PayPal', $body['resource']['amount']['total'], $body['resource']['transaction_fee']['value'], $body['resource']['id']);
         }
     }
 
