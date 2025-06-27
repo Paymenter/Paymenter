@@ -42,10 +42,13 @@ jobs:
 
       # Upload artifact
       - name: Upload archive
-        uses: actions/upload-artifact@v4
+        uses: shallwefootball/s3-upload-action@master
         with:
-          name: paymenter
-          path: paymenter.tar.gz
+          aws_key_id: ${{ secrets.CF_R2_KEY_ID }}
+          aws_secret_access_key: ${{ secrets.CF_R2_KEY_ACCESS }}
+          aws_bucket: paymenter-api
+          endpoint: ${{ secrets.CF_R2_ENDPOINT }}
+          source_dir: paymenter.tar.gz
 
       # Add to action file
       - name: Upload archive to https://api.paymenter.org/beta
