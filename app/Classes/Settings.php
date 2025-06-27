@@ -577,10 +577,14 @@ class Settings
         $uuid = config('settings.telemetry_uuid');
         if (is_null($uuid)) {
             $uuid = Uuid::uuid4()->toString();
-            Setting::updateOrCreate(
-                ['key' => 'telemetry_uuid'],
-                ['value' => $uuid]
-            );
+            try {
+                Setting::updateOrCreate(
+                    ['key' => 'telemetry_uuid'],
+                    ['value' => $uuid]
+                );
+            } catch (\Exception $e) {
+                // Avoid errors in workflows
+            }
         }
 
         // Daily fixed time based on UUID
