@@ -39,6 +39,11 @@ jobs:
         run: | 
             rm -rf node_modules vendor tests CODE_OF_CONDUCT.md CONTRIBUTING.md flake.lock flake.nix phpstan.neon phpunit.xml shell.nix
             tar -czf paymenter.tar.gz * .env.example .gitignore
+    
+      - name: Move file to seperate directory for r2 upload
+        run: |
+          mkdir -p r2_upload
+          cp paymenter.tar.gz r2_upload/
 
       # Upload artifact
       - name: Upload archive
@@ -48,7 +53,8 @@ jobs:
           r2-access-key-id: ${{ secrets.CF_R2_KEY_ID }}
           r2-secret-access-key: ${{ secrets.CF_R2_KEY_ACCESS }}
           r2-bucket: paymenter-api
-          source-dir: paymenter.tar.gz
+          source-dir: r2_upload
+          destination-dir: ./
 
       # Add to action file
       - name: Upload archive to https://api.paymenter.org/beta
