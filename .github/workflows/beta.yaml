@@ -40,10 +40,9 @@ jobs:
             rm -rf node_modules vendor tests CODE_OF_CONDUCT.md CONTRIBUTING.md flake.lock flake.nix phpstan.neon phpunit.xml shell.nix
             tar -czf paymenter.tar.gz * .env.example .gitignore
 
-      # Add to action file
-      - name: Upload archive to https://api.paymenter.org/beta
-        uses: JantHsueh/upload-file-action@master
+      # Upload artifact
+      - name: Upload archive
+        uses: actions/upload-artifact@v3
         with:
-          url: https://api.paymenter.org/beta
-          forms: '{"api_key": "${{ secrets.API_KEY }}"}'
-          fileForms: '{"file": "paymenter.tar.gz"}'
+          name: paymenter
+          path: paymenter.tar.gz

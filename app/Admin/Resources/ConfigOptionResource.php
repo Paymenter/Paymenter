@@ -123,11 +123,6 @@ class ConfigOptionResource extends Resource
             ->actions([
                 Tables\Actions\EditAction::make(),
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
-                ]),
-            ])
             ->defaultSort(function (Builder $query): Builder {
                 return $query
                     ->orderBy('sort', 'asc');
