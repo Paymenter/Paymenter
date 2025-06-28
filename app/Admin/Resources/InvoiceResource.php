@@ -117,7 +117,7 @@ class InvoiceResource extends Resource
                             ->hintAction(
                                 Forms\Components\Actions\Action::make('View Service')
                                     ->url(function (Get $get) {
-                                            return ServiceResource::getUrl('edit', ['record' => $get('reference_id')]);
+                                        return ServiceResource::getUrl('edit', ['record' => $get('reference_id')]);
                                     })
                                     ->label('View Service')
                                     ->hidden(fn (Get $get): bool => !in_array($get('reference_type'), [Service::class, ServiceUpgrade::class]))

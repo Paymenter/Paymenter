@@ -29,11 +29,11 @@ class CheckForUpdates extends Command
     {
         if (config('app.version') == 'development') {
             $this->info('You are using the development version. No update check available.');
+
             return;
 
         }
 
-        
         if (config('app.version') == 'beta') {
             $version = Http::get('https://api.paymenter.org/version?beta')->json();
             Setting::updateOrCreate(

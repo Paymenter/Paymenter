@@ -43,7 +43,7 @@ class TelemetryCommand extends Command
                 'database' => [
                     'type' => config('database.default'),
                     'version' => DB::getPdo()->getAttribute(\PDO::ATTR_SERVER_VERSION),
-                ]
+                ],
             ],
             'database_counts' => [
                 'invoices' => [
@@ -68,13 +68,14 @@ class TelemetryCommand extends Command
                 'extensions' => [
                     'count' => DB::table('extensions')->count(),
                     'active' => DB::table('extensions')->where('enabled', true)->pluck('extension')->toArray(),
-                ]
+                ],
             ],
         ];
 
         if ($this->option('simulate')) {
             $this->info('Simulating telemetry data...');
             $this->line(json_encode($data, JSON_PRETTY_PRINT));
+
             return;
         }
 
