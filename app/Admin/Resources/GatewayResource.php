@@ -68,7 +68,7 @@ class GatewayResource extends Resource
                 Section::make('Gateway Settings')
                     ->description('Specific settings for the selected gateway')
                     ->schema([
-                        Grid::make()->schema(fn (Get $get) => ExtensionHelper::getConfigAsInputs('gateway', $get('extension'), $get('settings')))->key('settings')
+                        Grid::make()->schema(fn (Get $get) => ExtensionHelper::getConfigAsInputs('gateway', $get('extension'), $get('settings')))->key('settings'),
                     ]),
             ]);
     }

@@ -92,7 +92,7 @@ class ServerResource extends Resource
                 Section::make('Server Settings')
                     ->description('Specific settings for the selected server')
                     ->schema([
-                        Grid::make()->schema(fn (Get $get) => ExtensionHelper::getConfigAsInputs('server', $get('extension'), $get('settings')))->key('settings')
+                        Grid::make()->schema(fn (Get $get) => ExtensionHelper::getConfigAsInputs('server', $get('extension'), $get('settings')))->key('settings'),
                     ]),
             ]);
     }
