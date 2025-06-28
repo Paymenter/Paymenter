@@ -10,6 +10,7 @@ use App\Models\Product;
 use App\Models\Server;
 use App\Models\Service;
 use Exception;
+use Filament\Forms\Components\Placeholder;
 use Illuminate\Support\Facades\Cache;
 
 class ExtensionHelper
@@ -25,16 +26,15 @@ class ExtensionHelper
         // Check how long this takes
         $extensions = self::getAvailableExtensions();
 
-        $end = microtime(true);
         if ($type && $type == 'other') {
             // Filter out gateways and servers
-            $extensions = array_filter($extensions, fn ($extension) => !in_array($extension['type'], ['gateway', 'server']));
+            $extensions = array_filter($extensions, fn($extension) => !in_array($extension['type'], ['gateway', 'server']));
 
             return $extensions;
         } elseif ($type) {
             $type = strtolower($type);
 
-            return array_filter($extensions, fn ($extension) => $extension['type'] === $type);
+            return array_filter($extensions, fn($extension) => $extension['type'] === $type);
         }
 
         return $extensions;
@@ -67,14 +67,16 @@ class ExtensionHelper
      *
      * @return array
      */
-    public static function getConfig($type, $extension)
+    public static function getConfig($type, $extension, $config = [])
     {
-        $typeClass = ($type == 'gateway') ? Gateway::class : Server::class;
-        $currentConfig = $typeClass::where('extension', $extension)->exists()
-            ? $typeClass::where('extension', $extension)->first()->settings->pluck('value', 'key')->toArray()
-            : [];
+        if (empty($config)) {
+            $typeClass = ($type == 'gateway') ? Gateway::class : (($type == 'server') ? Server::class : Extension::class);
+            $config = $typeClass::where('extension', $extension)->exists()
+                ? $typeClass::where('extension', $extension)->first()->settings->pluck('value', 'key')->toArray()
+                : [];
+        }
 
-        return self::getExtension($type, $extension)->getConfig($currentConfig);
+        return self::getExtension($type, $extension)->getConfig($config);
     }
 
     /**
@@ -151,7 +153,6 @@ class ExtensionHelper
             $extensions[] = [
                 'name' => $name,
                 'type' => $type,
-                'settings' => self::getConfig($type, $name),
             ];
         }
 
@@ -175,7 +176,6 @@ class ExtensionHelper
                     $extensions[] = [
                         'name' => $name,
                         'type' => $type,
-                        'settings' => self::getConfig($type, $name),
                     ];
                 }
             }
@@ -217,22 +217,28 @@ class ExtensionHelper
     /**
      * Convert extensions to options
      *
-     * @param  array  $extensions
+     * @param  Extension  $extension
      * @return object
      */
-    public static function convertToOptions($extensions)
+    public static function getConfigAsInputs(string $type, ?string $name, $config = [])
     {
-        $options = [];
-        $settings = ['default' => []];
-        foreach ($extensions as $extension) {
-            $options[$extension['name']] = $extension['name'];
-            foreach ($extension['settings'] as $setting) {
-                $setting['name'] = 'settings.' . $setting['name'];
-                $settings[$extension['name']][] = FilamentInput::convert($setting, true);
-            }
+        if (!$name) {
+            return [];
         }
 
-        return (object) ['options' => $options, 'settings' => $settings];
+        $settings = [];
+
+        try {
+            foreach (self::getConfig($type, $name, $config) as $key => $config) {
+                $config['name'] = 'settings.' . $config['name'];
+                $settings[] = FilamentInput::convert($config);
+            }
+        } catch (\Exception $e) {
+            $settings[] = Placeholder::make('error')->content($e->getMessage());
+            // Handle exception
+        }
+
+        return $settings;
     }
 
     /**

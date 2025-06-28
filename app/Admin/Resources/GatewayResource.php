@@ -3,6 +3,7 @@
 namespace App\Admin\Resources;
 
 use App\Admin\Resources\GatewayResource\Pages;
+use App\Helpers\ExtensionHelper;
 use App\Models\Gateway;
 use Filament\Forms;
 use Filament\Forms\Components\Grid;
@@ -39,7 +40,6 @@ class GatewayResource extends Resource
     public static function form(Form $form): Form
     {
         $gateways = \App\Helpers\ExtensionHelper::getExtensions('gateway');
-        $options = \App\Helpers\ExtensionHelper::convertToOptions($gateways);
 
         return $form
             ->schema([
@@ -54,7 +54,10 @@ class GatewayResource extends Resource
                     ->required()
                     ->searchable()
                     ->unique(static::getModel(), 'extension', ignoreRecord: true)
-                    ->options($options->options)
+                    ->options(array_combine(
+                        array_column($gateways, 'name'),
+                        array_column($gateways, 'name')
+                    ))
                     ->live(onBlur: true)
                     ->afterStateUpdated(fn (Select $component) => $component
                         ->getContainer()
@@ -65,7 +68,7 @@ class GatewayResource extends Resource
                 Section::make('Gateway Settings')
                     ->description('Specific settings for the selected gateway')
                     ->schema([
-                        Grid::make()->schema(fn (Get $get): array => $options->settings[$get('extension')] ?? $options->settings['default'])->key('settings'),
+                        Grid::make()->schema(fn (Get $get) => ExtensionHelper::getConfigAsInputs('gateway', $get('extension'), $get('settings')))->key('settings')
                     ]),
             ]);
     }
