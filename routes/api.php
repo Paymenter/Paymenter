@@ -17,7 +17,7 @@ Route::post('/oauth/token', [
 
 Route::get('/me', [ProfileController::class, 'me'])->middleware(['auth:api', 'scope:profile']);
 
-Route::group(['middleware' => ['api.admin'], 'prefix' => 'v1/admin'], function () {
+Route::group(['middleware' => ['api.admin'], 'prefix' => 'v1/admin', 'as' => 'api.v1.admin'], function () {
     Route::apiResources([
         'users' => UserController::class,
         'services' => ServiceController::class,
