@@ -3,6 +3,7 @@
 namespace App\Admin\Resources;
 
 use App\Admin\Resources\ExtensionResource\Pages;
+use App\Helpers\ExtensionHelper;
 use App\Models\Extension;
 use Filament\Forms\Components\Grid;
 use Filament\Forms\Components\Section;
@@ -38,16 +39,13 @@ class ExtensionResource extends Resource
 
     public static function form(Form $form): Form
     {
-        $extensions = \App\Helpers\ExtensionHelper::getExtensions('other');
-        $options = \App\Helpers\ExtensionHelper::convertToOptions($extensions);
-
         return $form
             ->schema([
                 Toggle::make('enabled'),
                 Section::make('Extension Settings')
                     ->description('Specific settings for the selected extension')
                     ->schema([
-                        Grid::make()->schema(fn (Get $get): array => $options->settings[$get('extension')] ?? $options->settings['default'])->key('settings'),
+                        Grid::make()->schema(fn (Get $get) => ExtensionHelper::getConfigAsInputs('other', $get('extension'), $get('settings')))->key('settings'),
                     ]),
             ]);
     }

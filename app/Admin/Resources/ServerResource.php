@@ -42,7 +42,6 @@ class ServerResource extends Resource
     public static function form(Form $form): Form
     {
         $servers = \App\Helpers\ExtensionHelper::getExtensions('server');
-        $options = \App\Helpers\ExtensionHelper::convertToOptions($servers);
 
         return $form
             ->schema([
@@ -56,7 +55,10 @@ class ServerResource extends Resource
                     ->label('Server')
                     ->required()
                     ->searchable()
-                    ->options($options->options)
+                    ->options(array_combine(
+                        array_column($servers, 'name'),
+                        array_column($servers, 'name')
+                    ))
                     ->live(onBlur: true)
                     ->disabledOn('edit')
                     ->afterStateUpdated(fn (Select $component) => $component
@@ -90,7 +92,7 @@ class ServerResource extends Resource
                 Section::make('Server Settings')
                     ->description('Specific settings for the selected server')
                     ->schema([
-                        Grid::make()->schema(fn (Get $get): array => $options->settings[$get('extension')] ?? $options->settings['default'])->key('settings'),
+                        Grid::make()->schema(fn (Get $get) => ExtensionHelper::getConfigAsInputs('server', $get('extension'), $get('settings')))->key('settings'),
                     ]),
             ]);
     }

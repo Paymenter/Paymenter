@@ -7,6 +7,7 @@ use App\Admin\Resources\InvoiceResource\RelationManagers;
 use App\Models\Currency;
 use App\Models\Invoice;
 use App\Models\Service;
+use App\Models\ServiceUpgrade;
 use App\Models\User;
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -116,20 +117,10 @@ class InvoiceResource extends Resource
                             ->hintAction(
                                 Forms\Components\Actions\Action::make('View Service')
                                     ->url(function (Get $get) {
-                                        if ($get('reference_type') === Service::class) {
-                                            return ServiceResource::getUrl('edit', ['record' => $get('reference_id')]);
-                                        } else {
-                                            return null;
-                                        }
+                                        return ServiceResource::getUrl('edit', ['record' => $get('reference_id')]);
                                     })
-                                    ->label(function (Get $get) {
-                                        if ($get('reference_type') === Service::class) {
-                                            return 'View Service';
-                                        } else {
-                                            return null;
-                                        }
-                                    })
-                                    ->hidden(fn (Get $get): bool => !$get('reference_id'))
+                                    ->label('View Service')
+                                    ->hidden(fn (Get $get): bool => !in_array($get('reference_type'), [Service::class, ServiceUpgrade::class]))
                             )
                             ->placeholder('Enter the description of the product'),
                         Forms\Components\Hidden::make('reference_type'),
