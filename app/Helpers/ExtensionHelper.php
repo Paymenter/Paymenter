@@ -112,7 +112,7 @@ class ExtensionHelper
             return [];
         }
 
-        return self::call($server, 'getCheckoutConfig', [$product, $values], mayFail: true) ?? [];
+        return self::call($server, 'getCheckoutConfig', [$product, $values, self::settingsToArray($product->settings)], mayFail: true) ?? [];
     }
 
     /**

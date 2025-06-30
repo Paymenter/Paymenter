@@ -48,6 +48,9 @@ class Create extends Command implements PromptsForMissingInput
             mkdir(dirname($path), 0755, true);
         }
         file_put_contents($path, $stub);
+
+        // Return path
+        $this->info("Extension created at: {$path}");
     }
 
     /**
