@@ -61,6 +61,11 @@ class Show extends Component
         }
     }
 
+    public function closeCancel()
+    {
+        $this->showCancel = false;
+    }
+
     public function goto($function)
     {
         // Check if function is allowed
