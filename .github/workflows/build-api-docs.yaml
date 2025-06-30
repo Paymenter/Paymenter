@@ -41,7 +41,7 @@ jobs:
           path: 'docs-repository'
 
       - name: Migrate database
-        run: php artisan migrate --force
+        run: php artisan migrate --force --seed
 
       - name: Build API docs
         run: php artisan scramble:export --path=docs-repository/public/openapi.json
