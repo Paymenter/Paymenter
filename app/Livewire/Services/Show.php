@@ -19,8 +19,8 @@ class Show extends Component
     #[Locked]
     public $currentView;
 
-    #[Url('cancel')]
-    public $showCancel = false;
+    #[Url('cancel', except: false)]
+    public bool $showCancel = false;
 
     public function mount()
     {

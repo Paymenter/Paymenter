@@ -59,7 +59,7 @@
                             <livewire:services.cancel :service="$service" />
                             <x-slot name="closeTrigger">
                                 <div class="flex gap-4">
-                                    <button wire:confirm="Are you sure?" wire:click="openModal('')" @click="open = false"
+                                    <button wire:click="$set('showCancel', false)" @click="open = false"
                                         class="text-primary-100">
                                         <x-ri-close-fill class="size-6" />
                                     </button>
