@@ -574,7 +574,7 @@ class Settings
 
     public static function getTelemetry()
     {
-        $uuid = config('settings.telemetry_uuid');
+        $uuid = Setting::where('key', 'telemetry_uuid')->value('value');
         if (is_null($uuid)) {
             $uuid = Uuid::uuid4()->toString();
             try {
