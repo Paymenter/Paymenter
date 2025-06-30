@@ -574,7 +574,11 @@ class Settings
 
     public static function getTelemetry()
     {
-        $uuid = Setting::where('key', 'telemetry_uuid')->value('value');
+        try {
+            $uuid = Setting::where('key', 'telemetry_uuid')->value('value');
+        } catch (\Exception $e) {
+            $uuid = null;
+        }
         if (is_null($uuid)) {
             $uuid = Uuid::uuid4()->toString();
             try {
