@@ -43,11 +43,9 @@ jobs:
       - name: Migrate database
         run: php artisan migrate --force --seed
 
-      - name: Enable extensions with API routes (affliates)
+      - name: Enable extensions with API routes (affiliates)
         run: |
-          php artisan tinker --execute="DB::table('extensions')->insertOrIgnore([
-            ['name' => 'Affiliates', 'extension' => 'affiliates', 'type' => 'other', 'enabled' => true]
-          ])"
+          php artisan tinker --execute="DB::table('extensions')->insert([['name' => 'Affiliates', 'extension' => 'affiliates', 'type' => 'other', 'enabled' => true]])"
 
       - name: Build API docs
         run: php artisan scramble:export --path=docs-repository/public/openapi.json
