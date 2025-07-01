@@ -35,4 +35,7 @@ return [
     'next_step' => 'Next Step',
 
     'upgrade_pending' => 'You cannot upgrade whilst there is already an upgrade / downgrade invoice open',
+
+    'outstanding_invoice' => 'You have an outstanding invoice.',
+    'view_and_pay' => 'Click here to view and pay',
 ];

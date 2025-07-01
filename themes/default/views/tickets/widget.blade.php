@@ -13,7 +13,7 @@
                 @if ($ticket->status == 'open') text-success bg-success/20 
                 @elseif($ticket->status == 'closed') text-inactive bg-inactive/20
                 @else text-info bg-info/20 
-                @endif"
+                @endif">
                 @if ($ticket->status == 'open')
                     <x-ri-add-circle-fill />
                 @elseif($ticket->status == 'closed')

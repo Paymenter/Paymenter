@@ -116,7 +116,15 @@
                 <tbody>
                     @foreach ($invoice->items as $item)
                         <tr>
-                            <td class="p-4 font-normal whitespace-nowrap">{{ $item->description }}</td>
+                            <td class="p-4 font-normal whitespace-nowrap">
+                                @if(in_array($item->reference_type, ['App\Models\Service', 'App\Models\ServiceUpgrade']))
+                                    <a href="{{ route('services.show', $item->reference_id) }}"
+                                        class="hover:underline underline-offset-2">{{ $item->description }}
+                                    </a>
+                                @else
+                                {{ $item->description }}
+                                @endif
+                            </td>
                             <td class="p-4 font-normal whitespace-nowrap text-base">{{ $item->formattedPrice }}
                             </td>
                             <td class="p-4 font-normal whitespace-nowrap">{{ $item->quantity }}</td>
