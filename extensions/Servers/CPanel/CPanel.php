@@ -273,6 +273,7 @@ class CPanel extends Server
 
         if (isset($response['data']['url'])) {
             $url = $response['data']['url'];
+
             return $url;
         }
 
@@ -284,7 +285,8 @@ class CPanel extends Server
         if (!isset($properties['cpanel_username'])) {
             return [];
         }
-        return  [
+
+        return [
             [
                 'label' => 'Access cPanel',
                 'type' => 'button',

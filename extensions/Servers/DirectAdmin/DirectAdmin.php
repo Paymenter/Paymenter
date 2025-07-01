@@ -27,6 +27,7 @@ class DirectAdmin extends Server
             if (isset($parsed['list']) && is_array($parsed['list'])) {
                 return $parsed['list'];
             }
+
             return $parsed;
         }
 
@@ -35,9 +36,8 @@ class DirectAdmin extends Server
 
     /**
      * Get all the configuration for the extension
-     * 
-     * @param array $values
-     * @return array
+     *
+     * @param  array  $values
      */
     public function getConfig($values = []): array
     {
@@ -61,15 +61,14 @@ class DirectAdmin extends Server
                 'type' => 'password',
                 'required' => true,
                 'encrypted' => true,
-            ]
+            ],
         ];
     }
 
     /**
      * Get product config
-     * 
-     * @param array $values
-     * @return array
+     *
+     * @param  array  $values
      */
     public function getProductConfig($values = []): array
     {
@@ -91,7 +90,6 @@ class DirectAdmin extends Server
         }
 
         $packages = array_merge($upackages, $rpackages);
-
 
         $ips = $this->request('/CMD_API_SHOW_RESELLER_IPS', parse: true);
 
@@ -129,13 +127,12 @@ class DirectAdmin extends Server
 
     /**
      * Check if currenct configuration is valid
-     *
-     * @return bool|string
      */
     public function testConfig(): bool|string
     {
         try {
             $this->request('/CMD_API_SHOW_USERS')->body();
+
             return true;
         } catch (\Exception $e) {
             return $e->getMessage();
@@ -143,11 +140,10 @@ class DirectAdmin extends Server
     }
 
     /**
-     * Create a server 
-     * 
-     * @param Service $service
-     * @param array $settings (product settings)
-     * @param array $properties (checkout options)
+     * Create a server
+     *
+     * @param  array  $settings  (product settings)
+     * @param  array  $properties  (checkout options)
      * @return bool
      */
     public function createServer(Service $service, $settings, $properties)
@@ -176,7 +172,7 @@ class DirectAdmin extends Server
             'package' => $settings['package'],
             'ip' => $ip,
             'domain' => $properties['domain'] ?? '',
-            'notify'   => 'yes',
+            'notify' => 'yes',
         ], parse: true);
 
         if ($response['error'] != '0') {
@@ -207,10 +203,9 @@ class DirectAdmin extends Server
 
     /**
      * Suspend a server
-     * 
-     * @param Service $service
-     * @param array $settings (product settings)
-     * @param array $properties (checkout options)
+     *
+     * @param  array  $settings  (product settings)
+     * @param  array  $properties  (checkout options)
      * @return bool
      */
     public function suspendServer(Service $service, $settings, $properties)
@@ -234,10 +229,9 @@ class DirectAdmin extends Server
 
     /**
      * Unsuspend a server
-     * 
-     * @param Service $service
-     * @param array $settings (product settings)
-     * @param array $properties (checkout options)
+     *
+     * @param  array  $settings  (product settings)
+     * @param  array  $properties  (checkout options)
      * @return bool
      */
     public function unsuspendServer(Service $service, $settings, $properties)
@@ -261,10 +255,9 @@ class DirectAdmin extends Server
 
     /**
      * Terminate a server
-     * 
-     * @param Service $service
-     * @param array $settings (product settings)
-     * @param array $properties (checkout options)
+     *
+     * @param  array  $settings  (product settings)
+     * @param  array  $properties  (checkout options)
      * @return bool
      */
     public function terminateServer(Service $service, $settings, $properties)
@@ -294,7 +287,8 @@ class DirectAdmin extends Server
         if (!isset($properties['directadmin_username'])) {
             return [];
         }
-        return  [
+
+        return [
             [
                 'label' => 'Access DirectAdmin',
                 'type' => 'button',
@@ -308,7 +302,6 @@ class DirectAdmin extends Server
         if (!isset($properties['directadmin_username'])) {
             return '';
         }
-
 
         $response = $this->request('/CMD_API_LOGIN_KEYS', 'post', [
             'action' => 'create',
