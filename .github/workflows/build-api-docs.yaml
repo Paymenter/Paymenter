@@ -45,7 +45,7 @@ jobs:
 
       - name: Enable extensions with API routes (affiliates)
         run: |
-          php artisan tinker --execute="DB::table('extensions')->insert(['name' => 'Affiliates', 'extension' => 'affiliates', 'type' => 'other', 'enabled' => true])"
+          php artisan tinker --execute="DB::table('extensions')->insert(['name' => 'Affiliates', 'extension' => 'Affiliates', 'type' => 'other', 'enabled' => true])"
 
       - name: Build API docs
         run: php artisan scramble:export --path=docs-repository/public/openapi.json
