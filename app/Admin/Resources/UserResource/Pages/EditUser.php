@@ -19,8 +19,7 @@ class EditUser extends EditRecord
             Actions\Action::make('impersonate')
                 ->label('Impersonate')
                 ->action(function ($record) {
-                    session()->put('impersonator', Auth::user()->id);
-                    Auth::login($record);
+                    session()->put('impersonating', $record->id);
                     $this->redirect('/dashboard');
                 })
                 ->hidden(fn ($record) => Auth::user()->hasPermission('impersonate', $record) == false || Auth::user()->id == $record->id),

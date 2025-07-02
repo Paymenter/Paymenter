@@ -30,6 +30,12 @@ class Session extends Model
         ];
     }
 
+    public function impersonating()
+    {
+        // Filter out impersonated sessions (by reading payload)
+        return isset(unserialize(base64_decode(($this->payload)))['impersonating']);
+    }
+
     public function user()
     {
         return $this->belongsTo(User::class);

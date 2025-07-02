@@ -2,6 +2,7 @@
 
 use App\Http\Middleware\Api\AdminApi;
 use App\Http\Middleware\EnsureUserHasPermissions;
+use App\Http\Middleware\ImpersonateMiddleware;
 use App\Http\Middleware\ProxyMiddleware;
 use App\Http\Middleware\SetLocale;
 use App\Models\DebugLog;
@@ -24,7 +25,10 @@ return Application::configure(basePath: dirname(__DIR__))
             'scope' => CheckForAnyScope::class,
             'api.admin' => AdminApi::class,
         ]);
-        $middleware->web(SetLocale::class);
+        $middleware->web([
+            SetLocale::class,
+            ImpersonateMiddleware::class
+        ]);
     })
     ->withEvents(discover: [
         __DIR__ . '/../app/Extensions',
