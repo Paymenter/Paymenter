@@ -5,7 +5,7 @@ namespace App\Policies;
 use App\Models\Invoice;
 use App\Models\User;
 
-class InvoicePolicy
+class InvoicePolicy extends BasePolicy
 {
     /**
      * Determine whether the user can view any models.
@@ -20,7 +20,7 @@ class InvoicePolicy
      */
     public function view(User $user, Invoice $invoice): bool
     {
-        return $user->hasPermission('admin.invoices.view') || $invoice->user_id === $user->id;
+        return $this->adminPermission($user, 'admin.invoices.view') || $invoice->user_id === $user->id;
     }
 
     /**
@@ -36,7 +36,7 @@ class InvoicePolicy
      */
     public function update(User $user, Invoice $invoice): bool
     {
-        return $user->hasPermission('admin.invoices.update') || $invoice->user_id === $user->id;
+        return $this->adminPermission($user, 'admin.invoices.update') || $invoice->user_id === $user->id;
     }
 
     /**

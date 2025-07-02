@@ -5,7 +5,7 @@ namespace App\Policies;
 use App\Models\Service;
 use App\Models\User;
 
-class ServicePolicy
+class ServicePolicy extends BasePolicy
 {
     /**
      * Determine whether the user can view any models.
@@ -20,7 +20,7 @@ class ServicePolicy
      */
     public function view(User $user, Service $service): bool
     {
-        return $user->hasPermission('admin.services.view') || $service->user_id === $user->id;
+        return $this->adminPermission($user, 'admin.services.view') || $service->user_id === $user->id;
     }
 
     /**
@@ -36,7 +36,7 @@ class ServicePolicy
      */
     public function update(User $user, Service $service): bool
     {
-        return $user->hasPermission('admin.services.update') || $service->user_id === $user->id;
+        return $this->adminPermission($user, 'admin.services.update') || $service->user_id === $user->id;
     }
 
     /**
