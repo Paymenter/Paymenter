@@ -274,7 +274,7 @@ class PayPal extends Gateway
                 'path' => '/plan/billing_cycles/@sequence==2/pricing_scheme/fixed_price',
                 'value' => [
                     'value' => $newPrice,
-                    'currency_code' => $service->order->currency_code,
+                    'currency_code' => $service->currency_code,
                 ],
             ],
         ]);
