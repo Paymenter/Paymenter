@@ -27,7 +27,7 @@ return Application::configure(basePath: dirname(__DIR__))
         ]);
         $middleware->web([
             SetLocale::class,
-            ImpersonateMiddleware::class
+            ImpersonateMiddleware::class,
         ]);
     })
     ->withEvents(discover: [

@@ -5,7 +5,6 @@ namespace App\Admin\Pages;
 use App\Classes\FilamentInput;
 use App\Classes\Settings as ClassesSettings;
 use App\Models\Setting;
-use App\Providers\SettingsProvider;
 use Filament\Forms\Components\Actions;
 use Filament\Forms\Components\Group;
 use Filament\Forms\Components\Tabs;
@@ -63,7 +62,7 @@ class Settings extends Page implements HasForms
                                 ->label('Reset Colors')
                                 ->color('danger')
                                 ->requiresConfirmation()
-                                ->action(fn() => $this->resetColors()),
+                                ->action(fn () => $this->resetColors()),
                         ]));
                         // Wrap the first two inputs in a group if there are more than one
                         if (count($inputs) > 1) {
@@ -106,7 +105,7 @@ class Settings extends Page implements HasForms
             $avSetting = (object) collect(\App\Classes\Settings::settings())->flatten(1)->firstWhere('name', $key);
             $avSetting->value = $settings[$key]->value ?? $avSetting->default ?? null;
 
-            if ($value !== $avSetting->value && (($avSetting->database_type ?? 'string') === 'boolean' && (bool)$value !== (bool)$avSetting->value)) {
+            if ($value !== $avSetting->value && (($avSetting->database_type ?? 'string') === 'boolean' && (bool) $value !== (bool) $avSetting->value)) {
                 if ($setting = $settings[$key] ?? null) {
                     $setting->update([
                         'value' => $value,
