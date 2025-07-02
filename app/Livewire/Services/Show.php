@@ -84,7 +84,9 @@ class Show extends Component
 
         if ($this->currentView) {
             try {
-                $view = ExtensionHelper::getView($this->service, $this->currentView);
+                // Search array for the current view
+                $currentViewObj = $this->views[array_search($this->currentView, array_column($this->views, 'name'))] ?? null;
+                $view = ExtensionHelper::getView($this->service, $currentViewObj);
             } catch (\Exception $e) {
                 if ($previousView !== $this->views[0]['name'] ?? null) {
                     $this->notify('Got an error while trying to load the view', 'error');
