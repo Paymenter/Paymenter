@@ -12,8 +12,10 @@ class Show extends Component
 {
     public Service $service;
 
+    #[Locked]
     public $buttons = [];
 
+    #[Locked]
     public $views = [];
 
     #[Locked]
@@ -39,7 +41,7 @@ class Show extends Component
                     $this->views[] = $action;
                 }
             }
-            $this->changeView($this->views[0] ?? null);
+            $this->changeView($this->views[0]['name'] ?? null);
         }
     }
 
