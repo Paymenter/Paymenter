@@ -30,6 +30,7 @@ class Logs extends Command
         $logFile = storage_path("logs/laravel-{$today}.log");
         if (!file_exists($logFile)) {
             $this->info('No log file found for today.');
+
             return;
         }
 
@@ -45,9 +46,9 @@ class Logs extends Command
             $this->info('Here is the last error message:');
             // output the last error message
             $this->line($lastErrorMessage);
+
             return;
         }
-
 
         // Add paymenter version and php version as first lines to $lastErrorMessage
         $paymenterVersion = config('app.version');
@@ -68,7 +69,6 @@ class Logs extends Command
 
         $this->line(trim($response));
     }
-
 
     protected function getLastErrorMessage(string $logContents): ?string
     {
