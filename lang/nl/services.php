@@ -38,4 +38,19 @@ return [
 
     'outstanding_invoice' => 'You have an outstanding invoice.',
     'view_and_pay' => 'Click here to view and pay',
+
+    'statuses' => [
+        'pending' => 'In afwachting',
+        'active' => 'Actief',
+        'cancelled' => 'Geannuleerd',
+        'suspended' => 'Gepauzeerd',
+    ],
+    'billing_cycles' => [
+        'day' => 'dag|dagen',
+        'week' => 'week|weken',
+        'month' => 'maand|maanden',
+        'year' => 'jaar|jaren',
+    ],
+    'every_period' => 'Elke :period :unit',
+    'price_every_period' => ':price per :period :unit',
 ];
