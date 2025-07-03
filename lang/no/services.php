@@ -38,4 +38,19 @@ return [
 
     'outstanding_invoice' => 'You have an outstanding invoice.',
     'view_and_pay' => 'Click here to view and pay',
+
+    'statuses' => [
+        'pending' => 'Pending',
+        'active' => 'Active',
+        'cancelled' => 'Cancelled',
+        'suspended' => 'Suspended',
+    ],
+    'billing_cycles' => [
+        'day' => 'day|days',
+        'week' => 'week|weeks',
+        'month' => 'month|months',
+        'year' => 'year|years',
+    ],
+    'every_period' => 'Every :period :unit',
+    'price_every_period' => ':price per :period :unit',
 ];
