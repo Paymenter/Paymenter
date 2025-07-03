@@ -23,8 +23,11 @@
                             </div>
                         </div>
                         <p class="text-sm text-gray-500">{{ $message->created_at->diffForHumans() }}</p>
-                        <div class="mt-2 prose dark:prose-invert">{!! Str::markdown(nl2br(e($message->message)), [
+                        <div class="mt-2 prose dark:prose-invert" style="word-break: break-all;">{!! Str::markdown(e($message->message), [
                             'allow_unsafe_links' => false,
+                            'renderer' => [
+                                'soft_break' => "<br>"
+                            ]
                         ]) !!}</div>
                     </div>
                 @endforeach
