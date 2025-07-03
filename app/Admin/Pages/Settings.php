@@ -105,7 +105,7 @@ class Settings extends Page implements HasForms
             $avSetting = (object) collect(\App\Classes\Settings::settings())->flatten(1)->firstWhere('name', $key);
             $avSetting->value = $settings[$key]->value ?? $avSetting->default ?? null;
 
-            if ($value !== $avSetting->value && (($avSetting->database_type ?? 'string') === 'boolean' && (bool) $value !== (bool) $avSetting->value)) {
+            if ($value !== $avSetting->value || (($avSetting->database_type ?? 'string') === 'boolean' && (bool) $value !== (bool) $avSetting->value)) {
                 if ($setting = $settings[$key] ?? null) {
                     $setting->update([
                         'value' => $value,
