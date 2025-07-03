@@ -384,11 +384,6 @@ class ExtensionHelper
                 ]
             );
         }
-
-        if ($invoice->remaining <= 0 && $invoice->status !== 'paid') {
-            $invoice->status = 'paid';
-            $invoice->save();
-        }
     }
 
     /**
