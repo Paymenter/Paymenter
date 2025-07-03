@@ -30,18 +30,17 @@ return [
     'upgrade_summary' => 'Upgrade Overzicht',
     'total_today' => 'Totale prijs vandaag',
 
-    
     'statuses' => [
         'pending' => 'In afwachting',
         'active' => 'Actief',
         'cancelled' => 'Geannuleerd',
-        'suspended' => 'Gepauzeerd'
+        'suspended' => 'Gepauzeerd',
     ],
     'billing_cycles' => [
         'day' => 'dag|dagen',
         'week' => 'week|weken',
         'month' => 'maand|maanden',
-        'year' => 'jaar|jaren'
+        'year' => 'jaar|jaren',
     ],
     'every_period' => 'Elke :period :unit',
     'price_every_period' => ':price per :period :unit',

@@ -43,14 +43,14 @@ return [
         'pending' => 'Pending',
         'active' => 'Active',
         'cancelled' => 'Cancelled',
-        'suspended' => 'Suspended'
+        'suspended' => 'Suspended',
     ],
     'billing_cycles' => [
         'day' => 'day|days',
         'week' => 'week|weeks',
         'month' => 'month|months',
-        'year' => 'year|years'
+        'year' => 'year|years',
     ],
     'every_period' => 'Every :period :unit',
-    'price_every_period' => ':price per :period :unit'
+    'price_every_period' => ':price per :period :unit',
 ];
