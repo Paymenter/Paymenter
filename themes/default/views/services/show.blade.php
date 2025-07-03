@@ -3,8 +3,9 @@
     <div class="w-full mb-4">
         <div class="bg-yellow-600/20 border-l-4 border-yellow-500 text-yellow-300 p-4 rounded-lg">
             <p class="font-medium">
-                ⚠️ {{  __('services.outstanding_invoice') }}
-                <a href="{{ route('invoices.show', $invoice)}}" class="underline hover:text-yellow-100 underline-offset-2">{{ __('services.view_and_pay') }}</a>.
+                ⚠️ {{ __('services.outstanding_invoice') }}
+                <a href="{{ route('invoices.show', $invoice)}}"
+                    class="underline hover:text-yellow-100 underline-offset-2">{{ __('services.view_and_pay') }}</a>.
             </p>
         </div>
     </div>
@@ -28,16 +29,18 @@
                     @if($service->plan->type == 'recurring')
                     <div class="flex items-center text-base">
                         <span class="mr-2">{{ __('services.billing_cycle') }}:</span>
-                        <span class="text-base/50">Every {{ $service->plan->billing_period > 1 ?
-                            $service->plan->billing_period : '' }}
-                            {{ Str::plural($service->plan->billing_unit, $service->plan->billing_period) }}</span>
+                        <span class="text-base/50">{{ __('services.every_period', [
+                            'period' => $service->plan->billing_period > 1 ? $service->plan->billing_period : '',
+                            'unit' => trans_choice(__('services.billing_cycles.' . $service->plan->billing_unit), $service->plan->billing_period)
+                            ])
+                        }}</span>
                     </div>
                     @endif
                     <div class="flex items-center text-base">
                         <span class="mr-2">{{ __('services.status') }}:</span>
                         <span
                             class="font-semibold @if ($service->status == 'active') text-green-500 @elseif($service->status == 'cancelled') text-red-500  @else text-orange-500 @endif">
-                            {{ ucfirst($service->status) }}
+                            {{ __('services.statuses.' . $service->status) }}
                         </span>
                     </div>
                 </div>
