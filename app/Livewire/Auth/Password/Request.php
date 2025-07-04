@@ -25,7 +25,7 @@ class Request extends Component
         // Find the user
         $user = User::where('email', $this->email)->first();
 
-        if ($user) {
+        if ($user && !$user?->role) {
             NotificationHelper::passwordResetNotification($user, ['url' => url(route('password.reset', [
                 'token' => Password::createToken($user),
                 'email' => $user->email,
@@ -33,8 +33,6 @@ class Request extends Component
         }
 
         $this->notify('If the email address is associated with an account, you will receive an email with instructions on how to reset your password.', 'success');
-
-        $this->redirect(route('login'));
     }
 
     public function render()
