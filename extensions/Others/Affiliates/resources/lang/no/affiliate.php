@@ -1,19 +1,19 @@
 <?php
 
 return [
-    'affiliate' => 'Affiliate',
-    'signup-for-affiliate' => 'Signup for Affiliate',
-    'code' => 'Code',
-    'visitors' => 'Visitors',
-    'total-visitors' => 'Total Visitors',
-    'signups' => 'Signups',
-    'total-signups' => 'Total Signups',
-    'earnings' => 'Earnings',
-    'total-earnings' => 'Total Earnings',
-    'your-affiliate-link' => 'Your affiliate link',
-    'copy' => 'Copy',
+    'affiliate' => 'Partner',
+    'signup-for-affiliate' => 'Registrer deg for Partner',
+    'code' => 'Kode',
+    'visitors' => 'Besøkende',
+    'total-visitors' => 'Totale besøkende',
+    'signups' => 'Registreringer',
+    'total-signups' => 'Totale registreringer',
+    'earnings' => 'Inntekter',
+    'total-earnings' => 'Totale inntekter',
+    'your-affiliate-link' => 'Din affiliatelenke',
+    'copy' => 'Kopier',
 
-    'you-havent-signed-up-yet' => 'You have not signed up for affiliates program yet!',
-    'you-are-already-affiliated' => 'You have already signed up for affiliate program.',
-    'signup-success' => 'Successfully signed up for affiliate program!',
+    'you-havent-signed-up-yet' => 'Du har ikke registrert deg for partnerprogrammet ennå!',
+    'you-are-already-affiliated' => 'Du har allerede registrert deg for partnerskapsprogrammet.',
+    'signup-success' => 'Registreringen er vellykket for partnerprogram!',
 ];
