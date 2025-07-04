@@ -69,6 +69,8 @@ class NotificationHelper
 
         // Generate the invoice PDF
         $pdf = PDF::generateInvoice($invoice);
+        // Generate path
+        mkdir(storage_path('app/invoices'), 0755, true);
         // Save the PDF to a temporary location
         $pdfPath = storage_path('app/invoices/' . $invoice->number . '.pdf');
         $pdf->save($pdfPath);
