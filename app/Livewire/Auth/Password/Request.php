@@ -22,6 +22,14 @@ class Request extends Component
             'email' => 'required|email',
         ]);
 
+        if (RateLimiter::tooManyAttempts('password-reset', 3)) {
+            $this->addError('email', 'Too many password reset attempts. Please try again later.');
+
+            return;
+        }
+
+        RateLimiter::increment('password-reset');
+
         // Find the user
         $user = User::where('email', $this->email)->first();
 
