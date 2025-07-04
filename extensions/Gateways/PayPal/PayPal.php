@@ -6,6 +6,7 @@ use App\Classes\Extension\Gateway;
 use App\Events\Service\Updated;
 use App\Helpers\ExtensionHelper;
 use App\Models\Invoice;
+use App\Models\InvoiceItem;
 use App\Models\Service;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Event;
@@ -236,7 +237,8 @@ class PayPal extends Gateway
         // Handle the subscription event
         if ($body['event_type'] === 'BILLING.SUBSCRIPTION.ACTIVATED' && isset($body['resource']['custom_id'])) {
             // Its activated so we can now add the subscription to the user (custom is the order id)
-            Invoice::findOrFail($body['resource']['custom_id'])->services->each(function ($service) use ($body) {
+            Invoice::findOrFail($body['resource']['custom_id'])->items()->where('reference_type', Service::class)->each(function (InvoiceItem $item) use ($body) {
+                $service = $item->reference;
                 $service->subscription_id = $body['resource']['id'];
                 $service->save();
                 $service->properties()->updateOrCreate([
