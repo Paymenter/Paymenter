@@ -1,0 +1,60 @@
+<?php
+
+namespace App\Console\Commands\User;
+
+use App\Helpers\NotificationHelper;
+use App\Models\User;
+use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Password;
+
+class PasswordReset extends Command
+{
+    /**
+     * The name and signature of the console command.
+     *
+     * @var string
+     */
+    protected $signature = 'user:password-reset {email? : The email address of the user}';
+
+    /**
+     * The console command description.
+     *
+     * @var string
+     */
+    protected $description = 'Send password reset email to a user';
+
+    /**
+     * Execute the console command.
+     */
+    public function handle(): int
+    {
+        $email = $this->argument('email') ?? $this->ask('Enter the email address of the user');
+
+        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            $this->error("Invalid email format");
+            return 1;
+        }
+
+        $user = User::where('email', $email)->first();
+
+        if (!$user) {
+            $this->error("User with email '{$email}' not found");
+            return 1;
+        }
+
+        try {
+            NotificationHelper::passwordResetNotification($user, [
+                'url' => url(route('password.reset', [
+                    'token' => Password::createToken($user),
+                    'email' => $user->email,
+                ], false))
+            ]);
+
+            $this->info("Password reset email sent successfully to '{$email}'");
+            return 0;
+        } catch (\Throwable $e) {
+            $this->error("Failed to send password reset email: " . $e->getMessage());
+            return 1;
+        }
+    }
+}
