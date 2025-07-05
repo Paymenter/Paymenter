@@ -1,19 +1,19 @@
 <?php
 
 return [
-    'affiliate' => 'Affiliate',
-    'signup-for-affiliate' => 'Signup for Affiliate',
-    'code' => 'Code',
-    'visitors' => 'Visitors',
-    'total-visitors' => 'Total Visitors',
-    'signups' => 'Signups',
-    'total-signups' => 'Total Signups',
-    'earnings' => 'Earnings',
-    'total-earnings' => 'Total Earnings',
-    'your-affiliate-link' => 'Your affiliate link',
-    'copy' => 'Copy',
+    'affiliate' => 'Afiliasi',
+    'signup-for-affiliate' => 'Daftar Program Afiliasi',
+    'code' => 'Kode',
+    'visitors' => 'Pengunjung',
+    'total-visitors' => 'Total Pengunjung',
+    'signups' => 'Pendaftaran',
+    'total-signups' => 'Total Pendaftaran',
+    'earnings' => 'Pendapatan',
+    'total-earnings' => 'Total Pendapatan',
+    'your-affiliate-link' => 'Tautan afiliasi Anda',
+    'copy' => 'Salin',
 
-    'you-havent-signed-up-yet' => 'You have not signed up for affiliates program yet!',
-    'you-are-already-affiliated' => 'You have already signed up for affiliate program.',
-    'signup-success' => 'Successfully signed up for affiliate program!',
+    'you-havent-signed-up-yet' => 'Anda belum mendaftar ke program afiliasi!',
+    'you-are-already-affiliated' => 'Anda telah terdaftar dalam program afiliasi.',
+    'signup-success' => 'Pendaftaran program afiliasi berhasil!',
 ];
