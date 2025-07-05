@@ -2,18 +2,19 @@
 
 return [
     'affiliate' => 'Affiliate',
-    'signup-for-affiliate' => 'Signup for Affiliate',
-    'code' => 'Code',
-    'visitors' => 'Visitors',
-    'total-visitors' => 'Total Visitors',
-    'signups' => 'Signups',
-    'total-signups' => 'Total Signups',
-    'earnings' => 'Earnings',
-    'total-earnings' => 'Total Earnings',
-    'your-affiliate-link' => 'Your affiliate link',
-    'copy' => 'Copy',
+    'signup-for-affiliate' => 'Registrera dig för affiliate',
+    'code' => 'Kod',
+    'visitors' => 'Besökare',
+    'total-visitors' => 'Antal besökare',
+    'signups' => 'Registreringar',
+    'total-signups' => 'Totalt antal registreringar',
+    'earnings' => 'Intäkter',
+    'total-earnings' => 'Totala intäkter',
+    'your-affiliate-link' => 'Din affiliate länk',
+    'copy' => 'Kopiera',
 
-    'you-havent-signed-up-yet' => 'You have not signed up for affiliates program yet!',
-    'you-are-already-affiliated' => 'You have already signed up for affiliate program.',
-    'signup-success' => 'Successfully signed up for affiliate program!',
+    'you-havent-signed-up-yet' => 'Du har inte registrerat dig för affiliates program ännu!',
+    'you-are-already-affiliated' => 'Du har redan registrerat dig för affiliate program.',
+    'signup-success' => '
+Registreringen av affiliateprogrammet lyckades!',
 ];
