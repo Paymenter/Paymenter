@@ -9,6 +9,6 @@ class BasePolicy
     protected function adminPermission(User $user, $permission): bool
     {
         // Only do this if the request starts with /admin
-        return request()->is('admin/*') && $user->hasPermission($permission);
+        return (request()->is('admin/*') || request()->routeIs('livewire.update')) && $user->hasPermission($permission);
     }
 }
