@@ -11,7 +11,6 @@ use App\Helpers\ExtensionHelper;
 use App\Models\Currency;
 use App\Models\Product;
 use App\Models\Service;
-use App\Models\User;
 use Filament\Forms;
 use Filament\Forms\Components\Actions\Action;
 use Filament\Forms\Components\Component;
@@ -23,7 +22,6 @@ use Filament\Support\RawJs;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Support\HtmlString;
 
 class ServiceResource extends Resource
 {

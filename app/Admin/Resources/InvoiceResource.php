@@ -9,7 +9,6 @@ use App\Models\Currency;
 use App\Models\Invoice;
 use App\Models\Service;
 use App\Models\ServiceUpgrade;
-use App\Models\User;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Forms\Get;
@@ -19,7 +18,6 @@ use Filament\Tables;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Support\HtmlString;
 
 class InvoiceResource extends Resource
 {

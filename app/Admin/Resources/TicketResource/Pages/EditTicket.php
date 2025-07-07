@@ -8,7 +8,6 @@ use App\Admin\Resources\TicketResource;
 use App\Admin\Resources\UserResource;
 use App\Models\Ticket;
 use App\Models\TicketMessage;
-use App\Models\User;
 use Filament\Actions\StaticAction;
 use Filament\Forms;
 use Filament\Forms\Form;
