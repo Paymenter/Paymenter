@@ -108,6 +108,7 @@ class Stripe extends Gateway
                 'invoice.created',
                 'invoice.payment_succeeded',
             ],
+            'api_version' => '2025-02-24.acacia', // Use the latest version
         ]);
 
         $gateway->settings()->updateOrCreate(['key' => 'stripe_webhook_secret'], ['value' => $webhook->secret]);
