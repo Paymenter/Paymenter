@@ -2,6 +2,7 @@
 
 namespace App\Admin\Resources;
 
+use App\Admin\Components\UserComponent;
 use App\Admin\Resources\TicketResource\Pages;
 use App\Admin\Resources\TicketResource\Widgets\TicketsOverView;
 use App\Models\Ticket;
@@ -86,35 +87,26 @@ class TicketResource extends Resource
                     ->columnSpan(function ($record) {
                         return $record ? 2 : 1;
                     }),
-                Forms\Components\Select::make('user_id')
-                    ->label('User')
-                    ->relationship('user', 'id')
-                    ->searchable()
-                    ->preload()
-                    ->live()
-                    ->getOptionLabelFromRecordUsing(fn ($record) => $record->name)
-                    ->getSearchResultsUsing(fn (string $search): array => User::where('first_name', 'like', "%$search%")->orWhere('last_name', 'like', "%$search%")->limit(50)->pluck('first_name', 'last_name', 'id')->toArray())
-                    ->columnSpan(function ($record) {
-                        return $record ? 2 : 1;
-                    })
-                    ->required(),
+                UserComponent::make('user_id')->columnSpan(function ($record) {
+                    return $record ? 2 : 1;
+                }),
                 Forms\Components\Select::make('assigned_to')
                     ->label('Assigned To')
                     ->searchable()
                     ->preload()
-                    ->relationship('user', 'id', fn (Builder $query) => $query->where('role_id', '!=', null))
-                    ->getOptionLabelFromRecordUsing(fn ($record) => $record->name)
+                    ->relationship('user', 'id', fn(Builder $query) => $query->where('role_id', '!=', null))
+                    ->getOptionLabelFromRecordUsing(fn($record) => $record->name)
                     ->columnSpan(function ($record) {
                         return $record ? 2 : 1;
                     }),
                 Forms\Components\Select::make('service_id')
                     ->label('Service')
                     ->relationship('service', 'id')
-                    ->getOptionLabelFromRecordUsing(fn ($record) => "{$record->product->name} - " . ucfirst($record->status))
+                    ->getOptionLabelFromRecordUsing(fn($record) => "{$record->product->name} - " . ucfirst($record->status))
                     ->columnSpan(function ($record) {
                         return $record ? 2 : 1;
                     })
-                    ->disabled(fn (Get $get) => !$get('user_id')),
+                    ->disabled(fn(Get $get) => !$get('user_id')),
                 Forms\Components\MarkdownEditor::make('message')
                     ->columnSpan(2)
                     ->label('Initial Message')
@@ -136,23 +128,23 @@ class TicketResource extends Resource
                 Tables\Columns\TextColumn::make('status')
                     ->sortable()
                     ->badge()
-                    ->color(fn (Ticket $record) => match ($record->status) {
+                    ->color(fn(Ticket $record) => match ($record->status) {
                         'open' => 'success',
                         'closed' => 'danger',
                         'replied' => 'warning',
                     })
-                    ->formatStateUsing(fn (string $state) => ucfirst($state)),
+                    ->formatStateUsing(fn(string $state) => ucfirst($state)),
                 Tables\Columns\TextColumn::make('priority')
                     ->sortable()
                     ->badge()
-                    ->color(fn (Ticket $record) => match ($record->priority) {
+                    ->color(fn(Ticket $record) => match ($record->priority) {
                         'low' => 'success',
                         'medium' => 'gray',
                         'high' => 'danger',
                     })
-                    ->formatStateUsing(fn (string $state) => ucfirst($state)),
+                    ->formatStateUsing(fn(string $state) => ucfirst($state)),
                 Tables\Columns\TextColumn::make('department')
-                    ->formatStateUsing(fn ($state) => array_combine(config('settings.ticket_departments'), config('settings.ticket_departments'))[$state])
+                    ->formatStateUsing(fn($state) => array_combine(config('settings.ticket_departments'), config('settings.ticket_departments'))[$state])
                     ->sortable(),
                 Tables\Columns\TextColumn::make('user.name')
                     ->searchable(['first_name', 'last_name'])

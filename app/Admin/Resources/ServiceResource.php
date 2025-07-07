@@ -3,6 +3,7 @@
 namespace App\Admin\Resources;
 
 use App\Admin\Clusters\Services;
+use App\Admin\Components\UserComponent;
 use App\Admin\Resources\Common\RelationManagers\PropertiesRelationManager;
 use App\Admin\Resources\ServiceResource\Pages;
 use App\Admin\Resources\ServiceResource\RelationManagers;
@@ -64,16 +65,7 @@ class ServiceResource extends Resource
                     ->preload()
                     ->disabled(fn (Get $get) => !$get('product_id'))
                     ->placeholder('Select the plan'),
-                Forms\Components\Select::make('user_id')
-                    ->label('User')
-                    ->relationship('user', 'id')
-                    ->searchable()
-                    ->preload()
-                    ->hint(fn ($get) => $get('user_id') ? new HtmlString('<a href="' . UserResource::getUrl('edit', ['record' => $get('user_id')]) . '" target="_blank">Go to User</a>') : null)
-                    ->getOptionLabelFromRecordUsing(fn ($record) => $record->name)
-                    ->getSearchResultsUsing(fn (string $search): array => User::where('first_name', 'like', "%$search%")->orWhere('last_name', 'like', "%$search%")->limit(50)->pluck('first_name', 'last_name', 'id')->toArray())
-                    ->live()
-                    ->required(),
+                UserComponent::make('user_id'),
                 Forms\Components\Select::make('status')
                     ->label('Status')
                     ->required()

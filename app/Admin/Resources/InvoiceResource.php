@@ -2,6 +2,7 @@
 
 namespace App\Admin\Resources;
 
+use App\Admin\Components\UserComponent;
 use App\Admin\Resources\InvoiceResource\Pages;
 use App\Admin\Resources\InvoiceResource\RelationManagers;
 use App\Models\Currency;
@@ -44,16 +45,7 @@ class InvoiceResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\Select::make('user_id')
-                    ->label('User')
-                    ->relationship('user', 'id')
-                    ->searchable()
-                    ->preload()
-                    ->getOptionLabelFromRecordUsing(fn ($record) => $record->name)
-                    ->getSearchResultsUsing(fn (string $search): array => User::where('first_name', 'like', "%$search%")->orWhere('last_name', 'like', "%$search%")->limit(50)->pluck('first_name', 'last_name', 'id')->toArray())
-                    ->hint(fn ($get) => $get('user_id') ? new HtmlString('<a href="' . UserResource::getUrl('edit', ['record' => $get('user_id')]) . '" target="_blank">Go to User</a>') : null)
-                    ->live()
-                    ->required(),
+                UserComponent::make('user_id'),
                 Forms\Components\TextInput::make('number')
                     ->label('Invoice Number')
                     ->helperText('The invoice number will be generated automatically')
