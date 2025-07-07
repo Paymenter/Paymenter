@@ -1,19 +1,19 @@
 <?php
 
 return [
-    'affiliate' => 'Affiliate',
-    'signup-for-affiliate' => 'Signup for Affiliate',
-    'code' => 'Code',
-    'visitors' => 'Visitors',
-    'total-visitors' => 'Total Visitors',
-    'signups' => 'Signups',
-    'total-signups' => 'Total Signups',
-    'earnings' => 'Earnings',
-    'total-earnings' => 'Total Earnings',
-    'your-affiliate-link' => 'Your affiliate link',
-    'copy' => 'Copy',
+    'affiliate' => 'مسوّق',
+    'signup-for-affiliate' => 'التسجيل كمسوّق بالعمولة',
+    'code' => 'الكود',
+    'visitors' => 'الزوار',
+    'total-visitors' => 'إجمالي الزوار',
+    'signups' => 'التسجيلات',
+    'total-signups' => 'إجمالي التسجيلات',
+    'earnings' => 'الأرباح',
+    'total-earnings' => 'إجمالي الأرباح',
+    'your-affiliate-link' => 'الرابط الخاص بك',
+    'copy' => 'نسخ',
 
-    'you-havent-signed-up-yet' => 'You have not signed up for affiliates program yet!',
-    'you-are-already-affiliated' => 'You have already signed up for affiliate program.',
-    'signup-success' => 'Successfully signed up for affiliate program!',
+    'you-havent-signed-up-yet' => 'لم تقم بالتسجيل في برنامج التسويق بالعمولة حتى الآن!',
+    'you-are-already-affiliated' => 'لقد قمت بالتسجيل بالفعل في برنامج التسويق بالعمولة.',
+    'signup-success' => 'تم التسجيل بنجاح في برنامج التسويق بالعمولة!',
 ];
