@@ -50,6 +50,9 @@ class Show extends Component
         if (!$view) {
             return;
         }
+        if ($this->currentView === $view) {
+            return $this->skipRender();
+        }
         $this->currentView = $view;
     }
 
