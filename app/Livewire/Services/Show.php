@@ -91,7 +91,9 @@ class Show extends Component
             try {
                 // Search array for the current view
                 $currentViewObj = $this->views[array_search($this->currentView, array_column($this->views, 'name'))] ?? null;
-                if (!$currentViewObj) throw new \Exception('View not found');
+                if (!$currentViewObj) {
+                    throw new \Exception('View not found');
+                }
                 $view = ExtensionHelper::getView($this->service, $currentViewObj);
             } catch (\Exception $e) {
                 if ($previousView !== $this->views[0]['name'] ?? null) {
