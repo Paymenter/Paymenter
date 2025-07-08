@@ -18,7 +18,7 @@ class Show extends Component
     #[Locked]
     public $views = [];
 
-    #[Locked]
+    #[Url('tab', except: false), Locked]
     public $currentView;
 
     #[Url('cancel', except: false)]
@@ -41,7 +41,7 @@ class Show extends Component
                     $this->views[] = $action;
                 }
             }
-            $this->changeView($this->views[0]['name'] ?? null);
+            $this->currentView = $this->currentView ?? ($this->views[0]['name'] ?? null);
         }
     }
 
@@ -50,7 +50,7 @@ class Show extends Component
         if (!$view) {
             return;
         }
-        if ($this->currentView === $view) {
+        if ($this->currentView === $view || !in_array($view, array_column($this->views, 'name'))) {
             return $this->skipRender();
         }
         $this->currentView = $view;
@@ -91,6 +91,7 @@ class Show extends Component
             try {
                 // Search array for the current view
                 $currentViewObj = $this->views[array_search($this->currentView, array_column($this->views, 'name'))] ?? null;
+                if (!$currentViewObj) throw new \Exception('View not found');
                 $view = ExtensionHelper::getView($this->service, $currentViewObj);
             } catch (\Exception $e) {
                 if ($previousView !== $this->views[0]['name'] ?? null) {
