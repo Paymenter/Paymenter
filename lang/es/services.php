@@ -26,7 +26,7 @@ return [
     'change_plan' => 'Cambiar plan',
     'current_price' => 'Precio actual',
     'new_price' => 'Nuevo precio',
-    'upgrade' => 'Actualizar',
+    'upgrade' => 'Mejorar',
     'upgrade_summary' => 'Resumen de actualización',
     'total_today' => 'Total hoy',
     'upgrade_service' => 'Actualizar el servicio',
