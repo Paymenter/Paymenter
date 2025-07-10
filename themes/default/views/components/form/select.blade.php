@@ -23,8 +23,8 @@
 
     <select id="{{ $id ?? $name }}" {{ $multiple ? 'multiple' : '' }} {{ $attributes->only(['required', 'wire:model',
         'wire:dirty.class', 'wire:model.live']) }}
-        class="block px-2.5 py-2.5 !min-h-[45px] w-full text-sm text-primary-100 bg-background-secondary border-2 border-neutral
-        rounded-md outline-none focus:outline-none focus:border-secondary transition-all duration-300 ease-in-out">
+        class="block px-2.5 py-2.5 w-full text-sm text-primary-100 bg-background-secondary border-2 border-neutral
+        rounded-md outline-none focus:outline-none focus:border-secondary transition-all duration-300 ease-in-out form-select">
         @if (count($options) == 0 && $slot)
         {{ $slot }}
         @else
