@@ -7,6 +7,7 @@ use App\Livewire\Component;
 use App\Models\User;
 use App\Traits\Captchable;
 use Illuminate\Support\Facades\Password;
+use Illuminate\Support\Facades\RateLimiter;
 
 class Request extends Component
 {
