@@ -19,7 +19,7 @@ return [
     'checking_payment' => 'Comprobando pago',
     'invoice_date' => 'Fecha de factura',
     'invoice_no' => 'Número de factura',
-    'tax_id' => 'ID del impuesto',
+    'tax_id' => 'Número de identificación fiscal',
     'company_id' => 'ID de la compañía',
     'item' => 'Artículo',
     'quantity' => 'Cantidad',
