@@ -61,9 +61,8 @@
                     <template x-for="(plan, index) in options" :key="index">
                         <li class="relative @if($showPriceTag) pb-7 @else pb-2 @endif">
                             <button @click="setOptionValue(index)" class="absolute flex flex-col items-center -translate-x-1/2">
-                                <span class="hidden lg:inline text-sm font-semibold" x-text="`${plan.option}`"></span>
-                                <span class="hidden lg:inline text-sm font-semibold" x-text="`${plan.price}`"></span>
-                                <span class="inline lg:hidden" x-text="`${plan.option}`"></span>
+                                <span class="text-sm font-semibold" x-text="`${plan.option}`"></span>
+                                <span class="text-sm font-semibold" x-text="`${plan.price}`"></span>
                             </button>
                         </li>
                     </template>
