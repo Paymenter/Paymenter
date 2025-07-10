@@ -26,7 +26,7 @@ return [
         'current_password_placeholder' => 'Tu contraseña actual',
         'new_password' => 'Nueva contraseña',
         'new_password_placeholder' => 'Tu nueva contraseña',
-        'confirm_password' => 'Confirmar la contraseña',
+        'confirm_password' => 'Confirme la contraseña',
         'confirm_password_placeholder' => 'Confirma tu nueva contraseña',
 
         'two_factor_code' => 'Ingresa el código de tu aplicación de autenticación',
