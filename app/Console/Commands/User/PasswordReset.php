@@ -5,16 +5,17 @@ namespace App\Console\Commands\User;
 use App\Helpers\NotificationHelper;
 use App\Models\User;
 use Illuminate\Console\Command;
+use Illuminate\Contracts\Console\PromptsForMissingInput;
 use Illuminate\Support\Facades\Password;
 
-class PasswordReset extends Command
+class PasswordReset extends Command implements PromptsForMissingInput
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'user:password-reset {email? : The email address of the user}';
+    protected $signature = 'app:user:password-reset {email}';
 
     /**
      * The console command description.
@@ -28,7 +29,7 @@ class PasswordReset extends Command
      */
     public function handle(): int
     {
-        $email = $this->argument('email') ?? $this->ask('Enter the email address of the user');
+        $email = $this->argument('email');
 
         if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
             $this->error("Invalid email format");
@@ -56,5 +57,12 @@ class PasswordReset extends Command
             $this->error("Failed to send password reset email: " . $e->getMessage());
             return 1;
         }
+    }
+
+    protected function promptForMissingArgumentsUsing(): array
+    {
+        return [
+            'email' => 'What is the user\'s email address?',
+        ];
     }
 }
