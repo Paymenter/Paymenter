@@ -50,7 +50,35 @@ class UserResource extends Resource
                 TextInput::make('password')->translateLabel()->password()->revealable()
                     ->dehydrateStateUsing(fn (string $state): string => Hash::make($state))
                     ->dehydrated(fn (?string $state): bool => filled($state))
-                    ->required(fn (string $operation): bool => $operation === 'create'),
+                    ->required(fn (string $operation): bool => $operation === 'create')
+                    ->suffixAction(
+                        Action::make('send_password_reset')
+                            ->icon('ri-mail-send-line')
+                            ->color('warning')
+                            ->size('sm')
+                            ->requiresConfirmation()
+                            ->modalHeading('Send Password Reset Email')
+                            ->modalDescription(fn (User $record): string => "Send a password reset email to {$record->email}?")
+                            ->action(function (User $record) {
+                                try {
+                                    \Illuminate\Support\Facades\Password::sendResetLink(['email' => $record->email]);
+    
+                                    \Filament\Notifications\Notification::make()
+                                        ->success()
+                                        ->title('Password reset email sent successfully')
+                                        ->send();
+                                } catch (\Exception $e) {
+                                    \Filament\Notifications\Notification::make()
+                                        ->danger()
+                                        ->title('Failed to send password reset email')
+                                        ->body('Please check your email configuration or try again later.')
+                                        ->send();
+                                }
+                            })
+                            ->visible(fn (string $operation): bool => $operation === 'edit')
+                            ->disabled(fn (User $record) => $record->role_id !== null)
+                            ->tooltip('Send password reset email')
+                    ),
                 Select::make('role_id')->translateLabel()->relationship('role', 'name')->searchable()->preload(),
                 Toggle::make('tfa_secret')
                     ->label('Two Factor Authentication')
