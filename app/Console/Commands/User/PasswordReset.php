@@ -27,20 +27,20 @@ class PasswordReset extends Command implements PromptsForMissingInput
     /**
      * Execute the console command.
      */
-    public function handle(): int
+    public function handle(): void
     {
         $email = $this->argument('email');
 
         if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
             $this->error("Invalid email format");
-            return 1;
+            return;
         }
 
         $user = User::where('email', $email)->first();
 
         if (!$user) {
             $this->error("User with email '{$email}' not found");
-            return 1;
+            return;
         }
 
         try {
@@ -52,10 +52,8 @@ class PasswordReset extends Command implements PromptsForMissingInput
             ]);
 
             $this->info("Password reset email sent successfully to '{$email}'");
-            return 0;
         } catch (\Throwable $e) {
             $this->error("Failed to send password reset email: " . $e->getMessage());
-            return 1;
         }
     }
 
