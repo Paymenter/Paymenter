@@ -81,7 +81,7 @@ class ShowSessions extends ManageRelatedRecords
                 ->color('danger')
                 ->requiresConfirmation()
                 ->modalHeading('Logout All Sessions')
-                ->modalDescription("Are you sure you want to logout all sessions for {$this->getOwnerRecord()->email}? This will force them to log in again.")
+                ->modalDescription("Are you sure you want to logout all sessions for {$this->getOwnerRecord()->email}? This will force the user to login again.")
                 ->action(function () {
                     $this->getOwnerRecord()->sessions()->delete();
                 })
