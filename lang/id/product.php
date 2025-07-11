@@ -19,8 +19,8 @@ return [
     'setup_fee' => 'Biaya Setup',
 
     'in_stock' => 'Tersedia',
-    'out_of_stock' => 'Produk : produk tidak tersedia',
-    'user_limit' => 'Anda telah mencapai batas untuk : produk',
+    'out_of_stock' => ':product tidak tersedia',
+    'user_limit' => 'Anda telah mencapai batas untuk :produk',
     'payment_method' => 'Metode pembayaran',
     'use_credits' => 'Gunakan Kredit',
     'tos' => 'Saya setuju dengan ',
