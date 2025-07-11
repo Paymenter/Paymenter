@@ -9,7 +9,6 @@ use App\Helpers\ExtensionHelper;
 use App\Models\Currency;
 use App\Models\Order;
 use App\Models\Product;
-use App\Models\User;
 use Filament\Forms;
 use Filament\Forms\Components\Actions\Action;
 use Filament\Forms\Components\Component;
