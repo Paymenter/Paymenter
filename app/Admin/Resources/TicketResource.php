@@ -100,7 +100,9 @@ class TicketResource extends Resource
                     }),
                 Forms\Components\Select::make('service_id')
                     ->label('Service')
-                    ->relationship('service', 'id')
+                    ->relationship('service', 'id', function (Builder $query, Get $get) {
+                        $query->where('user_id', $get('user_id'));
+                    })
                     ->getOptionLabelFromRecordUsing(fn ($record) => "{$record->product->name} - " . ucfirst($record->status))
                     ->columnSpan(function ($record) {
                         return $record ? 2 : 1;
