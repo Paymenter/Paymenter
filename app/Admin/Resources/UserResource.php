@@ -118,6 +118,7 @@ class UserResource extends Resource
             'services' => Pages\ShowServices::route('/{record}/services'),
             'invoices' => Pages\ShowInvoices::route('/{record}/invoices'),
             'credits' => Pages\ShowCredits::route('/{record}/credits'),
+            'sessions' => Pages\ShowSessions::route('/{record}/sessions'),
         ];
     }
 
@@ -129,6 +130,7 @@ class UserResource extends Resource
             Pages\ShowServices::class,
             Pages\ShowInvoices::class,
             Pages\ShowCredits::class,
+            Pages\ShowSessions::class,
         ]);
     }
 }
