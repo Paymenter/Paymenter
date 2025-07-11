@@ -31,7 +31,6 @@ class CheckForUpdates extends Command
             $this->info('You are using the development version. No update check available.');
 
             return;
-
         }
 
         if (config('app.version') == 'beta') {
@@ -49,10 +48,6 @@ class CheckForUpdates extends Command
             }
         } else {
             $version = Http::get('https://api.paymenter.org/version')->json();
-            Setting::updateOrCreate(
-                ['key' => 'latest_version'],
-                ['value' => $version['latest']]
-            );
 
             if (config('app.version') != $version['latest']) {
                 $this->info('A new version is available: ' . $version['latest']);
@@ -62,6 +57,11 @@ class CheckForUpdates extends Command
                 $this->info('You are using the latest version: ' . config('app.version'));
             }
         }
+        Setting::updateOrCreate(
+            ['key' => 'latest_version'],
+            ['value' => $version['latest']]
+        );
+
         $this->info('Update check completed.');
     }
 }

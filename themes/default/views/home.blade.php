@@ -4,7 +4,9 @@
             <article class="prose dark:prose-invert max-w-full">
                 {!! Str::markdown(theme('home_page_text', 'Welcome to Paymenter'), [
                 'allow_unsafe_links' => false,
-                ]) !!}
+                'renderer' => [
+                    'soft_break' => "<br>"
+                ]]) !!}
             </article>
         </div>
         <div class="mx-auto container rounded-md grid md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">

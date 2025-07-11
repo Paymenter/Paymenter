@@ -265,7 +265,7 @@ class Stripe extends Gateway
 
         // Create subscription
         foreach ($invoice->items as $item) {
-            if (!$item->reference_type === Service::class) {
+            if ($item->reference_type !== Service::class) {
                 continue;
             }
             $service = $item->reference;
@@ -286,7 +286,7 @@ class Stripe extends Gateway
 
             $phases = [];
             // Check if current invoice item price is bigger then service price (then we have a setup fee)
-            if ($item->price > $service->price) {
+            if ($item->price != $service->price) {
                 $phases[] = [
                     'items' => [
                         [

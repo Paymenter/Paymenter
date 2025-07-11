@@ -91,8 +91,11 @@ class Checkout extends Component
     public function updatePricing()
     {
         $total = $this->plan->price()->price + $this->product->configOptions->sum(function ($option) {
-            if (in_array($option->type, ['text', 'number', 'checkbox'])) {
+            if ($option->type === 'checkbox' && (isset($this->configOptions[$option->id]) && $this->configOptions[$option->id])) {
                 return $option->children->first()?->price(billing_period: $this->plan->billing_period, billing_unit: $this->plan->billing_unit)->price;
+            }
+            if (in_array($option->type, ['text', 'number', 'checkbox'])) {
+                return 0;
             }
 
             return $option->children->where('id', $this->configOptions[$option->id])->first()?->price(billing_period: $this->plan->billing_period, billing_unit: $this->plan->billing_unit)->price;

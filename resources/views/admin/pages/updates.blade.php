@@ -24,11 +24,6 @@
         <p class="mt-2">OR try the web updater (This is a beta feature, use at your own risk)</p>
         <div class="mt-2">
             {{ $this->update }}
-
-            <code>
-                <pre id="update-result" class="mt-2" x-data="{ output: '' }" x-html="output"  x-on:update-completed.window="output = (new AnsiUp()).ansi_to_html($event.detail[0].output);">
-                </pre>
-            </code>
         </div>
     </div>
     @elseif(config('app.version') != config('settings.latest_version') && config('app.version') != 'beta')
@@ -46,11 +41,6 @@
         <p class="mt-2">OR try the web updater (This is a beta feature, use at your own risk)</p>
         <div class="mt-2">
             {{ $this->update }}
-
-            <code>
-                <pre id="update-result" class="mt-2" x-data="{ output: '' }" x-html="output"  x-on:update-completed.window="output = (new AnsiUp()).ansi_to_html($event.detail[0].output);">
-                </pre>
-            </code>
         </div>
     </div>
     @else
@@ -64,4 +54,8 @@
         <p>You are up to date!</p>
     </div>
     @endif
+    <code>
+        <pre id="update-result" class="mt-2" x-data="{ output: '' }" x-html="output"  x-on:update-completed.window="output = (new AnsiUp()).ansi_to_html($event.detail[0].output);">
+        </pre>
+    </code>
 </x-filament-panels::page>

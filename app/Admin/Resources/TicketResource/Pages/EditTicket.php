@@ -2,12 +2,12 @@
 
 namespace App\Admin\Resources\TicketResource\Pages;
 
+use App\Admin\Components\UserComponent;
 use App\Admin\Resources\ServiceResource;
 use App\Admin\Resources\TicketResource;
 use App\Admin\Resources\UserResource;
 use App\Models\Ticket;
 use App\Models\TicketMessage;
-use App\Models\User;
 use Filament\Actions\StaticAction;
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -147,14 +147,7 @@ class EditTicket extends EditRecord
                                     Forms\Components\Select::make('department')
                                         ->label('Department')
                                         ->options(array_combine(config('settings.ticket_departments'), config('settings.ticket_departments'))),
-                                    Forms\Components\Select::make('user_id')
-                                        ->label('User')
-                                        ->relationship('user', 'id')
-                                        ->searchable()
-                                        ->preload()
-                                        ->getOptionLabelFromRecordUsing(fn ($record) => $record->name)
-                                        ->getSearchResultsUsing(fn (string $search): array => User::where('first_name', 'like', "%$search%")->orWhere('last_name', 'like', "%$search%")->limit(50)->pluck('name', 'id')->toArray())
-                                        ->required(),
+                                    UserComponent::make('user_id'),
                                     Forms\Components\Select::make('assigned_to')
                                         ->label('Assigned To')
                                         ->relationship('assignedTo', 'id', fn (Builder $query) => $query->where('role_id', '!=', null))

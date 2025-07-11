@@ -2,6 +2,7 @@
 
 namespace App\Admin\Resources;
 
+use App\Admin\Components\UserComponent;
 use App\Admin\Resources\OrderResource\Pages;
 use App\Admin\Resources\OrderResource\RelationManagers;
 use App\Helpers\ExtensionHelper;
@@ -21,7 +22,6 @@ use Filament\Support\RawJs;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Support\HtmlString;
 
 class OrderResource extends Resource
 {
@@ -37,20 +37,11 @@ class OrderResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\Select::make('user_id')
-                    ->label('User')
-                    ->relationship('user', 'id')
-                    ->searchable()
-                    ->preload()
-                    ->getOptionLabelFromRecordUsing(fn ($record) => $record->name)
-                    ->getSearchResultsUsing(fn (string $search): array => User::where('first_name', 'like', "%$search%")->orWhere('last_name', 'like', "%$search%")->limit(50)->pluck('name', 'id')->toArray())
+                UserComponent::make('user_id')
                     ->afterStateUpdated(function (Set $set, Get $get) {
                         // update all the services user_id
                         $set('services', collect($get('services'))->map(fn ($service) => array_merge($service, ['user_id' => $get('user_id')]))->toArray());
-                    })
-                    ->hint(fn ($get) => $get('user_id') ? new HtmlString('<a href="' . UserResource::getUrl('edit', ['record' => $get('user_id')]) . '" target="_blank">Go to User</a>') : null)
-                    ->live()
-                    ->required(),
+                    }),
                 Forms\Components\Select::make('currency_code')
                     ->label('Currency')
                     ->required()

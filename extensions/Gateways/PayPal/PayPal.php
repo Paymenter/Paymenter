@@ -253,7 +253,17 @@ class PayPal extends Gateway
         } elseif ($body['event_type'] === 'PAYMENT.SALE.COMPLETED' && isset($body['resource']['custom'])) {
             $invoice = Invoice::findOrFail($body['resource']['custom']);
 
-            ExtensionHelper::addPayment($invoice->id, 'PayPal', $body['resource']['amount']['total'], $body['resource']['transaction_fee']['value'], $body['resource']['id']);
+            // For each item get service then latest invoice
+            $invoiceItems = $invoice->items()->where('reference_type', Service::class)->get();
+            foreach ($invoiceItems as $item) {
+                $service = $item->reference;
+                // If the service has a subscription, update the latest invoice
+                if ($service->subscription_id) {
+                    $latestInvoice = $service->invoices()->latest()->first();
+
+                    ExtensionHelper::addPayment($latestInvoice->id, 'PayPal', $body['resource']['amount']['total'], $body['resource']['transaction_fee']['value'], $body['resource']['id']);
+                }
+            }
         }
     }
 
