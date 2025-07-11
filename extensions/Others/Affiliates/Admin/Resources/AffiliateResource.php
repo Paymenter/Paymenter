@@ -3,10 +3,7 @@
 namespace Paymenter\Extensions\Others\Affiliates\Admin\Resources;
 
 use App\Admin\Components\UserComponent;
-use App\Admin\Resources\UserResource;
 use App\Helpers\ExtensionHelper;
-use App\Models\User;
-use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Forms\Form;
@@ -14,7 +11,6 @@ use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
-use Illuminate\Support\HtmlString;
 use Paymenter\Extensions\Others\Affiliates\Admin\Resources\AffiliateResource\Pages;
 use Paymenter\Extensions\Others\Affiliates\Admin\Resources\AffiliateResource\RelationManagers;
 use Paymenter\Extensions\Others\Affiliates\Models\Affiliate;
