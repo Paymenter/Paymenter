@@ -116,7 +116,7 @@ class PayPal extends Gateway
             return $item->reference_type === Service::class;
         })->count() == $invoice->items->count();
 
-        if ($this->config('paypal_use_subscriptions') && $eligableforSubscription && $invoice->items->map(fn ($item) => $item->reference->plan->billing_period . $item->reference->plan->billing_unit)->unique()->count() === 1) {
+        if ($this->config('paypal_use_subscriptions') && $eligableforSubscription && $invoice->items->map(fn($item) => $item->reference->plan->billing_period . $item->reference->plan->billing_unit)->unique()->count() === 1) {
             $paypalProduct = $this->request('post', $url . '/v1/catalogs/products', [
                 'name' => $invoice->items->first()->reference->product->name,
                 'type' => 'SERVICE',
@@ -139,7 +139,7 @@ class PayPal extends Gateway
                 ],
             ];
 
-            $nextSum = $invoice->items->sum(fn ($item) => $item->reference->price * $item->reference->quantity);
+            $nextSum = $invoice->items->sum(fn($item) => $item->reference->price * $item->reference->quantity);
 
             $billingCycles[] = [
                 'frequency' => [
@@ -248,23 +248,15 @@ class PayPal extends Gateway
                     'value' => true,
                 ]);
             });
-
-            return response()->json(['status' => 'success']);
-        } elseif ($body['event_type'] === 'PAYMENT.SALE.COMPLETED' && isset($body['resource']['custom'])) {
-            $invoice = Invoice::findOrFail($body['resource']['custom']);
-
-            // For each item get service then latest invoice
-            $invoiceItems = $invoice->items()->where('reference_type', Service::class)->get();
-            foreach ($invoiceItems as $item) {
-                $service = $item->reference;
-                // If the service has a subscription, update the latest invoice
-                if ($service->subscription_id) {
-                    $latestInvoice = $service->invoices()->latest()->first();
-
-                    ExtensionHelper::addPayment($latestInvoice->id, 'PayPal', $body['resource']['amount']['total'], $body['resource']['transaction_fee']['value'], $body['resource']['id']);
-                }
-            }
+        } elseif ($body['event_type'] === 'PAYMENT.SALE.COMPLETED' && isset($body['resource']['billing_agreement_id'])) {
+            Service::where('subscription_id', $body['resource']['billing_agreement_id'])->each(function (Service $service) use ($body) {
+                // Add payment to the latest invoice
+                $latestInvoice = $service->invoices()->latest()->first();
+                ExtensionHelper::addPayment($latestInvoice->id, 'PayPal', $body['resource']['amount']['total'], $body['resource']['transaction_fee']['value'], $body['resource']['id']);
+            });
         }
+
+        return response()->json(['status' => 'success']);
     }
 
     public function updateSubscription(Service $service)
