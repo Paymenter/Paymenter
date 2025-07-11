@@ -54,7 +54,7 @@ class ConfigOptionResource extends Resource
                             Forms\Components\Checkbox::make('hidden')
                                 ->label('Hidden'),
                             Forms\Components\Checkbox::make('upgradable')
-                                ->visible(fn(Get $get): bool => in_array($get('type'), ['select', 'radio', 'slider']))
+                                ->visible(fn (Get $get): bool => in_array($get('type'), ['select', 'radio', 'slider']))
                                 ->label('Upgradable')
                                 ->helperText('If enabled, this configuration option can be upgraded in the future.'),
                             Forms\Components\Select::make('products')
@@ -65,14 +65,14 @@ class ConfigOptionResource extends Resource
                                 ->placeholder('Select the products that this configuration option belongs to'),
                         ]),
                         Forms\Components\Tabs\Tab::make('Options')
-                            ->visible(fn(Get $get): bool => in_array($get('type'), ['select', 'radio', 'slider', 'checkbox']))
+                            ->visible(fn (Get $get): bool => in_array($get('type'), ['select', 'radio', 'slider', 'checkbox']))
                             ->schema([
                                 Forms\Components\Repeater::make('Options')
                                     ->relationship('children')
                                     ->label('Options')
                                     ->addActionLabel('Add Option')
                                     ->columnSpanFull()
-                                    ->itemLabel(fn(array $state) => $state['name'])
+                                    ->itemLabel(fn (array $state) => $state['name'])
                                     ->collapsible()
                                     ->collapsed()
                                     ->cloneable()
@@ -80,10 +80,11 @@ class ConfigOptionResource extends Resource
                                     ->orderColumn('sort')
                                     ->columns(2)
                                     // When the type is checkbox only allow 1 child
-                                    ->maxItems(function (Get $get): int|null {
+                                    ->maxItems(function (Get $get): ?int {
                                         if (in_array($get('type'), ['select', 'radio', 'slider'])) {
                                             return null; // unlimited children
                                         }
+
                                         return 1; // checkbox
                                     })
                                     ->minItems(1)
@@ -128,7 +129,7 @@ class ConfigOptionResource extends Resource
                     ->label('Hidden')
                     ->sortable(),
             ])
-            ->modifyQueryUsing(fn(Builder $query) => $query->where('parent_id', null))
+            ->modifyQueryUsing(fn (Builder $query) => $query->where('parent_id', null))
             ->filters([
                 //
             ])
