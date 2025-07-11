@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Session as FacadesSession;
 
 class Session extends Model
@@ -30,10 +31,21 @@ class Session extends Model
         ];
     }
 
-    public function impersonating()
+    public function impersonating(): bool
     {
-        // Filter out impersonated sessions (by reading payload)
-        return isset(unserialize(base64_decode(($this->payload)))['impersonating']);
+        try {
+            $payload = $this->payload;
+
+            $decoded = config('session.encrypt')
+                ? Crypt::decryptString($payload)
+                : base64_decode($payload);
+
+            $data = unserialize($decoded);
+
+            return !empty($data['impersonating']);
+        } catch (\Throwable $e) {
+            return false;
+        }
     }
 
     public function user()
