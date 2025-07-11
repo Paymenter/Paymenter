@@ -32,7 +32,8 @@ class PasswordReset extends Command implements PromptsForMissingInput
         $email = $this->argument('email');
 
         if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-            $this->error("Invalid email format");
+            $this->error('Invalid email format');
+
             return;
         }
 
@@ -40,6 +41,7 @@ class PasswordReset extends Command implements PromptsForMissingInput
 
         if (!$user) {
             $this->error("User with email '{$email}' not found");
+
             return;
         }
 
@@ -48,12 +50,12 @@ class PasswordReset extends Command implements PromptsForMissingInput
                 'url' => url(route('password.reset', [
                     'token' => Password::createToken($user),
                     'email' => $user->email,
-                ], false))
+                ], false)),
             ]);
 
             $this->info("Password reset email sent successfully to '{$email}'");
         } catch (\Throwable $e) {
-            $this->error("Failed to send password reset email: " . $e->getMessage());
+            $this->error('Failed to send password reset email: ' . $e->getMessage());
         }
     }
 

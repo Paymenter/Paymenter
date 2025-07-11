@@ -27,6 +27,7 @@ class Request extends Component
 
         if (RateLimiter::tooManyAttempts($rateLimitKey, 3)) {
             $this->addError('email', 'Too many password reset attempts. Please try again later.');
+
             return;
         }
 
