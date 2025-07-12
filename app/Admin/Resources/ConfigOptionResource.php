@@ -43,6 +43,7 @@ class ConfigOptionResource extends Resource
                                 ->label('Type')
                                 ->native(false)
                                 ->required()
+                                ->reactive()
                                 ->options([
                                     'text' => 'Text',
                                     'number' => 'Number',
