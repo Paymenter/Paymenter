@@ -13,7 +13,7 @@ return [
     'invoice' => '發票 #:id',
     'unit_price' => '單價',
     'bill_to' => '帳單寄送至',
-    'issued_to' => 'Issued To',
+    'issued_to' => '授權給',
     'paid' => '已付款',
     'payment_pending' => '等待付款',
     'checking_payment' => '確認付款中',
