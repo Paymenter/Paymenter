@@ -21,9 +21,9 @@ return [
     'cancel_immediate_warning' => 'Lorsque vous appuyez sur le bouton ci-dessous, le service sera annulé immédiatement et vous ne pourrez plus l\'utiliser.',
     'cancellation_requested' => 'Annulation demandée',
 
-    'current_plan' => 'Abonnement actuel',
-    'new_plan' => 'Nouvel abonnement',
-    'change_plan' => 'Changer d\'abonnement',
+    'current_plan' => 'Offre actuelle',
+    'new_plan' => 'Nouvelle offre',
+    'change_plan' => 'Changer d\'offre',
     'current_price' => 'Prix actuel',
     'new_price' => 'Nouveau prix',
     'upgrade' => 'Mettre à niveau',
