@@ -29,7 +29,6 @@ class InvoiceNumberTest extends TestCase
         // Config should be set to 1001
         $this->assertEquals(1001, config('settings.invoice_number'));
 
-
         // Do it once more for good measure
         $invoice2 = new Invoice;
         $invoice2->user_id = $user->id;
