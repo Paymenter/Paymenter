@@ -2,7 +2,6 @@
 
 namespace Paymenter\Extensions\Gateways\Stripe;
 
-use Exception;
 use App\Classes\Extension\Gateway;
 use App\Events\Service\Updated;
 use App\Events\ServiceCancellation\Created;
@@ -11,6 +10,7 @@ use App\Models\Gateway as ModelsGateway;
 use App\Models\Invoice;
 use App\Models\Service;
 use Carbon\Carbon;
+use Exception;
 use Filament\Notifications\Notification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Event;
@@ -478,6 +478,7 @@ class Stripe extends Gateway
         $service->update(['subscription_id' => null]);
         // Remove has_stripe_subscription property
         $service->properties()->where('key', 'has_stripe_subscription')->delete();
+
         return true;
     }
 
