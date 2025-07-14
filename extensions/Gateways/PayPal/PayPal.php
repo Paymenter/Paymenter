@@ -2,8 +2,10 @@
 
 namespace Paymenter\Extensions\Gateways\PayPal;
 
+use Exception;
 use App\Classes\Extension\Gateway;
 use App\Events\Service\Updated;
+use App\Events\ServiceCancellation\Created;
 use App\Helpers\ExtensionHelper;
 use App\Models\Invoice;
 use App\Models\InvoiceItem;
@@ -28,14 +30,26 @@ class PayPal extends Gateway
             if ($event->service->isDirty('price')) {
                 try {
                     $this->updateSubscription($event->service);
-                } catch (\Exception $e) {
+                } catch (Exception $e) {
                 }
             }
             if ($event->service->isDirty('status') && $event->service->status === Service::STATUS_CANCELLED) {
                 try {
                     $this->cancelSubscription($event->service);
-                } catch (\Exception $e) {
+                } catch (Exception $e) {
                 }
+            }
+        });
+
+        Event::listen(Created::class, function (Created $event) {
+            $service = $event->cancellation->service;
+            if ($service->properties->where('key', 'has_paypal_subscription')->first()?->value !== '1') {
+                return;
+            }
+            try {
+                $this->cancelSubscription($service);
+            } catch (Exception $e) {
+                // Log the error or handle it as needed
             }
         });
     }
@@ -94,7 +108,7 @@ class PayPal extends Gateway
             ]);
 
             if ($result->failed()) {
-                throw new \Exception('Failed to generate access token: ' . $result->body());
+                throw new Exception('Failed to generate access token: ' . $result->body());
             }
 
             return $result->json()['access_token'];
@@ -116,7 +130,7 @@ class PayPal extends Gateway
             return $item->reference_type === Service::class;
         })->count() == $invoice->items->count();
 
-        if ($this->config('paypal_use_subscriptions') && $eligableforSubscription && $invoice->items->map(fn ($item) => $item->reference->plan->billing_period . $item->reference->plan->billing_unit)->unique()->count() === 1) {
+        if ($this->config('paypal_use_subscriptions') && $eligableforSubscription && $invoice->items->map(fn($item) => $item->reference->plan->billing_period . $item->reference->plan->billing_unit)->unique()->count() === 1) {
             $paypalProduct = $this->request('post', $url . '/v1/catalogs/products', [
                 'name' => $invoice->items->first()->reference->product->name,
                 'type' => 'SERVICE',
@@ -139,7 +153,7 @@ class PayPal extends Gateway
                 ],
             ];
 
-            $nextSum = $invoice->items->sum(fn ($item) => $item->reference->price * $item->reference->quantity);
+            $nextSum = $invoice->items->sum(fn($item) => $item->reference->price * $item->reference->quantity);
 
             $billingCycles[] = [
                 'frequency' => [
@@ -235,7 +249,7 @@ class PayPal extends Gateway
         $body = $request->json()->all();
 
         // Handle the subscription event
-        if ($body['event_type'] === 'BILLING.SUBSCRIPTION.CREATED' && isset($body['resource']['custom_id'])) {
+        if ($body['event_type'] === 'BILLING.SUBSCRIPTION.ACTIVATED' && isset($body['resource']['custom_id'])) {
             // Its activated so we can now add the subscription to the user (custom is the order id)
             Invoice::findOrFail($body['resource']['custom_id'])->items()->where('reference_type', Service::class)->each(function (InvoiceItem $item) use ($body) {
                 $service = $item->reference;
