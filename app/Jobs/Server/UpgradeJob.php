@@ -2,6 +2,7 @@
 
 namespace App\Jobs\Server;
 
+use Exception;
 use App\Helpers\ExtensionHelper;
 use App\Models\Service;
 use Illuminate\Bus\Queueable;
@@ -27,7 +28,7 @@ class UpgradeJob implements ShouldQueue
         // $data is the data that will be used to send the email, data is coming from the extension itself
         try {
             $data = ExtensionHelper::upgradeServer($this->service);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             if ($e->getMessage() == 'No server assigned to this product') {
                 return;
             }

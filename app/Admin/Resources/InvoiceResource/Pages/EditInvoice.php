@@ -2,6 +2,8 @@
 
 namespace App\Admin\Resources\InvoiceResource\Pages;
 
+use Filament\Actions\DeleteAction;
+use Filament\Actions\Action;
 use App\Admin\Resources\InvoiceResource;
 use App\Classes\PDF;
 use App\Models\Invoice;
@@ -15,8 +17,8 @@ class EditInvoice extends EditRecord
     protected function getHeaderActions(): array
     {
         return [
-            Actions\DeleteAction::make(),
-            Actions\Action::make('pdf')
+            DeleteAction::make(),
+            Action::make('pdf')
                 ->label('Download PDF')
                 ->action(function (Invoice $invoice) {
                     return response()->streamDownload(function () use ($invoice) {

@@ -2,6 +2,7 @@
 
 namespace App\Helpers;
 
+use App\Models\ServiceCancellation;
 use App\Classes\PDF;
 use App\Mail\Mail;
 use App\Models\EmailLog;
@@ -143,7 +144,7 @@ class NotificationHelper
         self::sendEmailNotification('password_reset', $data, $user);
     }
 
-    public static function serviceCancellationReceivedNotification(User $user, \App\Models\ServiceCancellation $cancellation, array $data = []): void
+    public static function serviceCancellationReceivedNotification(User $user, ServiceCancellation $cancellation, array $data = []): void
     {
         $data['cancellation'] = $cancellation;
         $data['service'] = $cancellation->service;

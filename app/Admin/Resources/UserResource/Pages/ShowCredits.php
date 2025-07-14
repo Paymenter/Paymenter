@@ -2,11 +2,17 @@
 
 namespace App\Admin\Resources\UserResource\Pages;
 
+use Filament\Schemas\Schema;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TextInput;
+use Filament\Schemas\Components\Utilities\Get;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Columns\TextInputColumn;
+use Filament\Actions\CreateAction;
+use Filament\Actions\DeleteAction;
 use App\Admin\Resources\UserResource;
 use App\Models\Currency;
 use Filament\Forms;
-use Filament\Forms\Form;
-use Filament\Forms\Get;
 use Filament\Resources\Pages\ManageRelatedRecords;
 use Filament\Support\RawJs;
 use Filament\Tables;
@@ -18,18 +24,18 @@ class ShowCredits extends ManageRelatedRecords
 
     protected static string $relationship = 'credits';
 
-    protected static ?string $navigationIcon = 'ri-bill-line';
+    protected static string | \BackedEnum | null $navigationIcon = 'ri-bill-line';
 
     public static function getNavigationLabel(): string
     {
         return 'Credits';
     }
 
-    public function form(Form $form): Form
+    public function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
-                Forms\Components\Select::make('currency_code')
+        return $schema
+            ->components([
+                Select::make('currency_code')
                     ->options(function () {
                         $existing_currencies = $this->getOwnerRecord()->credits->pluck('currency_code');
 
@@ -37,7 +43,7 @@ class ShowCredits extends ManageRelatedRecords
                     })
                     ->live()
                     ->required(),
-                Forms\Components\TextInput::make('amount')
+                TextInput::make('amount')
                     ->required()
                     ->label('Amount')
                     // Suffix based on chosen currency
@@ -60,20 +66,20 @@ class ShowCredits extends ManageRelatedRecords
         return $table
             ->recordTitleAttribute('currency.code')
             ->columns([
-                Tables\Columns\TextColumn::make('currency.code'),
-                Tables\Columns\TextColumn::make('formattedAmount')->label('Formatted Amount'),
-                Tables\Columns\TextInputColumn::make('amount')->label('Amount'),
+                TextColumn::make('currency.code'),
+                TextColumn::make('formattedAmount')->label('Formatted Amount'),
+                TextInputColumn::make('amount')->label('Amount'),
             ])
             ->filters([])
             ->headerActions([
-                Tables\Actions\CreateAction::make()->disabled(function () {
+                CreateAction::make()->disabled(function () {
                     $existing_currencies = $this->getOwnerRecord()->credits->pluck('currency_code');
 
                     return count(Currency::whereNotIn('code', $existing_currencies)->pluck('code', 'code')) <= 0;
                 }),
             ])
-            ->actions([
-                Tables\Actions\DeleteAction::make(),
+            ->recordActions([
+                DeleteAction::make(),
             ]);
     }
 }

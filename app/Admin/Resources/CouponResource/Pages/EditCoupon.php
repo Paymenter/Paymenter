@@ -2,6 +2,7 @@
 
 namespace App\Admin\Resources\CouponResource\Pages;
 
+use Filament\Actions\DeleteAction;
 use App\Admin\Resources\CouponResource;
 use Filament\Actions;
 use Filament\Resources\Pages\EditRecord;
@@ -13,7 +14,7 @@ class EditCoupon extends EditRecord
     protected function getHeaderActions(): array
     {
         return [
-            Actions\DeleteAction::make(),
+            DeleteAction::make(),
         ];
     }
 }

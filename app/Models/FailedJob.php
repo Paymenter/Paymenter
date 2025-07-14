@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Exception;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Artisan;
@@ -27,7 +28,7 @@ class FailedJob extends Model
     {
         try {
             Artisan::call('queue:retry', ['id' => $this->uuid]);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return $e->getMessage();
         }
 

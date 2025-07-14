@@ -54,20 +54,50 @@ class Extension
     }
 
     /**
-     * Get the meta data for the extension
-     * E.g. name, description, version
+     * Called when the extension is installed for the first time
+     * If the extension type is server or gateway, it will be called when the first server or gateway is created
      *
-     * @example return [
-     *     'name' => 'Paymenter',
-     *     'description' => 'Manage and optimize your hosting business with Paymenter',
-     * ]
-     *
-     * @link https://docs.paymenter.org
-     *
-     * @return array
+     * @return void
      */
-    public function getMetadata()
-    {
-        return [];
-    }
+    public function installed() {}
+
+    /**
+     * Called when the extension is uninstalled
+     * If the extension type is server or gateway, it will be called when the last server or gateway is deleted
+     *
+     * @return void
+     */
+    public function uninstalled() {}
+
+    /**
+     * Called when the extension is updated
+     * This is called when the extension is updated to a new version
+     * 
+     * @param  string  $oldVersion  The old version of the extension
+     * @return void
+     */
+    public function upgraded($oldVersion) {}
+
+    /**
+     * Called every request to the extension (if the extension is enabled)
+     * 
+     * @return void
+     */
+    public function boot() {}
+
+    /**
+     * Called when the extension is enabled
+     * If the extension type is server or gateway, it will be called every time a server or gateway is created
+     * 
+     * @return void
+     */
+    public function enabled() {}
+
+    /**
+     * Called when the extension is disabled
+     * If the extension type is server or gateway, it will be called every time a server or gateway is deleted
+     *
+     * @return void
+     */
+    public function disabled() {}
 }

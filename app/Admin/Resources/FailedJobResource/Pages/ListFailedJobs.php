@@ -2,9 +2,11 @@
 
 namespace App\Admin\Resources\FailedJobResource\Pages;
 
+use Filament\Actions\CreateAction;
+use Carbon\Carbon;
+use Filament\Actions\Action;
 use App\Admin\Resources\FailedJobResource;
 use Filament\Actions;
-use Filament\Notifications\Actions\Action;
 use Filament\Notifications\Notification;
 use Filament\Resources\Pages\ListRecords;
 use Illuminate\Support\Facades\DB;
@@ -16,7 +18,7 @@ class ListFailedJobs extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
-            Actions\CreateAction::make(),
+            CreateAction::make(),
         ];
     }
 
@@ -26,8 +28,8 @@ class ListFailedJobs extends ListRecords
         // Check if first job its available_at is at least 5 minutes ago
         if (DB::table('jobs')->count() > 0) {
             $firstJob = DB::table('jobs')->orderBy('available_at', 'asc')->first();
-            $firstJobAvailableAt = \Carbon\Carbon::parse($firstJob->available_at);
-            $now = \Carbon\Carbon::now();
+            $firstJobAvailableAt = Carbon::parse($firstJob->available_at);
+            $now = Carbon::now();
             $diffInMinutes = $firstJobAvailableAt->diffInMinutes($now);
             if ($diffInMinutes > 5) {
                 Notification::make()

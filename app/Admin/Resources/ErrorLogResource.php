@@ -2,10 +2,17 @@
 
 namespace App\Admin\Resources;
 
+use Illuminate\Database\Eloquent\Builder;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Actions\ViewAction;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteBulkAction;
+use Filament\Schemas\Schema;
+use Filament\Infolists\Components\TextEntry;
+use App\Admin\Resources\ErrorLogResource\Pages\ListErrorLogs;
 use App\Admin\Resources\ErrorLogResource\Pages;
 use App\Models\DebugLog;
 use Filament\Infolists;
-use Filament\Infolists\Infolist;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -14,14 +21,14 @@ class ErrorLogResource extends Resource
 {
     protected static ?string $model = DebugLog::class;
 
-    protected static ?string $navigationIcon = 'ri-bug-line';
+    protected static string | \BackedEnum | null $navigationIcon = 'ri-bug-line';
 
     protected static ?string $modelLabel = 'Error log';
 
-    public static ?string $navigationGroup = 'Debug';
+    public static string | \UnitEnum | null $navigationGroup = 'Debug';
 
     // Edit query to only include with type 'http'
-    public static function getEloquentQuery(): \Illuminate\Database\Eloquent\Builder
+    public static function getEloquentQuery(): Builder
     {
         return parent::getEloquentQuery()->where('type', 'exception');
     }
@@ -30,32 +37,32 @@ class ErrorLogResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('message')
+                TextColumn::make('message')
                     ->state(function (DebugLog $record) {
                         return $record->context['message'] ?? null;
                     })
                     ->toggleable(),
-                Tables\Columns\TextColumn::make('file')
+                TextColumn::make('file')
                     ->state(function (DebugLog $record) {
                         return $record->context['file'] ?? null;
                     })
                     ->toggleable(),
-                Tables\Columns\TextColumn::make('line')
+                TextColumn::make('line')
                     ->state(function (DebugLog $record) {
                         return $record->context['line'] ?? null;
                     })
                     ->toggleable(),
-                Tables\Columns\TextColumn::make('created_at')
+                TextColumn::make('created_at')
                     ->searchable()
                     ->toggleable(isToggledHiddenByDefault: true)
                     ->sortable(),
             ])
-            ->actions([
-                Tables\Actions\ViewAction::make(),
+            ->recordActions([
+                ViewAction::make(),
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+            ->toolbarActions([
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
                 ]),
             ])
             ->defaultSort('created_at', 'desc');
@@ -66,25 +73,25 @@ class ErrorLogResource extends Resource
         return config('settings.debug', false);
     }
 
-    public static function infolist(Infolist $infolist): Infolist
+    public static function infolist(Schema $schema): Schema
     {
-        return $infolist
+        return $schema
             ->columns(1)
-            ->schema([
-                Infolists\Components\TextEntry::make('message')
+            ->components([
+                TextEntry::make('message')
                     ->state(function (DebugLog $record) {
                         return $record->context['message'] ?? null;
                     }),
-                Infolists\Components\TextEntry::make('file')
+                TextEntry::make('file')
                     ->state(function (DebugLog $record) {
                         return $record->context['file'] ?? null;
                     }),
-                Infolists\Components\TextEntry::make('line')
+                TextEntry::make('line')
                     ->state(function (DebugLog $record) {
                         return $record->context['line'] ?? null;
                     }),
 
-                Infolists\Components\TextEntry::make('trace')
+                TextEntry::make('trace')
                     ->label('Trace')
                     ->state(function (DebugLog $record) {
                         return $record->context['trace'] ?? null;
@@ -95,7 +102,7 @@ class ErrorLogResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListErrorLogs::route('/'),
+            'index' => ListErrorLogs::route('/'),
         ];
     }
 }

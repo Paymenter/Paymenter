@@ -2,6 +2,7 @@
 
 namespace App\Events\Setting;
 
+use Throwable;
 use App\Models\Setting;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Foundation\Events\Dispatchable;
@@ -20,7 +21,7 @@ class Retrieved
         if ($setting->encrypted && $setting->value) {
             try {
                 $setting->value = Crypt::decryptString($setting->value);
-            } catch (\Throwable $th) {
+            } catch (Throwable $th) {
                 // Normal `throw new Exception($th)` wasn't working here, so we are using dump-and-die for now.
                 dd($th, $setting->value);
             }

@@ -19,7 +19,7 @@
         "andreiio/blade-remix-icon": "^3.6.0",
         "barryvdh/laravel-dompdf": "^3.0",
         "endroid/qr-code": "^5.0",
-        "filament/filament": "^3.2",
+        "filament/filament": "*",
         "flowframe/laravel-trend": "^0.4.0",
         "laravel/framework": "^12.0",
         "laravel/passport": "^12.0",
@@ -93,6 +93,12 @@
             "php-http/discovery": true
         }
     },
-    "minimum-stability": "stable",
+        "repositories": [
+        {
+            "type": "path",
+            "url": "filament/packages/*"
+        }
+    ],
+    "minimum-stability": "dev",
     "prefer-stable": true
 }

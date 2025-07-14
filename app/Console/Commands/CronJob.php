@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use Exception;
 use App\Jobs\Server\SuspendJob;
 use App\Jobs\Server\TerminateJob;
 use App\Models\EmailLog;
@@ -72,7 +73,7 @@ class CronJob extends Command
                     'quantity' => $service->quantity,
                     'description' => $service->description,
                 ]);
-            } catch (\Exception $e) {
+            } catch (Exception $e) {
                 DB::rollBack();
                 $this->error('Error creating invoice for service ' . $service->id . ': ' . $e->getMessage());
 

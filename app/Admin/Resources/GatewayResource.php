@@ -2,15 +2,23 @@
 
 namespace App\Admin\Resources;
 
+use Filament\Schemas\Schema;
+use Filament\Forms\Components\TextInput;
+use Filament\Schemas\Components\Section;
+use Filament\Schemas\Components\Grid;
+use Filament\Schemas\Components\Utilities\Get;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Actions\EditAction;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteBulkAction;
+use App\Admin\Resources\GatewayResource\Pages\ListGateways;
+use App\Admin\Resources\GatewayResource\Pages\CreateGateway;
+use App\Admin\Resources\GatewayResource\Pages\EditGateway;
 use App\Admin\Resources\GatewayResource\Pages;
 use App\Helpers\ExtensionHelper;
 use App\Models\Gateway;
 use Filament\Forms;
-use Filament\Forms\Components\Grid;
-use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
-use Filament\Forms\Form;
-use Filament\Forms\Get;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -21,11 +29,11 @@ class GatewayResource extends Resource
 {
     protected static ?string $model = Gateway::class;
 
-    protected static ?string $navigationGroup = 'Extensions';
+    protected static string | \UnitEnum | null $navigationGroup = 'Extensions';
 
-    protected static ?string $navigationIcon = 'ri-secure-payment-line';
+    protected static string | \BackedEnum | null $navigationIcon = 'ri-secure-payment-line';
 
-    protected static ?string $activeNavigationIcon = 'ri-secure-payment-fill';
+    protected static string | \BackedEnum | null $activeNavigationIcon = 'ri-secure-payment-fill';
 
     public static function getGloballySearchableAttributes(): array
     {
@@ -37,19 +45,19 @@ class GatewayResource extends Resource
         return $record->name;
     }
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        $gateways = \App\Helpers\ExtensionHelper::getExtensions('gateway');
+        $gateways = ExtensionHelper::getExtensions('gateway');
 
-        return $form
-            ->schema([
-                Forms\Components\TextInput::make('name')
+        return $schema
+            ->components([
+                TextInput::make('name')
                     ->label('Name')
                     ->required()
                     ->maxLength(255)
                     ->unique(static::getModel(), 'name', ignoreRecord: true)
                     ->placeholder('Enter the name of the gateway'),
-                Forms\Components\Select::make('extension')
+                Select::make('extension')
                     ->label('Gateway')
                     ->required()
                     ->searchable()
@@ -66,6 +74,7 @@ class GatewayResource extends Resource
                         ->fill())
                     ->placeholder('Select the type of the gateway'),
                 Section::make('Gateway Settings')
+                    ->columnSpanFull()
                     ->description('Specific settings for the selected gateway')
                     ->schema([
                         Grid::make()->schema(fn (Get $get) => ExtensionHelper::getConfigAsInputs('gateway', $get('extension'), $get('settings')))->key('settings'),
@@ -77,17 +86,17 @@ class GatewayResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('name')->searchable(),
+                TextColumn::make('name')->searchable(),
             ])
             ->filters([
                 //
             ])
-            ->actions([
-                Tables\Actions\EditAction::make(),
+            ->recordActions([
+                EditAction::make(),
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+            ->toolbarActions([
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
                 ]),
             ]);
     }
@@ -102,9 +111,9 @@ class GatewayResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListGateways::route('/'),
-            'create' => Pages\CreateGateway::route('/create'),
-            'edit' => Pages\EditGateway::route('/{record}/edit'),
+            'index' => ListGateways::route('/'),
+            'create' => CreateGateway::route('/create'),
+            'edit' => EditGateway::route('/{record}/edit'),
         ];
     }
 }

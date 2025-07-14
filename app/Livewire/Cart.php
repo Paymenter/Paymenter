@@ -2,6 +2,7 @@
 
 namespace App\Livewire;
 
+use Exception;
 use App\Classes\Cart as ClassesCart;
 use App\Classes\Price;
 use App\Exceptions\DisplayException;
@@ -273,7 +274,7 @@ class Cart extends Component
             } else {
                 return $this->redirect(route('invoices.show', $invoice) . '?pay');
             }
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             // Rollback the transaction
             DB::rollBack();
             // Return error message

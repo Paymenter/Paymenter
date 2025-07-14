@@ -2,6 +2,8 @@
 
 namespace App\Admin\Resources\UserResource\Pages;
 
+use Filament\Tables\Columns\TextColumn;
+use Filament\Actions\ViewAction;
 use App\Admin\Resources\ServiceResource;
 use App\Admin\Resources\UserResource;
 use Filament\Resources\Pages\ManageRelatedRecords;
@@ -14,7 +16,7 @@ class ShowServices extends ManageRelatedRecords
 
     protected static string $relationship = 'services';
 
-    protected static ?string $navigationIcon = 'heroicon-o-shopping-cart';
+    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-shopping-cart';
 
     public static function getNavigationLabel(): string
     {
@@ -26,15 +28,15 @@ class ShowServices extends ManageRelatedRecords
         return $table
             ->recordTitleAttribute('product.name')
             ->columns([
-                Tables\Columns\TextColumn::make('product.name'),
-                Tables\Columns\TextColumn::make('quantity'),
-                Tables\Columns\TextColumn::make('formattedPrice')->label('Price'),
+                TextColumn::make('product.name'),
+                TextColumn::make('quantity'),
+                TextColumn::make('formattedPrice')->label('Price'),
             ])
             ->filters([
                 //
             ])
-            ->actions([
-                Tables\Actions\ViewAction::make()->url(fn ($record) => ServiceResource::getUrl('edit', ['record' => $record])),
+            ->recordActions([
+                ViewAction::make()->url(fn ($record) => ServiceResource::getUrl('edit', ['record' => $record])),
             ]);
     }
 }

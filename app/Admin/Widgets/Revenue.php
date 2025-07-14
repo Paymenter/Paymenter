@@ -12,11 +12,11 @@ use Flowframe\Trend\TrendValue;
 
 class Revenue extends ChartWidget
 {
-    protected static ?string $heading = 'Revenue';
+    protected ?string $heading = 'Revenue';
 
     public ?string $filter = 'week';
 
-    protected static ?string $pollingInterval = null;
+    protected ?string $pollingInterval = null;
 
     protected function getFilters(): ?array
     {

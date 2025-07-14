@@ -2,6 +2,10 @@
 
 namespace App\Admin\Resources\OrderResource\RelationManagers;
 
+use Filament\Tables\Columns\TextColumn;
+use Filament\Actions\ViewAction;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteBulkAction;
 use App\Admin\Resources\ServiceResource;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables;
@@ -21,19 +25,19 @@ class ServiceRelationManager extends RelationManager
         return $table
             ->recordTitleAttribute('product.name')
             ->columns([
-                Tables\Columns\TextColumn::make('product.name'),
-                Tables\Columns\TextColumn::make('quantity'),
-                Tables\Columns\TextColumn::make('formattedPrice')->label('Price'),
+                TextColumn::make('product.name'),
+                TextColumn::make('quantity'),
+                TextColumn::make('formattedPrice')->label('Price'),
             ])
             ->filters([
                 //
             ])
-            ->actions([
-                Tables\Actions\ViewAction::make()->url(fn ($record) => ServiceResource::getUrl('edit', ['record' => $record])),
+            ->recordActions([
+                ViewAction::make()->url(fn ($record) => ServiceResource::getUrl('edit', ['record' => $record])),
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+            ->toolbarActions([
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
                 ]),
             ]);
     }

@@ -2,10 +2,11 @@
 
 namespace App\Admin\Resources\TicketResource\Pages;
 
+use Filament\Actions\CreateAction;
+use Filament\Schemas\Components\Tabs\Tab;
 use App\Admin\Resources\TicketResource;
 use App\Admin\Resources\TicketResource\Widgets\TicketsOverView;
 use Filament\Actions;
-use Filament\Resources\Components\Tab;
 use Filament\Resources\Pages\ListRecords;
 use Illuminate\Database\Eloquent\Builder;
 
@@ -16,7 +17,7 @@ class ListTickets extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
-            Actions\CreateAction::make(),
+            CreateAction::make(),
         ];
     }
 

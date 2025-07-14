@@ -2,6 +2,11 @@
 
 namespace App\Providers;
 
+use Livewire\Livewire;
+use Illuminate\Support\Facades\Route;
+use SocialiteProviders\Manager\SocialiteWasCalled;
+use SocialiteProviders\Discord\Provider;
+use Exception;
 use App\Classes\Synths\PriceSynth;
 use App\Helpers\ExtensionHelper;
 use App\Models\EmailLog;
@@ -38,17 +43,17 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         // Change livewire url
-        \Livewire\Livewire::setUpdateRoute(function ($handle) {
-            return \Illuminate\Support\Facades\Route::post('/paymenter/update', $handle)->middleware('web')->name('paymenter.');
+        Livewire::setUpdateRoute(function ($handle) {
+            return Route::post('/paymenter/update', $handle)->middleware('web')->name('paymenter.');
         });
-        \Livewire\Livewire::propertySynthesizer(PriceSynth::class);
+        Livewire::propertySynthesizer(PriceSynth::class);
 
         Gate::define('has-permission', function (User $user, string $ability) {
             return $user->hasPermission($ability);
         });
 
-        Event::listen(function (\SocialiteProviders\Manager\SocialiteWasCalled $event) {
-            $event->extendSocialite('discord', \SocialiteProviders\Discord\Provider::class);
+        Event::listen(function (SocialiteWasCalled $event) {
+            $event->extendSocialite('discord', Provider::class);
         });
 
         try {
@@ -59,7 +64,7 @@ class AppServiceProvider extends ServiceProvider
             ) {
                 ExtensionHelper::call($extension, 'boot', mayFail: true);
             }
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             // Fail silently
         }
 

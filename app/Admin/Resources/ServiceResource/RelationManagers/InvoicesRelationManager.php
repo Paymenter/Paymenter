@@ -2,11 +2,14 @@
 
 namespace App\Admin\Resources\ServiceResource\RelationManagers;
 
+use Filament\Schemas\Schema;
+use Filament\Forms\Components\TextInput;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Actions\ViewAction;
 use App\Admin\Resources\InvoiceResource;
 use App\Models\Invoice;
 use App\Models\InvoiceItem;
 use Filament\Forms;
-use Filament\Forms\Form;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -30,11 +33,11 @@ class InvoicesRelationManager extends RelationManager
             })->pluck('invoice_id'));
     }
 
-    public function form(Form $form): Form
+    public function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
-                Forms\Components\TextInput::make('id')
+        return $schema
+            ->components([
+                TextInput::make('id')
                     ->required()
                     ->maxLength(255),
 
@@ -46,9 +49,9 @@ class InvoicesRelationManager extends RelationManager
         return $table
             ->recordTitleAttribute('id')
             ->columns([
-                Tables\Columns\TextColumn::make('id')->sortable(),
-                Tables\Columns\TextColumn::make('formattedTotal')->label('Total'),
-                Tables\Columns\TextColumn::make('status')
+                TextColumn::make('id')->sortable(),
+                TextColumn::make('formattedTotal')->label('Total'),
+                TextColumn::make('status')
                     ->label('Status')
                     // Make first letter uppercase
                     ->formatStateUsing(fn (string $state): string => ucfirst($state))
@@ -63,8 +66,8 @@ class InvoicesRelationManager extends RelationManager
                 //
             ])
             ->headerActions([])
-            ->actions([
-                Tables\Actions\ViewAction::make()->url(fn ($record) => InvoiceResource::getUrl('edit', ['record' => $record])),
+            ->recordActions([
+                ViewAction::make()->url(fn ($record) => InvoiceResource::getUrl('edit', ['record' => $record])),
             ])
             ->defaultSort('invoices.id', 'desc');
     }

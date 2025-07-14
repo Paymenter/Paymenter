@@ -2,8 +2,8 @@
 
 namespace App\Admin\Actions;
 
+use Filament\Support\Enums\Width;
 use Filament\Actions\Action;
-use Filament\Support\Enums\MaxWidth;
 use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Model;
 
@@ -37,7 +37,7 @@ class AuditAction extends Action
                 ['record' => $record, 'children' => $this->auditChildren]
             ))
             ->modalHeading('test')
-            ->modalWidth(MaxWidth::Large)
+            ->modalWidth(Width::Large)
             ->modalSubmitAction(false)
             ->modalCancelAction(false);
     }

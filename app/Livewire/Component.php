@@ -2,11 +2,13 @@
 
 namespace App\Livewire;
 
+use App\Livewire\Traits\Disabled;
+use App\Livewire\Traits\HasNotifications;
 use App\Exceptions\DisplayException;
 
 class Component extends \Livewire\Component
 {
-    use Traits\Disabled, Traits\HasNotifications;
+    use Disabled, HasNotifications;
 
     public function paginationView()
     {

@@ -2,6 +2,7 @@
 
 namespace Paymenter\Extensions\Gateways\Stripe;
 
+use Exception;
 use App\Classes\Extension\Gateway;
 use App\Events\Service\Updated;
 use App\Events\ServiceCancellation\Created;

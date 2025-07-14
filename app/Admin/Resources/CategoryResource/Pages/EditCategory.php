@@ -2,6 +2,7 @@
 
 namespace App\Admin\Resources\CategoryResource\Pages;
 
+use Filament\Actions\DeleteAction;
 use App\Admin\Resources\CategoryResource;
 use Filament\Actions;
 use Filament\Notifications\Notification;
@@ -14,7 +15,7 @@ class EditCategory extends EditRecord
     protected function getHeaderActions(): array
     {
         return [
-            Actions\DeleteAction::make()->before(function (Actions\DeleteAction $action) {
+            DeleteAction::make()->before(function (DeleteAction $action) {
                 if ($this->record->products()->exists() || $this->record->children()->exists()) {
                     Notification::make()
                         ->title('Cannot delete category')

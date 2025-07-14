@@ -2,6 +2,10 @@
 
 namespace App\Helpers;
 
+use App\Attributes\ExtensionMeta;
+use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Model;
 use App\Classes\FilamentInput;
 use App\Models\Extension;
 use App\Models\Gateway;
@@ -12,6 +16,7 @@ use App\Models\Service;
 use Exception;
 use Filament\Forms\Components\Placeholder;
 use Illuminate\Support\Facades\Cache;
+use ReflectionClass;
 
 class ExtensionHelper
 {
@@ -150,9 +155,13 @@ class ExtensionHelper
                 continue;
             }
 
+            $reflection = new ReflectionClass($class);
+            $attributes = $reflection->getAttributes(ExtensionMeta::class);
+
             $extensions[] = [
                 'name' => $name,
                 'type' => $type,
+                'meta' => $attributes ? $attributes[0]->newInstance() : null,
             ];
         }
 
@@ -173,15 +182,29 @@ class ExtensionHelper
 
                 // Check if the class exists
                 if (class_exists('\\Paymenter\\Extensions\\' . ucfirst($type) . 's\\' . $name . '\\' . $name)) {
+                    $reflection = new ReflectionClass('\\Paymenter\\Extensions\\' . ucfirst($type) . 's\\' . $name . '\\' . $name);
+                    $attributes = $reflection->getAttributes(ExtensionMeta::class);
+
                     $extensions[] = [
                         'name' => $name,
                         'type' => $type,
+                        'meta' => $attributes ? $attributes[0]->newInstance() : null,
                     ];
                 }
             }
         }
 
         return $extensions;
+    }
+
+    public static function getInstallableExtensions()
+    {
+        $extensions = self::getExtensions('other');
+
+        // Filter out already installed extensions
+        $installedExtensions = Extension::all()->pluck('extension')->toArray();
+
+        return array_filter($extensions, fn ($extension) => !in_array($extension['name'], $installedExtensions));
     }
 
     public static function call($extension, $function, $args = [], $mayFail = false)
@@ -233,7 +256,7 @@ class ExtensionHelper
                 $config['name'] = 'settings.' . $config['name'];
                 $settings[] = FilamentInput::convert($config);
             }
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $settings[] = Placeholder::make('error')->content($e->getMessage());
             // Handle exception
         }
@@ -261,34 +284,12 @@ class ExtensionHelper
             return $values;
         }
 
-        if ($values instanceof \Livewire\Features\SupportFileUploads\TemporaryUploadedFile) {
+        if ($values instanceof TemporaryUploadedFile) {
             // Store the file and use the path, or just use the filename if already stored
             return $values->getRealPath() ?: (string) $values;
         }
 
         return $values;
-    }
-
-    /**
-     * Get available settings
-     *
-     * @return array
-     */
-    public static function getProductConfigOnce($server, $values = [])
-    {
-        static $config = [];
-
-        $config = Cache::get('product_config', []);
-
-        $key = $server->extension . $server->id . md5(serialize(self::prepareForSerialization($values)));
-
-        if (!isset($config[$key])) {
-            $config[$key] = self::getProductConfig($server, $values);
-        }
-
-        Cache::put('product_config', $config, 60);
-
-        return $config[$key];
     }
 
     /**
@@ -301,12 +302,12 @@ class ExtensionHelper
     {
         $settingsArray = [];
 
-        if ($settings instanceof \Illuminate\Database\Eloquent\Collection) {
+        if ($settings instanceof Collection) {
             // If $settings is a collection of models
             foreach ($settings as $setting) {
                 $settingsArray[$setting->key] = $setting->value;
             }
-        } elseif ($settings instanceof \Illuminate\Database\Eloquent\Model) {
+        } elseif ($settings instanceof Model) {
             // If $settings is a single model
             $settingsArray[$settings->name] = $settings->value;
         }
