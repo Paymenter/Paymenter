@@ -2,7 +2,6 @@
 
 namespace Paymenter\Extensions\Gateways\PayPal;
 
-use Exception;
 use App\Classes\Extension\Gateway;
 use App\Events\Service\Updated;
 use App\Events\ServiceCancellation\Created;
@@ -10,6 +9,7 @@ use App\Helpers\ExtensionHelper;
 use App\Models\Invoice;
 use App\Models\InvoiceItem;
 use App\Models\Service;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Http;
@@ -130,7 +130,7 @@ class PayPal extends Gateway
             return $item->reference_type === Service::class;
         })->count() == $invoice->items->count();
 
-        if ($this->config('paypal_use_subscriptions') && $eligableforSubscription && $invoice->items->map(fn($item) => $item->reference->plan->billing_period . $item->reference->plan->billing_unit)->unique()->count() === 1) {
+        if ($this->config('paypal_use_subscriptions') && $eligableforSubscription && $invoice->items->map(fn ($item) => $item->reference->plan->billing_period . $item->reference->plan->billing_unit)->unique()->count() === 1) {
             $paypalProduct = $this->request('post', $url . '/v1/catalogs/products', [
                 'name' => $invoice->items->first()->reference->product->name,
                 'type' => 'SERVICE',
@@ -153,7 +153,7 @@ class PayPal extends Gateway
                 ],
             ];
 
-            $nextSum = $invoice->items->sum(fn($item) => $item->reference->price * $item->reference->quantity);
+            $nextSum = $invoice->items->sum(fn ($item) => $item->reference->price * $item->reference->quantity);
 
             $billingCycles[] = [
                 'frequency' => [
