@@ -2,8 +2,10 @@
 
 namespace Paymenter\Extensions\Gateways\Stripe;
 
+use Exception;
 use App\Classes\Extension\Gateway;
 use App\Events\Service\Updated;
+use App\Events\ServiceCancellation\Created;
 use App\Helpers\ExtensionHelper;
 use App\Models\Gateway as ModelsGateway;
 use App\Models\Invoice;
@@ -31,16 +33,29 @@ class Stripe extends Gateway
             if ($event->service->isDirty('price') || $event->service->isDirty('expires_at')) {
                 try {
                     $this->updateSubscription($event->service);
-                } catch (\Exception $e) {
+                } catch (Exception $e) {
                 }
             }
             // Check if the service is canceled
             if ($event->service->isDirty('status') && $event->service->status === Service::STATUS_CANCELLED) {
                 try {
                     $this->cancelSubscription($event->service);
-                } catch (\Exception $e) {
+                } catch (Exception $e) {
                     // Ignore exception
                 }
+            }
+        });
+
+        Event::listen(Created::class, function (Created $event) {
+            $service = $event->cancellation->service;
+            if ($service->properties->where('key', 'has_stripe_subscription')->first()?->value !== '1' || !$service->subscription_id) {
+                // If the service is not a stripe subscription, skip
+                return;
+            }
+            try {
+                $this->cancelSubscription($service);
+            } catch (Exception $e) {
+                // Ignore exception
             }
         });
     }
@@ -140,7 +155,7 @@ class Stripe extends Gateway
                     if ($customer->deleted) {
                         $customer = null;
                     }
-                } catch (\Exception $e) {
+                } catch (Exception $e) {
                     // Customer not found, create a new one
                 }
             }
@@ -253,7 +268,7 @@ class Stripe extends Gateway
         $stripeCustomerId = $user->properties->where('key', 'stripe_id')->first();
         // Create customer if not exists
         if (!$stripeCustomerId) {
-            throw new \Exception('Stripe customer not found', $user);
+            throw new Exception('Stripe customer not found', $user);
         } else {
             $customer = $this->request('get', '/customers/' . $stripeCustomerId->value);
         }
@@ -459,6 +474,10 @@ class Stripe extends Gateway
         }
         $this->request('delete', '/subscriptions/' . $service->subscription_id);
 
+        // Remove subscription id from service
+        $service->update(['subscription_id' => null]);
+        // Remove has_stripe_subscription property
+        $service->properties()->where('key', 'has_stripe_subscription')->delete();
         return true;
     }
 
