@@ -235,7 +235,7 @@ class PayPal extends Gateway
         $body = $request->json()->all();
 
         // Handle the subscription event
-        if ($body['event_type'] === 'BILLING.SUBSCRIPTION.ACTIVATED' && isset($body['resource']['custom_id'])) {
+        if ($body['event_type'] === 'BILLING.SUBSCRIPTION.CREATED' && isset($body['resource']['custom_id'])) {
             // Its activated so we can now add the subscription to the user (custom is the order id)
             Invoice::findOrFail($body['resource']['custom_id'])->items()->where('reference_type', Service::class)->each(function (InvoiceItem $item) use ($body) {
                 $service = $item->reference;
