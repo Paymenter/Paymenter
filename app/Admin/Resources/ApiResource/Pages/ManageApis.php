@@ -2,6 +2,7 @@
 
 namespace App\Admin\Resources\ApiResource\Pages;
 
+use Filament\Actions\CreateAction;
 use App\Admin\Resources\ApiResource;
 use Filament\Actions;
 use Filament\Notifications\Notification;
@@ -15,7 +16,7 @@ class ManageApis extends ManageRecords
     protected function getHeaderActions(): array
     {
         return [
-            Actions\CreateAction::make()->mutateFormDataUsing(function (array $data): array {
+            CreateAction::make()->mutateDataUsing(function (array $data): array {
                 $token = 'PAYM' . bin2hex(random_bytes(32));
                 $data['token'] = hash('sha256', $token);
                 $data['type'] = 'admin';

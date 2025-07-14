@@ -2,6 +2,7 @@
 
 namespace App\Admin\Resources\TicketMessageResource\Pages;
 
+use Filament\Actions\DeleteAction;
 use App\Admin\Resources\TicketMessageResource;
 use Filament\Actions;
 use Filament\Resources\Pages\EditRecord;
@@ -13,7 +14,7 @@ class EditTicketMessage extends EditRecord
     protected function getHeaderActions(): array
     {
         return [
-            Actions\DeleteAction::make(),
+            DeleteAction::make(),
         ];
     }
 }

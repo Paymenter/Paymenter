@@ -2,6 +2,7 @@
 
 namespace App\Admin\Resources\ProductResource\Pages;
 
+use Arr;
 use App\Admin\Resources\ProductResource;
 use App\Helpers\ExtensionHelper;
 use App\Models\Server;
@@ -14,7 +15,7 @@ class CreateProduct extends CreateRecord
 
     protected function handleRecordCreation(array $data): Model
     {
-        $record = static::getModel()::create(\Arr::except($data, ['settings']));
+        $record = static::getModel()::create(Arr::except($data, ['settings']));
 
         if (!isset($data['settings'])) {
             return $record;

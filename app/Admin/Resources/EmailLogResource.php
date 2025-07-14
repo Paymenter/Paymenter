@@ -2,12 +2,18 @@
 
 namespace App\Admin\Resources;
 
+use Filament\Schemas\Schema;
+use Filament\Infolists\Components\TextEntry;
+use Filament\Support\Enums\TextSize;
+use Filament\Schemas\Components\View;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Actions\ViewAction;
+use App\Admin\Resources\EmailLogResource\Pages\ListEmailLogs;
+use App\Admin\Resources\EmailLogResource\Pages\ViewEmailLog;
 use App\Admin\Resources\EmailLogResource\Pages;
 use App\Models\EmailLog;
 use Filament\Infolists;
 use Filament\Infolists\Components;
-use Filament\Infolists\Components\View;
-use Filament\Infolists\Infolist;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -17,28 +23,28 @@ class EmailLogResource extends Resource
 {
     protected static ?string $model = EmailLog::class;
 
-    protected static ?string $navigationIcon = 'ri-mail-send-line';
+    protected static string | \BackedEnum | null $navigationIcon = 'ri-mail-send-line';
 
-    protected static ?string $activeNavigationIcon = 'ri-mail-send-fill';
+    protected static string | \BackedEnum | null $activeNavigationIcon = 'ri-mail-send-fill';
 
-    protected static ?string $navigationGroup = 'Other';
+    protected static string | \UnitEnum | null $navigationGroup = 'Other';
 
-    public static function infolist(Infolist $infolist): Infolist
+    public static function infolist(Schema $schema): Schema
     {
-        return $infolist
-            ->schema([
-                Infolists\Components\TextEntry::make('subject')
-                    ->size(Components\TextEntry\TextEntrySize::Medium)
+        return $schema
+            ->components([
+                TextEntry::make('subject')
+                    ->size(TextSize::Medium)
                     ->label('Subject'),
-                Infolists\Components\TextEntry::make('to')
-                    ->size(Components\TextEntry\TextEntrySize::Medium)
+                TextEntry::make('to')
+                    ->size(TextSize::Medium)
                     ->label('To'),
-                Infolists\Components\TextEntry::make('sent_at')
-                    ->size(Components\TextEntry\TextEntrySize::Medium)
+                TextEntry::make('sent_at')
+                    ->size(TextSize::Medium)
                     ->date()
                     ->hidden(fn ($state) => $state === null)
                     ->label('Sent At'),
-                Infolists\Components\TextEntry::make('status')
+                TextEntry::make('status')
                     ->badge()
                     ->color(fn (EmailLog $record) => match ($record->status) {
                         'pending' => 'gray',
@@ -48,9 +54,9 @@ class EmailLogResource extends Resource
                     ->formatStateUsing(fn (string $state) => ucfirst($state))
                     ->label('Status'),
 
-                Infolists\Components\TextEntry::make('error')
+                TextEntry::make('error')
                     ->columnSpanFull()
-                    ->size(Components\TextEntry\TextEntrySize::Medium)
+                    ->size(TextSize::Medium)
                     ->hidden(fn ($state) => $state === null)
                     ->label('Error'),
                 View::make('admin.infolists.components.iframe')->columnSpanFull(),
@@ -61,14 +67,14 @@ class EmailLogResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('subject')
+                TextColumn::make('subject')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('to')
+                TextColumn::make('to')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('sent_at')
+                TextColumn::make('sent_at')
                     ->dateTime()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('status')
+                TextColumn::make('status')
                     ->badge()
                     ->color(fn (EmailLog $record) => match ($record->status) {
                         'pending' => 'gray',
@@ -85,8 +91,8 @@ class EmailLogResource extends Resource
             ->filters([
                 //
             ])
-            ->actions([
-                Tables\Actions\ViewAction::make(),
+            ->recordActions([
+                ViewAction::make(),
             ]);
     }
 
@@ -100,8 +106,8 @@ class EmailLogResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListEmailLogs::route('/'),
-            'view' => Pages\ViewEmailLog::route('/{record}'),
+            'index' => ListEmailLogs::route('/'),
+            'view' => ViewEmailLog::route('/{record}'),
         ];
     }
 }

@@ -2,16 +2,26 @@
 
 namespace App\Admin\Resources;
 
+use Filament\Schemas\Schema;
+use Filament\Forms\Components\TextInput;
+use Filament\Schemas\Components\Utilities\Get;
+use Filament\Schemas\Components\Utilities\Set;
+use Filament\Forms\Components\RichEditor;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\FileUpload;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Actions\EditAction;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteBulkAction;
+use App\Admin\Resources\CategoryResource\Pages\ListCategories;
+use App\Admin\Resources\CategoryResource\Pages\CreateCategory;
+use App\Admin\Resources\CategoryResource\Pages\EditCategory;
 use App\Admin\Resources\CategoryResource\Pages;
 use App\Models\Category;
 use Filament\Forms;
-use Filament\Forms\Form;
-use Filament\Forms\Get;
-use Filament\Forms\Set;
 use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
 use Filament\Tables;
-use Filament\Tables\Actions\DeleteBulkAction;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Str;
@@ -20,19 +30,19 @@ class CategoryResource extends Resource
 {
     protected static ?string $model = Category::class;
 
-    protected static ?string $navigationGroup = 'Administration';
+    protected static string | \UnitEnum | null $navigationGroup = 'Administration';
 
-    protected static ?string $navigationIcon = 'ri-folder-6-line';
+    protected static string | \BackedEnum | null $navigationIcon = 'ri-folder-6-line';
 
-    protected static ?string $activeNavigationIcon = 'ri-folder-6-fill';
+    protected static string | \BackedEnum | null $activeNavigationIcon = 'ri-folder-6-fill';
 
     protected static ?int $navigationSort = 1;
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
-                Forms\Components\TextInput::make('name')
+        return $schema
+            ->components([
+                TextInput::make('name')
                     ->required()
                     ->maxLength(255)
                     ->live(onBlur: true)
@@ -43,18 +53,18 @@ class CategoryResource extends Resource
 
                         $set('slug', Str::slug($state));
                     }),
-                Forms\Components\TextInput::make('slug')
+                TextInput::make('slug')
                     ->required(),
-                Forms\Components\RichEditor::make('description')
+                RichEditor::make('description')
                     ->required(),
-                Forms\Components\Select::make('parent_id')
+                Select::make('parent_id')
                     ->relationship('parent', 'name')
                     ->searchable()
                     ->preload()
                     ->label('Parent Category')
                     // Disallow having same category as it's own parent
                     ->disableOptionWhen(fn (string $value, ?Category $record): bool => $record && (int) $value === $record->id),
-                Forms\Components\FileUpload::make('image')->label('Image')->nullable()->acceptedFileTypes(['image/*'])->columnSpanFull(),
+                FileUpload::make('image')->label('Image')->nullable()->acceptedFileTypes(['image/*'])->columnSpanFull(),
             ])->columns(2);
     }
 
@@ -62,25 +72,25 @@ class CategoryResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('name')
+                TextColumn::make('name')
                     ->searchable()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('slug')
+                TextColumn::make('slug')
                     ->searchable()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('description')
+                TextColumn::make('description')
                     ->searchable()
                     ->sortable(),
             ])
             ->filters([
                 //
             ])
-            ->actions([
-                Tables\Actions\EditAction::make(),
+            ->recordActions([
+                EditAction::make(),
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make()->before(function (DeleteBulkAction $action) {
+            ->toolbarActions([
+                BulkActionGroup::make([
+                    DeleteBulkAction::make()->before(function (DeleteBulkAction $action) {
                         foreach ($action->getRecords() as $record) {
                             if ($record->products()->exists() || $record->children()->exists()) {
                                 Notification::make()
@@ -113,9 +123,9 @@ class CategoryResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListCategories::route('/'),
-            'create' => Pages\CreateCategory::route('/create'),
-            'edit' => Pages\EditCategory::route('/{record}/edit'),
+            'index' => ListCategories::route('/'),
+            'create' => CreateCategory::route('/create'),
+            'edit' => EditCategory::route('/{record}/edit'),
         ];
     }
 }

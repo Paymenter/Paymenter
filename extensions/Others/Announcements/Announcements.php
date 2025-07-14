@@ -2,6 +2,11 @@
 
 namespace Paymenter\Extensions\Others\Announcements;
 
+use Exception;
+use Livewire\Livewire;
+use Paymenter\Extensions\Others\Announcements\Livewire\Announcements\Index;
+use Paymenter\Extensions\Others\Announcements\Livewire\Announcements\Show;
+use Paymenter\Extensions\Others\Announcements\Livewire\Announcements\Widget;
 use App\Classes\Extension\Extension;
 use App\Livewire\Auth\Register;
 use Illuminate\Support\Facades\Artisan;
@@ -24,7 +29,7 @@ class Announcements extends Extension
                     'label' => new HtmlString('You can use this extension to display announcements on the client area. To create a new announcement, go to <a class="text-primary-600" href="' . AnnouncementResource::getUrl() . '">Announcements</a>.'),
                 ],
             ];
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return [
                 [
                     'name' => 'Notice',
@@ -48,9 +53,9 @@ class Announcements extends Extension
         View::addNamespace('announcements', __DIR__ . '/resources/views');
 
         // Register livewire
-        \Livewire\Livewire::component('announcements.index', \Paymenter\Extensions\Others\Announcements\Livewire\Announcements\Index::class);
-        \Livewire\Livewire::component('announcements.show', \Paymenter\Extensions\Others\Announcements\Livewire\Announcements\Show::class);
-        \Livewire\Livewire::component('announcements.widget', \Paymenter\Extensions\Others\Announcements\Livewire\Announcements\Widget::class);
+        Livewire::component('announcements.index', Index::class);
+        Livewire::component('announcements.show', Show::class);
+        Livewire::component('announcements.widget', Widget::class);
 
         Event::listen('navigation', function () {
             if (Announcement::where('is_active', true)->where('published_at', '<=', now())->count() == 0) {

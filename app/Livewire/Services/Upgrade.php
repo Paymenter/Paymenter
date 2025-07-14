@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Services;
 
+use App\Models\User;
 use App\Classes\Price;
 use App\Events\Invoice\Created as InvoiceCreated;
 use App\Jobs\Server\UpgradeJob;
@@ -204,7 +205,7 @@ class Upgrade extends Component
             }
 
             // Check if user has credits in this currency
-            /** @var \App\Models\User */
+            /** @var User */
             $user = Auth::user();
             $credit = $user->credits()->where('currency_code', $price->currency->code)->first();
 

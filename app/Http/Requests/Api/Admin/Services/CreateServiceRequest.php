@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Api\Admin\Services;
 
+use App\Models\Plan;
 use App\Http\Requests\Api\Admin\AdminApiRequest;
 use App\Models\Product;
 
@@ -18,7 +19,7 @@ class CreateServiceRequest extends AdminApiRequest
                 'exists:plans,id',
                 function ($attribute, $value, $fail) {
                     $productId = $this->input('product_id');
-                    if ($productId && !\App\Models\Plan::where('id', $value)->where('priceable_type', Product::class)->where('priceable_id', $productId)->exists()) {
+                    if ($productId && !Plan::where('id', $value)->where('priceable_type', Product::class)->where('priceable_id', $productId)->exists()) {
                         // Check if the plan belongs to the specified product
                         $fail('The selected plan does not belong to the specified product.');
                     }

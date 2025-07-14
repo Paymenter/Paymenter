@@ -2,6 +2,7 @@
 
 namespace Paymenter\Extensions\Gateways\Stripe;
 
+use Exception;
 use App\Classes\Extension\Gateway;
 use App\Events\Service\Updated;
 use App\Helpers\ExtensionHelper;
@@ -31,14 +32,14 @@ class Stripe extends Gateway
             if ($event->service->isDirty('price') || $event->service->isDirty('expires_at')) {
                 try {
                     $this->updateSubscription($event->service);
-                } catch (\Exception $e) {
+                } catch (Exception $e) {
                 }
             }
             // Check if the service is canceled
             if ($event->service->isDirty('status') && $event->service->status === Service::STATUS_CANCELLED) {
                 try {
                     $this->cancelSubscription($event->service);
-                } catch (\Exception $e) {
+                } catch (Exception $e) {
                     // Ignore exception
                 }
             }
@@ -140,7 +141,7 @@ class Stripe extends Gateway
                     if ($customer->deleted) {
                         $customer = null;
                     }
-                } catch (\Exception $e) {
+                } catch (Exception $e) {
                     // Customer not found, create a new one
                 }
             }
@@ -253,7 +254,7 @@ class Stripe extends Gateway
         $stripeCustomerId = $user->properties->where('key', 'stripe_id')->first();
         // Create customer if not exists
         if (!$stripeCustomerId) {
-            throw new \Exception('Stripe customer not found', $user);
+            throw new Exception('Stripe customer not found', $user);
         } else {
             $customer = $this->request('get', '/customers/' . $stripeCustomerId->value);
         }

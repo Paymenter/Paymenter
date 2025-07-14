@@ -2,10 +2,22 @@
 
 namespace Paymenter\Extensions\Others\Announcements\Admin\Resources;
 
+use Filament\Schemas\Schema;
+use Filament\Forms\Components\TextInput;
+use Filament\Schemas\Components\Utilities\Get;
+use Filament\Schemas\Components\Utilities\Set;
+use Filament\Forms\Components\DateTimePicker;
+use Filament\Forms\Components\Toggle;
+use Filament\Forms\Components\RichEditor;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Columns\IconColumn;
+use Filament\Actions\EditAction;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteBulkAction;
+use Paymenter\Extensions\Others\Announcements\Admin\Resources\AnnouncementResource\Pages\ListAnnouncements;
+use Paymenter\Extensions\Others\Announcements\Admin\Resources\AnnouncementResource\Pages\CreateAnnouncement;
+use Paymenter\Extensions\Others\Announcements\Admin\Resources\AnnouncementResource\Pages\EditAnnouncement;
 use Filament\Forms;
-use Filament\Forms\Form;
-use Filament\Forms\Get;
-use Filament\Forms\Set;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -17,17 +29,17 @@ class AnnouncementResource extends Resource
 {
     protected static ?string $model = Announcement::class;
 
-    protected static ?string $navigationIcon = 'ri-megaphone-line';
+    protected static string | \BackedEnum | null $navigationIcon = 'ri-megaphone-line';
 
-    protected static ?string $activeNavigationIcon = 'ri-megaphone-fill';
+    protected static string | \BackedEnum | null $activeNavigationIcon = 'ri-megaphone-fill';
 
-    protected static ?string $navigationGroup = 'Administration';
+    protected static string | \UnitEnum | null $navigationGroup = 'Administration';
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
-                Forms\Components\TextInput::make('title')
+        return $schema
+            ->components([
+                TextInput::make('title')
                     ->label('Title')
                     ->required()
                     ->maxLength(255)
@@ -40,24 +52,24 @@ class AnnouncementResource extends Resource
                         $set('slug', Str::slug($state));
                     })
                     ->placeholder('Enter the title of the announcement'),
-                Forms\Components\TextInput::make('slug')
+                TextInput::make('slug')
                     ->label('Slug')
                     ->required()
                     ->maxLength(255)
                     ->placeholder('Enter the slug of the announcement'),
-                Forms\Components\TextInput::make('description')
+                TextInput::make('description')
                     ->label('Description')
                     ->required()
                     ->maxLength(255)
                     ->placeholder('Short description to show on the announcement list'),
-                Forms\Components\DateTimePicker::make('published_at')
+                DateTimePicker::make('published_at')
                     ->label('Published At')
                     ->required()
                     ->placeholder('Enter the date and time when the announcement should be published'),
-                Forms\Components\Toggle::make('is_active')
+                Toggle::make('is_active')
                     ->label('Is Published')
                     ->default(false),
-                Forms\Components\RichEditor::make('content')
+                RichEditor::make('content')
                     ->columnSpanFull()
                     ->label('Content')
                     ->required()
@@ -69,14 +81,14 @@ class AnnouncementResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('title')
+                TextColumn::make('title')
                     ->searchable()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('published_at')
+                TextColumn::make('published_at')
                     ->searchable()
                     ->dateTime()
                     ->sortable(),
-                Tables\Columns\IconColumn::make('is_active')
+                IconColumn::make('is_active')
                     ->label('Published')
                     ->boolean()
                     ->sortable(),
@@ -84,12 +96,12 @@ class AnnouncementResource extends Resource
             ->filters([
                 //
             ])
-            ->actions([
-                Tables\Actions\EditAction::make(),
+            ->recordActions([
+                EditAction::make(),
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+            ->toolbarActions([
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
                 ]),
             ]);
     }
@@ -97,9 +109,9 @@ class AnnouncementResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListAnnouncements::route('/'),
-            'create' => Pages\CreateAnnouncement::route('/create'),
-            'edit' => Pages\EditAnnouncement::route('/{record}/edit'),
+            'index' => ListAnnouncements::route('/'),
+            'create' => CreateAnnouncement::route('/create'),
+            'edit' => EditAnnouncement::route('/{record}/edit'),
         ];
     }
 }

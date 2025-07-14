@@ -2,6 +2,23 @@
 
 namespace App\Admin\Resources;
 
+use Filament\Schemas\Schema;
+use Filament\Schemas\Components\Utilities\Set;
+use Filament\Schemas\Components\Utilities\Get;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\Repeater;
+use Filament\Forms\Components\Hidden;
+use Filament\Forms\Components\TextInput;
+use Filament\Schemas\Components\Component;
+use Filament\Actions\Action;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Actions\EditAction;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteBulkAction;
+use App\Admin\Resources\OrderResource\RelationManagers\ServiceRelationManager;
+use App\Admin\Resources\OrderResource\Pages\ListOrders;
+use App\Admin\Resources\OrderResource\Pages\CreateOrder;
+use App\Admin\Resources\OrderResource\Pages\EditOrder;
 use App\Admin\Components\UserComponent;
 use App\Admin\Resources\OrderResource\Pages;
 use App\Admin\Resources\OrderResource\RelationManagers;
@@ -10,11 +27,6 @@ use App\Models\Currency;
 use App\Models\Order;
 use App\Models\Product;
 use Filament\Forms;
-use Filament\Forms\Components\Actions\Action;
-use Filament\Forms\Components\Component;
-use Filament\Forms\Form;
-use Filament\Forms\Get;
-use Filament\Forms\Set;
 use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
 use Filament\Support\RawJs;
@@ -26,22 +38,22 @@ class OrderResource extends Resource
 {
     protected static ?string $model = Order::class;
 
-    protected static ?string $navigationIcon = 'ri-shopping-bag-4-line';
+    protected static string | \BackedEnum | null $navigationIcon = 'ri-shopping-bag-4-line';
 
-    protected static ?string $activeNavigationIcon = 'ri-shopping-bag-4-fill';
+    protected static string | \BackedEnum | null $activeNavigationIcon = 'ri-shopping-bag-4-fill';
 
-    public static ?string $navigationGroup = 'Administration';
+    public static string | \UnitEnum | null $navigationGroup = 'Administration';
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
+        return $schema
+            ->components([
                 UserComponent::make('user_id')
                     ->afterStateUpdated(function (Set $set, Get $get) {
                         // update all the services user_id
                         $set('services', collect($get('services'))->map(fn ($service) => array_merge($service, ['user_id' => $get('user_id')]))->toArray());
                     }),
-                Forms\Components\Select::make('currency_code')
+                Select::make('currency_code')
                     ->label('Currency')
                     ->required()
                     ->live()
@@ -52,17 +64,17 @@ class OrderResource extends Resource
                     ->relationship('currency', 'code')
                     ->helperText('Does not convert the price, only displays the currency symbol')
                     ->placeholder('Select the currency'),
-                Forms\Components\Repeater::make('services')
+                Repeater::make('services')
                     ->relationship('services')
                     ->label('Services')
                     ->columnSpanFull()
                     ->columns(2)
                     ->schema([
-                        Forms\Components\Hidden::make('user_id')
+                        Hidden::make('user_id')
                             ->default(fn (Get $get) => $get('../../user_id')),
-                        Forms\Components\Hidden::make('currency_code')
+                        Hidden::make('currency_code')
                             ->default(fn (Get $get) => $get('../../currency_code')),
-                        Forms\Components\Select::make('product_id')
+                        Select::make('product_id')
                             ->label('Product')
                             ->required()
                             ->options(Product::all()->pluck('name', 'id')->toArray())
@@ -70,7 +82,7 @@ class OrderResource extends Resource
                             ->live()
                             ->afterStateUpdated(fn (Set $set) => $set('plan_id', null))
                             ->placeholder('Select the product'),
-                        Forms\Components\Select::make('plan_id')
+                        Select::make('plan_id')
                             ->label('Plan')
                             ->required()
                             ->relationship('plan', 'name', fn (Builder $query, Get $get) => $query->where('priceable_type', Product::class)->where('priceable_id', $get('product_id')))
@@ -90,11 +102,11 @@ class OrderResource extends Resource
                                 $set('price', $plan->price);
                             })
                             ->placeholder('Select the plan'),
-                        Forms\Components\TextInput::make('quantity')
+                        TextInput::make('quantity')
                             ->label('Quantity')
                             ->required()
                             ->placeholder('Enter the quantity'),
-                        Forms\Components\TextInput::make('price')
+                        TextInput::make('price')
                             ->suffix(fn (Component $component, Get $get) => $component->getRecord()?->currency->suffix ?? Currency::where('code', $get('../../currency_code'))->first()?->suffix)
                             ->prefix(fn (Component $component, Get $get) => $component->getRecord()?->currency->prefix ?? Currency::where('code', $get('../../currency_code'))->first()?->prefix)
                             ->label('Price')
@@ -105,7 +117,7 @@ class OrderResource extends Resource
                                 JS
                             ))
                             ->placeholder('Enter the price'),
-                        Forms\Components\TextInput::make('subscription_id')
+                        TextInput::make('subscription_id')
                             ->label('Subscription ID')
                             ->nullable()
                             ->placeholder('Enter the subscription ID')
@@ -138,20 +150,20 @@ class OrderResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('id')
+                TextColumn::make('id')
                     ->label('ID')
                     ->searchable()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('user.name')
+                TextColumn::make('user.name')
                     ->label('User')
                     ->searchable(query: fn (Builder $query, $search) => $query->whereHas('user', fn (Builder $query) => $query->where('first_name', 'like', "%$search%")->orWhere('last_name', 'like', "%$search%"))),
-                Tables\Columns\TextColumn::make('currency.code')
+                TextColumn::make('currency.code')
                     ->label('Currency')
                     ->searchable()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('formattedTotal')
+                TextColumn::make('formattedTotal')
                     ->label('Total'),
-                Tables\Columns\TextColumn::make('updated_at')
+                TextColumn::make('updated_at')
                     ->label('Updated At')
                     ->searchable()
                     ->sortable(),
@@ -163,12 +175,12 @@ class OrderResource extends Resource
             ->filters([
                 //
             ])
-            ->actions([
-                Tables\Actions\EditAction::make(),
+            ->recordActions([
+                EditAction::make(),
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+            ->toolbarActions([
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
                 ]),
             ]);
     }
@@ -176,16 +188,16 @@ class OrderResource extends Resource
     public static function getRelations(): array
     {
         return [
-            RelationManagers\ServiceRelationManager::class,
+            ServiceRelationManager::class,
         ];
     }
 
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListOrders::route('/'),
-            'create' => Pages\CreateOrder::route('/create'),
-            'edit' => Pages\EditOrder::route('/{record}/edit'),
+            'index' => ListOrders::route('/'),
+            'create' => CreateOrder::route('/create'),
+            'edit' => EditOrder::route('/{record}/edit'),
         ];
     }
 }

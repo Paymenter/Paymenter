@@ -2,6 +2,7 @@
 
 namespace App\Classes;
 
+use Exception;
 use Filament\Forms\Components\Checkbox;
 use Filament\Forms\Components\ColorPicker;
 use Filament\Forms\Components\FileUpload;
@@ -215,7 +216,7 @@ class FilamentInput
                         return function ($attribute, $value, $fail) {
                             try {
                                 ColorFactory::fromString(trim($value));
-                            } catch (\Exception $e) {
+                            } catch (Exception $e) {
                                 $fail('The :attribute must be a valid color.');
                             }
                         };
@@ -223,7 +224,7 @@ class FilamentInput
                     ->afterStateUpdated(function ($state, callable $set) use ($setting, $mode) {
                         try {
                             $set($setting->name, preg_replace('/,\s*/', ', ', ColorFactory::fromString(trim($state))->{'to' . ucfirst($mode)}()->__toString()));
-                        } catch (\Exception $e) {
+                        } catch (Exception $e) {
                         }
                     });
                 $color->$mode();
@@ -278,7 +279,7 @@ class FilamentInput
                 break;
 
             default:
-                throw new \Exception("Unknown input type: {$setting->type}");
+                throw new Exception("Unknown input type: {$setting->type}");
         }
     }
 }

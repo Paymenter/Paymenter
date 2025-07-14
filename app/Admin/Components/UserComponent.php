@@ -2,13 +2,14 @@
 
 namespace App\Admin\Components;
 
+use Illuminate\Support\HtmlString;
 use App\Admin\Resources\UserResource;
 use App\Models\User;
 use Filament\Forms\Components\Select;
 
 class UserComponent extends Select
 {
-    public static function make(string $name): static
+    public static function make(?string $name = null): static
     {
         return parent::make($name)
             ->label('User')
@@ -22,7 +23,7 @@ class UserComponent extends Select
                 ->get()
                 ->mapWithKeys(fn ($user) => [$user->id => $user->name . ' (' . $user->email . ')'])
                 ->toArray())
-            ->hint(fn ($get) => $get('user_id') ? new \Illuminate\Support\HtmlString('<a href="' . UserResource::getUrl('edit', ['record' => $get('user_id')]) . '" target="_blank">Go to User</a>') : null)
+            ->hint(fn ($get) => $get('user_id') ? new HtmlString('<a href="' . UserResource::getUrl('edit', ['record' => $get('user_id')]) . '" target="_blank">Go to User</a>') : null)
             ->live()
             ->required();
     }

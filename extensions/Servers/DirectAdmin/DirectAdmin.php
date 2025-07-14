@@ -2,6 +2,7 @@
 
 namespace Paymenter\Extensions\Servers\DirectAdmin;
 
+use Exception;
 use App\Classes\Extension\Server;
 use App\Models\Service;
 use App\Rules\Domain;
@@ -85,7 +86,7 @@ class DirectAdmin extends Server
             $rpackages = array_map(function ($package) {
                 return ['label' => $package . ' (reseller)', 'value' => $package];
             }, $rpackages);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $rpackages = [];
         }
 
@@ -134,7 +135,7 @@ class DirectAdmin extends Server
             $this->request('/CMD_API_SHOW_USERS')->body();
 
             return true;
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return $e->getMessage();
         }
     }
@@ -158,7 +159,7 @@ class DirectAdmin extends Server
             $ip = $this->request('/CMD_API_SHOW_RESELLER_IPS', parse: true)[0] ?? null;
 
             if (!$ip) {
-                throw new \Exception('No IP address available for the server');
+                throw new Exception('No IP address available for the server');
             }
         }
 
@@ -176,7 +177,7 @@ class DirectAdmin extends Server
         ], parse: true);
 
         if ($response['error'] != '0') {
-            throw new \Exception('Error creating DirectAdmin account: ' . $response['text']);
+            throw new Exception('Error creating DirectAdmin account: ' . $response['text']);
         }
 
         $service->properties()->updateOrCreate([
@@ -211,7 +212,7 @@ class DirectAdmin extends Server
     public function suspendServer(Service $service, $settings, $properties)
     {
         if (!isset($properties['directadmin_username'])) {
-            throw new \Exception('Service has not been created');
+            throw new Exception('Service has not been created');
         }
 
         $response = $this->request('/CMD_API_SELECT_USERS', 'post', [
@@ -221,7 +222,7 @@ class DirectAdmin extends Server
         ], parse: true);
 
         if ($response['error'] != '0') {
-            throw new \Exception('Error suspending DirectAdmin account: ' . $response['text']);
+            throw new Exception('Error suspending DirectAdmin account: ' . $response['text']);
         }
 
         return true;
@@ -237,7 +238,7 @@ class DirectAdmin extends Server
     public function unsuspendServer(Service $service, $settings, $properties)
     {
         if (!isset($properties['directadmin_username'])) {
-            throw new \Exception('Service has not been created');
+            throw new Exception('Service has not been created');
         }
 
         $response = $this->request('/CMD_API_SELECT_USERS', 'post', [
@@ -247,7 +248,7 @@ class DirectAdmin extends Server
         ], parse: true);
 
         if ($response['error'] != '0') {
-            throw new \Exception('Error unsuspending DirectAdmin account: ' . $response['text']);
+            throw new Exception('Error unsuspending DirectAdmin account: ' . $response['text']);
         }
 
         return true;
@@ -263,7 +264,7 @@ class DirectAdmin extends Server
     public function terminateServer(Service $service, $settings, $properties)
     {
         if (!isset($properties['directadmin_username'])) {
-            throw new \Exception('Service has not been created');
+            throw new Exception('Service has not been created');
         }
 
         $response = $this->request('/CMD_API_SELECT_USERS', 'post', [
@@ -273,7 +274,7 @@ class DirectAdmin extends Server
         ], parse: true);
 
         if ($response['error'] != '0') {
-            throw new \Exception('Error terminating DirectAdmin account: ' . $response['text']);
+            throw new Exception('Error terminating DirectAdmin account: ' . $response['text']);
         }
 
         // Delete the properties
@@ -312,7 +313,7 @@ class DirectAdmin extends Server
         ], parse: true);
 
         if ($response['error'] != '0') {
-            throw new \Exception('Error creating DirectAdmin SSO link: ' . $response['text']);
+            throw new Exception('Error creating DirectAdmin SSO link: ' . $response['text']);
         }
 
         return $response['details'] ?? '';

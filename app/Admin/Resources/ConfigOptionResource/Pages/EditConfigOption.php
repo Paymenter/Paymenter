@@ -2,6 +2,7 @@
 
 namespace App\Admin\Resources\ConfigOptionResource\Pages;
 
+use Filament\Actions\DeleteAction;
 use App\Admin\Resources\ConfigOptionResource;
 use App\Models\ConfigOption;
 use Filament\Actions;
@@ -15,7 +16,7 @@ class EditConfigOption extends EditRecord
     {
         return [
             // Show warning when there are child config options
-            Actions\DeleteAction::make('Delete')
+            DeleteAction::make('Delete')
                 ->requiresConfirmation()
                 ->modalDescription(
                     fn (ConfigOption $record) => $record->children()->exists()

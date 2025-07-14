@@ -2,13 +2,16 @@
 
 namespace App\Livewire\Traits;
 
+use ReflectionClass;
+use App\Attributes\DisabledIf;
+
 trait Disabled
 {
     public function bootDisabled()
     {
         // Read class-level attributes
-        $reflection = new \ReflectionClass($this);
-        $attributes = $reflection->getAttributes(\App\Attributes\DisabledIf::class);
+        $reflection = new ReflectionClass($this);
+        $attributes = $reflection->getAttributes(DisabledIf::class);
 
         // Check if the DisabledIf attribute is present
         foreach ($attributes as $attribute) {

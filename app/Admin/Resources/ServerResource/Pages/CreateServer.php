@@ -2,6 +2,7 @@
 
 namespace App\Admin\Resources\ServerResource\Pages;
 
+use Arr;
 use App\Admin\Resources\ServerResource;
 use App\Helpers\ExtensionHelper;
 use Filament\Resources\Pages\CreateRecord;
@@ -20,7 +21,7 @@ class CreateServer extends CreateRecord
 
     protected function handleRecordCreation(array $data): Model
     {
-        $record = static::getModel()::create(\Arr::except($data, ['settings']));
+        $record = static::getModel()::create(Arr::except($data, ['settings']));
 
         if (!isset($data['settings'])) {
             return $record;

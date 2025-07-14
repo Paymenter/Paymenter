@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands\User;
 
+use Throwable;
 use App\Helpers\NotificationHelper;
 use App\Models\User;
 use Illuminate\Console\Command;
@@ -54,7 +55,7 @@ class PasswordReset extends Command implements PromptsForMissingInput
             ]);
 
             $this->info("Password reset email sent successfully to '{$email}'");
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             $this->error('Failed to send password reset email: ' . $e->getMessage());
         }
     }

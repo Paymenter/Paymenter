@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Client;
 
+use Exception;
 use App\Exceptions\DisplayException;
 use App\Helpers\ExtensionHelper;
 use App\Livewire\Component;
@@ -88,7 +89,7 @@ class Credits extends Component
             }
 
             return $this->redirect(route('invoices.show', $invoice) . '?gateway=' . $this->gateway . '&pay', true);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             // Rollback the transaction
             DB::rollBack();
             // Return error message

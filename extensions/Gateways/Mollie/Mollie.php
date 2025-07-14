@@ -2,6 +2,7 @@
 
 namespace Paymenter\Extensions\Gateways\Mollie;
 
+use Exception;
 use App\Classes\Extension\Gateway;
 use App\Helpers\ExtensionHelper;
 use App\Models\Invoice;
@@ -24,7 +25,7 @@ class Mollie extends Gateway
         ])->$method('https://api.mollie.com' . $url, $data);
 
         if (!$response->successful()) {
-            throw new \Exception('Mollie API error: ' . $response->json()['detail']);
+            throw new Exception('Mollie API error: ' . $response->json()['detail']);
         }
 
         return $response->json();

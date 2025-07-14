@@ -2,6 +2,7 @@
 
 namespace Paymenter\Extensions\Servers\Convoy;
 
+use Exception;
 use App\Classes\Extension\Server;
 use App\Models\Product;
 use App\Models\Service;
@@ -20,7 +21,7 @@ class Convoy extends Server
         ])->$method($req_url, $data);
 
         if (!$response->successful()) {
-            throw new \Exception($response->json()['message']);
+            throw new Exception($response->json()['message']);
         }
 
         return $response->json() ?? [];
@@ -176,7 +177,7 @@ class Convoy extends Server
             $this->request('servers');
 
             return true;
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return $e->getMessage();
         }
 
@@ -278,7 +279,7 @@ class Convoy extends Server
         $server = $this->request('servers', 'post', $data);
 
         if (!isset($server['data'])) {
-            throw new \Exception('Failed to create server');
+            throw new Exception('Failed to create server');
         }
 
         $service->properties()->updateOrCreate([
@@ -298,7 +299,7 @@ class Convoy extends Server
     public function upgradeServer(Service $service, $settings, $properties)
     {
         if (!isset($properties['server_uuid'])) {
-            throw new \Exception('Server does not exist');
+            throw new Exception('Server does not exist');
         }
 
         $currentData = $this->request('servers/' . $properties['server_uuid']);
@@ -334,7 +335,7 @@ class Convoy extends Server
         // Update server
         $server = $this->request('servers/' . $properties['server_uuid'] . '/settings/build', 'patch', $data);
         if (!isset($server['data'])) {
-            throw new \Exception('Failed to update server');
+            throw new Exception('Failed to update server');
         }
 
         return [
@@ -352,7 +353,7 @@ class Convoy extends Server
     public function suspendServer(Service $service, $settings, $properties)
     {
         if (!isset($properties['server_uuid'])) {
-            throw new \Exception('Server does not exist');
+            throw new Exception('Server does not exist');
         }
 
         $this->request('servers/' . $properties['server_uuid'] . '/settings/suspend', 'post');
@@ -368,7 +369,7 @@ class Convoy extends Server
     public function unsuspendServer(Service $service, $settings, $properties)
     {
         if (!isset($properties['server_uuid'])) {
-            throw new \Exception('Server does not exist');
+            throw new Exception('Server does not exist');
         }
 
         $this->request('servers/' . $properties['server_uuid'] . '/settings/unsuspend', 'post');
@@ -384,7 +385,7 @@ class Convoy extends Server
     public function terminateServer(Service $service, $settings, $properties)
     {
         if (!isset($properties['server_uuid'])) {
-            throw new \Exception('Server does not exist');
+            throw new Exception('Server does not exist');
         }
 
         $this->request('servers/' . $properties['server_uuid'], 'delete');

@@ -2,6 +2,7 @@
 
 namespace App\Jobs\Server;
 
+use Exception;
 use App\Helpers\ExtensionHelper;
 use App\Models\Service;
 use Illuminate\Bus\Queueable;
@@ -26,7 +27,7 @@ class UnsuspendJob implements ShouldQueue
     {
         try {
             $data = ExtensionHelper::unsuspendServer($this->service);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             if ($e->getMessage() == 'No server assigned to this product') {
                 return;
             }

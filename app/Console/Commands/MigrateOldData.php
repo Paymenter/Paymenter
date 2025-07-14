@@ -2,6 +2,8 @@
 
 namespace App\Console\Commands;
 
+use Throwable;
+use App\Classes\Settings;
 use App\Helpers\ExtensionHelper;
 use App\Models\ConfigOption;
 use App\Models\Currency;
@@ -132,7 +134,7 @@ class MigrateOldData extends Command
             $records = $stmt->fetchAll(PDO::FETCH_ASSOC);
             try {
                 $processor($records);
-            } catch (\Throwable $th) {
+            } catch (Throwable $th) {
                 Log::error($th);
                 $this->fail($th->getMessage());
             }
@@ -147,7 +149,7 @@ class MigrateOldData extends Command
 
                 try {
                     $processor($records);
-                } catch (\Throwable $th) {
+                } catch (Throwable $th) {
                     Log::error($th);
                     $this->fail($th->getMessage());
                 }
@@ -240,7 +242,7 @@ class MigrateOldData extends Command
 
             // Migrate old settings directly if it is only renamed
             if (array_key_exists($old_setting['key'], $old_to_new_map)) {
-                $avSetting = \App\Classes\Settings::getSetting($key);
+                $avSetting = Settings::getSetting($key);
 
                 $settings[] = [
                     'key' => $key,
@@ -597,7 +599,7 @@ class MigrateOldData extends Command
         foreach ($records as $record) {
             try {
                 $extension = ExtensionHelper::getExtension($record['type'], $record['name']);
-            } catch (\Throwable $th) {
+            } catch (Throwable $th) {
                 $ext_name = $record['name'];
                 $this->warn("Not Migrating '$ext_name', Error: " . $th->getMessage());
 
@@ -621,7 +623,7 @@ class MigrateOldData extends Command
 
             try {
                 $extension_cfg = ExtensionHelper::getConfig($ext_type, $ext_name);
-            } catch (\Throwable $th) {
+            } catch (Throwable $th) {
                 $this->warn("Error while getting Extension '$ext_name', Not migrating ext settings: " . $th->getMessage());
 
                 continue;
@@ -645,7 +647,7 @@ class MigrateOldData extends Command
                     try {
                         // Check if the setting was already encrypted, if yes don't change it
                         Crypt::decryptString($old_ext_setting['value']);
-                    } catch (\Throwable $th) {
+                    } catch (Throwable $th) {
                         // Else, encrypt it
                         $old_ext_setting['value'] = Crypt::encryptString($old_ext_setting['value']);
                     }
@@ -654,7 +656,7 @@ class MigrateOldData extends Command
                         $decrypted = Crypt::decryptString($old_ext_setting['value']);
                         // If the setting was encrypted, decrypted it
                         $old_ext_setting['value'] = $decrypted;
-                    } catch (\Throwable $th) {
+                    } catch (Throwable $th) {
                         // Else, do nothing
                     }
                 }
@@ -716,7 +718,7 @@ class MigrateOldData extends Command
             foreach ($product_settings as $record) {
                 try {
                     $extension = Server::findOrFail($record['extension']);
-                } catch (\Throwable $th) {
+                } catch (Throwable $th) {
                     $extension = $record['extension'];
                     $this->warn("Error while getting Extension '$extension', Not migrating ext product settings: " . $th->getMessage());
 

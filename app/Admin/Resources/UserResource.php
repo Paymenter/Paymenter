@@ -2,6 +2,15 @@
 
 namespace App\Admin\Resources;
 
+use Filament\Schemas\Schema;
+use Filament\Tables\Filters\SelectFilter;
+use Filament\Actions\EditAction;
+use App\Admin\Resources\UserResource\Pages\ListUsers;
+use App\Admin\Resources\UserResource\Pages\CreateUser;
+use App\Admin\Resources\UserResource\Pages\EditUser;
+use App\Admin\Resources\UserResource\Pages\ShowServices;
+use App\Admin\Resources\UserResource\Pages\ShowInvoices;
+use App\Admin\Resources\UserResource\Pages\ShowCredits;
 use App\Admin\Resources\Common\RelationManagers\PropertiesRelationManager;
 use App\Admin\Resources\UserResource\Pages;
 use App\Models\Credit;
@@ -9,7 +18,6 @@ use App\Models\User;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
-use Filament\Forms\Form;
 use Filament\Resources\Pages\Page;
 use Filament\Resources\Resource;
 use Filament\Tables;
@@ -23,11 +31,11 @@ class UserResource extends Resource
 {
     protected static ?string $model = User::class;
 
-    protected static ?string $navigationGroup = 'Administration';
+    protected static string | \UnitEnum | null $navigationGroup = 'Administration';
 
-    protected static ?string $navigationIcon = 'ri-group-line';
+    protected static string | \BackedEnum | null $navigationIcon = 'ri-group-line';
 
-    protected static ?string $activeNavigationIcon = 'ri-group-fill';
+    protected static string | \BackedEnum | null $activeNavigationIcon = 'ri-group-fill';
 
     public static function getGloballySearchableAttributes(): array
     {
@@ -39,10 +47,10 @@ class UserResource extends Resource
         return $record->name;
     }
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
+        return $schema
+            ->components([
                 TextInput::make('first_name')->translateLabel()->required(),
                 TextInput::make('last_name')->translateLabel()->required(),
                 TextInput::make('email')->translateLabel()->email()->required()->unique('users', 'email', ignoreRecord: true),
@@ -92,13 +100,13 @@ class UserResource extends Resource
                 TextColumn::make('role.name'),
             ])
             ->filters([
-                Tables\Filters\SelectFilter::make('role')
+                SelectFilter::make('role')
                     ->relationship('role', 'name')
                     ->searchable()
                     ->preload(),
             ])
-            ->actions([
-                Tables\Actions\EditAction::make(),
+            ->recordActions([
+                EditAction::make(),
             ]);
     }
 
@@ -112,12 +120,12 @@ class UserResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListUsers::route('/'),
-            'create' => Pages\CreateUser::route('/create'),
-            'edit' => Pages\EditUser::route('/{record}/edit'),
-            'services' => Pages\ShowServices::route('/{record}/services'),
-            'invoices' => Pages\ShowInvoices::route('/{record}/invoices'),
-            'credits' => Pages\ShowCredits::route('/{record}/credits'),
+            'index' => ListUsers::route('/'),
+            'create' => CreateUser::route('/create'),
+            'edit' => EditUser::route('/{record}/edit'),
+            'services' => ShowServices::route('/{record}/services'),
+            'invoices' => ShowInvoices::route('/{record}/invoices'),
+            'credits' => ShowCredits::route('/{record}/credits'),
         ];
     }
 
@@ -125,10 +133,10 @@ class UserResource extends Resource
     {
 
         return $page->generateNavigationItems([
-            Pages\EditUser::class,
-            Pages\ShowServices::class,
-            Pages\ShowInvoices::class,
-            Pages\ShowCredits::class,
+            EditUser::class,
+            ShowServices::class,
+            ShowInvoices::class,
+            ShowCredits::class,
         ]);
     }
 }

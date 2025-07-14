@@ -2,10 +2,19 @@
 
 namespace App\Admin\Resources;
 
+use Filament\Schemas\Schema;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Select;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Actions\EditAction;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteBulkAction;
+use App\Admin\Resources\CurrencyResource\Pages\ListCurrencies;
+use App\Admin\Resources\CurrencyResource\Pages\CreateCurrency;
+use App\Admin\Resources\CurrencyResource\Pages\EditCurrency;
 use App\Admin\Resources\CurrencyResource\Pages;
 use App\Models\Currency;
 use Filament\Forms;
-use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -14,32 +23,32 @@ class CurrencyResource extends Resource
 {
     protected static ?string $model = Currency::class;
 
-    protected static ?string $navigationGroup = 'Configuration';
+    protected static string | \UnitEnum | null $navigationGroup = 'Configuration';
 
-    protected static ?string $navigationIcon = 'ri-money-dollar-circle-line';
+    protected static string | \BackedEnum | null $navigationIcon = 'ri-money-dollar-circle-line';
 
-    protected static ?string $activeNavigationIcon = 'ri-money-dollar-circle-fill';
+    protected static string | \BackedEnum | null $activeNavigationIcon = 'ri-money-dollar-circle-fill';
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
-                Forms\Components\TextInput::make('code')
+        return $schema
+            ->components([
+                TextInput::make('code')
                     ->label('Code')
                     ->required()
                     ->maxLength(3)
                     ->disabledOn('edit')
                     ->unique(static::getModel(), 'code', ignoreRecord: true)
                     ->placeholder('Enter the currency code'),
-                Forms\Components\TextInput::make('prefix')
+                TextInput::make('prefix')
                     ->label('Prefix')
                     ->maxLength(10)
                     ->placeholder('Enter the currency prefix'),
-                Forms\Components\TextInput::make('suffix')
+                TextInput::make('suffix')
                     ->label('Suffix')
                     ->maxLength(10)
                     ->placeholder('Enter the currency suffix'),
-                Forms\Components\Select::make('format')
+                Select::make('format')
                     ->label('Format')
                     ->options([
                         '1.000,00' => '1.000,00',
@@ -55,15 +64,15 @@ class CurrencyResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('code')
+                TextColumn::make('code')
                     ->label('Code')
                     ->searchable()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('prefix')
+                TextColumn::make('prefix')
                     ->label('Prefix')
                     ->searchable()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('suffix')
+                TextColumn::make('suffix')
                     ->label('Suffix')
                     ->searchable()
                     ->sortable(),
@@ -71,12 +80,12 @@ class CurrencyResource extends Resource
             ->filters([
                 //
             ])
-            ->actions([
-                Tables\Actions\EditAction::make(),
+            ->recordActions([
+                EditAction::make(),
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+            ->toolbarActions([
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
                 ]),
             ]);
     }
@@ -91,9 +100,9 @@ class CurrencyResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListCurrencies::route('/'),
-            'create' => Pages\CreateCurrency::route('/create'),
-            'edit' => Pages\EditCurrency::route('/{record}/edit'),
+            'index' => ListCurrencies::route('/'),
+            'create' => CreateCurrency::route('/create'),
+            'edit' => EditCurrency::route('/{record}/edit'),
         ];
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Providers\Filament;
 
+use Exception;
 use App\Http\Middleware\ImpersonateMiddleware;
 use App\Models\Extension;
 use App\Providers\SettingsProvider;
@@ -78,7 +79,7 @@ class AdminPanelProvider extends PanelProvider
                 DisableBladeIconComponents::class,
                 DispatchServingFilamentEvent::class,
             ])
-            ->theme(asset('css/filament/admin/theme.css'))
+            ->viteTheme('resources/css/filament/admin/theme.css', 'default')
             ->authMiddleware([
                 Authenticate::class,
             ]);
@@ -91,7 +92,7 @@ class AdminPanelProvider extends PanelProvider
                 $panel->discoverPages(in: base_path('extensions' . '/' . $extension->path . '/Admin/Pages'), for: $extension->namespace . '\\Admin\\Pages');
                 $panel->discoverClusters(in: base_path('extensions' . '/' . $extension->path . '/Admin/Clusters'), for: $extension->namespace . '\\Admin\\Clusters');
             }
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             // Do nothing
         }
 

@@ -2,6 +2,7 @@
 
 namespace Paymenter\Extensions\Others\Affiliates\Livewire\Affiliates;
 
+use App\Models\User;
 use App\Helpers\ExtensionHelper;
 use App\Livewire\Component;
 use Illuminate\Support\Facades\Auth;
@@ -35,7 +36,7 @@ class Affiliate extends Component
         $this->validate();
 
         /**
-         * @var App\Models\User
+         * @var User
          */
         $user = Auth::user();
         if ($user->affiliate) {

@@ -2,6 +2,7 @@
 
 namespace Paymenter\Extensions\Gateways\PayPal;
 
+use Exception;
 use App\Classes\Extension\Gateway;
 use App\Events\Service\Updated;
 use App\Helpers\ExtensionHelper;
@@ -28,13 +29,13 @@ class PayPal extends Gateway
             if ($event->service->isDirty('price')) {
                 try {
                     $this->updateSubscription($event->service);
-                } catch (\Exception $e) {
+                } catch (Exception $e) {
                 }
             }
             if ($event->service->isDirty('status') && $event->service->status === Service::STATUS_CANCELLED) {
                 try {
                     $this->cancelSubscription($event->service);
-                } catch (\Exception $e) {
+                } catch (Exception $e) {
                 }
             }
         });
@@ -94,7 +95,7 @@ class PayPal extends Gateway
             ]);
 
             if ($result->failed()) {
-                throw new \Exception('Failed to generate access token: ' . $result->body());
+                throw new Exception('Failed to generate access token: ' . $result->body());
             }
 
             return $result->json()['access_token'];
