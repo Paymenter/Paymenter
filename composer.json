@@ -7,7 +7,7 @@
         "framework"
     ],
     "license": "MIT",
-    "version": "dev-master",
+    "version": "1.2.3",
     "require": {
         "php": "^8.2 || ^8.3",
         "ext-intl": "*",
