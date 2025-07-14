@@ -2,10 +2,9 @@
 
 namespace App\Admin\Resources\UserResource\Pages;
 
-use Filament\Actions\DeleteAction;
-use Filament\Actions\Action;
 use App\Admin\Resources\UserResource;
-use Filament\Actions;
+use Filament\Actions\Action;
+use Filament\Actions\DeleteAction;
 use Filament\Resources\Pages\EditRecord;
 use Illuminate\Support\Facades\Auth;
 

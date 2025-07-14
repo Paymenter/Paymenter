@@ -2,20 +2,16 @@
 
 namespace App\Admin\Resources;
 
-use Filament\Schemas\Schema;
-use Filament\Infolists\Components\TextEntry;
-use Filament\Support\Enums\TextSize;
-use Filament\Schemas\Components\View;
-use Filament\Tables\Columns\TextColumn;
-use Filament\Actions\ViewAction;
 use App\Admin\Resources\EmailLogResource\Pages\ListEmailLogs;
 use App\Admin\Resources\EmailLogResource\Pages\ViewEmailLog;
-use App\Admin\Resources\EmailLogResource\Pages;
 use App\Models\EmailLog;
-use Filament\Infolists;
-use Filament\Infolists\Components;
+use Filament\Actions\ViewAction;
+use Filament\Infolists\Components\TextEntry;
 use Filament\Resources\Resource;
-use Filament\Tables;
+use Filament\Schemas\Components\View;
+use Filament\Schemas\Schema;
+use Filament\Support\Enums\TextSize;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 
@@ -23,11 +19,11 @@ class EmailLogResource extends Resource
 {
     protected static ?string $model = EmailLog::class;
 
-    protected static string | \BackedEnum | null $navigationIcon = 'ri-mail-send-line';
+    protected static string|\BackedEnum|null $navigationIcon = 'ri-mail-send-line';
 
-    protected static string | \BackedEnum | null $activeNavigationIcon = 'ri-mail-send-fill';
+    protected static string|\BackedEnum|null $activeNavigationIcon = 'ri-mail-send-fill';
 
-    protected static string | \UnitEnum | null $navigationGroup = 'Other';
+    protected static string|\UnitEnum|null $navigationGroup = 'Other';
 
     public static function infolist(Schema $schema): Schema
     {

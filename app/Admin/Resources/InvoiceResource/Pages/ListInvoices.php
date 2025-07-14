@@ -2,9 +2,8 @@
 
 namespace App\Admin\Resources\InvoiceResource\Pages;
 
-use Filament\Actions\CreateAction;
 use App\Admin\Resources\InvoiceResource;
-use Filament\Actions;
+use Filament\Actions\CreateAction;
 use Filament\Resources\Pages\ListRecords;
 
 class ListInvoices extends ListRecords

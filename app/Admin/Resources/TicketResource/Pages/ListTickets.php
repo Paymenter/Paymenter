@@ -2,12 +2,11 @@
 
 namespace App\Admin\Resources\TicketResource\Pages;
 
-use Filament\Actions\CreateAction;
-use Filament\Schemas\Components\Tabs\Tab;
 use App\Admin\Resources\TicketResource;
 use App\Admin\Resources\TicketResource\Widgets\TicketsOverView;
-use Filament\Actions;
+use Filament\Actions\CreateAction;
 use Filament\Resources\Pages\ListRecords;
+use Filament\Schemas\Components\Tabs\Tab;
 use Illuminate\Database\Eloquent\Builder;
 
 class ListTickets extends ListRecords

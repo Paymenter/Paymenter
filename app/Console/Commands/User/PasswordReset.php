@@ -2,12 +2,12 @@
 
 namespace App\Console\Commands\User;
 
-use Throwable;
 use App\Helpers\NotificationHelper;
 use App\Models\User;
 use Illuminate\Console\Command;
 use Illuminate\Contracts\Console\PromptsForMissingInput;
 use Illuminate\Support\Facades\Password;
+use Throwable;
 
 class PasswordReset extends Command implements PromptsForMissingInput
 {

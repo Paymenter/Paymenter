@@ -2,16 +2,14 @@
 
 namespace App\Admin\Resources;
 
-use Filament\Tables\Columns\TextColumn;
+use App\Admin\Resources\FailedJobResource\Pages\ListFailedJobs;
+use App\Models\FailedJob;
+use Exception;
 use Filament\Actions\Action;
 use Filament\Actions\BulkAction;
-use Exception;
-use App\Admin\Resources\FailedJobResource\Pages\ListFailedJobs;
-use App\Admin\Resources\FailedJobResource\Pages;
-use App\Models\FailedJob;
 use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
-use Filament\Tables;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Artisan;
@@ -20,11 +18,11 @@ class FailedJobResource extends Resource
 {
     protected static ?string $model = FailedJob::class;
 
-    protected static string | \BackedEnum | null $navigationIcon = 'ri-error-warning-line';
+    protected static string|\BackedEnum|null $navigationIcon = 'ri-error-warning-line';
 
-    protected static string | \BackedEnum | null $activeNavigationIcon = 'ri-error-warning-fill';
+    protected static string|\BackedEnum|null $activeNavigationIcon = 'ri-error-warning-fill';
 
-    protected static string | \UnitEnum | null $navigationGroup = 'Other';
+    protected static string|\UnitEnum|null $navigationGroup = 'Other';
 
     public static function getNavigationBadge(): ?string
     {

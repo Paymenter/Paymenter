@@ -2,9 +2,9 @@
 
 namespace App\Livewire;
 
+use App\Exceptions\DisplayException;
 use App\Livewire\Traits\Disabled;
 use App\Livewire\Traits\HasNotifications;
-use App\Exceptions\DisplayException;
 
 class Component extends \Livewire\Component
 {

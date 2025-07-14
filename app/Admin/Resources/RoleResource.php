@@ -2,17 +2,15 @@
 
 namespace App\Admin\Resources;
 
-use Filament\Schemas\Schema;
-use Filament\Actions\EditAction;
-use App\Admin\Resources\RoleResource\Pages\ListRoles;
 use App\Admin\Resources\RoleResource\Pages\CreateRole;
 use App\Admin\Resources\RoleResource\Pages\EditRole;
-use App\Admin\Resources\RoleResource\Pages;
+use App\Admin\Resources\RoleResource\Pages\ListRoles;
 use App\Models\Role;
+use Filament\Actions\EditAction;
 use Filament\Forms\Components\CheckboxList;
 use Filament\Forms\Components\TextInput;
 use Filament\Resources\Resource;
-use Filament\Tables;
+use Filament\Schemas\Schema;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Model;
@@ -22,11 +20,11 @@ class RoleResource extends Resource
 {
     protected static ?string $model = Role::class;
 
-    protected static string | \UnitEnum | null $navigationGroup = 'Configuration';
+    protected static string|\UnitEnum|null $navigationGroup = 'Configuration';
 
-    protected static string | \BackedEnum | null $navigationIcon = 'ri-shield-user-line';
+    protected static string|\BackedEnum|null $navigationIcon = 'ri-shield-user-line';
 
-    protected static string | \BackedEnum | null $activeNavigationIcon = 'ri-shield-user-fill';
+    protected static string|\BackedEnum|null $activeNavigationIcon = 'ri-shield-user-fill';
 
     public static function form(Schema $schema): Schema
     {

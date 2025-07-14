@@ -2,33 +2,33 @@
 
 namespace App\Admin\Pages;
 
-use Filament\Schemas\Schema;
-use Filament\Schemas\Components\Tabs\Tab;
-use Filament\Schemas\Components\Actions;
-use Filament\Actions\Action;
-use Filament\Schemas\Components\Group;
-use Filament\Schemas\Components\Tabs;
-use App\Models\User;
 use App\Classes\FilamentInput;
 use App\Classes\Settings as ClassesSettings;
 use App\Models\Setting;
+use App\Models\User;
+use Filament\Actions\Action;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
 use Filament\Notifications\Notification;
 use Filament\Pages\Page;
+use Filament\Schemas\Components\Actions;
+use Filament\Schemas\Components\Group;
+use Filament\Schemas\Components\Tabs;
+use Filament\Schemas\Components\Tabs\Tab;
+use Filament\Schemas\Schema;
 use Illuminate\Support\Facades\Gate;
 
 class Settings extends Page implements HasForms
 {
     use InteractsWithForms;
 
-    protected static string | \UnitEnum | null $navigationGroup = 'System';
+    protected static string|\UnitEnum|null $navigationGroup = 'System';
 
     protected static ?string $title = 'Settings';
 
-    protected static string | \BackedEnum | null $navigationIcon = 'ri-settings-3-line';
+    protected static string|\BackedEnum|null $navigationIcon = 'ri-settings-3-line';
 
-    protected static string | \BackedEnum | null $activeNavigationIcon = 'ri-settings-3-fill';
+    protected static string|\BackedEnum|null $activeNavigationIcon = 'ri-settings-3-fill';
 
     protected string $view = 'admin.pages.settings';
 

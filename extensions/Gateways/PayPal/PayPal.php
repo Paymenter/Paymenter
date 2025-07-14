@@ -2,13 +2,15 @@
 
 namespace Paymenter\Extensions\Gateways\PayPal;
 
-use Exception;
 use App\Classes\Extension\Gateway;
 use App\Events\Service\Updated;
+use App\Events\ServiceCancellation\Created;
 use App\Helpers\ExtensionHelper;
 use App\Models\Invoice;
 use App\Models\InvoiceItem;
 use App\Models\Service;
+use Exception;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Http;
@@ -37,6 +39,18 @@ class PayPal extends Gateway
                     $this->cancelSubscription($event->service);
                 } catch (Exception $e) {
                 }
+            }
+        });
+
+        Event::listen(Created::class, function (Created $event) {
+            $service = $event->cancellation->service;
+            if ($service->properties->where('key', 'has_paypal_subscription')->first()?->value !== '1') {
+                return;
+            }
+            try {
+                $this->cancelSubscription($service);
+            } catch (Exception $e) {
+                // Log the error or handle it as needed
             }
         });
     }

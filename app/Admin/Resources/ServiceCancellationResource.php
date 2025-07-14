@@ -2,22 +2,19 @@
 
 namespace App\Admin\Resources;
 
-use Filament\Schemas\Schema;
-use Filament\Forms\Components\Select;
-use Filament\Forms\Components\TextInput;
-use Filament\Tables\Columns\TextColumn;
-use Filament\Actions\EditAction;
-use Filament\Actions\BulkActionGroup;
-use Filament\Actions\DeleteBulkAction;
-use App\Admin\Resources\ServiceCancellationResource\Pages\ListServiceCancellations;
+use App\Admin\Clusters\Services;
 use App\Admin\Resources\ServiceCancellationResource\Pages\CreateServiceCancellation;
 use App\Admin\Resources\ServiceCancellationResource\Pages\EditServiceCancellation;
-use App\Admin\Clusters\Services;
-use App\Admin\Resources\ServiceCancellationResource\Pages;
+use App\Admin\Resources\ServiceCancellationResource\Pages\ListServiceCancellations;
 use App\Models\ServiceCancellation;
-use Filament\Forms;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\EditAction;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TextInput;
 use Filament\Resources\Resource;
-use Filament\Tables;
+use Filament\Schemas\Schema;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 
@@ -25,7 +22,7 @@ class ServiceCancellationResource extends Resource
 {
     protected static ?string $model = ServiceCancellation::class;
 
-    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-rectangle-stack';
 
     protected static ?string $cluster = Services::class;
 

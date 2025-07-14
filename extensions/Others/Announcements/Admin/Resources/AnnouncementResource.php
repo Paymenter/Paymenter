@@ -2,38 +2,35 @@
 
 namespace Paymenter\Extensions\Others\Announcements\Admin\Resources;
 
-use Filament\Schemas\Schema;
-use Filament\Forms\Components\TextInput;
-use Filament\Schemas\Components\Utilities\Get;
-use Filament\Schemas\Components\Utilities\Set;
-use Filament\Forms\Components\DateTimePicker;
-use Filament\Forms\Components\Toggle;
-use Filament\Forms\Components\RichEditor;
-use Filament\Tables\Columns\TextColumn;
-use Filament\Tables\Columns\IconColumn;
-use Filament\Actions\EditAction;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
-use Paymenter\Extensions\Others\Announcements\Admin\Resources\AnnouncementResource\Pages\ListAnnouncements;
-use Paymenter\Extensions\Others\Announcements\Admin\Resources\AnnouncementResource\Pages\CreateAnnouncement;
-use Paymenter\Extensions\Others\Announcements\Admin\Resources\AnnouncementResource\Pages\EditAnnouncement;
-use Filament\Forms;
+use Filament\Actions\EditAction;
+use Filament\Forms\Components\DateTimePicker;
+use Filament\Forms\Components\RichEditor;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Toggle;
 use Filament\Resources\Resource;
-use Filament\Tables;
+use Filament\Schemas\Components\Utilities\Get;
+use Filament\Schemas\Components\Utilities\Set;
+use Filament\Schemas\Schema;
+use Filament\Tables\Columns\IconColumn;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Support\Str;
-use Paymenter\Extensions\Others\Announcements\Admin\Resources\AnnouncementResource\Pages;
+use Paymenter\Extensions\Others\Announcements\Admin\Resources\AnnouncementResource\Pages\CreateAnnouncement;
+use Paymenter\Extensions\Others\Announcements\Admin\Resources\AnnouncementResource\Pages\EditAnnouncement;
+use Paymenter\Extensions\Others\Announcements\Admin\Resources\AnnouncementResource\Pages\ListAnnouncements;
 use Paymenter\Extensions\Others\Announcements\Models\Announcement;
 
 class AnnouncementResource extends Resource
 {
     protected static ?string $model = Announcement::class;
 
-    protected static string | \BackedEnum | null $navigationIcon = 'ri-megaphone-line';
+    protected static string|\BackedEnum|null $navigationIcon = 'ri-megaphone-line';
 
-    protected static string | \BackedEnum | null $activeNavigationIcon = 'ri-megaphone-fill';
+    protected static string|\BackedEnum|null $activeNavigationIcon = 'ri-megaphone-fill';
 
-    protected static string | \UnitEnum | null $navigationGroup = 'Administration';
+    protected static string|\UnitEnum|null $navigationGroup = 'Administration';
 
     public static function form(Schema $schema): Schema
     {

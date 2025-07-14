@@ -2,25 +2,22 @@
 
 namespace App\Admin\Resources;
 
-use Filament\Schemas\Schema;
-use Filament\Forms\Components\TextInput;
-use Filament\Schemas\Components\Section;
-use Filament\Schemas\Components\Grid;
-use Filament\Schemas\Components\Utilities\Get;
-use Filament\Tables\Columns\TextColumn;
-use Filament\Actions\EditAction;
-use Filament\Actions\BulkActionGroup;
-use Filament\Actions\DeleteBulkAction;
-use App\Admin\Resources\GatewayResource\Pages\ListGateways;
 use App\Admin\Resources\GatewayResource\Pages\CreateGateway;
 use App\Admin\Resources\GatewayResource\Pages\EditGateway;
-use App\Admin\Resources\GatewayResource\Pages;
+use App\Admin\Resources\GatewayResource\Pages\ListGateways;
 use App\Helpers\ExtensionHelper;
 use App\Models\Gateway;
-use Filament\Forms;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\EditAction;
 use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TextInput;
 use Filament\Resources\Resource;
-use Filament\Tables;
+use Filament\Schemas\Components\Grid;
+use Filament\Schemas\Components\Section;
+use Filament\Schemas\Components\Utilities\Get;
+use Filament\Schemas\Schema;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Database\Eloquent\Model;
@@ -29,11 +26,11 @@ class GatewayResource extends Resource
 {
     protected static ?string $model = Gateway::class;
 
-    protected static string | \UnitEnum | null $navigationGroup = 'Extensions';
+    protected static string|\UnitEnum|null $navigationGroup = 'Extensions';
 
-    protected static string | \BackedEnum | null $navigationIcon = 'ri-secure-payment-line';
+    protected static string|\BackedEnum|null $navigationIcon = 'ri-secure-payment-line';
 
-    protected static string | \BackedEnum | null $activeNavigationIcon = 'ri-secure-payment-fill';
+    protected static string|\BackedEnum|null $activeNavigationIcon = 'ri-secure-payment-fill';
 
     public static function getGloballySearchableAttributes(): array
     {

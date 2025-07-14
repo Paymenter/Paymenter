@@ -2,20 +2,18 @@
 
 namespace App\Admin\Resources\UserResource\Pages;
 
-use Filament\Schemas\Schema;
-use Filament\Forms\Components\Select;
-use Filament\Forms\Components\TextInput;
-use Filament\Schemas\Components\Utilities\Get;
-use Filament\Tables\Columns\TextColumn;
-use Filament\Tables\Columns\TextInputColumn;
-use Filament\Actions\CreateAction;
-use Filament\Actions\DeleteAction;
 use App\Admin\Resources\UserResource;
 use App\Models\Currency;
-use Filament\Forms;
+use Filament\Actions\CreateAction;
+use Filament\Actions\DeleteAction;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TextInput;
 use Filament\Resources\Pages\ManageRelatedRecords;
+use Filament\Schemas\Components\Utilities\Get;
+use Filament\Schemas\Schema;
 use Filament\Support\RawJs;
-use Filament\Tables;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Columns\TextInputColumn;
 use Filament\Tables\Table;
 
 class ShowCredits extends ManageRelatedRecords
@@ -24,7 +22,7 @@ class ShowCredits extends ManageRelatedRecords
 
     protected static string $relationship = 'credits';
 
-    protected static string | \BackedEnum | null $navigationIcon = 'ri-bill-line';
+    protected static string|\BackedEnum|null $navigationIcon = 'ri-bill-line';
 
     public static function getNavigationLabel(): string
     {

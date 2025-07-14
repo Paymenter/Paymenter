@@ -2,11 +2,11 @@
 
 namespace Paymenter\Extensions\Servers\Virtualizor;
 
-use Exception;
 use App\Classes\Extension\Server;
 use App\Models\Product;
 use App\Models\Service;
 use App\Models\User;
+use Exception;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
 

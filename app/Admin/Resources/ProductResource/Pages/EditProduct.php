@@ -2,13 +2,12 @@
 
 namespace App\Admin\Resources\ProductResource\Pages;
 
-use Filament\Actions\Action;
-use Filament\Actions\DeleteAction;
 use App\Admin\Resources\ProductResource;
 use App\Helpers\ExtensionHelper;
 use App\Models\Product;
 use App\Models\Server;
-use Filament\Actions;
+use Filament\Actions\Action;
+use Filament\Actions\DeleteAction;
 use Filament\Notifications\Notification;
 use Filament\Resources\Pages\EditRecord;
 use Illuminate\Database\Eloquent\Model;

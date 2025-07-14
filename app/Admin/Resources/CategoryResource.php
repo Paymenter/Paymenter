@@ -2,26 +2,23 @@
 
 namespace App\Admin\Resources;
 
-use Filament\Schemas\Schema;
-use Filament\Forms\Components\TextInput;
-use Filament\Schemas\Components\Utilities\Get;
-use Filament\Schemas\Components\Utilities\Set;
-use Filament\Forms\Components\RichEditor;
-use Filament\Forms\Components\Select;
-use Filament\Forms\Components\FileUpload;
-use Filament\Tables\Columns\TextColumn;
-use Filament\Actions\EditAction;
-use Filament\Actions\BulkActionGroup;
-use Filament\Actions\DeleteBulkAction;
-use App\Admin\Resources\CategoryResource\Pages\ListCategories;
 use App\Admin\Resources\CategoryResource\Pages\CreateCategory;
 use App\Admin\Resources\CategoryResource\Pages\EditCategory;
-use App\Admin\Resources\CategoryResource\Pages;
+use App\Admin\Resources\CategoryResource\Pages\ListCategories;
 use App\Models\Category;
-use Filament\Forms;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\EditAction;
+use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\RichEditor;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TextInput;
 use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
-use Filament\Tables;
+use Filament\Schemas\Components\Utilities\Get;
+use Filament\Schemas\Components\Utilities\Set;
+use Filament\Schemas\Schema;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Str;
@@ -30,11 +27,11 @@ class CategoryResource extends Resource
 {
     protected static ?string $model = Category::class;
 
-    protected static string | \UnitEnum | null $navigationGroup = 'Administration';
+    protected static string|\UnitEnum|null $navigationGroup = 'Administration';
 
-    protected static string | \BackedEnum | null $navigationIcon = 'ri-folder-6-line';
+    protected static string|\BackedEnum|null $navigationIcon = 'ri-folder-6-line';
 
-    protected static string | \BackedEnum | null $activeNavigationIcon = 'ri-folder-6-fill';
+    protected static string|\BackedEnum|null $activeNavigationIcon = 'ri-folder-6-fill';
 
     protected static ?int $navigationSort = 1;
 

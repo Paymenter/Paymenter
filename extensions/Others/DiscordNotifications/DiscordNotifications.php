@@ -2,11 +2,6 @@
 
 namespace Paymenter\Extensions\Others\DiscordNotifications;
 
-use App\Events\Order\Finalized;
-use App\Events\Order\Updated;
-use App\Events\User\Created;
-use App\Events\Invoice\Paid;
-use Exception;
 use App\Admin\Resources\InvoiceResource;
 use App\Admin\Resources\OrderResource;
 use App\Admin\Resources\ServiceResource;
@@ -14,11 +9,15 @@ use App\Admin\Resources\TicketResource;
 use App\Admin\Resources\UserResource;
 use App\Classes\Extension\Extension;
 use App\Events\Invoice;
-use App\Events\Order;
+use App\Events\Invoice\Paid;
+use App\Events\Order\Finalized;
+use App\Events\Order\Updated;
 use App\Events\Service;
 use App\Events\Ticket;
 use App\Events\TicketMessage;
 use App\Events\User;
+use App\Events\User\Created;
+use Exception;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Http;
 

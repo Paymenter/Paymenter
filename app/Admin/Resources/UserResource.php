@@ -2,26 +2,24 @@
 
 namespace App\Admin\Resources;
 
-use Filament\Schemas\Schema;
-use Filament\Tables\Filters\SelectFilter;
-use Filament\Actions\EditAction;
-use App\Admin\Resources\UserResource\Pages\ListUsers;
+use App\Admin\Resources\Common\RelationManagers\PropertiesRelationManager;
 use App\Admin\Resources\UserResource\Pages\CreateUser;
 use App\Admin\Resources\UserResource\Pages\EditUser;
-use App\Admin\Resources\UserResource\Pages\ShowServices;
-use App\Admin\Resources\UserResource\Pages\ShowInvoices;
+use App\Admin\Resources\UserResource\Pages\ListUsers;
 use App\Admin\Resources\UserResource\Pages\ShowCredits;
-use App\Admin\Resources\Common\RelationManagers\PropertiesRelationManager;
-use App\Admin\Resources\UserResource\Pages;
+use App\Admin\Resources\UserResource\Pages\ShowInvoices;
+use App\Admin\Resources\UserResource\Pages\ShowServices;
 use App\Models\Credit;
 use App\Models\User;
+use Filament\Actions\EditAction;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Resources\Pages\Page;
 use Filament\Resources\Resource;
-use Filament\Tables;
+use Filament\Schemas\Schema;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Database\Eloquent\Model;
@@ -31,11 +29,11 @@ class UserResource extends Resource
 {
     protected static ?string $model = User::class;
 
-    protected static string | \UnitEnum | null $navigationGroup = 'Administration';
+    protected static string|\UnitEnum|null $navigationGroup = 'Administration';
 
-    protected static string | \BackedEnum | null $navigationIcon = 'ri-group-line';
+    protected static string|\BackedEnum|null $navigationIcon = 'ri-group-line';
 
-    protected static string | \BackedEnum | null $activeNavigationIcon = 'ri-group-fill';
+    protected static string|\BackedEnum|null $activeNavigationIcon = 'ri-group-fill';
 
     public static function getGloballySearchableAttributes(): array
     {

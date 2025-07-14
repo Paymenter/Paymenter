@@ -2,25 +2,22 @@
 
 namespace App\Admin\Resources;
 
-use Filament\Schemas\Schema;
-use Filament\Forms\Components\TextInput;
-use Filament\Forms\Components\Select;
-use Filament\Schemas\Components\Utilities\Get;
-use Filament\Forms\Components\MarkdownEditor;
-use Filament\Tables\Columns\TextColumn;
-use Filament\Actions\EditAction;
-use Filament\Actions\BulkActionGroup;
-use Filament\Actions\DeleteBulkAction;
-use App\Admin\Resources\TicketResource\Pages\ListTickets;
+use App\Admin\Components\UserComponent;
 use App\Admin\Resources\TicketResource\Pages\CreateTicket;
 use App\Admin\Resources\TicketResource\Pages\EditTicket;
-use App\Admin\Components\UserComponent;
-use App\Admin\Resources\TicketResource\Pages;
+use App\Admin\Resources\TicketResource\Pages\ListTickets;
 use App\Admin\Resources\TicketResource\Widgets\TicketsOverView;
 use App\Models\Ticket;
-use Filament\Forms;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\EditAction;
+use Filament\Forms\Components\MarkdownEditor;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TextInput;
 use Filament\Resources\Resource;
-use Filament\Tables;
+use Filament\Schemas\Components\Utilities\Get;
+use Filament\Schemas\Schema;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Database\Eloquent\Builder;
@@ -30,11 +27,11 @@ class TicketResource extends Resource
 {
     protected static ?string $model = Ticket::class;
 
-    protected static string | \BackedEnum | null $navigationIcon = 'ri-customer-service-line';
+    protected static string|\BackedEnum|null $navigationIcon = 'ri-customer-service-line';
 
-    protected static string | \BackedEnum | null $activeNavigationIcon = 'ri-customer-service-fill';
+    protected static string|\BackedEnum|null $activeNavigationIcon = 'ri-customer-service-fill';
 
-    public static string | \UnitEnum | null $navigationGroup = 'Administration';
+    public static string|\UnitEnum|null $navigationGroup = 'Administration';
 
     public static function getNavigationBadge(): ?string
     {

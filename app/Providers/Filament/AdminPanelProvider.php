@@ -2,10 +2,10 @@
 
 namespace App\Providers\Filament;
 
-use Exception;
 use App\Http\Middleware\ImpersonateMiddleware;
 use App\Models\Extension;
 use App\Providers\SettingsProvider;
+use Exception;
 use Filament\Facades\Filament;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\DisableBladeIconComponents;

@@ -2,7 +2,6 @@
 
 namespace App\Console\Commands;
 
-use Throwable;
 use App\Classes\Settings;
 use App\Helpers\ExtensionHelper;
 use App\Models\ConfigOption;
@@ -21,6 +20,7 @@ use Illuminate\Support\Str;
 use PDO;
 use PDOException;
 use PDOStatement;
+use Throwable;
 
 use function Laravel\Prompts\password;
 use function Laravel\Prompts\text;

@@ -2,9 +2,8 @@
 
 namespace App\Admin\Resources\GatewayResource\Pages;
 
-use Filament\Actions\CreateAction;
 use App\Admin\Resources\GatewayResource;
-use Filament\Actions;
+use Filament\Actions\CreateAction;
 use Filament\Resources\Pages\ListRecords;
 
 class ListGateways extends ListRecords

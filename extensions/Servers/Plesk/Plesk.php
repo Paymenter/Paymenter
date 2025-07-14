@@ -2,10 +2,10 @@
 
 namespace Paymenter\Extensions\Servers\Plesk;
 
-use Exception;
 use App\Classes\Extension\Server;
 use App\Models\Service;
 use App\Rules\Domain;
+use Exception;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
 

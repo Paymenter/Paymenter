@@ -2,12 +2,11 @@
 
 namespace App\Admin\Resources\UserResource\Pages;
 
-use Filament\Tables\Columns\TextColumn;
-use Filament\Actions\ViewAction;
 use App\Admin\Resources\InvoiceResource;
 use App\Admin\Resources\UserResource;
+use Filament\Actions\ViewAction;
 use Filament\Resources\Pages\ManageRelatedRecords;
-use Filament\Tables;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 
@@ -17,7 +16,7 @@ class ShowInvoices extends ManageRelatedRecords
 
     protected static string $relationship = 'invoices';
 
-    protected static string | \BackedEnum | null $navigationIcon = 'ri-bill-line';
+    protected static string|\BackedEnum|null $navigationIcon = 'ri-bill-line';
 
     public static function getNavigationLabel(): string
     {

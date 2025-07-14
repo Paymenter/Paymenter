@@ -2,10 +2,10 @@
 
 namespace App\Livewire;
 
-use App\Models\CustomProperty;
-use Illuminate\Database\Eloquent\Model;
 use App\Events\Properties\Updated as PropertiesUpdated;
+use App\Models\CustomProperty;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Model;
 
 class ComponentWithProperties extends Component
 {
@@ -18,7 +18,7 @@ class ComponentWithProperties extends Component
     /**
      * Updates the properties of the model
      *
-     * @param Model|null $model
+     * @param  Model|null  $model
      * @param  string  $morphClass
      */
     public function initializeProperties($model, $morphClass)
@@ -53,7 +53,7 @@ class ComponentWithProperties extends Component
     /**
      * Updates the properties of the model
      *
-     * @param Model $model
+     * @param  Model  $model
      * @param  array  $properties
      */
     public function updateProperties($model, $properties)

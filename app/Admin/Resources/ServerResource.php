@@ -2,27 +2,24 @@
 
 namespace App\Admin\Resources;
 
-use Filament\Schemas\Schema;
-use Filament\Forms\Components\TextInput;
-use Filament\Actions\Action;
-use Filament\Schemas\Components\Utilities\Get;
-use Filament\Schemas\Components\Section;
-use Filament\Schemas\Components\Grid;
-use Filament\Tables\Columns\TextColumn;
-use Filament\Actions\EditAction;
-use Filament\Actions\BulkActionGroup;
-use Filament\Actions\DeleteBulkAction;
-use App\Admin\Resources\ServerResource\Pages\ListServers;
 use App\Admin\Resources\ServerResource\Pages\CreateServer;
 use App\Admin\Resources\ServerResource\Pages\EditServer;
-use App\Admin\Resources\ServerResource\Pages;
+use App\Admin\Resources\ServerResource\Pages\ListServers;
 use App\Helpers\ExtensionHelper;
 use App\Models\Server;
-use Filament\Forms;
+use Filament\Actions\Action;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\EditAction;
 use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TextInput;
 use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
-use Filament\Tables;
+use Filament\Schemas\Components\Grid;
+use Filament\Schemas\Components\Section;
+use Filament\Schemas\Components\Utilities\Get;
+use Filament\Schemas\Schema;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Database\Eloquent\Model;
@@ -31,11 +28,11 @@ class ServerResource extends Resource
 {
     protected static ?string $model = Server::class;
 
-    protected static string | \UnitEnum | null $navigationGroup = 'Extensions';
+    protected static string|\UnitEnum|null $navigationGroup = 'Extensions';
 
-    protected static string | \BackedEnum | null $navigationIcon = 'ri-server-line';
+    protected static string|\BackedEnum|null $navigationIcon = 'ri-server-line';
 
-    protected static string | \BackedEnum | null $activeNavigationIcon = 'ri-server-fill';
+    protected static string|\BackedEnum|null $activeNavigationIcon = 'ri-server-fill';
 
     public static function getGloballySearchableAttributes(): array
     {

@@ -2,9 +2,8 @@
 
 namespace App\Admin\Resources\EmailTemplateResource\Pages;
 
-use Filament\Actions\DeleteAction;
 use App\Admin\Resources\EmailTemplateResource;
-use Filament\Actions;
+use Filament\Actions\DeleteAction;
 use Filament\Resources\Pages\EditRecord;
 
 class EditEmailTemplate extends EditRecord

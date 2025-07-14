@@ -2,12 +2,12 @@
 
 namespace Paymenter\Extensions\Servers\Enhance;
 
-use Illuminate\Http\Client\Response;
-use Exception;
 use App\Classes\Extension\Server;
 use App\Models\Service;
 use App\Models\User;
 use App\Rules\Domain;
+use Exception;
+use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
 

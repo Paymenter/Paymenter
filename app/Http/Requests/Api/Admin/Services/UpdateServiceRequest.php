@@ -2,8 +2,8 @@
 
 namespace App\Http\Requests\Api\Admin\Services;
 
-use App\Models\Plan;
 use App\Http\Requests\Api\Admin\AdminApiRequest;
+use App\Models\Plan;
 
 class UpdateServiceRequest extends AdminApiRequest
 {

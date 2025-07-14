@@ -2,12 +2,11 @@
 
 namespace App\Admin\Resources\InvoiceResource\Pages;
 
-use Filament\Actions\DeleteAction;
-use Filament\Actions\Action;
 use App\Admin\Resources\InvoiceResource;
 use App\Classes\PDF;
 use App\Models\Invoice;
-use Filament\Actions;
+use Filament\Actions\Action;
+use Filament\Actions\DeleteAction;
 use Filament\Resources\Pages\EditRecord;
 
 class EditInvoice extends EditRecord

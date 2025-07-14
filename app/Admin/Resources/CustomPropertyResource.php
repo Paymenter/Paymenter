@@ -2,37 +2,34 @@
 
 namespace App\Admin\Resources;
 
-use Filament\Schemas\Schema;
-use Filament\Forms\Components\TextInput;
-use Filament\Forms\Components\Select;
-use Filament\Forms\Components\Textarea;
-use Filament\Forms\Components\TagsInput;
-use Filament\Schemas\Components\Section;
-use Filament\Forms\Components\Toggle;
-use Filament\Tables\Columns\TextColumn;
-use Filament\Tables\Columns\ToggleColumn;
-use Filament\Actions\EditAction;
-use Filament\Actions\BulkActionGroup;
-use Filament\Actions\DeleteBulkAction;
-use App\Admin\Resources\CustomPropertyResource\Pages\ListCustomProperty;
 use App\Admin\Resources\CustomPropertyResource\Pages\CreateCustomProperty;
 use App\Admin\Resources\CustomPropertyResource\Pages\EditCustomProperty;
-use App\Admin\Resources\CustomPropertyResource\Pages;
+use App\Admin\Resources\CustomPropertyResource\Pages\ListCustomProperty;
 use App\Models\CustomProperty;
-use Filament\Forms;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\EditAction;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TagsInput;
+use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Toggle;
 use Filament\Resources\Resource;
-use Filament\Tables;
+use Filament\Schemas\Components\Section;
+use Filament\Schemas\Schema;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Columns\ToggleColumn;
 use Filament\Tables\Table;
 
 class CustomPropertyResource extends Resource
 {
     protected static ?string $model = CustomProperty::class;
 
-    protected static string | \UnitEnum | null $navigationGroup = 'Configuration';
+    protected static string|\UnitEnum|null $navigationGroup = 'Configuration';
 
-    protected static string | \BackedEnum | null $navigationIcon = 'ri-list-settings-line';
+    protected static string|\BackedEnum|null $navigationIcon = 'ri-list-settings-line';
 
-    protected static string | \BackedEnum | null $activeNavigationIcon = 'ri-list-settings-fill';
+    protected static string|\BackedEnum|null $activeNavigationIcon = 'ri-list-settings-fill';
 
     public static function form(Schema $schema): Schema
     {

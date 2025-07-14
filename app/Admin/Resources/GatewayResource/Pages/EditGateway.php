@@ -2,10 +2,9 @@
 
 namespace App\Admin\Resources\GatewayResource\Pages;
 
-use Filament\Actions\DeleteAction;
 use App\Admin\Resources\GatewayResource;
 use App\Helpers\ExtensionHelper;
-use Filament\Actions;
+use Filament\Actions\DeleteAction;
 use Filament\Resources\Pages\EditRecord;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;

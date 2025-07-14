@@ -2,30 +2,27 @@
 
 namespace App\Admin\Resources;
 
-use Illuminate\Database\Eloquent\Builder;
-use Filament\Tables\Columns\TextColumn;
-use Filament\Actions\ViewAction;
+use App\Admin\Resources\ErrorLogResource\Pages\ListErrorLogs;
+use App\Models\DebugLog;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
-use Filament\Schemas\Schema;
+use Filament\Actions\ViewAction;
 use Filament\Infolists\Components\TextEntry;
-use App\Admin\Resources\ErrorLogResource\Pages\ListErrorLogs;
-use App\Admin\Resources\ErrorLogResource\Pages;
-use App\Models\DebugLog;
-use Filament\Infolists;
 use Filament\Resources\Resource;
-use Filament\Tables;
+use Filament\Schemas\Schema;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 
 class ErrorLogResource extends Resource
 {
     protected static ?string $model = DebugLog::class;
 
-    protected static string | \BackedEnum | null $navigationIcon = 'ri-bug-line';
+    protected static string|\BackedEnum|null $navigationIcon = 'ri-bug-line';
 
     protected static ?string $modelLabel = 'Error log';
 
-    public static string | \UnitEnum | null $navigationGroup = 'Debug';
+    public static string|\UnitEnum|null $navigationGroup = 'Debug';
 
     // Edit query to only include with type 'http'
     public static function getEloquentQuery(): Builder

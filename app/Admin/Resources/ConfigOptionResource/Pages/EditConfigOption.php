@@ -2,10 +2,9 @@
 
 namespace App\Admin\Resources\ConfigOptionResource\Pages;
 
-use Filament\Actions\DeleteAction;
 use App\Admin\Resources\ConfigOptionResource;
 use App\Models\ConfigOption;
-use Filament\Actions;
+use Filament\Actions\DeleteAction;
 use Filament\Resources\Pages\EditRecord;
 
 class EditConfigOption extends EditRecord

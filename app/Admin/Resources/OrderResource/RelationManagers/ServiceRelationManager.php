@@ -2,13 +2,12 @@
 
 namespace App\Admin\Resources\OrderResource\RelationManagers;
 
-use Filament\Tables\Columns\TextColumn;
-use Filament\Actions\ViewAction;
+use App\Admin\Resources\ServiceResource;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
-use App\Admin\Resources\ServiceResource;
+use Filament\Actions\ViewAction;
 use Filament\Resources\RelationManagers\RelationManager;
-use Filament\Tables;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 
 class ServiceRelationManager extends RelationManager
