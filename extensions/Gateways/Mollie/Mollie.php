@@ -2,10 +2,10 @@
 
 namespace Paymenter\Extensions\Gateways\Mollie;
 
-use Exception;
 use App\Classes\Extension\Gateway;
 use App\Helpers\ExtensionHelper;
 use App\Models\Invoice;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 

@@ -2,34 +2,31 @@
 
 namespace Paymenter\Extensions\Others\Affiliates\Admin\Resources;
 
-use Filament\Schemas\Schema;
-use Filament\Actions\EditAction;
-use Filament\Actions\BulkActionGroup;
-use Filament\Actions\DeleteBulkAction;
-use Paymenter\Extensions\Others\Affiliates\Admin\Resources\AffiliateResource\RelationManagers\AffiliatesRelationManager;
-use Paymenter\Extensions\Others\Affiliates\Admin\Resources\AffiliateResource\Pages\ListAffiliates;
-use Paymenter\Extensions\Others\Affiliates\Admin\Resources\AffiliateResource\Pages\EditAffiliate;
 use App\Admin\Components\UserComponent;
 use App\Helpers\ExtensionHelper;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\EditAction;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Resources\Resource;
-use Filament\Tables;
+use Filament\Schemas\Schema;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
-use Paymenter\Extensions\Others\Affiliates\Admin\Resources\AffiliateResource\Pages;
-use Paymenter\Extensions\Others\Affiliates\Admin\Resources\AffiliateResource\RelationManagers;
+use Paymenter\Extensions\Others\Affiliates\Admin\Resources\AffiliateResource\Pages\EditAffiliate;
+use Paymenter\Extensions\Others\Affiliates\Admin\Resources\AffiliateResource\Pages\ListAffiliates;
+use Paymenter\Extensions\Others\Affiliates\Admin\Resources\AffiliateResource\RelationManagers\AffiliatesRelationManager;
 use Paymenter\Extensions\Others\Affiliates\Models\Affiliate;
 
 class AffiliateResource extends Resource
 {
     protected static ?string $model = Affiliate::class;
 
-    protected static string | \BackedEnum | null $navigationIcon = 'ri-hand-coin-line';
+    protected static string|\BackedEnum|null $navigationIcon = 'ri-hand-coin-line';
 
-    protected static string | \BackedEnum | null $activeNavigationIcon = 'ri-hand-coin-fill';
+    protected static string|\BackedEnum|null $activeNavigationIcon = 'ri-hand-coin-fill';
 
-    protected static string | \UnitEnum | null $navigationGroup = 'Administration';
+    protected static string|\UnitEnum|null $navigationGroup = 'Administration';
 
     public static function form(Schema $schema): Schema
     {

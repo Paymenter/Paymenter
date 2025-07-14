@@ -2,37 +2,33 @@
 
 namespace App\Admin\Resources;
 
-use Filament\Schemas\Schema;
-use Filament\Forms\Components\TextInput;
-use Filament\Schemas\Components\Utilities\Get;
-use Filament\Forms\Components\Select;
-use Filament\Forms\Components\DatePicker;
-use Filament\Tables\Columns\TextColumn;
-use Filament\Actions\EditAction;
-use Filament\Actions\BulkActionGroup;
-use Filament\Actions\DeleteBulkAction;
-use App\Admin\Resources\CouponResource\RelationManagers\ServicesRelationManager;
-use App\Admin\Resources\CouponResource\Pages\ListCoupons;
 use App\Admin\Resources\CouponResource\Pages\CreateCoupon;
 use App\Admin\Resources\CouponResource\Pages\EditCoupon;
-use App\Admin\Resources\CouponResource\Pages;
-use App\Admin\Resources\CouponResource\RelationManagers;
+use App\Admin\Resources\CouponResource\Pages\ListCoupons;
+use App\Admin\Resources\CouponResource\RelationManagers\ServicesRelationManager;
 use App\Models\Coupon;
-use Filament\Forms;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\EditAction;
+use Filament\Forms\Components\DatePicker;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TextInput;
 use Filament\Resources\Resource;
+use Filament\Schemas\Components\Utilities\Get;
+use Filament\Schemas\Schema;
 use Filament\Support\RawJs;
-use Filament\Tables;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 
 class CouponResource extends Resource
 {
     protected static ?string $model = Coupon::class;
 
-    protected static string | \BackedEnum | null $navigationIcon = 'ri-coupon-line';
+    protected static string|\BackedEnum|null $navigationIcon = 'ri-coupon-line';
 
-    protected static string | \BackedEnum | null $activeNavigationIcon = 'ri-coupon-fill';
+    protected static string|\BackedEnum|null $activeNavigationIcon = 'ri-coupon-fill';
 
-    protected static string | \UnitEnum | null $navigationGroup = 'Configuration';
+    protected static string|\UnitEnum|null $navigationGroup = 'Configuration';
 
     public static function form(Schema $schema): Schema
     {

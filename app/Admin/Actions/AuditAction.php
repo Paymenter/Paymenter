@@ -2,8 +2,8 @@
 
 namespace App\Admin\Actions;
 
-use Filament\Support\Enums\Width;
 use Filament\Actions\Action;
+use Filament\Support\Enums\Width;
 use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Model;
 

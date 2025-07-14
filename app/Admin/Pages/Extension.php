@@ -15,18 +15,18 @@ use Filament\Tables\Concerns\InteractsWithTable;
 use Filament\Tables\Contracts\HasTable;
 use Filament\Tables\Table;
 
-class Extension extends Page implements HasTable, HasActions
+class Extension extends Page implements HasActions, HasTable
 {
-    use InteractsWithTable, InteractsWithActions;
+    use InteractsWithActions, InteractsWithTable;
 
     protected string $view = 'admin.pages.extension';
 
     // Cluster
     protected static ?string $cluster = Extensions::class;
 
-    protected static string | \BackedEnum | null $navigationIcon = 'ri-download-2-line';
+    protected static string|\BackedEnum|null $navigationIcon = 'ri-download-2-line';
 
-    protected static string | \BackedEnum | null $activeNavigationIcon = 'ri-download-2-fill';
+    protected static string|\BackedEnum|null $activeNavigationIcon = 'ri-download-2-fill';
 
     // Label for the navigation item
     protected static ?string $navigationLabel = 'Available Extensions';
@@ -43,7 +43,7 @@ class Extension extends Page implements HasTable, HasActions
                     ->label('Extension Name')
                     ->searchable()
                     ->sortable()
-                    ->state(fn($record) => $record['meta'] ? $record['meta']->name . ' (' . $record['meta']->author . ')' : $record['name']),
+                    ->state(fn ($record) => $record['meta'] ? $record['meta']->name . ' (' . $record['meta']->author . ')' : $record['name']),
                 TextColumn::make('meta.description')
                     ->label('Description')
                     ->searchable()
@@ -67,11 +67,11 @@ class Extension extends Page implements HasTable, HasActions
                             ->acceptedFileTypes(['application/zip', 'application/x-zip-compressed'])
                             ->directory('extensions/uploaded')
                             ->preserveFilenames()
-                            ->maxSize(10240) // 10 MB
+                            ->maxSize(10240), // 10 MB
                     ])
                     ->action(function ($data, UploadExtensionService $service) {
                         $service->handle(storage_path('app/' . $data['file']));
-                    })
+                    }),
             ]);
     }
 }

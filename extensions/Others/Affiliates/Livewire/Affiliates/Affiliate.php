@@ -2,9 +2,9 @@
 
 namespace Paymenter\Extensions\Others\Affiliates\Livewire\Affiliates;
 
-use App\Models\User;
 use App\Helpers\ExtensionHelper;
 use App\Livewire\Component;
+use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;

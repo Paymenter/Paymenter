@@ -2,37 +2,33 @@
 
 namespace App\Admin\Resources;
 
-use Filament\Schemas\Schema;
-use Filament\Forms\Components\Select;
-use Filament\Schemas\Components\Utilities\Get;
-use Filament\Forms\Components\TextInput;
-use Filament\Forms\Components\DatePicker;
-use Filament\Actions\Action;
-use Filament\Schemas\Components\Component;
-use Filament\Tables\Columns\TextColumn;
-use Filament\Tables\Filters\SelectFilter;
-use Filament\Actions\EditAction;
-use Filament\Actions\BulkActionGroup;
-use Filament\Actions\DeleteBulkAction;
-use App\Admin\Resources\ServiceResource\RelationManagers\InvoicesRelationManager;
-use App\Admin\Resources\ServiceResource\RelationManagers\ConfigOptionsRelationManager;
-use App\Admin\Resources\ServiceResource\Pages\ListService;
-use App\Admin\Resources\ServiceResource\Pages\CreateService;
-use App\Admin\Resources\ServiceResource\Pages\EditService;
 use App\Admin\Clusters\Services;
 use App\Admin\Components\UserComponent;
 use App\Admin\Resources\Common\RelationManagers\PropertiesRelationManager;
-use App\Admin\Resources\ServiceResource\Pages;
-use App\Admin\Resources\ServiceResource\RelationManagers;
+use App\Admin\Resources\ServiceResource\Pages\CreateService;
+use App\Admin\Resources\ServiceResource\Pages\EditService;
+use App\Admin\Resources\ServiceResource\Pages\ListService;
+use App\Admin\Resources\ServiceResource\RelationManagers\ConfigOptionsRelationManager;
+use App\Admin\Resources\ServiceResource\RelationManagers\InvoicesRelationManager;
 use App\Helpers\ExtensionHelper;
 use App\Models\Currency;
 use App\Models\Product;
 use App\Models\Service;
-use Filament\Forms;
+use Filament\Actions\Action;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\EditAction;
+use Filament\Forms\Components\DatePicker;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TextInput;
 use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
+use Filament\Schemas\Components\Component;
+use Filament\Schemas\Components\Utilities\Get;
+use Filament\Schemas\Schema;
 use Filament\Support\RawJs;
-use Filament\Tables;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 
@@ -40,9 +36,9 @@ class ServiceResource extends Resource
 {
     protected static ?string $model = Service::class;
 
-    protected static string | \BackedEnum | null $navigationIcon = 'ri-function-line';
+    protected static string|\BackedEnum|null $navigationIcon = 'ri-function-line';
 
-    protected static string | \BackedEnum | null $activeNavigationIcon = 'ri-function-fill';
+    protected static string|\BackedEnum|null $activeNavigationIcon = 'ri-function-fill';
 
     public static function getNavigationBadge(): ?string
     {

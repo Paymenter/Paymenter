@@ -3,9 +3,6 @@
 namespace App\Helpers;
 
 use App\Attributes\ExtensionMeta;
-use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
-use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Database\Eloquent\Model;
 use App\Classes\FilamentInput;
 use App\Models\Extension;
 use App\Models\Gateway;
@@ -15,7 +12,9 @@ use App\Models\Server;
 use App\Models\Service;
 use Exception;
 use Filament\Forms\Components\Placeholder;
-use Illuminate\Support\Facades\Cache;
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Model;
+use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
 use ReflectionClass;
 
 class ExtensionHelper

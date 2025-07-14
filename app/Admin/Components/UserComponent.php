@@ -2,10 +2,10 @@
 
 namespace App\Admin\Components;
 
-use Illuminate\Support\HtmlString;
 use App\Admin\Resources\UserResource;
 use App\Models\User;
 use Filament\Forms\Components\Select;
+use Illuminate\Support\HtmlString;
 
 class UserComponent extends Select
 {

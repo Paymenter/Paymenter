@@ -2,11 +2,11 @@
 
 namespace App\Models;
 
-use Throwable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Session as FacadesSession;
+use Throwable;
 
 class Session extends Model
 {

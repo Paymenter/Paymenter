@@ -10,10 +10,9 @@ use Illuminate\Support\Facades\File;
 class UploadExtensionService
 {
     /**
-     * Handle the uploaded extension file. 
+     * Handle the uploaded extension file.
      * The added file is always a zip file.
-     * 
-     * @param string $filePath
+     *
      * @return void
      */
     public function handle(string $filePath)
@@ -52,7 +51,6 @@ class UploadExtensionService
             throw new \Exception('Failed to move the extension files to the destination.');
         }
 
-
         // Remove the extracted files
         File::deleteDirectory($extractPath);
     }
@@ -86,6 +84,7 @@ class UploadExtensionService
         if (!$type['class'] || !$type['type']) {
             throw new \Exception('No valid extension class found in the provided path.');
         }
+
         return $type;
     }
 
@@ -126,7 +125,7 @@ class UploadExtensionService
 
     private function unzip(string $filePath, string $extractPath)
     {
-        $zip = new \ZipArchive();
+        $zip = new \ZipArchive;
         if ($zip->open($filePath) === true) {
             $zip->extractTo($extractPath);
             $zip->close();

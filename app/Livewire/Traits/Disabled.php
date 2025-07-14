@@ -2,8 +2,8 @@
 
 namespace App\Livewire\Traits;
 
-use ReflectionClass;
 use App\Attributes\DisabledIf;
+use ReflectionClass;
 
 trait Disabled
 {

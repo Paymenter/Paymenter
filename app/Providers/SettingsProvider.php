@@ -3,8 +3,8 @@
 namespace App\Providers;
 
 use App\Classes\Settings;
-use Exception;
 use App\Models\Setting;
+use Exception;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Config;

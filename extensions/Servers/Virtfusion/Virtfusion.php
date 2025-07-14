@@ -2,9 +2,9 @@
 
 namespace Paymenter\Extensions\Servers\Virtfusion;
 
-use Exception;
 use App\Classes\Extension\Server;
 use App\Models\Service;
+use Exception;
 use Illuminate\Support\Facades\Http;
 
 class Virtfusion extends Server

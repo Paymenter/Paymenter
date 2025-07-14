@@ -2,8 +2,8 @@
 
 namespace App\Livewire\Client;
 
-use App\Models\User;
 use App\Livewire\ComponentWithProperties;
+use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 
 class Account extends ComponentWithProperties

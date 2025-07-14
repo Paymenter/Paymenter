@@ -3,7 +3,6 @@
 namespace Paymenter\Extensions\Others\Affiliates\Admin\Resources\AffiliateResource\Pages;
 
 use Filament\Actions\DeleteAction;
-use Filament\Actions;
 use Filament\Resources\Pages\EditRecord;
 use Paymenter\Extensions\Others\Affiliates\Admin\Resources\AffiliateResource;
 

@@ -2,35 +2,31 @@
 
 namespace App\Admin\Resources;
 
-use Filament\Schemas\Schema;
-use Filament\Schemas\Components\Utilities\Set;
-use Filament\Schemas\Components\Utilities\Get;
-use Filament\Forms\Components\Select;
-use Filament\Forms\Components\Repeater;
-use Filament\Forms\Components\Hidden;
-use Filament\Forms\Components\TextInput;
-use Filament\Schemas\Components\Component;
-use Filament\Actions\Action;
-use Filament\Tables\Columns\TextColumn;
-use Filament\Actions\EditAction;
-use Filament\Actions\BulkActionGroup;
-use Filament\Actions\DeleteBulkAction;
-use App\Admin\Resources\OrderResource\RelationManagers\ServiceRelationManager;
-use App\Admin\Resources\OrderResource\Pages\ListOrders;
+use App\Admin\Components\UserComponent;
 use App\Admin\Resources\OrderResource\Pages\CreateOrder;
 use App\Admin\Resources\OrderResource\Pages\EditOrder;
-use App\Admin\Components\UserComponent;
-use App\Admin\Resources\OrderResource\Pages;
-use App\Admin\Resources\OrderResource\RelationManagers;
+use App\Admin\Resources\OrderResource\Pages\ListOrders;
+use App\Admin\Resources\OrderResource\RelationManagers\ServiceRelationManager;
 use App\Helpers\ExtensionHelper;
 use App\Models\Currency;
 use App\Models\Order;
 use App\Models\Product;
-use Filament\Forms;
+use Filament\Actions\Action;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\EditAction;
+use Filament\Forms\Components\Hidden;
+use Filament\Forms\Components\Repeater;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TextInput;
 use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
+use Filament\Schemas\Components\Component;
+use Filament\Schemas\Components\Utilities\Get;
+use Filament\Schemas\Components\Utilities\Set;
+use Filament\Schemas\Schema;
 use Filament\Support\RawJs;
-use Filament\Tables;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 
@@ -38,11 +34,11 @@ class OrderResource extends Resource
 {
     protected static ?string $model = Order::class;
 
-    protected static string | \BackedEnum | null $navigationIcon = 'ri-shopping-bag-4-line';
+    protected static string|\BackedEnum|null $navigationIcon = 'ri-shopping-bag-4-line';
 
-    protected static string | \BackedEnum | null $activeNavigationIcon = 'ri-shopping-bag-4-fill';
+    protected static string|\BackedEnum|null $activeNavigationIcon = 'ri-shopping-bag-4-fill';
 
-    public static string | \UnitEnum | null $navigationGroup = 'Administration';
+    public static string|\UnitEnum|null $navigationGroup = 'Administration';
 
     public static function form(Schema $schema): Schema
     {

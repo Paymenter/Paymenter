@@ -3,10 +3,10 @@
 namespace App\Classes;
 
 use App\Models\Currency;
-use Exception;
-use DateTimeZone;
 use App\Models\Setting;
 use App\Models\TaxRate;
+use DateTimeZone;
+use Exception;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\HtmlString;
 use Ramsey\Uuid\Uuid;

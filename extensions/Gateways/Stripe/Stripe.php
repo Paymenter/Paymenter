@@ -2,7 +2,6 @@
 
 namespace Paymenter\Extensions\Gateways\Stripe;
 
-use Exception;
 use App\Classes\Extension\Gateway;
 use App\Events\Service\Updated;
 use App\Events\ServiceCancellation\Created;
@@ -11,6 +10,7 @@ use App\Models\Gateway as ModelsGateway;
 use App\Models\Invoice;
 use App\Models\Service;
 use Carbon\Carbon;
+use Exception;
 use Exception;
 use Filament\Notifications\Notification;
 use Illuminate\Http\Request;

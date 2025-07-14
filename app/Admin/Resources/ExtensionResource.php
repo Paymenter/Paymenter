@@ -3,22 +3,19 @@
 namespace App\Admin\Resources;
 
 use App\Admin\Clusters\Extensions;
-use Filament\Schemas\Schema;
-use Filament\Schemas\Components\Section;
-use Filament\Schemas\Components\Grid;
-use Filament\Schemas\Components\Utilities\Get;
-use Filament\Tables\Columns\TextColumn;
-use Filament\Tables\Columns\IconColumn;
-use Filament\Actions\EditAction;
-use App\Admin\Resources\ExtensionResource\Pages\ListExtensions;
 use App\Admin\Resources\ExtensionResource\Pages\EditExtension;
-use App\Admin\Resources\ExtensionResource\Pages;
-use App\Admin\Resources\ExtensionResource\Pages\ListAvailableExtensions;
+use App\Admin\Resources\ExtensionResource\Pages\ListExtensions;
 use App\Helpers\ExtensionHelper;
 use App\Models\Extension;
+use Filament\Actions\EditAction;
 use Filament\Forms\Components\Toggle;
 use Filament\Resources\Resource;
-use Filament\Tables;
+use Filament\Schemas\Components\Grid;
+use Filament\Schemas\Components\Section;
+use Filament\Schemas\Components\Utilities\Get;
+use Filament\Schemas\Schema;
+use Filament\Tables\Columns\IconColumn;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Database\Eloquent\Builder;
@@ -28,9 +25,9 @@ class ExtensionResource extends Resource
 {
     protected static ?string $model = Extension::class;
 
-    protected static string | \BackedEnum | null $navigationIcon = 'ri-puzzle-line';
+    protected static string|\BackedEnum|null $navigationIcon = 'ri-puzzle-line';
 
-    protected static string | \BackedEnum | null $activeNavigationIcon = 'ri-puzzle-fill';
+    protected static string|\BackedEnum|null $activeNavigationIcon = 'ri-puzzle-fill';
 
     protected static ?string $cluster = Extensions::class;
 

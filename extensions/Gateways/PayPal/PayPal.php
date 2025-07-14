@@ -2,7 +2,6 @@
 
 namespace Paymenter\Extensions\Gateways\PayPal;
 
-use Exception;
 use App\Classes\Extension\Gateway;
 use App\Events\Service\Updated;
 use App\Events\ServiceCancellation\Created;
@@ -10,6 +9,7 @@ use App\Helpers\ExtensionHelper;
 use App\Models\Invoice;
 use App\Models\InvoiceItem;
 use App\Models\Service;
+use Exception;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Event;

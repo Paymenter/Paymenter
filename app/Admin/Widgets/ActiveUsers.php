@@ -2,9 +2,9 @@
 
 namespace App\Admin\Widgets;
 
-use Illuminate\View\View;
 use App\Models\Session;
 use Filament\Widgets\Widget;
+use Illuminate\View\View;
 
 class ActiveUsers extends Widget
 {

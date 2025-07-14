@@ -2,7 +2,6 @@
 
 namespace App\Livewire\Services;
 
-use App\Models\User;
 use App\Classes\Price;
 use App\Events\Invoice\Created as InvoiceCreated;
 use App\Jobs\Server\UpgradeJob;
@@ -11,6 +10,7 @@ use App\Models\Invoice;
 use App\Models\Product;
 use App\Models\Service;
 use App\Models\ServiceUpgrade;
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\Computed;

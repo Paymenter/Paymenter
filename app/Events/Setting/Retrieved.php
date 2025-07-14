@@ -2,12 +2,12 @@
 
 namespace App\Events\Setting;
 
-use Throwable;
 use App\Models\Setting;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Crypt;
+use Throwable;
 
 class Retrieved
 {

@@ -2,9 +2,8 @@
 
 namespace App\Admin\Resources\CategoryResource\Pages;
 
-use Filament\Actions\DeleteAction;
 use App\Admin\Resources\CategoryResource;
-use Filament\Actions;
+use Filament\Actions\DeleteAction;
 use Filament\Notifications\Notification;
 use Filament\Resources\Pages\EditRecord;
 

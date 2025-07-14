@@ -2,8 +2,8 @@
 
 namespace App\Classes;
 
-use Throwable;
 use Exception;
+use Throwable;
 
 class Theme
 {

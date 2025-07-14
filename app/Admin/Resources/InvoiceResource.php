@@ -2,34 +2,30 @@
 
 namespace App\Admin\Resources;
 
-use Filament\Schemas\Schema;
-use Filament\Forms\Components\TextInput;
-use Filament\Forms\Components\DatePicker;
-use Filament\Forms\Components\Select;
-use Filament\Forms\Components\Toggle;
-use Filament\Forms\Components\Repeater;
-use Filament\Schemas\Components\Utilities\Get;
-use Filament\Actions\Action;
-use Filament\Forms\Components\Hidden;
-use Filament\Tables\Columns\TextColumn;
-use Filament\Actions\EditAction;
-use Filament\Actions\BulkActionGroup;
-use Filament\Actions\DeleteBulkAction;
-use App\Admin\Resources\InvoiceResource\RelationManagers\TransactionsRelationManager;
-use App\Admin\Resources\InvoiceResource\Pages\ListInvoices;
+use App\Admin\Components\UserComponent;
 use App\Admin\Resources\InvoiceResource\Pages\CreateInvoice;
 use App\Admin\Resources\InvoiceResource\Pages\EditInvoice;
-use App\Admin\Components\UserComponent;
-use App\Admin\Resources\InvoiceResource\Pages;
-use App\Admin\Resources\InvoiceResource\RelationManagers;
+use App\Admin\Resources\InvoiceResource\Pages\ListInvoices;
+use App\Admin\Resources\InvoiceResource\RelationManagers\TransactionsRelationManager;
 use App\Models\Currency;
 use App\Models\Invoice;
 use App\Models\Service;
 use App\Models\ServiceUpgrade;
-use Filament\Forms;
+use Filament\Actions\Action;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\EditAction;
+use Filament\Forms\Components\DatePicker;
+use Filament\Forms\Components\Hidden;
+use Filament\Forms\Components\Repeater;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Toggle;
 use Filament\Resources\Resource;
+use Filament\Schemas\Components\Utilities\Get;
+use Filament\Schemas\Schema;
 use Filament\Support\RawJs;
-use Filament\Tables;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
@@ -38,9 +34,9 @@ class InvoiceResource extends Resource
 {
     protected static ?string $model = Invoice::class;
 
-    protected static string | \BackedEnum | null $navigationIcon = 'ri-receipt-line';
+    protected static string|\BackedEnum|null $navigationIcon = 'ri-receipt-line';
 
-    protected static string | \BackedEnum | null $activeNavigationIcon = 'ri-receipt-fill';
+    protected static string|\BackedEnum|null $activeNavigationIcon = 'ri-receipt-fill';
 
     public static function getNavigationBadge(): ?string
     {
@@ -52,7 +48,7 @@ class InvoiceResource extends Resource
         return 'warning';
     }
 
-    public static string | \UnitEnum | null $navigationGroup = 'Administration';
+    public static string|\UnitEnum|null $navigationGroup = 'Administration';
 
     public static function form(Schema $schema): Schema
     {

@@ -2,9 +2,8 @@
 
 namespace App\Admin\Resources\CurrencyResource\Pages;
 
-use Filament\Actions\CreateAction;
 use App\Admin\Resources\CurrencyResource;
-use Filament\Actions;
+use Filament\Actions\CreateAction;
 use Filament\Resources\Pages\ListRecords;
 
 class ListCurrencies extends ListRecords

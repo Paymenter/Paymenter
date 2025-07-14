@@ -2,24 +2,21 @@
 
 namespace App\Admin\Resources;
 
-use Filament\Schemas\Schema;
-use Filament\Schemas\Components\Tabs;
-use Filament\Schemas\Components\Tabs\Tab;
-use Filament\Forms\Components\TextInput;
-use Filament\Forms\Components\Select;
-use Filament\Forms\Components\Checkbox;
-use Filament\Schemas\Components\Utilities\Get;
-use Filament\Forms\Components\Repeater;
-use Filament\Tables\Columns\TextColumn;
-use Filament\Actions\EditAction;
-use App\Admin\Resources\ConfigOptionResource\Pages\ListConfigOptions;
 use App\Admin\Resources\ConfigOptionResource\Pages\CreateConfigOption;
 use App\Admin\Resources\ConfigOptionResource\Pages\EditConfigOption;
-use App\Admin\Resources\ConfigOptionResource\Pages;
+use App\Admin\Resources\ConfigOptionResource\Pages\ListConfigOptions;
 use App\Models\ConfigOption;
-use Filament\Forms;
+use Filament\Actions\EditAction;
+use Filament\Forms\Components\Checkbox;
+use Filament\Forms\Components\Repeater;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TextInput;
 use Filament\Resources\Resource;
-use Filament\Tables;
+use Filament\Schemas\Components\Tabs;
+use Filament\Schemas\Components\Tabs\Tab;
+use Filament\Schemas\Components\Utilities\Get;
+use Filament\Schemas\Schema;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 
@@ -27,11 +24,11 @@ class ConfigOptionResource extends Resource
 {
     protected static ?string $model = ConfigOption::class;
 
-    protected static string | \UnitEnum | null $navigationGroup = 'Configuration';
+    protected static string|\UnitEnum|null $navigationGroup = 'Configuration';
 
-    protected static string | \BackedEnum | null $navigationIcon = 'ri-equalizer-2-line';
+    protected static string|\BackedEnum|null $navigationIcon = 'ri-equalizer-2-line';
 
-    protected static string | \BackedEnum | null $activeNavigationIcon = 'ri-equalizer-2-fill';
+    protected static string|\BackedEnum|null $activeNavigationIcon = 'ri-equalizer-2-fill';
 
     public static function form(Schema $schema): Schema
     {

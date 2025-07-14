@@ -2,9 +2,8 @@
 
 namespace App\Admin\Resources\TaxRateResource\Pages;
 
-use Filament\Actions\CreateAction;
 use App\Admin\Resources\TaxRateResource;
-use Filament\Actions;
+use Filament\Actions\CreateAction;
 use Filament\Resources\Pages\ListRecords;
 
 class ListTaxRates extends ListRecords

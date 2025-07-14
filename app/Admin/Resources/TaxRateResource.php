@@ -2,31 +2,28 @@
 
 namespace App\Admin\Resources;
 
-use Filament\Schemas\Schema;
-use Filament\Forms\Components\TextInput;
-use Filament\Forms\Components\Select;
-use Filament\Tables\Columns\TextColumn;
-use Filament\Actions\EditAction;
-use Filament\Actions\BulkActionGroup;
-use Filament\Actions\DeleteBulkAction;
-use App\Admin\Resources\TaxRateResource\Pages\ListTaxRates;
 use App\Admin\Resources\TaxRateResource\Pages\CreateTaxRate;
 use App\Admin\Resources\TaxRateResource\Pages\EditTaxRate;
-use App\Admin\Resources\TaxRateResource\Pages;
+use App\Admin\Resources\TaxRateResource\Pages\ListTaxRates;
 use App\Models\TaxRate;
-use Filament\Forms;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\EditAction;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TextInput;
 use Filament\Resources\Resource;
+use Filament\Schemas\Schema;
 use Filament\Support\RawJs;
-use Filament\Tables;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 
 class TaxRateResource extends Resource
 {
     protected static ?string $model = TaxRate::class;
 
-    protected static string | \UnitEnum | null $navigationGroup = 'Configuration';
+    protected static string|\UnitEnum|null $navigationGroup = 'Configuration';
 
-    protected static string | \BackedEnum | null $navigationIcon = 'ri-wallet-3-line';
+    protected static string|\BackedEnum|null $navigationIcon = 'ri-wallet-3-line';
 
     public static function form(Schema $schema): Schema
     {

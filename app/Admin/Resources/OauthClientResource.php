@@ -2,33 +2,30 @@
 
 namespace App\Admin\Resources;
 
-use Filament\Schemas\Schema;
-use Filament\Forms\Components\TextInput;
-use Filament\Forms\Components\TagsInput;
-use Filament\Actions\Action;
-use Filament\Tables\Columns\TextColumn;
-use Filament\Actions\EditAction;
-use Filament\Actions\BulkActionGroup;
-use Filament\Actions\DeleteBulkAction;
-use App\Admin\Resources\OauthClientResource\Pages\ListOauthClients;
 use App\Admin\Resources\OauthClientResource\Pages\CreateOauthClient;
 use App\Admin\Resources\OauthClientResource\Pages\EditOauthClient;
-use App\Admin\Resources\OauthClientResource\Pages;
+use App\Admin\Resources\OauthClientResource\Pages\ListOauthClients;
 use App\Models\OauthClient;
-use Filament\Forms;
+use Filament\Actions\Action;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\EditAction;
+use Filament\Forms\Components\TagsInput;
+use Filament\Forms\Components\TextInput;
 use Filament\Resources\Resource;
-use Filament\Tables;
+use Filament\Schemas\Schema;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 
 class OauthClientResource extends Resource
 {
     protected static ?string $model = OauthClient::class;
 
-    protected static string | \BackedEnum | null $navigationIcon = 'ri-lock-2-line';
+    protected static string|\BackedEnum|null $navigationIcon = 'ri-lock-2-line';
 
-    protected static string | \BackedEnum | null $activeNavigationIcon = 'ri-lock-2-fill';
+    protected static string|\BackedEnum|null $activeNavigationIcon = 'ri-lock-2-fill';
 
-    protected static string | \UnitEnum | null $navigationGroup = 'Other';
+    protected static string|\UnitEnum|null $navigationGroup = 'Other';
 
     public static function form(Schema $schema): Schema
     {

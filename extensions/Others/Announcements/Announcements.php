@@ -2,18 +2,18 @@
 
 namespace Paymenter\Extensions\Others\Announcements;
 
-use Exception;
-use Livewire\Livewire;
-use Paymenter\Extensions\Others\Announcements\Livewire\Announcements\Index;
-use Paymenter\Extensions\Others\Announcements\Livewire\Announcements\Show;
-use Paymenter\Extensions\Others\Announcements\Livewire\Announcements\Widget;
 use App\Classes\Extension\Extension;
 use App\Livewire\Auth\Register;
+use Exception;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\HtmlString;
+use Livewire\Livewire;
 use Paymenter\Extensions\Others\Announcements\Admin\Resources\AnnouncementResource;
+use Paymenter\Extensions\Others\Announcements\Livewire\Announcements\Index;
+use Paymenter\Extensions\Others\Announcements\Livewire\Announcements\Show;
+use Paymenter\Extensions\Others\Announcements\Livewire\Announcements\Widget;
 use Paymenter\Extensions\Others\Announcements\Models\Announcement;
 
 class Announcements extends Extension

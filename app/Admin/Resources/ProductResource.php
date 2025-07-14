@@ -2,40 +2,36 @@
 
 namespace App\Admin\Resources;
 
-use Filament\Schemas\Schema;
-use Filament\Schemas\Components\Tabs;
-use Filament\Schemas\Components\Tabs\Tab;
-use Filament\Forms\Components\TextInput;
-use Filament\Schemas\Components\Utilities\Get;
-use Filament\Schemas\Components\Utilities\Set;
-use Filament\Forms\Components\Select;
-use Filament\Forms\Components\Textarea;
-use Filament\Forms\Components\Checkbox;
-use Filament\Forms\Components\RichEditor;
-use Filament\Forms\Components\FileUpload;
-use Filament\Actions\Action;
-use Filament\Schemas\Components\Grid;
-use Exception;
-use Filament\Forms\Components\Placeholder;
-use Filament\Forms\Components\Repeater;
-use Filament\Tables\Columns\TextColumn;
-use Filament\Tables\Filters\SelectFilter;
-use Filament\Actions\EditAction;
-use App\Admin\Resources\ProductResource\Pages\ListProducts;
 use App\Admin\Resources\ProductResource\Pages\CreateProduct;
 use App\Admin\Resources\ProductResource\Pages\EditProduct;
-use App\Admin\Resources\ProductResource\Pages;
+use App\Admin\Resources\ProductResource\Pages\ListProducts;
 use App\Classes\FilamentInput;
 use App\Helpers\ExtensionHelper;
 use App\Models\Currency;
 use App\Models\Product;
 use App\Models\Server;
-use Filament\Forms;
+use Exception;
+use Filament\Actions\Action;
+use Filament\Actions\EditAction;
+use Filament\Forms\Components\Checkbox;
+use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\Repeater;
+use Filament\Forms\Components\RichEditor;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\TextInput;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
+use Filament\Schemas\Components\Grid;
+use Filament\Schemas\Components\Tabs;
+use Filament\Schemas\Components\Tabs\Tab;
+use Filament\Schemas\Components\Utilities\Get;
+use Filament\Schemas\Components\Utilities\Set;
+use Filament\Schemas\Schema;
 use Filament\Support\RawJs;
-use Filament\Tables;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Cache;
@@ -45,11 +41,11 @@ class ProductResource extends Resource
 {
     protected static ?string $model = Product::class;
 
-    protected static string | \UnitEnum | null $navigationGroup = 'Administration';
+    protected static string|\UnitEnum|null $navigationGroup = 'Administration';
 
-    protected static string | \BackedEnum | null $navigationIcon = 'ri-instance-line';
+    protected static string|\BackedEnum|null $navigationIcon = 'ri-instance-line';
 
-    protected static string | \BackedEnum | null $activeNavigationIcon = 'ri-instance-fill';
+    protected static string|\BackedEnum|null $activeNavigationIcon = 'ri-instance-fill';
 
     protected static ?string $recordTitleAttribute = 'name';
 
@@ -100,7 +96,7 @@ class ProductResource extends Resource
                                     ->relationship('category', 'name')
                                     ->searchable()
                                     ->preload()
-                                    ->createOptionForm(fn(Schema $schema) => CategoryResource::form($schema))
+                                    ->createOptionForm(fn (Schema $schema) => CategoryResource::form($schema))
                                     ->required(),
                             ]),
                         Tab::make('Pricing')
@@ -126,13 +122,13 @@ class ProductResource extends Resource
                                     ->hintAction(
                                         Action::make('refresh')
                                             ->label('Refresh')
-                                            ->action(fn() => Cache::set('product_config', null, 0))
-                                            ->hidden(fn(Get $get) => $get('server_id') === null)
+                                            ->action(fn () => Cache::set('product_config', null, 0))
+                                            ->hidden(fn (Get $get) => $get('server_id') === null)
                                     )
                                     ->live(),
 
                                 Grid::make()
-                                    ->hidden(fn(Get $get) => $get('server_id') === null)
+                                    ->hidden(fn (Get $get) => $get('server_id') === null)
                                     ->columns(2)
                                     ->schema(
                                         function (Get $get) {
@@ -195,7 +191,7 @@ class ProductResource extends Resource
                     }
                 });
             })
-            ->itemLabel(fn(array $state) => $state['name'])
+            ->itemLabel(fn (array $state) => $state['name'])
             ->schema([
                 TextInput::make('name')
                     ->required()
@@ -222,7 +218,7 @@ class ProductResource extends Resource
                     ->required()
                     ->label('Time Interval')
                     ->default(1)
-                    ->hidden(fn(Get $get) => $get('type') !== 'recurring'),
+                    ->hidden(fn (Get $get) => $get('type') !== 'recurring'),
 
                 Select::make('billing_unit')
                     ->options([
@@ -234,9 +230,9 @@ class ProductResource extends Resource
                     ->label('Billing period')
                     ->required()
                     ->default('month')
-                    ->hidden(fn(Get $get) => $get('type') !== 'recurring'),
+                    ->hidden(fn (Get $get) => $get('type') !== 'recurring'),
                 Repeater::make('pricing')
-                    ->hidden(fn(Get $get) => $get('type') === 'free')
+                    ->hidden(fn (Get $get) => $get('type') === 'free')
                     ->columns(3)
                     ->addActionLabel('Add new price')
                     ->reorderable(false)
@@ -244,7 +240,7 @@ class ProductResource extends Resource
                     ->columnSpanFull()
                     ->maxItems(Currency::count())
                     ->defaultItems(1)
-                    ->itemLabel(fn(array $state) => $state['currency_code'])
+                    ->itemLabel(fn (array $state) => $state['currency_code'])
                     ->schema([
                         Select::make('currency_code')
                             ->options(function (Get $get, ?string $state) {
@@ -267,8 +263,8 @@ class ProductResource extends Resource
                             ->required()
                             ->label('Price')
                             // Suffix based on chosen currency
-                            ->prefix(fn(Get $get) => Currency::where('code', $get('currency_code'))->first()?->prefix)
-                            ->suffix(fn(Get $get) => Currency::where('code', $get('currency_code'))->first()?->suffix)
+                            ->prefix(fn (Get $get) => Currency::where('code', $get('currency_code'))->first()?->prefix)
+                            ->suffix(fn (Get $get) => Currency::where('code', $get('currency_code'))->first()?->suffix)
                             ->live(onBlur: true)
                             ->mask(RawJs::make(
                                 <<<'JS'
@@ -277,7 +273,7 @@ class ProductResource extends Resource
                             ))
                             ->numeric()
                             ->minValue(0)
-                            ->hidden(fn(Get $get) => $get('type') === 'free'),
+                            ->hidden(fn (Get $get) => $get('type') === 'free'),
                         TextInput::make('setup_fee')
                             ->label('Setup fee')
                             ->live(onBlur: true)
@@ -288,7 +284,7 @@ class ProductResource extends Resource
                             ))
                             ->numeric()
                             ->minValue(0)
-                            ->hidden(fn(Get $get) => $get('type') === 'free'),
+                            ->hidden(fn (Get $get) => $get('type') === 'free'),
                     ]),
             ]);
     }

@@ -72,7 +72,7 @@ class Extension
     /**
      * Called when the extension is updated
      * This is called when the extension is updated to a new version
-     * 
+     *
      * @param  string  $oldVersion  The old version of the extension
      * @return void
      */
@@ -80,7 +80,7 @@ class Extension
 
     /**
      * Called every request to the extension (if the extension is enabled)
-     * 
+     *
      * @return void
      */
     public function boot() {}
@@ -88,7 +88,7 @@ class Extension
     /**
      * Called when the extension is enabled
      * If the extension type is server or gateway, it will be called every time a server or gateway is created
-     * 
+     *
      * @return void
      */
     public function enabled() {}

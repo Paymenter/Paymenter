@@ -2,32 +2,29 @@
 
 namespace App\Admin\Resources;
 
-use Filament\Schemas\Schema;
-use Filament\Forms\Components\TextInput;
-use Filament\Forms\Components\Select;
-use Filament\Tables\Columns\TextColumn;
-use Filament\Actions\EditAction;
-use Filament\Actions\BulkActionGroup;
-use Filament\Actions\DeleteBulkAction;
-use App\Admin\Resources\CurrencyResource\Pages\ListCurrencies;
 use App\Admin\Resources\CurrencyResource\Pages\CreateCurrency;
 use App\Admin\Resources\CurrencyResource\Pages\EditCurrency;
-use App\Admin\Resources\CurrencyResource\Pages;
+use App\Admin\Resources\CurrencyResource\Pages\ListCurrencies;
 use App\Models\Currency;
-use Filament\Forms;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\EditAction;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TextInput;
 use Filament\Resources\Resource;
-use Filament\Tables;
+use Filament\Schemas\Schema;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 
 class CurrencyResource extends Resource
 {
     protected static ?string $model = Currency::class;
 
-    protected static string | \UnitEnum | null $navigationGroup = 'Configuration';
+    protected static string|\UnitEnum|null $navigationGroup = 'Configuration';
 
-    protected static string | \BackedEnum | null $navigationIcon = 'ri-money-dollar-circle-line';
+    protected static string|\BackedEnum|null $navigationIcon = 'ri-money-dollar-circle-line';
 
-    protected static string | \BackedEnum | null $activeNavigationIcon = 'ri-money-dollar-circle-fill';
+    protected static string|\BackedEnum|null $activeNavigationIcon = 'ri-money-dollar-circle-fill';
 
     public static function form(Schema $schema): Schema
     {

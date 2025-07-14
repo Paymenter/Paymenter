@@ -2,12 +2,11 @@
 
 namespace App\Admin\Resources\UserResource\Pages;
 
-use Filament\Tables\Columns\TextColumn;
-use Filament\Actions\ViewAction;
 use App\Admin\Resources\ServiceResource;
 use App\Admin\Resources\UserResource;
+use Filament\Actions\ViewAction;
 use Filament\Resources\Pages\ManageRelatedRecords;
-use Filament\Tables;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 
 class ShowServices extends ManageRelatedRecords
@@ -16,7 +15,7 @@ class ShowServices extends ManageRelatedRecords
 
     protected static string $relationship = 'services';
 
-    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-shopping-cart';
+    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-shopping-cart';
 
     public static function getNavigationLabel(): string
     {
