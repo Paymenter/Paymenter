@@ -1,4 +1,4 @@
-name: Lint
+name: Test 
 
 on:
   push:
@@ -8,7 +8,7 @@ on:
 
 permissions:
   contents: read
-  
+
 
 jobs:
   test:
@@ -35,6 +35,9 @@ jobs:
 
       - name: Create Database
         run: touch database/database.sqlite
+      
+      - name: Copy .env
+        run: php -r "file_exists('.env') || copy('.env.example', '.env');"
         
       - name: Install Dependencies
         run: composer install --prefer-dist --no-progress --no-suggest
