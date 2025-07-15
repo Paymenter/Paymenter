@@ -29,4 +29,28 @@ return [
     'upgrade' => 'Mettre à niveau',
     'upgrade_summary' => 'Résumé de la mise à niveau',
     'total_today' => 'Total aujourd\'hui',
+    'upgrade_service' => 'Service de mise à niveau',
+    'upgrade_choose_product' => 'Choisissez un produit vers lequel effectuer une mise à niveau',
+    'upgrade_choose_config' => 'Choisissez la configuration pour la mise à niveau',
+    'next_step' => 'Prochaine étape',
+
+    'upgrade_pending' => "Vous ne pouvez pas effectuer de mise à niveau tant qu'une facture de mise à niveau/rétrogradation est déjà ouverte.",
+
+    'outstanding_invoice' => 'Vous avez une facture impayée.',
+    'view_and_pay' => 'Cliquez ici pour voir et payer',
+
+    'statuses' => [
+        'pending' => 'En attente',
+        'active' => 'Actif',
+        'cancelled' => 'Annulé',
+        'suspended' => 'Suspendu',
+    ],
+    'billing_cycles' => [
+        'day' => 'jour|jours',
+        'week' => 'semaine|semaines',
+        'month' => 'mois|mois',
+        'year' => 'année|années',
+    ],
+    'every_period' => 'Chaque :period :unit',
+    'price_every_period' => ':price par :period :unit',
 ];
