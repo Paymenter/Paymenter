@@ -33,6 +33,11 @@ jobs:
           key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
           restore-keys: ${{ runner.os }}-composer-
 
+      - name: Build Assets
+        run: |
+          npm install
+          npm run build
+
       - name: Create Database
         run: touch database/database.sqlite
       
