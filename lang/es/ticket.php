@@ -20,6 +20,6 @@ return [
     'last_activity' => 'Última actividad',
 
     'service' => 'Servicio',
-    'select_service' => 'Seleccionar servicio',
+    'select_service' => 'Selecciona el servicio',
     'create' => 'Crear',
 ];
