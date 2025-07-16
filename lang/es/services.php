@@ -18,7 +18,7 @@ return [
     'cancel_type' => 'Tipo de cancelación',
     'cancel_immediate' => 'Cancelar de inmediato',
     'cancel_end_of_period' => 'Cancelar al final del período de facturación',
-    'cancel_immediate_warning' => 'Al pulsar el botón de abajo, el servicio se cancelará inmediatamente y ya no podrá utilizarlo.',
+    'cancel_immediate_warning' => 'Al pulsar el botón de abajo, el servicio se cancelará inmediatamente y ya no podrás utilizarlo.',
     'cancellation_requested' => 'Cancelación solicitada',
 
     'current_plan' => 'Plan actual',
@@ -27,17 +27,17 @@ return [
     'current_price' => 'Precio actual',
     'new_price' => 'Nuevo precio',
     'upgrade' => 'Mejorar',
-    'upgrade_summary' => 'Resumen de actualización',
+    'upgrade_summary' => 'Resumen de la actualización',
     'total_today' => 'Total hoy',
     'upgrade_service' => 'Actualizar el servicio',
-    'upgrade_choose_product' => 'Elija el producto al que desea cambiar',
-    'upgrade_choose_config' => 'Elija la configuración para la mejora',
-    'next_step' => 'Paso siguiente',
+    'upgrade_choose_product' => 'Elige el producto al que mejorar',
+    'upgrade_choose_config' => 'Elige la configuración para la mejora',
+    'next_step' => 'Siguiente paso',
 
-    'upgrade_pending' => 'No es posible realizar una actualización si ya existe una factura de mejora/disminución abierta',
+    'upgrade_pending' => 'No puedes actualizar tu plan mientras haya una factura de subida o bajada de plan pendiente',
 
     'outstanding_invoice' => 'Tienes una factura pendiente.',
-    'view_and_pay' => 'Haga clic aquí para ver y pagar',
+    'view_and_pay' => 'Haz clic aquí para ver y pagar',
 
     'statuses' => [
         'pending' => 'Pendiente',
