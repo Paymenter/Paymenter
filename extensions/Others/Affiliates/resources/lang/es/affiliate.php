@@ -15,5 +15,5 @@ return [
 
     'you-havent-signed-up-yet' => '¡Aún no se ha registrado en el programa de afiliados!',
     'you-are-already-affiliated' => 'Ya te has registrado en el programa de afiliados.',
-    'signup-success' => '¡Se ha suscrito exitosamente al programa de afiliados!',
+    'signup-success' => '¡Te has suscrito al programa de afiliados!',
 ];
