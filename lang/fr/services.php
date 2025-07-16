@@ -51,6 +51,6 @@ return [
         'month' => 'mois|mois',
         'year' => 'an|ans',
     ],
-    'every_period' => 'Toutes les :period :unit',
+    'every_period' => 'Chaque :period :unit',
     'price_every_period' => ':price pour :period :unit',
 ];
