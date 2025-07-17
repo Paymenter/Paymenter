@@ -6,6 +6,7 @@ use App\Classes\Extension\Server;
 use App\Models\Product;
 use App\Models\Service;
 use App\Models\User;
+use Exception;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
 
@@ -29,7 +30,7 @@ class Virtualizor extends Server
         }
 
         if (!$response->successful()) {
-            throw new \Exception('Failed to connect to Virtualizor API');
+            throw new Exception('Failed to connect to Virtualizor API');
         }
 
         return $response->json();
@@ -114,7 +115,7 @@ class Virtualizor extends Server
     {
         $os = $this->request('os');
         if (!isset($os['oslist'][$product->settings()->where('key', 'virt')->first()->value])) {
-            throw new \Exception('Invalid OS');
+            throw new Exception('Invalid OS');
         }
         $allOs = [];
         foreach ($os['oslist'][$product->settings()->where('key', 'virt')->first()->value] as $o) {
@@ -149,7 +150,7 @@ class Virtualizor extends Server
     {
         try {
             $this->request('users');
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return $e->getMessage();
         }
 
@@ -175,7 +176,7 @@ class Virtualizor extends Server
         $response = $this->request('adduser', 'post', $data);
 
         if (!$response['done']) {
-            throw new \Exception('Failed to create user');
+            throw new Exception('Failed to create user');
         }
 
         $users = $this->request('users', data: ['email' => $user->email]);
@@ -202,7 +203,7 @@ class Virtualizor extends Server
         $plans = $this->request('plans', 'get', $data);
         // Check if plan exists
         if (empty($plans['plans'])) {
-            throw new \Exception('Invalid plan OR Virtualization type');
+            throw new Exception('Invalid plan OR Virtualization type');
         }
         $plan = $plans['plans'][key($plans['plans'])];
         $password = Str::random(12);
@@ -241,7 +242,7 @@ class Virtualizor extends Server
         $response = $this->request('addvs', 'post', $data);
 
         if (isset($response['error']) && !empty($response['error'])) {
-            throw new \Exception('Failed to create server with error: ' . implode(', ', $response['error']));
+            throw new Exception('Failed to create server with error: ' . implode(', ', $response['error']));
         }
 
         $service->properties()->updateOrCreate([
@@ -267,7 +268,7 @@ class Virtualizor extends Server
     public function suspendServer(Service $service, $settings, $properties)
     {
         if (!isset($properties['server_id'])) {
-            throw new \Exception('Server does not exist');
+            throw new Exception('Server does not exist');
         }
 
         // Suspend server
@@ -286,7 +287,7 @@ class Virtualizor extends Server
     public function unsuspendServer(Service $service, $settings, $properties)
     {
         if (!isset($properties['server_id'])) {
-            throw new \Exception('Server does not exist');
+            throw new Exception('Server does not exist');
         }
 
         // Unsuspend server
@@ -305,14 +306,14 @@ class Virtualizor extends Server
     public function terminateServer(Service $service, $settings, $properties)
     {
         if (!isset($properties['server_id'])) {
-            throw new \Exception('Server does not exist');
+            throw new Exception('Server does not exist');
         }
 
         // Terminate server
         $request = $this->request('vs', 'post', ['delete' => $properties['server_id']]);
 
         if (empty($request['done']) || !$request['done']) {
-            throw new \Exception('Failed to terminate server');
+            throw new Exception('Failed to terminate server');
         }
 
         // Remove server id
@@ -339,13 +340,13 @@ class Virtualizor extends Server
     public function ssoLink(Service $service, $settings, $properties): string
     {
         if (!isset($properties['server_id'])) {
-            throw new \Exception('Server does not exist');
+            throw new Exception('Server does not exist');
         }
 
         $response = $this->request('sso', data: ['svs' => $properties['server_id']], clientApi: true);
 
         if (!isset($response['sid'])) {
-            throw new \Exception('Failed to get VNC link');
+            throw new Exception('Failed to get VNC link');
         }
 
         return 'https://' . $this->config('ip') . ':' . $this->config('client_port') . '/' . $response['token_key'] . '/?as=' . $response['sid'] . '&svs=' . $properties['server_id'];
@@ -354,7 +355,7 @@ class Virtualizor extends Server
     public function upgradeServer(Service $service, $settings, $properties)
     {
         if (!isset($properties['server_id'])) {
-            throw new \Exception('Server does not exist');
+            throw new Exception('Server does not exist');
         }
 
         $settings = array_merge($settings, $properties);
@@ -369,7 +370,7 @@ class Virtualizor extends Server
             }
         }
         if (!$plid) {
-            throw new \Exception('Plan not found');
+            throw new Exception('Plan not found');
         }
 
         $editData = [
@@ -382,7 +383,7 @@ class Virtualizor extends Server
         $response = $this->request('managevps', 'post', $editData);
 
         if (empty($response['done'])) {
-            throw new \Exception('Failed to upgrade server');
+            throw new Exception('Failed to upgrade server');
         }
 
         return true;

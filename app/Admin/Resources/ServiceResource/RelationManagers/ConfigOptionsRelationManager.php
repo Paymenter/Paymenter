@@ -3,10 +3,12 @@
 namespace App\Admin\Resources\ServiceResource\RelationManagers;
 
 use App\Models\ServiceConfig;
-use Filament\Forms;
-use Filament\Forms\Form;
+use Filament\Actions\DeleteAction;
+use Filament\Actions\EditAction;
+use Filament\Forms\Components\Select;
 use Filament\Resources\RelationManagers\RelationManager;
-use Filament\Tables;
+use Filament\Schemas\Schema;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 
@@ -14,11 +16,11 @@ class ConfigOptionsRelationManager extends RelationManager
 {
     protected static string $relationship = 'configs';
 
-    public function form(Form $form): Form
+    public function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
-                Forms\Components\Select::make('configValue.id')
+        return $schema
+            ->components([
+                Select::make('configValue.id')
                     ->label('Config Value')
                     ->required()
                     ->relationship('configValue', 'id', fn (Builder $query, ServiceConfig $record) => $query->where('parent_id', $record->config_option_id))
@@ -36,16 +38,16 @@ class ConfigOptionsRelationManager extends RelationManager
         return $table
             ->recordTitleAttribute('configOption.name')
             ->columns([
-                Tables\Columns\TextColumn::make('configOption.name'),
-                Tables\Columns\TextColumn::make('configValue.name'),
+                TextColumn::make('configOption.name'),
+                TextColumn::make('configValue.name'),
             ])
             ->filters([
                 //
             ])
             ->headerActions([])
-            ->actions([
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
+            ->recordActions([
+                EditAction::make(),
+                DeleteAction::make(),
             ]);
     }
 }
