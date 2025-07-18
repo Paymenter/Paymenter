@@ -104,7 +104,6 @@ class RoleResource extends Resource
     {
         return collect(Event::dispatch('permissions'))
             ->filter(fn($response) => is_array($response))
-            ->flatMap(fn($permissions) => $permissions)
             ->pipe(fn($merged) => Arr::dot($merged));
     }
 }
