@@ -24,10 +24,13 @@
                 @endif
             </div>
         </div>
-        <p class="text-base text-sm">Product(s): {{ $service->product->category->name }} {{ in_array($service->plan->type, ['recurring']) ? ' - ' . __('services.every_period', [
-            'period' => $service->plan->billing_period > 1 ? $service->plan->billing_period : '',
-            'unit' => trans_choice(__('services.billing_cycles.' . $service->plan->billing_unit), $service->plan->billing_period)
-        ]) : '' }}</p>
+        <p class="text-base text-sm">Product(s): {{ $service->product->category->name }} {{
+                in_array($service->plan->type, ['recurring']) ? ' - ' . __('services.every_period', [
+                'period' => $service->plan->billing_period > 1 ? $service->plan->billing_period : '',
+                'unit' => trans_choice(__('services.billing_cycles.' . $service->plan->billing_unit),
+                $service->plan->billing_period)
+                ]) : '' }} - {{ $service->expires_at ? __('services.expires_at') . ': '. $service->expires_at->format('M d, Y') : '' }}
+        </p>
         </div>
     </a>
     @endforeach
