@@ -114,6 +114,7 @@ class Settings
                     'label' => 'Google Enabled',
                     'description' => new HtmlString('<a href="https://paymenter.org/docs/guides/OAuth#google" target="_blank">Documentation</a>'),
                     'type' => 'checkbox',
+                    'database_type' => 'boolean',
                     'default' => false,
                     'required' => false,
                 ],
@@ -134,6 +135,7 @@ class Settings
                     'label' => 'GitHub Enabled',
                     'description' => new HtmlString('<a href="https://paymenter.org/docs/guides/OAuth#github" target="_blank">Documentation</a>'),
                     'type' => 'checkbox',
+                    'database_type' => 'boolean',
                     'default' => false,
                     'required' => false,
                 ],
@@ -154,6 +156,7 @@ class Settings
                     'label' => 'Discord Enabled',
                     'description' => new HtmlString('<a href="https://paymenter.org/docs/guides/OAuth#discord" target="_blank">Documentation</a>'),
                     'type' => 'checkbox',
+                    'database_type' => 'boolean',
                     'default' => false,
                     'required' => false,
                 ],
@@ -236,6 +239,7 @@ class Settings
                     'name' => 'tax_enabled',
                     'label' => 'Tax Enabled',
                     'type' => 'checkbox',
+                    'database_type' => 'boolean',
                     'default' => false,
                 ],
                 [
@@ -255,12 +259,14 @@ class Settings
                     'name' => 'mail_disable',
                     'label' => 'Disable Mail',
                     'type' => 'checkbox',
+                    'database_type' => 'boolean',
                     'default' => true,
                 ],
                 [
                     'name' => 'mail_must_verify',
                     'label' => 'Users must verify email before buying',
                     'type' => 'checkbox',
+                    'database_type' => 'boolean',
                     'default' => false,
                 ],
                 [
@@ -403,6 +409,7 @@ class Settings
                     'name' => 'credits_enabled',
                     'label' => 'Credits Enabled',
                     'type' => 'checkbox',
+                    'database_type' => 'boolean',
                     'default' => false,
                 ],
                 [
@@ -504,6 +511,7 @@ class Settings
                     'name' => 'registration_disabled',
                     'label' => 'Disable User Registration',
                     'type' => 'checkbox',
+                    'database_type' => 'boolean',
                     'default' => false,
                     'description' => 'Only allow existing users to log in. This will hide the registration page and prevent new users from signing up.',
                 ],
@@ -511,6 +519,7 @@ class Settings
                     'name' => 'tickets_disabled',
                     'label' => 'Disable Tickets',
                     'type' => 'checkbox',
+                    'database_type' => 'boolean',
                     'default' => false,
                     'description' => 'Disable the ticket system. This will disable all client side ticket functionality, including the ability to create new tickets and view existing tickets.',
                 ],
@@ -526,6 +535,7 @@ class Settings
                     'name' => 'debug',
                     'label' => 'Debug Mode',
                     'type' => 'checkbox',
+                    'database_type' => 'boolean',
                     'default' => false,
                     'description' => 'Enable debug mode to log HTTP requests and errors',
                 ],
@@ -574,7 +584,11 @@ class Settings
 
     public static function getTelemetry()
     {
-        $uuid = config('settings.telemetry_uuid');
+        try {
+            $uuid = Setting::where('key', 'telemetry_uuid')->value('value');
+        } catch (\Exception $e) {
+            $uuid = null;
+        }
         if (is_null($uuid)) {
             $uuid = Uuid::uuid4()->toString();
             try {

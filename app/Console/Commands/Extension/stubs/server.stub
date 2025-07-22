@@ -40,12 +40,11 @@ class {{ class }} extends Server
     }
 
     /**
-     * Create a server 
+     * Create a server for the service.
      * 
-     * @param Service $service
-     * @param array $settings (product settings)
-     * @param array $properties (checkout options)
-     * @return bool
+     * @param Service $service The service that is being created.
+     * @param array $settings The settings that are provided on the product from `getProductConfig`.
+     * @param array $properties Custom properties created by the admin and values coming from `getCheckoutConfig`.
      */
     public function createServer(Service $service, $settings, $properties)
     {

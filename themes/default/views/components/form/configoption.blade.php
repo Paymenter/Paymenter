@@ -37,6 +37,10 @@
                     this.updateSliderVisuals();
                 }
             }" class="flex flex-col gap-1 relative">
+                <label for="{{ $name }}"
+                    class="text-sm text-primary-100 w-fit start-1 ml-2 bg-background-secondary rounded-md px-2">
+                    {{ $config->label ?? $config->name }}
+                </label>
                 <div class="relative flex items-center" :style="`--progress:${progressOption};--segments-width:${segmentsWidthOption}`">
                     <div class="
                         absolute left-2.5 right-2.5 h-1.5 bg-background-secondary rounded-full overflow-hidden transition-all duration-500 ease-in-out
@@ -50,16 +54,15 @@
                         [&::-webkit-slider-thumb]:focus:ring-0 [&::-moz-range-thumb]:h-5 [&::-moz-range-thumb]:w-5
                         [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:bg-base [&::-moz-range-thumb]:border-none
                         [&::-moz-range-thumb]:shadow-none [&::-moz-range-thumb]:focus:ring-0
-                    " type="range" min="0" :max="options.length - 1" x-model="selectedOption" @input="setOptionValue(selectedOption)" aria-label="Option Slider">
+                    " type="range" min="0" :max="options.length - 1" x-model="selectedOption" @input="setOptionValue(selectedOption)" aria-label="Option Slider" name="{{ $name }}" id="{{ $name }}" />
                 </div>
                 <!-- Options -->
                 <ul class="flex justify-between text-xs font-medium text-light px-2.5">
                     <template x-for="(plan, index) in options" :key="index">
                         <li class="relative @if($showPriceTag) pb-7 @else pb-2 @endif">
-                            <button @click="setOptionValue(index)" class="fixed flex flex-col items-center -translate-x-1/2">
-                                <span class="hidden lg:inline text-sm font-semibold" x-text="`${plan.option}`"></span>
-                                <span class="hidden lg:inline text-sm font-semibold" x-text="`${plan.price}`"></span>
-                                <span class="inline lg:hidden" x-text="`${plan.option}`"></span>
+                            <button @click="setOptionValue(index)" class="absolute flex flex-col items-center -translate-x-1/2">
+                                <span class="text-sm font-semibold" x-text="`${plan.option}`"></span>
+                                <span class="text-sm font-semibold" x-text="`${plan.price}`"></span>
                             </button>
                         </li>
                     </template>
@@ -81,12 +84,12 @@
 
         @case('checkbox')
             <x-form.checkbox name="{{ $name }}" type="checkbox" :label="__($config->label ?? $config->name)"
-                :required="$config->required ?? false" :checked="config('configs.' . $config->name) ? true : false" wire:model="{{ $name }}" />
+                :required="$config->required ?? false" :checked="config('configs.' . $config->name) ? true : false" wire:model.live="{{ $name }}" />
         @break
 
         @case('radio')
             <x-form.radio name="{{ $name }}" :label="__($config->label ?? $config->name)"
-                :selected="config('configs.' . $config->name)" :required="$config->required ?? false" wire:model="{{ $name }}">
+                :selected="config('configs.' . $config->name)" :required="$config->required ?? false" wire:model.live="{{ $name }}">
                 {{  $slot }}
             </x-form.radio>
         @break

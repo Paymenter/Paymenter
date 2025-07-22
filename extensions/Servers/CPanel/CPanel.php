@@ -254,4 +254,44 @@ class CPanel extends Server
 
         return false;
     }
+
+    public function getLoginUrl(Service $service, $settings, $properties): string
+    {
+        if (!isset($properties['cpanel_username'])) {
+            throw new \Exception('Service has not been created');
+        }
+
+        $response = $this->request(
+            '/create_user_session',
+            'post',
+            [
+                'api.version' => 1,
+                'user' => $properties['cpanel_username'],
+                'service' => 'cpaneld',
+            ]
+        )->json();
+
+        if (isset($response['data']['url'])) {
+            $url = $response['data']['url'];
+
+            return $url;
+        }
+
+        throw new \Exception('Unable to generate cPanel login URL');
+    }
+
+    public function getActions(Service $service, $settings, $properties): array
+    {
+        if (!isset($properties['cpanel_username'])) {
+            return [];
+        }
+
+        return [
+            [
+                'label' => 'Access cPanel',
+                'type' => 'button',
+                'function' => 'getLoginUrl',
+            ],
+        ];
+    }
 }

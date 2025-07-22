@@ -2,10 +2,10 @@
 
 namespace App\Admin\Resources;
 
+use App\Admin\Components\UserComponent;
 use App\Admin\Resources\TicketResource\Pages;
 use App\Admin\Resources\TicketResource\Widgets\TicketsOverView;
 use App\Models\Ticket;
-use App\Models\User;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Forms\Get;
@@ -86,18 +86,9 @@ class TicketResource extends Resource
                     ->columnSpan(function ($record) {
                         return $record ? 2 : 1;
                     }),
-                Forms\Components\Select::make('user_id')
-                    ->label('User')
-                    ->relationship('user', 'id')
-                    ->searchable()
-                    ->preload()
-                    ->live()
-                    ->getOptionLabelFromRecordUsing(fn ($record) => $record->name)
-                    ->getSearchResultsUsing(fn (string $search): array => User::where('first_name', 'like', "%$search%")->orWhere('last_name', 'like', "%$search%")->limit(50)->pluck('name', 'id')->toArray())
-                    ->columnSpan(function ($record) {
-                        return $record ? 2 : 1;
-                    })
-                    ->required(),
+                UserComponent::make('user_id')->columnSpan(function ($record) {
+                    return $record ? 2 : 1;
+                }),
                 Forms\Components\Select::make('assigned_to')
                     ->label('Assigned To')
                     ->searchable()
@@ -109,7 +100,9 @@ class TicketResource extends Resource
                     }),
                 Forms\Components\Select::make('service_id')
                     ->label('Service')
-                    ->relationship('service', 'id')
+                    ->relationship('service', 'id', function (Builder $query, Get $get) {
+                        $query->where('user_id', $get('user_id'));
+                    })
                     ->getOptionLabelFromRecordUsing(fn ($record) => "{$record->product->name} - " . ucfirst($record->status))
                     ->columnSpan(function ($record) {
                         return $record ? 2 : 1;

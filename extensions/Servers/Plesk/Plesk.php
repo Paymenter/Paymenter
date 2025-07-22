@@ -144,7 +144,12 @@ class Plesk extends Server
         $response = $this->request('/domains', 'post', [
             'name' => $properties['domain'],
             'external_id' => $service->id,
-            'client' => $user['guid'],
+            'owner_client' => [
+                'id' => $returnData['client_id'],
+                'login' => 'owner',
+                'guid' => $user['guid'],
+                'external_id' => $service->user->id,
+            ],
             'hosting_type' => 'virtual',
             'hosting_settings' => [
                 'ftp_login' => $returnData['username'],

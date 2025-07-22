@@ -14,7 +14,7 @@ class Widget extends Component
     public function render()
     {
         return view('tickets.widget', [
-            'tickets' => Ticket::where('user_id', Auth::id())->latest()->paginate(config('settings.pagination')),
+            'tickets' => Ticket::where('user_id', Auth::id())->where('status', '!=', 'closed')->latest()->paginate(config('settings.pagination')),
         ])->layoutData([
             'title' => 'Tickets',
         ]);

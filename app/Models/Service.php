@@ -153,10 +153,7 @@ class Service extends Model
      */
     public function invoices()
     {
-        return $this->hasManyThrough(Invoice::class, InvoiceItem::class, 'reference_id', 'id', 'id', 'invoice_id')->where(function ($query) {
-            $query->where('reference_type', Service::class)
-                ->orWhere('reference_type', ServiceUpgrade::class);
-        });
+        return $this->hasManyThrough(Invoice::class, InvoiceItem::class, 'reference_id', 'id', 'id', 'invoice_id')->where('reference_type', Service::class);
     }
 
     /**

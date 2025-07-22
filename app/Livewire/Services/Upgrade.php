@@ -228,12 +228,10 @@ class Upgrade extends Component
         }
 
         $invoice = new Invoice([
-            'order' => $this->service->order,
-            'currency_code' => $this->service->order->currency_code,
-            'total' => $price->price,
+            'currency_code' => $this->service->currency_code,
             'status' => Invoice::STATUS_PENDING,
             'due_at' => Carbon::now()->addDays(7),
-            'user_id' => $this->service->order->user_id,
+            'user_id' => $this->service->user_id,
         ]);
         $invoice->save();
 

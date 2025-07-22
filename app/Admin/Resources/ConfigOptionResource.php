@@ -6,6 +6,7 @@ use App\Admin\Resources\ConfigOptionResource\Pages;
 use App\Models\ConfigOption;
 use Filament\Forms;
 use Filament\Forms\Form;
+use Filament\Forms\Get;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -42,6 +43,7 @@ class ConfigOptionResource extends Resource
                                 ->label('Type')
                                 ->native(false)
                                 ->required()
+                                ->reactive()
                                 ->options([
                                     'text' => 'Text',
                                     'number' => 'Number',
@@ -53,6 +55,7 @@ class ConfigOptionResource extends Resource
                             Forms\Components\Checkbox::make('hidden')
                                 ->label('Hidden'),
                             Forms\Components\Checkbox::make('upgradable')
+                                ->visible(fn (Get $get): bool => in_array($get('type'), ['select', 'radio', 'slider']))
                                 ->label('Upgradable')
                                 ->helperText('If enabled, this configuration option can be upgraded in the future.'),
                             Forms\Components\Select::make('products')
@@ -62,35 +65,46 @@ class ConfigOptionResource extends Resource
                                 ->preload()
                                 ->placeholder('Select the products that this configuration option belongs to'),
                         ]),
-                        Forms\Components\Tabs\Tab::make('Options')->schema([
-                            Forms\Components\Repeater::make('Options')
-                                ->relationship('children')
-                                ->label('Options')
-                                ->addActionLabel('Add Option')
-                                ->columnSpanFull()
-                                ->itemLabel(fn (array $state) => $state['name'])
-                                ->collapsible()
-                                ->collapsed()
-                                ->cloneable()
-                                ->reorderable()
-                                ->orderColumn('sort')
-                                ->columns(2)
-                                ->schema([
-                                    Forms\Components\TextInput::make('name')
-                                        ->label('Name')
-                                        ->required()
-                                        ->live()
-                                        ->maxLength(255)
-                                        ->placeholder('Enter the name of the configuration option'),
-                                    Forms\Components\TextInput::make('env_variable')
-                                        ->label('Environment Variable')
-                                        ->required()
-                                        ->maxLength(255)
-                                        ->placeholder('Enter the environment variable name'),
-                                    // if the type is select, radio or checkbox then allow unlimited children (otherwise only allow 1)
-                                    ProductResource::plan()->columnSpanFull()->label('Pricing')->reorderable(false)->deleteAction(null),
-                                ]),
-                        ]),
+                        Forms\Components\Tabs\Tab::make('Options')
+                            ->visible(fn (Get $get): bool => in_array($get('type'), ['select', 'radio', 'slider', 'checkbox']))
+                            ->schema([
+                                Forms\Components\Repeater::make('Options')
+                                    ->relationship('children')
+                                    ->label('Options')
+                                    ->addActionLabel('Add Option')
+                                    ->columnSpanFull()
+                                    ->itemLabel(fn (array $state) => $state['name'])
+                                    ->collapsible()
+                                    ->collapsed()
+                                    ->cloneable()
+                                    ->reorderable()
+                                    ->orderColumn('sort')
+                                    ->columns(2)
+                                    // When the type is checkbox only allow 1 child
+                                    ->maxItems(function (Get $get): ?int {
+                                        if (in_array($get('type'), ['select', 'radio', 'slider'])) {
+                                            return null; // unlimited children
+                                        }
+
+                                        return 1; // checkbox
+                                    })
+                                    ->minItems(1)
+                                    ->schema([
+                                        Forms\Components\TextInput::make('name')
+                                            ->label('Name')
+                                            ->required()
+                                            ->live()
+                                            ->maxLength(255)
+                                            ->placeholder('Enter the name of the configuration option'),
+                                        Forms\Components\TextInput::make('env_variable')
+                                            ->label('Environment Variable')
+                                            ->required()
+                                            ->maxLength(255)
+                                            ->placeholder('Enter the environment variable name'),
+                                        // if the type is select, radio or checkbox then allow unlimited children (otherwise only allow 1)
+                                        ProductResource::plan()->columnSpanFull()->label('Pricing')->reorderable(false)->deleteAction(null),
+                                    ]),
+                            ]),
                     ]),
             ]);
     }

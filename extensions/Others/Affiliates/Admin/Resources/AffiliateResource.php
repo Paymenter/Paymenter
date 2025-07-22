@@ -2,10 +2,8 @@
 
 namespace Paymenter\Extensions\Others\Affiliates\Admin\Resources;
 
-use App\Admin\Resources\UserResource;
+use App\Admin\Components\UserComponent;
 use App\Helpers\ExtensionHelper;
-use App\Models\User;
-use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Forms\Form;
@@ -13,7 +11,6 @@ use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
-use Illuminate\Support\HtmlString;
 use Paymenter\Extensions\Others\Affiliates\Admin\Resources\AffiliateResource\Pages;
 use Paymenter\Extensions\Others\Affiliates\Admin\Resources\AffiliateResource\RelationManagers;
 use Paymenter\Extensions\Others\Affiliates\Models\Affiliate;
@@ -35,16 +32,7 @@ class AffiliateResource extends Resource
         return $form
             ->schema([
                 Toggle::make('enabled')->default(true)->columnSpanFull(),
-                Select::make('user_id')
-                    ->label('User')
-                    ->relationship('user', 'id')
-                    ->searchable()
-                    ->preload()
-                    ->getOptionLabelFromRecordUsing(fn ($record) => $record->name)
-                    ->getSearchResultsUsing(fn (string $search): array => User::where('first_name', 'like', "%$search%")->orWhere('last_name', 'like', "%$search%")->limit(50)->pluck('name', 'id')->toArray())
-                    ->hint(fn ($get) => $get('user_id') ? new HtmlString('<a href="' . UserResource::getUrl('edit', ['record' => $get('user_id')]) . '" target="_blank">Go to User</a>') : null)
-                    ->live()
-                    ->required(),
+                UserComponent::make('user_id'),
                 TextInput::make('code')
                     ->label('Referral Code')
                     ->required()

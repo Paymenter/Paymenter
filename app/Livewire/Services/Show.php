@@ -12,15 +12,17 @@ class Show extends Component
 {
     public Service $service;
 
+    #[Locked]
     public $buttons = [];
 
+    #[Locked]
     public $views = [];
 
-    #[Locked]
+    #[Url('tab', except: false), Locked]
     public $currentView;
 
-    #[Url('cancel')]
-    public $showCancel = false;
+    #[Url('cancel', except: false)]
+    public bool $showCancel = false;
 
     public function mount()
     {
@@ -39,7 +41,7 @@ class Show extends Component
                     $this->views[] = $action;
                 }
             }
-            $this->changeView($this->views[0] ?? null);
+            $this->currentView = $this->currentView ?? ($this->views[0]['name'] ?? null);
         }
     }
 
@@ -47,6 +49,9 @@ class Show extends Component
     {
         if (!$view) {
             return;
+        }
+        if ($this->currentView === $view || !in_array($view, array_column($this->views, 'name'))) {
+            return $this->skipRender();
         }
         $this->currentView = $view;
     }
@@ -84,7 +89,12 @@ class Show extends Component
 
         if ($this->currentView) {
             try {
-                $view = ExtensionHelper::getView($this->service, $this->currentView);
+                // Search array for the current view
+                $currentViewObj = $this->views[array_search($this->currentView, array_column($this->views, 'name'))] ?? null;
+                if (!$currentViewObj) {
+                    throw new \Exception('View not found');
+                }
+                $view = ExtensionHelper::getView($this->service, $currentViewObj);
             } catch (\Exception $e) {
                 if ($previousView !== $this->views[0]['name'] ?? null) {
                     $this->notify('Got an error while trying to load the view', 'error');

@@ -112,7 +112,7 @@ class ExtensionHelper
             return [];
         }
 
-        return self::call($server, 'getCheckoutConfig', [$product, $values], mayFail: true) ?? [];
+        return self::call($server, 'getCheckoutConfig', [$product, $values, self::settingsToArray($product->settings)], mayFail: true) ?? [];
     }
 
     /**
@@ -384,11 +384,6 @@ class ExtensionHelper
                 ]
             );
         }
-
-        if ($invoice->remaining <= 0 && $invoice->status !== 'paid') {
-            $invoice->status = 'paid';
-            $invoice->save();
-        }
     }
 
     /**
@@ -510,6 +505,6 @@ class ExtensionHelper
 
         $server = self::checkServer($service, $function);
 
-        return self::getExtension('server', $server->extension, $server->settings)->$function($service, self::settingsToArray($service->product->settings), self::getServiceProperties($service), $view);
+        return self::getExtension('server', $server->extension, $server->settings)->$function($service, self::settingsToArray($service->product->settings), self::getServiceProperties($service), $view['name']);
     }
 }

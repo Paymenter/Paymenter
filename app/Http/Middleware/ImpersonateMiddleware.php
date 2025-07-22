@@ -2,7 +2,6 @@
 
 namespace App\Http\Middleware;
 
-use App\Models\User;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -17,10 +16,13 @@ class ImpersonateMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
-        // If the request contains, sign out the impersonated user
-        if (session()->has('impersonator')) {
-            Auth::login(User::find(session('impersonator')));
-            session()->forget('impersonator');
+        if (session()->has('impersonating')) {
+            if ($request->is('admin/*')) {
+                // Unset session
+                session()->forget('impersonating');
+            } else {
+                Auth::onceUsingId(session('impersonating'));
+            }
         }
 
         return $next($request);

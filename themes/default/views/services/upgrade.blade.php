@@ -40,10 +40,12 @@
                         {!! $service->product->description !!}
                     </article>
                     <h3 class="text-lg font-semibold mb-2">
-                        {{ $service->product->price(null, $service->plan->billing_period, $service->plan->billing_unit,
-                        $service->order->currency_code) }} every {{
-                        $service->plan->billing_period > 1 ? $service->plan->billing_period : '' }}
-                        {{ Str::plural($service->plan->billing_unit, $service->plan->billing_period) }}
+                        {{ __('services.price_every_period', [
+                            'price' => $service->product->price(null, $service->plan->billing_period, $service->plan->billing_unit,
+                            $service->currency_code),
+                            'period' => $service->plan->billing_period > 1 ? $service->plan->billing_period : '',
+                            'unit' => strtolower(trans_choice(__('services.billing_cycles.' . $service->plan->billing_unit), $service->plan->billing_period))
+                        ]) }}
                     </h3>
                 </label>
             </div>
@@ -74,10 +76,12 @@
                         {!! $product->description !!}
                     </article>
                     <h3 class="text-lg font-semibold mb-2">
-                        {{ $product->price(null, $service->plan->billing_period, $service->plan->billing_unit,
-                        $service->order->currency_code) }} every {{
-                        $service->plan->billing_period > 1 ? $service->plan->billing_period : '' }}
-                        {{ Str::plural($service->plan->billing_unit, $service->plan->billing_period) }}
+                        {{ __('services.price_every_period', [
+                            'price' => $product->price(null, $service->plan->billing_period, $service->plan->billing_unit,
+                            $service->currency_code),
+                            'period' => $service->plan->billing_period > 1 ? $service->plan->billing_period : '',
+                            'unit' => trans_choice(__('services.billing_cycles.' . $service->plan->billing_unit), $service->plan->billing_period)
+                        ]) }}
                     </h3>
                 </label>
             </div>
