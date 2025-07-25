@@ -27,7 +27,7 @@ return [
     'transaction_id' => 'ID transakcije',
     'gateway' => 'Platni prolaz',
     'payment_date' => 'Datum plaćanja',
-    'payment_method' => 'Payment Method',
-    'amount' => 'Amount',
-    'date' => 'Date',
+    'payment_method' => 'Način plaćanja',
+    'amount' => 'Iznos',
+    'date' => 'Datum',
 ];
