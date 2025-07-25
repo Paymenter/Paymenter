@@ -13,30 +13,30 @@ return [
     |
     */
 
-    'failed' => 'These credentials do not match our records.',
-    'password' => 'The provided password is incorrect.',
-    'throttle' => 'Too many login attempts. Please try again in :seconds seconds.',
+    'failed' => 'Ovi podaci se ne poklapaju sa našim zapisima.',
+    'password' => 'Navedena lozinka je netačna.',
+    'throttle' => 'Previše pokušaja prijavljivanja. Molimo pokušajte ponovo za :seconds sekundi.',
 
-    'sign_in' => 'Sign in',
-    'sign_in_title' => 'Sign in to your account',
-    'or_sign_in_with' => 'Or sign in with',
-    'forgot_password' => 'Forgot your password?',
-    'dont_have_account' => 'Don\'t have an account?',
-    'already_have_account' => 'Already have an account?',
+    'sign_in' => 'Prijavite se',
+    'sign_in_title' => 'Prijavite se na svoj nalog',
+    'or_sign_in_with' => 'Ili se prijavite putem',
+    'forgot_password' => 'Zaboravili ste lozinku?',
+    'dont_have_account' => 'Nemate nalog?',
+    'already_have_account' => 'Već imate nalog?',
 
-    'sign_up' => 'Sign up',
-    'sign_up_title' => 'Create your account',
+    'sign_up' => 'Registrujte se',
+    'sign_up_title' => 'Kreirajte svoj nalog',
 
-    'logout' => 'Logout',
+    'logout' => 'Odjavite se',
 
     'input' => [
         'email' => 'Email',
-        'email_label' => 'Email Address',
+        'email_label' => 'Email adresa',
         'password' => 'Lozinka',
     ],
 
     'oauth' => [
-        'unverified_discord_account' => 'Your Discord account is not verified.',
+        'unverified_discord_account' => 'Vaš Discord nalog nije verifikovan.',
         'account_not_registered' => 'You are not registered on this site.',
     ],
 
