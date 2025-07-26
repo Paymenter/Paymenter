@@ -1,12 +1,12 @@
 <?php
 
 return [
-    'invoices' => 'Invoices',
-    'product' => 'Product',
-    'price' => 'Price',
+    'invoices' => 'Fakture',
+    'product' => 'Proizvod',
+    'price' => 'Cena',
     'status' => 'Status',
-    'actions' => 'Actions',
-    'view' => 'View',
+    'actions' => 'Akcije',
+    'view' => 'Prikaži',
     'id' => 'ID',
     'total' => 'Ukupno',
     'subtotal' => 'Međuzbir',
