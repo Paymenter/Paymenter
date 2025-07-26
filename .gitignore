@@ -18,4 +18,7 @@ yarn-error.log
 /.idea
 /.vscode
 themes/*
+extensions/Others/Pages
+extensions/Servers/LicenseManager
+extensions/Servers/Proxmox
 !themes/default
