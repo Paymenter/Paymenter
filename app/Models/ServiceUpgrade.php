@@ -60,6 +60,7 @@ class ServiceUpgrade extends Model
         $expiresAt = $this->service->expires_at->copy()->startOfDay();
         $now = Carbon::now()->startOfDay();
         $remainingDays = $expiresAt->diffInDays($now, true);
+        $remainingDays = min($remainingDays, $billingPeriodDays);
 
         // Calculate the prorated amount
         $newPrice = $newItem->price(null, $this->service->plan->billing_period, $this->service->plan->billing_unit, $this->service->currency_code);
