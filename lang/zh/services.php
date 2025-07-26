@@ -53,4 +53,5 @@ return [
     ],
     'every_period' => '每 :period :unit',
     'price_every_period' => '每 :period :unit :price 元',
+    'expires_at' => 'Expires at',
 ];
