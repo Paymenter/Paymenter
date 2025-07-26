@@ -29,7 +29,7 @@
                 'period' => $service->plan->billing_period > 1 ? $service->plan->billing_period : '',
                 'unit' => trans_choice(__('services.billing_cycles.' . $service->plan->billing_unit),
                 $service->plan->billing_period)
-                ]) : '' }} - {{ $service->expires_at ? __('services.expires_at') . ': '. $service->expires_at->format('M d, Y') : '' }}
+                ]) : '' }} {{ $service->expires_at ? '- ' . __('services.expires_at') . ': '. $service->expires_at->format('M d, Y') : ''}}</p>
         </p>
         </div>
     </a>
