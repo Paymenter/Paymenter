@@ -53,4 +53,5 @@ return [
     ],
     'every_period' => 'كل :period :Unit',
     'price_every_period' => ':price لكل :period :Unit',
+    'expires_at' => 'Expires at',
 ];
