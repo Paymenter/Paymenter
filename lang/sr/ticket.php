@@ -1,12 +1,12 @@
 <?php
 
 return [
-    'ticket_details' => 'Ticket Details',
-    'tickets' => 'Tickets',
-    'subject' => 'Subject',
+    'ticket_details' => 'Detalji tiketa',
+    'tickets' => 'Tiketi',
+    'subject' => 'Tema',
     'status' => 'Status',
-    'priority' => 'Priority',
-    'department' => 'Department',
+    'priority' => 'Prioritet',
+    'department' => 'Odeljenje',
     'created_at' => 'Napravljeno dana',
     'reply' => 'Odgovori',
 
