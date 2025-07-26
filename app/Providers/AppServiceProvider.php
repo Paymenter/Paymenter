@@ -8,6 +8,7 @@ use App\Models\EmailLog;
 use App\Models\Extension;
 use App\Models\OauthClient;
 use App\Models\User;
+use App\Support\Passport\ScopeRegistry;
 use Dedoc\Scramble\Scramble;
 use Dedoc\Scramble\Support\Generator\OpenApi;
 use Dedoc\Scramble\Support\Generator\SecurityScheme;
@@ -92,9 +93,7 @@ class AppServiceProvider extends ServiceProvider
         });
         Passport::clientModel(OauthClient::class);
         Passport::ignoreRoutes();
-        Passport::tokensCan([
-            'profile' => 'View your profile',
-        ]);
+        Passport::tokensCan(ScopeRegistry::getAll());
 
         if (class_exists(Scramble::class)) {
             Scramble::configure()
