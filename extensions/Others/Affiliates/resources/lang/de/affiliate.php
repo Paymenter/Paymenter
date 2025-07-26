@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'affiliate' => 'Affiliate',
+    'affiliate' => 'Partner',
     'signup-for-affiliate' => '',
     'code' => 'Code',
     'visitors' => 'Besucher',
@@ -10,10 +10,10 @@ return [
     'total-signups' => 'Registrierungen insgesamt',
     'earnings' => 'Einnahmen',
     'total-earnings' => 'Einnahmen insgesamt',
-    'your-affiliate-link' => 'Your affiliate link',
+    'your-affiliate-link' => 'Dein Partnerlink',
     'copy' => 'Kopieren',
 
-    'you-havent-signed-up-yet' => 'You have not signed up for affiliates program yet!',
-    'you-are-already-affiliated' => 'You have already signed up for affiliate program.',
-    'signup-success' => 'Successfully signed up for affiliate program!',
+    'you-havent-signed-up-yet' => 'Du hast dich noch nicht für das Partnerprogramm angemeldet!',
+    'you-are-already-affiliated' => 'Du hast dich bereits für das Partnerprogramm angemeldet.',
+    'signup-success' => 'Erfolgreiche Anmeldung zum Partnerprogramm!',
 ];
