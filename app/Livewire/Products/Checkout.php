@@ -56,7 +56,7 @@ class Checkout extends Component
             $this->configOptions = $item->configOptions->mapWithKeys(function ($option) {
                 return [$option->option_id => $option->value];
             });
-            $this->checkoutConfig = (array)$item->checkoutConfig;
+            $this->checkoutConfig = (array) $item->checkoutConfig;
         } else {
             // Set the first plan as default
             $this->plan = $this->plan_id ? $this->product->plans->findOrFail($this->plan_id) : $this->product->plans->first();
@@ -139,7 +139,7 @@ class Checkout extends Component
                 'required',
                 Rule::exists('plans', 'id')->where(function ($query) {
                     $query->where('priceable_id', $this->product->id)->where('priceable_type', get_class($this->product));
-                })
+                }),
             ],
         ];
         foreach ($this->product->configOptions as $option) {
@@ -172,7 +172,7 @@ class Checkout extends Component
             }
             if (isset($config['validation'])) {
                 $validationRules[] = $config['validation'];
-            } 
+            }
             if (count($validationRules) > 0) {
                 $rules["checkoutConfig.{$config['name']}"] = implode('|', $validationRules);
             }
