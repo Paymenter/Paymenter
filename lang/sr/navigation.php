@@ -11,7 +11,7 @@ return [
     'account' => 'Nalog',
     'personal_details' => 'Lični podaci',
     'security' => 'Bezbednost',
-    'dashboard' => 'Dashboard',
-    'tickets' => 'Tickets',
+    'dashboard' => 'Kontrolna tabla',
+    'tickets' => 'Tiketi',
     'admin' => 'Admin',
 ];
