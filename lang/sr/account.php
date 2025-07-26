@@ -33,7 +33,7 @@ return [
         'two_factor_code_placeholder' => 'Vaš kod za dvostruku autentifikaciju',
 
         'currency' => 'Valuta',
-        'amount' => 'Amount',
+        'amount' => 'Iznos',
     ],
 
     'notifications' => [
