@@ -25,5 +25,5 @@ return [
     'use_credits' => 'Iskoristi kredite',
     'tos' => 'Slažem se sa',
     'tos_link' => 'Uslovi korišćenja',
-    'tos_required' => 'You must agree to the Terms of Service',
+    'tos_required' => 'Potrebno je da prihvatite Uslove korišćenja',
 ];
