@@ -37,19 +37,19 @@ return [
 
     'oauth' => [
         'unverified_discord_account' => 'Vaš Discord nalog nije verifikovan.',
-        'account_not_registered' => 'You are not registered on this site.',
+        'account_not_registered' => 'Niste registrovani na ovom sajtu.',
     ],
 
-    'reset_password' => 'Reset password',
+    'reset_password' => 'Resetujte lozinku',
 
-    'verify_2fa' => 'Verify 2FA',
-    'verify' => 'Verify',
+    'verify_2fa' => 'Verifikujte 2FA',
+    'verify' => 'Verifikujte',
 
     'verification' => [
         'notice' => 'Verifikujte svoju email adresu',
-        'sent' => 'A new verification link has been sent to your email address.',
-        'check_your_email' => 'Before proceeding, please check your email for a verification link.',
-        'not_received' => 'If you did not receive the email you can request another verification email.',
-        'request_another' => 'Resend verification email',
+        'sent' => 'Novi verifikacioni link je poslat na vašu email adresu.',
+        'check_your_email' => 'Pre nego što nastavite, proverite svoj email za verifikacioni link.',
+        'not_received' => 'Ako niste dobili email, možete zatražiti novi verifikacioni email.',
+        'request_another' => 'Pošalji verifikacioni email ponovo',
     ],
 ];
