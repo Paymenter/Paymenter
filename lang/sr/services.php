@@ -53,4 +53,5 @@ return [
     ],
     'every_period' => 'Svakih :period :unit',
     'price_every_period' => ':price po :period :unit',
+    'expires_at' => 'Expires at',
 ];
