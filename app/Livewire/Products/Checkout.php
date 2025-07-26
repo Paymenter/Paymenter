@@ -56,7 +56,7 @@ class Checkout extends Component
             $this->configOptions = $item->configOptions->mapWithKeys(function ($option) {
                 return [$option->option_id => $option->value];
             });
-            $this->checkoutConfig = $item->checkoutConfig;
+            $this->checkoutConfig = (array)$item->checkoutConfig;
         } else {
             // Set the first plan as default
             $this->plan = $this->plan_id ? $this->product->plans->findOrFail($this->plan_id) : $this->product->plans->first();
@@ -135,9 +135,12 @@ class Checkout extends Component
     public function rules()
     {
         $rules = [
-            'plan_id' => ['required', Rule::exists('plans', 'id')->where(function ($query) {
-                $query->where('priceable_id', $this->product->id)->where('priceable_type', get_class($this->product));
-            })],
+            'plan_id' => [
+                'required',
+                Rule::exists('plans', 'id')->where(function ($query) {
+                    $query->where('priceable_id', $this->product->id)->where('priceable_type', get_class($this->product));
+                })
+            ],
         ];
         foreach ($this->product->configOptions as $option) {
             if (in_array($option->type, ['text', 'number'])) {
@@ -148,10 +151,30 @@ class Checkout extends Component
             }
         }
         foreach ($this->getCheckoutConfig() as $key => $config) {
+            $validationRules = [];
+            if ($config['required'] ?? false) {
+                $validationRules[] = 'required';
+            }
+            if (isset($config['type'])) {
+                switch ($config['type']) {
+                    case 'text':
+                    case 'number':
+                        $validationRules[] = 'string';
+                        break;
+                    case 'select':
+                    case 'radio':
+                        $validationRules[] = 'in:' . implode(',', array_keys($config['options']));
+                        break;
+                    case 'checkbox':
+                        $validationRules[] = 'nullable|boolean';
+                        break;
+                }
+            }
             if (isset($config['validation'])) {
-                $rules["checkoutConfig.{$config['name']}"] = $config['validation'];
-            } elseif ($config['required'] ?? false) {
-                $rules["checkoutConfig.{$config['name']}"] = 'required';
+                $validationRules[] = $config['validation'];
+            } 
+            if (count($validationRules) > 0) {
+                $rules["checkoutConfig.{$config['name']}"] = implode('|', $validationRules);
             }
         }
 
