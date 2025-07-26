@@ -53,4 +53,5 @@ return [
     ],
     'every_period' => 'Elke :period :unit',
     'price_every_period' => ':price per :period :unit',
+    'expires_at' => 'Expires at',
 ];
