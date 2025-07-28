@@ -80,29 +80,6 @@ class ExtensionResource extends Resource
 
     public static function getEloquentQuery(): Builder
     {
-        // // Read whole base_path('extensions') directory and create a new Extension model for each extension (if it doesn't exist)
-        // foreach (scandir(base_path('extensions')) as $extension) {
-        //     if (in_array($extension, ['.', '..', 'Gateways', 'Servers'])) {
-        //         continue;
-        //     }
-
-        //     $type = strtolower($extension);
-        //     // Remove the 's' from  end of the type
-        //     $type = substr($type, 0, -1);
-
-        //     foreach (scandir(base_path('extensions/' . $extension)) as $extension) {
-        //         if (in_array($extension, ['.', '..'])) {
-        //             continue;
-        //         }
-
-        //         Extension::firstOrCreate([
-        //             'extension' => $extension,
-        //             'type' => $type,
-        //             'name' => $extension,
-        //         ]);
-        //     }
-        // }
-
         return parent::getEloquentQuery()->whereNotIn('type', ['gateway', 'server']);
     }
 

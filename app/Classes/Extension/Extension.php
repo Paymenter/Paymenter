@@ -76,7 +76,7 @@ class Extension
      * @param  string  $oldVersion  The old version of the extension
      * @return void
      */
-    public function upgraded($oldVersion) {}
+    public function upgraded($oldVersion = null) {}
 
     /**
      * Called every request to the extension (if the extension is enabled)

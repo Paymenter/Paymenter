@@ -14,6 +14,10 @@ use Exception;
 use Filament\Forms\Components\Placeholder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Log;
 use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
 use ReflectionClass;
 
@@ -128,7 +132,7 @@ class ExtensionHelper
     {
         $extensions = [];
 
-        $classmap = require_once base_path('vendor/composer/autoload_classmap.php');
+        $classmap = require base_path('vendor/composer/autoload_classmap.php');
 
         // Magic code so we can also support extensions that don't reside in the extensions folder
         foreach ($classmap as $class => $path) {
@@ -506,5 +510,56 @@ class ExtensionHelper
         $server = self::checkServer($service, $function);
 
         return self::getExtension('server', $server->extension, $server->settings)->$function($service, self::settingsToArray($service->product->settings), self::getServiceProperties($service), $view['name']);
+    }
+
+    /**
+     * Revert migrations for a specific extension
+     */
+    public static function rollbackMigrations($path)
+    {
+        $migrationFiles = glob(base_path($path . '/*.php'));
+
+        if (empty($migrationFiles)) {
+            return;
+        }
+
+        // Sort by filename to ensure correct order
+        usort($migrationFiles, function ($a, $b) {
+            return strcmp(basename($a), basename($b));
+        });
+
+        // Reverse the order to rollback in the correct sequence
+        $migrationFiles = array_reverse($migrationFiles);
+
+        foreach ($migrationFiles as $file) {
+            $migrationName = basename($file, '.php');
+            try {
+                $migration = require_once $file;
+                // return new class extends Migration
+                if (method_exists($migration, 'down') && DB::table('migrations')->where('migration', $migrationName)->exists()) {
+                    $migration->down();
+                    DB::table('migrations')->where('migration', $migrationName)->delete();
+                }
+            } catch (Exception $e) {
+                Log::error('Failed to rollback migration: ' . $migrationName . ' - ' . $e->getMessage());
+            }
+        }
+    }
+
+    /**
+     * Run migrations for a specific extension
+     */
+    public static function runMigrations($path)
+    {
+        try {
+            Artisan::call('migrate', [
+                '--path' => $path,
+                '--force' => true,
+            ]);
+            $output = Artisan::output();
+            Log::debug('Migrations output: ' . $output);
+        } catch (Exception $e) {
+            Log::error('Failed to run migrations for path: ' . $path . ' - ' . $e->getMessage());
+        }
     }
 }

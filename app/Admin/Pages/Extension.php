@@ -3,12 +3,14 @@
 namespace App\Admin\Pages;
 
 use App\Admin\Clusters\Extensions;
+use App\Admin\Resources\ExtensionResource;
 use App\Helpers\ExtensionHelper;
 use App\Services\Extensions\UploadExtensionService;
 use Filament\Actions\Action;
 use Filament\Actions\Concerns\InteractsWithActions;
 use Filament\Actions\Contracts\HasActions;
 use Filament\Forms\Components\FileUpload;
+use Filament\Notifications\Notification;
 use Filament\Pages\Page;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Concerns\InteractsWithTable;
@@ -43,7 +45,7 @@ class Extension extends Page implements HasActions, HasTable
                     ->label('Extension Name')
                     ->searchable()
                     ->sortable()
-                    ->state(fn ($record) => $record['meta'] ? $record['meta']->name . ' (' . $record['meta']->author . ')' : $record['name']),
+                    ->state(fn($record) => $record['meta'] ? $record['meta']->name . ' (' . $record['meta']->author . ')' : $record['name']),
                 TextColumn::make('meta.description')
                     ->label('Description')
                     ->searchable()
@@ -52,7 +54,24 @@ class Extension extends Page implements HasActions, HasTable
             ->recordActions([
                 Action::make('install')
                     ->label('Install')
-                    ->action(function ($record) {})
+                    ->action(function ($record) {
+                        $extension = \App\Models\Extension::create([
+                            'name' => $record['name'],
+                            'type' => $record['type'],
+                            'extension' => $record['name'],
+                        ]);
+                        ExtensionHelper::call($extension, 'installed', mayFail: true);
+
+                        Notification::make()
+                            ->title('Extension Installed')
+                            ->body('The extension has been successfully installed.')
+                            ->success()
+                            ->send();
+
+                        $this->redirect(ExtensionResource::getUrl('edit', [
+                            'record' => $extension->id,
+                        ]), true);
+                    })
                     ->requiresConfirmation(),
             ])
             ->headerActions([
@@ -70,7 +89,16 @@ class Extension extends Page implements HasActions, HasTable
                             ->maxSize(10240), // 10 MB
                     ])
                     ->action(function ($data, UploadExtensionService $service) {
-                        $service->handle(storage_path('app/' . $data['file']));
+                        try {
+                            $service->handle(storage_path('app/' . $data['file']));
+                        } catch (\Exception $e) {
+                            // Handle the exception, e.g., log it or show an error message
+                            Notification::make()
+                                ->title('Failed to upload extension')
+                                ->body($e->getMessage())
+                                ->danger()
+                                ->send();
+                        }
                     }),
             ]);
     }

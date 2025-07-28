@@ -2,10 +2,13 @@
 
 namespace App\Services\Extensions;
 
+use App\Attributes\ExtensionMeta;
 use App\Classes\Extension\Extension;
 use App\Classes\Extension\Gateway;
 use App\Classes\Extension\Server;
 use Illuminate\Support\Facades\File;
+use ReflectionClass;
+use Symfony\Component\Process\Process;
 
 class UploadExtensionService
 {
@@ -42,9 +45,29 @@ class UploadExtensionService
 
         // Move the files to the correct location
         $destinationPath = base_path('extensions/' . ucfirst($type['type']) . 's/' . $type['class']);
+        $updating = false;
+        $oldVersion = null;
+
         // Check if destination directory exists, if so, remove it
         if (is_dir($destinationPath)) {
+            $updating = true;
             File::deleteDirectory($destinationPath);
+        }
+
+        if ($updating) {
+            // Read the extension class for current version
+            $extensionClass = 'Paymenter\\Extensions\\' . ucfirst($type['type']) . 's\\' . ucfirst($type['class']);
+            if (class_exists($extensionClass)) {
+                $reflection = new ReflectionClass($extensionClass);
+                $attributes = $reflection->getAttributes(ExtensionMeta::class);
+
+                if (count($attributes) > 0) {
+                    $extensionMeta = $attributes[0]->newInstance();
+                    if ($extensionMeta->version) {
+                        $oldVersion = $extensionMeta->version;
+                    }
+                }
+            }
         }
 
         if (!rename($path, $destinationPath)) {
@@ -53,6 +76,13 @@ class UploadExtensionService
 
         // Remove the extracted files
         File::deleteDirectory($extractPath);
+
+        // Execute the upgraded method if it exists
+        if ($updating) {
+            Process::fromShellCommandline('php artisan app:upgrade ' . $type['type'] . ' ' . $type['class'] . ' ' . ($oldVersion ?? ''))
+                ->run(function ($type, $output) {
+                });
+        }
     }
 
     private function getExtensionType(string $path): array
@@ -63,7 +93,10 @@ class UploadExtensionService
             // Read file
             $content = file_get_contents($file);
             if (preg_match('/namespace\s+(.+?);/', $content, $matches)) {
-                require_once $file; // Include the file to load the class
+                if (!class_exists($matches[1] . '\\' . pathinfo(class_basename($file), PATHINFO_FILENAME))) {
+                    // If the class is not loaded, include the file
+                    require_once $file; // Include the file to load the class
+                }
                 $namespace = $matches[1];
                 if (preg_match('/class\s+(\w+)/', $content, $classMatches)) {
                     $className = $classMatches[1];
