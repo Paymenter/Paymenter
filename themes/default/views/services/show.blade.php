@@ -31,9 +31,15 @@
                         <span class="mr-2">{{ __('services.billing_cycle') }}:</span>
                         <span class="text-base/50">{{ __('services.every_period', [
                             'period' => $service->plan->billing_period > 1 ? $service->plan->billing_period : '',
-                            'unit' => trans_choice(__('services.billing_cycles.' . $service->plan->billing_unit), $service->plan->billing_period)
+                            'unit' => trans_choice(__('services.billing_cycles.' . $service->plan->billing_unit),
+                            $service->plan->billing_period)
                             ])
-                        }}</span>
+                            }}</span>
+                    </div>
+                    <div class="flex items-center text-base">
+                        <span class="mr-2">{{ __('services.expires_at') }}:</span>
+                        <span class="text-base/50">{{ $service->expires_at ? $service->expires_at->format('M d, Y')
+                            : 'N/A' }}</span>
                     </div>
                     @endif
                     <div class="flex items-center text-base">

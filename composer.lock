@@ -4392,13 +4392,17 @@
         {
             "name": "livewire/livewire",
             "version": "v3.6.4",
+            "version": "v3.6.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/livewire/livewire.git",
                 "reference": "ef04be759da41b14d2d129e670533180a44987dc"
+                "reference": "ef04be759da41b14d2d129e670533180a44987dc"
             },
             "dist": {
                 "type": "zip",
+                "url": "https://api.github.com/repos/livewire/livewire/zipball/ef04be759da41b14d2d129e670533180a44987dc",
+                "reference": "ef04be759da41b14d2d129e670533180a44987dc",
                 "url": "https://api.github.com/repos/livewire/livewire/zipball/ef04be759da41b14d2d129e670533180a44987dc",
                 "reference": "ef04be759da41b14d2d129e670533180a44987dc",
                 "shasum": ""
@@ -4456,6 +4460,7 @@
             "support": {
                 "issues": "https://github.com/livewire/livewire/issues",
                 "source": "https://github.com/livewire/livewire/tree/v3.6.4"
+                "source": "https://github.com/livewire/livewire/tree/v3.6.4"
             },
             "funding": [
                 {
@@ -4463,6 +4468,7 @@
                     "type": "github"
                 }
             ],
+            "time": "2025-07-17T05:12:15+00:00"
             "time": "2025-07-17T05:12:15+00:00"
         },
         {
@@ -6996,13 +7002,17 @@
         {
             "name": "spatie/laravel-package-tools",
             "version": "1.92.7",
+            "version": "1.92.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/spatie/laravel-package-tools.git",
                 "reference": "f09a799850b1ed765103a4f0b4355006360c49a5"
+                "reference": "f09a799850b1ed765103a4f0b4355006360c49a5"
             },
             "dist": {
                 "type": "zip",
+                "url": "https://api.github.com/repos/spatie/laravel-package-tools/zipball/f09a799850b1ed765103a4f0b4355006360c49a5",
+                "reference": "f09a799850b1ed765103a4f0b4355006360c49a5",
                 "url": "https://api.github.com/repos/spatie/laravel-package-tools/zipball/f09a799850b1ed765103a4f0b4355006360c49a5",
                 "reference": "f09a799850b1ed765103a4f0b4355006360c49a5",
                 "shasum": ""
@@ -7045,6 +7055,7 @@
             "support": {
                 "issues": "https://github.com/spatie/laravel-package-tools/issues",
                 "source": "https://github.com/spatie/laravel-package-tools/tree/1.92.7"
+                "source": "https://github.com/spatie/laravel-package-tools/tree/1.92.7"
             },
             "funding": [
                 {
@@ -7053,17 +7064,22 @@
                 }
             ],
             "time": "2025-07-17T15:46:43+00:00"
+            "time": "2025-07-17T15:46:43+00:00"
         },
         {
             "name": "spatie/laravel-query-builder",
+            "version": "6.3.3",
             "version": "6.3.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/spatie/laravel-query-builder.git",
                 "reference": "0d80323d2b2ffc410f06bf73c2e3a6ad763e4b8d"
+                "reference": "0d80323d2b2ffc410f06bf73c2e3a6ad763e4b8d"
             },
             "dist": {
                 "type": "zip",
+                "url": "https://api.github.com/repos/spatie/laravel-query-builder/zipball/0d80323d2b2ffc410f06bf73c2e3a6ad763e4b8d",
+                "reference": "0d80323d2b2ffc410f06bf73c2e3a6ad763e4b8d",
                 "url": "https://api.github.com/repos/spatie/laravel-query-builder/zipball/0d80323d2b2ffc410f06bf73c2e3a6ad763e4b8d",
                 "reference": "0d80323d2b2ffc410f06bf73c2e3a6ad763e4b8d",
                 "shasum": ""
@@ -7077,6 +7093,7 @@
             },
             "require-dev": {
                 "ext-json": "*",
+                "larastan/larastan": "^2.7 || ^3.3",
                 "larastan/larastan": "^2.7 || ^3.3",
                 "mockery/mockery": "^1.4",
                 "orchestra/testbench": "^7.0|^8.0|^10.0",
@@ -10376,13 +10393,17 @@
         {
             "name": "larastan/larastan",
             "version": "v3.6.0",
+            "version": "v3.6.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/larastan/larastan.git",
                 "reference": "6431d010dd383a9279eb8874a76ddb571738564a"
+                "reference": "6431d010dd383a9279eb8874a76ddb571738564a"
             },
             "dist": {
                 "type": "zip",
+                "url": "https://api.github.com/repos/larastan/larastan/zipball/6431d010dd383a9279eb8874a76ddb571738564a",
+                "reference": "6431d010dd383a9279eb8874a76ddb571738564a",
                 "url": "https://api.github.com/repos/larastan/larastan/zipball/6431d010dd383a9279eb8874a76ddb571738564a",
                 "reference": "6431d010dd383a9279eb8874a76ddb571738564a",
                 "shasum": ""
@@ -10453,6 +10474,7 @@
             "support": {
                 "issues": "https://github.com/larastan/larastan/issues",
                 "source": "https://github.com/larastan/larastan/tree/v3.6.0"
+                "source": "https://github.com/larastan/larastan/tree/v3.6.0"
             },
             "funding": [
                 {
@@ -10460,6 +10482,7 @@
                     "type": "github"
                 }
             ],
+            "time": "2025-07-11T06:52:52+00:00"
             "time": "2025-07-11T06:52:52+00:00"
         },
         {
@@ -11030,13 +11053,17 @@
         {
             "name": "phpstan/phpdoc-parser",
             "version": "2.2.0",
+            "version": "2.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpstan/phpdoc-parser.git",
                 "reference": "b9e61a61e39e02dd90944e9115241c7f7e76bfd8"
+                "reference": "b9e61a61e39e02dd90944e9115241c7f7e76bfd8"
             },
             "dist": {
                 "type": "zip",
+                "url": "https://api.github.com/repos/phpstan/phpdoc-parser/zipball/b9e61a61e39e02dd90944e9115241c7f7e76bfd8",
+                "reference": "b9e61a61e39e02dd90944e9115241c7f7e76bfd8",
                 "url": "https://api.github.com/repos/phpstan/phpdoc-parser/zipball/b9e61a61e39e02dd90944e9115241c7f7e76bfd8",
                 "reference": "b9e61a61e39e02dd90944e9115241c7f7e76bfd8",
                 "shasum": ""
@@ -11071,7 +11098,9 @@
             "support": {
                 "issues": "https://github.com/phpstan/phpdoc-parser/issues",
                 "source": "https://github.com/phpstan/phpdoc-parser/tree/2.2.0"
+                "source": "https://github.com/phpstan/phpdoc-parser/tree/2.2.0"
             },
+            "time": "2025-07-13T07:04:09+00:00"
             "time": "2025-07-13T07:04:09+00:00"
         },
         {
@@ -13083,6 +13112,7 @@
         "ext-pdo_mysql": "*",
         "ext-zip": "*"
     },
+    "platform-dev": {},
     "platform-dev": {},
     "plugin-api-version": "2.6.0"
 }

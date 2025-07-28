@@ -6,6 +6,7 @@ use App\Models\Setting;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Config;
 
 class Saved
 {
@@ -21,10 +22,12 @@ class Saved
         if ($setting->settingable_type === null) {
             $cSetting = \App\Classes\Settings::getSetting($setting->key);
             // Set the config value for the setting
-            config(["settings.$setting->key" => $setting->value]);
+            $settings = config('settings', []);
+            $settings[$setting->key] = $setting->value;
+            Config::set('settings', $settings);
             // Does it have overrides?
             if (isset($cSetting->override) && config("settings.$cSetting->name") !== null) {
-                config([$cSetting->override => config("settings.$cSetting->name")]);
+                Config::set($cSetting->override, config("settings.$cSetting->name"));
             }
         }
     }
