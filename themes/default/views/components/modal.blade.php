@@ -7,10 +7,10 @@
 ])
 <div x-data="{ open: {{ $open ? 'true' : 'false' }} }">
     <template x-teleport="body">
-        <div class="fixed inset-0 z-30 flex items-center justify-center overflow-auto bg-black/50"
+        <div class="fixed inset-0 z-30 flex items-center justify-center overflow-hidden bg-black/50"
             x-show="open">
             <!-- Modal inner -->
-            <div class="px-6 py-4 w-full mx-2 md:mx-auto text-left bg-background-secondary rounded shadow-lg {{ $width }}" x-cloak
+            <div class="px-6 py-4 w-full mx-2 md:mx-auto text-left bg-background-secondary rounded shadow-lg max-h-screen overflow-y-auto mb-8 mt-8 {{ $width }}" x-cloak
                 x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 scale-90"
                 x-transition:enter-end="opacity-100 scale-100" x-transition:leave="transition ease-in duration-300"
                 x-transition:leave-start="opacity-100 scale-100" x-transition:leave-end="opacity-0 scale-90">
