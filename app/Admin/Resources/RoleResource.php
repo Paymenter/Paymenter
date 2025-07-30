@@ -2,19 +2,19 @@
 
 namespace App\Admin\Resources;
 
-use App\Models\Role;
-use Filament\Tables;
-use Filament\Forms\Form;
-use Filament\Tables\Table;
-use Illuminate\Support\Arr;
-use Filament\Resources\Resource;
-use Illuminate\Support\Facades\Event;
-use Filament\Forms\Components\Fieldset;
-use Filament\Tables\Columns\TextColumn;
-use Illuminate\Database\Eloquent\Model;
-use Filament\Forms\Components\TextInput;
 use App\Admin\Resources\RoleResource\Pages;
+use App\Models\Role;
 use Filament\Forms\Components\CheckboxList;
+use Filament\Forms\Components\Fieldset;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Form;
+use Filament\Resources\Resource;
+use Filament\Tables;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Event;
 
 class RoleResource extends Resource
 {
@@ -103,7 +103,7 @@ class RoleResource extends Resource
     protected static function getExtensionPermissions(): array
     {
         return collect(Event::dispatch('permissions'))
-            ->filter(fn($response) => is_array($response))
-            ->pipe(fn($merged) => Arr::dot($merged));
+            ->filter(fn ($response) => is_array($response))
+            ->pipe(fn ($merged) => Arr::dot($merged));
     }
 }
