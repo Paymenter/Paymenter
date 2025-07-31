@@ -24,7 +24,7 @@ class Credits extends Component
     public $amount;
 
     #[Locked]
-    public $gateways;
+    public $gateways = [];
 
     public $gateway;
 
@@ -36,9 +36,19 @@ class Credits extends Component
 
         $this->amount = config('settings.credits_minimum_deposit');
         $this->currency = session('currency', config('settings.default_currency'));
-        $this->gateways = ExtensionHelper::getCheckoutGateways([], 'credits');
+        $this->gateways = ExtensionHelper::getCheckoutGateways($this->amount, $this->currency, 'credits');
         if (count($this->gateways) > 0 && !array_search($this->gateway, array_column($this->gateways, 'id')) !== false) {
             $this->gateway = $this->gateways[0]->id;
+        }
+    }
+
+    public function updated($variable)
+    {
+        if ($variable === 'amount' || $variable === 'currency') {
+            $this->gateways = ExtensionHelper::getCheckoutGateways($this->amount, $this->currency, 'credits');
+            if (count($this->gateways) > 0 && !array_search($this->gateway, array_column($this->gateways, 'id')) !== false) {
+                $this->gateway = $this->gateways[0]->id;
+            }
         }
     }
 

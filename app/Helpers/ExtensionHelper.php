@@ -335,13 +335,13 @@ class ExtensionHelper
      *
      * @return array
      */
-    public static function getCheckoutGateways($items, $type)
+    public static function getCheckoutGateways($total, $currency, $type, $items = [])
     {
         $gateways = [];
 
         foreach (Gateway::all() as $gateway) {
             if (self::hasFunction($gateway, 'canUseGateway')) {
-                if (self::getExtension('gateway', $gateway->extension, $gateway->settings)->canUseGateway($items, $type)) {
+                if (self::getExtension('gateway', $gateway->extension, $gateway->settings)->canUseGateway($total, $currency, $type, $items)) {
                     $gateways[] = $gateway;
                 }
             } else {
