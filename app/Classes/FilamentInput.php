@@ -99,6 +99,7 @@ class FilamentInput
                     ->hint($setting->hint ?? null)
                     ->hintColor('primary')
                     ->rules($setting->validation ?? [])
+                    ->nestedRecursiveRules($setting->nested_validation ?? [])
                     ->helperText($setting->description ?? null);
                 break;
 

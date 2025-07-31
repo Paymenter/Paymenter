@@ -5,6 +5,7 @@ namespace App\Classes;
 use App\Models\Currency;
 use App\Models\Setting;
 use App\Models\TaxRate;
+use App\Rules\Cidr;
 use DateTimeZone;
 use Exception;
 use Illuminate\Support\Facades\Auth;
@@ -108,6 +109,9 @@ class Settings
                     'type' => 'tags',
                     'database_type' => 'array',
                     'placeholder' => 'IP Addresses or CIDR (e.g. 1.1.1.1/32 or 2606:4700:4700::1111)',
+                    'nested_validation' => [
+                        new Cidr(allowWildCard: true)  
+                    ],
                 ],
             ],
 
