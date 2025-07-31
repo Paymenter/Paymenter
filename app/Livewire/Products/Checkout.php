@@ -129,7 +129,7 @@ class Checkout extends Component
 
     public function getCheckoutConfig()
     {
-        return once(fn () => ExtensionHelper::getCheckoutConfig($this->product, $this->checkoutConfig));
+        return once(fn() => ExtensionHelper::getCheckoutConfig($this->product, $this->checkoutConfig));
     }
 
     public function rules()
@@ -166,15 +166,20 @@ class Checkout extends Component
                         $validationRules[] = 'in:' . implode(',', array_keys($config['options']));
                         break;
                     case 'checkbox':
-                        $validationRules[] = 'nullable|boolean';
+                        $validationRules[] = 'nullable';
+                        $validationRules[] = 'boolean';
                         break;
                 }
             }
             if (isset($config['validation'])) {
-                $validationRules[] = $config['validation'];
+                if (is_array($config['validation'])) {
+                    $validationRules = array_merge($validationRules, $config['validation']);
+                } else {
+                    $validationRules[] = $config['validation'];
+                }
             }
             if (count($validationRules) > 0) {
-                $rules["checkoutConfig.{$config['name']}"] = implode('|', $validationRules);
+                $rules["checkoutConfig.{$config['name']}"] = $validationRules;
             }
         }
 
