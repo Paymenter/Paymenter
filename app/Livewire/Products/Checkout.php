@@ -175,7 +175,8 @@ class Checkout extends Component
                 if (is_array($config['validation'])) {
                     $validationRules = array_merge($validationRules, $config['validation']);
                 } else {
-                    $validationRules[] = $config['validation'];
+                    // Is validation seperated by |?
+                    $validationRules = array_merge($validationRules, explode('|', $config['validation']));
                 }
             }
             if (count($validationRules) > 0) {
