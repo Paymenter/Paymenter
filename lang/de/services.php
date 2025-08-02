@@ -34,7 +34,7 @@ return [
     'upgrade_choose_config' => 'Wähle die Konfiguration für das Upgrade aus',
     'next_step' => 'Nächster Schritt',
 
-    'upgrade_pending' => 'Du kannst kein Upgrade durchführen, solange bereits eine Upgrade-/Downgrade-Rechnung offen ist',
+    'upgrade_pending' => 'Du kannst kein Upgrade durchführen, solange du noch offene Rechnungen hast',
 
     'outstanding_invoice' => 'Du hast eine ausstehende Rechnung',
     'view_and_pay' => 'Hier klicken, um anzuzeigen und zu bezahlen',
