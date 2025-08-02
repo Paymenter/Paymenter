@@ -11,7 +11,7 @@ return [
     'reply' => 'Antworten',
 
     'create_ticket' => 'Ticket erstellen',
-    'select_department' => 'Abteilung wählen',
+    'select_department' => 'Kategorie wählen',
     'select_priority' => 'Priorität wählen',
     'low' => 'Niedrig',
     'medium' => 'Mittel',
