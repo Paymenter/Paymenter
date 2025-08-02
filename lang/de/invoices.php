@@ -12,7 +12,7 @@ return [
     'subtotal' => 'Zwischensumme',
     'invoice' => 'Rechnung #:id',
     'unit_price' => 'Einzelpreis',
-    'bill_to' => 'Rechnungsteller',
+    'bill_to' => 'Rechnungssteller',
     'issued_to' => 'Kunde',
     'paid' => 'Bezahlt',
     'payment_pending' => 'Zahlung ausstehend',
