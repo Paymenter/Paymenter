@@ -3,7 +3,7 @@
 namespace App\Admin\Resources\ConfigOptionResource\Pages;
 
 use App\Admin\Resources\ConfigOptionResource;
-use Filament\Actions;
+use Filament\Actions\CreateAction;
 use Filament\Resources\Pages\ListRecords;
 
 class ListConfigOptions extends ListRecords
@@ -13,7 +13,7 @@ class ListConfigOptions extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
-            Actions\CreateAction::make(),
+            CreateAction::make(),
         ];
     }
 }

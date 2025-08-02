@@ -5,6 +5,7 @@ namespace Paymenter\Extensions\Servers\CPanel;
 use App\Classes\Extension\Server;
 use App\Models\Service;
 use App\Rules\Domain;
+use Exception;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
 
@@ -156,7 +157,7 @@ class CPanel extends Server
     public function suspendServer(Service $service, $settings, $properties)
     {
         if (!isset($properties['cpanel_username'])) {
-            throw new \Exception('Service has not been created');
+            throw new Exception('Service has not been created');
         }
 
         $response = $this->request(
@@ -184,7 +185,7 @@ class CPanel extends Server
     public function unsuspendServer(Service $service, $settings, $properties)
     {
         if (!isset($properties['cpanel_username'])) {
-            throw new \Exception('Service has not been created');
+            throw new Exception('Service has not been created');
         }
 
         $response = $this->request(
@@ -212,7 +213,7 @@ class CPanel extends Server
     public function terminateServer(Service $service, $settings, $properties)
     {
         if (!isset($properties['cpanel_username'])) {
-            throw new \Exception('Service has not been created');
+            throw new Exception('Service has not been created');
         }
 
         $response = $this->request(
@@ -236,7 +237,7 @@ class CPanel extends Server
     public function upgradeServer(Service $service, $settings, $properties)
     {
         if (!isset($properties['cpanel_username'])) {
-            throw new \Exception('Service has not been created');
+            throw new Exception('Service has not been created');
         }
 
         $response = $this->request(
@@ -258,7 +259,7 @@ class CPanel extends Server
     public function getLoginUrl(Service $service, $settings, $properties): string
     {
         if (!isset($properties['cpanel_username'])) {
-            throw new \Exception('Service has not been created');
+            throw new Exception('Service has not been created');
         }
 
         $response = $this->request(
@@ -277,7 +278,7 @@ class CPanel extends Server
             return $url;
         }
 
-        throw new \Exception('Unable to generate cPanel login URL');
+        throw new Exception('Unable to generate cPanel login URL');
     }
 
     public function getActions(Service $service, $settings, $properties): array

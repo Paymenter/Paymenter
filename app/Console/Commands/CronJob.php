@@ -8,6 +8,7 @@ use App\Models\EmailLog;
 use App\Models\Service;
 use App\Models\ServiceUpgrade;
 use App\Models\Ticket;
+use Exception;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 
@@ -72,7 +73,7 @@ class CronJob extends Command
                     'quantity' => $service->quantity,
                     'description' => $service->description,
                 ]);
-            } catch (\Exception $e) {
+            } catch (Exception $e) {
                 DB::rollBack();
                 $this->error('Error creating invoice for service ' . $service->id . ': ' . $e->getMessage());
 

@@ -2,8 +2,12 @@
 
 namespace App\Classes;
 
+use App\Models\Currency;
 use App\Models\Setting;
 use App\Models\TaxRate;
+use App\Rules\Cidr;
+use DateTimeZone;
+use Exception;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\HtmlString;
 use Ramsey\Uuid\Uuid;
@@ -15,9 +19,9 @@ class Settings
         try {
             // Only code is needed
             $currencies = once(function () {
-                return \App\Models\Currency::pluck('code')->toArray();
+                return Currency::pluck('code')->toArray();
             });
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $currencies = [];
         }
         $settings = [
@@ -28,7 +32,7 @@ class Settings
                     'label' => 'Timezone',
                     'type' => 'select',
                     // Read timezones from PHP
-                    'options' => \DateTimeZone::listIdentifiers(\DateTimeZone::ALL),
+                    'options' => DateTimeZone::listIdentifiers(DateTimeZone::ALL),
                     'default' => 'UTC',
                     'required' => true,
                     'override' => 'app.timezone',
@@ -105,6 +109,9 @@ class Settings
                     'type' => 'tags',
                     'database_type' => 'array',
                     'placeholder' => 'IP Addresses or CIDR (e.g. 1.1.1.1/32 or 2606:4700:4700::1111)',
+                    'nested_validation' => [
+                        new Cidr(allowWildCard: true)  
+                    ],
                 ],
             ],
 
@@ -543,7 +550,7 @@ class Settings
         ];
 
         // Set theme settings
-        $settings['theme'] = [...$settings['theme'], ...\App\Classes\Theme::getSettings()];
+        $settings['theme'] = [...$settings['theme'], ...Theme::getSettings()];
 
         return $settings;
     }
@@ -586,7 +593,7 @@ class Settings
     {
         try {
             $uuid = Setting::where('key', 'telemetry_uuid')->value('value');
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $uuid = null;
         }
         if (is_null($uuid)) {
@@ -596,7 +603,7 @@ class Settings
                     ['key' => 'telemetry_uuid'],
                     ['value' => $uuid]
                 );
-            } catch (\Exception $e) {
+            } catch (Exception $e) {
                 // Avoid errors in workflows
             }
         }

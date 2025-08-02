@@ -2,9 +2,10 @@
 
 namespace App\Http\Resources;
 
+use App\Models\User;
 use TiMacDonald\JsonApi\JsonApiResource;
 
-/** @mixin \App\Models\User */
+/** @mixin User */
 class UserResource extends JsonApiResource
 {
     public $attributes = [

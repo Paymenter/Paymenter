@@ -5,21 +5,30 @@ namespace App\Admin\Resources;
 use App\Admin\Clusters\Services;
 use App\Admin\Components\UserComponent;
 use App\Admin\Resources\Common\RelationManagers\PropertiesRelationManager;
-use App\Admin\Resources\ServiceResource\Pages;
-use App\Admin\Resources\ServiceResource\RelationManagers;
+use App\Admin\Resources\ServiceResource\Pages\CreateService;
+use App\Admin\Resources\ServiceResource\Pages\EditService;
+use App\Admin\Resources\ServiceResource\Pages\ListService;
+use App\Admin\Resources\ServiceResource\RelationManagers\ConfigOptionsRelationManager;
+use App\Admin\Resources\ServiceResource\RelationManagers\InvoicesRelationManager;
 use App\Helpers\ExtensionHelper;
 use App\Models\Currency;
 use App\Models\Product;
 use App\Models\Service;
-use Filament\Forms;
-use Filament\Forms\Components\Actions\Action;
-use Filament\Forms\Components\Component;
-use Filament\Forms\Form;
-use Filament\Forms\Get;
+use Filament\Actions\Action;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\EditAction;
+use Filament\Forms\Components\DatePicker;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TextInput;
 use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
+use Filament\Schemas\Components\Component;
+use Filament\Schemas\Components\Utilities\Get;
+use Filament\Schemas\Schema;
 use Filament\Support\RawJs;
-use Filament\Tables;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 
@@ -27,9 +36,9 @@ class ServiceResource extends Resource
 {
     protected static ?string $model = Service::class;
 
-    protected static ?string $navigationIcon = 'ri-function-line';
+    protected static string|\BackedEnum|null $navigationIcon = 'ri-function-line';
 
-    protected static ?string $activeNavigationIcon = 'ri-function-fill';
+    protected static string|\BackedEnum|null $activeNavigationIcon = 'ri-function-fill';
 
     public static function getNavigationBadge(): ?string
     {
@@ -43,11 +52,11 @@ class ServiceResource extends Resource
 
     protected static ?string $cluster = Services::class;
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
-                Forms\Components\Select::make('product_id')
+        return $schema
+            ->components([
+                Select::make('product_id')
                     ->label('Product')
                     ->required()
                     ->options(Product::all()->pluck('name', 'id')->toArray())
@@ -55,7 +64,7 @@ class ServiceResource extends Resource
                     ->live()
                     ->preload()
                     ->placeholder('Select the product'),
-                Forms\Components\Select::make('plan_id')
+                Select::make('plan_id')
                     ->label('Plan')
                     ->required()
                     ->relationship('plan', 'name', fn (Builder $query, Get $get) => $query->where('priceable_id', $get('product_id'))->where('priceable_type', Product::class))
@@ -64,7 +73,7 @@ class ServiceResource extends Resource
                     ->disabled(fn (Get $get) => !$get('product_id'))
                     ->placeholder('Select the plan'),
                 UserComponent::make('user_id'),
-                Forms\Components\Select::make('status')
+                Select::make('status')
                     ->label('Status')
                     ->required()
                     ->options([
@@ -75,20 +84,20 @@ class ServiceResource extends Resource
                         'cancelled' => 'Cancelled',
                     ])
                     ->default('pending'),
-                Forms\Components\TextInput::make('quantity')
+                TextInput::make('quantity')
                     ->label('Quantity')
                     ->required()
                     ->placeholder('Enter the quantity'),
-                Forms\Components\DatePicker::make('expires_at')
+                DatePicker::make('expires_at')
                     ->label('Expires At')
                     ->required()
                     ->placeholder('Select the expiration date'),
-                Forms\Components\Select::make('coupon_id')
+                Select::make('coupon_id')
                     ->label('Coupon')
                     ->relationship('coupon', 'code')
                     ->searchable()
                     ->placeholder('Select the coupon'),
-                Forms\Components\Select::make('currency_code')
+                Select::make('currency_code')
                     ->options(function (Get $get, ?string $state) {
                         $pricing = collect($get('../../pricing'))->pluck('currency_code');
                         if ($state !== null) {
@@ -105,7 +114,7 @@ class ServiceResource extends Resource
                     ->live()
                     ->default(config('settings.default_currency'))
                     ->required(),
-                Forms\Components\TextInput::make('price')
+                TextInput::make('price')
                     ->required()
                     ->label('Price')
                     // Suffix based on chosen currency
@@ -119,7 +128,7 @@ class ServiceResource extends Resource
                     ))
                     ->numeric()
                     ->minValue(0),
-                Forms\Components\TextInput::make('subscription_id')
+                TextInput::make('subscription_id')
                     ->label('Subscription ID')
                     ->nullable()
                     ->placeholder('Enter the subscription ID')
@@ -151,18 +160,18 @@ class ServiceResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('id')
+                TextColumn::make('id')
                     ->label('ID')
                     ->sortable()
                     ->searchable(),
-                Tables\Columns\TextColumn::make('user.name')
+                TextColumn::make('user.name')
                     ->label('User')
                     ->searchable(true, fn (Builder $query, string $search) => $query->whereHas('user', fn (Builder $query) => $query->where('first_name', 'like', "%$search%")->orWhere('last_name', 'like', "%$search%"))),
-                Tables\Columns\TextColumn::make('product.name')
+                TextColumn::make('product.name')
                     ->label('Product')
                     ->searchable()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('status')
+                TextColumn::make('status')
                     ->badge()
                     ->color(fn (Service $record) => match ($record->status) {
                         'pending' => 'gray',
@@ -174,14 +183,14 @@ class ServiceResource extends Resource
                     ->label('Status')
                     ->searchable()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('expires_at')
+                TextColumn::make('expires_at')
                     ->label('Expires At')
                     ->date()
                     ->searchable()
                     ->sortable(),
             ])
             ->filters([
-                Tables\Filters\SelectFilter::make('status')
+                SelectFilter::make('status')
                     ->label('Status')
                     ->options([
                         'active' => 'Active',
@@ -194,12 +203,12 @@ class ServiceResource extends Resource
                 return $query
                     ->orderBy('id', 'desc');
             })
-            ->actions([
-                Tables\Actions\EditAction::make(),
+            ->recordActions([
+                EditAction::make(),
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+            ->toolbarActions([
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
                 ]),
             ]);
     }
@@ -207,18 +216,18 @@ class ServiceResource extends Resource
     public static function getRelations(): array
     {
         return [
-            RelationManagers\InvoicesRelationManager::class,
+            InvoicesRelationManager::class,
             PropertiesRelationManager::class,
-            RelationManagers\ConfigOptionsRelationManager::class,
+            ConfigOptionsRelationManager::class,
         ];
     }
 
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListService::route('/'),
-            'create' => Pages\CreateService::route('/create'),
-            'edit' => Pages\EditService::route('/{record}/edit'),
+            'index' => ListService::route('/'),
+            'create' => CreateService::route('/create'),
+            'edit' => EditService::route('/{record}/edit'),
         ];
     }
 }

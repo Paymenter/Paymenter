@@ -5,6 +5,7 @@ namespace App\Livewire\Services;
 use App\Helpers\ExtensionHelper;
 use App\Livewire\Component;
 use App\Models\Service;
+use Exception;
 use Livewire\Attributes\Locked;
 use Livewire\Attributes\Url;
 
@@ -31,7 +32,7 @@ class Show extends Component
             $actions = [];
             try {
                 $actions = ExtensionHelper::getActions($this->service);
-            } catch (\Exception $e) {
+            } catch (Exception $e) {
             }
             // separate the actions into buttons and views
             foreach ($actions as $action) {
@@ -92,10 +93,10 @@ class Show extends Component
                 // Search array for the current view
                 $currentViewObj = $this->views[array_search($this->currentView, array_column($this->views, 'name'))] ?? null;
                 if (!$currentViewObj) {
-                    throw new \Exception('View not found');
+                    throw new Exception('View not found');
                 }
                 $view = ExtensionHelper::getView($this->service, $currentViewObj);
-            } catch (\Exception $e) {
+            } catch (Exception $e) {
                 if ($previousView !== $this->views[0]['name'] ?? null) {
                     $this->notify('Got an error while trying to load the view', 'error');
                 }

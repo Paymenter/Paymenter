@@ -3,7 +3,9 @@
 namespace App\Livewire;
 
 use App\Events\Properties\Updated as PropertiesUpdated;
+use App\Models\CustomProperty;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Model;
 
 class ComponentWithProperties extends Component
 {
@@ -16,12 +18,12 @@ class ComponentWithProperties extends Component
     /**
      * Updates the properties of the model
      *
-     * @param  \Illuminate\Database\Eloquent\Model|null  $model
+     * @param  Model|null  $model
      * @param  string  $morphClass
      */
     public function initializeProperties($model, $morphClass)
     {
-        $this->custom_properties = \App\Models\CustomProperty::where('model', $morphClass)->get();
+        $this->custom_properties = CustomProperty::where('model', $morphClass)->get();
         if ($model) {
             $this->properties = $model
                 ->properties->mapWithKeys(function ($property) {
@@ -51,7 +53,7 @@ class ComponentWithProperties extends Component
     /**
      * Updates the properties of the model
      *
-     * @param  \Illuminate\Database\Eloquent\Model  $model
+     * @param  Model  $model
      * @param  array  $properties
      */
     public function updateProperties($model, $properties)

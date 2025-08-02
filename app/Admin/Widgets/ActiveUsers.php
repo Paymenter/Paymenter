@@ -2,19 +2,21 @@
 
 namespace App\Admin\Widgets;
 
+use App\Models\Session;
 use Filament\Widgets\Widget;
+use Illuminate\View\View;
 
 class ActiveUsers extends Widget
 {
-    protected static string $view = 'admin.widgets.active-users';
+    protected string $view = 'admin.widgets.active-users';
 
     protected static ?int $sort = 2;
 
     protected static string $title = 'Active Users';
 
-    public function render(): \Illuminate\View\View
+    public function render(): View
     {
-        $baseQuery = \App\Models\Session::query()
+        $baseQuery = Session::query()
             ->where('last_activity', '>=', now()->subMinutes(5))
             ->whereNotNull('user_id')
             ->orderBy('last_activity', 'desc')
@@ -23,7 +25,7 @@ class ActiveUsers extends Widget
         $sessions = (clone $baseQuery)->limit(5)->get();
         $onlineCount = (clone $baseQuery)->count();
 
-        return view(static::$view, [
+        return view($this->view, [
             'sessions' => $sessions,
             'onlineCount' => $onlineCount,
         ]);

@@ -9,6 +9,7 @@ use App\Models\EmailTemplate;
 use App\Models\Invoice;
 use App\Models\Order;
 use App\Models\Service;
+use App\Models\ServiceCancellation;
 use App\Models\TicketMessage;
 use App\Models\User;
 use Carbon\Carbon;
@@ -143,7 +144,7 @@ class NotificationHelper
         self::sendEmailNotification('password_reset', $data, $user);
     }
 
-    public static function serviceCancellationReceivedNotification(User $user, \App\Models\ServiceCancellation $cancellation, array $data = []): void
+    public static function serviceCancellationReceivedNotification(User $user, ServiceCancellation $cancellation, array $data = []): void
     {
         $data['cancellation'] = $cancellation;
         $data['service'] = $cancellation->service;
