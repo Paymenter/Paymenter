@@ -41,7 +41,7 @@
                     class="text-sm text-primary-100 w-fit start-1 ml-2 bg-background-secondary rounded-md px-2">
                     {{ $config->label ?? $config->name }}
                 </label>
-                <div class="relative flex items-center" :style="`--progress:${progressOption};--segments-width:${segmentsWidthOption}`">
+                <div class="relative flex items-center" :style="`--progress:${progressOption};--segments-width:${segmentsWidthOption}`" wire:ignore>
                     <div class="
                         absolute left-2.5 right-2.5 h-1.5 bg-background-secondary rounded-full overflow-hidden transition-all duration-500 ease-in-out
                         before:absolute before:inset-0 before:bg-primary
