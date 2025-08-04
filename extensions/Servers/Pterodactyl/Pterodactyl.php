@@ -144,7 +144,7 @@ class Pterodactyl extends Server
                 'min_value' => -1,
                 'suffix' => 'MiB',
                 'required' => true,
-                'description' => 'Set to 0 for unlimited, or to -1 to disable swap',
+                'description' => 'Set to -1 for unlimited, or to 0 to disable swap',
             ],
             [
                 'name' => 'disk',
