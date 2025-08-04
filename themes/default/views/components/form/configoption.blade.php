@@ -58,14 +58,20 @@
                 </div>
                 <!-- Options -->
                 <ul class="flex justify-between text-xs font-medium text-light px-2.5">
-                    <template x-for="(plan, index) in options" :key="index">
+                    @foreach($config->children as $child)
                         <li class="relative @if($showPriceTag) pb-7 @else pb-2 @endif">
-                            <button @click="setOptionValue(index)" class="absolute flex flex-col items-center -translate-x-1/2">
-                                <span class="text-sm font-semibold" x-text="`${plan.option}`"></span>
-                                <span class="text-sm font-semibold" x-text="`${plan.price}`"></span>
+                            <button @click="setOptionValue({{ $loop->index }})" class="absolute flex flex-col items-center -translate-x-1/2">
+                                <span class="text-sm font-semibold">
+                                    {{ $child->name }}
+                                </span>
+                                @if($showPriceTag)
+                                    <span class="text-sm font-semibold">
+                                        {{ ($showPriceTag && $child->price(billing_period: $plan->billing_period, billing_unit: $plan->billing_unit)->available) ? $child->price(billing_period: $plan->billing_period, billing_unit: $plan->billing_unit) : '' }}
+                                    </span>
+                                @endif
                             </button>
                         </li>
-                    </template>
+                    @endforeach
                 </ul>
             </div>
         @break
