@@ -60,12 +60,12 @@
                 <ul class="flex justify-between text-xs font-medium text-light px-2.5">
                     @foreach($config->children as $child)
                         <li class="relative @if($showPriceTag) pb-7 @else pb-2 @endif">
-                            <button @click="setOptionValue({{ $loop->index }})" class="absolute flex flex-col items-center -translate-x-1/2 w-24 text-center">
-                                <span class="text-sm font-semibold whitespace-nowrap">
+                            <button @click="setOptionValue({{ $loop->index }})" class="absolute flex flex-col items-center -translate-x-1/2 w-24">
+                                <span class="text-sm font-semibold">
                                     {{ $child->name }}
                                 </span>
                                 @if($showPriceTag)
-                                    <span class="text-sm font-semibold text-muted">
+                                    <span class="text-sm font-semibold">
                                         {{ ($showPriceTag && $child->price(billing_period: $plan->billing_period, billing_unit: $plan->billing_unit)->available) ? $child->price(billing_period: $plan->billing_period, billing_unit: $plan->billing_unit) : '' }}
                                     </span>
                                 @endif
