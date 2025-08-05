@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\SocialLoginController;
+use App\Http\Controllers\TicketAttachmentController;
 use App\Http\Middleware\MustVerfiyEmail;
 use App\Livewire\Auth;
 use App\Livewire\Cart;
@@ -57,6 +58,7 @@ Route::group(['middleware' => ['web', 'auth']], function () {
 
         return redirect()->route('dashboard');
     })->middleware(['signed'])->name('verification.verify');
+    Route::get('/tickets/attachments/{attachment:uuid}', [TicketAttachmentController::class, 'download'])->name('tickets.attachments.show')->middleware('can:view,attachment');
 });
 
 Route::get('cart', Cart::class)->name('cart');

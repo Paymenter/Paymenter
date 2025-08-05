@@ -38,7 +38,7 @@ class Show extends Component
         }
 
         if ($this->invoice->status === 'pending') {
-            $this->gateways = ExtensionHelper::getCheckoutGateways($this->invoice->items, 'invoice');
+            $this->gateways = ExtensionHelper::getCheckoutGateways($this->invoice->total, $this->invoice->currency_code, 'invoice', $this->invoice->items);
             if (count($this->gateways) > 0 && !array_search($this->gateway, array_column($this->gateways, 'id')) !== false) {
                 $this->gateway = $this->gateways[0]->id;
             }

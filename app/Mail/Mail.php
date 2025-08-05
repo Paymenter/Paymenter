@@ -8,6 +8,7 @@ use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\View\Compilers\BladeCompiler;
 
 class Mail extends Mailable
 {
@@ -37,7 +38,7 @@ class Mail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: $this->emailTemplate->subject,
+            subject: BladeCompiler::render($this->emailTemplate->subject, $this->data),
         );
     }
 

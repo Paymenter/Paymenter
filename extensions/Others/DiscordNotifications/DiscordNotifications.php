@@ -9,24 +9,28 @@ use App\Admin\Resources\TicketResource;
 use App\Admin\Resources\UserResource;
 use App\Classes\Extension\Extension;
 use App\Events\Invoice;
-use App\Events\Order;
+use App\Events\Invoice\Paid;
+use App\Events\Order\Finalized;
+use App\Events\Order\Updated;
 use App\Events\Service;
 use App\Events\Ticket;
 use App\Events\TicketMessage;
 use App\Events\User;
+use App\Events\User\Created;
+use Exception;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Http;
 
 class DiscordNotifications extends Extension
 {
     private const events = [
-        'Order Created' => Order\Finalized::class,
-        'Order Updated' => Order\Updated::class,
-        'User Created' => User\Created::class,
+        'Order Created' => Finalized::class,
+        'Order Updated' => Updated::class,
+        'User Created' => Created::class,
         'User Updated' => User\Updated::class,
         'Invoice Created' => Invoice\Finalized::class,
         'Invoice Updated' => Invoice\Updated::class,
-        'Invoice Paid' => Invoice\Paid::class,
+        'Invoice Paid' => Paid::class,
         'Ticket Created' => Ticket\Created::class,
         'Ticket Updated' => Ticket\Updated::class,
         'Ticket Replied' => TicketMessage\Created::class,
@@ -99,7 +103,7 @@ class DiscordNotifications extends Extension
                     function ($event) use ($eventType) {
                         try {
                             $this->sendNotification($event, $eventType);
-                        } catch (\Exception $e) {
+                        } catch (Exception $e) {
                             // Log the error
                             if (config('settings.debug')) {
                                 throw $e;

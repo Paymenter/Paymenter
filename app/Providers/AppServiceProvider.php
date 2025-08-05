@@ -12,15 +12,20 @@ use App\Support\Passport\ScopeRegistry;
 use Dedoc\Scramble\Scramble;
 use Dedoc\Scramble\Support\Generator\OpenApi;
 use Dedoc\Scramble\Support\Generator\SecurityScheme;
+use Exception;
 use Illuminate\Queue\Events\JobFailed;
 use Illuminate\Queue\Events\JobProcessed;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Queue;
+use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Str;
 use Laravel\Passport\Passport;
 use League\CommonMark\Extension\Table\TableExtension;
+use Livewire\Livewire;
+use SocialiteProviders\Discord\Provider;
+use SocialiteProviders\Manager\SocialiteWasCalled;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -39,17 +44,17 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         // Change livewire url
-        \Livewire\Livewire::setUpdateRoute(function ($handle) {
-            return \Illuminate\Support\Facades\Route::post('/paymenter/update', $handle)->middleware('web')->name('paymenter.');
+        Livewire::setUpdateRoute(function ($handle) {
+            return Route::post('/paymenter/update', $handle)->middleware('web')->name('paymenter.');
         });
-        \Livewire\Livewire::propertySynthesizer(PriceSynth::class);
+        Livewire::propertySynthesizer(PriceSynth::class);
 
         Gate::define('has-permission', function (User $user, string $ability) {
             return $user->hasPermission($ability);
         });
 
-        Event::listen(function (\SocialiteProviders\Manager\SocialiteWasCalled $event) {
-            $event->extendSocialite('discord', \SocialiteProviders\Discord\Provider::class);
+        Event::listen(function (SocialiteWasCalled $event) {
+            $event->extendSocialite('discord', Provider::class);
         });
 
         try {
@@ -60,7 +65,7 @@ class AppServiceProvider extends ServiceProvider
             ) {
                 ExtensionHelper::call($extension, 'boot', mayFail: true);
             }
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             // Fail silently
         }
 

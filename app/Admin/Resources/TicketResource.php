@@ -3,14 +3,21 @@
 namespace App\Admin\Resources;
 
 use App\Admin\Components\UserComponent;
-use App\Admin\Resources\TicketResource\Pages;
+use App\Admin\Resources\TicketResource\Pages\CreateTicket;
+use App\Admin\Resources\TicketResource\Pages\EditTicket;
+use App\Admin\Resources\TicketResource\Pages\ListTickets;
 use App\Admin\Resources\TicketResource\Widgets\TicketsOverView;
 use App\Models\Ticket;
-use Filament\Forms;
-use Filament\Forms\Form;
-use Filament\Forms\Get;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\EditAction;
+use Filament\Forms\Components\MarkdownEditor;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TextInput;
 use Filament\Resources\Resource;
-use Filament\Tables;
+use Filament\Schemas\Components\Utilities\Get;
+use Filament\Schemas\Schema;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Database\Eloquent\Builder;
@@ -20,11 +27,11 @@ class TicketResource extends Resource
 {
     protected static ?string $model = Ticket::class;
 
-    protected static ?string $navigationIcon = 'ri-customer-service-line';
+    protected static string|\BackedEnum|null $navigationIcon = 'ri-customer-service-line';
 
-    protected static ?string $activeNavigationIcon = 'ri-customer-service-fill';
+    protected static string|\BackedEnum|null $activeNavigationIcon = 'ri-customer-service-fill';
 
-    public static ?string $navigationGroup = 'Administration';
+    public static string|\UnitEnum|null $navigationGroup = 'Administration';
 
     public static function getNavigationBadge(): ?string
     {
@@ -46,17 +53,17 @@ class TicketResource extends Resource
         return $record->subject;
     }
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
-                Forms\Components\TextInput::make('subject')
+        return $schema
+            ->components([
+                TextInput::make('subject')
                     ->label('Subject')
                     ->columnSpan(function ($record) {
                         return $record ? 2 : 1;
                     })
                     ->required(),
-                Forms\Components\Select::make('status')
+                Select::make('status')
                     ->label('Status')
                     ->options([
                         'open' => 'Open',
@@ -68,7 +75,7 @@ class TicketResource extends Resource
                     })
                     ->default('open')
                     ->required(),
-                Forms\Components\Select::make('priority')
+                Select::make('priority')
                     ->label('Priority')
                     ->options([
                         'low' => 'Low',
@@ -80,7 +87,7 @@ class TicketResource extends Resource
                     })
                     ->default('medium')
                     ->required(),
-                Forms\Components\Select::make('department')
+                Select::make('department')
                     ->label('Department')
                     ->options(array_combine(config('settings.ticket_departments'), config('settings.ticket_departments')))
                     ->columnSpan(function ($record) {
@@ -89,7 +96,7 @@ class TicketResource extends Resource
                 UserComponent::make('user_id')->columnSpan(function ($record) {
                     return $record ? 2 : 1;
                 }),
-                Forms\Components\Select::make('assigned_to')
+                Select::make('assigned_to')
                     ->label('Assigned To')
                     ->searchable()
                     ->preload()
@@ -98,7 +105,7 @@ class TicketResource extends Resource
                     ->columnSpan(function ($record) {
                         return $record ? 2 : 1;
                     }),
-                Forms\Components\Select::make('service_id')
+                Select::make('service_id')
                     ->label('Service')
                     ->relationship('service', 'id', function (Builder $query, Get $get) {
                         $query->where('user_id', $get('user_id'));
@@ -108,7 +115,7 @@ class TicketResource extends Resource
                         return $record ? 2 : 1;
                     })
                     ->disabled(fn (Get $get) => !$get('user_id')),
-                Forms\Components\MarkdownEditor::make('message')
+                MarkdownEditor::make('message')
                     ->columnSpan(2)
                     ->label('Initial Message')
                     ->hiddenOn('edit')
@@ -123,10 +130,10 @@ class TicketResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('subject')
+                TextColumn::make('subject')
                     ->searchable()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('status')
+                TextColumn::make('status')
                     ->sortable()
                     ->badge()
                     ->color(fn (Ticket $record) => match ($record->status) {
@@ -135,7 +142,7 @@ class TicketResource extends Resource
                         'replied' => 'warning',
                     })
                     ->formatStateUsing(fn (string $state) => ucfirst($state)),
-                Tables\Columns\TextColumn::make('priority')
+                TextColumn::make('priority')
                     ->sortable()
                     ->badge()
                     ->color(fn (Ticket $record) => match ($record->priority) {
@@ -144,22 +151,22 @@ class TicketResource extends Resource
                         'high' => 'danger',
                     })
                     ->formatStateUsing(fn (string $state) => ucfirst($state)),
-                Tables\Columns\TextColumn::make('department')
+                TextColumn::make('department')
                     ->formatStateUsing(fn ($state) => array_combine(config('settings.ticket_departments'), config('settings.ticket_departments'))[$state])
                     ->sortable(),
-                Tables\Columns\TextColumn::make('user.name')
+                TextColumn::make('user.name')
                     ->searchable(['first_name', 'last_name'])
                     ->sortable(['first_name', 'last_name']),
             ])
             ->filters([
                 //
             ])
-            ->actions([
-                Tables\Actions\EditAction::make(),
+            ->recordActions([
+                EditAction::make(),
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+            ->toolbarActions([
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
                 ]),
             ])
             ->defaultSort('id', 'desc');
@@ -175,9 +182,9 @@ class TicketResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListTickets::route('/'),
-            'create' => Pages\CreateTicket::route('/create'),
-            'edit' => Pages\EditTicket::route('/{record}/edit'),
+            'index' => ListTickets::route('/'),
+            'create' => CreateTicket::route('/create'),
+            'edit' => EditTicket::route('/{record}/edit'),
         ];
     }
 }

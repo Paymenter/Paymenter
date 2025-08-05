@@ -8,7 +8,7 @@ use Filament\Widgets\StatsOverviewWidget\Stat;
 
 class TicketsOverView extends BaseWidget
 {
-    protected static ?string $pollingInterval = '20s';
+    protected ?string $pollingInterval = '20s';
 
     protected function getStats(): array
     {

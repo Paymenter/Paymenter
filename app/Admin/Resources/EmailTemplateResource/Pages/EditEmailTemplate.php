@@ -3,7 +3,7 @@
 namespace App\Admin\Resources\EmailTemplateResource\Pages;
 
 use App\Admin\Resources\EmailTemplateResource;
-use Filament\Actions;
+use Filament\Actions\DeleteAction;
 use Filament\Resources\Pages\EditRecord;
 
 class EditEmailTemplate extends EditRecord
@@ -13,7 +13,7 @@ class EditEmailTemplate extends EditRecord
     protected function getHeaderActions(): array
     {
         return [
-            Actions\DeleteAction::make(),
+            DeleteAction::make(),
         ];
     }
 }

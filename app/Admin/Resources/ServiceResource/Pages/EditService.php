@@ -6,7 +6,9 @@ use App\Admin\Resources\ServiceResource;
 use App\Helpers\ExtensionHelper;
 use App\Helpers\NotificationHelper;
 use App\Models\Service;
-use Filament\Actions;
+use Exception;
+use Filament\Actions\Action;
+use Filament\Actions\DeleteAction;
 use Filament\Forms\Components\Checkbox;
 use Filament\Forms\Components\Select;
 use Filament\Notifications\Notification;
@@ -20,10 +22,10 @@ class EditService extends EditRecord
     protected function getHeaderActions(): array
     {
         return [
-            Actions\DeleteAction::make(),
-            Actions\Action::make('changeStatus')
+            DeleteAction::make(),
+            Action::make('changeStatus')
                 ->label('Trigger Extension Action')
-                ->form([
+                ->schema([
                     Select::make('action')
                         ->label('Action')
                         ->options([
@@ -37,7 +39,7 @@ class EditService extends EditRecord
                         ->label('Send Notification')
                         ->default(false),
                 ])
-                ->action(function (array $data, Service $record, Actions\Action $action): void {
+                ->action(function (array $data, Service $record, Action $action): void {
                     try {
                         switch ($data['action']) {
                             case 'create':
@@ -59,7 +61,7 @@ class EditService extends EditRecord
                                 $sdata = ExtensionHelper::upgradeServer($record);
                                 break;
                         }
-                    } catch (\Exception $e) {
+                    } catch (Exception $e) {
                         if (config('app.debug')) {
                             throw $e;
                         }

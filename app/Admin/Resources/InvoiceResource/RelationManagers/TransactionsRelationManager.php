@@ -2,30 +2,35 @@
 
 namespace App\Admin\Resources\InvoiceResource\RelationManagers;
 
-use Filament\Forms;
-use Filament\Forms\Form;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\CreateAction;
+use Filament\Actions\DeleteAction;
+use Filament\Actions\DeleteBulkAction;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TextInput;
 use Filament\Resources\RelationManagers\RelationManager;
+use Filament\Schemas\Schema;
 use Filament\Support\RawJs;
-use Filament\Tables;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 
 class TransactionsRelationManager extends RelationManager
 {
     protected static string $relationship = 'transactions';
 
-    public function form(Form $form): Form
+    public function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
-                Forms\Components\Select::make('gateway.name')
+        return $schema
+            ->components([
+                Select::make('gateway.name')
                     ->label('Gateway')
                     ->relationship('gateway', 'name')
                     ->searchable()
                     ->preload()
                     ->placeholder('Select the gateway'),
-                Forms\Components\TextInput::make('transaction_id')
+                TextInput::make('transaction_id')
                     ->label('Transaction ID'),
-                Forms\Components\TextInput::make('amount')
+                TextInput::make('amount')
                     ->label('Amount')
                     ->numeric()
                     ->mask(RawJs::make(
@@ -34,7 +39,7 @@ class TransactionsRelationManager extends RelationManager
                         JS
                     ))
                     ->required(),
-                Forms\Components\TextInput::make('fee')
+                TextInput::make('fee')
                     ->numeric()
                     ->mask(RawJs::make(
                         <<<'JS'
@@ -50,24 +55,24 @@ class TransactionsRelationManager extends RelationManager
         return $table
             ->recordTitleAttribute('transaction_id')
             ->columns([
-                Tables\Columns\TextColumn::make('gateway.name')->label('Gateway'),
-                Tables\Columns\TextColumn::make('transaction_id'),
-                Tables\Columns\TextColumn::make('formattedAmount')->label('Amount'),
-                Tables\Columns\TextColumn::make('formattedFee')->label('Fee'),
-                Tables\Columns\TextColumn::make('created_at'),
+                TextColumn::make('gateway.name')->label('Gateway'),
+                TextColumn::make('transaction_id'),
+                TextColumn::make('formattedAmount')->label('Amount'),
+                TextColumn::make('formattedFee')->label('Fee'),
+                TextColumn::make('created_at'),
             ])
             ->filters([
                 //
             ])
             ->headerActions([
-                Tables\Actions\CreateAction::make(),
+                CreateAction::make(),
             ])
-            ->actions([
-                Tables\Actions\DeleteAction::make(),
+            ->recordActions([
+                DeleteAction::make(),
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+            ->toolbarActions([
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
                 ]),
             ]);
     }
