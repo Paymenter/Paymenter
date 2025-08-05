@@ -2,3 +2,5 @@
 
 @source '../../../../app/Admin';
 @source '../../../../resources/views';
+
+@plugin '@tailwindcss/typography';

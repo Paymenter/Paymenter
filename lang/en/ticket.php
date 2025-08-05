@@ -9,6 +9,10 @@ return [
     'department' => 'Department',
     'created_at' => 'Created At',
     'reply' => 'Reply',
+    'attachments' => 'Attachments',
+    'upload_attachments' => 'Upload Attachments',
+    'or_drag_and_drop' => 'or drag and drop',
+    'attachments_max' => 'Attachments up to 10MB',
 
     'create_ticket' => 'Create Ticket',
     'select_department' => 'Select Department',

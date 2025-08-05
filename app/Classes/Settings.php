@@ -8,6 +8,7 @@ use App\Models\TaxRate;
 use App\Rules\Cidr;
 use DateTimeZone;
 use Exception;
+use Filament\Schemas\Components\Utilities\Get;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\HtmlString;
 use Ramsey\Uuid\Uuid;
@@ -110,7 +111,7 @@ class Settings
                     'database_type' => 'array',
                     'placeholder' => 'IP Addresses or CIDR (e.g. 1.1.1.1/32 or 2606:4700:4700::1111)',
                     'nested_validation' => [
-                        new Cidr(allowWildCard: true)  
+                        new Cidr(allowWildCard: true)
                     ],
                 ],
             ],
@@ -359,6 +360,51 @@ class Settings
                     'disable_toolbar' => true,
                 ],
             ],
+            'tickets' => [
+                [
+                    'name' => 'ticket_departments',
+                    'label' => 'Ticket Departments',
+                    'type' => 'tags',
+                    'default' => ['Support', 'Sales'],
+                    'required' => true,
+                    'database_type' => 'array',
+                ],
+                // Email piping
+                [
+                    'name' => 'ticket_mail_piping',
+                    'label' => 'Email Piping',
+                    'type' => 'checkbox',
+                    'database_type' => 'boolean',
+                    'default' => false,
+                    'live' => true,
+                ],
+                [
+                    'name' => 'ticket_mail_host',
+                    'label' => 'Email Host',
+                    'type' => 'text',
+                    'required' => fn(Get $get) => $get('ticket_mail_piping'),
+                ],
+                [
+                    'name'=> 'ticket_mail_port',
+                    'label' => 'Email Port',
+                    'type' => 'number',
+                    'required' => fn(Get $get) => $get('ticket_mail_piping'),
+                    'default' => 993,
+                ],
+                [
+                    'name' => 'ticket_mail_email',
+                    'label' => 'Email Address',
+                    'type' => 'email',
+                    'required' => fn(Get $get) => $get('ticket_mail_piping'),
+                ],
+                [
+                    'name'=> 'ticket_mail_password',
+                    'label' => 'Email Password',
+                    'type' => 'password',
+                    'required' => fn(Get $get) => $get('ticket_mail_piping'),
+                ],
+            ],
+
             'cronjob' => [
                 [
                     'name' => 'cronjob_invoice',
@@ -505,14 +551,6 @@ class Settings
                     'options' => $currencies,
                     'default' => 'USD',
                     'required' => true,
-                ],
-                [
-                    'name' => 'ticket_departments',
-                    'label' => 'Ticket Departments',
-                    'type' => 'tags',
-                    'default' => ['Support', 'Sales'],
-                    'required' => true,
-                    'database_type' => 'array',
                 ],
                 [
                     'name' => 'registration_disabled',
