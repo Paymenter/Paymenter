@@ -34,11 +34,6 @@ class DirectAdmin extends Server
         return $response;
     }
 
-    /**
-     * Get all the configuration for the extension
-     *
-     * @param  array  $values
-     */
     public function getConfig($values = []): array
     {
         return [
@@ -65,23 +60,15 @@ class DirectAdmin extends Server
         ];
     }
 
-    /**
-     * Get product config
-     *
-     * @param  array  $values
-     */
     public function getProductConfig($values = []): array
     {
         $upackages = $this->request('/CMD_API_PACKAGES_USER', parse: true);
-        // Map to label => value pairs
         $upackages = array_map(function ($package) {
             return ['label' => $package, 'value' => $package];
         }, $upackages);
 
         try {
-            // If you are a reseller you won't have access to reseller packages
             $rpackages = $this->request('/CMD_API_PACKAGES_RESELLER', parse: true);
-            // Merge user packages with reseller packages
             $rpackages = array_map(function ($package) {
                 return ['label' => $package . ' (reseller)', 'value' => $package];
             }, $rpackages);
@@ -90,7 +77,6 @@ class DirectAdmin extends Server
         }
 
         $packages = array_merge($upackages, $rpackages);
-
         $ips = $this->request('/CMD_API_SHOW_RESELLER_IPS', parse: true);
 
         return [
@@ -125,27 +111,16 @@ class DirectAdmin extends Server
         ];
     }
 
-    /**
-     * Check if currenct configuration is valid
-     */
     public function testConfig(): bool|string
     {
         try {
             $this->request('/CMD_API_SHOW_USERS')->body();
-
             return true;
         } catch (\Exception $e) {
             return $e->getMessage();
         }
     }
 
-    /**
-     * Create a server
-     *
-     * @param  array  $settings  (product settings)
-     * @param  array  $properties  (checkout options)
-     * @return bool
-     */
     public function createServer(Service $service, $settings, $properties)
     {
         $password = substr(str_shuffle(str_repeat($x = 'abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ(!@.$%', ceil(10 / strlen($x)))), 1, 12);
@@ -156,7 +131,6 @@ class DirectAdmin extends Server
             $ip = $settings['ip'];
         } else {
             $ip = $this->request('/CMD_API_SHOW_RESELLER_IPS', parse: true)[0] ?? null;
-
             if (!$ip) {
                 throw new \Exception('No IP address available for the server');
             }
@@ -201,13 +175,6 @@ class DirectAdmin extends Server
         ];
     }
 
-    /**
-     * Suspend a server
-     *
-     * @param  array  $settings  (product settings)
-     * @param  array  $properties  (checkout options)
-     * @return bool
-     */
     public function suspendServer(Service $service, $settings, $properties)
     {
         if (!isset($properties['directadmin_username'])) {
@@ -227,13 +194,6 @@ class DirectAdmin extends Server
         return true;
     }
 
-    /**
-     * Unsuspend a server
-     *
-     * @param  array  $settings  (product settings)
-     * @param  array  $properties  (checkout options)
-     * @return bool
-     */
     public function unsuspendServer(Service $service, $settings, $properties)
     {
         if (!isset($properties['directadmin_username'])) {
@@ -253,13 +213,6 @@ class DirectAdmin extends Server
         return true;
     }
 
-    /**
-     * Terminate a server
-     *
-     * @param  array  $settings  (product settings)
-     * @param  array  $properties  (checkout options)
-     * @return bool
-     */
     public function terminateServer(Service $service, $settings, $properties)
     {
         if (!isset($properties['directadmin_username'])) {
@@ -276,7 +229,6 @@ class DirectAdmin extends Server
             throw new \Exception('Error terminating DirectAdmin account: ' . $response['text']);
         }
 
-        // Delete the properties
         $service->properties()->where('key', 'directadmin_username')->delete();
 
         return true;
@@ -299,22 +251,31 @@ class DirectAdmin extends Server
 
     public function ssoLink(Service $service, $settings, $properties): string
     {
-        if (!isset($properties['directadmin_username'])) {
+        if (!isset($properties['directadmin_username']) || !isset($properties['directadmin_password'])) {
             return '';
         }
 
-        $response = $this->request('/CMD_API_LOGIN_KEYS', 'post', [
+        // FIX: Previously the SSO link was generated using the DirectAdmin admin account credentials from the extension config,
+        // causing the link to log into the admin account instead of the user's account.
+        // This now uses the user's DirectAdmin credentials to generate the one-time URL.
+        $response = Http::withBasicAuth(
+            $properties['directadmin_username'],
+            $properties['directadmin_password']
+        )->withHeaders([
+            'Content-Type' => 'application/json',
+        ])->post(rtrim($this->config('host'), '/') . '/CMD_API_LOGIN_KEYS', [
             'action' => 'create',
             'type' => 'one_time_url',
             'expiry' => '5m',
-            'user' => $properties['directadmin_username'],
-            'passwd' => $properties['directadmin_password'],
-        ], parse: true);
+        ])->throw();
 
-        if ($response['error'] != '0') {
-            throw new \Exception('Error creating DirectAdmin SSO link: ' . $response['text']);
+        $body = html_entity_decode($response->body());
+        parse_str($body, $parsed);
+
+        if (!isset($parsed['error']) || $parsed['error'] != '0') {
+            throw new \Exception('Error creating DirectAdmin SSO link: ' . ($parsed['text'] ?? 'Unknown error'));
         }
 
-        return $response['details'] ?? '';
+        return $parsed['details'] ?? '';
     }
 }
