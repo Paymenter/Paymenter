@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Http;
 
 class DirectAdmin extends Server
 {
-    private function request($endpoint, $method = 'get', $data = [], $parse = false)
+    public function request($endpoint, $method = 'get', $data = [], $parse = false)
     {
         $host = rtrim($this->config('host'), '/');
         $url = $host . $endpoint;
@@ -299,22 +299,46 @@ class DirectAdmin extends Server
 
     public function ssoLink(Service $service, $settings, $properties): string
     {
-        if (!isset($properties['directadmin_username'])) {
+        if (!isset($properties['directadmin_username']) || !isset($properties['directadmin_password'])) {
             return '';
         }
 
-        $response = $this->request('/CMD_API_LOGIN_KEYS', 'post', [
+        // FIX: Previously the SSO link was generated using the DirectAdmin admin account credentials from the extension config,
+        // causing the link to log into the admin account instead of the user's account.
+        // This now uses the user's DirectAdmin credentials and the same request() parsing logic as other actions.
+        $response = $this->ssoLinkAPI('/CMD_API_LOGIN_KEYS', 'post', [
             'action' => 'create',
             'type' => 'one_time_url',
             'expiry' => '5m',
-            'user' => $properties['directadmin_username'],
-            'passwd' => $properties['directadmin_password'],
         ], parse: true);
 
-        if ($response['error'] != '0') {
-            throw new \Exception('Error creating DirectAdmin SSO link: ' . $response['text']);
+        if (!isset($response['error']) || $response['error'] != '0') {
+            throw new \Exception('Error creating DirectAdmin SSO link: ' . ($response['text'] ?? 'Unknown error'));
         }
 
         return $response['details'] ?? '';
+    }
+
+    public function ssoLinkAPI($endpoint, $method, $data, $parse, $username, $password)
+    {
+        $host = rtrim($this->config('host'), '/');
+        $url = $host . $endpoint;
+
+        $response = Http::withBasicAuth($username, $password)
+            ->withHeaders([
+                'Content-Type' => 'application/json',
+            ])->$method($url, $data)->throw();
+
+        if ($parse) {
+            $body = html_entity_decode($response->body());
+            parse_str($body, $parsed);
+            if (isset($parsed['list']) && is_array($parsed['list'])) {
+                return $parsed['list'];
+            }
+
+            return $parsed;
+        }
+
+        return $response;
     }
 }
