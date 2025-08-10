@@ -8,6 +8,7 @@ use App\Models\User;
 use App\Traits\Captchable;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Livewire\Attributes\Computed;
 
 #[DisabledIf('registration_disabled')]
 class Register extends ComponentWithProperties
@@ -15,14 +16,11 @@ class Register extends ComponentWithProperties
     use Captchable;
 
     public string $first_name = '';
-
     public string $last_name = '';
-
     public string $email = '';
-
     public string $password = '';
-
     public string $password_confirmation = '';
+    public bool $terms = false;
 
     public function mount()
     {
@@ -31,12 +29,31 @@ class Register extends ComponentWithProperties
 
     public function rules()
     {
-        return array_merge([
+        $rules = [
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
             'email' => 'required|email|max:255|unique:users',
             'password' => 'required|string|min:8|confirmed',
-        ], $this->getRulesForProperties());
+        ];
+
+        if (config('settings.tos')) {
+            $rules['terms'] = 'accepted';
+        }
+
+        return array_merge($rules, $this->getRulesForProperties());
+    }
+
+    #[Computed]
+    public function isFormInvalid()
+    {
+        $tosIsRequiredAndUnchecked = config('settings.tos') && !$this->terms;
+
+        return $tosIsRequiredAndUnchecked
+            || empty($this->first_name)
+            || empty($this->last_name)
+            || empty($this->email)
+            || empty($this->password)
+            || empty($this->password_confirmation);
     }
 
     public function submit()
