@@ -62,6 +62,45 @@
         .invoice-info td {
             padding: 2px 0;
         }
+
+        .totals-section {
+            margin-top: 30px;
+            float: right;
+            width: 300px;
+        }
+
+        .totals-table {
+            width: 100%;
+            margin-bottom: 10px;
+        }
+
+        .totals-table td {
+            padding: 8px 0;
+            border: none;
+        }
+
+        .totals-table .label {
+            text-align: left;
+            font-weight: normal;
+            color: #666;
+            text-transform: uppercase;
+            font-size: 0.875em;
+        }
+
+        .totals-table .amount {
+            text-align: right;
+            font-weight: bold;
+        }
+
+        .totals-table .total-row {
+            border-top: 2px solid #ddd;
+            font-size: 1.1em;
+        }
+
+        .totals-table .total-row .label {
+            font-weight: bold;
+            color: #000;
+        }
     </style>
 </head>
 
@@ -127,6 +166,46 @@
             @endforeach
         </tbody>
     </table>
+
+    @php
+        // Compute VAT rate from totals so it's always explicit and accurate
+        $net = $invoice->formattedTotal->price - $invoice->formattedTotal->tax;
+        $vatRate = $net > 0 ? round(($invoice->formattedTotal->tax / $net) * 100, 2) : null;
+        $prettyVat = !is_null($vatRate)
+            ? rtrim(rtrim(number_format($vatRate, 2, '.', ''), '0'), '.')
+            : null;
+    @endphp
+
+    <!-- Totals Section -->
+    <div class="totals-section">
+        @if ($invoice->formattedTotal->tax > 0)
+        <table class="totals-table">
+            <tr>
+                <td class="label">{{ __('invoices.subtotal') }}</td>
+                <td class="amount">{{ $invoice->formattedTotal->format($invoice->formattedTotal->price - $invoice->formattedTotal->tax) }}</td>
+            </tr>
+            <tr>
+                <td class="label">
+                    {{ \App\Classes\Settings::tax()->name }} @if(!is_null($prettyVat)) ({{ $prettyVat }}%) @endif
+                </td>
+                <td class="amount">{{ $invoice->formattedTotal->formatted->tax }}</td>
+            </tr>
+            <tr class="total-row">
+                <td class="label">{{ __('invoices.total') }}</td>
+                <td class="amount">{{ $invoice->formattedTotal }}</td>
+            </tr>
+        </table>
+        @else
+        <table class="totals-table">
+            <tr class="total-row">
+                <td class="label">{{ __('invoices.total') }}</td>
+                <td class="amount">{{ $invoice->formattedTotal }}</td>
+            </tr>
+        </table>
+        @endif
+    </div>
+
+    <div style="clear: both;"></div>
 
     @if($invoice->transactions->count() > 0)
     <table style="margin-top: 80px;" class="invoice-items">
