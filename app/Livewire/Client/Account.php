@@ -12,6 +12,7 @@ class Account extends ComponentWithProperties
     public string $last_name = '';
 
     public string $email = '';
+    public string $discord_id = '';
 
     public function mount()
     {
@@ -20,6 +21,7 @@ class Account extends ComponentWithProperties
         $this->first_name = $user->first_name;
         $this->last_name = $user->last_name;
         $this->email = $user->email;
+    $this->discord_id = $user->discord_id ?? '';
 
         $this->initializeProperties($user, $user::class);
     }
@@ -30,6 +32,7 @@ class Account extends ComponentWithProperties
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
             'email' => 'required|email|max:255|unique:users,email,' . Auth::id(),
+            'discord_id' => 'nullable|string|max:25',
         ], $this->getRulesForProperties());
     }
 
@@ -45,6 +48,11 @@ class Account extends ComponentWithProperties
         /** @var \App\Models\User $user */
         $user = Auth::user();
         $user->update($validatedData);
+        $user->first_name = $validatedData['first_name'];
+        $user->last_name = $validatedData['last_name'];
+        $user->email = $validatedData['email'];
+    $user->discord_id = $validatedData['discord_id'] ?? null;
+        $user->save();
 
         if (array_key_exists('properties', $validatedData)) {
             $this->updateProperties($user, $validatedData['properties']);

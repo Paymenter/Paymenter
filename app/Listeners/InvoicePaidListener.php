@@ -73,5 +73,8 @@ class InvoicePaidListener
                 }
             }
         });
+
+        // Send Discord DM for invoice payment
+    \App\Helpers\NotificationHelperDiscord::sendInvoicePaidDiscordDM($event->invoice->user, $event->invoice);
     }
 }

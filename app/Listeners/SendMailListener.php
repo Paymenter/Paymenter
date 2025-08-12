@@ -8,6 +8,7 @@ use App\Events\Order\Finalized as OrderFinalized;
 use App\Events\ServiceCancellation\Created as CancellationCreated;
 use App\Events\User\Created as UserCreated;
 use App\Helpers\NotificationHelper;
+use App\Helpers\NotificationHelperDiscord;
 use App\Models\Session;
 
 class SendMailListener
@@ -25,6 +26,7 @@ class SendMailListener
 
             $invoice = $event->invoice;
             NotificationHelper::invoiceCreatedNotification($invoice->user, $invoice);
+            NotificationHelperDiscord::sendInvoiceCreatedDiscordDM($invoice->user, $invoice);
         } elseif ($event instanceof UserCreated) {
             $user = $event->user;
             NotificationHelper::emailVerificationNotification($user);

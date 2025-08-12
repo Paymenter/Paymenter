@@ -9,8 +9,18 @@
             <x-form.input name="last_name" type="text" :label="__('general.input.last_name')"
                 :placeholder="__('general.input.last_name_placeholder')" wire:model="last_name" required dirty />
 
+
             <x-form.input name="email" type="email" :label="__('general.input.email')"
                 :placeholder="__('general.input.email_placeholder')" required wire:model="email" dirty />
+
+
+            @php
+                $discordDmEnabled = \App\Classes\Settings::getSetting('discord_dm_enabled')->value ?? false;
+            @endphp
+            @if($discordDmEnabled)
+                <x-form.input name="discord_id" type="text" label="Discord User ID"
+                    placeholder="e.g. 123456789012345678" wire:model="discord_id" dirty />
+            @endif
 
             <x-form.properties :custom_properties="$custom_properties" :properties="$properties" dirty />
         </div>

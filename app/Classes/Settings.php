@@ -492,6 +492,22 @@ class Settings
                     'default' => 'wavatar',
                 ],
                 [
+                    'name' => 'discord_dm_enabled',
+                    'label' => 'Enable Discord DM Notifications',
+                    'type' => 'checkbox',
+                    'database_type' => 'boolean',
+                    'default' => false,
+                    'description' => 'Allow users to receive invoice/service notifications via Discord DM.'
+                ],
+                [
+                    'name' => 'discord_bot_token',
+                    'label' => 'Discord Bot Token',
+                    'type' => 'text',
+                    'default' => '',
+                    'required' => false,
+                    'description' => 'The token of your Discord bot. This bot will be used to send DMs to users for invoice and service notifications.'
+                ],
+                [
                     'name' => 'default_currency',
                     'label' => 'Default Currency',
                     'type' => 'select',
