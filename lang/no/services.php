@@ -22,7 +22,7 @@ return [
     'cancellation_requested' => 'Avbestilling forespurt',
 
     'current_plan' => 'Gjeldende abonnement',
-    'new_plan' => 'Ny abonnement',
+    'new_plan' => 'Nytt abonnement',
     'change_plan' => 'Endre abonnement',
     'current_price' => 'Nåværende pris',
     'new_price' => 'Ny pris',
