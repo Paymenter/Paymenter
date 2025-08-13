@@ -198,7 +198,7 @@ class Cart extends Component
                 }
 
                 foreach ($item->configOptions as $configOption) {
-                    if (in_array($configOption->option_type, ['text', 'number', 'checkbox'])) {
+                    if (in_array($configOption->option_type, ['text', 'number', 'checkbox']) && $configOption->value) {
                         $service->properties()->updateOrCreate([
                             'key' => $configOption->option_env_variable ? $configOption->option_env_variable : $configOption->option_name,
                         ], [
