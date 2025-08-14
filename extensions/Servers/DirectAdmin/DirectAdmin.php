@@ -15,11 +15,11 @@ class DirectAdmin extends Server
         $url = $host . $endpoint;
 
         $response = Http::withBasicAuth(
-                    $this->config('username'),
-                    $this->config('password')
-                )->withHeaders([
-                            'Content-Type' => 'application/json',
-                        ])->$method($url, $data)->throw();
+            $this->config('username'),
+            $this->config('password')
+        )->withHeaders([
+            'Content-Type' => 'application/json',
+        ])->$method($url, $data)->throw();
 
         if ($parse) {
             return $this->parse($response);
