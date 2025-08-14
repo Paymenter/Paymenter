@@ -18,7 +18,10 @@
     <div class="flex justify-end">
         <div class="max-w-[200px] w-full text-right">
             <span class="cursor-pointer text-base underline" wire:click="downloadPDF">
-                Download PDF
+                <span wire:loading wire:target="downloadPDF">
+                    <x-ri-loader-5-fill class="size-6 animate-spin" />
+                </span>
+                <span wire:loading.remove wire:target="downloadPDF">Download PDF</span>
             </span>
         </div>
     </div>
