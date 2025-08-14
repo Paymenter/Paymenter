@@ -19,6 +19,8 @@ use Illuminate\Support\Facades\View;
 
 class Stripe extends Gateway
 {
+    private const API_VERSION = '2025-07-30.basil';
+
     public function boot()
     {
         require __DIR__ . '/routes.php';
@@ -123,7 +125,7 @@ class Stripe extends Gateway
                 'invoice.created',
                 'invoice.payment_succeeded',
             ],
-            'api_version' => '2025-02-24.acacia', // Use the latest version
+            'api_version' => self::API_VERSION,
         ]);
 
         $gateway->settings()->updateOrCreate(['key' => 'stripe_webhook_secret'], ['value' => $webhook->secret]);
@@ -138,8 +140,9 @@ class Stripe extends Gateway
     private function request($method, $url, $data = [])
     {
         return Http::withHeaders([
-            'Authorization' => 'Bearer ' . $this->config('stripe_secret_key'),
-        ])->asForm()->$method('https://api.stripe.com/v1' . $url, $data)->throw()->object();
+                    'Authorization' => 'Bearer ' . $this->config('stripe_secret_key'),
+                    'Stripe-Version' => self::API_VERSION
+                ])->asForm()->$method('https://api.stripe.com/v1' . $url, $data)->throw()->object();
     }
 
     public function pay($invoice, $total)
@@ -227,9 +230,10 @@ class Stripe extends Gateway
                 break;
             case 'invoice.created':
                 $invoice = $event->data->object; // contains a StripeInvoice
+
                 // Check if its draft and does exist in our database
-                if ($invoice->status === 'draft') {
-                    $service = Service::where('subscription_id', $invoice->subscription)->first();
+                if ($invoice->status === 'draft' && $invoice->parent->type === 'subscription_details') {
+                    $service = Service::where('subscription_id', $invoice->parent->subscription_details->subscription)->first();
 
                     if ($service) {
                         $this->request('post', '/invoices/' . $invoice->id . '/finalize');
@@ -242,20 +246,34 @@ class Stripe extends Gateway
                 // Mark invoice as paid
                 $invoice = $event->data->object; // contains a StripeInvoice
 
-                $service = Service::where('subscription_id', $invoice->subscription)->first();
+                if ($invoice->parent->type !== 'subscription_details') {
+                    break;
+                }
+
+                $service = Service::where('subscription_id', $invoice->parent->subscription_details->subscription)->first();
                 if ($service) {
                     $invoiceModel = $service->invoiceItems->sortByDesc('created_at')->first()->invoice;
-                    $paymentIntent = $this->request('get', '/payment_intents/' . $invoice->payment_intent);
+                    $paymentIntents = $this->request('get', '/invoice_payments', ['invoice' => $invoice->id]);
+                    $paymentIntent = collect($paymentIntents->data)->first();
+
                     $fee = 0;
-                    if (isset($paymentIntent->charges->data[0]->balance_transaction)) {
-                        $balanceTransaction = $this->request('get', '/balance_transactions/' . $paymentIntent->charges->data[0]->balance_transaction);
+                    if ($paymentIntent->payment->type !== 'payment_intent') {
+                        break;
+                    }
+
+                    $paymentIntent = $this->request('get', '/payment_intents/' . $paymentIntent->payment->payment_intent);
+
+                    if (isset($paymentIntent->latest_charge)) {
+                        $lastCharge = $this->request('get', '/charges/' . $paymentIntent->latest_charge);
+                        $balanceTransaction = $this->request('get', '/balance_transactions/' . $lastCharge->balance_transaction);
                         $fee = $balanceTransaction->fee / 100;
                     }
-                    ExtensionHelper::addPayment($invoiceModel->id, 'Stripe', $invoice->amount_paid / 100, $fee ?? null, $invoice->payment_intent);
+
+                    ExtensionHelper::addPayment($invoiceModel->id, 'Stripe', $invoice->amount_paid / 100, $fee ?? null, $paymentIntent->id);
                 }
                 break;
             default:
-                // Not a event type we care about, just return 200
+            // Not a event type we care about, just return 200
         }
 
         http_response_code(200);
