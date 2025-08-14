@@ -15,23 +15,28 @@ class DirectAdmin extends Server
         $url = $host . $endpoint;
 
         $response = Http::withBasicAuth(
-            $this->config('username'),
-            $this->config('password')
-        )->withHeaders([
-            'Content-Type' => 'application/json',
-        ])->$method($url, $data)->throw();
+                    $this->config('username'),
+                    $this->config('password')
+                )->withHeaders([
+                            'Content-Type' => 'application/json',
+                        ])->$method($url, $data)->throw();
 
         if ($parse) {
-            $body = html_entity_decode($response->body());
-            parse_str($body, $parsed);
-            if (isset($parsed['list']) && is_array($parsed['list'])) {
-                return $parsed['list'];
-            }
-
-            return $parsed;
+            return $this->parse($response);
         }
 
         return $response;
+    }
+
+    private function parse($response)
+    {
+        $body = html_entity_decode($response->body());
+        parse_str($body, $parsed);
+        if (isset($parsed['list']) && is_array($parsed['list'])) {
+            return $parsed['list'];
+        }
+
+        return $parsed;
     }
 
     /**
@@ -284,7 +289,7 @@ class DirectAdmin extends Server
 
     public function getActions(Service $service, $settings, $properties): array
     {
-        if (!isset($properties['directadmin_username'])) {
+        if (!isset($properties['directadmin_username'], $properties['directadmin_password'])) {
             return [];
         }
 
@@ -299,17 +304,19 @@ class DirectAdmin extends Server
 
     public function ssoLink(Service $service, $settings, $properties): string
     {
-        if (!isset($properties['directadmin_username'])) {
+        if (!isset($properties['directadmin_username'], $properties['directadmin_password'])) {
             return '';
         }
 
-        $response = $this->request('/CMD_API_LOGIN_KEYS', 'post', [
-            'action' => 'create',
-            'type' => 'one_time_url',
-            'expiry' => '5m',
-            'user' => $properties['directadmin_username'],
-            'passwd' => $properties['directadmin_password'],
-        ], parse: true);
+        $response = Http::withBasicAuth($properties['directadmin_username'], $properties['directadmin_password'])
+            ->accept('application/json')
+            ->post(rtrim($this->config('host'), '/') . '/CMD_API_LOGIN_KEYS', [
+                'action' => 'create',
+                'type' => 'one_time_url',
+                'expiry' => '5m',
+            ])->throw();
+
+        $response = $this->parse($response);
 
         if ($response['error'] != '0') {
             throw new \Exception('Error creating DirectAdmin SSO link: ' . $response['text']);
