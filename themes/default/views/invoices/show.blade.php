@@ -40,10 +40,7 @@
             </div>
             <div class="mt-4 sm:mt-0 text-right">
                 <p class="uppercase font-bold">{{ __('invoices.bill_to') }}</p>
-                <p>{{ config('settings.company_name') }}</p>
-                <p>{{ config('settings.company_address') }} {{ config('settings.company_address2') }}</p>
-                <p>{{ config('settings.company_zip') }} {{ config('settings.company_city') }}</p>
-                <p>{{ config('settings.company_state') }} {{ config('settings.company_country') }}</p>
+                <p>{!! nl2br(e(config('settings.bill_to_text', config('settings.company_name')))) !!}</p>
             </div>
         </div>
         <div class="sm:flex justify-between pr-4 pt-4 mt-6">

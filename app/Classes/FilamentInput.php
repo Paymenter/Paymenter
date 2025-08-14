@@ -10,6 +10,7 @@ use Filament\Forms\Components\MarkdownEditor;
 use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TagsInput;
+use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Spatie\Color\Factory as ColorFactory;
 
@@ -120,7 +121,7 @@ class FilamentInput
                 break;
 
             case 'textarea':
-                return MarkdownEditor::make($setting->name)
+                return Textarea::make($setting->name)
                     ->label($setting->label ?? $setting->name)
                     ->helperText($setting->description ?? null)
                     ->placeholder($setting->placeholder ?? $setting->default ?? '')
@@ -129,10 +130,10 @@ class FilamentInput
                     ->required($setting->required ?? false)
                     ->live(condition: $setting->live ?? false)
                     ->default($setting->default ?? '')
-                    ->disableAllToolbarButtons($setting->disable_toolbar ?? false)
                     ->rules($setting->validation ?? [])
                     ->disabled($setting->disabled ?? false);
                 break;
+
             case 'markdown':
                 return MarkdownEditor::make($setting->name)
                     ->label($setting->label ?? $setting->name)

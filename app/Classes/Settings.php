@@ -29,6 +29,13 @@ class Settings
             // Split settings into groups (only used in the settings page for organization)
             'general' => [
                 [
+                    'name' => 'company_name',
+                    'label' => 'Company Name',
+                    'type' => 'text',
+                    'override' => 'app.name',
+                    'default' => 'Paymenter',
+                ],
+                [
                     'name' => 'timezone',
                     'label' => 'Timezone',
                     'type' => 'select',
@@ -179,67 +186,6 @@ class Settings
                     'label' => 'Discord Client Secret',
                     'type' => 'text',
                     'required' => false,
-                ],
-            ],
-
-            'company-details' => [
-                [
-                    'name' => 'company_name',
-                    'label' => 'Company Name',
-                    'type' => 'text',
-                    'override' => 'app.name',
-                    'default' => 'Paymenter',
-                ],
-                [
-                    'name' => 'company_email',
-                    'label' => 'Company Email',
-                    'type' => 'email',
-                ],
-                [
-                    'name' => 'company_phone',
-                    'label' => 'Company Phone',
-                    'type' => 'text',
-                ],
-                [
-                    'name' => 'company_address',
-                    'label' => 'Company Address',
-                    'type' => 'text',
-                ],
-                [
-                    'name' => 'company_address2',
-                    'label' => 'Company Address 2',
-                    'type' => 'text',
-                ],
-                [
-                    'name' => 'company_city',
-                    'label' => 'Company City',
-                    'type' => 'text',
-                ],
-                [
-                    'name' => 'company_state',
-                    'label' => 'Company State',
-                    'type' => 'text',
-                ],
-                [
-                    'name' => 'company_zip',
-                    'label' => 'Company Zip',
-                    'type' => 'text',
-                ],
-                [
-                    'name' => 'company_country',
-                    'label' => 'Company Country',
-                    'type' => 'select',
-                    'options' => array_merge(['' => 'None'], config('app.countries')),
-                ],
-                [
-                    'name' => 'company_tax_id',
-                    'label' => 'Company Tax ID',
-                    'type' => 'text',
-                ],
-                [
-                    'name' => 'company_id',
-                    'label' => 'Company ID',
-                    'type' => 'text',
                 ],
             ],
             'tax' => [
@@ -500,6 +446,12 @@ class Settings
                 ],
             ],
             'invoices' => [
+                [
+                    'name' => 'bill_to_text',
+                    'label' => 'Bill To Text',
+                    'type' => 'textarea',
+                    'default' => '',
+                ],
                 [
                     'name' => 'invoice_number',
                     'label' => 'Invoice Number',
