@@ -5,6 +5,7 @@ namespace App\Listeners;
 use App\Events\Invoice\Creating;
 use App\Models\Invoice;
 use App\Models\Setting;
+use App\Models\Credit;
 
 class InvoiceCreatingListener
 {
@@ -34,5 +35,24 @@ class InvoiceCreatingListener
 
         // Set the invoice number
         $event->invoice->number = $formattedNumber;
+
+
+        // Auto-pay with credits if possible (additive)
+        $invoice = $event->invoice;
+        $user = $invoice->user;
+        $credit = $user?->credits()->where('currency_code', $invoice->currency_code)->first();
+
+        // Skip credit deposit invoices
+        if ($invoice->items()->whereRaw('LOWER(description) LIKE ?', ['%credit deposit%'])->exists()) {
+            return;
+        }
+
+        // Only pay if user has enough credits
+        if ($credit && $credit->amount >= $invoice->remaining) {
+            $credit->amount -= $invoice->remaining;
+            $credit->save();
+            \App\Helpers\ExtensionHelper::addPayment($invoice->id, null, amount: $invoice->remaining);
+            $invoice->status = 'paid';
+        }
     }
 }

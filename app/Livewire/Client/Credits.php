@@ -27,8 +27,6 @@ class Credits extends Component
 
     public $gateway;
 
-    public $auto_renewal_enabled;
-
     public function mount()
     {
         if (!config('settings.credits_enabled')) {
@@ -41,9 +39,6 @@ class Credits extends Component
         if (count($this->gateways) > 0 && !array_search($this->gateway, array_column($this->gateways, 'id')) !== false) {
             $this->gateway = $this->gateways[0]->id;
         }
-        $user = Auth::user();
-        // Default to enabled if not set
-        $this->auto_renewal_enabled = $user->auto_renewal_enabled ?? true;
     }
 
     public function addCredit()
@@ -109,30 +104,11 @@ class Credits extends Component
         }
     }
 
-    public function toggleAutoRenewCredits()
-    {
-        $user = Auth::user();
-        $user->auto_renewal_enabled = !$user->auto_renewal_enabled;
-        $user->save();
-        $this->auto_renewal_enabled = $user->auto_renewal_enabled;
-        $this->notify($user->auto_renewal_enabled ? 'Auto-renewal enabled.' : 'Auto-renewal disabled.', 'success');
-    }
-
     public function render()
     {
         return view('client.account.credits')->layoutData([
             'sidebar' => true,
             'title' => __('account.credits'),
         ]);
-    }
-
-    /**
-     * Prevent auto-renewal for credit top-up invoices.
-     */
-    public function processAutoRenewal($invoice)
-    {
-        if ($invoice->items()->where('reference_type', \App\Models\Credit::class)->exists()) {
-            return;
-        }
     }
 }

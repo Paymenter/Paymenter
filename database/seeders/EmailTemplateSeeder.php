@@ -209,44 +209,6 @@ class EmailTemplateSeeder extends Seeder
 
                 HTML,
             ],
-            [
-                'key' => 'insufficient_credits',
-                'subject' => 'Insufficient Credits for Invoice Payment',
-                'body' => <<<'HTML'
-                # Invoice Payment Failed
-
-                We're sorry to see you couldn't pay your invoice due to insufficient credits.
-
-                **Invoice Details**
-                - Invoice Number: {{ $invoice->number }}
-                - Required Credits: {{ $invoice->formattedTotal }} {{ $invoice->currency_code }}
-                - Available Credits: {{ $credit->amount }} {{ $credit->currency_code }}
-
-                Please add more credits or pay the invoice manually.
-
-                [Add Credits]({{ route('account.credits') }})
-                
-                HTML,
-            ],
-            [
-                'key' => 'incorrect_currency',
-                'subject' => 'Incorrect Currency for Invoice Payment',
-                'body' => <<<'HTML'
-                # Invoice Payment Failed
-
-                We're sorry to see you couldn't pay your invoice because your credits are in a different currency.
-
-                **Invoice Details**
-                - Invoice Number: {{ $invoice->number }}
-                - Invoice Currency: {{ $invoice->currency_code }}
-                - Your Credits Currency: {{ $credit->currency_code }}
-
-                Please add credits in the correct currency or pay the invoice manually.
-
-                [Add Credits]({{ route('account.credits') }})
-                
-                HTML,
-            ],
         ]);
     }
 }

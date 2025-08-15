@@ -403,14 +403,6 @@ class Settings
                     'default' => 7,
                     'required' => true,
                 ],
-                [
-                    'name' => 'cronjob_invoice_autorenew_frequency',
-                    'label' => 'Auto-renew Invoice Check Frequency (hours)',
-                    'type' => 'number',
-                    'default' => 24,
-                    'required' => true,
-                    'description' => 'How often to check and auto-renew invoices using credits (in hours).',
-                ],
             ],
             'credits' => [
                 [
@@ -419,6 +411,14 @@ class Settings
                     'type' => 'checkbox',
                     'database_type' => 'boolean',
                     'default' => false,
+                ],
+                [
+                    'name' => 'credits_auto_renewal_enabled',
+                    'label' => 'Enable Auto-renewal with Credits',
+                    'type' => 'checkbox',
+                    'database_type' => 'boolean',
+                    'default' => true,
+                    'description' => 'Automatically pay invoices using available credits if enabled.',
                 ],
                 [
                     'name' => 'credits_minimum_deposit',
