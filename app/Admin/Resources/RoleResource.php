@@ -8,6 +8,7 @@ use App\Admin\Resources\RoleResource\Pages\ListRoles;
 use App\Models\Role;
 use Filament\Actions\EditAction;
 use Filament\Forms\Components\CheckboxList;
+use Filament\Forms\Components\Fieldset;
 use Filament\Forms\Components\TextInput;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
@@ -15,6 +16,7 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Event;
 
 class RoleResource extends Resource
 {
@@ -34,7 +36,28 @@ class RoleResource extends Resource
                     ->unique(ignoreRecord: true)
                     ->required()
                     ->maxLength(255),
-                CheckboxList::make('permissions')->options(Arr::dot(config('permissions.role')))->columns(4)->bulkToggleable()->searchable()->noSearchResultsMessage('Permission could not be found'),
+                // Split permission UI into core and extension
+                Fieldset::make('Core Permissions')
+                    ->schema([
+                        CheckboxList::make('permissions')
+                            ->label(false)
+                            ->options(static::getCorePermissions())
+                            ->columns(4)
+                            ->bulkToggleable()
+                            ->searchable()
+                            ->noSearchResultsMessage('Permission could not be found')->columnSpanFull(),
+                    ]),
+
+                Fieldset::make('Extension Permissions')
+                    ->schema([
+                        CheckboxList::make('permissions')
+                            ->label(false)
+                            ->options(static::getExtensionPermissions())
+                            ->columns(4)
+                            ->bulkToggleable()
+                            ->searchable()
+                            ->noSearchResultsMessage('Permission could not be found')->columnSpanFull(),
+                    ]),
             ])->columns(1);
     }
 
@@ -72,5 +95,17 @@ class RoleResource extends Resource
             'create' => CreateRole::route('/create'),
             'edit' => EditRole::route('/{record}/edit'),
         ];
+    }
+
+    protected static function getCorePermissions(): array
+    {
+        return Arr::dot(config('permissions.role'));
+    }
+
+    protected static function getExtensionPermissions(): array
+    {
+        return collect(Event::dispatch('permissions'))
+            ->filter(fn ($response) => is_array($response))
+            ->pipe(fn ($merged) => Arr::dot($merged));
     }
 }

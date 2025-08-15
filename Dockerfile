@@ -15,9 +15,9 @@ WORKDIR /app
 
 COPY . ./
 COPY --from=0 /app/public/default /app/public/default
-RUN apk add --no-cache --update ca-certificates dcron curl git supervisor tar unzip nginx libpng-dev libxml2-dev libzip-dev icu-dev autoconf make g++ gcc libc-dev linux-headers \
+RUN apk add --no-cache --update ca-certificates dcron curl git supervisor tar unzip nginx libpng-dev libxml2-dev libzip-dev icu-dev autoconf make g++ gcc libc-dev linux-headers gmp-dev \
     && docker-php-ext-configure zip \
-    && docker-php-ext-install bcmath gd pdo_mysql zip intl sockets \
+    && docker-php-ext-install bcmath gd pdo_mysql zip intl sockets gmp \
     && pecl install redis \
     && docker-php-ext-enable redis \
     && apk del autoconf make g++ gcc libc-dev \
