@@ -34,7 +34,7 @@ class AppServiceProvider extends ServiceProvider
     {
         // Service provider for settings
         $this->app->register(SettingsProvider::class);
-        
+
         UrlGenerator::macro('alternateHasCorrectSignature', function (Request $request, $absolute = true, Closure|array $ignoreQuery = []) {
             // ensure the base path is applied to absolute url
             $absoluteUrl = url($request->path()); // forceRootUrl and forceScheme will apply
@@ -55,7 +55,7 @@ class AppServiceProvider extends ServiceProvider
                     return in_array($parameter, $ignoreQuery);
                 })
                 ->join('&');
-                
+
             $original = rtrim($url . '?' . $queryString, '?');
 
             $keys = call_user_func($this->keyResolver);
