@@ -9,11 +9,14 @@ use App\Models\Extension;
 use App\Models\OauthClient;
 use App\Models\User;
 use App\Support\Passport\ScopeRegistry;
+use Closure;
 use Dedoc\Scramble\Scramble;
 use Dedoc\Scramble\Support\Generator\OpenApi;
 use Dedoc\Scramble\Support\Generator\SecurityScheme;
+use Illuminate\Http\Request;
 use Illuminate\Queue\Events\JobFailed;
 use Illuminate\Queue\Events\JobProcessed;
+use Illuminate\Routing\UrlGenerator;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Queue;
@@ -31,6 +34,56 @@ class AppServiceProvider extends ServiceProvider
     {
         // Service provider for settings
         $this->app->register(SettingsProvider::class);
+        
+        UrlGenerator::macro('alternateHasCorrectSignature', function (Request $request, $absolute = true, Closure|array $ignoreQuery = []) {
+            // ensure the base path is applied to absolute url
+            $absoluteUrl = url($request->path()); // forceRootUrl and forceScheme will apply
+            $url = $absolute ? $absoluteUrl : '/' . $request->path();
+
+            $queryString = collect(explode('&', (string) $request->server->get('QUERY_STRING')))
+                ->reject(function ($parameter) use ($ignoreQuery) {
+                    $parameter = Str::before($parameter, '=');
+
+                    if ($parameter === 'signature') {
+                        return true;
+                    }
+
+                    if ($ignoreQuery instanceof Closure) {
+                        return $ignoreQuery($parameter);
+                    }
+
+                    return in_array($parameter, $ignoreQuery);
+                })
+                ->join('&');
+                
+            $original = rtrim($url . '?' . $queryString, '?');
+
+            $keys = call_user_func($this->keyResolver);
+
+            $keys = is_array($keys) ? $keys : [$keys];
+
+            foreach ($keys as $key) {
+                if (
+                    hash_equals(
+                        hash_hmac('sha256', $original, $key),
+                        (string) $request->query('signature', '')
+                    )
+                ) {
+                    return true;
+                }
+            }
+
+            return false;
+        });
+
+        UrlGenerator::macro('alternateHasValidSignature', function (Request $request, $absolute = true, array $ignoreQuery = []) {
+            return \URL::alternateHasCorrectSignature($request, $absolute, $ignoreQuery)
+                && \URL::signatureHasNotExpired($request);
+        });
+
+        Request::macro('hasValidSignature', function ($absolute = true, array $ignoreQuery = []) {
+            return \URL::alternateHasValidSignature($this, $absolute, $ignoreQuery);
+        });
     }
 
     /**
