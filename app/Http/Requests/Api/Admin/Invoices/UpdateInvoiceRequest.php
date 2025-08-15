@@ -11,16 +11,16 @@ class UpdateInvoiceRequest extends AdminApiRequest
     public function rules(): array
     {
         return [
-            'user_id' => 'required|exists:users,id',
+            'user_id' => 'sometimes|required|exists:users,id',
             /**
              * @example USD
              */
-            'currency_code' => 'required|string|exists:currencies,code',
-            'due_at' => 'nullable|date',
+            'currency_code' => 'sometimes|required|string|exists:currencies,code',
+            'due_at' => 'sometimes|nullable|date',
             /**
              * @default pending
              */
-            'status' => 'required|string|in:pending,paid,cancelled', // Status can be one of these values
+            'status' => 'sometimes|required|string|in:pending,paid,cancelled', // Status can be one of these values
         ];
     }
 }

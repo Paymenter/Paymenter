@@ -12,8 +12,9 @@ class UpdateServiceRequest extends AdminApiRequest
     public function rules(): array
     {
         return [
-            'product_id' => 'required|exists:products,id',
+            'product_id' => 'sometimes|required|exists:products,id',
             'plan_id' => [
+                'sometimes',
                 'required',
                 'exists:plans,id',
                 function ($attribute, $value, $fail) {
@@ -24,24 +25,24 @@ class UpdateServiceRequest extends AdminApiRequest
                     }
                 },
             ],
-            'user_id' => 'required|exists:users,id',
+            'user_id' => 'sometimes|required|exists:users,id',
             /**
              * @default 1
              */
-            'quantity' => 'required|integer|min:1',
+            'quantity' => 'sometimes|required|integer|min:1',
             /**
              * @default pending
              */
-            'status' => 'required|in:pending,active,cancelled,suspended',
-            'expires_at' => 'nullable|date|after_or_equal:today',
+            'status' => 'sometimes|required|in:pending,active,cancelled,suspended',
+            'expires_at' => 'sometimes|nullable|date|after_or_equal:today',
             /**
              * @example USD
              */
-            'currency_code' => 'required|string|exists:currencies,code',
-            'price' => 'required|numeric|min:0',
-            'coupon_id' => 'nullable|exists:coupons,id',
-            'subscription_id' => 'nullable|string|max:255',
-            'order_id' => 'nullable|exists:orders,id',
+            'currency_code' => 'sometimes|required|string|exists:currencies,code',
+            'price' => 'sometimes|required|numeric|min:0',
+            'coupon_id' => 'sometimes|nullable|exists:coupons,id',
+            'subscription_id' => 'sometimes|nullable|string|max:255',
+            'order_id' => 'sometimes|nullable|exists:orders,id',
         ];
     }
 }

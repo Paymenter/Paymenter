@@ -11,11 +11,11 @@ class UpdateOrderRequest extends AdminApiRequest
     public function rules(): array
     {
         return [
-            'user_id' => 'required|exists:users,id',
+            'user_id' => 'sometimes|required|exists:users,id',
             /**
              * @example USD
              */
-            'currency_code' => 'required|string|exists:currencies,code',
+            'currency_code' => 'sometimes|required|string|exists:currencies,code',
         ];
     }
 }

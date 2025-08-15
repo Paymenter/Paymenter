@@ -11,11 +11,11 @@ class UpdateTicketRequest extends AdminApiRequest
     public function rules(): array
     {
         return [
-            'subject' => 'required|string|max:255',
-            'user_id' => 'required|exists:users,id',
-            'department' => 'nullable|string|in:' . implode(',', config('settings.ticket_departments', [])),
-            'priority' => 'required|string|in:low,medium,high',
-            'status' => 'required|string|in:open,closed,replied',
+            'subject' => 'sometimes|required|string|max:255',
+            'user_id' => 'sometimes|required|exists:users,id',
+            'department' => 'sometimes|nullable|string|in:' . implode(',', config('settings.ticket_departments', [])),
+            'priority' => 'sometimes|required|string|in:low,medium,high',
+            'status' => 'sometimes|required|string|in:open,closed,replied',
         ];
     }
 }
