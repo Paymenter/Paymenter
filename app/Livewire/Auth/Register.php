@@ -19,7 +19,7 @@ class Register extends ComponentWithProperties
     public string $email = '';
     public string $password = '';
     public string $password_confirmation = '';
-    public bool $tos = false; // Für die TOS-Checkbox
+    public bool $tos = false;
 
     public function mount()
     {
@@ -35,7 +35,6 @@ class Register extends ComponentWithProperties
             'password'   => 'required|string|min:8|confirmed',
         ];
 
-        // Nur prüfen, wenn in den Settings TOS-Link existiert
         if (config('settings.tos')) {
             $rules['tos'] = 'accepted';
         }
