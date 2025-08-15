@@ -15,7 +15,7 @@
 
 <div align="center">
   <h3>Open-Source Billing, Built for Hosting</h3>
-  <p>Automate subscriptions, eliminate billing chaos, and grow your hosting business – without vendor lock-ins or hidden costs.</p>
+  <p>Automate subscriptions, eliminate billing chaos, and grow your hosting business – without vendor lock-ins.</p>
 </div>
 
 <h4 align="center">
