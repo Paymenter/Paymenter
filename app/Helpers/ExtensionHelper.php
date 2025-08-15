@@ -362,6 +362,8 @@ class ExtensionHelper
 
     /**
      * Add payment to invoice
+     * @param  Invoice|int  $invoice
+     * @param  Gateway|null  $gateway
      */
     public static function addPayment($invoice, $gateway, $amount, $fee = null, $transactionId = null)
     {
