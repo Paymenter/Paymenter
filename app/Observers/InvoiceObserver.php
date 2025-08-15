@@ -20,10 +20,15 @@ class InvoiceObserver
      */
     public function created(Invoice $invoice): void
     {
+        // Fire event immediately for synchronous listeners
         event(new InvoiceEvent\Created($invoice));
 
-        $sendEmail = $invoice->send_create_email;
+        // Dispatch after response for auto-renewal logic (ensures invoice items exist)
+        dispatch(function () use ($invoice) {
+            event(new \App\Events\Invoice\Created($invoice));
+        })->afterResponse();
 
+        $sendEmail = $invoice->send_create_email;
         dispatch(function () use ($invoice, $sendEmail) {
             event(new InvoiceEvent\Finalized($invoice, $sendEmail));
         })->afterResponse();
@@ -56,3 +61,4 @@ class InvoiceObserver
         event(new InvoiceEvent\Deleted($invoice));
     }
 }
+
