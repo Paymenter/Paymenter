@@ -15,16 +15,11 @@ class Register extends ComponentWithProperties
     use Captchable;
 
     public string $first_name = '';
-
     public string $last_name = '';
-
     public string $email = '';
-
     public string $password = '';
-
     public string $password_confirmation = '';
-
-    public bool $tos = false;
+    public bool $tos = false; // Für die TOS-Checkbox
 
     public function mount()
     {
@@ -33,13 +28,19 @@ class Register extends ComponentWithProperties
 
     public function rules()
     {
-        return array_merge([
+        $rules = [
             'first_name' => 'required|string|max:255',
-            'last_name' => 'required|string|max:255',
-            'email' => 'required|email|max:255|unique:users',
-            'password' => 'required|string|min:8|confirmed',
-            'tos' => 'accepted',
-        ], $this->getRulesForProperties());
+            'last_name'  => 'required|string|max:255',
+            'email'      => 'required|email|max:255|unique:users',
+            'password'   => 'required|string|min:8|confirmed',
+        ];
+
+        // Nur prüfen, wenn in den Settings TOS-Link existiert
+        if (config('settings.tos')) {
+            $rules['tos'] = 'accepted';
+        }
+
+        return array_merge($rules, $this->getRulesForProperties());
     }
 
     public function submit()
@@ -48,9 +49,9 @@ class Register extends ComponentWithProperties
 
         $user = User::create([
             'first_name' => $this->first_name,
-            'last_name' => $this->last_name,
-            'email' => $this->email,
-            'password' => Hash::make($this->password),
+            'last_name'  => $this->last_name,
+            'email'      => $this->email,
+            'password'   => Hash::make($this->password),
         ]);
 
         if (array_key_exists('properties', $validatedData)) {
