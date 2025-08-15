@@ -403,6 +403,14 @@ class Settings
                     'default' => 7,
                     'required' => true,
                 ],
+                [
+                    'name' => 'cronjob_invoice_autorenew_frequency',
+                    'label' => 'Auto-renew Invoice Check Frequency (hours)',
+                    'type' => 'number',
+                    'default' => 24,
+                    'required' => true,
+                    'description' => 'How often to check and auto-renew invoices using credits (in hours).',
+                ],
             ],
             'credits' => [
                 [
@@ -548,6 +556,11 @@ class Settings
         return $settings;
     }
 
+    /**
+     * Get the tax settings.
+     *
+     * @return object
+     */
     public static function tax()
     {
         // Use once so the query is only run once

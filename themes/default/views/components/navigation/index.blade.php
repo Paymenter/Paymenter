@@ -53,6 +53,7 @@
 
             <div class="flex flex-row items-center">
                 <div class="items-center hidden md:flex mr-3">
+                    {{-- Currency selector --}}
                     <x-dropdown>
                         <x-slot:trigger>
                             <div class="flex flex-col">
@@ -65,6 +66,36 @@
                             <livewire:components.currency-switch />
                         </x-slot:content>
                     </x-dropdown>
+
+                    {{-- Credits button (only one, styled like navigation links, between theme toggle and currency selector) --}}
+                    @if(auth()->check())
+                        @php
+                            $maxCredit = auth()->user()->credits->sortByDesc('amount')->first();
+                            $currency = $maxCredit ? \App\Models\Currency::where('code', $maxCredit->currency_code)->first() : null;
+                            // Use prefix and suffix for symbol, fallback to code if not set
+                            $symbol = '';
+                            if ($currency) {
+                                if ($currency->prefix && $currency->suffix) {
+                                    $symbol = $currency->prefix . $currency->suffix;
+                                } elseif ($currency->prefix) {
+                                    $symbol = $currency->prefix;
+                                } elseif ($currency->suffix) {
+                                    $symbol = $currency->suffix;
+                                } else {
+                                    $symbol = $currency->code;
+                                }
+                            }
+                        @endphp
+                        @if($maxCredit && $currency)
+                            <a href="{{ route('account.credits') }}" class="flex flex-row items-center h-9 mx-2 px-3 py-0.5 rounded text-base font-medium hover:text-primary transition" wire:navigate>
+                                <span class="flex items-center">
+                                    {{ __('Credits:') }} {{ $symbol }}{{ number_format($maxCredit->amount, 2) }}
+                                </span>
+                            </a>
+                        @endif
+                    @endif
+
+                    {{-- Theme toggle --}}
                     <x-theme-toggle />
                 </div>
 

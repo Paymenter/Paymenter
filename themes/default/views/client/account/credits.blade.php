@@ -41,5 +41,30 @@
                 {{ __('account.add_credit') }}
             </x-button.primary>
         </form>
+
+        <!-- Auto-renew toggle button styled as a green button when enabled -->
+        <div class="mt-6 flex items-center gap-2">
+            <button
+                type="button"
+                wire:click="toggleAutoRenewCredits"
+                class="px-4 py-1.5 rounded font-semibold flex items-center gap-2 transition duration-300 cursor-pointer
+                    {{ $auto_renewal_enabled ? 'bg-green-500 text-white hover:bg-green-600' : 'bg-background-secondary text-base border border-neutral hover:bg-background-secondary/80' }}">
+                @if($auto_renewal_enabled)
+                    <x-ri-check-line class="size-5" />
+                    {{ __('Auto Renew Enabled') }}
+                @else
+                    {{ __('Enable Auto Renew') }}
+                @endif
+            </button>
+            <!-- Info tooltip -->
+            <div x-data="{ open: false }" class="relative">
+                <button type="button" @mouseenter="open = true" @mouseleave="open = false" class="text-base/50 cursor-pointer">
+                    <x-ri-information-line class="size-5" />
+                </button>
+                <div x-show="open" x-transition class="absolute left-6 top-1 z-10 bg-background-secondary border border-neutral rounded px-3 py-2 text-xs text-base w-64 shadow-lg" style="white-space: normal;">
+                    {{ __('When enabled, your invoices will be automatically paid using your available credits if possible.') }}
+                </div>
+            </div>
+        </div>
     </div>
 </div>
