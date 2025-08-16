@@ -115,7 +115,7 @@ class Cart extends Component
             return $this->notify('Your cart is empty', 'error');
         }
         if (!Auth::check()) {
-            return redirect()->route('login');
+            return redirect()->guest('login');
         }
         if (config('settings.mail_must_verify') && !Auth::user()->hasVerifiedEmail()) {
             return redirect()->route('verification.notice');
