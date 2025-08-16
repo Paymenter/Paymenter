@@ -5,6 +5,8 @@ use App\Console\Commands\CronJob;
 use App\Console\Commands\TelemetryCommand;
 use Illuminate\Support\Facades\Schedule;
 
+// Register custom console commands
+
 Schedule::command(CronJob::class)->description('Runs daily to send out invoices, suspend servers, etc.')->daily();
 
 if (config('app.telemetry_enabled')) {

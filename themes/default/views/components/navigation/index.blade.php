@@ -53,6 +53,7 @@
 
             <div class="flex flex-row items-center">
                 <div class="items-center hidden md:flex mr-3">
+                    {{-- Currency selector --}}
                     <x-dropdown>
                         <x-slot:trigger>
                             <div class="flex flex-col">
@@ -65,6 +66,8 @@
                             <livewire:components.currency-switch />
                         </x-slot:content>
                     </x-dropdown>
+
+                    {{-- Theme toggle --}}
                     <x-theme-toggle />
                 </div>
 

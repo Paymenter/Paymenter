@@ -108,6 +108,7 @@ class Credits extends Component
     {
         return view('client.account.credits')->layoutData([
             'sidebar' => true,
+            'title' => __('account.credits'),
         ]);
     }
 }

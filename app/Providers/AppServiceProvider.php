@@ -3,7 +3,9 @@
 namespace App\Providers;
 
 use App\Classes\Synths\PriceSynth;
+use App\Events\Invoice\Created;
 use App\Helpers\ExtensionHelper;
+use App\Listeners\InvoiceCreatedListener;
 use App\Models\EmailLog;
 use App\Models\Extension;
 use App\Models\OauthClient;
@@ -159,5 +161,7 @@ class AppServiceProvider extends ServiceProvider
                     );
                 });
         }
+
+        Event::listen(Created::class, [InvoiceCreatedListener::class, 'handle']);
     }
 }

@@ -413,6 +413,14 @@ class Settings
                     'default' => false,
                 ],
                 [
+                    'name' => 'credits_auto_renewal_enabled',
+                    'label' => 'Enable Auto-renewal with Credits',
+                    'type' => 'checkbox',
+                    'database_type' => 'boolean',
+                    'default' => true,
+                    'description' => 'Automatically pay invoices using available credits if enabled.',
+                ],
+                [
                     'name' => 'credits_minimum_deposit',
                     'label' => 'Minimum Deposit',
                     'type' => 'number',
@@ -548,6 +556,11 @@ class Settings
         return $settings;
     }
 
+    /**
+     * Get the tax settings.
+     *
+     * @return object
+     */
     public static function tax()
     {
         // Use once so the query is only run once
