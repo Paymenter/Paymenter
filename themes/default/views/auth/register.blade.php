@@ -20,6 +20,15 @@
             :placeholder="__('Confirm your password')" wire:model="password_confirmation" required />
 
         <x-form.properties :custom_properties="$custom_properties" :properties="$properties" />
+    
+        @if(config('settings.tos'))
+            <x-form.checkbox wire:model="tos" name="tos" required>
+                {{ __('product.tos') }}
+                <a href="{{ config('settings.tos') }}" target="_blank" class="text-primary hover:text-primary/80">
+                    {{ __('product.tos_link') }}
+                </a>
+            </x-form.checkbox>
+        @endif    
     </div>
 
     <x-captcha :form="'register'" />
