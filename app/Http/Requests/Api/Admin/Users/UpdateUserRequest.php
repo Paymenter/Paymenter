@@ -11,12 +11,12 @@ class UpdateUserRequest extends AdminApiRequest
     public function rules(): array
     {
         return [
-            'first_name' => 'nullable|string|max:255',
-            'last_name' => 'nullable|string|max:255',
-            'email' => 'required|email|max:255|unique:users,email,' . $this->route()->parameter('user')->id,
-            'password' => 'nullable|string|min:8',
-            'email_verified_at' => 'nullable|date',
-            'role_id' => 'nullable|exists:roles,id',
+            'first_name' => 'sometimes|nullable|string|max:255',
+            'last_name' => 'sometimes|nullable|string|max:255',
+            'email' => 'sometimes|required|email|max:255|unique:users,email,' . $this->route()->parameter('user')->id,
+            'password' => 'sometimes|string|min:8',
+            'email_verified_at' => 'sometimes|nullable|date',
+            'role_id' => 'sometimes|nullable|exists:roles,id',
         ];
     }
 }

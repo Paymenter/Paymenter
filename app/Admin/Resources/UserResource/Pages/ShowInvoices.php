@@ -4,8 +4,9 @@ namespace App\Admin\Resources\UserResource\Pages;
 
 use App\Admin\Resources\InvoiceResource;
 use App\Admin\Resources\UserResource;
+use Filament\Actions\ViewAction;
 use Filament\Resources\Pages\ManageRelatedRecords;
-use Filament\Tables;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 
@@ -15,7 +16,7 @@ class ShowInvoices extends ManageRelatedRecords
 
     protected static string $relationship = 'invoices';
 
-    protected static ?string $navigationIcon = 'ri-bill-line';
+    protected static string|\BackedEnum|null $navigationIcon = 'ri-bill-line';
 
     public static function getNavigationLabel(): string
     {
@@ -27,9 +28,9 @@ class ShowInvoices extends ManageRelatedRecords
         return $table
             ->recordTitleAttribute('product.name')
             ->columns([
-                Tables\Columns\TextColumn::make('id')->sortable(),
-                Tables\Columns\TextColumn::make('formattedTotal')->label('Total'),
-                Tables\Columns\TextColumn::make('status')
+                TextColumn::make('id')->sortable(),
+                TextColumn::make('formattedTotal')->label('Total'),
+                TextColumn::make('status')
                     ->label('Status')
                     // Make first letter uppercase
                     ->formatStateUsing(fn (string $state): string => ucfirst($state))
@@ -49,8 +50,8 @@ class ShowInvoices extends ManageRelatedRecords
                         'cancelled' => 'Cancelled',
                     ]),
             ])
-            ->actions([
-                Tables\Actions\ViewAction::make()->url(fn ($record) => InvoiceResource::getUrl('edit', ['record' => $record])),
+            ->recordActions([
+                ViewAction::make()->url(fn ($record) => InvoiceResource::getUrl('edit', ['record' => $record])),
             ]);
     }
 }

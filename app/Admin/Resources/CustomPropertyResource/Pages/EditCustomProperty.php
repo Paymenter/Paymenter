@@ -3,7 +3,7 @@
 namespace App\Admin\Resources\CustomPropertyResource\Pages;
 
 use App\Admin\Resources\CustomPropertyResource;
-use Filament\Actions;
+use Filament\Actions\DeleteAction;
 use Filament\Resources\Pages\EditRecord;
 
 class EditCustomProperty extends EditRecord
@@ -13,7 +13,7 @@ class EditCustomProperty extends EditRecord
     protected function getHeaderActions(): array
     {
         return [
-            Actions\DeleteAction::make(),
+            DeleteAction::make(),
         ];
     }
 }

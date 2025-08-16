@@ -10,6 +10,7 @@ use App\Models\Invoice;
 use App\Models\Product;
 use App\Models\Service;
 use App\Models\ServiceUpgrade;
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\Computed;
@@ -204,7 +205,7 @@ class Upgrade extends Component
             }
 
             // Check if user has credits in this currency
-            /** @var \App\Models\User */
+            /** @var User */
             $user = Auth::user();
             $credit = $user->credits()->where('currency_code', $price->currency->code)->first();
 

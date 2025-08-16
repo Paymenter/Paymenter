@@ -5,6 +5,7 @@ namespace Paymenter\Extensions\Servers\Plesk;
 use App\Classes\Extension\Server;
 use App\Models\Service;
 use App\Rules\Domain;
+use Exception;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
 
@@ -80,7 +81,7 @@ class Plesk extends Server
             $this->request('/server', 'get')->json();
 
             return true;
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return $e->getMessage();
         }
     }
@@ -119,7 +120,7 @@ class Plesk extends Server
         try {
             $user = $this->request('/clients/' . $pleskCustomerId->value)->json();
             // Check if user exists
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $returnData['password'] = Str::password(12);
 
             $user = $this->request('/clients', 'post', [
@@ -180,7 +181,7 @@ class Plesk extends Server
     public function suspendServer(Service $service, $settings, $properties)
     {
         if (!isset($properties['domain_id'])) {
-            throw new \Exception('Service has not been created');
+            throw new Exception('Service has not been created');
         }
 
         $this->request('/domains/' . $properties['domain_id'] . '/status', 'put', [
@@ -200,7 +201,7 @@ class Plesk extends Server
     public function unsuspendServer(Service $service, $settings, $properties)
     {
         if (!isset($properties['domain_id'])) {
-            throw new \Exception('Service has not been created');
+            throw new Exception('Service has not been created');
         }
 
         $this->request('/domains/' . $properties['domain_id'] . '/status', 'put', [
@@ -220,7 +221,7 @@ class Plesk extends Server
     public function terminateServer(Service $service, $settings, $properties)
     {
         if (!isset($properties['domain_id'])) {
-            throw new \Exception('Service has not been created');
+            throw new Exception('Service has not been created');
         }
 
         $this->request('/domains/' . $properties['domain_id'], 'delete');

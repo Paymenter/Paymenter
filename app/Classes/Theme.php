@@ -2,16 +2,19 @@
 
 namespace App\Classes;
 
+use Exception;
+use Throwable;
+
 class Theme
 {
     public static function getSettings()
     {
         try {
             $theme = require base_path('themes/' . config('settings.theme', 'default') . '/theme.php');
-        } catch (\Throwable $th) {
+        } catch (Throwable $th) {
             // If not ran from the command line, throw an exception
             if (php_sapi_name() !== 'cli') {
-                throw new \Exception('Theme file could not be read. ' . $th);
+                throw new Exception('Theme file could not be read. ' . $th);
             } else {
                 return [];
             }

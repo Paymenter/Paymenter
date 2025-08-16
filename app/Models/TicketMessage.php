@@ -16,6 +16,7 @@ class TicketMessage extends Model
         'ticket_id',
         'user_id',
         'message',
+        'ticket_mail_log_id'
     ];
 
     public function ticket()
@@ -26,5 +27,15 @@ class TicketMessage extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function attachments()
+    {
+        return $this->hasMany(TicketMessageAttachment::class);
+    }
+
+    public function ticketMailLog()
+    {
+        return $this->belongsTo(TicketMailLog::class);
     }
 }

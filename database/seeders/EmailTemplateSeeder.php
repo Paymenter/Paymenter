@@ -134,7 +134,7 @@ class EmailTemplateSeeder extends Seeder
             ],
             [
                 'key' => 'new_ticket_message',
-                'subject' => 'New ticket reply',
+                'subject' => '[Ticket #{{ $ticketMessage->ticket_id }}] New reply',
                 'body' => <<<'HTML'
                 # New ticket reply
 

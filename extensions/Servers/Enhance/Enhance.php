@@ -6,12 +6,14 @@ use App\Classes\Extension\Server;
 use App\Models\Service;
 use App\Models\User;
 use App\Rules\Domain;
+use Exception;
+use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
 
 class Enhance extends Server
 {
-    private function request($url, $method = 'get', $data = []): \Illuminate\Http\Client\Response
+    private function request($url, $method = 'get', $data = []): Response
     {
         // Trim any leading slashes from the base url and add the path URL to it
         $req_url = rtrim($this->config('host'), '/') . '/api' . $url;
@@ -21,7 +23,7 @@ class Enhance extends Server
         ])->$method($req_url, $data);
 
         if (!$response->successful()) {
-            throw new \Exception('An error occurred, got status code ' . $response->status() . ' on ' . $req_url);
+            throw new Exception('An error occurred, got status code ' . $response->status() . ' on ' . $req_url);
         }
 
         return $response;
@@ -108,7 +110,7 @@ class Enhance extends Server
             $this->request('/orgs/' . $this->config('orgId'));
 
             return true;
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return $e->getMessage();
         }
     }
@@ -156,7 +158,7 @@ class Enhance extends Server
     public function createServer(Service $service, $settings, $properties)
     {
         if (isset($properties['subscription_id'])) {
-            throw new \Exception('Service has already been created');
+            throw new Exception('Service has already been created');
         }
         $user = $this->fetchUserOrg($service->user);
 
@@ -192,11 +194,11 @@ class Enhance extends Server
     public function suspendServer(Service $service, $settings, $properties)
     {
         if (!isset($properties['subscription_id'])) {
-            throw new \Exception('Service does not exist');
+            throw new Exception('Service does not exist');
         }
 
         if (!$service->properties()->where('key', 'subscription_id')->exists()) {
-            throw new \Exception('Missing user organization ID');
+            throw new Exception('Missing user organization ID');
         }
 
         $this->request('/orgs/' . $service->user->properties()->where('key', 'enhance_orgId')->first()->value . '/subscriptions/' . $properties['subscription_id'], 'patch', [
@@ -216,11 +218,11 @@ class Enhance extends Server
     public function unsuspendServer(Service $service, $settings, $properties)
     {
         if (!isset($properties['subscription_id'])) {
-            throw new \Exception('Service does not exist');
+            throw new Exception('Service does not exist');
         }
 
         if (!$service->properties()->where('key', 'subscription_id')->exists()) {
-            throw new \Exception('Missing user organization ID');
+            throw new Exception('Missing user organization ID');
         }
 
         $this->request('/orgs/' . $service->user->properties()->where('key', 'enhance_orgId')->first()->value . '/subscriptions/' . $properties['subscription_id'], 'patch', [
@@ -240,11 +242,11 @@ class Enhance extends Server
     public function terminateServer(Service $service, $settings, $properties)
     {
         if (!isset($properties['subscription_id'])) {
-            throw new \Exception('Service does not exist');
+            throw new Exception('Service does not exist');
         }
 
         if (!$service->properties()->where('key', 'subscription_id')->exists()) {
-            throw new \Exception('Missing user organization ID');
+            throw new Exception('Missing user organization ID');
         }
 
         $this->request('/orgs/' . $service->user->properties()->where('key', 'enhance_orgId')->first()->value . '/subscriptions/' . $properties['subscription_id'], 'delete');
@@ -264,11 +266,11 @@ class Enhance extends Server
     public function upgradeServer(Service $service, $settings, $properties)
     {
         if (!isset($properties['subscription_id'])) {
-            throw new \Exception('Service does not exist');
+            throw new Exception('Service does not exist');
         }
 
         if (!$service->properties()->where('key', 'subscription_id')->exists()) {
-            throw new \Exception('Missing user organization ID');
+            throw new Exception('Missing user organization ID');
         }
 
         $this->request('/orgs/' . $service->user->properties()->where('key', 'enhance_orgId')->first()->value . '/subscriptions/' . $properties['subscription_id'], 'patch', [
@@ -292,7 +294,7 @@ class Enhance extends Server
     public function ssoLink(Service $service): string
     {
         if (!$service->properties()->where('key', 'subscription_id')->exists()) {
-            throw new \Exception('Missing user organization ID');
+            throw new Exception('Missing user organization ID');
         }
 
         $members = $this->request('/orgs/' . $service->user->properties()->where('key', 'enhance_orgId')->first()->value . '/members', 'get')->json();

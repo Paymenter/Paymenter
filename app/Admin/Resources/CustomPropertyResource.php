@@ -2,36 +2,47 @@
 
 namespace App\Admin\Resources;
 
-use App\Admin\Resources\CustomPropertyResource\Pages;
+use App\Admin\Resources\CustomPropertyResource\Pages\CreateCustomProperty;
+use App\Admin\Resources\CustomPropertyResource\Pages\EditCustomProperty;
+use App\Admin\Resources\CustomPropertyResource\Pages\ListCustomProperty;
 use App\Models\CustomProperty;
-use Filament\Forms;
-use Filament\Forms\Form;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\EditAction;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TagsInput;
+use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Toggle;
 use Filament\Resources\Resource;
-use Filament\Tables;
+use Filament\Schemas\Components\Section;
+use Filament\Schemas\Schema;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Columns\ToggleColumn;
 use Filament\Tables\Table;
 
 class CustomPropertyResource extends Resource
 {
     protected static ?string $model = CustomProperty::class;
 
-    protected static ?string $navigationGroup = 'Configuration';
+    protected static string|\UnitEnum|null $navigationGroup = 'Configuration';
 
-    protected static ?string $navigationIcon = 'ri-list-settings-line';
+    protected static string|\BackedEnum|null $navigationIcon = 'ri-list-settings-line';
 
-    protected static ?string $activeNavigationIcon = 'ri-list-settings-fill';
+    protected static string|\BackedEnum|null $activeNavigationIcon = 'ri-list-settings-fill';
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
-                Forms\Components\TextInput::make('name')
+        return $schema
+            ->components([
+                TextInput::make('name')
                     ->required()
                     ->maxLength(255),
-                Forms\Components\TextInput::make('key')->required(),
-                Forms\Components\Select::make('model')->options([
+                TextInput::make('key')->required(),
+                Select::make('model')->options([
                     'App\Models\User' => 'User',
                 ])->required(),
-                Forms\Components\Select::make('type')->options([
+                Select::make('type')->options([
                     'string' => 'Short Text',
                     'text' => 'Long Text',
                     'number' => 'Number',
@@ -40,19 +51,19 @@ class CustomPropertyResource extends Resource
                     'radio' => 'Radio',
                     'date' => 'Date',
                 ])->required(),
-                Forms\Components\Textarea::make('description')->nullable()->columnSpanFull()->rows(2),
-                Forms\Components\TagsInput::make('allowed_values')->nullable(),
-                Forms\Components\TextInput::make('validation')->nullable(),
+                Textarea::make('description')->nullable()->columnSpanFull()->rows(2),
+                TagsInput::make('allowed_values')->nullable(),
+                TextInput::make('validation')->nullable(),
 
-                Forms\Components\Section::make()
+                Section::make()
                     ->columns([
                         'sm' => 1,
                         'md' => 3,
                     ])
                     ->schema([
-                        Forms\Components\Toggle::make('non_editable')->default(false),
-                        Forms\Components\Toggle::make('required')->default(false),
-                        Forms\Components\Toggle::make('show_on_invoice')->default(false),
+                        Toggle::make('non_editable')->default(false),
+                        Toggle::make('required')->default(false),
+                        Toggle::make('show_on_invoice')->default(false),
                     ]),
             ]);
     }
@@ -61,27 +72,27 @@ class CustomPropertyResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('name')->label('Property')
+                TextColumn::make('name')->label('Property')
                     ->description(fn (CustomProperty $record): string => mb_strimwidth(($record->description ?? ''),
                         0,
                         75,
                         '...'
                     )),
-                Tables\Columns\TextColumn::make('key'),
-                Tables\Columns\TextColumn::make('type')->formatStateUsing(fn ($state) => str($state)->title()),
-                Tables\Columns\ToggleColumn::make('non_editable'),
-                Tables\Columns\ToggleColumn::make('required'),
-                Tables\Columns\ToggleColumn::make('show_on_invoice'),
+                TextColumn::make('key'),
+                TextColumn::make('type')->formatStateUsing(fn ($state) => str($state)->title()),
+                ToggleColumn::make('non_editable'),
+                ToggleColumn::make('required'),
+                ToggleColumn::make('show_on_invoice'),
             ])
             ->filters([
                 //
             ])
-            ->actions([
-                Tables\Actions\EditAction::make(),
+            ->recordActions([
+                EditAction::make(),
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+            ->toolbarActions([
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
                 ]),
             ])->defaultGroup('model');
     }
@@ -96,9 +107,9 @@ class CustomPropertyResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListCustomProperty::route('/'),
-            'create' => Pages\CreateCustomProperty::route('/create'),
-            'edit' => Pages\EditCustomProperty::route('/{record}/edit'),
+            'index' => ListCustomProperty::route('/'),
+            'create' => CreateCustomProperty::route('/create'),
+            'edit' => EditCustomProperty::route('/{record}/edit'),
         ];
     }
 }

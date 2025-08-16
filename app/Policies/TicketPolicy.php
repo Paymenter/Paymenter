@@ -5,7 +5,7 @@ namespace App\Policies;
 use App\Models\Ticket;
 use App\Models\User;
 
-class TicketPolicy
+class TicketPolicy extends BasePolicy
 {
     /**
      * Determine whether the user can view any models.
@@ -20,7 +20,7 @@ class TicketPolicy
      */
     public function view(User $user, Ticket $ticket): bool
     {
-        return $user->hasPermission('admin.tickets.view') || $ticket->user_id === $user->id;
+        return $this->adminPermission($user, 'admin.tickets.view') || $ticket->user_id === $user->id;
     }
 
     /**
@@ -36,7 +36,7 @@ class TicketPolicy
      */
     public function update(User $user, Ticket $ticket): bool
     {
-        return $user->hasPermission('admin.tickets.update') || $ticket->user_id === $user->id;
+        return $this->adminPermission($user, 'admin.tickets.update') || $ticket->user_id === $user->id;
     }
 
     /**

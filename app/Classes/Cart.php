@@ -66,9 +66,9 @@ class Cart
      * Validate if a coupon is valid for the current user and cart
      *
      * @param  string  $coupon_code
-     * @return \App\Models\Coupon
+     * @return Coupon
      *
-     * @throws \App\Exceptions\DisplayException
+     * @throws DisplayException
      */
     public static function validateCoupon($coupon_code)
     {

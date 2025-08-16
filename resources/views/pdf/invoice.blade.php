@@ -95,12 +95,7 @@
             </td>
             <td>
                 <strong>{{ strtoupper(__('invoices.bill_to')) }}</strong> <br />
-                {{ config('settings.company_name') }} <br />
-                {{ config('settings.company_address') }} {{ config('settings.company_address2') }} <br />
-                {{ config('settings.company_zip') }} {{ config('settings.company_city') }} <br />
-                {{ config('settings.company_state') }} {{ config('settings.company_country') }}  <br />
-                {{ config('settings.company_tax_id') }} <br />
-                {{ config('settings.company_id') }} <br />
+                {!! nl2br(e(config('settings.bill_to_text', config('settings.company_name')))) !!}
             </td>
         </tr>
     </table>
