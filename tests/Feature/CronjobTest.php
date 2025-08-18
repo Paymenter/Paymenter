@@ -47,6 +47,45 @@ class CronjobTest extends TestCase
         ]);
     }
 
+    public function test_invoices_are_paid_with_credits_if_available(): void
+    {
+        $user = \App\Models\User::factory()->create();
+        
+        $user->credits()->create([
+            'currency_code' => 'USD',
+            'amount' => 10.00,
+        ]);
+
+        // Set config cronjob_invoice
+        // This is the number of days before the due date to send an invoice
+        config(['settings.cronjob_invoice' => 7]);
+
+        $product = $this->createProduct();
+
+        // Create a subscription for the user
+        $service = \App\Models\Service::factory()->create([
+            'user_id' => $user->id,
+            'plan_id' => $product->plan->id,
+            'product_id' => $product->product->id,
+            'status' => 'active',
+            'expires_at' => now()->addDays(2)->addHour(-1), // Set expires_at to 6 days from now
+            'currency_code' => 'USD',
+            'price' => 10.00, // Set a price for the service
+        ]);
+
+        // Run the cron job
+        $this->artisan('app:cron-job')
+            ->assertExitCode(0);
+
+        // Check if an invoice was created
+        $this->assertDatabaseHas('invoices', [
+            'user_id' => $user->id,
+            'status' => 'paid',
+            'due_at' => $service->expires_at,
+            'currency_code' => 'USD',
+        ]);
+    }
+
     public function test_services_are_cancelled_if_not_paid_within_configured_days(): void
     {
         // Create a user

@@ -372,14 +372,15 @@ class ExtensionHelper
         }
 
         $invoice = Invoice::findOrFail($invoice);
+
         if (!$transactionId) {
-            $invoice->transactions()->create([
+            $transaction = $invoice->transactions()->create([
                 'gateway_id' => $gateway ? $gateway->id : null,
                 'amount' => $amount,
                 'fee' => $fee,
             ]);
         } else {
-            $invoice->transactions()->updateOrCreate(
+            $transaction = $invoice->transactions()->updateOrCreate(
                 [
                     'transaction_id' => $transactionId,
                 ],
@@ -390,6 +391,8 @@ class ExtensionHelper
                 ]
             );
         }
+
+        return $transaction;
     }
 
     /**

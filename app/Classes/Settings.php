@@ -331,7 +331,7 @@ class Settings
                     'required' => fn(Get $get) => $get('ticket_mail_piping'),
                 ],
                 [
-                    'name'=> 'ticket_mail_port',
+                    'name' => 'ticket_mail_port',
                     'label' => 'Email Port',
                     'type' => 'number',
                     'required' => fn(Get $get) => $get('ticket_mail_piping'),
@@ -344,7 +344,7 @@ class Settings
                     'required' => fn(Get $get) => $get('ticket_mail_piping'),
                 ],
                 [
-                    'name'=> 'ticket_mail_password',
+                    'name' => 'ticket_mail_password',
                     'label' => 'Email Password',
                     'type' => 'password',
                     'required' => fn(Get $get) => $get('ticket_mail_piping'),
@@ -431,6 +431,14 @@ class Settings
                     'type' => 'number',
                     'default' => 300,
                     'required' => true,
+                ],
+                [
+                    'name' => 'credits_auto_use',
+                    'label' => 'Automatically use credits',
+                    'type' => 'checkbox',
+                    'database_type' => 'boolean',
+                    'default' => true,
+                    'description' => 'Automatically pay recurring invoices using available credits. (only pays if credits is more or equal to invoice amount)',
                 ],
             ],
             'theme' => [
