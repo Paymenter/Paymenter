@@ -20,12 +20,10 @@ class InvoiceObserver
      */
     public function created(Invoice $invoice): void
     {
-        // Dispatch after a 5 second delay for auto-renewal logic
-        dispatch(function () use ($invoice) {
-            event(new \App\Events\Invoice\Created($invoice));
-        })->delay(now()->addSeconds(5));
+        event(new InvoiceEvent\Created($invoice));
 
         $sendEmail = $invoice->send_create_email;
+
         dispatch(function () use ($invoice, $sendEmail) {
             event(new InvoiceEvent\Finalized($invoice, $sendEmail));
         })->afterResponse();
@@ -58,4 +56,3 @@ class InvoiceObserver
         event(new InvoiceEvent\Deleted($invoice));
     }
 }
-

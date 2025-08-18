@@ -156,5 +156,29 @@ class CronJob extends Command
         $this->info('Checking for updates...');
 
         $this->call(CheckForUpdates::class);
+
+        // Auto-pay pending invoices with credits if enabled
+        $autoPaidInvoices = 0;
+        \App\Models\Invoice::where('status', 'pending')->get()->each(function ($invoice) use (&$autoPaidInvoices) {
+            $user = $invoice->user;
+            // Check if user wants to use credits (add your toggle logic here, e.g. $user->use_credits or global setting)
+            if (!config('settings.credits_auto_renewal_enabled')) {
+                return;
+            }
+            $credit = $user?->credits()->where('currency_code', $invoice->currency_code)->first();
+            // Skip credit deposit invoices
+            if ($invoice->items()->whereRaw('LOWER(description) LIKE ?', ['%credit deposit%'])->exists()) {
+                return;
+            }
+            if ($credit && $credit->amount > 0 && $credit->amount >= $invoice->remaining) {
+                $credit->amount -= $invoice->remaining;
+                $credit->save();
+                \App\Helpers\ExtensionHelper::addPayment($invoice->id, null, amount: $invoice->remaining);
+                $invoice->status = 'paid';
+                $invoice->save();
+                $autoPaidInvoices++;
+            }
+        });
+        $this->info('Auto-paid invoices with credits: ' . $autoPaidInvoices);
     }
 }
