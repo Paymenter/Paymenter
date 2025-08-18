@@ -11,7 +11,7 @@ return [
     'earnings' => 'Ganhos',
     'total-earnings' => 'Lucros Totais',
     'your-affiliate-link' => 'Seu link de afiliado',
-    'copy' => 'Cópiar',
+    'copy' => 'Copiar',
 
     'you-havent-signed-up-yet' => 'Você ainda não se inscreveu no programa de afiliados!',
     'you-are-already-affiliated' => 'Você já se inscreveu no programa de afiliados.',
