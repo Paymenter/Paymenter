@@ -68,7 +68,10 @@ class TelemetryCommand extends Command
                 ],
                 'extensions' => [
                     'count' => DB::table('extensions')->count(),
-                    'active' => DB::table('extensions')->where('enabled', true)->pluck('extension')->toArray(),
+                    'active' => DB::table('extensions')
+                        ->where('enabled', true)
+                        ->orWhereIn('type', ['server', 'gateway'])
+                        ->pluck('extension')->toArray(),
                 ],
             ],
         ];
