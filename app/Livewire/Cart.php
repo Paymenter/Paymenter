@@ -114,7 +114,7 @@ class Cart extends Component
             return $this->notify('Your cart is empty', 'error');
         }
         if (!Auth::check()) {
-            return redirect()->route('login');
+            return redirect()->guest('login');
         }
         if (config('settings.mail_must_verify') && !Auth::user()->hasVerifiedEmail()) {
             return redirect()->route('verification.notice');
@@ -199,6 +199,9 @@ class Cart extends Component
 
                 foreach ($item->configOptions as $configOption) {
                     if (in_array($configOption->option_type, ['text', 'number', 'checkbox'])) {
+                        if (!isset($configOption->value)) {
+                            continue;
+                        }
                         $service->properties()->updateOrCreate([
                             'key' => $configOption->option_env_variable ? $configOption->option_env_variable : $configOption->option_name,
                         ], [

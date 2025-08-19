@@ -13,12 +13,14 @@ class EmailTemplate extends Model
         'key',
         'name',
         'subject',
+        'enabled',
         'body',
         'cc',
         'bcc',
     ];
 
     protected $casts = [
+        'enabled' => 'boolean',
         'cc' => 'array',
         'bcc' => 'array',
     ];
