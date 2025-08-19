@@ -7,12 +7,12 @@ use App\Observers\InvoiceTransactionObserver;
 use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
+use OwenIt\Auditing\Contracts\Auditable;
 
 #[ObservedBy([InvoiceTransactionObserver::class])]
-class InvoiceTransaction extends Model
+class InvoiceTransaction extends Model implements Auditable
 {
-    use HasFactory;
+    use HasFactory, \App\Models\Traits\Auditable;
 
     protected $fillable = [
         'invoice_id',
@@ -38,7 +38,7 @@ class InvoiceTransaction extends Model
     public function formattedFee(): Attribute
     {
         return Attribute::make(
-            get: fn () => new Price(['price' => $this->fee, 'currency' => $this->invoice->currency])
+            get: fn() => new Price(['price' => $this->fee, 'currency' => $this->invoice->currency])
         );
     }
 
@@ -48,7 +48,7 @@ class InvoiceTransaction extends Model
     public function formattedAmount(): Attribute
     {
         return Attribute::make(
-            get: fn () => new Price(['price' => $this->amount, 'currency' => $this->invoice->currency])
+            get: fn() => new Price(['price' => $this->amount, 'currency' => $this->invoice->currency])
         );
     }
 }

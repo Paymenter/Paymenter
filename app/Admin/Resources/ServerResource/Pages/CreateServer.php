@@ -21,6 +21,7 @@ class CreateServer extends CreateRecord
 
     protected function handleRecordCreation(array $data): Model
     {
+        $data['enabled'] = true;
         $record = static::getModel()::create(Arr::except($data, ['settings']));
 
         if (!isset($data['settings'])) {

@@ -94,6 +94,7 @@ class Stripe extends Gateway
                 'type' => 'checkbox',
                 'description' => 'Enable this option if you want to use subscriptions with Stripe (if available)',
                 'required' => false,
+                'database_type' => 'boolean',
             ],
         ];
     }

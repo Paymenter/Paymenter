@@ -8,12 +8,12 @@ use App\Observers\InvoiceObserver;
 use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
+use OwenIt\Auditing\Contracts\Auditable;
 
 #[ObservedBy([InvoiceObserver::class])]
-class Invoice extends Model
+class Invoice extends Model implements Auditable
 {
-    use HasFactory;
+    use HasFactory, \App\Models\Traits\Auditable;
 
     public const STATUS_PENDING = 'pending';
 
@@ -21,7 +21,7 @@ class Invoice extends Model
 
     public const STATUS_CANCELLED = 'cancelled';
 
-    protected $fillable = ['number', 'user_id', 'currency_code',  'due_at', 'status'];
+    protected $fillable = ['number', 'user_id', 'currency_code', 'due_at', 'status'];
 
     protected $casts = [
         'due_at' => 'date',
@@ -37,7 +37,7 @@ class Invoice extends Model
     public function total(): Attribute
     {
         return Attribute::make(
-            get: fn () => $this->items->sum(fn ($item) => $item->price * $item->quantity)
+            get: fn() => $this->items->sum(fn($item) => $item->price * $item->quantity)
         );
     }
 
@@ -49,7 +49,7 @@ class Invoice extends Model
     public function formattedTotal(): Attribute
     {
         return Attribute::make(
-            get: fn () => new Price(['price' => $this->total, 'currency' => $this->currency])
+            get: fn() => new Price(['price' => $this->total, 'currency' => $this->currency])
         );
     }
 
@@ -59,7 +59,7 @@ class Invoice extends Model
     public function formattedRemaining(): Attribute
     {
         return Attribute::make(
-            get: fn () => new Price(['price' => $this->remaining, 'currency' => $this->currency])
+            get: fn() => new Price(['price' => $this->remaining, 'currency' => $this->currency])
         );
     }
 
@@ -69,7 +69,7 @@ class Invoice extends Model
     public function remaining(): Attribute
     {
         return Attribute::make(
-            get: fn () => $this->total - $this->transactions->sum('amount')
+            get: fn() => $this->total - $this->transactions->sum('amount')
         );
     }
 
@@ -96,7 +96,7 @@ class Invoice extends Model
     public function pdf(): Attribute
     {
         return Attribute::make(
-            get: fn () => PDF::generateInvoice($this)
+            get: fn() => PDF::generateInvoice($this)
         );
     }
 }

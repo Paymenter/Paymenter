@@ -89,6 +89,16 @@ class AppServiceProvider extends ServiceProvider
         Request::macro('hasValidSignature', function ($absolute = true, array $ignoreQuery = []) {
             return \URL::alternateHasValidSignature($this, $absolute, $ignoreQuery);
         });
+
+        Request::macro('livewireUrl', function () {
+            if (request()->route()->named('paymenter.livewire.update')) {
+                $previousUrl = url()->previous();
+                
+                return $previousUrl !== null ? $previousUrl : null;
+            }
+
+            return request()->fullUrl();
+        });
     }
 
     /**

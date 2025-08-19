@@ -4,11 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
+use OwenIt\Auditing\Contracts\Auditable;
 
-class Extension extends Model
+class Extension extends Model implements Auditable
 {
-    use HasFactory;
+    use HasFactory, \App\Models\Traits\Auditable;
 
     protected $fillable = [
         'name',
@@ -31,14 +31,14 @@ class Extension extends Model
     public function path(): Attribute
     {
         return Attribute::make(
-            get: fn () => ucfirst($this->type) . 's/' . ucfirst($this->extension)
+            get: fn() => ucfirst($this->type) . 's/' . ucfirst($this->extension)
         );
     }
 
     public function namespace(): Attribute
     {
         return Attribute::make(
-            get: fn () => 'Paymenter\\Extensions\\' . ucfirst($this->type) . 's\\' . ucfirst($this->extension)
+            get: fn() => 'Paymenter\\Extensions\\' . ucfirst($this->type) . 's\\' . ucfirst($this->extension)
         );
     }
 }

@@ -7,12 +7,12 @@ use App\Observers\ServiceUpgradeObserver;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
+use OwenIt\Auditing\Contracts\Auditable;
 
 #[ObservedBy([ServiceUpgradeObserver::class])]
-class ServiceUpgrade extends Model
+class ServiceUpgrade extends Model implements Auditable
 {
-    use HasFactory;
+    use HasFactory, \App\Models\Traits\Auditable;
 
     public const STATUS_PENDING = 'pending';
 

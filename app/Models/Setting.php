@@ -6,11 +6,12 @@ use App\Events\Setting\Retrieved;
 use App\Events\Setting\Saved;
 use App\Events\Setting\Saving;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
+use OwenIt\Auditing\Contracts\Auditable;
+use App\Redactors\RightRedactor;
 
-class Setting extends Model
+class Setting extends Model implements Auditable
 {
-    use HasFactory;
+    use HasFactory, \App\Models\Traits\Auditable;
 
     /**
      * The attributes that are mass assignable.
@@ -24,9 +25,23 @@ class Setting extends Model
         'encrypted',
     ];
 
+    protected $casts = [
+        'encrypted' => 'boolean',
+    ];
+
     protected $dispatchesEvents = [
         'retrieved' => Retrieved::class,
         'saving' => Saving::class,
         'saved' => Saved::class,
     ];
+
+    public function getAttributeModifiers(): array
+    {
+        if (!$this->encrypted) {
+            return [];
+        }
+        return [
+            'value' => RightRedactor::class,
+        ];
+    }
 }
