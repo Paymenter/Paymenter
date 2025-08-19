@@ -167,15 +167,6 @@
         </tbody>
     </table>
 
-    @php
-        // Compute VAT rate from totals so it's always explicit and accurate
-        $net = $invoice->formattedTotal->price - $invoice->formattedTotal->tax;
-        $vatRate = $net > 0 ? round(($invoice->formattedTotal->tax / $net) * 100, 2) : null;
-        $prettyVat = !is_null($vatRate)
-            ? rtrim(rtrim(number_format($vatRate, 2, '.', ''), '0'), '.')
-            : null;
-    @endphp
-
     <!-- Totals Section -->
     <div class="totals-section">
         @if ($invoice->formattedTotal->tax > 0)
@@ -186,7 +177,7 @@
             </tr>
             <tr>
                 <td class="label">
-                    {{ \App\Classes\Settings::tax()->name }} @if(!is_null($prettyVat)) ({{ $prettyVat }}%) @endif
+                    {{ \App\Classes\Settings::tax()->name }} ({{ \App\Classes\Settings::tax()->rate }}%)
                 </td>
                 <td class="amount">{{ $invoice->formattedTotal->formatted->tax }}</td>
             </tr>
