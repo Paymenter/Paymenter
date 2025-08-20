@@ -1,16 +1,16 @@
 <?php
 
 return [
-    'services' => 'Services',
-    'product' => 'Product',
-    'price' => 'Price',
-    'status' => 'Status',
-    'name' => 'Name',
-    'actions' => 'Actions',
-    'view' => 'View',
+    'services' => 'שירותים',
+    'product' => 'מוצר',
+    'price' => 'מחיר',
+    'status' => 'מצב',
+    'name' => 'שם',
+    'actions' => 'פעולות',
+    'view' => 'תצוגה',
 
     'product_details' => 'פרטי מוצר',
-    'billing_cycle' => 'Billing Cycle',
+    'billing_cycle' => 'מחזור חיוב',
     'cancel' => 'ביטול',
     'cancellation' => 'Cancellation of :service',
     'cancel_are_you_sure' => 'Are you sure you want to cancel this service?',
@@ -25,7 +25,7 @@ return [
     'new_plan' => 'תוכנית חדשה',
     'change_plan' => 'שינוי תוכנית',
     'current_price' => 'מחיר נוכחי',
-    'new_price' => 'New Price',
+    'new_price' => 'מחיר חדש',
     'upgrade' => 'שדרוג',
     'upgrade_summary' => 'Upgrade Summary',
     'total_today' => 'Total Today',
