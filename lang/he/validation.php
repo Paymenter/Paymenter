@@ -34,7 +34,7 @@ return [
     'boolean' => 'The :attribute field must be true or false.',
     'can' => 'The :attribute field contains an unauthorized value.',
     'confirmed' => 'The :attribute field confirmation does not match.',
-    'current_password' => 'The password is incorrect.',
+    'current_password' => 'סיסמא שגויה.',
     'date' => 'The :attribute field must be a valid date.',
     'date_equals' => 'The :attribute field must be a date equal to :date.',
     'date_format' => 'The :attribute field must match the format :format.',
