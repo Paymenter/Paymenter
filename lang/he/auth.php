@@ -27,12 +27,12 @@ return [
     'sign_up' => 'Sign up',
     'sign_up_title' => 'Create your account',
 
-    'logout' => 'Logout',
+    'logout' => 'התנתק',
 
     'input' => [
-        'email' => 'Email',
-        'email_label' => 'Email Address',
-        'password' => 'Password',
+        'email' => 'מייל',
+        'email_label' => 'כתובת מייל',
+        'password' => 'סיסמה',
     ],
 
     'oauth' => [
