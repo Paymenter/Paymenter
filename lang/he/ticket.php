@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'ticket_details' => 'Ticket Details',
+    'ticket_details' => 'פרטי הקריאה',
     'tickets' => 'Tickets',
     'subject' => 'נושא',
     'status' => 'מצב',
@@ -10,21 +10,21 @@ return [
     'created_at' => 'Created At',
     'reply' => 'מענה',
     'attachments' => 'Attachments',
-    'upload_attachments' => 'Upload Attachments',
+    'upload_attachments' => ' צרף נספחים',
     'or_drag_and_drop' => 'or drag and drop',
     'files_max' => 'Files up to 10MB',
     'selected_files' => 'Selected Files',
 
-    'create_ticket' => 'Create Ticket',
-    'select_department' => 'Select Department',
+    'create_ticket' => 'צור פנייה',
+    'select_department' => 'בחר מחלקה',
     'select_priority' => 'Select Priority',
-    'low' => 'Low',
-    'medium' => 'Medium',
-    'high' => 'High',
+    'low' => 'נמוך',
+    'medium' => 'בינוני',
+    'high' => 'גבוה',
 
-    'last_activity' => 'Last activity',
+    'last_activity' => 'פעילות אחרונה',
 
-    'service' => 'Service',
-    'select_service' => 'Select Service',
-    'create' => 'Create',
+    'service' => 'שירות',
+    'select_service' => 'בחר שירות',
+    'create' => 'יצירה',
 ];
