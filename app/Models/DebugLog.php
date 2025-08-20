@@ -2,8 +2,6 @@
 
 namespace App\Models;
 
-
-
 class DebugLog extends Model
 {
     protected $fillable = [

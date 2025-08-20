@@ -29,9 +29,10 @@ class EditExtension extends EditRecord
 
                     // Redirect to the list page
                     $this->redirect(ExtensionResource::getUrl('index'), true);
-                })
+                }),
         ];
     }
+
     protected function mutateFormDataBeforeFill(array $data): array
     {
         foreach ($this->record->settings as $setting) {

@@ -5,14 +5,14 @@ namespace App\Models;
 use App\Observers\CategoryObserver;
 use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use OwenIt\Auditing\Contracts\Auditable;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use OwenIt\Auditing\Contracts\Auditable;
 
 #[ObservedBy(CategoryObserver::class)]
 class Category extends Model implements Auditable
 {
-    use HasFactory, \App\Models\Traits\Auditable;
+    use \App\Models\Traits\Auditable, HasFactory;
 
     protected $guarded = [];
 

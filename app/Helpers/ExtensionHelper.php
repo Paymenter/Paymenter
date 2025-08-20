@@ -362,6 +362,7 @@ class ExtensionHelper
 
     /**
      * Add payment to invoice
+     *
      * @param  Invoice|int  $invoice
      * @param  Gateway|null  $gateway
      */

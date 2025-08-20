@@ -12,7 +12,6 @@ use App\Models\TicketMessage;
 use Filament\Actions\Action;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\MarkdownEditor;
-use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Select;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Notifications\Notification;
@@ -22,7 +21,6 @@ use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Schema;
 use Filament\Support\Enums\TextSize;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
 
@@ -46,14 +44,14 @@ class EditTicket extends EditRecord
                         ['table'],
                         ['undo', 'redo'],
                     ])
-                    ->required(fn(Get $get) => count($get('attachments')) == 0),
+                    ->required(fn (Get $get) => count($get('attachments')) == 0),
                 FileUpload::make('attachments')
                     ->label('Attachments')
                     ->visibility('private')
-                    ->directory("tickets/uploads")
+                    ->directory('tickets/uploads')
                     ->multiple()
                     ->storeFileNamesIn('attachment_names')
-                    ->reorderable()
+                    ->reorderable(),
             ]);
     }
 
@@ -93,8 +91,8 @@ class EditTicket extends EditRecord
             ->components([
                 TextEntry::make('user_id')
                     ->size(TextSize::Large)
-                    ->formatStateUsing(fn($record) => $record->user->name)
-                    ->url(fn($record) => UserResource::getUrl('edit', ['record' => $record->user]))
+                    ->formatStateUsing(fn ($record) => $record->user->name)
+                    ->url(fn ($record) => UserResource::getUrl('edit', ['record' => $record->user]))
                     ->label('User ID'),
                 TextEntry::make('subject')
                     ->size(TextSize::Large)
@@ -102,8 +100,8 @@ class EditTicket extends EditRecord
                 TextEntry::make('status')
                     ->size(TextSize::Large)
                     ->badge()
-                    ->formatStateUsing(fn($state) => ucfirst($state))
-                    ->color(fn($state) => match ($state) {
+                    ->formatStateUsing(fn ($state) => ucfirst($state))
+                    ->color(fn ($state) => match ($state) {
                         'open' => 'success',
                         'closed' => 'danger',
                         'replied' => 'gray',
@@ -112,8 +110,8 @@ class EditTicket extends EditRecord
                 TextEntry::make('priority')
                     ->size(TextSize::Large)
                     ->badge()
-                    ->formatStateUsing(fn($state) => ucfirst($state))
-                    ->color(fn($state) => match ($state) {
+                    ->formatStateUsing(fn ($state) => ucfirst($state))
+                    ->color(fn ($state) => match ($state) {
                         'low' => 'success',
                         'medium' => 'gray',
                         'high' => 'danger',
@@ -121,7 +119,7 @@ class EditTicket extends EditRecord
                     ->label('Priority'),
                 TextEntry::make('department')
                     ->size(TextSize::Large)
-                    ->formatStateUsing(fn($state) => array_combine(config('settings.ticket_departments'), config('settings.ticket_departments'))[$state])
+                    ->formatStateUsing(fn ($state) => array_combine(config('settings.ticket_departments'), config('settings.ticket_departments'))[$state])
                     ->placeholder('No department')
                     ->label('Department'),
 
@@ -129,14 +127,14 @@ class EditTicket extends EditRecord
                     ->size(TextSize::Large)
                     ->label('Assigned To')
                     ->placeholder('No assigned user')
-                    ->formatStateUsing(fn($record) => $record->assignedTo->name),
+                    ->formatStateUsing(fn ($record) => $record->assignedTo->name),
 
                 TextEntry::make('service_id')
                     ->size(TextSize::Large)
                     ->label('Service')
-                    ->url(fn($record) => $record->service ? ServiceResource::getUrl('edit', ['record' => $record->service]) : null)
+                    ->url(fn ($record) => $record->service ? ServiceResource::getUrl('edit', ['record' => $record->service]) : null)
                     ->placeholder('No service')
-                    ->formatStateUsing(fn($record) => "{$record->service->product->name} - " . ucfirst($record->service->status)),
+                    ->formatStateUsing(fn ($record) => "{$record->service->product->name} - " . ucfirst($record->service->status)),
 
                 Actions::make([
                     Action::make('Edit')
@@ -168,20 +166,20 @@ class EditTicket extends EditRecord
                                     UserComponent::make('user_id'),
                                     Select::make('assigned_to')
                                         ->label('Assigned To')
-                                        ->relationship('assignedTo', 'id', fn(Builder $query) => $query->where('role_id', '!=', null))
+                                        ->relationship('assignedTo', 'id', fn (Builder $query) => $query->where('role_id', '!=', null))
                                         ->searchable()
                                         ->preload()
-                                        ->getOptionLabelFromRecordUsing(fn($record) => $record->name),
+                                        ->getOptionLabelFromRecordUsing(fn ($record) => $record->name),
                                     Select::make('service_id')
                                         ->label('Service')
                                         ->relationship('service', 'id', function (Builder $query, Get $get) {
                                             $query->where('user_id', $get('user_id'));
                                         })
-                                        ->getOptionLabelFromRecordUsing(fn($record) => "{$record->product->name} - " . ucfirst($record->status))
-                                        ->disabled(fn(Get $get) => !$get('user_id')),
+                                        ->getOptionLabelFromRecordUsing(fn ($record) => "{$record->product->name} - " . ucfirst($record->status))
+                                        ->disabled(fn (Get $get) => !$get('user_id')),
                                 ]);
                         })
-                        ->fillForm(fn($record) => [
+                        ->fillForm(fn ($record) => [
                             'status' => $record->status,
                             'priority' => $record->priority,
                             'department' => $record->department,
@@ -198,7 +196,7 @@ class EditTicket extends EditRecord
                         ->color('danger')
                         ->icon('heroicon-o-trash')
                         ->requiresConfirmation()
-                        ->action(fn(Ticket $record) => $record->delete())
+                        ->action(fn (Ticket $record) => $record->delete())
                         ->hidden(!auth()->user()->can('delete', $this->record))
                         ->after(function (Action $action) {
                             Notification::make()
@@ -209,8 +207,8 @@ class EditTicket extends EditRecord
                             $action->redirect(TicketResource::getUrl('index'));
                         }),
                     AuditAction::make()->auditChildren([
-                        'messages'
-                    ])
+                        'messages',
+                    ]),
                 ])->columnSpan(['default' => 'full', 'md' => 1]),
             ]);
     }

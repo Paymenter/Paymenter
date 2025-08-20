@@ -7,7 +7,7 @@ use OwenIt\Auditing\Contracts\Auditable;
 
 class CouponProduct extends Model implements Auditable
 {
-    use HasFactory, \App\Models\Traits\Auditable;
+    use \App\Models\Traits\Auditable, HasFactory;
 
     protected $fillable = [
         'coupon_id',

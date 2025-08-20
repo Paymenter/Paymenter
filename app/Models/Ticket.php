@@ -11,7 +11,7 @@ use OwenIt\Auditing\Contracts\Auditable;
 
 class Ticket extends Model implements Auditable
 {
-    use HasFactory, \App\Models\Traits\Auditable;
+    use \App\Models\Traits\Auditable, HasFactory;
 
     protected $fillable = [
         'subject',

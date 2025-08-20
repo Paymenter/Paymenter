@@ -2,7 +2,6 @@
 
 namespace Tests\Unit;
 
-use App\Models\Invoice;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 

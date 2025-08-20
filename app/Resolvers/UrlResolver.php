@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Resolvers;
 
 use Illuminate\Support\Facades\App;

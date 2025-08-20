@@ -10,13 +10,13 @@ use OwenIt\Auditing\Contracts\Auditable;
 #[ObservedBy([TicketMessageObserver::class])]
 class TicketMessage extends Model implements Auditable
 {
-    use HasFactory, \App\Models\Traits\Auditable;
+    use \App\Models\Traits\Auditable, HasFactory;
 
     protected $fillable = [
         'ticket_id',
         'user_id',
         'message',
-        'ticket_mail_log_id'
+        'ticket_mail_log_id',
     ];
 
     public function ticket()

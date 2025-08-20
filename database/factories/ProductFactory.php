@@ -3,7 +3,6 @@
 namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 
 /**
@@ -25,5 +24,4 @@ class ProductFactory extends Factory
             'slug' => Str::slug($this->faker->word()),
         ];
     }
-
 }

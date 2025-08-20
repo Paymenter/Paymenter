@@ -2,17 +2,16 @@
 
 namespace App\Admin\Resources\Audits\Tables;
 
-use App\Admin\Resources\ProductResource;
-use App\Admin\Resources\UserResource;
-use App\Admin\Resources\OrderResource;
-use App\Admin\Resources\InvoiceResource;
 use App\Admin\Resources\CategoryResource;
+use App\Admin\Resources\InvoiceResource;
+use App\Admin\Resources\OrderResource;
+use App\Admin\Resources\ProductResource;
 use App\Admin\Resources\ServiceResource;
 use App\Admin\Resources\TaxRateResource;
+use App\Admin\Resources\UserResource;
 use App\Models\Audit;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
-use Filament\Actions\EditAction;
 use Filament\Actions\ViewAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
@@ -40,7 +39,7 @@ class AuditsTable
                     ->sortable(),
                 TextColumn::make('event')
                     ->formatStateUsing(fn (Audit $record): string => $record->event . ' - ' . class_basename($record->auditable_type) . ' (' . $record->auditable_id . ')')
-                    ->url(function (Audit $record){ 
+                    ->url(function (Audit $record) {
                         if (isset(self::TYPE_TO_RESOURCE[class_basename($record->auditable_type)])) {
                             return self::TYPE_TO_RESOURCE[class_basename($record->auditable_type)]::getUrl('edit', [$record->auditable_id]);
                         }

@@ -13,7 +13,7 @@ use OwenIt\Auditing\Contracts\Auditable;
 #[ObservedBy([ServiceObserver::class])]
 class Service extends Model implements Auditable
 {
-    use HasFactory, HasProperties, \App\Models\Traits\Auditable;
+    use \App\Models\Traits\Auditable, HasFactory, HasProperties;
 
     public const STATUS_PENDING = 'pending';
 
@@ -81,7 +81,7 @@ class Service extends Model implements Auditable
     public function formattedPrice(): Attribute
     {
         return Attribute::make(
-            get: fn() => new Price(['price' => $this->price * $this->quantity, 'currency' => $this->currency])
+            get: fn () => new Price(['price' => $this->price * $this->quantity, 'currency' => $this->currency])
         );
     }
 
@@ -92,14 +92,14 @@ class Service extends Model implements Auditable
     {
         if ($this->plan->type == 'free' || $this->plan->type == 'one-time') {
             return Attribute::make(
-                get: fn() => $this->product->name
+                get: fn () => $this->product->name
             );
         }
         $date = $this->expires_at ?? now();
         $endDate = $date->copy()->{'add' . ucfirst($this->plan->billing_unit) . 's'}($this->plan->billing_period);
 
         return Attribute::make(
-            get: fn() => $this->product->name . ' (' . $date->format('M d, Y') . ' - ' . $endDate->format('M d, Y') . ')'
+            get: fn () => $this->product->name . ' (' . $date->format('M d, Y') . ' - ' . $endDate->format('M d, Y') . ')'
         );
     }
 
@@ -167,14 +167,14 @@ class Service extends Model implements Auditable
     public function cancellable(): Attribute
     {
         return Attribute::make(
-            get: fn() => $this->status !== 'cancelled' && $this->plan->type != 'free' && $this->plan->type != 'one-time' && !$this->cancellation?->exists()
+            get: fn () => $this->status !== 'cancelled' && $this->plan->type != 'free' && $this->plan->type != 'one-time' && !$this->cancellation?->exists()
         );
     }
 
     public function upgradable(): Attribute
     {
         return Attribute::make(
-            get: fn() => ($this->productUpgrades()->count() > 0 || $this->product->upgradableConfigOptions()->count() > 0) && $this->status == 'active' && $this->upgrade->where('status', ServiceUpgrade::STATUS_PENDING)->count() == 0
+            get: fn () => ($this->productUpgrades()->count() > 0 || $this->product->upgradableConfigOptions()->count() > 0) && $this->status == 'active' && $this->upgrade->where('status', ServiceUpgrade::STATUS_PENDING)->count() == 0
         );
     }
 

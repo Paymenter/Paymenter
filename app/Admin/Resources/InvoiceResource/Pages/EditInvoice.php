@@ -28,8 +28,8 @@ class EditInvoice extends EditRecord
             AuditAction::make()
                 ->auditChildren([
                     'items',
-                    'transactions'
-                ])
+                    'transactions',
+                ]),
         ];
     }
 }

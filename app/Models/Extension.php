@@ -8,7 +8,7 @@ use OwenIt\Auditing\Contracts\Auditable;
 
 class Extension extends Model implements Auditable
 {
-    use HasFactory, \App\Models\Traits\Auditable;
+    use \App\Models\Traits\Auditable, HasFactory;
 
     protected $fillable = [
         'name',
@@ -31,14 +31,14 @@ class Extension extends Model implements Auditable
     public function path(): Attribute
     {
         return Attribute::make(
-            get: fn() => ucfirst($this->type) . 's/' . ucfirst($this->extension)
+            get: fn () => ucfirst($this->type) . 's/' . ucfirst($this->extension)
         );
     }
 
     public function namespace(): Attribute
     {
         return Attribute::make(
-            get: fn() => 'Paymenter\\Extensions\\' . ucfirst($this->type) . 's\\' . ucfirst($this->extension)
+            get: fn () => 'Paymenter\\Extensions\\' . ucfirst($this->type) . 's\\' . ucfirst($this->extension)
         );
     }
 }

@@ -9,7 +9,7 @@ use OwenIt\Auditing\Contracts\Auditable;
 
 class Plan extends Model implements Auditable
 {
-    use HasFactory, \App\Models\Traits\Auditable;
+    use \App\Models\Traits\Auditable, HasFactory;
 
     public $timestamps = false;
 
@@ -58,7 +58,7 @@ class Plan extends Model implements Auditable
     public function billingDuration(): Attribute
     {
         if ($this->type === 'free' || $this->type == 'one-time') {
-            return Attribute::make(get: fn() => 0);
+            return Attribute::make(get: fn () => 0);
         }
         $diffInDays = match ($this->billing_unit) {
             'day' => 1,
@@ -68,7 +68,7 @@ class Plan extends Model implements Auditable
         };
 
         return Attribute::make(
-            get: fn() => $diffInDays * $this->billing_period
+            get: fn () => $diffInDays * $this->billing_period
         );
     }
 

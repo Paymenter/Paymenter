@@ -2,10 +2,7 @@
 
 namespace App\Listeners;
 
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Events\MessageSending;
-use Illuminate\Mail\Mailables\Headers;
-use Illuminate\Queue\InteractsWithQueue;
 
 class TicketReplyEmailListener
 {
@@ -30,7 +27,7 @@ class TicketReplyEmailListener
             $message->getHeaders()->addHeader('References', $ticket->id . '@' . $host);
 
             // Update reply to
-            if(config('settings.ticket_mail_piping', false)) {
+            if (config('settings.ticket_mail_piping', false)) {
                 $message->replyTo(config('settings.ticket_mail_email'));
             }
         }

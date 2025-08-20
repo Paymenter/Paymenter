@@ -10,7 +10,7 @@ use OwenIt\Auditing\Contracts\Auditable;
 #[ObservedBy([ServiceCancellationObserver::class])]
 class ServiceCancellation extends Model implements Auditable
 {
-    use HasFactory, \App\Models\Traits\Auditable;
+    use \App\Models\Traits\Auditable, HasFactory;
 
     protected $fillable = [
         'service_id',

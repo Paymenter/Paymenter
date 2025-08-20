@@ -9,6 +9,7 @@ use Tests\TestCase;
 class CheckoutTest extends TestCase
 {
     use RefreshDatabase;
+
     private $product = null;
 
     protected function setUp(): void
@@ -88,7 +89,6 @@ class CheckoutTest extends TestCase
             'price' => 20.00,
             'currency_code' => 'USD',
         ]);
-
 
         // Change plan
         Livewire::test('products.checkout', ['category' => $this->product->product->category, 'product' => $this->product->product->slug])

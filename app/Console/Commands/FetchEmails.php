@@ -4,8 +4,8 @@ namespace App\Console\Commands;
 
 use App\Models\TicketMailLog;
 use App\Models\TicketMessage;
-use Illuminate\Console\Command;
 use DirectoryTree\ImapEngine\Mailbox;
+use Illuminate\Console\Command;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
 
@@ -64,6 +64,7 @@ class FetchEmails extends Command
 
             if (!preg_match('/^(\d+)@/', $replyTo->email(), $matches)) {
                 $this->failedEmailLog($email);
+
                 continue;
             }
 
@@ -72,6 +73,7 @@ class FetchEmails extends Command
             $ticketMessage = TicketMessage::find($ticketMessageId);
             if (!$ticketMessage) {
                 $this->failedEmailLog($email);
+
                 continue;
             }
 
@@ -80,6 +82,7 @@ class FetchEmails extends Command
             // Check if from email matches ticket's email
             if ($email->from()->email() !== $ticket->user->email) {
                 $this->failedEmailLog($email);
+
                 continue;
             }
 
@@ -104,7 +107,7 @@ class FetchEmails extends Command
             foreach ($email->attachments() as $attachment) {
                 $extension = pathinfo($attachment->filename(), PATHINFO_EXTENSION);
                 // Randomize filename
-                $newName = Str::ulid() . '.' .  $extension;
+                $newName = Str::ulid() . '.' . $extension;
                 $path = 'tickets/uploads/' . $newName;
 
                 $attachment->save(storage_path('app/' . $path));
@@ -144,16 +147,16 @@ class FetchEmails extends Command
 
         // Remove lines like '----- Original Message -----' (some other clients).
         // Also remove lines like '--- On ... wrote:' (some other clients).
-        $message = preg_replace("/^---.*$/mi", '', $message);
+        $message = preg_replace('/^---.*$/mi', '', $message);
 
         // Remove lines like '____________' (some other clients).
-        $message = preg_replace("/^____________.*$/mi", '', $message);
+        $message = preg_replace('/^____________.*$/mi', '', $message);
 
         // Remove blocks of text with formats like:
         //   - 'From: Sent: To: Subject:'
         //   - 'From: To: Sent: Subject:'
         //   - 'From: Date: To: Reply-to: Subject:'
-        $message = preg_replace("/From:.*^(To:).*^(Subject:).*/sm", '', $message);
+        $message = preg_replace('/From:.*^(To:).*^(Subject:).*/sm', '', $message);
 
         // Remove any remaining whitespace.
         $message = trim($message);

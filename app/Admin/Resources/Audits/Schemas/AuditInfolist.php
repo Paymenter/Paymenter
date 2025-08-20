@@ -15,11 +15,11 @@ class AuditInfolist
         return $schema
             ->components([
                 TextEntry::make('user_id')
-                    ->url(fn(Audit $record): string => $record->user_id ? UserResource::getUrl('edit', [$record->user_id]) : '')
-                    ->formatStateUsing(fn(Audit $record): string => $record->user->name)
+                    ->url(fn (Audit $record): string => $record->user_id ? UserResource::getUrl('edit', [$record->user_id]) : '')
+                    ->formatStateUsing(fn (Audit $record): string => $record->user->name)
                     ->placeholder('System'),
                 TextEntry::make('event')
-                    ->formatStateUsing(fn(Audit $record): string => $record->event . ' - ' . class_basename($record->auditable_type) . ' (' . $record->auditable_id . ')')
+                    ->formatStateUsing(fn (Audit $record): string => $record->event . ' - ' . class_basename($record->auditable_type) . ' (' . $record->auditable_id . ')')
                     ->url(function (Audit $record) {
                         if (isset(AuditsTable::TYPE_TO_RESOURCE[class_basename($record->auditable_type)])) {
                             return AuditsTable::TYPE_TO_RESOURCE[class_basename($record->auditable_type)]::getUrl('edit', [$record->auditable_id]);

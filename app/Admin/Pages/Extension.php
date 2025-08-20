@@ -45,7 +45,7 @@ class Extension extends Page implements HasActions, HasTable
                     ->label('Extension Name')
                     ->searchable()
                     ->sortable()
-                    ->state(fn($record) => $record['meta'] ? $record['meta']->name . ' (' . $record['meta']->author . ')' : $record['name']),
+                    ->state(fn ($record) => $record['meta'] ? $record['meta']->name . ' (' . $record['meta']->author . ')' : $record['name']),
                 TextColumn::make('meta.description')
                     ->label('Description')
                     ->searchable()

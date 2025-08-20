@@ -4,7 +4,6 @@ namespace App\Helpers;
 
 use App\Classes\PDF;
 use App\Mail\Mail;
-use App\Mail\TicketReply;
 use App\Models\EmailLog;
 use App\Models\EmailTemplate;
 use App\Models\Invoice;
@@ -17,7 +16,6 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Mail as FacadesMail;
 use Illuminate\Support\Facades\URL;
-use Closure;
 
 class NotificationHelper
 {
@@ -67,7 +65,7 @@ class NotificationHelper
             'invoice' => $invoice,
             'items' => $invoice->items,
             'total' => $invoice->formattedTotal,
-            'has_subscription' => $invoice->items->filter(fn($item) => $item->reference_type === Service::class && $item->reference->subscription_id)->isNotEmpty(),
+            'has_subscription' => $invoice->items->filter(fn ($item) => $item->reference_type === Service::class && $item->reference->subscription_id)->isNotEmpty(),
         ];
 
         // Generate the invoice PDF

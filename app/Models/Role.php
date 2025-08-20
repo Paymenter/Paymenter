@@ -7,7 +7,7 @@ use OwenIt\Auditing\Contracts\Auditable;
 
 class Role extends Model implements Auditable
 {
-    use HasFactory, \App\Models\Traits\Auditable;
+    use \App\Models\Traits\Auditable, HasFactory;
 
     /**
      * The attributes that are mass assignable.

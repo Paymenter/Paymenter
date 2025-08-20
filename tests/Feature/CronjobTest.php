@@ -9,6 +9,7 @@ use Tests\TestCase;
 class CronjobTest extends TestCase
 {
     use RefreshDatabase;
+
     /**
      * A basic unit test example.
      */
@@ -50,7 +51,7 @@ class CronjobTest extends TestCase
     public function test_invoices_are_paid_with_credits_if_available(): void
     {
         $user = \App\Models\User::factory()->create();
-        
+
         $user->credits()->create([
             'currency_code' => 'USD',
             'amount' => 10.00,
@@ -127,7 +128,6 @@ class CronjobTest extends TestCase
 
         // Making sure the cronjob_order_suspend is set to 2 days
         config(['settings.cronjob_order_suspend' => 2]);
-
 
         // Create a subscription for the user
         $service = \App\Models\Service::factory()->create([

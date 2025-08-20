@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Ticket;
 use App\Models\TicketMessageAttachment;
 
 class TicketAttachmentController extends Controller

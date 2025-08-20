@@ -80,8 +80,7 @@ class UploadExtensionService
         // Execute the upgraded method if it exists
         if ($updating) {
             Process::fromShellCommandline('php artisan app:upgrade ' . $type['type'] . ' ' . $type['class'] . ' ' . ($oldVersion ?? ''))
-                ->run(function ($type, $output) {
-                });
+                ->run(function ($type, $output) {});
         }
     }
 

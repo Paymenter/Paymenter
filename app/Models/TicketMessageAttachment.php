@@ -2,12 +2,10 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Concerns\HasUuids;
-
 use Illuminate\Support\Str;
 
 class TicketMessageAttachment extends Model
-{    
+{
     protected $fillable = [
         'path',
         'filename',

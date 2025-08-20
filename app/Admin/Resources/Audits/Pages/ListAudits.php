@@ -3,7 +3,6 @@
 namespace App\Admin\Resources\Audits\Pages;
 
 use App\Admin\Resources\Audits\AuditResource;
-use Filament\Actions\CreateAction;
 use Filament\Resources\Pages\ListRecords;
 
 class ListAudits extends ListRecords

@@ -79,7 +79,7 @@ class EditProduct extends EditRecord
                 })->after(function (Product $record) {
                     $record->settings()->delete();
                 }),
-            AuditAction::make()
+            AuditAction::make(),
         ];
     }
 

@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Models;
+
 use OwenIt\Auditing\Contracts\Auditable;
 
 class ApiKey extends Model implements Auditable

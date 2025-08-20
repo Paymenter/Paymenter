@@ -4,15 +4,15 @@ namespace App\Models;
 
 use App\Models\Traits\HasPlans;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use OwenIt\Auditing\Contracts\Auditable;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
+use OwenIt\Auditing\Contracts\Auditable;
 
 class Product extends Model implements Auditable
 {
-    use HasFactory, HasPlans, \App\Models\Traits\Auditable;
+    use \App\Models\Traits\Auditable, HasFactory, HasPlans;
 
     protected $guarded = [];
 

@@ -8,7 +8,7 @@ use OwenIt\Auditing\Contracts\Auditable;
 
 class ConfigOption extends Model implements Auditable
 {
-    use HasFactory, HasPlans, \App\Models\Traits\Auditable;
+    use \App\Models\Traits\Auditable, HasFactory, HasPlans;
 
     protected $dontShowUnavailablePrice = true;
 

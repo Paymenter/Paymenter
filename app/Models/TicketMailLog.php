@@ -2,8 +2,6 @@
 
 namespace App\Models;
 
-
-
 class TicketMailLog extends Model
 {
     protected $fillable = [

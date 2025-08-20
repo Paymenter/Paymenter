@@ -37,7 +37,6 @@ class InvoiceResource extends Resource
 
     protected static ?string $cluster = InvoiceCluster::class;
 
-
     protected static string|\BackedEnum|null $navigationIcon = 'ri-receipt-line';
 
     protected static string|\BackedEnum|null $activeNavigationIcon = 'ri-receipt-fill';
@@ -99,8 +98,8 @@ class InvoiceResource extends Resource
                         TextInput::make('price')
                             ->label('Price')
                             // Grab invoice currency
-                            ->prefix(fn(Get $get): ?string => Currency::where('code', $get('../../currency_code'))->first()?->prefix)
-                            ->suffix(fn(Get $get): ?string => Currency::where('code', $get('../../currency_code'))->first()?->suffix)
+                            ->prefix(fn (Get $get): ?string => Currency::where('code', $get('../../currency_code'))->first()?->prefix)
+                            ->suffix(fn (Get $get): ?string => Currency::where('code', $get('../../currency_code'))->first()?->suffix)
                             ->required()
                             ->numeric()
                             ->mask(RawJs::make(
@@ -123,7 +122,7 @@ class InvoiceResource extends Resource
                                         return ServiceResource::getUrl('edit', ['record' => $get('reference_id')]);
                                     })
                                     ->label('View Service')
-                                    ->hidden(fn(Get $get): bool => !in_array($get('reference_type'), [Service::class, ServiceUpgrade::class]))
+                                    ->hidden(fn (Get $get): bool => !in_array($get('reference_type'), [Service::class, ServiceUpgrade::class]))
                             )
                             ->placeholder('Enter the description of the product'),
                         Hidden::make('reference_type'),
@@ -146,13 +145,13 @@ class InvoiceResource extends Resource
                     ->sortable(),
                 TextColumn::make('user.name')
                     ->label('User')
-                    ->searchable(true, fn(Builder $query, string $search) => $query->whereHas('user', fn(Builder $query) => $query->where('first_name', 'like', "%$search%")->orWhere('last_name', 'like', "%$search%"))),
+                    ->searchable(true, fn (Builder $query, string $search) => $query->whereHas('user', fn (Builder $query) => $query->where('first_name', 'like', "%$search%")->orWhere('last_name', 'like', "%$search%"))),
                 TextColumn::make('status')
                     ->label('Status')
                     // Make first letter uppercase
-                    ->formatStateUsing(fn(string $state): string => ucfirst($state))
+                    ->formatStateUsing(fn (string $state): string => ucfirst($state))
                     ->badge()
-                    ->color(fn(string $state): string => match ($state) {
+                    ->color(fn (string $state): string => match ($state) {
                         'paid' => 'success',
                         'pending' => 'warning',
                         default => 'danger',

@@ -13,7 +13,7 @@ use OwenIt\Auditing\Contracts\Auditable;
 #[ObservedBy([InvoiceObserver::class])]
 class Invoice extends Model implements Auditable
 {
-    use HasFactory, \App\Models\Traits\Auditable;
+    use \App\Models\Traits\Auditable, HasFactory;
 
     public const STATUS_PENDING = 'pending';
 
@@ -37,7 +37,7 @@ class Invoice extends Model implements Auditable
     public function total(): Attribute
     {
         return Attribute::make(
-            get: fn() => $this->items->sum(fn($item) => $item->price * $item->quantity)
+            get: fn () => $this->items->sum(fn ($item) => $item->price * $item->quantity)
         );
     }
 
@@ -49,7 +49,7 @@ class Invoice extends Model implements Auditable
     public function formattedTotal(): Attribute
     {
         return Attribute::make(
-            get: fn() => new Price(['price' => $this->total, 'currency' => $this->currency])
+            get: fn () => new Price(['price' => $this->total, 'currency' => $this->currency])
         );
     }
 
@@ -59,7 +59,7 @@ class Invoice extends Model implements Auditable
     public function formattedRemaining(): Attribute
     {
         return Attribute::make(
-            get: fn() => new Price(['price' => $this->remaining, 'currency' => $this->currency])
+            get: fn () => new Price(['price' => $this->remaining, 'currency' => $this->currency])
         );
     }
 
@@ -69,7 +69,7 @@ class Invoice extends Model implements Auditable
     public function remaining(): Attribute
     {
         return Attribute::make(
-            get: fn() => $this->total - $this->transactions->sum('amount')
+            get: fn () => $this->total - $this->transactions->sum('amount')
         );
     }
 
@@ -96,7 +96,7 @@ class Invoice extends Model implements Auditable
     public function pdf(): Attribute
     {
         return Attribute::make(
-            get: fn() => PDF::generateInvoice($this)
+            get: fn () => PDF::generateInvoice($this)
         );
     }
 }

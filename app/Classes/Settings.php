@@ -118,7 +118,7 @@ class Settings
                     'database_type' => 'array',
                     'placeholder' => 'IP Addresses or CIDR (e.g. 1.1.1.1/32 or 2606:4700:4700::1111)',
                     'nested_validation' => [
-                        new Cidr(allowWildCard: true)
+                        new Cidr(allowWildCard: true),
                     ],
                 ],
             ],
@@ -328,26 +328,26 @@ class Settings
                     'name' => 'ticket_mail_host',
                     'label' => 'Email Host',
                     'type' => 'text',
-                    'required' => fn(Get $get) => $get('ticket_mail_piping'),
+                    'required' => fn (Get $get) => $get('ticket_mail_piping'),
                 ],
                 [
                     'name' => 'ticket_mail_port',
                     'label' => 'Email Port',
                     'type' => 'number',
-                    'required' => fn(Get $get) => $get('ticket_mail_piping'),
+                    'required' => fn (Get $get) => $get('ticket_mail_piping'),
                     'default' => 993,
                 ],
                 [
                     'name' => 'ticket_mail_email',
                     'label' => 'Email Address',
                     'type' => 'email',
-                    'required' => fn(Get $get) => $get('ticket_mail_piping'),
+                    'required' => fn (Get $get) => $get('ticket_mail_piping'),
                 ],
                 [
                     'name' => 'ticket_mail_password',
                     'label' => 'Email Password',
                     'type' => 'password',
-                    'required' => fn(Get $get) => $get('ticket_mail_piping'),
+                    'required' => fn (Get $get) => $get('ticket_mail_piping'),
                 ],
             ],
 

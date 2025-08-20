@@ -10,7 +10,7 @@ use OwenIt\Auditing\Contracts\Auditable;
 #[ObservedBy([PropertyObserver::class])]
 class Property extends Model implements Auditable
 {
-    use HasFactory, \App\Models\Traits\Auditable;
+    use \App\Models\Traits\Auditable, HasFactory;
 
     public $guarded = [];
 

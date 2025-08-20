@@ -6,13 +6,12 @@ use App\Attributes\DisabledIf;
 use App\Livewire\Component;
 use App\Models\Ticket;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Str;
 use Livewire\Attributes\Locked;
 use Livewire\Attributes\Rule;
 use Livewire\Attributes\Validate;
 use Livewire\Features\SupportFileUploads\WithFileUploads;
-use Illuminate\Support\Str;
-use Illuminate\Support\Facades\File;
 
 #[DisabledIf('tickets_disabled')]
 class Show extends Component
@@ -49,7 +48,6 @@ class Show extends Component
                 'filesize' => File::size(storage_path('app/' . $path)),
             ]);
         }
-
 
         $this->notify('Message sent successfully');
 

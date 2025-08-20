@@ -30,7 +30,7 @@ class EditUser extends EditRecord
                 'services',
                 'tickets',
                 'credits',
-                'orders'
+                'orders',
             ]),
         ];
     }

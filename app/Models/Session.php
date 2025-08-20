@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Session as FacadesSession;
 use Throwable;

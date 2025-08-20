@@ -87,8 +87,8 @@ class EditService extends EditRecord
                 'invoices',
                 'properties',
                 'configs',
-                'invoiceItems'
-            ])
+                'invoiceItems',
+            ]),
         ];
     }
 }

@@ -4,7 +4,6 @@ namespace App\Admin\Clusters;
 
 use App\Models\Invoice;
 use Filament\Clusters\Cluster;
-use Filament\Support\Icons\Heroicon;
 
 class InvoiceCluster extends Cluster
 {

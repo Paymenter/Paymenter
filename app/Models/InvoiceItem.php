@@ -12,7 +12,7 @@ use OwenIt\Auditing\Contracts\Auditable;
 #[ObservedBy([InvoiceItemObserver::class])]
 class InvoiceItem extends Model implements Auditable
 {
-    use HasFactory, \App\Models\Traits\Auditable;
+    use \App\Models\Traits\Auditable, HasFactory;
 
     protected $fillable = [
         'invoice_id',
@@ -52,14 +52,14 @@ class InvoiceItem extends Model implements Auditable
     public function formattedTotal(): Attribute
     {
         return Attribute::make(
-            get: fn() => new Price(['price' => $this->total(), 'currency' => $this->invoice->currency])
+            get: fn () => new Price(['price' => $this->total(), 'currency' => $this->invoice->currency])
         );
     }
 
     public function formattedPrice(): Attribute
     {
         return Attribute::make(
-            get: fn() => new Price(['price' => $this->price, 'currency' => $this->invoice->currency])
+            get: fn () => new Price(['price' => $this->price, 'currency' => $this->invoice->currency])
         );
     }
 }
