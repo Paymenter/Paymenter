@@ -5,8 +5,11 @@
 FROM --platform=$TARGETOS/$TARGETARCH node:22-alpine AS build
 WORKDIR /app
 COPY . ./
-RUN npm install \
-    && npm run build 
+RUN apk add --no-cache php php-cli php-phar php-json php-mbstring php-tokenizer php-xml php-zip curl \
+    && curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer \
+    && composer install --no-dev --optimize-autoloader \
+    && npm install \
+    && npm run build
 
 # Stage 1:
 # Build the actual container with all of the needed PHP dependencies that will run the application.
