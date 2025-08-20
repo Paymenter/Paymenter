@@ -2,6 +2,7 @@
 
 namespace App\Helpers;
 
+use App\Attributes\ExtensionMeta;
 use App\Classes\FilamentInput;
 use App\Models\Extension;
 use App\Models\Gateway;
@@ -11,7 +12,14 @@ use App\Models\Server;
 use App\Models\Service;
 use Exception;
 use Filament\Forms\Components\Placeholder;
-use Illuminate\Support\Facades\Cache;
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Log;
+use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
+use ReflectionClass;
 
 class ExtensionHelper
 {
@@ -124,7 +132,7 @@ class ExtensionHelper
     {
         $extensions = [];
 
-        $classmap = require_once base_path('vendor/composer/autoload_classmap.php');
+        $classmap = require base_path('vendor/composer/autoload_classmap.php');
 
         // Magic code so we can also support extensions that don't reside in the extensions folder
         foreach ($classmap as $class => $path) {
@@ -150,9 +158,13 @@ class ExtensionHelper
                 continue;
             }
 
+            $reflection = new ReflectionClass($class);
+            $attributes = $reflection->getAttributes(ExtensionMeta::class);
+
             $extensions[] = [
                 'name' => $name,
                 'type' => $type,
+                'meta' => $attributes ? $attributes[0]->newInstance() : null,
             ];
         }
 
@@ -173,15 +185,29 @@ class ExtensionHelper
 
                 // Check if the class exists
                 if (class_exists('\\Paymenter\\Extensions\\' . ucfirst($type) . 's\\' . $name . '\\' . $name)) {
+                    $reflection = new ReflectionClass('\\Paymenter\\Extensions\\' . ucfirst($type) . 's\\' . $name . '\\' . $name);
+                    $attributes = $reflection->getAttributes(ExtensionMeta::class);
+
                     $extensions[] = [
                         'name' => $name,
                         'type' => $type,
+                        'meta' => $attributes ? $attributes[0]->newInstance() : null,
                     ];
                 }
             }
         }
 
         return $extensions;
+    }
+
+    public static function getInstallableExtensions()
+    {
+        $extensions = self::getExtensions('other');
+
+        // Filter out already installed extensions
+        $installedExtensions = Extension::all()->pluck('extension')->toArray();
+
+        return array_filter($extensions, fn ($extension) => !in_array($extension['name'], $installedExtensions));
     }
 
     public static function call($extension, $function, $args = [], $mayFail = false)
@@ -233,7 +259,7 @@ class ExtensionHelper
                 $config['name'] = 'settings.' . $config['name'];
                 $settings[] = FilamentInput::convert($config);
             }
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $settings[] = Placeholder::make('error')->content($e->getMessage());
             // Handle exception
         }
@@ -261,34 +287,12 @@ class ExtensionHelper
             return $values;
         }
 
-        if ($values instanceof \Livewire\Features\SupportFileUploads\TemporaryUploadedFile) {
+        if ($values instanceof TemporaryUploadedFile) {
             // Store the file and use the path, or just use the filename if already stored
             return $values->getRealPath() ?: (string) $values;
         }
 
         return $values;
-    }
-
-    /**
-     * Get available settings
-     *
-     * @return array
-     */
-    public static function getProductConfigOnce($server, $values = [])
-    {
-        static $config = [];
-
-        $config = Cache::get('product_config', []);
-
-        $key = $server->extension . $server->id . md5(serialize(self::prepareForSerialization($values)));
-
-        if (!isset($config[$key])) {
-            $config[$key] = self::getProductConfig($server, $values);
-        }
-
-        Cache::put('product_config', $config, 60);
-
-        return $config[$key];
     }
 
     /**
@@ -301,12 +305,12 @@ class ExtensionHelper
     {
         $settingsArray = [];
 
-        if ($settings instanceof \Illuminate\Database\Eloquent\Collection) {
+        if ($settings instanceof Collection) {
             // If $settings is a collection of models
             foreach ($settings as $setting) {
                 $settingsArray[$setting->key] = $setting->value;
             }
-        } elseif ($settings instanceof \Illuminate\Database\Eloquent\Model) {
+        } elseif ($settings instanceof Model) {
             // If $settings is a single model
             $settingsArray[$settings->name] = $settings->value;
         }
@@ -331,13 +335,13 @@ class ExtensionHelper
      *
      * @return array
      */
-    public static function getCheckoutGateways($items, $type)
+    public static function getCheckoutGateways($total, $currency, $type, $items = [])
     {
         $gateways = [];
 
         foreach (Gateway::all() as $gateway) {
             if (self::hasFunction($gateway, 'canUseGateway')) {
-                if (self::getExtension('gateway', $gateway->extension, $gateway->settings)->canUseGateway($items, $type)) {
+                if (self::getExtension('gateway', $gateway->extension, $gateway->settings)->canUseGateway($total, $currency, $type, $items)) {
                     $gateways[] = $gateway;
                 }
             } else {
@@ -358,6 +362,8 @@ class ExtensionHelper
 
     /**
      * Add payment to invoice
+     * @param  Invoice|int  $invoice
+     * @param  Gateway|null  $gateway
      */
     public static function addPayment($invoice, $gateway, $amount, $fee = null, $transactionId = null)
     {
@@ -366,14 +372,15 @@ class ExtensionHelper
         }
 
         $invoice = Invoice::findOrFail($invoice);
+
         if (!$transactionId) {
-            $invoice->transactions()->create([
+            $transaction = $invoice->transactions()->create([
                 'gateway_id' => $gateway ? $gateway->id : null,
                 'amount' => $amount,
                 'fee' => $fee,
             ]);
         } else {
-            $invoice->transactions()->updateOrCreate(
+            $transaction = $invoice->transactions()->updateOrCreate(
                 [
                     'transaction_id' => $transactionId,
                 ],
@@ -384,6 +391,8 @@ class ExtensionHelper
                 ]
             );
         }
+
+        return $transaction;
     }
 
     /**
@@ -506,5 +515,56 @@ class ExtensionHelper
         $server = self::checkServer($service, $function);
 
         return self::getExtension('server', $server->extension, $server->settings)->$function($service, self::settingsToArray($service->product->settings), self::getServiceProperties($service), $view['name']);
+    }
+
+    /**
+     * Revert migrations for a specific extension
+     */
+    public static function rollbackMigrations($path)
+    {
+        $migrationFiles = glob(base_path($path . '/*.php'));
+
+        if (empty($migrationFiles)) {
+            return;
+        }
+
+        // Sort by filename to ensure correct order
+        usort($migrationFiles, function ($a, $b) {
+            return strcmp(basename($a), basename($b));
+        });
+
+        // Reverse the order to rollback in the correct sequence
+        $migrationFiles = array_reverse($migrationFiles);
+
+        foreach ($migrationFiles as $file) {
+            $migrationName = basename($file, '.php');
+            try {
+                $migration = require_once $file;
+                // return new class extends Migration
+                if (method_exists($migration, 'down') && DB::table('migrations')->where('migration', $migrationName)->exists()) {
+                    $migration->down();
+                    DB::table('migrations')->where('migration', $migrationName)->delete();
+                }
+            } catch (Exception $e) {
+                Log::error('Failed to rollback migration: ' . $migrationName . ' - ' . $e->getMessage());
+            }
+        }
+    }
+
+    /**
+     * Run migrations for a specific extension
+     */
+    public static function runMigrations($path)
+    {
+        try {
+            Artisan::call('migrate', [
+                '--path' => $path,
+                '--force' => true,
+            ]);
+            $output = Artisan::output();
+            Log::debug('Migrations output: ' . $output);
+        } catch (Exception $e) {
+            Log::error('Failed to run migrations for path: ' . $path . ' - ' . $e->getMessage());
+        }
     }
 }

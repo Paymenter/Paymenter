@@ -3,9 +3,10 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
+
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Session as FacadesSession;
+use Throwable;
 
 class Session extends Model
 {
@@ -43,7 +44,7 @@ class Session extends Model
             $data = unserialize($decoded);
 
             return !empty($data['impersonating']);
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             return false;
         }
     }

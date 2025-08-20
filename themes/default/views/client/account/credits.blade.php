@@ -20,18 +20,18 @@
         <form wire:submit.prevent="addCredit">
             <!-- Currency and amount -->
             <div class="grid grid-cols-2 gap-4">
-                <x-form.select name="currency" :label="__('account.input.currency')" wire:model="currency" required>
+                <x-form.select name="currency" :label="__('account.input.currency')" wire:model.live="currency" required>
                     @foreach(\App\Models\Currency::all() as $currency)
                     <option value="{{ $currency->code }}">{{ $currency->code }}</option>
                     @endforeach
                 </x-form.select>
                 <x-form.input x-mask:dynamic="$money($input, '.', '', 2)" name="amount" type="number"
                     :label="__('account.input.amount')" :placeholder="__('account.input.amount_placeholder')"
-                    wire:model="amount" required />
+                    wire:model.live.debounce.250ms="amount" required />
 
-                <x-form.select name="gateway" :label="__('product.payment_method')" wire:model="gateway" required>
-                    @foreach(\App\Models\Gateway::all() as $gateway)
-                    <option value="{{ $gateway->id }}">{{ $gateway->name }}</option>
+                <x-form.select name="gateway" :label="__('product.payment_method')" wire:model.live="gateway" required>
+                    @foreach($gateways as $gatewayy)
+                    <option value="{{ $gatewayy->id }}" wire:key="{{ $gatewayy->id }}" @if($gatewayy->id == $gateway) selected @endif>{{ $gatewayy->name }}</option>
                     @endforeach
                 </x-form.select>
             </div>

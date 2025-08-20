@@ -7,12 +7,12 @@ use App\Observers\InvoiceItemObserver;
 use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
+use OwenIt\Auditing\Contracts\Auditable;
 
 #[ObservedBy([InvoiceItemObserver::class])]
-class InvoiceItem extends Model
+class InvoiceItem extends Model implements Auditable
 {
-    use HasFactory;
+    use HasFactory, \App\Models\Traits\Auditable;
 
     protected $fillable = [
         'invoice_id',
@@ -23,6 +23,10 @@ class InvoiceItem extends Model
         'gateway_id',
         'reference_id',
         'reference_type',
+    ];
+
+    protected $casts = [
+        'price' => 'decimal:2',
     ];
 
     public function invoice()
@@ -48,14 +52,14 @@ class InvoiceItem extends Model
     public function formattedTotal(): Attribute
     {
         return Attribute::make(
-            get: fn () => new Price(['price' => $this->total(), 'currency' => $this->invoice->currency])
+            get: fn() => new Price(['price' => $this->total(), 'currency' => $this->invoice->currency])
         );
     }
 
     public function formattedPrice(): Attribute
     {
         return Attribute::make(
-            get: fn () => new Price(['price' => $this->price, 'currency' => $this->invoice->currency])
+            get: fn() => new Price(['price' => $this->price, 'currency' => $this->invoice->currency])
         );
     }
 }

@@ -13,6 +13,7 @@ use App\Models\Invoice;
 use App\Models\Order;
 use App\Models\Service;
 use App\Models\User;
+use Exception;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -51,7 +52,7 @@ class Cart extends Component
             return;
         }
         $this->total = new Price(['price' => ClassesCart::get()->sum(fn ($item) => $item->price->price * $item->quantity), 'currency' => ClassesCart::get()->first()->price->currency]);
-        $this->gateways = ExtensionHelper::getCheckoutGateways(ClassesCart::get(), 'cart');
+        $this->gateways = ExtensionHelper::getCheckoutGateways($this->total->price, $this->total->currency->code, 'cart', ClassesCart::get());
         if (count($this->gateways) > 0 && !array_search($this->gateway, array_column($this->gateways, 'id')) !== false) {
             $this->gateway = $this->gateways[0]->id;
         }
@@ -276,7 +277,7 @@ class Cart extends Component
             } else {
                 return $this->redirect(route('invoices.show', $invoice) . '?pay');
             }
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             // Rollback the transaction
             DB::rollBack();
             // Return error message

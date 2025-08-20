@@ -2,7 +2,9 @@
 
 namespace App\Providers;
 
+use App\Classes\Settings;
 use App\Models\Setting;
+use Exception;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Config;
@@ -43,7 +45,7 @@ class SettingsProvider extends ServiceProvider
                 return;
             }
             config(['settings' => $settings]);
-            foreach (\App\Classes\Settings::settings() as $settings) {
+            foreach (Settings::settings() as $settings) {
                 foreach ($settings as $setting) {
                     if (isset($setting['override']) && config("settings.$setting[name]") !== null) {
                         config([$setting['override'] => config("settings.$setting[name]")]);
@@ -63,7 +65,7 @@ class SettingsProvider extends ServiceProvider
             URL::forceRootUrl(config('app.url'));
 
             Config::set('filesystems.disks.public.url', config('app.url') . '/storage');
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             // Do nothing
         }
     }

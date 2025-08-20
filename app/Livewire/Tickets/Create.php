@@ -5,6 +5,7 @@ namespace App\Livewire\Tickets;
 use App\Attributes\DisabledIf;
 use App\Livewire\Component;
 use App\Models\Ticket;
+use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Facades\Storage;
@@ -82,7 +83,7 @@ class Create extends Component
 
     public function render()
     {
-        /** @var \App\Models\User */
+        /** @var User */
         $user = Auth::user();
 
         return view('tickets.create', [

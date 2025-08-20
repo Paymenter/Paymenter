@@ -2,12 +2,14 @@
 
 namespace App\Admin\Resources;
 
-use App\Admin\Resources\FailedJobResource\Pages;
+use App\Admin\Resources\FailedJobResource\Pages\ListFailedJobs;
 use App\Models\FailedJob;
+use Exception;
+use Filament\Actions\Action;
+use Filament\Actions\BulkAction;
 use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
-use Filament\Tables;
-use Filament\Tables\Actions\BulkAction;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Artisan;
@@ -16,11 +18,11 @@ class FailedJobResource extends Resource
 {
     protected static ?string $model = FailedJob::class;
 
-    protected static ?string $navigationIcon = 'ri-error-warning-line';
+    protected static string|\BackedEnum|null $navigationIcon = 'ri-error-warning-line';
 
-    protected static ?string $activeNavigationIcon = 'ri-error-warning-fill';
+    protected static string|\BackedEnum|null $activeNavigationIcon = 'ri-error-warning-fill';
 
-    protected static ?string $navigationGroup = 'Other';
+    protected static string|\UnitEnum|null $navigationGroup = 'Other';
 
     public static function getNavigationBadge(): ?string
     {
@@ -36,23 +38,23 @@ class FailedJobResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('uuid')->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('payload')->formatStateUsing(function ($state) {
+                TextColumn::make('uuid')->toggleable(isToggledHiddenByDefault: true),
+                TextColumn::make('payload')->formatStateUsing(function ($state) {
                     $state = json_decode($state);
 
                     // List displayName
                     return $state->displayName;
                 }),
-                Tables\Columns\TextColumn::make('exception')->formatStateUsing(function ($state) {
+                TextColumn::make('exception')->formatStateUsing(function ($state) {
                     return explode("\n", $state)[0];
                 })->wrap()->tooltip(function ($state) {
                     return $state;
                 })->limit(200),
-                Tables\Columns\TextColumn::make('failed_at'),
+                TextColumn::make('failed_at'),
             ])
             ->poll()
-            ->actions([
-                Tables\Actions\Action::make('retry')
+            ->recordActions([
+                Action::make('retry')
                     ->label('Retry')
                     ->requiresConfirmation()
                     ->action(function (FailedJob $record): void {
@@ -62,7 +64,7 @@ class FailedJobResource extends Resource
                             ->success()
                             ->send();
                     }),
-                Tables\Actions\Action::make('delete')
+                Action::make('delete')
                     ->label('Mark as Resolved')
                     ->requiresConfirmation()
                     ->color('danger')
@@ -70,7 +72,7 @@ class FailedJobResource extends Resource
                         $failedJob->delete();
                     }),
             ])
-            ->bulkActions([
+            ->toolbarActions([
                 BulkAction::make('retry')
                     ->label('Retry')
                     ->requiresConfirmation()
@@ -78,7 +80,7 @@ class FailedJobResource extends Resource
                         foreach ($records as $record) {
                             try {
                                 Artisan::call("queue:retry {$record->uuid}");
-                            } catch (\Exception $e) {
+                            } catch (Exception $e) {
                                 Notification::make()
                                     ->title($e->getMessage())
                                     ->warning()
@@ -105,7 +107,7 @@ class FailedJobResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListFailedJobs::route('/'),
+            'index' => ListFailedJobs::route('/'),
         ];
     }
 }

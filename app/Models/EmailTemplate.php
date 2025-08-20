@@ -3,11 +3,11 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
+use OwenIt\Auditing\Contracts\Auditable;
 
-class EmailTemplate extends Model
+class EmailTemplate extends Model implements Auditable
 {
-    use HasFactory;
+    use HasFactory, \App\Models\Traits\Auditable;
 
     protected $fillable = [
         'key',

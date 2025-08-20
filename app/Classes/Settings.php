@@ -2,8 +2,13 @@
 
 namespace App\Classes;
 
+use App\Models\Currency;
 use App\Models\Setting;
 use App\Models\TaxRate;
+use App\Rules\Cidr;
+use DateTimeZone;
+use Exception;
+use Filament\Schemas\Components\Utilities\Get;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\HtmlString;
 use Ramsey\Uuid\Uuid;
@@ -15,20 +20,27 @@ class Settings
         try {
             // Only code is needed
             $currencies = once(function () {
-                return \App\Models\Currency::pluck('code')->toArray();
+                return Currency::pluck('code')->toArray();
             });
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $currencies = [];
         }
         $settings = [
             // Split settings into groups (only used in the settings page for organization)
             'general' => [
                 [
+                    'name' => 'company_name',
+                    'label' => 'Company Name',
+                    'type' => 'text',
+                    'override' => 'app.name',
+                    'default' => 'Paymenter',
+                ],
+                [
                     'name' => 'timezone',
                     'label' => 'Timezone',
                     'type' => 'select',
                     // Read timezones from PHP
-                    'options' => \DateTimeZone::listIdentifiers(\DateTimeZone::ALL),
+                    'options' => DateTimeZone::listIdentifiers(DateTimeZone::ALL),
                     'default' => 'UTC',
                     'required' => true,
                     'override' => 'app.timezone',
@@ -105,6 +117,9 @@ class Settings
                     'type' => 'tags',
                     'database_type' => 'array',
                     'placeholder' => 'IP Addresses or CIDR (e.g. 1.1.1.1/32 or 2606:4700:4700::1111)',
+                    'nested_validation' => [
+                        new Cidr(allowWildCard: true)
+                    ],
                 ],
             ],
 
@@ -171,67 +186,6 @@ class Settings
                     'label' => 'Discord Client Secret',
                     'type' => 'text',
                     'required' => false,
-                ],
-            ],
-
-            'company-details' => [
-                [
-                    'name' => 'company_name',
-                    'label' => 'Company Name',
-                    'type' => 'text',
-                    'override' => 'app.name',
-                    'default' => 'Paymenter',
-                ],
-                [
-                    'name' => 'company_email',
-                    'label' => 'Company Email',
-                    'type' => 'email',
-                ],
-                [
-                    'name' => 'company_phone',
-                    'label' => 'Company Phone',
-                    'type' => 'text',
-                ],
-                [
-                    'name' => 'company_address',
-                    'label' => 'Company Address',
-                    'type' => 'text',
-                ],
-                [
-                    'name' => 'company_address2',
-                    'label' => 'Company Address 2',
-                    'type' => 'text',
-                ],
-                [
-                    'name' => 'company_city',
-                    'label' => 'Company City',
-                    'type' => 'text',
-                ],
-                [
-                    'name' => 'company_state',
-                    'label' => 'Company State',
-                    'type' => 'text',
-                ],
-                [
-                    'name' => 'company_zip',
-                    'label' => 'Company Zip',
-                    'type' => 'text',
-                ],
-                [
-                    'name' => 'company_country',
-                    'label' => 'Company Country',
-                    'type' => 'select',
-                    'options' => array_merge(['' => 'None'], config('app.countries')),
-                ],
-                [
-                    'name' => 'company_tax_id',
-                    'label' => 'Company Tax ID',
-                    'type' => 'text',
-                ],
-                [
-                    'name' => 'company_id',
-                    'label' => 'Company ID',
-                    'type' => 'text',
                 ],
             ],
             'tax' => [
@@ -352,6 +306,51 @@ class Settings
                     'disable_toolbar' => true,
                 ],
             ],
+            'tickets' => [
+                [
+                    'name' => 'ticket_departments',
+                    'label' => 'Ticket Departments',
+                    'type' => 'tags',
+                    'default' => ['Support', 'Sales'],
+                    'required' => true,
+                    'database_type' => 'array',
+                ],
+                // Email piping
+                [
+                    'name' => 'ticket_mail_piping',
+                    'label' => 'Email Piping',
+                    'type' => 'checkbox',
+                    'database_type' => 'boolean',
+                    'default' => false,
+                    'live' => true,
+                ],
+                [
+                    'name' => 'ticket_mail_host',
+                    'label' => 'Email Host',
+                    'type' => 'text',
+                    'required' => fn(Get $get) => $get('ticket_mail_piping'),
+                ],
+                [
+                    'name' => 'ticket_mail_port',
+                    'label' => 'Email Port',
+                    'type' => 'number',
+                    'required' => fn(Get $get) => $get('ticket_mail_piping'),
+                    'default' => 993,
+                ],
+                [
+                    'name' => 'ticket_mail_email',
+                    'label' => 'Email Address',
+                    'type' => 'email',
+                    'required' => fn(Get $get) => $get('ticket_mail_piping'),
+                ],
+                [
+                    'name' => 'ticket_mail_password',
+                    'label' => 'Email Password',
+                    'type' => 'password',
+                    'required' => fn(Get $get) => $get('ticket_mail_piping'),
+                ],
+            ],
+
             'cronjob' => [
                 [
                     'name' => 'cronjob_invoice',
@@ -433,6 +432,14 @@ class Settings
                     'default' => 300,
                     'required' => true,
                 ],
+                [
+                    'name' => 'credits_auto_use',
+                    'label' => 'Automatically use credits',
+                    'type' => 'checkbox',
+                    'database_type' => 'boolean',
+                    'default' => true,
+                    'description' => 'Automatically pay recurring invoices using available credits. (only pays if credits is more or equal to invoice amount)',
+                ],
             ],
             'theme' => [
                 [
@@ -447,6 +454,12 @@ class Settings
                 ],
             ],
             'invoices' => [
+                [
+                    'name' => 'bill_to_text',
+                    'label' => 'Bill To Text',
+                    'type' => 'textarea',
+                    'default' => '',
+                ],
                 [
                     'name' => 'invoice_number',
                     'label' => 'Invoice Number',
@@ -500,14 +513,6 @@ class Settings
                     'required' => true,
                 ],
                 [
-                    'name' => 'ticket_departments',
-                    'label' => 'Ticket Departments',
-                    'type' => 'tags',
-                    'default' => ['Support', 'Sales'],
-                    'required' => true,
-                    'database_type' => 'array',
-                ],
-                [
                     'name' => 'registration_disabled',
                     'label' => 'Disable User Registration',
                     'type' => 'checkbox',
@@ -543,7 +548,7 @@ class Settings
         ];
 
         // Set theme settings
-        $settings['theme'] = [...$settings['theme'], ...\App\Classes\Theme::getSettings()];
+        $settings['theme'] = [...$settings['theme'], ...Theme::getSettings()];
 
         return $settings;
     }
@@ -586,7 +591,7 @@ class Settings
     {
         try {
             $uuid = Setting::where('key', 'telemetry_uuid')->value('value');
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $uuid = null;
         }
         if (is_null($uuid)) {
@@ -596,7 +601,7 @@ class Settings
                     ['key' => 'telemetry_uuid'],
                     ['value' => $uuid]
                 );
-            } catch (\Exception $e) {
+            } catch (Exception $e) {
                 // Avoid errors in workflows
             }
         }

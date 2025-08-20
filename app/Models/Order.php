@@ -7,12 +7,12 @@ use App\Observers\OrderObserver;
 use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
+use OwenIt\Auditing\Contracts\Auditable;
 
 #[ObservedBy([OrderObserver::class])]
-class Order extends Model
+class Order extends Model implements Auditable
 {
-    use HasFactory;
+    use HasFactory, \App\Models\Traits\Auditable;
 
     protected $fillable = ['user_id', 'currency_code'];
 
@@ -44,7 +44,7 @@ class Order extends Model
     public function total(): Attribute
     {
         return Attribute::make(
-            get: fn () => $this->services->sum(fn ($service) => $service->price * $service->quantity)
+            get: fn() => $this->services->sum(fn($service) => $service->price * $service->quantity)
         );
     }
 
@@ -56,7 +56,7 @@ class Order extends Model
     public function formattedTotal(): Attribute
     {
         return Attribute::make(
-            get: fn () => new Price(['price' => $this->total, 'currency' => $this->currency])
+            get: fn() => new Price(['price' => $this->total, 'currency' => $this->currency])
         );
     }
 
@@ -66,10 +66,10 @@ class Order extends Model
     public function invoices(): Attribute
     {
         // Each service has invoices (it is a hasManyThrough relationship order -> service -> invoiceItem -> invoice)
-        $invoicesId = $this->services->map(fn ($service) => $service->invoiceItems->map(fn ($invoiceItem) => $invoiceItem->invoice_id))->flatten();
+        $invoicesId = $this->services->map(fn($service) => $service->invoiceItems->map(fn($invoiceItem) => $invoiceItem->invoice_id))->flatten();
 
         return new Attribute(
-            get: fn () => Invoice::whereIn('id', $invoicesId)
+            get: fn() => Invoice::whereIn('id', $invoicesId)
         );
     }
 }

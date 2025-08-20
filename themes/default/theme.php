@@ -11,6 +11,7 @@ return [
             'label' => 'Direct Checkout',
             'type' => 'checkbox',
             'default' => false,
+            'database_type' => 'boolean',
             'description' => 'Don\'t show the product overview page, go directly to the checkout page',
         ],
         [
@@ -18,6 +19,7 @@ return [
             'label' => 'Small Images',
             'type' => 'checkbox',
             'default' => false,
+            'database_type' => 'boolean',
             'description' => 'Show small images in the product overview page',
         ],
         [
@@ -25,6 +27,7 @@ return [
             'label' => 'Show Category Description',
             'type' => 'checkbox',
             'default' => true,
+            'database_type' => 'boolean',
             'description' => 'Show the category description in the product overview page/homepage',
         ],
         [

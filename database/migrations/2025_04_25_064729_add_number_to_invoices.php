@@ -6,8 +6,7 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
     /**
      * Run the migrations.
      */
@@ -24,11 +23,13 @@ return new class extends Migration
         });
 
         // Set the default value for invoice_number to the current max value
-        Setting::updateOrCreate([
-            'key' => 'invoice_number',
-        ], [
-            'value' => DB::table('invoices')->max('id') ?: 0,
-        ]);
+        Setting::withoutEvents(function () {
+            Setting::updateOrCreate([
+                'key' => 'invoice_number',
+            ], [
+                'value' => DB::table('invoices')->max('id') ?: 0,
+            ]);
+        });
     }
 
     /**

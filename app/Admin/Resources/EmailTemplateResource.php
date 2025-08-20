@@ -2,47 +2,54 @@
 
 namespace App\Admin\Resources;
 
-use App\Admin\Resources\EmailTemplateResource\Pages;
+use App\Admin\Resources\EmailTemplateResource\Pages\CreateEmailTemplate;
+use App\Admin\Resources\EmailTemplateResource\Pages\EditEmailTemplate;
+use App\Admin\Resources\EmailTemplateResource\Pages\ListEmailTemplates;
 use App\Models\EmailTemplate;
-use Filament\Forms;
-use Filament\Forms\Form;
+use Filament\Actions\EditAction;
+use Filament\Forms\Components\MarkdownEditor;
+use Filament\Forms\Components\TagsInput;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Toggle;
 use Filament\Resources\Resource;
-use Filament\Tables;
+use Filament\Schemas\Schema;
+use Filament\Tables\Columns\IconColumn;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 
 class EmailTemplateResource extends Resource
 {
     protected static ?string $model = EmailTemplate::class;
 
-    protected static ?string $navigationIcon = 'ri-mail-settings-line';
+    protected static string|\BackedEnum|null $navigationIcon = 'ri-mail-settings-line';
 
-    protected static ?string $activeNavigationIcon = 'ri-mail-settings-fill';
+    protected static string|\BackedEnum|null $activeNavigationIcon = 'ri-mail-settings-fill';
 
-    protected static ?string $navigationGroup = 'Other';
+    protected static string|\UnitEnum|null $navigationGroup = 'Other';
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
-                Forms\Components\TextInput::make('key')
+        return $schema
+            ->components([
+                TextInput::make('key')
                     ->required()
                     ->disabledOn('edit')
                     ->maxLength(255),
-                Forms\Components\TextInput::make('subject')
+                TextInput::make('subject')
                     ->required()
                     ->maxLength(255),
-                Forms\Components\Toggle::make('enabled')
+                Toggle::make('enabled')
                     ->required(),
-                Forms\Components\MarkdownEditor::make('body')
+                MarkdownEditor::make('body')
                     ->hint('Use either Markdown or HTML to compose the email body.')
                     ->disableAllToolbarButtons()
                     ->required()
                     ->columnSpanFull(),
-                Forms\Components\TagsInput::make('cc')
+                TagsInput::make('cc')
                     ->placeholder('mail@example.com')
                     ->nestedRecursiveRules(['required', 'email'])
                     ->columnSpanFull(),
-                Forms\Components\TagsInput::make('bcc')
+                TagsInput::make('bcc')
                     ->nestedRecursiveRules(['required', 'email'])
                     ->placeholder('mail@example.com')
                     ->columnSpanFull(),
@@ -53,16 +60,16 @@ class EmailTemplateResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('subject')
+                TextColumn::make('subject')
                     ->searchable(),
-                Tables\Columns\IconColumn::make('enabled')
+                IconColumn::make('enabled')
                     ->boolean(),
             ])
             ->filters([
                 //
             ])
-            ->actions([
-                Tables\Actions\EditAction::make(),
+            ->recordActions([
+                EditAction::make(),
             ]);
     }
 
@@ -76,9 +83,9 @@ class EmailTemplateResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListEmailTemplates::route('/'),
-            'create' => Pages\CreateEmailTemplate::route('/create'),
-            'edit' => Pages\EditEmailTemplate::route('/{record}/edit'),
+            'index' => ListEmailTemplates::route('/'),
+            'create' => CreateEmailTemplate::route('/create'),
+            'edit' => EditEmailTemplate::route('/{record}/edit'),
         ];
     }
 }

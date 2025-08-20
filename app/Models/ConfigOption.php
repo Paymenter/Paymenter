@@ -4,11 +4,11 @@ namespace App\Models;
 
 use App\Models\Traits\HasPlans;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
+use OwenIt\Auditing\Contracts\Auditable;
 
-class ConfigOption extends Model
+class ConfigOption extends Model implements Auditable
 {
-    use HasFactory, HasPlans;
+    use HasFactory, HasPlans, \App\Models\Traits\Auditable;
 
     protected $dontShowUnavailablePrice = true;
 

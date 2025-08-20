@@ -5,11 +5,11 @@ namespace App\Models;
 use App\Classes\Price as PriceClass;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
+use OwenIt\Auditing\Contracts\Auditable;
 
-class Plan extends Model
+class Plan extends Model implements Auditable
 {
-    use HasFactory;
+    use HasFactory, \App\Models\Traits\Auditable;
 
     public $timestamps = false;
 
@@ -58,7 +58,7 @@ class Plan extends Model
     public function billingDuration(): Attribute
     {
         if ($this->type === 'free' || $this->type == 'one-time') {
-            return Attribute::make(get: fn () => 0);
+            return Attribute::make(get: fn() => 0);
         }
         $diffInDays = match ($this->billing_unit) {
             'day' => 1,
@@ -68,7 +68,7 @@ class Plan extends Model
         };
 
         return Attribute::make(
-            get: fn () => $diffInDays * $this->billing_period
+            get: fn() => $diffInDays * $this->billing_period
         );
     }
 

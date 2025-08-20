@@ -4,7 +4,7 @@ namespace App\Admin\Widgets;
 
 use App\Admin\Resources\TicketResource;
 use App\Models\Ticket;
-use Filament\Tables;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Filament\Widgets\TableWidget as BaseWidget;
 
@@ -24,9 +24,9 @@ class Support extends BaseWidget
                     ->limit(5)
             )
             ->columns([
-                Tables\Columns\TextColumn::make('subject')
+                TextColumn::make('subject')
                     ->label('Subject'),
-                Tables\Columns\TextColumn::make('status')
+                TextColumn::make('status')
                     ->label('Status')
                     ->badge()
                     ->color(fn (Ticket $record) => match ($record->status) {
@@ -35,9 +35,9 @@ class Support extends BaseWidget
                         'replied' => 'warning',
                     })
                     ->formatStateUsing(fn (string $state) => ucfirst($state)),
-                Tables\Columns\TextColumn::make('user.name')
+                TextColumn::make('user.name')
                     ->label('User'),
-                Tables\Columns\TextColumn::make('created_at')
+                TextColumn::make('created_at')
                     ->label('Created At'),
             ])
             ->recordUrl(fn (Ticket $record) => TicketResource::getUrl('edit', ['record' => $record]))

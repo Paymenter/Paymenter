@@ -18,7 +18,10 @@
     <div class="flex justify-end">
         <div class="max-w-[200px] w-full text-right">
             <span class="cursor-pointer text-base underline" wire:click="downloadPDF">
-                Download PDF
+                <span wire:loading wire:target="downloadPDF">
+                    <x-ri-loader-5-fill class="size-6 animate-spin" />
+                </span>
+                <span wire:loading.remove wire:target="downloadPDF">Download PDF</span>
             </span>
         </div>
     </div>
@@ -37,10 +40,7 @@
             </div>
             <div class="mt-4 sm:mt-0 text-right">
                 <p class="uppercase font-bold">{{ __('invoices.bill_to') }}</p>
-                <p>{{ config('settings.company_name') }}</p>
-                <p>{{ config('settings.company_address') }} {{ config('settings.company_address2') }}</p>
-                <p>{{ config('settings.company_zip') }} {{ config('settings.company_city') }}</p>
-                <p>{{ config('settings.company_state') }} {{ config('settings.company_country') }}</p>
+                <p>{!! nl2br(e(config('settings.bill_to_text', config('settings.company_name')))) !!}</p>
             </div>
         </div>
         <div class="sm:flex justify-between pr-4 pt-4 mt-6">

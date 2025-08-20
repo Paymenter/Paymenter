@@ -3,8 +3,11 @@
 namespace App\Admin\Resources\CouponResource\RelationManagers;
 
 use App\Admin\Resources\ServiceResource;
+use Filament\Actions\Action;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteBulkAction;
 use Filament\Resources\RelationManagers\RelationManager;
-use Filament\Tables;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 
 class ServicesRelationManager extends RelationManager
@@ -16,22 +19,22 @@ class ServicesRelationManager extends RelationManager
         return $table
             ->recordTitleAttribute('id')
             ->columns([
-                Tables\Columns\TextColumn::make('id'),
-                Tables\Columns\TextColumn::make('order.user.name')->label('User'),
-                Tables\Columns\TextColumn::make('product.name')->label('Product'),
+                TextColumn::make('id'),
+                TextColumn::make('order.user.name')->label('User'),
+                TextColumn::make('product.name')->label('Product'),
             ])
             ->filters([
                 //
             ])
             ->headerActions([])
-            ->actions([
-                Tables\Actions\Action::make('view')
+            ->recordActions([
+                Action::make('view')
                     ->label('View')
                     ->url(fn ($record) => ServiceResource::getUrl('edit', ['record' => $record])),
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+            ->toolbarActions([
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
                 ]),
             ]);
     }

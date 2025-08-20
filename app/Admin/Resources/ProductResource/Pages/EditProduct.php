@@ -2,11 +2,13 @@
 
 namespace App\Admin\Resources\ProductResource\Pages;
 
+use App\Admin\Actions\AuditAction;
 use App\Admin\Resources\ProductResource;
 use App\Helpers\ExtensionHelper;
 use App\Models\Product;
 use App\Models\Server;
-use Filament\Actions;
+use Filament\Actions\Action;
+use Filament\Actions\DeleteAction;
 use Filament\Notifications\Notification;
 use Filament\Resources\Pages\EditRecord;
 use Illuminate\Database\Eloquent\Model;
@@ -20,7 +22,7 @@ class EditProduct extends EditRecord
     protected function getHeaderActions(): array
     {
         return [
-            Actions\Action::make('duplicate')
+            Action::make('duplicate')
                 ->label('Duplicate')
                 ->requiresConfirmation()
                 ->action(function (Product $record) {
@@ -64,8 +66,8 @@ class EditProduct extends EditRecord
                         'record' => $new_record,
                     ]), true);
                 }),
-            Actions\DeleteAction::make()
-                ->before(function (Product $record, Actions\DeleteAction $action) {
+            DeleteAction::make()
+                ->before(function (Product $record, DeleteAction $action) {
                     if ($record->services()->count() > 0) {
                         Notification::make()
                             ->title('Whoops!')
@@ -77,6 +79,7 @@ class EditProduct extends EditRecord
                 })->after(function (Product $record) {
                     $record->settings()->delete();
                 }),
+            AuditAction::make()
         ];
     }
 
