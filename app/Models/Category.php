@@ -39,4 +39,8 @@ class Category extends Model implements Auditable
     {
         return $this->hasMany(Category::class, 'parent_id');
     }
+
+    protected $auditExclude = [
+        'remember_token',
+    ];
 }

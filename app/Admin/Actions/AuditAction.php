@@ -29,15 +29,15 @@ class AuditAction extends Action
         parent::setUp();
 
         $this
-            ->label('Audits')
+            ->label('📜')
             ->color('gray')
             ->slideOver()
             ->modalContent(fn (Model $record): View => view(
                 'admin.actions.audits',
                 ['record' => $record, 'children' => $this->auditChildren]
             ))
-            ->modalHeading('test')
-            ->modalWidth(Width::Large)
+            ->modalHeading('Audit Log')
+            ->modalWidth(Width::ExtraLarge)
             ->modalSubmitAction(false)
             ->modalCancelAction(false);
     }

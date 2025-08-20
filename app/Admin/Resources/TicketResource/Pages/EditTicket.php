@@ -2,6 +2,7 @@
 
 namespace App\Admin\Resources\TicketResource\Pages;
 
+use App\Admin\Actions\AuditAction;
 use App\Admin\Components\UserComponent;
 use App\Admin\Resources\ServiceResource;
 use App\Admin\Resources\TicketResource;
@@ -207,6 +208,9 @@ class EditTicket extends EditRecord
 
                             $action->redirect(TicketResource::getUrl('index'));
                         }),
+                    AuditAction::make()->auditChildren([
+                        'messages'
+                    ])
                 ])->columnSpan(['default' => 'full', 'md' => 1]),
             ]);
     }

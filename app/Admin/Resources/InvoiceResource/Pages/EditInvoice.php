@@ -2,6 +2,7 @@
 
 namespace App\Admin\Resources\InvoiceResource\Pages;
 
+use App\Admin\Actions\AuditAction;
 use App\Admin\Resources\InvoiceResource;
 use App\Classes\PDF;
 use App\Models\Invoice;
@@ -24,6 +25,11 @@ class EditInvoice extends EditRecord
                         echo PDF::generateInvoice($invoice)->stream();
                     }, 'invoice-' . $invoice->number . '.pdf');
                 }),
+            AuditAction::make()
+                ->auditChildren([
+                    'items',
+                    'transactions'
+                ])
         ];
     }
 }

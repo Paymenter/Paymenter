@@ -2,6 +2,7 @@
 
 namespace App\Admin\Resources\UserResource\Pages;
 
+use App\Admin\Actions\AuditAction;
 use App\Admin\Resources\UserResource;
 use Filament\Actions\Action;
 use Filament\Actions\DeleteAction;
@@ -24,6 +25,13 @@ class EditUser extends EditRecord
                     $this->redirect('/dashboard');
                 })
                 ->hidden(fn ($record) => Auth::user()->hasPermission('impersonate', $record) == false || Auth::user()->id == $record->id),
+            AuditAction::make()->auditChildren([
+                'invoices',
+                'services',
+                'tickets',
+                'credits',
+                'orders'
+            ]),
         ];
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Admin\Resources\ServiceResource\Pages;
 
+use App\Admin\Actions\AuditAction;
 use App\Admin\Resources\ServiceResource;
 use App\Helpers\ExtensionHelper;
 use App\Helpers\NotificationHelper;
@@ -81,7 +82,13 @@ class EditService extends EditRecord
                 })
                 ->color('primary')
                 ->modalSubmitActionLabel('Trigger'),
-
+            AuditAction::make()->auditChildren([
+                'order',
+                'invoices',
+                'properties',
+                'configs',
+                'invoiceItems'
+            ])
         ];
     }
 }
