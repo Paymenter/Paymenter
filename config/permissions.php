@@ -82,6 +82,9 @@ return [
                 'delete' => 'Delete Currencies',
                 'deleteAny' => 'Bulk Delete Currencies',
             ],
+            'audits' => [
+                'viewAny' => 'View Audits',
+            ],
             'roles' => [
                 'create' => 'Create Roles',
                 'update' => 'Update Roles',

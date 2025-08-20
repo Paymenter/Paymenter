@@ -17,7 +17,12 @@ class AuditResource extends Resource
 {
     protected static ?string $model = Audit::class;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
+    protected static string|BackedEnum|null $navigationIcon = 'ri-file-copy-2-line';
+
+    protected static string|BackedEnum|null $activeNavigationIcon = 'ri-file-copy-2-fill';
+
+    protected static string|\UnitEnum|null $navigationGroup = 'System';
+
 
     public static function infolist(Schema $schema): Schema
     {
