@@ -9,6 +9,11 @@ return [
     'department' => 'Avdeling',
     'created_at' => 'Opprettet',
     'reply' => 'Svar',
+    'attachments' => 'Attachments',
+    'upload_attachments' => 'Upload Attachments',
+    'or_drag_and_drop' => 'or drag and drop',
+    'files_max' => 'Files up to 10MB',
+    'selected_files' => 'Selected Files',
 
     'create_ticket' => 'Opprett sak',
     'select_department' => 'Velg avdeling',
