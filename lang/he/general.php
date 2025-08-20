@@ -1,15 +1,15 @@
 <?php
 
 return [
-    'view' => 'View',
+    'view' => 'תצוגה',
 
     'input' => [
-        'first_name' => 'First name',
-        'first_name_placeholder' => 'Your first name',
-        'last_name' => 'Last name',
-        'last_name_placeholder' => 'Your last name',
-        'email' => 'Email',
-        'email_placeholder' => 'Your email address',
+        'first_name' => 'שם פרטי',
+        'first_name_placeholder' => 'שם פרטי',
+        'last_name' => 'שם משפחה',
+        'last_name_placeholder' => 'שם המשפחה שלך',
+        'email' => 'דוא"ל',
+        'email_placeholder' => 'כתובת הדוא״ל שלך',
         'phone' => 'פלאפון',
         'phone_placeholder' => 'מספר הפלאפון שלך',
         'company_name' => 'שם החברה',
