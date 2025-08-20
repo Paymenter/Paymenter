@@ -13,19 +13,19 @@ return [
     |
     */
 
-    'failed' => 'These credentials do not match our records.',
-    'password' => 'The provided password is incorrect.',
-    'throttle' => 'Too many login attempts. Please try again in :seconds seconds.',
+    'failed' => 'פרטי ההזדהות שגויים.',
+    'password' => 'סיסמא שגויה.',
+    'throttle' => 'עברת את כמות ניסיונות החיבור המותרת, תוכל לנסות שוב בעוד :שניות שניות.',
 
-    'sign_in' => 'Sign in',
-    'sign_in_title' => 'Sign in to your account',
-    'or_sign_in_with' => 'Or sign in with',
-    'forgot_password' => 'Forgot your password?',
-    'dont_have_account' => 'Don\'t have an account?',
-    'already_have_account' => 'Already have an account?',
+    'sign_in' => 'התחברות',
+    'sign_in_title' => 'כניסה לחשבון',
+    'or_sign_in_with' => 'או היכנס באמצעות',
+    'forgot_password' => 'שכחת סיסמה?',
+    'dont_have_account' => 'אין לך חשבון?',
+    'already_have_account' => 'כבר יש לך חשבון?',
 
-    'sign_up' => 'Sign up',
-    'sign_up_title' => 'Create your account',
+    'sign_up' => 'הירשם',
+    'sign_up_title' => 'צור לעצמך חשבון',
 
     'logout' => 'התנתק',
 
@@ -36,20 +36,20 @@ return [
     ],
 
     'oauth' => [
-        'unverified_discord_account' => 'Your Discord account is not verified.',
-        'account_not_registered' => 'You are not registered on this site.',
+        'unverified_discord_account' => 'חשבון הדיסקורד שלך לא אומת.',
+        'account_not_registered' => 'אינך רשום באתר זה.',
     ],
 
-    'reset_password' => 'Reset password',
+    'reset_password' => 'איפוס סיסמה',
 
-    'verify_2fa' => 'Verify 2FA',
-    'verify' => 'Verify',
+    'verify_2fa' => 'אימות דו שלבי',
+    'verify' => 'אימות',
 
     'verification' => [
-        'notice' => 'Verify your email address',
-        'sent' => 'A new verification link has been sent to your email address.',
-        'check_your_email' => 'Before proceeding, please check your email for a verification link.',
-        'not_received' => 'If you did not receive the email you can request another verification email.',
-        'request_another' => 'Resend verification email',
+        'notice' => ' אמת את כתובת הדוא״ל שלך',
+        'sent' => 'קישור אימות חדש נשלח לכתובת האימייל שלך.',
+        'check_your_email' => 'לפני שתמשיך, כנס לאימייל שלך בשביל הקישור לאימות.',
+        'not_received' => 'אם לא קיבלת קישור לאימות, ביכולתך לבקש אחד נוסף.',
+        'request_another' => 'שלח מחדש דוא"ל אימות',
     ],
 ];
