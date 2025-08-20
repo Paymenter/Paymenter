@@ -25,7 +25,7 @@ $audits = $audits->sortByDesc('created_at')->sortByDesc('id');
                             (#{{ $audit->auditable_id }})
                         </div>
                     </div>
-                    <div class="text-xs text-gray-950 dark:text-white">
+                    <div class="text-xs text-gray-950 dark:text-white text-nowrap">
                         @if($audit->tags && $audit->tags == 'admin')
                             <span class="text-green-500" title="Action executed by admin">
                                 <x-ri-shield-user-line class="inline-block size-4" />
