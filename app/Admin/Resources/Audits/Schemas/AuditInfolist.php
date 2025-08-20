@@ -7,7 +7,6 @@ use App\Admin\Resources\UserResource;
 use App\Models\Audit;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Infolists\Components\ViewEntry;
-use Filament\Schemas\Components\View;
 use Filament\Schemas\Schema;
 
 class AuditInfolist
@@ -36,7 +35,7 @@ class AuditInfolist
                     ->label('Changes')
                     ->view('admin.infolists.components.difference')
                     ->columnSpanFull(),
-                
+
             ]);
     }
 }
