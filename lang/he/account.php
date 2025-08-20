@@ -4,7 +4,7 @@ return [
     'account' => 'חשבון',
     'personal_details' => 'פרטים אישיים',
     'security' => 'אבטחה',
-    'credits' => 'Credits',
+    'credits' => 'נקודות',
 
     'change_password' => 'שנה סיסמא',
 
@@ -17,36 +17,36 @@ return [
     'two_factor_authentication_qr_code' => 'סרוק את הקוד המצורף באמצעות האפליקציה:',
     'two_factor_authentication_secret' => 'או הכנס את הקוד באופן ידני:',
 
-    'sessions' => 'Sessions',
+    'sessions' => 'חיבורים',
     'sessions_description' => 'Manage and log out your active sessions on other browsers and devices.',
-    'logout_sessions' => 'Log this session out',
+    'logout_sessions' => 'ניתוק החיבור הנוכחי',
 
     'input' => [
-        'current_password' => 'סיסמה נוכחית',
-        'current_password_placeholder' => 'הסיסמה הנוכחית שלך',
+        'current_password' => 'הסיסמה הנוכחית',
+        'current_password_placeholder' => 'סיסמתך הנוכחית',
         'new_password' => 'סיסמה חדשה',
-        'new_password_placeholder' => 'הסיסמה החדשה שלך',
-        'confirm_password' => 'Confirm password',
-        'confirm_password_placeholder' => 'Confirm your new password',
+        'new_password_placeholder' => 'הסיסמה החדשה שלך היא',
+        'confirm_password' => 'אימות סיסמה',
+        'confirm_password_placeholder' => 'אמת את הסיסמה החדשה שלך',
 
-        'two_factor_code' => 'Enter the code from your authenticator app',
-        'two_factor_code_placeholder' => 'Your two-factor authentication code',
+        'two_factor_code' => 'הקש את הקוד מיישום האימות שלך',
+        'two_factor_code_placeholder' => 'הקוד שלך לאימות דו שלבי',
 
-        'currency' => 'Currency',
+        'currency' => 'מטבע',
         'amount' => 'סכום',
     ],
 
     'notifications' => [
-        'password_changed' => 'Password has been changed.',
-        'password_incorrect' => 'The current password is incorrect.',
-        'two_factor_enabled' => 'Two-factor authentication has been enabled.',
-        'two_factor_disabled' => 'Two-factor authentication has been disabled.',
-        'two_factor_code_incorrect' => 'The code is incorrect.',
-        'session_logged_out' => 'Session has been logged out.',
+        'password_changed' => 'הסיסמה השתנתה.',
+        'password_incorrect' => 'הסיסמה הנוכחית איננה נכונה.',
+        'two_factor_enabled' => 'אימות דו שלבי הופעל.',
+        'two_factor_disabled' => 'אימות דו שלבי בוטל.',
+        'two_factor_code_incorrect' => 'הקוד אינו נכון.',
+        'session_logged_out' => 'החיבור נותק.',
     ],
 
-    'no_credit' => 'You have no credits.',
-    'add_credit' => 'Add credit',
+    'no_credit' => 'נגמרו לך הנקודות.',
+    'add_credit' => 'הוסף נקודות',
     'credit_deposit' => 'Credit deposit (:currency)',
 
 ];
