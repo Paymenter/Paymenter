@@ -30,4 +30,5 @@ return [
     'payment_method' => 'Maksutapa',
     'amount' => 'Summa',
     'date' => 'Päivämäärä',
+    'due_date' => 'Due Date',
 ];
