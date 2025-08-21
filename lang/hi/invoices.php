@@ -30,4 +30,5 @@ return [
     'payment_method' => 'भुगतान का तरीका',
     'amount' => 'राशि',
     'date' => 'तारीख',
+    'due_date' => 'Due Date',
 ];
