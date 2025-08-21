@@ -18,7 +18,7 @@ class Index extends Component
 
     public function mount()
     {
-        $this->products = $this->category->products()->where('hidden', false)->with('category')->orderBy('sort')->get();
+        $this->products = $this->category->products()->where('hidden', false)->with(['category', 'plans.prices', 'configOptions.children.plans.prices'])->orderBy('sort')->get();
         $this->childCategories = $this->category->children()->where(function ($query) {
             $query->whereHas('children')->orWhereHas('products', function ($query) {
                 $query->where('hidden', false);
