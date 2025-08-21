@@ -6,6 +6,7 @@ use App\Classes\Settings;
 use App\Models\Setting;
 use Illuminate\Console\Command;
 
+use Illuminate\Support\Facades\Config;
 use function Laravel\Prompts\form;
 use function Laravel\Prompts\select;
 use function Laravel\Prompts\text;
@@ -18,6 +19,7 @@ class Change extends Command
 
     public function handle()
     {
+        Config::set('audit.console', true);
 
         $key = $this->argument('key');
         $value = $this->argument('value');

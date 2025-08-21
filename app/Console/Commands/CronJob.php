@@ -12,6 +12,7 @@ use App\Models\ServiceUpgrade;
 use App\Models\Ticket;
 use Exception;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 
 class CronJob extends Command
@@ -35,6 +36,8 @@ class CronJob extends Command
      */
     public function handle()
     {
+        Config::set('audit.console', true);
+        
         // Send invoices if due date is x days away
         $sendedInvoices = 0;
         Service::where('status', 'active')->where('expires_at', '<', now()->addDays((int) config('settings.cronjob_invoice', 7)))->get()->each(function ($service) use (&$sendedInvoices) {

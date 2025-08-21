@@ -5,6 +5,7 @@ namespace App\Console\Commands\User;
 use App\Models\Role;
 use App\Models\User;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Contracts\Console\PromptsForMissingInput;
 
 use function Laravel\Prompts\password;
@@ -31,6 +32,7 @@ class Create extends Command implements PromptsForMissingInput
      */
     public function handle()
     {
+        Config::set('audit.console', true);
         User::create([
             'first_name' => $this->argument('first_name'),
             'last_name' => $this->argument('last_name'),

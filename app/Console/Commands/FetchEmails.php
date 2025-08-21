@@ -6,6 +6,7 @@ use App\Models\TicketMailLog;
 use App\Models\TicketMessage;
 use DirectoryTree\ImapEngine\Mailbox;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
 
@@ -35,6 +36,7 @@ class FetchEmails extends Command
 
             return;
         }
+        Config::set('audit.console', true);
 
         $mailbox = new Mailbox([
             'port' => config('settings.ticket_mail_port'),
