@@ -5,8 +5,8 @@ namespace App\Console\Commands\User;
 use App\Models\Role;
 use App\Models\User;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Config;
 use Illuminate\Contracts\Console\PromptsForMissingInput;
+use Illuminate\Support\Facades\Config;
 
 use function Laravel\Prompts\password;
 use function Laravel\Prompts\select;
