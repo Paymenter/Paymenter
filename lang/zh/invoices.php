@@ -30,4 +30,5 @@ return [
     'payment_method' => '付款方式',
     'amount' => '金額',
     'date' => '日期',
+    'due_date' => 'Due Date',
 ];
