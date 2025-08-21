@@ -15,6 +15,7 @@ use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\ViewAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 
 class AuditsTable
 {
@@ -65,7 +66,9 @@ class AuditsTable
             ->recordActions([
                 ViewAction::make(),
             ])
-            ->defaultSort('created_at', 'desc')
+            ->defaultSort(function(Builder $query) {
+                return $query->orderBy('created_at', 'desc')->orderBy('id', 'desc');
+            })
             ->toolbarActions([
                 BulkActionGroup::make([
                     DeleteBulkAction::make(),

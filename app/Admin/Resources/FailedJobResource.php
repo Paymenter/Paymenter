@@ -91,9 +91,24 @@ class FailedJobResource extends Resource
                             ->title("{$records->count()} jobs have been pushed back onto the queue.")
                             ->success()
                             ->send();
-                    }),
+                    })
+                    ->deselectRecordsAfterCompletion(),
+                BulkAction::make("delete")
+                    ->label("Mark as Resolved")
+                    ->requiresConfirmation()
+                    ->color("danger")
+                    ->action(function (Collection $records): void {
+                        foreach ($records as $record) {
+                            $record->delete();
+                        }
+                        Notification::make()
+                            ->title("{$records->count()} jobs have been marked as resolved.")
+                            ->success()
+                            ->send();
+                    })
+                    ->deselectRecordsAfterCompletion(),
             ])
-            ->defaultSort('failed_at', 'desc')
+            ->defaultSort("failed_at", "desc")
             ->filters([
 
             ]);
