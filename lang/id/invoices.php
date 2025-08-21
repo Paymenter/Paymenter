@@ -30,4 +30,5 @@ return [
     'payment_method' => 'Metode Pembayaran',
     'amount' => 'Jumlah',
     'date' => 'Tanggal',
+    'due_date' => 'Due Date',
 ];
