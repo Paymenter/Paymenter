@@ -5,8 +5,8 @@ namespace App\Console\Commands\Settings;
 use App\Classes\Settings;
 use App\Models\Setting;
 use Illuminate\Console\Command;
-
 use Illuminate\Support\Facades\Config;
+
 use function Laravel\Prompts\form;
 use function Laravel\Prompts\select;
 use function Laravel\Prompts\text;

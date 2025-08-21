@@ -37,7 +37,7 @@ class CronJob extends Command
     public function handle()
     {
         Config::set('audit.console', true);
-        
+
         // Send invoices if due date is x days away
         $sendedInvoices = 0;
         Service::where('status', 'active')->where('expires_at', '<', now()->addDays((int) config('settings.cronjob_invoice', 7)))->get()->each(function ($service) use (&$sendedInvoices) {
