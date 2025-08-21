@@ -14,13 +14,6 @@ class ListFailedJobs extends ListRecords
 {
     protected static string $resource = FailedJobResource::class;
 
-    protected function getHeaderActions(): array
-    {
-        return [
-            CreateAction::make(),
-        ];
-    }
-
     // Check if jobs table is empty, if not send a notification
     public function mount(): void
     {
