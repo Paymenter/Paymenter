@@ -93,10 +93,10 @@ class FailedJobResource extends Resource
                             ->send();
                     })
                     ->deselectRecordsAfterCompletion(),
-                BulkAction::make("delete")
-                    ->label("Mark as Resolved")
+                BulkAction::make('delete')
+                    ->label('Mark as Resolved')
                     ->requiresConfirmation()
-                    ->color("danger")
+                    ->color('danger')
                     ->action(function (Collection $records): void {
                         foreach ($records as $record) {
                             $record->delete();
@@ -108,7 +108,7 @@ class FailedJobResource extends Resource
                     })
                     ->deselectRecordsAfterCompletion(),
             ])
-            ->defaultSort("failed_at", "desc")
+            ->defaultSort('failed_at', 'desc')
             ->filters([
 
             ]);
