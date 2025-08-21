@@ -16,6 +16,7 @@ trait Auditable
         if (App::runningInConsole() || !Str::contains(Request::livewireUrl(), '/admin')) {
             return [];
         }
+
         // Check current url contains admin
         return [
             'admin',
