@@ -30,4 +30,5 @@ return [
     'payment_method' => 'Спосіб оплати',
     'amount' => 'Сума',
     'date' => 'Date',
+    'due_date' => 'Due Date',
 ];
