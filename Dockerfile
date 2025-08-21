@@ -30,6 +30,7 @@ RUN npm install \
 
 # Switch back to the final stage
 FROM final AS production
+COPY --from=0 /app/public/default /app/public/default
 
 COPY .github/docker/default.conf /etc/nginx/http.d/default.conf
 COPY .github/docker/www.conf /usr/local/etc/php-fpm.conf

@@ -2,6 +2,7 @@
 
 namespace App\Models\Traits;
 
+use Illuminate\Support\Facades\App;
 use OwenIt\Auditing\Auditable as AuditableTrait;
 use Request;
 use Str;
@@ -12,13 +13,12 @@ trait Auditable
 
     public function generateTags(): array
     {
-        // Check current url contains admin
-        if (Str::contains(Request::livewireUrl(), '/admin')) {
-            return [
-                'admin',
-            ];
+        if (App::runningInConsole() || !Str::contains(Request::livewireUrl(), '/admin')) {
+            return [];
         }
-
-        return [];
+        // Check current url contains admin
+        return [
+            'admin',
+        ];
     }
 }
