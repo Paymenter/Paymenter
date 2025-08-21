@@ -22,7 +22,7 @@ class AuditInfolist
                 TextEntry::make('event')
                     ->formatStateUsing(fn (Audit $record): string => $record->event . ' - ' . class_basename($record->auditable_type) . ' (' . $record->auditable_id . ')')
                     ->url(function (Audit $record) {
-                        if ($record->event !== 'deleted' && isset(AuditsTable::TYPE_TO_RESOURCE[class_basename($record->auditable_type)])) {
+                        if ($record->event != 'deleted' && isset(AuditsTable::TYPE_TO_RESOURCE[class_basename($record->auditable_type)])) {
                             return AuditsTable::TYPE_TO_RESOURCE[class_basename($record->auditable_type)]::getUrl('edit', [$record->auditable_id]);
                         }
                     }),

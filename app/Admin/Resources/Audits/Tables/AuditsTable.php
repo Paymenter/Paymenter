@@ -35,13 +35,13 @@ class AuditsTable
             ->columns([
                 TextColumn::make('user_id')
                     ->url(fn (Audit $record): string => $record->user_id ? UserResource::getUrl('edit', [$record->user_id]) : '')
-                    ->formatStateUsing(fn (Audit $record): string => $record->user->name)
+                    ->formatStateUsing(fn (Audit $record): string => $record->user ? $record->user->name : 'User #' . $record->user_id)
                     ->placeholder('System')
                     ->sortable(),
                 TextColumn::make('event')
                     ->formatStateUsing(fn (Audit $record): string => $record->event . ' - ' . class_basename($record->auditable_type) . ' (' . $record->auditable_id . ')')
                     ->url(function (Audit $record) {
-                        if (isset(self::TYPE_TO_RESOURCE[class_basename($record->auditable_type)])) {
+                        if ($record->event != 'deleted' && isset(self::TYPE_TO_RESOURCE[class_basename($record->auditable_type)])) {
                             return self::TYPE_TO_RESOURCE[class_basename($record->auditable_type)]::getUrl('edit', [$record->auditable_id]);
                         }
                     })
