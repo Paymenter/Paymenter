@@ -46,6 +46,9 @@
         <div class="sm:flex justify-between pr-4 pt-4 mt-6">
             <div class="">
                 <p class="text-base">{{ __('invoices.invoice_date')}}: {{ $invoice->created_at->format('d M Y') }}</p>
+                @if($invoice->due_at)
+                    <p class="text-base">{{ __('invoices.due_date') }}: {{ $invoice->due_at->format('d M Y') }}</p>
+                @endif
                 <p class="text-base">{{ __('invoices.invoice_no')}}: {{ $invoice->number }}</p>
             </div>
             <div class="max-w-[200px] w-full">

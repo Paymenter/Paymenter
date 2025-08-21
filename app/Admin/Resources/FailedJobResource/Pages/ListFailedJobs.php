@@ -5,7 +5,6 @@ namespace App\Admin\Resources\FailedJobResource\Pages;
 use App\Admin\Resources\FailedJobResource;
 use Carbon\Carbon;
 use Filament\Actions\Action;
-use Filament\Actions\CreateAction;
 use Filament\Notifications\Notification;
 use Filament\Resources\Pages\ListRecords;
 use Illuminate\Support\Facades\DB;
@@ -13,13 +12,6 @@ use Illuminate\Support\Facades\DB;
 class ListFailedJobs extends ListRecords
 {
     protected static string $resource = FailedJobResource::class;
-
-    protected function getHeaderActions(): array
-    {
-        return [
-            CreateAction::make(),
-        ];
-    }
 
     // Check if jobs table is empty, if not send a notification
     public function mount(): void
