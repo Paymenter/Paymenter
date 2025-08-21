@@ -66,7 +66,7 @@ class AuditsTable
             ->recordActions([
                 ViewAction::make(),
             ])
-            ->defaultSort(function(Builder $query) {
+            ->defaultSort(function (Builder $query) {
                 return $query->orderBy('created_at', 'desc')->orderBy('id', 'desc');
             })
             ->toolbarActions([
