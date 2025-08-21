@@ -53,7 +53,7 @@ class FetchEmails extends Command
                 continue;
             }
 
-            $body = $this->cleanReplyEmail($email->text());
+            $body = \EmailReplyParser\EmailReplyParser::parseReply($email->text());
 
             // Check headers to see if this email is a reply
             $replyTo = $email->inReplyTo();
@@ -136,35 +136,5 @@ class FetchEmails extends Command
             'body' => $email->text(),
             'status' => 'unprocessed',
         ]);
-    }
-
-    private function cleanReplyEmail(string $body): string
-    {
-        $message = strip_tags($body);
-
-        // Remove quoted lines (lines that begin with '>').
-        $message = preg_replace("/(^\w.+:\n)?(^>.*(\n|$))+/mi", '', $message);
-
-        // Remove lines beginning with 'On' and ending with 'wrote:' (matches
-        // Mac OS X Mail, Gmail).
-        $message = preg_replace("/^On\s.*?wrote:.*$/m", '', $message);
-
-        // Remove lines like '----- Original Message -----' (some other clients).
-        // Also remove lines like '--- On ... wrote:' (some other clients).
-        $message = preg_replace('/^---.*$/mi', '', $message);
-
-        // Remove lines like '____________' (some other clients).
-        $message = preg_replace('/^____________.*$/mi', '', $message);
-
-        // Remove blocks of text with formats like:
-        //   - 'From: Sent: To: Subject:'
-        //   - 'From: To: Sent: Subject:'
-        //   - 'From: Date: To: Reply-to: Subject:'
-        $message = preg_replace('/From:.*^(To:).*^(Subject:).*/sm', '', $message);
-
-        // Remove any remaining whitespace.
-        $message = trim($message);
-
-        return $message;
     }
 }
