@@ -32,6 +32,7 @@ class FetchEmails extends Command
     {
         if (!config('settings.ticket_mail_piping', false)) {
             $this->info('Email piping is not enabled. Skipping email fetch.');
+            return;
         }
 
         $mailbox = new Mailbox([

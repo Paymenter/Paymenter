@@ -144,7 +144,7 @@
                 </div>
                 <div class="flex justify-between">
                     <div class="text-sm font-medium text-gray-500 uppercase dark:text-base">
-                        {{ \App\Classes\Settings::tax()->name }}
+                        {{ \App\Classes\Settings::tax()->name }} ({{ \App\Classes\Settings::tax()->rate }}%)
                     </div>
                     <div class="text-base font-medium text-gray-900 dark:text-white">
                         {{ $invoice->formattedTotal->formatted->tax }}

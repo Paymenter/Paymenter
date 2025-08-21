@@ -82,7 +82,7 @@
                 </div>
                 @if ($total->tax > 0)
                     <div class="font-semibold flex justify-between">
-                        <h4>{{ \App\Classes\Settings::tax()->name }}:</h4> {{ $total->formatted->tax }}
+                        <h4>{{ \App\Classes\Settings::tax()->name }} ({{ \App\Classes\Settings::tax()->rate }}%):</h4> {{ $total->formatted->tax }}
                     </div>
                 @endif
                 <div class="text-lg font-semibold flex justify-between mt-1">
