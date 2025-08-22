@@ -52,7 +52,9 @@
             </div>
 
             <div class="flex flex-row items-center">
-                <div class="items-center hidden md:flex mr-3">
+                <livewire:components.cart />
+                
+                <div class="items-center hidden md:flex mr-1">
                     <x-dropdown>
                         <x-slot:trigger>
                             <div class="flex flex-col">
@@ -68,7 +70,6 @@
                     <x-theme-toggle />
                 </div>
 
-                <livewire:components.cart />
 
                 @if(auth()->check())
                 <div class="hidden lg:flex">
