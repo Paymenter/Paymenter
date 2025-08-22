@@ -10,7 +10,7 @@ return [
     'id' => 'ID (מספר מזהה)',
     'total' => 'סך הכול',
     'subtotal' => 'סכום ביניים',
-    'invoice' => 'Invoice #:id',
+    'invoice' => 'חשבונית #:id',
     'unit_price' => 'מחיר יחידה',
     'bill_to' => 'חשבונית ל',
     'issued_to' => 'הונפק עבור',
@@ -30,5 +30,5 @@ return [
     'payment_method' => 'צורת תשלום',
     'amount' => 'סכום',
     'date' => 'תאריך',
-    'due_date' => 'Due Date',
+    'due_date' => 'תאריך יעד',
 ];
