@@ -18,7 +18,7 @@ return [
     'two_factor_authentication_secret' => 'או הכנס את הקוד באופן ידני:',
 
     'sessions' => 'חיבורים',
-    'sessions_description' => 'Manage and log out your active sessions on other browsers and devices.',
+    'sessions_description' => 'ניהול וניתוק חיבורים קיימים בדפדפנים ומכשירים אחרים.',
     'logout_sessions' => 'ניתוק החיבור הנוכחי',
 
     'input' => [
@@ -47,6 +47,6 @@ return [
 
     'no_credit' => 'נגמרו לך הנקודות.',
     'add_credit' => 'הוסף נקודות',
-    'credit_deposit' => 'Credit deposit (:currency)',
+    'credit_deposit' => 'טעינת נקודות  (:currency)',
 
 ];
