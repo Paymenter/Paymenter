@@ -8,6 +8,7 @@ use App\Admin\Resources\OrderResource;
 use App\Admin\Resources\ProductResource;
 use App\Admin\Resources\ServiceResource;
 use App\Admin\Resources\TaxRateResource;
+use App\Admin\Resources\TicketResource;
 use App\Admin\Resources\UserResource;
 use App\Models\Audit;
 use Filament\Actions\BulkActionGroup;
@@ -27,6 +28,7 @@ class AuditsTable
         'Category' => CategoryResource::class,
         'Service' => ServiceResource::class,
         'TaxRate' => TaxRateResource::class,
+        'Ticket' => TicketResource::class,
     ];
 
     public static function configure(Table $table): Table
