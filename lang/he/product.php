@@ -6,11 +6,11 @@ return [
     'checkout' => 'תשלום',
     'remove' => 'הסר',
     'empty_cart' => 'העגלה שלך ריקה',
-    'total_today' => 'Total today',
+    'total_today' => 'סך הכל היום',
     'subtotal' => 'סיכום ביניים',
     'total' => 'סך הכול',
 
-    'then_after_x' => 'Then after :time',
+    'then_after_x' => 'ואז אחרי :time',
     'order_summary' => 'פירוט הזמנה',
     'edit' => 'ערוך',
 
@@ -19,11 +19,11 @@ return [
     'setup_fee' => 'דמי התקנה',
 
     'in_stock' => 'זמין במלאי',
-    'out_of_stock' => 'Product :product is out of stock',
-    'user_limit' => 'You have reached the limit of :product',
+    'out_of_stock' => 'המוצר :product אינו במלאי',
+    'user_limit' => 'לא ניתן לרכוש עוד יחידות של :product',
     'payment_method' => 'אמצעי תשלום',
-    'use_credits' => 'Use credits',
+    'use_credits' => 'שימוש בנקודות',
     'tos' => 'אני מסכים ל-',
     'tos_link' => 'תנאי שימוש',
-    'tos_required' => 'You must agree to the Terms of Service',
+    'tos_required' => 'עליך לאשר את תנאי השימוש',
 ];
