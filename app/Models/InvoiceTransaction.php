@@ -22,6 +22,11 @@ class InvoiceTransaction extends Model implements Auditable
         'transaction_id',
     ];
 
+    protected $casts = [
+        'amount' => 'decimal:2',
+        'fee' => 'decimal:2',
+    ];
+
     public function invoice()
     {
         return $this->belongsTo(Invoice::class);
