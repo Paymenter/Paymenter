@@ -1,19 +1,19 @@
 <?php
 
 return [
-    'affiliate' => 'Affiliate',
-    'signup-for-affiliate' => 'Signup for Affiliate',
-    'code' => 'Code',
-    'visitors' => 'Visitors',
-    'total-visitors' => 'Total Visitors',
-    'signups' => 'Signups',
-    'total-signups' => 'Total Signups',
-    'earnings' => 'Earnings',
-    'total-earnings' => 'Total Earnings',
-    'your-affiliate-link' => 'Your affiliate link',
-    'copy' => 'Copy',
+    'affiliate' => 'Jälleenmyynti',
+    'signup-for-affiliate' => 'Aktivoi jälleenmyyntitili',
+    'code' => 'Koodi',
+    'visitors' => 'Vierailijat',
+    'total-visitors' => 'Vierailijoita yhteensä',
+    'signups' => 'Rekisteröitymiset',
+    'total-signups' => 'Rekisteröitymiset yhteensä',
+    'earnings' => 'Ansiot',
+    'total-earnings' => 'Ansiot yhteensä',
+    'your-affiliate-link' => 'Sinun jälleenmyyntilinkki',
+    'copy' => 'Kopioi',
 
-    'you-havent-signed-up-yet' => 'You have not signed up for affiliates program yet!',
-    'you-are-already-affiliated' => 'You have already signed up for affiliate program.',
-    'signup-success' => 'Successfully signed up for affiliate program!',
+    'you-havent-signed-up-yet' => 'Et ole vielä rekisteröitynyt jälleenmyyntiohjelmaan!',
+    'you-are-already-affiliated' => 'Olet jo rekisteröitynyt jälleenmyyntiohjelmaan.',
+    'signup-success' => 'Jälleenmyyntiohjelmaan rekistöröity onnistuneesti!',
 ];
