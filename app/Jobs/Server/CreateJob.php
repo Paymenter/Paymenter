@@ -15,6 +15,7 @@ use Illuminate\Queue\SerializesModels;
 class CreateJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+
     public $timeout = 60;
 
     /**

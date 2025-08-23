@@ -14,8 +14,9 @@ use Illuminate\Queue\SerializesModels;
 class UpgradeJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+
     public $timeout = 60;
-    
+
     /**
      * Create a new job instance.
      */

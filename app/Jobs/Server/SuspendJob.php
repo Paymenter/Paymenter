@@ -15,6 +15,7 @@ use Illuminate\Queue\SerializesModels;
 class SuspendJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+
     public $timeout = 60;
 
     /**
