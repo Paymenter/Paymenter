@@ -1,19 +1,19 @@
 <?php
 
 return [
-    'affiliate' => 'Affiliate',
-    'signup-for-affiliate' => 'Signup for Affiliate',
-    'code' => 'Code',
-    'visitors' => 'Visitors',
-    'total-visitors' => 'Total Visitors',
-    'signups' => 'Signups',
-    'total-signups' => 'Total Signups',
-    'earnings' => 'Earnings',
-    'total-earnings' => 'Total Earnings',
-    'your-affiliate-link' => 'Your affiliate link',
-    'copy' => 'Copy',
+    'affiliate' => 'שיווק שותפים',
+    'signup-for-affiliate' => 'הרשמה לשיווק שותפים',
+    'code' => 'קוד',
+    'visitors' => 'כניסות',
+    'total-visitors' => 'סך הכל כניסות',
+    'signups' => 'הרשמות',
+    'total-signups' => 'סך הכל הרשמות',
+    'earnings' => 'רווחים',
+    'total-earnings' => 'סך הכל רווחים',
+    'your-affiliate-link' => 'הקישור לשיווק השותפים שלך',
+    'copy' => 'העתק',
 
-    'you-havent-signed-up-yet' => 'You have not signed up for affiliates program yet!',
-    'you-are-already-affiliated' => 'You have already signed up for affiliate program.',
-    'signup-success' => 'Successfully signed up for affiliate program!',
+    'you-havent-signed-up-yet' => 'עוד לא נרשמת לתוכנית שיווק שותפים!',
+    'you-are-already-affiliated' => 'כבר נרשמת לתוכנית שיווק שותפים.',
+    'signup-success' => 'נרשמת בהצלחה לתוכנית שיווק שותפים!',
 ];
