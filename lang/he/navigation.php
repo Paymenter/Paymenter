@@ -10,8 +10,8 @@ return [
     'invoices' => 'חשבוניות',
     'account' => 'חשבון',
     'personal_details' => 'פרטים אישיים',
-    'security' => 'Security',
-    'dashboard' => 'Dashboard',
-    'tickets' => 'Tickets',
-    'admin' => 'Admin',
+    'security' => 'אבטחה',
+    'dashboard' => 'לוח בקרה',
+    'tickets' => 'קריאות',
+    'admin' => 'ניהול',
 ];
