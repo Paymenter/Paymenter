@@ -126,7 +126,7 @@ class Stripe extends Gateway
                 'subscription_schedule.canceled',
                 'invoice.created',
                 'invoice.payment_succeeded',
-                'charge.updated'
+                'charge.updated',
             ],
             'api_version' => self::API_VERSION,
         ]);
@@ -143,9 +143,9 @@ class Stripe extends Gateway
     private function request($method, $url, $data = [])
     {
         return Http::withHeaders([
-                    'Authorization' => 'Bearer ' . $this->config('stripe_secret_key'),
-                    'Stripe-Version' => self::API_VERSION,
-                ])->asForm()->$method('https://api.stripe.com/v1' . $url, $data)->throw()->object();
+            'Authorization' => 'Bearer ' . $this->config('stripe_secret_key'),
+            'Stripe-Version' => self::API_VERSION,
+        ])->asForm()->$method('https://api.stripe.com/v1' . $url, $data)->throw()->object();
     }
 
     public function pay($invoice, $total)
@@ -225,7 +225,6 @@ class Stripe extends Gateway
                     $fee = $balanceTransaction->fee / 100;
                 }
                 ExtensionHelper::addPayment($invoiceTransaction->invoice_id, 'Stripe', $charge->amount / 100, $fee ?? null, $charge->payment_intent);
-                
 
                 break;
             case 'setup_intent.succeeded':
@@ -275,7 +274,7 @@ class Stripe extends Gateway
                 }
                 break;
             default:
-            // Not a event type we care about, just return 200
+                // Not a event type we care about, just return 200
         }
 
         http_response_code(200);
