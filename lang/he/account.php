@@ -47,6 +47,6 @@ return [
 
     'no_credit' => 'נגמרו לך הנקודות.',
     'add_credit' => 'הוסף נקודות',
-    'credit_deposit' => 'טעינת נקודות  (:currency)',
+    'credit_deposit' => 'טעינת נקודות (:currency)',
 
 ];
