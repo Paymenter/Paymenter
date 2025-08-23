@@ -3,6 +3,7 @@
 namespace App\Listeners;
 
 use App\Events\Invoice\Paid;
+use App\Helpers\NotificationHelper;
 use App\Jobs\Server\CreateJob;
 use App\Jobs\Server\UnsuspendJob;
 use App\Jobs\Server\UpgradeJob;
@@ -17,6 +18,9 @@ class InvoicePaidListener
      */
     public function handle(Paid $event): void
     {
+        // Send invoice paid email notification
+        NotificationHelper::invoicePaidNotification($event->invoice->user, $event->invoice);
+
         // Update services if invoice is paid (suspended -> active etc.)
         $event->invoice->items->each(function ($item) {
             if ($item->reference_type == Service::class) {
