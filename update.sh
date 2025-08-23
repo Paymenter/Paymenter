@@ -124,6 +124,8 @@ RUN chown -R "$PERMUSER":"$PERMGROUP" .
 
 RUN php artisan app:check-for-updates
 
+RUN php artisan queue:restart
+
 # Set application up for maintenance.
 RUN php artisan up
 
