@@ -85,6 +85,18 @@ class EmailTemplateSeeder extends Seeder
                 @endforeach
                 </div>
 
+                @if($transactions->isNotEmpty())
+                **Payment Transactions**
+                <div class="table">
+
+                | Transaction ID | Date | Amount | Payment Method |
+                | :------------: | :--: | :----: | :-------------: |
+                @foreach ($transactions as $transaction)
+                | {{ $transaction->transaction_id }} | {{ $transaction->created_at->format('M j, Y') }} | {{ $transaction->formattedAmount }} | {{ $transaction->gateway?->name ?? 'N/A' }} |
+                @endforeach
+                </div>
+                @endif
+
                 <div class="action">
                     <a class="button button-blue" href="{{ route('invoices.show', $invoice) }}">
                         View invoice

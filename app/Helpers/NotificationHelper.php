@@ -96,6 +96,7 @@ class NotificationHelper
             'invoice' => $invoice,
             'items' => $invoice->items,
             'total' => $invoice->formattedTotal,
+            'transactions' => $invoice->transactions,
         ];
 
         self::sendEmailNotification('invoice_paid', $data, $user);
