@@ -18,7 +18,7 @@ class Plan extends Model implements Auditable
         'type',
         'billing_period',
         'billing_unit',
-        'sort'
+        'sort',
     ];
 
     /**
