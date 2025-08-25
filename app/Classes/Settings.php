@@ -448,7 +448,7 @@ class Settings
                     'database_type' => 'boolean',
                     'default' => true,
                     'description' => 'Enable giving back credits to users when they downgrade their service. The credits given back will be the prorated difference between the old and new service based on the remaining time in the billing cycle.',
-                ]
+                ],
             ],
             'theme' => [
                 [
