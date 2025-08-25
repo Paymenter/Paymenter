@@ -78,58 +78,6 @@ trait HasPlans
             }
         }
 
-        // If this is a Product with configurable options, add the lowest config option price
-        if (method_exists($this, 'configOptions') && $this->configOptions()->exists()) {
-            $lowestConfigPrice = 0; // Start with 0 as minimum
-            
-            // Get billing period and unit from the plan if not provided
-            $currentPlan = null;
-            if ($priceAndCurrency['price']) {
-                // Find the plan associated with the current price
-                foreach ($this->availablePlans(currency: $currency) as $p) {
-                    foreach ($p->prices as $planPrice) {
-                        if ($planPrice->id === $priceAndCurrency['price']->id) {
-                            $currentPlan = $p;
-                            break 2;
-                        }
-                    }
-                }
-                
-                $effectiveBillingPeriod = $billing_period ?? $currentPlan?->billing_period;
-                $effectiveBillingUnit = $billing_unit ?? $currentPlan?->billing_unit;
-                
-                // For each config option, find the minimum required price
-                foreach ($this->configOptions as $configOption) {
-                    if ($configOption->children()->exists()) {
-                        $optionMinPrice = null;
-                        
-                        // Find the cheapest option within this config category
-                        foreach ($configOption->children as $child) {
-                            $childPrice = $child->price(null, $effectiveBillingPeriod, $effectiveBillingUnit, $currency);
-                            
-                            if ($childPrice->available) {
-                                $childPriceValue = $childPrice->price ?? 0;
-                                
-                                if ($optionMinPrice === null || $childPriceValue < $optionMinPrice) {
-                                    $optionMinPrice = $childPriceValue;
-                                }
-                            }
-                        }
-                        
-                        // Add the minimum price for this config option to the total
-                        if ($optionMinPrice !== null) {
-                            $lowestConfigPrice += $optionMinPrice;
-                        }
-                    }
-                }
-                
-                // Add the lowest total config options price to the base product price
-                if ($lowestConfigPrice > 0) {
-                    $priceAndCurrency['price']->price += $lowestConfigPrice;
-                }
-            }
-        }
-
         return new Price($priceAndCurrency, dontShowUnavailablePrice: $this->dontShowUnavailablePrice ?? false);
     }
 }
