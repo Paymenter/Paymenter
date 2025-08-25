@@ -440,6 +440,15 @@ class Settings
                     'default' => true,
                     'description' => 'Automatically pay recurring invoices using available credits. (only pays if credits is more or equal to invoice amount)',
                 ],
+                [
+                    // Enable credits give back if and service is upgraded or downgraded
+                    'name' => 'credits_on_downgrade',
+                    'label' => 'Enable credits on service downgrade',
+                    'type' => 'checkbox',
+                    'database_type' => 'boolean',
+                    'default' => true,
+                    'description' => 'Enable giving back credits to users when they downgrade their service. The credits given back will be the prorated difference between the old and new service based on the remaining time in the billing cycle.',
+                ]
             ],
             'theme' => [
                 [

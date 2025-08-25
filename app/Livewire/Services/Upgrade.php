@@ -204,6 +204,12 @@ class Upgrade extends Component
                 UpgradeJob::dispatch($this->service);
             }
 
+            if (!config('settings.credits_on_downgrade', true)) {
+                $this->notify('The upgrade has been completed.', 'success');
+
+                return $this->redirect(route('services.show', $this->service), true);
+            }
+
             // Check if user has credits in this currency
             /** @var User */
             $user = Auth::user();
@@ -215,7 +221,7 @@ class Upgrade extends Component
             } else {
                 $user->credits()->create([
                     'currency_code' => $price->currency->code,
-                    'amount' => $price->price,
+                    'amount' => abs($price->price),
                 ]);
             }
 
