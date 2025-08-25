@@ -57,16 +57,12 @@ trait HasPlans
 
         $currency = $currency ?? session('currency', config('settings.default_currency'));
 
-        foreach (
-            $this->availablePlans(currency: $currency)->when($plan_id, function ($query) use ($plan_id) {
-                return $query->where('id', $plan_id);
-            }) as $plan
-        ) {
-            foreach (
-                $plan->prices->when($currency, function ($query) use ($currency) {
-                    return $query->where('currency_code', $currency);
-                }) as $price
-            ) {
+        foreach ($this->availablePlans(currency: $currency)->when($plan_id, function ($query) use ($plan_id) {
+            return $query->where('id', $plan_id);
+        }) as $plan) {
+            foreach ($plan->prices->when($currency, function ($query) use ($currency) {
+                return $query->where('currency_code', $currency);
+            }) as $price) {
                 if ($price->price < $priceAndCurrency['price'] || $priceAndCurrency['price'] === null) {
                     $priceAndCurrency['price'] = $price;
                     $priceAndCurrency['currency'] = $price->currency;
