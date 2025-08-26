@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'view' => 'תצוגה',
+    'view' => 'הצג',
 
     'input' => [
         'first_name' => 'שם פרטי',
