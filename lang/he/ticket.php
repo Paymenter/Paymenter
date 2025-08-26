@@ -17,7 +17,7 @@ return [
 
     'create_ticket' => 'צור פנייה',
     'select_department' => 'בחר מחלקה',
-    'select_priority' => 'בחר עדיפות',
+    'select_priority' => 'בחר דחיפות',
     'low' => 'נמוך',
     'medium' => 'בינוני',
     'high' => 'גבוה',
