@@ -7,9 +7,8 @@ use App\Livewire\Component;
 use App\Models\Ticket;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\RateLimiter;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Str;
 use Livewire\Features\SupportFileUploads\WithFileUploads;
 
@@ -76,7 +75,6 @@ class Create extends Component
             ]);
         }
 
-
         $this->notify('Message sent successfully');
 
         $this->reset(['attachments', 'message', 'subject', 'department', 'service', 'priority']);
@@ -94,8 +92,8 @@ class Create extends Component
             'departments' => (array) config('settings.ticket_departments'),
             'services' => $user->services()->orderBy('id', 'desc')->get(),
         ])->layoutData([
-                    'title' => 'Create Ticket',
-                    'sidebar' => true,
-                ]);
+            'title' => 'Create Ticket',
+            'sidebar' => true,
+        ]);
     }
 }
