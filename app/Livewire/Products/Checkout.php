@@ -43,13 +43,6 @@ class Checkout extends Component
     public function mount($product)
     {
         $this->product = $this->category->products()->where('slug', $product)->firstOrFail();
-        
-        $this->product->load(['configOptions' => function ($query) {
-            $query->orderBy('sort', 'asc')->orderBy('id', 'desc');
-        }, 'configOptions.children' => function ($query) {
-            $query->orderBy('sort', 'asc');
-        }]);
-
         if ($this->product->stock === 0) {
             return $this->redirect(route('products.show', ['category' => $this->category, 'product' => $this->product]), true);
         }
