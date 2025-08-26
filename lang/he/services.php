@@ -7,7 +7,7 @@ return [
     'status' => 'מצב',
     'name' => 'שם',
     'actions' => 'פעולות',
-    'view' => 'תצוגה',
+    'view' => 'הצג',
 
     'product_details' => 'פרטי מוצר',
     'billing_cycle' => 'מחזור חיוב',
