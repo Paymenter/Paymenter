@@ -20,6 +20,10 @@
     @apply bg-none;
 }
 
+.dark .EasyMDEContainer .CodeMirror-cursor {
+    border-left-color: white !important;
+}
+
 .EasyMDEContainer .cm-s-easymde .cm-formatting-code-block,
 .EasyMDEContainer .cm-s-easymde .cm-tab + .cm-comment {
     @apply bg-background-secondary border-0 border-neutral text-inherit;

@@ -9,6 +9,8 @@ use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Str;
 use Livewire\Features\SupportFileUploads\WithFileUploads;
 
 #[DisabledIf('tickets_disabled')]
@@ -28,19 +30,6 @@ class Create extends Component
 
     public string $priority;
 
-    public function completeUpload($filename)
-    {
-        // Find the attachment by its name
-        foreach ($this->attachments as $key => $attachment) {
-            if ($attachment->getFilename() === $filename) {
-                $url = $attachment->store('public/ticket-attachments');
-                $url = Storage::url($url);
-
-                return url($url);
-            }
-        }
-    }
-
     public function create()
     {
         // Add rules for the department
@@ -50,6 +39,7 @@ class Create extends Component
             'subject' => 'required|string',
             'message' => 'required|string',
             'priority' => 'required|in:low,medium,high',
+            'attachments.*' => 'file|max:10240',
         ]);
 
         if (RateLimiter::tooManyAttempts('create-ticket', 1)) {
@@ -68,14 +58,28 @@ class Create extends Component
             'priority' => $this->priority,
         ]);
 
-        $ticket->messages()->create([
+        $message = $ticket->messages()->create([
             'user_id' => Auth::id(),
             'message' => $this->message,
         ]);
 
+        foreach ($this->attachments as $attachment) {
+            $newName = Str::ulid() . '.' . $attachment->getClientOriginalExtension();
+            $path = 'tickets/uploads/' . $newName;
+            $attachment->storeAs('tickets/uploads', $newName);
+
+            $message->attachments()->create([
+                'path' => $path,
+                'filename' => $attachment->getClientOriginalName(),
+                'mime_type' => File::mimeType(storage_path('app/' . $path)),
+                'filesize' => File::size(storage_path('app/' . $path)),
+            ]);
+        }
+
+
         $this->notify('Message sent successfully');
 
-        $this->message = '';
+        $this->reset(['attachments', 'message', 'subject', 'department', 'service', 'priority']);
         $this->dispatch('saved');
 
         $this->redirect(route('tickets.show', $ticket), true);
@@ -90,8 +94,8 @@ class Create extends Component
             'departments' => (array) config('settings.ticket_departments'),
             'services' => $user->services()->orderBy('id', 'desc')->get(),
         ])->layoutData([
-            'title' => 'Create Ticket',
-            'sidebar' => true,
-        ]);
+                    'title' => 'Create Ticket',
+                    'sidebar' => true,
+                ]);
     }
 }
