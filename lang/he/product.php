@@ -2,7 +2,7 @@
 
 return [
     'add_to_cart' => 'הוסף לעגלה',
-    'view' => 'תצוגה',
+    'view' => 'הצג',
     'checkout' => 'תשלום',
     'remove' => 'הסר',
     'empty_cart' => 'העגלה שלך ריקה',
