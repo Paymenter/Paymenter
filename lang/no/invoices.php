@@ -30,5 +30,5 @@ return [
     'payment_method' => 'Betalingsmåte',
     'amount' => 'Beløp',
     'date' => 'Dato',
-    'due_date' => 'Due Date',
+    'due_date' => 'Forfallsdato',
 ];
