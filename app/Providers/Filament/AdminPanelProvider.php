@@ -6,6 +6,7 @@ use App\Http\Middleware\ImpersonateMiddleware;
 use App\Models\Extension;
 use App\Providers\SettingsProvider;
 use Exception;
+use Filament\Actions\Action;
 use Filament\Facades\Filament;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\DisableBladeIconComponents;
@@ -16,6 +17,9 @@ use Filament\Panel;
 use Filament\PanelProvider;
 use Filament\Support\Colors\Color;
 use Filament\Support\Enums\Alignment;
+use Filament\Support\Facades\FilamentIcon;
+use Filament\Support\Icons\Heroicon;
+use Filament\View\PanelsIconAlias;
 use Filament\View\PanelsRenderHook;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Cookie\Middleware\EncryptCookies;
@@ -50,16 +54,20 @@ class AdminPanelProvider extends PanelProvider
             ->discoverPages(in: app_path('Admin/Pages'), for: 'App\\Admin\\Pages')
             ->discoverClusters(in: app_path('Admin/Clusters'), for: 'App\\Admin\\Clusters')
             ->userMenuItems([
-                MenuItem::make()
+                'exit_admin' => MenuItem::make()
                     ->label('Exit Admin')
                     ->url('/')
-                    ->icon('heroicon-s-arrow-uturn-left')
-                    ->sort(24),
+                    ->icon('heroicon-s-arrow-uturn-left'),
+                'logout' => Action::make('logout')
+                    ->label('Sign out')
+                    ->icon(FilamentIcon::resolve(PanelsIconAlias::USER_MENU_LOGOUT_BUTTON) ?? Heroicon::ArrowLeftOnRectangle)
+                    ->url(fn() => $panel->getLogoutUrl())
+                    ->postToUrl(),
             ])
             ->discoverWidgets(in: app_path('Admin/Widgets'), for: 'App\\Admin\\Widgets')
             ->renderHook(
                 PanelsRenderHook::SIDEBAR_NAV_END,
-                fn (): string => Blade::render('<x-admin-footer />'),
+                fn(): string => Blade::render('<x-admin-footer />'),
             )
             ->navigationGroups([
                 'Administration',
