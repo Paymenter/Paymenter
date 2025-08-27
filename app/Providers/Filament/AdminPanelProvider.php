@@ -61,13 +61,13 @@ class AdminPanelProvider extends PanelProvider
                 'logout' => Action::make('logout')
                     ->label('Sign out')
                     ->icon(FilamentIcon::resolve(PanelsIconAlias::USER_MENU_LOGOUT_BUTTON) ?? Heroicon::ArrowLeftOnRectangle)
-                    ->url(fn() => $panel->getLogoutUrl())
+                    ->url(fn () => $panel->getLogoutUrl())
                     ->postToUrl(),
             ])
             ->discoverWidgets(in: app_path('Admin/Widgets'), for: 'App\\Admin\\Widgets')
             ->renderHook(
                 PanelsRenderHook::SIDEBAR_NAV_END,
-                fn(): string => Blade::render('<x-admin-footer />'),
+                fn (): string => Blade::render('<x-admin-footer />'),
             )
             ->navigationGroups([
                 'Administration',
