@@ -9,33 +9,15 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Livewire\Attributes\Locked;
 use Livewire\Attributes\Rule;
-use Livewire\Features\SupportFileUploads\WithFileUploads;
 
 #[DisabledIf('tickets_disabled')]
 class Show extends Component
 {
-    use WithFileUploads;
-
     #[Locked]
     public Ticket $ticket;
 
-    public array $attachments = [];
-
     #[Rule('required', 'string')]
     public string $message;
-
-    public function completeUpload($filename)
-    {
-        // Find the attachment by its name
-        foreach ($this->attachments as $key => $attachment) {
-            if ($attachment->getFilename() === $filename) {
-                $url = $attachment->store('public/ticket-attachments');
-                $url = Storage::url($url);
-
-                return url($url);
-            }
-        }
-    }
 
     public function save()
     {
