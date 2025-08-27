@@ -65,7 +65,7 @@
                                     {{ $child->name }}
                                 </span>
                                 @if($showPriceTag)
-                                    <span class="text-sm font-semibold">
+                                    <span class="text-sm font-semibold hidden lg:inline">
                                         {{ ($showPriceTag && $child->price(billing_period: $plan->billing_period, billing_unit: $plan->billing_unit)->available) ? $child->price(billing_period: $plan->billing_period, billing_unit: $plan->billing_unit) : '' }}
                                     </span>
                                 @endif
