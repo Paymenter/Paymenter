@@ -8,7 +8,7 @@
             element: document.getElementById('editor'),
             spellChecker: false,
             previewImagesInEditor: true,
-            uploadImage: true,
+            uploadImage: false,
             autoDownloadFontAwesome: false,
             status: [{
                 className: 'upload-image',
@@ -46,11 +46,6 @@
                     action: EasyMDE.toggleOrderedList,
                 }, '|',
                 {
-                    name: 'upload-image',
-                    action: EasyMDE.drawUploadedImage,
-                    title: 'Upload Image',
-                }, '|',
-                {
                     name: 'undo',
                     action: EasyMDE.undo,
                 }, {
@@ -59,13 +54,6 @@
                 },
 
             ],
-            imageUploadFunction: async (file, onSuccess, onError) => {
-                @this.upload('attachments', file, (url) => {
-                    @this.completeUpload(url).then((url) => {
-                        onSuccess(url);
-                    });
-                });
-            },
         });
 
         editor.codemirror.on('change', function() {

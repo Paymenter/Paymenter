@@ -8,15 +8,10 @@ use App\Models\Ticket;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Facades\Storage;
-use Livewire\Features\SupportFileUploads\WithFileUploads;
 
 #[DisabledIf('tickets_disabled')]
 class Create extends Component
 {
-    use WithFileUploads;
-
-    public array $attachments = [];
-
     public string $message;
 
     public string $subject;
@@ -26,19 +21,6 @@ class Create extends Component
     public ?int $service = null;
 
     public string $priority;
-
-    public function completeUpload($filename)
-    {
-        // Find the attachment by its name
-        foreach ($this->attachments as $key => $attachment) {
-            if ($attachment->getFilename() === $filename) {
-                $url = $attachment->store('public/ticket-attachments');
-                $url = Storage::url($url);
-
-                return url($url);
-            }
-        }
-    }
 
     public function create()
     {
