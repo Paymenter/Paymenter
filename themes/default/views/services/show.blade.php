@@ -49,6 +49,16 @@
                             {{ __('services.statuses.' . $service->status) }}
                         </span>
                     </div>
+                    <br>
+                    @foreach ($fields as $field)
+                    @if (isset($field['label']) && isset($field['text']))
+                    <div class="flex items-center text-base">
+                        <span class="mr-2">{{ $field['label'] }}:</span>
+                        <span class="text-base/50">{{ $field['text'] }}</span>
+                    </div>
+                    @endif
+                    @endforeach
+
                 </div>
             </div>
             @if($service->cancellable || $service->upgradable || count($buttons) > 0)
@@ -101,7 +111,7 @@
                     @else
                     <a href="{{ $button['url'] }}"
                         @if(!empty($button['target'])) target="{{ $button['target'] }}" @endif
-                        @if(($button['target'] ?? null) === '_blank') rel="noopener noreferrer" @endif>
+                        @if(($button['target'] ?? null)==='_blank' ) rel="noopener noreferrer" @endif>
                         <x-button.primary class="h-fit !w-fit">
                             {{ $button['label'] }}
                         </x-button.primary>
