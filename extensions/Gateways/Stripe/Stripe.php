@@ -16,6 +16,7 @@ use Filament\Notifications\Notification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\View;
 
 class Stripe extends Gateway
@@ -270,7 +271,7 @@ class Stripe extends Gateway
                         break;
                     }
 
-                    ExtensionHelper::addPayment($invoiceModel->id, 'Stripe', $invoice->amount_paid / 100, null, $paymentIntent->id);
+                    ExtensionHelper::addPayment($invoiceModel->id, 'Stripe', $invoice->amount_paid / 100, null, $paymentIntent->payment->payment_intent);
                 }
                 break;
             default:
