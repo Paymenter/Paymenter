@@ -109,7 +109,7 @@
                     @else
                     <a href="{{ $button['url'] }}"
                         @if(!empty($button['target'])) target="{{ $button['target'] }}" @endif
-                        @if(($button['target'] ?? null)==='_blank' ) rel="noopener noreferrer" @endif>
+                        @if(($button['target'] ?? null) === '_blank') rel="noopener noreferrer" @endif>
                         <x-button.primary class="h-fit !w-fit">
                             {{ $button['label'] }}
                         </x-button.primary>
