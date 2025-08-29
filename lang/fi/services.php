@@ -29,4 +29,29 @@ return [
     'upgrade' => 'Päivitä',
     'upgrade_summary' => 'Päivityksen yhteenveto',
     'total_today' => 'Yhteensä tänään',
+    'upgrade_service' => 'Päivitä palvelu',
+    'upgrade_choose_product' => 'Valitse tuote johon haluat päivittää',
+    'upgrade_choose_config' => 'Valitse päivityksen konfiguraatio',
+    'next_step' => 'Seuraava vaihe',
+
+    'upgrade_pending' => 'Et voi päivittää vaikka päivitys/alennuslasku on jo auki',
+
+    'outstanding_invoice' => 'Sinulla on maksamaton lasku.',
+    'view_and_pay' => 'Klikkaa tästä nähdäksesi ja maksaa',
+
+    'statuses' => [
+        'pending' => 'Odottaa',
+        'active' => 'Aktiivinen',
+        'cancelled' => 'Peruttu',
+        'suspended' => 'Keskeytetty',
+    ],
+    'billing_cycles' => [
+        'day' => 'päivä|päivää',
+        'week' => 'viikko|viikkoa',
+        'month' => 'kuukausi|kuukautta',
+        'year' => 'vuosi|vuotta',
+    ],
+    'every_period' => 'Joka :period :unit',
+    'price_every_period' => ':price per :period :unit',
+    'expires_at' => 'Vanhenee',
 ];

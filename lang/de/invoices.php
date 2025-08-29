@@ -12,7 +12,7 @@ return [
     'subtotal' => 'Zwischensumme',
     'invoice' => 'Rechnung #:id',
     'unit_price' => 'Einzelpreis',
-    'bill_to' => 'Rechnung an',
+    'bill_to' => 'Rechnung zu bezahlen an',
     'issued_to' => 'Ausgestellt auf',
     'paid' => 'Bezahlt',
     'payment_pending' => 'Zahlung ausstehend',
@@ -30,4 +30,5 @@ return [
     'payment_method' => 'Zahlungsmethode',
     'amount' => 'Anzahl',
     'date' => 'Datum',
+    'due_date' => 'Due Date',
 ];

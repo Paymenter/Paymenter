@@ -9,6 +9,11 @@ return [
     'department' => 'Departemen',
     'created_at' => 'Dibuat Pada',
     'reply' => 'Balas',
+    'attachments' => 'Lampiran',
+    'upload_attachments' => 'Unggah lampiran',
+    'or_drag_and_drop' => 'atau seret dan lepas',
+    'files_max' => 'Berkas hingga 10MB',
+    'selected_files' => 'Berkas dipilh',
 
     'create_ticket' => 'Buat Tiket',
     'select_department' => 'Pilih Departemen',

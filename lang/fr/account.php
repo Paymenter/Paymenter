@@ -9,11 +9,11 @@ return [
     'change_password' => 'Modifier le mot de passe',
 
     'two_factor_authentication' => 'Double authentification',
-    'two_factor_authentication_description' => 'Ajoutez un niveau de sécurité supplémentaire à votre compte en activant la double authentification.',
+    'two_factor_authentication_description' => 'Ajoutez une couche de sécurité supplémentaire à votre compte en activant l’authentification à deux facteurs.',
     'two_factor_authentication_enabled' => 'La double authentification est maintenant activée pour votre compte.',
     'two_factor_authentication_enable' => 'Activer la double authentification',
     'two_factor_authentication_disable' => 'Désactiver la double authentification',
-    'two_factor_authentication_enable_description' => 'Pour activer la double authentification, vous devez scanner le QR code ci-dessous avec une application d\'authentification comme Google Authenticator ou Authy.',
+    'two_factor_authentication_enable_description' => 'Pour activer l\'authentification à deux facteurs, vous devez scanner le code QR ci-dessous avec une application d\'authentification comme Google Authenticator ou Authy.',
     'two_factor_authentication_qr_code' => 'Scannez le QR code ci-dessous avec votre app d\'authentification :',
     'two_factor_authentication_secret' => 'Ou saisissez le code suivant manuellement :',
 

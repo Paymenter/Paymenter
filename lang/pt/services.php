@@ -29,4 +29,29 @@ return [
     'upgrade' => 'Atualizar',
     'upgrade_summary' => 'Resumo da atualização',
     'total_today' => 'Total hoje',
+    'upgrade_service' => 'Melhorar Serviço',
+    'upgrade_choose_product' => 'Escolha um produto para melhorar',
+    'upgrade_choose_config' => 'Escolha a configuração para melhorar',
+    'next_step' => 'Próximo passo',
+
+    'upgrade_pending' => 'Você não pode fazer outro melhoramento enquanto já há um melhoramento ativo / rebaixamento de fatura aberta',
+
+    'outstanding_invoice' => 'Você tem uma fatura em aberto.',
+    'view_and_pay' => 'Clique aqui para ver e pagar',
+
+    'statuses' => [
+        'pending' => 'Pendente',
+        'active' => 'Ativo',
+        'cancelled' => 'Cancelado',
+        'suspended' => 'Suspenso',
+    ],
+    'billing_cycles' => [
+        'day' => 'dia|dias',
+        'week' => 'semana|semanas',
+        'month' => 'mês|meses',
+        'year' => 'ano|anos',
+    ],
+    'every_period' => 'A cada :periodo :unidade',
+    'price_every_period' => ':preço por :periodo :unidade',
+    'expires_at' => 'Expiração',
 ];

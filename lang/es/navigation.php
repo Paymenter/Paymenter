@@ -5,7 +5,7 @@ return [
     'shop' => 'Tienda',
     'cart' => 'Carrito',
     'login' => 'Iniciar sesión',
-    'register' => 'Registro',
+    'register' => 'Registrarse',
     'services' => 'Servicios',
     'invoices' => 'Facturas',
     'account' => 'Cuenta',
@@ -13,5 +13,5 @@ return [
     'security' => 'Seguridad',
     'dashboard' => 'Panel',
     'tickets' => 'Tickets',
-    'admin' => 'Admin',
+    'admin' => 'Administración',
 ];

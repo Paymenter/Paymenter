@@ -13,7 +13,7 @@ return [
     'invoice' => 'الفاتورة #:id',
     'unit_price' => 'سعر الوحدة',
     'bill_to' => '',
-    'issued_to' => 'Issued To',
+    'issued_to' => 'صدرت إلى',
     'paid' => 'مدفوعة',
     'payment_pending' => 'في انتظار الدفع',
     'checking_payment' => 'الدفع قيد التحقق',
@@ -30,4 +30,5 @@ return [
     'payment_method' => 'طريقة الدفع',
     'amount' => 'المبلغ',
     'date' => 'التاريخ',
+    'due_date' => 'Due Date',
 ];

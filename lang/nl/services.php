@@ -29,6 +29,15 @@ return [
     'upgrade' => 'Upgrade',
     'upgrade_summary' => 'Upgrade Overzicht',
     'total_today' => 'Totale prijs vandaag',
+    'upgrade_service' => 'Upgrade Service',
+    'upgrade_choose_product' => 'Choose a product to upgrade to',
+    'upgrade_choose_config' => 'Choose the configuration for the upgrade',
+    'next_step' => 'Next Step',
+
+    'upgrade_pending' => 'You cannot upgrade whilst there is already an upgrade / downgrade invoice open',
+
+    'outstanding_invoice' => 'You have an outstanding invoice.',
+    'view_and_pay' => 'Click here to view and pay',
 
     'statuses' => [
         'pending' => 'In afwachting',
@@ -44,4 +53,5 @@ return [
     ],
     'every_period' => 'Elke :period :unit',
     'price_every_period' => ':price per :period :unit',
+    'expires_at' => 'Expires at',
 ];

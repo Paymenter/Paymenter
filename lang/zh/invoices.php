@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'invoices' => '發票',
+    'invoices' => '帳單',
     'product' => '產品',
     'price' => '價格',
     'status' => '狀態',
@@ -10,15 +10,15 @@ return [
     'id' => '編號',
     'total' => '總計',
     'subtotal' => '小計',
-    'invoice' => '發票 #:id',
+    'invoice' => '帳單 #:id',
     'unit_price' => '單價',
     'bill_to' => '帳單寄送至',
-    'issued_to' => 'Issued To',
+    'issued_to' => '授權給',
     'paid' => '已付款',
     'payment_pending' => '等待付款',
     'checking_payment' => '確認付款中',
-    'invoice_date' => '發票日期',
-    'invoice_no' => '發票號碼',
+    'invoice_date' => '帳單日期',
+    'invoice_no' => '帳單號碼',
     'tax_id' => '稅務編號',
     'company_id' => '公司編號',
     'item' => '項目',
@@ -30,4 +30,5 @@ return [
     'payment_method' => '付款方式',
     'amount' => '金額',
     'date' => '日期',
+    'due_date' => 'Due Date',
 ];

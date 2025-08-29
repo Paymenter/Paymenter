@@ -29,4 +29,29 @@ return [
     'upgrade' => 'Upgrade',
     'upgrade_summary' => 'Ringkasan Upgrade',
     'total_today' => 'Total Hari Ini',
+    'upgrade_service' => 'Tingkatkan Layanan',
+    'upgrade_choose_product' => 'Pilih produk untuk peningkatan',
+    'upgrade_choose_config' => 'Pilih konfigurasi untuk peningkatan',
+    'next_step' => 'Berikutnya',
+
+    'upgrade_pending' => 'Anda tidak dapat melakukan peningkatan jika terdapat faktur peningkatan/penurunan yang sedang berjalan',
+
+    'outstanding_invoice' => 'Anda memiliki faktur yang belum diselesaikan.',
+    'view_and_pay' => 'Klik di sini untuk melihat dan melakukan pembayaran',
+
+    'statuses' => [
+        'pending' => 'Tertunda',
+        'active' => 'Aktif',
+        'cancelled' => 'Dibatalkan',
+        'suspended' => 'Ditangguhkan',
+    ],
+    'billing_cycles' => [
+        'day' => 'hari|hari',
+        'week' => 'minggu|minggu',
+        'month' => 'bulan|bulan',
+        'year' => 'tahun|tahun',
+    ],
+    'every_period' => 'Setiap :period :unit',
+    'price_every_period' => ':price per :period :unit',
+    'expires_at' => 'Berakhir pada',
 ];

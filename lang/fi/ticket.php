@@ -9,6 +9,11 @@ return [
     'department' => 'Osasto',
     'created_at' => 'Luotu',
     'reply' => 'Vastaa',
+    'attachments' => 'Liitteet',
+    'upload_attachments' => 'Lataa liitteet',
+    'or_drag_and_drop' => 'tai vedä ja pudota',
+    'files_max' => 'Tiedostot enintään 10Mt',
+    'selected_files' => 'Valitut tiedostot',
 
     'create_ticket' => 'Luo uusi tukipyyntö',
     'select_department' => 'Valitse osasto',

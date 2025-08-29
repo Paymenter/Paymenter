@@ -19,14 +19,14 @@ return [
 
     'sessions' => 'Sesiones',
     'sessions_description' => 'Administra y cierra sesión en tus sesiones activas en otros navegadores y dispositivos.',
-    'logout_sessions' => 'Cerrar sesión en esta sesión',
+    'logout_sessions' => 'Cerrar esta sesión',
 
     'input' => [
         'current_password' => 'Contraseña actual',
         'current_password_placeholder' => 'Tu contraseña actual',
         'new_password' => 'Nueva contraseña',
         'new_password_placeholder' => 'Tu nueva contraseña',
-        'confirm_password' => 'Confirmar la contraseña',
+        'confirm_password' => 'Confirma la contraseña',
         'confirm_password_placeholder' => 'Confirma tu nueva contraseña',
 
         'two_factor_code' => 'Ingresa el código de tu aplicación de autenticación',

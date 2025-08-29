@@ -9,6 +9,11 @@ return [
     'department' => 'القسم',
     'created_at' => 'أنشئت في',
     'reply' => 'ردّ',
+    'attachments' => 'Attachments',
+    'upload_attachments' => 'Upload Attachments',
+    'or_drag_and_drop' => 'or drag and drop',
+    'files_max' => 'Files up to 10MB',
+    'selected_files' => 'Selected Files',
 
     'create_ticket' => 'إنشاء تذكرة',
     'select_department' => 'اختر القسم',

@@ -29,4 +29,29 @@ return [
     'upgrade' => 'الترقية',
     'upgrade_summary' => 'ملخص الترقية',
     'total_today' => 'إجمالي اليوم',
+    'upgrade_service' => 'ترقية الخدمة',
+    'upgrade_choose_product' => 'اختر منتج للترقية إليه',
+    'upgrade_choose_config' => 'اختر إعدادات الترقية',
+    'next_step' => 'الخطوة التالية',
+
+    'upgrade_pending' => 'لا يمكنك الترقية بينما توجد فاتورة ترقية / تخفيض مفتوحة',
+
+    'outstanding_invoice' => 'لديك فاتورة غير مسددة.',
+    'view_and_pay' => 'اضغط هنا للعرض والدفع',
+
+    'statuses' => [
+        'pending' => 'في الانتظار',
+        'active' => 'نشط',
+        'cancelled' => 'ملغاة',
+        'suspended' => 'معلق',
+    ],
+    'billing_cycles' => [
+        'day' => 'يوم|أيام',
+        'week' => 'أسبوع|أسابيع',
+        'month' => 'شهر|شهور',
+        'year' => 'سنة|سنين',
+    ],
+    'every_period' => 'كل :period :Unit',
+    'price_every_period' => ':price لكل :period :Unit',
+    'expires_at' => 'Expires at',
 ];

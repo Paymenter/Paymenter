@@ -1,11 +1,11 @@
 <?php
 
 return [
-    'dashboard_title' => 'Dashboard',
-    'welcome_back' => 'Welcome back, :name!',
-    'dashboard_description' => 'Manage your active services, invoices, tickets, and stay updated here.',
-    'open_tickets' => 'Open Tickets',
-    'unpaid_invoices' => 'Unpaid Invoices',
-    'active_services' => 'Active Services',
-    'view_all' => 'View All',
+    'dashboard_title' => 'Kontrolna tabla',
+    'welcome_back' => 'Dobrodošli nazad, :name!',
+    'dashboard_description' => 'Upravljajte svojim aktivnim uslugama, fakturama, tiketima i ostanite u toku ovde.',
+    'open_tickets' => 'Otvoreni tiketi',
+    'unpaid_invoices' => 'Neplaćene fakture',
+    'active_services' => 'Aktivne usluge',
+    'view_all' => 'Prikaži sve',
 ];

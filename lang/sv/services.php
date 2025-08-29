@@ -29,4 +29,29 @@ return [
     'upgrade' => 'Uppgradera',
     'upgrade_summary' => 'Sammanfattning av uppgradering',
     'total_today' => 'Totalt idag',
+    'upgrade_service' => 'Uppgradera tjänsten',
+    'upgrade_choose_product' => 'Välj en produkt att uppgradera till',
+    'upgrade_choose_config' => 'Välj konfiguration för uppgraderingen',
+    'next_step' => 'Nästa steg',
+
+    'upgrade_pending' => 'Du kan inte uppgradera medan det redan finns en uppgradering/nedgradering faktura öppen',
+
+    'outstanding_invoice' => 'Du har en obetald faktura.',
+    'view_and_pay' => 'Klicka här för att se och betala',
+
+    'statuses' => [
+        'pending' => 'Väntande',
+        'active' => 'Aktiv',
+        'cancelled' => 'Annullerad',
+        'suspended' => 'Avstängd',
+    ],
+    'billing_cycles' => [
+        'day' => 'dag|dagar',
+        'week' => 'vecka|veckor',
+        'month' => 'månad|månader',
+        'year' => 'år|år',
+    ],
+    'every_period' => 'Varje :period :unit',
+    'price_every_period' => ':price per :period :unit',
+    'expires_at' => 'Utgår den',
 ];

@@ -29,4 +29,29 @@ return [
     'upgrade' => 'Upgrade',
     'upgrade_summary' => 'Upgrade-Zusammenfassung',
     'total_today' => 'Heute zu bezahlender Betrag',
+    'upgrade_service' => 'Produkt hochstufen',
+    'upgrade_choose_product' => 'Wähle ein Produkt für das Upgrade aus',
+    'upgrade_choose_config' => 'Wähle die Konfiguration für das Upgrade aus',
+    'next_step' => 'Nächster Schritt',
+
+    'upgrade_pending' => 'Du kannst kein Upgrade durchführen, solange du noch offene Rechnungen hast',
+
+    'outstanding_invoice' => 'Du hast eine ausstehende Rechnung',
+    'view_and_pay' => 'Hier klicken, um anzuzeigen und zu bezahlen',
+
+    'statuses' => [
+        'pending' => 'Ausstehend',
+        'active' => 'Aktiv',
+        'cancelled' => 'Abgebrochen',
+        'suspended' => 'Ausgesetzt',
+    ],
+    'billing_cycles' => [
+        'day' => 'Tag|Tage',
+        'week' => 'Woche|Wochen',
+        'month' => 'Monat|Monate',
+        'year' => 'Jahr|Jahre',
+    ],
+    'every_period' => 'Jede :period :unit',
+    'price_every_period' => ':price je :period :unit',
+    'expires_at' => 'Gültig bis',
 ];
