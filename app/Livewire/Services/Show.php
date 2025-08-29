@@ -19,6 +19,9 @@ class Show extends Component
     #[Locked]
     public $views = [];
 
+    #[Locked]
+    public $fields = [];
+
     #[Url('tab', except: false), Locked]
     public $currentView;
 
@@ -40,6 +43,8 @@ class Show extends Component
                     $this->buttons[] = $action;
                 } elseif ($action['type'] == 'view') {
                     $this->views[] = $action;
+                } elseif ($action['type'] == 'text') {
+                    $this->fields[] = $action;
                 }
             }
             $this->currentView = $this->currentView ?? ($this->views[0]['name'] ?? null);

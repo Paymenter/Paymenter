@@ -49,6 +49,14 @@
                             {{ __('services.statuses.' . $service->status) }}
                         </span>
                     </div>
+                    <br>
+                    @foreach ($fields as $field)
+                    <div class="flex items-center text-base">
+                        <span class="mr-2">{{ $field['label'] }}:</span>
+                        <span class="text-base/50">{{ $field['text'] }}</span>
+                    </div>
+                    @endforeach
+
                 </div>
             </div>
             @if($service->cancellable || $service->upgradable || count($buttons) > 0)
