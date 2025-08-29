@@ -4,6 +4,7 @@ namespace App\Admin\Resources\ExtensionResource\Pages;
 
 use App\Admin\Resources\ExtensionResource;
 use App\Helpers\ExtensionHelper;
+use Filament\Actions\Action;
 use Filament\Resources\Pages\EditRecord;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
@@ -11,6 +12,26 @@ use Illuminate\Support\Arr;
 class EditExtension extends EditRecord
 {
     protected static string $resource = ExtensionResource::class;
+
+    protected function getHeaderActions(): array
+    {
+        return [
+            Action::make('uninstall')
+                ->requiresConfirmation()
+                ->color('danger')
+                ->label('Uninstall Extension')
+                ->modalDescription('Are you sure you want to uninstall this extension? This will remove all its data and settings.')
+                ->action(function (Model $record) {
+                    // Call the extension's uninstalled method
+                    ExtensionHelper::call($record, 'uninstalled', mayFail: true);
+                    // Delete the record
+                    $record->delete();
+
+                    // Redirect to the list page
+                    $this->redirect(ExtensionResource::getUrl('index'), true);
+                }),
+        ];
+    }
 
     protected function mutateFormDataBeforeFill(array $data): array
     {

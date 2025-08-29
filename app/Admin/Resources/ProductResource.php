@@ -2,23 +2,36 @@
 
 namespace App\Admin\Resources;
 
-use App\Admin\Resources\ProductResource\Pages;
+use App\Admin\Resources\ProductResource\Pages\CreateProduct;
+use App\Admin\Resources\ProductResource\Pages\EditProduct;
+use App\Admin\Resources\ProductResource\Pages\ListProducts;
 use App\Classes\FilamentInput;
 use App\Helpers\ExtensionHelper;
 use App\Models\Currency;
 use App\Models\Product;
 use App\Models\Server;
-use Filament\Forms;
-use Filament\Forms\Components\Actions\Action;
-use Filament\Forms\Components\Grid;
-use Filament\Forms\Components\Tabs;
-use Filament\Forms\Form;
-use Filament\Forms\Get;
-use Filament\Forms\Set;
+use Exception;
+use Filament\Actions\Action;
+use Filament\Actions\EditAction;
+use Filament\Forms\Components\Checkbox;
+use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\Repeater;
+use Filament\Forms\Components\RichEditor;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\TextInput;
+use Filament\Infolists\Components\TextEntry;
 use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
+use Filament\Schemas\Components\Grid;
+use Filament\Schemas\Components\Tabs;
+use Filament\Schemas\Components\Tabs\Tab;
+use Filament\Schemas\Components\Utilities\Get;
+use Filament\Schemas\Components\Utilities\Set;
+use Filament\Schemas\Schema;
 use Filament\Support\RawJs;
-use Filament\Tables;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Cache;
@@ -28,25 +41,25 @@ class ProductResource extends Resource
 {
     protected static ?string $model = Product::class;
 
-    protected static ?string $navigationGroup = 'Administration';
+    protected static string|\UnitEnum|null $navigationGroup = 'Administration';
 
-    protected static ?string $navigationIcon = 'ri-instance-line';
+    protected static string|\BackedEnum|null $navigationIcon = 'ri-instance-line';
 
-    protected static ?string $activeNavigationIcon = 'ri-instance-fill';
+    protected static string|\BackedEnum|null $activeNavigationIcon = 'ri-instance-fill';
 
     protected static ?string $recordTitleAttribute = 'name';
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
+        return $schema
+            ->components([
                 Tabs::make('Tabs')
                     ->persistTabInQueryString()
                     ->tabs([
-                        Tabs\Tab::make('General')
+                        Tab::make('General')
                             ->columns(2)
                             ->schema([
-                                Forms\Components\TextInput::make('name')
+                                TextInput::make('name')
                                     ->required()
                                     ->maxLength(255)
                                     ->live(onBlur: true)
@@ -57,38 +70,42 @@ class ProductResource extends Resource
 
                                         $set('slug', Str::slug($state));
                                     }),
-                                Forms\Components\TextInput::make('slug')->required()->unique(ignoreRecord: true),
-                                Forms\Components\TextInput::make('stock')->integer()->nullable(),
-                                Forms\Components\TextInput::make('per_user_limit')->integer()->nullable(),
-                                Forms\Components\Select::make('allow_quantity')->options([
+                                TextInput::make('slug')->required()->unique(ignoreRecord: true),
+                                TextInput::make('stock')->integer()->nullable(),
+                                TextInput::make('per_user_limit')->integer()->nullable(),
+                                Select::make('allow_quantity')->options([
                                     'disabled' => 'No',
                                     'separated' => 'Separated',
                                     'combined' => 'Combined',
                                 ])->default('separated')
                                     ->required(),
-                                Forms\Components\Textarea::make('email_template')
+                                Textarea::make('email_template')
                                     ->hint('This snippet will be used in the email template.')
                                     ->nullable(),
-                                Forms\Components\Checkbox::make('hidden')
+                                Checkbox::make('hidden')
                                     ->label('Hide product')
                                     ->hint('Hide the product from the client area.'),
 
-                                Forms\Components\RichEditor::make('description')->nullable()->columnSpanFull(),
-                                Forms\Components\FileUpload::make('image')->label('Image')->nullable()->acceptedFileTypes(['image/*']),
-                                Forms\Components\Select::make('category_id')
+                                RichEditor::make('description')->nullable()->columnSpanFull(),
+                                FileUpload::make('image')
+                                    ->label('Image')
+                                    ->nullable()
+                                    ->visibility('public')
+                                    ->acceptedFileTypes(['image/*']),
+                                Select::make('category_id')
                                     ->relationship('category', 'name')
                                     ->searchable()
                                     ->preload()
-                                    ->createOptionForm(fn (Form $form) => CategoryResource::form($form))
+                                    ->createOptionForm(fn (Schema $schema) => CategoryResource::form($schema))
                                     ->required(),
                             ]),
-                        Tabs\Tab::make('Pricing')
+                        Tab::make('Pricing')
                             ->schema([self::plan()]),
 
-                        Tabs\Tab::make('Upgrades')
+                        Tab::make('Upgrades')
                             ->schema([
                                 // Select input for the products this product can upgrade to (hasmany relationship)
-                                Forms\Components\Select::make('upgrades')
+                                Select::make('upgrades')
                                     ->label('Upgrades')
                                     ->relationship('upgrades', 'name', ignoreRecord: true)
                                     ->multiple()
@@ -96,9 +113,9 @@ class ProductResource extends Resource
                                     ->placeholder('Select the products that this product can upgrade to'),
                             ]),
 
-                        Tabs\Tab::make('Server')
+                        Tab::make('Server')
                             ->schema([
-                                Forms\Components\Select::make('server_id')
+                                Select::make('server_id')
                                     ->relationship('server', 'name')
                                     ->searchable()
                                     ->preload()
@@ -110,7 +127,7 @@ class ProductResource extends Resource
                                     )
                                     ->live(),
 
-                                Grid::make('settings')
+                                Grid::make()
                                     ->hidden(fn (Get $get) => $get('server_id') === null)
                                     ->columns(2)
                                     ->schema(
@@ -122,13 +139,13 @@ class ProductResource extends Resource
                                             $settings = [];
 
                                             try {
-                                                foreach (ExtensionHelper::getProductConfigOnce(Server::findOrFail($server), $get('settings')) as $setting) {
+                                                foreach (ExtensionHelper::getProductConfig(Server::findOrFail($server), $get('settings')) as $setting) {
                                                     // Easier to use dot notation for settings
                                                     $setting['name'] = 'settings.' . $setting['name'];
                                                     $settings[] = FilamentInput::convert($setting);
                                                 }
-                                            } catch (\Exception $e) {
-                                                $settings[] = Forms\Components\Placeholder::make('error')->content($e->getMessage());
+                                            } catch (Exception $e) {
+                                                $settings[] = TextEntry::make('error')->state($e->getMessage());
                                             }
 
                                             return $settings;
@@ -142,7 +159,7 @@ class ProductResource extends Resource
 
     public static function plan()
     {
-        return Forms\Components\Repeater::make('plan')
+        return Repeater::make('plan')
             ->addActionLabel('Add new plan')
             ->relationship('plans')
             ->name('name')
@@ -176,11 +193,11 @@ class ProductResource extends Resource
             })
             ->itemLabel(fn (array $state) => $state['name'])
             ->schema([
-                Forms\Components\TextInput::make('name')
+                TextInput::make('name')
                     ->required()
                     ->live(onBlur: true)
                     ->maxLength(255),
-                Forms\Components\Select::make('type')
+                Select::make('type')
                     ->options([
                         'free' => 'Free',
                         'one-time' => 'One Time',
@@ -197,13 +214,13 @@ class ProductResource extends Resource
                     ->placeholder('Select the type of the price')
                     ->default('free'),
 
-                Forms\Components\TextInput::make('billing_period')
+                TextInput::make('billing_period')
                     ->required()
                     ->label('Time Interval')
                     ->default(1)
                     ->hidden(fn (Get $get) => $get('type') !== 'recurring'),
 
-                Forms\Components\Select::make('billing_unit')
+                Select::make('billing_unit')
                     ->options([
                         'day' => 'Day',
                         'week' => 'Week',
@@ -214,7 +231,7 @@ class ProductResource extends Resource
                     ->required()
                     ->default('month')
                     ->hidden(fn (Get $get) => $get('type') !== 'recurring'),
-                Forms\Components\Repeater::make('pricing')
+                Repeater::make('pricing')
                     ->hidden(fn (Get $get) => $get('type') === 'free')
                     ->columns(3)
                     ->addActionLabel('Add new price')
@@ -225,7 +242,7 @@ class ProductResource extends Resource
                     ->defaultItems(1)
                     ->itemLabel(fn (array $state) => $state['currency_code'])
                     ->schema([
-                        Forms\Components\Select::make('currency_code')
+                        Select::make('currency_code')
                             ->options(function (Get $get, ?string $state) {
                                 $pricing = collect($get('../../pricing'))->pluck('currency_code');
                                 if ($state !== null) {
@@ -242,7 +259,7 @@ class ProductResource extends Resource
                             ->live()
                             ->default(config('settings.default_currency'))
                             ->required(),
-                        Forms\Components\TextInput::make('price')
+                        TextInput::make('price')
                             ->required()
                             ->label('Price')
                             // Suffix based on chosen currency
@@ -257,7 +274,7 @@ class ProductResource extends Resource
                             ->numeric()
                             ->minValue(0)
                             ->hidden(fn (Get $get) => $get('type') === 'free'),
-                        Forms\Components\TextInput::make('setup_fee')
+                        TextInput::make('setup_fee')
                             ->label('Setup fee')
                             ->live(onBlur: true)
                             ->mask(RawJs::make(
@@ -276,18 +293,18 @@ class ProductResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('name')->searchable(),
-                Tables\Columns\TextColumn::make('slug'),
-                Tables\Columns\TextColumn::make('category.name')->searchable(),
+                TextColumn::make('name')->searchable(),
+                TextColumn::make('slug'),
+                TextColumn::make('category.name')->searchable(),
             ])
             ->filters([
-                Tables\Filters\SelectFilter::make('category')
+                SelectFilter::make('category')
                     ->relationship('category', 'name')
                     ->searchable()
                     ->preload(),
             ])
-            ->actions([
-                Tables\Actions\EditAction::make(),
+            ->recordActions([
+                EditAction::make(),
             ])
             ->defaultSort(function (Builder $query): Builder {
                 return $query
@@ -300,9 +317,9 @@ class ProductResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListProducts::route('/'),
-            'create' => Pages\CreateProduct::route('/create'),
-            'edit' => Pages\EditProduct::route('/{record}/edit'),
+            'index' => ListProducts::route('/'),
+            'create' => CreateProduct::route('/create'),
+            'edit' => EditProduct::route('/{record}/edit'),
         ];
     }
 }

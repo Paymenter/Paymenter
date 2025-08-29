@@ -10,11 +10,16 @@ class CurrencySwitch extends Component
 {
     public $currentCurrency;
 
+    protected $currencies = [];
+
     public function mount()
     {
         $this->currentCurrency = session('currency', config('settings.default_currency'));
-
-        if (Cart::get()->isNotEmpty() || Currency::all()->count() <= 1) {
+        $this->currencies = Currency::all()->map(fn ($currency) => [
+            'value' => $currency->code,
+            'label' => $currency->code,
+        ])->values()->toArray();
+        if (Cart::get()->isNotEmpty() || count($this->currencies) <= 1) {
             $this->skipRender();
         }
     }
@@ -28,13 +33,12 @@ class CurrencySwitch extends Component
             return;
         }
         session(['currency' => $currency]);
-        $this->dispatch('currencyChanged', $currency);
+
+        return $this->redirect(request()->header('Referer', '/'), navigate: true);
     }
 
     public function render()
     {
-        $currencies = Currency::all();
-
-        return view('components.currency-switch', compact('currencies'));
+        return view('components.currency-switch');
     }
 }

@@ -5,13 +5,13 @@ namespace App\Models;
 use App\Observers\TicketObserver;
 use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
+use OwenIt\Auditing\Contracts\Auditable;
 
 #[ObservedBy([TicketObserver::class])]
 
-class Ticket extends Model
+class Ticket extends Model implements Auditable
 {
-    use HasFactory;
+    use \App\Models\Traits\Auditable, HasFactory;
 
     protected $fillable = [
         'subject',

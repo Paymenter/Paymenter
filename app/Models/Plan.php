@@ -5,11 +5,11 @@ namespace App\Models;
 use App\Classes\Price as PriceClass;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
+use OwenIt\Auditing\Contracts\Auditable;
 
-class Plan extends Model
+class Plan extends Model implements Auditable
 {
-    use HasFactory;
+    use \App\Models\Traits\Auditable, HasFactory;
 
     public $timestamps = false;
 
@@ -18,6 +18,7 @@ class Plan extends Model
         'type',
         'billing_period',
         'billing_unit',
+        'sort',
     ];
 
     /**

@@ -18,34 +18,40 @@
     <div class="flex justify-end">
         <div class="max-w-[200px] w-full text-right">
             <span class="cursor-pointer text-base underline" wire:click="downloadPDF">
-                Download PDF
+                <span wire:loading wire:target="downloadPDF">
+                    <x-ri-loader-5-fill class="size-6 animate-spin" />
+                </span>
+                <span wire:loading.remove wire:target="downloadPDF">Download PDF</span>
             </span>
         </div>
     </div>
 
     <div class="bg-background-secondary border border-neutral p-12 rounded-lg mt-2">
+        <h1 class="text-2xl font-bold sm:text-3xl">{{ __('invoices.invoice', ['id' => $invoice->number]) }}</h1>
         <div class="sm:flex justify-between pr-4 pt-4">
-            <h1 class="text-2xl font-bold sm:text-3xl">{{ __('invoices.invoice', ['id' => $invoice->number]) }}</h1>
-            <div class="mt-4 sm:mt-0 text-right">
+            <div class="mt-4">
+                <p class="uppercase font-bold">{{ __('invoices.issued_to') }}</p>
                 <p>{{ $invoice->user->name }}</p>
-                <p class="text-sm">{{ $invoice->user->address }}</p>
-                <p class="text-sm">{{ $invoice->user->city }} {{ $invoice->user->zip }}</p>
-                <p class="text-sm">{{ $invoice->user->state }} {{ $invoice->user->country }}</p>
-
-                <p class="mt-4 text-base">{{ __('invoices.invoice_date')}}: {{ $invoice->created_at->format('d M Y') }}</p>
+                @foreach($invoice->user->properties()->with('parent_property')->whereHas('parent_property', function ($query) {
+                    $query->where('show_on_invoice', true);
+                })->get() as $property)
+                    <p>{{ $property->value }}</p>
+                @endforeach
+            </div>
+            <div class="mt-4 sm:mt-0 text-right">
+                <p class="uppercase font-bold">{{ __('invoices.bill_to') }}</p>
+                <p>{!! nl2br(e(config('settings.bill_to_text', config('settings.company_name')))) !!}</p>
             </div>
         </div>
-        <div class="sm:flex justify-between pr-4 pt-4">
-            <div class="mt-6">
-                <p class="uppercase font-bold">{{ __('invoices.bill_to') }}</p>
-                <address class="text-base mt-4">
-                    <p>{{ config('settings.company_name') }}</p>
-                    <p>{{ config('settings.company_address') }}</p>
-                    <p>{{ config('settings.company_city') }} {{ config('settings.company_zip') }}</p>
-                    <p>{{ config('settings.company_state') }} {{ config('settings.company_country') }}</p>
-                </address>
+        <div class="sm:flex justify-between pr-4 pt-4 mt-6">
+            <div class="">
+                <p class="text-base">{{ __('invoices.invoice_date')}}: {{ $invoice->created_at->format('d M Y') }}</p>
+                @if($invoice->due_at)
+                    <p class="text-base">{{ __('invoices.due_date') }}: {{ $invoice->due_at->format('d M Y') }}</p>
+                @endif
+                <p class="text-base">{{ __('invoices.invoice_no')}}: {{ $invoice->number }}</p>
             </div>
-            <div class="max-w-[200px] w-full mt-6">
+            <div class="max-w-[200px] w-full">
                 @if ($invoice->status == 'paid')
                     <div class="text-green-500 mt-6 text-lg text-center font-semibold">
                         {{ __('invoices.paid') }}
@@ -65,7 +71,14 @@
                             </div>
                         @endif
                     </div>
-                    @if(Auth::user()->credits()->where('currency_code', $invoice->currency_code)->exists() && Auth::user()->credits()->where('currency_code', $invoice->currency_code)->first()->amount > 0)
+                    @php
+                        $credit = Auth::user()->credits()
+                                ->where('currency_code', $invoice->currency_code)
+                                ->where('amount', '>', 0)
+                                ->first();
+                        $itemHasCredit = $invoice->items()->where('reference_type', App\Models\Credit::class)->exists();
+                    @endphp
+                    @if($credit && !$itemHasCredit)
                         <x-form.checkbox wire:model="use_credits" name="use_credits" :label="__('product.use_credits')" />
                     @endif
                     @if(count($gateways) > 1)
@@ -106,7 +119,15 @@
                 <tbody>
                     @foreach ($invoice->items as $item)
                         <tr>
-                            <td class="p-4 font-normal whitespace-nowrap">{{ $item->description }}</td>
+                            <td class="p-4 font-normal whitespace-nowrap">
+                                @if(in_array($item->reference_type, ['App\Models\Service', 'App\Models\ServiceUpgrade']))
+                                    <a href="{{ route('services.show', $item->reference_type == 'App\Models\Service' ? $item->reference_id : $item->reference->service_id) }}"
+                                        class="hover:underline underline-offset-2">{{ $item->description }}
+                                    </a>
+                                @else
+                                {{ $item->description }}
+                                @endif
+                            </td>
                             <td class="p-4 font-normal whitespace-nowrap text-base">{{ $item->formattedPrice }}
                             </td>
                             <td class="p-4 font-normal whitespace-nowrap">{{ $item->quantity }}</td>
@@ -126,7 +147,7 @@
                 </div>
                 <div class="flex justify-between">
                     <div class="text-sm font-medium text-gray-500 uppercase dark:text-base">
-                        {{ \App\Classes\Settings::tax()->name }}
+                        {{ \App\Classes\Settings::tax()->name }} ({{ \App\Classes\Settings::tax()->rate }}%)
                     </div>
                     <div class="text-base font-medium text-gray-900 dark:text-white">
                         {{ $invoice->formattedTotal->formatted->tax }}

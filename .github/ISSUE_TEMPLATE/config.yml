@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Paymenter Support
+    url: https://github.com/Paymenter/Paymenter/discussions/new?category=support
+    about: Get support and help with Paymenter.
+  - name: Paymenter extension idea (Server/ Gateway)
+    url: https://github.com/Paymenter/Paymenter/discussions/new?category=ideas
+    about: Suggest a new Server or Gateway extension for Paymenter.

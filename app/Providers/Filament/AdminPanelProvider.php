@@ -2,8 +2,11 @@
 
 namespace App\Providers\Filament;
 
+use App\Http\Middleware\ImpersonateMiddleware;
 use App\Models\Extension;
 use App\Providers\SettingsProvider;
+use Exception;
+use Filament\Actions\Action;
 use Filament\Facades\Filament;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\DisableBladeIconComponents;
@@ -14,6 +17,9 @@ use Filament\Panel;
 use Filament\PanelProvider;
 use Filament\Support\Colors\Color;
 use Filament\Support\Enums\Alignment;
+use Filament\Support\Facades\FilamentIcon;
+use Filament\Support\Icons\Heroicon;
+use Filament\View\PanelsIconAlias;
 use Filament\View\PanelsRenderHook;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Cookie\Middleware\EncryptCookies;
@@ -48,11 +54,15 @@ class AdminPanelProvider extends PanelProvider
             ->discoverPages(in: app_path('Admin/Pages'), for: 'App\\Admin\\Pages')
             ->discoverClusters(in: app_path('Admin/Clusters'), for: 'App\\Admin\\Clusters')
             ->userMenuItems([
-                MenuItem::make()
+                'exit_admin' => MenuItem::make()
                     ->label('Exit Admin')
                     ->url('/')
-                    ->icon('heroicon-s-arrow-uturn-left')
-                    ->sort(24),
+                    ->icon('heroicon-s-arrow-uturn-left'),
+                'logout' => Action::make('logout')
+                    ->label('Sign out')
+                    ->icon(FilamentIcon::resolve(PanelsIconAlias::USER_MENU_LOGOUT_BUTTON) ?? Heroicon::ArrowLeftOnRectangle)
+                    ->url(fn () => $panel->getLogoutUrl())
+                    ->postToUrl(),
             ])
             ->discoverWidgets(in: app_path('Admin/Widgets'), for: 'App\\Admin\\Widgets')
             ->renderHook(
@@ -69,6 +79,7 @@ class AdminPanelProvider extends PanelProvider
                 EncryptCookies::class,
                 AddQueuedCookiesToResponse::class,
                 StartSession::class,
+                ImpersonateMiddleware::class,
                 AuthenticateSession::class,
                 ShareErrorsFromSession::class,
                 VerifyCsrfToken::class,
@@ -76,7 +87,7 @@ class AdminPanelProvider extends PanelProvider
                 DisableBladeIconComponents::class,
                 DispatchServingFilamentEvent::class,
             ])
-            ->theme(asset('css/filament/admin/theme.css'))
+            ->viteTheme('resources/css/filament/admin/theme.css', 'default')
             ->authMiddleware([
                 Authenticate::class,
             ]);
@@ -89,7 +100,7 @@ class AdminPanelProvider extends PanelProvider
                 $panel->discoverPages(in: base_path('extensions' . '/' . $extension->path . '/Admin/Pages'), for: $extension->namespace . '\\Admin\\Pages');
                 $panel->discoverClusters(in: base_path('extensions' . '/' . $extension->path . '/Admin/Clusters'), for: $extension->namespace . '\\Admin\\Clusters');
             }
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             // Do nothing
         }
 

@@ -4,6 +4,7 @@ namespace Paymenter\Extensions\Servers\Virtfusion;
 
 use App\Classes\Extension\Server;
 use App\Models\Service;
+use Exception;
 use Illuminate\Support\Facades\Http;
 
 class Virtfusion extends Server
@@ -87,7 +88,7 @@ class Virtfusion extends Server
     {
         try {
             $this->request('/connect');
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return $e->getMessage();
         }
 
@@ -111,7 +112,7 @@ class Virtfusion extends Server
         ])->$method($req_url, $data);
 
         if (!$response->successful()) {
-            throw new \Exception('An error occurred, got status code ' . $response->status() . ' on ' . $req_url);
+            throw new Exception('An error occurred, got status code ' . $response->status() . ' on ' . $req_url);
         }
 
         return $response->json() ?? [];
@@ -124,15 +125,15 @@ class Virtfusion extends Server
     {
         try {
             $response = $this->request('/users/' . $service->user->id . '/byExtRelation');
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             try {
                 $response = $this->request('/users', 'post', [
                     'email' => $service->user->email,
                     'name' => $service->user->name,
                     'extRelationId' => $service->user->id,
                 ]);
-            } catch (\Exception $e) {
-                throw new \Exception('Failed to create user, this is probably due to a wrong extRelationId');
+            } catch (Exception $e) {
+                throw new Exception('Failed to create user, this is probably due to a wrong extRelationId');
             }
         }
 
@@ -149,7 +150,7 @@ class Virtfusion extends Server
     public function createServer(Service $service, $settings, $properties)
     {
         if (isset($properties['server_id'])) {
-            throw new \Exception('Server already exists');
+            throw new Exception('Server already exists');
         }
 
         $data = [
@@ -186,7 +187,7 @@ class Virtfusion extends Server
     public function suspendServer(Service $service, $settings, $properties)
     {
         if (!isset($properties['server_id'])) {
-            throw new \Exception('Server does not exist');
+            throw new Exception('Server does not exist');
         }
 
         $this->request('/servers/' . $properties['server_id'] . '/suspend', 'post');
@@ -204,7 +205,7 @@ class Virtfusion extends Server
     public function unsuspendServer(Service $service, $settings, $properties)
     {
         if (!isset($properties['server_id'])) {
-            throw new \Exception('Server does not exist');
+            throw new Exception('Server does not exist');
         }
 
         $this->request('/servers/' . $properties['server_id'] . '/unsuspend', 'post');
@@ -222,7 +223,7 @@ class Virtfusion extends Server
     public function terminateServer(Service $service, $settings, $properties)
     {
         if (!isset($properties['server_id'])) {
-            throw new \Exception('Server does not exist');
+            throw new Exception('Server does not exist');
         }
 
         $this->request('/servers/' . $properties['server_id'], 'delete');

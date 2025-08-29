@@ -61,12 +61,15 @@ class MakeTheme extends Command implements PromptsForMissingInput
         $theme_file = $themes_directory . $theme_name . DIRECTORY_SEPARATOR . 'theme.php';
         // Get the contents of the file
         $theme_file_contents = $fs->get($theme_file);
-        // Replace the author and description fields
+        // Replace theme name and author
         $theme_file_contents = str_replace(
-            "'author' => 'Paymenter',",
-            "'author' => '$author',",
+            ["'name' => 'Default'", "'author' => 'Paymenter'"],
+            ["'name' => '$theme_name'", "'author' => '$author'"],
             $theme_file_contents
         );
+
+        // Save the changes back to the file
+        $fs->put($theme_file, $theme_file_contents);
 
         $this->line('[3/4] Replaced variables in `theme.php`.');
 

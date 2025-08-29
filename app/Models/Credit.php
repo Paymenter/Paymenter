@@ -4,10 +4,12 @@ namespace App\Models;
 
 use App\Classes\Price;
 use Illuminate\Database\Eloquent\Casts\Attribute;
-use Illuminate\Database\Eloquent\Model;
+use OwenIt\Auditing\Contracts\Auditable;
 
-class Credit extends Model
+class Credit extends Model implements Auditable
 {
+    use \App\Models\Traits\Auditable;
+
     protected $fillable = [
         'currency_code',
         'amount',

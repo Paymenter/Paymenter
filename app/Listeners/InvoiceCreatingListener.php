@@ -22,9 +22,6 @@ class InvoiceCreatingListener
         ], [
             'value' => $number,
         ]);
-        // Fix to new invoices on the same request/command
-        config(['settings.invoice_number' => $number]);
-
         // Pad the invoice number with leading zeros
         $paddedNumber = str_pad($number, config('settings.invoice_number_padding', 1), '0', STR_PAD_LEFT);
 

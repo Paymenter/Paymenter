@@ -8,15 +8,27 @@ use App\Models\EmailLog;
 use App\Models\Extension;
 use App\Models\OauthClient;
 use App\Models\User;
+use App\Support\Passport\ScopeRegistry;
+use Closure;
+use Dedoc\Scramble\Scramble;
+use Dedoc\Scramble\Support\Generator\OpenApi;
+use Dedoc\Scramble\Support\Generator\SecurityScheme;
+use Exception;
+use Illuminate\Http\Request;
 use Illuminate\Queue\Events\JobFailed;
 use Illuminate\Queue\Events\JobProcessed;
+use Illuminate\Routing\UrlGenerator;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Queue;
+use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Str;
 use Laravel\Passport\Passport;
 use League\CommonMark\Extension\Table\TableExtension;
+use Livewire\Livewire;
+use SocialiteProviders\Discord\Provider;
+use SocialiteProviders\Manager\SocialiteWasCalled;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -27,6 +39,66 @@ class AppServiceProvider extends ServiceProvider
     {
         // Service provider for settings
         $this->app->register(SettingsProvider::class);
+
+        UrlGenerator::macro('alternateHasCorrectSignature', function (Request $request, $absolute = true, Closure|array $ignoreQuery = []) {
+            // ensure the base path is applied to absolute url
+            $absoluteUrl = url($request->path()); // forceRootUrl and forceScheme will apply
+            $url = $absolute ? $absoluteUrl : '/' . $request->path();
+
+            $queryString = collect(explode('&', (string) $request->server->get('QUERY_STRING')))
+                ->reject(function ($parameter) use ($ignoreQuery) {
+                    $parameter = Str::before($parameter, '=');
+
+                    if ($parameter === 'signature') {
+                        return true;
+                    }
+
+                    if ($ignoreQuery instanceof Closure) {
+                        return $ignoreQuery($parameter);
+                    }
+
+                    return in_array($parameter, $ignoreQuery);
+                })
+                ->join('&');
+
+            $original = rtrim($url . '?' . $queryString, '?');
+
+            $keys = call_user_func($this->keyResolver);
+
+            $keys = is_array($keys) ? $keys : [$keys];
+
+            foreach ($keys as $key) {
+                if (
+                    hash_equals(
+                        hash_hmac('sha256', $original, $key),
+                        (string) $request->query('signature', '')
+                    )
+                ) {
+                    return true;
+                }
+            }
+
+            return false;
+        });
+
+        UrlGenerator::macro('alternateHasValidSignature', function (Request $request, $absolute = true, array $ignoreQuery = []) {
+            return \URL::alternateHasCorrectSignature($request, $absolute, $ignoreQuery)
+                && \URL::signatureHasNotExpired($request);
+        });
+
+        Request::macro('hasValidSignature', function ($absolute = true, array $ignoreQuery = []) {
+            return \URL::alternateHasValidSignature($this, $absolute, $ignoreQuery);
+        });
+
+        Request::macro('livewireUrl', function () {
+            if (request()->route()->named('paymenter.livewire.update')) {
+                $previousUrl = url()->previous();
+
+                return $previousUrl !== null ? $previousUrl : null;
+            }
+
+            return request()->fullUrl();
+        });
     }
 
     /**
@@ -35,26 +107,28 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         // Change livewire url
-        \Livewire\Livewire::setUpdateRoute(function ($handle) {
-            return \Illuminate\Support\Facades\Route::post('/paymenter/update', $handle)->middleware('web')->name('paymenter.update');
+        Livewire::setUpdateRoute(function ($handle) {
+            return Route::post('/paymenter/update', $handle)->middleware('web')->name('paymenter.');
         });
-        \Livewire\Livewire::propertySynthesizer(PriceSynth::class);
+        Livewire::propertySynthesizer(PriceSynth::class);
 
         Gate::define('has-permission', function (User $user, string $ability) {
             return $user->hasPermission($ability);
         });
 
-        Event::listen(function (\SocialiteProviders\Manager\SocialiteWasCalled $event) {
-            $event->extendSocialite('discord', \SocialiteProviders\Discord\Provider::class);
+        Event::listen(function (SocialiteWasCalled $event) {
+            $event->extendSocialite('discord', Provider::class);
         });
 
         try {
-            foreach (collect(Extension::where(function ($query) {
-                $query->where('enabled', true)->orWhere('type', 'server')->orWhere('type', 'gateway');
-            })->get())->unique('extension') as $extension) {
+            foreach (
+                collect(Extension::where(function ($query) {
+                    $query->where('enabled', true)->orWhere('type', 'server')->orWhere('type', 'gateway');
+                })->get())->unique('extension') as $extension
+            ) {
                 ExtensionHelper::call($extension, 'boot', mayFail: true);
             }
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             // Fail silently
         }
 
@@ -87,8 +161,18 @@ class AppServiceProvider extends ServiceProvider
         });
         Passport::clientModel(OauthClient::class);
         Passport::ignoreRoutes();
-        Passport::tokensCan([
-            'profile' => 'View your profile',
-        ]);
+        Passport::tokensCan(ScopeRegistry::getAll());
+
+        if (class_exists(Scramble::class)) {
+            Scramble::configure()
+                ->routes(function (\Illuminate\Routing\Route $route) {
+                    return Str::startsWith($route->uri, 'api/v1/admin');
+                })
+                ->withDocumentTransformers(function (OpenApi $openApi) {
+                    $openApi->secure(
+                        SecurityScheme::http('bearer')
+                    );
+                });
+        }
     }
 }

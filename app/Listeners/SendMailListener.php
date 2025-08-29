@@ -5,6 +5,7 @@ namespace App\Listeners;
 use App\Events\Auth\Login;
 use App\Events\Invoice\Finalized as InvoiceFinalized;
 use App\Events\Order\Finalized as OrderFinalized;
+use App\Events\ServiceCancellation\Created as CancellationCreated;
 use App\Events\User\Created as UserCreated;
 use App\Helpers\NotificationHelper;
 use App\Models\Session;
@@ -14,7 +15,7 @@ class SendMailListener
     /**
      * Handle the event.
      */
-    public function handle(InvoiceFinalized|OrderFinalized|UserCreated|Login $event): void
+    public function handle(InvoiceFinalized|OrderFinalized|UserCreated|Login|CancellationCreated $event): void
     {
 
         if ($event instanceof InvoiceFinalized) {
@@ -41,6 +42,9 @@ class SendMailListener
                 'time' => now()->format('Y-m-d H:i:s'),
             ];
             NotificationHelper::loginDetectedNotification($user, $data);
+        } elseif ($event instanceof CancellationCreated) {
+            $cancellation = $event->cancellation;
+            NotificationHelper::serviceCancellationReceivedNotification($cancellation->service->user, $cancellation);
         }
     }
 }

@@ -5,6 +5,7 @@ namespace App\Livewire\Invoices;
 use App\Classes\PDF;
 use App\Helpers\ExtensionHelper;
 use App\Livewire\Component;
+use App\Models\Credit;
 use App\Models\Gateway;
 use App\Models\Invoice;
 use Illuminate\Support\Facades\Auth;
@@ -37,7 +38,7 @@ class Show extends Component
         }
 
         if ($this->invoice->status === 'pending') {
-            $this->gateways = ExtensionHelper::getCheckoutGateways($this->invoice->products, 'invoice');
+            $this->gateways = ExtensionHelper::getCheckoutGateways($this->invoice->total, $this->invoice->currency_code, 'invoice', $this->invoice->items);
             if (count($this->gateways) > 0 && !array_search($this->gateway, array_column($this->gateways, 'id')) !== false) {
                 $this->gateway = $this->gateways[0]->id;
             }
@@ -51,6 +52,10 @@ class Show extends Component
 
         // We don't want to toggle use_credits before $this->pay() is called, otherwise it will always paid with credits
         $this->use_credits = true;
+        $hasCredits = $this->invoice->items()->where('reference_type', Credit::class)->exists();
+        if ($hasCredits) {
+            $this->use_credits = false;
+        }
     }
 
     public function pay()

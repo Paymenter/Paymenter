@@ -2,26 +2,31 @@
 
 namespace App\Admin\Resources;
 
-use App\Admin\Resources\HttpLogResource\Pages;
+use App\Admin\Resources\HttpLogResource\Pages\ListHttpLogs;
 use App\Models\DebugLog;
-use Filament\Infolists;
-use Filament\Infolists\Infolist;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\ViewAction;
+use Filament\Infolists\Components\TextEntry;
+use Filament\Infolists\Components\ViewEntry;
 use Filament\Resources\Resource;
-use Filament\Tables;
+use Filament\Schemas\Schema;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 
 class HttpLogResource extends Resource
 {
     protected static ?string $model = DebugLog::class;
 
-    protected static ?string $navigationIcon = 'ri-external-link-line';
+    protected static string|\BackedEnum|null $navigationIcon = 'ri-external-link-line';
 
     protected static ?string $modelLabel = 'HTTP log';
 
-    public static ?string $navigationGroup = 'Debug';
+    public static string|\UnitEnum|null $navigationGroup = 'Debug';
 
     // Edit query to only include with type 'http'
-    public static function getEloquentQuery(): \Illuminate\Database\Eloquent\Builder
+    public static function getEloquentQuery(): Builder
     {
         return parent::getEloquentQuery()->where('type', 'http');
     }
@@ -30,32 +35,32 @@ class HttpLogResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('method')
+                TextColumn::make('method')
                     ->state(function (DebugLog $record) {
                         return $record->context['method'] ?? null;
                     })
                     ->toggleable(),
-                Tables\Columns\TextColumn::make('url')
+                TextColumn::make('url')
                     ->state(function (DebugLog $record) {
                         return $record->context['url'] ?? null;
                     })
                     ->toggleable(),
-                Tables\Columns\TextColumn::make('status')
+                TextColumn::make('status')
                     ->state(function (DebugLog $record) {
                         return $record->context['response_status'] ?? null;
                     })
                     ->toggleable(),
-                Tables\Columns\TextColumn::make('created_at')
+                TextColumn::make('created_at')
                     ->searchable()
                     ->toggleable(isToggledHiddenByDefault: true)
                     ->sortable(),
             ])
-            ->actions([
-                Tables\Actions\ViewAction::make(),
+            ->recordActions([
+                ViewAction::make(),
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+            ->toolbarActions([
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
                 ]),
             ])
             ->defaultSort('created_at', 'desc');
@@ -66,46 +71,46 @@ class HttpLogResource extends Resource
         return config('settings.debug', false);
     }
 
-    public static function infolist(Infolist $infolist): Infolist
+    public static function infolist(Schema $schema): Schema
     {
-        return $infolist
-            ->schema([
-                Infolists\Components\TextEntry::make('method')
+        return $schema
+            ->components([
+                TextEntry::make('method')
                     ->state(function (DebugLog $record) {
                         return $record->context['method'] ?? null;
                     }),
-                Infolists\Components\TextEntry::make('url')
+                TextEntry::make('url')
                     ->state(function (DebugLog $record) {
                         return $record->context['url'] ?? null;
                     }),
 
-                Infolists\Components\TextEntry::make('status')
+                TextEntry::make('status')
                     ->state(function (DebugLog $record) {
                         return $record->context['response_status'] ?? null;
                     }),
 
-                Infolists\Components\ViewEntry::make('request')
+                ViewEntry::make('request')
                     ->label('Request')
                     ->view('admin.infolists.components.json')
                     ->state(function (DebugLog $record) {
                         return $record->context['payload'] ?? null;
                     })->columnSpanFull(),
 
-                Infolists\Components\ViewEntry::make('request_headers')
+                ViewEntry::make('request_headers')
                     ->label('Request Headers')
                     ->view('admin.infolists.components.json')
                     ->state(function (DebugLog $record) {
                         return $record->context['headers'] ?? null;
                     })->columnSpanFull(),
 
-                Infolists\Components\ViewEntry::make('response_headers')
+                ViewEntry::make('response_headers')
                     ->label('Response Headers')
                     ->view('admin.infolists.components.json')
                     ->state(function (DebugLog $record) {
                         return $record->context['response_headers'] ?? null;
                     })->columnSpanFull(),
 
-                Infolists\Components\ViewEntry::make('response')
+                ViewEntry::make('response')
                     ->label('Response')
                     ->view('admin.infolists.components.json')
                     ->state(function (DebugLog $record) {
@@ -118,7 +123,7 @@ class HttpLogResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListHttpLogs::route('/'),
+            'index' => ListHttpLogs::route('/'),
         ];
     }
 }

@@ -44,6 +44,7 @@
         </div>
     </div>
     @endif
+    @if(!config('settings.registration_disabled', false))
     <div class="text-base text-center rounded-md py-2 mt-6 text-sm">
         {{ __('auth.dont_have_account') }}
         <a class="text-sm text-secondary-500 text-secondary hover:underline" href="{{ route('register') }}"
@@ -51,4 +52,5 @@
             {{ __('auth.sign_up') }}
         </a>
     </div>
+    @endif
 </form>

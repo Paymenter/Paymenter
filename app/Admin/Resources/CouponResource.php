@@ -2,39 +2,46 @@
 
 namespace App\Admin\Resources;
 
-use App\Admin\Resources\CouponResource\Pages;
-use App\Admin\Resources\CouponResource\RelationManagers;
+use App\Admin\Resources\CouponResource\Pages\CreateCoupon;
+use App\Admin\Resources\CouponResource\Pages\EditCoupon;
+use App\Admin\Resources\CouponResource\Pages\ListCoupons;
+use App\Admin\Resources\CouponResource\RelationManagers\ServicesRelationManager;
 use App\Models\Coupon;
-use Filament\Forms;
-use Filament\Forms\Form;
-use Filament\Forms\Get;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\EditAction;
+use Filament\Forms\Components\DatePicker;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TextInput;
 use Filament\Resources\Resource;
+use Filament\Schemas\Components\Utilities\Get;
+use Filament\Schemas\Schema;
 use Filament\Support\RawJs;
-use Filament\Tables;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 
 class CouponResource extends Resource
 {
     protected static ?string $model = Coupon::class;
 
-    protected static ?string $navigationIcon = 'ri-coupon-line';
+    protected static string|\BackedEnum|null $navigationIcon = 'ri-coupon-line';
 
-    protected static ?string $activeNavigationIcon = 'ri-coupon-fill';
+    protected static string|\BackedEnum|null $activeNavigationIcon = 'ri-coupon-fill';
 
-    protected static ?string $navigationGroup = 'Configuration';
+    protected static string|\UnitEnum|null $navigationGroup = 'Configuration';
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
-                Forms\Components\TextInput::make('code')
+        return $schema
+            ->components([
+                TextInput::make('code')
                     ->label('Code')
                     ->required()
                     ->maxLength(255)
                     ->unique(static::getModel(), 'code', ignoreRecord: true)
                     ->placeholder('Enter the code of the coupon'),
 
-                Forms\Components\TextInput::make('value')
+                TextInput::make('value')
                     ->label('Value')
                     ->required()
                     ->numeric()
@@ -49,7 +56,7 @@ class CouponResource extends Resource
                     ->suffix(fn (Get $get) => $get('type') === 'percentage' ? '%' : config('settings.default_currency'))
                     ->placeholder('Enter the value of the coupon'),
 
-                Forms\Components\Select::make('type')
+                Select::make('type')
                     ->label('Type')
                     ->required()
                     ->default('percentage')
@@ -61,7 +68,7 @@ class CouponResource extends Resource
                     ])
                     ->placeholder('Select the type of the coupon'),
 
-                Forms\Components\TextInput::make('recurring')
+                TextInput::make('recurring')
                     ->label('Recurring')
                     ->numeric()
                     ->nullable()
@@ -70,19 +77,25 @@ class CouponResource extends Resource
                     ->placeholder('How many billing cycles the discount will be applied')
                     ->helperText('Enter 0 to apply it to all billing cycles, 1 to apply it only to the first billing cycle, etc.'),
 
-                Forms\Components\TextInput::make('max_uses')
+                TextInput::make('max_uses')
                     ->label('Max Uses')
                     ->numeric()
                     ->minValue(0)
-                    ->placeholder('Enter the maximum number of uses of the coupon'),
+                    ->placeholder('Enter the maximum number of total uses of the coupon'),
 
-                Forms\Components\DatePicker::make('starts_at')
+                TextInput::make('max_uses_per_user')
+                    ->label('Max Uses Per User')
+                    ->numeric()
+                    ->minValue(0)
+                    ->placeholder('Enter the maximum number of uses per user'),
+
+                DatePicker::make('starts_at')
                     ->label('Starts At'),
 
-                Forms\Components\DatePicker::make('expires_at')
+                DatePicker::make('expires_at')
                     ->label('Expires At'),
 
-                Forms\Components\Select::make('products')
+                Select::make('products')
                     ->label('Products')
                     ->relationship('products', 'name')
                     ->multiple()
@@ -96,18 +109,18 @@ class CouponResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('code')->searchable(),
-                Tables\Columns\TextColumn::make('value')->searchable()->formatStateUsing(fn ($record) => $record->value . ($record->type === 'percentage' ? '%' : config('settings.default_currency'))),
+                TextColumn::make('code')->searchable(),
+                TextColumn::make('value')->searchable()->formatStateUsing(fn ($record) => $record->value . ($record->type === 'percentage' ? '%' : config('settings.default_currency'))),
             ])
             ->filters([
                 //
             ])
-            ->actions([
-                Tables\Actions\EditAction::make(),
+            ->recordActions([
+                EditAction::make(),
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+            ->toolbarActions([
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
                 ]),
             ]);
     }
@@ -115,16 +128,16 @@ class CouponResource extends Resource
     public static function getRelations(): array
     {
         return [
-            RelationManagers\ServicesRelationManager::class,
+            ServicesRelationManager::class,
         ];
     }
 
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListCoupons::route('/'),
-            'create' => Pages\CreateCoupon::route('/create'),
-            'edit' => Pages\EditCoupon::route('/{record}/edit'),
+            'index' => ListCoupons::route('/'),
+            'create' => CreateCoupon::route('/create'),
+            'edit' => EditCoupon::route('/{record}/edit'),
         ];
     }
 }

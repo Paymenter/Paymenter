@@ -6,20 +6,16 @@ use App\Classes\Cart;
 use App\Classes\Price;
 use App\Helpers\ExtensionHelper;
 use App\Livewire\Component;
-use App\Livewire\Traits\CurrencyChanged;
 use App\Models\Category;
 use App\Models\Plan;
 use App\Models\Price as ModelsPrice;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
 use Livewire\Attributes\Locked;
-use Livewire\Attributes\On;
 use Livewire\Attributes\Url;
 
 class Checkout extends Component
 {
-    use CurrencyChanged;
-
     public $product;
 
     public Category $category;
@@ -60,7 +56,7 @@ class Checkout extends Component
             $this->configOptions = $item->configOptions->mapWithKeys(function ($option) {
                 return [$option->option_id => $option->value];
             });
-            $this->checkoutConfig = $item->checkoutConfig;
+            $this->checkoutConfig = (array) $item->checkoutConfig;
         } else {
             // Set the first plan as default
             $this->plan = $this->plan_id ? $this->product->plans->findOrFail($this->plan_id) : $this->product->plans->first();
@@ -73,7 +69,7 @@ class Checkout extends Component
                 }
 
                 return [$option->id => $this->configOptions[$option->id] ?? $option->children->first()->id];
-            });
+            })->toArray();
             foreach ($this->getCheckoutConfig() as $config) {
                 if (in_array($config['type'], ['select', 'radio'])) {
                     $this->checkoutConfig[$config['name']] = $this->checkoutConfig[$config['name']] ?? $config['default'] ?? array_key_first($config['options']);
@@ -84,15 +80,22 @@ class Checkout extends Component
         }
         // Update the pricing
         $this->updatePricing();
+
+        // As there is only one plan, config options and checkout config, we can directly call the checkout method to avoid confusion
+        // This is only done when the user is not editing the cart item
+        if ($this->product->plans->count() === 1 && empty($this->configOptions) && empty($this->checkoutConfig)) {
+            $this->checkout();
+        }
     }
 
-    // Making sure its being called when the currency is changed
-    #[On('currencyChanged')]
     public function updatePricing()
     {
         $total = $this->plan->price()->price + $this->product->configOptions->sum(function ($option) {
-            if (in_array($option->type, ['text', 'number', 'checkbox'])) {
+            if ($option->type === 'checkbox' && (isset($this->configOptions[$option->id]) && $this->configOptions[$option->id])) {
                 return $option->children->first()?->price(billing_period: $this->plan->billing_period, billing_unit: $this->plan->billing_unit)->price;
+            }
+            if (in_array($option->type, ['text', 'number', 'checkbox'])) {
+                return 0;
             }
 
             return $option->children->where('id', $this->configOptions[$option->id])->first()?->price(billing_period: $this->plan->billing_period, billing_unit: $this->plan->billing_unit)->price;
@@ -126,15 +129,18 @@ class Checkout extends Component
 
     public function getCheckoutConfig()
     {
-        return once(fn () => ExtensionHelper::getCheckoutConfig($this->product));
+        return once(fn () => ExtensionHelper::getCheckoutConfig($this->product, $this->checkoutConfig));
     }
 
     public function rules()
     {
         $rules = [
-            'plan_id' => ['required', Rule::exists('plans', 'id')->where(function ($query) {
-                $query->where('priceable_id', $this->product->id)->where('priceable_type', get_class($this->product));
-            })],
+            'plan_id' => [
+                'required',
+                Rule::exists('plans', 'id')->where(function ($query) {
+                    $query->where('priceable_id', $this->product->id)->where('priceable_type', get_class($this->product));
+                }),
+            ],
         ];
         foreach ($this->product->configOptions as $option) {
             if (in_array($option->type, ['text', 'number'])) {
@@ -145,10 +151,36 @@ class Checkout extends Component
             }
         }
         foreach ($this->getCheckoutConfig() as $key => $config) {
+            $validationRules = [];
+            if ($config['required'] ?? false) {
+                $validationRules[] = 'required';
+            }
+            if (isset($config['type'])) {
+                switch ($config['type']) {
+                    case 'text':
+                    case 'number':
+                        $validationRules[] = 'string';
+                        break;
+                    case 'select':
+                    case 'radio':
+                        $validationRules[] = 'in:' . implode(',', array_keys($config['options']));
+                        break;
+                    case 'checkbox':
+                        $validationRules[] = 'nullable';
+                        $validationRules[] = 'boolean';
+                        break;
+                }
+            }
             if (isset($config['validation'])) {
-                $rules["checkoutConfig.{$config['name']}"] = $config['validation'];
-            } elseif ($config['required'] ?? false) {
-                $rules["checkoutConfig.{$config['name']}"] = 'required';
+                if (is_array($config['validation'])) {
+                    $validationRules = array_merge($validationRules, $config['validation']);
+                } else {
+                    // Is validation seperated by |?
+                    $validationRules = array_merge($validationRules, explode('|', $config['validation']));
+                }
+            }
+            if (count($validationRules) > 0) {
+                $rules["checkoutConfig.{$config['name']}"] = $validationRules;
             }
         }
 

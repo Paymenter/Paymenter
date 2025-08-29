@@ -4,9 +4,12 @@ namespace Paymenter\Extensions\Gateways\PayPal;
 
 use App\Classes\Extension\Gateway;
 use App\Events\Service\Updated;
+use App\Events\ServiceCancellation\Created;
 use App\Helpers\ExtensionHelper;
-use App\Models\Order;
+use App\Models\Invoice;
+use App\Models\InvoiceItem;
 use App\Models\Service;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Http;
@@ -21,12 +24,32 @@ class PayPal extends Gateway
         View::addNamespace('gateways.paypal', __DIR__ . '/resources/views');
 
         Event::listen(Updated::class, function ($event) {
-            if (!$event->service->isDirty('price') || $event->service->properties->where('key', 'has_paypal_subscription')->first()?->value !== '1') {
+            if ($event->service->properties->where('key', 'has_paypal_subscription')->first()?->value !== '1') {
+                return;
+            }
+            if ($event->service->isDirty('price')) {
+                try {
+                    $this->updateSubscription($event->service);
+                } catch (Exception $e) {
+                }
+            }
+            if ($event->service->isDirty('status') && $event->service->status === Service::STATUS_CANCELLED) {
+                try {
+                    $this->cancelSubscription($event->service);
+                } catch (Exception $e) {
+                }
+            }
+        });
+
+        Event::listen(Created::class, function (Created $event) {
+            $service = $event->cancellation->service;
+            if ($service->properties->where('key', 'has_paypal_subscription')->first()?->value !== '1') {
                 return;
             }
             try {
-                $this->updateSubscription($event->service);
-            } catch (\Exception $e) {
+                $this->cancelSubscription($service);
+            } catch (Exception $e) {
+                // Log the error or handle it as needed
             }
         });
     }
@@ -85,7 +108,7 @@ class PayPal extends Gateway
             ]);
 
             if ($result->failed()) {
-                throw new \Exception('Failed to generate access token: ' . $result->body());
+                throw new Exception('Failed to generate access token: ' . $result->body());
             }
 
             return $result->json()['access_token'];
@@ -226,9 +249,10 @@ class PayPal extends Gateway
         $body = $request->json()->all();
 
         // Handle the subscription event
-        if ($body['event_type'] === 'BILLING.SUBSCRIPTION.ACTIVATED' && isset($body['resource']['custom_id'])) {
+        if ($body['event_type'] === 'BILLING.SUBSCRIPTION.CREATED' && isset($body['resource']['custom_id'])) {
             // Its activated so we can now add the subscription to the user (custom is the order id)
-            Order::findOrFail($body['resource']['custom_id'])->services->each(function ($service) use ($body) {
+            Invoice::findOrFail($body['resource']['custom_id'])->items()->where('reference_type', Service::class)->each(function (InvoiceItem $item) use ($body) {
+                $service = $item->reference;
                 $service->subscription_id = $body['resource']['id'];
                 $service->save();
                 $service->properties()->updateOrCreate([
@@ -238,17 +262,15 @@ class PayPal extends Gateway
                     'value' => true,
                 ]);
             });
-
-            return response()->json(['status' => 'success']);
-        } elseif ($body['event_type'] === 'PAYMENT.SALE.COMPLETED' && isset($body['resource']['custom'])) {
-            $order = Order::findOrFail($body['resource']['custom']);
-            foreach ($order->services as $service) {
-                // Get last invoice item
-                $invoiceItem = $service->invoiceItems->last();
-                // Add payment
-                ExtensionHelper::addPayment($invoiceItem->invoice_id, 'PayPal', $body['resource']['amount']['total'], $body['resource']['transaction_fee']['value'], $body['resource']['id']);
-            }
+        } elseif ($body['event_type'] === 'PAYMENT.SALE.COMPLETED' && isset($body['resource']['billing_agreement_id'])) {
+            Service::where('subscription_id', $body['resource']['billing_agreement_id'])->each(function (Service $service) use ($body) {
+                // Add payment to the latest invoice
+                $latestInvoice = $service->invoices()->latest()->first();
+                ExtensionHelper::addPayment($latestInvoice->id, 'PayPal', $body['resource']['amount']['total'], $body['resource']['transaction_fee']['value'], $body['resource']['id']);
+            });
         }
+
+        return response()->json(['status' => 'success']);
     }
 
     public function updateSubscription(Service $service)
@@ -270,7 +292,7 @@ class PayPal extends Gateway
                 'path' => '/plan/billing_cycles/@sequence==2/pricing_scheme/fixed_price',
                 'value' => [
                     'value' => $newPrice,
-                    'currency_code' => $service->order->currency_code,
+                    'currency_code' => $service->currency_code,
                 ],
             ],
         ]);

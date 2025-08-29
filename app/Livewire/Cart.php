@@ -13,6 +13,7 @@ use App\Models\Invoice;
 use App\Models\Order;
 use App\Models\Service;
 use App\Models\User;
+use Exception;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -51,7 +52,7 @@ class Cart extends Component
             return;
         }
         $this->total = new Price(['price' => ClassesCart::get()->sum(fn ($item) => $item->price->price * $item->quantity), 'currency' => ClassesCart::get()->first()->price->currency]);
-        $this->gateways = ExtensionHelper::getCheckoutGateways(ClassesCart::get(), 'cart');
+        $this->gateways = ExtensionHelper::getCheckoutGateways($this->total->price, $this->total->currency->code, 'cart', ClassesCart::get());
         if (count($this->gateways) > 0 && !array_search($this->gateway, array_column($this->gateways, 'id')) !== false) {
             $this->gateway = $this->gateways[0]->id;
         }
@@ -59,6 +60,9 @@ class Cart extends Component
 
     public function applyCoupon()
     {
+        if ($this->coupon && Session::has('coupon')) {
+            return $this->notify('Coupon code already applied', 'error');
+        }
         try {
             ClassesCart::applyCoupon($this->coupon);
         } catch (DisplayException $e) {
@@ -74,6 +78,9 @@ class Cart extends Component
 
     public function removeCoupon()
     {
+        if (!$this->coupon || !Session::has('coupon')) {
+            return $this->notify('No coupon code applied', 'error');
+        }
         ClassesCart::removeCoupon();
         $this->coupon = null;
         $this->updateTotal();
@@ -108,13 +115,21 @@ class Cart extends Component
             return $this->notify('Your cart is empty', 'error');
         }
         if (!Auth::check()) {
-            return redirect()->route('login');
+            return redirect()->guest('login');
         }
         if (config('settings.mail_must_verify') && !Auth::user()->hasVerifiedEmail()) {
             return redirect()->route('verification.notice');
         }
         if (config('settings.tos') && !$this->tos) {
             return $this->notify('You must accept the terms of service', 'error');
+        }
+
+        // Re-validate coupon if one exists
+        if (Session::has('coupon') && !ClassesCart::validateAndRefreshCoupon()) {
+            $this->coupon = null;
+            $this->updateTotal();
+
+            return $this->notify('This coupon can no longer be used', 'error');
         }
 
         // Start database transaction
@@ -184,7 +199,10 @@ class Cart extends Component
                 }
 
                 foreach ($item->configOptions as $configOption) {
-                    if (in_array($configOption->option_type, ['text', 'number'])) {
+                    if (in_array($configOption->option_type, ['text', 'number', 'checkbox'])) {
+                        if (!isset($configOption->value)) {
+                            continue;
+                        }
                         $service->properties()->updateOrCreate([
                             'key' => $configOption->option_env_variable ? $configOption->option_env_variable : $configOption->option_name,
                         ], [
@@ -259,7 +277,7 @@ class Cart extends Component
             } else {
                 return $this->redirect(route('invoices.show', $invoice) . '?pay');
             }
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             // Rollback the transaction
             DB::rollBack();
             // Return error message

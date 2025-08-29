@@ -17,7 +17,8 @@
                 this.selectPositionUpdate();
             });
 
-            window.addEventListener('resize', () => this.selectPositionUpdate());
+            window.addEventListener('resize', this.resizeHandler = () => this.selectPositionUpdate());
+            this.$el.addEventListener('alpine:destroyed', () => window.removeEventListener('resize', this.resizeHandler));
         },
 
         selectableItemIsActive(item) {
@@ -50,6 +51,8 @@
         },
 
         selectPositionUpdate() {
+            if (!this.$refs.selectButton || !this.$refs.selectableItemsList) return;
+            
             const selectDropdownBottomPos = this.$refs.selectButton.getBoundingClientRect().top + 
                 this.$refs.selectButton.offsetHeight + 
                 this.$refs.selectableItemsList.offsetHeight;

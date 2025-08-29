@@ -2,15 +2,20 @@
 
 namespace App\Admin\Resources;
 
-use App\Admin\Resources\ExtensionResource\Pages;
+use App\Admin\Clusters\Extensions;
+use App\Admin\Resources\ExtensionResource\Pages\EditExtension;
+use App\Admin\Resources\ExtensionResource\Pages\ListExtensions;
+use App\Helpers\ExtensionHelper;
 use App\Models\Extension;
-use Filament\Forms\Components\Grid;
-use Filament\Forms\Components\Section;
+use Filament\Actions\EditAction;
 use Filament\Forms\Components\Toggle;
-use Filament\Forms\Form;
-use Filament\Forms\Get;
 use Filament\Resources\Resource;
-use Filament\Tables;
+use Filament\Schemas\Components\Grid;
+use Filament\Schemas\Components\Section;
+use Filament\Schemas\Components\Utilities\Get;
+use Filament\Schemas\Schema;
+use Filament\Tables\Columns\IconColumn;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Database\Eloquent\Builder;
@@ -20,11 +25,11 @@ class ExtensionResource extends Resource
 {
     protected static ?string $model = Extension::class;
 
-    protected static ?string $navigationGroup = 'Extensions';
+    protected static string|\BackedEnum|null $navigationIcon = 'ri-puzzle-line';
 
-    protected static ?string $navigationIcon = 'ri-puzzle-line';
+    protected static string|\BackedEnum|null $activeNavigationIcon = 'ri-puzzle-fill';
 
-    protected static ?string $activeNavigationIcon = 'ri-puzzle-fill';
+    protected static ?string $cluster = Extensions::class;
 
     public static function getGloballySearchableAttributes(): array
     {
@@ -36,18 +41,16 @@ class ExtensionResource extends Resource
         return $record->name;
     }
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        $extensions = \App\Helpers\ExtensionHelper::getAvailableExtensions();
-        $options = \App\Helpers\ExtensionHelper::convertToOptions($extensions);
-
-        return $form
-            ->schema([
+        return $schema
+            ->components([
                 Toggle::make('enabled'),
                 Section::make('Extension Settings')
+                    ->columnSpanFull()
                     ->description('Specific settings for the selected extension')
                     ->schema([
-                        Grid::make()->schema(fn (Get $get): array => $options->settings[$get('extension')] ?? $options->settings['default'])->key('settings'),
+                        Grid::make()->schema(fn (Get $get) => ExtensionHelper::getConfigAsInputs('other', $get('extension'), $get('settings')))->key('settings'),
                     ]),
             ]);
     }
@@ -56,13 +59,13 @@ class ExtensionResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('name')
+                TextColumn::make('name')
                     ->searchable()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('type')
+                TextColumn::make('type')
                     ->searchable()
                     ->sortable(),
-                Tables\Columns\IconColumn::make('enabled')
+                IconColumn::make('enabled')
                     ->label('Enabled')
                     ->boolean()
                     ->sortable(),
@@ -70,44 +73,21 @@ class ExtensionResource extends Resource
             ->filters([
                 //
             ])
-            ->actions([
-                Tables\Actions\EditAction::make(),
+            ->recordActions([
+                EditAction::make(),
             ]);
     }
 
     public static function getEloquentQuery(): Builder
     {
-        // Read whole base_path('extensions') directory and create a new Extension model for each extension (if it doesn't exist)
-        foreach (scandir(base_path('extensions')) as $extension) {
-            if (in_array($extension, ['.', '..', 'Gateways', 'Servers'])) {
-                continue;
-            }
-
-            $type = strtolower($extension);
-            // Remove the 's' from  end of the type
-            $type = substr($type, 0, -1);
-
-            foreach (scandir(base_path('extensions/' . $extension)) as $extension) {
-                if (in_array($extension, ['.', '..'])) {
-                    continue;
-                }
-
-                Extension::firstOrCreate([
-                    'extension' => $extension,
-                    'type' => $type,
-                    'name' => $extension,
-                ]);
-            }
-        }
-
         return parent::getEloquentQuery()->whereNotIn('type', ['gateway', 'server']);
     }
 
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListExtensions::route('/'),
-            'edit' => Pages\EditExtension::route('/{record}/edit'),
+            'index' => ListExtensions::route('/'),
+            'edit' => EditExtension::route('/{record}/edit'),
         ];
     }
 }

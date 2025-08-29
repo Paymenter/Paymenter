@@ -113,6 +113,9 @@ RUN php artisan app:settings:change theme default
 RUN php artisan config:clear
 RUN php artisan view:clear
 
+# Optimize icons
+RUN php artisan icons:cache
+
 # Remove the old log files.
 RUN rm -rf storage/logs/*.log
 
@@ -120,6 +123,8 @@ RUN rm -rf storage/logs/*.log
 RUN chown -R "$PERMUSER":"$PERMGROUP" .
 
 RUN php artisan app:check-for-updates
+
+RUN php artisan queue:restart
 
 # Set application up for maintenance.
 RUN php artisan up

@@ -6,6 +6,7 @@ namespace App\Models;
 
 use App\Models\Traits\HasProperties;
 use App\Observers\UserObserver;
+use Dedoc\Scramble\Attributes\SchemaName;
 use Filament\Models\Contracts\FilamentUser;
 use Filament\Models\Contracts\HasAvatar;
 use Filament\Panel;
@@ -15,11 +16,13 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Passport\HasApiTokens;
+use OwenIt\Auditing\Contracts\Auditable;
 
+#[SchemaName('UserModel')]
 #[ObservedBy([UserObserver::class])]
-class User extends Authenticatable implements FilamentUser, HasAvatar
+class User extends Authenticatable implements Auditable, FilamentUser, HasAvatar
 {
-    use HasApiTokens, HasFactory, HasProperties, Notifiable;
+    use \App\Models\Traits\Auditable, HasApiTokens, HasFactory, HasProperties, Notifiable;
 
     /**
      * The attributes that are mass assignable.
@@ -148,14 +151,6 @@ class User extends Authenticatable implements FilamentUser, HasAvatar
     public function services()
     {
         return $this->hasMany(Service::class);
-    }
-
-    /**
-     * Get the user's audit logs.
-     */
-    public function audits()
-    {
-        return $this->morphMany(AuditLog::class, 'model');
     }
 
     /**

@@ -62,8 +62,11 @@
                 <div class="font-semibold flex items-end gap-2">
                     @if(!$coupon)
                         <x-form.input wire:model="coupon" name="coupon" label="Coupon" />
-                        <x-button.primary wire:click="applyCoupon" class="h-fit !w-fit mb-0.5">
-                            {{ __('product.apply') }}
+                        <x-button.primary wire:click="applyCoupon" class="h-fit !w-fit mb-0.5" wire:loading.attr="disabled">
+                            <x-loading target="applyCoupon" />
+                            <div wire:loading.remove wire:target="applyCoupon">
+                                {{ __('product.apply') }}
+                            </div>
                         </x-button.primary>
                     @else
                         <div class="flex justify-between items-center w-full">
@@ -79,7 +82,7 @@
                 </div>
                 @if ($total->tax > 0)
                     <div class="font-semibold flex justify-between">
-                        <h4>{{ \App\Classes\Settings::tax()->name }}:</h4> {{ $total->formatted->tax }}
+                        <h4>{{ \App\Classes\Settings::tax()->name }} ({{ \App\Classes\Settings::tax()->rate }}%):</h4> {{ $total->formatted->tax }}
                     </div>
                 @endif
                 <div class="text-lg font-semibold flex justify-between mt-1">

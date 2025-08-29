@@ -3,12 +3,18 @@
 namespace App\Admin\Resources;
 
 use App\Admin\Clusters\Services;
-use App\Admin\Resources\ServiceCancellationResource\Pages;
+use App\Admin\Resources\ServiceCancellationResource\Pages\CreateServiceCancellation;
+use App\Admin\Resources\ServiceCancellationResource\Pages\EditServiceCancellation;
+use App\Admin\Resources\ServiceCancellationResource\Pages\ListServiceCancellations;
 use App\Models\ServiceCancellation;
-use Filament\Forms;
-use Filament\Forms\Form;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\EditAction;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TextInput;
 use Filament\Resources\Resource;
-use Filament\Tables;
+use Filament\Schemas\Schema;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 
@@ -16,27 +22,27 @@ class ServiceCancellationResource extends Resource
 {
     protected static ?string $model = ServiceCancellation::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-rectangle-stack';
 
     protected static ?string $cluster = Services::class;
 
     protected static ?int $navigationSort = 2;
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
-                Forms\Components\Select::make('service_id')
+        return $schema
+            ->components([
+                Select::make('service_id')
                     ->relationship('service', 'id', fn (Builder $query) => $query->where('status', 'active'))
                     ->getOptionLabelFromRecordUsing(fn ($record) => $record->product->name . ' - ' . $record->plan->name . '  #' . $record->id . ($record->order && $record->order->user ? ' (' . $record->order->user->email . ')' : ''))
                     ->searchable()
                     ->preload()
                     ->disabledOn('edit')
                     ->required(),
-                Forms\Components\TextInput::make('reason')
+                TextInput::make('reason')
                     ->maxLength(255)
                     ->default(null),
-                Forms\Components\Select::make('type')
+                Select::make('type')
                     ->options([
                         'end_of_period' => 'End of Period',
                         'immediate' => 'Immediate',
@@ -50,21 +56,21 @@ class ServiceCancellationResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('service_id')
+                TextColumn::make('service_id')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('reason')
+                TextColumn::make('reason')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('type'),
-                Tables\Columns\TextColumn::make('deleted_at')
+                TextColumn::make('type'),
+                TextColumn::make('deleted_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('created_at')
+                TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('updated_at')
+                TextColumn::make('updated_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
@@ -72,12 +78,12 @@ class ServiceCancellationResource extends Resource
             ->filters([
                 //
             ])
-            ->actions([
-                Tables\Actions\EditAction::make(),
+            ->recordActions([
+                EditAction::make(),
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+            ->toolbarActions([
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
                 ]),
             ]);
     }
@@ -92,9 +98,9 @@ class ServiceCancellationResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListServiceCancellations::route('/'),
-            'create' => Pages\CreateServiceCancellation::route('/create'),
-            'edit' => Pages\EditServiceCancellation::route('/{record}/edit'),
+            'index' => ListServiceCancellations::route('/'),
+            'create' => CreateServiceCancellation::route('/create'),
+            'edit' => EditServiceCancellation::route('/{record}/edit'),
         ];
     }
 }

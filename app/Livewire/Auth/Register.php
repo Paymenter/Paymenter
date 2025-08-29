@@ -2,12 +2,14 @@
 
 namespace App\Livewire\Auth;
 
+use App\Attributes\DisabledIf;
 use App\Livewire\ComponentWithProperties;
 use App\Models\User;
 use App\Traits\Captchable;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
+#[DisabledIf('registration_disabled')]
 class Register extends ComponentWithProperties
 {
     use Captchable;
@@ -22,6 +24,8 @@ class Register extends ComponentWithProperties
 
     public string $password_confirmation = '';
 
+    public bool $tos = false;
+
     public function mount()
     {
         $this->initializeProperties(null, User::class);
@@ -29,12 +33,18 @@ class Register extends ComponentWithProperties
 
     public function rules()
     {
-        return array_merge([
+        $rules = [
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
             'email' => 'required|email|max:255|unique:users',
             'password' => 'required|string|min:8|confirmed',
-        ], $this->getRulesForProperties());
+        ];
+
+        if (config('settings.tos')) {
+            $rules['tos'] = 'accepted';
+        }
+
+        return array_merge($rules, $this->getRulesForProperties());
     }
 
     public function submit()

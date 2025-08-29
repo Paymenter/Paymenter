@@ -3,8 +3,9 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Session as FacadesSession;
+use Throwable;
 
 class Session extends Model
 {
@@ -28,6 +29,23 @@ class Session extends Model
         return [
             'last_activity' => 'datetime',
         ];
+    }
+
+    public function impersonating(): bool
+    {
+        try {
+            $payload = $this->payload;
+
+            $decoded = config('session.encrypt')
+                ? Crypt::decryptString($payload)
+                : base64_decode($payload);
+
+            $data = unserialize($decoded);
+
+            return !empty($data['impersonating']);
+        } catch (Throwable $e) {
+            return false;
+        }
     }
 
     public function user()

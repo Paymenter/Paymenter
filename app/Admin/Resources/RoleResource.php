@@ -2,37 +2,62 @@
 
 namespace App\Admin\Resources;
 
-use App\Admin\Resources\RoleResource\Pages;
+use App\Admin\Resources\RoleResource\Pages\CreateRole;
+use App\Admin\Resources\RoleResource\Pages\EditRole;
+use App\Admin\Resources\RoleResource\Pages\ListRoles;
 use App\Models\Role;
+use Filament\Actions\EditAction;
 use Filament\Forms\Components\CheckboxList;
+use Filament\Forms\Components\Fieldset;
 use Filament\Forms\Components\TextInput;
-use Filament\Forms\Form;
 use Filament\Resources\Resource;
-use Filament\Tables;
+use Filament\Schemas\Schema;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Event;
 
 class RoleResource extends Resource
 {
     protected static ?string $model = Role::class;
 
-    protected static ?string $navigationGroup = 'Configuration';
+    protected static string|\UnitEnum|null $navigationGroup = 'Configuration';
 
-    protected static ?string $navigationIcon = 'ri-shield-user-line';
+    protected static string|\BackedEnum|null $navigationIcon = 'ri-shield-user-line';
 
-    protected static ?string $activeNavigationIcon = 'ri-shield-user-fill';
+    protected static string|\BackedEnum|null $activeNavigationIcon = 'ri-shield-user-fill';
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
+        return $schema
+            ->components([
                 TextInput::make('name')
                     ->unique(ignoreRecord: true)
                     ->required()
                     ->maxLength(255),
-                CheckboxList::make('permissions')->options(Arr::dot(config('permissions')))->columns(4)->bulkToggleable()->searchable()->noSearchResultsMessage('Permission could not be found'),
+                // Split permission UI into core and extension
+                Fieldset::make('Core Permissions')
+                    ->schema([
+                        CheckboxList::make('permissions')
+                            ->label(false)
+                            ->options(static::getCorePermissions())
+                            ->columns(4)
+                            ->bulkToggleable()
+                            ->searchable()
+                            ->noSearchResultsMessage('Permission could not be found')->columnSpanFull(),
+                    ]),
+
+                Fieldset::make('Extension Permissions')
+                    ->schema([
+                        CheckboxList::make('permissions')
+                            ->label(false)
+                            ->options(static::getExtensionPermissions())
+                            ->columns(4)
+                            ->bulkToggleable()
+                            ->searchable()
+                            ->noSearchResultsMessage('Permission could not be found')->columnSpanFull(),
+                    ]),
             ])->columns(1);
     }
 
@@ -46,8 +71,8 @@ class RoleResource extends Resource
             ->filters([
                 //
             ])
-            ->actions([
-                Tables\Actions\EditAction::make(),
+            ->recordActions([
+                EditAction::make(),
             ]);
     }
 
@@ -66,9 +91,21 @@ class RoleResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListRoles::route('/'),
-            'create' => Pages\CreateRole::route('/create'),
-            'edit' => Pages\EditRole::route('/{record}/edit'),
+            'index' => ListRoles::route('/'),
+            'create' => CreateRole::route('/create'),
+            'edit' => EditRole::route('/{record}/edit'),
         ];
+    }
+
+    protected static function getCorePermissions(): array
+    {
+        return Arr::dot(config('permissions.role'));
+    }
+
+    protected static function getExtensionPermissions(): array
+    {
+        return collect(Event::dispatch('permissions'))
+            ->filter(fn ($response) => is_array($response))
+            ->pipe(fn ($merged) => Arr::dot($merged));
     }
 }

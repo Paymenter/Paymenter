@@ -2,9 +2,12 @@
 
 namespace App\Providers;
 
+use App\Classes\Settings;
 use App\Models\Setting;
+use Exception;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Str;
@@ -25,9 +28,9 @@ class SettingsProvider extends ServiceProvider
         $this->getSettings();
     }
 
-    public static function getSettings()
+    public static function getSettings($force = false): void
     {
-        if (config('settings') && !empty(config('settings'))) {
+        if (config('settings') && !empty(config('settings')) && !$force) {
             return;
         }
         try {
@@ -42,7 +45,7 @@ class SettingsProvider extends ServiceProvider
                 return;
             }
             config(['settings' => $settings]);
-            foreach (\App\Classes\Settings::settings() as $settings) {
+            foreach (Settings::settings() as $settings) {
                 foreach ($settings as $setting) {
                     if (isset($setting['override']) && config("settings.$setting[name]") !== null) {
                         config([$setting['override'] => config("settings.$setting[name]")]);
@@ -60,7 +63,9 @@ class SettingsProvider extends ServiceProvider
                 URL::forceScheme('https');
             }
             URL::forceRootUrl(config('app.url'));
-        } catch (\Exception $e) {
+
+            Config::set('filesystems.disks.public.url', config('app.url') . '/storage');
+        } catch (Exception $e) {
             // Do nothing
         }
     }
@@ -70,6 +75,6 @@ class SettingsProvider extends ServiceProvider
         Cache::forget('settings');
         // Restart queue worker
         Artisan::call('queue:restart');
-        self::getSettings();
+        self::getSettings(true);
     }
 }

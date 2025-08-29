@@ -9,6 +9,7 @@ use App\Models\EmailTemplate;
 use App\Models\Invoice;
 use App\Models\Order;
 use App\Models\Service;
+use App\Models\ServiceCancellation;
 use App\Models\TicketMessage;
 use App\Models\User;
 use Carbon\Carbon;
@@ -69,6 +70,11 @@ class NotificationHelper
 
         // Generate the invoice PDF
         $pdf = PDF::generateInvoice($invoice);
+        // Generate path
+        if (!file_exists(storage_path('app/invoices'))) {
+            // Create the directory if it doesn't exist
+            mkdir(storage_path('app/invoices'), 0755, true);
+        }
         // Save the PDF to a temporary location
         $pdfPath = storage_path('app/invoices/' . $invoice->number . '.pdf');
         $pdf->save($pdfPath);
@@ -136,5 +142,12 @@ class NotificationHelper
     {
         $data['user'] = $user;
         self::sendEmailNotification('password_reset', $data, $user);
+    }
+
+    public static function serviceCancellationReceivedNotification(User $user, ServiceCancellation $cancellation, array $data = []): void
+    {
+        $data['cancellation'] = $cancellation;
+        $data['service'] = $cancellation->service;
+        self::sendEmailNotification('service_cancellation_received', $data, $user);
     }
 }

@@ -18,17 +18,12 @@
             <strong>Your commit:</strong> {{ config('app.commit') }}
         </div>
         <p>See <a
-                href="https://v1.paymenter.org/docs/installation/updating">https://v1.paymenter.org/docs/installation/updating</a>
+                href="https://paymenter.org/docs/installation/updating">https://paymenter.org/docs/installation/updating</a>
             on how to update</p>
 
         <p class="mt-2">OR try the web updater (This is a beta feature, use at your own risk)</p>
         <div class="mt-2">
             {{ $this->update }}
-
-            <code>
-                <pre id="update-result" class="mt-2" x-data="{ output: '' }" x-html="output"  x-on:update-completed.window="output = (new AnsiUp()).ansi_to_html($event.detail[0].output);">
-                </pre>
-            </code>
         </div>
     </div>
     @elseif(config('app.version') != config('settings.latest_version') && config('app.version') != 'beta')
@@ -40,17 +35,12 @@
             <strong>Your version:</strong> {{ config('app.version') }}
         </div>
         <p>See <a
-                href="https://v1.paymenter.org/docs/installation/updating">https://v1.paymenter.org/docs/installation/updating</a>
+                href="https://paymenter.org/docs/installation/updating">https://paymenter.org/docs/installation/updating</a>
             on how to update</p>
 
         <p class="mt-2">OR try the web updater (This is a beta feature, use at your own risk)</p>
         <div class="mt-2">
             {{ $this->update }}
-
-            <code>
-                <pre id="update-result" class="mt-2" x-data="{ output: '' }" x-html="output"  x-on:update-completed.window="output = (new AnsiUp()).ansi_to_html($event.detail[0].output);">
-                </pre>
-            </code>
         </div>
     </div>
     @else
@@ -64,4 +54,8 @@
         <p>You are up to date!</p>
     </div>
     @endif
+    <code>
+        <pre id="update-result" class="mt-2" x-data="{ output: '' }" x-html="output"  x-on:update-completed.window="output = (new AnsiUp()).ansi_to_html($event.detail[0].output);">
+        </pre>
+    </code>
 </x-filament-panels::page>

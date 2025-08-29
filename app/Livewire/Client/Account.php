@@ -3,6 +3,7 @@
 namespace App\Livewire\Client;
 
 use App\Livewire\ComponentWithProperties;
+use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 
 class Account extends ComponentWithProperties
@@ -42,7 +43,7 @@ class Account extends ComponentWithProperties
     {
         $validatedData = $this->validate();
 
-        /** @var \App\Models\User $user */
+        /** @var User $user */
         $user = Auth::user();
         $user->update($validatedData);
 

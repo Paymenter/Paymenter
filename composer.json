@@ -1,5 +1,5 @@
 {
-    "name": "laravel/laravel",
+    "name": "paymenter/paymenter",
     "type": "project",
     "description": "The skeleton application for the Laravel framework.",
     "keywords": [
@@ -7,6 +7,7 @@
         "framework"
     ],
     "license": "MIT",
+    "version": "dev-master",
     "require": {
         "php": "^8.2 || ^8.3",
         "ext-intl": "*",
@@ -17,19 +18,26 @@
         "ext-zip": "*",
         "andreiio/blade-remix-icon": "^3.6.0",
         "barryvdh/laravel-dompdf": "^3.0",
+        "directorytree/imapengine": "^1.15",
         "endroid/qr-code": "^5.0",
-        "filament/filament": "^3.2",
+        "filament/filament": "^4.0.0",
         "flowframe/laravel-trend": "^0.4.0",
         "laravel/framework": "^12.0",
         "laravel/passport": "^12.0",
         "laravel/socialite": "^5.14",
         "laravel/tinker": "^2.9",
+        "owen-it/laravel-auditing": "^14.0",
         "qirolab/laravel-themer": "^2.2.1",
         "robthree/twofactorauth": "^3.0",
-        "socialiteproviders/discord": "^4.2"
+        "socialiteproviders/discord": "^4.2",
+        "spatie/color": "^1.8",
+        "spatie/laravel-query-builder": "^6.3",
+        "timacdonald/json-api": "^1.0.0-beta.4",
+        "willdurand/email-reply-parser": "^2.10"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.13",
+        "dedoc/scramble": "^0.12.21",
         "fakerphp/faker": "^1.23",
         "larastan/larastan": "^3.0",
         "laravel/pint": "^1.13",

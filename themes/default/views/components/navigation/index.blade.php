@@ -52,7 +52,9 @@
             </div>
 
             <div class="flex flex-row items-center">
-                <div class="items-center hidden md:flex mr-3">
+                <livewire:components.cart />
+                
+                <div class="items-center hidden md:flex mr-1">
                     <x-dropdown>
                         <x-slot:trigger>
                             <div class="flex flex-col">
@@ -68,7 +70,6 @@
                     <x-theme-toggle />
                 </div>
 
-                <livewire:components.cart />
 
                 @if(auth()->check())
                 <div class="hidden lg:flex">
@@ -97,11 +98,13 @@
                             {{ __('navigation.login') }}
                         </x-button.secondary>
                     </a>
+                    @if(!config('settings.registration_disabled', false))
                     <a href="{{ route('register') }}" wire:navigate>
                         <x-button.primary>
                             {{ __('navigation.register') }}
                         </x-button.primary>
                     </a>
+                    @endif
                 </div>
                 @endif
                 <button
@@ -222,11 +225,13 @@
 
                             @else
                             <div class="flex flex-col gap-3 mb-3">
+                                @if(!config('settings.registration_disabled', false))
                                 <a href="{{ route('register') }}" wire:navigate>
                                     <x-button.primary>
                                         {{ __('navigation.register') }}
                                     </x-button.primary>
                                 </a>
+                                @endif
                                 <a href="{{ route('login') }}" wire:navigate>
                                     <x-button.secondary>
                                         {{ __('navigation.login') }}

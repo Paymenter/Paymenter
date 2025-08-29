@@ -5,20 +5,25 @@ namespace App\Livewire\Services;
 use App\Helpers\ExtensionHelper;
 use App\Livewire\Component;
 use App\Models\Service;
+use Exception;
 use Livewire\Attributes\Locked;
+use Livewire\Attributes\Url;
 
 class Show extends Component
 {
     public Service $service;
 
+    #[Locked]
     public $buttons = [];
 
+    #[Locked]
     public $views = [];
 
-    #[Locked]
+    #[Url('tab', except: false), Locked]
     public $currentView;
 
-    public $showModal = '';
+    #[Url('cancel', except: false)]
+    public bool $showCancel = false;
 
     public function mount()
     {
@@ -27,7 +32,7 @@ class Show extends Component
             $actions = [];
             try {
                 $actions = ExtensionHelper::getActions($this->service);
-            } catch (\Exception $e) {
+            } catch (Exception $e) {
             }
             // separate the actions into buttons and views
             foreach ($actions as $action) {
@@ -37,7 +42,7 @@ class Show extends Component
                     $this->views[] = $action;
                 }
             }
-            $this->changeView($this->views[0]['name'] ?? null);
+            $this->currentView = $this->currentView ?? ($this->views[0]['name'] ?? null);
         }
     }
 
@@ -46,12 +51,20 @@ class Show extends Component
         if (!$view) {
             return;
         }
+        if ($this->currentView === $view || !in_array($view, array_column($this->views, 'name'))) {
+            return $this->skipRender();
+        }
         $this->currentView = $view;
     }
 
-    public function openModal($modal)
+    public function updatedShowCancel($value)
     {
-        $this->showModal = $modal;
+        if (!$this->service->cancellable) {
+            $this->notify('This service cannot be cancelled', 'error');
+            $this->showCancel = false;
+
+            return;
+        }
     }
 
     public function goto($function)
@@ -62,7 +75,12 @@ class Show extends Component
 
             return;
         }
-        $this->redirect(ExtensionHelper::callService($this->service, $function));
+        $result = ExtensionHelper::callService($this->service, $function);
+        // If its a response, return it
+        if (!is_string($result)) {
+            return $result;
+        }
+        $this->redirect($result);
     }
 
     public function render()
@@ -72,8 +90,13 @@ class Show extends Component
 
         if ($this->currentView) {
             try {
-                $view = ExtensionHelper::getView($this->service, $this->currentView);
-            } catch (\Exception $e) {
+                // Search array for the current view
+                $currentViewObj = $this->views[array_search($this->currentView, array_column($this->views, 'name'))] ?? null;
+                if (!$currentViewObj) {
+                    throw new Exception('View not found');
+                }
+                $view = ExtensionHelper::getView($this->service, $currentViewObj);
+            } catch (Exception $e) {
                 if ($previousView !== $this->views[0]['name'] ?? null) {
                     $this->notify('Got an error while trying to load the view', 'error');
                 }

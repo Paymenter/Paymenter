@@ -3,7 +3,7 @@
 namespace App\Admin\Resources\ServiceCancellationResource\Pages;
 
 use App\Admin\Resources\ServiceCancellationResource;
-use Filament\Actions;
+use Filament\Actions\DeleteAction;
 use Filament\Resources\Pages\EditRecord;
 
 class EditServiceCancellation extends EditRecord
@@ -13,7 +13,7 @@ class EditServiceCancellation extends EditRecord
     protected function getHeaderActions(): array
     {
         return [
-            Actions\DeleteAction::make(),
+            DeleteAction::make(),
         ];
     }
 }

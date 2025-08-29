@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Classes\Settings;
 use App\Helpers\ExtensionHelper;
 use App\Models\ConfigOption;
 use App\Models\Currency;
@@ -9,6 +10,7 @@ use App\Models\CustomProperty;
 use App\Models\Gateway;
 use App\Models\Price;
 use App\Models\Server;
+use App\Providers\SettingsProvider;
 use Closure;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Crypt;
@@ -18,6 +20,7 @@ use Illuminate\Support\Str;
 use PDO;
 use PDOException;
 use PDOStatement;
+use Throwable;
 
 use function Laravel\Prompts\password;
 use function Laravel\Prompts\text;
@@ -91,6 +94,8 @@ class MigrateOldData extends Command
             $this->migrateInvoices();
 
             DB::statement('SET foreign_key_checks=1');
+
+            SettingsProvider::flushCache();
         } catch (PDOException $e) {
             $this->fail('Connection failed: ' . $e->getMessage());
         }
@@ -129,7 +134,7 @@ class MigrateOldData extends Command
             $records = $stmt->fetchAll(PDO::FETCH_ASSOC);
             try {
                 $processor($records);
-            } catch (\Throwable $th) {
+            } catch (Throwable $th) {
                 Log::error($th);
                 $this->fail($th->getMessage());
             }
@@ -144,7 +149,7 @@ class MigrateOldData extends Command
 
                 try {
                     $processor($records);
-                } catch (\Throwable $th) {
+                } catch (Throwable $th) {
                     Log::error($th);
                     $this->fail($th->getMessage());
                 }
@@ -186,6 +191,7 @@ class MigrateOldData extends Command
             'timezone' => 'timezone',
             'language' => 'app_language',
             'app_logo' => 'logo',
+            'home_page_text' => 'theme_default_home_page_text',
 
             // Security
             'recaptcha_site_key' => 'captcha_site_key',
@@ -236,7 +242,7 @@ class MigrateOldData extends Command
 
             // Migrate old settings directly if it is only renamed
             if (array_key_exists($old_setting['key'], $old_to_new_map)) {
-                $avSetting = \App\Classes\Settings::getSetting($key);
+                $avSetting = Settings::getSetting($key);
 
                 $settings[] = [
                     'key' => $key,
@@ -593,7 +599,7 @@ class MigrateOldData extends Command
         foreach ($records as $record) {
             try {
                 $extension = ExtensionHelper::getExtension($record['type'], $record['name']);
-            } catch (\Throwable $th) {
+            } catch (Throwable $th) {
                 $ext_name = $record['name'];
                 $this->warn("Not Migrating '$ext_name', Error: " . $th->getMessage());
 
@@ -617,7 +623,7 @@ class MigrateOldData extends Command
 
             try {
                 $extension_cfg = ExtensionHelper::getConfig($ext_type, $ext_name);
-            } catch (\Throwable $th) {
+            } catch (Throwable $th) {
                 $this->warn("Error while getting Extension '$ext_name', Not migrating ext settings: " . $th->getMessage());
 
                 continue;
@@ -641,7 +647,7 @@ class MigrateOldData extends Command
                     try {
                         // Check if the setting was already encrypted, if yes don't change it
                         Crypt::decryptString($old_ext_setting['value']);
-                    } catch (\Throwable $th) {
+                    } catch (Throwable $th) {
                         // Else, encrypt it
                         $old_ext_setting['value'] = Crypt::encryptString($old_ext_setting['value']);
                     }
@@ -650,7 +656,7 @@ class MigrateOldData extends Command
                         $decrypted = Crypt::decryptString($old_ext_setting['value']);
                         // If the setting was encrypted, decrypted it
                         $old_ext_setting['value'] = $decrypted;
-                    } catch (\Throwable $th) {
+                    } catch (Throwable $th) {
                         // Else, do nothing
                     }
                 }
@@ -712,7 +718,7 @@ class MigrateOldData extends Command
             foreach ($product_settings as $record) {
                 try {
                     $extension = Server::findOrFail($record['extension']);
-                } catch (\Throwable $th) {
+                } catch (Throwable $th) {
                     $extension = $record['extension'];
                     $this->warn("Error while getting Extension '$extension', Not migrating ext product settings: " . $th->getMessage());
 
@@ -861,6 +867,7 @@ class MigrateOldData extends Command
 
                 return [
                     'id' => $record['id'],
+                    'number' => $record['id'],
                     'status' => $record['status'],
                     'due_at' => $record['due_date'],
                     'currency_code' => $this->currency_code,
@@ -874,7 +881,13 @@ class MigrateOldData extends Command
             DB::table('invoices')->insert($invoices);
             DB::table('invoice_items')->insert($invoice_items);
             DB::table('invoice_transactions')->insert($invoice_transactions);
+
         });
+        // Update settings for invoice number
+        DB::table('settings')->updateOrInsert(
+            ['key' => 'invoice_number'],
+            ['value' => DB::table('invoices')->max('id') ?: 0]
+        );
     }
 
     protected function migratePlans()

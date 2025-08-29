@@ -102,6 +102,15 @@ class Affiliates extends Extension
             AssociateOrderWithAffiliate::class,
         );
 
+        Event::listen('api.permissions', function () {
+            return [
+                'admin.affiliates.view' => 'View Affiliates',
+                'admin.affiliates.create' => 'Create Affiliates',
+                'admin.affiliates.update' => 'Update Affiliates',
+                'admin.affiliates.delete' => 'Delete Affiliates',
+            ];
+        });
+
         // Event::listen('navigation.dashboard', function ($routes) {
         //     dd($routes);
         //     return [

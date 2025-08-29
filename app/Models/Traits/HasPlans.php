@@ -57,7 +57,7 @@ trait HasPlans
 
         $currency = $currency ?? session('currency', config('settings.default_currency'));
 
-        foreach ($this->availablePlans()->when($plan_id, function ($query) use ($plan_id) {
+        foreach ($this->availablePlans(currency: $currency)->when($plan_id, function ($query) use ($plan_id) {
             return $query->where('id', $plan_id);
         }) as $plan) {
             foreach ($plan->prices->when($currency, function ($query) use ($currency) {

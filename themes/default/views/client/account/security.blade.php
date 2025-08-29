@@ -4,7 +4,7 @@
 
         <!-- Sessions -->
         <h5 class="text-lg font-bold pb-3 pt-4">{{ __('account.sessions') }}</h5>
-        @foreach (Auth::user()->sessions as $session)
+        @foreach (Auth::user()->sessions->filter(fn ($session) => !$session->impersonating()) as $session)
         <div class="flex flex-row items-center justify-between py-2 border-b border-primary-700">
             <div>
                 <p class="text-sm text-primary-100">{{ $session->ip_address }} -

@@ -2,9 +2,11 @@
 
 namespace App\Livewire\Auth;
 
+use App\Events\Auth\Login;
 use App\Livewire\Component;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Facades\Session;
 use RobThree\Auth\Providers\Qr\EndroidQrCodeProvider;
@@ -48,9 +50,16 @@ class Tfa extends Component
             return $this->addError('code', 'Invalid code.');
         }
 
+        // Check if code has been used before, preventing replay attacks
+        if (Cache::has('tfa_used_code_' . $user->id . '_' . $this->code)) {
+            return $this->addError('code', 'Invalid code.');
+        }
+        // Mark code as used for 60 seconds just in case
+        Cache::put('tfa_used_code_' . $user->id . '_' . $this->code, true, 60);
+
         Auth::loginUsingId($user->id, $session['remember']);
 
-        event(new \App\Events\Auth\Login(User::find(Auth::id())));
+        event(new Login(User::find(Auth::id())));
 
         Session::forget('2fa');
 

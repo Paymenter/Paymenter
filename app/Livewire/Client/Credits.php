@@ -8,6 +8,7 @@ use App\Livewire\Component;
 use App\Models\Credit;
 use App\Models\Gateway;
 use App\Models\Invoice;
+use Exception;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -23,7 +24,7 @@ class Credits extends Component
     public $amount;
 
     #[Locked]
-    public $gateways;
+    public $gateways = [];
 
     public $gateway;
 
@@ -35,9 +36,19 @@ class Credits extends Component
 
         $this->amount = config('settings.credits_minimum_deposit');
         $this->currency = session('currency', config('settings.default_currency'));
-        $this->gateways = ExtensionHelper::getCheckoutGateways([], 'credits');
+        $this->gateways = ExtensionHelper::getCheckoutGateways($this->amount, $this->currency, 'credits');
         if (count($this->gateways) > 0 && !array_search($this->gateway, array_column($this->gateways, 'id')) !== false) {
             $this->gateway = $this->gateways[0]->id;
+        }
+    }
+
+    public function updated($variable)
+    {
+        if ($variable === 'amount' || $variable === 'currency') {
+            $this->gateways = ExtensionHelper::getCheckoutGateways($this->amount, $this->currency, 'credits');
+            if (count($this->gateways) > 0 && !array_search($this->gateway, array_column($this->gateways, 'id')) !== false) {
+                $this->gateway = $this->gateways[0]->id;
+            }
         }
     }
 
@@ -81,14 +92,14 @@ class Credits extends Component
 
             // Redirect to the invoices page and pay the invoice
             if ($this->gateway) {
-                $pay = ExtensionHelper::pay(Gateway::where('id', $this->gateway)->first(), $invoice);
+                $pay = ExtensionHelper::pay(Gateway::where('id', $this->gateway)->first(), $invoice->fresh());
                 if (is_string($pay)) {
                     return $this->redirect($pay);
                 }
             }
 
             return $this->redirect(route('invoices.show', $invoice) . '?gateway=' . $this->gateway . '&pay', true);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             // Rollback the transaction
             DB::rollBack();
             // Return error message

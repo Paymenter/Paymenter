@@ -2,10 +2,16 @@
 
 namespace App\Classes;
 
+use App\Models\Currency;
 use App\Models\Setting;
 use App\Models\TaxRate;
+use App\Rules\Cidr;
+use DateTimeZone;
+use Exception;
+use Filament\Schemas\Components\Utilities\Get;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\HtmlString;
+use Ramsey\Uuid\Uuid;
 
 class Settings
 {
@@ -14,20 +20,27 @@ class Settings
         try {
             // Only code is needed
             $currencies = once(function () {
-                return \App\Models\Currency::pluck('code')->toArray();
+                return Currency::pluck('code')->toArray();
             });
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $currencies = [];
         }
         $settings = [
             // Split settings into groups (only used in the settings page for organization)
             'general' => [
                 [
+                    'name' => 'company_name',
+                    'label' => 'Company Name',
+                    'type' => 'text',
+                    'override' => 'app.name',
+                    'default' => 'Paymenter',
+                ],
+                [
                     'name' => 'timezone',
                     'label' => 'Timezone',
                     'type' => 'select',
                     // Read timezones from PHP
-                    'options' => \DateTimeZone::listIdentifiers(\DateTimeZone::ALL),
+                    'options' => DateTimeZone::listIdentifiers(DateTimeZone::ALL),
                     'default' => 'UTC',
                     'required' => true,
                     'override' => 'app.timezone',
@@ -104,6 +117,9 @@ class Settings
                     'type' => 'tags',
                     'database_type' => 'array',
                     'placeholder' => 'IP Addresses or CIDR (e.g. 1.1.1.1/32 or 2606:4700:4700::1111)',
+                    'nested_validation' => [
+                        new Cidr(allowWildCard: true),
+                    ],
                 ],
             ],
 
@@ -113,6 +129,7 @@ class Settings
                     'label' => 'Google Enabled',
                     'description' => new HtmlString('<a href="https://paymenter.org/docs/guides/OAuth#google" target="_blank">Documentation</a>'),
                     'type' => 'checkbox',
+                    'database_type' => 'boolean',
                     'default' => false,
                     'required' => false,
                 ],
@@ -133,6 +150,7 @@ class Settings
                     'label' => 'GitHub Enabled',
                     'description' => new HtmlString('<a href="https://paymenter.org/docs/guides/OAuth#github" target="_blank">Documentation</a>'),
                     'type' => 'checkbox',
+                    'database_type' => 'boolean',
                     'default' => false,
                     'required' => false,
                 ],
@@ -153,6 +171,7 @@ class Settings
                     'label' => 'Discord Enabled',
                     'description' => new HtmlString('<a href="https://paymenter.org/docs/guides/OAuth#discord" target="_blank">Documentation</a>'),
                     'type' => 'checkbox',
+                    'database_type' => 'boolean',
                     'default' => false,
                     'required' => false,
                 ],
@@ -169,72 +188,12 @@ class Settings
                     'required' => false,
                 ],
             ],
-
-            'company-details' => [
-                [
-                    'name' => 'company_name',
-                    'label' => 'Company Name',
-                    'type' => 'text',
-                    'override' => 'app.name',
-                    'default' => 'Paymenter',
-                ],
-                [
-                    'name' => 'company_email',
-                    'label' => 'Company Email',
-                    'type' => 'email',
-                ],
-                [
-                    'name' => 'company_phone',
-                    'label' => 'Company Phone',
-                    'type' => 'text',
-                ],
-                [
-                    'name' => 'company_address',
-                    'label' => 'Company Address',
-                    'type' => 'text',
-                ],
-                [
-                    'name' => 'company_address2',
-                    'label' => 'Company Address 2',
-                    'type' => 'text',
-                ],
-                [
-                    'name' => 'company_city',
-                    'label' => 'Company City',
-                    'type' => 'text',
-                ],
-                [
-                    'name' => 'company_state',
-                    'label' => 'Company State',
-                    'type' => 'text',
-                ],
-                [
-                    'name' => 'company_zip',
-                    'label' => 'Company Zip',
-                    'type' => 'text',
-                ],
-                [
-                    'name' => 'company_country',
-                    'label' => 'Company Country',
-                    'type' => 'select',
-                    'options' => array_merge(['' => 'None'], config('app.countries')),
-                ],
-                [
-                    'name' => 'company_tax_id',
-                    'label' => 'Company Tax ID',
-                    'type' => 'text',
-                ],
-                [
-                    'name' => 'company_id',
-                    'label' => 'Company ID',
-                    'type' => 'text',
-                ],
-            ],
             'tax' => [
                 [
                     'name' => 'tax_enabled',
                     'label' => 'Tax Enabled',
                     'type' => 'checkbox',
+                    'database_type' => 'boolean',
                     'default' => false,
                 ],
                 [
@@ -254,12 +213,14 @@ class Settings
                     'name' => 'mail_disable',
                     'label' => 'Disable Mail',
                     'type' => 'checkbox',
+                    'database_type' => 'boolean',
                     'default' => true,
                 ],
                 [
                     'name' => 'mail_must_verify',
                     'label' => 'Users must verify email before buying',
                     'type' => 'checkbox',
+                    'database_type' => 'boolean',
                     'default' => false,
                 ],
                 [
@@ -345,6 +306,51 @@ class Settings
                     'disable_toolbar' => true,
                 ],
             ],
+            'tickets' => [
+                [
+                    'name' => 'ticket_departments',
+                    'label' => 'Ticket Departments',
+                    'type' => 'tags',
+                    'default' => ['Support', 'Sales'],
+                    'required' => true,
+                    'database_type' => 'array',
+                ],
+                // Email piping
+                [
+                    'name' => 'ticket_mail_piping',
+                    'label' => 'Email Piping',
+                    'type' => 'checkbox',
+                    'database_type' => 'boolean',
+                    'default' => false,
+                    'live' => true,
+                ],
+                [
+                    'name' => 'ticket_mail_host',
+                    'label' => 'Email Host',
+                    'type' => 'text',
+                    'required' => fn (Get $get) => $get('ticket_mail_piping'),
+                ],
+                [
+                    'name' => 'ticket_mail_port',
+                    'label' => 'Email Port',
+                    'type' => 'number',
+                    'required' => fn (Get $get) => $get('ticket_mail_piping'),
+                    'default' => 993,
+                ],
+                [
+                    'name' => 'ticket_mail_email',
+                    'label' => 'Email Address',
+                    'type' => 'email',
+                    'required' => fn (Get $get) => $get('ticket_mail_piping'),
+                ],
+                [
+                    'name' => 'ticket_mail_password',
+                    'label' => 'Email Password',
+                    'type' => 'password',
+                    'required' => fn (Get $get) => $get('ticket_mail_piping'),
+                ],
+            ],
+
             'cronjob' => [
                 [
                     'name' => 'cronjob_invoice',
@@ -402,6 +408,7 @@ class Settings
                     'name' => 'credits_enabled',
                     'label' => 'Credits Enabled',
                     'type' => 'checkbox',
+                    'database_type' => 'boolean',
                     'default' => false,
                 ],
                 [
@@ -425,6 +432,23 @@ class Settings
                     'default' => 300,
                     'required' => true,
                 ],
+                [
+                    'name' => 'credits_auto_use',
+                    'label' => 'Automatically use credits',
+                    'type' => 'checkbox',
+                    'database_type' => 'boolean',
+                    'default' => true,
+                    'description' => 'Automatically pay recurring invoices using available credits. (only pays if credits is more or equal to invoice amount)',
+                ],
+                [
+                    // Enable credits give back if and service is upgraded or downgraded
+                    'name' => 'credits_on_downgrade',
+                    'label' => 'Enable credits on service downgrade',
+                    'type' => 'checkbox',
+                    'database_type' => 'boolean',
+                    'default' => true,
+                    'description' => 'Enable giving back credits to users when they downgrade their service. The credits given back will be the prorated difference between the old and new service based on the remaining time in the billing cycle.',
+                ],
             ],
             'theme' => [
                 [
@@ -439,6 +463,12 @@ class Settings
                 ],
             ],
             'invoices' => [
+                [
+                    'name' => 'bill_to_text',
+                    'label' => 'Bill To Text',
+                    'type' => 'textarea',
+                    'default' => '',
+                ],
                 [
                     'name' => 'invoice_number',
                     'label' => 'Invoice Number',
@@ -492,12 +522,20 @@ class Settings
                     'required' => true,
                 ],
                 [
-                    'name' => 'ticket_departments',
-                    'label' => 'Ticket Departments',
-                    'type' => 'tags',
-                    'default' => ['Support', 'Sales'],
-                    'required' => true,
-                    'database_type' => 'array',
+                    'name' => 'registration_disabled',
+                    'label' => 'Disable User Registration',
+                    'type' => 'checkbox',
+                    'database_type' => 'boolean',
+                    'default' => false,
+                    'description' => 'Only allow existing users to log in. This will hide the registration page and prevent new users from signing up.',
+                ],
+                [
+                    'name' => 'tickets_disabled',
+                    'label' => 'Disable Tickets',
+                    'type' => 'checkbox',
+                    'database_type' => 'boolean',
+                    'default' => false,
+                    'description' => 'Disable the ticket system. This will disable all client side ticket functionality, including the ability to create new tickets and view existing tickets.',
                 ],
                 [
                     'name' => 'pagination',
@@ -511,6 +549,7 @@ class Settings
                     'name' => 'debug',
                     'label' => 'Debug Mode',
                     'type' => 'checkbox',
+                    'database_type' => 'boolean',
                     'default' => false,
                     'description' => 'Enable debug mode to log HTTP requests and errors',
                 ],
@@ -518,17 +557,22 @@ class Settings
         ];
 
         // Set theme settings
-        $settings['theme'] = [...$settings['theme'], ...\App\Classes\Theme::getSettings()];
+        $settings['theme'] = [...$settings['theme'], ...Theme::getSettings()];
 
         return $settings;
     }
 
     public static function tax()
     {
-        $country = Auth::user()->country ?? null;
-
         // Use once so the query is only run once
-        return once(function () use ($country) {
+        return once(function () {
+            $country = Auth::user()?->properties()->where('key', 'country')->value('value') ?? null;
+
+            // Change country to a two-letter country code if it's not already
+            if ($country) {
+                $country = array_search($country, config('app.countries')) ?: $country;
+            }
+
             if ($taxRate = TaxRate::where('country', $country)->first()) {
                 return $taxRate;
             } elseif ($taxRate = TaxRate::where('country', 'all')->first()) {
@@ -550,5 +594,32 @@ class Settings
         $setting->value = Setting::where('settingable_type', null)->where('key', $key)->value('value') ?? $setting->default ?? null;
 
         return $setting;
+    }
+
+    public static function getTelemetry()
+    {
+        try {
+            $uuid = Setting::where('key', 'telemetry_uuid')->value('value');
+        } catch (Exception $e) {
+            $uuid = null;
+        }
+        if (is_null($uuid)) {
+            $uuid = Uuid::uuid4()->toString();
+            try {
+                Setting::updateOrCreate(
+                    ['key' => 'telemetry_uuid'],
+                    ['value' => $uuid]
+                );
+            } catch (Exception $e) {
+                // Avoid errors in workflows
+            }
+        }
+
+        // Daily fixed time based on UUID
+        $time = hexdec(str_replace('-', '', substr($uuid, 27))) % 1440;
+        $hour = floor($time / 60);
+        $minute = $time % 60;
+
+        return compact('uuid', 'hour', 'minute');
     }
 }

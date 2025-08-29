@@ -5,6 +5,7 @@ namespace App\Jobs\Server;
 use App\Helpers\ExtensionHelper;
 use App\Helpers\NotificationHelper;
 use App\Models\Service;
+use Exception;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -14,6 +15,8 @@ use Illuminate\Queue\SerializesModels;
 class CreateJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+
+    public $timeout = 60;
 
     /**
      * Create a new job instance.
@@ -28,15 +31,14 @@ class CreateJob implements ShouldQueue
         // $data is the data that will be used to send the email, data is coming from the extension itself
         try {
             $data = ExtensionHelper::createServer($this->service);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             if ($e->getMessage() == 'No server assigned to this product') {
                 return;
             }
         }
 
-        // Send the email (TO BE MADE)
         if ($this->sendNotification && isset($data)) {
-            NotificationHelper::serverCreatedNotification($this->service->order->user, $this->service, is_array($data) ? $data : []);
+            NotificationHelper::serverCreatedNotification($this->service->user, $this->service, is_array($data) ? $data : []);
         }
     }
 }

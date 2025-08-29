@@ -4,11 +4,11 @@ namespace App\Models;
 
 use App\Models\Traits\HasPlans;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
+use OwenIt\Auditing\Contracts\Auditable;
 
-class ConfigOption extends Model
+class ConfigOption extends Model implements Auditable
 {
-    use HasFactory, HasPlans;
+    use \App\Models\Traits\Auditable, HasFactory, HasPlans;
 
     protected $dontShowUnavailablePrice = true;
 
@@ -19,6 +19,7 @@ class ConfigOption extends Model
         'sort',
         'hidden',
         'parent_id',
+        'upgradable',
     ];
 
     /**
@@ -34,7 +35,7 @@ class ConfigOption extends Model
      */
     public function children()
     {
-        return $this->hasMany(ConfigOption::class, 'parent_id');
+        return $this->hasMany(ConfigOption::class, 'parent_id')->orderBy('sort');
     }
 
     /**

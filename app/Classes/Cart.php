@@ -4,6 +4,7 @@ namespace App\Classes;
 
 use App\Exceptions\DisplayException;
 use App\Models\Coupon;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 
 class Cart
@@ -61,22 +62,42 @@ class Cart
         session(['cart' => $cart]);
     }
 
-    public static function applyCoupon($code)
+    /**
+     * Validate if a coupon is valid for the current user and cart
+     *
+     * @param  string  $coupon_code
+     * @return Coupon
+     *
+     * @throws DisplayException
+     */
+    public static function validateCoupon($coupon_code)
     {
-        $coupon = Coupon::where('code', $code)->first();
+        $coupon = Coupon::where('code', $coupon_code)->first();
+
         if (!$coupon) {
             throw new DisplayException('Coupon code not found');
         }
-        if ($coupon->max_uses && $coupon->services->count() >= $coupon->max_uses) {
-            throw new DisplayException('Coupon code has reached its maximum uses');
-        }
+
         if ($coupon->expires_at && $coupon->expires_at->isPast()) {
             throw new DisplayException('Coupon code has expired');
         }
         if ($coupon->starts_at && $coupon->starts_at->isFuture()) {
             throw new DisplayException('Coupon code is not active yet');
         }
-        Session::put(['coupon' => $coupon]);
+        if ($coupon->max_uses && $coupon->services->count() >= $coupon->max_uses) {
+            throw new DisplayException('Coupon code has reached its maximum uses');
+        }
+        if (Auth::check() && $coupon->hasExceededMaxUsesPerUser(Auth::id())) {
+            throw new DisplayException('You have already used this coupon the maximum number of times allowed');
+        }
+
+        return $coupon;
+    }
+
+    public static function applyCoupon($code)
+    {
+        $coupon = self::validateCoupon($code);
+
         $wasSuccessful = false;
         $items = self::get()->map(function ($item) use ($coupon, &$wasSuccessful) {
             if ($coupon->products->where('id', $item->product->id)->isEmpty() && $coupon->products->isNotEmpty()) {
@@ -102,11 +123,36 @@ class Cart
         });
 
         session(['cart' => $items]);
+        Session::put(['coupon' => $coupon]);
 
         if ($wasSuccessful) {
             return $items;
         } else {
             throw new DisplayException('Coupon code is not valid for any items in your cart');
+        }
+    }
+
+    /**
+     * Validates and refreshes the coupon in the session
+     *
+     * @return bool True if coupon is valid, false otherwise
+     */
+    public static function validateAndRefreshCoupon()
+    {
+        if (!Session::has('coupon')) {
+            return true;
+        }
+
+        try {
+            $coupon = Session::get('coupon');
+            self::validateCoupon($coupon->code);
+
+            return true;
+        } catch (DisplayException $e) {
+            // Coupon is invalid, remove it
+            self::removeCoupon();
+
+            return false;
         }
     }
 

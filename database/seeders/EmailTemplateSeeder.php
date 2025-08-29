@@ -134,7 +134,7 @@ class EmailTemplateSeeder extends Seeder
             ],
             [
                 'key' => 'new_ticket_message',
-                'subject' => 'New ticket reply',
+                'subject' => '[Ticket #{{ $ticketMessage->ticket_id }}] New reply',
                 'body' => <<<'HTML'
                 # New ticket reply
 
@@ -183,6 +183,29 @@ class EmailTemplateSeeder extends Seeder
                 This password reset link will expire in 60 minutes.
 
                 If you did not request a password reset, no further action is required.
+
+                HTML,
+            ],
+            [
+                'key' => 'service_cancellation_received',
+                'subject' => 'Service cancellation received',
+                'body' => <<<'HTML'
+                # Server Cancellation Received
+
+                We're sorry to see you go! Your server cancellation has been successfully received.
+                
+                **Cancellation Details**
+                - Server: {{ $service->product->name }}
+                @if($cancellation->reason)
+                - Reason: {{ $cancellation->reason }}
+                @endif
+                - Requested at: {{ $cancellation->created_at->format('F j, Y, g:i A') }}
+                
+                @if($cancellation->type === 'end_of_period')
+                Your server will remain active until {{ $service->expires_at->format('F j, Y') }} (end of your current billing period).
+                @else
+                Your server has been terminated immediately.
+                @endif
 
                 HTML,
             ],

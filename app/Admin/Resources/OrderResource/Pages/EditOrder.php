@@ -3,7 +3,7 @@
 namespace App\Admin\Resources\OrderResource\Pages;
 
 use App\Admin\Resources\OrderResource;
-use Filament\Actions;
+use Filament\Actions\DeleteAction;
 use Filament\Resources\Pages\EditRecord;
 
 class EditOrder extends EditRecord
@@ -13,7 +13,7 @@ class EditOrder extends EditRecord
     protected function getHeaderActions(): array
     {
         return [
-            Actions\DeleteAction::make(),
+            DeleteAction::make(),
         ];
     }
 }

@@ -2,87 +2,103 @@
 
 namespace App\Admin\Resources\TicketResource\Pages;
 
+use App\Admin\Actions\AuditAction;
+use App\Admin\Components\UserComponent;
 use App\Admin\Resources\ServiceResource;
 use App\Admin\Resources\TicketResource;
 use App\Admin\Resources\UserResource;
 use App\Models\Ticket;
 use App\Models\TicketMessage;
-use App\Models\User;
-use Filament\Actions\StaticAction;
-use Filament\Forms;
-use Filament\Forms\Form;
-use Filament\Forms\Get;
-use Filament\Infolists;
-use Filament\Infolists\Components\Actions\Action;
-use Filament\Infolists\Components\Actions as InfolistActions;
-use Filament\Infolists\Components\TextEntry\TextEntrySize;
-use Filament\Infolists\Infolist;
+use Filament\Actions\Action;
+use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\MarkdownEditor;
+use Filament\Forms\Components\Select;
+use Filament\Infolists\Components\TextEntry;
 use Filament\Notifications\Notification;
 use Filament\Resources\Pages\EditRecord;
+use Filament\Schemas\Components\Actions;
+use Filament\Schemas\Components\Utilities\Get;
+use Filament\Schemas\Schema;
+use Filament\Support\Enums\TextSize;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\File;
 
 class EditTicket extends EditRecord
 {
     protected static string $resource = TicketResource::class;
 
-    protected static string $view = 'admin.resources.ticket-resource.pages.edit-ticket';
+    protected string $view = 'admin.resources.ticket-resource.pages.edit-ticket';
 
-    public function form(Form $form): Form
+    public function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
-                Forms\Components\MarkdownEditor::make('message')
+        return $schema
+            ->columns(1)
+            ->components([
+                MarkdownEditor::make('message')
                     ->label('Message')
-                    ->columnSpanFull()
-                    ->required(),
+                    ->toolbarButtons([
+                        ['bold', 'italic', 'strike', 'link'],
+                        ['heading'],
+                        ['blockquote', 'codeBlock', 'bulletList', 'orderedList'],
+                        ['table'],
+                        ['undo', 'redo'],
+                    ])
+                    ->required(fn (Get $get) => count($get('attachments')) == 0),
+                FileUpload::make('attachments')
+                    ->label('Attachments')
+                    ->visibility('private')
+                    ->directory('tickets/uploads')
+                    ->multiple()
+                    ->storeFileNamesIn('attachment_names')
+                    ->reorderable(),
             ]);
     }
 
-    protected function getFormActions(): array
-    {
-        return [
-            $this->getSaveFormAction()->label('Send Message'),
-            $this->getCancelFormAction(),
-        ];
-    }
-
     // Save action
-    protected function handleRecordUpdate(Model $record, array $data): Model
+    public function send()
     {
-        $record->messages()->create([
+        $data = $this->form->getState();
+
+        $message = $this->record->messages()->create([
             'user_id' => Auth::id(),
-            'message' => $data['message'],
+            'message' => $data['message'] ?? '',
         ]);
 
-        return $record;
-    }
+        // Move attachments
+        foreach ($data['attachments'] as $attachment) {
+            $originalPath = storage_path('app/' . $attachment);
+            $filename = $data['attachment_names'][$attachment];
+            $mimeType = File::mimeType($originalPath);
+            $filesize = File::size($originalPath);
 
-    // Clear form after save
-    public function save(bool $shouldRedirect = true, bool $shouldSendSavedNotification = true): void
-    {
-        parent::save($shouldRedirect, $shouldSendSavedNotification);
+            $message->attachments()->create([
+                'path' => $attachment,
+                'filename' => $filename,
+                'mime_type' => $mimeType,
+                'filesize' => $filesize,
+            ]);
+        }
 
         $this->form->fill();
     }
 
-    public function infolist(Infolist $infolist): Infolist
+    public function infolist(Schema $schema): Schema
     {
-        return $infolist
+        return $schema
             ->record($this->record)
             ->columns(['default' => 3, 'md' => 1])
-            ->schema([
-                Infolists\Components\TextEntry::make('user_id')
-                    ->size(TextEntrySize::Large)
+            ->components([
+                TextEntry::make('user_id')
+                    ->size(TextSize::Large)
                     ->formatStateUsing(fn ($record) => $record->user->name)
                     ->url(fn ($record) => UserResource::getUrl('edit', ['record' => $record->user]))
                     ->label('User ID'),
-                Infolists\Components\TextEntry::make('subject')
-                    ->size(TextEntrySize::Large)
+                TextEntry::make('subject')
+                    ->size(TextSize::Large)
                     ->label('Subject'),
-                Infolists\Components\TextEntry::make('status')
-                    ->size(TextEntrySize::Large)
+                TextEntry::make('status')
+                    ->size(TextSize::Large)
                     ->badge()
                     ->formatStateUsing(fn ($state) => ucfirst($state))
                     ->color(fn ($state) => match ($state) {
@@ -91,8 +107,8 @@ class EditTicket extends EditRecord
                         'replied' => 'gray',
                     })
                     ->label('Status'),
-                Infolists\Components\TextEntry::make('priority')
-                    ->size(TextEntrySize::Large)
+                TextEntry::make('priority')
+                    ->size(TextSize::Large)
                     ->badge()
                     ->formatStateUsing(fn ($state) => ucfirst($state))
                     ->color(fn ($state) => match ($state) {
@@ -101,32 +117,32 @@ class EditTicket extends EditRecord
                         'high' => 'danger',
                     })
                     ->label('Priority'),
-                Infolists\Components\TextEntry::make('department')
-                    ->size(TextEntrySize::Large)
+                TextEntry::make('department')
+                    ->size(TextSize::Large)
                     ->formatStateUsing(fn ($state) => array_combine(config('settings.ticket_departments'), config('settings.ticket_departments'))[$state])
                     ->placeholder('No department')
                     ->label('Department'),
 
-                Infolists\Components\TextEntry::make('assigned_to')
-                    ->size(TextEntrySize::Large)
+                TextEntry::make('assigned_to')
+                    ->size(TextSize::Large)
                     ->label('Assigned To')
                     ->placeholder('No assigned user')
                     ->formatStateUsing(fn ($record) => $record->assignedTo->name),
 
-                Infolists\Components\TextEntry::make('service_id')
-                    ->size(TextEntrySize::Large)
+                TextEntry::make('service_id')
+                    ->size(TextSize::Large)
                     ->label('Service')
                     ->url(fn ($record) => $record->service ? ServiceResource::getUrl('edit', ['record' => $record->service]) : null)
                     ->placeholder('No service')
                     ->formatStateUsing(fn ($record) => "{$record->service->product->name} - " . ucfirst($record->service->status)),
 
-                InfolistActions::make([
+                Actions::make([
                     Action::make('Edit')
-                        ->form(function (Form $form) {
-                            return $form
+                        ->schema(function (Schema $schema) {
+                            return $schema
                                 ->columns(2)
-                                ->schema([
-                                    Forms\Components\Select::make('status')
+                                ->components([
+                                    Select::make('status')
                                         ->label('Status')
                                         ->options([
                                             'open' => 'Open',
@@ -135,7 +151,7 @@ class EditTicket extends EditRecord
                                         ])
                                         ->default('open')
                                         ->required(),
-                                    Forms\Components\Select::make('priority')
+                                    Select::make('priority')
                                         ->label('Priority')
                                         ->options([
                                             'low' => 'Low',
@@ -144,24 +160,17 @@ class EditTicket extends EditRecord
                                         ])
                                         ->default('medium')
                                         ->required(),
-                                    Forms\Components\Select::make('department')
+                                    Select::make('department')
                                         ->label('Department')
                                         ->options(array_combine(config('settings.ticket_departments'), config('settings.ticket_departments'))),
-                                    Forms\Components\Select::make('user_id')
-                                        ->label('User')
-                                        ->relationship('user', 'id')
-                                        ->searchable()
-                                        ->preload()
-                                        ->getOptionLabelFromRecordUsing(fn ($record) => $record->name)
-                                        ->getSearchResultsUsing(fn (string $search): array => User::where('first_name', 'like', "%$search%")->orWhere('last_name', 'like', "%$search%")->limit(50)->pluck('name', 'id')->toArray())
-                                        ->required(),
-                                    Forms\Components\Select::make('assigned_to')
+                                    UserComponent::make('user_id'),
+                                    Select::make('assigned_to')
                                         ->label('Assigned To')
                                         ->relationship('assignedTo', 'id', fn (Builder $query) => $query->where('role_id', '!=', null))
                                         ->searchable()
                                         ->preload()
                                         ->getOptionLabelFromRecordUsing(fn ($record) => $record->name),
-                                    Forms\Components\Select::make('service_id')
+                                    Select::make('service_id')
                                         ->label('Service')
                                         ->relationship('service', 'id', function (Builder $query, Get $get) {
                                             $query->where('user_id', $get('user_id'));
@@ -189,7 +198,7 @@ class EditTicket extends EditRecord
                         ->requiresConfirmation()
                         ->action(fn (Ticket $record) => $record->delete())
                         ->hidden(!auth()->user()->can('delete', $this->record))
-                        ->after(function (StaticAction $action) {
+                        ->after(function (Action $action) {
                             Notification::make()
                                 ->title(__('filament-actions::delete.single.notifications.deleted.title'))
                                 ->success()
@@ -197,6 +206,9 @@ class EditTicket extends EditRecord
 
                             $action->redirect(TicketResource::getUrl('index'));
                         }),
+                    AuditAction::make()->auditChildren([
+                        'messages',
+                    ]),
                 ])->columnSpan(['default' => 'full', 'md' => 1]),
             ]);
     }

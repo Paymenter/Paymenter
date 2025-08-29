@@ -27,12 +27,15 @@
         @endif
 
         @foreach ($product->configOptions as $configOption)
-            <x-form.configoption :config="$configOption" :name="'configOptions.' . $configOption->id">
+            @php
+                $showPriceTag = $configOption->children->filter(fn ($value) => !$value->price(billing_period: $plan->billing_period, billing_unit: $plan->billing_unit)->is_free)->count() > 0;
+            @endphp
+            <x-form.configoption :config="$configOption" :name="'configOptions.' . $configOption->id" :showPriceTag="$showPriceTag" :plan="$plan">
                 @if ($configOption->type == 'select')
                     @foreach ($configOption->children as $configOptionValue)
                         <option value="{{ $configOptionValue->id }}">
                             {{ $configOptionValue->name }}
-                            {{ $configOptionValue->price(billing_period: $plan->billing_period, billing_unit: $plan->billing_unit)->available ? ' - ' . $configOptionValue->price(billing_period: $plan->billing_period, billing_unit: $plan->billing_unit) : '' }}
+                            {{ ($showPriceTag && $configOptionValue->price(billing_period: $plan->billing_period, billing_unit: $plan->billing_unit)->available) ? ' - ' . $configOptionValue->price(billing_period: $plan->billing_period, billing_unit: $plan->billing_unit) : '' }}
                         </option>
                     @endforeach
                 @elseif($configOption->type == 'radio')
@@ -43,7 +46,7 @@
                                 value="{{ $configOptionValue->id }}" />
                             <label for="{{ $configOptionValue->id }}">
                                 {{ $configOptionValue->name }}
-                                {{ $configOptionValue->price(billing_period: $plan->billing_period, billing_unit: $plan->billing_unit)->available ? ' - ' . $configOptionValue->price(billing_period: $plan->billing_period, billing_unit: $plan->billing_unit) : '' }}
+                                {{ ($showPriceTag && $configOptionValue->price(billing_period: $plan->billing_period, billing_unit: $plan->billing_unit)->available) ? ' - ' . $configOptionValue->price(billing_period: $plan->billing_period, billing_unit: $plan->billing_unit) : '' }}
                             </label>
                         </div>
                     @endforeach
@@ -83,7 +86,7 @@
         </div>
         @if ($total->setup_fee && $plan->type == 'recurring')
             <div class="text- font-semibold flex justify-between ">
-                <h4>{{ __('product.then_after_x', ['time' => $plan->billing_period . ' ' . $plan->billing_unit . ($plan->billing_period > 1 ? 's' : '')]) }}:
+                <h4>{{ __('product.then_after_x', ['time' => $plan->billing_period . ' ' . trans_choice(__('services.billing_cycles.' . $plan->billing_unit), $plan->billing_period)]) }}:
                 </h4> {{ $total->format($total->price - $total->setup_fee) }}
             </div>
         @endif

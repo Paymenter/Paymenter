@@ -15,6 +15,7 @@ return [
     'files_max' => 'Files up to 10MB',
     'selected_files' => 'Selected Files',
 
+
     'create_ticket' => 'Create Ticket',
     'select_department' => 'Select Department',
     'select_priority' => 'Select Priority',
