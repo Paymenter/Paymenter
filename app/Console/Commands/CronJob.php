@@ -102,6 +102,10 @@ class CronJob extends Command
 
             $service->update(['status' => 'cancelled']);
 
+            if ($service->product->stock) {
+                $service->product->increment('stock', $service->quantity);
+            }
+
             $ordersCancelled++;
         });
         $this->info('Cancelling services if first invoice is not paid after ' . config('settings.cronjob_order_cancel', 7) . ' days: ' . $ordersCancelled . ' orders');
@@ -141,6 +145,11 @@ class CronJob extends Command
             $service->update(['status' => 'cancelled']);
             // Cancel outstanding invoices
             $service->invoices()->where('status', 'pending')->update(['status' => 'cancelled']);
+
+            if ($service->product->stock) {
+                $service->product->increment('stock', $service->quantity);
+            }
+
             $ordersTerminated++;
         });
         $this->info('Terminating orders if due date is overdue for ' . config('settings.cronjob_order_terminate', 14) . ' days: ' . $ordersTerminated . ' orders');
