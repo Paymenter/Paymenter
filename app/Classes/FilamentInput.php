@@ -5,6 +5,8 @@ namespace App\Classes;
 use Exception;
 use Filament\Forms\Components\Checkbox;
 use Filament\Forms\Components\ColorPicker;
+use Filament\Forms\Components\DatePicker;
+use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\MarkdownEditor;
 use Filament\Forms\Components\Placeholder;
@@ -12,6 +14,7 @@ use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TagsInput;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\TimePicker;
 use Spatie\Color\Factory as ColorFactory;
 
 class FilamentInput
@@ -118,6 +121,23 @@ class FilamentInput
                     ->prefix($setting->prefix ?? null)
                     ->disabled($setting->disabled ?? false)
                     ->rules($setting->validation ?? []);
+                break;
+
+            case 'time':
+                return TimePicker::make($setting->name)
+                    ->label($setting->label ?? $setting->name)
+                    ->helperText($setting->description ?? null)
+                    ->placeholder($setting->placeholder ?? $setting->default ?? '')
+                    ->hint($setting->hint ?? null)
+                    ->hintColor('primary')
+                    ->required($setting->required ?? false)
+                    ->live(condition: $setting->live ?? false)
+                    ->default($setting->default ?? null)
+                    ->suffix($setting->suffix ?? null)
+                    ->prefix($setting->prefix ?? null)
+                    ->disabled($setting->disabled ?? false)
+                    ->rules($setting->validation ?? [])
+                    ->seconds($setting->seconds ?? false);
                 break;
 
             case 'textarea':
