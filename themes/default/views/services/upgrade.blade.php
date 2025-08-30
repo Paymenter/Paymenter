@@ -40,12 +40,19 @@
                         {!! $service->product->description !!}
                     </article>
                     <h3 class="text-lg font-semibold mb-2">
+                        @if($service->plan->type == 'recurring')
                         {{ __('services.price_every_period', [
                             'price' => $service->product->price(null, $service->plan->billing_period, $service->plan->billing_unit,
                             $service->currency_code),
                             'period' => $service->plan->billing_period > 1 ? $service->plan->billing_period : '',
                             'unit' => strtolower(trans_choice(__('services.billing_cycles.' . $service->plan->billing_unit), $service->plan->billing_period))
                         ]) }}
+                        @else 
+                        {{ __('services.price_one_time', [
+                            'price' => $service->product->price(null, null, null, $service->currency_code),
+                        ]) }}
+                        @endif
+
                     </h3>
                 </label>
             </div>
@@ -76,12 +83,18 @@
                         {!! $product->description !!}
                     </article>
                     <h3 class="text-lg font-semibold mb-2">
+                        @if($service->plan->type == 'recurring')
                         {{ __('services.price_every_period', [
                             'price' => $product->price(null, $service->plan->billing_period, $service->plan->billing_unit,
                             $service->currency_code),
                             'period' => $service->plan->billing_period > 1 ? $service->plan->billing_period : '',
                             'unit' => trans_choice(__('services.billing_cycles.' . $service->plan->billing_unit), $service->plan->billing_period)
                         ]) }}
+                        @else 
+                        {{ __('services.price_one_time', [
+                            'price' => $product->price(null, null, null, $service->currency_code),
+                        ]) }}
+                        @endif
                     </h3>
                 </label>
             </div>

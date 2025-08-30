@@ -57,20 +57,24 @@ class ServiceUpgrade extends Model implements Auditable
         };
 
         // Calculate the remaining days until the service expires
-        $expiresAt = $this->service->expires_at->copy()->startOfDay();
-        $now = Carbon::now()->startOfDay();
-        $remainingDays = $expiresAt->diffInDays($now, true);
-        $remainingDays = min($remainingDays, $billingPeriodDays);
+        if ($this->service->expires_at) {
+            $expiresAt = $this->service->expires_at->copy()->startOfDay();
+            $now = Carbon::now()->startOfDay();
+            $remainingDays = $expiresAt->diffInDays($now, true);
+            $remainingDays = min($remainingDays, $billingPeriodDays);
 
-        // Calculate the prorated amount
-        $newPrice = $newItem->price(null, $this->service->plan->billing_period, $this->service->plan->billing_unit, $this->service->currency_code);
-        if (empty($oldItem)) {
-            $oldPrice = 0;
+            // Calculate the prorated amount
+            $newPrice = $newItem->price(null, $this->service->plan->billing_period, $this->service->plan->billing_unit, $this->service->currency_code);
+            if (empty($oldItem)) {
+                $oldPrice = 0;
+            } else {
+                $oldPrice = $oldItem->price(null, $this->service->plan->billing_period, $this->service->plan->billing_unit, $this->service->currency_code)->price;
+            }
+            $priceDifference = $newPrice->price - $oldPrice;
+            $total = ($priceDifference / $billingPeriodDays) * $remainingDays;
         } else {
-            $oldPrice = $oldItem->price(null, $this->service->plan->billing_period, $this->service->plan->billing_unit, $this->service->currency_code)->price;
+            $total = $newItem->price(null, $this->service->plan->billing_period, $this->service->plan->billing_unit, $this->service->currency_code)->price;
         }
-        $priceDifference = $newPrice->price - $oldPrice;
-        $total = ($priceDifference / $billingPeriodDays) * $remainingDays;
 
         return new Price([
             'price' => $total,
