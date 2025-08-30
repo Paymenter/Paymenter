@@ -64,6 +64,49 @@ class EmailTemplateSeeder extends Seeder
                 HTML,
             ],
             [
+                'key' => 'invoice_paid',
+                'subject' => 'Invoice paid successfully',
+                'body' => <<<'HTML'
+                # Invoice paid successfully
+
+                Your invoice has been paid successfully.
+
+                **Invoice Details**
+                - Invoice Number: {{ $invoice->number }}
+                - Total Amount: **{{ $total }}**
+                - Paid Date: {{ now()->format('F j, Y, g:i A') }}
+
+                <div class="table">
+
+                |   Item   | Quantity |  Price   |
+                | :------: | :------: | :------: |
+                @foreach ($items as $item)
+                | {{ $item->description }} | {{ $item->quantity }} | {{ $item->price }} |
+                @endforeach
+                </div>
+
+                @if($transactions->isNotEmpty())
+                **Payment Transactions**
+                <div class="table">
+
+                | Transaction ID | Date | Amount | Payment Method |
+                | :------------: | :--: | :----: | :-------------: |
+                @foreach ($transactions as $transaction)
+                | {{ $transaction->transaction_id }} | {{ $transaction->created_at->format('M j, Y') }} | {{ $transaction->formattedAmount }} | {{ $transaction->gateway?->name ?? 'N/A' }} |
+                @endforeach
+                </div>
+                @endif
+
+                <div class="action">
+                    <a class="button button-blue" href="{{ route('invoices.show', $invoice) }}">
+                        View invoice
+                    </a>
+                </div>
+
+                Thank you for your payment!
+                HTML,
+            ],
+            [
                 'key' => 'new_order_created',
                 'subject' => 'New order created',
                 'body' => <<<'HTML'
