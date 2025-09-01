@@ -79,7 +79,7 @@ class CronJob extends Command
                     'description' => $service->description,
                 ]);
 
-                $this->payInvoiceWithCredits($invoice);
+                $this->payInvoiceWithCredits($invoice->refresh());
             } catch (Exception $e) {
                 DB::rollBack();
                 $this->error('Error creating invoice for service ' . $service->id . ': ' . $e->getMessage());
@@ -182,7 +182,7 @@ class CronJob extends Command
         }
         $user = $invoice->user;
         $credits = $user->credits()->where('currency_code', $invoice->currency_code)->first();
-        if ($credits && $credits->amount >= $invoice->remaining) {
+        if ($invoice->remaining > 0 && $credits && $credits->amount >= $invoice->remaining) {
             $credits->amount -= $invoice->remaining;
             $credits->save();
 
