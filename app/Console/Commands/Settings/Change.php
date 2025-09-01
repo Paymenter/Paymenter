@@ -45,7 +45,7 @@ class Change extends Command
                 if ($setting->type === 'select') {
                     return select('What value should the setting have?', $setting->options);
                 } else {
-                    return text('What value should the setting have?', default: $setting->default ?? '');
+                    return text('What value should the setting have?', default: $setting->value ?? '');
                 }
             });
         }
