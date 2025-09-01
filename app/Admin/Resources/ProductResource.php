@@ -91,6 +91,9 @@ class ProductResource extends Resource
                                     ->label('Image')
                                     ->nullable()
                                     ->visibility('public')
+                                    ->imageEditor()
+                                    ->image()
+                                    ->disk('public')
                                     ->acceptedFileTypes(['image/*']),
                                 Select::make('category_id')
                                     ->relationship('category', 'name')

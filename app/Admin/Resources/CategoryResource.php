@@ -65,6 +65,7 @@ class CategoryResource extends Resource
                     ->label('Image')
                     ->nullable()
                     ->visibility('public')
+                    ->disk('public')
                     ->acceptedFileTypes(['image/*'])
                     ->columnSpanFull(),
             ])->columns(2);
