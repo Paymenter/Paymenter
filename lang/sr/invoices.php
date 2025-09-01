@@ -30,5 +30,5 @@ return [
     'payment_method' => 'Način plaćanja',
     'amount' => 'Iznos',
     'date' => 'Datum',
-    'due_date' => 'Due Date',
+    'due_date' => 'Rok',
 ];
