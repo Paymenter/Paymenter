@@ -20,8 +20,16 @@ trait HasNotifications
     /**
      * Notifications
      */
-    public function notify($message, $type = 'success')
+    public function notify($message, $type = 'success', $redirect = false)
     {
-        $this->dispatch('notify', ['message' => $message, 'type' => $type]);
+        if ($redirect) {
+            // Set notification in session before redirect
+            Session::put('notification', [
+                'message' => $message,
+                'type' => $type,
+            ]);
+        } else {
+            $this->dispatch('notify', ['message' => $message, 'type' => $type]);
+        }
     }
 }

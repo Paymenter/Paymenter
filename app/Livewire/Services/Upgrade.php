@@ -139,7 +139,7 @@ class Upgrade extends Component
     public function doUpgrade()
     {
         if (!$this->service->upgradable) {
-            $this->notify('This service is not upgradable.', 'error');
+            $this->notify('This service is not upgradable.', 'error', true);
 
             return $this->redirect(route('services.show', $this->service), true);
         }
@@ -205,7 +205,7 @@ class Upgrade extends Component
             }
 
             if (!config('settings.credits_on_downgrade', true)) {
-                $this->notify('The upgrade has been completed.', 'success');
+                $this->notify('The upgrade has been completed.', 'success', true);
 
                 return $this->redirect(route('services.show', $this->service), true);
             }
@@ -226,9 +226,9 @@ class Upgrade extends Component
             }
 
             if ($price->price < 0) {
-                $this->notify('The upgrade has been completed. We\'ve added the remaining amount to your account balance.', 'success');
+                $this->notify('The upgrade has been completed. We\'ve added the remaining amount to your account balance.', 'success', true);
             } else {
-                $this->notify('The upgrade has been completed.', 'success');
+                $this->notify('The upgrade has been completed.', 'success', true);
             }
 
             return $this->redirect(route('services.show', $this->service), true);
@@ -255,7 +255,7 @@ class Upgrade extends Component
 
         event(new InvoiceCreated($invoice));
 
-        $this->notify('The upgrade has been added to your cart. Please complete the payment to proceed.', 'success');
+        $this->notify('The upgrade has been added to your cart. Please complete the payment to proceed.', 'success', true);
 
         return $this->redirect(route('invoices.show', $invoice));
     }

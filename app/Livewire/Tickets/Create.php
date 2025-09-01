@@ -75,7 +75,7 @@ class Create extends Component
             ]);
         }
 
-        $this->notify('Message sent successfully');
+        $this->notify('Message sent successfully', redirect: true);
 
         $this->reset(['attachments', 'message', 'subject', 'department', 'service', 'priority']);
         $this->dispatch('saved');
