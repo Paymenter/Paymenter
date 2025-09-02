@@ -60,6 +60,9 @@ class ComponentWithProperties extends Component
     {
         $properties = collect($properties)->map(function ($value, $key) use ($model) {
             $custom_property = $this->custom_properties->where('key', $key)->first();
+            if ($custom_property->non_editable && $model->properties->where('key', $key)->first()) {
+                return null;
+            }
 
             return [
                 'key' => $key,
@@ -69,7 +72,7 @@ class ComponentWithProperties extends Component
                 'name' => $custom_property->name,
                 'custom_property_id' => $custom_property->id,
             ];
-        })->toArray();
+        })->filter()->toArray();
 
         $model->properties()->upsert($properties, uniqueBy: [
             'key',
