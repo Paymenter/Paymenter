@@ -44,6 +44,7 @@ return [
         'active' => 'Aktiivinen',
         'cancelled' => 'Peruttu',
         'suspended' => 'Keskeytetty',
+        'cancellation_pending' => 'Cancellation Pending',
     ],
     'billing_cycles' => [
         'day' => 'päivä|päivää',
