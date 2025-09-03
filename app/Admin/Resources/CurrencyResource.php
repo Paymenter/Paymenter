@@ -37,6 +37,12 @@ class CurrencyResource extends Resource
                     ->disabledOn('edit')
                     ->unique(static::getModel(), 'code', ignoreRecord: true)
                     ->placeholder('Enter the currency code'),
+                TextInput::make('name')
+                    ->label('Name')
+                    ->helperText('Display name for customers, e.g., US Dollar')
+                    ->required()
+                    ->maxLength(255)
+                    ->placeholder('Enter the currency name'),
                 TextInput::make('prefix')
                     ->label('Prefix')
                     ->maxLength(10)
