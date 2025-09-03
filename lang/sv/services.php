@@ -53,6 +53,6 @@ return [
     ],
     'every_period' => 'Varje :period :unit',
     'price_every_period' => ':price per :period :unit',
-    'price_one_time' => ':price one time',
+    'price_one_time' => ':price en gång',
     'expires_at' => 'Utgår den',
 ];
