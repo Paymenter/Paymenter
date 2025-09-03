@@ -88,7 +88,7 @@
                             @endforeach
                         </x-form.select>
                     @endif
-                    <x-button.primary wire:click="pay" class="mt-4" wire:loading.attr="disabled" wire:target="pay">
+                    <x-button.primary wire:click="pay" class="mt-2" wire:loading.attr="disabled" wire:target="pay">
                         <span wire:loading wire:target="pay">Processing...</span>
                         <span wire:loading.remove wire:target="pay">Pay</span>
                     </x-button.primary>
