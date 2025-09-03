@@ -44,6 +44,7 @@ return [
         'active' => 'Aktivno',
         'cancelled' => 'Otkazano',
         'suspended' => 'Suspendovano',
+        'cancellation_pending' => 'Cancellation Pending',
     ],
     'billing_cycles' => [
         'day' => 'dan|dana',
