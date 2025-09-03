@@ -44,6 +44,7 @@ return [
         'active' => 'Aktif',
         'cancelled' => 'Dibatalkan',
         'suspended' => 'Ditangguhkan',
+        'cancellation_pending' => 'Cancellation Pending',
     ],
     'billing_cycles' => [
         'day' => 'hari|hari',
