@@ -44,6 +44,7 @@ return [
         'active' => 'פעיל',
         'cancelled' => 'בוטל',
         'suspended' => 'מושהה',
+        'cancellation_pending' => 'Cancellation Pending',
     ],
     'billing_cycles' => [
         'day' => 'יום|ימים',
