@@ -44,6 +44,7 @@ return [
         'active' => '已啟用',
         'cancelled' => '已取消',
         'suspended' => '已停權',
+        'cancellation_pending' => 'Cancellation Pending',
     ],
     'billing_cycles' => [
         'day' => '天',
