@@ -6,7 +6,6 @@ use App\Jobs\Server\UpgradeJob;
 use App\Models\ServiceUpgrade;
 use Illuminate\Support\Facades\DB;
 
-
 class ServiceUpgradeService
 {
     /**

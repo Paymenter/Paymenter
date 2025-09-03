@@ -5,7 +5,6 @@ namespace App\Listeners;
 use App\Events\Invoice\Paid;
 use App\Jobs\Server\CreateJob;
 use App\Jobs\Server\UnsuspendJob;
-use App\Jobs\Server\UpgradeJob;
 use App\Models\Credit;
 use App\Models\Service;
 use App\Models\ServiceUpgrade;
@@ -40,9 +39,9 @@ class InvoicePaidListener
                 if (!$serviceUpgrade || $serviceUpgrade->status !== ServiceUpgrade::STATUS_PENDING || !($serviceUpgrade instanceof ServiceUpgrade)) {
                     return;
                 }
-                
+
                 // Handle the upgrade
-                (new ServiceUpgradeService())->handle($serviceUpgrade);
+                (new ServiceUpgradeService)->handle($serviceUpgrade);
             } elseif ($item->reference_type == Credit::class) {
                 // Check if user has credits in this currency
                 $user = $item->invoice->user;

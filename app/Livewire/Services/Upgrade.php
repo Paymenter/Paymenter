@@ -4,7 +4,6 @@ namespace App\Livewire\Services;
 
 use App\Classes\Price;
 use App\Events\Invoice\Created as InvoiceCreated;
-use App\Jobs\Server\UpgradeJob;
 use App\Livewire\Component;
 use App\Models\Invoice;
 use App\Models\Product;
@@ -180,7 +179,7 @@ class Upgrade extends Component
         $price = $upgrade->calculatePrice();
 
         if ($price->price <= 0) {
-            (new ServiceUpgradeService())->handle($upgrade);
+            (new ServiceUpgradeService)->handle($upgrade);
 
             if (!config('settings.credits_on_downgrade', true)) {
                 $this->notify('The upgrade has been completed.', 'success', true);
