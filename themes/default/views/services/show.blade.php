@@ -44,10 +44,16 @@
                     @endif
                     <div class="flex items-center text-base">
                         <span class="mr-2">{{ __('services.status') }}:</span>
+                        @if($service->cancellation && $service->status == 'active')
+                        <span class="font-semibold text-orange-500">
+                            {{ __('services.statuses.cancellation_pending') }}
+                        </span>
+                        @else
                         <span
                             class="font-semibold @if ($service->status == 'active') text-green-500 @elseif($service->status == 'cancelled') text-red-500  @else text-orange-500 @endif">
                             {{ __('services.statuses.' . $service->status) }}
                         </span>
+                        @endif
                     </div>
                     <br>
                     @foreach ($fields as $field)
