@@ -49,7 +49,9 @@ class Extension extends Page implements HasActions, HasTable
     public string $filter = 'all';
 
     public int $loadedItems = self::PER_PAGE;
+
     public ?array $allExtensions = [];
+
     public ?string $error = null;
 
     public function mount(): void
@@ -59,8 +61,10 @@ class Extension extends Page implements HasActions, HasTable
                 $response = Http::timeout(15)->get('https://api.paymenter.org/extensions', ['limit' => 999]);
                 if (!$response->successful()) {
                     logger()->error('Paymenter Marketplace API request failed', ['status' => $response->status(), 'body' => $response->body()]);
+
                     return null;
                 }
+
                 return $response->json('extensions', []);
             });
             if (is_null($this->allExtensions)) {
@@ -72,22 +76,47 @@ class Extension extends Page implements HasActions, HasTable
         }
     }
 
-    public function updatedSearch(): void { $this->resetLoadedItems(); }
-    public function updatedFilter(): void { $this->resetLoadedItems(); }
-    public function loadMore(): void { $this->loadedItems += self::PER_PAGE; }
-    private function resetLoadedItems(): void { $this->loadedItems = self::PER_PAGE; }
+    public function updatedSearch(): void
+    {
+        $this->resetLoadedItems();
+    }
+
+    public function updatedFilter(): void
+    {
+        $this->resetLoadedItems();
+    }
+
+    public function loadMore(): void
+    {
+        $this->loadedItems += self::PER_PAGE;
+    }
+
+    private function resetLoadedItems(): void
+    {
+        $this->loadedItems = self::PER_PAGE;
+    }
 
     public function getFilteredExtensionsProperty(): Collection
     {
         if (is_null($this->allExtensions)) {
             return collect();
         }
+
         return collect($this->allExtensions)
-            ->when($this->search, fn(Collection $c) => $c->filter(fn($i) => stripos($i['name'], $this->search) !== false))
-            ->when($this->filter !== 'all', fn(Collection $c) => $c->where('type', $this->filter));
+            ->when($this->search, fn (Collection $c) => $c->filter(fn ($i) => stripos($i['name'], $this->search) !== false))
+            ->when($this->filter !== 'all', fn (Collection $c) => $c->where('type', $this->filter));
     }
-    public function getCanLoadMoreProperty(): bool { return $this->filteredExtensions->count() > $this->loadedItems; }
-    public function getExtensionsProperty(): Collection { return $this->filteredExtensions->take($this->loadedItems); }
+
+    public function getCanLoadMoreProperty(): bool
+    {
+        return $this->filteredExtensions->count() > $this->loadedItems;
+    }
+
+    public function getExtensionsProperty(): Collection
+    {
+        return $this->filteredExtensions->take($this->loadedItems);
+    }
+
     public function table(Table $table): Table
     {
         return $table
