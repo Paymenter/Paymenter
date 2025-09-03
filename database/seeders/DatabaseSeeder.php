@@ -38,6 +38,7 @@ class DatabaseSeeder extends Seeder
         if (\App\Models\Currency::count() === 0) {
             \App\Models\Currency::create([
                 'code' => 'USD',
+                'name' => 'US Dollar',
                 'prefix' => '$',
                 'suffix' => '',
                 'format' => '1.000,00',
