@@ -16,6 +16,11 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Concerns\InteractsWithTable;
 use Filament\Tables\Contracts\HasTable;
 use Filament\Tables\Table;
+use Illuminate\Http\Client\ConnectionException;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Http;
+use Livewire\Attributes\Url;
 
 class Extension extends Page implements HasActions, HasTable
 {
@@ -33,12 +38,60 @@ class Extension extends Page implements HasActions, HasTable
     // Label for the navigation item
     protected static ?string $navigationLabel = 'Available Extensions';
 
+    public string $activeTab = 'marketplace';
+
+    private const PER_PAGE = 12;
+
+    #[Url(except: '', as: 'q')]
+    public string $search = '';
+
+    #[Url(except: 'all')]
+    public string $filter = 'all';
+
+    public int $loadedItems = self::PER_PAGE;
+    public ?array $allExtensions = [];
+    public ?string $error = null;
+
+    public function mount(): void
+    {
+        try {
+            $this->allExtensions = Cache::remember('paymenter_marketplace_extensions', now()->addHours(6), function () {
+                $response = Http::timeout(15)->get('https://api.paymenter.org/extensions', ['limit' => 999]);
+                if (!$response->successful()) {
+                    logger()->error('Paymenter Marketplace API request failed', ['status' => $response->status(), 'body' => $response->body()]);
+                    return null;
+                }
+                return $response->json('extensions', []);
+            });
+            if (is_null($this->allExtensions)) {
+                $this->error = 'The Paymenter Marketplace is currently unavailable. Please try again later.';
+            }
+        } catch (ConnectionException $e) {
+            $this->error = 'Failed to connect to the Paymenter Marketplace. Please check your server\'s internet connection.';
+            logger()->error('Paymenter Marketplace API connection failed: ' . $e->getMessage());
+        }
+    }
+
+    public function updatedSearch(): void { $this->resetLoadedItems(); }
+    public function updatedFilter(): void { $this->resetLoadedItems(); }
+    public function loadMore(): void { $this->loadedItems += self::PER_PAGE; }
+    private function resetLoadedItems(): void { $this->loadedItems = self::PER_PAGE; }
+
+    public function getFilteredExtensionsProperty(): Collection
+    {
+        if (is_null($this->allExtensions)) {
+            return collect();
+        }
+        return collect($this->allExtensions)
+            ->when($this->search, fn(Collection $c) => $c->filter(fn($i) => stripos($i['name'], $this->search) !== false))
+            ->when($this->filter !== 'all', fn(Collection $c) => $c->where('type', $this->filter));
+    }
+    public function getCanLoadMoreProperty(): bool { return $this->filteredExtensions->count() > $this->loadedItems; }
+    public function getExtensionsProperty(): Collection { return $this->filteredExtensions->take($this->loadedItems); }
     public function table(Table $table): Table
     {
         return $table
-            ->records(function () {
-                return collect(ExtensionHelper::getInstallableExtensions());
-            })
+            ->records(fn () => collect(ExtensionHelper::getInstallableExtensions()))
             ->description('List of available extensions (not gateway or server extensions) that can be installed.')
             ->columns([
                 TextColumn::make('meta.name')
@@ -68,18 +121,15 @@ class Extension extends Page implements HasActions, HasTable
                             ->success()
                             ->send();
 
-                        $this->redirect(ExtensionResource::getUrl('edit', [
-                            'record' => $extension->id,
-                        ]), true);
+                        $this->redirect(ExtensionResource::getUrl('edit', ['record' => $extension->id]), true);
                     })
                     ->requiresConfirmation(),
             ])
             ->headerActions([
-                // Upload action to install new extensions
                 Action::make('upload')
                     ->label('Upload Extension')
                     ->icon('ri-upload-2-line')
-                    ->schema([
+                    ->form([
                         FileUpload::make('file')
                             ->label('Extension File')
                             ->required()
@@ -88,11 +138,16 @@ class Extension extends Page implements HasActions, HasTable
                             ->preserveFilenames()
                             ->maxSize(10240), // 10 MB
                     ])
-                    ->action(function ($data, UploadExtensionService $service) {
+                    ->action(function (array $data, UploadExtensionService $service) {
                         try {
                             $service->handle(storage_path('app/' . $data['file']));
-                        } catch (\Exception $e) {
                             // Handle the exception, e.g., log it or show an error message
+                            Notification::make()
+                                ->title('Extension uploaded successfully')
+                                ->body('It should now be available on the "Ready to Install" tab.')
+                                ->success()
+                                ->send();
+                        } catch (\Exception $e) {
                             Notification::make()
                                 ->title('Failed to upload extension')
                                 ->body($e->getMessage())
