@@ -17,7 +17,7 @@
                     'border-primary-500 text-primary-600' => $activeTab === 'installable',
                     'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300 dark:hover:border-gray-600' => $activeTab !== 'installable',
                 ])>
-                Ready to Install
+                Ready to Install / Upload
             </button>
         </nav>
     </div>

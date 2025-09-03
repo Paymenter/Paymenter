@@ -169,13 +169,32 @@ class Extension extends Page implements HasActions, HasTable
                     ])
                     ->action(function (array $data, UploadExtensionService $service) {
                         try {
-                            $service->handle(storage_path('app/' . $data['file']));
+                            $type = $service->handle(storage_path('app/' . $data['file']));
                             // Handle the exception, e.g., log it or show an error message
-                            Notification::make()
-                                ->title('Extension uploaded successfully')
-                                ->body('It should now be available on the "Ready to Install" tab.')
-                                ->success()
-                                ->send();
+                            switch ($type) {
+                                case 'server':
+                                    Notification::make()
+                                        ->title('Extension uploaded successfully')
+                                        ->body('Server uploaded successfully. Please go to the <a class="text-primary-600" wire:navigate href="' . \App\Admin\Resources\ServerResource::getUrl() . '">Servers</a> page to install the new server extension.')
+                                        ->success()
+                                        ->send();
+                                    break;
+                                case 'gateway':
+                                    Notification::make()
+                                        ->title('Extension uploaded successfully')
+                                        ->body('Gateway uploaded successfully. Please go to the <a class="text-primary-600" wire:navigate href="' . \App\Admin\Resources\GatewayResource::getUrl() . '">Gateways</a> page to install the new gateway extension.')
+                                        ->success()
+                                        ->send();
+                                    break;
+                                default:
+                                    // Unknown type, just stay on the page
+                                    Notification::make()
+                                        ->title('Extension uploaded successfully')
+                                        ->body('It should now be available on the "Ready to Install" tab.')
+                                        ->success()
+                                        ->send();
+                                    break;
+                            }
                         } catch (\Exception $e) {
                             Notification::make()
                                 ->title('Failed to upload extension')

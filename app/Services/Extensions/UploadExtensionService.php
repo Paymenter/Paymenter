@@ -18,7 +18,7 @@ class UploadExtensionService
      *
      * @return void
      */
-    public function handle(string $filePath)
+    public function handle(string $filePath): string
     {
         // Validate the file type and size
         if (!file_exists($filePath) || !is_readable($filePath)) {
@@ -82,6 +82,8 @@ class UploadExtensionService
             Process::fromShellCommandline('php artisan app:extension:upgrade ' . $type['type'] . ' ' . $type['class'] . ' ' . ($oldVersion ?? ''))
                 ->run(function ($type, $output) {});
         }
+
+        return $type['type'];
     }
 
     private function getExtensionType(string $path): array
