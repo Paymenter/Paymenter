@@ -11,6 +11,7 @@ use App\Models\Product;
 use App\Models\Service;
 use App\Models\ServiceUpgrade;
 use App\Models\User;
+use App\Services\ServiceUpgrade\ServiceUpgradeService;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\Computed;
@@ -179,30 +180,7 @@ class Upgrade extends Component
         $price = $upgrade->calculatePrice();
 
         if ($price->price <= 0) {
-            $upgrade->status = ServiceUpgrade::STATUS_COMPLETED;
-            $upgrade->save();
-
-            $upgrade->service()->update([
-                'plan_id' => $upgrade->plan_id,
-                'product_id' => $upgrade->product_id,
-            ]);
-
-            // Update the service configs
-            foreach ($upgrade->configs as $config) {
-                $upgrade->service->configs()->updateOrCreate(
-                    ['config_option_id' => $config->config_option_id],
-                    ['config_value_id' => $config->config_value_id]
-                );
-            }
-
-            $this->service->refresh();
-
-            $this->service->recalculatePrice();
-
-            if ($this->service->product->server) {
-                // If the service has a server, dispatch the upgrade job
-                UpgradeJob::dispatch($this->service);
-            }
+            (new ServiceUpgradeService())->handle($upgrade);
 
             if (!config('settings.credits_on_downgrade', true)) {
                 $this->notify('The upgrade has been completed.', 'success', true);

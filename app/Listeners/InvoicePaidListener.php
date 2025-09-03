@@ -9,6 +9,7 @@ use App\Jobs\Server\UpgradeJob;
 use App\Models\Credit;
 use App\Models\Service;
 use App\Models\ServiceUpgrade;
+use App\Services\ServiceUpgrade\ServiceUpgradeService;
 
 class InvoicePaidListener
 {
@@ -36,27 +37,12 @@ class InvoicePaidListener
                 $service->save();
             } elseif ($item->reference_type == ServiceUpgrade::class) {
                 $serviceUpgrade = $item->reference;
-                if (!$serviceUpgrade || $serviceUpgrade->status !== ServiceUpgrade::STATUS_PENDING) {
+                if (!$serviceUpgrade || $serviceUpgrade->status !== ServiceUpgrade::STATUS_PENDING || !($serviceUpgrade instanceof ServiceUpgrade)) {
                     return;
                 }
-                $serviceUpgrade->status = ServiceUpgrade::STATUS_COMPLETED;
-                $serviceUpgrade->save();
-
-                $service = $serviceUpgrade->service;
-                $service->plan_id = $serviceUpgrade->plan_id;
-                $service->product_id = $serviceUpgrade->product_id;
-                $service->save();
-
-                foreach ($serviceUpgrade->configs as $config) {
-                    $service->configs()->updateOrCreate(
-                        ['config_option_id' => $config->config_option_id],
-                        ['config_value_id' => $config->config_value_id]
-                    );
-                }
-                $service->recalculatePrice();
-                if ($service->product->server) {
-                    UpgradeJob::dispatch($service);
-                }
+                
+                // Handle the upgrade
+                (new ServiceUpgradeService())->handle($serviceUpgrade);
             } elseif ($item->reference_type == Credit::class) {
                 // Check if user has credits in this currency
                 $user = $item->invoice->user;

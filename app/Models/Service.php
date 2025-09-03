@@ -181,6 +181,10 @@ class Service extends Model implements Auditable
     public function productUpgrades()
     {
         return $this->product->upgrades->filter(function ($product) {
+            // Check stock
+            if ($product->stock !== null && ($product->stock - $this->quantity) < 0) {
+                return null;
+            }
             $plan = $product->plans()->where('billing_unit', $this->plan->billing_unit)->where('billing_period', $this->plan->billing_period)->get();
             // Only get the upgrades that have the exact same billing cycle as the service
             if ($plan->count() > 0) {
