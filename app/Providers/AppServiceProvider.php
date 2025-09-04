@@ -107,13 +107,14 @@ class AppServiceProvider extends ServiceProvider
 
                 if ($previousUrl !== null) {
                     $previousRequest = \Route::getRoutes()->match(request()->create($previousUrl));
-                    if($previousRequest) {
+                    if ($previousRequest) {
                         return $previousRequest->getName();
                     }
                 }
 
                 return 'paymenter.livewire.update';
             }
+
             return request()->route()->getName();
         });
     }
