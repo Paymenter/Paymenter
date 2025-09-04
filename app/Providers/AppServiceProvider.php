@@ -99,6 +99,23 @@ class AppServiceProvider extends ServiceProvider
 
             return request()->fullUrl();
         });
+
+        Request::macro('livewireRoute', function () {
+            // Return name of current route
+            if (request()->route()->named('paymenter.livewire.update')) {
+                $previousUrl = url()->previous();
+
+                if ($previousUrl !== null) {
+                    $previousRequest = \Route::getRoutes()->match(request()->create($previousUrl));
+                    if($previousRequest) {
+                        return $previousRequest->getName();
+                    }
+                }
+
+                return 'paymenter.livewire.update';
+            }
+            return request()->route()->getName();
+        });
     }
 
     /**

@@ -199,7 +199,7 @@ class Navigation
      */
     public static function markActiveRoute(array $routes): array
     {
-        $currentRoute = request()->route()->getName();
+        $currentRoute = request()->livewireRoute();
 
         foreach ($routes as &$route) {
             $route['active'] = self::isActiveRoute($route, $currentRoute);

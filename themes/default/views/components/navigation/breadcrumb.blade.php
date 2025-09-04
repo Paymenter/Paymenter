@@ -1,5 +1,5 @@
 @php
-    $currentRoute = request()->route()->getName();
+    $currentRoute = request()->livewireRoute();
 
     $navigation = [
         \App\Classes\Navigation::getLinks(),
