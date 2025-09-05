@@ -58,7 +58,9 @@ class Extension extends Page implements HasActions, HasTable
     {
         try {
             $this->allExtensions = Cache::remember('paymenter_marketplace_extensions', now()->addHours(6), function () {
-                $response = Http::timeout(15)->get('https://api.paymenter.org/extensions', ['limit' => 999]);
+                $response = Http::timeout(15)
+                    ->withUserAgent('Paymenter/' . config('app.version') . ' (https://paymenter.org)')
+                    ->get('https://api.paymenter.org/extensions', ['limit' => 999]);
                 if (!$response->successful()) {
                     logger()->error('Paymenter Marketplace API request failed', ['status' => $response->status(), 'body' => $response->body()]);
 
