@@ -84,6 +84,7 @@ class UserResource extends Resource
             ->columns([
                 TextColumn::make('first_name')
                     ->searchable()
+                    ->sortable()
                     ->description(function (User $user) {
                         if (count($user->credits) <= 0) {
                             return null;
@@ -93,9 +94,10 @@ class UserResource extends Resource
                             return "$credit->currency_code: $credit->amount";
                         })->toArray());
                     }),
-                TextColumn::make('last_name')->searchable(),
-                TextColumn::make('email')->searchable(),
-                TextColumn::make('role.name'),
+                TextColumn::make('last_name')->searchable()->sortable(),
+                TextColumn::make('email')->searchable()->sortable(),
+                TextColumn::make('role.name')->sortable(),
+                TextColumn::make('created_at')->dateTime()->sortable(),
             ])
             ->filters([
                 SelectFilter::make('role')
@@ -105,7 +107,8 @@ class UserResource extends Resource
             ])
             ->recordActions([
                 EditAction::make(),
-            ]);
+            ])
+            ->defaultSort('created_at', 'desc');
     }
 
     public static function getRelations(): array
