@@ -55,5 +55,5 @@ return [
     'every_period' => '每 :period :unit',
     'price_every_period' => '每 :period :unit :price 元',
     'price_one_time' => ':price one time',
-    'expires_at' => 'Expires at',
+    'expires_at' => '有效期限至',
 ];
