@@ -11,8 +11,11 @@ use App\Models\Coupon;
 use App\Models\Gateway;
 use App\Models\Invoice;
 use App\Models\Order;
+use App\Models\Plan;
+use App\Models\Product;
 use App\Models\Service;
 use App\Models\User;
+use App\Models\ConfigOption;
 use Exception;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -41,7 +44,96 @@ class Cart extends Component
         if (Session::has('coupon')) {
             $this->coupon = Session::get('coupon');
         }
+
+        // Always recalculate cart items fresh using plan IDs
+        $this->recalculateCartItems();
+
         $this->updateTotal();
+    }
+
+    /**
+     * Recalculate all cart items fresh using their plan IDs
+     * This ensures taxes are always calculated correctly for the current user state
+     */
+    private function recalculateCartItems()
+    {
+        $cart = ClassesCart::get();
+        if ($cart->isEmpty()) {
+            return;
+        }
+
+        $updatedItems = $cart->map(function ($item) {
+            $plan = Plan::find($item->plan->id);
+            $product = Product::find($item->product->id);
+
+            if (!$plan || !$product) {
+                return $item;
+            }
+
+            $basePrice = $plan->price()->price;
+            $baseSetupFee = $plan->price()->setup_fee;
+
+            $configOptionsPrice = 0;
+            $configOptionsSetupFee = 0;
+            
+            foreach ($item->configOptions as $configOption) {
+                if (isset($configOption->option_id) && isset($configOption->value)) {
+                    $option = ConfigOption::find($configOption->option_id);
+                    if ($option) {
+                        if ($option->type === 'checkbox' && $configOption->value) {
+                            $childPrice = $option->children->first()?->price(
+                                billing_period: $plan->billing_period, 
+                                billing_unit: $plan->billing_unit
+                            );
+                            if ($childPrice) {
+                                $configOptionsPrice += $childPrice->price;
+                            }
+                        } elseif (in_array($option->type, ['text', 'number', 'checkbox'])) {
+                            $configOptionsPrice += 0;
+                        } else {
+                            $childPrice = $option->children->where('id', $configOption->value)->first()?->price(
+                                billing_period: $plan->billing_period, 
+                                billing_unit: $plan->billing_unit
+                            );
+                            if ($childPrice) {
+                                $configOptionsPrice += $childPrice->price;
+                            }
+                        }
+
+                        if (in_array($option->type, ['text', 'number', 'checkbox'])) {
+                            $childPrice = $option->children->first()?->price(
+                                billing_period: $plan->billing_period, 
+                                billing_unit: $plan->billing_unit
+                            );
+                            if ($childPrice) {
+                                $configOptionsSetupFee += $childPrice->setup_fee;
+                            }
+                        } else {
+                            $childPrice = $option->children->where('id', $configOption->value)->first()?->price(
+                                billing_period: $plan->billing_period, 
+                                billing_unit: $plan->billing_unit
+                            );
+                            if ($childPrice) {
+                                $configOptionsSetupFee += $childPrice->setup_fee;
+                            }
+                        }
+                    }
+                }
+            }
+
+            $totalPrice = $basePrice + $configOptionsPrice;
+            $totalSetupFee = $baseSetupFee + $configOptionsSetupFee;
+
+            $item->price = new Price([
+                'price' => $totalPrice,
+                'setup_fee' => $totalSetupFee,
+                'currency' => $plan->price()->currency,
+            ], apply_exclusive_tax: true);
+
+            return $item;
+        });
+
+        session(['cart' => $updatedItems]);
     }
 
     private function updateTotal()
