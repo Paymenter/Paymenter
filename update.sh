@@ -28,7 +28,7 @@ if [[ -f "config/app.php" ]]; then
   PREV_VER="$(grep 'version' config/app.php | head -1 | sed -E "s/.*'version'\s*=>\s*'([^']+)'.*/\1/")"
 
   # Only run checks if version < 1.2.12
-  if [[ -n "${PREV_VER:-}" ]] && php -r "exit(version_compare('$PREV_VER','1.2.12','<')?0:1);"; then
+  if [[ "$PREV_VER" != *beta* ]] && [[ -n "${PREV_VER:-}" ]] && php -r "exit(version_compare('$PREV_VER','1.2.12','<')?0:1);"; then
     # Check extensions for admin folder
     if [[ -d extensions ]]; then
       found_admin=$(find extensions -type d -name Admin \
