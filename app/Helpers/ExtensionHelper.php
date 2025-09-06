@@ -15,6 +15,7 @@ use Filament\Forms\Components\Placeholder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Log;
@@ -276,6 +277,29 @@ class ExtensionHelper
     {
         return self::call($server, 'getProductConfig', [$values]);
     }
+
+        /**
+     * Get available settings
+     *
+     * @return array
+     */
+    public static function getProductConfigOnce($server, $values = [])
+    {
+        static $config = [];
+
+        $config = Cache::get('product_config', []);
+
+        $key = $server->extension . $server->id . md5(serialize(self::prepareForSerialization($values)));
+
+        if (!isset($config[$key])) {
+            $config[$key] = self::getProductConfig($server, $values);
+        }
+
+        Cache::put('product_config', $config, 60);
+
+        return $config[$key];
+    }
+
 
     protected static function prepareForSerialization($values)
     {

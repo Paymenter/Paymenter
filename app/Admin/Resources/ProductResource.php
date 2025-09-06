@@ -142,7 +142,7 @@ class ProductResource extends Resource
                                             $settings = [];
 
                                             try {
-                                                foreach (ExtensionHelper::getProductConfig(Server::findOrFail($server), $get('settings')) as $setting) {
+                                                foreach (ExtensionHelper::getProductConfigOnce(Server::findOrFail($server), $get('settings')) as $setting) {
                                                     // Easier to use dot notation for settings
                                                     $setting['name'] = 'settings.' . $setting['name'];
                                                     $settings[] = FilamentInput::convert($setting);
