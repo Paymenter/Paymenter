@@ -18,8 +18,13 @@ jobs:
         with:
           node-version: 18
 
+      - uses: shivammathur/setup-php@15c43e89cdef867065b0213be354c2841860869e
+        with:
+          php-version: '8.3'
       - name: Install dependencies
-        run: npm i
+        run: |
+          composer install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
+          npm i
 
       - name: Build
         run: npm run build
@@ -41,7 +46,7 @@ jobs:
 
       - name: Create release archive
         run: |
-          rm -rf node_modules tests CODE_OF_CONDUCT.md CONTRIBUTING.md flake.lock flake.nix phpstan.neon phpunit.xml shell.nix
+          rm -rf node_modules tests CODE_OF_CONDUCT.md CONTRIBUTING.md flake.lock flake.nix phpstan.neon phpunit.xml shell.nix vendor
           tar -czf paymenter.tar.gz * .env.example .gitignore
 
       - name: Create checksum and add to changelog
