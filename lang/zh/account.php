@@ -4,7 +4,7 @@ return [
     'account' => '帳戶',
     'personal_details' => '個人資料',
     'security' => '安全性',
-    'credits' => '點數',
+    'credits' => '餘額',
 
     'change_password' => '變更密碼',
 
@@ -45,8 +45,8 @@ return [
         'session_logged_out' => '工作階段已登出。',
     ],
 
-    'no_credit' => '您沒有點數。',
-    'add_credit' => '新增點數',
-    'credit_deposit' => '點數儲值 (:currency)',
+    'no_credit' => '您沒有餘額。',
+    'add_credit' => '新增餘額',
+    'credit_deposit' => '餘額儲值 (:currency)',
 
 ];

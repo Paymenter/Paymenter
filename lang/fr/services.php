@@ -44,6 +44,7 @@ return [
         'active' => 'Actif',
         'cancelled' => 'Annulée',
         'suspended' => 'Suspendue',
+        'cancellation_pending' => 'Cancellation Pending',
     ],
     'billing_cycles' => [
         'day' => 'jour|jours',
@@ -53,5 +54,6 @@ return [
     ],
     'every_period' => 'Chaque :period :unit',
     'price_every_period' => ':price pour :period :unit',
+    'price_one_time' => ':price one time',
     'expires_at' => 'Expires at',
 ];
