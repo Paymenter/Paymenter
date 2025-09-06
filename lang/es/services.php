@@ -34,7 +34,7 @@ return [
     'upgrade_choose_config' => 'Elige la configuración para la mejora',
     'next_step' => 'Siguiente paso',
 
-    'upgrade_pending' => 'No puedes actualizar tu plan mientras haya una factura de subida o bajada de plan pendiente',
+    'upgrade_pending' => 'No es posible realizar una actualización si ya existe una factura de mejora/disminución abierta',
 
     'outstanding_invoice' => 'Tienes una factura pendiente.',
     'view_and_pay' => 'Haz clic aquí para ver y pagar',
@@ -44,6 +44,7 @@ return [
         'active' => 'Activo',
         'cancelled' => 'Cancelado',
         'suspended' => 'Suspendido',
+        'cancellation_pending' => 'Cancellation Pending',
     ],
     'billing_cycles' => [
         'day' => 'día|días',
@@ -53,5 +54,6 @@ return [
     ],
     'every_period' => 'Cada :period :unit',
     'price_every_period' => ':price por :period :unit',
+    'price_one_time' => ':price one time',
     'expires_at' => 'Vence el',
 ];

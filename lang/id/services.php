@@ -44,6 +44,7 @@ return [
         'active' => 'Aktif',
         'cancelled' => 'Dibatalkan',
         'suspended' => 'Ditangguhkan',
+        'cancellation_pending' => 'Cancellation Pending',
     ],
     'billing_cycles' => [
         'day' => 'hari|hari',
@@ -53,5 +54,6 @@ return [
     ],
     'every_period' => 'Setiap :period :unit',
     'price_every_period' => ':price per :period :unit',
+    'price_one_time' => ':price one time',
     'expires_at' => 'Berakhir pada',
 ];

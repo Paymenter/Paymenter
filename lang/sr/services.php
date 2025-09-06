@@ -44,6 +44,7 @@ return [
         'active' => 'Aktivno',
         'cancelled' => 'Otkazano',
         'suspended' => 'Suspendovano',
+        'cancellation_pending' => 'Cancellation Pending',
     ],
     'billing_cycles' => [
         'day' => 'dan|dana',
@@ -53,5 +54,6 @@ return [
     ],
     'every_period' => 'Svakih :period :unit',
     'price_every_period' => ':price po :period :unit',
-    'expires_at' => 'Expires at',
+    'price_one_time' => ':price jednokratno',
+    'expires_at' => 'Ističe',
 ];

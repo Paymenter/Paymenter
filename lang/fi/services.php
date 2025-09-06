@@ -44,6 +44,7 @@ return [
         'active' => 'Aktiivinen',
         'cancelled' => 'Peruttu',
         'suspended' => 'Keskeytetty',
+        'cancellation_pending' => 'Cancellation Pending',
     ],
     'billing_cycles' => [
         'day' => 'päivä|päivää',
@@ -53,5 +54,6 @@ return [
     ],
     'every_period' => 'Joka :period :unit',
     'price_every_period' => ':price per :period :unit',
+    'price_one_time' => ':price one time',
     'expires_at' => 'Vanhenee',
 ];

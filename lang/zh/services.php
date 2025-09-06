@@ -44,6 +44,7 @@ return [
         'active' => '已啟用',
         'cancelled' => '已取消',
         'suspended' => '已停權',
+        'cancellation_pending' => 'Cancellation Pending',
     ],
     'billing_cycles' => [
         'day' => '天',
@@ -53,5 +54,6 @@ return [
     ],
     'every_period' => '每 :period :unit',
     'price_every_period' => '每 :period :unit :price 元',
-    'expires_at' => 'Expires at',
+    'price_one_time' => ':price one time',
+    'expires_at' => '有效期限至',
 ];
