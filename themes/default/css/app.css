@@ -10,6 +10,8 @@
 
 @source "../views";
 @source "../../../extensions/**/*.blade.php";
+@source "../../../extensions/Servers/Proxmox";
+@source "../../../extensions/Others/Pages";
 
 @theme {
   /* Font Family */

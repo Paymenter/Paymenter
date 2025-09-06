@@ -57,7 +57,7 @@ class OrderResource extends Resource
                         // update all the services currency_code
                         $set('services', collect($get('services'))->map(fn ($service) => array_merge($service, ['currency_code' => $get('currency_code')]))->toArray());
                     })
-                    ->relationship('currency', 'code')
+                    ->options(Currency::query()->pluck('code', 'code'))
                     ->helperText('Does not convert the price, only displays the currency symbol')
                     ->placeholder('Select the currency'),
                 Repeater::make('services')
