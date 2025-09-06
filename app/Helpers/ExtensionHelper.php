@@ -278,7 +278,7 @@ class ExtensionHelper
         return self::call($server, 'getProductConfig', [$values]);
     }
 
-        /**
+    /**
      * Get available settings
      *
      * @return array
@@ -299,7 +299,6 @@ class ExtensionHelper
 
         return $config[$key];
     }
-
 
     protected static function prepareForSerialization($values)
     {
