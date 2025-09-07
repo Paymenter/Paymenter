@@ -22,6 +22,18 @@ class Plan extends Model implements Auditable
     ];
 
     /**
+     * Get the attributes that should be cast.
+     *
+     * @return array<string, string>
+     */
+    protected function casts(): array
+    {
+        return [
+            'billing_period' => 'integer',
+        ];
+    }
+
+    /**
      * Get the available prices of the plan.
      */
     public function prices()
