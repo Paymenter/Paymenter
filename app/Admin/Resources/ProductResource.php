@@ -36,6 +36,7 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Str;
+use Livewire\Component;
 
 class ProductResource extends Resource
 {
@@ -134,7 +135,7 @@ class ProductResource extends Resource
                                     ->hidden(fn (Get $get) => $get('server_id') === null)
                                     ->columns(2)
                                     ->schema(
-                                        function (Get $get) {
+                                        function (Get $get, Component $livewire) {
                                             $server = $get('server_id');
                                             if ($server == null) {
                                                 return [];
@@ -143,6 +144,11 @@ class ProductResource extends Resource
 
                                             try {
                                                 foreach (ExtensionHelper::getProductConfigOnce(Server::findOrFail($server), $get('settings')) as $setting) {
+                                                    if (($setting['type'] === 'select' && isset($setting['multiple']) && $setting['multiple'] === true) || $setting['type'] === 'tags'){
+                                                        if (!isset($livewire->data['settings'][$setting['name']])){
+                                                            $livewire->data['settings'][$setting['name']] = [];
+                                                        }
+                                                    }
                                                     // Easier to use dot notation for settings
                                                     $setting['name'] = 'settings.' . $setting['name'];
                                                     $settings[] = FilamentInput::convert($setting);

@@ -90,8 +90,8 @@ class CategoryResource extends Resource
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
-                    DeleteBulkAction::make()->before(function (DeleteBulkAction $action) {
-                        foreach ($action->getRecords() as $record) {
+                    DeleteBulkAction::make()->before(function (DeleteBulkAction $action, $records) {
+                        foreach ($records as $record) {
                             if ($record->products()->exists() || $record->children()->exists()) {
                                 Notification::make()
                                     ->title('Cannot delete category')
