@@ -23,9 +23,7 @@ use Paymenter\Extensions\Others\Affiliates\Models\Affiliate;
 
 class Affiliates extends Extension
 {
-    public function __construct(public $config = [])
-    {
-    }
+    public function __construct(public $config = []) {}
 
     /**
      * Get all the configuration for the extension
@@ -75,9 +73,7 @@ class Affiliates extends Extension
         Artisan::call('migrate', ['--path' => 'extensions/Others/Affiliates/database/migrations/2025_01_31_155928_create_ext_affiliate_orders_table.php', '--force' => true]);
     }
 
-    public function disabled()
-    {
-    }
+    public function disabled() {}
 
     public function boot()
     {

@@ -8,10 +8,8 @@ use App\Admin\Resources\RoleResource\Pages\ListRoles;
 use App\Models\Role;
 use Filament\Actions\EditAction;
 use Filament\Forms\Components\CheckboxList;
-use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\TextInput;
 use Filament\Resources\Resource;
-use Filament\Schemas\Components\Fieldset;
 use Filament\Schemas\Schema;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
@@ -31,7 +29,7 @@ class RoleResource extends Resource
 
     public static function form(Schema $schema): Schema
     {
-        $extensionPermissions = once(fn() => Arr::dot(
+        $extensionPermissions = once(fn () => Arr::dot(
             array_merge_recursive(...Event::dispatch('permissions', []))
         ));
 
@@ -57,7 +55,7 @@ class RoleResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('name')->sortable(),
-                TextColumn::make('permissions')->formatStateUsing(fn(Role $record): string => in_array('*', $record->permissions) ? 'All' : count($record->permissions))->sortable(),
+                TextColumn::make('permissions')->formatStateUsing(fn (Role $record): string => in_array('*', $record->permissions) ? 'All' : count($record->permissions))->sortable(),
             ])
             ->filters([
                 //
