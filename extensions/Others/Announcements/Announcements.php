@@ -7,6 +7,7 @@ use App\Livewire\Auth\Register;
 use Exception;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Event;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\HtmlString;
 use Livewire\Livewire;
@@ -57,6 +58,8 @@ class Announcements extends Extension
         Livewire::component('announcements.show', Show::class);
         Livewire::component('announcements.widget', Widget::class);
 
+        Gate::policy(Announcement::class, Policies\AnnouncementPolicy::class);
+
         Event::listen('navigation', function () {
             if (Announcement::where('is_active', true)->where('published_at', '<=', now())->count() == 0) {
                 return;
@@ -68,6 +71,15 @@ class Announcements extends Extension
                 'icon' => 'ri-megaphone',
                 'separator' => true,
                 'children' => [],
+            ];
+        });
+
+        Event::listen('permissions', function () {
+            return [
+                'admin.announcements.view' => 'View Announcements',
+                'admin.announcements.create' => 'Create Announcements',
+                'admin.announcements.update' => 'Update Announcements',
+                'admin.announcements.delete' => 'Delete Announcements',
             ];
         });
 

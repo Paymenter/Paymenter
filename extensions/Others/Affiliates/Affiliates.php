@@ -10,6 +10,7 @@ use App\Helpers\ExtensionHelper;
 use App\Models\User;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Event;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Facades\View;
 use Livewire\Livewire;
@@ -22,7 +23,9 @@ use Paymenter\Extensions\Others\Affiliates\Models\Affiliate;
 
 class Affiliates extends Extension
 {
-    public function __construct(public $config = []) {}
+    public function __construct(public $config = [])
+    {
+    }
 
     /**
      * Get all the configuration for the extension
@@ -72,7 +75,9 @@ class Affiliates extends Extension
         Artisan::call('migrate', ['--path' => 'extensions/Others/Affiliates/database/migrations/2025_01_31_155928_create_ext_affiliate_orders_table.php', '--force' => true]);
     }
 
-    public function disabled() {}
+    public function disabled()
+    {
+    }
 
     public function boot()
     {
@@ -85,6 +90,8 @@ class Affiliates extends Extension
         User::resolveRelationUsing('affiliate', function (User $userModel) {
             return $userModel->hasOne(Affiliate::class, 'user_id');
         });
+
+        Gate::policy(Affiliate::class, Policies\AffiliatePolicy::class);
 
         ExtensionHelper::registerMiddleware(AffiliatesMiddleware::class);
 
@@ -103,6 +110,15 @@ class Affiliates extends Extension
         );
 
         Event::listen('api.permissions', function () {
+            return [
+                'admin.affiliates.view' => 'View Affiliates',
+                'admin.affiliates.create' => 'Create Affiliates',
+                'admin.affiliates.update' => 'Update Affiliates',
+                'admin.affiliates.delete' => 'Delete Affiliates',
+            ];
+        });
+
+        Event::listen('permissions', function () {
             return [
                 'admin.affiliates.view' => 'View Affiliates',
                 'admin.affiliates.create' => 'Create Affiliates',
