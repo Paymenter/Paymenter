@@ -144,8 +144,8 @@ class ProductResource extends Resource
 
                                             try {
                                                 foreach (ExtensionHelper::getProductConfigOnce(Server::findOrFail($server), $get('settings')) as $setting) {
-                                                    if (($setting['type'] === 'select' && isset($setting['multiple']) && $setting['multiple'] === true) || $setting['type'] === 'tags'){
-                                                        if (!isset($livewire->data['settings'][$setting['name']])){
+                                                    if (($setting['type'] === 'select' && isset($setting['multiple']) && $setting['multiple'] === true) || $setting['type'] === 'tags') {
+                                                        if (!isset($livewire->data['settings'][$setting['name']])) {
                                                             $livewire->data['settings'][$setting['name']] = [];
                                                         }
                                                     }
