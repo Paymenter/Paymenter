@@ -10,7 +10,6 @@ use App\Console\Commands\Extension\Upgrade;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\File;
 use ReflectionClass;
-use Symfony\Component\Process\Process;
 
 class UploadExtensionService
 {
