@@ -60,7 +60,7 @@ class Revenue extends ChartWidget
                 end: $end,
             )
             ->{'per' . ucfirst($per)}()
-            ->sum('amount - fee');
+            ->sum('amount - COALESCE(fee, 0)');
 
         $newOrders = Trend::model(Order::class)
             ->between(
