@@ -42,7 +42,7 @@
                             </div>
                         </div>
                         <p class="text-sm text-gray-500">{{ $message->created_at->diffForHumans() }}</p>
-                        <div class="mt-2 prose dark:prose-invert break-all">{!! Str::markdown($message->message, [
+                        <div class="mt-2 prose dark:prose-invert break-words">{!! Str::markdown($message->message, [
                             'html_input' => 'escape',
                             'allow_unsafe_links' => false,
                             'renderer' => [

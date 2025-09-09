@@ -13,7 +13,7 @@
                             <p class="text-sm text-gray-500">{{ $message->created_at->diffForHumans() }}</p>
                         </div>
                     </div>
-                    <div class="mt-2 prose dark:prose-invert break-all max-w-full">{!! Str::markdown($message->message, [
+                    <div class="mt-2 prose dark:prose-invert break-words max-w-full">{!! Str::markdown($message->message, [
                             'html_input' => 'escape',
                             'allow_unsafe_links' => false,
                             'renderer' => [
