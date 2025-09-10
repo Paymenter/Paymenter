@@ -273,7 +273,7 @@ class Convoy extends Server
             'account_password' => $password,
             'template_uuid' => $os,
             'should_create_server' => true,
-            'start_on_completion' => false,
+            'start_on_completion' => isset($properties['start_on_create']) ? (bool) $properties['start_on_create'] : (bool) $settings['start_on_create'],
         ];
 
         $server = $this->request('servers', 'post', $data);
