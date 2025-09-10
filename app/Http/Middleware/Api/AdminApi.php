@@ -4,7 +4,6 @@ namespace App\Http\Middleware\Api;
 
 use App\Models\ApiKey;
 use Closure;
-use Illuminate\Auth\AuthenticationException;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 

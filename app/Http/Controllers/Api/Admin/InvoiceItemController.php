@@ -20,7 +20,7 @@ class InvoiceItemController extends ApiController
     protected const INCLUDES = [
         'gateway',
         'reference',
-        'invoice'
+        'invoice',
     ];
 
     /**

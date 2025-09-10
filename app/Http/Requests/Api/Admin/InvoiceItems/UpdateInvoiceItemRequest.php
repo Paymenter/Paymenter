@@ -35,7 +35,7 @@ class UpdateInvoiceItemRequest extends AdminApiRequest
                         }
                     }
                 },
-            ]
+            ],
         ];
     }
 }

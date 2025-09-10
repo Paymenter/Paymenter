@@ -23,9 +23,9 @@ class InvoiceItemResource extends JsonApiResource
             'reference' => function () {
                 if ($this->reference_type === 'App\Models\Credit') {
                     return new CreditResource($this->reference);
-                } elseif( $this->reference_type === 'App\Models\ServiceUpgrade') {
+                } elseif ($this->reference_type === 'App\Models\ServiceUpgrade') {
                     return new ServiceUpgradeResource($this->reference);
-                } 
+                }
 
                 return new ServiceResource($this->reference);
             },

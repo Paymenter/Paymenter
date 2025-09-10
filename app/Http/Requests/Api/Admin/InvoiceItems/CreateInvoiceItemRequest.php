@@ -37,7 +37,7 @@ class CreateInvoiceItemRequest extends AdminApiRequest
                         }
                     }
                 },
-            ]
+            ],
 
         ];
     }
