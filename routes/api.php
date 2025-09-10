@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\Admin\InvoiceController;
+use App\Http\Controllers\Api\Admin\InvoiceItemController;
 use App\Http\Controllers\Api\Admin\OrderController;
 use App\Http\Controllers\Api\Admin\ServiceController;
 use App\Http\Controllers\Api\Admin\TicketController;
@@ -23,6 +24,7 @@ Route::group(['middleware' => ['api.admin'], 'prefix' => 'v1/admin', 'as' => 'ap
         'services' => ServiceController::class,
         'orders' => OrderController::class,
         'invoices' => InvoiceController::class,
+        'invoice-items' => InvoiceItemController::class,
         'tickets' => TicketController::class,
         'ticket-messages' => TicketMessageController::class,
     ]);

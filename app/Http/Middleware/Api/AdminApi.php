@@ -4,6 +4,7 @@ namespace App\Http\Middleware\Api;
 
 use App\Models\ApiKey;
 use Closure;
+use Illuminate\Auth\AuthenticationException;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -24,12 +25,12 @@ class AdminApi
         $token = ApiKey::where('token', hash('sha256', $request->bearerToken()))
             ->where('enabled', true)
             ->firstOr(function () {
-                return response()->json(['error' => 'The provided API key is invalid or has been disabled.'], 401);
+                abort(401, 'The provided API key is invalid or has been disabled.');
             });
 
         // Check if the token is of type 'admin'
         if ($token->type !== 'admin' || ($token->ip_addresses && !in_array($request->ip(), $token->ip_addresses))) {
-            return response()->json(['error' => 'You do not have permission to access this resource.'], 403);
+            abort(403, 'You do not have permission to access this resource.');
         }
 
         $token->last_used_at = now();

@@ -16,7 +16,6 @@ class InvoiceItem extends Model implements Auditable
 
     protected $fillable = [
         'invoice_id',
-        'service_id',
         'quantity',
         'price',
         'description',

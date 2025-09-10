@@ -184,6 +184,12 @@ return [
                 'view' => 'View Invoices',
                 'delete' => 'Delete Invoices',
             ],
+            'invoice_items' => [
+                'create' => 'Create Invoice Items',
+                'update' => 'Update Invoice Items',
+                'view' => 'View Invoice Items',
+                'delete' => 'Delete Invoice Items',
+            ],
             'tickets' => [
                 'create' => 'Create Tickets',
                 'update' => 'Update Tickets',
