@@ -20,18 +20,10 @@ class Plan extends Model implements Auditable
         'billing_unit',
         'sort',
     ];
-
-    /**
-     * Get the attributes that should be cast.
-     *
-     * @return array<string, string>
-     */
-    protected function casts(): array
-    {
-        return [
-            'billing_period' => 'integer',
-        ];
-    }
+    
+    protected $casts = [
+        'billing_period' => 'integer',
+    ];
 
     /**
      * Get the available prices of the plan.
