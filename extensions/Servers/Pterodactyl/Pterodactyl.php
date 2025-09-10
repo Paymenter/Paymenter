@@ -283,6 +283,10 @@ class Pterodactyl extends Server
             $returnData['created_user'] = true;
         }
 
+        if (isset($settings['location'])) {
+            $settings['location_ids'] = [$settings['location']];
+        }
+
         $deploymentData = $this->generateDeploymentData($settings, $environment);
 
         $serverCreationData = [
@@ -312,9 +316,7 @@ class Pterodactyl extends Server
         ];
         if ($deploymentData['auto_deploy']) {
             $serverCreationData['deploy'] = [
-                'locations' => isset($settings['location'])
-                    ? [$settings['location']]
-                    : (array) $settings['location_ids'],
+                'locations' => (array) $settings['location_ids'],
                 'dedicated_ip' => $settings['dedicated_ip'] ?? false,
                 'port_range' => $settings['port_range'] ?? [],
             ];
