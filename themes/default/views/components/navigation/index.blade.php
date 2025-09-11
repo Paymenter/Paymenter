@@ -58,7 +58,7 @@
                     <x-dropdown>
                         <x-slot:trigger>
                             <div class="flex flex-col">
-                                <span class="text-sm text-base font-semibold text-nowrap">{{ strtoupper(app()->getLocale()) }} <span class="text-base/50 font-semibold">|</span> {{ \App\Models\Currency::find(session('currency', config('settings.default_currency')))->name }}</span>
+                                <span class="text-sm text-base font-semibold text-nowrap">{{ strtoupper(app()->getLocale()) }} <span class="text-base/50 font-semibold">|</span> {{ \App\Models\Currency::find(session('currency', config('settings.default_currency')))?->name ?? session('currency', config('settings.default_currency')) }}</span>
                             </div>
                         </x-slot:trigger>
                         <x-slot:content>
