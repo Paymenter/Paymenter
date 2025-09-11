@@ -113,6 +113,7 @@ class Settings extends Page implements HasForms
                     $setting->update([
                         'value' => $value,
                         'type' => $avSetting->database_type ?? 'string',
+                        'encrypted' => $avSetting->encrypted ?? false,
                     ]);
                 } else {
                     Setting::create([

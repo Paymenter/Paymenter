@@ -348,6 +348,7 @@ class Settings
                     'label' => 'Email Password',
                     'type' => 'password',
                     'required' => fn (Get $get) => $get('ticket_mail_piping'),
+                    'encrypted' => true,
                 ],
             ],
 

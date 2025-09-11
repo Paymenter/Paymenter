@@ -38,6 +38,7 @@ class Extension extends Page implements HasActions, HasTable
     // Label for the navigation item
     protected static ?string $navigationLabel = 'Available Extensions';
 
+    #[Url(except: 'marketplace', as: 'tab')]
     public string $activeTab = 'marketplace';
 
     private const PER_PAGE = 12;
