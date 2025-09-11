@@ -51,7 +51,7 @@ class ExtensionResource extends Resource
                     ->columnSpanFull()
                     ->description('Specific settings for the selected extension')
                     ->schema([
-                        Grid::make()->schema(fn(Get $get) => ExtensionHelper::getConfigAsInputs('other', $get('extension'), $get('settings')))->key('settings'),
+                        Grid::make()->schema(fn (Get $get) => ExtensionHelper::getConfigAsInputs('other', $get('extension'), $get('settings')))->key('settings'),
                     ]),
             ]);
     }
@@ -80,7 +80,7 @@ class ExtensionResource extends Resource
             ->headerActions([
                 Action::make('create')
                     ->label('Install Extension')
-                    ->url(fn() => \App\Admin\Pages\Extension::getUrl(['tab' => 'installable'])),
+                    ->url(fn () => \App\Admin\Pages\Extension::getUrl(['tab' => 'installable'])),
             ]);
     }
 
