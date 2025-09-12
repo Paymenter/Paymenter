@@ -21,7 +21,7 @@
 
     <x-button.primary class="w-full" type="submit">{{ __('auth.sign_in') }}</x-button.primary>
 
-    @if (config('settings.oauth_github') || config('settings.oauth_google') || config('settings.oauth_discord'))
+    @if (config('settings.oauth_github') || config('settings.oauth_google') || config('settings.oauth_discord') || config('settings.oauth_authentik'))
     <div class="flex flex-col items-center mt-4">
         <div class="my-5 flex items-center w-full">
             <span aria-hidden="true" class="h-0.5 grow rounded bg-primary-700"></span>
@@ -31,7 +31,7 @@
             <span aria-hidden="true" class="h-0.5 grow rounded bg-primary-700"></span>
         </div>
         <div class="flex flex-row flex-wrap justify-center mt-2 gap-4">
-            @foreach (['github', 'google', 'discord'] as $provider)
+            @foreach (['github', 'google', 'discord', 'authentik'] as $provider)
             @if (config('settings.oauth_' . $provider))
             <a href="{{ route('oauth.redirect', $provider) }}"
                 class="flex items-center justify-center px-4 h-10 border border-neutral rounded-md text-primary-100">

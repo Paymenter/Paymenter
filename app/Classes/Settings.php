@@ -27,7 +27,7 @@ class Settings
         }
         $settings = [
             // Split settings into groups (only used in the settings page for organization)
-            'general' => [
+  'general' => [
                 [
                     'name' => 'company_name',
                     'label' => 'Company Name',
@@ -50,8 +50,6 @@ class Settings
                     'label' => 'Default Language',
                     'default' => 'en',
                     'type' => 'select',
-                    // Read languages from resources/lang directory
-                    // The ternary operator is only present for now. Since there are no lang files, it returns [], which breaks the frontend, so we return ['en']
                     'options' => glob(base_path('lang/*'), GLOB_ONLYDIR) ? array_map('basename', glob(base_path('lang/*'), GLOB_ONLYDIR)) : ['en'],
                     'required' => true,
                     'validation' => 'in:' . implode(',', glob(base_path('lang/*'), GLOB_ONLYDIR) ? array_map('basename', glob(base_path('lang/*'), GLOB_ONLYDIR)) : ['en']),
@@ -187,6 +185,36 @@ class Settings
                     'type' => 'text',
                     'required' => false,
                 ],
+                // START: Authentik SSO Settings
+                [
+                    'name' => 'oauth_authentik',
+                    'label' => 'Authentik Enabled',
+                    'description' => new HtmlString('Use Authentik as an SSO provider. <a href="https://goauthentik.io/docs/providers/oauth2/" target="_blank">Documentation</a>'),
+                    'type' => 'checkbox',
+                    'database_type' => 'boolean',
+                    'default' => false,
+                    'required' => false,
+                ],
+                [
+                    'name' => 'oauth_authentik_client_id',
+                    'label' => 'Authentik Client ID',
+                    'type' => 'text',
+                    'required' => false,
+                ],
+                [
+                    'name' => 'oauth_authentik_client_secret',
+                    'label' => 'Authentik Client Secret',
+                    'type' => 'text',
+                    'required' => false,
+                ],
+                [
+                    'name' => 'oauth_authentik_base_url',
+                    'label' => 'Authentik Issuer/URL',
+                    'type' => 'text',
+                    'required' => false,
+                    'description' => 'Example: https://authentik.yourdomain.com/application/o/slug/',
+                ],
+                // END: Authentik SSO Settings
             ],
             'tax' => [
                 [
@@ -348,7 +376,6 @@ class Settings
                     'label' => 'Email Password',
                     'type' => 'password',
                     'required' => fn (Get $get) => $get('ticket_mail_piping'),
-                    'encrypted' => true,
                 ],
             ],
 

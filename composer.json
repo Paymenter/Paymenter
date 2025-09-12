@@ -7,7 +7,7 @@
         "framework"
     ],
     "license": "MIT",
-    "version": "dev-master",
+    "version": "1.3.2",
     "require": {
         "php": "^8.2 || ^8.3",
         "ext-intl": "*",
@@ -26,10 +26,13 @@
         "laravel/passport": "^12.0",
         "laravel/socialite": "^5.14",
         "laravel/tinker": "^2.9",
+        "league/oauth2-client": "^2.8",
         "owen-it/laravel-auditing": "^14.0",
         "qirolab/laravel-themer": "^2.2.1",
         "robthree/twofactorauth": "^3.0",
+        "socialiteproviders/authentik": "^5.2",
         "socialiteproviders/discord": "^4.2",
+        "socialiteproviders/manager": "^4.8",
         "spatie/color": "^1.8",
         "spatie/laravel-query-builder": "^6.3",
         "timacdonald/json-api": "^1.0.0-beta.4",
