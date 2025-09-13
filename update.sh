@@ -123,7 +123,7 @@ RUN rm -f paymenter.tar.gz
 
 
 # Setup correct permissions on the new files.
-RUN chmod -R 755 storage bootstrap/cache
+RUN chmod -R 755 storage bootstrap/cache extensions
 
 # Run the composer install command.
 RUN composer install --no-dev --optimize-autoloader
