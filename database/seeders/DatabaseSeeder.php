@@ -48,7 +48,6 @@ class DatabaseSeeder extends Seeder
         \App\Providers\SettingsProvider::flushCache();
 
         $this->call([
-            CustomPropertySeeder::class,
             EmailTemplateSeeder::class,
         ]);
     }

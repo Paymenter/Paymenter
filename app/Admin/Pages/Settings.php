@@ -12,6 +12,7 @@ use Filament\Forms\Contracts\HasForms;
 use Filament\Notifications\Notification;
 use Filament\Pages\Page;
 use Filament\Schemas\Components\Actions;
+use Filament\Schemas\Components\Form;
 use Filament\Schemas\Components\Group;
 use Filament\Schemas\Components\Tabs;
 use Filament\Schemas\Components\Tabs\Tab;
@@ -85,9 +86,19 @@ class Settings extends Page implements HasForms
 
         return $schema
             ->components([
-                Tabs::make('Tabs')
-                    ->tabs($tabs)
-                    ->persistTabInQueryString(),
+                Form::make([
+                    Tabs::make('Tabs')
+                        ->tabs($tabs)
+                        ->persistTabInQueryString(),
+                ])
+                    ->livewireSubmitHandler('save')
+                    ->footer([
+                        Actions::make([
+                            Action::make('save')
+                                ->submit('save')
+                                ->keyBindings(['mod+s']),
+                        ]),
+                    ]),
             ])
             ->statePath('data');
     }
@@ -156,13 +167,6 @@ class Settings extends Page implements HasForms
             ->title('Colors has been reset!')
             ->success()
             ->send();
-    }
-
-    public static function saveAction(): Action
-    {
-        return Action::make('save')
-            ->action('save')
-            ->keyBindings(['mod+s']);
     }
 
     public static function canAccess(): bool
