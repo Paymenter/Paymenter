@@ -20,8 +20,10 @@ class Show extends Component
 
     #[Url]
     public $gateway = null;
+
     #[Url]
     public $paid = null;
+
     #[Url]
     public $checkPayment = false;
 
