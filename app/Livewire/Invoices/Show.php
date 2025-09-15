@@ -20,11 +20,13 @@ class Show extends Component
 
     #[Url]
     public $gateway = null;
+    #[Url]
+    public $paid = null;
+    #[Url]
+    public $checkPayment = false;
 
     #[Locked]
     public $gateways;
-
-    public $checkPayment = false;
 
     private $pay = null;
 
@@ -46,15 +48,16 @@ class Show extends Component
                 $this->pay();
             }
         }
-        if (Request::has('checkPayment') && $this->invoice->status === 'pending') {
-            $this->checkPayment = true;
-        }
 
         // We don't want to toggle use_credits before $this->pay() is called, otherwise it will always paid with credits
         $this->use_credits = true;
         $hasCredits = $this->invoice->items()->where('reference_type', Credit::class)->exists();
         if ($hasCredits) {
             $this->use_credits = false;
+        }
+
+        if ($this->paid == 'true') {
+            $this->notify(__('The invoice has been paid.'), 'success');
         }
     }
 
@@ -110,8 +113,8 @@ class Show extends Component
     {
         $this->invoice->refresh();
         if ($this->invoice->status === 'paid') {
-            $this->notify(__('The invoice has been paid.'), 'success');
             $this->checkPayment = false;
+            $this->redirect(route('invoices.show', $this->invoice) . '?paid=true', false);
         }
     }
 
