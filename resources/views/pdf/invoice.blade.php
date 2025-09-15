@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>{{ __('invoices.invoice', ['id' => $invoice->number]) }}</title>
+    <title>{{ config('settings.invoice_proforma', false) ? __('invoices.proforma_invoice', ['id' => $invoice->id]) : __('invoices.invoice', ['id' => $invoice->number]) }}</title>
     <style>
         body {
             font-family:
@@ -138,8 +138,10 @@
             </td>
         </tr>
     </table>
-    <p>{{ __('invoices.invoice_date') }}: <strong>{{ $invoice->created_at->format('d/m/Y') }}</strong></p>
+    <p>{{ config('settings.invoice_proforma', false) ? __('invoices.proforma_invoice_date') : __('invoices.invoice_date') }}: <strong>{{ $invoice->created_at->format('d/m/Y') }}</strong></p>
+    @if($invoice->number)
     <p>{{ __('invoices.invoice_no') }}: <strong>{{ $invoice->number }}</strong></p>
+    @endif
 
     <table style="margin-top: 40px;" class="invoice-items">
         <thead>

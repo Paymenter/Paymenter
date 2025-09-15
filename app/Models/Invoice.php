@@ -73,6 +73,15 @@ class Invoice extends Model implements Auditable
         );
     }
 
+    /**
+     * Get tax model of the invoice.
+     * Either via locked invoice or via users country.
+     */
+    public function tax()
+    {
+        return $this->belongsTo(Tax::class);
+    }
+
     public function currency()
     {
         return $this->belongsTo(Currency::class, 'currency_code');

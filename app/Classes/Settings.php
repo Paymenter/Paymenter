@@ -503,6 +503,14 @@ class Settings
                     'description' => 'Format to use for invoice numbers. Use {number} to insert the zero padded number and use {year}, {month} and {day} placeholders to insert the current date. Example: INV-{year}-{month}-{day}-{number} or INV-{year}{number}. It must at least contain {number}.',
                     'validation' => 'regex:/{number}/',
                 ],
+                [
+                    'name' => 'invoice_proforma',
+                    'label' => 'Proforma Invoices',
+                    'type' => 'checkbox',
+                    'database_type' => 'boolean',
+                    'default' => false,
+                    'description' => 'Proforma invoices will not be assigned an official invoice number until payment is received and will be marked as "Proforma".',
+                ]
             ],
             'other' => [
                 [
