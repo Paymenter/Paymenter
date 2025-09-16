@@ -11,5 +11,5 @@ Schedule::command(FetchEmails::class)->description('Import ticket emails using I
 
 if (config('app.telemetry_enabled')) {
     $settings = Settings::getTelemetry();
-    Schedule::command(TelemetryCommand::class)->description('Sends telemetry data')->dailyAt($settings['hour'], $settings['minute']);
+    Schedule::command(TelemetryCommand::class)->description('Sends telemetry data')->dailyAt($settings['hour'] . ':' . $settings['minute']);
 }

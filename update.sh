@@ -115,6 +115,9 @@ RUN php artisan down
 # Download the latest release from GitHub.
 RUN curl -L -o paymenter.tar.gz "$URL"
 
+# Delete app folder
+RUN rm -rf app
+
 # Extract the tarball.
 RUN tar -xzf paymenter.tar.gz
 

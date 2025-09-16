@@ -159,6 +159,10 @@ class ExtensionHelper
                 continue;
             }
 
+            if (!file_exists($path) || !class_exists($class)) {
+                continue;
+            }
+
             $reflection = new ReflectionClass($class);
             $attributes = $reflection->getAttributes(ExtensionMeta::class);
 
