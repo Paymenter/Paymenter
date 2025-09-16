@@ -2,6 +2,8 @@
 
 namespace App\Classes;
 
+use App\Models\TaxRate;
+
 /**
  * Class Price
  */
@@ -36,7 +38,7 @@ class Price
         $this->discount = $discount;
     }
 
-    public function __construct($priceAndCurrency = null, $free = false, $dontShowUnavailablePrice = false, $apply_exclusive_tax = false)
+    public function __construct($priceAndCurrency = null, $free = false, $dontShowUnavailablePrice = false, $apply_exclusive_tax = false, TaxRate|int|null $tax = null)
     {
         if (is_array($priceAndCurrency)) {
             $priceAndCurrency = (object) $priceAndCurrency;
@@ -68,7 +70,7 @@ class Price
 
         // Calculate taxes
         if (config('settings.tax_enabled')) {
-            $tax = Settings::tax();
+            $tax ??= Settings::tax();
             if ($tax) {
                 // Inclusive has the tax included in the price
                 if (config('settings.tax_type') == 'inclusive' || !$apply_exclusive_tax) {

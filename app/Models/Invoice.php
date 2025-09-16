@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Classes\PDF;
 use App\Classes\Price;
+use App\Classes\Settings;
 use App\Observers\InvoiceObserver;
 use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Casts\Attribute;
@@ -27,6 +28,8 @@ class Invoice extends Model implements Auditable
         'due_at' => 'date',
     ];
 
+    protected $with = ['items', 'snapshot'];
+
     public bool $send_create_email = true;
 
     /**
@@ -37,7 +40,7 @@ class Invoice extends Model implements Auditable
     public function total(): Attribute
     {
         return Attribute::make(
-            get: fn () => $this->items->sum(fn ($item) => $item->price * $item->quantity)
+            get: fn() => $this->items->sum(fn($item) => $item->price * $item->quantity)
         );
     }
 
@@ -49,7 +52,7 @@ class Invoice extends Model implements Auditable
     public function formattedTotal(): Attribute
     {
         return Attribute::make(
-            get: fn () => new Price(['price' => $this->total, 'currency' => $this->currency])
+            get: fn() => new Price(['price' => $this->total, 'currency' => $this->currency, 'tax' => $this->tax])
         );
     }
 
@@ -59,7 +62,7 @@ class Invoice extends Model implements Auditable
     public function formattedRemaining(): Attribute
     {
         return Attribute::make(
-            get: fn () => new Price(['price' => $this->remaining, 'currency' => $this->currency])
+            get: fn() => new Price(['price' => $this->remaining, 'currency' => $this->currency, 'tax' => $this->tax])
         );
     }
 
@@ -69,7 +72,7 @@ class Invoice extends Model implements Auditable
     public function remaining(): Attribute
     {
         return Attribute::make(
-            get: fn () => $this->total - $this->transactions->sum('amount')
+            get: fn() => $this->total - $this->transactions->sum('amount')
         );
     }
 
@@ -77,9 +80,62 @@ class Invoice extends Model implements Auditable
      * Get tax model of the invoice.
      * Either via locked invoice or via users country.
      */
-    public function tax()
+    public function tax(): Attribute
     {
-        return $this->belongsTo(Tax::class);
+        if (config('settings.invoice_snapshot', true) && $this?->snapshot?->tax_name) {
+            return Attribute::make(
+                get: fn() => new TaxRate([
+                    'name' => $this->snapshot->tax_name,
+                    'rate' => $this->snapshot->tax_rate,
+                    'country' => $this->snapshot->tax_country,
+                ])
+            );
+        }
+
+        return Attribute::make(
+            get: fn() => Settings::tax($this->user)
+        );
+    }
+
+    public function userProperties(): Attribute
+    {
+        if (config('settings.invoice_snapshot', true) && $this?->snapshot?->properties) {
+            return Attribute::make(
+                get: fn() => $this->snapshot->properties
+            );
+        }
+
+        return Attribute::make(
+            get: fn() => $this->user->properties()->with('parent_property')->whereHas('parent_property', function ($query) {
+                $query->where('show_on_invoice', true);
+            })->pluck('value', 'key')->toArray()
+        );
+    }
+
+    public function userName(): Attribute
+    {
+        if (config('settings.invoice_snapshot', true) && $this?->snapshot?->name) {
+            return Attribute::make(
+                get: fn() => $this->snapshot->name
+            );
+        }
+
+        return Attribute::make(
+            get: fn() => $this->user->name
+        );
+    }
+
+    public function billTo(): Attribute
+    {
+        if (config('settings.invoice_snapshot', true) && $this?->snapshot?->bill_to) {
+            return Attribute::make(
+                get: fn() => $this->snapshot->bill_to
+            );
+        }
+
+        return Attribute::make(
+            get: fn() => config('settings.bill_to_text', config('settings.company_name'))
+        );
     }
 
     public function currency()
@@ -102,10 +158,15 @@ class Invoice extends Model implements Auditable
         return $this->hasMany(InvoiceTransaction::class);
     }
 
+    public function snapshot()
+    {
+        return $this->hasOne(InvoiceSnapshot::class);
+    }
+
     public function pdf(): Attribute
     {
         return Attribute::make(
-            get: fn () => PDF::generateInvoice($this)
+            get: fn() => PDF::generateInvoice($this)
         );
     }
 }

@@ -28,26 +28,24 @@
 
     <div class="bg-background-secondary border border-neutral p-12 rounded-lg mt-2">
         <h1 class="text-2xl font-bold sm:text-3xl">
-            {{ config('settings.invoice_proforma', false) ? __('invoices.proforma_invoice', ['id' => $invoice->id]) : __('invoices.invoice', ['id' => $invoice->number]) }}
+            {{ !$invoice->number && config('settings.invoice_proforma', false) ? __('invoices.proforma_invoice', ['id' => $invoice->id]) : __('invoices.invoice', ['id' => $invoice->number]) }}
         </h1>
         <div class="sm:flex justify-between pr-4 pt-4">
             <div class="mt-4 sm:mt-0">
                 <p class="uppercase font-bold">{{ __('invoices.issued_to') }}</p>
-                <p>{{ $invoice->user->name }}</p>
-                @foreach($invoice->user->properties()->with('parent_property')->whereHas('parent_property', function ($query) {
-                    $query->where('show_on_invoice', true);
-                })->get() as $property)
-                    <p>{{ $property->value }}</p>
+                <p>{{ $invoice->user_name }}</p>
+                @foreach($invoice->user_properties as $property)
+                    <p>{{ $property }}</p>
                 @endforeach
             </div>
             <div class="mt-4 sm:mt-0 text-right">
                 <p class="uppercase font-bold">{{ __('invoices.bill_to') }}</p>
-                <p>{!! nl2br(e(config('settings.bill_to_text', config('settings.company_name')))) !!}</p>
+                <p>{!! nl2br(e($invoice->bill_to)) !!}</p>
             </div>
         </div>
         <div class="sm:flex justify-between pr-4 pt-4 mt-6">
             <div class="">
-                <p class="text-base">{{ config('settings.invoice_proforma', false) ? __('invoices.proforma_invoice_date') : __('invoices.invoice_date') }}: {{ $invoice->created_at->format('d M Y') }}</p>
+                <p class="text-base">{{ !$invoice->number && config('settings.invoice_proforma', false) ? __('invoices.proforma_invoice_date') : __('invoices.invoice_date') }}: {{ $invoice->created_at->format('d M Y') }}</p>
                 @if($invoice->due_at)
                     <p class="text-base">{{ __('invoices.due_date') }}: {{ $invoice->due_at->format('d M Y') }}</p>
                 @endif
@@ -151,7 +149,7 @@
                 </div>
                 <div class="flex justify-between">
                     <div class="text-sm font-medium text-gray-500 uppercase dark:text-base">
-                        {{ \App\Classes\Settings::tax()->name }} ({{ \App\Classes\Settings::tax()->rate }}%)
+                        {{ $invoice->tax->name }} ({{ $invoice->tax->rate }}%)
                     </div>
                     <div class="text-base font-medium text-gray-900 dark:text-white">
                         {{ $invoice->formattedTotal->formatted->tax }}

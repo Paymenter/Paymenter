@@ -13,7 +13,7 @@ class Index extends Component
     public function render()
     {
         return view('invoices.index', [
-            'invoices' => Auth::user()->invoices()->orderBy('id', 'desc')->paginate(config('settings.pagination')),
+            'invoices' => Auth::user()->invoices()->with('user')->orderBy('id', 'desc')->paginate(config('settings.pagination')),
         ])->layoutData([
             'title' => __('invoices.invoices'),
             'sidebar' => true,
