@@ -29,11 +29,10 @@ class CreateInvoiceSnapshotListener
             return;
         }
 
-        
         $snapshotData = [
             'name' => $invoice->user->name,
             'properties' => $invoice->user_properties,
-            'bill_to' => config('settings.bill_to_text', ''),
+            'bill_to' => config('settings.bill_to_text', config('settings.company_name')),
         ];
         
         if ($tax = Settings::tax($invoice->user)) {
