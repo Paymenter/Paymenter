@@ -141,7 +141,7 @@ class Cart extends Component
             foreach (ClassesCart::get() as $item) {
                 // Make sure we have the latest product data and lock it
                 $item->product = Product::where('id', $item->product->id)->lockForUpdate()->first();
-                
+
                 if (
                     $item->product->per_user_limit > 0 && ($user->services->where('product_id', $item->product->id)->count() >= $item->product->per_user_limit ||
                         ClassesCart::get()->filter(fn ($it) => $it->product->id == $item->product->id)->sum(fn ($it) => $it->quantity) + $user->services->where('product_id', $item->product->id)->count() > $item->product->per_user_limit
