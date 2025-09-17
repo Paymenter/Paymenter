@@ -3,6 +3,7 @@
 namespace Paymenter\Extensions\Others\Announcements;
 
 use App\Classes\Extension\Extension;
+use App\Helpers\ExtensionHelper;
 use App\Livewire\Auth\Register;
 use Exception;
 use Illuminate\Support\Facades\Artisan;
@@ -41,10 +42,15 @@ class Announcements extends Extension
         }
     }
 
-    public function enabled()
+    public function installed()
     {
-        // Run migrations
-        Artisan::call('migrate', ['--path' => 'extensions/Others/Announcements/database/migrations/2024_10_19_095356_create_ext_announcements_table.php', '--force' => true]);
+        ExtensionHelper::runMigrations(__DIR__ . '/database/migrations');
+    }
+
+    public function uninstalled()
+    {
+        // Rollback migrations
+        ExtensionHelper::rollbackMigrations(__DIR__ . '/database/migrations');
     }
 
     public function boot()
