@@ -10,6 +10,7 @@ class ServiceResource extends JsonApiResource
         'id',
         'quantity',
         'price',
+        'status',
         'currency_code',
         'expires_at',
         'updated_at',
