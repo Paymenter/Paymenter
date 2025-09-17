@@ -6,7 +6,6 @@ use App\Classes\Extension\Extension;
 use App\Helpers\ExtensionHelper;
 use App\Livewire\Auth\Register;
 use Exception;
-use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\View;

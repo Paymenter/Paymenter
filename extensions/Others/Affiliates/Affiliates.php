@@ -8,7 +8,6 @@ use App\Events\Order\Created as OrderCreated;
 use App\Events\User\Created as UserCreated;
 use App\Helpers\ExtensionHelper;
 use App\Models\User;
-use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Lang;
