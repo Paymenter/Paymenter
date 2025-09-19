@@ -80,6 +80,11 @@ Paymenter is available under the MIT license, offering you the freedom to adapt 
 
 Thanks to all sponsors for helping fund Paymenter's development. [Interested in becoming a sponsor?](https://github.com/sponsors/Paymenter)
 
+<a href="https://nodedog.consulting/?rel=paymenter">
+    <img src="https://github.com/user-attachments/assets/d31a9ac5-aca4-476b-a678-55cc694df1aa" width="300">
+</a>
+
+
 ## License
 
 Licensed under the [MIT License](https://github.com/Paymenter/Paymenter/blob/master/LICENSE).
