@@ -90,6 +90,18 @@ class NotificationHelper
         self::sendEmailNotification('new_invoice_created', $data, $user, $attachments);
     }
 
+    public static function invoicePaidNotification(User $user, Invoice $invoice): void
+    {
+        $data = [
+            'invoice' => $invoice,
+            'items' => $invoice->items,
+            'total' => $invoice->formattedTotal,
+            'transactions' => $invoice->transactions,
+        ];
+
+        self::sendEmailNotification('invoice_paid', $data, $user);
+    }
+
     public static function orderCreatedNotification(User $user, Order $order, array $data = []): void
     {
         $data = [
