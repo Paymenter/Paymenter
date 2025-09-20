@@ -12,5 +12,6 @@ class DisabledIf
     public function __construct(
         public string $setting,
         public bool $default = false,
+        public bool $reverse = false
     ) {}
 }

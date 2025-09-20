@@ -9,7 +9,7 @@
             <div class="bg-secondary/10 p-2 rounded-lg">
                 <x-ri-bill-line class="size-5 text-secondary" />
             </div>
-            <span class="font-medium">Invoice #{{$invoice->number }}</span>
+            <span class="font-medium">{{ !$invoice->number && config('settings.invoice_proforma', false) ? __('invoices.proforma_invoice', ['id' => $invoice->id]) : __('invoices.invoice', ['id' => $invoice->number]) }}</span>
             <span class="text-base/50 font-semibold">
                 <x-ri-circle-fill class="size-1 text-base/20" />
             </span>

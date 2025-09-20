@@ -11,6 +11,7 @@ return [
     'total' => 'Total',
     'subtotal' => 'Subtotal',
     'invoice' => 'Invoice #:id',
+    'proforma_invoice' => 'Proforma Invoice #:id',
     'unit_price' => 'Unit Price',
     'bill_to' => 'Bill To',
     'issued_to' => 'Issued To',
@@ -18,6 +19,7 @@ return [
     'payment_pending' => 'Payment Pending',
     'checking_payment' => 'Checking Payment',
     'invoice_date' => 'Invoice Date',
+    'proforma_invoice_date' => 'Proforma Invoice Date',
     'invoice_no' => 'Invoice No',
     'tax_id' => 'Tax ID',
     'company_id' => 'Company ID',
@@ -31,4 +33,6 @@ return [
     'amount' => 'Amount',
     'date' => 'Date',
     'due_date' => 'Due Date',
+    'payment_for_invoice' => 'Payment for Invoice #:number',
+    'payment_for_proforma_invoice' => 'Payment for Proforma Invoice #:id',
 ];

@@ -5,6 +5,7 @@ namespace App\Classes;
 use App\Models\Currency;
 use App\Models\Setting;
 use App\Models\TaxRate;
+use App\Models\User;
 use App\Rules\Cidr;
 use DateTimeZone;
 use Exception;
@@ -328,26 +329,26 @@ class Settings
                     'name' => 'ticket_mail_host',
                     'label' => 'Email Host',
                     'type' => 'text',
-                    'required' => fn (Get $get) => $get('ticket_mail_piping'),
+                    'required' => fn(Get $get) => $get('ticket_mail_piping'),
                 ],
                 [
                     'name' => 'ticket_mail_port',
                     'label' => 'Email Port',
                     'type' => 'number',
-                    'required' => fn (Get $get) => $get('ticket_mail_piping'),
+                    'required' => fn(Get $get) => $get('ticket_mail_piping'),
                     'default' => 993,
                 ],
                 [
                     'name' => 'ticket_mail_email',
                     'label' => 'Email Address',
                     'type' => 'email',
-                    'required' => fn (Get $get) => $get('ticket_mail_piping'),
+                    'required' => fn(Get $get) => $get('ticket_mail_piping'),
                 ],
                 [
                     'name' => 'ticket_mail_password',
                     'label' => 'Email Password',
                     'type' => 'password',
-                    'required' => fn (Get $get) => $get('ticket_mail_piping'),
+                    'required' => fn(Get $get) => $get('ticket_mail_piping'),
                     'encrypted' => true,
                 ],
             ],
@@ -503,6 +504,22 @@ class Settings
                     'description' => 'Format to use for invoice numbers. Use {number} to insert the zero padded number and use {year}, {month} and {day} placeholders to insert the current date. Example: INV-{year}-{month}-{day}-{number} or INV-{year}{number}. It must at least contain {number}.',
                     'validation' => 'regex:/{number}/',
                 ],
+                [
+                    'name' => 'invoice_proforma',
+                    'label' => 'Proforma Invoices',
+                    'type' => 'checkbox',
+                    'database_type' => 'boolean',
+                    'default' => false,
+                    'description' => 'Proforma invoices will not be assigned an official invoice number until payment is received and will be marked as "Proforma".',
+                ],
+                [
+                    'name' => 'invoice_snapshot',
+                    'label' => 'Invoice Snapshot',
+                    'type' => 'checkbox',
+                    'database_type' => 'boolean',
+                    'default' => true,
+                    'description' => 'Save a snapshot of important data (name, address, etc.) on the invoice when it is paid. This ensures that if someone changes their details later, old invoices will still have the correct information.',
+                ]
             ],
             'other' => [
                 [
@@ -571,24 +588,25 @@ class Settings
         return $settings;
     }
 
-    public static function tax()
+    public static function tax(User $user = null)
     {
         // Use once so the query is only run once
-        return once(function () {
-            $country = Auth::user()?->properties()->where('key', 'country')->value('value') ?? null;
+        return once(function () use ($user) {
+            $user ??= Auth::user();
+            // Get country from user properties
+            $country = $user?->properties->where('key', 'country')->value('value') ?? null;
 
             // Change country to a two-letter country code if it's not already
             if ($country) {
                 $country = array_search($country, config('app.countries')) ?: $country;
             }
 
-            if ($taxRate = TaxRate::where('country', $country)->first()) {
-                return $taxRate;
-            } elseif ($taxRate = TaxRate::where('country', 'all')->first()) {
-                return $taxRate;
-            }
+            $taxRate = TaxRate::whereIn('country', [$country, 'all'])
+                ->orderByRaw("country = ? desc", [$country])
+                ->first();
 
-            return 0;
+            return $taxRate ?: 0;
+
         });
     }
 

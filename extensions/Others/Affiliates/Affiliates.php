@@ -141,6 +141,7 @@ class Affiliates extends Extension
             return [
                 'name' => __('affiliates::affiliate.affiliate'),
                 'route' => 'affiliate.index',
+                'priority' => 15,
             ];
         });
     }
