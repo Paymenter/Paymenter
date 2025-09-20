@@ -126,7 +126,7 @@ class FetchEmails extends Command
                 }
             }
         } catch (\Exception $e) {
-            \Log::error("FetchEmails failed: " . $e->getMessage());
+            \Log::error('FetchEmails failed: ' . $e->getMessage());
         } finally {
             // Ensure the mailbox is disconnected
             if (isset($mailbox)) {
