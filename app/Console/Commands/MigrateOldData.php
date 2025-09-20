@@ -173,6 +173,7 @@ class MigrateOldData extends Command
         // Remove all the pre-existing currencies, in case the user still want's to use single currency
         Currency::truncate();
         Currency::create([
+            'name' => $this->currency_code,
             'code' => $this->currency_code,
             'prefix' => $currency_settings['currency_position']['value'] === 'left' ? $currency_settings['currency_sign']['value'] : null,
             'suffix' => $currency_settings['currency_position']['value'] === 'right' ? $currency_settings['currency_sign']['value'] : null,
