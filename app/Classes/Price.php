@@ -33,6 +33,9 @@ class Price
 
     public $original_setup_fee;
 
+    public $total = 0;
+
+
     public function setDiscount($discount)
     {
         $this->discount = $discount;
@@ -92,6 +95,7 @@ class Price
             }
         }
         $this->has_setup_fee = isset($this->setup_fee) ? $this->setup_fee > 0 : false;
+        $this->total = $this->price + ($this->setup_fee ?? 0);
         $this->dontShowUnavailablePrice = $dontShowUnavailablePrice;
         $this->formatted = (object) [
             'price' => $this->format($this->price),
@@ -115,6 +119,7 @@ class Price
         }
         // Get the format
         $format = $this->currency->format;
+        $price = $price ?? 0;
         switch ($format) {
             case '1.000,00':
                 $price = number_format($price, 2, ',', '.');

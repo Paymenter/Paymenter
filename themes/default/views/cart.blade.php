@@ -19,7 +19,7 @@
                 </div>
                 <div class="flex flex-col justify-between items-end gap-4">
                     <h3 class="text-xl font-semibold p-1">
-                        {{ $item->price->format($item->price->price * $item->quantity) }} @if ($item->quantity > 1)
+                        {{ $item->price->format($item->price->total * $item->quantity) }} @if ($item->quantity > 1)
                             ({{ $item->price }} each)
                         @endif
                     </h3>

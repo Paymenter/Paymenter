@@ -104,20 +104,19 @@ class Cart
                 return (object) $item;
             }
             $wasSuccessful = true;
-            $discount = 0;
-            if ($coupon->type === 'percentage') {
-                $discount = $item->price->price * $coupon->value / 100;
-            } elseif ($coupon->type === 'fixed') {
-                $discount = $coupon->value;
-            } else {
-                $discount = $item->price->setup_fee;
-                $item->price->setup_fee = 0;
+            $pdiscount = 0;
+            $sdiscount = 0;
+            if ($coupon->applies_to === 'price' || $coupon->applies_to === 'all') {
+                $pdiscount = self::getCouponDiscountedAmount($item->price, $coupon);
+                $item->price->price -= $pdiscount;
+                $item->price->total -= $pdiscount;
             }
-            if ($item->price->price < $discount) {
-                $discount = $item->price->price;
+            if ($coupon->applies_to === 'setup_fee' || $coupon->applies_to === 'all') {
+                $sdiscount = self::getCouponDiscountedAmount($item->price, $coupon);
+                $item->price->setup_fee -= $sdiscount;
+                $item->price->total -= $sdiscount;
             }
-            $item->price->setDiscount($discount);
-            $item->price->price -= $discount;
+            $item->price->setDiscount($pdiscount + $sdiscount);
 
             return (object) $item;
         });
@@ -130,6 +129,22 @@ class Cart
         } else {
             throw new DisplayException('Coupon code is not valid for any items in your cart');
         }
+    }
+
+
+    private static function getCouponDiscountedAmount($price, $coupon)
+    {
+        $discount = 0;
+        if ($coupon->type === 'percentage') {
+            $discount = $price->price * $coupon->value / 100;
+        } elseif ($coupon->type === 'fixed') {
+            $discount = $coupon->value;
+        }
+        if ($price->price < $discount) {
+            $discount = $price->price;
+        }
+
+        return $discount;
     }
 
     /**
