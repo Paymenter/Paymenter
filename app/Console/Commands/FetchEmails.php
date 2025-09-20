@@ -38,90 +38,99 @@ class FetchEmails extends Command
         }
         Config::set('audit.console', true);
 
-        $mailbox = new Mailbox([
-            'port' => config('settings.ticket_mail_port'),
-            'username' => config('settings.ticket_mail_email'),
-            'password' => config('settings.ticket_mail_password'),
-            'host' => config('settings.ticket_mail_host'),
-        ]);
-
-        // Fetch emails from the mailbox
-        $emails = $mailbox->inbox();
-
-        foreach ($emails->messages()->since(now()->subDays(1))->withHeaders()->withBody()->get() as $email) {
-            if (TicketMailLog::where('message_id', $email->messageId())->exists()) {
-                continue;
-            }
-
-            $body = \EmailReplyParser\EmailReplyParser::parseReply($email->text());
-
-            // Check headers to see if this email is a reply
-            $replyTo = $email->inReplyTo();
-            if (!$replyTo) {
-                // Create email log but don't process
-                $this->failedEmailLog($email);
-
-                continue;
-            }
-
-            // Validate if in reply to another ticket (<ticket message id>@hostname)
-
-            if (!preg_match('/^(\d+)@/', $replyTo->email(), $matches)) {
-                $this->failedEmailLog($email);
-
-                continue;
-            }
-
-            $ticketMessageId = $matches[1];
-            // Check if the ticket exists
-            $ticketMessage = TicketMessage::find($ticketMessageId);
-            if (!$ticketMessage) {
-                $this->failedEmailLog($email);
-
-                continue;
-            }
-
-            $ticket = $ticketMessage->ticket;
-
-            // Check if from email matches ticket's email
-            if ($email->from()->email() !== $ticket->user->email) {
-                $this->failedEmailLog($email);
-
-                continue;
-            }
-
-            // // Log the successful email processing
-            $ticketMailLog = TicketMailLog::create([
-                'message_id' => $email->messageId(),
-                'subject' => $email->subject(),
-                'from' => $email->from()->email(),
-                'to' => $email->to()[0]->email(),
-                'body' => $email->text(),
-                'status' => 'processed',
+        try {
+            $mailbox = new Mailbox([
+                'port' => config('settings.ticket_mail_port'),
+                'username' => config('settings.ticket_mail_email'),
+                'password' => config('settings.ticket_mail_password'),
+                'host' => config('settings.ticket_mail_host'),
             ]);
 
-            // // Add reply to ticket
-            $message = $ticket->messages()->create([
-                'message' => $body,
-                'user_id' => $ticket->user_id,
-                'ticket_mail_log_id' => $ticketMailLog->id,
-            ]);
+            // Fetch emails from the mailbox
+            $emails = $mailbox->inbox();
 
-            // Foreach attachment
-            foreach ($email->attachments() as $attachment) {
-                $extension = pathinfo($attachment->filename(), PATHINFO_EXTENSION);
-                // Randomize filename
-                $newName = Str::ulid() . '.' . $extension;
-                $path = 'tickets/uploads/' . $newName;
+            foreach ($emails->messages()->since(now()->subDays(1))->withHeaders()->withBody()->get() as $email) {
+                if (TicketMailLog::where('message_id', $email->messageId())->exists()) {
+                    continue;
+                }
 
-                $attachment->save(storage_path('app/' . $path));
+                $body = \EmailReplyParser\EmailReplyParser::parseReply($email->text());
 
-                $message->attachments()->create([
-                    'path' => $path,
-                    'filename' => $attachment->filename(),
-                    'mime_type' => File::mimeType(storage_path('app/' . $path)),
-                    'filesize' => File::size(storage_path('app/' . $path)),
+                // Check headers to see if this email is a reply
+                $replyTo = $email->inReplyTo();
+                if (!$replyTo) {
+                    // Create email log but don't process
+                    $this->failedEmailLog($email);
+
+                    continue;
+                }
+
+                // Validate if in reply to another ticket (<ticket message id>@hostname)
+
+                if (!preg_match('/^(\d+)@/', $replyTo->email(), $matches)) {
+                    $this->failedEmailLog($email);
+
+                    continue;
+                }
+
+                $ticketMessageId = $matches[1];
+                // Check if the ticket exists
+                $ticketMessage = TicketMessage::find($ticketMessageId);
+                if (!$ticketMessage) {
+                    $this->failedEmailLog($email);
+
+                    continue;
+                }
+
+                $ticket = $ticketMessage->ticket;
+
+                // Check if from email matches ticket's email
+                if ($email->from()->email() !== $ticket->user->email) {
+                    $this->failedEmailLog($email);
+
+                    continue;
+                }
+
+                // // Log the successful email processing
+                $ticketMailLog = TicketMailLog::create([
+                    'message_id' => $email->messageId(),
+                    'subject' => $email->subject(),
+                    'from' => $email->from()->email(),
+                    'to' => $email->to()[0]->email(),
+                    'body' => $email->text(),
+                    'status' => 'processed',
                 ]);
+
+                // // Add reply to ticket
+                $message = $ticket->messages()->create([
+                    'message' => $body,
+                    'user_id' => $ticket->user_id,
+                    'ticket_mail_log_id' => $ticketMailLog->id,
+                ]);
+
+                // Foreach attachment
+                foreach ($email->attachments() as $attachment) {
+                    $extension = pathinfo($attachment->filename(), PATHINFO_EXTENSION);
+                    // Randomize filename
+                    $newName = Str::ulid() . '.' . $extension;
+                    $path = 'tickets/uploads/' . $newName;
+
+                    $attachment->save(storage_path('app/' . $path));
+
+                    $message->attachments()->create([
+                        'path' => $path,
+                        'filename' => $attachment->filename(),
+                        'mime_type' => File::mimeType(storage_path('app/' . $path)),
+                        'filesize' => File::size(storage_path('app/' . $path)),
+                    ]);
+                }
+            }
+        } catch (\Exception $e) {
+            \Log::error('FetchEmails failed: ' . $e->getMessage());
+        } finally {
+            // Ensure the mailbox is disconnected
+            if (isset($mailbox)) {
+                $mailbox->disconnect();
             }
         }
     }
