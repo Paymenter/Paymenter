@@ -23,6 +23,8 @@ class Setting extends Model implements Auditable
         'value',
         'type',
         'encrypted',
+        'settingable_id',
+        'settingable_type',
     ];
 
     protected $casts = [
