@@ -3,6 +3,5 @@
 namespace App\Models;
 
 use Laravel\Passport\Client as PassportClient;
-use OwenIt\Auditing\Contracts\Auditable;
 
 class OauthClient extends PassportClient {}
