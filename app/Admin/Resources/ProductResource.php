@@ -132,7 +132,7 @@ class ProductResource extends Resource
                                     ->live()
                                     ->afterStateUpdated(fn (Select $component) => $component
                                         ->getContainer()
-                                        ->getComponent('extension_settings')
+                                        ->getComponent('extension_settings', withHidden: true)
                                         ->getChildSchema()
                                         ->fill()),
 
