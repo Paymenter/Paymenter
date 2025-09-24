@@ -11,6 +11,7 @@ return [
     'total' => 'Totaal',
     'subtotal' => 'Subtotaal',
     'invoice' => 'Factuur #:id',
+    'proforma_invoice' => 'Proforma Invoice #:id',
     'unit_price' => 'Prijs per stuk',
     'bill_to' => 'Factuur aan',
     'issued_to' => 'Op naam van',
@@ -18,6 +19,7 @@ return [
     'payment_pending' => 'Betaling in afwachting',
     'checking_payment' => 'Betaling controleren',
     'invoice_date' => 'Factuurdatum',
+    'proforma_invoice_date' => 'Proforma Invoice Date',
     'invoice_no' => 'Factuurnummer',
     'tax_id' => 'BTW. nummer',
     'company_id' => 'KVK nummer',
@@ -31,4 +33,6 @@ return [
     'amount' => 'Bedrag',
     'date' => 'Datum',
     'due_date' => 'Due Date',
+    'payment_for_invoice' => 'Payment for Invoice #:number',
+    'payment_for_proforma_invoice' => 'Payment for Proforma Invoice #:id',
 ];
