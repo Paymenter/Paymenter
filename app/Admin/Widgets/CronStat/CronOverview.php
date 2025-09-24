@@ -13,7 +13,6 @@ class CronOverview extends StatsOverviewWidget
 
     protected ?string $pollingInterval = '60s';
 
-
     protected function getStats(): array
     {
         $lastRun = Setting::where('key', 'last_scheduler_run')->first()?->value;
