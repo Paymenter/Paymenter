@@ -11,6 +11,7 @@ return [
     'total' => 'Gesamt',
     'subtotal' => 'Zwischensumme',
     'invoice' => 'Rechnung #:id',
+    'proforma_invoice' => 'Proforma Invoice #:id',
     'unit_price' => 'Einzelpreis',
     'bill_to' => 'Rechnung zu bezahlen an',
     'issued_to' => 'Ausgestellt auf',
@@ -18,6 +19,7 @@ return [
     'payment_pending' => 'Zahlung ausstehend',
     'checking_payment' => 'Zahlung wird geprüft',
     'invoice_date' => 'Rechnungsdatum',
+    'proforma_invoice_date' => 'Proforma Invoice Date',
     'invoice_no' => 'Rechnungsnummer',
     'tax_id' => 'Steuer-ID',
     'company_id' => 'Unternehmens-ID',
@@ -31,4 +33,6 @@ return [
     'amount' => 'Anzahl',
     'date' => 'Datum',
     'due_date' => 'Due Date',
+    'payment_for_invoice' => 'Payment for Invoice #:number',
+    'payment_for_proforma_invoice' => 'Payment for Proforma Invoice #:id',
 ];
