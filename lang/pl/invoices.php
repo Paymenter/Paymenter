@@ -11,6 +11,7 @@ return [
     'total' => 'Razem',
     'subtotal' => 'Suma częściowa',
     'invoice' => 'Faktura #:id',
+    'proforma_invoice' => 'Proforma Invoice #:id',
     'unit_price' => 'Cena jednostkowa',
     'bill_to' => 'Wystawiono dla',
     'issued_to' => 'Issued To',
@@ -18,6 +19,7 @@ return [
     'payment_pending' => 'Płatności oczekujące',
     'checking_payment' => 'Sprawdzanie płatności',
     'invoice_date' => 'Data faktury',
+    'proforma_invoice_date' => 'Proforma Invoice Date',
     'invoice_no' => 'Nr Faktury',
     'tax_id' => 'NIP nabywcy',
     'company_id' => 'Identyfikator firmy',
@@ -31,4 +33,6 @@ return [
     'amount' => 'Ilość',
     'date' => 'Data',
     'due_date' => 'Due Date',
+    'payment_for_invoice' => 'Payment for Invoice #:number',
+    'payment_for_proforma_invoice' => 'Payment for Proforma Invoice #:id',
 ];
