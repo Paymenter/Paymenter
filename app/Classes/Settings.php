@@ -329,26 +329,26 @@ class Settings
                     'name' => 'ticket_mail_host',
                     'label' => 'Email Host',
                     'type' => 'text',
-                    'required' => fn(Get $get) => $get('ticket_mail_piping'),
+                    'required' => fn (Get $get) => $get('ticket_mail_piping'),
                 ],
                 [
                     'name' => 'ticket_mail_port',
                     'label' => 'Email Port',
                     'type' => 'number',
-                    'required' => fn(Get $get) => $get('ticket_mail_piping'),
+                    'required' => fn (Get $get) => $get('ticket_mail_piping'),
                     'default' => 993,
                 ],
                 [
                     'name' => 'ticket_mail_email',
                     'label' => 'Email Address',
                     'type' => 'email',
-                    'required' => fn(Get $get) => $get('ticket_mail_piping'),
+                    'required' => fn (Get $get) => $get('ticket_mail_piping'),
                 ],
                 [
                     'name' => 'ticket_mail_password',
                     'label' => 'Email Password',
                     'type' => 'password',
-                    'required' => fn(Get $get) => $get('ticket_mail_piping'),
+                    'required' => fn (Get $get) => $get('ticket_mail_piping'),
                     'encrypted' => true,
                 ],
             ],
@@ -519,7 +519,7 @@ class Settings
                     'database_type' => 'boolean',
                     'default' => true,
                     'description' => 'Save a snapshot of important data (name, address, etc.) on the invoice when it is paid. This ensures that if someone changes their details later, old invoices will still have the correct information.',
-                ]
+                ],
             ],
             'other' => [
                 [
@@ -588,7 +588,7 @@ class Settings
         return $settings;
     }
 
-    public static function tax(User $user = null)
+    public static function tax(?User $user = null)
     {
         // Use once so the query is only run once
         return once(function () use ($user) {
@@ -602,7 +602,7 @@ class Settings
             }
 
             $taxRate = TaxRate::whereIn('country', [$country, 'all'])
-                ->orderByRaw("country = ? desc", [$country])
+                ->orderByRaw('country = ? desc', [$country])
                 ->first();
 
             return $taxRate ?: 0;

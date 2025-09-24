@@ -30,7 +30,7 @@ class ScheduleHeartbeatCommand extends Command
         Setting::updateOrCreate(
             [
                 'key' => 'last_scheduler_run',
-                'settingable_type' => CronStat::class
+                'settingable_type' => CronStat::class,
             ],
             ['value' => now()->toDateTimeString()]
         );

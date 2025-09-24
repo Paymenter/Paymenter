@@ -51,7 +51,6 @@ class CronJob extends Command
                         return;
                     }
 
-
                     // Calculate if we should edit the price because of the coupon
                     if ($service->coupon) {
                         // Calculate what iteration of the coupon we are in
@@ -66,8 +65,9 @@ class CronJob extends Command
 
                     // If service price is 0, immediately activate next period
                     if ($service->price <= 0) {
-                        (new \App\Services\Service\RenewServiceService())->handle($service);
+                        (new \App\Services\Service\RenewServiceService)->handle($service);
                         $number++;
+
                         return;
                     }
 
@@ -173,6 +173,7 @@ class CronJob extends Command
                         $number++;
                     }
                 });
+
                 return $number;
             });
 
@@ -180,7 +181,6 @@ class CronJob extends Command
                 $number = EmailLog::where('created_at', '<', now()->subDays((int) config('settings.cronjob_delete_email_logs', 90)))->count();
                 // Delete email logs older then x
                 EmailLog::where('created_at', '<', now()->subDays((int) config('settings.cronjob_delete_email_logs', 90)))->delete();
-
 
                 return $number;
             });
@@ -221,15 +221,10 @@ class CronJob extends Command
 
     /**
      * Function to run a specific cron job by its key.
-     * 
-     * @param string $key
-     * @param callable $callback
-     * @return void
      */
     private function runCronJob(string $key, callable $callback): void
     {
         $items = $callback() ?? 0;
-
 
         CronStat::create([
             'key' => $key,
@@ -237,6 +232,6 @@ class CronJob extends Command
             'date' => now()->toDateString(),
         ]);
 
-        $this->info("Cronjob task '" . __('admin.cronjob.' . $key) . "' completed: Processed " . $items . " items.");
+        $this->info("Cronjob task '" . __('admin.cronjob.' . $key) . "' completed: Processed " . $items . ' items.');
     }
 }

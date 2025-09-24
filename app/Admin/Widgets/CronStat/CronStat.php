@@ -2,7 +2,6 @@
 
 namespace App\Admin\Widgets\CronStat;
 
-use App\Models\Setting;
 use Carbon\Carbon;
 use Filament\Widgets\Concerns\InteractsWithPageFilters;
 use Filament\Widgets\StatsOverviewWidget;
@@ -32,7 +31,6 @@ class CronStat extends StatsOverviewWidget
     protected function getStats(): array
     {
         $date = $this->pageFilters['date'] ?? now()->toDateString();
-
 
         return [
             Stat::make('Invoices Created', \App\Models\CronStat::where('key', 'invoices_created')->where('date', $date)->sum('value'))

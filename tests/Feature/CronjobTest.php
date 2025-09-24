@@ -96,7 +96,7 @@ class CronjobTest extends TestCase
         // This is the number of days before the due date to send an invoice
         config(['settings.cronjob_invoice' => 7]);
 
-        $product = $this->createProduct(); 
+        $product = $this->createProduct();
 
         // Create a subscription for the user
         $service = \App\Models\Service::factory()->create([

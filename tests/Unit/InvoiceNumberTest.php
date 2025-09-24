@@ -72,7 +72,7 @@ class InvoiceNumberTest extends TestCase
 
         // Refresh invoice
         $invoice->refresh();
-        
+
         // Number should now be set to 2001
         $this->assertEquals(2001, $invoice->number);
 

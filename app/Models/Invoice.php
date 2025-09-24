@@ -40,7 +40,7 @@ class Invoice extends Model implements Auditable
     public function total(): Attribute
     {
         return Attribute::make(
-            get: fn() => $this->items->sum(fn($item) => $item->price * $item->quantity)
+            get: fn () => $this->items->sum(fn ($item) => $item->price * $item->quantity)
         );
     }
 
@@ -52,7 +52,7 @@ class Invoice extends Model implements Auditable
     public function formattedTotal(): Attribute
     {
         return Attribute::make(
-            get: fn() => new Price(['price' => $this->total, 'currency' => $this->currency, 'tax' => $this->tax])
+            get: fn () => new Price(['price' => $this->total, 'currency' => $this->currency, 'tax' => $this->tax])
         );
     }
 
@@ -62,7 +62,7 @@ class Invoice extends Model implements Auditable
     public function formattedRemaining(): Attribute
     {
         return Attribute::make(
-            get: fn() => new Price(['price' => $this->remaining, 'currency' => $this->currency, 'tax' => $this->tax])
+            get: fn () => new Price(['price' => $this->remaining, 'currency' => $this->currency, 'tax' => $this->tax])
         );
     }
 
@@ -72,7 +72,7 @@ class Invoice extends Model implements Auditable
     public function remaining(): Attribute
     {
         return Attribute::make(
-            get: fn() => $this->total - $this->transactions->sum('amount')
+            get: fn () => $this->total - $this->transactions->sum('amount')
         );
     }
 
@@ -84,7 +84,7 @@ class Invoice extends Model implements Auditable
     {
         if (config('settings.invoice_snapshot', true) && $this?->snapshot?->tax_name) {
             return Attribute::make(
-                get: fn() => new TaxRate([
+                get: fn () => new TaxRate([
                     'name' => $this->snapshot->tax_name,
                     'rate' => $this->snapshot->tax_rate,
                     'country' => $this->snapshot->tax_country,
@@ -93,7 +93,7 @@ class Invoice extends Model implements Auditable
         }
 
         return Attribute::make(
-            get: fn() => Settings::tax($this->user)
+            get: fn () => Settings::tax($this->user)
         );
     }
 
@@ -101,12 +101,12 @@ class Invoice extends Model implements Auditable
     {
         if (config('settings.invoice_snapshot', true) && $this?->snapshot?->properties) {
             return Attribute::make(
-                get: fn() => $this->snapshot->properties
+                get: fn () => $this->snapshot->properties
             );
         }
 
         return Attribute::make(
-            get: fn() => $this->user->properties()->with('parent_property')->whereHas('parent_property', function ($query) {
+            get: fn () => $this->user->properties()->with('parent_property')->whereHas('parent_property', function ($query) {
                 $query->where('show_on_invoice', true);
             })->pluck('value', 'key')->toArray()
         );
@@ -116,12 +116,12 @@ class Invoice extends Model implements Auditable
     {
         if (config('settings.invoice_snapshot', true) && $this?->snapshot?->name) {
             return Attribute::make(
-                get: fn() => $this->snapshot->name
+                get: fn () => $this->snapshot->name
             );
         }
 
         return Attribute::make(
-            get: fn() => $this->user->name
+            get: fn () => $this->user->name
         );
     }
 
@@ -129,12 +129,12 @@ class Invoice extends Model implements Auditable
     {
         if (config('settings.invoice_snapshot', true) && $this?->snapshot?->bill_to) {
             return Attribute::make(
-                get: fn() => $this->snapshot->bill_to
+                get: fn () => $this->snapshot->bill_to
             );
         }
 
         return Attribute::make(
-            get: fn() => config('settings.bill_to_text', config('settings.company_name'))
+            get: fn () => config('settings.bill_to_text', config('settings.company_name'))
         );
     }
 
@@ -166,7 +166,7 @@ class Invoice extends Model implements Auditable
     public function pdf(): Attribute
     {
         return Attribute::make(
-            get: fn() => PDF::generateInvoice($this)
+            get: fn () => PDF::generateInvoice($this)
         );
     }
 }

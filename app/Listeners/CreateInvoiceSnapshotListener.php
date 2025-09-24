@@ -4,12 +4,6 @@ namespace App\Listeners;
 
 use App\Classes\Settings;
 use App\Events\Invoice\Paid;
-use App\Jobs\Server\CreateJob;
-use App\Jobs\Server\UnsuspendJob;
-use App\Models\Credit;
-use App\Models\Service;
-use App\Models\ServiceUpgrade;
-use App\Services\ServiceUpgrade\ServiceUpgradeService;
 
 class CreateInvoiceSnapshotListener
 {
@@ -34,7 +28,7 @@ class CreateInvoiceSnapshotListener
             'properties' => $invoice->user_properties,
             'bill_to' => config('settings.bill_to_text', config('settings.company_name')),
         ];
-        
+
         if ($tax = Settings::tax($invoice->user)) {
             $snapshotData['tax_name'] = $tax->name;
             $snapshotData['tax_rate'] = $tax->rate;

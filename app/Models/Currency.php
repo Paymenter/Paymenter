@@ -24,7 +24,8 @@ class Currency extends Model
         'suffix',
         'format',
     ];
-        public function newEloquentBuilder($query)
+
+    public function newEloquentBuilder($query)
     {
         return new Builders\CacheableBuilder($query);
     }

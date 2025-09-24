@@ -17,7 +17,7 @@ trait Disabled
         foreach ($attributes as $attribute) {
             $instance = $attribute->newInstance();
             // Check the condition based on the attribute's setting
-                $condition = config('settings.' . $instance->setting, $instance->default);
+            $condition = config('settings.' . $instance->setting, $instance->default);
             if ($instance->reverse) {
                 $condition = !$condition;
             }

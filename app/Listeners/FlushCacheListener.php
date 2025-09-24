@@ -14,7 +14,7 @@ class FlushCacheListener
         }
         static $flushed = false;
         if (!$flushed) {
-            app()->terminating(fn() => SettingsProvider::flushCache());
+            app()->terminating(fn () => SettingsProvider::flushCache());
             $flushed = true;
         }
     }

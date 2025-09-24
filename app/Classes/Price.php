@@ -35,7 +35,6 @@ class Price
 
     public $total = 0;
 
-
     public function setDiscount($discount)
     {
         $this->discount = $discount;

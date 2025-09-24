@@ -131,7 +131,6 @@ class Cart
         }
     }
 
-
     private static function getCouponDiscountedAmount($price, $coupon)
     {
         $discount = 0;

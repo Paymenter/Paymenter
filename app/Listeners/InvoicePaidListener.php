@@ -3,8 +3,6 @@
 namespace App\Listeners;
 
 use App\Events\Invoice\Paid;
-use App\Jobs\Server\CreateJob;
-use App\Jobs\Server\UnsuspendJob;
 use App\Models\Credit;
 use App\Models\Service;
 use App\Models\ServiceUpgrade;
@@ -25,7 +23,7 @@ class InvoicePaidListener
                 if (!$service || !($service instanceof Service)) {
                     return;
                 }
-                (new RenewServiceService())->handle($service);
+                (new RenewServiceService)->handle($service);
             } elseif ($item->reference_type == ServiceUpgrade::class) {
                 $serviceUpgrade = $item->reference;
                 if (!$serviceUpgrade || $serviceUpgrade->status !== ServiceUpgrade::STATUS_PENDING || !($serviceUpgrade instanceof ServiceUpgrade)) {

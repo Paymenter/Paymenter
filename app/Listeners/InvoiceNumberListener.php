@@ -18,7 +18,7 @@ class InvoiceNumberListener
             if ($event->invoice->isDirty('status') && $event->invoice->status == 'paid' && !$event->invoice->number) {
                 $this->setInvoiceNumber($event);
             }
-        } else if ($event instanceof Creating && !config('settings.invoice_proforma', false)) {
+        } elseif ($event instanceof Creating && !config('settings.invoice_proforma', false)) {
             $this->setInvoiceNumber($event);
         }
     }

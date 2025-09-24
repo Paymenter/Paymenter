@@ -5,7 +5,6 @@ namespace App\Services\Service;
 use App\Jobs\Server\CreateJob;
 use App\Jobs\Server\UnsuspendJob;
 use App\Models\Service;
-use Illuminate\Support\Facades\DB;
 
 class RenewServiceService
 {

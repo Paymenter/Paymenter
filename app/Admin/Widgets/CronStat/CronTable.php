@@ -16,7 +16,9 @@ class CronTable extends ChartWidget
     protected ?string $pollingInterval = null;
 
     protected static bool $isLazy = true;
+
     public ?string $filter = 'week';
+
     protected ?string $maxHeight = '300px';
 
     protected ?string $heading = 'Cron Table';
@@ -41,27 +43,27 @@ class CronTable extends ChartWidget
                 [
                     'label' => 'Invoices Created',
 
-                    'data' => $invoicesCreated->map(fn(TrendValue $value) => $value->aggregate),
+                    'data' => $invoicesCreated->map(fn (TrendValue $value) => $value->aggregate),
                     'backgroundColor' => 'rgba(54, 162, 235, 0.5)',
                     'borderColor' => 'rgba(54, 162, 235, 1)',
                     'borderWidth' => 1,
                 ],
                 [
                     'label' => 'Services Suspended',
-                    'data' => $servicesSuspended->map(fn(TrendValue $value) => $value->aggregate),
+                    'data' => $servicesSuspended->map(fn (TrendValue $value) => $value->aggregate),
                     'backgroundColor' => 'rgba(255, 206, 86, 0.5)',
                     'borderColor' => 'rgba(255, 206, 86, 1)',
                     'borderWidth' => 1,
                 ],
                 [
                     'label' => 'Services Terminated',
-                    'data' => $servicesTerminated->map(fn(TrendValue $value) => $value->aggregate),
+                    'data' => $servicesTerminated->map(fn (TrendValue $value) => $value->aggregate),
                     'backgroundColor' => 'rgba(255, 99, 132, 0.5)',
                     'borderColor' => 'rgba(255, 99, 132, 1)',
                     'borderWidth' => 1,
                 ],
             ],
-            'labels' => $invoicesCreated->map(fn(TrendValue $value) => $value->date)->toArray(),
+            'labels' => $invoicesCreated->map(fn (TrendValue $value) => $value->date)->toArray(),
         ];
     }
 
