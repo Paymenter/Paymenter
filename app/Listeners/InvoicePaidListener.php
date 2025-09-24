@@ -8,6 +8,7 @@ use App\Jobs\Server\UnsuspendJob;
 use App\Models\Credit;
 use App\Models\Service;
 use App\Models\ServiceUpgrade;
+use App\Services\Service\RenewServiceService;
 use App\Services\ServiceUpgrade\ServiceUpgradeService;
 
 class InvoicePaidListener
@@ -21,19 +22,10 @@ class InvoicePaidListener
         $event->invoice->items->each(function ($item) {
             if ($item->reference_type == Service::class) {
                 $service = $item->reference;
-                if (!$service) {
+                if (!$service || !($service instanceof Service)) {
                     return;
                 }
-                if ($service->product->server) {
-                    if ($service->status == Service::STATUS_SUSPENDED) {
-                        UnsuspendJob::dispatch($service);
-                    } elseif ($service->status == Service::STATUS_PENDING) {
-                        CreateJob::dispatch($service);
-                    }
-                }
-                $service->status = Service::STATUS_ACTIVE;
-                $service->expires_at = $service->calculateNextDueDate();
-                $service->save();
+                (new RenewServiceService())->handle($service);
             } elseif ($item->reference_type == ServiceUpgrade::class) {
                 $serviceUpgrade = $item->reference;
                 if (!$serviceUpgrade || $serviceUpgrade->status !== ServiceUpgrade::STATUS_PENDING || !($serviceUpgrade instanceof ServiceUpgrade)) {

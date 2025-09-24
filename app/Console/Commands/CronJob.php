@@ -64,6 +64,13 @@ class CronJob extends Command
                         }
                     }
 
+                    // If service price is 0, immediately activate next period
+                    if ($service->price <= 0) {
+                        (new \App\Services\Service\RenewServiceService())->handle($service);
+                        $number++;
+                        return;
+                    }
+
                     // Create invoice
                     $invoice = $service->invoices()->make([
                         'user_id' => $service->user_id,
