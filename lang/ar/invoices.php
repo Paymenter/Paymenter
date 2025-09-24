@@ -11,6 +11,7 @@ return [
     'total' => 'الإجمالي',
     'subtotal' => 'المجموع الجزئي',
     'invoice' => 'الفاتورة #:id',
+    'proforma_invoice' => 'Proforma Invoice #:id',
     'unit_price' => 'سعر الوحدة',
     'bill_to' => '',
     'issued_to' => 'صدرت إلى',
@@ -18,6 +19,7 @@ return [
     'payment_pending' => 'في انتظار الدفع',
     'checking_payment' => 'الدفع قيد التحقق',
     'invoice_date' => 'تاريخ الفاتورة',
+    'proforma_invoice_date' => 'Proforma Invoice Date',
     'invoice_no' => 'رقم الفاتورة',
     'tax_id' => 'الرقم الضريبي',
     'company_id' => 'معرّف الشركة',
@@ -31,4 +33,6 @@ return [
     'amount' => 'المبلغ',
     'date' => 'التاريخ',
     'due_date' => 'Due Date',
+    'payment_for_invoice' => 'Payment for Invoice #:number',
+    'payment_for_proforma_invoice' => 'Payment for Proforma Invoice #:id',
 ];
