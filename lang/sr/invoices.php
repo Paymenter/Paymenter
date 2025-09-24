@@ -11,6 +11,7 @@ return [
     'total' => 'Ukupno',
     'subtotal' => 'Međuzbir',
     'invoice' => 'Faktura #:id',
+    'proforma_invoice' => 'Proforma Invoice #:id',
     'unit_price' => 'Jedinična cena',
     'bill_to' => 'Naplatiti korisniku',
     'issued_to' => 'Izdato za',
@@ -18,6 +19,7 @@ return [
     'payment_pending' => 'Plaćanje na čekanju',
     'checking_payment' => 'Uplata se proverava',
     'invoice_date' => 'Datum računa',
+    'proforma_invoice_date' => 'Proforma Invoice Date',
     'invoice_no' => 'Broj fakture',
     'tax_id' => 'PIB',
     'company_id' => 'Broj Kompanije',
@@ -31,4 +33,6 @@ return [
     'amount' => 'Iznos',
     'date' => 'Datum',
     'due_date' => 'Rok',
+    'payment_for_invoice' => 'Payment for Invoice #:number',
+    'payment_for_proforma_invoice' => 'Payment for Proforma Invoice #:id',
 ];
