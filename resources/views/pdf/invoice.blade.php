@@ -17,7 +17,8 @@
                 Arial,
                 sans-serif,
                 'Apple Color Emoji',
-                'Segoe UI Emoji';
+                'Segoe UI Emoji',
+                'DejaVu Sans';
             font-size: 16px;
         }
 
