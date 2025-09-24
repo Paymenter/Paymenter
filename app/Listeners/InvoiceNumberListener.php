@@ -3,17 +3,28 @@
 namespace App\Listeners;
 
 use App\Events\Invoice\Creating;
+use App\Events\Invoice\Updating;
 use App\Models\Invoice;
 use App\Models\Setting;
 
-class InvoiceCreatingListener
+class InvoiceNumberListener
 {
     /**
      * Handle the event.
      */
-    public function handle(Creating $event): void
+    public function handle(Creating|Updating $event): void
     {
+        if ($event instanceof Updating) {
+            if ($event->invoice->isDirty('status') && $event->invoice->status == 'paid' && !$event->invoice->number) {
+                $this->setInvoiceNumber($event);
+            }
+        } else if ($event instanceof Creating && !config('settings.invoice_proforma', false)) {
+            $this->setInvoiceNumber($event);
+        }
+    }
 
+    private function setInvoiceNumber(Creating|Updating $event): void
+    {
         // Get the next invoice number
         $number = config('settings.invoice_number', 1) + 1;
         // Update setting

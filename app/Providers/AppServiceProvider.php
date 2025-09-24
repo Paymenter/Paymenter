@@ -6,6 +6,7 @@ use App\Classes\Synths\PriceSynth;
 use App\Helpers\ExtensionHelper;
 use App\Models\EmailLog;
 use App\Models\Extension;
+use App\Models\Invoice;
 use App\Models\OauthClient;
 use App\Models\User;
 use App\Support\Passport\ScopeRegistry;
@@ -180,6 +181,12 @@ class AppServiceProvider extends ServiceProvider
         Passport::clientModel(OauthClient::class);
         Passport::ignoreRoutes();
         Passport::tokensCan(ScopeRegistry::getAll());
+
+        Route::bind('invoice', function ($val) {
+            return Invoice::where('id', $val)
+                ->orWhere('number', $val)
+                ->firstOrFail();
+        });
 
         if (class_exists(Scramble::class)) {
             Scramble::configure()

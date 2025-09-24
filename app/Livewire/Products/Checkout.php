@@ -108,7 +108,7 @@ class Checkout extends Component
             return $option->children->where('id', $this->configOptions[$option->id])->first()?->price(billing_period: $this->plan->billing_period, billing_unit: $this->plan->billing_unit)->setup_fee;
         });
         $this->total = new Price([
-            'price' => $total + $setup_fee,
+            'price' => $total,
             'currency' => $this->plan->price()->currency,
             'setup_fee' => $setup_fee,
         ], apply_exclusive_tax: true);

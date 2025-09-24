@@ -62,10 +62,6 @@ class ServiceCancellationResource extends Resource
                 TextColumn::make('reason')
                     ->searchable(),
                 TextColumn::make('type'),
-                TextColumn::make('deleted_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
@@ -85,7 +81,8 @@ class ServiceCancellationResource extends Resource
                 BulkActionGroup::make([
                     DeleteBulkAction::make(),
                 ]),
-            ]);
+            ])
+            ->defaultSort('created_at', 'desc');
     }
 
     public static function getRelations(): array

@@ -4,3 +4,11 @@
 @source '../../../../resources/views';
 
 @plugin '@tailwindcss/typography';
+
+.fi-wi-stats-overview-stat.success .fi-wi-stats-overview-stat-value {
+    color: theme('colors.green.600');
+}
+
+.fi-wi-stats-overview-stat.error .fi-wi-stats-overview-stat-value {
+    color: theme('colors.red.500');
+}

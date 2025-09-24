@@ -3,23 +3,23 @@
     <div class="px-2">
 
         @isset($affiliate)
-            <div class="mt-4 md:grid-cols-3 grid">
-                <div class="flex flex-col gap-2">
+            <div class="mt-4 md:grid-cols-3 grid gap-4">
+                <div class="flex flex-col gap-1 bg-background-secondary p-4 rounded-lg">
                     <span class="text-xl font-semibold">{{ __('affiliates::affiliate.visitors') }}</span>
                     <span class="text-gray-500">{{ __('affiliates::affiliate.total-visitors') }}</span>
-                    <span class="text-2xl font-semibold">{{ Number::format($affiliate->visitors) }}</span>
+                    <span class="text-2xl font-semibold mt-1">{{ Number::format($affiliate->visitors) }}</span>
                 </div>
-                <div class="flex flex-col gap-2">
+                <div class="flex flex-col gap-1 bg-background-secondary p-4 rounded-lg">
                     <span class="text-xl font-semibold">{{ __('affiliates::affiliate.signups') }}</span>
                     <span class="text-gray-500">{{ __('affiliates::affiliate.total-signups') }}</span>
-                    <span class="text-2xl font-semibold">
+                    <span class="text-2xl font-semibold mt-1">
                         {{ Number::format($affiliate->signups) }}
                     </span>
                 </div>
-                <div class="flex flex-col gap-2">
+                <div class="flex flex-col gap-1 bg-background-secondary p-4 rounded-lg">
                     <span class="text-xl font-semibold">{{ __('affiliates::affiliate.earnings') }}</span>
                     <span class="text-gray-500">{{ __('affiliates::affiliate.total-earnings') }}</span>
-                    <span class="text-2xl font-semibold">
+                    <span class="text-2xl font-semibold mt-1">
                         <ul>
                             @foreach ($affiliate->earnings as $currency => $amount)
                                 <li>

@@ -112,6 +112,7 @@ class Security extends Component
     {
         return view('client.account.security')->layoutData([
             'sidebar' => true,
+            'title' => 'Security',
         ]);
     }
 }

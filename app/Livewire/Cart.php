@@ -52,7 +52,7 @@ class Cart extends Component
 
             return;
         }
-        $this->total = new Price(['price' => ClassesCart::get()->sum(fn ($item) => $item->price->price * $item->quantity), 'currency' => ClassesCart::get()->first()->price->currency]);
+        $this->total = new Price(['price' => ClassesCart::get()->sum(fn($item) => $item->price->total * $item->quantity), 'currency' => ClassesCart::get()->first()->price->currency]);
         $this->gateways = ExtensionHelper::getCheckoutGateways($this->total->price, $this->total->currency->code, 'cart', ClassesCart::get());
         if (count($this->gateways) > 0 && !array_search($this->gateway, array_column($this->gateways, 'id')) !== false) {
             $this->gateway = $this->gateways[0]->id;
@@ -144,7 +144,7 @@ class Cart extends Component
 
                 if (
                     $item->product->per_user_limit > 0 && ($user->services->where('product_id', $item->product->id)->count() >= $item->product->per_user_limit ||
-                        ClassesCart::get()->filter(fn ($it) => $it->product->id == $item->product->id)->sum(fn ($it) => $it->quantity) + $user->services->where('product_id', $item->product->id)->count() > $item->product->per_user_limit
+                        ClassesCart::get()->filter(fn($it) => $it->product->id == $item->product->id)->sum(fn($it) => $it->quantity) + $user->services->where('product_id', $item->product->id)->count() > $item->product->per_user_limit
                     )
                 ) {
                     throw new DisplayException(__('product.user_limit', ['product' => $item->product->name]));
@@ -178,10 +178,12 @@ class Cart extends Component
             // Create the services
             foreach (ClassesCart::get() as $item) {
                 // Is it a lifetime coupon, then we can adjust the price of the service
-                if ($this->coupon && $this->coupon->recurring != 1) {
-                    $price = $item->price->price - $item->price->setup_fee;
+                if ($this->coupon && (empty($this->coupon->recurring) || $this->coupon->recurring == 1)) {
+                    // Apply coupon only to first billing cycle (use original price for recurring)
+                    $price = $item->price->original_price;
                 } else {
-                    $price = $item->price->original_price - $item->price->original_setup_fee;
+                    // Apply coupon to all billing cycles (use discounted price)
+                    $price = $item->price->price;
                 }
                 // Create the service
                 $service = $order->services()->create([
@@ -224,11 +226,11 @@ class Cart extends Component
                 }
 
                 // Create the invoice items
-                if ($item->price->price > 0) {
+                if ($item->price->total > 0) {
                     $invoice->items()->create([
                         'reference_id' => $service->id,
                         'reference_type' => Service::class,
-                        'price' => $item->price->price,
+                        'price' => $item->price->total,
                         'quantity' => $item->quantity,
                         'description' => $service->description,
                     ]);
@@ -244,16 +246,16 @@ class Cart extends Component
             }
 
             // We don't wanna use credits if the total price is 0, duh
-            if ($this->use_credits && $this->total->price > 0) {
+            if ($this->use_credits && $this->total->total > 0) {
                 $credit = Auth::user()->credits()->where('currency_code', $this->total->currency->code)->first();
                 if ($credit && $credit->amount > 0) {
                     // Is it more credits or less credits than the total price?
-                    if ($credit->amount >= $this->total->price) {
-                        $credit->amount -= $this->total->price;
+                    if ($credit->amount >= $this->total->total) {
+                        $credit->amount -= $this->total->total;
                         $credit->save();
-                        ExtensionHelper::addPayment($invoice->id, null, amount: $this->total->price);
+                        ExtensionHelper::addPayment($invoice->id, null, amount: $this->total->total);
                     } else {
-                        $this->total->price -= $credit->amount;
+                        $this->total->total -= $credit->amount;
                         ExtensionHelper::addPayment($invoice->id, null, amount: $credit->amount);
                         $credit->amount = 0;
                         $credit->save();

@@ -3,9 +3,11 @@
 use App\Classes\Settings;
 use App\Console\Commands\CronJob;
 use App\Console\Commands\FetchEmails;
+use App\Console\Commands\ScheduleHeartbeatCommand;
 use App\Console\Commands\TelemetryCommand;
 use Illuminate\Support\Facades\Schedule;
 
+Schedule::command(ScheduleHeartbeatCommand::class)->description('Updates the last scheduler run time')->everyMinute();
 Schedule::command(CronJob::class)->description('Runs daily to send out invoices, suspend servers, etc.')->dailyAt(config('settings.cronjob_time', '00:00'));
 Schedule::command(FetchEmails::class)->description('Import ticket emails using IMAP')->everyFiveMinutes()->withoutOverlapping();
 

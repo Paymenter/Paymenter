@@ -15,7 +15,7 @@ class Saved
     /**
      * Create a new event instance.
      */
-    public function __construct(Setting $setting)
+    public function __construct(public Setting $setting)
     {
         // This event is dispatched after a setting is saved.
         // We are gonna overwrite the value of the setting

@@ -2,6 +2,8 @@
 
 namespace App\Classes;
 
+use App\Models\TaxRate;
+
 /**
  * Class Price
  */
@@ -31,12 +33,15 @@ class Price
 
     public $original_setup_fee;
 
+    public $total = 0;
+
+
     public function setDiscount($discount)
     {
         $this->discount = $discount;
     }
 
-    public function __construct($priceAndCurrency = null, $free = false, $dontShowUnavailablePrice = false, $apply_exclusive_tax = false)
+    public function __construct($priceAndCurrency = null, $free = false, $dontShowUnavailablePrice = false, $apply_exclusive_tax = false, TaxRate|int|null $tax = null)
     {
         if (is_array($priceAndCurrency)) {
             $priceAndCurrency = (object) $priceAndCurrency;
@@ -68,7 +73,7 @@ class Price
 
         // Calculate taxes
         if (config('settings.tax_enabled')) {
-            $tax = Settings::tax();
+            $tax ??= Settings::tax();
             if ($tax) {
                 // Inclusive has the tax included in the price
                 if (config('settings.tax_type') == 'inclusive' || !$apply_exclusive_tax) {
@@ -90,6 +95,7 @@ class Price
             }
         }
         $this->has_setup_fee = isset($this->setup_fee) ? $this->setup_fee > 0 : false;
+        $this->total = $this->price + ($this->setup_fee ?? 0);
         $this->dontShowUnavailablePrice = $dontShowUnavailablePrice;
         $this->formatted = (object) [
             'price' => $this->format($this->price),
@@ -113,6 +119,7 @@ class Price
         }
         // Get the format
         $format = $this->currency->format;
+        $price = $price ?? 0;
         switch ($format) {
             case '1.000,00':
                 $price = number_format($price, 2, ',', '.');

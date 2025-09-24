@@ -52,7 +52,6 @@ class CouponResource extends Resource
                             $money($input, '.', '', 2)
                         JS
                     ))
-                    ->hidden(fn (Get $get) => $get('type') === 'free_setup')
                     ->suffix(fn (Get $get) => $get('type') === 'percentage' ? '%' : config('settings.default_currency'))
                     ->placeholder('Enter the value of the coupon'),
 
@@ -64,18 +63,26 @@ class CouponResource extends Resource
                     ->options([
                         'percentage' => 'Percentage',
                         'fixed' => 'Fixed amount',
-                        'free_setup' => 'Free setup',
                     ])
                     ->placeholder('Select the type of the coupon'),
+                Select::make('applies_to')
+                    ->label('Applies To')
+                    ->required()
+                    ->default('all')
+                    ->options([
+                        'all' => 'Price and Setup Fee',
+                        'price' => 'Price only',
+                        'setup_fee' => 'Setup Fee only',
+                    ]),
 
                 TextInput::make('recurring')
                     ->label('Recurring')
                     ->numeric()
                     ->nullable()
                     ->minValue(0)
-                    ->hidden(fn (Get $get) => $get('type') === 'free_setup')
+                    ->hidden(fn (Get $get) => $get('applies_to') === 'free_setup')
                     ->placeholder('How many billing cycles the discount will be applied')
-                    ->helperText('Enter 0 to apply it to all billing cycles, 1 to apply it only to the first billing cycle, etc.'),
+                    ->helperText('Enter 0 to apply it to all billing cycles, 1 (or leave empty) to apply it only to the first billing cycle, etc.'),
 
                 TextInput::make('max_uses')
                     ->label('Max Uses')

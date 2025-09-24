@@ -16,7 +16,7 @@ class ShowInvoices extends ManageRelatedRecords
 
     protected static string $relationship = 'invoices';
 
-    protected static string|\BackedEnum|null $navigationIcon = 'ri-bill-line';
+    protected static string|\BackedEnum|null $navigationIcon = 'ri-receipt-line';
 
     public static function getNavigationLabel(): string
     {

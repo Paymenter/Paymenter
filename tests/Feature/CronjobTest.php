@@ -87,6 +87,40 @@ class CronjobTest extends TestCase
         ]);
     }
 
+    public function test_services_are_renewed_if_price_is_zero(): void
+    {
+        // Create a user
+        $user = \App\Models\User::factory()->create();
+
+        // Set config cronjob_invoice
+        // This is the number of days before the due date to send an invoice
+        config(['settings.cronjob_invoice' => 7]);
+
+        $product = $this->createProduct(); 
+
+        // Create a subscription for the user
+        $service = \App\Models\Service::factory()->create([
+            'user_id' => $user->id,
+            'plan_id' => $product->plan->id,
+            'product_id' => $product->product->id,
+            'status' => 'active',
+            'expires_at' => now()->addDays(2)->addHour(-1), // Set expires_at to 6 days from now
+            'currency_code' => 'USD',
+            'price' => 0.00, // Set a price for the service
+        ]);
+
+        // Run the cron job
+        $this->artisan('app:cron-job')
+            ->assertExitCode(0);
+
+        // Check if the service was renewed
+        $this->assertDatabaseHas('services', [
+            'id' => $service->id,
+            'status' => 'active',
+            'expires_at' => $service->calculateNextDueDate(),
+        ]);
+    }
+
     public function test_services_are_cancelled_if_not_paid_within_configured_days(): void
     {
         // Create a user
