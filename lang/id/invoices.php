@@ -11,6 +11,7 @@ return [
     'total' => 'Total',
     'subtotal' => 'Subtotal',
     'invoice' => 'Faktur #:id',
+    'proforma_invoice' => 'Proforma Invoice #:id',
     'unit_price' => 'Harga Unit',
     'bill_to' => 'Ditagihkan Kepada',
     'issued_to' => 'Diterbitkan untuk',
@@ -18,6 +19,7 @@ return [
     'payment_pending' => 'Menunggu Pembayaran',
     'checking_payment' => 'Memeriksa Pembayaran',
     'invoice_date' => 'Tanggal Faktur',
+    'proforma_invoice_date' => 'Proforma Invoice Date',
     'invoice_no' => 'No. Faktur',
     'tax_id' => 'NPWP',
     'company_id' => 'ID Perusahaan',
@@ -31,4 +33,6 @@ return [
     'amount' => 'Jumlah',
     'date' => 'Tanggal',
     'due_date' => 'Jatuh Tempo',
+    'payment_for_invoice' => 'Payment for Invoice #:number',
+    'payment_for_proforma_invoice' => 'Payment for Proforma Invoice #:id',
 ];
