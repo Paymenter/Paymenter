@@ -13,15 +13,7 @@ class CronStat extends StatsOverviewWidget
 
     protected static bool $isDiscovered = false;
 
-    protected function getFilters(): ?array
-    {
-        return [
-            'today' => 'Today',
-            'week' => 'Last week',
-            'month' => 'Last month',
-            'year' => 'This year',
-        ];
-    }
+    protected ?string $pollingInterval = null;
 
     public function getColumns(): int|array
     {
