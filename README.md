@@ -22,7 +22,7 @@
   <a href="https://paymenter.org">Website</a> ·
   <a href="https://paymenter.org/docs/installation/install">Documentation</a> ·
   <a href="https://demo.paymenter.org">Live Demo</a> ·
-  <a href="https://builtbybit.com/resources/categories/paymenter.76/">Extensions</a>
+  <a href="https://paymenter.org/marketplace">Extensions</a>
 </h4>
 
  <div align="center">
@@ -32,7 +32,7 @@
   [![GitHub release (latest by date)](https://img.shields.io/github/v/release/paymenter/paymenter)](https://github.com/Paymenter/paymenter/releases)
     <br>
     <br>
-  [![Discord](https://img.shields.io/discord/882318291014651924?logo=discord&labelColor=white&color=5865f2)](https://discord.gg/xB4UUT3XQg)
+  [![Discord](https://img.shields.io/discord/882318291014651924?logo=discord&labelColor=white&color=5865f2)](https://discord.gg/paymenter-882318291014651924)
   
 </div>
 
