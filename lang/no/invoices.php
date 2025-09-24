@@ -11,6 +11,7 @@ return [
     'total' => 'Totalt',
     'subtotal' => 'Delsum',
     'invoice' => 'Faktura #:id',
+    'proforma_invoice' => 'Proforma Invoice #:id',
     'unit_price' => 'Enhetspris',
     'bill_to' => 'Fakturer Til',
     'issued_to' => 'Utstedt til',
@@ -18,6 +19,7 @@ return [
     'payment_pending' => 'Venter på betaling',
     'checking_payment' => 'Kontrollerer betaling',
     'invoice_date' => 'Fakturadato',
+    'proforma_invoice_date' => 'Proforma Invoice Date',
     'invoice_no' => 'Faktura nr',
     'tax_id' => 'Mva-nr',
     'company_id' => 'Org-nr',
@@ -31,4 +33,6 @@ return [
     'amount' => 'Beløp',
     'date' => 'Dato',
     'due_date' => 'Forfallsdato',
+    'payment_for_invoice' => 'Payment for Invoice #:number',
+    'payment_for_proforma_invoice' => 'Payment for Proforma Invoice #:id',
 ];
