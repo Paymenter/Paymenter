@@ -122,6 +122,9 @@ class UploadExtensionService
                     } elseif (is_subclass_of($fullClassName, Extension::class)) {
                         $type['type'] = 'other';
                     }
+                    if ($type['class'] && $type['type']) {
+                        break; // Exit the loop if we found a valid class
+                    }
                 }
             }
         }
