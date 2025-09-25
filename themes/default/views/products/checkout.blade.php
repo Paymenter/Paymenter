@@ -3,7 +3,7 @@
         <h1 class="text-3xl font-bold">{{ $product->name }}</h1>
         <div class="flex flex-row w-full gap-4">
             @if ($product->image)
-                <img src="{{ Storage::url($product->image) }}" alt="{{ $product->name }}" class="w-40">
+                <img src="{{ Storage::url($product->image) }}" alt="{{ $product->name }}" class="max-w-40">
             @endif
             <div class="max-h-28 overflow-y-auto w-full">
                 <article class="prose dark:prose-invert prose-sm">
