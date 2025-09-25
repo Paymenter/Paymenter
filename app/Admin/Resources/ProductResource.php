@@ -320,7 +320,6 @@ class ProductResource extends Resource
                 return $query
                     ->orderBy('sort', 'asc');
             })
-            ->reorderable('sort')
             ->defaultGroup('category.name');
     }
 

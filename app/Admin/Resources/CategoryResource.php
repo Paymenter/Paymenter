@@ -5,6 +5,7 @@ namespace App\Admin\Resources;
 use App\Admin\Resources\CategoryResource\Pages\CreateCategory;
 use App\Admin\Resources\CategoryResource\Pages\EditCategory;
 use App\Admin\Resources\CategoryResource\Pages\ListCategories;
+use App\Admin\Resources\CategoryResource\RelationManagers\ProductsRelationManager;
 use App\Models\Category;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
@@ -116,7 +117,7 @@ class CategoryResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            ProductsRelationManager::class
         ];
     }
 
