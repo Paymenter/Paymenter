@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'dashboard_title' => 'Instrumentpanel',
+    'dashboard_title' => 'Min side',
     'welcome_back' => 'Velkommen tilbake, :name!',
     'dashboard_description' => 'Behandle dine aktive tjenester, fakturaer, saker, og hold deg oppdatert her.',
     'open_tickets' => 'Åpne saker',
