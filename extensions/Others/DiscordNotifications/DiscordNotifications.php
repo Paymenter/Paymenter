@@ -202,18 +202,18 @@ class DiscordNotifications extends Extension
     private function sendNotification($event, $eventType)
     {
         $fields = [
-            'User Updated' => fn($event) => $this->updatedEvent($event, 'user'),
-            'User Created' => fn($event) => $this->userCreated($event->user),
-            'Order Created' => fn($event) => $this->orderCreated($event->order),
-            'Order Updated' => fn($event) => $this->updatedEvent($event, 'order'),
-            'Invoice Created' => fn($event) => $this->invoiceCreated($event->invoice),
-            'Invoice Updated' => fn($event) => $this->updatedEvent($event, 'invoice'),
-            'Invoice Paid' => fn($event) => $this->createdEvent($event, 'invoice', ['id']),
-            'Ticket Created' => fn($event) => $this->createdEvent($event, 'ticket', ['id', 'user_id']),
-            'Ticket Updated' => fn($event) => $this->updatedEvent($event, 'ticket'),
-            'Ticket Replied' => fn($event) => $this->createdEvent($event, 'ticketMessage', ['ticket_id', 'message']),
-            'Service Created' => fn($event) => $this->serviceCreated($event->service),
-            'Service Updated' => fn($event) => $this->updatedEvent($event, 'service'),
+            'User Updated' => fn ($event) => $this->updatedEvent($event, 'user'),
+            'User Created' => fn ($event) => $this->userCreated($event->user),
+            'Order Created' => fn ($event) => $this->orderCreated($event->order),
+            'Order Updated' => fn ($event) => $this->updatedEvent($event, 'order'),
+            'Invoice Created' => fn ($event) => $this->invoiceCreated($event->invoice),
+            'Invoice Updated' => fn ($event) => $this->updatedEvent($event, 'invoice'),
+            'Invoice Paid' => fn ($event) => $this->createdEvent($event, 'invoice', ['id']),
+            'Ticket Created' => fn ($event) => $this->createdEvent($event, 'ticket', ['id', 'user_id']),
+            'Ticket Updated' => fn ($event) => $this->updatedEvent($event, 'ticket'),
+            'Ticket Replied' => fn ($event) => $this->createdEvent($event, 'ticketMessage', ['ticket_id', 'message']),
+            'Service Created' => fn ($event) => $this->serviceCreated($event->service),
+            'Service Updated' => fn ($event) => $this->updatedEvent($event, 'service'),
         ];
 
         // Check if the event type is valid
@@ -362,7 +362,7 @@ class DiscordNotifications extends Extension
             ],
         ];
 
-        foreach( $invoice->items as $item) {
+        foreach ($invoice->items as $item) {
             $fields[] = [
                 'name' => $item->description,
                 'value' => $item->quantity . ' x ' . $item->formattedPrice,
@@ -372,5 +372,4 @@ class DiscordNotifications extends Extension
 
         return $fields;
     }
-
 }
