@@ -17,6 +17,7 @@ use App\Events\Ticket;
 use App\Events\TicketMessage;
 use App\Events\User;
 use App\Events\User\Created;
+use App\Models\Order;
 use Exception;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Http;
@@ -105,7 +106,7 @@ class DiscordNotifications extends Extension
                             $this->sendNotification($event, $eventType);
                         } catch (Exception $e) {
                             // Log the error
-                            if (config('settings.debug')) {
+                            if (config('settings.debug', false)) {
                                 throw $e;
                             }
                         }
@@ -120,7 +121,9 @@ class DiscordNotifications extends Extension
         $changedFields = [];
         $changedFields[] = [
             'name' => 'ID',
-            'value' => $this->mapId($event->{$model}->id, $model . '_id'),
+            'value' => $model === 'user'
+                ? $event->{$model}->name
+                : $this->mapId($event->{$model}->id, $model . '_id'),
             'inline' => true,
         ];
         foreach ($event->{$model}->getChanges() as $field => $value) {
@@ -132,6 +135,13 @@ class DiscordNotifications extends Extension
                 $changedFields[] = [
                     'name' => ucfirst(str_replace('_', ' ', $field)),
                     'value' => $event->{$model}->getOriginal($field) . ' -> ' . $value,
+                    'inline' => true,
+                ];
+            }
+            if ($field === 'password') {
+                $changedFields[] = [
+                    'name' => 'Password',
+                    'value' => '********',
                     'inline' => true,
                 ];
             }
@@ -151,6 +161,8 @@ class DiscordNotifications extends Extension
             if (str_contains($value, '_id') || $value === 'id') {
                 if ($value === 'id') {
                     $value = $this->mapId($event->{$model}->{$value}, $model . '_id');
+                } elseif ($value === 'user_id') {
+                    $value = '[User ' . $event->{$model}->user->name . '](' . UserResource::getUrl('edit', ['record' => $event->{$model}->user_id]) . ')';
                 } else {
                     $value = $this->mapId($event->{$model}->{$value}, $value);
                 }
@@ -172,7 +184,6 @@ class DiscordNotifications extends Extension
     {
         // Get the route name for the model
         $resources = [
-            'user_id' => UserResource::class,
             'order_id' => OrderResource::class,
             'invoice_id' => InvoiceResource::class,
             'ticket_id' => TicketResource::class,
@@ -191,18 +202,18 @@ class DiscordNotifications extends Extension
     private function sendNotification($event, $eventType)
     {
         $fields = [
-            'User Updated' => fn ($event) => $this->updatedEvent($event, 'user'),
-            'User Created' => fn ($event) => $this->createdEvent($event, 'user', ['id', 'first_name', 'last_name', 'email']),
-            'Order Created' => fn ($event) => $this->createdEvent($event, 'order', ['id', 'formattedTotal', 'user_id']),
-            'Order Updated' => fn ($event) => $this->updatedEvent($event, 'order'),
-            'Invoice Created' => fn ($event) => $this->createdEvent($event, 'invoice', ['id', 'formattedTotal', 'user_id']),
-            'Invoice Updated' => fn ($event) => $this->updatedEvent($event, 'invoice'),
-            'Invoice Paid' => fn ($event) => $this->createdEvent($event, 'invoice', ['id']),
-            'Ticket Created' => fn ($event) => $this->createdEvent($event, 'ticket', ['id', 'user_id']),
-            'Ticket Updated' => fn ($event) => $this->updatedEvent($event, 'ticket'),
-            'Ticket Replied' => fn ($event) => $this->createdEvent($event, 'ticketMessage', ['ticket_id', 'message']),
-            'Service Created' => fn ($event) => $this->createdEvent($event, 'service', ['id', 'user_id', 'formattedPrice']),
-            'Service Updated' => fn ($event) => $this->updatedEvent($event, 'service'),
+            'User Updated' => fn($event) => $this->updatedEvent($event, 'user'),
+            'User Created' => fn($event) => $this->userCreated($event->user),
+            'Order Created' => fn($event) => $this->orderCreated($event->order),
+            'Order Updated' => fn($event) => $this->updatedEvent($event, 'order'),
+            'Invoice Created' => fn($event) => $this->invoiceCreated($event->invoice),
+            'Invoice Updated' => fn($event) => $this->updatedEvent($event, 'invoice'),
+            'Invoice Paid' => fn($event) => $this->createdEvent($event, 'invoice', ['id']),
+            'Ticket Created' => fn($event) => $this->createdEvent($event, 'ticket', ['id', 'user_id']),
+            'Ticket Updated' => fn($event) => $this->updatedEvent($event, 'ticket'),
+            'Ticket Replied' => fn($event) => $this->createdEvent($event, 'ticketMessage', ['ticket_id', 'message']),
+            'Service Created' => fn($event) => $this->serviceCreated($event->service),
+            'Service Updated' => fn($event) => $this->updatedEvent($event, 'service'),
         ];
 
         // Check if the event type is valid
@@ -238,4 +249,128 @@ class DiscordNotifications extends Extension
         // Send the notification to Discord
         Http::post($webhookUrl, $message)->json();
     }
+
+    private function userCreated(\App\Models\User $user)
+    {
+        $fields = [
+            [
+                'name' => 'ID',
+                'value' => $this->mapId($user->id, 'user_id'),
+                'inline' => true,
+            ],
+            [
+                'name' => 'Name',
+                'value' => $user->name,
+                'inline' => true,
+            ],
+            [
+                'name' => 'Email',
+                'value' => $user->email,
+                'inline' => true,
+            ],
+        ];
+
+        // Add properties
+        foreach ($user->properties as $key => $value) {
+            $fields[] = [
+                'name' => ucfirst(str_replace('_', ' ', $key)),
+                'value' => (string) $value,
+                'inline' => true,
+            ];
+        }
+
+        return $fields;
+    }
+
+    private function orderCreated(Order $order)
+    {
+        $fields = [
+            [
+                'name' => 'ID',
+                'value' => $this->mapId($order->id, 'order_id'),
+                'inline' => true,
+            ],
+            [
+                'name' => 'User',
+                'value' => '[User ' . $order->user->name . '](' . UserResource::getUrl('edit', ['record' => $order->user_id]) . ')',
+                'inline' => true,
+            ],
+            [
+                'name' => 'Total',
+                'value' => (string) $order->formattedTotal,
+                'inline' => true,
+            ],
+        ];
+
+        foreach ($order->services as $service) {
+            $fields[] = [
+                'name' => $service->product->name,
+                'value' => '[Service #' . $service->id . '](' . ServiceResource::getUrl('edit', ['record' => $service->id]) . ') (' . $service->formattedPrice . ')',
+                'inline' => true,
+            ];
+
+        }
+
+        return $fields;
+    }
+
+    private function serviceCreated(\App\Models\Service $service)
+    {
+        $fields = [
+            [
+                'name' => 'ID',
+                'value' => $this->mapId($service->id, 'service_id'),
+                'inline' => true,
+            ],
+            [
+                'name' => 'User',
+                'value' => '[User ' . $service->user->name . '](' . UserResource::getUrl('edit', ['record' => $service->user_id]) . ')',
+                'inline' => true,
+            ],
+            [
+                'name' => 'Product',
+                'value' => $service->product->name,
+                'inline' => true,
+            ],
+            [
+                'name' => 'Price',
+                'value' => (string) $service->formattedPrice,
+                'inline' => true,
+            ],
+        ];
+
+        return $fields;
+    }
+
+    private function invoiceCreated(\App\Models\Invoice $invoice)
+    {
+        $fields = [
+            [
+                'name' => 'ID',
+                'value' => $this->mapId($invoice->id, 'invoice_id'),
+                'inline' => true,
+            ],
+            [
+                'name' => 'User',
+                'value' => '[User ' . $invoice->user->name . '](' . UserResource::getUrl('edit', ['record' => $invoice->user_id]) . ')',
+                'inline' => true,
+            ],
+            [
+                'name' => 'Total',
+                'value' => (string) $invoice->formattedTotal,
+                'inline' => true,
+            ],
+        ];
+
+        foreach( $invoice->items as $item) {
+            $fields[] = [
+                'name' => $item->description,
+                'value' => $item->quantity . ' x ' . $item->formattedPrice,
+                'inline' => true,
+            ];
+        }
+
+        return $fields;
+    }
+
 }
