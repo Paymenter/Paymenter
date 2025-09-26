@@ -11,6 +11,7 @@ return [
     'total' => 'Totale',
     'subtotal' => 'Subtotale',
     'invoice' => 'Fattura #:id',
+    'proforma_invoice' => 'Proforma Invoice #:id',
     'unit_price' => 'Prezzo unitario',
     'bill_to' => 'Fattura a',
     'issued_to' => 'Issued To',
@@ -18,6 +19,7 @@ return [
     'payment_pending' => 'Pagamento in sospeso',
     'checking_payment' => 'Controllo Pagamento',
     'invoice_date' => 'Data fattura',
+    'proforma_invoice_date' => 'Proforma Invoice Date',
     'invoice_no' => 'Fattura n.',
     'tax_id' => 'Partita IVA',
     'company_id' => 'ID società',
@@ -31,4 +33,6 @@ return [
     'amount' => 'Quantità',
     'date' => 'Data',
     'due_date' => 'Due Date',
+    'payment_for_invoice' => 'Payment for Invoice #:number',
+    'payment_for_proforma_invoice' => 'Payment for Proforma Invoice #:id',
 ];

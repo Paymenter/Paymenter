@@ -11,6 +11,7 @@ return [
     'total' => 'Yhteensä',
     'subtotal' => 'Välisumma',
     'invoice' => 'Lasku #:id',
+    'proforma_invoice' => 'Proforma Invoice #:id',
     'unit_price' => 'Yksikköhinta',
     'bill_to' => 'Laskutusosoite',
     'issued_to' => 'Asiakas',
@@ -18,6 +19,7 @@ return [
     'payment_pending' => 'Odottaa maksua',
     'checking_payment' => 'Tarkistetaan maksua',
     'invoice_date' => 'Laskun päivämäärä',
+    'proforma_invoice_date' => 'Proforma Invoice Date',
     'invoice_no' => 'Laskun numero',
     'tax_id' => 'Alv-tunnus',
     'company_id' => 'Y-tunnus',
@@ -31,4 +33,6 @@ return [
     'amount' => 'Summa',
     'date' => 'Päivämäärä',
     'due_date' => 'Eräpäivä',
+    'payment_for_invoice' => 'Payment for Invoice #:number',
+    'payment_for_proforma_invoice' => 'Payment for Proforma Invoice #:id',
 ];
