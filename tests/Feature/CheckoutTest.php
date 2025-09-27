@@ -2,7 +2,9 @@
 
 namespace Tests\Feature;
 
+use App\Models\Cart;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Once;
 use Livewire\Livewire;
 use Tests\TestCase;
 
@@ -46,11 +48,28 @@ class CheckoutTest extends TestCase
         ]));
 
         $response->assertRedirect(route('cart'));
-        $response->assertSessionHas('cart');
+        $cart = Cart::where('currency_code', 'USD')->first();
+        $this->assertNotNull($cart);
 
-        $response = $this->get(route('cart'));
+        $this->assertNotNull($cart->items()->first());
+        $response->assertCookie('cart', $cart->ulid);
+
+        Once::flush();
+
+        $response = $this->withCookie('cart', $cart->ulid)->get(route('cart'));
+        $response->assertCookie('cart', $cart->ulid);
         $response->assertStatus(200);
-        $response->assertSee($this->product->product->name);
+        $response->assertSeeText($this->product->product->name);
+
+        $this->assertDatabaseHas('carts', [
+            'currency_code' => 'USD',
+        ]);
+
+        $this->assertDatabaseHas('cart_items', [
+            'cart_id' => $cart->id,
+            'product_id' => $this->product->product->id,
+            'plan_id' => $this->product->plan->id,
+        ]);
     }
 
     public function test_checkout_page_with_multiple_plans(): void

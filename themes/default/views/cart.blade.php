@@ -57,7 +57,7 @@
         @endforeach
     </div>
     <div class="flex flex-col gap-4">
-        @if (!Cart::items()->isEmpty())
+        @if (!Cart::items()->count() === 0)
             <div class="flex flex-col gap-2 w-full col-span-1 bg-background-secondary p-3 rounded-md">
                 <h2 class="text-2xl font-semibold mb-3">
                     {{ __('product.order_summary') }}
