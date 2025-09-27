@@ -2,9 +2,12 @@
 
 namespace App\Models;
 
+use App\Observers\CartObserver;
+use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Model;
 
+#[ObservedBy(CartObserver::class)]
 class Cart extends Model
 {
     use HasUlids;

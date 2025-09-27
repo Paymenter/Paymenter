@@ -86,7 +86,10 @@ class Cart
     public static function remove($index)
     {
         $cart = self::get();
-        $cart->items()->where('id', $index)->delete();
+        $item = $cart->items()->where('id', $index)->first();
+        if ($item) {
+            $item->delete(); // We also want to trigger Eloquent events
+        }
         $cart->load('items.plan', 'items.product', 'items.product.configOptions.children.plans.prices');
     }
 

@@ -3,9 +3,12 @@
 namespace App\Models;
 
 use App\Classes\Price;
+use App\Observers\CartItemObserver;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 
+#[ObservedBy(CartItemObserver::class)]
 class CartItem extends Model
 {
     protected $fillable = [
