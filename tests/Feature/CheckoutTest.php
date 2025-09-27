@@ -97,6 +97,35 @@ class CheckoutTest extends TestCase
             ->set('plan_id', $plan->id)
             ->call('updatePricing')
             ->assertSee($this->product->plan->name)
-            ->assertSee('$20,00');
+            ->assertSee('$20,00')
+            ->call('checkout');
+
+        $this->assertDatabaseHas('carts', [
+            'currency_code' => 'USD',
+        ]);
+    }
+
+    public function test_checkout_page_with_plan_not_in_product(): void
+    {
+        $plan = $this->product->product->plans()->create([
+            'name' => 'Test Plan 2',
+            'billing_unit' => 'month',
+            'billing_period' => 1,
+            'type' => 'recurring',
+        ]);
+        $plan->prices()->create([
+            'price' => 20.00,
+            'currency_code' => 'USD',
+        ]);
+
+        // Add plan
+        $plan = $this->createProduct()->plan;
+
+        Livewire::test('products.checkout', ['category' => $this->product->product->category, 'product' => $this->product->product->slug])
+            ->assertSee($this->product->product->name)
+            ->assertSee('$10,00')
+            ->set('plan_id', $plan->id)
+            ->call('checkout')
+            ->assertHasErrors(['plan_id' => 'exists']);
     }
 }

@@ -145,7 +145,9 @@ class AppServiceProvider extends ServiceProvider
                     $query->where('enabled', true)->orWhere('type', 'server')->orWhere('type', 'gateway');
                 })->get())->unique('extension') as $extension
             ) {
-                ExtensionHelper::call($extension, 'boot', mayFail: true);
+                if (ExtensionHelper::hasFunction($extension, 'boot')) {
+                    ExtensionHelper::call($extension, 'boot', mayFail: true);
+                }
             }
         } catch (Exception $e) {
             // Fail silently

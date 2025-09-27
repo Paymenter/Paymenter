@@ -17,7 +17,7 @@
                 @foreach ($product->availablePlans() as $availablePlan)
                     <option value="{{ $availablePlan->id }}">
                         {{ $availablePlan->name }} -
-                        {{ $availablePlan->price() }}
+                        {{ $availablePlan->price()->formatted->price }}
                         @if ($availablePlan->price()->has_setup_fee)
                             + {{ $availablePlan->price()->formatted->setup_fee }} {{ __('product.setup_fee') }}
                         @endif
@@ -81,13 +81,21 @@
         <h2 class="text-2xl font-semibold  mb-2">
             {{ __('product.order_summary') }}
         </h2>
-        <div class="text- font-semibold flex justify-between">
+        @if ($total->total_tax > 0)
+            <div class="font-semibold flex justify-between">
+                <h4>{{ __('invoices.subtotal') }}:</h4> {{ $total->format($total->subtotal) }}
+            </div>
+            <div class="font-semibold flex justify-between">
+                <h4>{{ \App\Classes\Settings::tax()->name }} ({{ \App\Classes\Settings::tax()->rate }}%):</h4> {{ $total->formatted->total_tax }}
+            </div>
+        @endif
+        <div class="text-lg font-semibold flex justify-between">
             <h4>{{ __('product.total_today') }}:</h4> {{ $total }}
         </div>
         @if ($total->setup_fee && $plan->type == 'recurring')
             <div class="text- font-semibold flex justify-between ">
                 <h4>{{ __('product.then_after_x', ['time' => $plan->billing_period . ' ' . trans_choice(__('services.billing_cycles.' . $plan->billing_unit), $plan->billing_period)]) }}:
-                </h4> {{ $total->format($total->price - $total->setup_fee) }}
+                </h4> {{ $total->format($total->price) }}
             </div>
         @endif
         @if (($product->stock > 0 || !$product->stock) && $product->price()->available)

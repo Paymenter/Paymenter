@@ -7,11 +7,8 @@ use App\Classes\Price;
 use App\Exceptions\DisplayException;
 use App\Helpers\ExtensionHelper;
 use App\Jobs\Server\CreateJob;
-use App\Models\Coupon;
-use App\Models\Gateway;
 use App\Models\Invoice;
 use App\Models\Order;
-use App\Models\Product;
 use App\Models\Service;
 use App\Models\User;
 use Exception;
@@ -39,21 +36,21 @@ class Cart extends Component
 
     public function mount()
     {
-        if (Session::has('coupon')) {
-            $this->coupon = Session::get('coupon');
+        if (ClassesCart::get()->coupon_id) {
+            $this->coupon = ClassesCart::get()->coupon;
         }
         $this->updateTotal();
     }
 
     private function updateTotal()
     {
-        if (ClassesCart::get()->isEmpty()) {
+        if (ClassesCart::items()->count() == 0) {
             $this->total = null;
 
             return;
         }
-        $this->total = new Price(['price' => ClassesCart::get()->sum(fn ($item) => $item->price->total * $item->quantity), 'currency' => ClassesCart::get()->first()->price->currency]);
-        $this->gateways = ExtensionHelper::getCheckoutGateways($this->total->price, $this->total->currency->code, 'cart', ClassesCart::get());
+        $this->total = new Price(['price' => ClassesCart::items()->sum(fn ($item) => $item->price->total * $item->quantity), 'currency' => ClassesCart::get()->currency]);
+        $this->gateways = ExtensionHelper::getCheckoutGateways($this->total->total, $this->total->currency->code, 'cart', ClassesCart::items());
         if (count($this->gateways) > 0 && !array_search($this->gateway, array_column($this->gateways, 'id')) !== false) {
             $this->gateway = $this->gateways[0]->id;
         }
@@ -61,7 +58,7 @@ class Cart extends Component
 
     public function applyCoupon()
     {
-        if ($this->coupon && Session::has('coupon')) {
+        if ($this->coupon && ClassesCart::get()->coupon_id) {
             return $this->notify('Coupon code already applied', 'error');
         }
         try {
@@ -72,14 +69,15 @@ class Cart extends Component
 
             return;
         }
-        $this->coupon = Session::get('coupon');
+        ClassesCart::get()->load('coupon');
+        $this->coupon = ClassesCart::get()->coupon;
         $this->updateTotal();
         $this->notify('Coupon code applied successfully', 'success');
     }
 
     public function removeCoupon()
     {
-        if (!$this->coupon || !Session::has('coupon')) {
+        if (!$this->coupon || !ClassesCart::get()->coupon_id) {
             return $this->notify('No coupon code applied', 'error');
         }
         ClassesCart::removeCoupon();
@@ -96,23 +94,14 @@ class Cart extends Component
 
     public function updateQuantity($index, $quantity)
     {
-        if (ClassesCart::get()->get($index)->product->allow_quantity !== 'combined') {
-            return;
-        }
-        if ($quantity < 1) {
-            $this->removeProduct($index);
-
-            return;
-        }
-        ClassesCart::get()->get($index)->quantity = $quantity;
-        session(['cart' => ClassesCart::get()->toArray()]);
+        ClassesCart::updateQuantity($index, $quantity);
         $this->updateTotal();
     }
 
     // Checkout
     public function checkout()
     {
-        if (ClassesCart::get()->isEmpty() || Session::has('cart') === false) {
+        if (ClassesCart::items()->count() === 0) {
             return $this->notify('Your cart is empty', 'error');
         }
         if (!Auth::check()) {
@@ -126,7 +115,7 @@ class Cart extends Component
         }
 
         // Re-validate coupon if one exists
-        if (Session::has('coupon') && !ClassesCart::validateAndRefreshCoupon()) {
+        if (ClassesCart::get()->coupon && !ClassesCart::validateAndRefreshCoupon()) {
             $this->coupon = null;
             $this->updateTotal();
 
@@ -136,11 +125,13 @@ class Cart extends Component
         // Start database transaction
         DB::beginTransaction();
         try {
+            $cart = ClassesCart::get();
+
             $user = User::where('id', Auth::id())->lockForUpdate()->first();
             // Lock the orderproducts
-            foreach (ClassesCart::get() as $item) {
+            foreach ($cart->items as $item) {
                 // Make sure we have the latest product data and lock it
-                $item->product = Product::where('id', $item->product->id)->lockForUpdate()->first();
+                $item->product->lockForUpdate();
 
                 if (
                     $item->product->per_user_limit > 0 && ($user->services->where('product_id', $item->product->id)->count() >= $item->product->per_user_limit ||
@@ -161,7 +152,7 @@ class Cart extends Component
             // Create the order
             $order = new Order([
                 'user_id' => $user->id,
-                'currency_code' => $this->total->currency->code,
+                'currency_code' => $cart->currency_code,
             ]);
             $order->save();
 
@@ -170,13 +161,13 @@ class Cart extends Component
                 $invoice = new Invoice([
                     'user_id' => $user->id,
                     'due_at' => now()->addDays(7),
-                    'currency_code' => $this->total->currency->code,
+                    'currency_code' => $cart->currency_code,
                 ]);
                 $invoice->save();
             }
 
             // Create the services
-            foreach (ClassesCart::get() as $item) {
+            foreach ($cart->items as $item) {
                 // Is it a lifetime coupon, then we can adjust the price of the service
                 if ($this->coupon && (empty($this->coupon->recurring) || $this->coupon->recurring == 1)) {
                     // Apply coupon only to first billing cycle (use original price for recurring)
@@ -188,15 +179,15 @@ class Cart extends Component
                 // Create the service
                 $service = $order->services()->create([
                     'user_id' => $user->id,
-                    'currency_code' => $this->total->currency->code,
+                    'currency_code' => $cart->currency_code,
                     'product_id' => $item->product->id,
                     'plan_id' => $item->plan->id,
                     'price' => $price,
                     'quantity' => $item->quantity,
-                    'coupon_id' => Session::has('coupon') ? Session::get('coupon')->id : null,
+                    'coupon_id' => $cart->coupon_id,
                 ]);
 
-                foreach ($item->checkoutConfig as $key => $value) {
+                foreach ($item->checkout_config as $key => $value) {
                     $service->properties()->updateOrCreate([
                         'key' => $key,
                     ], [
@@ -204,7 +195,8 @@ class Cart extends Component
                     ]);
                 }
 
-                foreach ($item->configOptions as $configOption) {
+                foreach ($item->config_options as $configOption) {
+                    $configOption = (object) $configOption;
                     if (in_array($configOption->option_type, ['text', 'number', 'checkbox'])) {
                         if (!isset($configOption->value)) {
                             continue;
@@ -267,8 +259,7 @@ class Cart extends Component
             DB::commit();
 
             // Clear the cart
-            Session::forget('cart');
-            Session::forget('coupon');
+            ClassesCart::clear();
 
             // Pass the gateway to the payment page
             Session::put(['gateway' => $this->gateway]);

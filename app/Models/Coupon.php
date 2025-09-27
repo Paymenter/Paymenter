@@ -26,6 +26,7 @@ class Coupon extends Model implements Auditable
         'expires_at' => 'datetime',
         'max_uses' => 'integer',
         'max_uses_per_user' => 'integer',
+        'value' => 'float', 
     ];
 
     /**

@@ -144,7 +144,7 @@
                 <div class="flex justify-between">
                     <div class="text-sm font-medium text-gray-500 uppercase dark:text-base">{{ __('invoices.subtotal') }}</div>
                     <div class="text-base font-medium text-gray-900 dark:text-white">
-                        {{ $invoice->formattedTotal->format($invoice->formattedTotal->price - $invoice->formattedTotal->tax) }}
+                        {{ $invoice->formattedTotal->format($invoice->formattedTotal->subtotal) }}
                     </div>
                 </div>
                 <div class="flex justify-between">

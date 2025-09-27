@@ -1,19 +1,19 @@
 <div class="flex flex-col md:grid md:grid-cols-4 gap-4">
     <div class="flex flex-col col-span-3 gap-4">
-        @if (Cart::get()->isEmpty())
+        @if (Cart::items()->count() === 0)
             <h1 class="text-2xl font-semibold">
                 {{ __('product.empty_cart') }}
             </h1>
         @endif
-        @foreach (Cart::get() as $key => $item)
+        @foreach (Cart::items() as $item)
             <div class="flex flex-row justify-between w-full bg-background-secondary p-3 rounded-md">
                 <div class="flex flex-col gap-1">
                     <h2 class="text-2xl font-semibold">
                         {{ $item->product->name }}
                     </h2>
                     <p class="text-sm">
-                        @foreach ($item->configOptions as $option)
-                            {{ $option->option_name }}: {{ $option->value_name }}<br>
+                        @foreach ($item->config_options as $option)
+                            {{ $option['option_name'] }}: {{ $option['value_name'] }}<br>
                         @endforeach
                     </p>
                 </div>
@@ -27,26 +27,29 @@
                         @if ($item->product->allow_quantity == 'combined')
                             <div class="flex flex-row gap-1 items-center mr-4">
                                 <x-button.secondary
-                                    wire:click="updateQuantity({{ $key }}, {{ $item->quantity - 1 }})"
+                                    wire:click="updateQuantity({{ $item->id }}, {{ $item->quantity - 1 }})"
                                     class="h-full !w-fit">
                                     -
                                 </x-button.secondary>
                                 <x-form.input class="h-10 text-center" disabled divClass="!mt-0 !w-14" value="{{ $item->quantity }}" name="quantity" />
                                 <x-button.secondary
-                                    wire:click="updateQuantity({{ $key }}, {{ $item->quantity + 1 }});"
+                                    wire:click="updateQuantity({{ $item->id }}, {{ $item->quantity + 1 }});"
                                     class="h-full !w-fit">
                                     +
                                 </x-button.secondary>
                             </div>
                         @endif
-                        <a href="{{ route('products.checkout', [$item->product->category, $item->product, 'edit' => $key]) }}"
+                        <a href="{{ route('products.checkout', [$item->product->category, $item->product, 'edit' => $item->id]) }}"
                             wire:navigate>
                             <x-button.primary class="h-fit w-fit">
                                 {{ __('product.edit') }}
                             </x-button.primary>
                         </a>
-                        <x-button.danger wire:click="removeProduct({{ $key }})" class="h-fit !w-fit">
-                            {{ __('product.remove') }}
+                        <x-button.danger wire:click="removeProduct({{ $item->id }})" class="h-fit !w-fit">
+                            <x-loading target="removeProduct({{ $item->id }})" />
+                            <div wire:loading.remove wire:target="removeProduct({{ $item->id }})">
+                                {{ __('product.remove') }}
+                            </div>
                         </x-button.danger>
                     </div>
                 </div>
@@ -54,7 +57,7 @@
         @endforeach
     </div>
     <div class="flex flex-col gap-4">
-        @if (!Cart::get()->isEmpty())
+        @if (!Cart::items()->isEmpty())
             <div class="flex flex-col gap-2 w-full col-span-1 bg-background-secondary p-3 rounded-md">
                 <h2 class="text-2xl font-semibold mb-3">
                     {{ __('product.order_summary') }}
@@ -78,15 +81,15 @@
                     @endif
                 </div>
                 <div class="font-semibold flex justify-between">
-                    <h4>{{ __('invoices.subtotal') }}:</h4> {{ $total->format($total->price - $total->tax) }}
+                    <h4>{{ __('invoices.subtotal') }}:</h4> {{ $total->format($total->subtotal) }}
                 </div>
                 @if ($total->tax > 0)
                     <div class="font-semibold flex justify-between">
-                        <h4>{{ \App\Classes\Settings::tax()->name }} ({{ \App\Classes\Settings::tax()->rate }}%):</h4> {{ $total->formatted->tax }}
+                        <h4>{{ \App\Classes\Settings::tax()->name }} ({{ \App\Classes\Settings::tax()->rate }}%):</h4> {{ $total->format($total->tax) }}
                     </div>
                 @endif
                 <div class="text-lg font-semibold flex justify-between mt-1">
-                    <h4>{{ __('invoices.total') }}:</h4> {{ $total }}
+                    <h4>{{ __('invoices.total') }}:</h4> {{ $total->format($total->total) }}
                 </div>
             </div>
 
@@ -99,7 +102,7 @@
                     @endforeach
                 </x-form.select>
                 @endif
-                @if(Auth::check() && Auth::user()->credits()->where('currency_code', Cart::get()->first()->price->currency->code)->exists() && Auth::user()->credits()->where('currency_code', Cart::get()->first()->price->currency->code)->first()->amount > 0)
+                @if(Auth::check() && Auth::user()->credits()->where('currency_code', Cart::get()->currency_code)->exists() && Auth::user()->credits()->where('currency_code', Cart::get()->currency_code)->first()->amount > 0)
                     <x-form.checkbox wire:model="use_credits" name="use_credits" label="Use Credits" />
                 @endif
                 @endif
