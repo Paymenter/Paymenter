@@ -126,6 +126,21 @@
                                     <a href="{{ route('services.show', $item->reference_type == 'App\Models\Service' ? $item->reference_id : $item->reference->service_id) }}"
                                         class="hover:underline underline-offset-2">{{ $item->description }}
                                     </a>
+                                    @if($item->reference_type == 'App\Models\Service' && $item->reference)
+                                        @php
+                                            $hostname = $item->reference->getHostnameAttribute();
+                                        @endphp
+                                        @if($hostname)
+                                            <br><small class="text-gray-500">{{ __('services.hostname') }}: {{ $hostname }}</small>
+                                        @endif
+                                    @elseif($item->reference_type == 'App\Models\ServiceUpgrade' && $item->reference && $item->reference->service)
+                                        @php
+                                            $hostname = $item->reference->service->getHostnameAttribute();
+                                        @endphp
+                                        @if($hostname)
+                                            <br><small class="text-gray-500">{{ __('services.hostname') }}: {{ $hostname }}</small>
+                                        @endif
+                                    @endif
                                 @else
                                 {{ $item->description }}
                                 @endif

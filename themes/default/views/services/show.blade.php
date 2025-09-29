@@ -55,6 +55,15 @@
                         </span>
                         @endif
                     </div>
+                    @php
+                        $hostname = $service->getHostnameAttribute();
+                    @endphp
+                    @if($hostname)
+                    <div class="flex items-center text-base">
+                        <span class="mr-2">{{ __('services.hostname') }}:</span>
+                        <span class="text-base/50">{{ $hostname }}</span>
+                    </div>
+                    @endif
                     <br>
                     @foreach ($fields as $field)
                     <div class="flex items-center text-base">

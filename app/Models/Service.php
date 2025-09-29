@@ -215,4 +215,33 @@ class Service extends Model implements Auditable
     {
         return $this->hasMany(ServiceUpgrade::class);
     }
+
+    /**
+     * Get the hostname for this service from configuration
+     */
+    public function getHostnameAttribute()
+    {
+        // Look for hostname in service configs
+        $hostnameConfig = $this->configs()->whereHas('configOption', function ($query) {
+            $query->where('name', 'like', '%hostname%')
+                  ->orWhere('name', 'like', '%domain%')
+                  ->orWhere('name', 'like', '%server_name%');
+        })->first();
+
+        if ($hostnameConfig && $hostnameConfig->configValue) {
+            return $hostnameConfig->configValue->value;
+        }
+
+        // Look for hostname in properties
+        $hostnameProperty = $this->properties()->where('key', 'like', '%hostname%')
+            ->orWhere('key', 'like', '%domain%')
+            ->orWhere('key', 'like', '%server_name%')
+            ->first();
+
+        if ($hostnameProperty) {
+            return $hostnameProperty->value;
+        }
+
+        return '';
+    }
 }
