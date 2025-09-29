@@ -153,7 +153,23 @@
         <tbody>
             @foreach($invoice->items as $item)
             <tr>
-                <td>{{ $item->description }}</td>
+                <td>
+                    {{ $item->description }}
+                    @if(in_array($item->reference_type, ['App\Models\Service', 'App\Models\ServiceUpgrade']))
+                        @if($item->reference_type == 'App\Models\Service' && $item->reference)
+                            @php
+                                $hostname = $item->reference->getHostnameAttribute();
+                            @endphp
+                        @elseif($item->reference_type == 'App\Models\ServiceUpgrade' && $item->reference && $item->reference->service)
+                            @php
+                                $hostname = $item->reference->service->getHostnameAttribute();
+                            @endphp
+                        @endif
+                        @if($hostname)
+                            <br><small style="color: #666;">{{ __('services.hostname') }}: {{ $hostname }}</small>
+                        @endif
+                    @endif
+                </td>
                 <td>{{ $item->quantity }}</td>
                 <td>{{ $item->formattedPrice }}</td>
                 <td>{{ $item->formattedTotal }}</td>

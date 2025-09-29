@@ -31,6 +31,20 @@
         </div>
         @foreach ($invoice->items as $item)
             <p class="text-base text-sm">Item(s): {{ $item->description }} ({{ __('invoices.invoice_date')}}: {{ $invoice->created_at->format('d M Y') }})</p>
+            @if(in_array($item->reference_type, ['App\Models\Service', 'App\Models\ServiceUpgrade']))
+                @if($item->reference_type == 'App\Models\Service' && $item->reference)
+                    @php
+                        $hostname = $item->reference->getHostnameAttribute();
+                    @endphp
+                @elseif($item->reference_type == 'App\Models\ServiceUpgrade' && $item->reference && $item->reference->service)
+                    @php
+                        $hostname = $item->reference->service->getHostnameAttribute();
+                    @endphp
+                @endif
+                @if($hostname)
+                    <p class="text-base/60 text-sm">{{ __('services.hostname') }}: {{ $hostname }}</p>
+                @endif
+            @endif
         @endforeach
         </div>
     </a>
