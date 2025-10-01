@@ -28,8 +28,6 @@ class Invoice extends Model implements Auditable
         'due_at' => 'date',
     ];
 
-    protected $with = ['items', 'snapshot'];
-
     public bool $send_create_email = true;
 
     /**
@@ -72,7 +70,7 @@ class Invoice extends Model implements Auditable
     public function remaining(): Attribute
     {
         return Attribute::make(
-            get: fn () => $this->total - $this->transactions->sum('amount')
+            get: fn () => $this->total - $this->transactions->where('status', \App\Enums\InvoiceTransactionStatus::SUCCEEDED)->sum('amount')
         );
     }
 

@@ -3,6 +3,7 @@
 namespace App\Admin\Resources\InvoiceTransactions\Tables;
 
 use App\Admin\Resources\InvoiceResource;
+use App\Enums\InvoiceTransactionStatus;
 use App\Models\InvoiceTransaction;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteAction;
@@ -30,6 +31,17 @@ class InvoiceTransactionsTable
                     ->sortable(),
                 TextColumn::make('transaction_id')
                     ->searchable(),
+                TextColumn::make('status')
+                    ->sortable()
+                    ->badge()
+                    ->color(fn (InvoiceTransaction $record) => match ($record->status) {
+                        InvoiceTransactionStatus::SUCCEEDED => 'success',
+                        InvoiceTransactionStatus::PROCESSING => 'warning',
+                        InvoiceTransactionStatus::FAILED => 'danger',
+                        default => null,
+                    })
+                    ->formatStateUsing(fn (InvoiceTransactionStatus $state): string => ucfirst($state->value))
+                    ->label('Status'),
                 TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()

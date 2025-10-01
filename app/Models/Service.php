@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Classes\Price;
+use App\Classes\Settings;
 use App\Models\Traits\HasProperties;
 use App\Observers\ServiceObserver;
 use Illuminate\Database\Eloquent\Attributes\ObservedBy;
@@ -81,7 +82,7 @@ class Service extends Model implements Auditable
     public function formattedPrice(): Attribute
     {
         return Attribute::make(
-            get: fn () => new Price(['price' => $this->price * $this->quantity, 'currency' => $this->currency])
+            get: fn() => new Price(['price' => $this->price * $this->quantity, 'currency' => $this->currency])
         );
     }
 
@@ -92,14 +93,14 @@ class Service extends Model implements Auditable
     {
         if ($this->plan->type == 'free' || $this->plan->type == 'one-time') {
             return Attribute::make(
-                get: fn () => $this->product->name
+                get: fn() => $this->product->name
             );
         }
         $date = $this->expires_at ?? now();
         $endDate = $date->copy()->{'add' . ucfirst($this->plan->billing_unit) . 's'}($this->plan->billing_period);
 
         return Attribute::make(
-            get: fn () => $this->product->name . ' (' . $date->format('M d, Y') . ' - ' . $endDate->format('M d, Y') . ')'
+            get: fn() => $this->product->name . ' (' . $date->format('M d, Y') . ' - ' . $endDate->format('M d, Y') . ')'
         );
     }
 
@@ -167,14 +168,14 @@ class Service extends Model implements Auditable
     public function cancellable(): Attribute
     {
         return Attribute::make(
-            get: fn () => $this->status !== 'cancelled' && $this->plan->type != 'free' && $this->plan->type != 'one-time' && !$this->cancellation?->exists()
+            get: fn() => $this->status !== 'cancelled' && $this->plan->type != 'free' && $this->plan->type != 'one-time' && !$this->cancellation?->exists()
         );
     }
 
     public function upgradable(): Attribute
     {
         return Attribute::make(
-            get: fn () => ($this->productUpgrades()->count() > 0 || $this->product->upgradableConfigOptions()->count() > 0) && $this->status == 'active' && $this->upgrade->where('status', ServiceUpgrade::STATUS_PENDING)->count() == 0
+            get: fn() => ($this->productUpgrades()->count() > 0 || $this->product->upgradableConfigOptions()->count() > 0) && $this->status == 'active' && $this->upgrade->where('status', ServiceUpgrade::STATUS_PENDING)->count() == 0
         );
     }
 
@@ -197,22 +198,43 @@ class Service extends Model implements Auditable
         });
     }
 
-    public function recalculatePrice()
+    public function calculatePrice()
     {
-        // Calculate the price based on the plan and quantity and config options
-        $price = $this->plan->price()->price * $this->quantity;
+        // Calculate the price based on the plan and config options
+        $price = $this->plan->price()->price;
+
         $this->configs->each(function ($config) use (&$price) {
             $configValue = $config->configValue;
             if ($configValue) {
                 $price += $configValue->price(null, $this->plan->billing_period, $this->plan->billing_unit, $this->currency_code)->price;
             }
         });
-        $this->price = $price;
-        $this->save();
+
+        // Add coupon discount if applicable
+        if ($this->coupon) {
+            $invoices = $this->invoices()->where('status', 'paid')->count() + 1;
+            // If it already used for the recurring period, do not apply the discount
+            if ($this->coupon->recurring == 0 || $invoices <= $this->coupon->recurring) {
+                $discount = $this->coupon->calculateDiscount($price);
+                $price -= $discount;
+            }
+        }
+
+        $price = (new Price([
+            'price' => $price,
+            'currency' => $this->currency,
+        ], apply_exclusive_tax: true, tax: Settings::tax($this->user)))->price;
+
+        return number_format($price, 2, '.', '');
     }
 
     public function upgrade()
     {
         return $this->hasMany(ServiceUpgrade::class);
+    }
+
+    public function billingAgreement()
+    {
+        return $this->belongsTo(BillingAgreement::class, 'billing_agreement_id');
     }
 }

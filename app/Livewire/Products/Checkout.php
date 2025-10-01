@@ -54,6 +54,10 @@ class Checkout extends Component
             $this->plan = $item->plan;
             $this->plan_id = $this->plan->id;
             $this->configOptions = array_column($item->config_options, 'value', 'option_id');
+            // Update config options for checkbox types
+            foreach ($this->product->configOptions->where('type', 'checkbox') as $option) {
+                $this->configOptions[$option->id] = isset($this->configOptions[$option->id]) ? true : false;
+            }
             $this->checkoutConfig = (array) $item->checkout_config;
         } else {
             // Set the first plan as default
@@ -65,7 +69,7 @@ class Checkout extends Component
                 if (in_array($option->type, ['text', 'number'])) {
                     return [$option->id => $this->configOptions[$option->id] ?? null];
                 }
-                if( $option->type === 'checkbox') {
+                if ($option->type === 'checkbox') {
                     return [$option->id => isset($this->configOptions[$option->id]) && in_array($this->configOptions[$option->id], [true, 'true'], true) ? true : false];
                 }
 
@@ -219,14 +223,35 @@ class Checkout extends Component
 
         // Change configOptions so they also contain the name of the option (resulting in less database calls = faster speeds)
         $configOptions = $this->product->configOptions->map(function ($option) {
-            if ($option->type == 'checkbox'){
-                return (object) ['option_id' => $option->id, 'option_name' => $option->name, 'option_type' => $option->type, 'option_env_variable' => $option->env_variable, 'value' => isset($this->configOptions[$option->id]) && in_array($this->configOptions[$option->id], [true, 'true'], true) ? true : false, 'value_name' => isset($this->configOptions[$option->id]) && in_array($this->configOptions[$option->id], [true, 'true'], true) ? 'Yes' : 'No'];
+            if ($option->type == 'checkbox') {
+                return (object) [
+                    'option_id' => $option->id,
+                    'option_name' => $option->name,
+                    'option_type' => $option->type,
+                    'option_env_variable' => $option->env_variable,
+                    'value' => isset($this->configOptions[$option->id]) && in_array($this->configOptions[$option->id], [true, 'true'], true) ? $option->children->first()->id : null,
+                    'value_name' => isset($this->configOptions[$option->id]) && in_array($this->configOptions[$option->id], [true, 'true'], true) ? 'Yes' : 'No'
+                ];
             }
             if (in_array($option->type, ['text', 'number'])) {
-                return (object) ['option_id' => $option->id, 'option_name' => $option->name, 'option_type' => $option->type, 'option_env_variable' => $option->env_variable, 'value' => $this->configOptions[$option->id], 'value_name' => $this->configOptions[$option->id]];
+                return (object) [
+                    'option_id' => $option->id,
+                    'option_name' => $option->name,
+                    'option_type' => $option->type,
+                    'option_env_variable' => $option->env_variable,
+                    'value' => $this->configOptions[$option->id],
+                    'value_name' => $this->configOptions[$option->id]
+                ];
             }
 
-            return (object) ['option_id' => $option->id, 'option_name' => $option->name, 'option_type' => $option->type, 'option_env_variable' => $option->env_variable, 'value' => $this->configOptions[$option->id], 'value_name' => $option->children->where('id', $this->configOptions[$option->id])->first()->name];
+            return (object) [
+                'option_id' => $option->id,
+                'option_name' => $option->name,
+                'option_type' => $option->type,
+                'option_env_variable' => $option->env_variable,
+                'value' => $this->configOptions[$option->id],
+                'value_name' => $option->children->where('id', $this->configOptions[$option->id])->first()->name
+            ];
         });
 
         Cart::add($this->product, $this->plan, $configOptions, $this->checkoutConfig, key: $this->cartProductKey);

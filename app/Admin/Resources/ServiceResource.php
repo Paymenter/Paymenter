@@ -90,12 +90,13 @@ class ServiceResource extends Resource
                     ->placeholder('Enter the quantity'),
                 DatePicker::make('expires_at')
                     ->label('Expires At')
-                    ->required()
+                    ->required(fn (Get $get) => $get('plan')?->type != 'one-time' && $get('plan')?->type != 'free' && $get('status') !== 'pending')
                     ->placeholder('Select the expiration date'),
                 Select::make('coupon_id')
                     ->label('Coupon')
                     ->relationship('coupon', 'code')
                     ->searchable()
+                    ->preload()
                     ->placeholder('Select the coupon'),
                 Select::make('currency_code')
                     ->options(function (Get $get, ?string $state) {
@@ -127,7 +128,22 @@ class ServiceResource extends Resource
                         JS
                     ))
                     ->numeric()
-                    ->minValue(0),
+                    ->minValue(0)
+                    ->hintAction(
+                        Action::make('Recalculate Price')
+                            ->action(function (Component $component, Service $service) {
+                                if ($service) {
+                                    Notification::make('Price Recalculated')
+                                        ->title('The price has been successfully recalculated')
+                                        ->success()
+                                        ->send();
+                                    // Update the form field
+                                    $component->state($service->calculatePrice());
+                                }
+                            })
+                            ->label('Recalculate Price')
+                            ->icon('ri-refresh-line')
+                        ),
                 TextInput::make('subscription_id')
                     ->label('Subscription ID')
                     ->nullable()

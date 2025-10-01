@@ -48,9 +48,10 @@ Route::group(['middleware' => ['web', 'auth', MustVerfiyEmail::class]], function
 });
 
 Route::group(['middleware' => ['web', 'auth']], function () {
-    Route::get('account', Client\Account::class)->name('account');
-    Route::get('account/security', Client\Security::class)->name('account.security');
-    Route::get('account/credits', Client\Credits::class)->name('account.credits');
+    Route::get('/account', Client\Account::class)->name('account');
+    Route::get('/account/security', Client\Security::class)->name('account.security');
+    Route::get('/account/credits', Client\Credits::class)->name('account.credits');
+    Route::get('/account/payment-methods', Client\PaymentMethods::class)->name('account.payment-methods');
 
     Route::get('/email/verify', Auth\VerifyEmail::class)->name('verification.notice');
     Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $request) {

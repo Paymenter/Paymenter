@@ -18,7 +18,7 @@
             <div>
                 <h2 class="text-3xl font-bold">{{ $product->name }}</h2>
                 <h3 class="text-xl font-semibold">
-                    {{ $product->price() }}
+                    {{ $product->price()->formatted->price }}
                 </h3>
             </div>
             @if ($product->stock !== 0 && $product->price()->available)

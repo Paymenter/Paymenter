@@ -79,36 +79,18 @@ class CartItem extends Model
 
                 if ($this->cart->coupon_id && $this->cart->coupon) {
                     $coupon = $this->cart->coupon;
-                    $pdiscount = 0;
-                    $sdiscount = 0;
-                    if ($coupon->applies_to === 'price' || $coupon->applies_to === 'all') {
-                        $pdiscount = self::getCouponDiscountedAmount($price->price, $coupon);
-                        $price->price -= $pdiscount;
-                    }
-                    if ($coupon->applies_to === 'setup_fee' || $coupon->applies_to === 'all') {
-                        $sdiscount = self::getCouponDiscountedAmount($price->setup_fee, $coupon);
-                        $price->setup_fee -= $sdiscount;
-                    }
+                    $pdiscount = $coupon->calculateDiscount($price->price);
+                    $sdiscount = $coupon->calculateDiscount($price->setup_fee, 'setup_fee');
+
+                    $price->price -= $pdiscount;
+                    $price->setup_fee -= $sdiscount;
+
+
                     $price->setDiscount($pdiscount + $sdiscount);
                 }
 
                 return $price;
             }
         );
-    }
-
-    private function getCouponDiscountedAmount($price, Coupon $coupon)
-    {
-        $discount = 0;
-        if ($coupon->type === 'percentage') {
-            $discount = $price * $coupon->value / 100;
-        } elseif ($coupon->type === 'fixed') {
-            $discount = $coupon->value;
-        }
-        if ($price < $discount) {
-            $discount = $price;
-        }
-
-        return $discount;
     }
 }

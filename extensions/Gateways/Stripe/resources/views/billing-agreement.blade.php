@@ -7,7 +7,7 @@
     </div>
     <button id="submit"
         class="mt-4 bg-secondary-500 text-white hover:bg-secondary py-2 px-4 rounded-md w-full bg-gradient-to-tr from-secondary via-50% via-20% via-secondary to-[#5573FD80] duration-300">
-        Pay
+        Authorize
     </button>
 </form>
 @script
@@ -21,6 +21,8 @@
             var stripe = Stripe(
                 "{{ $stripePublishableKey }}"
             );
+
+            const type = '{{ $type }}';
 
             const options = {
                 clientSecret: '{{ $intent->client_secret }}',
@@ -59,40 +61,14 @@
 
                 var {
                     error
-                } = await stripe.confirmPayment({
-                    //`Elements` instance that was used to create the Payment Element
+                } = await stripe.confirmSetup({
                     elements,
                     confirmParams: {
-                        return_url: '{{ route('invoices.show', $invoice) }}?checkPayment=true',
+                        return_url: '{{ route('extensions.gateways.stripe.setup-agreement') }}',
                     },
                 });
 
-
-                // This point will only be reached if there is an immediate error when
-                // confirming the payment. Otherwise, your customer will be redirected to
-                // your `return_url`. For some payment methods like iDEAL, your customer will
-                // be redirected to an intermediate site first to authorize the payment, then
-                // redirected to the `return_url`.
-                if (error.type === "card_error" || error.type === "validation_error") {
-                    showMessage(error.message);
-                } else {
-                    showMessage("An unexpected error occurred.");
-                }
-
-                setLoading(false);
             });
-
-            function showMessage(messageText) {
-                const messageContainer = document.querySelector("#error-message");
-
-                messageContainer.classList.remove("hidden");
-                messageContainer.textContent = messageText;
-
-                setTimeout(function() {
-                    messageContainer.classList.add("hidden");
-                    messageContainer.textContent = "";
-                }, 4000);
-            }
 
             // Show a spinner on payment submission
             function setLoading(isLoading) {

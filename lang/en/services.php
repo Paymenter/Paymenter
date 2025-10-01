@@ -56,4 +56,6 @@ return [
     'price_every_period' => ':price per :period :unit',
     'price_one_time' => ':price one time',
     'expires_at' => 'Expires at',
+    'auto_pay' => 'Auto paying using',
+    'auto_pay_not_configured' => 'Not configured',
 ];

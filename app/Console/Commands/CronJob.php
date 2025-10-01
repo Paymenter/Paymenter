@@ -57,8 +57,7 @@ class CronJob extends Command
                         $iteration = $service->invoices()->count() + 1;
                         if ($iteration == $service->coupon->recurring) {
                             // Calculate the price
-                            $price = $service->plan->prices()->where('currency_code', $service->currency_code)->first()->price;
-                            $service->price = $price;
+                            $service->price = $service->calculatePrice();
                             $service->save();
                         }
                     }

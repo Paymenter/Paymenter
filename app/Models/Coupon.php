@@ -26,7 +26,7 @@ class Coupon extends Model implements Auditable
         'expires_at' => 'datetime',
         'max_uses' => 'integer',
         'max_uses_per_user' => 'integer',
-        'value' => 'float', 
+        'value' => 'float',
     ];
 
     /**
@@ -56,5 +56,27 @@ class Coupon extends Model implements Auditable
         return $this->services()
             ->where('user_id', $userId)
             ->count() >= $this->max_uses_per_user;
+    }
+
+    public function calculateDiscount($price, $type = 'price')
+    {
+        if (!in_array($type, ['price', 'setup_fee'])) {
+            throw new \InvalidArgumentException('Invalid type for coupon discount calculation');
+        }
+        if (!in_array($this->applies_to, ['all', $type])) {
+            return 0;
+        }
+
+        $discount = 0;
+        if ($this->type === 'percentage') {
+            $discount = $price * $this->value / 100;
+        } elseif ($this->type === 'fixed') {
+            $discount = $this->value;
+        }
+        if ($price < $discount) {
+            $discount = $price;
+        }
+
+        return $discount;
     }
 }

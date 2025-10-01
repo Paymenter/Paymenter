@@ -82,6 +82,7 @@ class EditService extends EditRecord
                 })
                 ->color('primary')
                 ->modalSubmitActionLabel('Trigger'),
+                
             AuditAction::make()->auditChildren([
                 'order',
                 'invoices',

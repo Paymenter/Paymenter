@@ -23,9 +23,6 @@ class Cart extends Component
     #[Locked]
     public $total;
 
-    #[Locked]
-    public array $gateways;
-
     public $gateway;
 
     public $coupon;
@@ -49,7 +46,7 @@ class Cart extends Component
 
             return;
         }
-        $this->total = new Price(['price' => ClassesCart::items()->sum(fn ($item) => $item->price->total * $item->quantity), 'currency' => ClassesCart::get()->currency]);
+        $this->total = new Price(['price' => ClassesCart::items()->sum(fn($item) => $item->price->total * $item->quantity), 'currency' => ClassesCart::get()->currency]);
         $this->gateways = ExtensionHelper::getCheckoutGateways($this->total->total, $this->total->currency->code, 'cart', ClassesCart::items());
         if (count($this->gateways) > 0 && !array_search($this->gateway, array_column($this->gateways, 'id')) !== false) {
             $this->gateway = $this->gateways[0]->id;
@@ -135,7 +132,7 @@ class Cart extends Component
 
                 if (
                     $item->product->per_user_limit > 0 && ($user->services->where('product_id', $item->product->id)->count() >= $item->product->per_user_limit ||
-                        ClassesCart::get()->filter(fn ($it) => $it->product->id == $item->product->id)->sum(fn ($it) => $it->quantity) + $user->services->where('product_id', $item->product->id)->count() > $item->product->per_user_limit
+                        ClassesCart::get()->filter(fn($it) => $it->product->id == $item->product->id)->sum(fn($it) => $it->quantity) + $user->services->where('product_id', $item->product->id)->count() > $item->product->per_user_limit
                     )
                 ) {
                     throw new DisplayException(__('product.user_limit', ['product' => $item->product->name]));
@@ -197,7 +194,7 @@ class Cart extends Component
 
                 foreach ($item->config_options as $configOption) {
                     $configOption = (object) $configOption;
-                    if (in_array($configOption->option_type, ['text', 'number', 'checkbox'])) {
+                    if (in_array($configOption->option_type, ['text', 'number'])) {
                         if (!isset($configOption->value)) {
                             continue;
                         }
@@ -208,6 +205,9 @@ class Cart extends Component
                             'value' => $configOption->value,
                         ]);
 
+                        continue;
+                    }
+                    if (!isset($configOption->value) || $configOption->value === null) {
                         continue;
                     }
 
@@ -237,32 +237,11 @@ class Cart extends Component
                 }
             }
 
-            // We don't wanna use credits if the total price is 0, duh
-            if ($this->use_credits && $this->total->total > 0) {
-                $credit = Auth::user()->credits()->where('currency_code', $this->total->currency->code)->first();
-                if ($credit && $credit->amount > 0) {
-                    // Is it more credits or less credits than the total price?
-                    if ($credit->amount >= $this->total->total) {
-                        $credit->amount -= $this->total->total;
-                        $credit->save();
-                        ExtensionHelper::addPayment($invoice->id, null, amount: $this->total->total);
-                    } else {
-                        $this->total->total -= $credit->amount;
-                        ExtensionHelper::addPayment($invoice->id, null, amount: $credit->amount);
-                        $credit->amount = 0;
-                        $credit->save();
-                    }
-                }
-            }
-
             // Commit the transaction
             DB::commit();
 
             // Clear the cart
             ClassesCart::clear();
-
-            // Pass the gateway to the payment page
-            Session::put(['gateway' => $this->gateway]);
 
             if ($this->total->price == 0) {
                 // Is it only one item? Then redirect to the service page
@@ -272,7 +251,7 @@ class Cart extends Component
 
                 return $this->redirect(route('services'), true);
             } else {
-                return $this->redirect(route('invoices.show', $invoice) . '?pay');
+                return $this->redirect(route('invoices.show', [$invoice, 'pay' => true]), true);
             }
         } catch (Exception $e) {
             // Rollback the transaction

@@ -57,7 +57,7 @@
         @endforeach
     </div>
     <div class="flex flex-col gap-4">
-        @if (!Cart::items()->count() === 0)
+        @if (Cart::items()->count() > 0)
             <div class="flex flex-col gap-2 w-full col-span-1 bg-background-secondary p-3 rounded-md">
                 <h2 class="text-2xl font-semibold mb-3">
                     {{ __('product.order_summary') }}
@@ -94,18 +94,6 @@
             </div>
 
             <div class="flex flex-col gap-2 w-full col-span-1 bg-background-secondary p-3 rounded-md">
-                @if($total->price > 0)
-                @if(count($gateways) > 1)
-                <x-form.select wire:model.live="gateway" name="gateway" :label="__('product.payment_method')">
-                    @foreach ($gateways as $gateway)
-                    <option value="{{ $gateway->id }}">{{ $gateway->name }}</option>
-                    @endforeach
-                </x-form.select>
-                @endif
-                @if(Auth::check() && Auth::user()->credits()->where('currency_code', Cart::get()->currency_code)->exists() && Auth::user()->credits()->where('currency_code', Cart::get()->currency_code)->first()->amount > 0)
-                    <x-form.checkbox wire:model="use_credits" name="use_credits" label="Use Credits" />
-                @endif
-                @endif
                 @if(config('settings.tos'))
                     <x-form.checkbox wire:model="tos" name="tos">
                         {{ __('product.tos') }}

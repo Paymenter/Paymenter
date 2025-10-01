@@ -2,6 +2,7 @@
 
 namespace App\Admin\Widgets;
 
+use App\Enums\InvoiceTransactionStatus;
 use App\Models\InvoiceTransaction;
 use App\Models\Order;
 use Carbon\Carbon;
@@ -46,7 +47,7 @@ class Revenue extends ChartWidget
             'year' => 'month',
         };
 
-        $revenue = Trend::model(InvoiceTransaction::class)
+        $revenue = Trend::query(InvoiceTransaction::query()->where('status', InvoiceTransactionStatus::SUCCEEDED))
             ->between(
                 start: $start,
                 end: $end,
@@ -54,7 +55,7 @@ class Revenue extends ChartWidget
             ->{'per' . ucfirst($per)}()
             ->sum('amount');
 
-        $netRevenue = Trend::model(InvoiceTransaction::class)
+        $netRevenue = Trend::query(InvoiceTransaction::query()->where('status', InvoiceTransactionStatus::SUCCEEDED))
             ->between(
                 start: $start,
                 end: $end,

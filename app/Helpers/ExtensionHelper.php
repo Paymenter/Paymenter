@@ -4,12 +4,16 @@ namespace App\Helpers;
 
 use App\Attributes\ExtensionMeta;
 use App\Classes\FilamentInput;
+use App\Enums\InvoiceTransactionStatus;
+use App\Models\BillingAgreement;
 use App\Models\Extension;
 use App\Models\Gateway;
 use App\Models\Invoice;
+use App\Models\InvoiceTransaction;
 use App\Models\Product;
 use App\Models\Server;
 use App\Models\Service;
+use App\Models\User;
 use Exception;
 use Filament\Forms\Components\Placeholder;
 use Illuminate\Database\Eloquent\Collection;
@@ -37,13 +41,13 @@ class ExtensionHelper
 
         if ($type && $type == 'other') {
             // Filter out gateways and servers
-            $extensions = array_filter($extensions, fn ($extension) => !in_array($extension['type'], ['gateway', 'server']));
+            $extensions = array_filter($extensions, fn($extension) => !in_array($extension['type'], ['gateway', 'server']));
 
             return $extensions;
         } elseif ($type) {
             $type = strtolower($type);
 
-            return array_filter($extensions, fn ($extension) => $extension['type'] === $type);
+            return array_filter($extensions, fn($extension) => $extension['type'] === $type);
         }
 
         return $extensions;
@@ -212,7 +216,7 @@ class ExtensionHelper
         // Filter out already installed extensions
         $installedExtensions = Extension::all()->pluck('extension')->toArray();
 
-        return array_filter($extensions, fn ($extension) => !in_array($extension['name'], $installedExtensions));
+        return array_filter($extensions, fn($extension) => !in_array($extension['name'], $installedExtensions));
     }
 
     public static function call($extension, $function, $args = [], $mayFail = false)
@@ -387,13 +391,71 @@ class ExtensionHelper
         return self::getExtension('gateway', $gateway->extension, $gateway->settings)->pay($invoice, $invoice->remaining);
     }
 
+    public static function charge(Gateway $gateway, Invoice $invoice, BillingAgreement $billingAgreement): bool
+    {
+        return self::getExtension('gateway', $gateway->extension, $gateway->settings)->charge($invoice, $invoice->remaining, $billingAgreement);
+    }
+
+
+    public static function getBillingAgreementGateways($currency)
+    {
+        $gateways = [];
+
+        foreach (Gateway::with('settings')->get() as $gateway) {
+            if (self::hasFunction($gateway, 'supportsBillingAgreements')) {
+                if (self::getExtension('gateway', $gateway->extension, $gateway->settings)->supportsBillingAgreements($currency)) {
+                    $gateways[] = $gateway;
+                }
+            }
+        }
+
+        return $gateways;
+    }
+
+    /**
+     * Create billing agreement
+     * 
+     * @param \App\Models\User $user
+     * @param \App\Models\Gateway $gateway
+     * @return string|view
+     */
+    public static function createBillingAgreement($user, $gateway)
+    {
+        return self::getExtension('gateway', $gateway->extension, $gateway->settings)->createBillingAgreement($user);
+    }
+
+    /**
+     * Cancel billing agreement
+     * @param \App\Models\BillingAgreement $billingAgreement
+     * @return bool
+     */
+    public static function cancelBillingAgreement(BillingAgreement $billingAgreement)
+    {
+        return self::getExtension('gateway', $billingAgreement->gateway->extension, $billingAgreement->gateway->settings)->cancelBillingAgreement($billingAgreement);
+    }
+
+    public static function makeBillingAgreement(User $user, $gateway, $name, $externalReference)
+    {
+        $gateway = Gateway::where('extension', $gateway)->firstOrFail();
+
+        $billingAgreement = BillingAgreement::updateOrCreate([
+            'external_reference' => $externalReference,
+            'user_id' => $user->id,
+            'gateway_id' => $gateway->id,
+        ], [
+            'name' => $name,
+        ]);
+
+        return $billingAgreement;
+    }
+
     /**
      * Add payment to invoice
      *
      * @param  Invoice|int  $invoice
      * @param  Gateway|null  $gateway
      */
-    public static function addPayment($invoice, $gateway, $amount, $fee = null, $transactionId = null)
+    public static function addPayment($invoice, $gateway, $amount, $fee = null, $transactionId = null, InvoiceTransactionStatus $status = InvoiceTransactionStatus::SUCCEEDED)
     {
         if (isset($gateway)) {
             $gateway = Gateway::where('extension', $gateway)->first();
@@ -403,25 +465,52 @@ class ExtensionHelper
 
         if (!$transactionId) {
             $transaction = $invoice->transactions()->create([
-                'gateway_id' => $gateway ? $gateway->id : null,
+                'gateway_id' => $gateway?->id,
                 'amount' => $amount,
                 'fee' => $fee,
+                'status' => $status,
             ]);
         } else {
+            $updateData = [
+                'gateway_id' => $gateway?->id,
+                'amount' => $amount,
+                'status' => $status,
+            ];
+            if ($fee !== null) {
+                $updateData['fee'] = $fee;
+            }
+
             $transaction = $invoice->transactions()->updateOrCreate(
                 [
                     'transaction_id' => $transactionId,
                 ],
-                [
-                    'gateway_id' => $gateway ? $gateway->id : null,
-                    'amount' => $amount,
-                    'fee' => $fee,
-                ]
+                $updateData
             );
         }
 
         return $transaction;
     }
+
+    public static function addProccesingPayment($invoice, $gateway, $amount, $fee = null, $transactionId = null)
+    {
+        return self::addPayment($invoice, $gateway, $amount, $fee, $transactionId, InvoiceTransactionStatus::PROCESSING);
+    }
+
+    public static function addFailedPayment($invoice, $gateway, $amount, $fee = null, $transactionId = null)
+    {
+        return self::addPayment($invoice, $gateway, $amount, $fee, $transactionId, InvoiceTransactionStatus::FAILED);
+    }
+
+    public static function addPaymentFee($transactionId, $fee)
+    {
+        $transaction = InvoiceTransaction::where('transaction_id', $transactionId)->firstOrFail();
+
+        $transaction->fee = $fee;
+        $transaction->save();
+
+        return $transaction;
+    }
+
 
     /**
      * Cancel subscription

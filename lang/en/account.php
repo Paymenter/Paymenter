@@ -34,6 +34,7 @@ return [
 
         'currency' => 'Currency',
         'amount' => 'Amount',
+        'payment_gateway' => 'Payment gateway',
     ],
 
     'notifications' => [
@@ -49,4 +50,27 @@ return [
     'add_credit' => 'Add credit',
     'credit_deposit' => 'Credit deposit (:currency)',
 
+
+    'payment_methods' => 'Payment Methods',
+    'recent_transactions' => 'Recent Transactions',
+    'saved_payment_methods' => 'Saved Payment Methods',
+    'setup_payment_method' => 'Set up a new payment method',
+    'no_saved_payment_methods' => 'You have no saved payment methods.',
+    'saved_payment_methods_description' => 'Manage your saved payment methods for faster checkout and automatic payments.',
+    'no_saved_payment_methods_description' => 'You can add a payment method to make future payments faster and easier, and enable automatic payments for your services.',
+    'add_payment_method' => 'Add payment method',
+    'payment_method_statuses' => [
+        'active' => 'Active',
+        'inactive' => 'Inactive',
+        'expired' => 'Expired',
+        'pending' => 'Pending',
+    ],
+    'payment_method_added' => 'Payment method has been added.',
+    'payment_method_add_failed' => 'Failed to add payment method. Please try again.',
+    'services_linked' => ':count service(s) linked',
+    'remove' => 'Remove',
+    'remove_payment_method' => 'Remove Payment Method',
+    'remove_payment_method_confirm' => 'Are you sure you want to remove :name? This action cannot be undone.',
+    'cancel' => 'Cancel',
+    'confirm' => 'Yes, Remove',
 ];
