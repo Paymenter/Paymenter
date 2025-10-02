@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Middleware\Api\AdminApi;
+use App\Http\Middleware\CheckoutParameterMiddleware;
+use App\Http\Middleware\CurrencyMiddleware;
 use App\Http\Middleware\EnsureUserHasPermissions;
 use App\Http\Middleware\ImpersonateMiddleware;
 use App\Http\Middleware\ProxyMiddleware;
@@ -24,6 +26,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'has' => EnsureUserHasPermissions::class,
             'scope' => CheckForAnyScope::class,
             'api.admin' => AdminApi::class,
+            'checkout' => CheckoutParameterMiddleware::class,
         ]);
         $middleware->web([
             SetLocale::class,

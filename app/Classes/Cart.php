@@ -40,10 +40,9 @@ class Cart
         return self::get()->items;
     }
 
-    public static function add(Product $product, Plan $plan, $configOptions, $checkoutConfig, $quantity = 1, $key = null)
+    public static function createCart()
     {
-        // Match on key
-        $cart = self::get();
+        $cart = self::getOnce();
         if (!$cart->exists) {
             $cart->user_id = Auth::id();
             $cart->currency_code = session('currency', session('currency', config('settings.default_currency')));
@@ -51,6 +50,14 @@ class Cart
             Cookie::queue('cart', $cart->ulid, 60 * 24 * 30); // 30 days
             $cart = \App\Models\Cart::find($cart->id);
         }
+
+        return $cart;
+    }
+
+    public static function add(Product $product, Plan $plan, $configOptions, $checkoutConfig, $quantity = 1, $key = null)
+    {
+        // Match on key
+        $cart = self::createCart();
 
         $item = $cart->items()->updateOrCreate([
             'id' => $key,
@@ -61,7 +68,7 @@ class Cart
             'checkout_config' => $checkoutConfig,
             'quantity' => $quantity,
         ]);
-
+        $cart->load('items.plan', 'items.product', 'items.product.configOptions.children.plans.prices');
 
         if ($cart->coupon_id) {
             // Reapply coupon to the cart
@@ -151,12 +158,12 @@ class Cart
         $coupon = self::validateCoupon($code);
 
         $wasSuccessful = false;
-        $cart = self::get();
+        $cart = self::createCart();
         $cart->coupon_id = $coupon->id;
         $cart->save();
 
-        // Check if any of the items have gotten a discount
-        if ($cart->items->filter(fn($item) => $item->price->hasDiscount())->isNotEmpty()) {
+        // Check if any of the items have gotten a discount, if empty also set succesful because it's valid for future use (will get rechecked on checkout
+        if ($cart->items->filter(fn($item) => $item->price->hasDiscount())->isNotEmpty() || $cart->items->isEmpty()) {
             $wasSuccessful = true;
         } else {
             $cart->coupon_id = null;
