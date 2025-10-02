@@ -207,17 +207,14 @@
                     {{ __('invoices.paid') }}
                 </div>
                 @elseif ($invoice->status == 'pending')
-                @if($checkPayment || $invoice->transactions->where('status',
-                \App\Enums\InvoiceTransactionStatus::PROCESSING)->where('created_at', '>=', now()->subDays(1))->count()
-                > 0)
+                @if($checkPayment || $invoice->transactions->where('status', \App\Enums\InvoiceTransactionStatus::PROCESSING)->where('created_at', '>=', now()->subDays(1))->count() > 0)
                 <div class="text-yellow-500 mb-6 text-lg text-center flex items-center justify-center">
                     {{ __('invoices.payment_processing') }}
                     <x-ri-loader-5-fill aria-hidden="true" class="size-6 ms-2 fill-yellow-600 animate-spin" />
                 </div>
                 @else
                 <div class="mb-6 text-lg text-center">
-                    @if($invoice->transactions->where('status',
-                    \App\Enums\InvoiceTransactionStatus::PROCESSING)->count() > 0)
+                    @if($invoice->transactions->where('status', \App\Enums\InvoiceTransactionStatus::PROCESSING)->count() > 0)
                     <span class="text-yellow-500">{{ __('invoices.payment_processing') }}</span>
                     <p class="text-sm">{{ __('invoices.duplicate_payment') }}</p>
                     @else

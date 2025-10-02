@@ -88,6 +88,31 @@ class PayPal extends Gateway
         ]);
     }
 
+    public function charge(Invoice $invoice, $total, \App\Models\BillingAgreement $billingAgreement)
+    {
+        $url = $this->config('test_mode') ? 'https://api-m.sandbox.paypal.com' : 'https://api-m.paypal.com';
+        $result = $this->request('post', $url . '/v2/checkout/orders', [
+            'intent' => 'CAPTURE',
+            'purchase_units' => [
+                [
+                    'invoice_id' => $invoice->id,
+                    'amount' => [
+                        'currency_code' => $invoice->currency_code,
+                        'value' => $total,
+                    ],
+                ],
+            ],
+            'payment_source' => [
+                'paypal' => [
+                    'vault_id' => $billingAgreement->external_reference,
+                ],
+            ],
+        ]);
+
+        return true;
+    }
+
+
     public function boot()
     {
         require __DIR__ . '/routes.php';
@@ -191,6 +216,7 @@ class PayPal extends Gateway
         return Http::withHeaders([
                     'Content-Type' => 'application/json',
                     'Authorization' => 'Bearer ' . $this->generateAccessToken(),
+                    'PayPal-Request-Id' => uniqid(),
                 ])->$method($url, $data)->object();
     }
 
@@ -202,7 +228,7 @@ class PayPal extends Gateway
             'intent' => 'CAPTURE',
             'purchase_units' => [
                 [
-                    'reference_id' => $invoice->id,
+                    'invoice_id' => $invoice->id,
                     'amount' => [
                         'currency_code' => $invoice->currency_code,
                         'value' => $total,
@@ -238,7 +264,7 @@ class PayPal extends Gateway
             'intent' => 'CAPTURE',
         ]);
 
-        ExtensionHelper::addPayment($response->purchase_units[0]->reference_id, 'PayPal', $response->purchase_units[0]->payments->captures[0]->amount->value, $response->purchase_units[0]->payments->captures[0]->seller_receivable_breakdown->paypal_fee->value, $response->id);
+        ExtensionHelper::addPayment($response->purchase_units[0]->invoice_id, 'PayPal', $response->purchase_units[0]->payments->captures[0]->amount->value, $response->purchase_units[0]->payments->captures[0]->seller_receivable_breakdown->paypal_fee->value, $response->id);
 
         return $response;
     }
@@ -288,6 +314,12 @@ class PayPal extends Gateway
             $billingAgreement = \App\Models\BillingAgreement::where('external_reference', $body['resource']['id'])->first();
             if ($billingAgreement) {
                 $billingAgreement->delete();
+            }
+        } elseif($body['event_type'] === 'PAYMENT.CAPTURE.COMPLETED' && isset($body['resource']['supplementary_data']['related_ids']['order_id'])) {
+            $orderID = $body['resource']['supplementary_data']['related_ids']['order_id'];
+            $order = $this->request('get', ($this->config('test_mode') ? 'https://api-m.sandbox.paypal.com' : 'https://api-m.paypal.com') . '/v2/checkout/orders/' . $orderID);
+            if (isset($order->purchase_units[0]->invoice_id)) {
+                ExtensionHelper::addPayment($order->purchase_units[0]->invoice_id, 'PayPal', $order->purchase_units[0]->payments->captures[0]->amount->value, $order->purchase_units[0]->payments->captures[0]->seller_receivable_breakdown->paypal_fee->value, $body['resource']['id']);
             }
         }
 
