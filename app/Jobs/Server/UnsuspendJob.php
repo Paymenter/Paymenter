@@ -33,6 +33,7 @@ class UnsuspendJob implements ShouldQueue
             if ($e->getMessage() == 'No server assigned to this product') {
                 return;
             }
+            report($e);
         }
     }
 }
