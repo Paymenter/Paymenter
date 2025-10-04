@@ -105,7 +105,7 @@ class CronJob extends Command
 
                     $service->update(['status' => 'cancelled']);
 
-                    if ($service->product->stock) {
+                    if ($service->product->stock !== null) {
                         $service->product->increment('stock', $service->quantity);
                     }
 
@@ -155,7 +155,7 @@ class CronJob extends Command
                     // Cancel outstanding invoices
                     $service->invoices()->where('status', 'pending')->update(['status' => 'cancelled']);
 
-                    if ($service->product->stock) {
+                    if ($service->product->stock !== null) {
                         $service->product->increment('stock', $service->quantity);
                     }
 

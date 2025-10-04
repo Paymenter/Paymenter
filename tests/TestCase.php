@@ -9,13 +9,14 @@ abstract class TestCase extends BaseTestCase
     protected bool $seed = true;
 
     //
-    protected function createProduct()
+    protected function createProduct(array $attributes = [])
     {
+
         // Create product + plan + price
-        $product = \App\Models\Product::factory()->create([
+        $product = \App\Models\Product::factory()->create(array_merge([
             'name' => 'Test Product',
             'description' => 'This is a test product.',
-        ]);
+        ], $attributes));
 
         $this->assertDatabaseHas('products', [
             'id' => $product->id,
