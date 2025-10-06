@@ -5,14 +5,14 @@ namespace App\Console\Commands\Extension;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
 
-class Upgrade extends Command
+class Install extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'app:extension:upgrade {type} {name} {oldVersion?}';
+    protected $signature = 'app:extension:install {type} {name} {oldVersion?}';
 
     /**
      * The console command description.
@@ -32,13 +32,13 @@ class Upgrade extends Command
         }
 
         $extensionInstance = new $extensionClass;
-        if (method_exists($extensionInstance, 'upgraded')) {
+        if (method_exists($extensionInstance, 'installed')) {
             try {
-                $extensionInstance->upgraded($this->argument('oldVersion'));
+                $extensionInstance->installed();
             } catch (\Exception $e) {
-                Log::error("Error during upgrade of extension {$this->argument('name')}: " . $e->getMessage());
+                Log::error("Error during installation of extension {$this->argument('name')}: " . $e->getMessage());
 
-                return $this->error('An error occurred while upgrading the extension: ' . $e->getMessage());
+                return $this->error('An error occurred while installing the extension: ' . $e->getMessage());
             }
         }
     }
