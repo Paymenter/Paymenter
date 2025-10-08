@@ -26,6 +26,7 @@
         "laravel/passport": "^12.0",
         "laravel/socialite": "^5.14",
         "laravel/tinker": "^2.9",
+        "minishlink/web-push": "9",
         "owen-it/laravel-auditing": "^14.0",
         "qirolab/laravel-themer": "^2.2.1",
         "robthree/twofactorauth": "^3.0",
