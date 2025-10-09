@@ -1,19 +1,19 @@
 <?php
 
 return [
-    'affiliate' => 'Affiliate',
-    'signup-for-affiliate' => 'Signup for Affiliate',
-    'code' => 'Code',
-    'visitors' => 'Visitors',
-    'total-visitors' => 'Total Visitors',
-    'signups' => 'Signups',
-    'total-signups' => 'Total Signups',
-    'earnings' => 'Earnings',
-    'total-earnings' => 'Total Earnings',
-    'your-affiliate-link' => 'Your affiliate link',
-    'copy' => 'Copy',
+    'affiliate' => 'Satış Ortaklığı',
+    'signup-for-affiliate' => 'Satış Ortaklığına Kaydol',
+    'code' => 'Kod',
+    'visitors' => 'Ziyaretçiler',
+    'total-visitors' => 'Toplam Ziyaretçi',
+    'signups' => 'Yeni Kayıtlar',
+    'total-signups' => 'Toplam Yeni Kayıt',
+    'earnings' => 'Kazançlar',
+    'total-earnings' => 'Toplam Kazanç',
+    'your-affiliate-link' => 'Satış Ortaklığı Bağlantınız',
+    'copy' => 'Kopyala',
 
-    'you-havent-signed-up-yet' => 'You have not signed up for affiliates program yet!',
-    'you-are-already-affiliated' => 'You have already signed up for affiliate program.',
-    'signup-success' => 'Successfully signed up for affiliate program!',
+    'you-havent-signed-up-yet' => 'Henüz satış ortaklığına kaydolmadınız.',
+    'you-are-already-affiliated' => 'Zaten satış ortaklığına kayıtlısınız.',
+    'signup-success' => 'Satış ortaklığına başarıyla kaydoldunuz.',
 ];
