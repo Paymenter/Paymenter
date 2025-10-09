@@ -1,11 +1,11 @@
 <?php
 
 return [
-    'dashboard_title' => 'Dashboard',
-    'welcome_back' => 'Welcome back, :name!',
-    'dashboard_description' => 'Manage your active services, invoices, tickets, and stay updated here.',
-    'open_tickets' => 'Open Tickets',
-    'unpaid_invoices' => 'Unpaid Invoices',
-    'active_services' => 'Active Services',
-    'view_all' => 'View All',
+    'dashboard_title' => 'Hızlı Bakış',
+    'welcome_back' => ':name, hoş geldiniz!',
+    'dashboard_description' => 'Aktif hizmetlerinizi, faturalarınızı ve destek taleplerinizi yönetin, gelişmelerden haberdar olun.',
+    'open_tickets' => 'Açık Destek Talepleri',
+    'unpaid_invoices' => 'Ödenmemiş Faturalar',
+    'active_services' => 'Aktif Hizmetler',
+    'view_all' => 'Tümünü Göster',
 ];
