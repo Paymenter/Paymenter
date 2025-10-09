@@ -52,6 +52,7 @@ Route::group(['middleware' => ['web', 'auth']], function () {
     Route::get('/account/security', Client\Security::class)->name('account.security');
     Route::get('/account/credits', Client\Credits::class)->name('account.credits');
     Route::get('/account/payment-methods', Client\PaymentMethods::class)->name('account.payment-methods');
+    Route::get('/account/notifications', Client\Notifications::class)->name('account.notifications');
 
     Route::get('/email/verify', Auth\VerifyEmail::class)->name('verification.notice');
     Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $request) {

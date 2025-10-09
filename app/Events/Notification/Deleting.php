@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Events\Cart;
+namespace App\Events\Notification;
 
-use App\Models\Cart;
+use App\Models\Notification;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
@@ -14,5 +14,5 @@ class Deleting
     /**
      * Create a new event instance.
      */
-    public function __construct(public Cart $cart) {}
+    public function __construct(public Notification $notification) {}
 }

@@ -152,6 +152,11 @@ class Navigation
                                 'name' => __('account.payment_methods'),
                                 'route' => 'account.payment-methods',
                                 'priority' => 40,
+                            ],
+                            [
+                                'name' => __('navigation.notifications'),
+                                'route' => 'account.notifications',
+                                'priority' => 50,
                             ]
                         ]
                     ),

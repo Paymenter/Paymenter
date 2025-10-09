@@ -73,4 +73,17 @@ return [
     'remove_payment_method_confirm' => 'Are you sure you want to remove :name? This action cannot be undone.',
     'cancel' => 'Cancel',
     'confirm' => 'Yes, Remove',
+    'email_notifications' => 'Email Notifications',
+    'in_app_notifications' => 'In-App Notifications',
+    'notifications_description' => 'Manage your notification preferences. You can choose to receive notifications via email, in-app (push), or both.',
+    'notification' => 'Notification',
+
+    'push_notifications' => 'Push Notifications',
+    'push_notifications_description' => 'Enable push notifications to receive real-time updates directly in your browser, even when you are not on the site.',
+    'enable_push_notifications' => 'Enable Push Notifications',
+    'push_status' => [
+        'not_supported' => 'Push notifications are not supported by your browser.',
+        'denied' => 'Push notifications are blocked. Please enable them in your browser settings.',
+        'subscribed' => 'Push notifications are enabled.',
+    ],
 ];

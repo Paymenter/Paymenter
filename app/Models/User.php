@@ -200,4 +200,14 @@ class User extends Authenticatable implements Auditable, FilamentUser, HasAvatar
     {
         return $this->hasManyThrough(InvoiceTransaction::class, Invoice::class, 'user_id', 'invoice_id', 'id', 'id');
     }
+
+    public function notificationsPreferences()
+    {
+        return $this->hasMany(NotificationPreference::class);
+    }
+
+    public function pushSubscriptions()
+    {
+        return $this->hasMany(NotificationSubscription::class);
+    }
 }

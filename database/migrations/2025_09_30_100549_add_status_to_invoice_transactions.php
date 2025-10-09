@@ -24,6 +24,7 @@ return new class extends Migration
     {
         Schema::table('invoice_transactions', function (Blueprint $table) {
             $table->dropColumn('status');
+            $table->dropColumn('failure_reason');
         });
     }
 };
