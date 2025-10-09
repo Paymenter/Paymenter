@@ -2,11 +2,14 @@
 
 namespace App\Listeners;
 
+use App\Enums\InvoiceTransactionStatus;
 use App\Events\Auth\Login;
 use App\Events\Invoice\Finalized as InvoiceFinalized;
 use App\Events\Invoice\Paid as InvoicePaid;
 use App\Events\Order\Finalized as OrderFinalized;
 use App\Events\ServiceCancellation\Created as CancellationCreated;
+use App\Events\InvoiceTransaction\Created as InvoiceTransactionCreated;
+use App\Events\InvoiceTransaction\Updated as InvoiceTransactionUpdated;
 use App\Events\User\Created as UserCreated;
 use App\Helpers\NotificationHelper;
 use App\Models\Session;
@@ -16,7 +19,7 @@ class SendMailListener
     /**
      * Handle the event.
      */
-    public function handle(InvoiceFinalized|OrderFinalized|UserCreated|Login|CancellationCreated|InvoicePaid $event): void
+    public function handle(InvoiceFinalized|OrderFinalized|UserCreated|Login|CancellationCreated|InvoicePaid|InvoiceTransactionCreated|InvoiceTransactionUpdated $event): void
     {
 
         if ($event instanceof InvoiceFinalized) {
@@ -28,7 +31,12 @@ class SendMailListener
             NotificationHelper::invoiceCreatedNotification($invoice->user, $invoice);
         } elseif ($event instanceof InvoicePaid) {
             NotificationHelper::invoicePaidNotification($event->invoice->user, $event->invoice);
-            
+        } elseif ($event instanceof InvoiceTransactionCreated || $event instanceof InvoiceTransactionUpdated) {
+            // Check if status is failed
+            $transaction = $event->invoiceTransaction;
+            if ($transaction->status === InvoiceTransactionStatus::Failed) {
+                NotificationHelper::invoicePaymentFailedNotification($transaction->invoice->user, $transaction);
+            }
         } elseif ($event instanceof UserCreated) {
             $user = $event->user;
             NotificationHelper::emailVerificationNotification($user);

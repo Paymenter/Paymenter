@@ -453,9 +453,8 @@ class ExtensionHelper
      * Add payment to invoice
      *
      * @param  Invoice|int  $invoice
-     * @param  Gateway|null  $gateway
      */
-    public static function addPayment($invoice, $gateway, $amount, $fee = null, $transactionId = null, InvoiceTransactionStatus $status = InvoiceTransactionStatus::SUCCEEDED)
+    public static function addPayment($invoice, $gateway, $amount, $fee = null, $transactionId = null, InvoiceTransactionStatus $status = InvoiceTransactionStatus::Succeeded)
     {
         if (isset($gateway)) {
             $gateway = Gateway::where('extension', $gateway)->first();
@@ -491,14 +490,14 @@ class ExtensionHelper
         return $transaction;
     }
 
-    public static function addProccesingPayment($invoice, $gateway, $amount, $fee = null, $transactionId = null)
+    public static function addProcessingPayment($invoice, $gateway, $amount, $fee = null, $transactionId = null)
     {
-        return self::addPayment($invoice, $gateway, $amount, $fee, $transactionId, InvoiceTransactionStatus::PROCESSING);
+        return self::addPayment($invoice, $gateway, $amount, $fee, $transactionId, InvoiceTransactionStatus::Processing);
     }
 
     public static function addFailedPayment($invoice, $gateway, $amount, $fee = null, $transactionId = null)
     {
-        return self::addPayment($invoice, $gateway, $amount, $fee, $transactionId, InvoiceTransactionStatus::FAILED);
+        return self::addPayment($invoice, $gateway, $amount, $fee, $transactionId, InvoiceTransactionStatus::Failed);
     }
 
     public static function addPaymentFee($transactionId, $fee)

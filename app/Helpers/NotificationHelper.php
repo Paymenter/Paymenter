@@ -5,6 +5,7 @@ namespace App\Helpers;
 use App\Classes\PDF;
 use App\Mail\Mail;
 use App\Models\EmailLog;
+use App\Models\InvoiceTransaction;
 use App\Models\Notification;
 use App\Models\Invoice;
 use App\Models\NotificationTemplate;
@@ -62,7 +63,7 @@ class NotificationHelper
             'title' => BladeCompiler::render($notification->in_app_title, $data),
             'body' => BladeCompiler::render($notification->in_app_body, $data),
             'url' => isset($notification->in_app_url) ? BladeCompiler::render($notification->in_app_url, $data) : null,
-        ]);        
+        ]);
     }
 
     public static function sendNotification(
@@ -92,13 +93,13 @@ class NotificationHelper
         self::sendNotification('new_login_detected', $data, $user);
     }
 
-    public static function invoiceCreatedNotification(User $user, Invoice $invoice): void
+    public static function invoiceNotification(User $user, Invoice $invoice, $key = 'invoice_created'): void
     {
         $data = [
             'invoice' => $invoice,
             'items' => $invoice->items,
             'total' => $invoice->formattedTotal,
-            'has_subscription' => $invoice->items->filter(fn ($item) => $item->reference_type === Service::class && $item->reference->subscription_id)->isNotEmpty(),
+            'has_subscription' => $invoice->items->filter(fn($item) => $item->reference_type === Service::class && $item->reference->subscription_id)->isNotEmpty(),
         ];
 
         // Generate the invoice PDF
@@ -118,9 +119,29 @@ class NotificationHelper
                 'path' => 'invoices/' . ($invoice->number ?? $invoice->id) . '.pdf',
                 'name' => 'invoice.pdf',
             ],
-        ];
+        ]; 
 
-        self::sendNotification('new_invoice_created', $data, $user, $attachments);
+        self::sendNotification($key, $data, $user, $attachments);
+    }
+
+    public static function invoiceCreatedNotification(User $user, Invoice $invoice): void
+    {
+        self::invoiceNotification($user, $invoice, 'invoice_created');
+    }
+
+    public static function invoicePaidNotification(User $user, Invoice $invoice): void
+    {
+        self::invoiceNotification($user, $invoice, 'invoice_paid');
+    }
+
+    public static function invoicePaymentFailedNotification(User $user, InvoiceTransaction $invoiceTransaction): void
+    {
+        $data = [
+            'invoice' => $invoiceTransaction->invoice,
+            'transaction' => $invoiceTransaction,
+            'total' => $invoiceTransaction->invoice->formattedTotal,
+        ];
+        self::sendNotification('invoice_payment_failed', $data, $user);
     }
 
     public static function orderCreatedNotification(User $user, Order $order, array $data = []): void

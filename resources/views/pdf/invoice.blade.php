@@ -193,7 +193,7 @@
 
     <div style="clear: both;"></div>
 
-    @if($invoice->transactions->where('status', \App\Enums\InvoiceTransactionStatus::SUCCEEDED)->count() > 0)
+    @if($invoice->transactions->where('status', \App\Enums\InvoiceTransactionStatus::Succeeded)->count() > 0)
     <table style="margin-top: 80px;" class="invoice-items">
         <thead>
             <tr>
@@ -204,7 +204,7 @@
             </tr>
         </thead>
         <tbody>
-            @foreach($invoice->transactions->where('status', \App\Enums\InvoiceTransactionStatus::SUCCEEDED) as $transaction)
+            @foreach($invoice->transactions->where('status', \App\Enums\InvoiceTransactionStatus::Succeeded) as $transaction)
             <tr>
                 <td>{{ $transaction->transaction_id }}</td>
                 <td>{{ $transaction->created_at->format('d/m/Y') }}</td>

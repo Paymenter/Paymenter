@@ -70,7 +70,7 @@ class Invoice extends Model implements Auditable
     public function remaining(): Attribute
     {
         return Attribute::make(
-            get: fn () => $this->total - $this->transactions->where('status', \App\Enums\InvoiceTransactionStatus::SUCCEEDED)->sum('amount')
+            get: fn () => $this->total - $this->transactions->where('status', \App\Enums\InvoiceTransactionStatus::Succeeded)->sum('amount')
         );
     }
 

@@ -13,7 +13,6 @@ return new class extends Migration
     {
         Schema::table('invoice_transactions', function (Blueprint $table) {
             $table->string('status')->default('succeeded')->after('transaction_id');
-            $table->text('failure_reason')->nullable()->after('status');
         });
     }
 
@@ -24,7 +23,6 @@ return new class extends Migration
     {
         Schema::table('invoice_transactions', function (Blueprint $table) {
             $table->dropColumn('status');
-            $table->dropColumn('failure_reason');
         });
     }
 };

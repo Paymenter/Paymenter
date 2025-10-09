@@ -68,6 +68,54 @@ class EmailTemplateSeeder extends Seeder
             'edit_preference_message' => 'Notify me about new invoices',
             'in_app_url' => '{{ route("invoices.show", $invoice) }}'
         ],
+        'invoice_paid' => [
+            'subject' => 'Invoice paid',
+            'body' => <<<'HTML'
+                # Invoice paid  
+                            
+                Your invoice has been successfully paid.
+                            
+                Total amount: **{{ $invoice->formattedTotal }}**
+                            
+                You can view your invoice details by clicking the button below.
+                            
+                <div class="action">
+                	<a class="button button-blue" href="{{ route('invoices.show', $invoice) }}">
+                		View Invoice
+                	</a>
+                </div>
+                HTML,
+            'in_app_title' => 'Invoice paid',
+            'in_app_body' => 'Your invoice #{{ $invoice->id }} has been successfully paid with total amount: {{ $invoice->formattedTotal }}.',
+            'mail_enabled' => 'choice_on',
+            'in_app_enabled' => 'choice_on',
+            'edit_preference_message' => 'Notify me about successful payments',
+            'in_app_url' => '{{ route("invoices.show", $invoice) }}',
+        ],
+        'invoice_payment_failed' => [
+            'subject' => 'Invoice payment failed',
+            'body' => <<<'HTML'
+                # Invoice payment failed  
+
+                Your invoice payment has failed.
+
+                Total amount: **{{ $invoice->formattedTotal }}**
+                            
+                Please pay the invoice to avoid service interruptions.
+                            
+                <div class="action">
+                	<a class="button button-blue" href="{{ route('invoices.show', $invoice) }}">
+                		Pay Invoice
+                	</a>
+                </div>
+                HTML,
+            'in_app_title' => 'Invoice payment failed',
+            'in_app_body' => 'Your invoice #{{ $invoice->id }} payment has failed. Please pay the invoice to avoid service interruptions.',
+            'mail_enabled' => 'choice_on',
+            'in_app_enabled' => 'choice_on',
+            'edit_preference_message' => 'Alert me about payment failures',
+            'in_app_url' => '{{ route("invoices.show", $invoice) }}',
+        ],
         'new_order_created' => [
             'subject' => 'New order created',
             'body' => <<<'HTML'
@@ -250,7 +298,7 @@ class EmailTemplateSeeder extends Seeder
     {
 
         foreach (self::mapping as $key => $data) {
-            DB::table('notifications')->insertOrIgnore(
+            DB::table('notification_templates')->insertOrIgnore(
                 array_merge($data, ['key' => $key, 'enabled' => true])
             );
         }

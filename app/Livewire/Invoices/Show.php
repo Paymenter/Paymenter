@@ -41,7 +41,7 @@ class Show extends Component
         if (Request::has('checkPayment') && $this->invoice->status === 'pending') {
             $this->checkPayment = true;
         }
-        if ($this->invoice->transactions()->where('status', \App\Enums\InvoiceTransactionStatus::PROCESSING)->exists()) {
+        if ($this->invoice->transactions()->where('status', \App\Enums\InvoiceTransactionStatus::Processing)->exists()) {
             $this->checkPayment = true;
         }
 
@@ -163,7 +163,7 @@ class Show extends Component
         // Check for transactions that failed since lastChecked
         if ($this->lastChecked) {
             $failedSinceLastCheck = $this->invoice->transactions()
-                ->where('status', \App\Enums\InvoiceTransactionStatus::FAILED)
+                ->where('status', \App\Enums\InvoiceTransactionStatus::Failed)
                 ->where('updated_at', '>', $this->lastChecked)
                 ->exists();
 

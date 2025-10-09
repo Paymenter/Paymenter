@@ -35,9 +35,9 @@ class InvoiceTransactionsTable
                     ->sortable()
                     ->badge()
                     ->color(fn (InvoiceTransaction $record) => match ($record->status) {
-                        InvoiceTransactionStatus::SUCCEEDED => 'success',
-                        InvoiceTransactionStatus::PROCESSING => 'warning',
-                        InvoiceTransactionStatus::FAILED => 'danger',
+                        InvoiceTransactionStatus::Succeeded => 'success',
+                        InvoiceTransactionStatus::Processing => 'warning',
+                        InvoiceTransactionStatus::Failed => 'danger',
                         default => null,
                     })
                     ->formatStateUsing(fn (InvoiceTransactionStatus $state): string => ucfirst($state->value))

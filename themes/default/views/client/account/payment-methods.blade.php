@@ -140,19 +140,19 @@
                     <div class="pr-2">
                         <!-- Show status -->
                         <span class="text-sm text-base/70 mr-1">
-                            @if($transaction->status === \App\Enums\InvoiceTransactionStatus::SUCCEEDED)
+                            @if($transaction->status === \App\Enums\InvoiceTransactionStatus::Succeeded)
                             <span
                                 class="inline-flex items-center px-1 py-0.5 pr-1.5 rounded-full text-xs bg-green-100 text-green-800">
                                 <x-ri-check-line class="size-3 mr-1" />
                                 {{ __('invoices.transaction_statuses.succeeded') }}
                             </span>
-                            @elseif($transaction->status === \App\Enums\InvoiceTransactionStatus::PROCESSING)
+                            @elseif($transaction->status === \App\Enums\InvoiceTransactionStatus::Processing)
                             <span
                                 class="inline-flex items-center px-1 py-0.5 pr-1.5 rounded-full text-xs bg-yellow-100 text-yellow-800">
                                 <x-ri-loader-5-fill class="size-3 mr-1 fill-yellow-600 animate-spin" />
                                 {{ __('invoices.transaction_statuses.processing') }}
                             </span>
-                            @elseif($transaction->status === \App\Enums\InvoiceTransactionStatus::FAILED)
+                            @elseif($transaction->status === \App\Enums\InvoiceTransactionStatus::Failed)
                             <span
                                 class="inline-flex items-center px-1 py-0.5 pr-1.5 rounded-full text-xs bg-red-100 text-red-800">
                                 <x-ri-close-line class="size-3 mr-1" />

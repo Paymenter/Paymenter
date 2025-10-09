@@ -47,7 +47,7 @@ class Revenue extends ChartWidget
             'year' => 'month',
         };
 
-        $revenue = Trend::query(InvoiceTransaction::query()->where('status', InvoiceTransactionStatus::SUCCEEDED))
+        $revenue = Trend::query(InvoiceTransaction::query()->where('status', InvoiceTransactionStatus::Succeeded))
             ->between(
                 start: $start,
                 end: $end,
@@ -55,7 +55,7 @@ class Revenue extends ChartWidget
             ->{'per' . ucfirst($per)}()
             ->sum('amount');
 
-        $netRevenue = Trend::query(InvoiceTransaction::query()->where('status', InvoiceTransactionStatus::SUCCEEDED))
+        $netRevenue = Trend::query(InvoiceTransaction::query()->where('status', InvoiceTransactionStatus::Succeeded))
             ->between(
                 start: $start,
                 end: $end,

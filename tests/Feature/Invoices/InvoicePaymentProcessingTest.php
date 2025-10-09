@@ -43,7 +43,7 @@ class InvoicePaymentProcessingTest extends TestCase
         // Add partial payment
         $invoice->transactions()->create([
             'amount' => 30.00,
-            'status' => \App\Enums\InvoiceTransactionStatus::SUCCEEDED,
+            'status' => \App\Enums\InvoiceTransactionStatus::Succeeded,
         ]);
 
         $this->assertEquals(70.00, $invoice->fresh()->remaining);

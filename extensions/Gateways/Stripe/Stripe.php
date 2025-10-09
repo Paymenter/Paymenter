@@ -182,7 +182,7 @@ class Stripe extends Gateway
                 if (!isset($paymentIntent->metadata->invoice_id)) {
                     break;
                 }
-                ExtensionHelper::addProccesingPayment($paymentIntent->metadata->invoice_id, 'Stripe', $paymentIntent->amount / 100, null, $paymentIntent->id);
+                ExtensionHelper::addProcessingPayment($paymentIntent->metadata->invoice_id, 'Stripe', $paymentIntent->amount / 100, null, $paymentIntent->id);
                 break;
             // Normal payment
             case 'payment_intent.succeeded':
