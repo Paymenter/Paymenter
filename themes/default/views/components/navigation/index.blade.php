@@ -68,6 +68,7 @@
                         </x-slot:content>
                     </x-dropdown>
                     <x-theme-toggle />
+                    <livewire:components.notifications />
                 </div>
 
 

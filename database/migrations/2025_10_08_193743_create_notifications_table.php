@@ -17,6 +17,9 @@ return new class extends Migration {
             $table->string('title');
             $table->text('body');
             $table->string('url')->nullable();
+            $table->timestamp('read_at')->nullable();
+            $table->boolean('show_in_app')->default(true);
+            $table->boolean('show_as_push')->default(true);
             $table->timestamps();
         });
     }

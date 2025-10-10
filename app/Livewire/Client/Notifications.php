@@ -95,7 +95,9 @@ class Notifications extends Component
                 'body' => 'You will now receive push notifications from ' . config('app.name'),
                 'icon' => Storage::url(config('settings.logo')),
                 'badge' => Storage::url(config('settings.logo')),
-                'always_send' => true,
+                'show_in_app' => false,
+                // This forces it to be a push notification only
+                'show_as_push' => true,
                 'data' => [
                     'url' => url('/'),
                 ],

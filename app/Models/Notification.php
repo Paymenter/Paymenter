@@ -19,4 +19,10 @@ class Notification extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    public function markAsRead()
+    {
+        $this->read_at = now();
+        $this->save();
+    }
 }

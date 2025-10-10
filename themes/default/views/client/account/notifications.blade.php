@@ -26,10 +26,6 @@
             </div>
             @script
             <script>
-                navigator.serviceWorker.register('/service-worker.js').catch(function(error) {
-                    console.log('Service Worker registration failed:', error);
-                });
-
                 Alpine.data('pushNotifications', () => ({
                     subscriptionStatus: 'unknown',
 

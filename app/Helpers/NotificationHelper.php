@@ -56,13 +56,17 @@ class NotificationHelper
     public static function sendInAppNotification(
         NotificationTemplate $notification,
         array $data,
-        User $user
+        User $user,
+        bool $show_in_app = true,
+        bool $show_as_push = true
     ): void {
         Notification::create([
             'user_id' => $user->id,
             'title' => BladeCompiler::render($notification->in_app_title, $data),
             'body' => BladeCompiler::render($notification->in_app_body, $data),
             'url' => isset($notification->in_app_url) ? BladeCompiler::render($notification->in_app_url, $data) : null,
+            'show_in_app' => $show_in_app,
+            'show_as_push' => $show_as_push,
         ]);
     }
 
@@ -70,7 +74,9 @@ class NotificationHelper
         $notificationTemplateKey,
         array $data,
         User $user,
-        array $attachments = []
+        array $attachments = [],
+        bool $show_in_app = true,
+        bool $show_as_push = true
     ): void {
         $notification = NotificationTemplate::where('key', $notificationTemplateKey)->first();
         if (!$notification || !$notification->enabled) {
@@ -84,7 +90,7 @@ class NotificationHelper
         }
 
         if ($notification->isEnabledForPreference($userPreference, 'app')) {
-            self::sendInAppNotification($notification, $data, $user);
+            self::sendInAppNotification($notification, $data, $user, $show_in_app, $show_as_push);
         }
     }
 

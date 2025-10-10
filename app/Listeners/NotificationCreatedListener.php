@@ -41,6 +41,8 @@ class NotificationCreatedListener implements ShouldQueue
                     'icon' => Storage::url(config('settings.logo')),
                     'badge' => Storage::url(config('settings.logo')),
                     'url' => $notification->url,
+                    'show_in_app' => $notification->show_in_app,
+                    'show_as_push' => $notification->show_as_push,
                 ]),
             );
         }
