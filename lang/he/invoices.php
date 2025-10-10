@@ -11,6 +11,7 @@ return [
     'total' => 'סך הכול',
     'subtotal' => 'סכום ביניים',
     'invoice' => 'חשבונית #:id',
+    'proforma_invoice' => 'Proforma Invoice #:id',
     'unit_price' => 'מחיר יחידה',
     'bill_to' => 'חשבונית ל',
     'issued_to' => 'הונפק עבור',
@@ -18,6 +19,7 @@ return [
     'payment_pending' => 'ממתין לתשלום',
     'checking_payment' => 'בודק תשלום',
     'invoice_date' => 'תאריך קנייה',
+    'proforma_invoice_date' => 'Proforma Invoice Date',
     'invoice_no' => 'מספר קבלה',
     'tax_id' => 'מזהה מס',
     'company_id' => 'מזהה חברה',
@@ -31,4 +33,6 @@ return [
     'amount' => 'סכום',
     'date' => 'תאריך',
     'due_date' => 'תאריך יעד',
+    'payment_for_invoice' => 'Payment for Invoice #:number',
+    'payment_for_proforma_invoice' => 'Payment for Proforma Invoice #:id',
 ];

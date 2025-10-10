@@ -11,6 +11,7 @@ return [
     'total' => '總計',
     'subtotal' => '小計',
     'invoice' => '帳單 #:id',
+    'proforma_invoice' => 'Proforma Invoice #:id',
     'unit_price' => '單價',
     'bill_to' => '帳單寄送至',
     'issued_to' => '授權給',
@@ -18,6 +19,7 @@ return [
     'payment_pending' => '等待付款',
     'checking_payment' => '確認付款中',
     'invoice_date' => '帳單日期',
+    'proforma_invoice_date' => 'Proforma Invoice Date',
     'invoice_no' => '帳單號碼',
     'tax_id' => '稅務編號',
     'company_id' => '公司編號',
@@ -31,4 +33,6 @@ return [
     'amount' => '金額',
     'date' => '日期',
     'due_date' => 'Due Date',
+    'payment_for_invoice' => 'Payment for Invoice #:number',
+    'payment_for_proforma_invoice' => 'Payment for Proforma Invoice #:id',
 ];

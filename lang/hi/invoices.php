@@ -11,6 +11,7 @@ return [
     'total' => 'कुल',
     'subtotal' => 'उप-योग',
     'invoice' => 'इनवॉइस #:id',
+    'proforma_invoice' => 'Proforma Invoice #:id',
     'unit_price' => 'इकाई मूल्य',
     'bill_to' => 'बिल प्राप्तकर्ता',
     'issued_to' => 'प्राप्तकर्ता',
@@ -18,6 +19,7 @@ return [
     'payment_pending' => 'भुगतान लंबित',
     'checking_payment' => 'भुगतान की जाँच की जा रही है',
     'invoice_date' => 'इनवॉइस तिथि',
+    'proforma_invoice_date' => 'Proforma Invoice Date',
     'invoice_no' => 'इनवॉइस नंबर',
     'tax_id' => 'टैक्स आईडी',
     'company_id' => 'कंपनी आईडी',
@@ -31,4 +33,6 @@ return [
     'amount' => 'राशि',
     'date' => 'तारीख',
     'due_date' => 'Due Date',
+    'payment_for_invoice' => 'Payment for Invoice #:number',
+    'payment_for_proforma_invoice' => 'Payment for Proforma Invoice #:id',
 ];
