@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Classes\PDF;
 use App\Classes\Price;
 use App\Classes\Settings;
+use App\Models\Traits\HasProperties;
 use App\Observers\InvoiceObserver;
 use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Casts\Attribute;
@@ -14,7 +15,7 @@ use OwenIt\Auditing\Contracts\Auditable;
 #[ObservedBy([InvoiceObserver::class])]
 class Invoice extends Model implements Auditable
 {
-    use \App\Models\Traits\Auditable, HasFactory;
+    use \App\Models\Traits\Auditable, HasFactory, HasProperties;
 
     public const STATUS_PENDING = 'pending';
 
