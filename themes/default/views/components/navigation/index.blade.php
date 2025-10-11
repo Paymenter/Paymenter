@@ -68,11 +68,11 @@
                         </x-slot:content>
                     </x-dropdown>
                     <x-theme-toggle />
-                    <livewire:components.notifications />
                 </div>
-
-
+                
+                
                 @if(auth()->check())
+                <livewire:components.notifications />
                 <div class="hidden lg:flex">
                     <x-dropdown>
                         <x-slot:trigger>
