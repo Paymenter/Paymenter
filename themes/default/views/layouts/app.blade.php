@@ -47,6 +47,7 @@
                 {{ $slot }}
             </main>
             <x-notification />
+            <x-confirmation />
             <div class="py-8">
                 <x-navigation.footer />
             </div>

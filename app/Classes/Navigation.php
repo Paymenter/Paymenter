@@ -148,6 +148,16 @@ class Navigation
                                 'condition' => config('settings.credits_enabled'),
                                 'priority' => 30,
                             ],
+                            [
+                                'name' => __('account.payment_methods'),
+                                'route' => 'account.payment-methods',
+                                'priority' => 40,
+                            ],
+                            [
+                                'name' => __('navigation.notifications'),
+                                'route' => 'account.notifications',
+                                'priority' => 50,
+                            ]
                         ]
                     ),
                 ],

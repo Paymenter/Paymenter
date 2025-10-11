@@ -58,7 +58,7 @@ class Overview extends BaseWidget
         $percentageIncrease = $lastMonth > 0 ? (($thisMonth - $lastMonth) / $lastMonth) * 100 : 0;
 
         return Stat::make($name, $thisMonth)
-            ->description($increase >= 0 ? 'Increased by ' . number_format($percentageIncrease, 2) . '% (this month)' : 'Decreased by ' . number_format($percentageIncrease, 2) . '% (this month)')
+            ->description($increase >= 0 ? 'Increased by ' . number_format($percentageIncrease, 2) . '% (last 30 days)' : 'Decreased by ' . number_format($percentageIncrease, 2) . '% (last 30 days)')
             ->descriptionIcon($increase >= 0 ? 'heroicon-m-arrow-trending-up' : 'heroicon-m-arrow-trending-down')
             ->chart($chart->map(fn (TrendValue $value) => $value->aggregate)->toArray())
             ->color($increase >= 0 ? 'success' : 'danger');

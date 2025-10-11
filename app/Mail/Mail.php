@@ -2,7 +2,7 @@
 
 namespace App\Mail;
 
-use App\Models\EmailTemplate;
+use App\Models\NotificationTemplate;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
@@ -18,13 +18,13 @@ class Mail extends Mailable
 
     public array $data = [];
 
-    public EmailTemplate $emailTemplate;
+    public NotificationTemplate $emailTemplate;
 
     /**
      * Create a new message instance.
      */
     public function __construct(
-        EmailTemplate $emailTemplate,
+        NotificationTemplate $emailTemplate,
         array $data = []
     ) {
         $this->emailTemplate = $emailTemplate;

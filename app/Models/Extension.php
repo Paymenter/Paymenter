@@ -4,11 +4,12 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use OwenIt\Auditing\Contracts\Auditable;
 
 class Extension extends Model implements Auditable
 {
-    use \App\Models\Traits\Auditable, HasFactory;
+    use \App\Models\Traits\Auditable, HasFactory, SoftDeletes;
 
     protected $fillable = [
         'name',

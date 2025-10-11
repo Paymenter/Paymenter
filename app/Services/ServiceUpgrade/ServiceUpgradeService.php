@@ -43,7 +43,12 @@ class ServiceUpgradeService
                     ['config_value_id' => $config->config_value_id]
                 );
             }
-            $service->recalculatePrice();
+
+            $service->refresh();
+
+            $service->price = $service->calculatePrice();
+            $service->save();
+
             if ($service->product->server) {
                 UpgradeJob::dispatch($service);
             }

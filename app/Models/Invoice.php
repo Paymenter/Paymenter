@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Classes\PDF;
 use App\Classes\Price;
 use App\Classes\Settings;
+use App\Models\Traits\HasProperties;
 use App\Observers\InvoiceObserver;
 use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Casts\Attribute;
@@ -14,7 +15,7 @@ use OwenIt\Auditing\Contracts\Auditable;
 #[ObservedBy([InvoiceObserver::class])]
 class Invoice extends Model implements Auditable
 {
-    use \App\Models\Traits\Auditable, HasFactory;
+    use \App\Models\Traits\Auditable, HasFactory, HasProperties;
 
     public const STATUS_PENDING = 'pending';
 
@@ -27,8 +28,6 @@ class Invoice extends Model implements Auditable
     protected $casts = [
         'due_at' => 'date',
     ];
-
-    protected $with = ['items', 'snapshot'];
 
     public bool $send_create_email = true;
 
@@ -72,7 +71,7 @@ class Invoice extends Model implements Auditable
     public function remaining(): Attribute
     {
         return Attribute::make(
-            get: fn () => $this->total - $this->transactions->sum('amount')
+            get: fn () => $this->total - $this->transactions->where('status', \App\Enums\InvoiceTransactionStatus::Succeeded)->sum('amount')
         );
     }
 

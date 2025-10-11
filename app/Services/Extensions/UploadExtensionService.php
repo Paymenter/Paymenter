@@ -6,6 +6,7 @@ use App\Attributes\ExtensionMeta;
 use App\Classes\Extension\Extension;
 use App\Classes\Extension\Gateway;
 use App\Classes\Extension\Server;
+use App\Console\Commands\Extension\Install;
 use App\Console\Commands\Extension\Upgrade;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\File;
@@ -90,6 +91,11 @@ class UploadExtensionService
                 'type' => $type['type'],
                 'name' => $type['class'],
                 'oldVersion' => $oldVersion,
+            ]);
+        } else {
+            Artisan::call(Install::class, [
+                'type' => $type['type'],
+                'name' => $type['class'],
             ]);
         }
 

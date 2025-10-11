@@ -20,11 +20,13 @@ class InvoiceTransaction extends Model implements Auditable
         'amount',
         'fee',
         'transaction_id',
+        'status',
     ];
 
     protected $casts = [
         'amount' => 'decimal:2',
         'fee' => 'decimal:2',
+        'status' => \App\Enums\InvoiceTransactionStatus::class,
     ];
 
     public function invoice()

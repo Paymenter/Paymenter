@@ -34,6 +34,7 @@ class SuspendJob implements ShouldQueue
             if ($e->getMessage() == 'No server assigned to this product') {
                 return;
             }
+            report($e);
         }
 
         if ($this->sendNotification && isset($data)) {

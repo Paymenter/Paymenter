@@ -4,62 +4,121 @@ namespace App\Classes;
 
 use App\Exceptions\DisplayException;
 use App\Models\Coupon;
+use App\Models\Plan;
+use App\Models\Product;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\Session;
 
 class Cart
 {
-    public static function get()
+    public static function getOnce()
     {
-        return collect(session('cart', []));
-    }
-
-    public static function add($product, $plan, $configOptions, $checkoutConfig, Price $price, $quantity = 1, $key = null)
-    {
-        if (isset($key)) {
-            $cart = self::get();
-            // Check if key exists
-            $cart[$key] = (object) [
-                'product' => (object) $product,
-                'plan' => (object) $plan,
-                'configOptions' => (object) $configOptions,
-                'checkoutConfig' => (object) $checkoutConfig,
-                'price' => $price,
-                'quantity' => $quantity,
-            ];
-        } else {
-            $cart = self::get()->push((object) [
-                'product' => (object) $product,
-                'plan' => (object) $plan,
-                'configOptions' => (object) $configOptions,
-                'checkoutConfig' => (object) $checkoutConfig,
-                'price' => $price,
-                'quantity' => $quantity,
-            ]);
+        if (!Cookie::has('cart') || !$cart = \App\Models\Cart::where('ulid', Cookie::get('cart'))->first()) {
+            return new \App\Models\Cart();
         }
 
-        session(['cart' => $cart]);
+        return $cart->load('items.plan', 'items.product', 'items.product.configOptions.children.plans.prices');
+    }
 
-        if (Session::has('coupon')) {
+    public static function get()
+    {
+        return once(fn() => self::getOnce());
+    }
+
+    public static function clear()
+    {
+        if (Cookie::has('cart')) {
+            \App\Models\Cart::where('ulid', Cookie::get('cart'))->delete();
+            Cookie::queue(Cookie::forget('cart'));
+        }
+    }
+
+    public static function items()
+    {
+        return self::get()->items;
+    }
+
+    public static function createCart()
+    {
+        $cart = self::getOnce();
+        if (!$cart->exists) {
+            $cart->user_id = Auth::id();
+            $cart->currency_code = session('currency', session('currency', config('settings.default_currency')));
+            $cart->save();
+            Cookie::queue('cart', $cart->ulid, 60 * 24 * 30); // 30 days
+            $cart = \App\Models\Cart::find($cart->id);
+        }
+
+        return $cart;
+    }
+
+    public static function add(Product $product, Plan $plan, $configOptions, $checkoutConfig, $quantity = 1, $key = null)
+    {
+        // Match on key
+        $cart = self::createCart();
+
+        $item = $cart->items()->updateOrCreate([
+            'id' => $key,
+        ], [
+            'product_id' => $product->id,
+            'plan_id' => $plan->id,
+            'config_options' => $configOptions,
+            'checkout_config' => $checkoutConfig,
+            'quantity' => $quantity,
+        ]);
+        $cart->load('items.plan', 'items.product', 'items.product.configOptions.children.plans.prices');
+
+        if ($cart->coupon_id) {
             // Reapply coupon to the cart
             try {
-                $coupon = Session::get('coupon');
-                self::removeCoupon();
-                self::applyCoupon($coupon->code);
+                self::validateCoupon($cart->coupon->code);
+                // Check if any of the items have gotten a discount
+                if ($cart->items->filter(fn($item) => $item->price->hasDiscount())->isEmpty()) {
+                    $cart->coupon_id = null;
+                    $cart->save();
+                }
             } catch (DisplayException $e) {
-                // Ignore exception
+                // Coupon is invalid, remove it
+                $cart->coupon_id = null;
+                $cart->save();
             }
         }
 
         // Return index of the newly added item
-        return $key ?? $cart->count() - 1;
+        return $item->id;
     }
 
     public static function remove($index)
     {
         $cart = self::get();
-        $cart->forget($index);
-        session(['cart' => $cart]);
+        $item = $cart->items()->where('id', $index)->first();
+        if ($item) {
+            $item->delete(); // We also want to trigger Eloquent events
+        }
+        $cart->load('items.plan', 'items.product', 'items.product.configOptions.children.plans.prices');
+    }
+
+    public static function updateQuantity($index, $quantity)
+    {
+        $cart = self::get();
+        if ($item = $cart->items()->where('id', $index)->first()) {
+            if ($item->product->allow_quantity !== 'combined') {
+                return;
+            }
+        } else {
+            return;
+        }
+
+        if ($quantity < 1) {
+            self::remove($index);
+            return;
+        }
+        $item->quantity = $quantity;
+        $item->save();
+
+        $cart->load('items');
     }
 
     /**
@@ -99,51 +158,24 @@ class Cart
         $coupon = self::validateCoupon($code);
 
         $wasSuccessful = false;
-        $items = self::get()->map(function ($item) use ($coupon, &$wasSuccessful) {
-            if ($coupon->products->where('id', $item->product->id)->isEmpty() && $coupon->products->isNotEmpty()) {
-                return (object) $item;
-            }
+        $cart = self::createCart();
+        $cart->coupon_id = $coupon->id;
+        $cart->save();
+
+        // Check if any of the items have gotten a discount, if empty also set succesful because it's valid for future use (will get rechecked on checkout
+        if ($cart->items->filter(fn($item) => $item->price->hasDiscount())->isNotEmpty() || $cart->items->isEmpty()) {
             $wasSuccessful = true;
-            $pdiscount = 0;
-            $sdiscount = 0;
-            if ($coupon->applies_to === 'price' || $coupon->applies_to === 'all') {
-                $pdiscount = self::getCouponDiscountedAmount($item->price, $coupon);
-                $item->price->price -= $pdiscount;
-                $item->price->total -= $pdiscount;
-            }
-            if ($coupon->applies_to === 'setup_fee' || $coupon->applies_to === 'all') {
-                $sdiscount = self::getCouponDiscountedAmount($item->price, $coupon);
-                $item->price->setup_fee -= $sdiscount;
-                $item->price->total -= $sdiscount;
-            }
-            $item->price->setDiscount($pdiscount + $sdiscount);
-
-            return (object) $item;
-        });
-
-        session(['cart' => $items]);
-        Session::put(['coupon' => $coupon]);
+        } else {
+            $cart->coupon_id = null;
+        }
 
         if ($wasSuccessful) {
-            return $items;
+            $cart->save();
         } else {
+            $cart->coupon_id = null;
+            $cart->save();
             throw new DisplayException('Coupon code is not valid for any items in your cart');
         }
-    }
-
-    private static function getCouponDiscountedAmount($price, $coupon)
-    {
-        $discount = 0;
-        if ($coupon->type === 'percentage') {
-            $discount = $price->price * $coupon->value / 100;
-        } elseif ($coupon->type === 'fixed') {
-            $discount = $coupon->value;
-        }
-        if ($price->price < $discount) {
-            $discount = $price->price;
-        }
-
-        return $discount;
     }
 
     /**
@@ -153,12 +185,12 @@ class Cart
      */
     public static function validateAndRefreshCoupon()
     {
-        if (!Session::has('coupon')) {
+        if (!self::get()->coupon_id || !self::get()->coupon) {
             return true;
         }
 
         try {
-            $coupon = Session::get('coupon');
+            $coupon = self::get()->coupon;
             self::validateCoupon($coupon->code);
 
             return true;
@@ -172,16 +204,7 @@ class Cart
 
     public static function removeCoupon()
     {
-        Session::forget('coupon');
-        $items = self::get()->map(function ($item) {
-            $item->price = new Price([
-                'price' => $item->price->original_price,
-                'setup_fee' => $item->price->original_setup_fee,
-                'currency' => $item->price->currency,
-            ], apply_exclusive_tax: true);
-
-            return (object) $item;
-        });
-        session(['cart' => $items]);
+        self::get()->update(['coupon_id' => null]);
+        self::get()->load('coupon');
     }
 }

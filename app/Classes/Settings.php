@@ -12,6 +12,7 @@ use Exception;
 use Filament\Schemas\Components\Utilities\Get;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\HtmlString;
+use Minishlink\WebPush\VAPID;
 use Ramsey\Uuid\Uuid;
 
 class Settings
@@ -329,26 +330,26 @@ class Settings
                     'name' => 'ticket_mail_host',
                     'label' => 'Email Host',
                     'type' => 'text',
-                    'required' => fn (Get $get) => $get('ticket_mail_piping'),
+                    'required' => fn(Get $get) => $get('ticket_mail_piping'),
                 ],
                 [
                     'name' => 'ticket_mail_port',
                     'label' => 'Email Port',
                     'type' => 'number',
-                    'required' => fn (Get $get) => $get('ticket_mail_piping'),
+                    'required' => fn(Get $get) => $get('ticket_mail_piping'),
                     'default' => 993,
                 ],
                 [
                     'name' => 'ticket_mail_email',
                     'label' => 'Email Address',
                     'type' => 'email',
-                    'required' => fn (Get $get) => $get('ticket_mail_piping'),
+                    'required' => fn(Get $get) => $get('ticket_mail_piping'),
                 ],
                 [
                     'name' => 'ticket_mail_password',
                     'label' => 'Email Password',
                     'type' => 'password',
-                    'required' => fn (Get $get) => $get('ticket_mail_piping'),
+                    'required' => fn(Get $get) => $get('ticket_mail_piping'),
                     'encrypted' => true,
                 ],
             ],
@@ -648,5 +649,29 @@ class Settings
         $minute = $time % 60;
 
         return compact('uuid', 'hour', 'minute');
+    }
+
+    public static function validateOrCreateVapidKeys(): bool
+    {
+        $publicKey = config('settings.vapid_public_key');
+        $privateKey = config('settings.vapid_private_key');
+        if ($publicKey && $privateKey && strlen($publicKey) > 80 && strlen($privateKey) > 40) {
+            return true;
+        }
+        try {
+            $vapid = VAPID::createVapidKeys();
+            Setting::updateOrCreate(
+                ['key' => 'vapid_public_key', 'encrypted' => true],
+                ['value' => $vapid['publicKey']]
+            );
+            Setting::updateOrCreate(
+                ['key' => 'vapid_private_key', 'encrypted' => true],
+                ['value' => $vapid['privateKey']]
+            );
+
+            return true;
+        } catch (Exception $e) {
+            return false;
+        }
     }
 }

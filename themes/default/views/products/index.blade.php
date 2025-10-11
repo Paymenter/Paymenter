@@ -66,7 +66,7 @@
                         </article>
                     @endif
                     <h3 class="text-lg font-semibold mb-2">
-                        {{ $product->price() }}
+                        {{ $product->price()->formatted->price }}
                     </h3>
                     @if (($product->stock > 0 || !$product->stock) && $product->price()->available && theme('direct_checkout', false))
                         <a href="{{ route('products.checkout', ['category' => $category, 'product' => $product->slug]) }}"

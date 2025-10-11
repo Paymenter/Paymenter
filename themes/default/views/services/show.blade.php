@@ -55,6 +55,13 @@
                         </span>
                         @endif
                     </div>
+                    @if(Auth::user()->billingAgreements->count() > 0)
+                    <div class="flex items-center text-base">
+                        <!-- Auto paying using -->
+                        <span class="mr-2">{{ __('services.auto_pay') }}:</span>
+                        <span class="text-base/50">{{ $service->billing_agreement ? $service->billing_agreement->name : __('services.auto_pay_not_configured') }}</span>
+                    </div>
+                    @endif
                     <br>
                     @foreach ($fields as $field)
                     <div class="flex items-center text-base">
@@ -62,7 +69,6 @@
                         <span class="text-base/50">{{ $field['text'] }}</span>
                     </div>
                     @endforeach
-
                 </div>
             </div>
             @if($service->cancellable || $service->upgradable || count($buttons) > 0)

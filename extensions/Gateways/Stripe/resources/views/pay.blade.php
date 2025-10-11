@@ -5,13 +5,14 @@
     <div id="payment-element">
 
     </div>
-    <button id="submit" class="mt-4 bg-secondary-500 text-white hover:bg-secondary py-2 px-4 rounded-md w-full bg-gradient-to-tr from-secondary via-50% via-20% via-secondary to-[#5573FD80] duration-300">
+    <button id="submit"
+        class="mt-4 bg-secondary-500 text-white hover:bg-secondary py-2 px-4 rounded-md w-full bg-gradient-to-tr from-secondary via-50% via-20% via-secondary to-[#5573FD80] duration-300">
         Pay
     </button>
 </form>
 @script
-    <script>
-        const script = document.createElement('script');
+<script>
+    const script = document.createElement('script');
         script.src = 'https://js.stripe.com/v3/';
         script.async = true;
         document.body.appendChild(script);
@@ -20,8 +21,6 @@
             var stripe = Stripe(
                 "{{ $stripePublishableKey }}"
             );
-
-            const type = '{{ $type }}';
 
             const options = {
                 clientSecret: '{{ $intent->client_secret }}',
@@ -58,26 +57,16 @@
                 
                 var error;
 
-                if (type == 'payment') {
-                    var {
-                        error
-                    } = await stripe.confirmPayment({
-                        //`Elements` instance that was used to create the Payment Element
-                        elements,
-                        confirmParams: {
-                            return_url: '{{ route('invoices.show', $invoice) }}?checkPayment=true',
-                        },
-                    });
-                } else if (type == 'setup') {
-                    var {
-                        error
-                    } = await stripe.confirmSetup({
-                        elements,
-                        confirmParams: {
-                            return_url: '{{ route('invoices.show', $invoice) }}?checkPayment=true',
-                        },
-                    });
-                }
+                var {
+                    error
+                } = await stripe.confirmPayment({
+                    //`Elements` instance that was used to create the Payment Element
+                    elements,
+                    confirmParams: {
+                        return_url: '{{ route('invoices.show', $invoice) }}?checkPayment=true',
+                    },
+                });
+
 
                 // This point will only be reached if there is an immediate error when
                 // confirming the payment. Otherwise, your customer will be redirected to
@@ -92,42 +81,6 @@
 
                 setLoading(false);
             });
-            checkStatus();
-
-
-            async function checkStatus() {
-                const clientSecret = new URLSearchParams(window.location.search).get(
-                    "payment_intent_client_secret"
-                );
-
-                if (!clientSecret) {
-                    return;
-                }
-
-                const {
-                    paymentIntent
-                } = await stripe.retrievePaymentIntent(clientSecret);
-
-                switch (paymentIntent.status) {
-                    case "succeeded":
-                        window.location.href = "{{ route('invoices.show', $invoice) }}";
-                        break;
-                    case "processing":
-                        // Show a spinner and disable the submit button
-                        setLoading(true);
-                        showMessage("Your payment is processing.");
-                        // Hide payment-element
-                        document.getElementById("payment-element").classList.add("hidden");
-                        setTimeout(checkStatus, 2000);
-                        break;
-                    case "requires_payment_method":
-                        showMessage("Your payment was not successful, please try again.");
-                        break;
-                    default:
-                        showMessage("Something went wrong.");
-                        break;
-                }
-            }
 
             function showMessage(messageText) {
                 const messageContainer = document.querySelector("#error-message");
@@ -158,5 +111,5 @@
                 paymentElement.destroy();
             });
         };
-    </script>
+</script>
 @endscript

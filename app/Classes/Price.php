@@ -33,11 +33,14 @@ class Price
 
     public $original_setup_fee;
 
-    public $total = 0;
-
     public function setDiscount($discount)
     {
         $this->discount = $discount;
+    }
+
+    public function hasDiscount(): bool
+    {
+        return $this->discount > 0;
     }
 
     public function __construct($priceAndCurrency = null, $free = false, $dontShowUnavailablePrice = false, $apply_exclusive_tax = false, TaxRate|int|null $tax = null)
@@ -55,6 +58,8 @@ class Price
                 'setup_fee' => $this->format($this->setup_fee),
                 'tax' => $this->format($this->tax),
                 'setup_fee_tax' => $this->format($this->setup_fee_tax),
+                'total' => $this->format($this->total),
+                'total_tax' => $this->format($this->total_tax),
             ];
 
             return;
@@ -66,16 +71,17 @@ class Price
             $this->currency = (object) $this->currency;
         }
         $this->setup_fee = $priceAndCurrency->price->setup_fee ?? $priceAndCurrency->setup_fee ?? null;
+
         // We save the original so we can revert back to it when removing a coupon
         $this->original_price = $this->price;
         $this->original_setup_fee = $this->setup_fee;
 
         // Calculate taxes
-        if (config('settings.tax_enabled')) {
+        if (config('settings.tax_enabled', false)) {
             $tax ??= Settings::tax();
             if ($tax) {
                 // Inclusive has the tax included in the price
-                if (config('settings.tax_type') == 'inclusive' || !$apply_exclusive_tax) {
+                if (config('settings.tax_type', 'inclusive') == 'inclusive' || !$apply_exclusive_tax) {
                     $this->tax = number_format($this->price - ($this->price / (1 + $tax->rate / 100)), 2, '.', '');
                     if ($this->setup_fee) {
                         $this->setup_fee_tax = number_format($this->setup_fee - ($this->setup_fee / (1 + $tax->rate / 100)), 2, '.', '');
@@ -94,13 +100,15 @@ class Price
             }
         }
         $this->has_setup_fee = isset($this->setup_fee) ? $this->setup_fee > 0 : false;
-        $this->total = $this->price + ($this->setup_fee ?? 0);
         $this->dontShowUnavailablePrice = $dontShowUnavailablePrice;
+
         $this->formatted = (object) [
+            'total' => $this->format($this->total),
             'price' => $this->format($this->price),
             'setup_fee' => $this->format($this->setup_fee),
             'tax' => $this->format($this->tax),
             'setup_fee_tax' => $this->format($this->setup_fee_tax),
+            'total_tax' => $this->format($this->total_tax),
         ];
     }
 
@@ -139,15 +147,19 @@ class Price
 
     public function __toString()
     {
-        return $this->formatted->price;
+        return $this->formatted->total;
     }
 
     public function __get($name)
     {
-        if ($name == 'available') {
-            return $this->currency || $this->is_free ? true : false;
-        } else {
-            return $this->$name;
-        }
+        return match ($name) {
+            'total' => number_format($this->price + ($this->setup_fee ?? 0), 2, '.', ''),
+            'total_tax' => number_format($this->tax + $this->setup_fee_tax, 2, '.', ''),
+            // Subtotal is price + setup_fee - tax - setup_fee_tax
+            'subtotal' => number_format(($this->price + ($this->setup_fee ?? 0)) - ($this->tax + $this->setup_fee_tax), 2, '.', ''),
+            'available' => $this->currency || $this->is_free ? true : false,
+            default => $this->$name ?? null,
+        };
     }
 }
+

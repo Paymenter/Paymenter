@@ -4,9 +4,11 @@ namespace App\Console\Commands\User;
 
 use App\Helpers\NotificationHelper;
 use App\Models\User;
+use Hash;
 use Illuminate\Console\Command;
 use Illuminate\Contracts\Console\PromptsForMissingInput;
 use Illuminate\Support\Facades\Password;
+use Str;
 use Throwable;
 
 class PasswordReset extends Command implements PromptsForMissingInput
@@ -23,7 +25,7 @@ class PasswordReset extends Command implements PromptsForMissingInput
      *
      * @var string
      */
-    protected $description = 'Send password reset email to a user';
+    protected $description = 'Reset a user\'s password and show the new password in the console';
 
     /**
      * Execute the console command.
@@ -46,18 +48,23 @@ class PasswordReset extends Command implements PromptsForMissingInput
             return;
         }
 
-        try {
-            NotificationHelper::passwordResetNotification($user, [
-                'url' => url(route('password.reset', [
-                    'token' => Password::createToken($user),
-                    'email' => $user->email,
-                ], false)),
-            ]);
+        if (!$this->confirm("Are you sure you want to reset the password for user with email '{$email}'?")) {
+            $this->info('Operation cancelled.');
 
-            $this->info("Password reset email sent successfully to '{$email}'");
-        } catch (Throwable $e) {
-            $this->error('Failed to send password reset email: ' . $e->getMessage());
+            return;
         }
+
+        // Make a strong password 
+        $password = Str::password(16);
+        $user->forceFill([
+            'password' => Hash::make($password),
+        ])->setRememberToken(Str::random(60));
+
+        $user->save();
+
+        // Output the new password to the console
+        $this->info("Password for user with email '{$email}' has been reset.");
+        $this->info("New password: <options=bold;fg=red>{$password}</>");
     }
 
     protected function promptForMissingArgumentsUsing(): array
