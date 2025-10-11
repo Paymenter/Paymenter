@@ -12,7 +12,7 @@ class Install extends Command
      *
      * @var string
      */
-    protected $signature = 'app:extension:install {type} {name} {oldVersion?}';
+    protected $signature = 'app:extension:install {type} {name}';
 
     /**
      * The console command description.
