@@ -6,7 +6,7 @@
             <span>{{ __('ticket.create_ticket') }}</span>
         </x-navigation.link>
     </div>
-    @foreach ($tickets as $ticket)
+    @forelse ($tickets as $ticket)
     <a href="{{ route('tickets.show', $ticket) }}" wire:navigate>
         <div class="bg-background-secondary hover:bg-background-secondary/80 border border-neutral p-4 rounded-lg mb-4">
             <div class="flex items-center justify-between mb-2">
@@ -37,5 +37,9 @@
             </p>
         </div>
     </a>
-    @endforeach
+    @empty
+        <div class="text-center p-6 text-neutral/70 border border-neutral/20 rounded-lg">
+            No tickets found.
+        </div>
+    @endforelse
 </div>
