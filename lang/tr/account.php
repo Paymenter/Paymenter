@@ -2,11 +2,11 @@
 
 return [
     'account' => 'Hesap',
-    'personal_details' => 'Kişisel bilgiler',
+    'personal_details' => 'Kişisel Bilgiler',
     'security' => 'Güvenlik',
-    'credits' => 'Bakiyeler',
+    'credits' => 'Bakiye',
 
-    'change_password' => 'Şifreyi değiştir',
+    'change_password' => 'Şifre Değiştir',
 
     'two_factor_authentication' => 'İki Faktörlü Kimlik Doğrulama',
     'two_factor_authentication_description' => 'İki faktörlü kimlik doğrulamayı etkinleştirerek hesabınıza ek bir güvenlik katmanı ekleyin.',
