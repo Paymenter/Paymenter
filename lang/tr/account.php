@@ -4,7 +4,7 @@ return [
     'account' => 'Hesap',
     'personal_details' => 'Kişisel bilgiler',
     'security' => 'Güvenlik',
-    'credits' => 'Credits',
+    'credits' => 'Bakiyeler',
 
     'change_password' => 'Şifreyi değiştir',
 
