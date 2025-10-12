@@ -43,7 +43,7 @@ return [
     'declined_if' => ':other :value olduğunda :attribute reddedilmelidir.',
     'different' => ':attribute ve :other farklı olmalıdır.',
     'digits' => ':attribute :digits basamak olmalıdır.',
-    'digits_between' => 'The :attribute field must be between :min and :max digits.',
+    'digits_between' => ':attribute alanı en az :min, en fazla :max karakter olmalıdır.',
     'dimensions' => 'The :attribute field has invalid image dimensions.',
     'distinct' => 'The :attribute field has a duplicate value.',
     'doesnt_end_with' => 'The :attribute field must not end with one of the following: :values.',
