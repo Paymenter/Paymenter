@@ -59,16 +59,16 @@ class NotificationHelper
         array $attachments = [],
         string $email = null,
     ): void {
+        if (!$email) {
+            $email = config('settings.system_email_address');
+        }
+        if (!$email || config('settings.mail_disable')) {
+            return;
+        }
         $mail = new \App\Mail\SystemMail([
             'subject' => $subject,
             'body' => $body,
         ]);
-        if (!$email) {
-            $email = config('settings.system_email_address');
-        }
-        if (!$email) {
-            return;
-        }
         $emailLog = EmailLog::create([
             'subject' => $mail->envelope()->subject,
             'to' => $email,
