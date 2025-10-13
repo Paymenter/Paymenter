@@ -15,8 +15,9 @@ class UpgradeJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    public $timeout = 60;
+    public $timeout = 120;
 
+    public $tries = 1;
     /**
      * Create a new job instance.
      */
@@ -34,6 +35,7 @@ class UpgradeJob implements ShouldQueue
             if ($e->getMessage() == 'No server assigned to this product') {
                 return;
             }
+            throw $e;
         }
     }
 }

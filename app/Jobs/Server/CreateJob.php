@@ -16,7 +16,7 @@ class CreateJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    public $timeout = 60;
+    public $timeout = 120;
 
     public $tries = 1;
 

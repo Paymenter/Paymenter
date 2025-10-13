@@ -662,7 +662,7 @@ class ExtensionHelper
                     DB::table('migrations')->where('migration', $migrationName)->delete();
                 }
             } catch (Exception $e) {
-                Log::error('Failed to rollback migration: ' . $migrationName . ' - ' . $e->getMessage());
+                report($e);
             }
         }
     }
@@ -680,7 +680,7 @@ class ExtensionHelper
             $output = Artisan::output();
             Log::debug('Migrations output: ' . $output);
         } catch (Exception $e) {
-            Log::error('Failed to run migrations for path: ' . $path . ' - ' . $e->getMessage());
+            report($e);
         }
     }
 }

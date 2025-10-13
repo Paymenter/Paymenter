@@ -14,8 +14,6 @@ use App\Models\User;
 use Exception;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Session;
 use Livewire\Attributes\Locked;
 
 class Cart extends Component
@@ -262,10 +260,9 @@ class Cart extends Component
             if ($e instanceof DisplayException) {
                 return $this->notify($e->getMessage(), 'error');
             } else {
-                Log::error($e);
+                report($e);
                 $this->notify('An error occurred while processing your order. Please try again later.');
             }
-            throw $e;
         }
     }
 
