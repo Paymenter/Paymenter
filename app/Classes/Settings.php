@@ -77,6 +77,13 @@ class Settings
                     'file_name' => 'logo.webp',
                 ],
                 [
+                    'name' => 'system_email_address',
+                    'label' => 'System Email Address',
+                    'type' => 'email',
+                    'required' => true,
+                    'description' => 'The email address used for system emails, such as CronJob failures, updates, etc.',
+                ],
+                [
                     'name' => 'tos',
                     'label' => 'Terms of Service',
                     'description' => 'URL to your terms of service. Leave blank to disable.',

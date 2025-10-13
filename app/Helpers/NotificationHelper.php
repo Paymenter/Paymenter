@@ -53,6 +53,39 @@ class NotificationHelper
             ->queue($mail);
     }
 
+    public static function sendSystemEmailNotification(
+        string $subject,
+        string $body,
+        array $attachments = [],
+        string $email = null,
+    ): void {
+        $mail = new \App\Mail\SystemMail([
+            'subject' => $subject,
+            'body' => $body,
+        ]);
+        if (!$email) {
+            $email = config('settings.system_email_address');
+        }
+        if (!$email) {
+            return;
+        }
+        $emailLog = EmailLog::create([
+            'subject' => $mail->envelope()->subject,
+            'to' => $email,
+            'body' => $mail->render(),
+        ]);
+
+        // Add the email log id to the payload
+        $mail->email_log_id = $emailLog->id;
+
+        foreach ($attachments as $attachment) {
+            $mail->attachFromStorage($attachment['path'], $attachment['name'], $attachment['options'] ?? []);
+        }
+
+        FacadesMail::to($email)
+            ->queue($mail);
+    }
+
     public static function sendInAppNotification(
         NotificationTemplate $notification,
         array $data,
@@ -125,7 +158,7 @@ class NotificationHelper
                 'path' => 'invoices/' . ($invoice->number ?? $invoice->id) . '.pdf',
                 'name' => 'invoice.pdf',
             ],
-        ]; 
+        ];
 
         self::sendNotification($key, $data, $user, $attachments);
     }

@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Helpers\ExtensionHelper;
+use App\Helpers\NotificationHelper;
 use App\Jobs\Server\SuspendJob;
 use App\Jobs\Server\TerminateJob;
 use App\Models\CronStat;
@@ -186,6 +187,12 @@ class CronJob extends Command
 
         } catch (Exception $e) {
             DB::rollBack();
+
+            NotificationHelper::sendSystemEmailNotification('Cron Job Error', <<<HTML
+                An error occurred while running the cron job:<br>
+                <pre>{$e->getMessage()}.</pre><br>
+                Please check the system and application logs for more details.
+                HTML);
 
             throw $e;
         }
