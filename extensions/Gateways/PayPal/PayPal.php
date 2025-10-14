@@ -79,7 +79,8 @@ class PayPal extends Gateway
             Auth::user(),
             'PayPal',
             'PayPal ' . $request->payment_source->paypal->email_address,
-            $request->id
+            $request->id,
+            'paypal',
         );
 
         return redirect()->route('account.payment-methods')->with('notification', [
@@ -111,7 +112,6 @@ class PayPal extends Gateway
 
         return true;
     }
-
 
     public function boot()
     {

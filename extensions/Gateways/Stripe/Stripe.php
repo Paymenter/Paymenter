@@ -598,12 +598,16 @@ class Stripe extends Gateway
         // Get the actual payment method that will be used for future charges
         $actualPaymentMethod = $this->getActualPaymentMethod($setupIntent);
 
+        $data = $this->getPaymentDetails($actualPaymentMethod);
+
         // Save billing agreement
         ExtensionHelper::makeBillingAgreement(
             $user,
             'Stripe',
-            $this->getPaymentMethodName($actualPaymentMethod),
-            $actualPaymentMethod->id
+            $data['name'],
+            $actualPaymentMethod->id,
+            $data['type'],
+            $data['expiry'],
         );
     }
 
@@ -625,11 +629,10 @@ class Stripe extends Gateway
         return $this->request('get', '/payment_methods/' . $setupIntent->payment_method);
     }
 
-    private function getPaymentMethodName($paymentMethod)
+    private function getPaymentDetails($paymentMethod)
     {
-        switch ($paymentMethod->type) {
-            case 'card':
-                return match ($paymentMethod->card->brand) {
+        $name = match ($paymentMethod->type) {
+            'card' => match ($paymentMethod->card->brand) {
                     'amex' => 'American Express',
                     'diners' => 'Diners Club',
                     'discover' => 'Discover',
@@ -638,23 +641,38 @@ class Stripe extends Gateway
                     'unionpay' => 'UnionPay',
                     'visa' => 'Visa',
                     default => ucfirst($paymentMethod->card->brand),
-                } . ' **** ' . $paymentMethod->card->last4;
+                } . ' **** ' . $paymentMethod->card->last4,
 
-            case 'sepa_debit':
-                return 'SEPA Direct Debit **** ' . $paymentMethod->sepa_debit->last4;
+            'sepa_debit' => 'SEPA Direct Debit **** ' . $paymentMethod->sepa_debit->last4,
+            'ideal' => 'iDEAL **** ' . $paymentMethod->ideal->bank_code,
+            'bancontact' => 'Bancontact **** ' . $paymentMethod->bancontact->bank_code,
+            'sofort' => 'SOFORT **** ' . strtoupper($paymentMethod->sofort->country),
+            'us_bank_account' => 'US Bank Account **** ' . $paymentMethod->us_bank_account->last4,
+            'bacs_debit' => 'Bacs Direct Debit **** ' . $paymentMethod->bacs_debit->last4,
+            'au_becs_debit' => 'BECS Direct Debit **** ' . $paymentMethod->au_becs_debit->last4,
 
-            case 'us_bank_account':
-                return 'US Bank Account **** ' . $paymentMethod->us_bank_account->last4;
-
-            case 'bacs_debit':
-                return 'Bacs Direct Debit **** ' . $paymentMethod->bacs_debit->last4;
-
-            case 'au_becs_debit':
-                return 'BECS Direct Debit **** ' . $paymentMethod->au_becs_debit->last4;
-
-            default:
-                return ucfirst(str_replace('_', ' ', $paymentMethod->type));
+            default => ucfirst(str_replace('_', ' ', $paymentMethod->type)),
+        };
+        $type = match ($paymentMethod->type) {
+            'card' => $paymentMethod->card->brand,
+            // For the others, just return the type as is
+            default => $paymentMethod->type,
+        };
+        $expiry = null;
+        if ($paymentMethod->type === 'card') {
+            $expiry = Carbon::createFromDate(
+                $paymentMethod->card->exp_year,
+                $paymentMethod->card->exp_month,
+                1
+            )->endOfMonth()->format('Y-m-d');
         }
+
+        return [
+            'name' => $name,
+            'type' => $type,
+            'expiry' => $expiry,
+        ];
+
     }
 
     public function charge(Invoice $invoice, $amount, BillingAgreement $billingAgreement)

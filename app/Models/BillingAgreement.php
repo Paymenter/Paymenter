@@ -18,6 +18,8 @@ class BillingAgreement extends Model implements Auditable
         'gateway_id',
         'name', // e.g. Visa **** 4242
         'external_reference', // e.g. Stripe card id, PayPal billing agreement id
+        'type', // e.g. card type
+        'expiry',
     ];
 
     public function uniqueIds()

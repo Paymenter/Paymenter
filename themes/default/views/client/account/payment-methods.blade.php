@@ -58,7 +58,6 @@
             @endif
         </div>
 
-        @if($billingAgreements->count() > 0)
         @forelse ($billingAgreements as $agreement)
         <div
             class="bg-background-secondary border border-neutral p-4 rounded-lg mb-4 hover:bg-background-secondary/80 transition-colors">
@@ -111,8 +110,6 @@
             <p class="text-base/70 mb-4">{{ __('account.no_saved_payment_methods') }}</p>
         </div>
         @endforelse
-        @endif
-
 
         <h3 class="text-lg font-bold pb-3 mt-8">{{ __('account.recent_transactions') }}</h3>
         @foreach ($transactions as $transaction)

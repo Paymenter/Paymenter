@@ -434,7 +434,7 @@ class ExtensionHelper
         return self::getExtension('gateway', $billingAgreement->gateway->extension, $billingAgreement->gateway->settings)->cancelBillingAgreement($billingAgreement);
     }
 
-    public static function makeBillingAgreement(User $user, $gateway, $name, $externalReference)
+    public static function makeBillingAgreement(User $user, $gateway, $name, $externalReference, $type = null, $expiry = null)
     {
         $gateway = Gateway::where('extension', $gateway)->firstOrFail();
 
@@ -444,6 +444,8 @@ class ExtensionHelper
             'gateway_id' => $gateway->id,
         ], [
             'name' => $name,
+            'type' => $type,
+            'expiry' => $expiry,
         ]);
 
         return $billingAgreement;

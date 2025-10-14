@@ -22,6 +22,8 @@ return new class extends Migration
             $table->foreign('currency_code')->references('code')->on('currencies')->cascadeOnDelete();
             // Name can be for example Visa **** 4242
             $table->string('name');
+            $table->string('type')->nullable();
+            $table->date('expiry')->nullable();
             $table->string('external_reference')->unique();
             $table->softDeletes();
             $table->timestamps();
