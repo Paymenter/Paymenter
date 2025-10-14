@@ -45,4 +45,5 @@ return [
     'pay_with_one_time_method' => 'Or pay with a one-time method',
     'pay_with_credits' => 'Pay with Credits',
     'apply_credit' => 'Apply Credit ( :amount )',
+    'no_invoices' => 'No invoices found.',
 ];

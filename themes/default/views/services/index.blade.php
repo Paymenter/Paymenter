@@ -1,6 +1,6 @@
 <div class="space-y-4">
     <x-navigation.breadcrumb />
-    @foreach ($services as $service)
+    @forelse ($services as $service)
     <a href="{{ route('services.show', $service) }}" wire:navigate>
         <div class="bg-background-secondary hover:bg-background-secondary/80 border border-neutral p-4 rounded-lg mb-4">
         <div class="flex items-center justify-between mb-2">
@@ -33,7 +33,11 @@
         </p>
         </div>
     </a>
-    @endforeach
+    @empty
+    <div class="bg-background-secondary border border-neutral p-4 rounded-lg">
+        <p class="text-base text-sm">{{ __('services.no_services') }}</p>
+    </div>
+    @endforelse
 
     {{ $services->links() }}
 </div>

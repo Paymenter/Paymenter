@@ -58,4 +58,6 @@ return [
     'expires_at' => 'Expires at',
     'auto_pay' => 'Auto paying using',
     'auto_pay_not_configured' => 'Not configured',
+
+    'no_services' => 'No services found',
 ];
