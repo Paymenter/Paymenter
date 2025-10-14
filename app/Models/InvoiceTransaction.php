@@ -21,6 +21,7 @@ class InvoiceTransaction extends Model implements Auditable
         'fee',
         'transaction_id',
         'status',
+        'is_credit_transaction',
     ];
 
     protected $casts = [

@@ -46,4 +46,5 @@ return [
     'pay_with_credits' => 'Pay with Credits',
     'apply_credit' => 'Apply Credit ( :amount )',
     'no_invoices' => 'No invoices found.',
+    'paid_with_credits' => 'Paid with Credits',
 ];

@@ -456,7 +456,7 @@ class ExtensionHelper
      *
      * @param  Invoice|int  $invoice
      */
-    public static function addPayment($invoice, $gateway, $amount, $fee = null, $transactionId = null, InvoiceTransactionStatus $status = InvoiceTransactionStatus::Succeeded)
+    public static function addPayment($invoice, $gateway, $amount, $fee = null, $transactionId = null, InvoiceTransactionStatus $status = InvoiceTransactionStatus::Succeeded, $isCreditTransaction = false)
     {
         if (isset($gateway)) {
             $gateway = Gateway::where('extension', $gateway)->first();
@@ -470,12 +470,14 @@ class ExtensionHelper
                 'amount' => $amount,
                 'fee' => $fee,
                 'status' => $status,
+                'is_credit_transaction' => $isCreditTransaction,
             ]);
         } else {
             $updateData = [
                 'gateway_id' => $gateway?->id,
                 'amount' => $amount,
                 'status' => $status,
+                'is_credit_transaction' => $isCreditTransaction,
             ];
             if ($fee !== null) {
                 $updateData['fee'] = $fee;

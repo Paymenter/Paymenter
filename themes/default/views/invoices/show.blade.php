@@ -174,7 +174,12 @@
                                 {{ $transaction->created_at->format('d M Y H:i') }}</td>
                             <td class="p-4 font-normal whitespace-nowrap">{{ $transaction->transaction_id }}
                             </td>
-                            <td class="p-4 font-normal whitespace-nowrap">{{ $transaction->gateway?->name }}
+                            <td class="p-4 font-normal whitespace-nowrap">
+                                @if($transaction->is_credit_transaction)
+                                {{ __('invoices.paid_with_credits') }}
+                                @else
+                                {{ $transaction->gateway?->name }}
+                                @endif
                             </td>
                             <td class="p-4 font-normal whitespace-nowrap">{{ $transaction->formattedAmount }}
                             </td>
