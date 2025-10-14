@@ -160,8 +160,11 @@
             </table>
         </div>
 
-        <x-button.primary wire:click="savePreferences" class="w-full mt-6">
-            {{ __('general.save') }}
+        <x-button.primary wire:click="savePreferences" class="w-full mt-6" wire:loading.attr="disabled">
+            <x-loading wire:loading wire:target="savePreferences" />
+            <span wire:loading.remove wire:target="savePreferences">
+                {{ __('general.save') }}
+            </span>
         </x-button.primary>
     </div>
 </div>

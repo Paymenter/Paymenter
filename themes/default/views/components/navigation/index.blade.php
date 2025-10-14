@@ -27,7 +27,7 @@
                             <x-slot:content>
                                 @foreach ($nav['children'] as $child)
                                 <x-navigation.link
-                                    :href="route($child['route'], $child['params'] ?? null)"
+                                    :href="$child['url']"
                                     :spa="isset($child['spa']) ? $nav['spa'] : true">
                                     {{ $child['name'] }}
                                 </x-navigation.link>
@@ -37,7 +37,7 @@
                     </div>
                     @else
                     <x-navigation.link
-                        :href="route($nav['route'], $nav['params'] ?? null)"
+                        :href="$nav['url']"
                         :spa="isset($nav['spa']) ? $nav['spa'] : true"
                         class="flex items-center p-3">
                         {{ $nav['name'] }}
@@ -84,7 +84,7 @@
                                 <span class="text-sm text-base break-words">{{ auth()->user()->email }}</span>
                             </div>
                             @foreach (\App\Classes\Navigation::getAccountDropdownLinks() as $nav)
-                            <x-navigation.link :href="route($nav['route'], $nav['params'] ?? null)" :spa="isset($nav['spa']) ? $nav['spa'] : true">
+                            <x-navigation.link :href="$nav['url']" :spa="isset($nav['spa']) ? $nav['spa'] : true">
                                 {{ $nav['name'] }}
                             </x-navigation.link>
                             @endforeach
@@ -214,7 +214,7 @@
                                         <div class="h-px w-full bg-neutral my-6"></div>
                                         <div class="mt-4 flex flex-col gap-2 w-full">
                                             @foreach (\App\Classes\Navigation::getAccountDropdownLinks() as $nav)
-                                            <x-navigation.link :href="route($nav['route'], $nav['params'] ?? null)" :spa="isset($nav['spa']) ? $nav['spa'] : true">
+                                            <x-navigation.link :href="$nav['url']" :spa="isset($nav['spa']) ? $nav['spa'] : true">
                                                 {{ $nav['name'] }}
                                             </x-navigation.link>
                                             @endforeach

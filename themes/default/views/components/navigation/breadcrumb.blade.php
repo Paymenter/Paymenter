@@ -1,5 +1,5 @@
 @php
-    $currentRoute = request()->livewireRoute();
+    $currentRoute = request()->livewireUrl();
 
     $navigation = [
         \App\Classes\Navigation::getLinks(),
@@ -9,7 +9,7 @@
 
     function findBreadcrumb($items, $currentRoute) {
         foreach ($items as $item) {
-            if (isset($item['route']) && $item['route'] === $currentRoute) {
+            if (isset($item['url']) && $item['url'] === $currentRoute) {
                 return [$item];
             }
 

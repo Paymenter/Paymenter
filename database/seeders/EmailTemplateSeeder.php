@@ -141,54 +141,54 @@ class EmailTemplateSeeder extends Seeder
             'in_app_url' => '{{ route("services") }}'
         ],
         'new_server_created' => [
-            'subject' => 'Server activated',
+            'subject' => 'Service activated',
             'body' => <<<'HTML'
-                # Server activated
+                # Service activated
 
-                Your server has been activated.
+                Your service has been activated.
 
-                **Server details**
+                **Service details**
                 - Name: {{ $service->product->name }}
 
                 @isset($service->product->email_template)
-                **Server information**  
+                **Service information**  
                 {!! Str::markdown(Illuminate\View\Compilers\BladeCompiler::render($service->product->email_template, get_defined_vars()['__data'])) !!}
                 @endisset
                 HTML,
-            'in_app_title' => 'Server activated',
-            'in_app_body' => 'Your server {{ $service->product->name }} has been activated.',
+            'in_app_title' => 'Service activated',
+            'in_app_body' => 'Your service {{ $service->product->name }} has been activated.',
             'mail_enabled' => 'force',
             'in_app_enabled' => 'choice_on',
             'edit_preference_message' => 'Notify me about new service activations',
             'in_app_url' => '{{ route("services.show", $service) }}'
         ],
         'server_suspended' => [
-            'subject' => 'Server suspended',
+            'subject' => 'Service suspended',
             'body' => <<<'HTML'
-                # Server suspended
+                # Service suspended
 
-                Your server has been suspended due to a payment failure.
+                Your service has been suspended due to a payment failure.
 
-                **Server details**
+                **Service details**
                 - Name: {{ $service->product->name }}
 
-                Please pay the invoice to reactivate the server.
+                Please pay the invoice to reactivate the service.
                 HTML,
-            'in_app_title' => 'Server suspended',
-            'in_app_body' => 'Your server {{ $service->product->name }} has been suspended due to a payment failure. Please pay the invoice to reactivate the server.',
+            'in_app_title' => 'Service suspended',
+            'in_app_body' => 'Your service {{ $service->product->name }} has been suspended due to a payment failure. Please pay the invoice to reactivate the service.',
             'mail_enabled' => 'force',
             'in_app_enabled' => 'choice_on',
             'edit_preference_message' => 'Alert me about service suspensions',
             'in_app_url' => '{{ route("services.show", $service) }}'
         ],
         'server_terminated' => [
-            'subject' => 'Server terminated',
+            'subject' => 'Service terminated',
             'body' => <<<'HTML'
-                # Server terminated
+                # Service terminated
 
-                Your server has been terminated.
+                Your service has been terminated.
 
-                **Server details**
+                **Service details**
                 - Name: {{ $service->product->name }}
 
                 Do you consider it a mistake?
