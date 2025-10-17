@@ -1,52 +1,52 @@
 <?php
 
 return [
-    'account' => 'Account',
-    'personal_details' => 'Personal details',
-    'security' => 'Security',
-    'credits' => 'Credits',
+    'account' => 'Fiók',
+    'personal_details' => 'Személyes adatok',
+    'security' => 'Biztonság',
+    'credits' => 'Kreditek',
 
-    'change_password' => 'Change password',
+    'change_password' => 'Jelszó módosítása',
 
-    'two_factor_authentication' => 'Two-factor authentication',
+    'two_factor_authentication' => 'Kétlépcsős azonosítás',
     'two_factor_authentication_description' => 'Add an extra layer of security to your account by enabling two-factor authentication.',
     'two_factor_authentication_enabled' => 'Two-factor authentication is enabled for your account.',
     'two_factor_authentication_enable' => 'Enable two-factor authentication',
     'two_factor_authentication_disable' => 'Disable two-factor authentication',
     'two_factor_authentication_enable_description' => 'To enable two factor authentication, you need to scan the QR code below with an authenticator app like Google Authenticator or Authy.',
     'two_factor_authentication_qr_code' => 'Scan the QR code below with your authenticator app:',
-    'two_factor_authentication_secret' => 'Or enter the following code manually:',
+    'two_factor_authentication_secret' => 'Vagy írd be a következő kódot manuálisan:',
 
-    'sessions' => 'Sessions',
-    'sessions_description' => 'Manage and log out your active sessions on other browsers and devices.',
-    'logout_sessions' => 'Log this session out',
+    'sessions' => 'Munkamenetek',
+    'sessions_description' => 'Kezeld, és jelentkezz ki aktív munkameneteidből más böngészőkön és eszközökön.',
+    'logout_sessions' => 'Ez a munkamenet kijelentkeztetése',
 
     'input' => [
-        'current_password' => 'Current password',
-        'current_password_placeholder' => 'Your current password',
-        'new_password' => 'New password',
-        'new_password_placeholder' => 'Your new password',
-        'confirm_password' => 'Confirm password',
-        'confirm_password_placeholder' => 'Confirm your new password',
+        'current_password' => 'Jelenlegi jelszó',
+        'current_password_placeholder' => 'Jelenlegi jelszavad',
+        'new_password' => 'Új jelszó',
+        'new_password_placeholder' => 'Új jelszavad',
+        'confirm_password' => 'Jelszó megerősítése',
+        'confirm_password_placeholder' => 'Erősítsd meg az új jelszavad',
 
-        'two_factor_code' => 'Enter the code from your authenticator app',
-        'two_factor_code_placeholder' => 'Your two-factor authentication code',
+        'two_factor_code' => 'Add meg a hitelesítő alkalmazása által generált kódot',
+        'two_factor_code_placeholder' => 'Kétlépcsős azonosító kódod',
 
-        'currency' => 'Currency',
-        'amount' => 'Amount',
+        'currency' => 'Pénznem',
+        'amount' => 'Mennyiség',
     ],
 
     'notifications' => [
-        'password_changed' => 'Password has been changed.',
-        'password_incorrect' => 'The current password is incorrect.',
-        'two_factor_enabled' => 'Two-factor authentication has been enabled.',
-        'two_factor_disabled' => 'Two-factor authentication has been disabled.',
-        'two_factor_code_incorrect' => 'The code is incorrect.',
-        'session_logged_out' => 'Session has been logged out.',
+        'password_changed' => 'A jelszó megváltoztatásra került.',
+        'password_incorrect' => 'A jelenlegi jelszavad helytelen.',
+        'two_factor_enabled' => 'Kétlépcsős azonosítás bekapcsolva.',
+        'two_factor_disabled' => 'Kétlépcsős azonosítás kikapcsolva.',
+        'two_factor_code_incorrect' => 'A kód helytelen.',
+        'session_logged_out' => 'A munkamenet ki lett jelentkeztetve.',
     ],
 
-    'no_credit' => 'You have no credits.',
-    'add_credit' => 'Add credit',
+    'no_credit' => 'Nincs kredited.',
+    'add_credit' => 'Kredit hozzáadása',
     'credit_deposit' => 'Credit deposit (:currency)',
 
 ];
