@@ -1,19 +1,19 @@
 <?php
 
 return [
-    'affiliate' => 'Affiliate',
-    'signup-for-affiliate' => 'Signup for Affiliate',
+    'affiliate' => 'Partnerprogramra',
+    'signup-for-affiliate' => 'Csatlakozás az partnerprogramrahoz',
     'code' => 'Kód',
     'visitors' => 'Látogatók',
     'total-visitors' => 'Összes látogató',
-    'signups' => 'Signups',
-    'total-signups' => 'Total Signups',
+    'signups' => 'Regisztrációk',
+    'total-signups' => 'Összes regisztráció',
     'earnings' => 'Kereset',
     'total-earnings' => 'Teljes jutalom',
-    'your-affiliate-link' => 'Your affiliate link',
+    'your-affiliate-link' => 'Az ajánlói linked',
     'copy' => 'Másolás',
 
-    'you-havent-signed-up-yet' => 'You have not signed up for affiliates program yet!',
-    'you-are-already-affiliated' => 'You have already signed up for affiliate program.',
-    'signup-success' => 'Successfully signed up for affiliate program!',
+    'you-havent-signed-up-yet' => 'Még nem csatlakoztál a partnerprogramhoz!',
+    'you-are-already-affiliated' => 'Már csatlakoztál a partnerprogramhoz.',
+    'signup-success' => 'Sikeresen csatlakoztál a partnerprogramhoz!',
 ];
