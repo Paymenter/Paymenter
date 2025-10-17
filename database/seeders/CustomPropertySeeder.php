@@ -24,6 +24,9 @@ class CustomPropertySeeder extends Seeder
                 'required' => 1,
                 'show_on_invoice' => 0,
                 'validation' => 'string|max:255',
+                'condition_mode' => 'none',
+                'condition_rules' => null,
+                'sort_order' => 10,
             ],
             [
                 'key' => 'company_name',
@@ -34,6 +37,9 @@ class CustomPropertySeeder extends Seeder
                 'required' => 0,
                 'show_on_invoice' => 1,
                 'validation' => 'string|max:255',
+                'condition_mode' => 'none',
+                'condition_rules' => null,
+                'sort_order' => 20,
             ],
             [
                 'key' => 'address',
@@ -44,6 +50,9 @@ class CustomPropertySeeder extends Seeder
                 'required' => 1,
                 'show_on_invoice' => 1,
                 'validation' => 'string|max:255',
+                'condition_mode' => 'none',
+                'condition_rules' => null,
+                'sort_order' => 40,
             ],
             [
                 'key' => 'address2',
@@ -54,6 +63,9 @@ class CustomPropertySeeder extends Seeder
                 'required' => 0,
                 'show_on_invoice' => 0,
                 'validation' => 'string|max:255',
+                'condition_mode' => 'none',
+                'condition_rules' => null,
+                'sort_order' => 50,
             ],
             [
                 'key' => 'city',
@@ -64,6 +76,9 @@ class CustomPropertySeeder extends Seeder
                 'required' => 1,
                 'show_on_invoice' => 1,
                 'validation' => 'string|max:255',
+                'condition_mode' => 'none',
+                'condition_rules' => null,
+                'sort_order' => 60,
             ],
             [
                 'key' => 'state',
@@ -74,6 +89,9 @@ class CustomPropertySeeder extends Seeder
                 'required' => 1,
                 'show_on_invoice' => 1,
                 'validation' => 'string|max:255',
+                'condition_mode' => 'none',
+                'condition_rules' => null,
+                'sort_order' => 70,
             ],
             [
                 'key' => 'zip',
@@ -84,6 +102,9 @@ class CustomPropertySeeder extends Seeder
                 'required' => 1,
                 'show_on_invoice' => 1,
                 'validation' => 'string|max:255',
+                'condition_mode' => 'none',
+                'condition_rules' => null,
+                'sort_order' => 80,
             ],
         ]);
 
@@ -98,6 +119,9 @@ class CustomPropertySeeder extends Seeder
                 'show_on_invoice' => 1,
                 'allowed_values' => json_encode(array_values(array_slice(config('app.countries', []), 1))),
                 'validation' => 'string|max:255',
+                'condition_mode' => 'none',
+                'condition_rules' => null,
+                'sort_order' => 30,
             ],
         ]);
     }

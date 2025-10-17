@@ -27,7 +27,11 @@ class PropertiesRelationManager extends RelationManager
                 Select::make('custom_property_id')->label('Custom Property')
                     ->required()
                     ->options(function ($livewire): array {
-                        return CustomProperty::where('model', get_class($livewire->ownerRecord))->pluck('name', 'id')->toArray();
+                        return CustomProperty::where('model', get_class($livewire->ownerRecord))
+                            ->orderBy('sort_order')
+                            ->orderBy('name')
+                            ->pluck('name', 'id')
+                            ->toArray();
                     })->nullable(),
                 TextInput::make('name')->translateLabel()->nullable(),
                 TextInput::make('key')->translateLabel()->required(),

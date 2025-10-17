@@ -4,13 +4,16 @@ namespace App\Livewire;
 
 use App\Events\Properties\Updated as PropertiesUpdated;
 use App\Models\CustomProperty;
-use Illuminate\Database\Eloquent\Collection;
+use App\Services\CustomPropertyVisibilityService;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Collection;
 
 class ComponentWithProperties extends Component
 {
     // Custom Properties which will be used to render the Inputs
     public Collection $custom_properties;
+
+    public string $customPropertyMorphClass = '';
 
     // Values of the Custom Properties
     public array $properties = [];
@@ -23,7 +26,10 @@ class ComponentWithProperties extends Component
      */
     public function initializeProperties($model, $morphClass)
     {
-        $this->custom_properties = CustomProperty::where('model', $morphClass)->get();
+        $this->customPropertyMorphClass = $morphClass;
+
+        $this->properties = [];
+
         if ($model) {
             $this->properties = $model
                 ->properties->mapWithKeys(function ($property) {
@@ -31,6 +37,8 @@ class ComponentWithProperties extends Component
                 })
                 ->toArray();
         }
+
+        $this->refreshVisibleProperties();
     }
 
     public function getRulesForProperties(): array
@@ -59,7 +67,12 @@ class ComponentWithProperties extends Component
     public function updateProperties($model, $properties)
     {
         $properties = collect($properties)->map(function ($value, $key) use ($model) {
-            $custom_property = $this->custom_properties->where('key', $key)->first();
+            $custom_property = $this->custom_properties->firstWhere('key', $key);
+
+            if (! $custom_property) {
+                return null;
+            }
+
             if ($custom_property->non_editable && $model->properties->where('key', $key)->first()) {
                 return null;
             }
@@ -87,5 +100,62 @@ class ComponentWithProperties extends Component
         ]);
 
         event(new PropertiesUpdated($model, $properties));
+    }
+
+    protected function refreshVisibleProperties(): void
+    {
+        if (! isset($this->custom_properties)) {
+            $this->custom_properties = collect();
+        }
+
+        if ($this->customPropertyMorphClass === '') {
+            $this->custom_properties = collect();
+
+            return;
+        }
+
+        $allProperties = CustomProperty::query()
+            ->where('model', $this->customPropertyMorphClass)
+            ->orderBy('sort_order')
+            ->orderBy('name')
+            ->get();
+
+        /** @var CustomPropertyVisibilityService $resolver */
+        $resolver = app(CustomPropertyVisibilityService::class);
+
+        $visible = $resolver->filter($allProperties, $this->properties)->values();
+        $visibleKeys = $visible->pluck('key')->all();
+
+        $existingKeys = $this->custom_properties instanceof Collection
+            ? $this->custom_properties->pluck('key')->all()
+            : [];
+
+        if ($existingKeys !== $visibleKeys) {
+            $this->custom_properties = $visible;
+        } elseif ($this->custom_properties instanceof Collection) {
+            $this->custom_properties = $this->custom_properties->map(function ($property) use ($visible) {
+                $replacement = $visible->firstWhere('key', $property->key);
+
+                return $replacement ?? $property;
+            });
+        }
+
+        if ($this->properties !== []) {
+            $currentValues = $this->properties;
+            $this->properties = [];
+
+            foreach ($visibleKeys as $key) {
+                if (array_key_exists($key, $currentValues)) {
+                    $this->properties[$key] = $currentValues[$key];
+                }
+            }
+        }
+    }
+
+    public function updated($propertyName, $value): void
+    {
+        if (is_string($propertyName) && str_starts_with($propertyName, 'properties.')) {
+            $this->refreshVisibleProperties();
+        }
     }
 }
