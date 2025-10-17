@@ -9,12 +9,12 @@ return [
     'change_password' => 'Jelszó módosítása',
 
     'two_factor_authentication' => 'Kétlépcsős azonosítás',
-    'two_factor_authentication_description' => 'Add an extra layer of security to your account by enabling two-factor authentication.',
-    'two_factor_authentication_enabled' => 'Two-factor authentication is enabled for your account.',
-    'two_factor_authentication_enable' => 'Enable two-factor authentication',
-    'two_factor_authentication_disable' => 'Disable two-factor authentication',
-    'two_factor_authentication_enable_description' => 'To enable two factor authentication, you need to scan the QR code below with an authenticator app like Google Authenticator or Authy.',
-    'two_factor_authentication_qr_code' => 'Scan the QR code below with your authenticator app:',
+    'two_factor_authentication_description' => 'Adj egy extra biztonsági réteget a fiókodhoz a kétlépcsős azonosítás engedélyezésével.',
+    'two_factor_authentication_enabled' => 'A kétlépcsős azonosítás be van kapcsolva a fiókodhoz.',
+    'two_factor_authentication_enable' => 'Kétlépcsős azonosítás engedélyezése',
+    'two_factor_authentication_disable' => 'Kétlépcsős azonosítás letiltása',
+    'two_factor_authentication_enable_description' => 'A kétlépcsős azonosítás engedélyezéséhez a lenti QR-kódot olvasd be egy autentikátor alkalmazással, például a Google Authenticatorral vagy az Authy-val.',
+    'two_factor_authentication_qr_code' => 'Olvasd be az alábbi QR-kódot az autentikátor alkalmazásoddal:',
     'two_factor_authentication_secret' => 'Vagy írd be a következő kódot manuálisan:',
 
     'sessions' => 'Munkamenetek',
@@ -39,14 +39,14 @@ return [
     'notifications' => [
         'password_changed' => 'A jelszó megváltoztatásra került.',
         'password_incorrect' => 'A jelenlegi jelszavad helytelen.',
-        'two_factor_enabled' => 'Kétlépcsős azonosítás bekapcsolva.',
-        'two_factor_disabled' => 'Kétlépcsős azonosítás kikapcsolva.',
+        'two_factor_enabled' => 'Kétlépcsős azonosítás engedélyezve.',
+        'two_factor_disabled' => 'Kétlépcsős azonosítás letiltva.',
         'two_factor_code_incorrect' => 'A kód helytelen.',
         'session_logged_out' => 'A munkamenet ki lett jelentkeztetve.',
     ],
 
     'no_credit' => 'Nincs kredited.',
     'add_credit' => 'Kredit hozzáadása',
-    'credit_deposit' => 'Credit deposit (:currency)',
+    'credit_deposit' => 'Kredit befizetés (:currency)',
 
 ];
