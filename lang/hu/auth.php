@@ -13,43 +13,43 @@ return [
     |
     */
 
-    'failed' => 'These credentials do not match our records.',
-    'password' => 'The provided password is incorrect.',
-    'throttle' => 'Too many login attempts. Please try again in :seconds seconds.',
+    'failed' => 'Ezek az adatok nem egyeznek az adatbázisunkban szereplőkkel.',
+    'password' => 'A megadott jelszó helytelen.',
+    'throttle' => 'Túl sok bejelentkezési kísérlet. Kérlek, próbáld újra :seconds másodperc múlva.',
 
-    'sign_in' => 'Sign in',
-    'sign_in_title' => 'Sign in to your account',
-    'or_sign_in_with' => 'Or sign in with',
-    'forgot_password' => 'Forgot your password?',
-    'dont_have_account' => 'Don\'t have an account?',
-    'already_have_account' => 'Already have an account?',
+    'sign_in' => 'Jelentkezz be',
+    'sign_in_title' => 'Jelentkezz be a fiókodba',
+    'or_sign_in_with' => 'Vagy jelentkezzen be ezzel',
+    'forgot_password' => 'Elfelejtetted a jelszavadat?',
+    'dont_have_account' => 'Nincs még fiókod?',
+    'already_have_account' => 'Van már fiókod?',
 
-    'sign_up' => 'Sign up',
-    'sign_up_title' => 'Create your account',
+    'sign_up' => 'Regisztráció',
+    'sign_up_title' => 'Fiók létrehozása',
 
-    'logout' => 'Logout',
+    'logout' => 'Kijelentkezés',
 
     'input' => [
         'email' => 'Email',
-        'email_label' => 'Email Address',
-        'password' => 'Password',
+        'email_label' => 'Email cím',
+        'password' => 'Jelszó',
     ],
 
     'oauth' => [
-        'unverified_discord_account' => 'Your Discord account is not verified.',
-        'account_not_registered' => 'You are not registered on this site.',
+        'unverified_discord_account' => 'A Discord fiókod nem hitelesített.',
+        'account_not_registered' => 'Nem regisztráltál ezen az oldalon.',
     ],
 
-    'reset_password' => 'Reset password',
+    'reset_password' => 'Jelszó visszaállítása',
 
-    'verify_2fa' => 'Verify 2FA',
-    'verify' => 'Verify',
+    'verify_2fa' => '2FA Hitelesítés',
+    'verify' => 'Hitelesítés',
 
     'verification' => [
-        'notice' => 'Verify your email address',
-        'sent' => 'A new verification link has been sent to your email address.',
-        'check_your_email' => 'Before proceeding, please check your email for a verification link.',
-        'not_received' => 'If you did not receive the email you can request another verification email.',
-        'request_another' => 'Resend verification email',
+        'notice' => 'Hitelesítsd az email címed',
+        'sent' => 'Egy új megerősítő linket küldtünk az email címedre.',
+        'check_your_email' => 'Mielőtt folytatnád, nézd meg az emailjeidet és keresd meg a megerősítő linket, amit küldtünk.',
+        'not_received' => 'Ha nem kaptál megerősítő email-t, itt kérhetsz egy másikat.',
+        'request_another' => 'Hitelesítő email újraküldése',
     ],
 ];
