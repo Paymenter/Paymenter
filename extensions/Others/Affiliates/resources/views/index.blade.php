@@ -1,4 +1,4 @@
-<div>
+<div class="container mt-14">
     <x-navigation.breadcrumb />
     <div class="px-2">
 

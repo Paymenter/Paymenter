@@ -1,4 +1,4 @@
-<div>
+<div class="container mt-14">
     <x-navigation.breadcrumb />
     <p class="text-base text-base/60 font mt-2 mb-8">
         {{ __('dashboard.dashboard_description') }}

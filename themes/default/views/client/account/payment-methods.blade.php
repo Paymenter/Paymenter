@@ -1,4 +1,4 @@
-<div>
+<div class="container mt-14">
     <x-navigation.breadcrumb />
     <div class="px-2">
         @if($setupModalVisible)
@@ -26,7 +26,6 @@
                     {{ __('account.setup_payment_method') }}
                 </div>
             </x-button.primary>
-
             @if ($this->setup)
             <x-modal :title="__('account.setup')" open>
                 <div class="mt-8">

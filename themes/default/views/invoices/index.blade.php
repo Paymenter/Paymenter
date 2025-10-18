@@ -1,4 +1,4 @@
-<div class="space-y-4">
+<div class="container mt-14 space-y-4">
     <x-navigation.breadcrumb />
 
     @forelse ($invoices as $invoice)

@@ -1,4 +1,4 @@
-<div class="space-y-4">
+<div class="container mt-14 space-y-4">
     <div class="flex flex-row justify-between">
         <x-navigation.breadcrumb />
         <x-navigation.link :href="route('tickets.create')" class="flex items-center gap-2">
