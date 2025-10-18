@@ -1,7 +1,4 @@
-<x-modal
-    :title="config('settings.invoice_proforma', false) ? __('invoices.payment_for_proforma_invoice', ['id' => $invoice->id]) : __('invoices.payment_for_invoice', ['number' => $invoice->number])"
-    open>
-    <x-slot>
+
         <div>
             <!-- Show apply credits button if available -->
             @php
@@ -34,30 +31,7 @@
             <div class="mb-6">
                 <h3 class="text-lg font-semibold mb-2">{{ __('account.saved_payment_methods') }}</h3>
                 <div class="space-y-3">
-                    @php
-                    $groupedMethods = $this->savedPaymentMethods->groupBy('gateway.extension');
-                    @endphp
-
-                    @foreach($groupedMethods as $gatewayName => $methods)
-                    <div class="flex items-center justify-between mb-4">
-                        <div class="flex items-center gap-3 mt-6">
-                            <div class="bg-background-secondary border border-neutral rounded-lg overflow-hidden">
-                                @if($gatewayName === 'Stripe')
-                                <x-icons.stripe class="size-9" />
-                                @elseif($gatewayName === 'PayPal')
-                                <x-icons.paypal class="size-9" />
-                                @else
-                                <x-ri-secure-payment-line class="size-5 text-primary" />
-                                @endif
-                            </div>
-                            <h2 class="text-lg font-semibold">{{ $gatewayName }}</h2>
-                        </div>
-                        <span class="bg-primary flex items-center justify-center font-semibold rounded-md size-5 text-sm text-white">
-                            {{ $methods->count() }}
-                        </span>
-                    </div>
-
-                    @foreach($methods as $method)
+                    @foreach($this->savedPaymentMethods as $method)
                     <div wire:click="$set('selectedMethod', '{{ $method->ulid }}')"
                         class="flex items-center justify-between p-4 bg-background-secondary border rounded-lg cursor-pointer transition-all
                             {{ $selectedMethod === $method->ulid ? 'border-primary ring-2 ring-primary' : 'border-neutral hover:border-neutral-focus' }}">
@@ -94,7 +68,6 @@
                             @if($selectedMethod === $method->ulid) <x-ri-check-line class="size-4 text-white" /> @endif
                         </div>
                     </div>
-                    @endforeach
                     @endforeach
                     <a href="{{ route('account.payment-methods') }}" wire:navigate>
                         <x-button.secondary>
@@ -161,6 +134,3 @@
                 </x-button.primary>
             </div>
         </div>
-
-    </x-slot>
-</x-modal>

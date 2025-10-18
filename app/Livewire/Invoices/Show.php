@@ -8,6 +8,7 @@ use App\Livewire\Component;
 use App\Models\Credit;
 use App\Models\Gateway;
 use App\Models\Invoice;
+use App\Models\Service;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Request;
 use Livewire\Attributes\Computed;
@@ -85,8 +86,9 @@ class Show extends Component
     public function hasRecurringServices()
     {
         return $this->invoice->items()
-            ->where('reference_type', \App\Models\Service::class)
-            ->whereHas('reference', function ($query) {
+            ->where('reference_type', Service::class)
+            ->whereNotNull('reference_id')
+            ->whereHasMorph('reference', [Service::class], function ($query) {
                 $query->whereHas('plan', function ($planQuery) {
                     $planQuery->whereNotIn('type', ['one-time', 'free']);
                 });

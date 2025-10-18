@@ -11,10 +11,9 @@
             :class="hasAside ? 'w-full' : 'container'">
 
             <div class="flex flex-row items-center">
-                <a href="{{ route('home') }}" class="flex flex-row items-center h-10" wire:navigate>
-                    @if (config('settings.logo_light') || config('settings.logo_dark'))
+                <a href="{{ route('home') }}" class="flex flex-row items-center h-10 gap-2" wire:navigate>
                     <x-logo class="h-8" />
-                    @else
+                    @if(theme('logo_display', 'logo-and-name') != 'logo-only')
                     <span class="text-xl font-bold leading-none flex items-center">{{ config('app.name') }}</span>
                     @endif
                 </a>

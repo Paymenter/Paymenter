@@ -1,5 +1,5 @@
 @php
-$lightLogo = config('settings.logo_light');
+$lightLogo = config('settings.logo');
 $darkLogo = config('settings.logo_dark');
 @endphp
 

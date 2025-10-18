@@ -69,7 +69,7 @@ class Settings
                     'override' => 'app.url',
                 ],
                 [
-                    'name' => 'logo_light',
+                    'name' => 'logo',
                     'label' => 'Logo (Light Mode)',
                     'type' => 'file',
                     'required' => false,

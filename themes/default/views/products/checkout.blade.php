@@ -1,4 +1,4 @@
-<div class="flex flex-col md:grid md:grid-cols-4 gap-6">
+<div class="container mt-14 flex flex-col md:grid md:grid-cols-4 gap-6">
     <div class="flex flex-col gap-4 w-full col-span-3">
         <h1 class="text-3xl font-bold">{{ $product->name }}</h1>
         <div class="flex flex-row w-full gap-4">

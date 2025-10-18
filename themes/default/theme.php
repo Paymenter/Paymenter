@@ -31,6 +31,16 @@ return [
             'description' => 'Show the category description in the product overview page/homepage',
         ],
         [
+            'name' => 'logo_display',
+            'label' => 'Logo display',
+            'type' => 'select',
+            'options' => [
+                'logo-only' => 'Logo only',
+                'logo-and-name' => 'Logo and Name',
+            ],
+            'default' => 'logo-and-name',
+        ],
+        [
             'name' => 'home_page_text',
             'label' => 'Home Page Text',
             'type' => 'markdown',

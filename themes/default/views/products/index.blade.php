@@ -69,7 +69,7 @@
                     <h3 class="text-lg font-semibold mb-2">
                         {{ $product->price()->formatted->price }}
                     </h3>
-                    <div class="mt-auto pt-4 flex items-center gap-2">
+                    <div class="mt-auto pt-2 flex items-center gap-2">
                         <a href="{{ route('products.show', ['category' => $product->category, 'product' => $product->slug]) }}"
                             wire:navigate class="flex-grow">
                             <x-button.primary class="w-full">
