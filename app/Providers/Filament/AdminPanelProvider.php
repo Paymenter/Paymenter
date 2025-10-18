@@ -30,6 +30,7 @@ use Illuminate\Session\Middleware\StartSession;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
+use Illuminate\Support\Facades\File;
 
 class AdminPanelProvider extends PanelProvider
 {
@@ -72,6 +73,16 @@ class AdminPanelProvider extends PanelProvider
             ->renderHook(
                 PanelsRenderHook::SIDEBAR_NAV_END,
                 fn (): string => Blade::render('<x-admin-footer />'),
+            )
+            ->renderHook(
+                'panels::head.end',
+                function (): string {
+                    $activeTheme = config('settings.theme', 'default');
+                    $activeThemePath = base_path("themes/{$activeTheme}/views/layouts/colors.blade.php");
+                    $defaultThemePath = base_path("themes/default/views/layouts/colors.blade.php");
+                    $pathToUse = File::exists($activeThemePath) ? $activeThemePath : $defaultThemePath;
+                    return Blade::render(File::get($pathToUse));
+                }
             )
             ->navigationGroups([
                 'Administration',
