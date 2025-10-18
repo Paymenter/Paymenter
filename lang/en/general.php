@@ -1,7 +1,6 @@
 <?php
 
 return [
-    'view' => 'View',
 
     'input' => [
         'first_name' => 'First name',
