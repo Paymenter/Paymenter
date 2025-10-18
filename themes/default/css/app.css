@@ -72,6 +72,10 @@ color utility to any element that depends on these defaults.
   }
 }
 
+@utility container {
+  @apply max-w-[1380px] mx-auto px-4 sm:px-6 lg:px-8;
+}
+
 @utility text-nowrap {
   text-wrap: nowrap;
 }
@@ -116,4 +120,3 @@ color utility to any element that depends on these defaults.
 ::-webkit-scrollbar-corner {
     background: transparent;
 }
-
