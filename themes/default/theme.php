@@ -100,7 +100,7 @@ return [
             'name' => 'dark-neutral',
             'label' => 'Borders, Accents... (Dark)',
             'type' => 'color',
-            'default' => 'hsl(220, 25%, 29%)',
+            'default' => 'hsl(0, 0%, 7%)',
         ],
         [
             'name' => 'dark-base',
@@ -124,13 +124,13 @@ return [
             'name' => 'dark-background',
             'label' => 'Background - Color (Dark)',
             'type' => 'color',
-            'default' => 'hsl(221, 39%, 11%)',
+            'default' => 'hsl(240, 18%, 9%)',
         ],
         [
             'name' => 'dark-background-secondary',
             'label' => 'Background - Secondary Color (Dark)',
             'type' => 'color',
-            'default' => 'hsl(217, 33%, 16%)',
+            'default' => 'hsl(240, 13%, 11%)',
         ],
     ],
 ];
