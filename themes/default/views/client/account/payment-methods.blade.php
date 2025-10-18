@@ -51,36 +51,67 @@
             @if(count($this->gateways) > 0)
             <x-button.primary class="h-fit !w-fit" wire:click="$set('setupModalVisible', true)"
                 wire:loading.attr="disabled" wire:target="setupModalVisible">
-                <x-ri-add-line class="size-4 mr-2" />
+                <x-ri-add-line class="size-4" />
                 {{ __('account.add_payment_method') }}
             </x-button.primary>
             @endif
         </div>
 
-        @forelse ($billingAgreements as $agreement)
-        <div
-            class="bg-background-secondary border border-neutral p-4 rounded-lg mb-4 hover:bg-background-secondary/80 transition-colors">
+        @php
+        $groupedAgreements = $billingAgreements->groupBy('gateway.extension');
+        @endphp
+
+        @if($groupedAgreements->count() > 0)
+        @foreach($groupedAgreements as $gatewayName => $agreements)
+        <div class="flex items-center justify-between mb-6">
+            <div class="flex items-center gap-3 mt-8">
+                <div class="bg-background-secondary border border-neutral rounded-lg overflow-hidden">
+                    @if($gatewayName === 'Stripe')
+                    <x-icons.stripe class="size-9" />
+                    @elseif($gatewayName === 'PayPal')
+                    <x-icons.paypal class="size-9" />
+                    @else
+                    <x-ri-secure-payment-line class="size-5 text-primary" />
+                    @endif
+                </div>
+                <h2 class="text-xl font-semibold">{{ $gatewayName }}</h2>
+            </div>
+            <span class="bg-primary flex items-center justify-center font-semibold rounded-md size-5 text-sm text-white">
+                {{ $agreements->count() }}
+            </span>
+        </div>
+
+        @foreach($agreements as $agreement)
+        <div class="bg-background-secondary border border-neutral p-4 rounded-lg mb-4 hover:bg-background-secondary/80 transition-colors">
             <div class="flex items-center justify-between">
                 <div class="flex items-center gap-4">
-                    {{-- Payment method icon --}}
-                    <div class="bg-primary/10 p-3 rounded-lg">
-                        @if($agreement->gateway->extension === 'Stripe')
-                        <x-ri-bank-card-line class="size-6 text-primary" />
-                        @elseif($agreement->gateway->extension === 'PayPal')
-                        <x-ri-paypal-line class="size-6 text-primary" />
-                        @else
-                        <x-ri-secure-payment-line class="size-6 text-primary" />
-                        @endif
+                    <div class="rounded-lg overflow-hidden flex items-center justify-center">
+                        @switch(strtolower($agreement->type))
+                        @case('visa')<x-icons.visa class="size-9" />@break
+                        @case('mastercard')<x-icons.mastercard class="size-9" />@break
+                        @case('amex')<x-icons.amex class="size-9" />@break
+                        @case('american express')<x-icons.american-express class="size-9" />@break
+                        @case('discover')<x-icons.discover class="size-9" />@break
+                        @case('paypal')<x-icons.paypal class="size-9" />@break
+                        @case('sepa_debit')<x-icons.sepa class="size-9" />@break
+                        @case('ideal')<x-icons.ideal class="size-9" />@break
+                        @case('bancontact')<x-icons.bancontact class="size-9" />@break
+                        @case('sofort')<x-icons.sofort class="size-9" />@break
+                        @case('us_bank_account')
+                        @case('bacs_debit')
+                        @case('au_becs_debit')<x-icons.bank-debit class="size-9" />@break
+                        @default<x-ri-bank-card-line class="size-6 text-primary" />
+                        @endswitch
                     </div>
-
-                    {{-- Payment method details --}}
                     <div>
                         <div class="font-semibold text-base">
                             {{ $agreement->name }}
                         </div>
-                        <div class="text-sm text-base/70 flex items-center">
-                            <p>{{ $agreement->gateway->name }}</p>
+                        @if($agreement->expiry)
+                        <div class="text-sm text-neutral-500">
+                            Expires: {{ \Carbon\Carbon::parse($agreement->expiry)->format('m/Y') }}
                         </div>
+                        @endif
                         @if($agreement->services()->count() > 0)
                         <div class="text-xs text-base/50 mt-1">
                             {{ __('account.services_linked', ['count' => $agreement->services()->count()]) }}
@@ -89,26 +120,27 @@
                     </div>
                 </div>
 
-                {{-- Actions --}}
                 <div class="flex items-center gap-2">
                     <x-button.danger class="!px-2" x-on:click="$store.confirmation.confirm({
-                        title: '{{ __('account.remove_payment_method') }}',
-                        message: '{{ __('account.remove_payment_method_confirm', ['name' => $agreement->name]) }}',
-                        confirmText: '{{ __('account.confirm') }}',
-                        cancelText: '{{ __('account.cancel') }}',
-                        callback: () => $wire.removePaymentMethod('{{ $agreement->ulid }}')
-                    })">
+                                title: '{{ __('account.remove_payment_method') }}',
+                                message: '{{ __('account.remove_payment_method_confirm', ['name' => $agreement->name]) }}',
+                                confirmText: '{{ __('account.confirm') }}',
+                                cancelText: '{{ __('account.cancel') }}',
+                                callback: () => $wire.removePaymentMethod('{{ $agreement->ulid }}')
+                            })">
                         <x-ri-delete-bin-line class="size-4" />
                     </x-button.danger>
                 </div>
             </div>
         </div>
-        @empty
+        @endforeach
+        @endforeach
+        @else
         <div class="bg-background-secondary border border-neutral p-6 rounded-lg text-center">
             <x-ri-bank-card-line class="size-12 text-base/30 mx-auto mb-3" />
             <p class="text-base/70 mb-4">{{ __('account.no_saved_payment_methods') }}</p>
         </div>
-        @endforelse
+        @endif
 
         <h3 class="text-lg font-bold pb-3 mt-8">{{ __('account.recent_transactions') }}</h3>
         @foreach ($transactions as $transaction)
@@ -134,7 +166,6 @@
                         </span>
                     </div>
                     <div class="pr-2">
-                        <!-- Show status -->
                         <span class="text-sm text-base/70 mr-1">
                             @if($transaction->status === \App\Enums\InvoiceTransactionStatus::Succeeded)
                             <span
@@ -162,7 +193,6 @@
             </div>
         </a>
         @endforeach
-
         {{ $transactions->links() }}
     </div>
 </div>

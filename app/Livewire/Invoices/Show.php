@@ -31,6 +31,10 @@ class Show extends Component
 
     public $lastChecked = null;
 
+    public $selectedMethod = null;
+
+    public $setAsDefault = false;
+
     public function mount()
     {
         $sessionGateway = session('gateway');
@@ -76,11 +80,60 @@ class Show extends Component
         return Auth::user()->billingAgreements()->with('gateway')->get();
     }
 
+
+    #[Computed]
+    public function hasRecurringServices()
+    {
+        return $this->invoice->items()
+            ->where('reference_type', \App\Models\Service::class)
+            ->whereHas('reference', function ($query) {
+                $query->whereHas('plan', function ($planQuery) {
+                    $planQuery->whereNotIn('type', ['one-time', 'free']);
+                });
+            })
+            ->exists();
+    }
+
     public function updatedShowPayModal($value)
     {
         if ($value && $this->invoice->status !== 'pending') {
             $this->showPayModal = false;
         }
+    }
+
+    public function processPayment()
+    {
+        if (is_null($this->selectedMethod)) {
+            return;
+        }
+
+        if ($this->selectedMethod === 'credit') {
+            return $this->payWithCredit();
+        }
+
+        if (str_starts_with($this->selectedMethod, 'gateway-')) {
+            $gatewayId = substr($this->selectedMethod, 8);
+            return $this->payWithMethod($gatewayId);
+        }
+
+        if ($this->setAsDefault) {
+            $services = $this->invoice->items()
+                ->with('reference')
+                ->where('reference_type', \App\Models\Service::class)
+                ->get()
+                ->pluck('reference')
+                ->filter(fn($service) => $service->isRecurring());
+
+            foreach ($services as $service) {
+                $service->update(['billing_agreement_id' => $this->selectedMethod]);
+            }
+
+            if ($services->count() > 0) {
+                $this->dispatch('toast', message: 'Default payment method has been updated for recurring services.');
+            }
+        }
+
+        return $this->payWithSavedMethod($this->selectedMethod);
     }
 
     public function payWithMethod($methodId)
