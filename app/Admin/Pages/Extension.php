@@ -18,6 +18,7 @@ use Filament\Tables\Contracts\HasTable;
 use Filament\Tables\Table;
 use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 use Livewire\Attributes\Url;
@@ -207,5 +208,10 @@ class Extension extends Page implements HasActions, HasTable
                         }
                     }),
             ]);
+    }
+
+    public static function canAccess(): bool
+    {
+        return Auth::user()->hasPermission('admin.extensions.viewAny') && Auth::user()->hasPermission('admin.extensions.install');
     }
 }

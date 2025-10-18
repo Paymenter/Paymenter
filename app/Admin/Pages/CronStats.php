@@ -9,6 +9,7 @@ use Filament\Forms\Components\DatePicker;
 use Filament\Pages\Dashboard;
 use Filament\Pages\Dashboard\Actions\FilterAction;
 use Filament\Pages\Dashboard\Concerns\HasFiltersAction;
+use Illuminate\Support\Facades\Auth;
 
 class CronStats extends Dashboard
 {
@@ -48,5 +49,10 @@ class CronStats extends Dashboard
             CronTable::class,
             CronStat::class,
         ];
+    }
+
+    public static function canAccess(): bool
+    {
+        return Auth::user()->hasPermission('admin.cron_stats.view');
     }
 }

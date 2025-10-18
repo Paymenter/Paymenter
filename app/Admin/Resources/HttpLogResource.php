@@ -14,6 +14,7 @@ use Filament\Schemas\Schema;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Auth;
 
 class HttpLogResource extends Resource
 {
@@ -125,5 +126,10 @@ class HttpLogResource extends Resource
         return [
             'index' => ListHttpLogs::route('/'),
         ];
+    }
+
+    public static function canAccess(): bool
+    {
+        return Auth::user()->hasPermission('admin.debug_logs.view');
     }
 }
