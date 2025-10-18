@@ -21,7 +21,12 @@ $audits = $audits->sortByDesc('created_at')->sortByDesc('id');
                     <div class="flex gap-x-2 items-center">
                         <div class="text-sm font-medium text-gray-950 dark:text-white">
                             {{ $audit->user?->name ?? 'System' }}
-                            {{ $audit->event }} {{ class_basename($audit->auditable_type) }}
+                            @if($audit->event == 'extension_action' && isset($audit->new_values['action']))
+                                <!-- action name for extension actions -->
+                                {{ str_replace('_', ' ', $audit->new_values['action']) }}
+                            @else
+                            {{ $audit->event }}
+                            @endif {{ class_basename($audit->auditable_type) }}
                             (#{{ $audit->auditable_id }})
                         </div>
                     </div>
@@ -57,7 +62,7 @@ $audits = $audits->sortByDesc('created_at')->sortByDesc('id');
                         @endforeach
                         @endif
                     </div>
-                    @else
+                    @elseif($audit->event !== 'extension_action')
                     <div class="text-sm text-gray-950 dark:text-white">
                         @if(count($audit->getModified()) === 0)
                         <span class="text-xs text-gray-950 dark:text-white">

@@ -21,9 +21,11 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Log;
 use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
+use OwenIt\Auditing\Events\AuditCustom;
 use ReflectionClass;
 
 class ExtensionHelper
@@ -565,12 +567,25 @@ class ExtensionHelper
         return $server;
     }
 
+    protected static function recordAudit(Model $model, string $action, array $oldValues = [], array $newValues = [])
+    {
+        // Trigger audit log for server creation
+        $model->auditEvent = $action;
+        $model->isCustomEvent = true;
+        $model->auditCustomOld = $oldValues;
+        $model->auditCustomNew = $newValues;
+
+        Event::dispatch(new AuditCustom($model));
+    }
+
     /**
      * Create server
      */
     public static function createServer(Service $service)
     {
         $server = self::checkServer($service, 'createServer');
+
+        self::recordAudit($service, 'extension_action', [], ['action' => 'create_server']);
 
         return self::getExtension('server', $server->extension, $server->settings)->createServer($service, self::settingsToArray($service->product->settings), self::getServiceProperties($service));
     }
@@ -582,6 +597,8 @@ class ExtensionHelper
     {
         $server = self::checkServer($service, 'suspendServer');
 
+        self::recordAudit($service, 'extension_action', [], ['action' => 'suspend_server']);
+
         return self::getExtension('server', $server->extension, $server->settings)->suspendServer($service, self::settingsToArray($service->product->settings), self::getServiceProperties($service));
     }
 
@@ -591,6 +608,8 @@ class ExtensionHelper
     public static function unsuspendServer(Service $service)
     {
         $server = self::checkServer($service, 'unsuspendServer');
+
+        self::recordAudit($service, 'extension_action', [], ['action' => 'unsuspend_server']);
 
         return self::getExtension('server', $server->extension, $server->settings)->unsuspendServer($service, self::settingsToArray($service->product->settings), self::getServiceProperties($service));
     }
@@ -602,6 +621,8 @@ class ExtensionHelper
     {
         $server = self::checkServer($service, 'terminateServer');
 
+        self::recordAudit($service, 'extension_action', [], ['action' => 'terminate_server']);
+
         return self::getExtension('server', $server->extension, $server->settings)->terminateServer($service, self::settingsToArray($service->product->settings), self::getServiceProperties($service));
     }
 
@@ -611,6 +632,8 @@ class ExtensionHelper
     public static function upgradeServer(Service $service)
     {
         $server = self::checkServer($service, 'upgradeServer');
+
+        self::recordAudit($service, 'extension_action', [], ['action' => 'upgrade_server']);
 
         return self::getExtension('server', $server->extension, $server->settings)->upgradeServer($service, self::settingsToArray($service->product->settings), self::getServiceProperties($service));
     }
