@@ -69,12 +69,31 @@ class Settings
                     'override' => 'app.url',
                 ],
                 [
-                    'name' => 'logo',
-                    'label' => 'Logo',
+                    'name' => 'logo_light',
+                    'label' => 'Logo (Light Mode)',
                     'type' => 'file',
                     'required' => false,
                     'accept' => ['image/*'],
-                    'file_name' => 'logo.webp',
+                    'file_name' => 'logo-light.webp',
+                    'description' => 'Upload a logo to be displayed on light backgrounds.',
+                ],
+                [
+                    'name' => 'logo_dark',
+                    'label' => 'Logo (Dark Mode)',
+                    'type' => 'file',
+                    'required' => false,
+                    'accept' => ['image/*'],
+                    'file_name' => 'logo-dark.webp',
+                    'description' => 'Upload a logo to be displayed on dark backgrounds.',
+                ],
+                [
+                    'name' => 'favicon',
+                    'label' => 'Favicon',
+                    'type' => 'file',
+                    'required' => false,
+                    'accept' => ['image/x-icon', 'image/png', 'image/svg+xml'],
+                    'file_name' => 'favicon.ico',
+                    'description' => 'Upload a .ico, .png, or .svg file to be used as the browser icon.',
                 ],
                 [
                     'name' => 'system_email_address',
@@ -615,7 +634,6 @@ class Settings
                 ->first();
 
             return $taxRate ?: 0;
-
         });
     }
 

@@ -9,8 +9,11 @@
 
             <div class="flex flex-row items-center">
                 <a href="{{ route('home') }}" class="flex flex-row items-center h-10" wire:navigate>
-                    <x-logo class="h-10 mr-2 rtl:ml-2" />
+                    @if (config('settings.logo_light') || config('settings.logo_dark'))
+                    <x-logo class="h-8" />
+                    @else
                     <span class="text-xl font-bold leading-none flex items-center">{{ config('app.name') }}</span>
+                    @endif
                 </a>
                 <div class="md:flex hidden flex-row ml-7">
                     @foreach (\App\Classes\Navigation::getLinks() as $nav)

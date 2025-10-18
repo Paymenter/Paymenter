@@ -14,8 +14,8 @@
     @vite(['themes/' . config('settings.theme') . '/js/app.js', 'themes/' . config('settings.theme') . '/css/app.css'], config('settings.theme'))
     @include('layouts.colors')
 
-    @if (config('settings.logo'))
-        <link rel="icon" href="{{ Storage::url(config('settings.logo')) }}" type="image/png">
+    @if (config('settings.favicon'))
+    <link rel="icon" href="{{ Storage::url(config('settings.favicon')) }}">
     @endif
     @isset($title)
     <meta content="{{ isset($title) ? config('app.name', 'Paymenter') . ' - ' . $title : config('app.name', 'Paymenter') }}" property="og:title">

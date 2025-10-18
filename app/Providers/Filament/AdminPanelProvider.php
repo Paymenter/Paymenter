@@ -49,7 +49,11 @@ class AdminPanelProvider extends PanelProvider
                 'primary' => Color::Blue,
             ])
             ->globalSearchKeyBindings(['command+k', 'ctrl+k'])
-            ->favicon(config('settings.logo') ? Storage::url(config('settings.logo')) : null)
+            ->favicon(config('settings.favicon') ? Storage::url(config('settings.favicon')) : null)
+            ->brandLogo(config('settings.logo_light') ? Storage::url(config('settings.logo_light')) : null)
+            ->darkModeBrandLogo(config('settings.logo_dark') ? Storage::url(config('settings.logo_dark')) : null)
+            ->brandName(config('settings.logo_light') || config('settings.logo_dark') ? null : config('app.name'))
+            ->brandLogoHeight('2rem')
             ->discoverResources(in: app_path('Admin/Resources'), for: 'App\\Admin\\Resources')
             ->discoverPages(in: app_path('Admin/Pages'), for: 'App\\Admin\\Pages')
             ->discoverClusters(in: app_path('Admin/Clusters'), for: 'App\\Admin\\Clusters')
