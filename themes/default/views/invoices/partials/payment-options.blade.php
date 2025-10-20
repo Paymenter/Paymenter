@@ -31,7 +31,7 @@
     </div>
     @endif
 
-    @if($this->savedPaymentMethods && count($this->savedPaymentMethods) > 0)
+    @if($this->savedPaymentMethods)
     <div class="mb-6">
         <h3 class="text-lg font-semibold mb-2">{{ __('account.saved_payment_methods') }}</h3>
         <div class="space-y-3">
@@ -101,7 +101,7 @@
     @if($this->gateways && count($this->gateways) > 0)
     <div class="mb-6" x-data="{ showOneTime: @if($this->savedPaymentMethods->count() == 0) true @else false @endif }">
         <button @click="showOneTime = !showOneTime"
-            class="flex items-center justify-between w-full p-3 text-left rounded-lg border border-neutral transition-colors">
+            class="flex items-center justify-between w-full p-3 text-left rounded-lg border border-neutral transition-colors @if($this->savedPaymentMethods->count() == 0) hidden @endif">
             <span class="text-sm font-medium">
                 {{ __('invoices.pay_with_one_time_method') }}
             </span>
