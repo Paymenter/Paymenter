@@ -1,7 +1,6 @@
 <?php
 
 return [
-    'view' => 'Anzeigen',
 
     'input' => [
         'first_name' => 'Vorname',
@@ -33,4 +32,5 @@ return [
 
     'all_rights_reserved' => 'Alle Rechte vorbehalten.',
     'update' => 'Aktualisierung',
+    'save' => 'Save',
 ];
