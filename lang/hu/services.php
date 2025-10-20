@@ -56,4 +56,14 @@ return [
     'price_every_period' => ':price per :period :unit',
     'price_one_time' => ':price one time',
     'expires_at' => 'Lejár ilyenkor',
+    'auto_pay' => 'Auto paying using',
+    'auto_pay_not_configured' => 'Not configured',
+
+    'no_services' => 'No services found',
+    'update_billing_agreement' => 'Update Billing Agreement',
+    'clear_billing_agreement' => 'Clear Billing Agreement',
+    'select_billing_agreement' => 'Select Billing Agreement',
+
+    'remove_payment_method' => 'Remove Payment Method',
+    'remove_payment_method_confirm' => 'Are you sure you want to remove the payment method ":name" from this service? Your service will no longer be able to auto pay its invoices.',
 ];
