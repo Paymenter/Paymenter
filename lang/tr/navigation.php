@@ -14,4 +14,5 @@ return [
     'dashboard' => 'Hızlı Bakış',
     'tickets' => 'Destek Talepleri',
     'admin' => 'Yönetim Paneli',
+    'notifications' => 'Notifications',
 ];
