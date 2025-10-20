@@ -1,7 +1,6 @@
 <?php
 
 return [
-    'view' => 'देखें',
 
     'input' => [
         'first_name' => 'पहला नाम',
@@ -33,4 +32,5 @@ return [
 
     'all_rights_reserved' => 'सर्वाधिकार सुरक्षित।',
     'update' => 'अपडेट करें',
+    'save' => 'Save',
 ];
