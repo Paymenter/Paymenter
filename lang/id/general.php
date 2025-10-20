@@ -1,7 +1,6 @@
 <?php
 
 return [
-    'view' => 'Lihat',
 
     'input' => [
         'first_name' => 'Nama depan',
@@ -33,4 +32,5 @@ return [
 
     'all_rights_reserved' => 'Hak cipta dilindungi.',
     'update' => 'Pembaruan',
+    'save' => 'Save',
 ];
