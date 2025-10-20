@@ -1,7 +1,6 @@
 <?php
 
 return [
-    'view' => 'Prikaži',
 
     'input' => [
         'first_name' => 'Ime',
@@ -33,4 +32,5 @@ return [
 
     'all_rights_reserved' => 'Sva prava zadržana.',
     'update' => 'Ažuriraj',
+    'save' => 'Save',
 ];
