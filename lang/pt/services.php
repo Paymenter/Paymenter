@@ -44,7 +44,7 @@ return [
         'active' => 'Ativo',
         'cancelled' => 'Cancelado',
         'suspended' => 'Suspenso',
-        'cancellation_pending' => 'Cancellation Pending',
+        'cancellation_pending' => 'Cancelamento Pendente',
     ],
     'billing_cycles' => [
         'day' => 'dia|dias',
