@@ -14,4 +14,5 @@ return [
     'dashboard' => 'Irányítópult',
     'tickets' => 'Hibajegyek',
     'admin' => 'Adminisztrátor',
+    'notifications' => 'Notifications',
 ];
