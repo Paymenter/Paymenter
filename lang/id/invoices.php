@@ -35,4 +35,21 @@ return [
     'due_date' => 'Jatuh Tempo',
     'payment_for_invoice' => 'Payment for Invoice #:number',
     'payment_for_proforma_invoice' => 'Payment for Proforma Invoice #:id',
+    'transaction_statuses' => [
+        'succeeded' => 'Succeeded',
+        'processing' => 'Processing',
+        'failed' => 'Failed',
+    ],
+    'payment_processing' => 'Payment Processing',
+    'duplicate_payment' => 'There is already a payment being processed for this invoice. Paying again may result in duplicate charges.',
+    'pay_with_one_time_method' => 'Or pay with a one-time method',
+    'pay_with_credits' => 'Pay with Credits',
+    'apply_credit' => 'Apply Credit ( :amount )',
+    'no_invoices' => 'No invoices found.',
+    'paid_with_credits' => 'Paid with Credits',
+    'one_time_payment' => 'One-Time Payment',
+    'use_for_recurring' => 'Use for Recurring Payments',
+    'pay_now' => 'Pay Now',
+    'apply_credits_and_continue' => 'Apply Credits and Continue',
+
 ];
