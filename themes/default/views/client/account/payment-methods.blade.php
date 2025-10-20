@@ -58,18 +58,16 @@
         </div>
 
         @php
-        $groupedAgreements = $billingAgreements->groupBy('gateway.extension');
+        $groupedAgreements = $billingAgreements->groupBy('gateway.name');
         @endphp
 
         @if($groupedAgreements->count() > 0)
         @foreach($groupedAgreements as $gatewayName => $agreements)
         <div class="flex items-center justify-between mb-6">
             <div class="flex items-center gap-3 mt-8">
-                <div class="bg-background-secondary border border-neutral rounded-lg overflow-hidden">
-                    @if($gatewayName === 'Stripe')
-                    <x-icons.stripe class="size-9" />
-                    @elseif($gatewayName === 'PayPal')
-                    <x-icons.paypal class="size-9" />
+                <div class="bg-background-secondary border border-neutral rounded-lg overflow-hidden size-9 flex items-center justify-center">
+                    @if($agreements->first()?->gateway?->meta?->icon)
+                    <img src="{{ $agreements->first()->gateway->meta->icon }}" alt="{{ $gatewayName }}" class="size-9" />
                     @else
                     <x-ri-secure-payment-line class="size-5 text-primary" />
                     @endif

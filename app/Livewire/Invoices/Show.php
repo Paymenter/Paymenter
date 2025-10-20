@@ -20,9 +20,6 @@ class Show extends Component
     #[Locked]
     public Invoice $invoice;
 
-    #[Url]
-    public $gateway = null;
-
     public $checkPayment = false;
 
     private $pay = null;
@@ -38,11 +35,6 @@ class Show extends Component
 
     public function mount()
     {
-        $sessionGateway = session('gateway');
-        if ($sessionGateway) {
-            $this->gateway = $sessionGateway;
-        }
-
         if (Request::has('checkPayment') && $this->invoice->status === 'pending') {
             $this->checkPayment = true;
         }
@@ -61,12 +53,7 @@ class Show extends Component
     #[Computed]
     public function gateways()
     {
-        $gateways = ExtensionHelper::getCheckoutGateways($this->invoice->total, $this->invoice->currency_code, 'invoice', $this->invoice->items);
-        if (count($gateways) > 0 && !array_search($this->gateway, array_column($gateways, 'id')) !== false) {
-            $this->gateway = $gateways[0]->id;
-        }
-
-        return $gateways;
+        return ExtensionHelper::getCheckoutGateways($this->invoice->total, $this->invoice->currency_code, 'invoice', $this->invoice->items);
     }
 
     #[Computed]
@@ -81,9 +68,8 @@ class Show extends Component
         return Auth::user()->billingAgreements()->with('gateway')->get();
     }
 
-
     #[Computed]
-    public function hasRecurringServices()
+    public function recurringServices()
     {
         return $this->invoice->items()
             ->where('reference_type', Service::class)
@@ -92,8 +78,7 @@ class Show extends Component
                 $query->whereHas('plan', function ($planQuery) {
                     $planQuery->whereNotIn('type', ['one-time', 'free']);
                 });
-            })
-            ->exists();
+            });
     }
 
     public function updatedShowPayModal($value)
@@ -119,12 +104,7 @@ class Show extends Component
         }
 
         if ($this->setAsDefault) {
-            $services = $this->invoice->items()
-                ->with('reference')
-                ->where('reference_type', \App\Models\Service::class)
-                ->get()
-                ->pluck('reference')
-                ->filter(fn($service) => $service->isRecurring());
+            $services = $this->recurringServices()->get();
 
             foreach ($services as $service) {
                 $service->update(['billing_agreement_id' => $this->selectedMethod]);

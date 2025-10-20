@@ -21,6 +21,8 @@ class Extension extends Model implements Auditable
 
     protected $guarded = [];
 
+protected $appends = ['meta'];
+
     /**
      * Get the extension's settings.
      */
@@ -40,6 +42,13 @@ class Extension extends Model implements Auditable
     {
         return Attribute::make(
             get: fn () => 'Paymenter\\Extensions\\' . ucfirst($this->type) . 's\\' . ucfirst($this->extension)
+        );
+    }
+
+    public function meta(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => \App\Helpers\ExtensionHelper::getMeta($this->namespace . '\\' . ucfirst($this->extension))
         );
     }
 }

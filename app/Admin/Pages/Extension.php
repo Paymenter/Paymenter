@@ -12,6 +12,8 @@ use Filament\Actions\Contracts\HasActions;
 use Filament\Forms\Components\FileUpload;
 use Filament\Notifications\Notification;
 use Filament\Pages\Page;
+use Filament\Tables\Columns\IconColumn;
+use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Concerns\InteractsWithTable;
 use Filament\Tables\Contracts\HasTable;
@@ -127,6 +129,9 @@ class Extension extends Page implements HasActions, HasTable
             ->records(fn () => collect(ExtensionHelper::getInstallableExtensions()))
             ->description('List of available extensions (not gateway or server extensions) that can be installed.')
             ->columns([
+                ImageColumn::make('meta.icon')
+                    ->label('Icon')
+                    ->state(fn ($record) => $record['meta']?->icon ? $record['meta']->icon : 'ri-puzzle-fill'),
                 TextColumn::make('meta.name')
                     ->label('Extension Name')
                     ->searchable()

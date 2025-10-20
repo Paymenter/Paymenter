@@ -28,11 +28,6 @@
                         @endif
                         <div class="flex justify-between items-center">
                             <h3 class="text-xl font-semibold">{{ $category->name }}</h3>
-                            @if($category->min_price)
-                            <span class="text-sm font-semibold bg-primary/20 text-primary px-2 py-1 rounded">
-                                From {{ $category->min_price->formatted->price }}
-                            </span>
-                            @endif
                         </div>
                         @if(theme('small_images', false))
                     </div>

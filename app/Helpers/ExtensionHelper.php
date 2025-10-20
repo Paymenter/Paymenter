@@ -168,14 +168,10 @@ class ExtensionHelper
             if (!file_exists($path) || !class_exists($class)) {
                 continue;
             }
-
-            $reflection = new ReflectionClass($class);
-            $attributes = $reflection->getAttributes(ExtensionMeta::class);
-
             $extensions[] = [
                 'name' => $name,
                 'type' => $type,
-                'meta' => $attributes ? $attributes[0]->newInstance() : null,
+                'meta' => self::getMeta($class),
             ];
         }
 
@@ -196,19 +192,26 @@ class ExtensionHelper
 
                 // Check if the class exists
                 if (class_exists('\\Paymenter\\Extensions\\' . ucfirst($type) . 's\\' . $name . '\\' . $name)) {
-                    $reflection = new ReflectionClass('\\Paymenter\\Extensions\\' . ucfirst($type) . 's\\' . $name . '\\' . $name);
-                    $attributes = $reflection->getAttributes(ExtensionMeta::class);
+                    
 
                     $extensions[] = [
                         'name' => $name,
                         'type' => $type,
-                        'meta' => $attributes ? $attributes[0]->newInstance() : null,
+                        'meta' => self::getMeta('\\Paymenter\\Extensions\\' . ucfirst($type) . 's\\' . $name . '\\' . $name),
                     ];
                 }
             }
         }
 
         return $extensions;
+    }
+
+    public static function getMeta($class)
+    {
+        $reflection = new ReflectionClass($class);
+        $attributes = $reflection->getAttributes(ExtensionMeta::class);
+
+        return $attributes ? $attributes[0]->newInstance() : null;
     }
 
     public static function getInstallableExtensions()

@@ -7,7 +7,7 @@
                 <x-ri-notification-3-fill class="size-4" ::class="{'animate-wiggle': hasNew}"/>
                 @if($this->notifications->where('read_at', null)->count() > 0)
                 <span
-                    class="absolute -top-2 -right-2 w-4 h-4 inline-flex items-center justify-center text-xs font-bold leading-none text-red-100 bg-red-600 rounded-full">
+                    class="absolute top-0 right-0 w-4 h-4 inline-flex items-center justify-center text-xs font-bold leading-none text-red-100 bg-red-600 rounded-full">
                     {{ $this->notifications->where('read_at', null)->count() }}
                 </span>
                 @endif

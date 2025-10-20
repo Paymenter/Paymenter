@@ -1,5 +1,5 @@
 <div class="container mt-14">
-    <div class="grid md:grid-cols-4 gap-4">
+    <div class="flex flex-col md:grid md:grid-cols-4 gap-4">
         <div class="flex flex-col gap-2">
             <div class="mx-auto container">
                 <h1 class="text-3xl font-bold">{{ $category->name }}</h1>
@@ -70,6 +70,14 @@
                         {{ $product->price()->formatted->price }}
                     </h3>
                     <div class="mt-auto pt-2 flex items-center gap-2">
+                        @if($product->stock !== 0 && $product->price()->available && theme('direct_checkout', false))
+                        <a href="{{ route('products.checkout', ['category' => $product->category, 'product' => $product->slug]) }}"
+                            wire:navigate class="flex-grow">
+                            <x-button.primary class="w-full">
+                                {{ __('product.add_to_cart') }}
+                            </x-button.primary>
+                        </a>
+                        @else
                         <a href="{{ route('products.show', ['category' => $product->category, 'product' => $product->slug]) }}"
                             wire:navigate class="flex-grow">
                             <x-button.primary class="w-full">
@@ -83,6 +91,7 @@
                                 <x-ri-shopping-bag-4-fill class="size-6" />
                             </x-button.secondary>
                         </a>
+                        @endif
                         @endif
                     </div>
                 </div>

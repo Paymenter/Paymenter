@@ -2,6 +2,7 @@
 
 namespace Paymenter\Extensions\Gateways\Stripe;
 
+use App\Attributes\ExtensionMeta;
 use App\Classes\Extension\Gateway;
 use App\Events\Service\Updated;
 use App\Events\ServiceCancellation\Created;
@@ -22,6 +23,14 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\View;
 use Str;
 
+#[ExtensionMeta(
+    name: 'Stripe Gateway',
+    description: 'Accept payments via Stripe.',
+    version: '1.0.0',
+    author: 'Paymenter',
+    url: 'https://paymenter.org/docs/extensions/stripe',
+    icon: 'data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PSIwIDAgNTEyIDUxMiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICAgIDxyZWN0IHdpZHRoPSI1MTIiIGhlaWdodD0iNTEyIiBmaWxsPSIjNTMzQUZEIiAvPgogICAgPHBhdGggZmlsbC1ydWxlPSJldmVub2RkIiBjbGlwLXJ1bGU9ImV2ZW5vZGQiIGQ9Ik0xMjggMzg0TDM4NCAzMjkuNzFWMTI4TDEyOCAxODIuOTI0VjM4NFoiIGZpbGw9IndoaXRlIiAvPgo8L3N2Zz4K'
+)]
 class Stripe extends Gateway
 {
     private const API_VERSION = '2025-07-30.basil';

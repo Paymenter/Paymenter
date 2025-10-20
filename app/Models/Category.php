@@ -40,30 +40,6 @@ class Category extends Model implements Auditable
         return $this->hasMany(Category::class, 'parent_id');
     }
 
-    public function getMinPriceAttribute()
-    {
-        $minPrice = null;
-        $minPriceProduct = null;
-
-        foreach ($this->products as $product) {
-            foreach ($product->plans as $plan) {
-                foreach ($plan->prices as $price) {
-                    if ($price->price && $price->price > 0) {
-                        if (is_null($minPrice) || $price->price < $minPrice) {
-                            $minPrice = $price->price;
-                            $minPriceProduct = $product;
-                        }
-                    }
-                }
-            }
-        }
-        if ($minPriceProduct) {
-            return $minPriceProduct->price();
-        }
-
-        return null;
-    }
-
     protected $auditExclude = [
         'remember_token',
     ];
