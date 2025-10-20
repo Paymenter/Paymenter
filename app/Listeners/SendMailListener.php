@@ -35,7 +35,7 @@ class SendMailListener
             // Check if status is failed
             $transaction = $event->invoiceTransaction;
             if ($transaction->status === InvoiceTransactionStatus::Failed) {
-                NotificationHelper::invoicePaymentFailedNotification($transaction->invoice->user, $transaction);
+                NotificationHelper::invoicePaymentFailedNotification($transaction->invoice->user, $transaction->invoice);
             }
         } elseif ($event instanceof UserCreated) {
             $user = $event->user;

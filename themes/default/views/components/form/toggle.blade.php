@@ -10,7 +10,7 @@
             id="{{ $id }}"
             type="checkbox"
             class="sr-only peer"
-            {{ $attributes->whereStartsWith('wire:model') }}
+            {{ $attributes->except('disabled') }}
             {{ $disabled ? 'disabled' : '' }}
         >
         <div class="w-11 h-6 bg-neutral rounded-full peer-checked:bg-primary transition-colors duration-300 ease-in-out"></div>
@@ -19,5 +19,7 @@
                     transition-transform duration-300 ease-in-out">
         </div>
     </div>
+    @isset($label)
     <span class="ml-3 text-sm font-medium text-base/80">{{ $label }}</span>
+    @endisset
 </label>

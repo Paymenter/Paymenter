@@ -112,7 +112,7 @@ class Show extends Component
             }
 
             if ($services->count() > 0) {
-                $this->dispatch('toast', message: 'Default payment method has been updated for recurring services.');
+                $this->notify('Default payment method has been updated for recurring services.', 'success');
             }
         }
 

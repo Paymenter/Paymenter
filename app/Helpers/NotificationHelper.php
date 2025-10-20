@@ -173,14 +173,9 @@ class NotificationHelper
         self::invoiceNotification($user, $invoice, 'invoice_paid');
     }
 
-    public static function invoicePaymentFailedNotification(User $user, InvoiceTransaction $invoiceTransaction): void
+    public static function invoicePaymentFailedNotification(User $user, Invoice $invoice): void
     {
-        $data = [
-            'invoice' => $invoiceTransaction->invoice,
-            'transaction' => $invoiceTransaction,
-            'total' => $invoiceTransaction->invoice->formattedTotal,
-        ];
-        self::sendNotification('invoice_payment_failed', $data, $user);
+        self::invoiceNotification($user, $invoice, 'invoice_payment_failed');
     }
 
     public static function orderCreatedNotification(User $user, Order $order, array $data = []): void

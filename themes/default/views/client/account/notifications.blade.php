@@ -4,28 +4,29 @@
     <div class="px-2">
         <!-- Configure push notifications -->
         @if($this->supportsPush())
-            <div class="bg-background-secondary rounded-lg p-4 mb-6" x-data="pushNotifications">
-                <h2 class="text-lg font-medium text-primary mb-2">{{ __('account.push_notifications') }}</h2>
-                <p class="text-base/70 mb-4">{{ __('account.push_notifications_description') }}</p>
-                <x-button.primary type="button" class="!w-fit" @click="subscribe" x-bind:disabled="subscriptionStatus !== 'not_subscribed'">
-                    <x-ri-notification-line class="size-5 mr-2" />
-                    {{ __('account.enable_push_notifications') }}
-                </x-button.primary>
-                <div x-show="subscriptionStatus !== 'unknown'">
-                    <template x-if="subscriptionStatus === 'not_supported'">
-                        <p class="text-sm text-red-600">{{ __('account.push_status.not_supported') }}</p>
-                    </template>
-                    <template x-if="subscriptionStatus === 'denied'">
-                        <p class="text-sm text-red-600">{{ __('account.push_status.denied') }}</p>
-                    </template>
-                    <template x-if="subscriptionStatus === 'subscribed'">
-                        <p class="text-sm text-green-600">{{ __('account.push_status.subscribed') }}</p>
-                    </template>
-                </div>
+        <div class="bg-background-secondary rounded-lg p-4 mb-6" x-data="pushNotifications">
+            <h2 class="text-lg font-medium text-primary mb-2">{{ __('account.push_notifications') }}</h2>
+            <p class="text-base/70 mb-4">{{ __('account.push_notifications_description') }}</p>
+            <x-button.primary type="button" class="!w-fit" @click="subscribe"
+                x-bind:disabled="subscriptionStatus !== 'not_subscribed'">
+                <x-ri-notification-line class="size-5 mr-2" />
+                {{ __('account.enable_push_notifications') }}
+            </x-button.primary>
+            <div x-show="subscriptionStatus !== 'unknown'">
+                <template x-if="subscriptionStatus === 'not_supported'">
+                    <p class="text-sm text-red-600">{{ __('account.push_status.not_supported') }}</p>
+                </template>
+                <template x-if="subscriptionStatus === 'denied'">
+                    <p class="text-sm text-red-600">{{ __('account.push_status.denied') }}</p>
+                </template>
+                <template x-if="subscriptionStatus === 'subscribed'">
+                    <p class="text-sm text-green-600">{{ __('account.push_status.subscribed') }}</p>
+                </template>
             </div>
-            @script
-            <script>
-                Alpine.data('pushNotifications', () => ({
+        </div>
+        @script
+        <script>
+            Alpine.data('pushNotifications', () => ({
                     subscriptionStatus: 'unknown',
 
                     init() {
@@ -92,8 +93,8 @@
                     return outputArray;
                 }
 
-            </script>
-            @endscript
+        </script>
+        @endscript
         @endif
         <div class="overflow-x-auto">
             <table class="w-full bg-background-secondary rounded-lg">
@@ -125,33 +126,17 @@
                         <td class="py-4 px-6 text-base/70">
                             {{ $notification->name }}
                         </td>
-                        <td class="py-4 px-4 text-center">
-                            <button type="button" 
-                                @click="preferences['{{ $notification->key }}']['mail_enabled'] = !preferences['{{ $notification->key }}']['mail_enabled']"
-                                @if(!$notification->mail_controllable) disabled @endif
-                                class="inline-flex cursor-pointer items-center p-2 rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-secondary disabled:opacity-50 disabled:cursor-not-allowed"
-                                :class="preferences['{{ $notification->key }}']['mail_enabled'] ? 'bg-green-600 hover:bg-green-700' : 'bg-gray-400 hover:bg-gray-500'">
-                                <template x-if="preferences['{{ $notification->key }}']['mail_enabled']">
-                                    <x-ri-mail-fill class="size-4 text-white" />
-                                </template>
-                                <template x-if="!preferences['{{ $notification->key }}']['mail_enabled']">
-                                    <x-ri-mail-line class="size-4 text-white" />
-                                </template>
-                            </button>
+                        <td class="py-4 px-4">
+                            <div class="flex justify-center items-center">
+                                <x-form.toggle :disabled="!$notification->mail_controllable"
+                                    wire:model.defer="preferences.{{ $notification->key }}.mail_enabled" />
+                            </div>
                         </td>
-                        <td class="py-4 px-4 text-center">
-                            <button type="button" 
-                                @click="preferences['{{ $notification->key }}']['in_app_enabled'] = !preferences['{{ $notification->key }}']['in_app_enabled']"
-                                @if(!$notification->in_app_controllable) disabled @endif
-                                class="inline-flex cursor-pointer items-center p-2 rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-secondary disabled:opacity-50 disabled:cursor-not-allowed"
-                                :class="preferences['{{ $notification->key }}']['in_app_enabled'] ? 'bg-green-600 hover:bg-green-700' : 'bg-gray-400 hover:bg-gray-500'">
-                                <template x-if="preferences['{{ $notification->key }}']['in_app_enabled']">
-                                    <x-ri-notification-fill class="size-4 text-white" />
-                                </template>
-                                <template x-if="!preferences['{{ $notification->key }}']['in_app_enabled']">
-                                    <x-ri-notification-line class="size-4 text-white" />
-                                </template>
-                            </button>
+                        <td class="py-4 px-4">
+                            <div class="flex justify-center items-center">
+                                <x-form.toggle :disabled="!$notification->in_app_controllable"
+                                    wire:model.defer="preferences.{{ $notification->key }}.in_app_enabled" />
+                            </div>
                         </td>
                     </tr>
                     @endforeach
