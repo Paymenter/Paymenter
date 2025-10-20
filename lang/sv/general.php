@@ -1,7 +1,6 @@
 <?php
 
 return [
-    'view' => 'Visa',
 
     'input' => [
         'first_name' => 'Förnamn',
@@ -33,4 +32,5 @@ return [
 
     'all_rights_reserved' => 'Alla rättigheter reserverade.',
     'update' => 'Uppdatera',
+    'save' => 'Save',
 ];
