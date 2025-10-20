@@ -105,9 +105,10 @@ class Show extends Component
 
         if ($this->setAsDefault) {
             $services = $this->recurringServices()->get();
+            $agreement = Auth::user()->billingAgreements()->where('ulid', $this->selectedMethod)->first();
 
             foreach ($services as $service) {
-                $service->update(['billing_agreement_id' => $this->selectedMethod]);
+                $service->update(['billing_agreement_id' => $agreement->id]);
             }
 
             if ($services->count() > 0) {
