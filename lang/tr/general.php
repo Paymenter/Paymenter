@@ -1,7 +1,6 @@
 <?php
 
 return [
-    'view' => 'Görüntüle',
 
     'input' => [
         'first_name' => 'Ad',
@@ -33,4 +32,5 @@ return [
 
     'all_rights_reserved' => 'Tüm hakları saklıdır.',
     'update' => 'Güncelle',
+    'save' => 'Save',
 ];
