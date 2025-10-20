@@ -1,7 +1,6 @@
 <?php
 
 return [
-    'view' => 'Переглянути',
 
     'input' => [
         'first_name' => 'Ім\'я',
@@ -33,4 +32,5 @@ return [
 
     'all_rights_reserved' => 'Всі права захищені.',
     'update' => 'Оновити',
+    'save' => 'Save',
 ];
