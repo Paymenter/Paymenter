@@ -1,7 +1,6 @@
 <?php
 
 return [
-    'view' => '檢視',
 
     'input' => [
         'first_name' => '名字',
@@ -33,4 +32,5 @@ return [
 
     'all_rights_reserved' => '版權所有。',
     'update' => '更新',
+    'save' => 'Save',
 ];
