@@ -1,7 +1,6 @@
 <?php
 
 return [
-    'view' => 'Megtekintés',
 
     'input' => [
         'first_name' => 'Keresztnév',
@@ -33,4 +32,5 @@ return [
 
     'all_rights_reserved' => 'Minden jog fenntartva.',
     'update' => 'Frissítés',
+    'save' => 'Save',
 ];
