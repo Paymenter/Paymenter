@@ -46,6 +46,7 @@ class CronTable extends ChartWidget
         $invoicesCreated = $this->addDefault(Trend::query(CronStat::query()->where('key', 'invoices_created')), $start, $end);
         $servicesSuspended = $this->addDefault(Trend::query(CronStat::query()->where('key', 'services_suspended')), $start, $end);
         $servicesTerminated = $this->addDefault(Trend::query(CronStat::query()->where('key', 'services_terminated')), $start, $end);
+        $invoicesCharged = $this->addDefault(Trend::query(CronStat::query()->where('key', 'invoice_charged')), $start, $end);
 
         return [
             'datasets' => [
@@ -69,6 +70,13 @@ class CronTable extends ChartWidget
                     'data' => $servicesTerminated->map(fn (TrendValue $value) => $value->aggregate),
                     'backgroundColor' => 'rgba(255, 99, 132, 0.5)',
                     'borderColor' => 'rgba(255, 99, 132, 1)',
+                    'borderWidth' => 1,
+                ],
+                [
+                    'label' => 'Invoices Charged',
+                    'data' => $invoicesCharged->map(fn (TrendValue $value) => $value->aggregate),
+                    'backgroundColor' => 'rgba(75, 192, 192, 0.5)',
+                    'borderColor' => 'rgba(75, 192, 192, 1)',
                     'borderWidth' => 1,
                 ],
             ],

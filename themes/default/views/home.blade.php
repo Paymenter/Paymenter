@@ -18,7 +18,7 @@
 
             <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-5 mb-4">
                 @foreach ($categories as $category)
-                <div class="flex flex-col bg-background-secondary hover:bg-background-secondary/80 border border-neutral p-4 rounded-lg gap-4">
+                <div class="flex flex-col bg-background-secondary hover:bg-background-secondary/80 border border-neutral p-4 rounded-lg">
                     @if(theme('small_images', false))
                     <div class="flex gap-x-3 items-center">
                         @endif
@@ -33,7 +33,7 @@
                     </div>
                     @endif
                     @if(theme('show_category_description', true))
-                    <article class="prose dark:prose-invert">
+                    <article class="prose dark:prose-invert mt-2">
                         {!! $category->description !!}
                     </article>
                     @endif

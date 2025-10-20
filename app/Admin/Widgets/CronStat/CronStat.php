@@ -33,6 +33,8 @@ class CronStat extends StatsOverviewWidget
                 ->description('Total overdue services terminated on ' . Carbon::parse($date)->toFormattedDateString()),
             Stat::make('Tickets Closed', \App\Models\CronStat::where('key', 'tickets_closed')->where('date', $date)->sum('value'))
                 ->description('Total inactive tickets closed on ' . Carbon::parse($date)->toFormattedDateString()),
+            Stat::make('Invoices Charged', \App\Models\CronStat::where('key', 'invoice_charged')->where('date', $date)->sum('value'))
+                ->description('Total invoices charged on ' . Carbon::parse($date)->toFormattedDateString()),
         ];
     }
 }

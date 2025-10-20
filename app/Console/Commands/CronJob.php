@@ -34,6 +34,8 @@ class CronJob extends Command
      */
     protected $description = 'Run automated tasks';
 
+    private int $successFullCharges = 0;
+
     /**
      * Execute the console command.
      */
@@ -102,6 +104,8 @@ class CronJob extends Command
                                     $invoice,
                                     $service->billingAgreement
                                 );
+
+                                $this->successFullCharges++;
                             } catch (Exception $e) {
                                 // Ignore errors here
                                 NotificationHelper::invoicePaymentFailedNotification($invoice->user, $invoice);
@@ -130,6 +134,8 @@ class CronJob extends Command
 
                     $number++;
                 });
+
+                return $number;
             });
 
             $this->runCronJob('upgrade_invoices_updated', function ($number = 0) {
@@ -185,6 +191,8 @@ class CronJob extends Command
 
                     $number++;
                 });
+
+                return $number;
             });
 
             $this->runCronJob('tickets_closed', function ($number = 0) {
@@ -226,6 +234,14 @@ class CronJob extends Command
             ['key' => 'last_cron_run', 'settingable_type' => CronStat::class],
             ['value' => now()->toDateTimeString(), 'type' => 'string']
         );
+
+        CronStat::create([
+            'key' => 'invoice_charged',
+            'value' => $this->successFullCharges,
+            'date' => now()->toDateString(),
+        ]);
+
+        $this->info('Successfully charged ' . $this->successFullCharges . ' invoices.');
 
         // Check for updates
         $this->info('Checking for updates...');
