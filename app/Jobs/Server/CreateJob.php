@@ -16,12 +16,16 @@ class CreateJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    public $timeout = 60;
+    public $timeout = 120;
+
+    public $tries = 1;
 
     /**
      * Create a new job instance.
      */
-    public function __construct(public Service $service, public $sendNotification = true) {}
+    public function __construct(public Service $service, public $sendNotification = true)
+    {
+    }
 
     /**
      * Execute the job.
@@ -35,6 +39,7 @@ class CreateJob implements ShouldQueue
             if ($e->getMessage() == 'No server assigned to this product') {
                 return;
             }
+            throw $e;
         }
 
         if ($this->sendNotification && isset($data)) {

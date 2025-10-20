@@ -2,6 +2,7 @@
 
 namespace Paymenter\Extensions\Gateways\PayPal;
 
+use App\Attributes\ExtensionMeta;
 use App\Classes\Extension\Gateway;
 use App\Events\Service\Updated;
 use App\Events\ServiceCancellation\Created;
@@ -11,12 +12,116 @@ use App\Models\InvoiceItem;
 use App\Models\Service;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\View;
 
+#[ExtensionMeta(
+    name: 'PayPal Gateway',
+    description: 'Accept payments via PayPal.',
+    version: '1.0.0',
+    author: 'Paymenter',
+    url: 'https://paymenter.org/docs/extensions/paypal',
+    icon: 'data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PSIwIDAgNTEyIDUxMiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICAgIDxyZWN0IHdpZHRoPSI1MTIiIGhlaWdodD0iNTEyIiBmaWxsPSIjRjVGNkY4IiAvPgogICAgPHBhdGggZD0iTTMzNi4zOTcgMTgxLjQ4QzMzNi4zOTcgMjE1LjY2NyAzMDQuODQ3IDI1NiAyNTcuMTExIDI1NkgyMTEuMTI5TDIwOC44NzIgMjcwLjI0MkwxOTguMTQ1IDMzOC44SDE0MUwxNzUuMzc4IDExOEgyNjcuOTYxQzI5OS4xMzcgMTE4IDMyMy42NjQgMTM1LjM3NiAzMzIuNjk4IDE1OS41MjNDMzM1LjMwNCAxNjYuNTQzIDMzNi41NTkgMTczLjk5MyAzMzYuMzk3IDE4MS40OFoiIGZpbGw9IiMwMDI5OTEiIC8+CiAgICA8cGF0aCBkPSJNMzY5LjMzMSAyNDQuOTZDMzYzLjAzMSAyODMuMjM3IDMyOS44OTggMzExLjI5MyAyOTEuMTA2IDMxMS4ySDI1OS4xNzZMMjQ1Ljg4NSAzOTRIMTg5LjA0N0wxOTguMTQzIDMzOC44TDIwOC44NzYgMjcwLjI0MUwyMTEuMTI3IDI1NkgyNTcuMTA5QzMwNC43ODMgMjU2IDMzNi4zOTUgMjE1LjY2NyAzMzYuMzk1IDE4MS40NzlDMzU5Ljg1NSAxOTMuNTg3IDM3My41MzIgMjE4LjA1MyAzNjkuMzMxIDI0NC45NloiIGZpbGw9IiM2MENERkYiIC8+CiAgICA8cGF0aCBkPSJNMzM2LjM5NyAxODEuNDhDMzI2LjU1OSAxNzYuMzM0IDMxNC42MjkgMTczLjIgMzAxLjY0NSAxNzMuMkgyMjQuMTE5TDIxMS4xMjkgMjU2SDI1Ny4xMTFDMzA0Ljc4NSAyNTYgMzM2LjM5NyAyMTUuNjY3IDMzNi4zOTcgMTgxLjQ4WiIgZmlsbD0iIzAwOENGRiIgLz4KPC9zdmc+Cg=='
+)]
 class PayPal extends Gateway
 {
+
+    public function supportsBillingAgreements(): bool
+    {
+        return true;
+    }
+
+    public function createBillingAgreement(\App\Models\User $user)
+    {
+        // Using PayPal Vaulting
+        $url = $this->config('test_mode') ? 'https://api-m.sandbox.paypal.com' : 'https://api-m.paypal.com';
+        $result = $this->request('post', $url . '/v3/vault/setup-tokens', [
+            'payment_source' => [
+                'paypal' => [
+                    'description' => 'Billing Agreement for ' . config('settings.company_name'),
+                    'usage_type' => 'MERCHANT',
+                    'experience_context' => [
+                        'payment_method_preference' => 'IMMEDIATE_PAYMENT_REQUIRED',
+                        'return_url' => route('extensions.gateways.paypal.setup-agreement'),
+                        'cancel_url' => route('account.payment-methods'),
+                        'brand_name' => config('settings.company_name'),
+                        'shipping_preference' => 'NO_SHIPPING',
+                        'vault_instruction' => 'ON_PAYER_APPROVAL',
+                    ],
+                ],
+            ]
+        ]);
+
+        return $result->links[1]->href;
+    }
+
+    public function cancelBillingAgreement(\App\Models\BillingAgreement $billingAgreement): bool
+    {
+        $url = $this->config('test_mode') ? 'https://api-m.sandbox.paypal.com' : 'https://api-m.paypal.com';
+        $this->request('delete', $url . '/v3/vault/payment-tokens/' . $billingAgreement->external_reference);
+
+        return true;
+    }
+
+    public function setupAgreement(Request $request)
+    {
+        $request->validate([
+            'approval_token_id' => 'required|string|max:255',
+        ]);
+
+        $tokenId = $request->input('approval_token_id');
+        $url = $this->config('test_mode') ? 'https://api-m.sandbox.paypal.com' : 'https://api-m.paypal.com';
+        $request = $this->request('post', $url . '/v3/vault/payment-tokens', [
+            'payment_source' => [
+                'token' => [
+                    'id' => $tokenId,
+                    'type' => 'SETUP_TOKEN',
+                ],
+            ]
+        ]);
+
+        ExtensionHelper::makeBillingAgreement(
+            Auth::user(),
+            'PayPal',
+            'PayPal ' . $request->payment_source->paypal->email_address,
+            $request->id,
+            'paypal',
+        );
+
+        return redirect()->route('account.payment-methods')->with('notification', [
+            'type' => 'success',
+            'message' => 'Payment method added successfully.',
+        ]);
+    }
+
+    public function charge(Invoice $invoice, $total, \App\Models\BillingAgreement $billingAgreement)
+    {
+        $url = $this->config('test_mode') ? 'https://api-m.sandbox.paypal.com' : 'https://api-m.paypal.com';
+        $result = $this->request('post', $url . '/v2/checkout/orders', [
+            'intent' => 'CAPTURE',
+            'purchase_units' => [
+                [
+                    'invoice_id' => $invoice->id,
+                    'amount' => [
+                        'currency_code' => $invoice->currency_code,
+                        'value' => $total,
+                    ],
+                ],
+            ],
+            'payment_source' => [
+                'paypal' => [
+                    'vault_id' => $billingAgreement->external_reference,
+                ],
+            ],
+        ]);
+
+        return true;
+    }
+
     public function boot()
     {
         require __DIR__ . '/routes.php';
@@ -104,8 +209,8 @@ class PayPal extends Gateway
                 'Accept' => 'application/json',
                 'Authorization' => 'Basic ' . base64_encode($this->config('client_id') . ':' . $this->config('client_secret')),
             ])->asForm()->post($url . '/v1/oauth2/token', [
-                'grant_type' => 'client_credentials',
-            ]);
+                        'grant_type' => 'client_credentials',
+                    ]);
 
             if ($result->failed()) {
                 throw new Exception('Failed to generate access token: ' . $result->body());
@@ -118,92 +223,37 @@ class PayPal extends Gateway
     public function request($method, $url, $data = [])
     {
         return Http::withHeaders([
-            'Content-Type' => 'application/json',
-            'Authorization' => 'Bearer ' . $this->generateAccessToken(),
-        ])->$method($url, $data)->object();
+                    'Content-Type' => 'application/json',
+                    'Authorization' => 'Bearer ' . $this->generateAccessToken(),
+                    'PayPal-Request-Id' => uniqid(),
+                ])->$method($url, $data)->object();
     }
 
     public function pay($invoice, $total)
     {
         $url = $this->config('test_mode') ? 'https://api-m.sandbox.paypal.com' : 'https://api-m.paypal.com';
-        $eligableforSubscription = collect($invoice->items)->filter(function ($item) {
-            return $item->reference_type === Service::class;
-        })->count() == $invoice->items->count();
 
-        if ($this->config('paypal_use_subscriptions') && $eligableforSubscription && $invoice->items->map(fn ($item) => $item->reference->plan->billing_period . $item->reference->plan->billing_unit)->unique()->count() === 1) {
-            $paypalProduct = $this->request('post', $url . '/v1/catalogs/products', [
-                'name' => $invoice->items->first()->reference->product->name,
-                'type' => 'SERVICE',
-            ]);
-
-            // For each item in the invoice, create a billing cycle
-            $billingCycles[] = [
-                'frequency' => [
-                    'interval_unit' => strtoupper($invoice->items->first()->reference->plan->billing_unit),
-                    'interval_count' => $invoice->items->first()->reference->plan->billing_period,
-                ],
-                'tenure_type' => 'TRIAL',
-                'sequence' => 1,
-                'total_cycles' => 1,
-                'pricing_scheme' => [
-                    'fixed_price' => [
+        $order = $this->request('post', $url . '/v2/checkout/orders', [
+            'intent' => 'CAPTURE',
+            'purchase_units' => [
+                [
+                    'invoice_id' => $invoice->id,
+                    'amount' => [
+                        'currency_code' => $invoice->currency_code,
                         'value' => $total,
-                        'currency_code' => $invoice->currency_code,
                     ],
                 ],
-            ];
+            ],
+            'application_context' => [
+                'return_url' => route('invoices.show', $invoice),
+                'cancel_url' => route('invoices.show', $invoice),
+                // Disable shipping information
+                'shipping_preference' => 'NO_SHIPPING',
+            ],
+        ]);
 
-            $nextSum = $invoice->items->sum(fn ($item) => $item->reference->price * $item->reference->quantity);
 
-            $billingCycles[] = [
-                'frequency' => [
-                    'interval_unit' => strtoupper($invoice->items->first()->reference->plan->billing_unit),
-                    'interval_count' => $invoice->items->first()->reference->plan->billing_period,
-                ],
-                'tenure_type' => 'REGULAR',
-                'sequence' => 2,
-                'total_cycles' => 0,
-                'pricing_scheme' => [
-                    'fixed_price' => [
-                        'value' => $nextSum,
-                        'currency_code' => $invoice->currency_code,
-                    ],
-                ],
-            ];
-
-            $plan = $this->request('post', $url . '/v1/billing/plans', [
-                'product_id' => $paypalProduct->id,
-                'name' => $invoice->items->first()->reference->plan->name,
-                'description' => $invoice->items->first()->reference->plan->description,
-                'billing_cycles' => $billingCycles,
-                'payment_preferences' => [
-                    'auto_bill_outstanding' => true,
-                    'setup_fee_failure_action' => 'CONTINUE',
-                    'payment_failure_threshold' => 3,
-                ],
-            ]);
-        } else {
-            $order = $this->request('post', $url . '/v2/checkout/orders', [
-                'intent' => 'CAPTURE',
-                'purchase_units' => [
-                    [
-                        'reference_id' => $invoice->id,
-                        'amount' => [
-                            'currency_code' => $invoice->currency_code,
-                            'value' => $total,
-                        ],
-                    ],
-                ],
-                'application_context' => [
-                    'return_url' => route('invoices.show', $invoice),
-                    'cancel_url' => route('invoices.show', $invoice),
-                    // Disable shipping information
-                    'shipping_preference' => 'NO_SHIPPING',
-                ],
-            ]);
-        }
-
-        return view('gateways.paypal::pay', ['invoice' => $invoice, 'total' => $total, 'order' => $order ?? null, 'plan' => $plan ?? null, 'clientId' => $this->config('client_id')]);
+        return view('gateways.paypal::pay', ['invoice' => $invoice, 'total' => $total, 'order' => $order ?? null, 'clientId' => $this->config('client_id')]);
     }
 
     public function capture(Request $request)
@@ -223,7 +273,7 @@ class PayPal extends Gateway
             'intent' => 'CAPTURE',
         ]);
 
-        ExtensionHelper::addPayment($response->purchase_units[0]->reference_id, 'PayPal', $response->purchase_units[0]->payments->captures[0]->amount->value, $response->purchase_units[0]->payments->captures[0]->seller_receivable_breakdown->paypal_fee->value, $response->id);
+        ExtensionHelper::addPayment($response->purchase_units[0]->invoice_id, 'PayPal', $response->purchase_units[0]->payments->captures[0]->amount->value, $response->purchase_units[0]->payments->captures[0]->seller_receivable_breakdown->paypal_fee->value, $response->id);
 
         return $response;
     }
@@ -268,6 +318,18 @@ class PayPal extends Gateway
                 $latestInvoice = $service->invoices()->latest()->first();
                 ExtensionHelper::addPayment($latestInvoice->id, 'PayPal', $body['resource']['amount']['total'], $body['resource']['transaction_fee']['value'], $body['resource']['id']);
             });
+        } elseif ($body['event_type'] === 'VAULT.PAYMENT-TOKEN.DELETED') {
+            // Find the billing agreement with this external reference
+            $billingAgreement = \App\Models\BillingAgreement::where('external_reference', $body['resource']['id'])->first();
+            if ($billingAgreement) {
+                $billingAgreement->delete();
+            }
+        } elseif($body['event_type'] === 'PAYMENT.CAPTURE.COMPLETED' && isset($body['resource']['supplementary_data']['related_ids']['order_id'])) {
+            $orderID = $body['resource']['supplementary_data']['related_ids']['order_id'];
+            $order = $this->request('get', ($this->config('test_mode') ? 'https://api-m.sandbox.paypal.com' : 'https://api-m.paypal.com') . '/v2/checkout/orders/' . $orderID);
+            if (isset($order->purchase_units[0]->invoice_id)) {
+                ExtensionHelper::addPayment($order->purchase_units[0]->invoice_id, 'PayPal', $order->purchase_units[0]->payments->captures[0]->amount->value, $order->purchase_units[0]->payments->captures[0]->seller_receivable_breakdown->paypal_fee->value, $body['resource']['id']);
+            }
         }
 
         return response()->json(['status' => 'success']);

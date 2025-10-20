@@ -1,4 +1,4 @@
-<div>
+<div class="container mt-14">
     @if($invoice = $service->invoices()->where('status', 'pending')->first())
     <div class="w-full mb-4">
         <div class="bg-yellow-600/20 border-l-4 border-yellow-500 text-yellow-300 p-4 rounded-lg">
@@ -55,6 +55,7 @@
                         </span>
                         @endif
                     </div>
+                    @include('services.partials.billing-agreement')
                     <br>
                     @foreach ($fields as $field)
                     <div class="flex items-center text-base">
@@ -62,7 +63,6 @@
                         <span class="text-base/50">{{ $field['text'] }}</span>
                     </div>
                     @endforeach
-
                 </div>
             </div>
             @if($service->cancellable || $service->upgradable || count($buttons) > 0)

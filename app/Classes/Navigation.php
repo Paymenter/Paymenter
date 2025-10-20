@@ -21,7 +21,7 @@ class Navigation
             $routes = [
                 [
                     'name' => __('navigation.home'),
-                    'route' => 'home',
+                    'url' => route('home'),
                     'icon' => 'ri-home-2',
                 ],
                 [
@@ -29,8 +29,7 @@ class Navigation
                     'children' => $categories->map(function ($category) {
                         return [
                             'name' => $category->name,
-                            'route' => 'category.show',
-                            'params' => ['category' => $category->slug],
+                            'url' => route('category.show', ['category' => $category->slug]),
                         ];
                     })->toArray(),
                     'condition' => count($categories) > 0,
@@ -57,20 +56,20 @@ class Navigation
             $routes = [
                 [
                     'name' => __('navigation.dashboard'),
-                    'route' => 'dashboard',
+                    'url' => route('dashboard'),
                 ],
                 [
                     'name' => __('navigation.tickets'),
-                    'route' => 'tickets',
+                    'url' => route('tickets'),
                     'condition' => !config('settings.tickets_disabled', false),
                 ],
                 [
                     'name' => __('navigation.account'),
-                    'route' => 'account',
+                    'url' => route('account'),
                 ],
                 [
                     'name' => __('navigation.admin'),
-                    'route' => 'filament.admin.pages.dashboard',
+                    'url' => route('filament.admin.pages.dashboard'),
                     'spa' => false,
                     'condition' => Auth::user()->role_id !== null,
                 ],
@@ -93,21 +92,21 @@ class Navigation
             $routes = [
                 [
                     'name' => __('navigation.dashboard'),
-                    'route' => 'dashboard',
+                    'url' => route('dashboard'),
                     'icon' => 'ri-function',
                     'condition' => Auth::check(),
                     'priority' => 10,
                 ],
                 [
                     'name' => __('navigation.services'),
-                    'route' => 'services',
+                    'url' => route('services'),
                     'icon' => 'ri-archive-stack',
                     'condition' => Auth::check(),
                     'priority' => 20,
                 ],
                 [
                     'name' => __('navigation.invoices'),
-                    'route' => 'invoices',
+                    'url' => route('invoices'),
                     'icon' => 'ri-receipt',
                     'separator' => true,
                     'condition' => Auth::check(),
@@ -115,7 +114,7 @@ class Navigation
                 ],
                 [
                     'name' => __('navigation.tickets'),
-                    'route' => 'tickets',
+                    'url' => route('tickets'),
                     'icon' => 'ri-customer-service',
                     'separator' => true,
                     'condition' => Auth::check() && !config('settings.tickets_disabled', false),
@@ -131,23 +130,33 @@ class Navigation
                         [
                             [
                                 'name' => __('navigation.personal_details'),
-                                'route' => 'account',
+                                'url' => route('account'),
                                 'params' => [],
                                 'priority' => 10,
                             ],
                             [
                                 'name' => __('navigation.security'),
-                                'route' => 'account.security',
+                                'url' => route('account.security'),
                                 'params' => [],
                                 'priority' => 20,
                             ],
                             [
                                 'name' => __('account.credits'),
-                                'route' => 'account.credits',
+                                'url' => route('account.credits'),
                                 'params' => [],
                                 'condition' => config('settings.credits_enabled'),
                                 'priority' => 30,
                             ],
+                            [
+                                'name' => __('account.payment_methods'),
+                                'url' => route('account.payment-methods'),
+                                'priority' => 40,
+                            ],
+                            [
+                                'name' => __('navigation.notifications'),
+                                'url' => route('account.notifications'),
+                                'priority' => 50,
+                            ]
                         ]
                     ),
                 ],
@@ -199,7 +208,7 @@ class Navigation
      */
     public static function markActiveRoute(array $routes): array
     {
-        $currentRoute = request()->livewireRoute();
+        $currentRoute = request()->livewireUrl();
 
         foreach ($routes as &$route) {
             $route['active'] = self::isActiveRoute($route, $currentRoute);
@@ -211,7 +220,21 @@ class Navigation
             if (isset($route['children'])) {
                 foreach ($route['children'] as &$child) {
                     $child['active'] = self::isActiveRoute($child, $currentRoute);
+
+                    if (isset($child['icon'])) {
+                        $child['icon'] .= $child['active'] ? '-fill' : '-line';
+                    }
+
+                    // Make route a url
+                    if (isset($child['route']) && !isset($child['url'])) {
+                        $child['url'] = route($child['route'], $child['params'] ?? []);
+                    }
                 }
+            }
+
+            // Make route a url
+            if (isset($route['route']) && !isset($route['url'])) {
+                $route['url'] = route($route['route'], $route['params'] ?? []);
             }
         }
 
@@ -220,42 +243,18 @@ class Navigation
 
     private static function isActiveRoute(array $route, string $currentRoute): bool
     {
-        if (($route['route'] ?? '') === $currentRoute) {
+        if (($route['url'] ?? '') === $currentRoute) {
             return true;
         }
 
         if (!empty($route['children'])) {
             foreach ($route['children'] as $child) {
-                if (($child['route'] ?? '') === $currentRoute) {
+                if (($child['url'] ?? '') === $currentRoute) {
                     return true;
                 }
             }
         }
 
         return false;
-    }
-
-    public static function getCurrent()
-    {
-        $route = request()->route()->getName();
-        $routes = self::getLinks();
-        // Get current parnet of the route
-        $parent = null;
-        foreach ($routes as $item) {
-            if ($item['route'] == $route) {
-                $parent = $item;
-                break;
-            }
-            if (isset($item['children'])) {
-                foreach ($item['children'] as $child) {
-                    if ($child['route'] == $route) {
-                        $parent = $item;
-                        break;
-                    }
-                }
-            }
-        }
-
-        return $parent;
     }
 }

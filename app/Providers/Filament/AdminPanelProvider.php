@@ -30,6 +30,7 @@ use Illuminate\Session\Middleware\StartSession;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
+use Illuminate\Support\Facades\File;
 
 class AdminPanelProvider extends PanelProvider
 {
@@ -49,7 +50,11 @@ class AdminPanelProvider extends PanelProvider
                 'primary' => Color::Blue,
             ])
             ->globalSearchKeyBindings(['command+k', 'ctrl+k'])
-            ->favicon(config('settings.logo') ? Storage::url(config('settings.logo')) : null)
+            ->favicon(config('settings.favicon') ? Storage::url(config('settings.favicon')) : null)
+            ->brandLogo(config('settings.logo') ? Storage::url(config('settings.logo')) : null)
+            ->darkModeBrandLogo(config('settings.logo_dark') ? Storage::url(config('settings.logo_dark')) : null)
+            ->brandName(config('settings.logo') || config('settings.logo_dark') ? null : config('app.name'))
+            ->brandLogoHeight('2rem')
             ->discoverResources(in: app_path('Admin/Resources'), for: 'App\\Admin\\Resources')
             ->discoverPages(in: app_path('Admin/Pages'), for: 'App\\Admin\\Pages')
             ->discoverClusters(in: app_path('Admin/Clusters'), for: 'App\\Admin\\Clusters')
@@ -68,6 +73,16 @@ class AdminPanelProvider extends PanelProvider
             ->renderHook(
                 PanelsRenderHook::SIDEBAR_NAV_END,
                 fn (): string => Blade::render('<x-admin-footer />'),
+            )
+            ->renderHook(
+                'panels::head.end',
+                function (): string {
+                    $activeTheme = config('settings.theme', 'default');
+                    $activeThemePath = base_path("themes/{$activeTheme}/views/layouts/colors.blade.php");
+                    $defaultThemePath = base_path("themes/default/views/layouts/colors.blade.php");
+                    $pathToUse = File::exists($activeThemePath) ? $activeThemePath : $defaultThemePath;
+                    return Blade::render(File::get($pathToUse));
+                }
             )
             ->navigationGroups([
                 'Administration',

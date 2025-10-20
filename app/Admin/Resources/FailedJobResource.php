@@ -81,6 +81,7 @@ class FailedJobResource extends Resource
                             try {
                                 Artisan::call("queue:retry {$record->uuid}");
                             } catch (Exception $e) {
+                                report($e);
                                 Notification::make()
                                     ->title($e->getMessage())
                                     ->warning()

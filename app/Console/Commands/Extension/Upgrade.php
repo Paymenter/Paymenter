@@ -34,7 +34,7 @@ class Upgrade extends Command
         $extensionInstance = new $extensionClass;
         if (method_exists($extensionInstance, 'upgraded')) {
             try {
-                $extensionInstance->upgraded();
+                $extensionInstance->upgraded($this->argument('oldVersion'));
             } catch (\Exception $e) {
                 Log::error("Error during upgrade of extension {$this->argument('name')}: " . $e->getMessage());
 

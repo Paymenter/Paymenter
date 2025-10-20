@@ -8,8 +8,10 @@ use App\Livewire\Component;
 use App\Models\Credit;
 use App\Models\Gateway;
 use App\Models\Invoice;
+use App\Models\Service;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Request;
+use Livewire\Attributes\Computed;
 use Livewire\Attributes\Locked;
 use Livewire\Attributes\Url;
 
@@ -18,82 +20,167 @@ class Show extends Component
     #[Locked]
     public Invoice $invoice;
 
-    #[Url]
-    public $gateway = null;
-
-    #[Locked]
-    public $gateways;
-
     public $checkPayment = false;
 
     private $pay = null;
 
-    public $use_credits = false;
+    #[Url('pay', except: false, nullable: true)]
+    public $showPayModal = false;
+
+    public $lastChecked = null;
+
+    public $selectedMethod = null;
+
+    public $setAsDefault = false;
 
     public function mount()
     {
-        $sessionGateway = session('gateway');
-        if ($sessionGateway) {
-            $this->gateway = $sessionGateway;
-        }
-
-        if ($this->invoice->status === 'pending') {
-            $this->gateways = ExtensionHelper::getCheckoutGateways($this->invoice->total, $this->invoice->currency_code, 'invoice', $this->invoice->items);
-            if (count($this->gateways) > 0 && !array_search($this->gateway, array_column($this->gateways, 'id')) !== false) {
-                $this->gateway = $this->gateways[0]->id;
-            }
-            if ($sessionGateway && Request::has('pay')) {
-                $this->pay();
-            }
-        }
         if (Request::has('checkPayment') && $this->invoice->status === 'pending') {
             $this->checkPayment = true;
         }
+        if ($this->invoice->transactions()->where('status', \App\Enums\InvoiceTransactionStatus::Processing)->exists()) {
+            $this->checkPayment = true;
+        }
 
-        // We don't want to toggle use_credits before $this->pay() is called, otherwise it will always paid with credits
-        $this->use_credits = true;
-        $hasCredits = $this->invoice->items()->where('reference_type', Credit::class)->exists();
-        if ($hasCredits) {
-            $this->use_credits = false;
+        // Load relations
+        $this->invoice->load('transactions', 'transactions.gateway', 'transactions.invoice');
+
+        if ($this->showPayModal && $this->invoice->status !== 'pending') {
+            $this->showPayModal = false;
         }
     }
 
-    public function pay()
+    #[Computed]
+    public function gateways()
     {
-        if ($this->use_credits) {
-            $credit = Auth::user()->credits()->where('currency_code', $this->invoice->currency_code)->first();
-            if ($credit && $credit->amount > 0) {
-                // Is it more credits or less credits than the total price?
-                if ($credit->amount >= $this->invoice->remaining) {
-                    $credit->amount -= $this->invoice->remaining;
-                    $credit->save();
-                    ExtensionHelper::addPayment($this->invoice->id, null, amount: $this->invoice->remaining);
+        return ExtensionHelper::getCheckoutGateways($this->invoice->total, $this->invoice->currency_code, 'invoice', $this->invoice->items);
+    }
 
-                    return $this->redirect(route('invoices.show', $this->invoice), true);
-                } else {
-                    ExtensionHelper::addPayment($this->invoice->id, null, amount: $credit->amount);
-                    $credit->amount = 0;
-                    $credit->save();
+    #[Computed]
+    public function paymentMethods()
+    {
+        return ExtensionHelper::getBillingAgreementGateways($this->invoice->currency_code);
+    }
 
-                    $this->invoice = $this->invoice->fresh();
-                }
+    #[Computed]
+    public function savedPaymentMethods()
+    {
+        return Auth::user()->billingAgreements()->with('gateway')->get();
+    }
+
+    #[Computed]
+    public function recurringServices()
+    {
+        return $this->invoice->items()
+            ->where('reference_type', Service::class)
+            ->whereNotNull('reference_id')
+            ->whereHasMorph('reference', [Service::class], function ($query) {
+                $query->whereHas('plan', function ($planQuery) {
+                    $planQuery->whereNotIn('type', ['one-time', 'free']);
+                });
+            });
+    }
+
+    public function updatedShowPayModal($value)
+    {
+        if ($value && $this->invoice->status !== 'pending') {
+            $this->showPayModal = false;
+        }
+    }
+
+    public function processPayment()
+    {
+        if (is_null($this->selectedMethod)) {
+            return;
+        }
+
+        if ($this->selectedMethod === 'credit') {
+            return $this->payWithCredit();
+        }
+
+        if (str_starts_with($this->selectedMethod, 'gateway-')) {
+            $gatewayId = substr($this->selectedMethod, 8);
+            return $this->payWithMethod($gatewayId);
+        }
+
+        if ($this->setAsDefault) {
+            $services = $this->recurringServices()->get();
+            $agreement = Auth::user()->billingAgreements()->where('ulid', $this->selectedMethod)->first();
+
+            foreach ($services as $service) {
+                $service->update(['billing_agreement_id' => $agreement->id]);
             }
+
+            if ($services->count() > 0) {
+                $this->notify('Default payment method has been updated for recurring services.', 'success');
+            }
+        }
+
+        return $this->payWithSavedMethod($this->selectedMethod);
+    }
+
+    public function payWithMethod($methodId)
+    {
+        if (!in_array($methodId, array_column($this->gateways, 'id'))) {
+            return $this->notify(__('Invalid payment method.'), 'error');
         }
 
         if ($this->invoice->status !== 'pending') {
             return $this->notify(__('This invoice cannot be paid.'), 'error');
         }
-        if ($this->checkPayment) {
-            $this->checkPayment = false;
-        }
-        $this->validate([
-            'gateway' => 'required',
-        ]);
 
-        $this->pay = ExtensionHelper::pay(Gateway::where('id', $this->gateway)->first(), $this->invoice);
+        $this->pay = ExtensionHelper::pay(Gateway::where('id', $methodId)->first(), $this->invoice);
 
         if (is_string($this->pay)) {
             $this->redirect($this->pay);
+        }
+    }
+
+    public function payWithCredit()
+    {
+        $credit = Auth::user()->credits()->where('currency_code', $this->invoice->currency_code)->lockForUpdate()->first();
+        if ($credit && $credit->amount > 0) {
+            // Is it more credits or less credits than the total price?
+            if ($credit->amount >= $this->invoice->remaining) {
+                $credit->amount -= $this->invoice->remaining;
+                $credit->save();
+                ExtensionHelper::addPayment($this->invoice->id, null, amount: $this->invoice->remaining, isCreditTransaction: true);
+
+                return $this->redirect(route('invoices.show', $this->invoice), true);
+            } else {
+                ExtensionHelper::addPayment($this->invoice->id, null, amount: $credit->amount, isCreditTransaction: true);
+                $credit->amount = 0;
+                $credit->save();
+
+                $this->invoice = $this->invoice->fresh();
+                $this->notify(__('Part of the invoice has been paid with credits. Please pay the remaining amount'));
+            }
+        }
+    }
+
+    public function payWithSavedMethod($agreementUlid)
+    {
+        $agreement = Auth::user()->billingAgreements()->where('ulid', $agreementUlid)->with('gateway')->first();
+        if (!$agreement) {
+            return $this->notify(__('Invalid payment method.'), 'error');
+        }
+
+        if (!in_array($agreement->gateway->id, array_column($this->paymentMethods, 'id'))) {
+            return $this->notify(__('This payment method cannot be used for this invoice.'), 'error');
+        }
+
+        if ($this->invoice->status !== 'pending') {
+            return $this->notify(__('This invoice cannot be paid.'), 'error');
+        }
+
+        $success = ExtensionHelper::charge($agreement->gateway, $this->invoice, $agreement);
+
+        if ($success === true) {
+            $this->notify(__('Successfully charged the saved payment method.'), 'success');
+
+            return $this->redirect(route('invoices.show', $this->invoice) . '?checkPayment', true);
+        } else {
+            return $this->notify(__('Could not process payment. Please try again or use a different payment method.'), 'error');
         }
     }
 
@@ -109,9 +196,35 @@ class Show extends Component
     public function checkPaymentStatus()
     {
         $this->invoice->refresh();
+
+        // Check for transactions that failed since lastChecked
+        if ($this->lastChecked) {
+            $failedSinceLastCheck = $this->invoice->transactions()
+                ->where('status', \App\Enums\InvoiceTransactionStatus::Failed)
+                ->where('updated_at', '>', $this->lastChecked)
+                ->exists();
+
+            if ($failedSinceLastCheck) {
+                $this->notify(__('Payment failed. Please try again or use a different payment method.'), 'error');
+                $this->checkPayment = false;
+                $this->lastChecked = null;
+                return;
+            }
+        }
+
+        // Update lastChecked to current time
+        $this->lastChecked = now();
+
+        // Check if invoice is paid
         if ($this->invoice->status === 'paid') {
             $this->notify(__('The invoice has been paid.'), 'success');
             $this->checkPayment = false;
+            $this->lastChecked = null;
+        }
+
+        // Skip render if still checking
+        if ($this->checkPayment) {
+            return $this->skipRender();
         }
     }
 

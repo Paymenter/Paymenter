@@ -11,6 +11,9 @@ class TicketReplyEmailListener
      */
     public function handle(MessageSending $event): void
     {
+        if (!isset($event->data['emailTemplate'])) {
+            return;
+        }
         if ($event->data['emailTemplate']->key === 'new_ticket_message') {
             $message = $event->message;
             $host = config('app.url');

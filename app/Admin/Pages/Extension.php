@@ -12,12 +12,15 @@ use Filament\Actions\Contracts\HasActions;
 use Filament\Forms\Components\FileUpload;
 use Filament\Notifications\Notification;
 use Filament\Pages\Page;
+use Filament\Tables\Columns\IconColumn;
+use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Concerns\InteractsWithTable;
 use Filament\Tables\Contracts\HasTable;
 use Filament\Tables\Table;
 use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 use Livewire\Attributes\Url;
@@ -126,6 +129,9 @@ class Extension extends Page implements HasActions, HasTable
             ->records(fn () => collect(ExtensionHelper::getInstallableExtensions()))
             ->description('List of available extensions (not gateway or server extensions) that can be installed.')
             ->columns([
+                ImageColumn::make('meta.icon')
+                    ->label('Icon')
+                    ->state(fn ($record) => $record['meta']?->icon ? $record['meta']->icon : 'ri-puzzle-fill'),
                 TextColumn::make('meta.name')
                     ->label('Extension Name')
                     ->searchable()
@@ -207,5 +213,10 @@ class Extension extends Page implements HasActions, HasTable
                         }
                     }),
             ]);
+    }
+
+    public static function canAccess(): bool
+    {
+        return Auth::user()->hasPermission('admin.extensions.viewAny') && Auth::user()->hasPermission('admin.extensions.install');
     }
 }

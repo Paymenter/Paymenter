@@ -4,11 +4,12 @@ namespace App\Livewire;
 
 use App\Exceptions\DisplayException;
 use App\Livewire\Traits\Disabled;
+use App\Livewire\Traits\HasConfirmation;
 use App\Livewire\Traits\HasNotifications;
 
 class Component extends \Livewire\Component
 {
-    use Disabled, HasNotifications;
+    use Disabled, HasNotifications, HasConfirmation;
 
     public function paginationView()
     {

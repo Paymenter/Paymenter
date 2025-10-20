@@ -1,4 +1,4 @@
-<div class="mx-auto container mt-4">
+<div class="container mt-14">
     <div class="bg-background-secondary hover:bg-background-secondary/80 border border-neutral p-4 rounded-lg">
         <div class="flex flex-row justify-between mb-6">
             <h2 class="text-xl font-bold">{{ $announcement->title }}</h2>

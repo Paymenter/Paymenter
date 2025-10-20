@@ -156,6 +156,7 @@ return [
     'aliases' => Facade::defaultAliases()->merge([
         'Redis' => Illuminate\Support\Facades\Redis::class,
         'Cart' => App\Classes\Cart::class,
+        'ExtensionHelper' => App\Helpers\ExtensionHelper::class,
     ])->toArray(),
 
     'countries' => [

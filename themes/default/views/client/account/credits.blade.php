@@ -1,4 +1,4 @@
-<div>
+<div class="container mt-14">
     <x-navigation.breadcrumb />
     <div class="px-2">
         <h4 class="text-2xl font-bold pb-3">{{ __('account.credits') }}</h4>

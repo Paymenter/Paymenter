@@ -78,7 +78,7 @@ class Logs extends Command
 
         if (!empty($matches[1])) {
             // Return the last error message trimmed
-            return trim(end($matches[1]));
+            return trim(end($matches[0]));
         }
 
         return null;

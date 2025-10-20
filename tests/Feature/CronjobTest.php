@@ -299,4 +299,92 @@ class CronjobTest extends TestCase
             'status' => 'closed',
         ]);
     }
+
+    public function test_if_product_stock_is_incremented_on_termination(): void
+    {
+        $product = $this->createProduct(['stock' => 10]);
+        $user = \App\Models\User::factory()->create();
+
+        $service = \App\Models\Service::factory()->create([
+            'product_id' => $product->product->id,
+            'status' => 'suspended',
+            'expires_at' => now()->subDays(15),
+            'user_id' => $user->id,
+            'currency_code' => 'USD',
+            'price' => 10.00,
+            'quantity' => 2,
+        ]);
+
+        // Run the cron job
+        $this->artisan('app:cron-job')
+            ->assertExitCode(0);
+
+        // Check if the service was terminated
+        $this->assertDatabaseHas('services', [
+            'id' => $service->id,
+            'status' => \App\Models\Service::STATUS_CANCELLED,
+        ]);
+
+        // Check if the product stock was incremented
+        $this->assertDatabaseHas('products', [
+            'id' => $product->product->id,
+            'stock' => 10 + $service->quantity,
+        ]);
+    }
+    
+    public function test_if_stock_is_null_it_does_not_increment_stock()
+    {
+        $product = $this->createProduct(['stock' => null]);
+        $user = \App\Models\User::factory()->create();
+
+        $service = \App\Models\Service::factory()->create([
+            'product_id' => $product->product->id,
+            'status' => 'suspended',
+            'expires_at' => now()->subDays(15),
+            'user_id' => $user->id,
+            'currency_code' => 'USD',
+            'price' => 10.00,
+        ]);
+
+        // Run the cron job
+        $this->artisan('app:cron-job')
+            ->assertExitCode(0);
+
+        // Check if the service was terminated
+        $this->assertDatabaseHas('services', [
+            'id' => $service->id,
+            'status' => \App\Models\Service::STATUS_CANCELLED,
+        ]);
+    }
+
+    public function test_if_stock_is_zero_it_does_increment_stock()
+    {
+        $product = $this->createProduct(['stock' => 0]);
+        $user = \App\Models\User::factory()->create();
+
+        $service = \App\Models\Service::factory()->create([
+            'product_id' => $product->product->id,
+            'status' => 'suspended',
+            'expires_at' => now()->subDays(15),
+            'user_id' => $user->id,
+            'currency_code' => 'USD',
+            'price' => 10.00,
+        ]);
+
+        // Run the cron job
+        $this->artisan('app:cron-job')
+            ->assertExitCode(0);
+
+        // Check if the service was terminated
+        $this->assertDatabaseHas('services', [
+            'id' => $service->id,
+            'status' => \App\Models\Service::STATUS_CANCELLED,
+        ]);
+
+        // Check if the product stock was incremented
+        $this->assertDatabaseHas('products', [
+            'id' => $product->product->id,
+            'stock' => 1,
+        ]);
+    }
 }

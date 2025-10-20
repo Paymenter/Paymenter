@@ -32,7 +32,6 @@ class PriceSynth extends Synth
             'original_price' => $instance->original_price,
             'original_setup_fee' => $instance->original_setup_fee,
             'formatted' => $instance->formatted,
-            'total' => $instance->total,
         ], []];
     }
 
@@ -44,7 +43,6 @@ class PriceSynth extends Synth
         $price->discount = $instance['discount'];
         $price->original_price = $instance['original_price'];
         $price->original_setup_fee = $instance['original_setup_fee'];
-        $price->total = $instance['total'];
 
         return $price;
     }

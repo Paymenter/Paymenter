@@ -1,18 +1,23 @@
 <nav class="w-full px-4 lg:px-8 bg-background-secondary border-b border-neutral md:h-16 flex md:flex-row flex-col justify-between fixed top-0 z-20">
-    <div x-data="{ 
-        slideOverOpen: false 
-    }"
+    <div
+        x-data="{ 
+            slideOverOpen: false,
+            hasAside: !!document.getElementById('main-aside')
+        }"
         x-init="$watch('slideOverOpen', value => { document.documentElement.style.overflow = value ? 'hidden' : '' })"
         class="relative z-50 w-full h-auto">
-
-        <div class="flex flex-row items-center justify-between w-full h-16">
+        <div
+            class="flex flex-row items-center justify-between h-16"
+            :class="hasAside ? 'w-full' : 'container'">
 
             <div class="flex flex-row items-center">
-                <a href="{{ route('home') }}" class="flex flex-row items-center h-10" wire:navigate>
-                    <x-logo class="h-10 mr-2 rtl:ml-2" />
+                <a href="{{ route('home') }}" class="flex flex-row items-center h-10 gap-2" wire:navigate>
+                    <x-logo class="h-8" />
+                    @if(theme('logo_display', 'logo-and-name') != 'logo-only')
                     <span class="text-xl font-bold leading-none flex items-center">{{ config('app.name') }}</span>
+                    @endif
                 </a>
-                <div class="md:flex hidden flex-row ml-7">
+                <div class="md:flex hidden flex-row ml-6">
                     @foreach (\App\Classes\Navigation::getLinks() as $nav)
                     @if (isset($nav['children']) && count($nav['children']) > 0)
                     <div class="relative">
@@ -27,7 +32,7 @@
                             <x-slot:content>
                                 @foreach ($nav['children'] as $child)
                                 <x-navigation.link
-                                    :href="route($child['route'], $child['params'] ?? null)"
+                                    :href="$child['url']"
                                     :spa="isset($child['spa']) ? $nav['spa'] : true">
                                     {{ $child['name'] }}
                                 </x-navigation.link>
@@ -37,7 +42,7 @@
                     </div>
                     @else
                     <x-navigation.link
-                        :href="route($nav['route'], $nav['params'] ?? null)"
+                        :href="$nav['url']"
                         :spa="isset($nav['spa']) ? $nav['spa'] : true"
                         class="flex items-center p-3">
                         {{ $nav['name'] }}
@@ -53,7 +58,7 @@
 
             <div class="flex flex-row items-center">
                 <livewire:components.cart />
-                
+
                 <div class="items-center hidden md:flex mr-1">
                     <x-dropdown>
                         <x-slot:trigger>
@@ -70,10 +75,10 @@
                     <x-theme-toggle />
                 </div>
 
-
                 @if(auth()->check())
+                <livewire:components.notifications />
                 <div class="hidden lg:flex">
-                    <x-dropdown>
+                    <x-dropdown :showArrow="false">
                         <x-slot:trigger>
                             <img src="{{ auth()->user()->avatar }}" class="size-8 rounded-full border border-neutral bg-background" alt="avatar" />
                         </x-slot:trigger>
@@ -83,7 +88,7 @@
                                 <span class="text-sm text-base break-words">{{ auth()->user()->email }}</span>
                             </div>
                             @foreach (\App\Classes\Navigation::getAccountDropdownLinks() as $nav)
-                            <x-navigation.link :href="route($nav['route'], $nav['params'] ?? null)" :spa="isset($nav['spa']) ? $nav['spa'] : true">
+                            <x-navigation.link :href="$nav['url']" :spa="isset($nav['spa']) ? $nav['spa'] : true">
                                 {{ $nav['name'] }}
                             </x-navigation.link>
                             @endforeach
@@ -213,7 +218,7 @@
                                         <div class="h-px w-full bg-neutral my-6"></div>
                                         <div class="mt-4 flex flex-col gap-2 w-full">
                                             @foreach (\App\Classes\Navigation::getAccountDropdownLinks() as $nav)
-                                            <x-navigation.link :href="route($nav['route'], $nav['params'] ?? null)" :spa="isset($nav['spa']) ? $nav['spa'] : true">
+                                            <x-navigation.link :href="$nav['url']" :spa="isset($nav['spa']) ? $nav['spa'] : true">
                                                 {{ $nav['name'] }}
                                             </x-navigation.link>
                                             @endforeach

@@ -1,4 +1,4 @@
-<div class="space-y-4">
+<div class="container mt-14 space-y-4">
     <div class="flex flex-row justify-between">
         <x-navigation.breadcrumb />
         <x-navigation.link :href="route('tickets.create')" class="flex items-center gap-2">
@@ -6,7 +6,7 @@
             <span>{{ __('ticket.create_ticket') }}</span>
         </x-navigation.link>
     </div>
-    @foreach ($tickets as $ticket)
+    @forelse ($tickets as $ticket)
     <a href="{{ route('tickets.show', $ticket) }}" wire:navigate>
         <div class="bg-background-secondary hover:bg-background-secondary/80 border border-neutral p-4 rounded-lg mb-4">
             <div class="flex items-center justify-between mb-2">
@@ -20,7 +20,7 @@
                     @if ($ticket->status == 'open') text-success bg-success/20 
                     @elseif($ticket->status == 'closed') text-inactive bg-inactive/20
                     @else text-info bg-info/20 
-                    @endif"
+                    @endif">
                     @if ($ticket->status == 'open')
                         <x-ri-add-circle-fill />
                     @elseif($ticket->status == 'closed')
@@ -37,5 +37,11 @@
             </p>
         </div>
     </a>
-    @endforeach
+    @empty
+    <div class="bg-background-secondary border border-neutral p-4 rounded-lg">
+        <p class="text-base text-sm">{{ __('ticket.no_tickets') }}</p>
+    </div>
+    @endforelse
+
+    {{ $tickets->links() }}
 </div>

@@ -12,3 +12,31 @@
 .fi-wi-stats-overview-stat.error .fi-wi-stats-overview-stat-value {
     color: theme('colors.red.500');
 }
+
+.fi-topbar, 
+.fi-sidebar, 
+.fi-contained, 
+.fi-ta-ctn, 
+.fi-wi-stats-overview-stat, 
+.fi-section-has-header {
+    background-color: hsl(var(--color-background-secondary));
+}
+
+.fi-body, .fi-simple-main {
+    background-color: hsl(var(--color-background));
+}
+
+/*
+.fi-sidebar .fi-sidebar-item-label {
+    color: hsl(var(--color-muted));
+}
+    
+.fi-btn-primary {
+    background-color: hsl(var(--color-primary)) !important;
+    color: hsl(var(--color-inverted)) !important;
+}
+
+.fi-btn-primary:hover {
+    background-color: hsl(var(--color-secondary)) !important;
+}
+*/

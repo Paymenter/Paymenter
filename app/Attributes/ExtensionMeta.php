@@ -15,5 +15,6 @@ class ExtensionMeta
         public string $version,
         public string $author,
         public string $url = '',
+        public string $icon = '',
     ) {}
 }

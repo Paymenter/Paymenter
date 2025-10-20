@@ -13,6 +13,7 @@ use Filament\Schemas\Schema;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Auth;
 
 class ErrorLogResource extends Resource
 {
@@ -101,5 +102,10 @@ class ErrorLogResource extends Resource
         return [
             'index' => ListErrorLogs::route('/'),
         ];
+    }
+
+    public static function canAccess(): bool
+    {
+        return Auth::user()->hasPermission('admin.debug_logs.view');
     }
 }
