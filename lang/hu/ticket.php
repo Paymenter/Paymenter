@@ -27,4 +27,5 @@ return [
     'service' => 'Szolgáltatás',
     'select_service' => 'Szolgáltatás kiválasztása',
     'create' => 'Létrehozás',
+    'no_tickets' => 'No tickets found',
 ];
