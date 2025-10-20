@@ -14,4 +14,5 @@ return [
     'dashboard' => 'Min side',
     'tickets' => 'Saker',
     'admin' => 'Administrator',
+    'notifications' => 'Notifications',
 ];
