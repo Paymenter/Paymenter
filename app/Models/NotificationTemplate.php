@@ -48,8 +48,8 @@ class NotificationTemplate extends Model implements Auditable
         return in_array($this->in_app_enabled, [NotificationEnabledStatus::ChoiceOn, NotificationEnabledStatus::ChoiceOff]);
     }
 
-// Check if user has enabled this notification for email
-    public function isEnabledForPreference(NotificationPreference $preference = null, $type = 'mail')
+    // Check if user has enabled this notification for email
+    public function isEnabledForPreference(?NotificationPreference $preference = null, $type = 'mail')
     {
         $type = $type === 'app' ? 'in_app_enabled' : 'mail_enabled';
         if ($this->{$type} === NotificationEnabledStatus::Force) {

@@ -4,12 +4,9 @@ namespace App\Listeners;
 
 use App\Events\Notification\Created;
 use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Minishlink\WebPush\Subscription;
 use Minishlink\WebPush\WebPush;
-
-
 
 class NotificationCreatedListener implements ShouldQueue
 {

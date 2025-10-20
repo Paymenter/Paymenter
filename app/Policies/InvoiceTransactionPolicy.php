@@ -2,7 +2,6 @@
 
 namespace App\Policies;
 
-use App\Models\Invoice;
 use App\Models\InvoiceTransaction;
 use App\Models\User;
 

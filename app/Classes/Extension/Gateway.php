@@ -13,22 +13,16 @@ use Illuminate\Support\Facades\View;
  */
 abstract class Gateway extends Extension
 {
-
     /**
      * Pay the given invoice with the given total amount.
-     * 
-     * @param \App\Models\Invoice $invoice
-     * @param mixed $total
+     *
+     * @param  mixed  $total
      * @return View|string
      */
-    public function pay(Invoice $invoice, $total)
-    {
-    }
+    public function pay(Invoice $invoice, $total) {}
 
     /**
      * Check if gateway supports billing agreements.
-     * 
-     * @return bool
      */
     public function supportsBillingAgreements(): bool
     {
@@ -37,9 +31,8 @@ abstract class Gateway extends Extension
 
     /**
      * Create a billing agreement for the given user.
-     * 
-     * @param \App\Models\User $user
-     * @param string $currencyCode
+     *
+     * @param  string  $currencyCode
      * @return View|string
      */
     public function createBillingAgreement(User $user)
@@ -49,8 +42,7 @@ abstract class Gateway extends Extension
 
     /**
      * Cancel the billing agreement associated with the given card.
-     * 
-     * @param \App\Models\BillingAgreement $billingAgreement
+     *
      * @return void
      */
     public function cancelBillingAgreement(BillingAgreement $billingAgreement): bool
@@ -60,10 +52,8 @@ abstract class Gateway extends Extension
 
     /**
      * Charge the given billing agreement for the given invoice and amount.
-     * 
-     * @param \App\Models\BillingAgreement $billingAgreement
-     * @param \App\Models\Invoice $invoice
-     * @param mixed $total
+     *
+     * @param  mixed  $total
      * @return bool
      */
     public function charge(Invoice $invoice, $total, BillingAgreement $billingAgreement)

@@ -331,7 +331,7 @@ class CronjobTest extends TestCase
             'stock' => 10 + $service->quantity,
         ]);
     }
-    
+
     public function test_if_stock_is_null_it_does_not_increment_stock()
     {
         $product = $this->createProduct(['stock' => null]);

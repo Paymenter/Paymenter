@@ -50,7 +50,6 @@ return [
     'add_credit' => 'Add credit',
     'credit_deposit' => 'Credit deposit (:currency)',
 
-
     'payment_methods' => 'Payment Methods',
     'recent_transactions' => 'Recent Transactions',
     'saved_payment_methods' => 'Saved Payment Methods',

@@ -7,7 +7,6 @@ use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\On;
 
-
 class Notifications extends Component
 {
     #[Computed, On('notification-added')]
@@ -39,7 +38,6 @@ class Notifications extends Component
 
         $notification->markAsRead();
     }
-    
 
     public function render()
     {

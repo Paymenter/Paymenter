@@ -21,7 +21,7 @@ class Extension extends Model implements Auditable
 
     protected $guarded = [];
 
-protected $appends = ['meta'];
+    protected $appends = ['meta'];
 
     /**
      * Get the extension's settings.

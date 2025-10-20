@@ -2,7 +2,6 @@
 
 use App\Http\Middleware\Api\AdminApi;
 use App\Http\Middleware\CheckoutParameterMiddleware;
-use App\Http\Middleware\CurrencyMiddleware;
 use App\Http\Middleware\EnsureUserHasPermissions;
 use App\Http\Middleware\ImpersonateMiddleware;
 use App\Http\Middleware\ProxyMiddleware;

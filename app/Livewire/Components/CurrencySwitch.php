@@ -15,7 +15,7 @@ class CurrencySwitch extends Component
     public function mount()
     {
         $this->currentCurrency = session('currency', config('settings.default_currency'));
-        $this->currencies = Currency::all()->map(fn($currency) => [
+        $this->currencies = Currency::all()->map(fn ($currency) => [
             'value' => $currency->code,
             'label' => $currency->name,
         ])->values()->toArray();

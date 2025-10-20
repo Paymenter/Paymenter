@@ -8,7 +8,6 @@ use App\Helpers\ExtensionHelper;
 use App\Livewire\Component;
 use App\Models\Category;
 use App\Models\Plan;
-use App\Models\Price as ModelsPrice;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
 use Livewire\Attributes\Locked;
@@ -103,12 +102,14 @@ class Checkout extends Component
             if ($option->type === 'checkbox' && (isset($this->configOptions[$option->id]) && $this->configOptions[$option->id])) {
                 $total += $option->children->first()?->price(billing_period: $this->plan->billing_period, billing_unit: $this->plan->billing_unit)->price;
                 $setup_fee += $option->children->first()?->price(billing_period: $this->plan->billing_period, billing_unit: $this->plan->billing_unit)->setup_fee;
+
                 return;
             }
             // Skip text, number and checkbox types as they have no price
             if (in_array($option->type, ['text', 'number', 'checkbox'])) {
                 $total += 0;
                 $setup_fee += 0;
+
                 return;
             }
 
@@ -116,7 +117,6 @@ class Checkout extends Component
             $total += $option->children->where('id', $this->configOptions[$option->id])->first()?->price(billing_period: $this->plan->billing_period, billing_unit: $this->plan->billing_unit)->price;
             $setup_fee += $option->children->where('id', $this->configOptions[$option->id])->first()?->price(billing_period: $this->plan->billing_period, billing_unit: $this->plan->billing_unit)->setup_fee;
         });
-
 
         $this->total = new Price([
             'price' => $total,
@@ -140,7 +140,7 @@ class Checkout extends Component
 
     public function getCheckoutConfig()
     {
-        return once(fn() => ExtensionHelper::getCheckoutConfig($this->product, $this->checkoutConfig));
+        return once(fn () => ExtensionHelper::getCheckoutConfig($this->product, $this->checkoutConfig));
     }
 
     public function rules()
@@ -230,7 +230,7 @@ class Checkout extends Component
                     'option_type' => $option->type,
                     'option_env_variable' => $option->env_variable,
                     'value' => isset($this->configOptions[$option->id]) && in_array($this->configOptions[$option->id], [true, 'true'], true) ? $option->children->first()->id : null,
-                    'value_name' => isset($this->configOptions[$option->id]) && in_array($this->configOptions[$option->id], [true, 'true'], true) ? 'Yes' : 'No'
+                    'value_name' => isset($this->configOptions[$option->id]) && in_array($this->configOptions[$option->id], [true, 'true'], true) ? 'Yes' : 'No',
                 ];
             }
             if (in_array($option->type, ['text', 'number'])) {
@@ -240,7 +240,7 @@ class Checkout extends Component
                     'option_type' => $option->type,
                     'option_env_variable' => $option->env_variable,
                     'value' => $this->configOptions[$option->id],
-                    'value_name' => $this->configOptions[$option->id]
+                    'value_name' => $this->configOptions[$option->id],
                 ];
             }
 
@@ -250,7 +250,7 @@ class Checkout extends Component
                 'option_type' => $option->type,
                 'option_env_variable' => $option->env_variable,
                 'value' => $this->configOptions[$option->id],
-                'value_name' => $option->children->where('id', $this->configOptions[$option->id])->first()->name
+                'value_name' => $option->children->where('id', $this->configOptions[$option->id])->first()->name,
             ];
         });
 

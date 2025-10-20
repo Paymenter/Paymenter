@@ -5,6 +5,7 @@ namespace App\Classes\Pdf;
 class FilePdfWrapper
 {
     private $filePath;
+
     private $fileName;
 
     public function __construct(string $filePath, ?string $fileName = null)
@@ -21,15 +22,17 @@ class FilePdfWrapper
     public function download($name = null)
     {
         $name = $name ?: $this->fileName;
+
         return response()->download($this->filePath, $name);
     }
 
     public function stream($name = null)
     {
         $name = $name ?: $this->fileName;
+
         return response()->file($this->filePath, [
             'Content-Type' => 'application/pdf',
-            'Content-Disposition' => 'inline; filename="' . $name . '"'
+            'Content-Disposition' => 'inline; filename="' . $name . '"',
         ]);
     }
 

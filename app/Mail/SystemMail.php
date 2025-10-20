@@ -2,13 +2,11 @@
 
 namespace App\Mail;
 
-use App\Models\NotificationTemplate;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\View\Compilers\BladeCompiler;
 
 class SystemMail extends Mailable
 {
@@ -57,4 +55,3 @@ class SystemMail extends Mailable
         );
     }
 }
-

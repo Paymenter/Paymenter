@@ -21,7 +21,7 @@ trait HasConfirmation
         if (method_exists($this, $action)) {
             return $this->{$action}(...$parameters);
         }
-        
+
         throw new \Exception("Method {$action} does not exist");
     }
 }

@@ -9,7 +9,7 @@ use App\Livewire\Traits\HasNotifications;
 
 class Component extends \Livewire\Component
 {
-    use Disabled, HasNotifications, HasConfirmation;
+    use Disabled, HasConfirmation, HasNotifications;
 
     public function paginationView()
     {

@@ -30,7 +30,7 @@ class EmailTemplateSeeder extends Seeder
             'mail_enabled' => 'force',
             'in_app_enabled' => 'choice_off',
             'edit_preference_message' => 'Alert me about new login attempts',
-            'in_app_url' => '{{ route("profile.security") }}'
+            'in_app_url' => '{{ route("profile.security") }}',
         ],
         'new_invoice_created' => [
             'subject' => 'New invoice created',
@@ -66,7 +66,7 @@ class EmailTemplateSeeder extends Seeder
             'mail_enabled' => 'choice_on',
             'in_app_enabled' => 'choice_on',
             'edit_preference_message' => 'Notify me about new invoices',
-            'in_app_url' => '{{ route("invoices.show", $invoice) }}'
+            'in_app_url' => '{{ route("invoices.show", $invoice) }}',
         ],
         'invoice_paid' => [
             'subject' => 'Invoice paid',
@@ -138,7 +138,7 @@ class EmailTemplateSeeder extends Seeder
             'mail_enabled' => 'choice_on',
             'in_app_enabled' => 'choice_on',
             'edit_preference_message' => 'Send me order confirmations',
-            'in_app_url' => '{{ route("services") }}'
+            'in_app_url' => '{{ route("services") }}',
         ],
         'new_server_created' => [
             'subject' => 'Service activated',
@@ -160,7 +160,7 @@ class EmailTemplateSeeder extends Seeder
             'mail_enabled' => 'force',
             'in_app_enabled' => 'choice_on',
             'edit_preference_message' => 'Notify me about new service activations',
-            'in_app_url' => '{{ route("services.show", $service) }}'
+            'in_app_url' => '{{ route("services.show", $service) }}',
         ],
         'server_suspended' => [
             'subject' => 'Service suspended',
@@ -179,7 +179,7 @@ class EmailTemplateSeeder extends Seeder
             'mail_enabled' => 'force',
             'in_app_enabled' => 'choice_on',
             'edit_preference_message' => 'Alert me about service suspensions',
-            'in_app_url' => '{{ route("services.show", $service) }}'
+            'in_app_url' => '{{ route("services.show", $service) }}',
         ],
         'server_terminated' => [
             'subject' => 'Service terminated',
@@ -203,7 +203,7 @@ class EmailTemplateSeeder extends Seeder
             'mail_enabled' => 'force',
             'in_app_enabled' => 'choice_on',
             'edit_preference_message' => 'Alert me about service terminations',
-            'in_app_url' => '{{ route("services.show", $service) }}'
+            'in_app_url' => '{{ route("services.show", $service) }}',
         ],
         'new_ticket_message' => [
             'subject' => '[Ticket #{{ $ticketMessage->ticket_id }}] New reply',
@@ -223,7 +223,7 @@ class EmailTemplateSeeder extends Seeder
             'mail_enabled' => 'choice_on',
             'in_app_enabled' => 'choice_on',
             'edit_preference_message' => 'Notify me about ticket replies',
-            'in_app_url' => '{{ route("tickets.show", $ticketMessage->ticket_id) }}'
+            'in_app_url' => '{{ route("tickets.show", $ticketMessage->ticket_id) }}',
         ],
         'email_verification' => [
             'subject' => 'Email verification',
@@ -287,7 +287,7 @@ class EmailTemplateSeeder extends Seeder
             'mail_enabled' => 'choice_on',
             'in_app_enabled' => 'choice_on',
             'edit_preference_message' => 'Notify me about service cancellations',
-            'in_app_url' => '{{ route("services.show", $service) }}'
+            'in_app_url' => '{{ route("services.show", $service) }}',
         ],
     ];
 

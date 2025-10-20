@@ -5,7 +5,6 @@ namespace App\Livewire\Invoices;
 use App\Classes\PDF;
 use App\Helpers\ExtensionHelper;
 use App\Livewire\Component;
-use App\Models\Credit;
 use App\Models\Gateway;
 use App\Models\Invoice;
 use App\Models\Service;
@@ -100,6 +99,7 @@ class Show extends Component
 
         if (str_starts_with($this->selectedMethod, 'gateway-')) {
             $gatewayId = substr($this->selectedMethod, 8);
+
             return $this->payWithMethod($gatewayId);
         }
 
@@ -208,6 +208,7 @@ class Show extends Component
                 $this->notify(__('Payment failed. Please try again or use a different payment method.'), 'error');
                 $this->checkPayment = false;
                 $this->lastChecked = null;
+
                 return;
             }
         }

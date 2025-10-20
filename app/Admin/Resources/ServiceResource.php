@@ -143,7 +143,7 @@ class ServiceResource extends Resource
                             })
                             ->label('Recalculate Price')
                             ->icon('ri-refresh-line')
-                        ),
+                    ),
                 Select::make('billing_agreement_id')
                     ->label('Billing Agreement')
                     ->relationship('billingAgreement', 'name', fn (Builder $query, Get $get) => $query->where('user_id', $get('user_id')))

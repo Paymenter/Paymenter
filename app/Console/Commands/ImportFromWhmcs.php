@@ -6,7 +6,6 @@ use App\Models\Category;
 use App\Models\ConfigOption;
 use App\Models\CustomProperty;
 use App\Models\Product;
-use App\Models\Property;
 use App\Models\Service;
 use App\Models\Setting;
 use App\Models\User;
@@ -14,19 +13,15 @@ use App\Providers\SettingsProvider;
 use Closure;
 use DB;
 use Illuminate\Console\Command;
-use Illuminate\Contracts\Console\PromptsForMissingInput;
 use Illuminate\Http\Client\Batch;
-use Illuminate\Support\Facades\Http;
 use Log;
-use Throwable;
-use function Laravel\Prompts\password;
-use function Laravel\Prompts\text;
-use Illuminate\Http\Client\ConnectionException;
-use Illuminate\Http\Client\RequestException;
-use Illuminate\Http\Client\Response;
 use PDO;
 use PDOException;
 use PDOStatement;
+use Throwable;
+
+use function Laravel\Prompts\password;
+use function Laravel\Prompts\text;
 
 class ImportFromWhmcs extends Command
 {
@@ -97,9 +92,6 @@ class ImportFromWhmcs extends Command
             $this->importInvoices();
             $this->importInvoiceItems();
             $this->importPayments();
-
-
-
 
             DB::statement('SET foreign_key_checks=1');
 
@@ -399,7 +391,6 @@ class ImportFromWhmcs extends Command
                     $stmt2->execute();
                     $prices = $stmt2->fetchAll(PDO::FETCH_ASSOC);
 
-
                     $this->priceMagic($prices, $planData, $priceData, ['id' => $record['id'] . $option['id'], 'paytype' => 'recurring'], ConfigOption::class);
                 }
             }
@@ -421,7 +412,7 @@ class ImportFromWhmcs extends Command
         });
     }
 
-    private function priceMagic(&$prices, &$planData = [], &$priceData = [], $record, $priceableType = Product::class)
+    private function priceMagic(&$prices, &$planData, &$priceData, $record, $priceableType = Product::class)
     {
         foreach ($prices as $pricing) {
             if ($record['paytype'] === 'onetime') {
@@ -450,7 +441,6 @@ class ImportFromWhmcs extends Command
                     'price' => $pricing['monthly'],
                     'setup_fee' => $setupFee,
                 ];
-
 
                 continue;
             }
@@ -506,7 +496,6 @@ class ImportFromWhmcs extends Command
             }
         }
 
-        return;
     }
 
     private function importProducts()
@@ -600,13 +589,13 @@ class ImportFromWhmcs extends Command
                         'name' => 'Free',
                         'type' => 'free',
                     ];
+
                     continue;
                 }
                 $stmt = $this->pdo->prepare('SELECT * FROM tblpricing WHERE type = "product" AND relid = :relid');
                 $stmt->bindValue(':relid', $record['id'], PDO::PARAM_INT);
                 $stmt->execute();
                 $prices = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
 
                 $this->priceMagic($prices, $planData, $priceData, $record);
             }
@@ -843,7 +832,8 @@ class ImportFromWhmcs extends Command
         });
     }
 
-    private function importInvoices(){
+    private function importInvoices()
+    {
         $this->info('Importing invoices... (' . $this->count('tblinvoices') . ' records)');
 
         $this->migrateInBatch('tblinvoices', 'SELECT * FROM tblinvoices LIMIT :limit OFFSET :offset', function ($records) {
@@ -879,7 +869,8 @@ class ImportFromWhmcs extends Command
         });
     }
 
-    private function importInvoiceItems(){
+    private function importInvoiceItems()
+    {
         $this->info('Importing invoice items... (' . $this->count('tblinvoiceitems') . ' records)');
 
         $this->migrateInBatch('tblinvoiceitems', 'SELECT * FROM tblinvoiceitems LIMIT :limit OFFSET :offset', function ($records) {
@@ -893,7 +884,7 @@ class ImportFromWhmcs extends Command
                     'created_at' => now(),
                     'updated_at' => now(),
                     'reference_type' => match ($record['type']) {
-                        'Hosting' => Service::class,    
+                        'Hosting' => Service::class,
                         'Domain' => null,
                         'Addon' => null,
                         'Upgrade' => null,
@@ -907,7 +898,8 @@ class ImportFromWhmcs extends Command
         });
     }
 
-    private function importPayments(){
+    private function importPayments()
+    {
         $this->info('Importing payments... (' . $this->count('tblaccounts') . ' records)');
 
         $this->migrateInBatch('tblaccounts', 'SELECT * FROM tblaccounts LIMIT :limit OFFSET :offset', function ($records) {

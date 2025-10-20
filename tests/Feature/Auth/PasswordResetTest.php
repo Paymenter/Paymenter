@@ -2,12 +2,9 @@
 
 namespace Tests\Feature\Auth;
 
-use App\Livewire\Auth\Login;
 use App\Livewire\Auth\Password\Request;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Password;
 use Livewire\Livewire;
 use Tests\TestCase;
 
@@ -21,7 +18,6 @@ class PasswordResetTest extends TestCase
             ->assertHasNoErrors()
             ->assertSee('Email');
     }
-
 
     public function test_can_request_password_reset_link()
     {
@@ -38,7 +34,6 @@ class PasswordResetTest extends TestCase
         $this->assertDatabaseHas('users', [
             'email' => 'test@example.com',
         ]);
-
 
         $this->assertDatabaseCount('password_reset_tokens', 1);
         $this->assertDatabaseHas('password_reset_tokens', [

@@ -4,8 +4,8 @@ namespace App\Classes;
 
 use App\Classes\Pdf\ContentPdfWrapper;
 use App\Classes\Pdf\FilePdfWrapper;
-use App\Models\Invoice;
 use App\Events\Invoice\GeneratePdf;
+use App\Models\Invoice;
 use Barryvdh\DomPDF\Facade\Pdf as DomPDF;
 
 class PDF
@@ -15,7 +15,7 @@ class PDF
         // Dispatch event to see if any extension wants to handle PDF generation
         $event = new GeneratePdf($invoice);
         event($event);
-        
+
         // If an extension provided a PDF in any format, handle it
         if ($event->hasPdf()) {
             return self::processPdfFromEvent($event);

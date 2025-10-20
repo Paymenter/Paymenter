@@ -2,14 +2,12 @@
 
 namespace App\Console\Commands\User;
 
-use App\Helpers\NotificationHelper;
 use App\Models\User;
 use Hash;
 use Illuminate\Console\Command;
 use Illuminate\Contracts\Console\PromptsForMissingInput;
 use Illuminate\Support\Facades\Password;
 use Str;
-use Throwable;
 
 class PasswordReset extends Command implements PromptsForMissingInput
 {
@@ -54,7 +52,7 @@ class PasswordReset extends Command implements PromptsForMissingInput
             return;
         }
 
-        // Make a strong password 
+        // Make a strong password
         $password = Str::password(16);
         $user->forceFill([
             'password' => Hash::make($password),

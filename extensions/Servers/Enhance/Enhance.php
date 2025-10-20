@@ -18,9 +18,9 @@ class Enhance extends Server
         // Trim any leading slashes from the base url and add the path URL to it
         $req_url = rtrim($this->config('host'), '/') . '/api' . $url;
         $response = Http::withHeaders([
-                    'Authorization' => 'Bearer ' . $this->config('apikey'),
-                    'Accept' => 'application/json',
-                ])->$method($req_url, $data);
+            'Authorization' => 'Bearer ' . $this->config('apikey'),
+            'Accept' => 'application/json',
+        ])->$method($req_url, $data);
 
         if (!$response->successful()) {
             $body = $response->body();
@@ -194,7 +194,6 @@ class Enhance extends Server
         // Add domain
         $this->request('/orgs/' . $user . '/websites', 'post', $data);
 
-
         return true;
     }
 
@@ -312,6 +311,7 @@ class Enhance extends Server
         if (!$service->properties()->where('key', 'subscription_id')->exists()) {
             throw new Exception('Missing subscription ID');
         }
+
         return [
             [
                 'type' => 'button',

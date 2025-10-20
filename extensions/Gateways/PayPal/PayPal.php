@@ -13,10 +13,8 @@ use App\Models\Service;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\View;
 
 #[ExtensionMeta(
@@ -29,7 +27,6 @@ use Illuminate\Support\Facades\View;
 )]
 class PayPal extends Gateway
 {
-
     public function supportsBillingAgreements(): bool
     {
         return true;
@@ -53,7 +50,7 @@ class PayPal extends Gateway
                         'vault_instruction' => 'ON_PAYER_APPROVAL',
                     ],
                 ],
-            ]
+            ],
         ]);
 
         return $result->links[1]->href;
@@ -81,7 +78,7 @@ class PayPal extends Gateway
                     'id' => $tokenId,
                     'type' => 'SETUP_TOKEN',
                 ],
-            ]
+            ],
         ]);
 
         ExtensionHelper::makeBillingAgreement(
@@ -209,8 +206,8 @@ class PayPal extends Gateway
                 'Accept' => 'application/json',
                 'Authorization' => 'Basic ' . base64_encode($this->config('client_id') . ':' . $this->config('client_secret')),
             ])->asForm()->post($url . '/v1/oauth2/token', [
-                        'grant_type' => 'client_credentials',
-                    ]);
+                'grant_type' => 'client_credentials',
+            ]);
 
             if ($result->failed()) {
                 throw new Exception('Failed to generate access token: ' . $result->body());
@@ -223,10 +220,10 @@ class PayPal extends Gateway
     public function request($method, $url, $data = [])
     {
         return Http::withHeaders([
-                    'Content-Type' => 'application/json',
-                    'Authorization' => 'Bearer ' . $this->generateAccessToken(),
-                    'PayPal-Request-Id' => uniqid(),
-                ])->$method($url, $data)->object();
+            'Content-Type' => 'application/json',
+            'Authorization' => 'Bearer ' . $this->generateAccessToken(),
+            'PayPal-Request-Id' => uniqid(),
+        ])->$method($url, $data)->object();
     }
 
     public function pay($invoice, $total)
@@ -251,7 +248,6 @@ class PayPal extends Gateway
                 'shipping_preference' => 'NO_SHIPPING',
             ],
         ]);
-
 
         return view('gateways.paypal::pay', ['invoice' => $invoice, 'total' => $total, 'order' => $order ?? null, 'clientId' => $this->config('client_id')]);
     }
@@ -324,7 +320,7 @@ class PayPal extends Gateway
             if ($billingAgreement) {
                 $billingAgreement->delete();
             }
-        } elseif($body['event_type'] === 'PAYMENT.CAPTURE.COMPLETED' && isset($body['resource']['supplementary_data']['related_ids']['order_id'])) {
+        } elseif ($body['event_type'] === 'PAYMENT.CAPTURE.COMPLETED' && isset($body['resource']['supplementary_data']['related_ids']['order_id'])) {
             $orderID = $body['resource']['supplementary_data']['related_ids']['order_id'];
             $order = $this->request('get', ($this->config('test_mode') ? 'https://api-m.sandbox.paypal.com' : 'https://api-m.paypal.com') . '/v2/checkout/orders/' . $orderID);
             if (isset($order->purchase_units[0]->invoice_id)) {

@@ -7,7 +7,6 @@ use App\Livewire\Component;
 use App\Models\Currency;
 use App\Models\Gateway;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Cache;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\Url;
 use Livewire\WithPagination;
@@ -40,6 +39,7 @@ class PaymentMethods extends Component
         if (count($gateways) > 0 && !$this->gateway) {
             $this->gateway = $gateways[0]->id;
         }
+
         return $gateways;
     }
 
@@ -68,6 +68,7 @@ class PaymentMethods extends Component
         // Check if gateway is valid and supports the selected currency
         if (!in_array($this->gateway, array_column($this->gateways, 'id'))) {
             $this->addError('gateway', __('account.invalid_payment_gateway'));
+
             return;
         }
 
@@ -108,8 +109,8 @@ class PaymentMethods extends Component
             'transactions' => Auth::user()->transactions()->with(['invoice', 'gateway'])->latest()->paginate(config('settings.pagination')),
             'billingAgreements' => Auth::user()->billingAgreements()->latest()->get(),
         ])->layoutData([
-                    'sidebar' => true,
-                    'title' => 'Payment Methods',
-                ]);
+            'sidebar' => true,
+            'title' => 'Payment Methods',
+        ]);
     }
 }

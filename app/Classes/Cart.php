@@ -7,7 +7,6 @@ use App\Models\Coupon;
 use App\Models\Plan;
 use App\Models\Product;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\Session;
 
@@ -16,7 +15,7 @@ class Cart
     public static function getOnce()
     {
         if (!Cookie::has('cart') || !$cart = \App\Models\Cart::where('ulid', Cookie::get('cart'))->first()) {
-            return new \App\Models\Cart();
+            return new \App\Models\Cart;
         }
 
         return $cart->load('items.plan', 'items.product', 'items.product.configOptions.children.plans.prices');
@@ -24,7 +23,7 @@ class Cart
 
     public static function get()
     {
-        return once(fn() => self::getOnce());
+        return once(fn () => self::getOnce());
     }
 
     public static function clear()
@@ -75,7 +74,7 @@ class Cart
             try {
                 self::validateCoupon($cart->coupon->code);
                 // Check if any of the items have gotten a discount
-                if ($cart->items->filter(fn($item) => $item->price->hasDiscount())->isEmpty()) {
+                if ($cart->items->filter(fn ($item) => $item->price->hasDiscount())->isEmpty()) {
                     $cart->coupon_id = null;
                     $cart->save();
                 }
@@ -113,6 +112,7 @@ class Cart
 
         if ($quantity < 1) {
             self::remove($index);
+
             return;
         }
         $item->quantity = $quantity;
@@ -163,7 +163,7 @@ class Cart
         $cart->save();
 
         // Check if any of the items have gotten a discount, if empty also set succesful because it's valid for future use (will get rechecked on checkout
-        if ($cart->items->filter(fn($item) => $item->price->hasDiscount())->isNotEmpty() || $cart->items->isEmpty()) {
+        if ($cart->items->filter(fn ($item) => $item->price->hasDiscount())->isNotEmpty() || $cart->items->isEmpty()) {
             $wasSuccessful = true;
         } else {
             $cart->coupon_id = null;

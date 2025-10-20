@@ -43,13 +43,13 @@ class ExtensionHelper
 
         if ($type && $type == 'other') {
             // Filter out gateways and servers
-            $extensions = array_filter($extensions, fn($extension) => !in_array($extension['type'], ['gateway', 'server']));
+            $extensions = array_filter($extensions, fn ($extension) => !in_array($extension['type'], ['gateway', 'server']));
 
             return $extensions;
         } elseif ($type) {
             $type = strtolower($type);
 
-            return array_filter($extensions, fn($extension) => $extension['type'] === $type);
+            return array_filter($extensions, fn ($extension) => $extension['type'] === $type);
         }
 
         return $extensions;
@@ -192,7 +192,6 @@ class ExtensionHelper
 
                 // Check if the class exists
                 if (class_exists('\\Paymenter\\Extensions\\' . ucfirst($type) . 's\\' . $name . '\\' . $name)) {
-                    
 
                     $extensions[] = [
                         'name' => $name,
@@ -221,7 +220,7 @@ class ExtensionHelper
         // Filter out already installed extensions
         $installedExtensions = Extension::all()->pluck('extension')->toArray();
 
-        return array_filter($extensions, fn($extension) => !in_array($extension['name'], $installedExtensions));
+        return array_filter($extensions, fn ($extension) => !in_array($extension['name'], $installedExtensions));
     }
 
     public static function call($extension, $function, $args = [], $mayFail = false)
@@ -401,7 +400,6 @@ class ExtensionHelper
         return self::getExtension('gateway', $gateway->extension, $gateway->settings)->charge($invoice, $invoice->remaining, $billingAgreement);
     }
 
-
     public static function getBillingAgreementGateways($currency)
     {
         $gateways = [];
@@ -419,9 +417,9 @@ class ExtensionHelper
 
     /**
      * Create billing agreement
-     * 
-     * @param \App\Models\User $user
-     * @param \App\Models\Gateway $gateway
+     *
+     * @param  \App\Models\User  $user
+     * @param  \App\Models\Gateway  $gateway
      * @return string|view
      */
     public static function createBillingAgreement($user, $gateway)
@@ -431,7 +429,7 @@ class ExtensionHelper
 
     /**
      * Cancel billing agreement
-     * @param \App\Models\BillingAgreement $billingAgreement
+     *
      * @return bool
      */
     public static function cancelBillingAgreement(BillingAgreement $billingAgreement)
@@ -518,7 +516,6 @@ class ExtensionHelper
 
         return $transaction;
     }
-
 
     /**
      * Cancel subscription

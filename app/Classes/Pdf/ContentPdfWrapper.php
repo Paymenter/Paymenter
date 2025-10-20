@@ -5,7 +5,9 @@ namespace App\Classes\Pdf;
 class ContentPdfWrapper
 {
     private $content;
+
     private $fileName;
+
     private $tempPath;
 
     public function __construct(string $content, ?string $fileName = null)
@@ -17,7 +19,7 @@ class ContentPdfWrapper
 
         $this->content = $content;
         $this->fileName = $fileName ?? 'invoice.pdf';
-        
+
         // Create temporary file for operations that need a file path
         $this->tempPath = tempnam(sys_get_temp_dir(), 'pdf_wrapper_');
         file_put_contents($this->tempPath, $content);
@@ -31,6 +33,7 @@ class ContentPdfWrapper
     public function download($name = null)
     {
         $name = $name ?: $this->fileName;
+
         return response($this->content)
             ->header('Content-Type', 'application/pdf')
             ->header('Content-Disposition', 'attachment; filename="' . $name . '"');
@@ -39,6 +42,7 @@ class ContentPdfWrapper
     public function stream($name = null)
     {
         $name = $name ?: $this->fileName;
+
         return response($this->content)
             ->header('Content-Type', 'application/pdf')
             ->header('Content-Disposition', 'inline; filename="' . $name . '"');

@@ -4,9 +4,9 @@ namespace App\Models;
 
 use App\Classes\Price;
 use App\Observers\CartItemObserver;
+use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 
 #[ObservedBy(CartItemObserver::class)]
 class CartItem extends Model
@@ -57,6 +57,7 @@ class CartItem extends Model
                     if ($option->type === 'checkbox' && $selected?->value) {
                         $total += $option->children->first()?->price(billing_period: $this->plan->billing_period, billing_unit: $this->plan->billing_unit)->price;
                         $setup_fee += $option->children->first()?->price(billing_period: $this->plan->billing_period, billing_unit: $this->plan->billing_unit)->setup_fee;
+
                         return;
                     }
 
@@ -64,6 +65,7 @@ class CartItem extends Model
                     if (in_array($option->type, ['text', 'number', 'checkbox'])) {
                         $total += 0;
                         $setup_fee += 0;
+
                         return;
                     }
 
@@ -84,7 +86,6 @@ class CartItem extends Model
 
                     $price->price -= $pdiscount;
                     $price->setup_fee -= $sdiscount;
-
 
                     $price->setDiscount($pdiscount + $sdiscount);
                 }

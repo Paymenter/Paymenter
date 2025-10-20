@@ -3,25 +3,17 @@
 namespace App\Livewire\Client;
 
 use App\Classes\Settings;
-use App\Helpers\ExtensionHelper;
 use App\Livewire\Component;
-use App\Models\Currency;
-use App\Models\Gateway;
 use App\Models\NotificationTemplate;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Storage;
 use Livewire\Attributes\Computed;
-use Livewire\Attributes\Url;
-use Livewire\WithPagination;
 use Minishlink\WebPush\Subscription;
-use Minishlink\WebPush\VAPID;
 use Minishlink\WebPush\WebPush;
 
 class Notifications extends Component
 {
     public $preferences = [];
-
 
     public function mount()
     {
@@ -145,6 +137,7 @@ class Notifications extends Component
                 ];
             });
     }
+
     public function render()
     {
         return view('client.account.notifications')->layoutData([

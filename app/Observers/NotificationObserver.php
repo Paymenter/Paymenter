@@ -2,8 +2,9 @@
 
 namespace App\Observers;
 
-use App\Models\Notification;
 use App\Events\Notification as NotificationEvents;
+use App\Models\Notification;
+
 class NotificationObserver
 {
     /**

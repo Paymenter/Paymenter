@@ -28,6 +28,7 @@ class EditService extends EditRecord
                     if (!$status) {
                         return [];
                     }
+
                     return [
                         Checkbox::make('deleteExtensionServer')
                             ->label('Also trigger deletion of server')

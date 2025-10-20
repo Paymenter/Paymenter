@@ -5,9 +5,8 @@ namespace App\Helpers;
 use App\Classes\PDF;
 use App\Mail\Mail;
 use App\Models\EmailLog;
-use App\Models\InvoiceTransaction;
-use App\Models\Notification;
 use App\Models\Invoice;
+use App\Models\Notification;
 use App\Models\NotificationTemplate;
 use App\Models\Order;
 use App\Models\Service;
@@ -57,7 +56,7 @@ class NotificationHelper
         string $subject,
         string $body,
         array $attachments = [],
-        string $email = null,
+        ?string $email = null,
     ): void {
         if (!$email) {
             $email = config('settings.system_email_address');
@@ -138,7 +137,7 @@ class NotificationHelper
             'invoice' => $invoice,
             'items' => $invoice->items,
             'total' => $invoice->formattedTotal,
-            'has_subscription' => $invoice->items->filter(fn($item) => $item->reference_type === Service::class && $item->reference->subscription_id)->isNotEmpty(),
+            'has_subscription' => $invoice->items->filter(fn ($item) => $item->reference_type === Service::class && $item->reference->subscription_id)->isNotEmpty(),
         ];
 
         // Generate the invoice PDF

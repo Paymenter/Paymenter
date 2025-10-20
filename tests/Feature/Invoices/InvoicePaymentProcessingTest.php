@@ -2,11 +2,11 @@
 
 namespace Tests\Feature\Invoices;
 
+use App\Models\Invoice;
 use App\Models\Service;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
-use App\Models\Invoice;
 
 class InvoicePaymentProcessingTest extends TestCase
 {
@@ -22,6 +22,7 @@ class InvoicePaymentProcessingTest extends TestCase
             'quantity' => 1,
             'price' => $total,
         ]);
+
         return $invoice->fresh();
     }
 

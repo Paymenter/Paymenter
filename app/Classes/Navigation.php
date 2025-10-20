@@ -156,7 +156,7 @@ class Navigation
                                 'name' => __('navigation.notifications'),
                                 'url' => route('account.notifications'),
                                 'priority' => 50,
-                            ]
+                            ],
                         ]
                     ),
                 ],

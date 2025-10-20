@@ -4,12 +4,6 @@ namespace App\Listeners;
 
 use App\Classes\Cart;
 use App\Events\Auth\Login;
-use App\Events\Invoice\Finalized as InvoiceFinalized;
-use App\Events\Order\Finalized as OrderFinalized;
-use App\Events\ServiceCancellation\Created as CancellationCreated;
-use App\Events\User\Created as UserCreated;
-use App\Helpers\NotificationHelper;
-use App\Models\Session;
 use Illuminate\Auth\Events\Logout;
 use Illuminate\Support\Facades\Cookie;
 

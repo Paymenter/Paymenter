@@ -28,9 +28,9 @@ use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\AuthenticateSession;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\Support\Facades\Blade;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
-use Illuminate\Support\Facades\File;
 
 class AdminPanelProvider extends PanelProvider
 {
@@ -79,8 +79,9 @@ class AdminPanelProvider extends PanelProvider
                 function (): string {
                     $activeTheme = config('settings.theme', 'default');
                     $activeThemePath = base_path("themes/{$activeTheme}/views/layouts/colors.blade.php");
-                    $defaultThemePath = base_path("themes/default/views/layouts/colors.blade.php");
+                    $defaultThemePath = base_path('themes/default/views/layouts/colors.blade.php');
                     $pathToUse = File::exists($activeThemePath) ? $activeThemePath : $defaultThemePath;
+
                     return Blade::render(File::get($pathToUse));
                 }
             )
