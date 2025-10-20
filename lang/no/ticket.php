@@ -27,4 +27,5 @@ return [
     'service' => 'Tjeneste',
     'select_service' => 'Velg tjeneste',
     'create' => 'Opprett',
+    'no_tickets' => 'No tickets found',
 ];
