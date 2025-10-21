@@ -353,9 +353,17 @@ class ImportFromWhmcs extends Command
             $priceData = [];
 
             foreach ($records as $record) {
+                if (strpos($record['optionname'], '|') !== false) {
+                    $environmentVariable = explode('|', $record['optionname'])[0];
+                    $name = explode('|', $record['optionname'])[1] ?? $record['optionname'];
+                } else {
+                    $environmentVariable = null;
+                    $name = $record['optionname'];
+                }
                 $data[] = [
                     'id' => $record['id'],
-                    'name' => $record['optionname'],
+                    'name' => $name,
+                    'env_variable' => $environmentVariable,
                     'type' => match ($record['optiontype']) {
                         1 => 'select',
                         2 => 'radio',
@@ -376,10 +384,18 @@ class ImportFromWhmcs extends Command
                 $optionRecords = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
                 foreach ($optionRecords as $option) {
+                    if (strpos($option['optionname'], '|') !== false) {
+                        $environmentVariable = explode('|', $option['optionname'])[0];
+                        $name = explode('|', $option['optionname'])[1] ?? $option['optionname'];
+                    } else {
+                        $environmentVariable = null;
+                        $name = $option['optionname'];
+                    }
                     $options[] = [
                         'id' => $record['id'] . $option['id'],
                         'parent_id' => $option['configid'],
-                        'name' => $option['optionname'],
+                        'name' => $name,
+                        'env_variable' => $environmentVariable,
                         'sort' => $option['sortorder'],
                         'created_at' => now(),
                         'updated_at' => now(),
