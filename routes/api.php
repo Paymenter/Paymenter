@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\Admin\CreditController;
 use App\Http\Controllers\Api\Admin\InvoiceController;
 use App\Http\Controllers\Api\Admin\InvoiceItemController;
 use App\Http\Controllers\Api\Admin\OrderController;
@@ -20,6 +21,7 @@ Route::get('/me', [ProfileController::class, 'me'])->middleware(['auth:api', 'sc
 
 Route::group(['middleware' => ['api.admin'], 'prefix' => 'v1/admin', 'as' => 'api.v1.admin.'], function () {
     Route::apiResources([
+        'credits' => CreditController::class,
         'users' => UserController::class,
         'services' => ServiceController::class,
         'orders' => OrderController::class,

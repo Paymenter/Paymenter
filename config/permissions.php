@@ -234,6 +234,12 @@ return [
                 'view' => 'View Coupons',
                 'delete' => 'Delete Coupons',
             ],
+            'credits' => [
+                'create' => 'Create Credits',
+                'update' => 'Update Credits',
+                'view' => 'View Credits',
+                'delete' => 'Delete Credits',
+            ],
             'products' => [
                 'view' => 'View Products',
             ],
@@ -245,9 +251,6 @@ return [
             ],
             'roles' => [
                 'view' => 'View Roles',
-            ],
-            'credits' => [
-                'view' => 'View Credits',
             ],
         ],
     ],
