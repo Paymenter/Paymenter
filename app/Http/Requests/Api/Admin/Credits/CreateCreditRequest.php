@@ -19,7 +19,7 @@ class CreateCreditRequest extends AdminApiRequest
                 'required',
                 'string',
                 'exists:currencies,code',
-                'unique:credits,currency_code,NULL,id,user_id,' . $this->input('user_id')
+                'unique:credits,currency_code,NULL,id,user_id,' . $this->input('user_id'),
             ],
             'amount' => 'required|numeric|min:0',
         ];
