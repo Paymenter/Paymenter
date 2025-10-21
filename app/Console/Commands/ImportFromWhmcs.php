@@ -822,12 +822,13 @@ class ImportFromWhmcs extends Command
                     'service_id' => $record['relid'],
                     'reason' => $record['reason'],
                     'requested_at' => $record['date'],
+                    'type' => $record['type'] == 'End of Billing Period' ? 'end_of_period' : 'immediate',
                     'created_at' => now(),
                     'updated_at' => now(),
                 ];
             }
 
-            DB::table('cancellations')->insert($data);
+            DB::table('service_cancellations')->insert($data);
         });
     }
 
