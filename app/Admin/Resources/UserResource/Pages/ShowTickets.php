@@ -2,10 +2,8 @@
 
 namespace App\Admin\Resources\UserResource\Pages;
 
-use App\Admin\Resources\GatewayResource;
 use App\Admin\Resources\UserResource;
 use App\Models\Ticket;
-use Filament\Actions\DeleteAction;
 use Filament\Resources\Pages\ManageRelatedRecords;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
@@ -34,21 +32,21 @@ class ShowTickets extends ManageRelatedRecords
                 TextColumn::make('status')
                     ->sortable()
                     ->badge()
-                    ->color(fn(Ticket $record) => match ($record->status) {
+                    ->color(fn (Ticket $record) => match ($record->status) {
                         'open' => 'success',
                         'closed' => 'danger',
                         'replied' => 'warning',
                     })
-                    ->formatStateUsing(fn(string $state) => ucfirst($state)),
+                    ->formatStateUsing(fn (string $state) => ucfirst($state)),
                 TextColumn::make('priority')
                     ->sortable()
                     ->badge()
-                    ->color(fn(Ticket $record) => match ($record->priority) {
+                    ->color(fn (Ticket $record) => match ($record->priority) {
                         'low' => 'success',
                         'medium' => 'gray',
                         'high' => 'danger',
                     })
-                    ->formatStateUsing(fn(string $state) => ucfirst($state)),
+                    ->formatStateUsing(fn (string $state) => ucfirst($state)),
                 TextColumn::make('department')
                     ->sortable(),
                 TextColumn::make('user.name')
