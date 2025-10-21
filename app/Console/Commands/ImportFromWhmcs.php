@@ -63,8 +63,7 @@ class ImportFromWhmcs extends Command
         $host = $this->askOrUseENV(argument: 'host', env: 'DB_HOST', question: 'Enter the host:', placeholder: 'localhost');
         $port = $this->askOrUseENV(argument: 'port', env: 'DB_PORT', question: 'Enter the port:', placeholder: '3306');
         $username = $this->askOrUseENV(argument: 'username', env: 'DB_USERNAME', question: 'Enter the username:', placeholder: 'paymenter');
-        // $password = $this->askOrUseENV(argument: 'password', env: 'DB_PASSWORD', question: 'Enter the password:', placeholder: 'password');
-        $password = '';
+        $password = password("Enter the password for user '$username':", required: true);
 
         try {
             $this->pdo = new PDO("mysql:host=$host;port=$port;dbname=$dbname", $username, $password);
