@@ -1,9 +1,9 @@
 <form
     class="mx-auto flex flex-col gap-2 mt-4 shadow-sm px-6 sm:px-14 pb-10 bg-primary-800 rounded-md xl:max-w-[40%] w-full"
     wire:submit="submit" id="login">
-    <div class="flex flex-col items-center mt-4 mb-10">
-        <x-logo />
-        <h1 class="text-2xl text-center mt-2">{{ __('auth.sign_in_title') }} </h1>
+    <div class="flex flex-col items-center my-14">
+        <x-logo class="h-10" />
+        <h1 class="text-2xl text-center mt-6">{{ __('auth.sign_in_title') }} </h1>
     </div>
     <x-form.input name="email" type="email" :label="__('general.input.email')"
         :placeholder="__('general.input.email_placeholder')" wire:model="email" hideRequiredIndicator required />
