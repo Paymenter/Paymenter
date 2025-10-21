@@ -6,9 +6,11 @@ use App\Admin\Resources\Common\RelationManagers\PropertiesRelationManager;
 use App\Admin\Resources\UserResource\Pages\CreateUser;
 use App\Admin\Resources\UserResource\Pages\EditUser;
 use App\Admin\Resources\UserResource\Pages\ListUsers;
+use App\Admin\Resources\UserResource\Pages\ShowBillingAgreements;
 use App\Admin\Resources\UserResource\Pages\ShowCredits;
 use App\Admin\Resources\UserResource\Pages\ShowInvoices;
 use App\Admin\Resources\UserResource\Pages\ShowServices;
+use App\Admin\Resources\UserResource\Pages\ShowTickets;
 use App\Models\Credit;
 use App\Models\User;
 use Filament\Actions\EditAction;
@@ -127,17 +129,20 @@ class UserResource extends Resource
             'services' => ShowServices::route('/{record}/services'),
             'invoices' => ShowInvoices::route('/{record}/invoices'),
             'credits' => ShowCredits::route('/{record}/credits'),
+            'tickets' => ShowTickets::route('/{record}/tickets'),
+            'billing-agreements' => ShowBillingAgreements::route('/{record}/billing-agreements'),
         ];
     }
 
     public static function getRecordSubNavigation(Page $page): array
     {
-
         return $page->generateNavigationItems([
             EditUser::class,
             ShowServices::class,
             ShowInvoices::class,
             ShowCredits::class,
+            ShowTickets::class,
+            ShowBillingAgreements::class,
         ]);
     }
 }
