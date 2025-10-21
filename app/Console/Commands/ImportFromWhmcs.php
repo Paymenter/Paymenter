@@ -821,10 +821,9 @@ class ImportFromWhmcs extends Command
                     'id' => $record['id'],
                     'service_id' => $record['relid'],
                     'reason' => $record['reason'],
-                    'requested_at' => $record['date'],
                     'type' => $record['type'] == 'End of Billing Period' ? 'end_of_period' : 'immediate',
-                    'created_at' => now(),
-                    'updated_at' => now(),
+                    'created_at' => $record['date'],
+                    'updated_at' => $record['date'],
                 ];
             }
 
