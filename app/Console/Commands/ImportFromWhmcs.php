@@ -810,9 +810,17 @@ class ImportFromWhmcs extends Command
                     'id' => $record['id'],
                     'order_id' => $record['orderid'],
                     'product_id' => $record['packageid'],
-                    'status' => strtolower($record['domainstatus']),
+                    'status' => match ($record['domainstatus']) {
+                        'Active' => 'active',
+                        'Suspended' => 'suspended',
+                        'Terminated' => 'cancelled',
+                        'Cancelled' => 'cancelled',
+                        'Fraud' => 'cancelled',
+                        'Pending' => 'pending',
+                        default => 'pending',
+                    },
                     'price' => $record['amount'],
-                    'quantity' => 1,
+                    'quantity' => $record['qty'],
                     'user_id' => $record['userid'],
                     'plan_id' => $planId,
                     'currency_code' => $user['code'],
@@ -882,6 +890,13 @@ class ImportFromWhmcs extends Command
 
             DB::table('invoices')->insert($data);
         });
+
+        // Set invoice number in settings to highest imported invoice number + 1
+        $highestInvoiceNumber = DB::table('invoices')->max('number');
+        Setting::updateOrCreate(
+            ['key' => 'invoice_number'],
+            ['value' => $highestInvoiceNumber + 1]
+        );
     }
 
     private function importInvoiceItems()
