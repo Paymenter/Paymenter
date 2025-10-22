@@ -67,13 +67,13 @@ class Affiliates extends Extension
 
     public function installed()
     {
-        ExtensionHelper::runMigrations(__DIR__ . '/database/migrations');
+        ExtensionHelper::runMigrations('extensions/Others/Affiliates/database/migrations');
     }
 
     public function uninstalled()
     {
         // Rollback migrations
-        ExtensionHelper::rollbackMigrations(__DIR__ . '/database/migrations');
+        ExtensionHelper::rollbackMigrations('extensions/Others/Affiliates/database/migrations');
     }
 
     public function disabled() {}

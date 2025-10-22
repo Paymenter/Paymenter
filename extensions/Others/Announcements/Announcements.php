@@ -43,13 +43,13 @@ class Announcements extends Extension
 
     public function installed()
     {
-        ExtensionHelper::runMigrations(__DIR__ . '/database/migrations');
+        ExtensionHelper::runMigrations('extensions/Others/Announcements/database/migrations');
     }
 
     public function uninstalled()
     {
         // Rollback migrations
-        ExtensionHelper::rollbackMigrations(__DIR__ . '/database/migrations');
+        ExtensionHelper::rollbackMigrations('extensions/Others/Announcements/database/migrations');
     }
 
     public function boot()

@@ -18,6 +18,7 @@ use Exception;
 use Filament\Forms\Components\Placeholder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Migrations\Migrator;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
@@ -43,13 +44,13 @@ class ExtensionHelper
 
         if ($type && $type == 'other') {
             // Filter out gateways and servers
-            $extensions = array_filter($extensions, fn ($extension) => !in_array($extension['type'], ['gateway', 'server']));
+            $extensions = array_filter($extensions, fn($extension) => !in_array($extension['type'], ['gateway', 'server']));
 
             return $extensions;
         } elseif ($type) {
             $type = strtolower($type);
 
-            return array_filter($extensions, fn ($extension) => $extension['type'] === $type);
+            return array_filter($extensions, fn($extension) => $extension['type'] === $type);
         }
 
         return $extensions;
@@ -220,7 +221,7 @@ class ExtensionHelper
         // Filter out already installed extensions
         $installedExtensions = Extension::all()->pluck('extension')->toArray();
 
-        return array_filter($extensions, fn ($extension) => !in_array($extension['name'], $installedExtensions));
+        return array_filter($extensions, fn($extension) => !in_array($extension['name'], $installedExtensions));
     }
 
     public static function call($extension, $function, $args = [], $mayFail = false)
@@ -232,8 +233,11 @@ class ExtensionHelper
 
             return self::getExtension($extension->type, $extension->extension, $extension->settings)->$function(...$args);
         } catch (Exception $e) {
+            // If mayFail is true, just report the exception instead of throwing it
             if (!$mayFail) {
                 throw $e;
+            } else {
+                report($e);
             }
         }
     }
@@ -699,13 +703,12 @@ class ExtensionHelper
      */
     public static function runMigrations($path)
     {
+        $migrator = app(Migrator::class);
+
         try {
-            Artisan::call('migrate', [
-                '--path' => $path,
-                '--force' => true,
-            ]);
-            $output = Artisan::output();
-            Log::debug('Migrations output: ' . $output);
+            $ranMigrations = $migrator->run(base_path($path));
+
+            Log::debug('Migrations output: ', $ranMigrations);
         } catch (Exception $e) {
             report($e);
         }
