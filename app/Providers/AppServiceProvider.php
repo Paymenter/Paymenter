@@ -15,6 +15,7 @@ use Dedoc\Scramble\Scramble;
 use Dedoc\Scramble\Support\Generator\OpenApi;
 use Dedoc\Scramble\Support\Generator\SecurityScheme;
 use Exception;
+use Illuminate\Foundation\Exceptions\Handler;
 use Illuminate\Http\Request;
 use Illuminate\Queue\Events\JobFailed;
 use Illuminate\Queue\Events\JobProcessed;
@@ -118,6 +119,11 @@ class AppServiceProvider extends ServiceProvider
 
             return request()->route()->getName();
         });
+
+        $this->app->singleton(Handler::class, function ($app) {
+            return new \App\Exceptions\ErrorHandler($app);
+        });
+
     }
 
     /**

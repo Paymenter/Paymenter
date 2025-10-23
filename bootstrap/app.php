@@ -10,9 +10,8 @@ use App\Models\DebugLog;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
-use Illuminate\Support\ViewErrorBag;
 use Laravel\Passport\Http\Middleware\CheckForAnyScope;
-use Symfony\Component\HttpKernel\Exception\HttpException;
+use Exception;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -58,31 +57,4 @@ return Application::configure(basePath: dirname(__DIR__))
                 throw $e;
             }
         });
-
-        $exceptions->render(function (Throwable $e) {
-            $status = $e instanceof HttpException ? $e->getStatusCode() : 500;
-            $headers = $e instanceof HttpException ? $e->getHeaders() : [];
-
-            $candidates = [
-                "errors.$status",
-                'errors.' . substr((string) $status, 0, 1) . 'xx',
-                'errors.500',
-            ];
-
-            foreach ($candidates as $view) {
-                if (view()->exists($view)) {
-                    try {
-                        return response()->view($view, [
-                            'errors' => new ViewErrorBag,
-                            'exception' => $e,
-                        ], $status, $headers);
-                    } catch (Exception $ex) {
-                        return null;
-                    }
-                }
-            }
-
-            return null;
-        });
-
     })->create();
