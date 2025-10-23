@@ -56,9 +56,6 @@
         <x-impersonating />
     </div>
     @livewireScriptConfig 
-            @php
-        throw new \Exception('Testing Sentry integration from Livewire component');
-    @endphp
     {!! hook('footer') !!}
 </body>
 
