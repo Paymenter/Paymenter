@@ -103,7 +103,6 @@ class NotificationTemplateResource extends Resource
                             ->columnSpanFull(),
                         TextInput::make('in_app_url')
                             ->label('In-App URL')
-                            ->url()
                             ->maxLength(255)
                             ->placeholder('{{ route("invoices.show", $invoice) }}')
                             ->hint('Supports dynamic variables like {{ route("invoices.show", $invoice) }}')
