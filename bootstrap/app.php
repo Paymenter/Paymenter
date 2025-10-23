@@ -73,7 +73,7 @@ return Application::configure(basePath: dirname(__DIR__))
                 if (view()->exists($view)) {
                     try {
                         return response()->view($view, [
-                            'errors' => new ViewErrorBag(),
+                            'errors' => new ViewErrorBag,
                             'exception' => $e,
                         ], $status, $headers);
                     } catch (Exception $ex) {
