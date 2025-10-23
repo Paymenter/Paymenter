@@ -44,7 +44,7 @@ return [
         'active' => 'Ativo',
         'cancelled' => 'Cancelado',
         'suspended' => 'Suspenso',
-        'cancellation_pending' => 'Cancellation Pending',
+        'cancellation_pending' => 'Cancelamento Pendente',
     ],
     'billing_cycles' => [
         'day' => 'dia|dias',
@@ -54,16 +54,16 @@ return [
     ],
     'every_period' => 'A cada :periodo :unidade',
     'price_every_period' => ':preço por :periodo :unidade',
-    'price_one_time' => ':price one time',
+    'price_one_time' => ':price única vez',
     'expires_at' => 'Expiração',
-    'auto_pay' => 'Auto paying using',
+    'auto_pay' => 'Pagar automaticamente usando',
     'auto_pay_not_configured' => 'Não configurado',
 
     'no_services' => 'Nenhum serviço encontrado',
-    'update_billing_agreement' => 'Update Billing Agreement',
-    'clear_billing_agreement' => 'Clear Billing Agreement',
-    'select_billing_agreement' => 'Select Billing Agreement',
+    'update_billing_agreement' => 'Atualizar contrato de cobrança',
+    'clear_billing_agreement' => 'Limpar Acordo de Cobrança',
+    'select_billing_agreement' => 'Selecionar Acordo de Cobrança',
 
-    'remove_payment_method' => 'Remove Payment Method',
-    'remove_payment_method_confirm' => 'Are you sure you want to remove the payment method ":name" from this service? Your service will no longer be able to auto pay its invoices.',
+    'remove_payment_method' => 'Remover Método de Pagamento',
+    'remove_payment_method_confirm' => 'Tem certeza que deseja remover o método de pagamento ":name" deste serviço? Seu serviço não será mais capaz de pagar automaticamente as suas faturas.',
 ];
