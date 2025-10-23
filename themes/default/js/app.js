@@ -1,3 +1,5 @@
+import { Livewire, Alpine } from '../../../vendor/livewire/livewire/dist/livewire.esm';
+
 document.addEventListener('livewire:init', () => {
     Livewire.hook('request', ({ fail }) => {
         fail(({ status, preventDefault }) => {
@@ -114,3 +116,6 @@ if ('serviceWorker' in navigator) {
         }
     }
 }
+
+
+Livewire.start()
