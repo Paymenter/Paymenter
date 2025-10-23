@@ -57,9 +57,9 @@ return [
     'price_one_time' => ':price one time',
     'expires_at' => 'Expiração',
     'auto_pay' => 'Auto paying using',
-    'auto_pay_not_configured' => 'Not configured',
+    'auto_pay_not_configured' => 'Não configurado',
 
-    'no_services' => 'No services found',
+    'no_services' => 'Nenhum serviço encontrado',
     'update_billing_agreement' => 'Update Billing Agreement',
     'clear_billing_agreement' => 'Clear Billing Agreement',
     'select_billing_agreement' => 'Select Billing Agreement',
