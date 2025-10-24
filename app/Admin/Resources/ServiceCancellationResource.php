@@ -34,12 +34,12 @@ class ServiceCancellationResource extends Resource
         return $schema
             ->components([
                 Select::make('service_id')
-                    ->relationship('service', 'id', fn(Builder $query) => $query->where('status', 'active'))
-                    ->getOptionLabelFromRecordUsing(fn($record) => $record->product->name . ' - ' . $record->plan->name . '  #' . $record->id . ($record->order && $record->order->user ? ' (' . $record->order->user->email . ')' : ''))
+                    ->relationship('service', 'id', fn (Builder $query) => $query->where('status', 'active'))
+                    ->getOptionLabelFromRecordUsing(fn ($record) => $record->product->name . ' - ' . $record->plan->name . '  #' . $record->id . ($record->order && $record->order->user ? ' (' . $record->order->user->email . ')' : ''))
                     ->searchable()
                     ->preload()
                     ->disabledOn('edit')
-                    ->hint(fn($get) => $get('service_id') ? new HtmlString('<a href="' . ServiceResource::getUrl('edit', ['record' => $get('service_id')]) . '" target="_blank">Go to Service</a>') : null)
+                    ->hint(fn ($get) => $get('service_id') ? new HtmlString('<a href="' . ServiceResource::getUrl('edit', ['record' => $get('service_id')]) . '" target="_blank">Go to Service</a>') : null)
                     ->required(),
                 TextInput::make('reason')
                     ->maxLength(255)
@@ -59,8 +59,8 @@ class ServiceCancellationResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('service_id')
-                    ->formatStateUsing(fn($record) => $record->service->product->name . ' - ' . $record->service->plan->name . '  #' . $record->service->id . ($record->service->order->user ? ' (' . $record->service->order->user->email . ')' : ''))
-                    ->url(fn($record) => ServiceResource::getUrl('edit', ['record' => $record->service_id]))
+                    ->formatStateUsing(fn ($record) => $record->service->product->name . ' - ' . $record->service->plan->name . '  #' . $record->service->id . ($record->service->order->user ? ' (' . $record->service->order->user->email . ')' : ''))
+                    ->url(fn ($record) => ServiceResource::getUrl('edit', ['record' => $record->service_id]))
                     ->sortable(),
                 TextColumn::make('reason')
                     ->searchable(),

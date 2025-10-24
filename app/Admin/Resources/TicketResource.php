@@ -102,8 +102,8 @@ class TicketResource extends Resource
                     ->label('Assigned To')
                     ->searchable()
                     ->preload()
-                    ->relationship('user', 'id', fn(Builder $query) => $query->where('role_id', '!=', null))
-                    ->getOptionLabelFromRecordUsing(fn($record) => $record->name)
+                    ->relationship('user', 'id', fn (Builder $query) => $query->where('role_id', '!=', null))
+                    ->getOptionLabelFromRecordUsing(fn ($record) => $record->name)
                     ->columnSpan(function ($record) {
                         return $record ? 2 : 1;
                     }),
@@ -112,11 +112,11 @@ class TicketResource extends Resource
                     ->relationship('service', 'id', function (Builder $query, Get $get) {
                         $query->where('user_id', $get('user_id'));
                     })
-                    ->getOptionLabelFromRecordUsing(fn($record) => "{$record->product->name} - " . ucfirst($record->status))
+                    ->getOptionLabelFromRecordUsing(fn ($record) => "{$record->product->name} - " . ucfirst($record->status))
                     ->columnSpan(function ($record) {
                         return $record ? 2 : 1;
                     })
-                    ->disabled(fn(Get $get) => !$get('user_id')),
+                    ->disabled(fn (Get $get) => !$get('user_id')),
                 MarkdownEditor::make('message')
                     ->columnSpan(2)
                     ->label('Initial Message')
@@ -138,21 +138,21 @@ class TicketResource extends Resource
                 TextColumn::make('status')
                     ->sortable()
                     ->badge()
-                    ->color(fn(Ticket $record) => match ($record->status) {
+                    ->color(fn (Ticket $record) => match ($record->status) {
                         'open' => 'success',
                         'closed' => 'danger',
                         'replied' => 'warning',
                     })
-                    ->formatStateUsing(fn(string $state) => ucfirst($state)),
+                    ->formatStateUsing(fn (string $state) => ucfirst($state)),
                 TextColumn::make('priority')
                     ->sortable()
                     ->badge()
-                    ->color(fn(Ticket $record) => match ($record->priority) {
+                    ->color(fn (Ticket $record) => match ($record->priority) {
                         'low' => 'success',
                         'medium' => 'gray',
                         'high' => 'danger',
                     })
-                    ->formatStateUsing(fn(string $state) => ucfirst($state)),
+                    ->formatStateUsing(fn (string $state) => ucfirst($state)),
                 TextColumn::make('department')
                     ->sortable(),
                 TextColumn::make('user.name')
@@ -163,8 +163,8 @@ class TicketResource extends Resource
                 SelectFilter::make('user')
                     ->label('User')
                     ->relationship('user', 'id')
-                    ->indicateUsing(fn($data) => $data['value'] ? 'User: ' . User::find($data['value'])->name : null)
-                    ->getOptionLabelFromRecordUsing(fn($record) => $record->name),
+                    ->indicateUsing(fn ($data) => $data['value'] ? 'User: ' . User::find($data['value'])->name : null)
+                    ->getOptionLabelFromRecordUsing(fn ($record) => $record->name),
                 SelectFilter::make('priority')
                     ->options([
                         'low' => 'Low',
@@ -175,9 +175,9 @@ class TicketResource extends Resource
                     ->options(array_combine(config('settings.ticket_departments'), config('settings.ticket_departments')), config('settings.ticket_departments')),
                 SelectFilter::make('assigned_to')
                     ->label('Assigned To')
-                    ->relationship('user', 'id', fn(Builder $query) => $query->where('role_id', '!=', null))
-                    ->indicateUsing(fn($data) => $data['value'] ?'Assigned to: ' . User::find($data['value'])->name : null)
-                    ->getOptionLabelFromRecordUsing(fn($record) => $record->name),
+                    ->relationship('user', 'id', fn (Builder $query) => $query->where('role_id', '!=', null))
+                    ->indicateUsing(fn ($data) => $data['value'] ? 'Assigned to: ' . User::find($data['value'])->name : null)
+                    ->getOptionLabelFromRecordUsing(fn ($record) => $record->name),
             ])
             ->recordActions([
                 EditAction::make(),
