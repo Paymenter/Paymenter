@@ -21,6 +21,7 @@ use Filament\Resources\Pages\Page;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\Filter;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Contracts\Support\Htmlable;
@@ -106,6 +107,13 @@ class UserResource extends Resource
                     ->relationship('role', 'name')
                     ->searchable()
                     ->preload(),
+                Filter::make('email_verified')
+                    ->label('Email Verified'),
+                Filter::make('has_active_services')
+                    ->label('Has Active Services')
+                    ->query(fn ($query) => $query->whereHas('services', function ($q) {
+                        $q->where('status', 'active');
+                    })),
             ])
             ->recordActions([
                 EditAction::make(),
