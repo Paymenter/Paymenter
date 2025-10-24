@@ -19,7 +19,7 @@ abstract class Gateway extends Extension
      * @param  mixed  $total
      * @return View|string
      */
-    public function pay(Invoice $invoice, $total) {}
+    abstract public function pay(Invoice $invoice, $total);
 
     /**
      * Check if gateway supports billing agreements.

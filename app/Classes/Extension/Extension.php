@@ -91,7 +91,7 @@ class Extension
      *
      * @return void
      */
-    public function enabled() {}
+    public function enabled(ModelsExtension $extension) {}
 
     /**
      * Called when the extension is disabled
@@ -99,5 +99,5 @@ class Extension
      *
      * @return void
      */
-    public function disabled() {}
+    public function disabled(ModelsExtension $extension) {}
 }

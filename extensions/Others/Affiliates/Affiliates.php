@@ -76,8 +76,6 @@ class Affiliates extends Extension
         ExtensionHelper::rollbackMigrations('extensions/Others/Affiliates/database/migrations');
     }
 
-    public function disabled() {}
-
     public function boot()
     {
         require __DIR__ . '/routes/web.php';
