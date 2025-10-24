@@ -30,7 +30,7 @@ class ImportFromWhmcs extends Command
      *
      * @var string
      */
-    protected $signature = 'app:import-from-whmcs {dbname} {password?} {host?} {port?} {username?}';
+    protected $signature = 'app:import-from-whmcs {dbname} {username?} {host?} {port?}';
 
     /**
      * The console command description.
