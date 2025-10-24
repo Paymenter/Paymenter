@@ -163,9 +163,9 @@ class Stripe extends Gateway
     private function request($method, $url, $data = [])
     {
         return Http::withHeaders([
-                    'Authorization' => 'Bearer ' . $this->config('stripe_secret_key'),
-                    'Stripe-Version' => self::API_VERSION,
-                ])->asForm()->$method('https://api.stripe.com/v1' . $url, $data)->throw()->object();
+            'Authorization' => 'Bearer ' . $this->config('stripe_secret_key'),
+            'Stripe-Version' => self::API_VERSION,
+        ])->asForm()->$method('https://api.stripe.com/v1' . $url, $data)->throw()->object();
     }
 
     public function pay($invoice, $total)
@@ -198,7 +198,7 @@ class Stripe extends Gateway
                 }
                 ExtensionHelper::addProcessingPayment($paymentIntent->metadata->invoice_id, 'Stripe', $paymentIntent->amount / 100, null, $paymentIntent->id);
                 break;
-            // Normal payment
+                // Normal payment
             case 'payment_intent.succeeded':
                 $paymentIntent = $event->data->object; // contains a StripePaymentIntent
                 if (!isset($paymentIntent->metadata->invoice_id)) {
@@ -284,7 +284,7 @@ class Stripe extends Gateway
                 }
                 break;
             default:
-            // Not a event type we care about, just return 200
+                // Not a event type we care about, just return 200
         }
 
         http_response_code(200);
@@ -647,15 +647,15 @@ class Stripe extends Gateway
     {
         $name = match ($paymentMethod->type) {
             'card' => match ($paymentMethod->card->brand) {
-                    'amex' => 'American Express',
-                    'diners' => 'Diners Club',
-                    'discover' => 'Discover',
-                    'jcb' => 'JCB',
-                    'mastercard' => 'Mastercard',
-                    'unionpay' => 'UnionPay',
-                    'visa' => 'Visa',
-                    default => ucfirst($paymentMethod->card->brand),
-                } . ' **** ' . $paymentMethod->card->last4,
+                'amex' => 'American Express',
+                'diners' => 'Diners Club',
+                'discover' => 'Discover',
+                'jcb' => 'JCB',
+                'mastercard' => 'Mastercard',
+                'unionpay' => 'UnionPay',
+                'visa' => 'Visa',
+                default => ucfirst($paymentMethod->card->brand),
+            } . ' **** ' . $paymentMethod->card->last4,
 
             'sepa_debit' => 'SEPA Direct Debit **** ' . $paymentMethod->sepa_debit->last4,
             'ideal' => 'iDEAL **** ' . $paymentMethod->ideal->bank_code,
