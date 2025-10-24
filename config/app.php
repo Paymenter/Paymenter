@@ -98,6 +98,7 @@ return [
         'fi' => 'Finnish',
         'fr' => 'French',
         'it' => 'Italian',
+		'ru' => 'Русский',
         'sv' => 'Swedish',
         'uk' => 'Ukrainian',
         'ko' => 'Korean',
