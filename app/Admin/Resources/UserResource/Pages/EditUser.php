@@ -31,6 +31,8 @@ class EditUser extends EditRecord
                 'tickets',
                 'credits',
                 'orders',
+                'billingAgreements',
+                'properties',
             ]),
         ];
     }
