@@ -58,7 +58,7 @@ class FetchEmails extends Command
 
                 // Check headers to see if this email is a reply
                 $replyTo = $email->inReplyTo();
-                if (!$replyTo) {
+                if (!$replyTo || count($replyTo) === 0) {
                     // Create email log but don't process
                     $this->failedEmailLog($email);
 
@@ -67,7 +67,7 @@ class FetchEmails extends Command
 
                 // Validate if in reply to another ticket (<ticket message id>@hostname)
 
-                if (!preg_match('/^(\d+)@/', $replyTo->email(), $matches)) {
+                if (!preg_match('/^(\d+)@/', $replyTo[0], $matches)) {
                     $this->failedEmailLog($email);
 
                     continue;
