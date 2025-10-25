@@ -1,7 +1,6 @@
 <?php
 
 return [
-    'view' => 'הצג',
 
     'input' => [
         'first_name' => 'שם פרטי',
@@ -33,4 +32,5 @@ return [
 
     'all_rights_reserved' => 'כל הזכויות שמורות.',
     'update' => 'עדכון',
+    'save' => 'Save',
 ];

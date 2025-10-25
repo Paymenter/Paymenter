@@ -1,7 +1,6 @@
 <?php
 
 return [
-    'view' => 'Näytä',
 
     'input' => [
         'first_name' => 'Etunimi',
@@ -33,4 +32,5 @@ return [
 
     'all_rights_reserved' => 'Kaikki oikeudet pidätetään.',
     'update' => 'Päivitä',
+    'save' => 'Save',
 ];

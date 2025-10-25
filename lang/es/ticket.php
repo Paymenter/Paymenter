@@ -9,11 +9,11 @@ return [
     'department' => 'Departamento',
     'created_at' => 'Creado en',
     'reply' => 'Responder',
-    'attachments' => 'Attachments',
-    'upload_attachments' => 'Upload Attachments',
-    'or_drag_and_drop' => 'or drag and drop',
-    'files_max' => 'Files up to 10MB',
-    'selected_files' => 'Selected Files',
+    'attachments' => 'Archivos',
+    'upload_attachments' => 'Subir archivos',
+    'or_drag_and_drop' => 'o arrastra y suelta',
+    'files_max' => 'Archivos de hasta 10 Mb',
+    'selected_files' => 'Archivos seleccionados',
 
     'create_ticket' => 'Crear un ticket',
     'select_department' => 'Seleccionar Departamento',
@@ -27,4 +27,5 @@ return [
     'service' => 'Servicio',
     'select_service' => 'Selecciona el servicio',
     'create' => 'Crear',
+    'no_tickets' => 'No tickets found',
 ];

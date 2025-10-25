@@ -14,4 +14,5 @@ return [
     'dashboard' => '控制面板',
     'tickets' => '服務單',
     'admin' => '管理員',
+    'notifications' => 'Notifications',
 ];
