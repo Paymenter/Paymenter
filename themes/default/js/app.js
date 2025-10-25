@@ -1,4 +1,8 @@
 import { Livewire, Alpine } from '../../../vendor/livewire/livewire/dist/livewire.esm';
+import EasyMDE from 'easymde';
+import 'easymde/dist/easymde.min.css';
+
+window.EasyMDE = EasyMDE;
 
 document.addEventListener('livewire:init', () => {
     Livewire.hook('request', ({ fail }) => {
