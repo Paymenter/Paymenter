@@ -131,7 +131,7 @@ class NotificationHelper
         self::sendNotification('new_login_detected', $data, $user);
     }
 
-    public static function invoiceNotification(User $user, Invoice $invoice, $key = 'invoice_created'): void
+    public static function invoiceNotification(User $user, Invoice $invoice, $key = 'new_invoice_created'): void
     {
         $data = [
             'invoice' => $invoice,
@@ -164,7 +164,7 @@ class NotificationHelper
 
     public static function invoiceCreatedNotification(User $user, Invoice $invoice): void
     {
-        self::invoiceNotification($user, $invoice, 'invoice_created');
+        self::invoiceNotification($user, $invoice, 'new_invoice_created');
     }
 
     public static function invoicePaidNotification(User $user, Invoice $invoice): void
