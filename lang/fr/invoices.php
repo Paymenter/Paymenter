@@ -13,7 +13,7 @@ return [
     'invoice' => 'Facture #:id',
     'unit_price' => 'Prix unitaire',
     'bill_to' => 'Facturer à',
-    'issued_to' => 'Adresser à',
+    'issued_to' => 'Émis par',
     'paid' => 'Payé',
     'payment_pending' => 'Paiement en attente',
     'checking_payment' => 'Vérification du paiement',
@@ -30,5 +30,5 @@ return [
     'payment_method' => 'Mode de paiement',
     'amount' => 'Montant',
     'date' => 'Date',
-    'due_date' => 'Due Date',
+    'due_date' => 'Date limite de paiement',
 ];
