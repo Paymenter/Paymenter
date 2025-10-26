@@ -1,3 +1,7 @@
+@once
+    @vite('themes/' . config('settings.theme') . '/js/easymde-entry.js', config('settings.theme'))
+@endonce
+
 @script
     <script>
         const editor = new EasyMDE({
