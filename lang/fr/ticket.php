@@ -9,11 +9,11 @@ return [
     'department' => 'Service',
     'created_at' => 'Créé le',
     'reply' => 'Répondre',
-    'attachments' => 'Attachments',
-    'upload_attachments' => 'Upload Attachments',
-    'or_drag_and_drop' => 'or drag and drop',
-    'files_max' => 'Files up to 10MB',
-    'selected_files' => 'Selected Files',
+    'attachments' => 'Pièces jointes',
+    'upload_attachments' => 'Téléverser une pièce jointe',
+    'or_drag_and_drop' => 'ou glissez-déposez',
+    'files_max' => 'Fichiers jusqu\'à 10 Mo',
+    'selected_files' => 'Fichiers sélectionnés',
 
     'create_ticket' => 'Créer un ticket',
     'select_department' => 'Sélectionnez le service',
@@ -27,5 +27,5 @@ return [
     'service' => 'Service',
     'select_service' => 'Sélectionnez le service',
     'create' => 'Créer',
-    'no_tickets' => 'No tickets found',
+    'no_tickets' => 'Aucun ticket trouvé',
 ];
