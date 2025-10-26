@@ -556,6 +556,13 @@ class Stripe extends Gateway
             ],
             'usage' => 'off_session',
             'customer' => $customer->id,
+
+            'automatic_payment_methods' => ['enabled' => 'true'],
+            'payment_method_options' => [
+                'alipay' => [
+                    'currency' => strtolower(session('currency', config('settings.default_currency'))),
+                ],
+            ],
         ]);
 
         // Return the client secret to the frontend to complete the setup

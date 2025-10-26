@@ -65,6 +65,14 @@
                     elements,
                     confirmParams: {
                         return_url: '{{ route('extensions.gateways.stripe.setup-agreement') }}',
+                        mandate_data: {
+                            customer_acceptance: {
+                                type: 'online',
+                                online: {
+                                    infer_from_client: 'true',
+                                },
+                            },
+                        },
                     },
                 });
 
