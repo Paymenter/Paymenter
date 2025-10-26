@@ -27,7 +27,7 @@
                 </div>
             </x-button.primary>
             @if ($this->setup)
-            <x-modal :title="__('account.setup')" open>
+            <x-modal :title="__('account.setup_payment_method')" open>
                 <div class="mt-8">
                     {{ $this->setup }}
                 </div>
