@@ -33,8 +33,8 @@ return [
     'amount' => 'Montant',
     'date' => 'Date',
     'due_date' => 'Due Date',
-    'payment_for_invoice' => 'Payment for Invoice #:number',
-    'payment_for_proforma_invoice' => 'Payment for Proforma Invoice #:id',
+    'payment_for_invoice' => '',
+    'payment_for_proforma_invoice' => '',
     'transaction_statuses' => [
         'succeeded' => 'Succeeded',
         'processing' => 'Processing',
