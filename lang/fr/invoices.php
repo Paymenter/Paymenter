@@ -12,7 +12,7 @@ return [
     'subtotal' => 'Sous-total',
     'invoice' => 'Facture #:id',
     'unit_price' => 'Prix unitaire',
-    'bill_to' => 'Facturer à',
+    'bill_to' => 'Émis par',
     'issued_to' => 'Adresser à',
     'paid' => 'Payé',
     'payment_pending' => 'Paiement en attente',
@@ -30,5 +30,5 @@ return [
     'payment_method' => 'Mode de paiement',
     'amount' => 'Montant',
     'date' => 'Date',
-    'due_date' => 'Due Date',
+    'due_date' => 'Date limite de paiement',
 ];
