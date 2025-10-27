@@ -28,6 +28,9 @@ return [
 
         'password' => '密碼',
         'password_placeholder' => '您的密碼',
+
+        'password_confirmation' => 'Confirm Password',
+        'password_confirmation_placeholder' => 'Confirm your password',
     ],
 
     'all_rights_reserved' => '版權所有。',
