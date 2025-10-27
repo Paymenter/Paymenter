@@ -8,7 +8,7 @@
 'divClass' => null,
 'hideRequiredIndicator' => false,
 ])
-<fieldset class="flex flex-col relative mt-3 w-full {{ $divClass ?? '' }}" name="{{ $name }}">
+<fieldset class="flex flex-col relative w-full {{ $divClass ?? '' }}" name="{{ $name }}">
     @if ($label)
     <legend>
         <label for="{{ $name }}"

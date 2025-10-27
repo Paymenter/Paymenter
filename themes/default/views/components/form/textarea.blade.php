@@ -10,7 +10,7 @@
 'hideRequiredIndicator' => false,
 'dirty' => false,
 ])
-<fieldset class="flex flex-col mt-3 w-full {{ $divClass ?? '' }}">
+<fieldset class="flex flex-col w-full {{ $divClass ?? '' }}">
     @if ($label)
     <label for="{{ $name }}" class="mb-1 text-sm text-primary-100">
         {{ $label }}
