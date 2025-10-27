@@ -42,7 +42,7 @@ return [
             'queue' => env('DB_QUEUE', 'default'),
             'retry_after' => env('DB_QUEUE_RETRY_AFTER', 90),
             'after_commit' => true,
-        ]
+        ],
     ],
 
     /*
