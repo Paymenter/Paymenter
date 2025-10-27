@@ -28,6 +28,9 @@ return [
 
         'password' => 'Пароль',
         'password_placeholder' => 'Ваш пароль',
+
+        'password_confirmation' => 'Confirm Password',
+        'password_confirmation_placeholder' => 'Confirm your password',
     ],
 
     'all_rights_reserved' => 'Всі права захищені.',
