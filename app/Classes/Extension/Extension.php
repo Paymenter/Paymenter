@@ -13,9 +13,7 @@ use App\Models\Server;
  */
 class Extension
 {
-    public function __construct(public $config = [])
-    {
-    }
+    public function __construct(public $config = []) {}
 
     /**
      * Get a configuration value
@@ -61,9 +59,7 @@ class Extension
      *
      * @return void
      */
-    public function installed()
-    {
-    }
+    public function installed() {}
 
     /**
      * Called when the extension is uninstalled
@@ -71,9 +67,7 @@ class Extension
      *
      * @return void
      */
-    public function uninstalled()
-    {
-    }
+    public function uninstalled() {}
 
     /**
      * Called when the extension is updated
@@ -82,16 +76,12 @@ class Extension
      * @param  string  $oldVersion  The old version of the extension
      * @return void
      */
-    public function upgraded($oldVersion = null)
-    {
-    }
+    public function upgraded($oldVersion = null) {}
 
     /**
      * Called every request to the extension (if the extension is enabled)
      *
      * @return void
      */
-    public function boot()
-    {
-    }
+    public function boot() {}
 }
