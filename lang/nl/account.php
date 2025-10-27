@@ -13,6 +13,7 @@ return [
     'two_factor_authentication_enabled' => 'Tweestapsverificatie is ingeschakeld voor uw account.',
     'two_factor_authentication_enable' => 'Schakel tweestapsverificatie in',
     'two_factor_authentication_disable' => 'Schakel tweestapsverificatie uit',
+    'two_factor_authentication_disable_description' => 'Are you sure you want to disable two-factor authentication? This will remove the extra layer of security from your account.',
     'two_factor_authentication_enable_description' => 'Om tweestapsverificatie in te schakelen, moet u onderstaande QR-code scannen met een authenticatie-app zoals Google Authenticator of Authy.',
     'two_factor_authentication_qr_code' => 'Scan de onderstaande QR-code met uw authenticatie-app:',
     'two_factor_authentication_secret' => 'Of voer de volgende code handmatig in:',
