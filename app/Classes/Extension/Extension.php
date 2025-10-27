@@ -13,7 +13,9 @@ use App\Models\Server;
  */
 class Extension
 {
-    public function __construct(public $config = []) {}
+    public function __construct(public $config = [])
+    {
+    }
 
     /**
      * Get a configuration value
@@ -59,7 +61,9 @@ class Extension
      *
      * @return void
      */
-    public function installed() {}
+    public function installed()
+    {
+    }
 
     /**
      * Called when the extension is uninstalled
@@ -67,7 +71,9 @@ class Extension
      *
      * @return void
      */
-    public function uninstalled() {}
+    public function uninstalled()
+    {
+    }
 
     /**
      * Called when the extension is updated
@@ -76,28 +82,16 @@ class Extension
      * @param  string  $oldVersion  The old version of the extension
      * @return void
      */
-    public function upgraded($oldVersion = null) {}
+    public function upgraded($oldVersion = null)
+    {
+    }
 
     /**
      * Called every request to the extension (if the extension is enabled)
      *
      * @return void
      */
-    public function boot() {}
-
-    /**
-     * Called when the extension is enabled
-     * If the extension type is server or gateway, it will be called every time a server or gateway is created
-     *
-     * @return void
-     */
-    public function enabled(ModelsExtension $extension) {}
-
-    /**
-     * Called when the extension is disabled
-     * If the extension type is server or gateway, it will be called every time a server or gateway is deleted
-     *
-     * @return void
-     */
-    public function disabled(ModelsExtension $extension) {}
+    public function boot()
+    {
+    }
 }
