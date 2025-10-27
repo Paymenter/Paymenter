@@ -13,6 +13,7 @@ return [
     'two_factor_authentication_enabled' => 'A kétlépcsős azonosítás be van kapcsolva a fiókodhoz.',
     'two_factor_authentication_enable' => 'Kétlépcsős azonosítás engedélyezése',
     'two_factor_authentication_disable' => 'Kétlépcsős azonosítás letiltása',
+    'two_factor_authentication_disable_description' => 'Are you sure you want to disable two-factor authentication? This will remove the extra layer of security from your account.',
     'two_factor_authentication_enable_description' => 'A kétlépcsős azonosítás engedélyezéséhez a lenti QR-kódot olvasd be egy autentikátor alkalmazással, például a Google Authenticatorral vagy az Authy-val.',
     'two_factor_authentication_qr_code' => 'Olvasd be az alábbi QR-kódot az autentikátor alkalmazásoddal:',
     'two_factor_authentication_secret' => 'Vagy írd be a következő kódot manuálisan:',
