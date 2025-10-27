@@ -28,6 +28,9 @@ return [
 
         'password' => 'Jelszó',
         'password_placeholder' => 'Jelszavad',
+
+        'password_confirmation' => 'Confirm Password',
+        'password_confirmation_placeholder' => 'Confirm your password',
     ],
 
     'all_rights_reserved' => 'Minden jog fenntartva.',
