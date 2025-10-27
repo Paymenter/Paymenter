@@ -96,7 +96,7 @@ class CronJob extends Command
                     $this->payInvoiceWithCredits($invoice);
 
                     // Charge billing agreements
-                    if ($service->billing_agreement_id) {
+                    if ($service->billing_agreement_id && $invoice->fresh()->status === 'pending') {
                         DB::afterCommit(function () use ($invoice, $service) {
                             try {
                                 ExtensionHelper::charge(
