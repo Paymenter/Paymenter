@@ -13,6 +13,7 @@ return [
     'two_factor_authentication_enabled' => 'Zwei-Faktor-Authentifizierung wurde deinem Account hinzugefügt.',
     'two_factor_authentication_enable' => 'Zwei-Faktor-Authentifizierung aktivieren',
     'two_factor_authentication_disable' => 'Zwei-Faktor-Authentifizierung deaktivieren',
+    'two_factor_authentication_disable_description' => 'Are you sure you want to disable two-factor authentication? This will remove the extra layer of security from your account.',
     'two_factor_authentication_enable_description' => 'Zur Aktivierung der Zwei-Faktor-Authentifizierung, müssen Sie den folgenden QR-Code mit einer Authenticator App, wie Google Auth oder Authy, scannen.',
     'two_factor_authentication_qr_code' => 'Scanne den folgenden QR-Code mit deiner Authenticator App:',
     'two_factor_authentication_secret' => 'Oder gib den folgenden Code manuell ein:',
