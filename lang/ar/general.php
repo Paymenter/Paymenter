@@ -28,6 +28,9 @@ return [
 
         'password' => 'كلمة المرور',
         'password_placeholder' => 'كلمة مرورك',
+
+        'password_confirmation' => 'Confirm Password',
+        'password_confirmation_placeholder' => 'Confirm your password',
     ],
 
     'all_rights_reserved' => 'جميع الحقوق محفوظة.',
