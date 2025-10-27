@@ -13,6 +13,7 @@ return [
     'two_factor_authentication_enabled' => 'Uwierzytelnianie dwuskładnikowe jest włączone dla Twojego konta.',
     'two_factor_authentication_enable' => 'Włącz uwierzytelnianie dwuskładnikowe',
     'two_factor_authentication_disable' => 'Wyłącz uwierzytelnianie dwuskładnikowe',
+    'two_factor_authentication_disable_description' => 'Are you sure you want to disable two-factor authentication? This will remove the extra layer of security from your account.',
     'two_factor_authentication_enable_description' => 'Aby włączyć uwierzytelnianie dwuskładnikowe, musisz zeskanować poniższy kod QR za pomocą aplikacji uwierzytelniającej, takiej jak Google Authenticator lub Authy.',
     'two_factor_authentication_qr_code' => 'Zeskanuj poniższy kod QR za pomocą aplikacji uwierzytelniającej:',
     'two_factor_authentication_secret' => 'Lub wprowadź ręcznie następujący kod:',
