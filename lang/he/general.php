@@ -28,6 +28,9 @@ return [
 
         'password' => 'סיסמה',
         'password_placeholder' => 'הסיסמה שלך',
+
+        'password_confirmation' => 'Confirm Password',
+        'password_confirmation_placeholder' => 'Confirm your password',
     ],
 
     'all_rights_reserved' => 'כל הזכויות שמורות.',
