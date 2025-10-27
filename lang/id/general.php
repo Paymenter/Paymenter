@@ -28,6 +28,9 @@ return [
 
         'password' => 'Kata Sandi',
         'password_placeholder' => 'Kata Sandi Anda',
+
+        'password_confirmation' => 'Confirm Password',
+        'password_confirmation_placeholder' => 'Confirm your password',
     ],
 
     'all_rights_reserved' => 'Hak cipta dilindungi.',
