@@ -13,6 +13,7 @@ return [
     'two_factor_authentication_enabled' => 'Hesabınız için iki faktörlü kimlik doğrulama etkinleştirildi.',
     'two_factor_authentication_enable' => 'İki faktörlü kimlik doğrulamayı etkinleştir',
     'two_factor_authentication_disable' => 'İki faktörlü kimlik doğrulamayı devre dışı bırak',
+    'two_factor_authentication_disable_description' => 'Are you sure you want to disable two-factor authentication? This will remove the extra layer of security from your account.',
     'two_factor_authentication_enable_description' => 'İki faktörlü kimlik doğrulamayı etkinleştirmek için aşağıdaki QR kodunu Google Authenticator veya Authy gibi bir doğrulayıcı uygulaması ile taramanız gerekiyor.',
     'two_factor_authentication_qr_code' => 'Aşağıdaki QR kodunu doğrulayıcı uygulamanız ile tarayın:',
     'two_factor_authentication_secret' => 'Veya aşağıdaki kodu elle girin:',
