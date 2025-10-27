@@ -61,7 +61,7 @@ class SendMailListener
         $ip = request()->ip();
         if (!$user->authenticationLogs()->where('ip_address', $ip)->exists()) {
             // If the log for this IP does not exist, create a new log
-            $log = new UserAuthenticationLog();
+            $log = new UserAuthenticationLog;
             $log->user_id = $user->id;
             $log->ip_address = $ip;
             $log->save();
