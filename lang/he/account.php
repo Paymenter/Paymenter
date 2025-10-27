@@ -13,6 +13,7 @@ return [
     'two_factor_authentication_enabled' => 'אימות דו שלבי מופעל בחשבונך.',
     'two_factor_authentication_enable' => 'הפעל אימות דו שלבי',
     'two_factor_authentication_disable' => 'בטל אימות דו שלבי',
+    'two_factor_authentication_disable_description' => 'Are you sure you want to disable two-factor authentication? This will remove the extra layer of security from your account.',
     'two_factor_authentication_enable_description' => 'על מנת להפעיל אימות דו שלבי, עליך לסרוק את קוד ה-QR המצורף באמצעות אפליקציית אימות דו שלבי כמו Google Authenticator או Authy.',
     'two_factor_authentication_qr_code' => 'סרוק את הקוד המצורף באמצעות האפליקציה:',
     'two_factor_authentication_secret' => 'או הכנס את הקוד באופן ידני:',
