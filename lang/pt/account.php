@@ -13,6 +13,7 @@ return [
     'two_factor_authentication_enabled' => 'A autenticação de dois fatores está habilitada para sua conta.',
     'two_factor_authentication_enable' => 'Ativar autenticação de dois fatores (2FA)',
     'two_factor_authentication_disable' => 'Desativar autenticação de dois fatores',
+    'two_factor_authentication_disable_description' => 'Are you sure you want to disable two-factor authentication? This will remove the extra layer of security from your account.',
     'two_factor_authentication_enable_description' => 'Para habilitar a autenticação de dois fatores, você precisa digitalizar o código QR abaixo com um aplicativo autenticador, como o Autenticador do Google ou Authy.',
     'two_factor_authentication_qr_code' => 'Escaneie o código QR abaixo com o seu aplicativo de autenticação:',
     'two_factor_authentication_secret' => 'Ou insira o seguinte código manualmente:',
