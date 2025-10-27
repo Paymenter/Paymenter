@@ -2,7 +2,7 @@
     class="flex flex-col gap-2 max-w-md mx-auto px-6 sm:px-14 pb-10 bg-primary-800 rounded-md"
     wire:submit="submit" id="reset">
     <div class="flex flex-col items-center mt-4 mb-10">
-        <x-logo />
+        <x-logo class="h-10" />
         <h1 class="text-2xl text-center mt-2">{{ __('auth.reset_password') }} </h1>
     </div>
     <x-form.input name="email" type="text" :label="__('general.input.email')" :placeholder="__('general.input.email_placeholder')" wire:model="email" required />
