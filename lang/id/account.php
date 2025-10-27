@@ -13,6 +13,7 @@ return [
     'two_factor_authentication_enabled' => 'Autentikasi dua faktor diaktifkan untuk akun Anda.',
     'two_factor_authentication_enable' => 'Aktifkan autentikasi dua faktor',
     'two_factor_authentication_disable' => 'Nonaktifkan autentikasi dua faktor',
+    'two_factor_authentication_disable_description' => 'Are you sure you want to disable two-factor authentication? This will remove the extra layer of security from your account.',
     'two_factor_authentication_enable_description' => 'Untuk mengaktifkan autentikasi dua faktor, Anda perlu memindai kode QR di bawah ini menggunakan aplikasi autentikator seperti Google Authenticator atau Authy.',
     'two_factor_authentication_qr_code' => 'Pindah kode QR di bawah ini menggunakan aplikasi autentikator anda:',
     'two_factor_authentication_secret' => 'Atau masukkan kode berikut secara manual:',
