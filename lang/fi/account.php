@@ -13,6 +13,7 @@ return [
     'two_factor_authentication_enabled' => 'Kaksivaiheinen todennus on käytössä tililläsi.',
     'two_factor_authentication_enable' => 'Ota käyttöön kaksivaiheinen tunnistautuminen',
     'two_factor_authentication_disable' => 'Poista käytöstä kaksivaiheinen tunnistautuminen',
+    'two_factor_authentication_disable_description' => 'Are you sure you want to disable two-factor authentication? This will remove the extra layer of security from your account.',
     'two_factor_authentication_enable_description' => 'Ottaaksesi käyttöön kaksivaiheisen todennuksen, sinun täytyy skannata alla oleva QR-koodi autentikointisovelluksella, kuten Google Authenticator tai Authy.',
     'two_factor_authentication_qr_code' => 'Skannaa alla oleva QR-koodi tunnistautumissovelluksellasi:',
     'two_factor_authentication_secret' => 'Tai kirjoita seuraava koodi manuaalisesti:',
