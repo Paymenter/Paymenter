@@ -13,6 +13,7 @@ return [
     'two_factor_authentication_enabled' => 'Tvåfaktorsautentisering är aktiverat för ditt konto.',
     'two_factor_authentication_enable' => 'Aktivera tvåfaktorsautentisering',
     'two_factor_authentication_disable' => 'Inaktivera tvåfaktorsautentisering',
+    'two_factor_authentication_disable_description' => 'Are you sure you want to disable two-factor authentication? This will remove the extra layer of security from your account.',
     'two_factor_authentication_enable_description' => 'För att aktivera tvåfaktorsautentisering måste du skanna QR-koden nedan med en autentiseringsapp som Google Authenticator eller Authy.',
     'two_factor_authentication_qr_code' => 'Skanna QR-koden nedan med din autentiseringsapp:',
     'two_factor_authentication_secret' => 'Eller ange följande kod manuellt:',
