@@ -2,7 +2,7 @@
     <x-navigation.breadcrumb />
     <div class="px-2">
 
-        <div class="grid grid-cols-2 gap-4">
+        <div class="grid md:grid-cols-2 gap-3">
 
             <x-form.input name="first_name" type="text" :label="__('general.input.first_name')"
                 :placeholder="__('general.input.first_name_placeholder')" wire:model="first_name" required dirty />
