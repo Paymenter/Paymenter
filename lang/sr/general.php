@@ -28,6 +28,9 @@ return [
 
         'password' => 'Lozinka',
         'password_placeholder' => 'Vaša lozinka',
+
+        'password_confirmation' => 'Confirm Password',
+        'password_confirmation_placeholder' => 'Confirm your password',
     ],
 
     'all_rights_reserved' => 'Sva prava zadržana.',
