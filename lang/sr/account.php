@@ -13,6 +13,7 @@ return [
     'two_factor_authentication_enabled' => 'Dvofaktorska autentifikacija je omogućena za vaš nalog.',
     'two_factor_authentication_enable' => 'Omogući dvofaktorsku autentifikaciju',
     'two_factor_authentication_disable' => 'Onemogući dvofaktorsku autentifikaciju',
+    'two_factor_authentication_disable_description' => 'Are you sure you want to disable two-factor authentication? This will remove the extra layer of security from your account.',
     'two_factor_authentication_enable_description' => 'Da biste omogućili dvofaktorsku autentifikaciju, potrebno je da skenirate QR kod ispod pomoću aplikacije za autentifikaciju kao što su Google Authenticator ili Authy.',
     'two_factor_authentication_qr_code' => 'Skenirajte QR kod ispod pomoću aplikacije za autentifikaciju:',
     'two_factor_authentication_secret' => 'Ili ručno unesite sledeći kod:',
