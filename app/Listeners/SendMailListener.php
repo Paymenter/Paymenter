@@ -13,6 +13,7 @@ use App\Events\ServiceCancellation\Created as CancellationCreated;
 use App\Events\User\Created as UserCreated;
 use App\Helpers\NotificationHelper;
 use App\Models\Session;
+use App\Models\UserAuthenticationLog;
 
 class SendMailListener
 {
@@ -47,16 +48,35 @@ class SendMailListener
             $order = $event->order;
             NotificationHelper::orderCreatedNotification($order->user, $order);
         } elseif ($event instanceof Login) {
-            $user = $event->user;
+            $this->login($event);
+        } elseif ($event instanceof CancellationCreated) {
+            $cancellation = $event->cancellation;
+            NotificationHelper::serviceCancellationReceivedNotification($cancellation->service->user, $cancellation);
+        }
+    }
+
+    private function login(Login $event): void
+    {
+        $user = $event->user;
+        $ip = request()->ip();
+        if (!$user->authenticationLogs()->where('ip_address', $ip)->exists()) {
+            // If the log for this IP does not exist, create a new log
+            $log = new UserAuthenticationLog();
+            $log->user_id = $user->id;
+            $log->ip_address = $ip;
+            $log->save();
+
             $data = [
-                'ip' => request()->ip(),
+                'ip' => $ip,
                 'device' => (new Session(['user_agent' => request()->userAgent()]))->getFormattedDeviceAttribute(),
                 'time' => now()->format('Y-m-d H:i:s'),
             ];
             NotificationHelper::loginDetectedNotification($user, $data);
-        } elseif ($event instanceof CancellationCreated) {
-            $cancellation = $event->cancellation;
-            NotificationHelper::serviceCancellationReceivedNotification($cancellation->service->user, $cancellation);
+        } else {
+            // If it exists, update the last used timestamp
+            $log = $user->authenticationLogs()->where('ip_address', $ip)->first();
+            $log->last_used_at = now();
+            $log->save();
         }
     }
 }

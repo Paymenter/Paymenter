@@ -215,4 +215,9 @@ class User extends Authenticatable implements Auditable, FilamentUser, HasAvatar
     {
         return $this->hasMany(NotificationSubscription::class);
     }
+
+    public function authenticationLogs()
+    {
+        return $this->hasMany(UserAuthenticationLog::class);
+    }
 }
