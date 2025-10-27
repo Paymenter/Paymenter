@@ -13,6 +13,7 @@ return [
     'two_factor_authentication_enabled' => 'To-faktor autentisering er aktivert for kontoen din.',
     'two_factor_authentication_enable' => 'Aktiver to-faktor autentisering',
     'two_factor_authentication_disable' => 'Deaktiver to-faktor autentisering',
+    'two_factor_authentication_disable_description' => 'Are you sure you want to disable two-factor authentication? This will remove the extra layer of security from your account.',
     'two_factor_authentication_enable_description' => 'For å aktivere to-faktor autentisering, må du skanne QR-koden nedenfor med en autentiseringsapp som Google Authenticator eller Authy.',
     'two_factor_authentication_qr_code' => 'Skann QR-koden nedenfor med din autentiseringsapp:',
     'two_factor_authentication_secret' => 'Eller skriv inn følgende kode manuelt:',
