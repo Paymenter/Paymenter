@@ -8,17 +8,14 @@
 'divClass' => null,
 'hideRequiredIndicator' => false,
 ])
-<fieldset class="flex flex-col relative mt-3 w-full {{ $divClass ?? '' }}">
+<fieldset class="flex flex-col mt-3 w-full {{ $divClass ?? '' }}">
     @if ($label)
-    <legend>
-        <label for="{{ $name }}"
-            class="text-sm text-primary-100 absolute -translate-y-1/2 start-1 ml-1 bg-background-secondary rounded-md px-2">
-            {{ $label }}
-            @if ($required && !$hideRequiredIndicator)
-            <span class="text-red-500">*</span>
-            @endif
-        </label>
-    </legend>
+    <label for="{{ $name }}" class="mb-1 text-sm text-primary-100">
+        {{ $label }}
+        @if ($required && !$hideRequiredIndicator)
+        <span class="text-red-500">*</span>
+        @endif
+    </label>
     @endif
 
     <select id="{{ $id ?? $name }}" {{ $multiple ? 'multiple' : '' }} {{ $attributes->except(['options', 'id', 'name', 'multiple', 'class']) }}
