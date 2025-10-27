@@ -28,6 +28,9 @@ return [
 
         'password' => 'Şifre',
         'password_placeholder' => 'Şifreniz',
+
+        'password_confirmation' => 'Confirm Password',
+        'password_confirmation_placeholder' => 'Confirm your password',
     ],
 
     'all_rights_reserved' => 'Tüm hakları saklıdır.',
