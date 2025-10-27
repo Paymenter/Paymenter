@@ -36,6 +36,7 @@ class Service extends Model implements Auditable
         'coupon_id',
         'user_id',
         'currency_code',
+        'billing_agreement_id',
     ];
 
     protected $casts = [
