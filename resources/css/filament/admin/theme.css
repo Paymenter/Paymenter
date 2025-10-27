@@ -18,7 +18,8 @@
 .fi-contained, 
 .fi-ta-ctn, 
 .fi-wi-stats-overview-stat, 
-.fi-section-has-header {
+.fi-section-has-header,
+.fi-widget-wrapper {
     background-color: hsl(var(--color-background-secondary));
 }
 

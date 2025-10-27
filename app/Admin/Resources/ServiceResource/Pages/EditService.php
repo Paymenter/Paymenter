@@ -119,4 +119,15 @@ class EditService extends EditRecord
             ]),
         ];
     }
+
+    protected function getHeaderWidgets(): array
+    {
+        if (!$this->record->cancellation()->exists()) {
+            return [];
+        }
+
+        return [
+            ServiceResource\Widgets\CancellationOverview::class,
+        ];
+    }
 }
