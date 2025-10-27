@@ -104,14 +104,15 @@ class Show extends Component
         }
 
         if ($this->setAsDefault) {
-            $services = $this->recurringServices()->get();
+            $invoiceItems = $this->recurringServices()->get();
             $agreement = Auth::user()->billingAgreements()->where('ulid', $this->selectedMethod)->first();
 
-            foreach ($services as $service) {
+            foreach ($invoiceItems as $invoiceItem) {
+                $service = $invoiceItem->reference;
                 $service->update(['billing_agreement_id' => $agreement->id]);
             }
 
-            if ($services->count() > 0) {
+            if ($invoiceItems->count() > 0) {
                 $this->notify('Default payment method has been updated for recurring services.', 'success');
             }
         }
