@@ -16,7 +16,7 @@
 
         <x-form.input name="password" type="password" :label="__('Password')" :placeholder="__('Your password')"
             wire:model="password" required />
-        <x-form.input name="password_confirm" type="password" :label="__('Password')"
+        <x-form.input name="password_confirm" type="password" :label="__('Confirm Password')"
             :placeholder="__('Confirm your password')" wire:model="password_confirmation" required />
 
         <x-form.properties :custom_properties="$custom_properties" :properties="$properties" />
