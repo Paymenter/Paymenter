@@ -13,6 +13,7 @@ return [
     'two_factor_authentication_enabled' => '您的帳戶已啟用兩步驟驗證。',
     'two_factor_authentication_enable' => '啟用兩步驟驗證',
     'two_factor_authentication_disable' => '停用兩步驟驗證',
+    'two_factor_authentication_disable_description' => 'Are you sure you want to disable two-factor authentication? This will remove the extra layer of security from your account.',
     'two_factor_authentication_enable_description' => '若要啟用兩步驟驗證，您需要使用像 Google Authenticator 或 Authy 這類的驗證應用程式掃描下方的 QR Code。',
     'two_factor_authentication_qr_code' => '使用您的驗證應用程式掃描下方的 QR Code：',
     'two_factor_authentication_secret' => '或手動輸入以下代碼：',
