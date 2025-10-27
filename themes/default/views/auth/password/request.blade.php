@@ -5,7 +5,7 @@
         <x-logo />
         <h1 class="text-2xl text-center mt-2">{{ __('auth.reset_password') }} </h1>
     </div>
-    <x-form.input name="email" type="text" :label="__('auth.input.email_label')" :placeholder="__('auth.input.email')" wire:model="email" required />
+    <x-form.input name="email" type="text" :label="__('general.input.email')" :placeholder="__('general.input.email_placeholder')" wire:model="email" required />
 
     <x-captcha :form="'reset'" />
 
