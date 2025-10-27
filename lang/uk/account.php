@@ -13,6 +13,7 @@ return [
     'two_factor_authentication_enabled' => 'Двофакторна автентифікація ввімкнена для вашого облікового запису.',
     'two_factor_authentication_enable' => 'Увімкнути двофакторну автентифікацію',
     'two_factor_authentication_disable' => 'Вимкнути двофакторну автентифікацію',
+    'two_factor_authentication_disable_description' => 'Are you sure you want to disable two-factor authentication? This will remove the extra layer of security from your account.',
     'two_factor_authentication_enable_description' => 'Щоб увімкнути двофакторну автентифікацію, проскануйте QR-код нижче за допомогою додатка для автентифікації, наприклад, Google Authenticator або Authy.',
     'two_factor_authentication_qr_code' => 'Скануйте QR-код нижче у вашому додатку для автентифікації:',
     'two_factor_authentication_secret' => 'Або введіть наступний код вручну:',
