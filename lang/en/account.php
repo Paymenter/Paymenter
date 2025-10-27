@@ -13,6 +13,7 @@ return [
     'two_factor_authentication_enabled' => 'Two-factor authentication is enabled for your account.',
     'two_factor_authentication_enable' => 'Enable two-factor authentication',
     'two_factor_authentication_disable' => 'Disable two-factor authentication',
+    'two_factor_authentication_disable_description' => 'Are you sure you want to disable two-factor authentication? This will remove the extra layer of security from your account.',
     'two_factor_authentication_enable_description' => 'To enable two factor authentication, you need to scan the QR code below with an authenticator app like Google Authenticator or Authy.',
     'two_factor_authentication_qr_code' => 'Scan the QR code below with your authenticator app:',
     'two_factor_authentication_secret' => 'Or enter the following code manually:',
