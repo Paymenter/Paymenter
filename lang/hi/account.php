@@ -13,6 +13,7 @@ return [
     'two_factor_authentication_enabled' => 'आपके खाते के लिए दो-चरणीय प्रमाणीकरण सक्षम है।',
     'two_factor_authentication_enable' => 'दो-चरणीय प्रमाणीकरण सक्षम करें',
     'two_factor_authentication_disable' => 'दो-चरणीय प्रमाणीकरण अक्षम करें',
+    'two_factor_authentication_disable_description' => 'Are you sure you want to disable two-factor authentication? This will remove the extra layer of security from your account.',
     'two_factor_authentication_enable_description' => 'दो-चरणीय प्रमाणीकरण सक्षम करने के लिए, नीचे दिए गए QR कोड को Google Authenticator या Authy जैसे ऐप से स्कैन करें।',
     'two_factor_authentication_qr_code' => 'अपने प्रमाणीकरण ऐप से नीचे दिए गए QR कोड को स्कैन करें:',
     'two_factor_authentication_secret' => 'या नीचे दिए गए कोड को मैन्युअली दर्ज करें:',
