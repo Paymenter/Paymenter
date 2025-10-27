@@ -13,6 +13,7 @@ return [
     'two_factor_authentication_enabled' => 'تم تمكين المصادقة الثنائية لحسابك.',
     'two_factor_authentication_enable' => 'تمكين المصادقة الثنائية',
     'two_factor_authentication_disable' => 'تعطيل المصادقة الثنائية',
+    'two_factor_authentication_disable_description' => 'Are you sure you want to disable two-factor authentication? This will remove the extra layer of security from your account.',
     'two_factor_authentication_enable_description' => 'لتمكين المصادقة الثنائية، تحتاج إلى مسح رمز QR أدناه باستخدام تطبيق مصادقة مثل Google Authenticator أو Authy.',
     'two_factor_authentication_qr_code' => 'أفحص رمز QR أدناه باستخدام تطبيق المصادقة الخاص بك:',
     'two_factor_authentication_secret' => 'أو أدخل الرمز التالي يدويًا:',
