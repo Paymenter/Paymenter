@@ -1,5 +1,5 @@
 <form
-    class="mx-auto flex flex-col gap-2 mt-4 shadow-sm px-6 sm:px-14 pb-10 bg-primary-800 rounded-md xl:max-w-[40%] w-full"
+    class="mx-auto flex flex-col gap-2 mt-4 px-6 sm:px-14 pb-10 bg-primary-800 rounded-md xl:max-w-[40%] w-full"
     wire:submit="submit" id="login">
     <div class="flex flex-col items-center my-14">
         <x-logo class="h-10" />
