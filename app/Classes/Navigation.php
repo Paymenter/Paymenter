@@ -71,7 +71,7 @@ class Navigation
                     'name' => __('navigation.admin'),
                     'url' => route('filament.admin.pages.dashboard'),
                     'spa' => false,
-                    'condition' => Auth::user()->role_id !== null,
+                    'condition' => Auth::check() && Auth::user()->role_id !== null,
                 ],
             ];
 
