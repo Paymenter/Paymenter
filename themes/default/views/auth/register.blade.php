@@ -1,5 +1,5 @@
 <form
-    class="mx-auto flex flex-col gap-2 mt-4 shadow-sm px-6 sm:px-14 pb-10 bg-primary-800 rounded-md xl:max-w-[60%] w-full"
+    class="mx-auto flex flex-col gap-2 mt-4 px-6 sm:px-14 pb-10 bg-primary-800 rounded-md xl:max-w-[60%] w-full"
     wire:submit.prevent="submit" id="register">
     <div class="flex flex-col items-center my-14">
         <x-logo class="h-10" />
@@ -35,7 +35,7 @@
 
     <x-button.primary class="w-full mt-2">{{ __('auth.sign_up') }}</x-button.primary>
 
-    <div class="text-white text-center rounded-md py-2 mt-6 text-sm">
+    <div class="text-base text-center rounded-md py-2 mt-6 text-sm">
         {{ __('auth.already_have_account') }}
         <a class="text-sm text-secondary-500 text-secondary hover:underline" href="{{ route('login') }}" wire:navigate>
             {{ __('auth.sign_in') }}
