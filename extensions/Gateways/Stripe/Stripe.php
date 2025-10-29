@@ -171,6 +171,7 @@ class Stripe extends Gateway
     public function pay($invoice, $total)
     {
         $intent = $this->request('post', '/payment_intents', [
+            'description' => __('invoices.payment_for_invoice', ['number' => $invoice->number ?? $invoice->id ]),
             'amount' => $total * 100,
             'currency' => $invoice->currency_code,
             'automatic_payment_methods' => ['enabled' => 'true'],

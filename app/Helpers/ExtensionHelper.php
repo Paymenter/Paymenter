@@ -43,13 +43,13 @@ class ExtensionHelper
 
         if ($type && $type == 'other') {
             // Filter out gateways and servers
-            $extensions = array_filter($extensions, fn ($extension) => !in_array($extension['type'], ['gateway', 'server']));
+            $extensions = array_filter($extensions, fn($extension) => !in_array($extension['type'], ['gateway', 'server']));
 
             return $extensions;
         } elseif ($type) {
             $type = strtolower($type);
 
-            return array_filter($extensions, fn ($extension) => $extension['type'] === $type);
+            return array_filter($extensions, fn($extension) => $extension['type'] === $type);
         }
 
         return $extensions;
@@ -220,7 +220,7 @@ class ExtensionHelper
         // Filter out already installed extensions
         $installedExtensions = Extension::all()->pluck('extension')->toArray();
 
-        return array_filter($extensions, fn ($extension) => !in_array($extension['name'], $installedExtensions));
+        return array_filter($extensions, fn($extension) => !in_array($extension['name'], $installedExtensions));
     }
 
     public static function call($extension, $function, $args = [], $mayFail = false)
@@ -236,7 +236,10 @@ class ExtensionHelper
             if (!$mayFail) {
                 throw $e;
             } else {
-                report($e);
+                // If extension error is Not Found, don't report
+                if (\Str::doesntEndWith($e->getMessage(), 'not found')) {
+                    report($e);
+                }
             }
         }
     }
