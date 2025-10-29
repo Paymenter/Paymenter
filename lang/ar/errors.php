@@ -2,12 +2,12 @@
 
 return [
     '404' => [
-        'title' => 'Page Not Found',
-        'message' => 'Sorry, the page you are looking for could not be found.',
-        'return_home' => 'Back to Home',
+        'title' => 'الصفحة غير موجودة',
+        'message' => 'عذراً، لم يتم العثور على الصفحة التي تبحث عنها.',
+        'return_home' => 'العودة إلى الصفحة الرئيسية',
     ],
     '500' => [
-        'title' => 'Server Error',
-        'message' => 'Whoops, something went wrong on our end. Please try again later.',
+        'title' => 'خطأ في الخادم',
+        'message' => 'عفواً، حدث خطأ من طرفنا. الرجاء المحاولة مرة أخرى لاحقًا.',
     ],
 ];
