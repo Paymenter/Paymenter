@@ -4,9 +4,9 @@ return [
     '' => '',
 
     'button' => [
-        'view' => 'View',
-        'view_all' => 'View All',
+        'view' => 'عرض',
+        'view_all' => 'عرض الكل',
     ],
-    'confirm' => 'Confirm',
-    'cancel' => 'Cancel',
+    'confirm' => 'تأكيد',
+    'cancel' => 'إلغاء',
 ];
