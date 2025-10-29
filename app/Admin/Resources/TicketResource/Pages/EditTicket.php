@@ -83,6 +83,29 @@ class EditTicket extends EditRecord
         $this->form->fill();
     }
 
+    public function closeTicket()
+    {
+        if (auth()->user()->can('update', $this->record)) {
+            if ($this->record->status === 'closed') {
+                Notification::make()
+                    ->title(__('ticket.close_ticket_already_closed'))
+                    ->info()
+                    ->send();
+
+                return;
+            }
+
+            $this->record->update(['status' => 'closed']);
+            $this->record->refresh();
+            $this->record->status = 'closed';
+
+            Notification::make()
+                ->title(__('ticket.close_ticket_success'))
+                ->success()
+                ->send();
+        }
+    }
+
     public function infolist(Schema $schema): Schema
     {
         return $schema
