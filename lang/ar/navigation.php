@@ -14,5 +14,5 @@ return [
     'dashboard' => 'لوحة المعلومات',
     'tickets' => 'التذاكر',
     'admin' => 'الإدارة',
-    'notifications' => 'Notifications',
+    'notifications' => 'الإشعارات',
 ];
