@@ -56,6 +56,16 @@ class Show extends Component
         $this->dispatch('saved');
     }
 
+    public function closeTicket()
+    {
+        $this->authorize('update', $this->ticket);
+
+        $this->ticket->update(['status' => 'closed']);
+        $this->ticket->refresh();
+
+        $this->notify(__('ticket.close_ticket_success'));
+    }
+
     public function render()
     {
         return view('tickets.show')->layoutData([
