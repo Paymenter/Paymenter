@@ -9,11 +9,11 @@ return [
     'department' => 'القسم',
     'created_at' => 'أنشئت في',
     'reply' => 'ردّ',
-    'attachments' => 'Attachments',
-    'upload_attachments' => 'Upload Attachments',
-    'or_drag_and_drop' => 'or drag and drop',
-    'files_max' => 'Files up to 10MB',
-    'selected_files' => 'Selected Files',
+    'attachments' => 'المرفقات',
+    'upload_attachments' => 'رفع مرفقات',
+    'or_drag_and_drop' => 'أو اسحب و اسقط',
+    'files_max' => 'ملفات إلى حجم 10 ميغابايت',
+    'selected_files' => 'الملفات المحددة',
 
     'create_ticket' => 'إنشاء تذكرة',
     'select_department' => 'اختر القسم',
@@ -27,5 +27,5 @@ return [
     'service' => 'الخدمة',
     'select_service' => 'اختر الخدمة',
     'create' => 'أنشئ',
-    'no_tickets' => 'No tickets found',
+    'no_tickets' => 'لا توجد تذاكر',
 ];
