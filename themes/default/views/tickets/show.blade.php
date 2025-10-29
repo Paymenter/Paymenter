@@ -118,21 +118,23 @@
                                 {{ __('ticket.reply') }}
                             </x-button.primary>
 
-                            @if ($ticket->status === 'closed')
-                                <x-button.danger type="button" class="!w-fit order-1 sm:order-2" disabled>
-                                    {{ __('ticket.close_ticket') }}
-                                </x-button.danger>
-                            @else
-                                <x-button.danger type="button" class="!w-fit order-1 sm:order-2"
-                                    x-on:click.prevent="$store.confirmation.confirm({
-                                        title: '{{ __('ticket.close_ticket') }}',
-                                        message: '{{ __('ticket.close_ticket_confirmation') }}',
-                                        confirmText: '{{ __('common.confirm') }}',
-                                        cancelText: '{{ __('common.cancel') }}',
-                                        callback: () => $wire.closeTicket()
-                                    })">
-                                    {{ __('ticket.close_ticket') }}
-                                </x-button.danger>
+                            @if (!config('settings.ticket_client_closing_disabled'))
+                                @if ($ticket->status === 'closed')
+                                    <x-button.danger type="button" class="!w-fit order-1 sm:order-2" disabled>
+                                        {{ __('ticket.close_ticket') }}
+                                    </x-button.danger>
+                                @else
+                                    <x-button.danger type="button" class="!w-fit order-1 sm:order-2"
+                                        x-on:click.prevent="$store.confirmation.confirm({
+                                            title: '{{ __('ticket.close_ticket') }}',
+                                            message: '{{ __('ticket.close_ticket_confirmation') }}',
+                                            confirmText: '{{ __('common.confirm') }}',
+                                            cancelText: '{{ __('common.cancel') }}',
+                                            callback: () => $wire.closeTicket()
+                                        })">
+                                        {{ __('ticket.close_ticket') }}
+                                    </x-button.danger>
+                                @endif
                             @endif
                         </div>
                     </form>

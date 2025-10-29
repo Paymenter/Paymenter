@@ -344,6 +344,13 @@ class Settings
                     'required' => true,
                     'database_type' => 'array',
                 ],
+                [
+                    'name' => 'ticket_client_closing_disabled',
+                    'label' => 'Disallow clients from closing tickets',
+                    'type' => 'checkbox',
+                    'database_type' => 'boolean',
+                    'default' => false,
+                ],
                 // Email piping
                 [
                     'name' => 'ticket_mail_piping',
