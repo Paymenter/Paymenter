@@ -14,6 +14,10 @@ return [
     'or_drag_and_drop' => 'أو اسحب و اسقط',
     'files_max' => 'ملفات إلى حجم 10 ميغابايت',
     'selected_files' => 'الملفات المحددة',
+    'close_ticket' => 'Close Ticket',
+    'close_ticket_confirmation' => 'Are you sure you want to close this ticket? This action cannot be undone.',
+    'close_ticket_success' => 'Ticket closed successfully.',
+    'close_ticket_already_closed' => 'This ticket is already closed.',
 
     'create_ticket' => 'إنشاء تذكرة',
     'select_department' => 'اختر القسم',
