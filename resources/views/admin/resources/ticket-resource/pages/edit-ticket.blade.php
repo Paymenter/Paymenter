@@ -76,10 +76,9 @@
                     <x-filament::button type="submit" target="send">
                         Send Message
                     </x-filament::button>
-                    @if ($this->record->status !== 'closed')
-                        <x-filament::button type="button" color="danger" wire:click="closeTicket">
-                            {{ __('ticket.close_ticket') }}
-                        </x-filament::button>
+
+                    @if ($this->closeTicket->isVisible())
+                        {{ $this->closeTicket }}
                     @endif
                 </div>
             </form>

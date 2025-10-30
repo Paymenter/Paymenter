@@ -55,6 +55,23 @@ class EditTicket extends EditRecord
             ]);
     }
 
+    public function closeTicket(): Action
+    {
+        return Action::make('closeTicket')
+            ->label(__('ticket.close_ticket'))
+            ->color('danger')
+            ->hidden(!auth()->user()->can('update', $this->record) || $this->record->status === 'closed')
+            ->action(fn (Ticket $record) => $record->update(['status' => 'closed']))
+            ->after(function () {
+                $this->record->refresh();
+
+                Notification::make()
+                    ->title('Ticket closed successfully.')
+                    ->success()
+                    ->send();
+            });
+    }
+
     // Save action
     public function send()
     {
@@ -81,29 +98,6 @@ class EditTicket extends EditRecord
         }
 
         $this->form->fill();
-    }
-
-    public function closeTicket()
-    {
-        if (auth()->user()->can('update', $this->record)) {
-            if ($this->record->status === 'closed') {
-                Notification::make()
-                    ->title(__('ticket.close_ticket_already_closed'))
-                    ->info()
-                    ->send();
-
-                return;
-            }
-
-            $this->record->update(['status' => 'closed']);
-            $this->record->refresh();
-            $this->record->status = 'closed';
-
-            Notification::make()
-                ->title(__('ticket.close_ticket_success'))
-                ->success()
-                ->send();
-        }
     }
 
     public function infolist(Schema $schema): Schema
