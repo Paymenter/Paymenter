@@ -72,14 +72,14 @@
                 <div class="mt-4 mb-4">
                     {{ $this->form }}
                 </div>
-                <div class="flex flex-wrap gap-2">
-                    <x-filament::button type="submit" target="send">
-                        Send Message
-                    </x-filament::button>
-
+                <div class="flex flex-wrap gap-2 justify-end">
                     @if ($this->closeTicket->isVisible())
                         {{ $this->closeTicket }}
                     @endif
+                    
+                    <x-filament::button type="submit" target="send">
+                        Send Message
+                    </x-filament::button>
                 </div>
             </form>
         </div>

@@ -136,7 +136,6 @@ class EditTicket extends EditRecord
                     ->label('Priority'),
                 TextEntry::make('department')
                     ->size(TextSize::Large)
-                    ->formatStateUsing(fn ($state) => array_combine(config('settings.ticket_departments'), config('settings.ticket_departments'))[$state])
                     ->placeholder('No department')
                     ->label('Department'),
 

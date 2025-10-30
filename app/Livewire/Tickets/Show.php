@@ -59,6 +59,9 @@ class Show extends Component
     public function closeTicket()
     {
         $this->authorize('update', $this->ticket);
+        if (config('settings.ticket_client_closing_disabled', false)) {
+            abort(403, 'Closing tickets is disabled.');
+        }
 
         $this->ticket->update(['status' => 'closed']);
         $this->ticket->refresh();

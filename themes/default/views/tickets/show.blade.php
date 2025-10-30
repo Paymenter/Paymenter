@@ -114,28 +114,21 @@
                                 @change="selectedFiles = Array.from($event.target.files)" />
                         </div>
                         <div class="mt-2 flex flex-col sm:flex-row gap-2 justify-end">
-                            <x-button.primary type="submit" class="!w-fit order-2 sm:order-1" wire:target="save">
+                            @if (!config('settings.ticket_client_closing_disabled', false) && $ticket->status !== 'closed')
+                                <x-button.danger type="button" class="sm:!w-fit order-2 sm:order-1"
+                                    x-on:click.prevent="$store.confirmation.confirm({
+                                        title: '{{ __('ticket.close_ticket') }}',
+                                        message: '{{ __('ticket.close_ticket_confirmation') }}',
+                                        confirmText: '{{ __('common.confirm') }}',
+                                        cancelText: '{{ __('common.cancel') }}',
+                                        callback: () => $wire.closeTicket()
+                                    })">
+                                    {{ __('ticket.close_ticket') }}
+                                </x-button.danger>
+                            @endif
+                            <x-button.primary type="submit" class="sm:!w-fit order-1 sm:order-2" wire:target="save">
                                 {{ __('ticket.reply') }}
                             </x-button.primary>
-
-                            @if (!config('settings.ticket_client_closing_disabled'))
-                                @if ($ticket->status === 'closed')
-                                    <x-button.danger type="button" class="!w-fit order-1 sm:order-2" disabled>
-                                        {{ __('ticket.close_ticket') }}
-                                    </x-button.danger>
-                                @else
-                                    <x-button.danger type="button" class="!w-fit order-1 sm:order-2"
-                                        x-on:click.prevent="$store.confirmation.confirm({
-                                            title: '{{ __('ticket.close_ticket') }}',
-                                            message: '{{ __('ticket.close_ticket_confirmation') }}',
-                                            confirmText: '{{ __('common.confirm') }}',
-                                            cancelText: '{{ __('common.cancel') }}',
-                                            callback: () => $wire.closeTicket()
-                                        })">
-                                        {{ __('ticket.close_ticket') }}
-                                    </x-button.danger>
-                                @endif
-                            @endif
                         </div>
                     </form>
                     <x-easymde-editor />
