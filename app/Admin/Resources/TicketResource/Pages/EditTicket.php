@@ -55,6 +55,23 @@ class EditTicket extends EditRecord
             ]);
     }
 
+    public function closeTicket(): Action
+    {
+        return Action::make('closeTicket')
+            ->label(__('ticket.close_ticket'))
+            ->color('danger')
+            ->hidden(!auth()->user()->can('update', $this->record) || $this->record->status === 'closed')
+            ->action(fn (Ticket $record) => $record->update(['status' => 'closed']))
+            ->after(function () {
+                $this->record->refresh();
+
+                Notification::make()
+                    ->title('Ticket closed successfully.')
+                    ->success()
+                    ->send();
+            });
+    }
+
     // Save action
     public function send()
     {

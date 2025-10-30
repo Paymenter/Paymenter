@@ -18,7 +18,7 @@
             </div>
             <div class="mt-4" x-text="$store.confirmation.message"></div>
             <div class="mt-5 sm:mt-4 flex-col sm:flex-row flex sm:flex-row-reverse gap-2">
-                <x-button.secondary type="button" 
+                <x-button.primary type="button" 
                     x-on:click="$store.confirmation.execute()"
                     ::disabled="$store.confirmation.loading">             
                     <!-- Loading spinner -->
@@ -29,7 +29,7 @@
                     </template>
                     
                     <span x-text="$store.confirmation.loading ? 'Loading...' : $store.confirmation.confirmText"></span>
-                </x-button.secondary>
+                </x-button.primary>
                 
                 <x-button.danger type="button" 
                     x-text="$store.confirmation.cancelText" 
