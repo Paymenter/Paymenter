@@ -58,7 +58,16 @@ chown -R nginx:nginx /app/storage
 
 ## make sure the db is set up
 echo -e "Migrating and Seeding D.B"
-php artisan migrate --seed --force
+php artisan migrate --force
+
+# Check if settings table is empty. If so, seed the database.
+SETTING_COUNT=$(php artisan tinker --execute='echo \App\Models\Setting::count()')
+if [ "$SETTING_COUNT" -eq 0 ]; then
+    echo "Database is empty. Seeding initial data..."
+    php artisan db:seed --force
+else
+    echo "Database already contains data. Skipping seeding."
+fi
 
 ## start cronjobs for the queue
 echo -e "Starting cron jobs."
