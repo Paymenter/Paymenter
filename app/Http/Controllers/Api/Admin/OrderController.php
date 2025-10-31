@@ -19,6 +19,7 @@ class OrderController extends ApiController
 {
     protected const INCLUDES = [
         'services',
+        'user'
     ];
 
     /**
