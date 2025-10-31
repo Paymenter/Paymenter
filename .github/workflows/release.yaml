@@ -23,7 +23,7 @@ jobs:
           php-version: '8.3'
       - name: Install dependencies
         run: |
-          composer install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
+          composer install -q --no-dev --optimize-autoloader --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
           npm i
 
       - name: Build
@@ -46,7 +46,7 @@ jobs:
 
       - name: Create release archive
         run: |
-          rm -rf node_modules tests CODE_OF_CONDUCT.md CONTRIBUTING.md flake.lock flake.nix phpstan.neon phpunit.xml shell.nix vendor
+          rm -rf node_modules tests CODE_OF_CONDUCT.md CONTRIBUTING.md flake.lock flake.nix phpstan.neon phpunit.xml shell.nix
           tar -czf paymenter.tar.gz * .env.example .gitignore
 
       - name: Create checksum and add to changelog
