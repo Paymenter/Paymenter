@@ -4,7 +4,6 @@ namespace App\Admin\Resources;
 
 use App\Admin\Resources\ErrorLogResource\Pages\ListErrorLogs;
 use App\Models\DebugLog;
-use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\ViewAction;
 use Filament\Infolists\Components\TextEntry;
