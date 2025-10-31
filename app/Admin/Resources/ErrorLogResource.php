@@ -59,9 +59,7 @@ class ErrorLogResource extends Resource
                 ViewAction::make(),
             ])
             ->toolbarActions([
-                BulkActionGroup::make([
-                    DeleteBulkAction::make(),
-                ]),
+                DeleteBulkAction::make(),
             ])
             ->defaultSort('created_at', 'desc');
     }

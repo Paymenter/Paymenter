@@ -109,10 +109,7 @@ class FailedJobResource extends Resource
                     })
                     ->deselectRecordsAfterCompletion(),
             ])
-            ->defaultSort('failed_at', 'desc')
-            ->filters([
-
-            ]);
+            ->defaultSort('failed_at', 'desc');
     }
 
     public static function canCreate(): bool
