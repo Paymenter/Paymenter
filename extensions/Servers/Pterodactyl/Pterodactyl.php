@@ -663,7 +663,7 @@ class Pterodactyl extends Server
         return [
             [
                 'type' => 'button',
-                'label' => 'Go to server',
+                'label' => 'services.pterodactyl.go_to_server',
                 'url' => $this->config('host') . '/server/' . $server['attributes']['identifier'],
             ],
         ];
