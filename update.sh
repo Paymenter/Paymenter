@@ -124,12 +124,8 @@ RUN tar -xzf paymenter.tar.gz
 # Remove the tarball.
 RUN rm -f paymenter.tar.gz
 
-
 # Setup correct permissions on the new files.
 RUN chmod -R 755 storage bootstrap/cache extensions
-
-# Run the composer install command.
-RUN composer install --no-dev --optimize-autoloader
 
 # Run the database migrations.
 RUN php artisan migrate --force --seed
@@ -138,8 +134,7 @@ RUN php artisan migrate --force --seed
 RUN php artisan app:settings:change theme default
 
 # Clear config and view caches.
-RUN php artisan config:clear
-RUN php artisan view:clear
+RUN php artisan optimize:clear
 
 # Optimize icons
 RUN php artisan icons:cache
