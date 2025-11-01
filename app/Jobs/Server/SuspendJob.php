@@ -34,12 +34,13 @@ class SuspendJob implements ShouldQueue
             $data = ExtensionHelper::suspendServer($this->service);
         } catch (Exception $e) {
             if ($e->getMessage() == 'No server assigned to this product') {
-                return;
+                // return;
+            } else {
+                throw $e;
             }
-            throw $e;
         }
 
-        if ($this->sendNotification && isset($data)) {
+        if ($this->sendNotification) {
             NotificationHelper::serverSuspendedNotification($this->service->user, $this->service, is_array($data) ? $data : []);
         }
     }
