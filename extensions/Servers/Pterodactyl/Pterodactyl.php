@@ -265,7 +265,6 @@ class Pterodactyl extends Server
                 'type' => 'select',
                 'options' => $dockerImageList,
                 'required' => true,
-                'live' => true,
             ],
         ];
     }
