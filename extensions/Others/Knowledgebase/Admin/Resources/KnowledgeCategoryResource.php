@@ -28,6 +28,8 @@ class KnowledgeCategoryResource extends Resource
 {
     protected static ?string $model = KnowledgeCategory::class;
 
+    protected static ?string $breadcrumb = 'Knowledgebase';
+
     protected static string|\BackedEnum|null $navigationIcon = 'ri-book-2-line';
 
     protected static string|\BackedEnum|null $activeNavigationIcon = 'ri-book-2-fill';

@@ -10,10 +10,22 @@ class ListKnowledgeArticles extends ListRecords
 {
     protected static string $resource = KnowledgeArticleResource::class;
 
+    protected static ?string $title = 'Articles';
+
+    protected ?string $heading = 'Articles';
+
     protected function getHeaderActions(): array
     {
         return [
             CreateAction::make(),
+        ];
+    }
+
+    public function getBreadcrumbs(): array
+    {
+        return [
+            KnowledgeArticleResource::getUrl('index') => 'Knowledgebase',
+            'Articles',
         ];
     }
 }

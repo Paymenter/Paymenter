@@ -10,6 +10,8 @@ class ListKnowledgeCategories extends ListRecords
 {
     protected static string $resource = KnowledgeCategoryResource::class;
 
+    protected ?string $heading = 'Categories';
+
     protected function getHeaderActions(): array
     {
         return [
@@ -25,6 +27,14 @@ class ListKnowledgeCategories extends ListRecords
 
     public function getHeading(): string
     {
-        return 'Knowledgebase';
+        return $this->heading ?? parent::getHeading();
+    }
+
+    public function getBreadcrumbs(): array
+    {
+        return [
+            'Knowledgebase',
+            'Categories',
+        ];
     }
 }

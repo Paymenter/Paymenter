@@ -5,11 +5,14 @@ namespace Paymenter\Extensions\Others\Knowledgebase\Admin\Resources\KnowledgeCat
 use Filament\Actions\DeleteAction;
 use Filament\Notifications\Notification;
 use Filament\Resources\Pages\EditRecord;
+use Illuminate\Contracts\Support\Htmlable;
 use Paymenter\Extensions\Others\Knowledgebase\Admin\Resources\KnowledgeCategoryResource;
 
 class EditKnowledgeCategory extends EditRecord
 {
     protected static string $resource = KnowledgeCategoryResource::class;
+
+    protected static ?string $title = 'Knowledgebase';
 
     protected function getHeaderActions(): array
     {
@@ -29,6 +32,27 @@ class EditKnowledgeCategory extends EditRecord
                         $action->cancel();
                     }
                 }),
+        ];
+    }
+
+    public function getHeading(): string
+    {
+        return $this->getRecord()->name ?? 'Category';
+    }
+
+    public function getSubheading(): string | Htmlable | null
+    {
+        return null;
+    }
+
+    public function getBreadcrumbs(): array
+    {
+        $categoryName = $this->getRecord()->name ?? 'Category';
+
+        return [
+            KnowledgeCategoryResource::getUrl('index') => 'Knowledgebase',
+            'Categories',
+            $categoryName,
         ];
     }
 }
