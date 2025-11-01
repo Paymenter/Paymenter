@@ -18,8 +18,6 @@ return new class extends Migration
             $table->ulid('ulid')->unique();
             $table->foreignIdFor(User::class)->constrained()->cascadeOnDelete();
             $table->foreignIdFor(Gateway::class)->constrained('extensions')->cascadeOnDelete();
-            $table->string('currency_code')->nullable();
-            $table->foreign('currency_code')->references('code')->on('currencies')->cascadeOnDelete();
             // Name can be for example Visa **** 4242
             $table->string('name');
             $table->string('type')->nullable();
