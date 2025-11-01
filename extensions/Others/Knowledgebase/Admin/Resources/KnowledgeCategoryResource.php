@@ -118,7 +118,6 @@ class KnowledgeCategoryResource extends Resource
                     ->sortable(),
             ])
             ->defaultSort('sort_order')
-            ->reorderable('sort_order')
             ->recordActions([
                 EditAction::make(),
             ])

@@ -98,7 +98,6 @@ class ArticlesRelationManager extends RelationManager
                     ->formatStateUsing(fn(?int $state) => $state ?? 0),
             ])
             ->defaultSort('sort_order')
-            ->reorderable('sort_order')
             ->headerActions([
                 Action::make('createArticle')
                     ->label('Create article')
