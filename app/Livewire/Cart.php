@@ -130,7 +130,7 @@ class Cart extends Component
 
                 if (
                     $item->product->per_user_limit > 0 && ($user->services->where('product_id', $item->product->id)->count() >= $item->product->per_user_limit ||
-                        ClassesCart::get()->filter(fn ($it) => $it->product->id == $item->product->id)->sum(fn ($it) => $it->quantity) + $user->services->where('product_id', $item->product->id)->count() > $item->product->per_user_limit
+                        $cart->items->filter(fn ($it) => $it->product->id == $item->product->id)->sum(fn ($it) => $it->quantity) + $user->services->where('product_id', $item->product->id)->count() > $item->product->per_user_limit
                     )
                 ) {
                     throw new DisplayException(__('product.user_limit', ['product' => $item->product->name]));
