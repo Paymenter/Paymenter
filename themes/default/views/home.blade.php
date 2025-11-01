@@ -37,7 +37,7 @@
                         {!! $category->description !!}
                     </article>
                     @endif
-                    <a href="{{ route('category.show', ['category' => $category->slug]) }}" wire:navigate class="mt-2">
+                    <a href="{{ route('category.show', ['category' => $category->slug]) }}" wire:navigate class="mt-auto pt-2">
                         <x-button.primary>
                             {{ __('common.button.view_all') }}
                             <x-ri-arrow-right-fill class="size-5" />
