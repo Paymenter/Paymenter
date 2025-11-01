@@ -35,7 +35,7 @@ class ServiceCancellationResource extends Resource
             ->components([
                 Select::make('service_id')
                     ->relationship('service', 'id', fn (Builder $query) => $query->where('status', 'active'))
-                    ->getOptionLabelFromRecordUsing(fn ($record) => $record->product->name . ' - ' . $record->plan->name . '  #' . $record->id . ($record->order && $record->order->user ? ' (' . $record->order->user->email . ')' : ''))
+                    ->getOptionLabelFromRecordUsing(fn ($record) => $record->product->name . ' - ' . $record->plan->name . '  #' . $record->id . ($record->user ? ' (' . $record->user->email . ')' : ''))
                     ->searchable()
                     ->preload()
                     ->disabledOn('edit')
@@ -59,7 +59,7 @@ class ServiceCancellationResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('service_id')
-                    ->formatStateUsing(fn ($record) => $record->service->product->name . ' - ' . $record->service->plan->name . '  #' . $record->service->id . ($record->service->order->user ? ' (' . $record->service->order->user->email . ')' : ''))
+                    ->formatStateUsing(fn ($record) => $record->service->product->name . ' - ' . $record->service->plan->name . '  #' . $record->service->id . ($record->service?->user ? ' (' . $record->service->user->email . ')' : ''))
                     ->url(fn ($record) => ServiceResource::getUrl('edit', ['record' => $record->service_id]))
                     ->sortable(),
                 TextColumn::make('reason')
