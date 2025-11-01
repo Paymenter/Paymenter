@@ -123,6 +123,8 @@ class KnowledgeCategoryResource extends Resource
             ->toolbarActions([
                 BulkActionGroup::make([
                     DeleteBulkAction::make()
+                        ->tooltip('Remove all articles from the selected categories before deleting them.')
+                        ->disabled(fn($records) => $records->contains(fn($record) => $record->articles()->exists()))
                         ->before(function (DeleteBulkAction $action, $records) {
                             $blocked = collect($records)->filter(fn($record) => $record->articles()->exists());
 

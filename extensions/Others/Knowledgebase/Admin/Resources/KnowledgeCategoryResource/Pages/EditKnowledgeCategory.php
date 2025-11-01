@@ -16,6 +16,8 @@ class EditKnowledgeCategory extends EditRecord
         return [
             DeleteAction::make()
                 ->requiresConfirmation()
+                ->disabled(fn($record) => $record->articles()->exists())
+                ->tooltip('Remove all articles from the category before deleting it.')
                 ->before(function (DeleteAction $action, $record) {
                     if ($record->articles()->exists()) {
                         Notification::make()
