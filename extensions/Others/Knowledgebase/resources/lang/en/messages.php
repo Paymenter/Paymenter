@@ -9,7 +9,7 @@ return [
     'related_articles' => 'Related Articles',
     'no_related_articles' => 'No related articles yet.',
     'view_count' => '{0} No views|{1} :count view|[2,*] :count views',
-    'search_placeholder' => 'Search for articles, categories, or keywords...',
+    'search_placeholder' => 'Search for articles',
     'search_results_heading' => 'Search results',
     'no_results' => 'No articles matched your search.',
     'results_count' => '{0} No items|{1} :count item|[2,*] :count items',
