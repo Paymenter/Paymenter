@@ -80,7 +80,7 @@ class CheckForUpdates extends Command
             ['key' => 'latest_version'],
             ['value' => $version['latest']]
         );
-        
+
         $this->info('Update check completed.');
     }
 }
