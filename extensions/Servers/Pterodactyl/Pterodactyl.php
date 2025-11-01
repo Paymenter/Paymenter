@@ -91,6 +91,16 @@ class Pterodactyl extends Server
             }
         }
 
+        $dockerImageList = [];
+        if (isset($values['nest_id']) && $values['nest_id'] !== '' && isset($values['egg_id']) && $values['egg_id'] !== '') {
+            $egg = $this->request('/api/application/nests/' . $values['nest_id'] . '/eggs/' . $values['egg_id']);
+            if (isset($egg['attributes']['docker_images']) && is_array($egg['attributes']['docker_images'])) {
+                foreach ($egg['attributes']['docker_images'] as $image) {
+                    $dockerImageList[$image] = $image;
+                }
+            }
+        }
+
         $using_port_array = isset($values['port_array']) && $values['port_array'] !== '';
 
         return [
@@ -127,6 +137,8 @@ class Pterodactyl extends Server
                 'type' => 'select',
                 'options' => $eggList,
                 'required' => true,
+                // Lets fetch the images every time the egg id changes
+                'live' => true,
             ],
             [
                 'name' => 'memory',
@@ -247,6 +259,14 @@ class Pterodactyl extends Server
                 'description' => 'Terminates the server if it breaches the memory limits. Enabling OOM killer may cause server processes to exit unexpectedly.',
                 'type' => 'checkbox',
             ],
+            [
+                'name' => 'dokcer_image',
+                'label' => 'Docker Image',
+                'type' => 'select',
+                'options' => $dockerImageList,
+                'required' => true,
+                'live' => true,
+            ],
         ];
     }
 
@@ -294,7 +314,7 @@ class Pterodactyl extends Server
             'name' => isset($settings['servername']) ? $settings['servername'] : $service->product->name . ' #' . $service->id,
             'user' => (int) $user,
             'egg' => $settings['egg_id'],
-            'docker_image' => $eggData['attributes']['docker_image'],
+            'docker_image' => $settings['docker_image'],
             'startup' => $eggData['attributes']['startup'],
             'environment' => $deploymentData['environment'],
             'skip_scripts' => $settings['skip_scripts'] ?? false,
