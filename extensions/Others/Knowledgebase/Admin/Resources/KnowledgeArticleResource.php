@@ -118,6 +118,10 @@ class KnowledgeArticleResource extends Resource
                     ->label('Published At')
                     ->dateTime()
                     ->sortable(),
+                TextColumn::make('updated_at')
+                    ->label('Updated At')
+                    ->dateTime()
+                    ->sortable(),
                 IconColumn::make('is_active')
                     ->label('Active')
                     ->boolean()

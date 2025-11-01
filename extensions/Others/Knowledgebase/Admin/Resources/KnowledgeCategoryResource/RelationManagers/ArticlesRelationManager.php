@@ -85,6 +85,10 @@ class ArticlesRelationManager extends RelationManager
                     ->label('Published At')
                     ->dateTime()
                     ->sortable(),
+                Tables\Columns\TextColumn::make('updated_at')
+                    ->label('Updated At')
+                    ->dateTime()
+                    ->sortable(),
                 Tables\Columns\IconColumn::make('is_active')
                     ->label('Active')
                     ->boolean(),
