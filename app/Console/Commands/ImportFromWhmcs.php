@@ -347,11 +347,10 @@ class ImportFromWhmcs extends Command
         $this->info('Importing config options... (' . $this->count('tblproductconfigoptions') . ' records)');
 
         $this->migrateInBatch('tblproductconfigoptions', 'SELECT * FROM tblproductconfigoptions LIMIT :limit OFFSET :offset', function ($records) {
-            $data = [];
-            $options = [];
             $planData = [];
             $priceData = [];
 
+            // First, insert parent config options and track their new IDs
             foreach ($records as $record) {
                 if (strpos($record['optionname'], '|') !== false) {
                     $environmentVariable = explode('|', $record['optionname'])[0];
@@ -360,8 +359,8 @@ class ImportFromWhmcs extends Command
                     $environmentVariable = null;
                     $name = $record['optionname'];
                 }
-                $data[] = [
-                    'id' => $record['id'],
+
+                $parentData = [
                     'name' => $name,
                     'env_variable' => $environmentVariable,
                     'type' => match ($record['optiontype']) {
@@ -377,7 +376,10 @@ class ImportFromWhmcs extends Command
                     'updated_at' => now(),
                 ];
 
-                // Get options
+                // Insert parent and get the new Laravel-generated ID
+                $newParentId = DB::table('config_options')->insertGetId($parentData);
+
+                // Get child options for this parent
                 $stmt = $this->pdo->prepare('SELECT * FROM tblproductconfigoptionssub WHERE configid = :configid');
                 $stmt->bindValue(':configid', $record['id'], PDO::PARAM_INT);
                 $stmt->execute();
@@ -391,29 +393,29 @@ class ImportFromWhmcs extends Command
                         $environmentVariable = null;
                         $name = $option['optionname'];
                     }
-                    $options[] = [
-                        'id' => $record['id'] . $option['id'],
-                        'parent_id' => $option['configid'],
+
+                    $childData = [
+                        'parent_id' => $newParentId, // Use the new Laravel-generated parent ID
                         'name' => $name,
                         'env_variable' => $environmentVariable,
                         'sort' => $option['sortorder'],
                         'created_at' => now(),
                         'updated_at' => now(),
                     ];
+
+                    // Insert child and get the new Laravel-generated ID
+                    $newChildId = DB::table('config_options')->insertGetId($childData);
+
                     // Get pricing for the option
                     $stmt2 = $this->pdo->prepare('SELECT * FROM tblpricing WHERE type = "configoptions" AND relid = :relid');
                     $stmt2->bindValue(':relid', $option['id'], PDO::PARAM_INT);
                     $stmt2->execute();
                     $prices = $stmt2->fetchAll(PDO::FETCH_ASSOC);
 
-                    $this->priceMagic($prices, $planData, $priceData, ['id' => $record['id'] . $option['id'], 'paytype' => 'recurring'], ConfigOption::class);
+                    $this->priceMagic($prices, $planData, $priceData, ['id' => $newChildId, 'paytype' => 'recurring'], ConfigOption::class);
                 }
             }
 
-            DB::table('config_options')->insert($data);
-            if (count($options) > 0) {
-                DB::table('config_options')->insert($options);
-            }
             // Insert plans and then prices
             foreach ($planData as $planKey => $plan) {
                 $planId = DB::table('plans')->insertGetId($plan);
