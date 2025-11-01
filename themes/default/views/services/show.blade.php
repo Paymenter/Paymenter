@@ -110,14 +110,14 @@
                     <!-- If the button has a function then call it when clicked -->
                     @if (isset($button['function']))
                     <x-button.primary class="h-fit !w-fit" wire:click="goto('{{ $button['function'] }}')">
-                        {{ $button['label'] }}
+                        {{ __($button['label']) }}
                     </x-button.primary>
                     @else
                     <a href="{{ $button['url'] }}"
                         @if(!empty($button['target'])) target="{{ $button['target'] }}" @endif
                         @if(($button['target'] ?? null) === '_blank') rel="noopener noreferrer" @endif>
                         <x-button.primary class="h-fit !w-fit">
-                            {{ $button['label'] }}
+                            {{ __($button['label']) }}
                         </x-button.primary>
                     </a>
                     @endif
