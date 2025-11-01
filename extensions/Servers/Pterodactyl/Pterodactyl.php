@@ -260,7 +260,7 @@ class Pterodactyl extends Server
                 'type' => 'checkbox',
             ],
             [
-                'name' => 'dokcer_image',
+                'name' => 'docker_image',
                 'label' => 'Docker Image',
                 'type' => 'select',
                 'options' => $dockerImageList,
