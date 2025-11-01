@@ -51,5 +51,6 @@ return [
     'use_for_recurring' => 'استخدام للدفع المتكرر',
     'pay_now' => 'إدفع الآن',
     'apply_credits_and_continue' => 'إستخدم الرصيد وأستمر',
+    'apply_credits_and_pay' => 'Apply Credits and Pay',
 
 ];
