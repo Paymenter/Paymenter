@@ -11,9 +11,8 @@ use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Components\Utilities\Set;
 use Filament\Schemas\Schema;
 use Filament\Tables;
-use Filament\Actions\CreateAction;
-use Filament\Actions\DeleteAction;
-use Filament\Actions\EditAction;
+use Filament\Actions\Action;
+use Paymenter\Extensions\Others\Knowledgebase\Admin\Resources\KnowledgeArticleResource;
 use Illuminate\Support\Str;
 
 class ArticlesRelationManager extends RelationManager
@@ -101,10 +100,20 @@ class ArticlesRelationManager extends RelationManager
             ->defaultSort('sort_order')
             ->reorderable('sort_order')
             ->headerActions([
-                CreateAction::make()->label('Create article'),
+                Action::make('createArticle')
+                    ->label('Create article')
+                    ->icon('heroicon-o-plus')
+                    ->url(fn() => KnowledgeArticleResource::getUrl('create', [
+                        'category' => $this->getOwnerRecord()->getKey(),
+                    ])),
             ])
             ->recordActions([
-                EditAction::make(),
+                Action::make('manage')
+                    ->label('Manage')
+                    ->icon('heroicon-o-pencil-square')
+                    ->url(fn($record) => KnowledgeArticleResource::getUrl('edit', [
+                        'record' => $record,
+                    ])),
             ]);
     }
 }
