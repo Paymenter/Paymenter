@@ -38,7 +38,7 @@
                 }
             }" class="flex flex-col gap-1 relative">
                 <label for="{{ $name }}"
-                    class="text-sm text-primary-100 w-fit start-1 ml-2 bg-background-secondary rounded-md px-2">
+                    class="mb-1 text-sm text-primary-100">
                     {{ $config->label ?? $config->name }}
                 </label>
                 <div class="relative flex items-center" :style="`--progress:${progressOption};--segments-width:${segmentsWidthOption}`" wire:ignore>

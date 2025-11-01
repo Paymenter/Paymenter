@@ -8,17 +8,14 @@
 'divClass' => null,
 'hideRequiredIndicator' => false,
 ])
-<fieldset class="flex flex-col relative w-full {{ $divClass ?? '' }}" name="{{ $name }}">
+<fieldset class="flex flex-col w-full {{ $divClass ?? '' }}" name="{{ $name }}">
     @if ($label)
-    <legend>
-        <label for="{{ $name }}"
-            class="text-sm text-primary-100 absolute -translate-y-1/2 start-1 ml-1 bg-background-secondary rounded-md px-2">
-            {{ $label }}
-            @if ($required && !$hideRequiredIndicator)
-            <span class="text-red-500">*</span>
-            @endif
-        </label>
-    </legend>
+    <label for="{{ $name }}" class="mb-1 text-sm text-primary-100">
+        {{ $label }}
+        @if ($required && !$hideRequiredIndicator)
+        <span class="text-red-500">*</span>
+        @endif
+    </label>
     @endif
 
     <div
