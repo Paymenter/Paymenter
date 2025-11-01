@@ -44,7 +44,7 @@ return [
         'active' => 'Actif',
         'cancelled' => 'Annulée',
         'suspended' => 'Suspendue',
-        'cancellation_pending' => 'Cancellation Pending',
+        'cancellation_pending' => 'Annulation en attente',
     ],
     'billing_cycles' => [
         'day' => 'jour|jours',
@@ -54,6 +54,16 @@ return [
     ],
     'every_period' => 'Chaque :period :unit',
     'price_every_period' => ':price pour :period :unit',
-    'price_one_time' => ':price one time',
-    'expires_at' => 'Expires at',
+    'price_one_time' => ':price paiement unique',
+    'expires_at' => 'Expire le',
+    'auto_pay' => 'Paiement automatique en utilisant',
+    'auto_pay_not_configured' => 'Non configuré',
+
+    'no_services' => 'Aucun service trouvé',
+    'update_billing_agreement' => 'Mettre à jour l\'accord de facturation',
+    'clear_billing_agreement' => 'Effacer l\'accord de facturation',
+    'select_billing_agreement' => 'Sélectionner l\'accord de facturation',
+
+    'remove_payment_method' => 'Supprimer le moyen de paiement',
+    'remove_payment_method_confirm' => 'Êtes-vous sûr de vouloir supprimer le mode de paiement ":name" de ce service ? Vous ne serez plus automatiquement prélevé pour ce service.',
 ];

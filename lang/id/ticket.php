@@ -14,6 +14,10 @@ return [
     'or_drag_and_drop' => 'atau seret dan lepas',
     'files_max' => 'Berkas hingga 10MB',
     'selected_files' => 'Berkas dipilh',
+    'close_ticket' => 'Close Ticket',
+    'close_ticket_confirmation' => 'Are you sure you want to close this ticket? This action cannot be undone.',
+    'close_ticket_success' => 'Ticket closed successfully.',
+    'close_ticket_already_closed' => 'This ticket is already closed.',
 
     'create_ticket' => 'Buat Tiket',
     'select_department' => 'Pilih Departemen',
@@ -27,4 +31,5 @@ return [
     'service' => 'Layanan',
     'select_service' => 'Pilih Layanan',
     'create' => 'Buat',
+    'no_tickets' => 'No tickets found',
 ];

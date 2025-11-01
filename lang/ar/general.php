@@ -1,7 +1,6 @@
 <?php
 
 return [
-    'view' => 'عرض',
 
     'input' => [
         'first_name' => 'الاسم الأول',
@@ -29,8 +28,12 @@ return [
 
         'password' => 'كلمة المرور',
         'password_placeholder' => 'كلمة مرورك',
+
+        'password_confirmation' => 'تأكيد كلمة المرور',
+        'password_confirmation_placeholder' => 'تأكيد كلمة مرورك الجديدة',
     ],
 
     'all_rights_reserved' => 'جميع الحقوق محفوظة.',
     'update' => 'تحديث',
+    'save' => 'حفظ',
 ];

@@ -1,7 +1,6 @@
 <?php
 
 return [
-    'view' => 'הצג',
 
     'input' => [
         'first_name' => 'שם פרטי',
@@ -29,8 +28,12 @@ return [
 
         'password' => 'סיסמה',
         'password_placeholder' => 'הסיסמה שלך',
+
+        'password_confirmation' => 'Confirm Password',
+        'password_confirmation_placeholder' => 'Confirm your password',
     ],
 
     'all_rights_reserved' => 'כל הזכויות שמורות.',
     'update' => 'עדכון',
+    'save' => 'Save',
 ];

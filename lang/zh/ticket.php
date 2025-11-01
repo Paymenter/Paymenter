@@ -14,6 +14,10 @@ return [
     'or_drag_and_drop' => '或拖放',
     'files_max' => '文件最大可上傳10MB',
     'selected_files' => '選擇檔案',
+    'close_ticket' => 'Close Ticket',
+    'close_ticket_confirmation' => 'Are you sure you want to close this ticket? This action cannot be undone.',
+    'close_ticket_success' => 'Ticket closed successfully.',
+    'close_ticket_already_closed' => 'This ticket is already closed.',
 
     'create_ticket' => '建立工單',
     'select_department' => '選擇部門',
@@ -27,4 +31,5 @@ return [
     'service' => '服務',
     'select_service' => '選擇服務',
     'create' => '建立',
+    'no_tickets' => 'No tickets found',
 ];

@@ -44,7 +44,7 @@ return [
         'active' => 'Activo',
         'cancelled' => 'Cancelado',
         'suspended' => 'Suspendido',
-        'cancellation_pending' => 'Cancellation Pending',
+        'cancellation_pending' => 'Cancelación pendiente',
     ],
     'billing_cycles' => [
         'day' => 'día|días',
@@ -54,6 +54,16 @@ return [
     ],
     'every_period' => 'Cada :period :unit',
     'price_every_period' => ':price por :period :unit',
-    'price_one_time' => ':price one time',
+    'price_one_time' => ':price una sola vez',
     'expires_at' => 'Vence el',
+    'auto_pay' => 'Auto paying using',
+    'auto_pay_not_configured' => 'Not configured',
+
+    'no_services' => 'No services found',
+    'update_billing_agreement' => 'Update Billing Agreement',
+    'clear_billing_agreement' => 'Clear Billing Agreement',
+    'select_billing_agreement' => 'Select Billing Agreement',
+
+    'remove_payment_method' => 'Remove Payment Method',
+    'remove_payment_method_confirm' => 'Are you sure you want to remove the payment method ":name" from this service? Your service will no longer be able to auto pay its invoices.',
 ];

@@ -44,7 +44,7 @@ return [
         'active' => 'نشط',
         'cancelled' => 'ملغاة',
         'suspended' => 'معلق',
-        'cancellation_pending' => 'Cancellation Pending',
+        'cancellation_pending' => 'الإلغاء تحت الإنتظار',
     ],
     'billing_cycles' => [
         'day' => 'يوم|أيام',
@@ -54,6 +54,16 @@ return [
     ],
     'every_period' => 'كل :period :Unit',
     'price_every_period' => ':price لكل :period :Unit',
-    'price_one_time' => ':price one time',
-    'expires_at' => 'Expires at',
+    'price_one_time' => ':price مرة واحدة',
+    'expires_at' => 'تنتهي في',
+    'auto_pay' => 'دفع تلقائي بإستخدام',
+    'auto_pay_not_configured' => 'لم يتم الإعداد',
+
+    'no_services' => 'لا توجد خدمات',
+    'update_billing_agreement' => 'تحديث اتفاقية الفوترة',
+    'clear_billing_agreement' => 'مسح اتفاقية الفوترة',
+    'select_billing_agreement' => 'اختر اتفاقية الفوترة',
+
+    'remove_payment_method' => 'إزالة طريقة الدفع',
+    'remove_payment_method_confirm' => 'هل أنت متأكد من أنك تريد إزالة طريقة الدفع ":name" من هذه الخدمة؟ لن تتمكن خدمتك بعد الآن من دفع الفواتير تلقائيًا.',
 ];

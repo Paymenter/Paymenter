@@ -1,7 +1,6 @@
 <?php
 
 return [
-    'view' => 'Weergeven',
 
     'input' => [
         'first_name' => 'Voornaam',
@@ -29,8 +28,12 @@ return [
 
         'password' => 'Wachtwoord',
         'password_placeholder' => 'Uw wachtwoord',
+
+        'password_confirmation' => 'Confirm Password',
+        'password_confirmation_placeholder' => 'Confirm your password',
     ],
 
     'all_rights_reserved' => 'Alle rechten voorbehouden.',
     'update' => 'Update',
+    'save' => 'Save',
 ];

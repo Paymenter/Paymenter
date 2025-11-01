@@ -14,6 +14,10 @@ return [
     'or_drag_and_drop' => 'eller dra och släpp',
     'files_max' => 'Filer upp till 10MB',
     'selected_files' => 'Valda filer',
+    'close_ticket' => 'Close Ticket',
+    'close_ticket_confirmation' => 'Are you sure you want to close this ticket? This action cannot be undone.',
+    'close_ticket_success' => 'Ticket closed successfully.',
+    'close_ticket_already_closed' => 'This ticket is already closed.',
 
     'create_ticket' => 'Skapa ärende',
     'select_department' => 'Välj avdelning',
@@ -27,4 +31,5 @@ return [
     'service' => 'Tjänst',
     'select_service' => 'Välj tjänst',
     'create' => 'Skapa',
+    'no_tickets' => 'No tickets found',
 ];
