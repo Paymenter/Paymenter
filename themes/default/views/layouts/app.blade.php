@@ -26,9 +26,16 @@
     <meta content="{{ $description }}" property="og:description">
     <meta content="{{ $description }}" name="description">
     @endisset
+    @isset($keywords)
+    <meta content="{{ $keywords }}" name="keywords">
+    @endisset
     @isset($image)
     <meta content="{{ $image }}" property="og:image">
     <meta content="{{ $image }}" name="image">
+    @endisset
+    @isset($canonical)
+    <link rel="canonical" href="{{ $canonical }}">
+    <meta content="{{ $canonical }}" property="og:url">
     @endisset
 
     <meta name="theme-color" content="{{ theme('primary') }}">

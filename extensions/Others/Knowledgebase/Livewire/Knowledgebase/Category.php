@@ -3,6 +3,7 @@
 namespace Paymenter\Extensions\Others\Knowledgebase\Livewire\Knowledgebase;
 
 use App\Livewire\Component;
+use Illuminate\Support\Str;
 use Paymenter\Extensions\Others\Knowledgebase\Models\KnowledgeCategory;
 
 class Category extends Component
@@ -20,9 +21,29 @@ class Category extends Component
 
     public function render()
     {
+        $category = $this->category;
+
+        $description = Str::of($category->description ?? '')
+            ->stripTags()
+            ->squish()
+            ->limit(160)
+            ->toString();
+
+        $articles = $category->publishedArticles;
+
+        $keywords = collect([$category->name])
+            ->merge($articles->pluck('title')->take(5))
+            ->filter()
+            ->implode(', ');
+
         return view('knowledgebase::category', [
-            'category' => $this->category,
-            'articles' => $this->category->publishedArticles,
+            'category' => $category,
+            'articles' => $articles,
+        ])->layoutData([
+            'title' => $category->name,
+            'description' => $description,
+            'keywords' => $keywords,
+            'canonical' => route('knowledgebase.category', $category),
         ]);
     }
 }
