@@ -6,6 +6,6 @@ return [
     'sent' => 'Şifre sıfırlama bağlantısı e-posta adresinize gönderildi.',
     'throttled' => 'Yeniden denemeden önce lütfen bir süre bekleyin.',
     'token' => 'Şifre sıfırlama kodu geçersiz.',
-    'user' => "Bu e-posta adresine sahip bir kullanıcı bulunamadı.",
+    'user' => 'Bu e-posta adresine sahip bir kullanıcı bulunamadı.',
 
 ];
