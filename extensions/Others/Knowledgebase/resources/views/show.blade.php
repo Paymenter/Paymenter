@@ -3,8 +3,9 @@
         <div
             class="rounded-lg border border-neutral bg-background-secondary hover:bg-background-secondary/80 p-4 transition">
             <div class="flex flex-col gap-3">
-                <div class="flex items-center justify-between gap-4">
-                    <div class="space-y-2">
+                <div
+                    class="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between sm:gap-6">
+                    <div class="space-y-2 min-w-0">
                         <span
                             class="text-xs uppercase tracking-wide text-primary-600">{{ $article->category->name }}</span>
                         <h1 class="text-2xl font-semibold text-base">{{ $article->title }}</h1>
@@ -12,7 +13,7 @@
                             <p class="text-sm text-base/70">{{ $article->summary }}</p>
                         @endif
                     </div>
-                    <div class="text-sm text-base/60 flex flex-col items-end gap-1">
+                    <div class="text-sm text-base/60 flex flex-col items-end gap-1 shrink-0 whitespace-nowrap">
                         @if ($article->published_at)
                             <span>{{ $article->published_at->timezone(config('app.timezone'))->translatedFormat('M d, Y') }}</span>
                         @endif
