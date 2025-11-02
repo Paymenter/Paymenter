@@ -4,11 +4,20 @@ namespace Paymenter\Extensions\Others\Knowledgebase\Livewire\Knowledgebase;
 
 use App\Livewire\Component;
 use Illuminate\Support\Str;
+use Livewire\Attributes\Url;
+use Livewire\WithPagination;
 use Paymenter\Extensions\Others\Knowledgebase\Models\KnowledgeCategory;
+use Paymenter\Extensions\Others\Knowledgebase\Traits\InteractsWithKnowledgebaseSearch;
 
 class Category extends Component
 {
+    use WithPagination;
+    use InteractsWithKnowledgebaseSearch;
+
     public KnowledgeCategory $category;
+
+    #[Url(except: '')]
+    public string $search = '';
 
     public function mount(KnowledgeCategory $category)
     {
@@ -29,6 +38,9 @@ class Category extends Component
     {
         $category = $this->category;
 
+        $searchTerm = $this->resolveSearchTerm();
+        $searchResults = $this->fetchSearchResults($searchTerm);
+
         $description = Str::of($category->description ?? '')
             ->stripTags()
             ->squish()
@@ -48,6 +60,8 @@ class Category extends Component
             'category' => $category,
             'articles' => $articles,
             'children' => $children,
+            'searchTerm' => $searchTerm,
+            'searchResults' => $searchResults,
         ])->layoutData([
             'title' => $category->name,
             'description' => $description,
