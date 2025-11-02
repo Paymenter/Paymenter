@@ -65,11 +65,18 @@
                         <span class="text-yellow-500">{{ __('invoices.payment_pending') }}</span>
                         @endif
                     </div>
-                    <x-button.primary wire:click="$set('showPayModal', true)" class="mt-2" wire:loading.attr="disabled"
-                        wire:target="$set('showPayModal')">
-                        <span wire:loading wire:target="pay">Processing...</span>
-                        <span wire:loading.remove wire:target="pay">Pay</span>
-                    </x-button.primary>
+                    <div class="flex items-center justify-center gap-4 mt-2">
+                        <x-button.primary wire:click="$set('showPayModal', true)" class="mt-2" wire:loading.attr="disabled"
+                            wire:target="$set('showPayModal')">
+                            <span wire:loading wire:target="pay">Processing...</span>
+                            <span wire:loading.remove wire:target="pay">Pay</span>
+                        </x-button.primary>
+                        @if ($this->isCancellable())
+                            <x-button.danger wire:confirm="Are you sure?" class="mt-2" wire:click="cancelOrder">
+                                {{ __('services.cancel') }}
+                            </x-button.danger>
+                        @endif
+                    </div>
                     @endif
                     @endif
                 </div>

@@ -69,25 +69,31 @@
             <div>
                 <h4 class="text-lg font-semibold">{{ __('services.actions') }}:</h4>
                 <div class="mt-2 flex flex-row gap-2 flex-wrap">
-                    @if($service->upgradable)
-                    <a href="{{ route('services.upgrade', $service->id) }}">
-                        <x-button.primary class="h-fit !w-fit">
+                    @if($service->status == 'pending')
+                        <x-button.danger class="h-fit !w-fit" wire:confirm="Are you sure?" wire:click="cancelPendingService">
+                            <span>{{ __('services.cancel') }}</span>
+                        </x-button.danger>
+                    @else
+                        @if($service->upgradable)
+                        <a href="{{ route('services.upgrade', $service->id) }}">
+                            <x-button.primary class="h-fit !w-fit">
+                                <span>{{ __('services.upgrade') }}</span>
+                            </x-button.primary>
+                        </a>
+                        @endif
+                        @if($service->upgrade()->where('status', 'pending')->exists())
+                        <x-button.primary class="h-fit !w-fit"
+                            @click="Alpine.store('notifications').addNotification([{message: '{{ __('services.upgrade_pending') }}', type: 'error'}])">
                             <span>{{ __('services.upgrade') }}</span>
                         </x-button.primary>
-                    </a>
-                    @endif
-                    @if($service->upgrade()->where('status', 'pending')->exists())
-                    <x-button.primary class="h-fit !w-fit"
-                        @click="Alpine.store('notifications').addNotification([{message: '{{ __('services.upgrade_pending') }}', type: 'error'}])">
-                        <span>{{ __('services.upgrade') }}</span>
-                    </x-button.primary>
-                    @endif
-                    @if($service->cancellable)
-                    <x-button.danger class="h-fit !w-fit" wire:click="$set('showCancel', true)">
-                        <span wire:loading.remove wire:target="$set('showCancel', true)">{{ __('services.cancel')
-                            }}</span>
-                        <x-loading target="$set('showCancel', true)" />
-                    </x-button.danger>
+                        @endif
+                        @if($service->cancellable)
+                        <x-button.danger class="h-fit !w-fit" wire:click="$set('showCancel', true)">
+                            <span wire:loading.remove wire:target="$set('showCancel', true)">{{ __('services.cancel')
+                                }}</span>
+                            <x-loading target="$set('showCancel', true)" />
+                        </x-button.danger>
+                        @endif
                     @endif
                     @if($showCancel)
                     <x-modal open="true"

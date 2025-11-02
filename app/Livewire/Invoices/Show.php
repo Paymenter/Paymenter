@@ -32,6 +32,22 @@ class Show extends Component
 
     public $setAsDefault = false;
 
+    #[Computed]
+    public function isCancellable(): bool
+    {
+        if ($this->invoice->status !== Invoice::STATUS_PENDING) {
+            return false;
+        }
+
+        $services = $this->invoice->items()->where('reference_type', Service::class)->get();
+
+        if ($services->isEmpty()) {
+            return false;
+        }
+
+        return $services->every(fn ($item) => $item->reference && $item->reference->status === Service::STATUS_PENDING);
+    }
+
     public function mount()
     {
         if (Request::has('checkPayment') && $this->invoice->status === 'pending') {
@@ -243,5 +259,32 @@ class Show extends Component
         return response()->streamDownload(function () {
             echo PDF::generateInvoice($this->invoice)->stream();
         }, 'invoice-' . ($this->invoice->number ?? $this->invoice->id) . '.pdf');
+    }
+
+
+    public function cancelOrder()
+    {
+        if (!$this->isCancellable()) {
+            return;
+        }
+
+        $this->invoice->items()->where('reference_type', Service::class)->get()->each(function ($item) {
+            if ($item->reference && $item->reference instanceof Service) {
+                $service = $item->reference;
+                $product = $service->product;
+
+                if ($product && !is_null($product->stock)) {
+                    $product->increment('stock', $service->quantity);
+                }
+
+                $service->update(['status' => Service::STATUS_CANCELLED]);
+            }
+        });
+
+        $this->invoice->update(['status' => Invoice::STATUS_CANCELLED]);
+
+        $this->notify(__('services.statuses.cancelled'), 'success', true);
+
+        return $this->redirect(route('dashboard'), true);
     }
 }

@@ -56,6 +56,28 @@ class Show extends Component
         }
     }
 
+    public function cancelPendingService()
+    {
+        $this->authorize('update', $this->service);
+
+        if ($this->service->status !== Service::STATUS_PENDING) {
+            return;
+        }
+
+        $product = $this->service->product;
+        if ($product && !is_null($product->stock)) {
+            $product->increment('stock', $this->service->quantity);
+        }
+
+        $this->service->invoices()->where('status', 'pending')->update(['status' => 'cancelled']);
+
+        $this->service->update(['status' => 'cancelled']);
+
+        $this->notify(__('services.statuses.cancelled'), 'success', true);
+
+        return $this->redirect(route('services'), true);
+    }
+
     public function updatedShowBillingAgreement()
     {
         $this->selectedMethod = Auth::user()->billingAgreements()->where('id', $this->service->billing_agreement_id)?->first()?->ulid;
