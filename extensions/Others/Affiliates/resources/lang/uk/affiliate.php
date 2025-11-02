@@ -1,19 +1,19 @@
 <?php
 
 return [
-    'affiliate' => 'Affiliate',
-    'signup-for-affiliate' => 'Signup for Affiliate',
-    'code' => 'Code',
-    'visitors' => 'Visitors',
-    'total-visitors' => 'Total Visitors',
-    'signups' => 'Signups',
-    'total-signups' => 'Total Signups',
-    'earnings' => 'Earnings',
-    'total-earnings' => 'Total Earnings',
-    'your-affiliate-link' => 'Your affiliate link',
-    'copy' => 'Copy',
+    'affiliate' => 'Партнерська програма',
+    'signup-for-affiliate' => 'Зареєструватися в партнерській програмі',
+    'code' => 'Код',
+    'visitors' => 'Відвідувачі',
+    'total-visitors' => 'Всього відвідувачів',
+    'signups' => 'Реєстрації',
+    'total-signups' => 'Всього реєстрацій',
+    'earnings' => 'Заробіток',
+    'total-earnings' => 'Загальний заробіток',
+    'your-affiliate-link' => 'Ваше партнерське посилання',
+    'copy' => 'Копіювати',
 
-    'you-havent-signed-up-yet' => 'You have not signed up for affiliates program yet!',
-    'you-are-already-affiliated' => 'You have already signed up for affiliate program.',
-    'signup-success' => 'Successfully signed up for affiliate program!',
+    'you-havent-signed-up-yet' => 'Ви ще не зареєстровані в партнерській програмі!',
+    'you-are-already-affiliated' => 'Ви вже зареєстровані в партнерській програмі.',
+    'signup-success' => 'Ви успішно зареєструвалися в партнерській програмі!',
 ];
