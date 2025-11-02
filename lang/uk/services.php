@@ -65,5 +65,5 @@ return [
     'select_billing_agreement' => 'Виберіть платіжну угоду',
 
     'remove_payment_method' => 'Видалити спосіб оплати',
-    'remove_payment_method_confirm' => 'Are you sure you want to remove the payment method ":name" from this service? Your service will no longer be able to auto pay its invoices.',
+    'remove_payment_method_confirm' => 'Ви дійсно бажаєте видалити платіжний метод ":name" з цього сервісу? Ваша служба більше не зможе автоматично сплачувати рахунки-фактури.',
 ];
