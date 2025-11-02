@@ -57,9 +57,27 @@ class KnowledgeCategory extends Model
     {
         return $query->where(function (Builder $query) {
             $query->whereHas('publishedArticles')
-                ->orWhereHas('children', fn(Builder $childQuery) => $childQuery
+                ->orWhereHas('children', fn (Builder $childQuery) => $childQuery
                     ->active()
                     ->whereHas('publishedArticles'));
+        });
+    }
+
+    public function scopeMatchesSearchTerm(Builder $query, string $term): Builder
+    {
+        $term = trim($term);
+
+        if ($term === '') {
+            return $query;
+        }
+
+        $like = '%' . $term . '%';
+
+        return $query->where(function (Builder $query) use ($term, $like) {
+            $query->where('name', 'like', $like)
+                ->orWhere('description', 'like', $like)
+                ->orWhereHas('publishedArticles', fn (Builder $articleQuery) => $articleQuery->search($term))
+                ->orWhereHas('children', fn (Builder $childQuery) => $childQuery->matchesSearchTerm($term));
         });
     }
 

@@ -16,6 +16,8 @@ return [
     'view_article' => 'View article',
     'view_articles' => 'View articles',
     'subcategories' => 'Subcategories',
+    'clear_search' => 'Clear search',
+    'searching' => 'Searching...',
     'previous_article' => 'Previous article',
     'next_article' => 'Next article',
     'previous' => 'Previous',
