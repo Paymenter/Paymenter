@@ -14,6 +14,7 @@ return [
     'no_results' => 'No articles matched your search.',
     'results_count' => '{0} No items|{1} :count item|[2,*] :count items',
     'view_article' => 'View article',
+    'download_article' => 'Download PDF',
     'view_articles' => 'View articles',
     'subcategories' => 'Subcategories',
     'clear_search' => 'Clear search',

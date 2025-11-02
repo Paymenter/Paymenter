@@ -31,6 +31,13 @@ class Knowledgebase extends Extension
                     'type' => 'placeholder',
                     'label' => new HtmlString('Use this extension to publish knowledge base articles. Manage them from <a class="text-primary-600" href="' . KnowledgeArticleResource::getUrl() . '">Knowledge Base</a>.'),
                 ],
+                [
+                    'name' => 'allow_downloads',
+                    'type' => 'checkbox',
+                    'label' => 'Allow article downloads',
+                    'default' => true,
+                    'description' => 'Show a download button on articles and enable PDF exports for clients.',
+                ],
             ];
         } catch (\Throwable $e) {
             return [
