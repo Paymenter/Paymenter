@@ -30,6 +30,8 @@ class KnowledgeCategoryResource extends Resource
 
     protected static ?string $breadcrumb = 'Knowledgebase';
 
+    protected static ?string $slug = 'knowledgebase';
+
     protected static string|\BackedEnum|null $navigationIcon = 'ri-book-2-line';
 
     protected static string|\BackedEnum|null $activeNavigationIcon = 'ri-book-2-fill';

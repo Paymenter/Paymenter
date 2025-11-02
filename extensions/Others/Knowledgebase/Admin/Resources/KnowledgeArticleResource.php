@@ -31,6 +31,8 @@ class KnowledgeArticleResource extends Resource
 
     protected static bool $shouldRegisterNavigation = false;
 
+    protected static ?string $slug = 'knowledgebase/articles';
+
     protected static string|\BackedEnum|null $navigationIcon = 'ri-file-text-line';
 
     protected static string|\BackedEnum|null $activeNavigationIcon = 'ri-file-text-fill';
