@@ -14,6 +14,7 @@ class ConfigOption extends Model implements Auditable
 
     protected $fillable = [
         'name',
+        'description',
         'env_variable',
         'type',
         'sort',
