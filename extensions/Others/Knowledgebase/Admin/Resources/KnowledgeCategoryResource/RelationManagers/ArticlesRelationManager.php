@@ -55,10 +55,6 @@ class ArticlesRelationManager extends RelationManager
                 DateTimePicker::make('published_at')
                     ->label('Publish At')
                     ->seconds(false),
-                TextInput::make('sort_order')
-                    ->label('Sort Order')
-                    ->numeric()
-                    ->default(0),
                 TextInput::make('view_count')
                     ->label('View Count')
                     ->numeric()
@@ -75,6 +71,8 @@ class ArticlesRelationManager extends RelationManager
     public function table(Tables\Table $table): Tables\Table
     {
         return $table
+            ->reorderable('sort_order')
+            ->defaultSort('sort_order')
             ->columns([
                 Tables\Columns\TextColumn::make('title')
                     ->label('Title')

@@ -88,10 +88,6 @@ class KnowledgeArticleResource extends Resource
                     ->label('Publish At')
                     ->seconds(false)
                     ->default(now()),
-                TextInput::make('sort_order')
-                    ->label('Sort Order')
-                    ->numeric()
-                    ->default(0),
                 TextInput::make('view_count')
                     ->label('View Count')
                     ->numeric()
@@ -109,6 +105,7 @@ class KnowledgeArticleResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+            ->reorderable('sort_order')
             ->columns([
                 TextColumn::make('title')
                     ->label('Title')
@@ -136,7 +133,7 @@ class KnowledgeArticleResource extends Resource
                     ->badge()
                     ->formatStateUsing(fn (?int $state) => $state ?? 0),
             ])
-            ->defaultSort('published_at', 'desc')
+            ->defaultSort('sort_order')
             ->filters([
                 SelectFilter::make('category_id')
                     ->label('Category')

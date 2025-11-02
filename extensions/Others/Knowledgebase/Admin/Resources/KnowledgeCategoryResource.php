@@ -82,11 +82,6 @@ class KnowledgeCategoryResource extends Resource
                     ->label('Description')
                     ->placeholder('Optional description displayed to users')
                     ->columnSpanFull(),
-                TextInput::make('sort_order')
-                    ->label('Sort Order')
-                    ->numeric()
-                    ->default(0)
-                    ->columnSpan(1),
                 Select::make('is_active')
                     ->label('Visible to clients')
                     ->options([
@@ -107,6 +102,7 @@ class KnowledgeCategoryResource extends Resource
         }
 
         return $table
+            ->reorderable('sort_order')
             ->columns([
                 TextColumn::make('name')
                     ->label('Name')
@@ -121,9 +117,6 @@ class KnowledgeCategoryResource extends Resource
                     ->label('Parent')
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                TextColumn::make('sort_order')
-                    ->label('Order')
-                    ->sortable(),
                 TextColumn::make('articles_count')
                     ->label('Articles')
                     ->counts('articles')
