@@ -33,7 +33,8 @@
                                             <div class="flex items-start justify-between gap-4">
                                                 <div class="flex flex-col gap-1">
                                                     <a href="{{ route('knowledgebase.category', $result->category) }}"
-                                                        wire:navigate class="text-xs uppercase text-base/60 hover:text-primary">
+                                                        wire:navigate
+                                                        class="text-xs uppercase text-base/60 hover:text-primary">
                                                         {{ $result->category->name }}
                                                     </a>
                                                     <a href="{{ route('knowledgebase.show', $result) }}" wire:navigate

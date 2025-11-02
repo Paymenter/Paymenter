@@ -2,6 +2,7 @@
 
 namespace Paymenter\Extensions\Others\Knowledgebase\Admin\Resources\KnowledgeCategoryResource\RelationManagers;
 
+use Filament\Actions\Action;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Select;
@@ -11,9 +12,8 @@ use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Components\Utilities\Set;
 use Filament\Schemas\Schema;
 use Filament\Tables;
-use Filament\Actions\Action;
-use Paymenter\Extensions\Others\Knowledgebase\Admin\Resources\KnowledgeArticleResource;
 use Illuminate\Support\Str;
+use Paymenter\Extensions\Others\Knowledgebase\Admin\Resources\KnowledgeArticleResource;
 
 class ArticlesRelationManager extends RelationManager
 {
@@ -95,14 +95,14 @@ class ArticlesRelationManager extends RelationManager
                     ->label('Views')
                     ->sortable()
                     ->badge()
-                    ->formatStateUsing(fn(?int $state) => $state ?? 0),
+                    ->formatStateUsing(fn (?int $state) => $state ?? 0),
             ])
             ->defaultSort('sort_order')
             ->headerActions([
                 Action::make('createArticle')
                     ->label('Create article')
                     ->icon('heroicon-o-plus')
-                    ->url(fn() => KnowledgeArticleResource::getUrl('create', [
+                    ->url(fn () => KnowledgeArticleResource::getUrl('create', [
                         'category' => $this->getOwnerRecord()->getKey(),
                     ])),
             ])
@@ -110,7 +110,7 @@ class ArticlesRelationManager extends RelationManager
                 Action::make('manage')
                     ->label('Manage')
                     ->icon('heroicon-o-pencil-square')
-                    ->url(fn($record) => KnowledgeArticleResource::getUrl('edit', [
+                    ->url(fn ($record) => KnowledgeArticleResource::getUrl('edit', [
                         'record' => $record,
                     ])),
             ]);

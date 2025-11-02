@@ -22,7 +22,8 @@
             @if ($searchTerm !== '' && $searchResults)
                 <div class="mt-3 rounded-lg border border-neutral bg-background-secondary p-4">
                     <div class="flex flex-wrap items-center justify-between gap-2">
-                        <h2 class="text-lg font-semibold">{{ __('knowledgebase::messages.search_results_heading') }}</h2>
+                        <h2 class="text-lg font-semibold">{{ __('knowledgebase::messages.search_results_heading') }}
+                        </h2>
                         <span
                             class="text-xs text-base/60">{{ trans_choice('knowledgebase::messages.results_count', $searchResults->total(), ['count' => $searchResults->total()]) }}</span>
                     </div>
@@ -39,7 +40,8 @@
                                             <div class="flex items-start justify-between gap-4">
                                                 <div class="flex flex-col gap-1">
                                                     <a href="{{ route('knowledgebase.category', $result->category) }}"
-                                                        wire:navigate class="text-xs uppercase text-base/60 hover:text-primary">
+                                                        wire:navigate
+                                                        class="text-xs uppercase text-base/60 hover:text-primary">
                                                         {{ $result->category->name }}
                                                     </a>
                                                     <a href="{{ route('knowledgebase.show', $result) }}" wire:navigate
@@ -89,7 +91,8 @@
         @if ($searchTerm === '')
             @if ($children->isNotEmpty())
                 <div class="flex flex-col gap-4">
-                    <span class="text-xs font-semibold uppercase text-base/50">{{ __('knowledgebase::messages.subcategories') }}</span>
+                    <span
+                        class="text-xs font-semibold uppercase text-base/50">{{ __('knowledgebase::messages.subcategories') }}</span>
                     <div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
                         @foreach ($children as $child)
                             <div
@@ -110,13 +113,15 @@
                                             </p>
                                         @endif
                                     </div>
-                                    <span class="rounded-full bg-primary-600/10 px-3 py-1 text-xs font-medium text-primary-600">
+                                    <span
+                                        class="rounded-full bg-primary-600/10 px-3 py-1 text-xs font-medium text-primary-600">
                                         {{ trans_choice('knowledgebase::messages.articles_count', $childArticlesCount, ['count' => $childArticlesCount]) }}
                                     </span>
                                 </div>
 
                                 <div>
-                                    <a href="{{ route('knowledgebase.category', $child) }}" wire:navigate class="block">
+                                    <a href="{{ route('knowledgebase.category', $child) }}" wire:navigate
+                                        class="block">
                                         <x-button.primary class="w-full">
                                             {{ __('knowledgebase::messages.view_articles') }}
                                         </x-button.primary>
@@ -142,7 +147,9 @@
                                 @endif
                             </div>
                             @php
-                                $preview = \Illuminate\Support\Str::of($article->summary ?: strip_tags($article->content))
+                                $preview = \Illuminate\Support\Str::of(
+                                    $article->summary ?: strip_tags($article->content),
+                                )
                                     ->squish()
                                     ->limit(220);
                             @endphp
@@ -167,4 +174,3 @@
         @endif
     </div>
 </div>
-

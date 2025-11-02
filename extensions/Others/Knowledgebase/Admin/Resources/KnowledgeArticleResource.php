@@ -50,9 +50,9 @@ class KnowledgeArticleResource extends Resource
                     ->relationship('category', 'name')
                     ->searchable()
                     ->preload()
-                    ->default(fn() => request()->integer('category'))
-                    ->required(fn() => !request()->filled('category'))
-                    ->hidden(fn() => request()->filled('category')),
+                    ->default(fn () => request()->integer('category'))
+                    ->required(fn () => !request()->filled('category'))
+                    ->hidden(fn () => request()->filled('category')),
                 TextInput::make('title')
                     ->label('Title')
                     ->required()
@@ -134,13 +134,13 @@ class KnowledgeArticleResource extends Resource
                     ->label('Views')
                     ->sortable()
                     ->badge()
-                    ->formatStateUsing(fn(?int $state) => $state ?? 0),
+                    ->formatStateUsing(fn (?int $state) => $state ?? 0),
             ])
             ->defaultSort('published_at', 'desc')
             ->filters([
                 SelectFilter::make('category_id')
                     ->label('Category')
-                    ->options(fn() => KnowledgeCategory::query()->pluck('name', 'id')->all()),
+                    ->options(fn () => KnowledgeCategory::query()->pluck('name', 'id')->all()),
                 SelectFilter::make('is_active')
                     ->label('Active Status')
                     ->options([

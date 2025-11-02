@@ -90,7 +90,7 @@ class KnowledgeArticle extends Model
             ->ordered()
             ->get();
 
-        $index = $siblings->search(fn(KnowledgeArticle $item) => $item->id === $this->id);
+        $index = $siblings->search(fn (KnowledgeArticle $item) => $item->id === $this->id);
 
         if ($index === false) {
             return [null, null];

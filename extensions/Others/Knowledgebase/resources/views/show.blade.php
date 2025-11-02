@@ -3,8 +3,7 @@
         <div
             class="rounded-lg border border-neutral bg-background-secondary hover:bg-background-secondary/80 p-4 transition">
             <div class="flex flex-col gap-3">
-                <div
-                    class="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between sm:gap-6">
+                <div class="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between sm:gap-6">
                     <div class="space-y-2 min-w-0">
                         <span
                             class="text-xs uppercase tracking-wide text-primary-600">{{ $article->category->name }}</span>

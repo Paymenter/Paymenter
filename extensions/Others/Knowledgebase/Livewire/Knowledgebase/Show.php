@@ -9,7 +9,9 @@ use Paymenter\Extensions\Others\Knowledgebase\Models\KnowledgeArticle;
 class Show extends Component
 {
     public KnowledgeArticle $article;
+
     public ?KnowledgeArticle $previousArticle = null;
+
     public ?KnowledgeArticle $nextArticle = null;
 
     public function mount(KnowledgeArticle $article): void

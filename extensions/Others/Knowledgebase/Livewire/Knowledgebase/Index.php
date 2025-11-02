@@ -12,6 +12,7 @@ use Paymenter\Extensions\Others\Knowledgebase\Models\KnowledgeCategory;
 class Index extends Component
 {
     use WithPagination;
+
     public function mount()
     {
         if (!KnowledgeCategory::visible()->exists()) {
@@ -37,10 +38,10 @@ class Index extends Component
             ->ordered()
             ->withCount(['publishedArticles as articles_count'])
             ->with([
-                'children' => fn($query) => $query->visible()
+                'children' => fn ($query) => $query->visible()
                     ->ordered()
                     ->withCount(['publishedArticles as articles_count']),
-                'publishedArticles' => fn($query) => $query->ordered()->limit(5),
+                'publishedArticles' => fn ($query) => $query->ordered()->limit(5),
             ])
             ->get()
             ->each(function (KnowledgeCategory $category) {

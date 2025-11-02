@@ -8,6 +8,7 @@ use Filament\Actions\EditAction;
 use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
+use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
 use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Components\Utilities\Set;
@@ -17,7 +18,6 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Support\Facades\Schema as SchemaFacade;
 use Illuminate\Support\Str;
-use Filament\Notifications\Notification;
 use Paymenter\Extensions\Others\Knowledgebase\Admin\Resources\KnowledgeCategoryResource\Pages\CreateKnowledgeCategory;
 use Paymenter\Extensions\Others\Knowledgebase\Admin\Resources\KnowledgeCategoryResource\Pages\EditKnowledgeCategory;
 use Paymenter\Extensions\Others\Knowledgebase\Admin\Resources\KnowledgeCategoryResource\Pages\ListKnowledgeCategories;
@@ -44,7 +44,7 @@ class KnowledgeCategoryResource extends Resource
 
     public static function form(Schema $schema): Schema
     {
-        if (! SchemaFacade::hasTable('ext_kb_categories')) {
+        if (!SchemaFacade::hasTable('ext_kb_categories')) {
             return $schema->components([]);
         }
 
@@ -102,7 +102,7 @@ class KnowledgeCategoryResource extends Resource
 
     public static function table(Table $table): Table
     {
-        if (! SchemaFacade::hasTable('ext_kb_categories')) {
+        if (!SchemaFacade::hasTable('ext_kb_categories')) {
             return $table->columns([]);
         }
 
@@ -141,9 +141,9 @@ class KnowledgeCategoryResource extends Resource
                 BulkActionGroup::make([
                     DeleteBulkAction::make()
                         ->tooltip('Remove all articles from the selected categories before deleting them.')
-                        ->disabled(fn($records) => $records->contains(fn($record) => $record->articles()->exists()))
+                        ->disabled(fn ($records) => $records->contains(fn ($record) => $record->articles()->exists()))
                         ->before(function (DeleteBulkAction $action, $records) {
-                            $blocked = collect($records)->filter(fn($record) => $record->articles()->exists());
+                            $blocked = collect($records)->filter(fn ($record) => $record->articles()->exists());
 
                             if ($blocked->isEmpty()) {
                                 return;

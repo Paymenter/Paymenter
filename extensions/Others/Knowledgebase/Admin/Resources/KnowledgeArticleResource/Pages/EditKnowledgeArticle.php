@@ -25,7 +25,7 @@ class EditKnowledgeArticle extends EditRecord
         return $this->getRecord()->title ?? 'Article';
     }
 
-    public function getSubheading(): string | Htmlable | null
+    public function getSubheading(): string|Htmlable|null
     {
         return null;
     }

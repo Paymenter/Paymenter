@@ -11,8 +11,8 @@ use Paymenter\Extensions\Others\Knowledgebase\Traits\InteractsWithKnowledgebaseS
 
 class Category extends Component
 {
-    use WithPagination;
     use InteractsWithKnowledgebaseSearch;
+    use WithPagination;
 
     public KnowledgeCategory $category;
 
@@ -22,14 +22,14 @@ class Category extends Component
     public function mount(KnowledgeCategory $category)
     {
         $category->load([
-            'publishedArticles' => fn($query) => $query->ordered(),
-            'children' => fn($query) => $query->visible()->ordered()->with(['publishedArticles' => fn($q) => $q->ordered()]),
+            'publishedArticles' => fn ($query) => $query->ordered(),
+            'children' => fn ($query) => $query->visible()->ordered()->with(['publishedArticles' => fn ($q) => $q->ordered()]),
             'parent',
         ]);
 
         $hasVisibleContent = $category->publishedArticles->isNotEmpty() || $category->children->isNotEmpty();
 
-        abort_if(!$category->is_active || ! $hasVisibleContent, 404);
+        abort_if(!$category->is_active || !$hasVisibleContent, 404);
 
         $this->category = $category;
     }
