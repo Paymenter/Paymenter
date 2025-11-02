@@ -12,6 +12,47 @@
             @endif
         </div>
 
+        @if ($children->isNotEmpty())
+            <div class="flex flex-col gap-4">
+                <span class="text-xs font-semibold uppercase text-base/50">{{ __('knowledgebase::messages.subcategories') }}</span>
+                <div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+                    @foreach ($children as $child)
+                        <div
+                            class="rounded-lg border border-neutral bg-background-secondary hover:bg-background-secondary/80 p-4 transition flex flex-col gap-4">
+                            @php
+                                $childDescription = \Illuminate\Support\Str::of($child->description ?? '')
+                                    ->stripTags()
+                                    ->squish();
+                                $childArticlesCount = $child->publishedArticles->count();
+                            @endphp
+
+                            <div class="flex flex-1 items-start justify-between gap-4">
+                                <div class="flex flex-col gap-3">
+                                    <h2 class="text-xl font-semibold">{{ $child->name }}</h2>
+                                    @if ($childDescription->isNotEmpty())
+                                        <p class="text-sm text-base/70">
+                                            {{ $childDescription->limit(180) }}
+                                        </p>
+                                    @endif
+                                </div>
+                                <span class="rounded-full bg-primary-600/10 px-3 py-1 text-xs font-medium text-primary-600">
+                                    {{ trans_choice('knowledgebase::messages.articles_count', $childArticlesCount, ['count' => $childArticlesCount]) }}
+                                </span>
+                            </div>
+
+                            <div>
+                                <a href="{{ route('knowledgebase.category', $child) }}" wire:navigate class="block">
+                                    <x-button.primary class="w-full">
+                                        {{ __('knowledgebase::messages.view_articles') }}
+                                    </x-button.primary>
+                                </a>
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+            </div>
+        @endif
+
         <div class="space-y-4">
             @foreach ($articles as $article)
                 <div

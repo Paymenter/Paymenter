@@ -15,6 +15,7 @@ return [
     'results_count' => '{0} No items|{1} :count item|[2,*] :count items',
     'view_article' => 'View article',
     'view_articles' => 'View articles',
+    'subcategories' => 'Subcategories',
     'previous_article' => 'Previous article',
     'next_article' => 'Next article',
     'previous' => 'Previous',

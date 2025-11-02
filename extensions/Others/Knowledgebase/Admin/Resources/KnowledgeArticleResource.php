@@ -48,7 +48,9 @@ class KnowledgeArticleResource extends Resource
                     ->relationship('category', 'name')
                     ->searchable()
                     ->preload()
-                    ->required(),
+                    ->default(fn() => request()->integer('category'))
+                    ->required(fn() => !request()->filled('category'))
+                    ->hidden(fn() => request()->filled('category')),
                 TextInput::make('title')
                     ->label('Title')
                     ->required()

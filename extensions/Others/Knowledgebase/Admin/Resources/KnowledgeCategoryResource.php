@@ -66,6 +66,16 @@ class KnowledgeCategoryResource extends Resource
                     ->required()
                     ->maxLength(255)
                     ->placeholder('Unique slug for the category'),
+                Select::make('parent_id')
+                    ->label('Parent Category')
+                    ->searchable()
+                    ->preload()
+                    ->options(fn () => KnowledgeCategory::query()
+                        ->orderBy('name')
+                        ->pluck('name', 'id'))
+                    ->nullable()
+                    ->helperText('Optional parent category to group subcategories.')
+                    ->columnSpan(1),
                 RichEditor::make('description')
                     ->label('Description')
                     ->placeholder('Optional description displayed to users')
@@ -105,6 +115,10 @@ class KnowledgeCategoryResource extends Resource
                     ->searchable()
                     ->toggleable(isToggledHiddenByDefault: true)
                     ->sortable(),
+                TextColumn::make('parent.name')
+                    ->label('Parent')
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('sort_order')
                     ->label('Order')
                     ->sortable(),

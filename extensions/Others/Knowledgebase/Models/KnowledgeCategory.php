@@ -5,6 +5,7 @@ namespace Paymenter\Extensions\Others\Knowledgebase\Models;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class KnowledgeCategory extends Model
 {
@@ -16,6 +17,7 @@ class KnowledgeCategory extends Model
         'description',
         'is_active',
         'sort_order',
+        'parent_id',
     ];
 
     protected $casts = [
@@ -27,6 +29,18 @@ class KnowledgeCategory extends Model
         return $this->hasMany(KnowledgeArticle::class, 'category_id')
             ->orderBy('sort_order')
             ->orderBy('title');
+    }
+
+    public function parent(): BelongsTo
+    {
+        return $this->belongsTo(self::class, 'parent_id');
+    }
+
+    public function children(): HasMany
+    {
+        return $this->hasMany(self::class, 'parent_id')
+            ->orderBy('sort_order')
+            ->orderBy('name');
     }
 
     public function publishedArticles(): HasMany
@@ -41,7 +55,12 @@ class KnowledgeCategory extends Model
 
     public function scopeWithPublishedArticles(Builder $query): Builder
     {
-        return $query->whereHas('publishedArticles');
+        return $query->where(function (Builder $query) {
+            $query->whereHas('publishedArticles')
+                ->orWhereHas('children', fn(Builder $childQuery) => $childQuery
+                    ->active()
+                    ->whereHas('publishedArticles'));
+        });
     }
 
     public function scopeVisible(Builder $query): Builder

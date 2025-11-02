@@ -29,10 +29,19 @@ class Index extends Component
         $searchTerm = trim($this->search);
 
         $categories = KnowledgeCategory::visible()
+            ->whereNull('parent_id')
             ->ordered()
             ->withCount(['publishedArticles as articles_count'])
-            ->with(['publishedArticles' => fn($query) => $query->ordered()->limit(5)])
-            ->get();
+            ->with([
+                'children' => fn($query) => $query->visible()
+                    ->ordered()
+                    ->withCount(['publishedArticles as articles_count']),
+                'publishedArticles' => fn($query) => $query->ordered()->limit(5),
+            ])
+            ->get()
+            ->each(function (KnowledgeCategory $category) {
+                $category->total_articles_count = $category->articles_count + $category->children->sum('articles_count');
+            });
 
         return view('knowledgebase::index', [
             'categories' => $categories,

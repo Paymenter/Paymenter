@@ -12,9 +12,15 @@ class Category extends Component
 
     public function mount(KnowledgeCategory $category)
     {
-        $category->load(['publishedArticles' => fn($query) => $query->ordered()]);
+        $category->load([
+            'publishedArticles' => fn($query) => $query->ordered(),
+            'children' => fn($query) => $query->visible()->ordered()->with(['publishedArticles' => fn($q) => $q->ordered()]),
+            'parent',
+        ]);
 
-        abort_if(!$category->is_active || $category->publishedArticles->isEmpty(), 404);
+        $hasVisibleContent = $category->publishedArticles->isNotEmpty() || $category->children->isNotEmpty();
+
+        abort_if(!$category->is_active || ! $hasVisibleContent, 404);
 
         $this->category = $category;
     }
@@ -30,15 +36,18 @@ class Category extends Component
             ->toString();
 
         $articles = $category->publishedArticles;
+        $children = $category->children;
 
         $keywords = collect([$category->name])
             ->merge($articles->pluck('title')->take(5))
+            ->merge($children->pluck('name')->take(5))
             ->filter()
             ->implode(', ');
 
         return view('knowledgebase::category', [
             'category' => $category,
             'articles' => $articles,
+            'children' => $children,
         ])->layoutData([
             'title' => $category->name,
             'description' => $description,

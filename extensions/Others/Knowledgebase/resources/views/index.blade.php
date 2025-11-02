@@ -94,7 +94,7 @@
                             @endif
                         </div>
                         <span class="rounded-full bg-primary-600/10 px-3 py-1 text-xs font-medium text-primary-600">
-                            {{ trans_choice('knowledgebase::messages.articles_count', $category->articles_count, ['count' => $category->articles_count]) }}
+                            {{ trans_choice('knowledgebase::messages.articles_count', $category->total_articles_count ?? $category->articles_count, ['count' => $category->total_articles_count ?? $category->articles_count]) }}
                         </span>
                     </div>
 
