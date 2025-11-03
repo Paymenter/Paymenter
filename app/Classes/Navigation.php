@@ -211,30 +211,31 @@ class Navigation
         $currentRoute = request()->livewireUrl();
 
         foreach ($routes as &$route) {
-            $route['active'] = self::isActiveRoute($route, $currentRoute);
-
-            if (isset($route['icon'])) {
-                $route['icon'] .= $route['active'] ? '-fill' : '-line';
+            // Make route a url
+            if (isset($route['route']) && !isset($route['url'])) {
+                $route['url'] = route($route['route'], $route['params'] ?? []);
             }
 
             if (isset($route['children'])) {
                 foreach ($route['children'] as &$child) {
+                    // Make route a url
+                    if (isset($child['route']) && !isset($child['url'])) {
+                        $child['url'] = route($child['route'], $child['params'] ?? []);
+                    }
+
                     $child['active'] = self::isActiveRoute($child, $currentRoute);
 
                     if (isset($child['icon'])) {
                         $child['icon'] .= $child['active'] ? '-fill' : '-line';
                     }
-
-                    // Make route a url
-                    if (isset($child['route']) && !isset($child['url'])) {
-                        $child['url'] = route($child['route'], $child['params'] ?? []);
-                    }
                 }
             }
 
-            // Make route a url
-            if (isset($route['route']) && !isset($route['url'])) {
-                $route['url'] = route($route['route'], $route['params'] ?? []);
+
+            $route['active'] = self::isActiveRoute($route, $currentRoute);
+
+            if (isset($route['icon'])) {
+                $route['icon'] .= $route['active'] ? '-fill' : '-line';
             }
         }
 
