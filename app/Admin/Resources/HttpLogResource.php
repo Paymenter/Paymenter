@@ -45,11 +45,13 @@ class HttpLogResource extends Resource
                     ->state(function (DebugLog $record) {
                         return $record->context['url'] ?? null;
                     })
+                    ->searchable(query: fn (Builder $query, string $search): Builder => $query->where('context->url', 'like', "%{$search}%"))
                     ->toggleable(),
                 TextColumn::make('status')
                     ->state(function (DebugLog $record) {
                         return $record->context['response_status'] ?? null;
                     })
+                    ->searchable(query: fn (Builder $query, string $search): Builder => $query->where('context->response_status', 'like', "%{$search}%"))
                     ->toggleable(),
                 TextColumn::make('created_at')
                     ->searchable()

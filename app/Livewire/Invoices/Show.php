@@ -120,7 +120,7 @@ class Show extends Component
         return $this->payWithSavedMethod($this->selectedMethod);
     }
 
-    public function payWithMethod($methodId)
+    private function payWithMethod($methodId)
     {
         if (!in_array($methodId, array_column($this->gateways, 'id'))) {
             return $this->notify(__('Invalid payment method.'), 'error');
@@ -137,7 +137,7 @@ class Show extends Component
         }
     }
 
-    public function payWithCredit()
+    private function payWithCredit()
     {
         $credit = Auth::user()->credits()->where('currency_code', $this->invoice->currency_code)->lockForUpdate()->first();
         if ($credit && $credit->amount > 0) {
@@ -159,7 +159,7 @@ class Show extends Component
         }
     }
 
-    public function payWithSavedMethod($agreementUlid)
+    private function payWithSavedMethod($agreementUlid)
     {
         $agreement = Auth::user()->billingAgreements()->where('ulid', $agreementUlid)->with('gateway')->first();
         if (!$agreement) {

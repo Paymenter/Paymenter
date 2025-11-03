@@ -29,12 +29,21 @@ class Overview extends BaseWidget
     {
         $model = $model instanceof Model ? get_class($model) : $model;
 
-        $chart = Trend::model($model)
-            ->between(
-                start: now()->subMonth(),
-                end: now(),
-            )
-            ->perDay();
+        if ($model === InvoiceTransaction::class) {
+            $chart = Trend::query($model::query()->where('status', \App\Enums\InvoiceTransactionStatus::Succeeded)->where('is_credit_transaction', false))
+                ->between(
+                    start: now()->subMonth(),
+                    end: now(),
+                )
+                ->perDay();
+        } else {
+            $chart = Trend::model($model)
+                ->between(
+                    start: now()->subMonth(),
+                    end: now(),
+                )
+                ->perDay();
+        }
 
         if ($sum) {
             $chart = $chart->sum($sum);

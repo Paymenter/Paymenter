@@ -93,10 +93,13 @@ class AppServiceProvider extends ServiceProvider
         });
 
         Request::macro('livewireUrl', function () {
-            if (request()->route()->named('paymenter.livewire.update')) {
+            // Somehow people manage to have no route
+            $route = request()->route();
+
+            if ($route && $route->named('paymenter.livewire.update')) {
                 $previousUrl = url()->previous();
 
-                return $previousUrl !== null ? $previousUrl : null;
+                return $previousUrl !== null ? $previousUrl : request()->fullUrl();
             }
 
             return request()->fullUrl();

@@ -76,7 +76,10 @@ class CheckForUpdates extends Command
                 HTML
             );
         }
-        $setting->update(['value' => $version['latest']]);
+        Setting::updateOrCreate(
+            ['key' => 'latest_version'],
+            ['value' => $version['latest']]
+        );
 
         $this->info('Update check completed.');
     }

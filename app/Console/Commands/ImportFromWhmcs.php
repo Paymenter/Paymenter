@@ -846,7 +846,7 @@ class ImportFromWhmcs extends Command
                 $data[] = [
                     'id' => $record['id'],
                     'service_id' => $record['relid'],
-                    'reason' => $record['reason'],
+                    'reason' => mb_substr($record['reason'], 0, 255),
                     'type' => $record['type'] == 'End of Billing Period' ? 'end_of_period' : 'immediate',
                     'created_at' => $record['date'],
                     'updated_at' => $record['date'],
@@ -911,7 +911,7 @@ class ImportFromWhmcs extends Command
                 $data[] = [
                     'id' => $record['id'],
                     'invoice_id' => $record['invoiceid'],
-                    'description' => $record['description'],
+                    'description' => mb_substr($record['description'], 0, 255),
                     'price' => $record['amount'],
                     'created_at' => now(),
                     'updated_at' => now(),
