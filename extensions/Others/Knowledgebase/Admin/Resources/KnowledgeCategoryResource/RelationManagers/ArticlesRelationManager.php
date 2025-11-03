@@ -12,6 +12,8 @@ use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Components\Utilities\Set;
 use Filament\Schemas\Schema;
 use Filament\Tables;
+use Filament\Tables\Actions\BulkActionGroup;
+use Filament\Tables\Actions\DeleteBulkAction;
 use Illuminate\Support\Str;
 use Paymenter\Extensions\Others\Knowledgebase\Admin\Resources\KnowledgeArticleResource;
 
@@ -72,7 +74,6 @@ class ArticlesRelationManager extends RelationManager
     {
         return $table
             ->reorderable('sort_order')
-            ->defaultSort('sort_order')
             ->columns([
                 Tables\Columns\TextColumn::make('title')
                     ->label('Title')
@@ -111,6 +112,16 @@ class ArticlesRelationManager extends RelationManager
                     ->url(fn ($record) => KnowledgeArticleResource::getUrl('edit', [
                         'record' => $record,
                     ])),
+            ])
+            ->bulkActions([
+                BulkActionGroup::make([
+                    DeleteBulkAction::make()
+                        ->requiresConfirmation()
+                        ->modalHeading('Delete selected articles')
+                        ->modalDescription('This action will permanently delete the selected articles from this category. This cannot be undone.')
+                        ->modalSubmitActionLabel('Delete articles')
+                        ->color('danger'),
+                ]),
             ]);
     }
 }

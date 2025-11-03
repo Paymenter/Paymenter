@@ -150,7 +150,12 @@ class KnowledgeArticleResource extends Resource
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
-                    DeleteBulkAction::make(),
+                    DeleteBulkAction::make()
+                        ->requiresConfirmation()
+                        ->modalHeading('Delete selected articles')
+                        ->modalDescription('This action will permanently delete the selected knowledge base articles. This cannot be undone.')
+                        ->modalSubmitActionLabel('Delete articles')
+                        ->color('danger'),
                 ]),
             ]);
     }
