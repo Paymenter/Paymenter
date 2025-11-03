@@ -29,12 +29,21 @@ class Overview extends BaseWidget
     {
         $model = $model instanceof Model ? get_class($model) : $model;
 
-        $chart = Trend::model($model)
-            ->between(
-                start: now()->subMonth(),
-                end: now(),
-            )
-            ->perDay();
+        if ($model === InvoiceTransaction::class) {
+            $chart = Trend::query($model::query()->where('status', \App\Enums\InvoiceTransactionStatus::Succeeded)->where('is_credit_transaction', false))
+                ->between(
+                    start: now()->subMonth(),
+                    end: now(),
+                )
+                ->perDay();
+        } else {
+            $chart = Trend::model($model)
+                ->between(
+                    start: now()->subMonth(),
+                    end: now(),
+                )
+                ->perDay();
+        }
 
         if ($sum) {
             $chart = $chart->sum($sum);
@@ -60,7 +69,7 @@ class Overview extends BaseWidget
         return Stat::make($name, $thisMonth)
             ->description($increase >= 0 ? 'Increased by ' . number_format($percentageIncrease, 2) . '% (last 30 days)' : 'Decreased by ' . number_format($percentageIncrease, 2) . '% (last 30 days)')
             ->descriptionIcon($increase >= 0 ? 'heroicon-m-arrow-trending-up' : 'heroicon-m-arrow-trending-down')
-            ->chart($chart->map(fn (TrendValue $value) => $value->aggregate)->toArray())
+            ->chart($chart->map(fn(TrendValue $value) => $value->aggregate)->toArray())
             ->color($increase >= 0 ? 'success' : 'danger');
     }
 
