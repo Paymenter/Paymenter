@@ -37,11 +37,11 @@ class ShowServices extends ManageRelatedRecords
                     ->badge()
                     ->formatStateUsing(fn (string $state) => ucfirst($state))
                     ->color(fn (string $state): string => match ($state) {
-                        'pending' => 'gray',
                         'active' => 'success',
-                        'cancelled' => 'danger',
-                        'suspended' => 'warning',
-                        default => 'primary',
+                        'pending' => 'warning',
+                        'suspended' => 'danger',
+                        'cancelled' => 'gray',
+                        default => 'gray',
                     }),
             ])
             ->filters([

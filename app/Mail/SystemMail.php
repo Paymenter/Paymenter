@@ -46,7 +46,7 @@ class SystemMail extends Mailable
 
         {$this->mail['body']}
 
-        <small>This is an automated message send from {$appName}</small>
+        <small>This is an automated message sent from {$appName}</small>
         HTML;
 
         return new Content(

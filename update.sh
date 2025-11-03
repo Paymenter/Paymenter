@@ -116,7 +116,7 @@ RUN php artisan down
 RUN curl -L -o paymenter.tar.gz "$URL"
 
 # Delete app folder
-RUN rm -rf app
+RUN rm -rf app bootstrap/cache/*.php
 
 # Extract the tarball.
 RUN tar -xzf paymenter.tar.gz
