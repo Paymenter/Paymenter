@@ -7,6 +7,8 @@ use App\Models\Ticket;
 use Filament\Resources\Pages\ManageRelatedRecords;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use App\Admin\Resources\TicketResource;
+use Filament\Actions\Action;
 
 class ShowTickets extends ManageRelatedRecords
 {
@@ -19,6 +21,15 @@ class ShowTickets extends ManageRelatedRecords
     public static function getNavigationLabel(): string
     {
         return 'Tickets';
+    }
+
+    protected function getHeaderActions(): array
+    {
+        return [
+            Action::make('create_ticket')
+                ->label(__('ticket.create_ticket'))
+                ->url(fn () => TicketResource::getUrl('create', ['ownerRecord' => $this->record])),
+        ];
     }
 
     public function table(Table $table): Table

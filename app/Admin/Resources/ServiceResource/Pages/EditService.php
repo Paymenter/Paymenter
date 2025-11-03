@@ -14,6 +14,7 @@ use Filament\Forms\Components\Checkbox;
 use Filament\Forms\Components\Select;
 use Filament\Notifications\Notification;
 use Filament\Resources\Pages\EditRecord;
+use App\Admin\Resources\TicketResource;
 
 class EditService extends EditRecord
 {
@@ -22,6 +23,13 @@ class EditService extends EditRecord
     protected function getHeaderActions(): array
     {
         return [
+            Action::make('create_ticket')
+                ->label(__('ticket.create_ticket'))
+                ->color('gray')
+                ->url(fn () => TicketResource::getUrl('create', [
+                    'ownerRecord' => $this->record->user_id,
+                    'service_id' => $this->record->id,
+                ])),
             DeleteAction::make()
                 ->form(function (DeleteAction $action) {
                     $status = !in_array($this->record->status, [Service::STATUS_PENDING, Service::STATUS_CANCELLED]) && $this->record->product->server_id !== null;
