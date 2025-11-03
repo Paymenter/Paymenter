@@ -4,9 +4,9 @@ return [
     '' => '',
 
     'button' => [
-        'view' => 'View',
-        'view_all' => 'View All',
+        'view' => 'Megtekintés',
+        'view_all' => 'Összes megtekintése',
     ],
-    'confirm' => 'Confirm',
-    'cancel' => 'Cancel',
+    'confirm' => 'Megerősítés',
+    'cancel' => 'Mégse',
 ];
