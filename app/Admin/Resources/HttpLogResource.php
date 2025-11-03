@@ -45,11 +45,13 @@ class HttpLogResource extends Resource
                     ->state(function (DebugLog $record) {
                         return $record->context['url'] ?? null;
                     })
+                    ->searchable()
                     ->toggleable(),
                 TextColumn::make('status')
                     ->state(function (DebugLog $record) {
                         return $record->context['response_status'] ?? null;
                     })
+                    ->searchable()
                     ->toggleable(),
                 TextColumn::make('created_at')
                     ->searchable()
