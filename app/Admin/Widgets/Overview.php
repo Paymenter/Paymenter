@@ -19,48 +19,56 @@ class Overview extends BaseWidget
     protected function getStats(): array
     {
         return [
-            $this->getData(InvoiceTransaction::class, 'Revenue', 'amount'),
+            $this->invoiceTransaction(),
             $this->getData(Ticket::class, 'Tickets'),
             $this->getData(Service::class, 'Services'),
         ];
+    }
+
+    private function invoiceTransaction()
+    {
+        $chart = Trend::query(InvoiceTransaction::query()->where('status', \App\Enums\InvoiceTransactionStatus::Succeeded)->where('is_credit_transaction', false))
+            ->between(
+                start: now()->subMonth(),
+                end: now(),
+            )
+            ->perDay()->sum('amount');
+
+
+        $thisMonth = $chart->sum('aggregate');
+
+        $lastMonth = InvoiceTransaction::query()
+            ->whereBetween('created_at', [now()->subMonths(2), now()->subMonth()])
+            ->sum('amount');
+
+        $increase = $thisMonth - $lastMonth;
+
+        $percentageIncrease = $lastMonth > 0 ? (($thisMonth - $lastMonth) / $lastMonth) * 100 : 0;
+
+        return Stat::make('Revenue', $thisMonth)
+            ->description($increase >= 0 ? 'Increased by ' . number_format($percentageIncrease, 2) . '% (last 30 days)' : 'Decreased by ' . number_format($percentageIncrease, 2) . '% (last 30 days)')
+            ->descriptionIcon($increase >= 0 ? 'heroicon-m-arrow-trending-up' : 'heroicon-m-arrow-trending-down')
+            ->chart($chart->map(fn(TrendValue $value) => $value->aggregate)->toArray())
+            ->color($increase >= 0 ? 'success' : 'danger');
     }
 
     private function getData($model, $name, $sum = false)
     {
         $model = $model instanceof Model ? get_class($model) : $model;
 
-        if ($model === InvoiceTransaction::class) {
-            $chart = Trend::query($model::query()->where('status', \App\Enums\InvoiceTransactionStatus::Succeeded)->where('is_credit_transaction', false))
-                ->between(
-                    start: now()->subMonth(),
-                    end: now(),
-                )
-                ->perDay();
-        } else {
-            $chart = Trend::model($model)
-                ->between(
-                    start: now()->subMonth(),
-                    end: now(),
-                )
-                ->perDay();
-        }
-
-        if ($sum) {
-            $chart = $chart->sum($sum);
-        } else {
-            $chart = $chart->count();
-        }
+        $chart = Trend::model($model)
+            ->between(
+                start: now()->subMonth(),
+                end: now(),
+            )
+            ->perDay()
+            ->count();
 
         $thisMonth = $chart->sum('aggregate');
 
         $lastMonth = $model::query()
-            ->whereBetween('created_at', [now()->subMonths(2), now()->subMonth()]);
-
-        if ($sum) {
-            $lastMonth = $lastMonth->sum($sum);
-        } else {
-            $lastMonth = $lastMonth->count();
-        }
+            ->whereBetween('created_at', [now()->subMonths(2), now()->subMonth()])
+            ->count();
 
         $increase = $thisMonth - $lastMonth;
 
@@ -69,7 +77,7 @@ class Overview extends BaseWidget
         return Stat::make($name, $thisMonth)
             ->description($increase >= 0 ? 'Increased by ' . number_format($percentageIncrease, 2) . '% (last 30 days)' : 'Decreased by ' . number_format($percentageIncrease, 2) . '% (last 30 days)')
             ->descriptionIcon($increase >= 0 ? 'heroicon-m-arrow-trending-up' : 'heroicon-m-arrow-trending-down')
-            ->chart($chart->map(fn (TrendValue $value) => $value->aggregate)->toArray())
+            ->chart($chart->map(fn(TrendValue $value) => $value->aggregate)->toArray())
             ->color($increase >= 0 ? 'success' : 'danger');
     }
 
