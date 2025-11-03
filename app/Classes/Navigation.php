@@ -231,7 +231,6 @@ class Navigation
                 }
             }
 
-
             $route['active'] = self::isActiveRoute($route, $currentRoute);
 
             if (isset($route['icon'])) {
