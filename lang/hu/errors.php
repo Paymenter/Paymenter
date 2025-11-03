@@ -2,12 +2,12 @@
 
 return [
     '404' => [
-        'title' => 'Page Not Found',
-        'message' => 'Sorry, the page you are looking for could not be found.',
-        'return_home' => 'Back to Home',
+        'title' => 'Az oldal nem található',
+        'message' => 'Sajnáljuk, a keresett oldal nem található.',
+        'return_home' => 'Vissza a főoldalra',
     ],
     '500' => [
-        'title' => 'Server Error',
-        'message' => 'Whoops, something went wrong on our end. Please try again later.',
+        'title' => 'Szerver Hiba',
+        'message' => 'Sajnálom, a hiba nálunk van. Próbáld újra később.',
     ],
 ];
