@@ -14,10 +14,10 @@ return [
     'or_drag_and_drop' => 'vagy húzd ide',
     'files_max' => 'Legfeljebb 10MB méretű fájlok',
     'selected_files' => 'Fájlok kiválasztása',
-    'close_ticket' => 'Close Ticket',
+    'close_ticket' => 'Jegy lezárása',
     'close_ticket_confirmation' => 'Are you sure you want to close this ticket? This action cannot be undone.',
-    'close_ticket_success' => 'Ticket closed successfully.',
-    'close_ticket_already_closed' => 'This ticket is already closed.',
+    'close_ticket_success' => 'Hibajegy sikeresen lezárva.',
+    'close_ticket_already_closed' => 'A hibajegy már le van zárva.',
 
     'create_ticket' => 'Hibajegy létrehozása',
     'select_department' => 'Részleg kiválasztása',
@@ -31,5 +31,5 @@ return [
     'service' => 'Szolgáltatás',
     'select_service' => 'Szolgáltatás kiválasztása',
     'create' => 'Létrehozás',
-    'no_tickets' => 'No tickets found',
+    'no_tickets' => 'Nem találtunk hibajegyet',
 ];
