@@ -8,10 +8,13 @@
                     @foreach ($ticket->messages()->with('user')->get() as $index => $message)
                     <div class="bg-background-secondary hover:bg-background-secondary/80 border border-neutral p-4 rounded-lg w-full max-w-[80%]  {{ $message->user_id === $ticket->user_id ? 'ml-auto' : 'mr-auto' }}"
                         @if ($loop->last) x-data x-init="$nextTick(() => $el.scrollIntoView({ block: 'end' }))" @endif>
-                        <div class="flex items-center justify-between">
-                            <div>
-                                <h2 class="text-lg font-semibold">{{ $message->user->name }}</h2>
-                                <p class="text-sm text-gray-500">{{ $message->created_at->diffForHumans() }}</p>
+                        <div class="flex items-center justify-between gap-4">
+                            <div class="flex items-center gap-3">
+                                <img src="{{ $message->user->avatar }}" class="size-8 rounded-full border border-neutral bg-background" alt="{{ $message->user->name }} avatar" />
+                                <div class="flex flex-col gap-1">
+                                    <h2 class="text-lg font-semibold">{{ $message->user->name }}</h2>
+                                    <p class="text-sm text-gray-500">{{ $message->created_at->diffForHumans() }}</p>
+                                </div>
                             </div>
                         </div>
                         <div class="mt-2 prose dark:prose-invert break-words max-w-full">{!! Str::markdown($message->message, [
