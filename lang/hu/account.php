@@ -30,12 +30,12 @@ return [
         'confirm_password' => 'Jelszó megerősítése',
         'confirm_password_placeholder' => 'Erősítsd meg az új jelszavad',
 
-        'two_factor_code' => 'Add meg a hitelesítő alkalmazása által generált kódot',
+        'two_factor_code' => 'Add meg a hitelesítő alkalmazás által generált kódot',
         'two_factor_code_placeholder' => 'Kétlépcsős azonosító kódod',
 
         'currency' => 'Pénznem',
         'amount' => 'Mennyiség',
-        'payment_gateway' => 'Fizetési portál',
+        'payment_gateway' => 'Fizetési mód',
     ],
 
     'notifications' => [
@@ -71,7 +71,7 @@ return [
     'remove' => 'Eltávolítás',
     'remove_payment_method' => 'Fizetési mód eltávolítása',
     'remove_payment_method_confirm' => 'Are you sure you want to remove :name? This action cannot be undone.',
-    'cancel' => 'Mégse',
+    'cancel' => 'Mégsem',
     'confirm' => 'Igen, eltávolítom',
     'email_notifications' => 'Email értesítések',
     'in_app_notifications' => 'Alkalmazáson belüli értesítések',
