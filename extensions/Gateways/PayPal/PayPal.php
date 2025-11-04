@@ -54,6 +54,10 @@ class PayPal extends Gateway
             ],
         ]);
 
+        if (!isset($result->links[1]->href)) {
+            throw new Exception('Failed to create billing agreement.');
+        }
+
         return $result->links[1]->href;
     }
 
@@ -207,8 +211,8 @@ class PayPal extends Gateway
                 'Accept' => 'application/json',
                 'Authorization' => 'Basic ' . base64_encode($this->config('client_id') . ':' . $this->config('client_secret')),
             ])->asForm()->post($url . '/v1/oauth2/token', [
-                'grant_type' => 'client_credentials',
-            ]);
+                        'grant_type' => 'client_credentials',
+                    ]);
 
             if ($result->failed()) {
                 throw new Exception('Failed to generate access token: ' . $result->body());
@@ -221,10 +225,10 @@ class PayPal extends Gateway
     public function request($method, $url, $data = [])
     {
         return Http::withHeaders([
-            'Content-Type' => 'application/json',
-            'Authorization' => 'Bearer ' . $this->generateAccessToken(),
-            'PayPal-Request-Id' => uniqid(),
-        ])->$method($url, $data)->object();
+                    'Content-Type' => 'application/json',
+                    'Authorization' => 'Bearer ' . $this->generateAccessToken(),
+                    'PayPal-Request-Id' => uniqid(),
+                ])->$method($url, $data)->object();
     }
 
     public function pay($invoice, $total)
