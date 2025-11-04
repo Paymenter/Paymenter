@@ -58,7 +58,7 @@ Or, get additional help via [Community Discord](https://discord.gg/xB4UUT3XQg).
 
 The requirements for Paymenter are the following:
 
-- PHP (8.2 or higher).
+- PHP (8.3 or higher).
 - Composer
 - Webserver (Apache or Nginx)
 - Database (MariaDB)

@@ -32,10 +32,10 @@ class Revenue extends ChartWidget
     protected function getData(): array
     {
         $start = match ($this->filter) {
-            'today' => now()->subDay(),
-            'week' => now()->subWeek(),
-            'month' => now()->subMonth(),
-            'year' => now()->subYear(),
+            'today' => now()->subDay()->startOfDay(),
+            'week' => now()->subWeek()->startOfDay(),
+            'month' => now()->subMonth()->startOfDay(),
+            'year' => now()->subYear()->startOfDay(),
         };
 
         $end = now();

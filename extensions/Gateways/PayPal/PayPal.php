@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\View;
+use Illuminate\Support\HtmlString;
 
 #[ExtensionMeta(
     name: 'PayPal Gateway',
@@ -29,7 +30,7 @@ class PayPal extends Gateway
 {
     public function supportsBillingAgreements(): bool
     {
-        return true;
+        return $this->config('paypal_support_billing_agreements') ?? false;
     }
 
     public function createBillingAgreement(\App\Models\User $user)
@@ -52,6 +53,10 @@ class PayPal extends Gateway
                 ],
             ],
         ]);
+
+        if (!isset($result->links[1]->href)) {
+            throw new Exception('Failed to create billing agreement.');
+        }
 
         return $result->links[1]->href;
     }
@@ -188,10 +193,10 @@ class PayPal extends Gateway
                 'required' => false,
             ],
             [
-                'name' => 'paypal_use_subscriptions',
-                'label' => 'Use subscriptions',
+                'name' => 'paypal_support_billing_agreements',
+                'label' => 'Supports Billing Agreements',
                 'type' => 'checkbox',
-                'description' => 'Enable this option if you want to use subscriptions with PayPal (if available)',
+                'description' => new HtmlString('Enable this option if your PayPal account supports billing agreements. <a href="https://paymenter.org/docs/extensions/paypal#billing-agreements" target="_blank" rel="noopener">Learn more</a>'),
                 'required' => false,
             ],
         ];

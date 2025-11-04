@@ -27,11 +27,15 @@ class ShowServices extends ManageRelatedRecords
         return $table
             ->recordTitleAttribute('product.name')
             ->columns([
+                TextColumn::make('id')
+                    ->label('ID')
+                    ->sortable(),
                 TextColumn::make('product.name'),
                 TextColumn::make('quantity'),
                 TextColumn::make('formattedPrice')->label('Price'),
                 TextColumn::make('status')
                     ->badge()
+                    ->formatStateUsing(fn (string $state) => ucfirst($state))
                     ->color(fn (string $state): string => match ($state) {
                         'active' => 'success',
                         'pending' => 'warning',
