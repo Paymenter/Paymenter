@@ -7,7 +7,7 @@ return [
         'return_home' => 'Vissza a főoldalra',
     ],
     '500' => [
-        'title' => 'Szerver Hiba',
-        'message' => 'Sajnálom, a hiba nálunk van. Próbáld újra később.',
+        'title' => 'Szerver hiba',
+        'message' => 'Sajnáljuk, valami hiba történt nálunk. Próbáld újra később.',
     ],
 ];
