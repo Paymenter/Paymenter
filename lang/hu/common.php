@@ -8,5 +8,5 @@ return [
         'view_all' => 'Összes megtekintése',
     ],
     'confirm' => 'Megerősítés',
-    'cancel' => 'Mégse',
+    'cancel' => 'Mégsem',
 ];
