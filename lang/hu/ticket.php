@@ -12,10 +12,10 @@ return [
     'attachments' => 'Mellékletek',
     'upload_attachments' => 'Csatolmány feltöltése',
     'or_drag_and_drop' => 'vagy húzd ide',
-    'files_max' => 'Legfeljebb 10MB méretű fájlok',
+    'files_max' => 'Legfeljebb 10MB méretű fájl tölthető fel',
     'selected_files' => 'Fájlok kiválasztása',
     'close_ticket' => 'Jegy lezárása',
-    'close_ticket_confirmation' => 'Are you sure you want to close this ticket? This action cannot be undone.',
+    'close_ticket_confirmation' => 'Biztosan lezárod ezt a hibajegyet? Ez a művelet nem vonható vissza.',
     'close_ticket_success' => 'Hibajegy sikeresen lezárva.',
     'close_ticket_already_closed' => 'A hibajegy már le van zárva.',
 
