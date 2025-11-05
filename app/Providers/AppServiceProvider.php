@@ -192,8 +192,8 @@ class AppServiceProvider extends ServiceProvider
         Passport::tokensCan(ScopeRegistry::getAll());
 
         Route::bind('invoice', function ($val) {
-            return Invoice::where('id', $val)
-                ->orWhere('number', $val)
+            return Invoice::where('number', $val)
+                ->orWhere('id', $val)
                 ->firstOrFail();
         });
 
