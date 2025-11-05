@@ -73,7 +73,7 @@ class OrderResource extends Resource
                         Select::make('product_id')
                             ->label('Product')
                             ->required()
-                            ->options(Product::all()->pluck('name', 'id')->toArray())
+                            ->options(Product::all()->mapWithKeys(fn (Product $product) => [$product->id => "{$product->name} ({$product->slug}) - ID: {$product->id}"])->toArray())
                             ->searchable()
                             ->live()
                             ->afterStateUpdated(fn (Set $set) => $set('plan_id', null))
