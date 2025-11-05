@@ -35,12 +35,13 @@ class CreateJob implements ShouldQueue
             $data = ExtensionHelper::createServer($this->service);
         } catch (Exception $e) {
             if ($e->getMessage() == 'No server assigned to this product') {
-                return;
+                // return;
+            } else {
+                throw $e;
             }
-            throw $e;
         }
 
-        if ($this->sendNotification && isset($data)) {
+        if ($this->sendNotification) {
             NotificationHelper::serverCreatedNotification($this->service->user, $this->service, is_array($data) ? $data : []);
         }
     }

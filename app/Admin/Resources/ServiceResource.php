@@ -28,6 +28,7 @@ use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Schema;
 use Filament\Support\RawJs;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\Filter;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
@@ -220,6 +221,33 @@ class ServiceResource extends Resource
                         'suspended' => 'Suspended',
                         'cancelled' => 'Cancelled',
                     ]),
+                SelectFilter::make('user')
+                    ->label('User')
+                    ->relationship('user', 'id')
+                    ->getOptionLabelFromRecordUsing(fn ($record) => $record->name . ' (' . $record->email . ')')
+                    ->searchable()
+                    ->preload(),
+                SelectFilter::make('product')
+                    ->label('Product')
+                    ->relationship('product', 'name')
+                    ->searchable()
+                    ->preload(),
+                Filter::make('expires_at')
+                    ->form([
+                        DatePicker::make('expires_from')->label('Expires From'),
+                        DatePicker::make('expires_until')->label('Expires Until'),
+                    ])
+                    ->query(function (Builder $query, array $data): Builder {
+                        return $query
+                            ->when(
+                                $data['expires_from'],
+                                fn (Builder $query, $date): Builder => $query->whereDate('expires_at', '>=', $date),
+                            )
+                            ->when(
+                                $data['expires_until'],
+                                fn (Builder $query, $date): Builder => $query->whereDate('expires_at', '<=', $date),
+                            );
+                    }),
             ])
             ->defaultSort(function (Builder $query): Builder {
                 return $query
