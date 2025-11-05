@@ -6,7 +6,9 @@
                 <div class="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between sm:gap-6">
                     <div class="space-y-2 min-w-0 sm:flex-1">
                         <span
-                            class="text-xs uppercase tracking-wide text-primary-600">{{ $article->category->name }}</span>
+                            class="text-xs font-medium uppercase tracking-wide text-primary">
+                            {{ $article->category->name }}
+                        </span>
                         <h1 class="text-2xl font-semibold text-base">{{ $article->title }}</h1>
                         @if ($article->summary)
                             <p class="text-sm text-base/70">{{ $article->summary }}</p>
@@ -20,7 +22,7 @@
                         <span>{{ trans_choice('knowledgebase::messages.view_count', $article->view_count, ['count' => $article->view_count]) }}</span>
                         @if ($allowDownloads)
                             <a href="{{ route('knowledgebase.article.download', $article) }}"
-                                class="inline-flex items-center gap-1 whitespace-nowrap rounded-md border border-primary-600 px-2.5 py-1 text-xs font-medium text-primary-600 transition hover:bg-primary-50">
+                                class="inline-flex items-center gap-1 whitespace-nowrap rounded-md border border-neutral bg-background-secondary px-2.5 py-1 text-xs font-medium text-base transition hover:bg-background-secondary/80">
                                 <x-ri-download-2-line class="size-3" />
                                 <span>{{ __('knowledgebase::messages.download_article') }}</span>
                             </a>

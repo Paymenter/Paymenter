@@ -27,7 +27,7 @@ class Knowledgebase extends Extension
         try {
             return [
                 [
-                    'name' => 'notice',
+                    'name' => 'Notice',
                     'type' => 'placeholder',
                     'label' => new HtmlString('Use this extension to publish knowledge base articles. Manage them from <a class="text-primary-600" href="' . KnowledgeArticleResource::getUrl() . '">Knowledge Base</a>.'),
                 ],
