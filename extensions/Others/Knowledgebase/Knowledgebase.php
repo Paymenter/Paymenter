@@ -74,12 +74,8 @@ class Knowledgebase extends Extension
         Gate::policy(KnowledgeCategory::class, KnowledgeCategoryPolicy::class);
         Gate::policy(KnowledgeArticle::class, KnowledgeArticlePolicy::class);
 
-        Event::listen('navigation', function () {
+        Event::listen(['navigation', 'navigation.dashboard'], function () {
             if (!Schema::hasTable('ext_kb_articles')) {
-                return;
-            }
-
-            if (!KnowledgeArticle::published()->exists()) {
                 return;
             }
 
@@ -88,6 +84,8 @@ class Knowledgebase extends Extension
                 'route' => 'knowledgebase.index',
                 'icon' => 'ri-article',
                 'priority' => 15,
+                'separator' => true,
+                'children' => [],
             ];
         });
 

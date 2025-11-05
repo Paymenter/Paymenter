@@ -10,31 +10,42 @@ class KnowledgeArticlePolicy extends BasePolicy
 {
     public function viewAny(User $user): bool
     {
-        return $this->adminPermission($user, 'admin.knowledgebase.articles.view');
+        return $this->checkAdminAccess($user, 'admin.knowledgebase.articles.view');
     }
 
     public function view(User $user, KnowledgeArticle $article): bool
     {
-        return $this->adminPermission($user, 'admin.knowledgebase.articles.view');
+        return $this->checkAdminAccess($user, 'admin.knowledgebase.articles.view');
     }
 
     public function create(User $user): bool
     {
-        return $this->adminPermission($user, 'admin.knowledgebase.articles.create');
+        return $this->checkAdminAccess($user, 'admin.knowledgebase.articles.create');
     }
 
     public function update(User $user, KnowledgeArticle $article): bool
     {
-        return $this->adminPermission($user, 'admin.knowledgebase.articles.update');
+        return $this->checkAdminAccess($user, 'admin.knowledgebase.articles.update');
     }
 
     public function delete(User $user, KnowledgeArticle $article): bool
     {
-        return $this->adminPermission($user, 'admin.knowledgebase.articles.delete');
+        return $this->checkAdminAccess($user, 'admin.knowledgebase.articles.delete');
     }
 
     public function deleteAny(User $user): bool
     {
-        return $this->adminPermission($user, 'admin.knowledgebase.articles.delete');
+        return $this->checkAdminAccess($user, 'admin.knowledgebase.articles.delete');
+    }
+
+    protected function checkAdminAccess(User $user, string $permission): bool
+    {
+        $request = request();
+
+        if ($request && ($request->is('admin') || $request->is('admin/*') || $request->routeIs('filament.admin.*'))) {
+            return $user->hasPermission($permission);
+        }
+
+        return $this->adminPermission($user, $permission);
     }
 }
