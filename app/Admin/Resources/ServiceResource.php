@@ -59,7 +59,17 @@ class ServiceResource extends Resource
                 Select::make('product_id')
                     ->label('Product')
                     ->required()
-                    ->options(Product::all()->mapWithKeys(fn (Product $product) => [$product->id => "{$product->name} ({$product->slug}) - ID: {$product->id}"])->toArray())
+                    ->options(
+                        function () {
+                            return Product::with('category')
+                                ->get()
+                                ->mapWithKeys(function (Product $product) {
+                                    $categoryName = $product->category->name;
+                                    return [$product->id => "{$product->name} - {$categoryName} ({$product->id})"];
+                                })
+                                ->toArray();
+                        }
+                    )
                     ->searchable()
                     ->live()
                     ->preload()
@@ -220,33 +230,6 @@ class ServiceResource extends Resource
                         'suspended' => 'Suspended',
                         'cancelled' => 'Cancelled',
                     ]),
-                SelectFilter::make('user')
-                    ->label('User')
-                    ->relationship('user', 'id')
-                    ->getOptionLabelFromRecordUsing(fn ($record) => $record->name . ' (' . $record->email . ')')
-                    ->searchable()
-                    ->preload(),
-                SelectFilter::make('product')
-                    ->label('Product')
-                    ->relationship('product', 'name')
-                    ->searchable()
-                    ->preload(),
-                Filter::make('expires_at')
-                    ->form([
-                        DatePicker::make('expires_from')->label('Expires From'),
-                        DatePicker::make('expires_until')->label('Expires Until'),
-                    ])
-                    ->query(function (Builder $query, array $data): Builder {
-                        return $query
-                            ->when(
-                                $data['expires_from'],
-                                fn (Builder $query, $date): Builder => $query->whereDate('expires_at', '>=', $date),
-                            )
-                            ->when(
-                                $data['expires_until'],
-                                fn (Builder $query, $date): Builder => $query->whereDate('expires_at', '<=', $date),
-                            );
-                    }),
             ])
             ->defaultSort(function (Builder $query): Builder {
                 return $query
