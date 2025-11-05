@@ -7,6 +7,7 @@ use App\Admin\Resources\CouponResource\Pages\EditCoupon;
 use App\Admin\Resources\CouponResource\Pages\ListCoupons;
 use App\Admin\Resources\CouponResource\RelationManagers\ServicesRelationManager;
 use App\Models\Coupon;
+use App\Models\Product;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
@@ -104,7 +105,8 @@ class CouponResource extends Resource
 
                 Select::make('products')
                     ->label('Products')
-                    ->relationship('products', 'name')
+                    ->relationship('products')
+                    ->getOptionLabelFromRecordUsing(fn (Product $record) => "{$record->name} ({$record->slug}) - ID: {$record->id}")
                     ->multiple()
                     ->preload()
                     ->placeholder('Select the products that this coupon applies to')
