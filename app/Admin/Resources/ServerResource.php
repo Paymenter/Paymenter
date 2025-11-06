@@ -58,7 +58,7 @@ class ServerResource extends Resource
                         static::getModel(),
                         'name',
                         ignoreRecord: true,
-                        modifyRuleUsing: fn($rule) => $rule->where('deleted_at', null)
+                        modifyRuleUsing: fn ($rule) => $rule->where('deleted_at', null)
                     )
                     ->placeholder('Enter the name of the server'),
                 Select::make('extension')
@@ -71,7 +71,7 @@ class ServerResource extends Resource
                     ))
                     ->live(onBlur: true)
                     ->disabledOn('edit')
-                    ->afterStateUpdated(fn(Select $component) => $component
+                    ->afterStateUpdated(fn (Select $component) => $component
                         ->getContainer()
                         ->getComponent('settings')
                         ->getChildSchema()
@@ -103,7 +103,7 @@ class ServerResource extends Resource
                     ->columnSpanFull()
                     ->description('Specific settings for the selected server')
                     ->schema([
-                        Grid::make()->schema(fn(Get $get) => ExtensionHelper::getConfigAsInputs('server', $get('extension'), $get('settings')))->key('settings'),
+                        Grid::make()->schema(fn (Get $get) => ExtensionHelper::getConfigAsInputs('server', $get('extension'), $get('settings')))->key('settings'),
                     ]),
             ]);
     }
