@@ -52,19 +52,24 @@ class GatewayResource extends Resource
                     ->label('Name')
                     ->required()
                     ->maxLength(255)
-                    ->unique(static::getModel(), 'name', ignoreRecord: true)
+                    ->unique(static::getModel(), 'name', ignoreRecord: true,)
                     ->placeholder('Enter the name of the gateway'),
                 Select::make('extension')
                     ->label('Gateway')
                     ->required()
                     ->searchable()
-                    ->unique(static::getModel(), 'extension', ignoreRecord: true)
+                    ->unique(
+                        static::getModel(),
+                        'extension',
+                        ignoreRecord: true,
+                        modifyRuleUsing: fn($rule) => $rule->where('deleted_at', null)
+                    )
                     ->options(array_combine(
                         array_column($gateways, 'name'),
                         array_column($gateways, 'name')
                     ))
                     ->live(onBlur: true)
-                    ->afterStateUpdated(fn (Select $component) => $component
+                    ->afterStateUpdated(fn(Select $component) => $component
                         ->getContainer()
                         ->getComponent('settings')
                         ->getChildComponentContainer()
@@ -74,7 +79,7 @@ class GatewayResource extends Resource
                     ->columnSpanFull()
                     ->description('Specific settings for the selected gateway')
                     ->schema([
-                        Grid::make()->schema(fn (Get $get) => ExtensionHelper::getConfigAsInputs('gateway', $get('extension'), $get('settings')))->key('settings'),
+                        Grid::make()->schema(fn(Get $get) => ExtensionHelper::getConfigAsInputs('gateway', $get('extension'), $get('settings')))->key('settings'),
                     ]),
             ]);
     }
