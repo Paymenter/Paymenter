@@ -4,9 +4,9 @@ return [
     '' => '',
 
     'button' => [
-        'view' => 'View',
-        'view_all' => 'View All',
+        'view' => 'Pogledaj',
+        'view_all' => 'Pogledaj sve',
     ],
-    'confirm' => 'Confirm',
-    'cancel' => 'Cancel',
+    'confirm' => 'Potvrdi',
+    'cancel' => 'Otkaži',
 ];

@@ -51,5 +51,6 @@ return [
     'use_for_recurring' => 'Usar para Pagamentos Recorrentes',
     'pay_now' => 'Pagar Agora',
     'apply_credits_and_continue' => 'Aplicar Créditos e Continuar',
+    'apply_credits_and_pay' => 'Apply Credits and Pay',
 
 ];

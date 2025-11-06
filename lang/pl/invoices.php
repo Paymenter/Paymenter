@@ -51,5 +51,6 @@ return [
     'use_for_recurring' => 'Use for Recurring Payments',
     'pay_now' => 'Pay Now',
     'apply_credits_and_continue' => 'Apply Credits and Continue',
+    'apply_credits_and_pay' => 'Apply Credits and Pay',
 
 ];
