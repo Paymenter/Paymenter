@@ -8,5 +8,5 @@ return [
         'view_all' => 'View All',
     ],
     'confirm' => 'Confirm',
-    'cancel' => 'Cancel',
+    'cancel' => 'Abbrechen',
 ];

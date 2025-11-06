@@ -2,12 +2,12 @@
 
 return [
     '404' => [
-        'title' => 'Page Not Found',
-        'message' => 'Sorry, the page you are looking for could not be found.',
-        'return_home' => 'Back to Home',
+        'title' => 'Сторінку не знайдено',
+        'message' => 'Вибачте, сторінку, яку ви шукали, не знайдено.',
+        'return_home' => 'Повернутись на Головну',
     ],
     '500' => [
-        'title' => 'Server Error',
-        'message' => 'Whoops, something went wrong on our end. Please try again later.',
+        'title' => 'Помилка сервера',
+        'message' => 'Ой! У нас сталася якась помилка. Спробуй пізніше.',
     ],
 ];

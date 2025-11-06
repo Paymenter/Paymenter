@@ -8,6 +8,6 @@ return [
     ],
     '500' => [
         'title' => 'Server Error',
-        'message' => 'Whoops, something went wrong on our end. Please try again later.',
+        'message' => 'Hoppla, bei uns ist etwas schiefgelaufen. Bitte versuchen Sie es später erneut.',
     ],
 ];

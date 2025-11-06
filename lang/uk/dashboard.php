@@ -1,11 +1,11 @@
 <?php
 
 return [
-    'dashboard_title' => 'Dashboard',
-    'welcome_back' => 'Welcome back, :name!',
-    'dashboard_description' => 'Manage your active services, invoices, tickets, and stay updated here.',
+    'dashboard_title' => 'Панель керування',
+    'welcome_back' => 'З поверненням, :name!',
+    'dashboard_description' => 'Керуйте своїми активними послугами, рахунками, заявками та залишайтеся в курсі всіх оновлень тут.',
     'open_tickets' => 'Відкриті тікети',
     'unpaid_invoices' => 'Неоплачені рахунки',
     'active_services' => 'Активні послуги',
-    'view_all' => 'View All',
+    'view_all' => 'Переглянути все',
 ];

@@ -3,12 +3,12 @@
 return [
 
     'cronjob' => [
-        'invoices_created' => 'Invoices created',
-        'orders_cancelled' => 'Orders cancelled',
-        'upgrade_invoices_updated' => 'Upgrade invoices updated',
-        'services_suspended' => 'Services suspended',
-        'services_terminated' => 'Services terminated',
-        'tickets_closed' => 'Tickets closed',
-        'email_logs_deleted' => 'Email logs deleted',
+        'invoices_created' => 'Kreirani računi',
+        'orders_cancelled' => 'Otkazane narudžbine',
+        'upgrade_invoices_updated' => 'Ažurirani računi za nadogradnju',
+        'services_suspended' => 'Suspendovane usluge',
+        'services_terminated' => 'Okončane usluge',
+        'tickets_closed' => 'Zatvoreni tiketi',
+        'email_logs_deleted' => 'Obrisani logovi e-pošte',
     ],
 ];
