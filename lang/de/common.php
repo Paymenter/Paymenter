@@ -7,6 +7,6 @@ return [
         'view' => 'View',
         'view_all' => 'View All',
     ],
-    'confirm' => 'Confirm',
+    'confirm' => 'Bestätigen',
     'cancel' => 'Abbrechen',
 ];
