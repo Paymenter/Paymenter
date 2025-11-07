@@ -35,5 +35,5 @@ return [
 
     'all_rights_reserved' => 'Alle Rechte vorbehalten.',
     'update' => 'Aktualisierung',
-    'save' => 'Save',
+    'save' => 'Speichern',
 ];
