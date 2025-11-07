@@ -875,7 +875,7 @@ class ImportFromWhmcs extends Command
 
                 $data[] = [
                     'id' => $record['id'],
-                    'number' => !empty($record['invoicenum']) ? $record['invoicenum'] : $record['id'],
+                    'number' => !empty($record['invoicenum']) ? $record['invoicenum'] : null,
                     'user_id' => $record['userid'],
                     'status' => match ($record['status']) {
                         'Paid' => 'paid',
