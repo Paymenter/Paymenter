@@ -54,16 +54,16 @@ return [
     ],
     'every_period' => 'Jede :period :unit',
     'price_every_period' => ':price je :period :unit',
-    'price_one_time' => ':price one time',
+    'price_one_time' => ':price einmal',
     'expires_at' => 'Gültig bis',
-    'auto_pay' => 'Auto paying using',
-    'auto_pay_not_configured' => 'Not configured',
+    'auto_pay' => 'Automatische Zahlung mit',
+    'auto_pay_not_configured' => 'Nicht konfiguriert',
 
-    'no_services' => 'No services found',
-    'update_billing_agreement' => 'Update Billing Agreement',
+    'no_services' => 'Keine Services gefunden',
+    'update_billing_agreement' => 'Vereinbarung aktualisieren',
     'clear_billing_agreement' => 'Zahlungsvereinbarung entfernen',
     'select_billing_agreement' => 'Zahlungsvereinbarung entfernen',
 
-    'remove_payment_method' => 'Remove Payment Method',
+    'remove_payment_method' => 'Zahlungsmethode entfernen',
     'remove_payment_method_confirm' => 'Möchtest du die Zahlungsmethode „:name“ wirklich aus diesem Dienst entfernen? Der Dienst kann dann seine Rechnungen nicht mehr automatisch bezahlen.',
 ];
