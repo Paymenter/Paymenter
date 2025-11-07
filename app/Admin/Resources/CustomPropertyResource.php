@@ -14,6 +14,7 @@ use Filament\Forms\Components\TagsInput;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
+use Filament\Schemas\Components\Utilities\Get as FormGet;
 use Filament\Resources\Resource;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
@@ -50,9 +51,13 @@ class CustomPropertyResource extends Resource
                     'checkbox' => 'Checkbox',
                     'radio' => 'Radio',
                     'date' => 'Date',
-                ])->required(),
+                ])
+                ->required()
+                ->live(),
                 Textarea::make('description')->nullable()->columnSpanFull()->rows(2),
-                TagsInput::make('allowed_values')->nullable(),
+                TagsInput::make('allowed_values')
+                    ->visible(fn (FormGet $get) => in_array($get('type'), ['select', 'radio']))
+                    ->nullable(),
                 TextInput::make('validation')->nullable(),
 
                 Section::make()
