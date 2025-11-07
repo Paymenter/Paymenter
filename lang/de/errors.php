@@ -7,7 +7,7 @@ return [
         'return_home' => 'Back to Home',
     ],
     '500' => [
-        'title' => 'Server Error',
+        'title' => 'Interner Fehler',
         'message' => 'Hoppla, bei uns ist etwas schiefgelaufen. Bitte versuchen Sie es später erneut.',
     ],
 ];
