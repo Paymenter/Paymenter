@@ -61,9 +61,9 @@ return [
 
     'no_services' => 'No services found',
     'update_billing_agreement' => 'Update Billing Agreement',
-    'clear_billing_agreement' => 'Clear Billing Agreement',
-    'select_billing_agreement' => 'Select Billing Agreement',
+    'clear_billing_agreement' => 'Zahlungsvereinbarung entfernen',
+    'select_billing_agreement' => '',
 
     'remove_payment_method' => 'Remove Payment Method',
-    'remove_payment_method_confirm' => 'Are you sure you want to remove the payment method ":name" from this service? Your service will no longer be able to auto pay its invoices.',
+    'remove_payment_method_confirm' => 'Möchtest du die Zahlungsmethode „:name“ wirklich aus diesem Dienst entfernen? Der Dienst kann dann seine Rechnungen nicht mehr automatisch bezahlen.',
 ];

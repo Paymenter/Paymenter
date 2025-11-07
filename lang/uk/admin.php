@@ -3,12 +3,12 @@
 return [
 
     'cronjob' => [
-        'invoices_created' => 'Invoices created',
-        'orders_cancelled' => 'Orders cancelled',
-        'upgrade_invoices_updated' => 'Upgrade invoices updated',
-        'services_suspended' => 'Services suspended',
-        'services_terminated' => 'Services terminated',
-        'tickets_closed' => 'Tickets closed',
-        'email_logs_deleted' => 'Email logs deleted',
+        'invoices_created' => 'Рахунок створено',
+        'orders_cancelled' => 'Замовлення скасовано',
+        'upgrade_invoices_updated' => 'Рахунки за оновлення послуг оновлено',
+        'services_suspended' => 'Послуги призупинено',
+        'services_terminated' => 'Послуги припинено',
+        'tickets_closed' => 'Заявки закрито',
+        'email_logs_deleted' => 'Логи електронної пошти видалено',
     ],
 ];

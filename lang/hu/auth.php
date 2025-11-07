@@ -17,7 +17,7 @@ return [
     'password' => 'A megadott jelszó helytelen.',
     'throttle' => 'Túl sok bejelentkezési kísérlet. Kérlek, próbáld újra :seconds másodperc múlva.',
 
-    'sign_in' => 'Jelentkezz be',
+    'sign_in' => 'Belépés',
     'sign_in_title' => 'Jelentkezz be a fiókodba',
     'or_sign_in_with' => 'Vagy jelentkezzen be ezzel',
     'forgot_password' => 'Elfelejtetted a jelszavadat?',
@@ -42,14 +42,14 @@ return [
 
     'reset_password' => 'Jelszó visszaállítása',
 
-    'verify_2fa' => '2FA Hitelesítés',
+    'verify_2fa' => 'Kétfaktoros hitelesítés',
     'verify' => 'Hitelesítés',
 
     'verification' => [
-        'notice' => 'Hitelesítsd az email címed',
-        'sent' => 'Egy új megerősítő linket küldtünk az email címedre.',
-        'check_your_email' => 'Mielőtt folytatnád, nézd meg az emailjeidet és keresd meg a megerősítő linket, amit küldtünk.',
-        'not_received' => 'Ha nem kaptál megerősítő email-t, itt kérhetsz egy másikat.',
-        'request_another' => 'Hitelesítő email újraküldése',
+        'notice' => 'Erősítsd meg az e-mail címed',
+        'sent' => 'Egy új megerősítő linket küldtünk az e-mail címedre.',
+        'check_your_email' => 'Mielőtt folytatnád, nézd meg az e-mail-jeidet és keresd meg a megerősítő linket, amit küldtünk.',
+        'not_received' => 'Ha nem kaptál megerősítő e-mail-t, itt kérhetsz egy másikat.',
+        'request_another' => 'Megerősítő e-mail újraküldése',
     ],
 ];

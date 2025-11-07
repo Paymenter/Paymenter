@@ -1,18 +1,18 @@
 <?php
 
 return [
-    'home' => 'Kezdőlap',
+    'home' => 'Főoldal',
     'shop' => 'Bolt',
     'cart' => 'Kosár',
     'login' => 'Bejelentkezés',
     'register' => 'Regisztráció',
     'services' => 'Szolgáltatások',
-    'invoices' => 'Számlák',
+    'invoices' => 'Díjbekérők',
     'account' => 'Fiók',
     'personal_details' => 'Személyes adatok',
     'security' => 'Biztonság',
-    'dashboard' => 'Irányítópult',
+    'dashboard' => 'Vezérlőpult',
     'tickets' => 'Hibajegyek',
     'admin' => 'Adminisztrátor',
-    'notifications' => 'Notifications',
+    'notifications' => 'Értesítések',
 ];

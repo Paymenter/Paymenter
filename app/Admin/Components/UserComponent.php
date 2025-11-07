@@ -19,6 +19,8 @@ class UserComponent extends Select
             ->getOptionLabelFromRecordUsing(fn ($record) => $record->name . ' (' . $record->email . ')')
             ->getSearchResultsUsing(fn (string $search): array => User::where('first_name', 'like', "%$search%")
                 ->orWhere('last_name', 'like', "%$search%")
+                ->orWhere('email', 'like', "%$search%")
+                ->orWhere('id', 'like', "%$search%")
                 ->limit(50)
                 ->get()
                 ->mapWithKeys(fn ($user) => [$user->id => $user->name . ' (' . $user->email . ')'])

@@ -68,6 +68,9 @@ class CartItem extends Model
 
                         return;
                     }
+                    if (!$selected || !isset($selected->value)) {
+                        return;
+                    }
 
                     $total += $option->children->where('id', $selected?->value)->first()?->price(billing_period: $this->plan->billing_period, billing_unit: $this->plan->billing_unit)->price;
                     $setup_fee += $option->children->where('id', $selected?->value)->first()?->price(billing_period: $this->plan->billing_period, billing_unit: $this->plan->billing_unit)->setup_fee;

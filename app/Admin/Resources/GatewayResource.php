@@ -58,7 +58,12 @@ class GatewayResource extends Resource
                     ->label('Gateway')
                     ->required()
                     ->searchable()
-                    ->unique(static::getModel(), 'extension', ignoreRecord: true)
+                    ->unique(
+                        static::getModel(),
+                        'extension',
+                        ignoreRecord: true,
+                        modifyRuleUsing: fn ($rule) => $rule->where('deleted_at', null)
+                    )
                     ->options(array_combine(
                         array_column($gateways, 'name'),
                         array_column($gateways, 'name')
