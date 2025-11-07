@@ -74,7 +74,7 @@ class Knowledgebase extends Extension
         Gate::policy(KnowledgeCategory::class, KnowledgeCategoryPolicy::class);
         Gate::policy(KnowledgeArticle::class, KnowledgeArticlePolicy::class);
 
-        Event::listen(['navigation', 'navigation.dashboard'], function () {
+        Event::listen('navigation', function () {
             if (!Schema::hasTable('ext_kb_articles')) {
                 return;
             }
