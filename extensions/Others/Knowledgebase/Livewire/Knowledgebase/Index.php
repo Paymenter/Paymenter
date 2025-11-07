@@ -44,9 +44,21 @@ class Index extends Component
                 'publishedArticles' => fn ($query) => $query->ordered()->limit(5),
             ])
             ->get()
-            ->each(function (KnowledgeCategory $category) {
-                $category->total_articles_count = $category->articles_count + $category->children->sum('articles_count');
-            });
+            ->map(function (KnowledgeCategory $category) {
+                $category->total_articles_count = ($category->articles_count ?? 0)
+                    + $category->children->sum('articles_count');
+
+                $category->setRelation(
+                    'children',
+                    $category->children
+                        ->filter(fn (KnowledgeCategory $child) => ($child->articles_count ?? 0) > 0)
+                        ->values()
+                );
+
+                return $category;
+            })
+            ->filter(fn (KnowledgeCategory $category) => ($category->total_articles_count ?? 0) > 0)
+            ->values();
 
         $searchResults = null;
 
