@@ -14,9 +14,9 @@ use Filament\Forms\Components\TagsInput;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
-use Filament\Schemas\Components\Utilities\Get as FormGet;
 use Filament\Resources\Resource;
 use Filament\Schemas\Components\Section;
+use Filament\Schemas\Components\Utilities\Get as FormGet;
 use Filament\Schemas\Schema;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\ToggleColumn;
@@ -52,8 +52,8 @@ class CustomPropertyResource extends Resource
                     'radio' => 'Radio',
                     'date' => 'Date',
                 ])
-                ->required()
-                ->live(),
+                    ->required()
+                    ->live(),
                 Textarea::make('description')->nullable()->columnSpanFull()->rows(2),
                 TagsInput::make('allowed_values')
                     ->visible(fn (FormGet $get) => in_array($get('type'), ['select', 'radio']))
