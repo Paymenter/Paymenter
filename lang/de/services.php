@@ -44,7 +44,7 @@ return [
         'active' => 'Aktiv',
         'cancelled' => 'Abgebrochen',
         'suspended' => 'Ausgesetzt',
-        'cancellation_pending' => 'Cancellation Pending',
+        'cancellation_pending' => 'Stornierung ausstehend',
     ],
     'billing_cycles' => [
         'day' => 'Tag|Tage',
@@ -62,7 +62,7 @@ return [
     'no_services' => 'No services found',
     'update_billing_agreement' => 'Update Billing Agreement',
     'clear_billing_agreement' => 'Zahlungsvereinbarung entfernen',
-    'select_billing_agreement' => '',
+    'select_billing_agreement' => 'Zahlungsvereinbarung entfernen',
 
     'remove_payment_method' => 'Remove Payment Method',
     'remove_payment_method_confirm' => 'Möchtest du die Zahlungsmethode „:name“ wirklich aus diesem Dienst entfernen? Der Dienst kann dann seine Rechnungen nicht mehr automatisch bezahlen.',
