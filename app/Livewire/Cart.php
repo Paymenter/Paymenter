@@ -163,7 +163,7 @@ class Cart extends Component
             // Create the services
             foreach ($cart->items as $item) {
                 // Is it a lifetime coupon, then we can adjust the price of the service
-                if ($this->coupon && ($this->coupon?->recurring === null || (int) $this->coupon?->recurring == 1)) {
+                if ($this->coupon && ($this->coupon->recurring === null || (int) $this->coupon->recurring == 1)) {
                     // Apply coupon only to first billing cycle (use original price for recurring)
                     $price = $item->price->original_price;
                 } else {
