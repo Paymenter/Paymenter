@@ -20,6 +20,7 @@ use Illuminate\Http\Request;
 use Illuminate\Queue\Events\JobFailed;
 use Illuminate\Queue\Events\JobProcessed;
 use Illuminate\Routing\UrlGenerator;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Queue;
@@ -134,6 +135,14 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        // Register custom Blesta user provider for password compatibility
+        Auth::provider('blesta', function ($app, array $config) {
+            return new \App\Auth\BlestaUserProvider(
+                $app['hash'],
+                $config['model']
+            );
+        });
+
         // Change livewire url
         Livewire::setUpdateRoute(function ($handle) {
             return Route::post('/paymenter/update', $handle)->middleware('web')->name('paymenter.');
@@ -192,8 +201,8 @@ class AppServiceProvider extends ServiceProvider
         Passport::tokensCan(ScopeRegistry::getAll());
 
         Route::bind('invoice', function ($val) {
-            return Invoice::where('number', $val)
-                ->orWhere('id', $val)
+            return Invoice::where('id', $val)
+                ->orWhere('number', $val)
                 ->firstOrFail();
         });
 

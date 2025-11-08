@@ -67,7 +67,7 @@ return [
 
     'providers' => [
         'users' => [
-            'driver' => 'eloquent',
+            'driver' => 'blesta', // Custom provider that supports Blesta passwords
             'model' => env('AUTH_MODEL', App\Models\User::class),
         ],
 
