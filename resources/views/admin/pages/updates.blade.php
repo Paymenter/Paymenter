@@ -1,6 +1,6 @@
 <x-filament-panels::page>
     @assets
-    <script src="https://cdn.jsdelivr.net/npm/ansi_up@5.0.0/ansi_up.min.js"></script>
+    <script src="{{ asset('js/ansi_up/ansi_up.min.js') }}"></script>
     @endassets
     @if(config('app.version') == 'beta')
     <div>
