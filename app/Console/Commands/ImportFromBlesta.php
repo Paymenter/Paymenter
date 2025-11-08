@@ -1151,49 +1151,49 @@ class ImportFromBlesta extends Command
         // Blesta doesn't have a separate service_cancellations table
         // Cancellation info is stored in the services table (date_canceled, cancellation_reason)
         $this->info('Creating cancellations from services table...');
-        
-        // Get canceled services from services table
-        // Note: cancellation_reason might not exist in all Blesta versions
-        try {
-            $stmt = $this->pdo->prepare('SELECT id, date_canceled, cancellation_reason, date_renews FROM services WHERE (status = "canceled" OR date_canceled IS NOT NULL)');
-            $stmt->execute();
-            $serviceRecords = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        } catch (PDOException $e) {
-            // cancellation_reason field doesn't exist, try without it
-            $stmt = $this->pdo->prepare('SELECT id, date_canceled, date_renews FROM services WHERE (status = "canceled" OR date_canceled IS NOT NULL)');
-            $stmt->execute();
-            $serviceRecords = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        }
-        
-        $data = [];
-        foreach ($serviceRecords as $record) {
-            // Determine if cancellation is immediate or end of period
-            $type = 'immediate';
-            if (isset($record['date_canceled']) && $record['date_canceled'] && isset($record['date_renews']) && $record['date_renews']) {
-                // If cancel date is the same as renewal date, it's end of period
-                if ($record['date_canceled'] == $record['date_renews']) {
-                    $type = 'end_of_period';
-                } elseif (strtotime($record['date_canceled']) > time()) {
-                    // If cancel date is in the future, it's end of period
-                    $type = 'end_of_period';
-                }
+            
+            // Get canceled services from services table
+            // Note: cancellation_reason might not exist in all Blesta versions
+            try {
+                $stmt = $this->pdo->prepare('SELECT id, date_canceled, cancellation_reason, date_renews FROM services WHERE (status = "canceled" OR date_canceled IS NOT NULL)');
+                $stmt->execute();
+                $serviceRecords = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            } catch (PDOException $e) {
+                // cancellation_reason field doesn't exist, try without it
+                $stmt = $this->pdo->prepare('SELECT id, date_canceled, date_renews FROM services WHERE (status = "canceled" OR date_canceled IS NOT NULL)');
+                $stmt->execute();
+                $serviceRecords = $stmt->fetchAll(PDO::FETCH_ASSOC);
             }
             
-            $data[] = [
-                'service_id' => $record['id'],
-                'reason' => mb_substr($record['cancellation_reason'] ?? '', 0, 255),
-                'type' => $type,
-                'created_at' => $record['date_canceled'] ?? now(),
-                'updated_at' => $record['date_canceled'] ?? now(),
-            ];
-        }
+            $data = [];
+            foreach ($serviceRecords as $record) {
+                // Determine if cancellation is immediate or end of period
+                $type = 'immediate';
+                if (isset($record['date_canceled']) && $record['date_canceled'] && isset($record['date_renews']) && $record['date_renews']) {
+                    // If cancel date is the same as renewal date, it's end of period
+                    if ($record['date_canceled'] == $record['date_renews']) {
+                        $type = 'end_of_period';
+                    } elseif (strtotime($record['date_canceled']) > time()) {
+                        // If cancel date is in the future, it's end of period
+                        $type = 'end_of_period';
+                    }
+                }
+                
+                $data[] = [
+                    'service_id' => $record['id'],
+                    'reason' => mb_substr($record['cancellation_reason'] ?? '', 0, 255),
+                    'type' => $type,
+                    'created_at' => $record['date_canceled'] ?? now(),
+                    'updated_at' => $record['date_canceled'] ?? now(),
+                ];
+            }
 
-        if (count($data) > 0) {
-            DB::table('service_cancellations')->insert($data);
-            $this->info('Created ' . count($data) . ' cancellations from services.');
-        } else {
-            $this->info('No cancellations found.');
-        }
+            if (count($data) > 0) {
+                DB::table('service_cancellations')->insert($data);
+                $this->info('Created ' . count($data) . ' cancellations from services.');
+            } else {
+                $this->info('No cancellations found.');
+            }
     }
 
     private function importInvoices()

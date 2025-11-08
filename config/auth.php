@@ -67,11 +67,7 @@ return [
 
     'providers' => [
         'users' => [
-            'driver' => match(env('AUTH_PROVIDER', 'default')) {
-                'default' => 'eloquent',
-                'blesta' => 'blesta',
-                default => 'eloquent',
-            },
+            'driver' => env('AUTH_PROVIDER', 'eloquent'),
             'model' => env('AUTH_MODEL', App\Models\User::class),
         ],
 
