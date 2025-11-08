@@ -60,17 +60,15 @@ class ServiceResource extends Resource
                 Select::make('product_id')
                     ->label('Product')
                     ->required()
-                    ->options(
-                        function () {
-                            return Product::with('category')
-                                ->get()
-                                ->mapWithKeys(function (Product $product) {
-                                    $categoryName = $product->category->name;
-                                    return [$product->id => "{$product->name} - {$categoryName} ({$product->id})"];
-                                })
-                                ->toArray();
-                        }
-                    )
+                    ->relationship(
+                            name: 'product',
+                            titleAttribute: 'name',
+                            modifyQueryUsing: fn (Builder $query) => $query->with('category')
+                        )
+                    ->getOptionLabelFromRecordUsing(function (Product $product) {
+                            $categoryName = $product->category->name; 
+                            return "{$product->name} - {$categoryName} ({$product->id})";
+                        })
                     ->searchable()
                     ->live()
                     ->preload()
