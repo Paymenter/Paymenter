@@ -23,7 +23,7 @@ class Cart extends Component
 
     public $gateway;
 
-    public $coupon;
+    public $coupon = '';
 
     public $use_credits = true;
 
@@ -31,9 +31,7 @@ class Cart extends Component
 
     public function mount()
     {
-        if (ClassesCart::get()->coupon_id) {
-            $this->coupon = ClassesCart::get()->coupon;
-        }
+        $this->refreshCouponState();
         $this->updateTotal();
     }
 
@@ -53,30 +51,40 @@ class Cart extends Component
 
     public function applyCoupon()
     {
-        if ($this->coupon && ClassesCart::get()->coupon_id) {
+        if (ClassesCart::get()->coupon_id) {
             return $this->notify('Coupon code already applied', 'error');
         }
+
+        $codeSource = $this->coupon;
+        if (!is_string($codeSource)) {
+            $codeSource = $codeSource->code ?? '';
+        }
+        $code = trim($codeSource);
+
+        if ($code === '') {
+            return $this->notify('Please enter a coupon code', 'error');
+        }
+
         try {
-            ClassesCart::applyCoupon($this->coupon);
+            ClassesCart::applyCoupon($code);
         } catch (DisplayException $e) {
             $this->notify($e->getMessage(), 'error');
-            $this->coupon = null;
+            $this->coupon = '';
 
             return;
         }
-        ClassesCart::get()->load('coupon');
-        $this->coupon = ClassesCart::get()->coupon;
+        $this->refreshCouponState();
         $this->updateTotal();
         $this->notify('Coupon code applied successfully', 'success');
     }
 
     public function removeCoupon()
     {
-        if (!$this->coupon || !ClassesCart::get()->coupon_id) {
+        if (!ClassesCart::get()->coupon_id) {
             return $this->notify('No coupon code applied', 'error');
         }
         ClassesCart::removeCoupon();
-        $this->coupon = null;
+        $this->refreshCouponState();
         $this->updateTotal();
         $this->notify('Coupon code removed successfully', 'success');
     }
@@ -111,7 +119,7 @@ class Cart extends Component
 
         // Re-validate coupon if one exists
         if (ClassesCart::get()->coupon && !ClassesCart::validateAndRefreshCoupon()) {
-            $this->coupon = null;
+            $this->refreshCouponState();
             $this->updateTotal();
 
             return $this->notify('This coupon can no longer be used', 'error');
@@ -162,9 +170,12 @@ class Cart extends Component
             }
 
             // Create the services
+            $cart->load('coupon');
+            $activeCoupon = $cart->coupon;
+
             foreach ($cart->items as $item) {
                 // Is it a lifetime coupon, then we can adjust the price of the service
-                if ($this->coupon && (empty($this->coupon->recurring) || $this->coupon->recurring == 1)) {
+                if ($activeCoupon && (empty($activeCoupon->recurring) || $activeCoupon->recurring == 1)) {
                     // Apply coupon only to first billing cycle (use original price for recurring)
                     $price = $item->price->original_price;
                 } else {
@@ -268,6 +279,23 @@ class Cart extends Component
 
     public function render()
     {
+        $this->refreshCouponState();
+
         return view('cart');
+    }
+
+    protected function refreshCouponState(): void
+    {
+        $cart = ClassesCart::get();
+
+        if (!$cart->exists) {
+            $this->coupon = '';
+
+            return;
+        }
+
+        $cart->refresh();
+        $cart->loadMissing('coupon');
+        $this->coupon = $cart->coupon ?? '';
     }
 }
