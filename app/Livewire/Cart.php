@@ -81,7 +81,7 @@ class Cart extends Component
     public function removeCoupon()
     {
         if (!ClassesCart::get()->coupon_id) {
-            return $this->notify('No coupon code applied', 'error');
+            return $this->notify('Coupon code could not be applied', 'error');
         }
         ClassesCart::removeCoupon();
         $this->refreshCouponState();
