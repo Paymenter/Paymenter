@@ -116,6 +116,7 @@ class ServiceUpgrade extends Model implements Auditable
         }
 
         $price = $oldItem->price(
+            null,
             $this->service->plan->billing_period,
             $this->service->plan->billing_unit,
             $this->service->currency_code
