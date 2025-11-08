@@ -49,31 +49,31 @@ class Upgrade extends Component
     #[Computed]
     public function totalToday()
     {
-        $upgrade = new ServiceUpgrade([
-            'service' => $this->service,
-            'product' => $this->upgradeProduct,
-        ]);
+        $upgrade = new ServiceUpgrade();
+        $upgrade->setRelation('service', $this->service);
+        $upgrade->setRelation('product', $this->upgradeProduct);
 
-        $total = $upgrade->calculateProratedAmount(
-            $this->service->product,
-            $this->upgradeProduct
-        )->price;
+        $configOverrides = collect($this->configOptions ?? [])
+            ->mapWithKeys(function ($value, $optionId) {
+                $option = $this->upgradeProduct?->upgradableConfigOptions->firstWhere('id', (int) $optionId);
 
-        // Calculate prices for config options
-        foreach ($this->configOptions as $optionId => $value) {
-            $option = $this->upgradeProduct->upgradableConfigOptions->where('id', $optionId)->first();
-            if (!$option || !$option->children->contains('id', $value)) {
-                continue;
-            }
+                if (!$option) {
+                    return [];
+                }
 
-            $oldPrice = $this->service->configs->where('config_option_id', $optionId)->first();
+                $configValue = $option->children->firstWhere('id', $value);
 
-            $ctotal = $upgrade->calculateProratedAmount(
-                $oldPrice ? $oldPrice->configValue : null,
-                $option->children->find($value)
-            );
-            $total += $ctotal->price;
-        }
+                if (!$configValue) {
+                    return [];
+                }
+
+                return [(int) $optionId => $configValue];
+            });
+
+        $total = $upgrade->calculateProratedTotalFor(
+            $this->upgradeProduct,
+            $configOverrides->all()
+        );
 
         return new Price([
             'price' => $total,
