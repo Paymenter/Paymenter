@@ -28,7 +28,17 @@ class TicketMessageAttachment extends Model
 
     public function getLocalPathAttribute(): string
     {
-        return storage_path("app/{$this->path}");
+        // Security: Validate path to prevent directory traversal
+        $safePath = str_replace(['..', "\0"], '', $this->path);
+        $fullPath = storage_path("app/{$safePath}");
+
+        // Ensure the resolved path is within the storage directory
+        $storagePath = storage_path('app/');
+        if (strpos(realpath(dirname($fullPath)), realpath($storagePath)) !== 0) {
+            throw new \RuntimeException('Invalid file path');
+        }
+
+        return $fullPath;
     }
 
     // Function to check if attachment can be previewed

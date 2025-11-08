@@ -636,8 +636,9 @@ class ImportFromWhmcs extends Command
         if (!$userId) {
             if ($message['admin'] !== '') {
                 // Admin is a first name + last name in WHMCS
+                // Security: Use parameter binding to prevent SQL injection
                 $user = DB::table('users')
-                    ->where(DB::raw("CONCAT(first_name, ' ', last_name)"), $message['admin'])
+                    ->whereRaw("CONCAT(first_name, ' ', last_name) = ?", [$message['admin']])
                     ->orWhere('first_name', $message['admin'])
                     ->first();
                 if ($user) {

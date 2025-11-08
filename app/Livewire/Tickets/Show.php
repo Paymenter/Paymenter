@@ -41,9 +41,12 @@ class Show extends Component
             $path = 'tickets/uploads/' . $newName;
             $attachment->storeAs('tickets/uploads', $newName);
 
+            // Security: Sanitize filename to prevent header injection
+            $safeFilename = $this->sanitizeFilename($attachment->getClientOriginalName());
+
             $message->attachments()->create([
                 'path' => $path,
-                'filename' => $attachment->getClientOriginalName(),
+                'filename' => $safeFilename,
                 'mime_type' => File::mimeType(storage_path('app/' . $path)),
                 'filesize' => File::size(storage_path('app/' . $path)),
             ]);
@@ -67,6 +70,27 @@ class Show extends Component
         $this->ticket->refresh();
 
         $this->notify(__('ticket.close_ticket_success'));
+    }
+
+    /**
+     * Sanitize filename to prevent security issues
+     */
+    private function sanitizeFilename(string $filename): string
+    {
+        // Remove any path separators
+        $filename = basename($filename);
+
+        // Remove null bytes and control characters
+        $filename = preg_replace('/[\x00-\x1F\x7F]/', '', $filename);
+
+        // Limit length
+        if (strlen($filename) > 255) {
+            $extension = pathinfo($filename, PATHINFO_EXTENSION);
+            $basename = pathinfo($filename, PATHINFO_FILENAME);
+            $filename = substr($basename, 0, 255 - strlen($extension) - 1) . '.' . $extension;
+        }
+
+        return $filename;
     }
 
     public function render()

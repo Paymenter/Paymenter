@@ -109,25 +109,36 @@ class UploadExtensionService
         foreach ($files as $file) {
             // Read file
             $content = file_get_contents($file);
+
+            // Security: Validate file content before processing
+            if (!$this->validatePhpFile($content)) {
+                continue;
+            }
+
             if (preg_match('/namespace\s+(.+?);/', $content, $matches)) {
-                if (!class_exists($matches[1] . '\\' . pathinfo(class_basename($file), PATHINFO_FILENAME))) {
-                    // If the class is not loaded, include the file
-                    require_once $file; // Include the file to load the class
-                }
                 $namespace = $matches[1];
+
+                // Security: Validate namespace format
+                if (!preg_match('/^[A-Za-z_\\\\][A-Za-z0-9_\\\\]*$/', $namespace)) {
+                    continue;
+                }
+
                 if (preg_match('/^\s*class\s+([A-Za-z_][A-Za-z0-9_]*)\s*(?:extends|implements|\{)/m', $content, $classMatches)) {
                     $className = $classMatches[1];
                     $fullClassName = $namespace . '\\' . $className;
 
                     // Only return className
                     $type['class'] = $className;
-                    if (is_subclass_of($fullClassName, Server::class)) {
+
+                    // Security: Check inheritance through static analysis instead of loading the file
+                    if ($this->extendsClass($content, 'Server')) {
                         $type['type'] = 'server';
-                    } elseif (is_subclass_of($fullClassName, Gateway::class)) {
+                    } elseif ($this->extendsClass($content, 'Gateway')) {
                         $type['type'] = 'gateway';
-                    } elseif (is_subclass_of($fullClassName, Extension::class)) {
+                    } elseif ($this->extendsClass($content, 'Extension')) {
                         $type['type'] = 'other';
                     }
+
                     if ($type['class'] && $type['type']) {
                         break; // Exit the loop if we found a valid class
                     }
@@ -139,6 +150,36 @@ class UploadExtensionService
         }
 
         return $type;
+    }
+
+    /**
+     * Validate PHP file content for security
+     */
+    private function validatePhpFile(string $content): bool
+    {
+        // Check for dangerous functions
+        $dangerousFunctions = [
+            'eval', 'exec', 'shell_exec', 'system', 'passthru',
+            'proc_open', 'popen', 'curl_exec', 'curl_multi_exec',
+            'parse_ini_file', 'show_source', 'file_get_contents',
+            'file_put_contents', 'unlink', 'rmdir'
+        ];
+
+        foreach ($dangerousFunctions as $func) {
+            if (preg_match('/\b' . preg_quote($func, '/') . '\s*\(/i', $content)) {
+                throw new \Exception("Extension contains potentially dangerous function: {$func}");
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * Check if class extends a specific parent class through static analysis
+     */
+    private function extendsClass(string $content, string $parentClass): bool
+    {
+        return preg_match('/class\s+\w+\s+extends\s+' . preg_quote($parentClass, '/') . '\b/', $content) === 1;
     }
 
     private function validateExtensionPath(string $path, int $depth = 0): string
