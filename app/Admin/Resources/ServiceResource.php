@@ -28,9 +28,9 @@ use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Schema;
 use Filament\Support\RawJs;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\Filter;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
-use Filament\Tables\Filters\Filter;
 use Illuminate\Database\Eloquent\Builder;
 
 class ServiceResource extends Resource
@@ -61,14 +61,15 @@ class ServiceResource extends Resource
                     ->label('Product')
                     ->required()
                     ->relationship(
-                            name: 'product',
-                            titleAttribute: 'name',
-                            modifyQueryUsing: fn (Builder $query) => $query->with('category')
-                        )
+                        name: 'product',
+                        titleAttribute: 'name',
+                        modifyQueryUsing: fn (Builder $query) => $query->with('category')
+                    )
                     ->getOptionLabelFromRecordUsing(function (Product $product) {
-                            $categoryName = $product->category->name; 
-                            return "{$product->name} - {$categoryName} ({$product->id})";
-                        })
+                        $categoryName = $product->category->name;
+
+                        return "{$product->name} - {$categoryName} ({$product->id})";
+                    })
                     ->searchable()
                     ->live()
                     ->preload()
@@ -86,11 +87,11 @@ class ServiceResource extends Resource
                     ->label('Status')
                     ->required()
                     ->options([
-                        // active, pending, suspended, cancelled
-                        'active' => 'Active',
-                        'pending' => 'Pending',
-                        'suspended' => 'Suspended',
-                        'cancelled' => 'Cancelled',
+                    // active, pending, suspended, cancelled
+                    'active' => 'Active',
+                    'pending' => 'Pending',
+                    'suspended' => 'Suspended',
+                    'cancelled' => 'Cancelled',
                     ])
                     ->default('pending'),
                 TextInput::make('quantity')

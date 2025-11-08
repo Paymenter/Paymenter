@@ -80,6 +80,7 @@ class OrderResource extends Resource
                             )
                             ->getOptionLabelFromRecordUsing(function (Product $product) {
                                 $categoryName = $product->category->name;
+
                                 return "{$product->name} - {$categoryName} ({$product->id})";
                             })
                             ->searchable()
