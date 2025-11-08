@@ -53,21 +53,8 @@ class BlestaPasswordHelper
     }
 
     /**
-     * Check if a password hash appears to be a Blesta-style hash
-     * This is a heuristic check - Blesta hashes are bcrypt hashes that start with $2y$
-     * 
-     * @param string $hash The password hash to check
-     * @return bool True if it looks like a Blesta hash (bcrypt format)
-     */
-    public static function isBlestaHash(string $hash): bool
-    {
-        // Blesta uses bcrypt, which starts with $2y$ or $2a$ or $2b$
-        return preg_match('/^\$2[ayb]\$/', $hash) === 1;
-    }
-
-    /**
      * Verify password with fallback to standard Laravel hash
-     * Tries Blesta verification first, then falls back to standard Hash::check
+     * Tries Blesta verification first (if system key exists), then falls back to standard Hash::check
      * 
      * @param string $password The plain text password
      * @param string $hash The stored password hash
@@ -79,7 +66,7 @@ class BlestaPasswordHelper
         // First try Blesta verification if system key exists
         $blestaKey = $systemKey ?? \App\Models\Setting::where('key', 'blesta_system_key')->value('value');
         
-        if ($blestaKey && self::isBlestaHash($hash)) {
+        if ($blestaKey) {
             $blestaVerified = self::verify($password, $hash, $blestaKey);
             if ($blestaVerified) {
                 return true;
