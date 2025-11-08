@@ -97,7 +97,14 @@ class KnowledgeArticleResource extends Resource
                     ->label('Content')
                     ->columnSpanFull()
                     ->required()
-                    ->placeholder('Article content'),
+                    ->placeholder('Article content')
+                    ->toolbarButtons([
+                        ['bold', 'italic', 'underline', 'strike', 'subscript', 'superscript', 'link', 'small', 'lead'],
+                        ['h1', 'h2', 'h3', 'alignStart', 'alignCenter', 'alignEnd'],
+                        ['blockquote', 'codeBlock', 'bulletList', 'orderedList', 'details', 'code', 'textColor'],
+                        ['table', 'attachFiles', 'grid', 'gridDelete', 'horizontalRule'],
+                        ['undo', 'redo'],
+                    ]),
             ])
             ->columns(2);
     }
