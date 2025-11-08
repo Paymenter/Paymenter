@@ -52,10 +52,6 @@ class ImportFromBlesta extends Command
      */
     protected $batchSize = 500;
 
-    /**
-     * Map of Blesta module/module_row to Paymenter server_id
-     */
-    protected array $moduleServerMap = [];
 
     /**
      * Execute the console command.
@@ -102,7 +98,6 @@ class ImportFromBlesta extends Command
             $this->importAdmins();
             $this->importUsers();
             $this->importCategories();
-            $this->importServers();
             $this->importProducts();
             $this->importTickets();
             $this->importOrders();
@@ -505,158 +500,6 @@ class ImportFromBlesta extends Command
         });
     }
 
-    private function importServers()
-    {
-        $this->info('Importing servers from Blesta modules (Pterodactyl)...');
-
-        $modules = [];
-        try {
-            $modulesStmt = $this->pdo->prepare("SELECT * FROM modules WHERE LOWER(class) = 'pterodactyl' OR LOWER(name) LIKE '%pterodactyl%'");
-            $modulesStmt->execute();
-            $modules = $modulesStmt->fetchAll(PDO::FETCH_ASSOC);
-        } catch (PDOException $e) {
-            $this->info('No modules table found or query failed, skipping servers import.');
-            return;
-        }
-
-        if (!$modules || count($modules) === 0) {
-            $this->info('No Pterodactyl modules found in Blesta.');
-            return;
-        }
-
-        foreach ($modules as $module) {
-            $rows = [];
-            try {
-                $rowsStmt = $this->pdo->prepare('SELECT * FROM module_rows WHERE module_id = :module_id');
-                $rowsStmt->bindValue(':module_id', $module['id'], PDO::PARAM_INT);
-                $rowsStmt->execute();
-                $rows = $rowsStmt->fetchAll(PDO::FETCH_ASSOC);
-            } catch (PDOException $e) {
-            }
-
-            if (!$rows || count($rows) === 0) {
-                continue;
-            }
-
-            $moduleLevelMeta = [];
-            try {
-                $moduleMetaStmt = $this->pdo->prepare('SELECT * FROM module_meta WHERE module_id = :module_id');
-                $moduleMetaStmt->bindValue(':module_id', $module['id'], PDO::PARAM_INT);
-                $moduleMetaStmt->execute();
-                $moduleMetas = $moduleMetaStmt->fetchAll(PDO::FETCH_ASSOC);
-                foreach ($moduleMetas as $m) {
-                    $key = strtolower($m['key'] ?? '');
-                    $moduleLevelMeta[$key] = $m['value'] ?? null;
-                }
-            } catch (PDOException $e) {
-            }
-
-            foreach ($rows as $row) {
-                $meta = [];
-                try {
-                    $metaStmt = $this->pdo->prepare('SELECT * FROM module_row_meta WHERE module_row_id = :row_id');
-                    $metaStmt->bindValue(':row_id', $row['id'], PDO::PARAM_INT);
-                    $metaStmt->execute();
-                    $metas = $metaStmt->fetchAll(PDO::FETCH_ASSOC);
-                    foreach ($metas as $m) {
-                        $key = strtolower($m['key'] ?? '');
-                        $meta[$key] = $m['value'] ?? null;
-                    }
-                } catch (PDOException $e) {
-                }
-
-                $hostCandidates = [
-                    $meta['hostname'] ?? null,
-                    $meta['host_name'] ?? null,
-                    $meta['host'] ?? null,
-                    $meta['url'] ?? null,
-                    $meta['panel_url'] ?? null,
-                    $meta['base_url'] ?? null,
-                    $moduleLevelMeta['hostname'] ?? null,
-                    $moduleLevelMeta['host_name'] ?? null,
-                    $moduleLevelMeta['host'] ?? null,
-                    $moduleLevelMeta['url'] ?? null,
-                    $moduleLevelMeta['panel_url'] ?? null,
-                    $moduleLevelMeta['base_url'] ?? null,
-                ];
-                $apiKeyCandidates = [
-                    $meta['application_api_key'] ?? null,
-                    $meta['application_api_token'] ?? null,
-                    $meta['api_key'] ?? null,
-                    $meta['token'] ?? null,
-                    $meta['account_api_key'] ?? null,
-                    $meta['application_key'] ?? null,
-                    $meta['pterodactyl_api_key'] ?? null,
-                    $moduleLevelMeta['application_api_key'] ?? null,
-                    $moduleLevelMeta['application_api_token'] ?? null,
-                    $moduleLevelMeta['api_key'] ?? null,
-                    $moduleLevelMeta['token'] ?? null,
-                    $moduleLevelMeta['account_api_key'] ?? null,
-                    $moduleLevelMeta['application_key'] ?? null,
-                    $moduleLevelMeta['pterodactyl_api_key'] ?? null,
-                ];
-
-                $host = null;
-                foreach ($hostCandidates as $cand) {
-                    if (!empty($cand)) { $host = $cand; break; }
-                }
-                $apiKey = null;
-                foreach ($apiKeyCandidates as $cand) {
-                    if (!empty($cand)) { $apiKey = $cand; break; }
-                }
-
-                if ($apiKey) {
-                    $decoded = base64_decode($apiKey, true);
-                    if ($decoded !== false) {
-                        $apiKey = $decoded;
-                    }
-                }
-
-                if ($host && !preg_match('/^https?:\/\//i', $host)) {
-                    $useSsl = null;
-                    if (isset($meta['use_ssl'])) {
-                        $useSsl = filter_var($meta['use_ssl'], FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE);
-                    } elseif (isset($moduleLevelMeta['use_ssl'])) {
-                        $useSsl = filter_var($moduleLevelMeta['use_ssl'], FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE);
-                    }
-                    $host = ($useSsl === false ? 'http://' : 'https://') . $host;
-                }
-
-                $serverName = $meta['server_name'] ?? $row['name'] ?? $module['name'] ?? ('Pterodactyl #' . $row['id']);
-
-                if (!$host || !$apiKey) {
-                    $this->info('Skipping Pterodactyl server import for module_row_id ' . $row['id'] . ' due to missing host or API key.');
-                    continue;
-                }
-
-                $existing = DB::table('extensions')
-                    ->where('type', 'server')
-                    ->where('name', $serverName)
-                    ->first();
-
-                if ($existing) {
-                    $serverId = $existing->id;
-                } else {
-                    $serverId = DB::table('extensions')->insertGetId([
-                        'name' => $serverName,
-                        'enabled' => true,
-                        'extension' => 'Pterodactyl',
-                        'type' => 'server',
-                        'created_at' => now(),
-                        'updated_at' => now(),
-                    ]);
-
-                }
-
-                $this->moduleServerMap['row_' . $row['id']] = $serverId;
-                $this->moduleServerMap['module_' . $module['id']] = $serverId;
-            }
-        }
-
-        if (count($this->moduleServerMap) > 0) {
-            $this->info('Imported Pterodactyl server definitions.');
-        }
-    }
 
     private function importProducts()
     {
@@ -748,8 +591,6 @@ class ImportFromBlesta extends Command
                     'hidden' => ($record['status'] ?? 'active') !== 'active' ? 1 : 0,
                     'stock' => $stock,
                     'allow_quantity' => $allowQuantity,
-                    // Link Pterodactyl server if module is mapped
-                    'server_id' => isset($record['module_id']) && isset($this->moduleServerMap['module_' . $record['module_id']]) ? $this->moduleServerMap['module_' . $record['module_id']] : null,
                     'created_at' => now(),
                     'updated_at' => now(),
                 ];
@@ -1151,86 +992,49 @@ class ImportFromBlesta extends Command
 
     private function importOrders()
     {
-        // Blesta may not have a separate orders table
-        // We'll create orders from services if order_id exists
-        // Check if orders table exists first
-        try {
-            $orderCount = $this->count('orders');
-            $this->info('Importing orders... (' . $orderCount . ' records)');
-            
-            $this->migrateInBatch('orders', 'SELECT * FROM orders LIMIT :limit OFFSET :offset', function ($records) {
-                $data = [];
-                foreach ($records as $record) {
-                    // Get currency from client
-                    $clientStmt = $this->pdo->prepare('SELECT * FROM clients WHERE id = :id LIMIT 1');
-                    $clientStmt->bindValue(':id', $record['client_id'] ?? 0, PDO::PARAM_INT);
-                    $clientStmt->execute();
-                    $client = $clientStmt->fetch(PDO::FETCH_ASSOC);
+        // Blesta doesn't have a separate orders table
+        // Create orders from services if order_id exists
+        $this->info('Creating orders from services...');
+        
+        $stmt = $this->pdo->prepare('SELECT DISTINCT order_id, client_id FROM services WHERE order_id IS NOT NULL');
+        $stmt->execute();
+        $orderRecords = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        
+        $data = [];
+        $orderIds = [];
+        
+        foreach ($orderRecords as $record) {
+            if (isset($record['order_id']) && !in_array($record['order_id'], $orderIds)) {
+                $orderIds[] = $record['order_id'];
+                
+                // Get currency from client
+                $clientStmt = $this->pdo->prepare('SELECT * FROM clients WHERE id = :id LIMIT 1');
+                $clientStmt->bindValue(':id', $record['client_id'], PDO::PARAM_INT);
+                $clientStmt->execute();
+                $client = $clientStmt->fetch(PDO::FETCH_ASSOC);
 
-                    if (!$client) {
-                        continue;
-                    }
-
+                if ($client) {
                     $currencyStmt = $this->pdo->prepare('SELECT * FROM currencies WHERE id = :id LIMIT 1');
                     $currencyStmt->bindValue(':id', $client['currency'] ?? 1, PDO::PARAM_INT);
                     $currencyStmt->execute();
                     $currency = $currencyStmt->fetch(PDO::FETCH_ASSOC);
 
                     $data[] = [
-                        'id' => $record['id'],
+                        'id' => $record['order_id'],
                         'user_id' => $record['client_id'],
                         'currency_code' => $currency['code'] ?? 'USD',
-                        'created_at' => $record['date_created'] ?? now(),
-                        'updated_at' => $record['date_updated'] ?? $record['date_created'] ?? now(),
+                        'created_at' => now(),
+                        'updated_at' => now(),
                     ];
                 }
-
-                if (count($data) > 0) {
-                    DB::table('orders')->insert($data);
-                }
-            });
-        } catch (PDOException $e) {
-            // Orders table doesn't exist, create orders from services
-            $this->info('Orders table not found, creating orders from services...');
-            
-            $stmt = $this->pdo->prepare('SELECT DISTINCT order_id, client_id FROM services WHERE order_id IS NOT NULL');
-            $stmt->execute();
-            $orderRecords = $stmt->fetchAll(PDO::FETCH_ASSOC);
-            
-            $data = [];
-            $orderIds = [];
-            
-            foreach ($orderRecords as $record) {
-                if (isset($record['order_id']) && !in_array($record['order_id'], $orderIds)) {
-                    $orderIds[] = $record['order_id'];
-                    
-                    // Get currency from client
-                    $clientStmt = $this->pdo->prepare('SELECT * FROM clients WHERE id = :id LIMIT 1');
-                    $clientStmt->bindValue(':id', $record['client_id'], PDO::PARAM_INT);
-                    $clientStmt->execute();
-                    $client = $clientStmt->fetch(PDO::FETCH_ASSOC);
-
-                    if ($client) {
-                        $currencyStmt = $this->pdo->prepare('SELECT * FROM currencies WHERE id = :id LIMIT 1');
-                        $currencyStmt->bindValue(':id', $client['currency'] ?? 1, PDO::PARAM_INT);
-                        $currencyStmt->execute();
-                        $currency = $currencyStmt->fetch(PDO::FETCH_ASSOC);
-
-                        $data[] = [
-                            'id' => $record['order_id'],
-                            'user_id' => $record['client_id'],
-                            'currency_code' => $currency['code'] ?? 'USD',
-                            'created_at' => now(),
-                            'updated_at' => now(),
-                        ];
-                    }
-                }
             }
+        }
 
-            if (count($data) > 0) {
-                DB::table('orders')->insert($data);
-                $this->info('Created ' . count($data) . ' orders from services.');
-            }
+        if (count($data) > 0) {
+            DB::table('orders')->insert($data);
+            $this->info('Created ' . count($data) . ' orders from services.');
+        } else {
+            $this->info('No orders found.');
         }
     }
 
@@ -1357,18 +1161,9 @@ class ImportFromBlesta extends Command
                     ]);
                 }
 
-                $orderId = null;
-                try {
-                    $orderStmt = $this->pdo->prepare('SELECT id FROM orders WHERE client_id = :client_id ORDER BY date_created DESC LIMIT 1');
-                    $orderStmt->bindValue(':client_id', $record['client_id'], PDO::PARAM_INT);
-                    $orderStmt->execute();
-                    $orderResult = $orderStmt->fetch(PDO::FETCH_ASSOC);
-                    if ($orderResult) {
-                        $orderId = $orderResult['id'];
-                    }
-                } catch (PDOException $e) {
-                    // Orders table doesn't exist or query failed, skip order_id
-                }
+                // Use order_id from service record if it exists
+                // Orders are created from services in importOrders(), so we can use the order_id directly
+                $orderId = $record['order_id'] ?? null;
 
                 // Ensure we have valid product_id and plan_id to prevent 500 errors
                 if (!$packageId || !$planId) {
@@ -1407,72 +1202,49 @@ class ImportFromBlesta extends Command
     {
         // Blesta doesn't have a separate service_cancellations table
         // Cancellation info is stored in the services table (date_canceled, cancellation_reason)
-        // Check if table exists first, otherwise create from services
+        $this->info('Creating cancellations from services table...');
+        
+        // Get canceled services from services table
+        // Note: cancellation_reason might not exist in all Blesta versions
         try {
-            $cancelCount = $this->count('service_cancellations');
-            $this->info('Importing cancellations... (' . $cancelCount . ' records)');
-            
-            $this->migrateInBatch('service_cancellations', 'SELECT * FROM service_cancellations LIMIT :limit OFFSET :offset', function ($records) {
-                $data = [];
-                foreach ($records as $record) {
-                    $data[] = [
-                        'id' => $record['id'],
-                        'service_id' => $record['service_id'],
-                        'reason' => mb_substr($record['reason'] ?? '', 0, 255),
-                        'type' => ($record['date_canceled'] ?? null) ? 'immediate' : 'end_of_period',
-                        'created_at' => $record['date_canceled'] ?? $record['date_added'] ?? now(),
-                        'updated_at' => $record['date_updated'] ?? $record['date_added'] ?? now(),
-                    ];
-                }
-
-                DB::table('service_cancellations')->insert($data);
-            });
+            $stmt = $this->pdo->prepare('SELECT id, date_canceled, cancellation_reason, date_renews FROM services WHERE (status = "canceled" OR date_canceled IS NOT NULL)');
+            $stmt->execute();
+            $serviceRecords = $stmt->fetchAll(PDO::FETCH_ASSOC);
         } catch (PDOException $e) {
-            // Table doesn't exist, create cancellations from services table
-            $this->info('Service cancellations table not found, creating from services table...');
-            
-            // Get canceled services from services table
-            // Note: cancellation_reason might not exist in all Blesta versions
-            try {
-                $stmt = $this->pdo->prepare('SELECT id, date_canceled, cancellation_reason, date_renews FROM services WHERE (status = "canceled" OR date_canceled IS NOT NULL)');
-                $stmt->execute();
-                $serviceRecords = $stmt->fetchAll(PDO::FETCH_ASSOC);
-            } catch (PDOException $e) {
-                // cancellation_reason field doesn't exist, try without it
-                $stmt = $this->pdo->prepare('SELECT id, date_canceled, date_renews FROM services WHERE (status = "canceled" OR date_canceled IS NOT NULL)');
-                $stmt->execute();
-                $serviceRecords = $stmt->fetchAll(PDO::FETCH_ASSOC);
-            }
-            
-            $data = [];
-            foreach ($serviceRecords as $record) {
-                // Determine if cancellation is immediate or end of period
-                $type = 'immediate';
-                if (isset($record['date_canceled']) && $record['date_canceled'] && isset($record['date_renews']) && $record['date_renews']) {
-                    // If cancel date is the same as renewal date, it's end of period
-                    if ($record['date_canceled'] == $record['date_renews']) {
-                        $type = 'end_of_period';
-                    } elseif (strtotime($record['date_canceled']) > time()) {
-                        // If cancel date is in the future, it's end of period
-                        $type = 'end_of_period';
-                    }
+            // cancellation_reason field doesn't exist, try without it
+            $stmt = $this->pdo->prepare('SELECT id, date_canceled, date_renews FROM services WHERE (status = "canceled" OR date_canceled IS NOT NULL)');
+            $stmt->execute();
+            $serviceRecords = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        }
+        
+        $data = [];
+        foreach ($serviceRecords as $record) {
+            // Determine if cancellation is immediate or end of period
+            $type = 'immediate';
+            if (isset($record['date_canceled']) && $record['date_canceled'] && isset($record['date_renews']) && $record['date_renews']) {
+                // If cancel date is the same as renewal date, it's end of period
+                if ($record['date_canceled'] == $record['date_renews']) {
+                    $type = 'end_of_period';
+                } elseif (strtotime($record['date_canceled']) > time()) {
+                    // If cancel date is in the future, it's end of period
+                    $type = 'end_of_period';
                 }
-                
-                $data[] = [
-                    'service_id' => $record['id'],
-                    'reason' => mb_substr($record['cancellation_reason'] ?? '', 0, 255),
-                    'type' => $type,
-                    'created_at' => $record['date_canceled'] ?? now(),
-                    'updated_at' => $record['date_canceled'] ?? now(),
-                ];
             }
+            
+            $data[] = [
+                'service_id' => $record['id'],
+                'reason' => mb_substr($record['cancellation_reason'] ?? '', 0, 255),
+                'type' => $type,
+                'created_at' => $record['date_canceled'] ?? now(),
+                'updated_at' => $record['date_canceled'] ?? now(),
+            ];
+        }
 
-            if (count($data) > 0) {
-                DB::table('service_cancellations')->insert($data);
-                $this->info('Created ' . count($data) . ' cancellations from services.');
-            } else {
-                $this->info('No cancellations found.');
-            }
+        if (count($data) > 0) {
+            DB::table('service_cancellations')->insert($data);
+            $this->info('Created ' . count($data) . ' cancellations from services.');
+        } else {
+            $this->info('No cancellations found.');
         }
     }
 

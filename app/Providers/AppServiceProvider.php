@@ -136,6 +136,9 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         // Register custom Blesta user provider for password compatibility
+        // Note: Blesta uses HMAC-SHA-256 + bcrypt (not standard bcrypt), so a custom provider is needed
+        // to verify passwords during migration. The provider falls back to standard Laravel bcrypt
+        // for passwords that are already in standard format.
         Auth::provider('blesta', function ($app, array $config) {
             return new \App\Auth\BlestaUserProvider(
                 $app['hash'],
