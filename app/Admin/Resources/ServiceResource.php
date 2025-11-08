@@ -28,9 +28,9 @@ use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Schema;
 use Filament\Support\RawJs;
 use Filament\Tables\Columns\TextColumn;
-use Filament\Tables\Filters\Filter;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
+use Filament\Tables\Filters\Filter;
 use Illuminate\Database\Eloquent\Builder;
 
 class ServiceResource extends Resource
@@ -60,7 +60,15 @@ class ServiceResource extends Resource
                 Select::make('product_id')
                     ->label('Product')
                     ->required()
-                    ->options(Product::all()->pluck('name', 'id')->toArray())
+                    ->relationship(
+                            name: 'product',
+                            titleAttribute: 'name',
+                            modifyQueryUsing: fn (Builder $query) => $query->with('category')
+                        )
+                    ->getOptionLabelFromRecordUsing(function (Product $product) {
+                            $categoryName = $product->category->name; 
+                            return "{$product->name} - {$categoryName} ({$product->id})";
+                        })
                     ->searchable()
                     ->live()
                     ->preload()
