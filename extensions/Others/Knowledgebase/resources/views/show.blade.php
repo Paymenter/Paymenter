@@ -20,13 +20,6 @@
                             <span>{{ $article->published_at->timezone(config('app.timezone'))->translatedFormat('M d, Y') }}</span>
                         @endif
                         <span>{{ trans_choice('knowledgebase::messages.view_count', $article->view_count, ['count' => $article->view_count]) }}</span>
-                        @if ($allowDownloads)
-                            <a href="{{ route('knowledgebase.article.download', $article) }}"
-                                class="inline-flex items-center gap-1 whitespace-nowrap rounded-md border border-neutral bg-background-secondary px-2.5 py-1 text-xs font-medium text-base transition hover:bg-background-secondary/80">
-                                <x-ri-download-2-line class="size-3" />
-                                <span>{{ __('knowledgebase::messages.download_article') }}</span>
-                            </a>
-                        @endif
                     </div>
                 </div>
 
