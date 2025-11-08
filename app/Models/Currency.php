@@ -46,4 +46,24 @@ class Currency extends Model
             Cache::flush();
         });
     }
+
+    public function services()
+    {
+        return $this->hasMany(Service::class, 'currency_code', 'code');
+    }
+
+    public function orders()
+    {
+        return $this->hasMany(Order::class, 'currency_code', 'code');
+    }
+
+    public function credits()
+    {
+        return $this->hasMany(Credit::class, 'currency_code', 'code');
+    }
+
+    public function carts()
+    {
+        return $this->hasMany(Cart::class, 'currency_code', 'code');
+    }
 }

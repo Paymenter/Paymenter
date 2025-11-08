@@ -36,6 +36,11 @@ class CurrencySwitch extends Component
             return;
         }
         session(['currency' => $currency]);
+        $cart = Cart::get();
+        if ($cart->exists) {
+            $cart->currency_code = $currency;
+            $cart->save();
+        }
 
         return $this->redirect(request()->header('Referer', '/'), navigate: true);
     }
