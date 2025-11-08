@@ -78,11 +78,7 @@ class OrderResource extends Resource
                                 titleAttribute: 'name',
                                 modifyQueryUsing: fn (Builder $query) => $query->with('category')
                             )
-                            ->getOptionLabelFromRecordUsing(function (Product $product) {
-                                $categoryName = $product->category->name;
-
-                                return "{$product->name} - {$categoryName} ({$product->id})";
-                            })
+                            ->getOptionLabelFromRecordUsing(fn (Product $product) => "{$product->name} - {$product->category->name} (#{$product->id})")
                             ->searchable()
                             ->preload()
                             ->live()

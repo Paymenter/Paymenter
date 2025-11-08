@@ -109,11 +109,7 @@ class CouponResource extends Resource
                         titleAttribute: 'name',
                         modifyQueryUsing: fn (\Illuminate\Database\Eloquent\Builder $query) => $query->with('category')
                     )
-                    ->getOptionLabelFromRecordUsing(function (\App\Models\Product $record) {
-                        $categoryName = $record->category->name;
-
-                        return "{$record->name} - {$categoryName} ({$record->id})";
-                    })
+                    ->getOptionLabelFromRecordUsing(fn (\App\Models\Product $record) => "{$record->name} - {$record->category->name} (#{$record->id})")
                     ->multiple()
                     ->preload()
                     ->placeholder('Select the products that this coupon applies to')

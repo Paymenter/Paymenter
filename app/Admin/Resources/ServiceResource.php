@@ -65,11 +65,7 @@ class ServiceResource extends Resource
                         titleAttribute: 'name',
                         modifyQueryUsing: fn (Builder $query) => $query->with('category')
                     )
-                    ->getOptionLabelFromRecordUsing(function (Product $product) {
-                        $categoryName = $product->category->name;
-
-                        return "{$product->name} - {$categoryName} ({$product->id})";
-                    })
+                    ->getOptionLabelFromRecordUsing(fn (Product $product) => "{$product->name} - {$product->category->name} (#{$product->id})")
                     ->searchable()
                     ->live()
                     ->preload()
@@ -87,11 +83,11 @@ class ServiceResource extends Resource
                     ->label('Status')
                     ->required()
                     ->options([
-                    // active, pending, suspended, cancelled
-                    'active' => 'Active',
-                    'pending' => 'Pending',
-                    'suspended' => 'Suspended',
-                    'cancelled' => 'Cancelled',
+                        // active, pending, suspended, cancelled
+                        'active' => 'Active',
+                        'pending' => 'Pending',
+                        'suspended' => 'Suspended',
+                        'cancelled' => 'Cancelled',
                     ])
                     ->default('pending'),
                 TextInput::make('quantity')
