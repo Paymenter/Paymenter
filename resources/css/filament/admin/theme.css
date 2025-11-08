@@ -19,7 +19,8 @@
 .fi-ta-ctn, 
 .fi-wi-stats-overview-stat, 
 .fi-section-has-header,
-.fi-widget-wrapper {
+.fi-widget-wrapper,
+.fi-tabs {
     background-color: hsl(var(--color-background-secondary));
 }
 
