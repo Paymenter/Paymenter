@@ -100,7 +100,6 @@ class ImportFromBlesta extends Command
             $this->importCategories();
             $this->importProducts();
             $this->importTickets();
-            $this->importOrders();
             $this->importServices();
             $this->importCancellations();
             $this->importInvoices();
@@ -990,53 +989,6 @@ class ImportFromBlesta extends Command
         });
     }
 
-    private function importOrders()
-    {
-        // Blesta doesn't have a separate orders table
-        // Create orders from services if order_id exists
-        $this->info('Creating orders from services...');
-        
-        $stmt = $this->pdo->prepare('SELECT DISTINCT order_id, client_id FROM services WHERE order_id IS NOT NULL');
-        $stmt->execute();
-        $orderRecords = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        
-        $data = [];
-        $orderIds = [];
-        
-        foreach ($orderRecords as $record) {
-            if (isset($record['order_id']) && !in_array($record['order_id'], $orderIds)) {
-                $orderIds[] = $record['order_id'];
-                
-                // Get currency from client
-                $clientStmt = $this->pdo->prepare('SELECT * FROM clients WHERE id = :id LIMIT 1');
-                $clientStmt->bindValue(':id', $record['client_id'], PDO::PARAM_INT);
-                $clientStmt->execute();
-                $client = $clientStmt->fetch(PDO::FETCH_ASSOC);
-
-                if ($client) {
-                    $currencyStmt = $this->pdo->prepare('SELECT * FROM currencies WHERE id = :id LIMIT 1');
-                    $currencyStmt->bindValue(':id', $client['currency'] ?? 1, PDO::PARAM_INT);
-                    $currencyStmt->execute();
-                    $currency = $currencyStmt->fetch(PDO::FETCH_ASSOC);
-
-                    $data[] = [
-                        'id' => $record['order_id'],
-                        'user_id' => $record['client_id'],
-                        'currency_code' => $currency['code'] ?? 'USD',
-                        'created_at' => now(),
-                        'updated_at' => now(),
-                    ];
-                }
-            }
-        }
-
-        if (count($data) > 0) {
-            DB::table('orders')->insert($data);
-            $this->info('Created ' . count($data) . ' orders from services.');
-        } else {
-            $this->info('No orders found.');
-        }
-    }
 
     private function importServices()
     {
@@ -1161,10 +1113,6 @@ class ImportFromBlesta extends Command
                     ]);
                 }
 
-                // Use order_id from service record if it exists
-                // Orders are created from services in importOrders(), so we can use the order_id directly
-                $orderId = $record['order_id'] ?? null;
-
                 // Ensure we have valid product_id and plan_id to prevent 500 errors
                 if (!$packageId || !$planId) {
                     continue; // Skip services without valid product or plan
@@ -1172,7 +1120,7 @@ class ImportFromBlesta extends Command
 
                 $data[] = [
                     'id' => $record['id'],
-                    'order_id' => $orderId,
+                    'order_id' => null,
                     'product_id' => $packageId,
                     'status' => match ($record['status'] ?? 'pending') {
                         'active' => 'active',
@@ -1278,7 +1226,6 @@ class ImportFromBlesta extends Command
                         $invoiceNumber = $record['id_value'];
                     }
                 }
-                
 
                 // Determine status - Blesta uses 'active', 'draft', 'void'
                 // Check if invoice is paid by looking at transaction_applied table
