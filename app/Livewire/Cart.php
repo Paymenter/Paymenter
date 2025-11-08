@@ -57,15 +57,14 @@ class Cart extends Component
             return $this->notify('Coupon code already applied', 'error');
         }
         try {
-            ClassesCart::applyCoupon($this->coupon);
+            $cart = ClassesCart::applyCoupon($this->coupon);
         } catch (DisplayException $e) {
             $this->notify($e->getMessage(), 'error');
             $this->coupon = null;
 
             return;
         }
-        ClassesCart::get()->load('coupon');
-        $this->coupon = ClassesCart::get()->coupon;
+        $this->coupon = $cart->coupon;
         $this->updateTotal();
         $this->notify('Coupon code applied successfully', 'success');
     }
