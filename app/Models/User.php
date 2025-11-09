@@ -2,14 +2,13 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
-
 use App\Models\Traits\HasProperties;
 use App\Observers\UserObserver;
 use Dedoc\Scramble\Attributes\SchemaName;
 use Filament\Models\Contracts\FilamentUser;
 use Filament\Models\Contracts\HasAvatar;
 use Filament\Panel;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -35,6 +34,7 @@ class User extends Authenticatable implements Auditable, FilamentUser, HasAvatar
         'email',
         'password',
         'role_id',
+        'avatar_path',
         'tfa_secret',
         'email_verified_at',
     ];
@@ -84,7 +84,22 @@ class User extends Authenticatable implements Auditable, FilamentUser, HasAvatar
     public function avatar(): Attribute
     {
         return Attribute::make(
-            get: fn () => 'https://www.gravatar.com/avatar/' . md5(strtolower($this->email)) . '?d=' . urlencode((string) config('settings.gravatar_default')),
+            get: function () {
+                $avatarSetting = config('settings.avatar_source', 'wavatar');
+
+                if ($avatarSetting === 'custom' && $this->avatar_path) {
+                    if (Storage::disk('public')->exists($this->avatar_path)) {
+                        return Storage::disk('public')->url($this->avatar_path);
+                    }
+                }
+
+                $gravatarDefault = $avatarSetting;
+                if ($avatarSetting === 'custom') {
+                    $gravatarDefault = 'mp';
+                }
+
+                return 'https://www.gravatar.com/avatar/' . md5(strtolower($this->email)) . '?d=' . urlencode((string) $gravatarDefault);
+            },
         );
     }
 
