@@ -25,19 +25,4 @@ class EditKnowledgeArticle extends EditRecord
         return $this->getRecord()->title ?? 'Article';
     }
 
-    public function getSubheading(): string|Htmlable|null
-    {
-        return null;
-    }
-
-    public function getBreadcrumbs(): array
-    {
-        $articleTitle = $this->getRecord()->title ?? 'Article';
-
-        return [
-            KnowledgeArticleResource::getUrl('index') => 'Knowledgebase',
-            'Articles',
-            $articleTitle,
-        ];
-    }
 }

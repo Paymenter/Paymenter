@@ -8,6 +8,8 @@ use Paymenter\Extensions\Others\Knowledgebase\Admin\Resources\KnowledgeCategoryR
 
 class ListKnowledgeCategories extends ListRecords
 {
+    protected static ?string $title = 'Knowledgebase';
+
     protected static string $resource = KnowledgeCategoryResource::class;
 
     protected ?string $heading = 'Categories';
@@ -20,21 +22,4 @@ class ListKnowledgeCategories extends ListRecords
         ];
     }
 
-    public function getTitle(): string
-    {
-        return 'Knowledgebase';
-    }
-
-    public function getHeading(): string
-    {
-        return $this->heading ?? parent::getHeading();
-    }
-
-    public function getBreadcrumbs(): array
-    {
-        return [
-            'Knowledgebase',
-            'Categories',
-        ];
-    }
 }

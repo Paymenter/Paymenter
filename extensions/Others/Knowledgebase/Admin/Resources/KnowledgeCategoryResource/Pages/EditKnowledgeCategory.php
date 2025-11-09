@@ -45,14 +45,4 @@ class EditKnowledgeCategory extends EditRecord
         return null;
     }
 
-    public function getBreadcrumbs(): array
-    {
-        $categoryName = $this->getRecord()->name ?? 'Category';
-
-        return [
-            KnowledgeCategoryResource::getUrl('index') => 'Knowledgebase',
-            'Categories',
-            $categoryName,
-        ];
-    }
 }

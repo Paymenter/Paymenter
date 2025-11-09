@@ -20,12 +20,4 @@ class ListKnowledgeArticles extends ListRecords
             CreateAction::make(),
         ];
     }
-
-    public function getBreadcrumbs(): array
-    {
-        return [
-            KnowledgeArticleResource::getUrl('index') => 'Knowledgebase',
-            'Articles',
-        ];
-    }
 }
