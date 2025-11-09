@@ -18,6 +18,7 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Support\Facades\Schema as SchemaFacade;
 use Illuminate\Support\Str;
+use Paymenter\Extensions\Others\Knowledgebase\Admin\Clusters\Knowledgebase;
 use Paymenter\Extensions\Others\Knowledgebase\Admin\Resources\KnowledgeCategoryResource\Pages\CreateKnowledgeCategory;
 use Paymenter\Extensions\Others\Knowledgebase\Admin\Resources\KnowledgeCategoryResource\Pages\EditKnowledgeCategory;
 use Paymenter\Extensions\Others\Knowledgebase\Admin\Resources\KnowledgeCategoryResource\Pages\ListKnowledgeCategories;
@@ -30,17 +31,15 @@ class KnowledgeCategoryResource extends Resource
 
     protected static ?string $breadcrumb = 'Knowledgebase';
 
-    protected static ?string $slug = 'knowledgebase';
+    protected static ?string $slug = 'categories';
 
     protected static string|\BackedEnum|null $navigationIcon = 'ri-book-2-line';
 
     protected static string|\BackedEnum|null $activeNavigationIcon = 'ri-book-2-fill';
 
-    protected static ?string $navigationLabel = 'Knowledgebase';
+    protected static ?string $navigationLabel = 'Categories';
 
-    protected static string|\UnitEnum|null $navigationGroup = 'Administration';
-
-    protected static ?int $navigationSort = 30;
+    protected static ?string $cluster = Knowledgebase::class;
 
     public static function form(Schema $schema): Schema
     {
@@ -78,10 +77,6 @@ class KnowledgeCategoryResource extends Resource
                     ->nullable()
                     ->helperText('Optional parent category to group subcategories.')
                     ->columnSpan(1),
-                RichEditor::make('description')
-                    ->label('Description')
-                    ->placeholder('Optional description displayed to users')
-                    ->columnSpanFull(),
                 Select::make('is_active')
                     ->label('Visible to clients')
                     ->options([
@@ -91,6 +86,10 @@ class KnowledgeCategoryResource extends Resource
                     ->default(true)
                     ->required()
                     ->columnSpan(1),
+                RichEditor::make('description')
+                    ->label('Description')
+                    ->placeholder('Optional description displayed to users')
+                    ->columnSpanFull(),
             ])
             ->columns(2);
     }

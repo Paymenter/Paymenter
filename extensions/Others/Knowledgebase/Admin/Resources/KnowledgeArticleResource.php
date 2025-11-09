@@ -19,6 +19,7 @@ use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Str;
+use Paymenter\Extensions\Others\Knowledgebase\Admin\Clusters\Knowledgebase;
 use Paymenter\Extensions\Others\Knowledgebase\Admin\Resources\KnowledgeArticleResource\Pages\CreateKnowledgeArticle;
 use Paymenter\Extensions\Others\Knowledgebase\Admin\Resources\KnowledgeArticleResource\Pages\EditKnowledgeArticle;
 use Paymenter\Extensions\Others\Knowledgebase\Admin\Resources\KnowledgeArticleResource\Pages\ListKnowledgeArticles;
@@ -29,17 +30,15 @@ class KnowledgeArticleResource extends Resource
 {
     protected static ?string $model = KnowledgeArticle::class;
 
-    protected static bool $shouldRegisterNavigation = false;
-
-    protected static ?string $slug = 'knowledgebase/articles';
+    protected static ?string $slug = 'articles';
 
     protected static string|\BackedEnum|null $navigationIcon = 'ri-file-text-line';
 
     protected static string|\BackedEnum|null $activeNavigationIcon = 'ri-file-text-fill';
 
-    protected static string|\UnitEnum|null $navigationGroup = 'Knowledgebase';
+    protected static ?string $navigationLabel = 'Articles';
 
-    protected static ?int $navigationSort = 2;
+    protected static ?string $cluster = Knowledgebase::class;
 
     public static function form(Schema $schema): Schema
     {
@@ -129,6 +128,7 @@ class KnowledgeArticleResource extends Resource
                 TextColumn::make('updated_at')
                     ->label('Updated At')
                     ->dateTime()
+                    ->toggleable(isToggledHiddenByDefault: true)
                     ->sortable(),
                 IconColumn::make('is_active')
                     ->label('Active')
