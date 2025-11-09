@@ -558,7 +558,7 @@ class Settings
             ],
             'other' => [
                 [
-                    'name' => 'gravatar_default',
+                    'name' => 'avatar_source',
                     'label' => 'Gravatar Default',
                     'description' => 'Default image to use when a user does not have a Gravatar. ',
                     'link' => 'https://docs.gravatar.com/general/images/#default-image',
@@ -570,6 +570,7 @@ class Settings
                         'wavatar' => 'Wavatar',
                         'retro' => 'Retro',
                         'robohash' => 'Robohash',
+                        'custom' => 'User Upload',
                         'blank' => 'Blank',
                     ],
                     'default' => 'wavatar',
