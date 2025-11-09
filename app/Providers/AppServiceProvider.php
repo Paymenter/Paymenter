@@ -20,6 +20,7 @@ use Illuminate\Http\Request;
 use Illuminate\Queue\Events\JobFailed;
 use Illuminate\Queue\Events\JobProcessed;
 use Illuminate\Routing\UrlGenerator;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Queue;
@@ -134,6 +135,17 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        // Register custom Blesta user provider for password compatibility (if AUTH_PROVIDER=blesta)
+        // Note: Blesta uses HMAC-SHA-256 + bcrypt (not standard bcrypt), so a custom provider is needed
+        // to verify passwords during migration. The provider falls back to standard Laravel bcrypt
+        // for passwords that are already in standard format.
+        Auth::provider('blesta', function ($app, array $config) {
+            return new \App\Auth\BlestaUserProvider(
+                $app['hash'],
+                $config['model']
+            );
+        });
+
         // Change livewire url
         Livewire::setUpdateRoute(function ($handle) {
             return Route::post('/paymenter/update', $handle)->middleware('web')->name('paymenter.');
@@ -192,8 +204,8 @@ class AppServiceProvider extends ServiceProvider
         Passport::tokensCan(ScopeRegistry::getAll());
 
         Route::bind('invoice', function ($val) {
-            return Invoice::where('number', $val)
-                ->orWhere('id', $val)
+            return Invoice::where('id', $val)
+                ->orWhere('number', $val)
                 ->firstOrFail();
         });
 
