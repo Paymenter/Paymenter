@@ -93,15 +93,15 @@
                         @endphp
 
                         <div class="flex flex-1 items-start justify-between gap-4">
-                            <div class="flex flex-col gap-3">
+                            <div class="flex min-w-0 flex-col gap-3">
                                 <h2 class="text-xl font-semibold">{{ $category->name }}</h2>
                                 @if ($categoryDescription->isNotEmpty())
-                                    <p class="text-sm text-base/70">
+                                    <p class="line-clamp-3 text-sm text-base/70">
                                         {{ $categoryDescription->limit(180) }}
                                     </p>
                                 @endif
                             </div>
-                            <span class="rounded-full bg-primary-600/10 px-3 py-1 text-xs font-medium text-primary-600">
+                            <span class="shrink-0 rounded-full bg-primary-600/10 px-3 py-1 text-xs font-medium text-primary-600">
                                 {{ trans_choice('knowledgebase::messages.articles_count', $category->total_articles_count ?? $category->articles_count, ['count' => $category->total_articles_count ?? $category->articles_count]) }}
                             </span>
                         </div>
