@@ -73,8 +73,14 @@ class OrderResource extends Resource
                         Select::make('product_id')
                             ->label('Product')
                             ->required()
-                            ->options(Product::all()->pluck('name', 'id')->toArray())
+                            ->relationship(
+                                name: 'product',
+                                titleAttribute: 'name',
+                                modifyQueryUsing: fn (Builder $query) => $query->with('category')
+                            )
+                            ->getOptionLabelFromRecordUsing(fn (Product $product) => "{$product->name} - {$product->category->name} (#{$product->id})")
                             ->searchable()
+                            ->preload()
                             ->live()
                             ->afterStateUpdated(fn (Set $set) => $set('plan_id', null))
                             ->placeholder('Select the product'),

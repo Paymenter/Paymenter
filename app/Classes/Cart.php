@@ -171,6 +171,8 @@ class Cart
 
         if ($wasSuccessful) {
             $cart->save();
+
+            return $cart;
         } else {
             $cart->coupon_id = null;
             $cart->save();

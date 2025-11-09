@@ -57,15 +57,14 @@ class Cart extends Component
             return $this->notify('Coupon code already applied', 'error');
         }
         try {
-            ClassesCart::applyCoupon($this->coupon);
+            $cart = ClassesCart::applyCoupon($this->coupon);
         } catch (DisplayException $e) {
             $this->notify($e->getMessage(), 'error');
             $this->coupon = null;
 
             return;
         }
-        ClassesCart::get()->load('coupon');
-        $this->coupon = ClassesCart::get()->coupon;
+        $this->coupon = $cart->coupon;
         $this->updateTotal();
         $this->notify('Coupon code applied successfully', 'success');
     }
@@ -164,7 +163,7 @@ class Cart extends Component
             // Create the services
             foreach ($cart->items as $item) {
                 // Is it a lifetime coupon, then we can adjust the price of the service
-                if ($this->coupon && (empty($this->coupon->recurring) || $this->coupon->recurring == 1)) {
+                if ($this->coupon && ($this->coupon->recurring === null || (int) $this->coupon->recurring == 1)) {
                     // Apply coupon only to first billing cycle (use original price for recurring)
                     $price = $item->price->original_price;
                 } else {
