@@ -181,8 +181,14 @@ class Invoice extends Model implements Auditable
             return $this->where($field, $value)->firstOrFail();
         }
 
-        return $this->where('number', $value)
-            ->orWhere('id', $value)
-            ->firstOrFail();
+        // Try to find by number first
+        $query = $this->where('number', $value);
+
+        // Only try to match by ID if value is numeric
+        if (is_numeric($value)) {
+            $query->orWhere('id', $value);
+        }
+
+        return $query->firstOrFail();
     }
 }
