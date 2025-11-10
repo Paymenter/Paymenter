@@ -71,6 +71,7 @@ return [
     'remove' => 'Obriši',
     'remove_payment_method' => 'Obriši metodu plaćanja',
     'remove_payment_method_confirm' => 'Da li ste sigurni da želite da uklonite ":name"? Ova radnja se ne može poništiti.',
+    'expires' => 'Expires :date',
     'cancel' => 'Otkaži',
     'confirm' => 'Da, Ukloni',
     'email_notifications' => 'E-mail obaveštenja',
