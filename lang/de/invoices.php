@@ -30,6 +30,7 @@ return [
     'gateway' => 'Schnittstelle',
     'payment_date' => 'Zahlungsdatum',
     'payment_method' => 'Zahlungsmethode',
+    'download_pdf' => 'Download PDF',
     'amount' => 'Anzahl',
     'date' => 'Datum',
     'due_date' => 'Fälligkeitsdatum',
@@ -47,10 +48,13 @@ return [
     'apply_credit' => 'Guthaben anwenden ( :amount )',
     'no_invoices' => 'Keine Rechnungen vorhanden.',
     'paid_with_credits' => 'Bezahlt mit Credits',
+    'available_credits' => 'Available Credits: :amount',
+    'account_credits' => 'Account Credits',
     'one_time_payment' => 'Einmalige Zahlung',
     'use_for_recurring' => 'Für wiederholte Zahlungen verwenden',
     'pay_now' => 'Jetzt bezahlen',
     'apply_credits_and_continue' => 'Credits anwenden und fortfahren',
     'apply_credits_and_pay' => 'Credits anwenden und bezahlen',
+    'amount_due' => 'Amount Due: :amount',
 
 ];
