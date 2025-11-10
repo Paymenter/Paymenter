@@ -71,6 +71,7 @@ return [
     'remove' => 'إزالة',
     'remove_payment_method' => 'إزالة طريقة الدفع',
     'remove_payment_method_confirm' => 'هل أنت متأكد من أنك تريد إزالة :name؟ لا يمكن التراجع عن هذا الإجراء.',
+    'expires' => 'Expires :date',
     'cancel' => 'إلغاء',
     'confirm' => 'نعم، أزل',
     'email_notifications' => 'إشعارات البريد الإلكتروني',
