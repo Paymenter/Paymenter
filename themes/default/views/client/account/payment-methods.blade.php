@@ -107,7 +107,7 @@
                         </div>
                         @if($agreement->expiry)
                         <div class="text-sm text-neutral-500">
-                            Expires: {{ \Carbon\Carbon::parse($agreement->expiry)->format('m/Y') }}
+                            {{ __('account.expires', ['date' => \Carbon\Carbon::parse($agreement->expiry)->format('m/Y')]) }}
                         </div>
                         @endif
                         @if($agreement->services()->count() > 0)

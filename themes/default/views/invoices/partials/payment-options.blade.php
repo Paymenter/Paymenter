@@ -18,8 +18,8 @@
                     <x-ri-copper-coin-line class="size-6 text-primary" />
                 </div>
                 <div>
-                    <p class="font-medium">Account Credit</p>
-                    <p class="text-sm text-base/50">Available: {{ $credit->formattedAmount }}</p>
+                    <p class="font-medium">{{ __('invoices.account_credits') }}</p>
+                    <p class="text-sm text-base/50">{{ __('invoices.available_credits', ['amount' => $credit->formattedAmount]) }}</p>
                 </div>
             </div>
             <div
@@ -75,7 +75,7 @@
                         <div class="font-semibold text-base"> {{ $method->name }} </div>
                         @if($method->expiry)
                         <div class="text-sm text-neutral-500">
-                            Expires: {{ \Carbon\Carbon::parse($method->expiry)->format('m/Y') }}
+                            {{ __('account.expires', ['date' => \Carbon\Carbon::parse($method->expiry)->format('m/Y')]) }}
                         </div>
                         @endif
                     </div>

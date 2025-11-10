@@ -10,7 +10,9 @@
                     <span wire:loading wire:target="downloadPDF">
                         <x-ri-loader-5-fill class="size-6 animate-spin" />
                     </span>
-                    <span wire:loading.remove wire:target="downloadPDF">Download PDF</span>
+                    <span wire:loading.remove wire:target="downloadPDF">
+                        {{ __('invoices.download_pdf') }}
+                    </span>
                 </span>
             </div>
         </div>
