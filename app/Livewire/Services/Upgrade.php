@@ -2,7 +2,6 @@
 
 namespace App\Livewire\Services;
 
-use App\Classes\Price;
 use App\Events\Invoice\Created as InvoiceCreated;
 use App\Livewire\Component;
 use App\Models\Invoice;

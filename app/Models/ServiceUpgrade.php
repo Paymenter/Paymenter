@@ -118,6 +118,7 @@ class ServiceUpgrade extends Model implements Auditable
     protected function getBillingPeriodDays(): int
     {
         $plan = $this->service->plan;
+
         return match ($plan->billing_unit) {
             'day' => $plan->billing_period,
             'week' => $plan->billing_period * 7,
@@ -133,6 +134,7 @@ class ServiceUpgrade extends Model implements Auditable
             return 0;
         }
         $billingPeriodDays = $this->getBillingPeriodDays();
+
         return min($this->service->expires_at->copy()->startOfDay()->diffInDays(Carbon::now()->startOfDay(), true), $billingPeriodDays);
     }
 
@@ -144,6 +146,7 @@ class ServiceUpgrade extends Model implements Auditable
         $billingPeriodDays = $this->getBillingPeriodDays();
         $remainingDays = $this->getRemainingDays();
         $paidAmount = (float) $this->service->calculatePrice();
+
         return $billingPeriodDays > 0 ? ($paidAmount / $billingPeriodDays) * $remainingDays : $paidAmount;
     }
 }
