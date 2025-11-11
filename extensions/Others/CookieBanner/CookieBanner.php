@@ -15,7 +15,6 @@ use Illuminate\Support\HtmlString;
 )]
 class CookieBanner extends Extension
 {
-
     public function getConfig($values = []): array
     {
         return [
@@ -183,8 +182,11 @@ HTML;
     }
 
     public function enabled(): void {}
+
     public function disabled(): void {}
+
     public function updated(): void {}
+
     public function install(): void {}
 
     private function getSetting(string $key, $default = null)
