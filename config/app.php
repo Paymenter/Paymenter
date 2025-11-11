@@ -97,6 +97,7 @@ return [
         'es' => 'Spanish',
         'fi' => 'Finnish',
         'fr' => 'French',
+        'id' => 'Indonesian',
         'it' => 'Italian',
         'sv' => 'Swedish',
         'uk' => 'Ukrainian',
