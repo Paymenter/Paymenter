@@ -54,31 +54,25 @@ class Upgrade extends Component
             'product' => $this->upgradeProduct,
         ]);
 
-        $total = $upgrade->calculateProratedAmount(
-            $this->service->product,
-            $this->upgradeProduct
-        )->price;
+        // Initialize empty configs collection
+        $configs = collect();
 
-        // Calculate prices for config options
+        // Add config options to the temporary upgrade (without saving)
         foreach ($this->configOptions as $optionId => $value) {
             $option = $this->upgradeProduct->upgradableConfigOptions->where('id', $optionId)->first();
             if (!$option || !$option->children->contains('id', $value)) {
                 continue;
             }
 
-            $oldPrice = $this->service->configs->where('config_option_id', $optionId)->first();
-
-            $ctotal = $upgrade->calculateProratedAmount(
-                $oldPrice ? $oldPrice->configValue : null,
-                $option->children->find($value)
-            );
-            $total += $ctotal->price;
+            $configs->push(new \App\Models\ServiceConfig([
+                'config_option_id' => $optionId,
+                'config_value_id' => $value,
+            ]));
         }
 
-        return new Price([
-            'price' => $total,
-            'currency' => $this->service->currency,
-        ]);
+        $upgrade->setRelation('configs', $configs);
+
+        return $upgrade->calculatePrice();
     }
 
     // When upgrade changes, update the upgradeProduct

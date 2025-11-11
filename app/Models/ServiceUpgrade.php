@@ -58,21 +58,14 @@ class ServiceUpgrade extends Model implements Auditable
         }
 
         $plan = $this->service->plan;
-        $billingPeriodDays = match ($plan->billing_unit) {
-            'day' => $plan->billing_period,
-            'week' => $plan->billing_period * 7,
-            'month' => $plan->billing_period * 30,
-            'year' => $plan->billing_period * 365,
-            default => 0,
-        };
         $newPrice = $newItem->price(null, $plan->billing_period, $plan->billing_unit, $this->service->currency_code)->price;
 
         if (!$this->service->expires_at) {
             return $this->makePrice($newPrice);
         }
 
-        $expiresAt = $this->service->expires_at->copy()->startOfDay();
-        $remainingDays = min($expiresAt->diffInDays(Carbon::now()->startOfDay(), true), $billingPeriodDays);
+        $billingPeriodDays = $this->getBillingPeriodDays();
+        $remainingDays = $this->getRemainingDays();
         $priceDifference = $newPrice - $this->resolveOldItemPrice($oldItem);
         $total = $billingPeriodDays > 0 ? ($priceDifference / $billingPeriodDays) * $remainingDays : $priceDifference;
 
@@ -90,6 +83,11 @@ class ServiceUpgrade extends Model implements Auditable
             }
         }
 
+        // Cap refunds to what was actually paid when coupon exists
+        if ($total < 0 && $this->service->coupon_id) {
+            $total = max($total, -$this->getMaxRefundAmount());
+        }
+
         return $this->makePrice($total);
     }
 
@@ -97,22 +95,6 @@ class ServiceUpgrade extends Model implements Auditable
     {
         if (empty($oldItem)) {
             return 0;
-        }
-
-        $invoice = $this->service->invoices()
-            ->where('status', Invoice::STATUS_PAID)
-            ->with(['items' => fn ($query) => $query
-                ->where('reference_type', Service::class)
-                ->where('reference_id', $this->service->id)])
-            ->latest('created_at')
-            ->first();
-
-        if ($invoice && $invoice->items->isNotEmpty()) {
-            $amount = $invoice->items->sum(fn ($item) => (float) ($item->price ?? 0) * (int) ($item->quantity ?? 1));
-
-            if ($amount > 0) {
-                return $amount;
-            }
         }
 
         $price = $oldItem->price(
@@ -131,5 +113,37 @@ class ServiceUpgrade extends Model implements Auditable
             'price' => $amount,
             'currency' => $this->service->currency,
         ]);
+    }
+
+    protected function getBillingPeriodDays(): int
+    {
+        $plan = $this->service->plan;
+        return match ($plan->billing_unit) {
+            'day' => $plan->billing_period,
+            'week' => $plan->billing_period * 7,
+            'month' => $plan->billing_period * 30,
+            'year' => $plan->billing_period * 365,
+            default => 0,
+        };
+    }
+
+    protected function getRemainingDays(): int
+    {
+        if (!$this->service->expires_at) {
+            return 0;
+        }
+        $billingPeriodDays = $this->getBillingPeriodDays();
+        return min($this->service->expires_at->copy()->startOfDay()->diffInDays(Carbon::now()->startOfDay(), true), $billingPeriodDays);
+    }
+
+    public function getMaxRefundAmount(): float
+    {
+        if (!$this->service->expires_at) {
+            return 0;
+        }
+        $billingPeriodDays = $this->getBillingPeriodDays();
+        $remainingDays = $this->getRemainingDays();
+        $paidAmount = (float) $this->service->calculatePrice();
+        return $billingPeriodDays > 0 ? ($paidAmount / $billingPeriodDays) * $remainingDays : $paidAmount;
     }
 }
