@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>{{ __('invoices.invoice', ['id' => $invoice->number]) }}</title>
+    <title>{{ !$invoice->number && config('settings.invoice_proforma', false) ? __('invoices.proforma_invoice', ['id' => $invoice->id]) : __('invoices.invoice', ['id' => $invoice->number]) }}</title>
     <style>
         body {
             font-family:
@@ -17,7 +17,8 @@
                 Arial,
                 sans-serif,
                 'Apple Color Emoji',
-                'Segoe UI Emoji';
+                'Segoe UI Emoji',
+                'DejaVu Sans';
             font-size: 16px;
         }
 
@@ -62,6 +63,45 @@
         .invoice-info td {
             padding: 2px 0;
         }
+
+        .totals-section {
+            margin-top: 30px;
+            float: right;
+            width: 300px;
+        }
+
+        .totals-table {
+            width: 100%;
+            margin-bottom: 10px;
+        }
+
+        .totals-table td {
+            padding: 8px 0;
+            border: none;
+        }
+
+        .totals-table .label {
+            text-align: left;
+            font-weight: normal;
+            color: #666;
+            text-transform: uppercase;
+            font-size: 0.875em;
+        }
+
+        .totals-table .amount {
+            text-align: right;
+            font-weight: bold;
+        }
+
+        .totals-table .total-row {
+            border-top: 2px solid #ddd;
+            font-size: 1.1em;
+        }
+
+        .totals-table .total-row .label {
+            font-weight: bold;
+            color: #000;
+        }
     </style>
 </head>
 
@@ -85,27 +125,21 @@
         <tr>
             <td rowspan="2" style="font-size: 1em;vertical-align: top;">
                 <strong>{{ __('invoices.issued_to') }}</strong><br>
-                {{ $invoice->user->name }} <br />
-                @foreach($invoice->user->properties()->with('parent_property')->whereHas('parent_property', function
-                ($query) {
-                $query->where('show_on_invoice', true);
-                })->get() as $property)
-                {{ $property->value }} <br />
+                {{ $invoice->user_name }} <br />
+                @foreach($invoice->user_properties as $property)
+                    {{ $property }} <br />
                 @endforeach
             </td>
             <td>
                 <strong>{{ strtoupper(__('invoices.bill_to')) }}</strong> <br />
-                {{ config('settings.company_name') }} <br />
-                {{ config('settings.company_address') }} {{ config('settings.company_address2') }} <br />
-                {{ config('settings.company_zip') }} {{ config('settings.company_city') }} <br />
-                {{ config('settings.company_state') }} {{ config('settings.company_country') }}  <br />
-                {{ config('settings.company_tax_id') }} <br />
-                {{ config('settings.company_id') }} <br />
+                {!! nl2br(e($invoice->bill_to)) !!}
             </td>
         </tr>
     </table>
-    <p>{{ __('invoices.invoice_date') }}: <strong>{{ $invoice->created_at->format('d/m/Y') }}</strong></p>
+    <p>{{ !$invoice->number && config('settings.invoice_proforma', false) ? __('invoices.proforma_invoice_date') : __('invoices.invoice_date') }}: <strong>{{ $invoice->created_at->format('d/m/Y') }}</strong></p>
+    @if($invoice->number)
     <p>{{ __('invoices.invoice_no') }}: <strong>{{ $invoice->number }}</strong></p>
+    @endif
 
     <table style="margin-top: 40px;" class="invoice-items">
         <thead>
@@ -128,7 +162,38 @@
         </tbody>
     </table>
 
-    @if($invoice->transactions->count() > 0)
+    <!-- Totals Section -->
+    <div class="totals-section">
+        @if ($invoice->formattedTotal->tax > 0)
+        <table class="totals-table">
+            <tr>
+                <td class="label">{{ __('invoices.subtotal') }}</td>
+                <td class="amount">{{ $invoice->formattedTotal->format($invoice->formattedTotal->price - $invoice->formattedTotal->tax) }}</td>
+            </tr>
+            <tr>
+                <td class="label">
+                    {{ $invoice->tax->name }} ({{ $invoice->tax->rate }}%)
+                </td>
+                <td class="amount">{{ $invoice->formattedTotal->formatted->tax }}</td>
+            </tr>
+            <tr class="total-row">
+                <td class="label">{{ __('invoices.total') }}</td>
+                <td class="amount">{{ $invoice->formattedTotal }}</td>
+            </tr>
+        </table>
+        @else
+        <table class="totals-table">
+            <tr class="total-row">
+                <td class="label">{{ __('invoices.total') }}</td>
+                <td class="amount">{{ $invoice->formattedTotal }}</td>
+            </tr>
+        </table>
+        @endif
+    </div>
+
+    <div style="clear: both;"></div>
+
+    @if($invoice->transactions->where('status', \App\Enums\InvoiceTransactionStatus::Succeeded)->count() > 0)
     <table style="margin-top: 80px;" class="invoice-items">
         <thead>
             <tr>
@@ -139,7 +204,7 @@
             </tr>
         </thead>
         <tbody>
-            @foreach($invoice->transactions as $transaction)
+            @foreach($invoice->transactions->where('status', \App\Enums\InvoiceTransactionStatus::Succeeded) as $transaction)
             <tr>
                 <td>{{ $transaction->transaction_id }}</td>
                 <td>{{ $transaction->created_at->format('d/m/Y') }}</td>

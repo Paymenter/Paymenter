@@ -17,7 +17,7 @@ class Index extends Component
     public function render()
     {
         return view('announcements::index', [
-            'announcements' => Announcement::latest()->get(),
+            'announcements' => Announcement::where('is_active', true)->where('published_at', '<=', now())->orderBy('published_at', 'desc')->get(),
         ]);
     }
 }

@@ -75,6 +75,11 @@ class Security extends Component
 
                 $this->twoFactorEnabled = true;
                 $this->showEnableTwoFactor = false;
+
+                // Destroy all other sessions
+                Session::where('user_id', Auth::id())
+                    ->where('id', '!=', session()->getId())
+                    ->delete();
             } else {
                 $this->notify(__('account.notifications.two_factor_code_incorrect'), 'error');
             }
@@ -112,6 +117,7 @@ class Security extends Component
     {
         return view('client.account.security')->layoutData([
             'sidebar' => true,
+            'title' => 'Security',
         ]);
     }
 }

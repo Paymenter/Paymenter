@@ -5,6 +5,7 @@ namespace App\Admin\Resources\ProductResource\Pages;
 use App\Admin\Resources\ProductResource;
 use App\Helpers\ExtensionHelper;
 use App\Models\Server;
+use Arr;
 use Filament\Resources\Pages\CreateRecord;
 use Illuminate\Database\Eloquent\Model;
 
@@ -14,13 +15,13 @@ class CreateProduct extends CreateRecord
 
     protected function handleRecordCreation(array $data): Model
     {
-        $record = static::getModel()::create(\Arr::except($data, ['settings']));
+        $record = static::getModel()::create(Arr::except($data, ['settings']));
 
         if (!isset($data['settings'])) {
             return $record;
         }
 
-        $product_config = ExtensionHelper::getProductConfig(Server::findOrFail($data['server_id']));
+        $product_config = ExtensionHelper::getProductConfig(Server::findOrFail($data['server_id']), $data['settings']);
 
         $things = array_map(function ($option) use ($data, $record) {
             return [

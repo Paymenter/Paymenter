@@ -20,3 +20,8 @@ yarn-error.log
 themes/*
 !themes/default
 !themes/kila
+=======
+extensions/Others/Pages
+extensions/Servers/LicenseManager
+extensions/Servers/Proxmox
+!themes/default

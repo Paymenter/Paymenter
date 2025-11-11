@@ -3,12 +3,18 @@
 namespace Paymenter\Extensions\Others\Announcements;
 
 use App\Classes\Extension\Extension;
+use App\Helpers\ExtensionHelper;
 use App\Livewire\Auth\Register;
-use Illuminate\Support\Facades\Artisan;
+use Exception;
 use Illuminate\Support\Facades\Event;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\HtmlString;
+use Livewire\Livewire;
 use Paymenter\Extensions\Others\Announcements\Admin\Resources\AnnouncementResource;
+use Paymenter\Extensions\Others\Announcements\Livewire\Announcements\Index;
+use Paymenter\Extensions\Others\Announcements\Livewire\Announcements\Show;
+use Paymenter\Extensions\Others\Announcements\Livewire\Announcements\Widget;
 use Paymenter\Extensions\Others\Announcements\Models\Announcement;
 
 class Announcements extends Extension
@@ -24,7 +30,7 @@ class Announcements extends Extension
                     'label' => new HtmlString('You can use this extension to display announcements on the client area. To create a new announcement, go to <a class="text-primary-600" href="' . AnnouncementResource::getUrl() . '">Announcements</a>.'),
                 ],
             ];
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return [
                 [
                     'name' => 'Notice',
@@ -35,10 +41,15 @@ class Announcements extends Extension
         }
     }
 
-    public function enabled()
+    public function installed()
     {
-        // Run migrations
-        Artisan::call('migrate', ['--path' => 'extensions/Others/Announcements/database/migrations/2024_10_19_095356_create_ext_announcements_table.php', '--force' => true]);
+        ExtensionHelper::runMigrations('extensions/Others/Announcements/database/migrations');
+    }
+
+    public function uninstalled()
+    {
+        // Rollback migrations
+        ExtensionHelper::rollbackMigrations('extensions/Others/Announcements/database/migrations');
     }
 
     public function boot()
@@ -48,9 +59,11 @@ class Announcements extends Extension
         View::addNamespace('announcements', __DIR__ . '/resources/views');
 
         // Register livewire
-        \Livewire\Livewire::component('announcements.index', \Paymenter\Extensions\Others\Announcements\Livewire\Announcements\Index::class);
-        \Livewire\Livewire::component('announcements.show', \Paymenter\Extensions\Others\Announcements\Livewire\Announcements\Show::class);
-        \Livewire\Livewire::component('announcements.widget', \Paymenter\Extensions\Others\Announcements\Livewire\Announcements\Widget::class);
+        Livewire::component('announcements.index', Index::class);
+        Livewire::component('announcements.show', Show::class);
+        Livewire::component('announcements.widget', Widget::class);
+
+        Gate::policy(Announcement::class, Policies\AnnouncementPolicy::class);
 
         Event::listen('navigation', function () {
             if (Announcement::where('is_active', true)->where('published_at', '<=', now())->count() == 0) {
@@ -63,6 +76,15 @@ class Announcements extends Extension
                 'icon' => 'ri-megaphone',
                 'separator' => true,
                 'children' => [],
+            ];
+        });
+
+        Event::listen('permissions', function () {
+            return [
+                'admin.announcements.view' => 'View Announcements',
+                'admin.announcements.create' => 'Create Announcements',
+                'admin.announcements.update' => 'Update Announcements',
+                'admin.announcements.delete' => 'Delete Announcements',
             ];
         });
 

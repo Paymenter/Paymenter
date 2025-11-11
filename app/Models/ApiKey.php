@@ -2,10 +2,12 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
+use OwenIt\Auditing\Contracts\Auditable;
 
-class ApiKey extends Model
+class ApiKey extends Model implements Auditable
 {
+    use \App\Models\Traits\Auditable;
+
     protected $fillable = [
         'name',
         'permissions',
@@ -21,5 +23,9 @@ class ApiKey extends Model
         'permissions' => 'array',
         'ip_addresses' => 'array',
         'last_used_at' => 'datetime',
+    ];
+
+    protected $auditExclude = [
+        'last_used_at',
     ];
 }

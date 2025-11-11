@@ -2,12 +2,13 @@
 
 namespace App\Mail;
 
-use App\Models\EmailTemplate;
+use App\Models\NotificationTemplate;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\View\Compilers\BladeCompiler;
 
 class Mail extends Mailable
 {
@@ -17,13 +18,13 @@ class Mail extends Mailable
 
     public array $data = [];
 
-    public EmailTemplate $emailTemplate;
+    public NotificationTemplate $emailTemplate;
 
     /**
      * Create a new message instance.
      */
     public function __construct(
-        EmailTemplate $emailTemplate,
+        NotificationTemplate $emailTemplate,
         array $data = []
     ) {
         $this->emailTemplate = $emailTemplate;
@@ -37,7 +38,7 @@ class Mail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: $this->emailTemplate->subject,
+            subject: BladeCompiler::render($this->emailTemplate->subject, $this->data),
         );
     }
 

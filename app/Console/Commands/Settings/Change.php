@@ -5,6 +5,7 @@ namespace App\Console\Commands\Settings;
 use App\Classes\Settings;
 use App\Models\Setting;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Config;
 
 use function Laravel\Prompts\form;
 use function Laravel\Prompts\select;
@@ -18,6 +19,7 @@ class Change extends Command
 
     public function handle()
     {
+        Config::set('audit.console', true);
 
         $key = $this->argument('key');
         $value = $this->argument('value');
@@ -43,7 +45,7 @@ class Change extends Command
                 if ($setting->type === 'select') {
                     return select('What value should the setting have?', $setting->options);
                 } else {
-                    return text('What value should the setting have?', default: $setting->default ?? '');
+                    return text('What value should the setting have?', default: $setting->value ?? '');
                 }
             });
         }

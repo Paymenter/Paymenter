@@ -3,11 +3,11 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
+use OwenIt\Auditing\Contracts\Auditable;
 
-class CustomProperty extends Model
+class CustomProperty extends Model implements Auditable
 {
-    use HasFactory;
+    use \App\Models\Traits\Auditable, HasFactory;
 
     public $timestamps = false;
 

@@ -15,13 +15,13 @@ class Updates extends Page implements HasForms
 {
     use InteractsWithForms;
 
-    protected static ?string $navigationIcon = 'ri-loop-left-line';
+    protected static string|\BackedEnum|null $navigationIcon = 'ri-loop-left-line';
 
-    protected static ?string $activeNavigationIcon = 'ri-loop-left-fill';
+    protected static string|\BackedEnum|null $activeNavigationIcon = 'ri-loop-left-fill';
 
-    protected static string $view = 'admin.pages.updates';
+    protected string $view = 'admin.pages.updates';
 
-    protected static ?string $navigationGroup = 'System';
+    protected static string|\UnitEnum|null $navigationGroup = 'System';
 
     protected function getHeaderActions(): array
     {

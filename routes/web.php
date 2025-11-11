@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\SocialLoginController;
+use App\Http\Controllers\TicketAttachmentController;
 use App\Http\Middleware\MustVerfiyEmail;
 use App\Livewire\Auth;
 use App\Livewire\Cart;
@@ -35,7 +36,7 @@ Route::group(['middleware' => ['web', 'auth', MustVerfiyEmail::class]], function
     Route::get('/dashboard', Dashboard::class)->name('dashboard');
 
     Route::get('/invoices', Invoices\Index::class)->name('invoices');
-    Route::get('/invoices/{invoice:number}', Invoices\Show::class)->name('invoices.show')->middleware('can:view,invoice');
+    Route::get('/invoices/{invoice}', Invoices\Show::class)->name('invoices.show')->middleware('can:view,invoice');
 
     Route::get('/tickets', Tickets\Index::class)->name('tickets');
     Route::get('/tickets/create', Tickets\Create::class)->name('tickets.create');
@@ -47,9 +48,11 @@ Route::group(['middleware' => ['web', 'auth', MustVerfiyEmail::class]], function
 });
 
 Route::group(['middleware' => ['web', 'auth']], function () {
-    Route::get('account', Client\Account::class)->name('account');
-    Route::get('account/security', Client\Security::class)->name('account.security');
-    Route::get('account/credits', Client\Credits::class)->name('account.credits');
+    Route::get('/account', Client\Account::class)->name('account');
+    Route::get('/account/security', Client\Security::class)->name('account.security');
+    Route::get('/account/credits', Client\Credits::class)->name('account.credits');
+    Route::get('/account/payment-methods', Client\PaymentMethods::class)->name('account.payment-methods');
+    Route::get('/account/notifications', Client\Notifications::class)->name('account.notifications');
 
     Route::get('/email/verify', Auth\VerifyEmail::class)->name('verification.notice');
     Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $request) {
@@ -57,11 +60,12 @@ Route::group(['middleware' => ['web', 'auth']], function () {
 
         return redirect()->route('dashboard');
     })->middleware(['signed'])->name('verification.verify');
+    Route::get('/tickets/attachments/{attachment:uuid}', [TicketAttachmentController::class, 'download'])->name('tickets.attachments.show')->middleware('can:view,attachment');
 });
 
-Route::get('cart', Cart::class)->name('cart');
+Route::get('cart', Cart::class)->name('cart')->middleware('checkout');
 
-Route::group(['prefix' => 'products'], function () {
+Route::group(['prefix' => 'products', 'middleware' => 'checkout'], function () {
     Route::get('/{category:slug}', Products\Index::class)->name('category.show')/* ->where('category', '[A-Za-z0-9_/-]+') */;
     Route::get('/{category:slug}/{product:slug}', Products\Show::class)->name('products.show')/* ->where('category', '[A-Za-z0-9_/-]+') */;
     Route::get('/{category:slug}/{product:slug}/checkout', Products\Checkout::class)->name('products.checkout')/* ->where('category', '[A-Za-z0-9_/-]+') */;

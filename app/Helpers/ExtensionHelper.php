@@ -2,16 +2,31 @@
 
 namespace App\Helpers;
 
+use App\Attributes\ExtensionMeta;
 use App\Classes\FilamentInput;
+use App\Enums\InvoiceTransactionStatus;
+use App\Models\BillingAgreement;
 use App\Models\Extension;
 use App\Models\Gateway;
 use App\Models\Invoice;
+use App\Models\InvoiceTransaction;
 use App\Models\Product;
 use App\Models\Server;
 use App\Models\Service;
+use App\Models\User;
 use Exception;
 use Filament\Forms\Components\Placeholder;
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Migrations\Migrator;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Event;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Log;
+use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
+use OwenIt\Auditing\Events\AuditCustom;
+use ReflectionClass;
 
 class ExtensionHelper
 {
@@ -124,7 +139,7 @@ class ExtensionHelper
     {
         $extensions = [];
 
-        $classmap = require_once base_path('vendor/composer/autoload_classmap.php');
+        $classmap = require base_path('vendor/composer/autoload_classmap.php');
 
         // Magic code so we can also support extensions that don't reside in the extensions folder
         foreach ($classmap as $class => $path) {
@@ -150,9 +165,13 @@ class ExtensionHelper
                 continue;
             }
 
+            if (!file_exists($path) || !class_exists($class)) {
+                continue;
+            }
             $extensions[] = [
                 'name' => $name,
                 'type' => $type,
+                'meta' => self::getMeta($class),
             ];
         }
 
@@ -173,15 +192,35 @@ class ExtensionHelper
 
                 // Check if the class exists
                 if (class_exists('\\Paymenter\\Extensions\\' . ucfirst($type) . 's\\' . $name . '\\' . $name)) {
+
                     $extensions[] = [
                         'name' => $name,
                         'type' => $type,
+                        'meta' => self::getMeta('\\Paymenter\\Extensions\\' . ucfirst($type) . 's\\' . $name . '\\' . $name),
                     ];
                 }
             }
         }
 
         return $extensions;
+    }
+
+    public static function getMeta($class)
+    {
+        $reflection = new ReflectionClass($class);
+        $attributes = $reflection->getAttributes(ExtensionMeta::class);
+
+        return $attributes ? $attributes[0]->newInstance() : null;
+    }
+
+    public static function getInstallableExtensions()
+    {
+        $extensions = self::getExtensions('other');
+
+        // Filter out already installed extensions
+        $installedExtensions = Extension::all()->pluck('extension')->toArray();
+
+        return array_filter($extensions, fn ($extension) => !in_array($extension['name'], $installedExtensions));
     }
 
     public static function call($extension, $function, $args = [], $mayFail = false)
@@ -193,8 +232,14 @@ class ExtensionHelper
 
             return self::getExtension($extension->type, $extension->extension, $extension->settings)->$function(...$args);
         } catch (Exception $e) {
+            // If mayFail is true, just report the exception instead of throwing it
             if (!$mayFail) {
                 throw $e;
+            } else {
+                // If extension error is Not Found, don't report
+                if (\Str::doesntEndWith($e->getMessage(), 'not found')) {
+                    report($e);
+                }
             }
         }
     }
@@ -233,7 +278,7 @@ class ExtensionHelper
                 $config['name'] = 'settings.' . $config['name'];
                 $settings[] = FilamentInput::convert($config);
             }
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $settings[] = Placeholder::make('error')->content($e->getMessage());
             // Handle exception
         }
@@ -249,24 +294,6 @@ class ExtensionHelper
     public static function getProductConfig($server, $values = [])
     {
         return self::call($server, 'getProductConfig', [$values]);
-    }
-
-    protected static function prepareForSerialization($values)
-    {
-        if (is_array($values)) {
-            foreach ($values as $key => $value) {
-                $values[$key] = self::prepareForSerialization($value);
-            }
-
-            return $values;
-        }
-
-        if ($values instanceof \Livewire\Features\SupportFileUploads\TemporaryUploadedFile) {
-            // Store the file and use the path, or just use the filename if already stored
-            return $values->getRealPath() ?: (string) $values;
-        }
-
-        return $values;
     }
 
     /**
@@ -291,6 +318,24 @@ class ExtensionHelper
         return $config[$key];
     }
 
+    protected static function prepareForSerialization($values)
+    {
+        if (is_array($values)) {
+            foreach ($values as $key => $value) {
+                $values[$key] = self::prepareForSerialization($value);
+            }
+
+            return $values;
+        }
+
+        if ($values instanceof TemporaryUploadedFile) {
+            // Store the file and use the path, or just use the filename if already stored
+            return $values->getRealPath() ?: (string) $values;
+        }
+
+        return $values;
+    }
+
     /**
      * Convert settings to array
      *
@@ -301,12 +346,12 @@ class ExtensionHelper
     {
         $settingsArray = [];
 
-        if ($settings instanceof \Illuminate\Database\Eloquent\Collection) {
+        if ($settings instanceof Collection) {
             // If $settings is a collection of models
             foreach ($settings as $setting) {
                 $settingsArray[$setting->key] = $setting->value;
             }
-        } elseif ($settings instanceof \Illuminate\Database\Eloquent\Model) {
+        } elseif ($settings instanceof Model) {
             // If $settings is a single model
             $settingsArray[$settings->name] = $settings->value;
         }
@@ -331,13 +376,13 @@ class ExtensionHelper
      *
      * @return array
      */
-    public static function getCheckoutGateways($items, $type)
+    public static function getCheckoutGateways($total, $currency, $type, $items = [])
     {
         $gateways = [];
 
-        foreach (Gateway::all() as $gateway) {
+        foreach (Gateway::with('settings')->get() as $gateway) {
             if (self::hasFunction($gateway, 'canUseGateway')) {
-                if (self::getExtension('gateway', $gateway->extension, $gateway->settings)->canUseGateway($items, $type)) {
+                if (self::getExtension('gateway', $gateway->extension, $gateway->settings)->canUseGateway($total, $currency, $type, $items)) {
                     $gateways[] = $gateway;
                 }
             } else {
@@ -356,34 +401,126 @@ class ExtensionHelper
         return self::getExtension('gateway', $gateway->extension, $gateway->settings)->pay($invoice, $invoice->remaining);
     }
 
+    public static function charge(Gateway $gateway, Invoice $invoice, BillingAgreement $billingAgreement): bool
+    {
+        return self::getExtension('gateway', $gateway->extension, $gateway->settings)->charge($invoice, $invoice->remaining, $billingAgreement);
+    }
+
+    public static function getBillingAgreementGateways()
+    {
+        $gateways = [];
+
+        foreach (Gateway::with('settings')->get() as $gateway) {
+            if (self::hasFunction($gateway, 'supportsBillingAgreements')) {
+                if (self::getExtension('gateway', $gateway->extension, $gateway->settings)->supportsBillingAgreements()) {
+                    $gateways[] = $gateway;
+                }
+            }
+        }
+
+        return $gateways;
+    }
+
+    /**
+     * Create billing agreement
+     *
+     * @param  \App\Models\User  $user
+     * @param  \App\Models\Gateway  $gateway
+     * @return string|view
+     */
+    public static function createBillingAgreement($user, $gateway)
+    {
+        return self::getExtension('gateway', $gateway->extension, $gateway->settings)->createBillingAgreement($user);
+    }
+
+    /**
+     * Cancel billing agreement
+     *
+     * @return bool
+     */
+    public static function cancelBillingAgreement(BillingAgreement $billingAgreement)
+    {
+        return self::getExtension('gateway', $billingAgreement->gateway->extension, $billingAgreement->gateway->settings)->cancelBillingAgreement($billingAgreement);
+    }
+
+    public static function makeBillingAgreement(User $user, $gateway, $name, $externalReference, $type = null, $expiry = null)
+    {
+        $gateway = Gateway::where('extension', $gateway)->firstOrFail();
+
+        $billingAgreement = BillingAgreement::updateOrCreate([
+            'external_reference' => $externalReference,
+            'user_id' => $user->id,
+            'gateway_id' => $gateway->id,
+        ], [
+            'name' => $name,
+            'type' => $type,
+            'expiry' => $expiry,
+        ]);
+
+        return $billingAgreement;
+    }
+
     /**
      * Add payment to invoice
+     *
+     * @param  Invoice|int  $invoice
      */
-    public static function addPayment($invoice, $gateway, $amount, $fee = null, $transactionId = null)
+    public static function addPayment($invoice, $gateway, $amount, $fee = null, $transactionId = null, InvoiceTransactionStatus $status = InvoiceTransactionStatus::Succeeded, $isCreditTransaction = false)
     {
         if (isset($gateway)) {
             $gateway = Gateway::where('extension', $gateway)->first();
         }
 
         $invoice = Invoice::findOrFail($invoice);
+
         if (!$transactionId) {
-            $invoice->transactions()->create([
-                'gateway_id' => $gateway ? $gateway->id : null,
+            $transaction = $invoice->transactions()->create([
+                'gateway_id' => $gateway?->id,
                 'amount' => $amount,
                 'fee' => $fee,
+                'status' => $status,
+                'is_credit_transaction' => $isCreditTransaction,
             ]);
         } else {
-            $invoice->transactions()->updateOrCreate(
+            $updateData = [
+                'gateway_id' => $gateway?->id,
+                'amount' => $amount,
+                'status' => $status,
+                'is_credit_transaction' => $isCreditTransaction,
+            ];
+            if ($fee !== null) {
+                $updateData['fee'] = $fee;
+            }
+
+            $transaction = $invoice->transactions()->updateOrCreate(
                 [
                     'transaction_id' => $transactionId,
                 ],
-                [
-                    'gateway_id' => $gateway ? $gateway->id : null,
-                    'amount' => $amount,
-                    'fee' => $fee,
-                ]
+                $updateData
             );
         }
+
+        return $transaction;
+    }
+
+    public static function addProcessingPayment($invoice, $gateway, $amount, $fee = null, $transactionId = null)
+    {
+        return self::addPayment($invoice, $gateway, $amount, $fee, $transactionId, InvoiceTransactionStatus::Processing);
+    }
+
+    public static function addFailedPayment($invoice, $gateway, $amount, $fee = null, $transactionId = null)
+    {
+        return self::addPayment($invoice, $gateway, $amount, $fee, $transactionId, InvoiceTransactionStatus::Failed);
+    }
+
+    public static function addPaymentFee($transactionId, $fee)
+    {
+        $transaction = InvoiceTransaction::where('transaction_id', $transactionId)->firstOrFail();
+
+        $transaction->fee = $fee;
+        $transaction->save();
+
+        return $transaction;
     }
 
     /**
@@ -436,12 +573,25 @@ class ExtensionHelper
         return $server;
     }
 
+    protected static function recordAudit(Model $model, string $action, array $oldValues = [], array $newValues = [])
+    {
+        // Trigger audit log for server creation
+        $model->auditEvent = $action;
+        $model->isCustomEvent = true;
+        $model->auditCustomOld = $oldValues;
+        $model->auditCustomNew = $newValues;
+
+        Event::dispatch(new AuditCustom($model));
+    }
+
     /**
      * Create server
      */
     public static function createServer(Service $service)
     {
         $server = self::checkServer($service, 'createServer');
+
+        self::recordAudit($service, 'extension_action', [], ['action' => 'create_server']);
 
         return self::getExtension('server', $server->extension, $server->settings)->createServer($service, self::settingsToArray($service->product->settings), self::getServiceProperties($service));
     }
@@ -453,6 +603,8 @@ class ExtensionHelper
     {
         $server = self::checkServer($service, 'suspendServer');
 
+        self::recordAudit($service, 'extension_action', [], ['action' => 'suspend_server']);
+
         return self::getExtension('server', $server->extension, $server->settings)->suspendServer($service, self::settingsToArray($service->product->settings), self::getServiceProperties($service));
     }
 
@@ -462,6 +614,8 @@ class ExtensionHelper
     public static function unsuspendServer(Service $service)
     {
         $server = self::checkServer($service, 'unsuspendServer');
+
+        self::recordAudit($service, 'extension_action', [], ['action' => 'unsuspend_server']);
 
         return self::getExtension('server', $server->extension, $server->settings)->unsuspendServer($service, self::settingsToArray($service->product->settings), self::getServiceProperties($service));
     }
@@ -473,6 +627,8 @@ class ExtensionHelper
     {
         $server = self::checkServer($service, 'terminateServer');
 
+        self::recordAudit($service, 'extension_action', [], ['action' => 'terminate_server']);
+
         return self::getExtension('server', $server->extension, $server->settings)->terminateServer($service, self::settingsToArray($service->product->settings), self::getServiceProperties($service));
     }
 
@@ -482,6 +638,8 @@ class ExtensionHelper
     public static function upgradeServer(Service $service)
     {
         $server = self::checkServer($service, 'upgradeServer');
+
+        self::recordAudit($service, 'extension_action', [], ['action' => 'upgrade_server']);
 
         return self::getExtension('server', $server->extension, $server->settings)->upgradeServer($service, self::settingsToArray($service->product->settings), self::getServiceProperties($service));
     }
@@ -506,5 +664,55 @@ class ExtensionHelper
         $server = self::checkServer($service, $function);
 
         return self::getExtension('server', $server->extension, $server->settings)->$function($service, self::settingsToArray($service->product->settings), self::getServiceProperties($service), $view['name']);
+    }
+
+    /**
+     * Revert migrations for a specific extension
+     */
+    public static function rollbackMigrations($path)
+    {
+        $migrationFiles = glob(base_path($path . '/*.php'));
+
+        if (empty($migrationFiles)) {
+            return;
+        }
+
+        // Sort by filename to ensure correct order
+        usort($migrationFiles, function ($a, $b) {
+            return strcmp(basename($a), basename($b));
+        });
+
+        // Reverse the order to rollback in the correct sequence
+        $migrationFiles = array_reverse($migrationFiles);
+
+        foreach ($migrationFiles as $file) {
+            $migrationName = basename($file, '.php');
+            try {
+                $migration = require_once $file;
+                // return new class extends Migration
+                if (method_exists($migration, 'down') && DB::table('migrations')->where('migration', $migrationName)->exists()) {
+                    $migration->down();
+                    DB::table('migrations')->where('migration', $migrationName)->delete();
+                }
+            } catch (Exception $e) {
+                report($e);
+            }
+        }
+    }
+
+    /**
+     * Run migrations for a specific extension
+     */
+    public static function runMigrations($path)
+    {
+        $migrator = app(Migrator::class);
+
+        try {
+            $ranMigrations = $migrator->run(base_path($path));
+
+            Log::debug('Migrations output: ', $ranMigrations);
+        } catch (Exception $e) {
+            report($e);
+        }
     }
 }

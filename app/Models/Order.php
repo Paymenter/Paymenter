@@ -7,12 +7,12 @@ use App\Observers\OrderObserver;
 use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
+use OwenIt\Auditing\Contracts\Auditable;
 
 #[ObservedBy([OrderObserver::class])]
-class Order extends Model
+class Order extends Model implements Auditable
 {
-    use HasFactory;
+    use \App\Models\Traits\Auditable, HasFactory;
 
     protected $fillable = ['user_id', 'currency_code'];
 

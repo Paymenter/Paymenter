@@ -14,7 +14,7 @@ class Show extends Component
 
     public function mount($product)
     {
-        $this->product = $this->category->products()->where('slug', $product)->where('hidden', false)->firstOrFail();
+        $this->product = $this->category->products()->where('slug', $product)->where('hidden', false)->with(['plans.prices', 'configOptions.children.plans.prices'])->firstOrFail();
     }
 
     public function render()

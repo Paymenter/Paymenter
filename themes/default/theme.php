@@ -11,6 +11,7 @@ return [
             'label' => 'Direct Checkout',
             'type' => 'checkbox',
             'default' => false,
+            'database_type' => 'boolean',
             'description' => 'Don\'t show the product overview page, go directly to the checkout page',
         ],
         [
@@ -18,6 +19,7 @@ return [
             'label' => 'Small Images',
             'type' => 'checkbox',
             'default' => false,
+            'database_type' => 'boolean',
             'description' => 'Show small images in the product overview page',
         ],
         [
@@ -25,7 +27,18 @@ return [
             'label' => 'Show Category Description',
             'type' => 'checkbox',
             'default' => true,
+            'database_type' => 'boolean',
             'description' => 'Show the category description in the product overview page/homepage',
+        ],
+        [
+            'name' => 'logo_display',
+            'label' => 'Logo display',
+            'type' => 'select',
+            'options' => [
+                'logo-only' => 'Logo only',
+                'logo-and-name' => 'Logo and Name',
+            ],
+            'default' => 'logo-and-name',
         ],
         [
             'name' => 'home_page_text',
@@ -97,7 +110,7 @@ return [
             'name' => 'dark-neutral',
             'label' => 'Borders, Accents... (Dark)',
             'type' => 'color',
-            'default' => 'hsl(220, 25%, 29%)',
+            'default' => 'hsl(0, 0%, 7%)',
         ],
         [
             'name' => 'dark-base',
@@ -121,13 +134,13 @@ return [
             'name' => 'dark-background',
             'label' => 'Background - Color (Dark)',
             'type' => 'color',
-            'default' => 'hsl(221, 39%, 11%)',
+            'default' => 'hsl(240, 18%, 9%)',
         ],
         [
             'name' => 'dark-background-secondary',
             'label' => 'Background - Secondary Color (Dark)',
             'type' => 'color',
-            'default' => 'hsl(217, 33%, 16%)',
+            'default' => 'hsl(240, 13%, 11%)',
         ],
     ],
 ];

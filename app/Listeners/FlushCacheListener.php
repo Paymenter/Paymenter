@@ -9,6 +9,9 @@ class FlushCacheListener
 {
     public function handle(Saved $event)
     {
+        if ($event->setting->settingable_type !== null) {
+            return;
+        }
         static $flushed = false;
         if (!$flushed) {
             app()->terminating(fn () => SettingsProvider::flushCache());

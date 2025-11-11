@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Auth;
 
+use App\Events\Auth\Login;
 use App\Livewire\Component;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
@@ -58,7 +59,7 @@ class Tfa extends Component
 
         Auth::loginUsingId($user->id, $session['remember']);
 
-        event(new \App\Events\Auth\Login(User::find(Auth::id())));
+        event(new Login(User::find(Auth::id())));
 
         Session::forget('2fa');
 

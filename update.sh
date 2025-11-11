@@ -20,6 +20,30 @@ fi
 # Exit if release URL is empty or underfined
 if [[ $URL == "" ]]; then echo -e "\x1b[31;1mRelease URL not defined.\x1b[0m"; exit 1; fi
 
+
+# Check if the previous version is 1.2.11 or lower, if so, check if extensions directory contains filament resources (except announcements/affiliates)
+
+if [[ -f "config/app.php" ]]; then
+  # Read version from config/app.php
+  PREV_VER="$(grep 'version' config/app.php | head -1 | sed -E "s/.*'version'\s*=>\s*'([^']+)'.*/\1/")"
+
+  # Only run checks if version < 1.2.12
+  if [[ "$PREV_VER" != *beta* ]] && [[ -n "${PREV_VER:-}" ]] && php -r "exit(version_compare('$PREV_VER','1.2.12','<')?0:1);"; then
+    # Check extensions for admin folder
+    if [[ -d extensions ]]; then
+      found_admin=$(find extensions -type d -name Admin \
+        ! -path "*/Announcements/*" \
+        ! -path "*/Affiliates/*")
+      if [[ -n "$found_admin" ]]; then
+        echo -e "\x1b[31;1mExtensions that need to be removed (temporary):\x1b[0m"
+        echo "$found_admin"
+        echo -e "\x1b[31;1mCannot execute self-upgrade process. Please remove the given extensions, then re-run the upgrade process and add the (updated) extensions again after the upgrade is complete.\x1b[0m"
+        exit 1
+      fi
+    fi
+  fi
+fi
+
 for i in "$@"
 do
 case $i in
@@ -85,8 +109,14 @@ RUN() {
     "${@}"
 }
 
+# Set application down for maintenance.
+RUN php artisan down
+
 # Download the latest release from GitHub.
 RUN curl -L -o paymenter.tar.gz "$URL"
+
+# Delete app folder
+RUN rm -rf app bootstrap/cache/*.php
 
 # Extract the tarball.
 RUN tar -xzf paymenter.tar.gz
@@ -94,14 +124,8 @@ RUN tar -xzf paymenter.tar.gz
 # Remove the tarball.
 RUN rm -f paymenter.tar.gz
 
-# Set application down for maintenance.
-RUN php artisan down
-
 # Setup correct permissions on the new files.
-RUN chmod -R 755 storage bootstrap/cache
-
-# Run the composer install command.
-RUN composer install --no-dev --optimize-autoloader
+RUN chmod -R 755 storage bootstrap/cache extensions
 
 # Run the database migrations.
 RUN php artisan migrate --force --seed
@@ -110,8 +134,10 @@ RUN php artisan migrate --force --seed
 RUN php artisan app:settings:change theme default
 
 # Clear config and view caches.
-RUN php artisan config:clear
-RUN php artisan view:clear
+RUN php artisan optimize:clear
+
+# Optimize icons
+RUN php artisan icons:cache
 
 # Remove the old log files.
 RUN rm -rf storage/logs/*.log
@@ -120,6 +146,8 @@ RUN rm -rf storage/logs/*.log
 RUN chown -R "$PERMUSER":"$PERMGROUP" .
 
 RUN php artisan app:check-for-updates
+
+RUN php artisan queue:restart
 
 # Set application up for maintenance.
 RUN php artisan up

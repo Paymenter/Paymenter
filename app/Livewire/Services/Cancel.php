@@ -30,7 +30,7 @@ class Cancel extends Component
             'reason' => $this->reason,
         ]);
 
-        $this->notify(__('services.cancellation_requested'), 'success');
+        $this->notify(__('services.cancellation_requested'), 'success', true);
 
         $this->redirect(route('services.show', $this->service), true);
     }

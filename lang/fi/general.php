@@ -1,7 +1,6 @@
 <?php
 
 return [
-    'view' => 'Näytä',
 
     'input' => [
         'first_name' => 'Etunimi',
@@ -29,8 +28,12 @@ return [
 
         'password' => 'Salasana',
         'password_placeholder' => 'Salasanasi',
+
+        'password_confirmation' => 'Confirm Password',
+        'password_confirmation_placeholder' => 'Confirm your password',
     ],
 
     'all_rights_reserved' => 'Kaikki oikeudet pidätetään.',
     'update' => 'Päivitä',
+    'save' => 'Save',
 ];

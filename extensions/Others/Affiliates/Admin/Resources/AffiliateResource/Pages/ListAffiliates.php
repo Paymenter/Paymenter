@@ -2,7 +2,7 @@
 
 namespace Paymenter\Extensions\Others\Affiliates\Admin\Resources\AffiliateResource\Pages;
 
-use Filament\Actions;
+use Filament\Actions\CreateAction;
 use Filament\Resources\Pages\ListRecords;
 use Paymenter\Extensions\Others\Affiliates\Admin\Resources\AffiliateResource;
 
@@ -13,7 +13,7 @@ class ListAffiliates extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
-            Actions\CreateAction::make(),
+            CreateAction::make(),
         ];
     }
 }

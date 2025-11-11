@@ -33,6 +33,9 @@ class RewardAffiliate
             return;
         }
         $order = $invoice->items()->first()->reference->order;
+        if (!$order) {
+            return;
+        }
         $referral = AffiliateOrder::where('order_id', $order->id)->first();
 
         if (!$referral) {

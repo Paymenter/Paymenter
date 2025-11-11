@@ -1,7 +1,6 @@
 <?php
 
 return [
-    'view' => 'Visualizar',
 
     'input' => [
         'first_name' => 'Primeiro nome',
@@ -29,8 +28,12 @@ return [
 
         'password' => 'Senha',
         'password_placeholder' => 'Sua senha',
+
+        'password_confirmation' => 'Confirm Password',
+        'password_confirmation_placeholder' => 'Confirm your password',
     ],
 
     'all_rights_reserved' => 'Todos os direitos reservados.',
     'update' => 'Atualizar',
+    'save' => 'Salvar',
 ];

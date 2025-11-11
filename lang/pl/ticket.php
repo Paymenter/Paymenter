@@ -9,6 +9,15 @@ return [
     'department' => 'Departament',
     'created_at' => 'Data utworzenia',
     'reply' => 'Odpowiedz',
+    'attachments' => 'Attachments',
+    'upload_attachments' => 'Upload Attachments',
+    'or_drag_and_drop' => 'or drag and drop',
+    'files_max' => 'Files up to 10MB',
+    'selected_files' => 'Selected Files',
+    'close_ticket' => 'Close Ticket',
+    'close_ticket_confirmation' => 'Are you sure you want to close this ticket? This action cannot be undone.',
+    'close_ticket_success' => 'Ticket closed successfully.',
+    'close_ticket_already_closed' => 'This ticket is already closed.',
 
     'create_ticket' => 'Utwórz Bilet',
     'select_department' => 'Wybierz dział',
@@ -22,4 +31,5 @@ return [
     'service' => 'Usługa',
     'select_service' => 'Wybierz usługę',
     'create' => 'Utwórz',
+    'no_tickets' => 'No tickets found',
 ];

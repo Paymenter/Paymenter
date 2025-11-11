@@ -29,4 +29,41 @@ return [
     'upgrade' => 'Upgrade',
     'upgrade_summary' => 'Ringkasan Upgrade',
     'total_today' => 'Total Hari Ini',
+    'upgrade_service' => 'Tingkatkan Layanan',
+    'upgrade_choose_product' => 'Pilih produk untuk peningkatan',
+    'upgrade_choose_config' => 'Pilih konfigurasi untuk peningkatan',
+    'next_step' => 'Berikutnya',
+
+    'upgrade_pending' => 'Anda tidak dapat melakukan peningkatan jika terdapat faktur peningkatan/penurunan yang sedang berjalan',
+
+    'outstanding_invoice' => 'Anda memiliki faktur yang belum diselesaikan.',
+    'view_and_pay' => 'Klik di sini untuk melihat dan melakukan pembayaran',
+
+    'statuses' => [
+        'pending' => 'Tertunda',
+        'active' => 'Aktif',
+        'cancelled' => 'Dibatalkan',
+        'suspended' => 'Ditangguhkan',
+        'cancellation_pending' => 'Cancellation Pending',
+    ],
+    'billing_cycles' => [
+        'day' => 'hari|hari',
+        'week' => 'minggu|minggu',
+        'month' => 'bulan|bulan',
+        'year' => 'tahun|tahun',
+    ],
+    'every_period' => 'Setiap :period :unit',
+    'price_every_period' => ':price per :period :unit',
+    'price_one_time' => ':price one time',
+    'expires_at' => 'Berakhir pada',
+    'auto_pay' => 'Auto paying using',
+    'auto_pay_not_configured' => 'Not configured',
+
+    'no_services' => 'No services found',
+    'update_billing_agreement' => 'Update Billing Agreement',
+    'clear_billing_agreement' => 'Clear Billing Agreement',
+    'select_billing_agreement' => 'Select Billing Agreement',
+
+    'remove_payment_method' => 'Remove Payment Method',
+    'remove_payment_method_confirm' => 'Are you sure you want to remove the payment method ":name" from this service? Your service will no longer be able to auto pay its invoices.',
 ];

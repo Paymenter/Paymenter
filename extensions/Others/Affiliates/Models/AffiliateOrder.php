@@ -49,10 +49,10 @@ class AffiliateOrder extends Model
                     if ($invoice->status !== 'paid') {
                         return;
                     }
-                    if (!isset($earnings[$invoice->currency_code])) {
-                        $earnings[$invoice->currency_code] = 0;
+                    if (!isset($earnings[$invoice->currency->name])) {
+                        $earnings[$invoice->currency->name] = 0;
                     }
-                    $earnings[$invoice->currency_code] += $invoice->total * $reward_percentage / 100;
+                    $earnings[$invoice->currency->name] += $invoice->total * $reward_percentage / 100;
                 });
 
                 foreach ($earnings as $currency => $total) {

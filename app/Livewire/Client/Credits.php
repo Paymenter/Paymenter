@@ -2,19 +2,21 @@
 
 namespace App\Livewire\Client;
 
+use App\Attributes\DisabledIf;
 use App\Exceptions\DisplayException;
 use App\Helpers\ExtensionHelper;
 use App\Livewire\Component;
 use App\Models\Credit;
 use App\Models\Gateway;
 use App\Models\Invoice;
+use Exception;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Session;
 use Livewire\Attributes\Locked;
 use Livewire\Attributes\Validate;
 
+#[DisabledIf('credits_enabled', reverse: true)]
 class Credits extends Component
 {
     #[Validate('required|exists:currencies,code')]
@@ -23,21 +25,27 @@ class Credits extends Component
     public $amount;
 
     #[Locked]
-    public $gateways;
+    public $gateways = [];
 
     public $gateway;
 
     public function mount()
     {
-        if (!config('settings.credits_enabled')) {
-            return redirect()->route('account');
-        }
-
         $this->amount = config('settings.credits_minimum_deposit');
         $this->currency = session('currency', config('settings.default_currency'));
-        $this->gateways = ExtensionHelper::getCheckoutGateways([], 'credits');
+        $this->gateways = ExtensionHelper::getCheckoutGateways($this->amount, $this->currency, 'credits');
         if (count($this->gateways) > 0 && !array_search($this->gateway, array_column($this->gateways, 'id')) !== false) {
             $this->gateway = $this->gateways[0]->id;
+        }
+    }
+
+    public function updated($variable)
+    {
+        if ($variable === 'amount' || $variable === 'currency') {
+            $this->gateways = ExtensionHelper::getCheckoutGateways($this->amount, $this->currency, 'credits');
+            if (count($this->gateways) > 0 && !array_search($this->gateway, array_column($this->gateways, 'id')) !== false) {
+                $this->gateway = $this->gateways[0]->id;
+            }
         }
     }
 
@@ -49,19 +57,33 @@ class Credits extends Component
             'gateway' => 'required|in:' . implode(',', array_column($this->gateways, 'id')),
         ]);
 
-        if (Auth::user()->credits()->where('currency_code', $this->currency)->exists()) {
-            // Check if the current credits + the new credits exceed the maximum credits allowed
-            if (Auth::user()->credits()->where('currency_code', $this->currency)->sum('amount') + $this->amount > config('settings.credits_maximum_credit')) {
-                $this->notify('You cannot exceed the maximum credits allowed.', 'error');
-
-                return;
-            }
-        }
-
         // Create invoice
         DB::beginTransaction();
 
         try {
+            // Lock the user's invoices and credits
+            Auth::user()->invoices()->lockForUpdate()->get();
+            $credits = Auth::user()->credits()->where('currency_code', $this->currency)->lockForUpdate()->get();
+
+            // Check if user has credits in this currency
+            if ($credits->isNotEmpty()) {
+                // Check if the current credits + the new credits exceed the maximum credits allowed
+                if ($credits->sum('amount') + $this->amount > config('settings.credits_maximum_credit')) {
+                    $this->notify('You cannot exceed the maximum credits allowed.', 'error');
+
+                    return;
+                }
+            }
+
+            // Check if the user has any unpaid invoice items referencing credits
+            $unpaidInvoiceItems = Auth::user()->invoices()->where('status', Invoice::STATUS_PENDING)->whereHas('items', function ($query) {
+                $query->where('reference_type', Credit::class);
+            })->exists();
+
+            if ($unpaidInvoiceItems) {
+                throw new DisplayException('You have an unpaid invoice for credits. Please pay the invoice before adding more credits.');
+            }
+
             $invoice = Invoice::create([
                 'user_id' => Auth::id(),
                 'currency_code' => $this->currency,
@@ -88,18 +110,10 @@ class Credits extends Component
             }
 
             return $this->redirect(route('invoices.show', $invoice) . '?gateway=' . $this->gateway . '&pay', true);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             // Rollback the transaction
             DB::rollBack();
             // Return error message
-            // Is it a real error or a validation error?
-            // If it's a validation error, you can use the $this->addError() method to display the error message to the user.
-            if ($e instanceof DisplayException) {
-                $this->notify($e->getMessage(), 'error');
-            } else {
-                Log::error($e);
-                $this->notify('An error occurred while processing your order. Please try again later.');
-            }
             throw $e;
         }
     }
@@ -108,6 +122,7 @@ class Credits extends Component
     {
         return view('client.account.credits')->layoutData([
             'sidebar' => true,
+            'title' => 'Add Credits',
         ]);
     }
 }

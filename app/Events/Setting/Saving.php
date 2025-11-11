@@ -7,6 +7,7 @@ use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Crypt;
+use Throwable;
 
 class Saving
 {
@@ -20,7 +21,7 @@ class Saving
         if ($setting->encrypted) {
             try {
                 $setting->value = Crypt::encryptString($setting->value);
-            } catch (\Throwable $th) {
+            } catch (Throwable $th) {
                 // Normal `throw new Exception($th)` wasn't working here, so we are using dump-and-die for now.
                 dd($th, $setting->value);
             }

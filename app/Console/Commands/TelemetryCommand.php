@@ -6,6 +6,7 @@ use App\Classes\Settings;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
+use PDO;
 
 class TelemetryCommand extends Command
 {
@@ -42,7 +43,7 @@ class TelemetryCommand extends Command
 
                 'database' => [
                     'type' => config('database.default'),
-                    'version' => DB::getPdo()->getAttribute(\PDO::ATTR_SERVER_VERSION),
+                    'version' => DB::getPdo()->getAttribute(PDO::ATTR_SERVER_VERSION),
                 ],
             ],
             'database_counts' => [
@@ -67,7 +68,10 @@ class TelemetryCommand extends Command
                 ],
                 'extensions' => [
                     'count' => DB::table('extensions')->count(),
-                    'active' => DB::table('extensions')->where('enabled', true)->pluck('extension')->toArray(),
+                    'active' => DB::table('extensions')
+                        ->where('enabled', true)
+                        ->orWhereIn('type', ['server', 'gateway'])
+                        ->pluck('extension')->toArray(),
                 ],
             ],
         ];

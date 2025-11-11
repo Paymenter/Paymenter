@@ -1,5 +1,8 @@
 <?php
 
+use App\Helpers\EventHelper;
+use Illuminate\Config\Repository;
+
 if (!function_exists('theme')) {
     /**
      * Get the specified configuration value.
@@ -8,7 +11,7 @@ if (!function_exists('theme')) {
      *
      * @param  array|string  $key
      * @param  mixed  $default
-     * @return mixed|\Illuminate\Config\Repository
+     * @return mixed|Repository
      */
     function theme($key, $default = null)
     {
@@ -28,6 +31,6 @@ if (!function_exists('hook')) {
      */
     function hook($event)
     {
-        return \App\Helpers\EventHelper::renderEvent($event);
+        return EventHelper::renderEvent($event);
     }
 }

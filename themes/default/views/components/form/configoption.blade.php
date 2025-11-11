@@ -38,10 +38,10 @@
                 }
             }" class="flex flex-col gap-1 relative">
                 <label for="{{ $name }}"
-                    class="text-sm text-primary-100 w-fit start-1 ml-2 bg-background-secondary rounded-md px-2">
+                    class="mb-1 text-sm text-primary-100">
                     {{ $config->label ?? $config->name }}
                 </label>
-                <div class="relative flex items-center" :style="`--progress:${progressOption};--segments-width:${segmentsWidthOption}`">
+                <div class="relative flex items-center" :style="`--progress:${progressOption};--segments-width:${segmentsWidthOption}`" wire:ignore>
                     <div class="
                         absolute left-2.5 right-2.5 h-1.5 bg-background-secondary rounded-full overflow-hidden transition-all duration-500 ease-in-out
                         before:absolute before:inset-0 before:bg-primary
@@ -58,14 +58,20 @@
                 </div>
                 <!-- Options -->
                 <ul class="flex justify-between text-xs font-medium text-light px-2.5">
-                    <template x-for="(plan, index) in options" :key="index">
+                    @foreach($config->children as $child)
                         <li class="relative @if($showPriceTag) pb-7 @else pb-2 @endif">
-                            <button @click="setOptionValue(index)" class="absolute flex flex-col items-center -translate-x-1/2">
-                                <span class="text-sm font-semibold" x-text="`${plan.option}`"></span>
-                                <span class="text-sm font-semibold" x-text="`${plan.price}`"></span>
+                            <button @click="setOptionValue({{ $loop->index }})" class="absolute flex flex-col items-center -translate-x-1/2">
+                                <span class="text-sm font-semibold">
+                                    {{ $child->name }}
+                                </span>
+                                @if($showPriceTag)
+                                    <span class="text-sm font-semibold hidden lg:inline">
+                                        {{ ($showPriceTag && $child->price(billing_period: $plan->billing_period, billing_unit: $plan->billing_unit)->available) ? $child->price(billing_period: $plan->billing_period, billing_unit: $plan->billing_unit) : '' }}
+                                    </span>
+                                @endif
                             </button>
                         </li>
-                    </template>
+                    @endforeach
                 </ul>
             </div>
         @break
@@ -83,13 +89,12 @@
         @break
 
         @case('checkbox')
-            <x-form.checkbox name="{{ $name }}" type="checkbox" :label="__($config->label ?? $config->name)"
-                :required="$config->required ?? false" :checked="config('configs.' . $config->name) ? true : false" wire:model.live="{{ $name }}" />
+            <x-form.checkbox name="{{ $name }}" type="checkbox" :label="__($config->label ?? $config->name) . (($showPriceTag && $config->children->first()->price(billing_period: $plan->billing_period, billing_unit: $plan->billing_unit)->available) ? ' - ' . $config->children->first()->price(billing_period: $plan->billing_period, billing_unit: $plan->billing_unit) : '')"
+                :required="$config->required ?? false" wire:model.live="{{ $name }}" />
         @break
 
         @case('radio')
-            <x-form.radio name="{{ $name }}" :label="__($config->label ?? $config->name)"
-                :selected="config('configs.' . $config->name)" :required="$config->required ?? false" wire:model.live="{{ $name }}">
+            <x-form.radio name="{{ $name }}" :label="__($config->label ?? $config->name)" :required="$config->required ?? false" wire:model.live="{{ $name }}">
                 {{  $slot }}
             </x-form.radio>
         @break

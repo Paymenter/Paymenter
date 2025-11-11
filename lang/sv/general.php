@@ -1,7 +1,6 @@
 <?php
 
 return [
-    'view' => 'Visa',
 
     'input' => [
         'first_name' => 'Förnamn',
@@ -29,8 +28,12 @@ return [
 
         'password' => 'Lösenord',
         'password_placeholder' => 'Ditt lösenord',
+
+        'password_confirmation' => 'Confirm Password',
+        'password_confirmation_placeholder' => 'Confirm your password',
     ],
 
     'all_rights_reserved' => 'Alla rättigheter reserverade.',
     'update' => 'Uppdatera',
+    'save' => 'Save',
 ];

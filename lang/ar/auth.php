@@ -36,7 +36,7 @@ return [
     ],
 
     'oauth' => [
-        'unverified_discord_account' => 'لم يتم التحقق من حساب ديسكورد الخاص بك.',
+        'unverified_discord_account' => 'لم يتم التحقق من حساب الدسكورد الخاص بك.',
         'account_not_registered' => 'أنت غير مسجل في هذا الموقع.',
     ],
 

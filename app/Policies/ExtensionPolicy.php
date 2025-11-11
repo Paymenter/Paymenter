@@ -30,4 +30,20 @@ class ExtensionPolicy
     {
         return $user->hasPermission('admin.extensions.update');
     }
+
+    /**
+     * Determine whether the user can delete the model.
+     */
+    public function install(User $user): bool
+    {
+        return $user->hasPermission('admin.extensions.install');
+    }
+
+    /**
+     * Determine whether the user can delete the model.
+     */
+    public function delete(User $user, Extension $extension): bool
+    {
+        return $user->hasPermission('admin.extensions.delete');
+    }
 }

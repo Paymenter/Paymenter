@@ -2,13 +2,20 @@
 
 namespace App\Console\Commands;
 
+use App\Helpers\ExtensionHelper;
+use App\Helpers\NotificationHelper;
 use App\Jobs\Server\SuspendJob;
 use App\Jobs\Server\TerminateJob;
-use App\Models\EmailLog;
+use App\Models\CronStat;
+use App\Models\Invoice;
+use App\Models\Notification;
 use App\Models\Service;
 use App\Models\ServiceUpgrade;
+use App\Models\Setting;
 use App\Models\Ticket;
+use Exception;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 
 class CronJob extends Command
@@ -27,134 +34,245 @@ class CronJob extends Command
      */
     protected $description = 'Run automated tasks';
 
+    private int $successFullCharges = 0;
+
     /**
      * Execute the console command.
      */
     public function handle()
     {
-        // Send invoices if due date is x days away
-        $sendedInvoices = 0;
-        Service::where('status', 'active')->where('expires_at', '<', now()->addDays((int) config('settings.cronjob_invoice', 7)))->get()->each(function ($service) use (&$sendedInvoices) {
-            // Does the service have already a pending invoice?
-            if ($service->invoices()->where('status', 'pending')->exists() || $service->cancellation()->exists()) {
-                return;
-            }
+        Config::set('audit.console', true);
 
-            DB::beginTransaction();
+        DB::beginTransaction();
 
-            try {
-                // Calculate if we should edit the price because of the coupon
-                if ($service->coupon) {
-                    // Calculate what iteration of the coupon we are in
-                    $iteration = $service->invoices()->count() + 1;
-                    if ($iteration == $service->coupon->recurring) {
-                        // Calculate the price
-                        $price = $service->plan->prices()->where('currency_code', $service->currency_code)->first()->price;
-                        $service->price = $price;
-                        $service->save();
+        try {
+            // Send invoices if due date is x days away
+            $this->runCronJob('invoices_created', function ($number = 0) {
+                Service::where('status', 'active')->where('expires_at', '<', now()->addDays((int) config('settings.cronjob_invoice', 7)))->get()->each(function ($service) use (&$number) {
+                    // Does the service have already a pending invoice?
+                    if ($service->invoices()->where('status', 'pending')->exists() || $service->cancellation()->exists()) {
+                        return;
                     }
-                }
 
-                // Create invoice
-                $invoice = $service->invoices()->make([
-                    'user_id' => $service->user_id,
-                    'status' => 'pending',
-                    'due_at' => $service->expires_at,
-                    'currency_code' => $service->currency_code,
-                ]);
+                    // Calculate if we should edit the price because of the coupon
+                    if ($service->coupon) {
+                        // Calculate what iteration of the coupon we are in
+                        $iteration = $service->invoices()->count() + 1;
+                        if ($iteration == $service->coupon->recurring) {
+                            // Calculate the price
+                            $service->price = $service->calculatePrice();
+                            $service->save();
+                        }
+                    }
 
-                $invoice->save();
-                // Create invoice items
-                $invoice->items()->create([
-                    'reference_id' => $service->id,
-                    'reference_type' => Service::class,
-                    'price' => $service->price,
-                    'quantity' => $service->quantity,
-                    'description' => $service->description,
-                ]);
-            } catch (\Exception $e) {
-                DB::rollBack();
-                $this->error('Error creating invoice for service ' . $service->id . ': ' . $e->getMessage());
+                    // If service price is 0, immediately activate next period
+                    if ($service->price <= 0) {
+                        (new \App\Services\Service\RenewServiceService)->handle($service);
+                        $number++;
 
-                return;
-            }
+                        return;
+                    }
 
-            DB::commit();
+                    // Create invoice
+                    $invoice = $service->invoices()->make([
+                        'user_id' => $service->user_id,
+                        'status' => 'pending',
+                        'due_at' => $service->expires_at,
+                        'currency_code' => $service->currency_code,
+                    ]);
 
-            $sendedInvoices++;
-        });
-        $this->info('Sending invoices if due date is ' . config('settings.cronjob_invoice', 7) . ' days away: ' . $sendedInvoices . ' invoices');
+                    $invoice->save();
+                    // Create invoice items
+                    $invoice->items()->create([
+                        'reference_id' => $service->id,
+                        'reference_type' => Service::class,
+                        'price' => $service->price,
+                        'quantity' => $service->quantity,
+                        'description' => $service->description,
+                    ]);
 
-        // Cancel services if first invoice is not paid after x days
-        $ordersCancelled = 0;
-        Service::where('status', 'pending')->whereDoesntHave('invoices', function ($query) {
-            $query->where('status', 'paid');
-        })->where('created_at', '<', now()->subDays((int) config('settings.cronjob_order_cancel', 7)))->get()->each(function ($service) use (&$ordersCancelled) {
-            $service->invoices()->where('status', 'pending')->update(['status' => 'cancelled']);
+                    $invoice = $invoice->refresh();
 
-            $service->update(['status' => 'cancelled']);
+                    $this->payInvoiceWithCredits($invoice);
 
-            $ordersCancelled++;
-        });
-        $this->info('Cancelling services if first invoice is not paid after ' . config('settings.cronjob_order_cancel', 7) . ' days: ' . $ordersCancelled . ' orders');
+                    // Charge billing agreements
+                    if ($service->billing_agreement_id && $invoice->fresh()->status === 'pending') {
+                        DB::afterCommit(function () use ($invoice, $service) {
+                            try {
+                                ExtensionHelper::charge(
+                                    $service->billingAgreement->gateway,
+                                    $invoice,
+                                    $service->billingAgreement
+                                );
 
-        $updatedUpgradeInvoices = 0;
-        ServiceUpgrade::where('status', 'pending')->get()->each(function ($upgrade) use (&$updatedUpgradeInvoices) {
-            if ($upgrade->service->expires_at < now()) {
-                $upgrade->update(['status' => 'cancelled']);
-                $upgrade->invoice->update(['status' => 'cancelled']);
+                                $this->successFullCharges++;
+                            } catch (Exception $e) {
+                                // Ignore errors here
+                                NotificationHelper::invoicePaymentFailedNotification($invoice->user, $invoice);
+                            }
+                        });
+                    }
 
-                $updatedUpgradeInvoices++;
+                    $number++;
+                });
 
-                return;
-            }
+                return $number;
+            });
 
-            $upgrade->invoice->items()->update([
-                'price' => $upgrade->calculatePrice()->price,
-            ]);
+            $this->runCronJob('orders_cancelled', function ($number = 0) {
+                // Cancel services if first invoice is not paid after x days
+                Service::where('status', 'pending')->whereDoesntHave('invoices', function ($query) {
+                    $query->where('status', 'paid');
+                })->where('created_at', '<', now()->subDays((int) config('settings.cronjob_order_cancel', 7)))->get()->each(function ($service) use (&$number) {
+                    $service->invoices()->where('status', 'pending')->update(['status' => 'cancelled']);
 
-            $updatedUpgradeInvoices++;
-        });
+                    $service->update(['status' => 'cancelled']);
 
-        // Suspend orders if due date is overdue for x days
-        $ordersSuspended = 0;
-        Service::where('status', 'active')->where('expires_at', '<', now()->subDays((int) config('settings.cronjob_order_suspend', 2)))->each(function ($service) use (&$ordersSuspended) {
-            SuspendJob::dispatch($service);
+                    if ($service->product->stock !== null) {
+                        $service->product->increment('stock', $service->quantity);
+                    }
 
-            $service->update(['status' => 'suspended']);
-            $ordersSuspended++;
-        });
-        $this->info('Suspending orders if due date is overdue for ' . config('settings.cronjob_order_suspend', 2) . ' days: ' . $ordersSuspended . ' orders');
+                    $number++;
+                });
 
-        // Terminate orders if due date is overdue for x days
-        $ordersTerminated = 0;
-        Service::where('status', 'suspended')->where('expires_at', '<', now()->subDays((int) config('settings.cronjob_order_terminate', 14)))->each(function ($service) use (&$ordersTerminated) {
-            TerminateJob::dispatch($service);
-            $service->update(['status' => 'cancelled']);
-            // Cancel outstanding invoices
-            $service->invoices()->where('status', 'pending')->update(['status' => 'cancelled']);
-            $ordersTerminated++;
-        });
-        $this->info('Terminating orders if due date is overdue for ' . config('settings.cronjob_order_terminate', 14) . ' days: ' . $ordersTerminated . ' orders');
+                return $number;
+            });
 
-        // Close tickets if no response for x days
-        $ticketClosed = 0;
-        Ticket::where('status', 'replied')->each(function ($ticket) use (&$ticketClosed) {
-            $lastMessage = $ticket->messages()->latest('created_at')->first();
-            if ($lastMessage && $lastMessage->created_at < now()->subDays((int) config('settings.cronjob_close_ticket', 7))) {
-                $ticket->update(['status' => 'closed']);
-                $ticketClosed++;
-            }
-        });
-        $this->info('Closing tickets if no response for ' . config('settings.cronjob_close_ticket', 7) . ' days: ' . $ticketClosed . ' tickets');
+            $this->runCronJob('upgrade_invoices_updated', function ($number = 0) {
+                // Update pending upgrade invoices
+                ServiceUpgrade::where('status', 'pending')->get()->each(function ($upgrade) use (&$number) {
+                    if ($upgrade->service->expires_at < now()) {
+                        $upgrade->update(['status' => 'cancelled']);
+                        $upgrade->invoice->update(['status' => 'cancelled']);
 
-        // Delete email logs older then x
-        $this->info('Deleting email logs older then ' . config('settings.cronjob_delete_email_logs', 90) . ' days: ' . EmailLog::where('created_at', '<', now()->subDays((int) config('settings.cronjob_delete_email_logs', 30)))->count());
-        EmailLog::where('created_at', '<', now()->subDays((int) config('settings.cronjob_delete_email_logs', 90)))->delete();
+                        $number++;
+
+                        return;
+                    }
+
+                    $upgrade->invoice->items()->update([
+                        'price' => $upgrade->calculatePrice()->price,
+                    ]);
+
+                    $number++;
+                });
+
+                return $number;
+            });
+
+            $this->runCronJob('services_suspended', function ($number = 0) {
+                // Suspend orders if due date is overdue for x days
+                Service::where('status', 'active')->where('expires_at', '<', now()->subDays((int) config('settings.cronjob_order_suspend', 2)))->get()->each(function ($service) use (&$number) {
+                    SuspendJob::dispatch($service);
+
+                    $service->update(['status' => 'suspended']);
+                    $number++;
+                });
+
+                return $number;
+            });
+
+            $this->runCronJob('services_terminated', function ($number = 0) {
+                // Terminate orders if due date is overdue for x days
+                Service::where('status', 'suspended')->where('expires_at', '<', now()->subDays((int) config('settings.cronjob_order_terminate', 14)))->each(function ($service) use (&$number) {
+                    TerminateJob::dispatch($service);
+
+                    $service->update(['status' => 'cancelled']);
+                    // Cancel outstanding invoices
+                    $service->invoices()->where('status', 'pending')->update(['status' => 'cancelled']);
+
+                    if ($service->product->stock !== null) {
+                        $service->product->increment('stock', $service->quantity);
+                    }
+
+                    $number++;
+                });
+
+                return $number;
+            });
+
+            $this->runCronJob('tickets_closed', function ($number = 0) {
+                // Close tickets if no response for x days
+                Ticket::where('status', 'replied')->each(function ($ticket) use (&$number) {
+                    $lastMessage = $ticket->messages()->latest('created_at')->first();
+                    if ($lastMessage && $lastMessage->created_at < now()->subDays((int) config('settings.cronjob_close_ticket', 7))) {
+                        $ticket->update(['status' => 'closed']);
+                        $number++;
+                    }
+                });
+
+                return $number;
+            });
+
+            $this->runCronJob('email_logs_deleted', function ($number = 0) {
+                $number = Notification::where('created_at', '<', now()->subDays((int) config('settings.cronjob_delete_email_logs', 90)))->count();
+                // Delete email logs older then x
+                Notification::where('created_at', '<', now()->subDays((int) config('settings.cronjob_delete_email_logs', 90)))->delete();
+
+                return $number;
+            });
+
+        } catch (Exception $e) {
+            DB::rollBack();
+
+            NotificationHelper::sendSystemEmailNotification('Cron Job Error', <<<HTML
+                An error occurred while running the cron job:<br>
+                <pre>{$e->getMessage()}.</pre><br>
+                Please check the system and application logs for more details.
+                HTML);
+
+            throw $e;
+        }
+
+        DB::commit();
+
+        Setting::updateOrCreate(
+            ['key' => 'last_cron_run', 'settingable_type' => CronStat::class],
+            ['value' => now()->toDateTimeString(), 'type' => 'string']
+        );
+
+        CronStat::create([
+            'key' => 'invoice_charged',
+            'value' => $this->successFullCharges,
+            'date' => now()->toDateString(),
+        ]);
+
+        $this->info('Successfully charged ' . $this->successFullCharges . ' invoices.');
 
         // Check for updates
         $this->info('Checking for updates...');
 
         $this->call(CheckForUpdates::class);
+    }
+
+    private function payInvoiceWithCredits(Invoice $invoice): void
+    {
+        if (!config('settings.credits_auto_use', true)) {
+            return;
+        }
+        $user = $invoice->user;
+        $credits = $user->credits()->where('currency_code', $invoice->currency_code)->first();
+        if ($invoice->remaining > 0 && $credits && $credits->amount >= $invoice->remaining) {
+            $credits->amount -= $invoice->remaining;
+            $credits->save();
+
+            ExtensionHelper::addPayment($invoice->id, null, amount: $invoice->remaining, isCreditTransaction: true);
+        }
+    }
+
+    /**
+     * Function to run a specific cron job by its key.
+     */
+    private function runCronJob(string $key, callable $callback): void
+    {
+        $items = $callback() ?? 0;
+
+        CronStat::create([
+            'key' => $key,
+            'value' => $items,
+            'date' => now()->toDateString(),
+        ]);
+
+        $this->info("Cronjob task '" . __('admin.cronjob.' . $key) . "' completed: Processed " . $items . ' items.');
     }
 }

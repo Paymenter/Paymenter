@@ -5,6 +5,8 @@ namespace App\Livewire\Services;
 use App\Helpers\ExtensionHelper;
 use App\Livewire\Component;
 use App\Models\Service;
+use Exception;
+use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\Locked;
 use Livewire\Attributes\Url;
 
@@ -18,11 +20,18 @@ class Show extends Component
     #[Locked]
     public $views = [];
 
+    #[Locked]
+    public $fields = [];
+
     #[Url('tab', except: false), Locked]
     public $currentView;
 
     #[Url('cancel', except: false)]
     public bool $showCancel = false;
+
+    public bool $showBillingAgreement = false;
+
+    public $selectedMethod;
 
     public function mount()
     {
@@ -31,7 +40,7 @@ class Show extends Component
             $actions = [];
             try {
                 $actions = ExtensionHelper::getActions($this->service);
-            } catch (\Exception $e) {
+            } catch (Exception $e) {
             }
             // separate the actions into buttons and views
             foreach ($actions as $action) {
@@ -39,10 +48,33 @@ class Show extends Component
                     $this->buttons[] = $action;
                 } elseif ($action['type'] == 'view') {
                     $this->views[] = $action;
+                } elseif ($action['type'] == 'text') {
+                    $this->fields[] = $action;
                 }
             }
             $this->currentView = $this->currentView ?? ($this->views[0]['name'] ?? null);
         }
+    }
+
+    public function updatedShowBillingAgreement()
+    {
+        $this->selectedMethod = Auth::user()->billingAgreements()->where('id', $this->service->billing_agreement_id)?->first()?->ulid;
+    }
+
+    public function updateBillingAgreement()
+    {
+        $agreement = Auth::user()->billingAgreements()->where('ulid', $this->selectedMethod)->first();
+        $this->service->billing_agreement_id = $agreement->id;
+        $this->service->save();
+
+        $this->showBillingAgreement = false;
+    }
+
+    public function clearBillingAgreement()
+    {
+        $this->service->billing_agreement_id = null;
+        $this->service->save();
+        $this->selectedMethod = null;
     }
 
     public function changeView($view)
@@ -92,10 +124,10 @@ class Show extends Component
                 // Search array for the current view
                 $currentViewObj = $this->views[array_search($this->currentView, array_column($this->views, 'name'))] ?? null;
                 if (!$currentViewObj) {
-                    throw new \Exception('View not found');
+                    throw new Exception('View not found');
                 }
                 $view = ExtensionHelper::getView($this->service, $currentViewObj);
-            } catch (\Exception $e) {
+            } catch (Exception $e) {
                 if ($previousView !== $this->views[0]['name'] ?? null) {
                     $this->notify('Got an error while trying to load the view', 'error');
                 }

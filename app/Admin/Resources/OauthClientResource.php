@@ -2,37 +2,43 @@
 
 namespace App\Admin\Resources;
 
-use App\Admin\Resources\OauthClientResource\Pages;
+use App\Admin\Resources\OauthClientResource\Pages\CreateOauthClient;
+use App\Admin\Resources\OauthClientResource\Pages\EditOauthClient;
+use App\Admin\Resources\OauthClientResource\Pages\ListOauthClients;
 use App\Models\OauthClient;
-use Filament\Forms;
-use Filament\Forms\Components\Actions\Action;
-use Filament\Forms\Form;
+use Filament\Actions\Action;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\EditAction;
+use Filament\Forms\Components\TagsInput;
+use Filament\Forms\Components\TextInput;
 use Filament\Resources\Resource;
-use Filament\Tables;
+use Filament\Schemas\Schema;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 
 class OauthClientResource extends Resource
 {
     protected static ?string $model = OauthClient::class;
 
-    protected static ?string $navigationIcon = 'ri-lock-2-line';
+    protected static string|\BackedEnum|null $navigationIcon = 'ri-lock-2-line';
 
-    protected static ?string $activeNavigationIcon = 'ri-lock-2-fill';
+    protected static string|\BackedEnum|null $activeNavigationIcon = 'ri-lock-2-fill';
 
-    protected static ?string $navigationGroup = 'Other';
+    protected static string|\UnitEnum|null $navigationGroup = 'Other';
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
-                Forms\Components\TextInput::make('name')
+        return $schema
+            ->components([
+                TextInput::make('name')
                     ->required()
                     ->maxLength(255),
-                Forms\Components\TagsInput::make('redirect')
+                TagsInput::make('redirect')
                     ->required()
                     ->separator(',')
                     ->columnSpanFull(),
-                Forms\Components\TextInput::make('secret')
+                TextInput::make('secret')
                     ->disabled()
                     ->formatStateUsing(fn ($record) => $record?->secret)
                     ->hiddenOn(['create'])
@@ -46,7 +52,7 @@ class OauthClientResource extends Resource
                                 );
                             })
                     ),
-                Forms\Components\TextInput::make('client_id')
+                TextInput::make('client_id')
                     ->disabled()
                     ->formatStateUsing(fn ($record) => $record?->id)
                     ->hiddenOn(['create'])
@@ -67,20 +73,20 @@ class OauthClientResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('id')
+                TextColumn::make('id')
                     ->label('ID'),
-                Tables\Columns\TextColumn::make('name')
+                TextColumn::make('name')
                     ->searchable(),
             ])
             ->filters([
                 //
             ])
-            ->actions([
-                Tables\Actions\EditAction::make(),
+            ->recordActions([
+                EditAction::make(),
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+            ->toolbarActions([
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
                 ]),
             ]);
     }
@@ -95,9 +101,9 @@ class OauthClientResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListOauthClients::route('/'),
-            'create' => Pages\CreateOauthClient::route('/create'),
-            'edit' => Pages\EditOauthClient::route('/{record}/edit'),
+            'index' => ListOauthClients::route('/'),
+            'create' => CreateOauthClient::route('/create'),
+            'edit' => EditOauthClient::route('/{record}/edit'),
         ];
     }
 }

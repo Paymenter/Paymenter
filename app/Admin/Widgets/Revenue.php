@@ -2,6 +2,7 @@
 
 namespace App\Admin\Widgets;
 
+use App\Enums\InvoiceTransactionStatus;
 use App\Models\InvoiceTransaction;
 use App\Models\Order;
 use Carbon\Carbon;
@@ -12,11 +13,11 @@ use Flowframe\Trend\TrendValue;
 
 class Revenue extends ChartWidget
 {
-    protected static ?string $heading = 'Revenue';
+    protected ?string $heading = 'Revenue';
 
     public ?string $filter = 'week';
 
-    protected static ?string $pollingInterval = null;
+    protected ?string $pollingInterval = null;
 
     protected function getFilters(): ?array
     {
@@ -31,10 +32,10 @@ class Revenue extends ChartWidget
     protected function getData(): array
     {
         $start = match ($this->filter) {
-            'today' => now()->subDay(),
-            'week' => now()->subWeek(),
-            'month' => now()->subMonth(),
-            'year' => now()->subYear(),
+            'today' => now()->subDay()->startOfDay(),
+            'week' => now()->subWeek()->startOfDay(),
+            'month' => now()->subMonth()->startOfDay(),
+            'year' => now()->subYear()->startOfDay(),
         };
 
         $end = now();
@@ -46,7 +47,7 @@ class Revenue extends ChartWidget
             'year' => 'month',
         };
 
-        $revenue = Trend::model(InvoiceTransaction::class)
+        $revenue = Trend::query(InvoiceTransaction::query()->where('status', InvoiceTransactionStatus::Succeeded)->where('is_credit_transaction', false))
             ->between(
                 start: $start,
                 end: $end,
@@ -54,13 +55,13 @@ class Revenue extends ChartWidget
             ->{'per' . ucfirst($per)}()
             ->sum('amount');
 
-        $netRevenue = Trend::model(InvoiceTransaction::class)
+        $netRevenue = Trend::query(InvoiceTransaction::query()->where('status', InvoiceTransactionStatus::Succeeded)->where('is_credit_transaction', false))
             ->between(
                 start: $start,
                 end: $end,
             )
             ->{'per' . ucfirst($per)}()
-            ->sum('amount - fee');
+            ->sum('amount - COALESCE(fee, 0)');
 
         $newOrders = Trend::model(Order::class)
             ->between(

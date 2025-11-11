@@ -3,7 +3,7 @@
 namespace App\Admin\Resources\OauthClientResource\Pages;
 
 use App\Admin\Resources\OauthClientResource;
-use Filament\Actions;
+use Filament\Actions\DeleteAction;
 use Filament\Resources\Pages\EditRecord;
 
 class EditOauthClient extends EditRecord
@@ -13,7 +13,7 @@ class EditOauthClient extends EditRecord
     protected function getHeaderActions(): array
     {
         return [
-            Actions\DeleteAction::make(),
+            DeleteAction::make(),
         ];
     }
 }

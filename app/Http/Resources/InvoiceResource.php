@@ -2,10 +2,11 @@
 
 namespace App\Http\Resources;
 
+use App\Models\Invoice;
 use TiMacDonald\JsonApi\JsonApiResource;
 
 /**
- * @mixin \App\Models\Invoice
+ * @mixin Invoice
  */
 class InvoiceResource extends JsonApiResource
 {

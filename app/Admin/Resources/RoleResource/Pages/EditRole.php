@@ -3,7 +3,7 @@
 namespace App\Admin\Resources\RoleResource\Pages;
 
 use App\Admin\Resources\RoleResource;
-use Filament\Actions;
+use Filament\Actions\DeleteAction;
 use Filament\Resources\Pages\EditRecord;
 
 class EditRole extends EditRecord
@@ -13,7 +13,7 @@ class EditRole extends EditRecord
     protected function getHeaderActions(): array
     {
         return [
-            Actions\DeleteAction::make(),
+            DeleteAction::make(),
         ];
     }
 }

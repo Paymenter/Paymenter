@@ -24,7 +24,7 @@
                             {{ $announcement->published_at->diffForHumans() }}
                         </div>
                     </div>
-                    <p class="prose dark:prose-invert text-sm">{{ $announcement->description }}</p>
+                    <p class="text-sm text-base/70">{{ $announcement->description }}</p>
                 </div>
             </a>
             @endforeach

@@ -3,17 +3,26 @@
 namespace App\Admin\Resources;
 
 use App\Admin\Resources\Common\RelationManagers\PropertiesRelationManager;
-use App\Admin\Resources\UserResource\Pages;
+use App\Admin\Resources\UserResource\Pages\CreateUser;
+use App\Admin\Resources\UserResource\Pages\EditUser;
+use App\Admin\Resources\UserResource\Pages\ListUsers;
+use App\Admin\Resources\UserResource\Pages\ShowBillingAgreements;
+use App\Admin\Resources\UserResource\Pages\ShowCredits;
+use App\Admin\Resources\UserResource\Pages\ShowInvoices;
+use App\Admin\Resources\UserResource\Pages\ShowServices;
+use App\Admin\Resources\UserResource\Pages\ShowTickets;
 use App\Models\Credit;
 use App\Models\User;
+use Filament\Actions\EditAction;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
-use Filament\Forms\Form;
 use Filament\Resources\Pages\Page;
 use Filament\Resources\Resource;
-use Filament\Tables;
+use Filament\Schemas\Schema;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\Filter;
+use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Database\Eloquent\Model;
@@ -23,11 +32,11 @@ class UserResource extends Resource
 {
     protected static ?string $model = User::class;
 
-    protected static ?string $navigationGroup = 'Administration';
+    protected static string|\UnitEnum|null $navigationGroup = 'Administration';
 
-    protected static ?string $navigationIcon = 'ri-group-line';
+    protected static string|\BackedEnum|null $navigationIcon = 'ri-group-line';
 
-    protected static ?string $activeNavigationIcon = 'ri-group-fill';
+    protected static string|\BackedEnum|null $activeNavigationIcon = 'ri-group-fill';
 
     public static function getGloballySearchableAttributes(): array
     {
@@ -39,10 +48,10 @@ class UserResource extends Resource
         return $record->name;
     }
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
+        return $schema
+            ->components([
                 TextInput::make('first_name')->translateLabel()->required(),
                 TextInput::make('last_name')->translateLabel()->required(),
                 TextInput::make('email')->translateLabel()->email()->required()->unique('users', 'email', ignoreRecord: true),
@@ -78,6 +87,7 @@ class UserResource extends Resource
             ->columns([
                 TextColumn::make('first_name')
                     ->searchable()
+                    ->sortable()
                     ->description(function (User $user) {
                         if (count($user->credits) <= 0) {
                             return null;
@@ -87,19 +97,28 @@ class UserResource extends Resource
                             return "$credit->currency_code: $credit->amount";
                         })->toArray());
                     }),
-                TextColumn::make('last_name')->searchable(),
-                TextColumn::make('email')->searchable(),
-                TextColumn::make('role.name'),
+                TextColumn::make('last_name')->searchable()->sortable(),
+                TextColumn::make('email')->searchable()->sortable(),
+                TextColumn::make('role.name')->sortable(),
+                TextColumn::make('created_at')->dateTime()->sortable(),
             ])
             ->filters([
-                Tables\Filters\SelectFilter::make('role')
+                SelectFilter::make('role')
                     ->relationship('role', 'name')
                     ->searchable()
                     ->preload(),
+                Filter::make('email_verified')
+                    ->label('Email Verified'),
+                Filter::make('has_active_services')
+                    ->label('Has Active Services')
+                    ->query(fn ($query) => $query->whereHas('services', function ($q) {
+                        $q->where('status', 'active');
+                    })),
             ])
-            ->actions([
-                Tables\Actions\EditAction::make(),
-            ]);
+            ->recordActions([
+                EditAction::make(),
+            ])
+            ->defaultSort('created_at', 'desc');
     }
 
     public static function getRelations(): array
@@ -112,23 +131,26 @@ class UserResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListUsers::route('/'),
-            'create' => Pages\CreateUser::route('/create'),
-            'edit' => Pages\EditUser::route('/{record}/edit'),
-            'services' => Pages\ShowServices::route('/{record}/services'),
-            'invoices' => Pages\ShowInvoices::route('/{record}/invoices'),
-            'credits' => Pages\ShowCredits::route('/{record}/credits'),
+            'index' => ListUsers::route('/'),
+            'create' => CreateUser::route('/create'),
+            'edit' => EditUser::route('/{record}/edit'),
+            'services' => ShowServices::route('/{record}/services'),
+            'invoices' => ShowInvoices::route('/{record}/invoices'),
+            'credits' => ShowCredits::route('/{record}/credits'),
+            'tickets' => ShowTickets::route('/{record}/tickets'),
+            'billing-agreements' => ShowBillingAgreements::route('/{record}/billing-agreements'),
         ];
     }
 
     public static function getRecordSubNavigation(Page $page): array
     {
-
         return $page->generateNavigationItems([
-            Pages\EditUser::class,
-            Pages\ShowServices::class,
-            Pages\ShowInvoices::class,
-            Pages\ShowCredits::class,
+            EditUser::class,
+            ShowServices::class,
+            ShowInvoices::class,
+            ShowCredits::class,
+            ShowTickets::class,
+            ShowBillingAgreements::class,
         ]);
     }
 }

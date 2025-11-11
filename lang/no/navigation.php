@@ -11,7 +11,8 @@ return [
     'account' => 'Konto',
     'personal_details' => 'Personopplysninger',
     'security' => 'Sikkerhet',
-    'dashboard' => 'Kontrollpanel',
+    'dashboard' => 'Min side',
     'tickets' => 'Saker',
     'admin' => 'Administrator',
+    'notifications' => 'Notifications',
 ];

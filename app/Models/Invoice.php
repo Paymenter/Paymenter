@@ -4,16 +4,18 @@ namespace App\Models;
 
 use App\Classes\PDF;
 use App\Classes\Price;
+use App\Classes\Settings;
+use App\Models\Traits\HasProperties;
 use App\Observers\InvoiceObserver;
 use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
+use OwenIt\Auditing\Contracts\Auditable;
 
 #[ObservedBy([InvoiceObserver::class])]
-class Invoice extends Model
+class Invoice extends Model implements Auditable
 {
-    use HasFactory;
+    use \App\Models\Traits\Auditable, HasFactory, HasProperties;
 
     public const STATUS_PENDING = 'pending';
 
@@ -21,7 +23,7 @@ class Invoice extends Model
 
     public const STATUS_CANCELLED = 'cancelled';
 
-    protected $fillable = ['number', 'user_id', 'currency_code',  'due_at', 'status'];
+    protected $fillable = ['number', 'user_id', 'currency_code', 'due_at', 'status'];
 
     protected $casts = [
         'due_at' => 'date',
@@ -49,7 +51,7 @@ class Invoice extends Model
     public function formattedTotal(): Attribute
     {
         return Attribute::make(
-            get: fn () => new Price(['price' => $this->total, 'currency' => $this->currency])
+            get: fn () => new Price(['price' => $this->total, 'currency' => $this->currency, 'tax' => $this->tax])
         );
     }
 
@@ -59,7 +61,7 @@ class Invoice extends Model
     public function formattedRemaining(): Attribute
     {
         return Attribute::make(
-            get: fn () => new Price(['price' => $this->remaining, 'currency' => $this->currency])
+            get: fn () => new Price(['price' => $this->remaining, 'currency' => $this->currency, 'tax' => $this->tax])
         );
     }
 
@@ -69,7 +71,69 @@ class Invoice extends Model
     public function remaining(): Attribute
     {
         return Attribute::make(
-            get: fn () => $this->total - $this->transactions->sum('amount')
+            get: fn () => $this->total - $this->transactions->where('status', \App\Enums\InvoiceTransactionStatus::Succeeded)->sum('amount')
+        );
+    }
+
+    /**
+     * Get tax model of the invoice.
+     * Either via locked invoice or via users country.
+     */
+    public function tax(): Attribute
+    {
+        if (config('settings.invoice_snapshot', true) && $this?->snapshot?->tax_name) {
+            return Attribute::make(
+                get: fn () => new TaxRate([
+                    'name' => $this->snapshot->tax_name,
+                    'rate' => $this->snapshot->tax_rate,
+                    'country' => $this->snapshot->tax_country,
+                ])
+            );
+        }
+
+        return Attribute::make(
+            get: fn () => Settings::tax($this->user)
+        );
+    }
+
+    public function userProperties(): Attribute
+    {
+        if (config('settings.invoice_snapshot', true) && $this?->snapshot?->properties) {
+            return Attribute::make(
+                get: fn () => $this->snapshot->properties
+            );
+        }
+
+        return Attribute::make(
+            get: fn () => $this->user->properties()->with('parent_property')->whereHas('parent_property', function ($query) {
+                $query->where('show_on_invoice', true);
+            })->pluck('value', 'key')->toArray()
+        );
+    }
+
+    public function userName(): Attribute
+    {
+        if (config('settings.invoice_snapshot', true) && $this?->snapshot?->name) {
+            return Attribute::make(
+                get: fn () => $this->snapshot->name
+            );
+        }
+
+        return Attribute::make(
+            get: fn () => $this->user->name
+        );
+    }
+
+    public function billTo(): Attribute
+    {
+        if (config('settings.invoice_snapshot', true) && $this?->snapshot?->bill_to) {
+            return Attribute::make(
+                get: fn () => $this->snapshot->bill_to
+            );
+        }
+
+        return Attribute::make(
+            get: fn () => config('settings.bill_to_text', config('settings.company_name'))
         );
     }
 
@@ -93,10 +157,38 @@ class Invoice extends Model
         return $this->hasMany(InvoiceTransaction::class);
     }
 
+    public function snapshot()
+    {
+        return $this->hasOne(InvoiceSnapshot::class);
+    }
+
     public function pdf(): Attribute
     {
         return Attribute::make(
             get: fn () => PDF::generateInvoice($this)
         );
+    }
+
+    public function getRouteKey()
+    {
+        // Prefer using number if it’s set, otherwise fallback to id
+        return $this->number ?: $this->id;
+    }
+
+    public function resolveRouteBinding($value, $field = null)
+    {
+        if ($field) {
+            return $this->where($field, $value)->firstOrFail();
+        }
+
+        // Try to find by number first
+        $query = $this->where('number', $value);
+
+        // Only try to match by ID if value is numeric
+        if (is_numeric($value)) {
+            $query->orWhere('id', $value);
+        }
+
+        return $query->firstOrFail();
     }
 }

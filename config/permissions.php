@@ -23,6 +23,13 @@ return [
                 'delete' => 'Delete Invoices',
                 'deleteAny' => 'Bulk Delete Invoices',
             ],
+            'invoice_transactions' => [
+                'create' => 'Create Invoice Transactions',
+                'update' => 'Update Invoice Transactions',
+                'viewAny' => 'View Invoice Transactions',
+                'delete' => 'Delete Invoice Transactions',
+                'deleteAny' => 'Bulk Delete Invoice Transactions',
+            ],
             'products' => [
                 'create' => 'Create Products',
                 'update' => 'Update Products',
@@ -82,6 +89,15 @@ return [
                 'delete' => 'Delete Currencies',
                 'deleteAny' => 'Bulk Delete Currencies',
             ],
+            'audits' => [
+                'viewAny' => 'View Audits',
+            ],
+            'cron_stats' => [
+                'view' => 'View Cron Stats',
+            ],
+            'debug_logs' => [
+                'view' => 'View Debug Logs',
+            ],
             'roles' => [
                 'create' => 'Create Roles',
                 'update' => 'Update Roles',
@@ -133,6 +149,8 @@ return [
             'extensions' => [
                 'update' => 'Update Extensions',
                 'viewAny' => 'View Extensions',
+                'install' => 'Install Extensions',
+                'delete' => 'Delete Extensions',
             ],
             'failed_jobs' => [
                 'viewAny' => 'View Failed Jobs',
@@ -181,6 +199,12 @@ return [
                 'view' => 'View Invoices',
                 'delete' => 'Delete Invoices',
             ],
+            'invoice_items' => [
+                'create' => 'Create Invoice Items',
+                'update' => 'Update Invoice Items',
+                'view' => 'View Invoice Items',
+                'delete' => 'Delete Invoice Items',
+            ],
             'tickets' => [
                 'create' => 'Create Tickets',
                 'update' => 'Update Tickets',
@@ -210,6 +234,12 @@ return [
                 'view' => 'View Coupons',
                 'delete' => 'Delete Coupons',
             ],
+            'credits' => [
+                'create' => 'Create Credits',
+                'update' => 'Update Credits',
+                'view' => 'View Credits',
+                'delete' => 'Delete Credits',
+            ],
             'products' => [
                 'view' => 'View Products',
             ],
@@ -221,9 +251,6 @@ return [
             ],
             'roles' => [
                 'view' => 'View Roles',
-            ],
-            'credits' => [
-                'view' => 'View Credits',
             ],
         ],
     ],

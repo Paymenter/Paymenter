@@ -1,7 +1,6 @@
 <?php
 
 return [
-    'view' => 'View',
 
     'input' => [
         'first_name' => 'First name',
@@ -29,8 +28,12 @@ return [
 
         'password' => 'Password',
         'password_placeholder' => 'Your password',
+
+        'password_confirmation' => 'Confirm Password',
+        'password_confirmation_placeholder' => 'Confirm your password',
     ],
 
     'all_rights_reserved' => 'All rights reserved.',
     'update' => 'Update',
+    'save' => 'Save',
 ];

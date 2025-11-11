@@ -4,11 +4,12 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use OwenIt\Auditing\Contracts\Auditable;
 
-class Extension extends Model
+class Extension extends Model implements Auditable
 {
-    use HasFactory;
+    use \App\Models\Traits\Auditable, HasFactory, SoftDeletes;
 
     protected $fillable = [
         'name',
@@ -39,6 +40,13 @@ class Extension extends Model
     {
         return Attribute::make(
             get: fn () => 'Paymenter\\Extensions\\' . ucfirst($this->type) . 's\\' . ucfirst($this->extension)
+        );
+    }
+
+    public function meta(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => \App\Helpers\ExtensionHelper::getMeta($this->namespace . '\\' . ucfirst($this->extension))
         );
     }
 }

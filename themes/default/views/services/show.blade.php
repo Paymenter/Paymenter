@@ -1,4 +1,4 @@
-<div>
+<div class="container mt-14">
     @if($invoice = $service->invoices()->where('status', 'pending')->first())
     <div class="w-full mb-4">
         <div class="bg-yellow-600/20 border-l-4 border-yellow-500 text-yellow-300 p-4 rounded-lg">
@@ -31,18 +31,38 @@
                         <span class="mr-2">{{ __('services.billing_cycle') }}:</span>
                         <span class="text-base/50">{{ __('services.every_period', [
                             'period' => $service->plan->billing_period > 1 ? $service->plan->billing_period : '',
-                            'unit' => trans_choice(__('services.billing_cycles.' . $service->plan->billing_unit), $service->plan->billing_period)
+                            'unit' => trans_choice(__('services.billing_cycles.' . $service->plan->billing_unit),
+                            $service->plan->billing_period)
                             ])
-                        }}</span>
+                            }}</span>
+                    </div>
+                    <div class="flex items-center text-base">
+                        <span class="mr-2">{{ __('services.expires_at') }}:</span>
+                        <span class="text-base/50">{{ $service->expires_at ? $service->expires_at->format('M d, Y')
+                            : 'N/A' }}</span>
                     </div>
                     @endif
                     <div class="flex items-center text-base">
                         <span class="mr-2">{{ __('services.status') }}:</span>
+                        @if($service->cancellation && $service->status == 'active')
+                        <span class="font-semibold text-orange-500">
+                            {{ __('services.statuses.cancellation_pending') }}
+                        </span>
+                        @else
                         <span
                             class="font-semibold @if ($service->status == 'active') text-green-500 @elseif($service->status == 'cancelled') text-red-500  @else text-orange-500 @endif">
                             {{ __('services.statuses.' . $service->status) }}
                         </span>
+                        @endif
                     </div>
+                    @include('services.partials.billing-agreement')
+                    <br>
+                    @foreach ($fields as $field)
+                    <div class="flex items-center text-base">
+                        <span class="mr-2">{{ $field['label'] }}:</span>
+                        <span class="text-base/50">{{ $field['text'] }}</span>
+                    </div>
+                    @endforeach
                 </div>
             </div>
             @if($service->cancellable || $service->upgradable || count($buttons) > 0)
@@ -93,7 +113,9 @@
                         {{ $button['label'] }}
                     </x-button.primary>
                     @else
-                    <a href="{{ $button['url'] }}">
+                    <a href="{{ $button['url'] }}"
+                        @if(!empty($button['target'])) target="{{ $button['target'] }}" @endif
+                        @if(($button['target'] ?? null) === '_blank') rel="noopener noreferrer" @endif>
                         <x-button.primary class="h-fit !w-fit">
                             {{ $button['label'] }}
                         </x-button.primary>

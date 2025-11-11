@@ -1,7 +1,6 @@
 <?php
 
 return [
-    'view' => 'देखें',
 
     'input' => [
         'first_name' => 'पहला नाम',
@@ -29,8 +28,12 @@ return [
 
         'password' => 'पासवर्ड',
         'password_placeholder' => 'आपका पासवर्ड',
+
+        'password_confirmation' => 'Confirm Password',
+        'password_confirmation_placeholder' => 'Confirm your password',
     ],
 
     'all_rights_reserved' => 'सर्वाधिकार सुरक्षित।',
     'update' => 'अपडेट करें',
+    'save' => 'Save',
 ];

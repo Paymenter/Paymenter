@@ -2,14 +2,14 @@
 
 namespace App\Livewire\Services;
 
-use App\Classes\Price;
 use App\Events\Invoice\Created as InvoiceCreated;
-use App\Jobs\Server\UpgradeJob;
 use App\Livewire\Component;
 use App\Models\Invoice;
 use App\Models\Product;
 use App\Models\Service;
 use App\Models\ServiceUpgrade;
+use App\Models\User;
+use App\Services\ServiceUpgrade\ServiceUpgradeService;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\Computed;
@@ -53,31 +53,25 @@ class Upgrade extends Component
             'product' => $this->upgradeProduct,
         ]);
 
-        $total = $upgrade->calculateProratedAmount(
-            $this->service->product,
-            $this->upgradeProduct
-        )->price;
+        // Initialize empty configs collection
+        $configs = collect();
 
-        // Calculate prices for config options
+        // Add config options to the temporary upgrade (without saving)
         foreach ($this->configOptions as $optionId => $value) {
             $option = $this->upgradeProduct->upgradableConfigOptions->where('id', $optionId)->first();
             if (!$option || !$option->children->contains('id', $value)) {
                 continue;
             }
 
-            $oldPrice = $this->service->configs->where('config_option_id', $optionId)->first();
-
-            $ctotal = $upgrade->calculateProratedAmount(
-                $oldPrice ? $oldPrice->configValue : null,
-                $option->children->find($value)
-            );
-            $total += $ctotal->price;
+            $configs->push(new \App\Models\ServiceConfig([
+                'config_option_id' => $optionId,
+                'config_value_id' => $value,
+            ]));
         }
 
-        return new Price([
-            'price' => $total,
-            'currency' => $this->service->currency,
-        ]);
+        $upgrade->setRelation('configs', $configs);
+
+        return $upgrade->calculatePrice();
     }
 
     // When upgrade changes, update the upgradeProduct
@@ -138,7 +132,7 @@ class Upgrade extends Component
     public function doUpgrade()
     {
         if (!$this->service->upgradable) {
-            $this->notify('This service is not upgradable.', 'error');
+            $this->notify('This service is not upgradable.', 'error', true);
 
             return $this->redirect(route('services.show', $this->service), true);
         }
@@ -178,33 +172,16 @@ class Upgrade extends Component
         $price = $upgrade->calculatePrice();
 
         if ($price->price <= 0) {
-            $upgrade->status = ServiceUpgrade::STATUS_COMPLETED;
-            $upgrade->save();
+            (new ServiceUpgradeService)->handle($upgrade);
 
-            $upgrade->service()->update([
-                'plan_id' => $upgrade->plan_id,
-                'product_id' => $upgrade->product_id,
-            ]);
+            if (!config('settings.credits_on_downgrade', true)) {
+                $this->notify('The upgrade has been completed.', 'success', true);
 
-            // Update the service configs
-            foreach ($upgrade->configs as $config) {
-                $upgrade->service->configs()->updateOrCreate(
-                    ['config_option_id' => $config->config_option_id],
-                    ['config_value_id' => $config->config_value_id]
-                );
-            }
-
-            $this->service->refresh();
-
-            $this->service->recalculatePrice();
-
-            if ($this->service->product->server) {
-                // If the service has a server, dispatch the upgrade job
-                UpgradeJob::dispatch($this->service);
+                return $this->redirect(route('services.show', $this->service), true);
             }
 
             // Check if user has credits in this currency
-            /** @var \App\Models\User */
+            /** @var User */
             $user = Auth::user();
             $credit = $user->credits()->where('currency_code', $price->currency->code)->first();
 
@@ -214,14 +191,14 @@ class Upgrade extends Component
             } else {
                 $user->credits()->create([
                     'currency_code' => $price->currency->code,
-                    'amount' => $price->price,
+                    'amount' => abs($price->price),
                 ]);
             }
 
             if ($price->price < 0) {
-                $this->notify('The upgrade has been completed. We\'ve added the remaining amount to your account balance.', 'success');
+                $this->notify('The upgrade has been completed. We\'ve added the remaining amount to your account balance.', 'success', true);
             } else {
-                $this->notify('The upgrade has been completed.', 'success');
+                $this->notify('The upgrade has been completed.', 'success', true);
             }
 
             return $this->redirect(route('services.show', $this->service), true);
@@ -248,7 +225,7 @@ class Upgrade extends Component
 
         event(new InvoiceCreated($invoice));
 
-        $this->notify('The upgrade has been added to your cart. Please complete the payment to proceed.', 'success');
+        $this->notify('The upgrade has been added to your cart. Please complete the payment to proceed.', 'success', true);
 
         return $this->redirect(route('invoices.show', $invoice));
     }

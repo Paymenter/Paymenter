@@ -5,12 +5,12 @@ namespace App\Models;
 use App\Observers\ServiceCancellationObserver;
 use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
+use OwenIt\Auditing\Contracts\Auditable;
 
 #[ObservedBy([ServiceCancellationObserver::class])]
-class ServiceCancellation extends Model
+class ServiceCancellation extends Model implements Auditable
 {
-    use HasFactory;
+    use \App\Models\Traits\Auditable, HasFactory;
 
     protected $fillable = [
         'service_id',

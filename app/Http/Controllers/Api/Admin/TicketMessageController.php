@@ -19,6 +19,7 @@ class TicketMessageController extends ApiController
     protected const INCLUDES = [
         'user',
         'ticket',
+        'attachments',
     ];
 
     /**

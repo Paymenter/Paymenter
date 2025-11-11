@@ -1,6 +1,6 @@
-<div class="space-y-4">
+<div class="container mt-14 space-y-4">
     <x-navigation.breadcrumb />
-    @foreach ($services as $service)
+    @forelse ($services as $service)
     <a href="{{ route('services.show', $service) }}" wire:navigate>
         <div class="bg-background-secondary hover:bg-background-secondary/80 border border-neutral p-4 rounded-lg mb-4">
         <div class="flex items-center justify-between mb-2">
@@ -24,13 +24,20 @@
                 @endif
             </div>
         </div>
-        <p class="text-base text-sm">Product(s): {{ $service->product->category->name }} {{ in_array($service->plan->type, ['recurring']) ? ' - ' . __('services.every_period', [
-            'period' => $service->plan->billing_period > 1 ? $service->plan->billing_period : '',
-            'unit' => trans_choice(__('services.billing_cycles.' . $service->plan->billing_unit), $service->plan->billing_period)
-        ]) : '' }}</p>
+        <p class="text-base text-sm">Product(s): {{ $service->product->category->name }} {{
+                in_array($service->plan->type, ['recurring']) ? ' - ' . __('services.every_period', [
+                'period' => $service->plan->billing_period > 1 ? $service->plan->billing_period : '',
+                'unit' => trans_choice(__('services.billing_cycles.' . $service->plan->billing_unit),
+                $service->plan->billing_period)
+                ]) : '' }} {{ $service->expires_at ? '- ' . __('services.expires_at') . ': '. $service->expires_at->format('M d, Y') : ''}}</p>
+        </p>
         </div>
     </a>
-    @endforeach
+    @empty
+    <div class="bg-background-secondary border border-neutral p-4 rounded-lg">
+        <p class="text-base text-sm">{{ __('services.no_services') }}</p>
+    </div>
+    @endforelse
 
     {{ $services->links() }}
 </div>

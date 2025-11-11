@@ -16,5 +16,6 @@ class TicketMessageResource extends JsonApiResource
     public $relationships = [
         'user' => UserResource::class,
         'ticket' => TicketResource::class,
+        'attachments' => TicketAttachmentResource::class,
     ];
 }

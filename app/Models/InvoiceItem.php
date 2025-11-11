@@ -7,22 +7,25 @@ use App\Observers\InvoiceItemObserver;
 use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
+use OwenIt\Auditing\Contracts\Auditable;
 
 #[ObservedBy([InvoiceItemObserver::class])]
-class InvoiceItem extends Model
+class InvoiceItem extends Model implements Auditable
 {
-    use HasFactory;
+    use \App\Models\Traits\Auditable, HasFactory;
 
     protected $fillable = [
         'invoice_id',
-        'service_id',
         'quantity',
         'price',
         'description',
         'gateway_id',
         'reference_id',
         'reference_type',
+    ];
+
+    protected $casts = [
+        'price' => 'decimal:2',
     ];
 
     public function invoice()

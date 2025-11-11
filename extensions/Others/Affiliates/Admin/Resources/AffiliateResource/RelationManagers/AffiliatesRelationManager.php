@@ -3,8 +3,11 @@
 namespace Paymenter\Extensions\Others\Affiliates\Admin\Resources\AffiliateResource\RelationManagers;
 
 use App\Admin\Resources\OrderResource;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteAction;
+use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\ViewAction;
 use Filament\Resources\RelationManagers\RelationManager;
-use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Paymenter\Extensions\Others\Affiliates\Models\AffiliateOrder;
@@ -39,13 +42,13 @@ class AffiliatesRelationManager extends RelationManager
             ->filters([
                 //
             ])
-            ->actions([
-                Tables\Actions\ViewAction::make()->url(fn ($record) => OrderResource::getUrl('edit', ['record' => $record->order])),
-                Tables\Actions\DeleteAction::make(),
+            ->recordActions([
+                ViewAction::make()->url(fn ($record) => OrderResource::getUrl('edit', ['record' => $record->order])),
+                DeleteAction::make(),
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+            ->toolbarActions([
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
                 ]),
             ]);
     }

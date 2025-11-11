@@ -7,7 +7,7 @@
             <div class="bg-secondary/10 p-2 rounded-lg">
                 <x-ri-ticket-line class="size-5 text-secondary" />
             </div>
-            <span class="font-medium">{{ $ticket->subject }}</span>
+            <span class="font-medium">#{{ $ticket->id }} - {{ $ticket->subject }}</span>
             </div>
             <div class="size-5 rounded-md p-0.5
                 @if ($ticket->status == 'open') text-success bg-success/20 
@@ -25,7 +25,7 @@
         </div>
         <p class="text-base text-sm">
             {{ __('ticket.last_activity') }}
-            {{ $ticket->messages()->orderBy('created_at', 'desc')->first()->created_at->diffForHumans() }}
+            {{ $ticket->messages()->orderBy('created_at', 'desc')->first()?->created_at->diffForHumans() }}
             {{ $ticket->department ? ' - ' . $ticket->department : '' }}
         </p>
         </div>

@@ -10,11 +10,16 @@ class Home extends Component
     {
         return view('home', [
             // Categories which have NO parent and at least one child
-            'categories' => Category::whereNull('parent_id')->where(function ($query) {
-                $query->whereHas('children')->orWhereHas('products', function ($query) {
-                    $query->where('hidden', false);
-                });
-            })->orderBy('sort')->get(),
+            'categories' => Category::whereNull('parent_id')
+                ->where(function ($query) {
+                    $query->whereHas('children')
+                        ->orWhereHas('products', function ($query) {
+                            $query->where('hidden', false);
+                        });
+                })
+                ->with(['products.plans.prices'])
+                ->orderBy('sort')
+                ->get(),
             'title' => 'Home',
         ]);
     }

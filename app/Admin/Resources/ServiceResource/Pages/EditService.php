@@ -2,16 +2,18 @@
 
 namespace App\Admin\Resources\ServiceResource\Pages;
 
+use App\Admin\Actions\AuditAction;
 use App\Admin\Resources\ServiceResource;
 use App\Helpers\ExtensionHelper;
 use App\Helpers\NotificationHelper;
 use App\Models\Service;
-use Filament\Actions;
+use Exception;
+use Filament\Actions\Action;
+use Filament\Actions\DeleteAction;
 use Filament\Forms\Components\Checkbox;
 use Filament\Forms\Components\Select;
 use Filament\Notifications\Notification;
 use Filament\Resources\Pages\EditRecord;
-use Illuminate\Support\Facades\Log;
 
 class EditService extends EditRecord
 {
@@ -20,10 +22,38 @@ class EditService extends EditRecord
     protected function getHeaderActions(): array
     {
         return [
-            Actions\DeleteAction::make(),
-            Actions\Action::make('changeStatus')
+            DeleteAction::make()
+                ->form(function (DeleteAction $action) {
+                    $status = !in_array($this->record->status, [Service::STATUS_PENDING, Service::STATUS_CANCELLED]) && $this->record->product->server_id !== null;
+                    if (!$status) {
+                        return [];
+                    }
+
+                    return [
+                        Checkbox::make('deleteExtensionServer')
+                            ->label('Also trigger deletion of server')
+                            ->default(true),
+                    ];
+                })
+                ->action(function (array $data, Service $record): void {
+                    try {
+                        if (($data['deleteExtensionServer'] ?? false)) {
+                            ExtensionHelper::terminateServer($record);
+                        }
+                    } catch (Exception $e) {
+                        report($e);
+
+                        Notification::make('Error')
+                            ->title('Error occured while deleting the related server:')
+                            ->body($e->getMessage())
+                            ->danger()
+                            ->send();
+                    }
+                    $record->delete();
+                }),
+            Action::make('changeStatus')
                 ->label('Trigger Extension Action')
-                ->form([
+                ->schema([
                     Select::make('action')
                         ->label('Action')
                         ->options([
@@ -37,7 +67,7 @@ class EditService extends EditRecord
                         ->label('Send Notification')
                         ->default(false),
                 ])
-                ->action(function (array $data, Service $record, Actions\Action $action): void {
+                ->action(function (array $data, Service $record, Action $action): void {
                     try {
                         switch ($data['action']) {
                             case 'create':
@@ -59,11 +89,11 @@ class EditService extends EditRecord
                                 $sdata = ExtensionHelper::upgradeServer($record);
                                 break;
                         }
-                    } catch (\Exception $e) {
+                    } catch (Exception $e) {
                         if (config('app.debug')) {
                             throw $e;
                         }
-                        Log::error($e);
+                        report($e);
                         Notification::make('Error')
                             ->title('Error occured while triggering the action:')
                             ->body($e->getMessage())
@@ -80,6 +110,24 @@ class EditService extends EditRecord
                 ->color('primary')
                 ->modalSubmitActionLabel('Trigger'),
 
+            AuditAction::make()->auditChildren([
+                'order',
+                'invoices',
+                'properties',
+                'configs',
+                'invoiceItems',
+            ]),
+        ];
+    }
+
+    protected function getHeaderWidgets(): array
+    {
+        if (!$this->record->cancellation()->exists()) {
+            return [];
+        }
+
+        return [
+            ServiceResource\Widgets\CancellationOverview::class,
         ];
     }
 }

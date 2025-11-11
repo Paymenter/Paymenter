@@ -23,7 +23,7 @@ return [
     'user_limit' => 'Vous avez atteint la limite de :product',
     'payment_method' => 'Méthode de paiement',
     'use_credits' => 'Utiliser des crédits',
-    'tos' => 'J\'accepte les ',
+    'tos' => 'J’accepte les ',
     'tos_link' => 'Conditions générales d\'utilisation',
-    'tos_required' => 'Vous devez accepter les conditions d\'utilisation',
+    'tos_required' => 'Vous devez accepter nos conditions générales d\'utilisation',
 ];

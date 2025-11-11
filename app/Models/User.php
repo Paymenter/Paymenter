@@ -16,12 +16,13 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Passport\HasApiTokens;
+use OwenIt\Auditing\Contracts\Auditable;
 
 #[SchemaName('UserModel')]
 #[ObservedBy([UserObserver::class])]
-class User extends Authenticatable implements FilamentUser, HasAvatar
+class User extends Authenticatable implements Auditable, FilamentUser, HasAvatar
 {
-    use HasApiTokens, HasFactory, HasProperties, Notifiable;
+    use \App\Models\Traits\Auditable, HasApiTokens, HasFactory, HasProperties, Notifiable;
 
     /**
      * The attributes that are mass assignable.
@@ -153,14 +154,6 @@ class User extends Authenticatable implements FilamentUser, HasAvatar
     }
 
     /**
-     * Get the user's audit logs.
-     */
-    public function audits()
-    {
-        return $this->morphMany(AuditLog::class, 'model');
-    }
-
-    /**
      * Get the user's invoices.
      */
     public function invoices()
@@ -191,5 +184,40 @@ class User extends Authenticatable implements FilamentUser, HasAvatar
     public function credits()
     {
         return $this->hasMany(Credit::class);
+    }
+
+    public function cart()
+    {
+        return $this->hasOne(Cart::class);
+    }
+
+    public function billingAgreements()
+    {
+        return $this->hasMany(BillingAgreement::class);
+    }
+
+    public function transactions()
+    {
+        return $this->hasManyThrough(InvoiceTransaction::class, Invoice::class, 'user_id', 'invoice_id', 'id', 'id');
+    }
+
+    public function notifications()
+    {
+        return $this->hasMany(Notification::class);
+    }
+
+    public function notificationsPreferences()
+    {
+        return $this->hasMany(NotificationPreference::class);
+    }
+
+    public function pushSubscriptions()
+    {
+        return $this->hasMany(NotificationSubscription::class);
+    }
+
+    public function authenticationLogs()
+    {
+        return $this->hasMany(UserAuthenticationLog::class);
     }
 }

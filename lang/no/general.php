@@ -1,7 +1,6 @@
 <?php
 
 return [
-    'view' => 'Vis',
 
     'input' => [
         'first_name' => 'Fornavn',
@@ -29,8 +28,12 @@ return [
 
         'password' => 'Passord',
         'password_placeholder' => 'Ditt passord',
+
+        'password_confirmation' => 'Confirm Password',
+        'password_confirmation_placeholder' => 'Confirm your password',
     ],
 
     'all_rights_reserved' => 'Alle rettigheter reservert.',
     'update' => 'Oppdater',
+    'save' => 'Save',
 ];

@@ -28,8 +28,8 @@ return [
     'between' => [
         'array' => ':attribute feltet må ha mellom :min og :max elementer.',
         'file' => ':attribute feltet må være mellom :min og :max kilobytes.',
-        'numeric' => '',
-        'string' => ':attribute må være mellom :min og :max tegn.',
+        'numeric' => ':attribute feltet må være mellom :min og :max.',
+        'string' => ':attribute feltet må være mellom :min og :max tegn.',
     ],
     'boolean' => ':attribute må være sann eller usann.',
     'can' => ':attribute feltet inneholder en uautorisert verdi.',

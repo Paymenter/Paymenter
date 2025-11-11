@@ -8,8 +8,8 @@ use App\Events\Order\Created as OrderCreated;
 use App\Events\User\Created as UserCreated;
 use App\Helpers\ExtensionHelper;
 use App\Models\User;
-use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Event;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Facades\View;
 use Livewire\Livewire;
@@ -65,14 +65,16 @@ class Affiliates extends Extension
         ];
     }
 
-    public function enabled()
+    public function installed()
     {
-        // Run migrations
-        Artisan::call('migrate', ['--path' => 'extensions/Others/Affiliates/database/migrations/2024_12_25_075634_create_ext_affiliates_table.php', '--force' => true]);
-        Artisan::call('migrate', ['--path' => 'extensions/Others/Affiliates/database/migrations/2025_01_31_155928_create_ext_affiliate_orders_table.php', '--force' => true]);
+        ExtensionHelper::runMigrations('extensions/Others/Affiliates/database/migrations');
     }
 
-    public function disabled() {}
+    public function uninstalled()
+    {
+        // Rollback migrations
+        ExtensionHelper::rollbackMigrations('extensions/Others/Affiliates/database/migrations');
+    }
 
     public function boot()
     {
@@ -85,6 +87,8 @@ class Affiliates extends Extension
         User::resolveRelationUsing('affiliate', function (User $userModel) {
             return $userModel->hasOne(Affiliate::class, 'user_id');
         });
+
+        Gate::policy(Affiliate::class, Policies\AffiliatePolicy::class);
 
         ExtensionHelper::registerMiddleware(AffiliatesMiddleware::class);
 
@@ -111,6 +115,15 @@ class Affiliates extends Extension
             ];
         });
 
+        Event::listen('permissions', function () {
+            return [
+                'admin.affiliates.view' => 'View Affiliates',
+                'admin.affiliates.create' => 'Create Affiliates',
+                'admin.affiliates.update' => 'Update Affiliates',
+                'admin.affiliates.delete' => 'Delete Affiliates',
+            ];
+        });
+
         // Event::listen('navigation.dashboard', function ($routes) {
         //     dd($routes);
         //     return [
@@ -126,6 +139,7 @@ class Affiliates extends Extension
             return [
                 'name' => __('affiliates::affiliate.affiliate'),
                 'route' => 'affiliate.index',
+                'priority' => 15,
             ];
         });
     }
