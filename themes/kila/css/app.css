@@ -1,0 +1,151 @@
+@import 'tailwindcss';
+
+@plugin '@tailwindcss/forms' {
+  strategy: class;
+}
+
+@plugin '@tailwindcss/typography';
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@source "../views";
+@source "../../../extensions/**/*.blade.php";
+
+@theme {
+  /* Font Family */
+  --font-sans: "Nunito", ui-sans-serif, system-ui, sans-serif;
+}
+
+@theme inline {
+  /* Branding Colors */
+  --color-primary: hsl(var(--color-primary));
+  --color-secondary: hsl(var(--color-secondary));
+  
+  /* Neutral Colors */
+  --color-neutral: hsl(var(--color-neutral));
+  
+  /* Text Colors */
+  --color-base: hsl(var(--color-base));
+  --color-muted: hsl(var(--color-muted));
+  --color-inverted: hsl(var(--color-inverted));
+  
+  /* State Colors */
+  --color-success: hsl(var(--color-success));
+  --color-error: hsl(var(--color-error));
+  --color-warning: hsl(var(--color-warning));
+  --color-inactive: hsl(var(--color-inactive));
+  --color-info: hsl(var(--color-info));
+  
+  /* Background Colors */
+  --color-background: hsl(var(--color-background));
+  --color-background-secondary: hsl(var(--color-background-secondary));
+  --color-card: hsl(var(--color-card));
+}
+
+/*
+The default border color has changed to `currentColor` in Tailwind CSS v4,
+so we've added these compatibility styles to make sure everything still
+looks the same as it did with Tailwind CSS v3.
+
+If we ever want to remove these styles, we need to add an explicit border
+color utility to any element that depends on these defaults.
+*/
+@layer base {
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-gray-200, currentColor);
+  }
+}
+
+@utility text-nowrap {
+  text-wrap: nowrap;
+}
+
+@utility text-wrap {
+  text-wrap: wrap;
+}
+
+/* Kila Theme Custom Styles */
+@layer components {
+  /* Card hover effect */
+  .kila-card {
+    @apply rounded-lg transition-all duration-300;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  }
+
+  .kila-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2), 0 10px 10px -5px rgba(0, 0, 0, 0.1);
+  }
+
+  /* Button styles */
+  .btn-kila-primary {
+    @apply bg-primary text-white font-medium py-2 px-4 rounded-lg transition-all duration-200;
+  }
+
+  .btn-kila-primary:hover {
+    filter: brightness(1.1);
+  }
+
+  .btn-kila-success {
+    @apply bg-success text-white font-medium py-2 px-4 rounded-lg transition-all duration-200;
+  }
+
+  .btn-kila-success:hover {
+    filter: brightness(1.1);
+  }
+
+  .btn-kila-danger {
+    @apply bg-error text-white font-medium py-2 px-4 rounded-lg transition-all duration-200;
+  }
+
+  .btn-kila-danger:hover {
+    filter: brightness(1.1);
+  }
+
+  /* Navbar styles */
+  .kila-navbar {
+    @apply backdrop-blur-sm bg-background-secondary/80 border-b border-neutral;
+  }
+
+  /* Badge/Pill styles */
+  .kila-badge {
+    @apply inline-flex items-center px-3 py-1 rounded-full text-xs font-medium uppercase tracking-wide;
+  }
+
+  /* Input focus state */
+  .kila-input:focus {
+    @apply ring-2 ring-primary/50 border-primary;
+  }
+
+  /* Stat card */
+  .kila-stat-card {
+    @apply p-6 rounded-lg relative overflow-hidden;
+  }
+
+  /* Table styles */
+  .kila-table {
+    @apply w-full border-collapse;
+  }
+
+  .kila-table thead {
+    @apply bg-background-secondary;
+  }
+
+  .kila-table th {
+    @apply px-6 py-3 text-left text-xs font-medium text-muted uppercase tracking-wider;
+  }
+
+  .kila-table td {
+    @apply px-6 py-4 whitespace-nowrap text-sm;
+  }
+
+  .kila-table tbody tr:hover {
+    @apply bg-background-secondary/50;
+  }
+}
+
+@import './easymde.css'

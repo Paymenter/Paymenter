@@ -1,0 +1,145 @@
+<?php
+
+return [
+    'name' => 'Kila',
+    'author' => 'DilanTheDev',
+    'url' => 'https://paymenter.org',
+
+    'settings' => [
+        [
+            'name' => 'direct_checkout',
+            'label' => 'Direct Checkout',
+            'type' => 'checkbox',
+            'default' => false,
+            'description' => 'Don\'t show the product overview page, go directly to the checkout page',
+        ],
+        [
+            'name' => 'small_images',
+            'label' => 'Small Images',
+            'type' => 'checkbox',
+            'default' => false,
+            'description' => 'Show small images in the product overview page',
+        ],
+        [
+            'name' => 'show_category_description',
+            'label' => 'Show Category Description',
+            'type' => 'checkbox',
+            'default' => true,
+            'description' => 'Show the category description in the product overview page/homepage',
+        ],
+        [
+            'name' => 'home_page_text',
+            'label' => 'Home Page Text',
+            'type' => 'markdown',
+            'default' => 'Welcome to our hosting platform! Choose from our beautifully crafted services to enhance your online presence.',
+        ],
+        [
+            'name' => 'primary',
+            'label' => 'Primary - Brand Color (Light)',
+            'type' => 'color',
+            'default' => 'hsl(210, 78%, 58%)',
+        ],
+        [
+            'name' => 'secondary',
+            'label' => 'Secondary - Brand Color (Light)',
+            'type' => 'color',
+            'default' => 'hsl(160, 84%, 39%)',
+        ],
+        [
+            'name' => 'neutral',
+            'label' => 'Borders, Accents... (Light)',
+            'type' => 'color',
+            'default' => 'hsl(211, 28%, 20%)',
+        ],
+        [
+            'name' => 'base',
+            'label' => 'Base - Text Color (Light)',
+            'type' => 'color',
+            'default' => 'hsl(0, 0%, 0%)',
+        ],
+        [
+            'name' => 'muted',
+            'label' => 'Muted - Text Color (Light)',
+            'type' => 'color',
+            'default' => 'hsl(220, 9%, 65%)',
+        ],
+        [
+            'name' => 'inverted',
+            'label' => 'Inverted - Text Color (Light)',
+            'type' => 'color',
+            'default' => 'hsl(0, 0%, 100%)',
+        ],
+        [
+            'name' => 'background',
+            'label' => 'Background - Color (Light)',
+            'type' => 'color',
+            'default' => 'hsl(0, 0%, 100%)',
+        ],
+        [
+            'name' => 'background-secondary',
+            'label' => 'Background - Secondary Color (Light)',
+            'type' => 'color',
+            'default' => 'hsl(0, 0%, 97%)',
+        ],
+        [
+            'name' => 'dark-primary',
+            'label' => 'Primary - Accent Blue (Dark)',
+            'type' => 'color',
+            'default' => 'hsl(210, 78%, 58%)',
+        ],
+        [
+            'name' => 'dark-secondary',
+            'label' => 'Secondary - Accent Green (Dark)',
+            'type' => 'color',
+            'default' => 'hsl(160, 84%, 39%)',
+        ],
+        [
+            'name' => 'dark-neutral',
+            'label' => 'Borders, Accents... (Dark)',
+            'type' => 'color',
+            'default' => 'hsl(211, 28%, 20%)',
+        ],
+        [
+            'name' => 'dark-base',
+            'label' => 'Base - Text Color (Dark)',
+            'type' => 'color',
+            'default' => 'hsl(0, 0%, 100%)',
+        ],
+        [
+            'name' => 'dark-muted',
+            'label' => 'Muted - Text Color (Dark)',
+            'type' => 'color',
+            'default' => 'hsl(220, 9%, 65%)',
+        ],
+        [
+            'name' => 'dark-inverted',
+            'label' => 'Inverted - Text Color (Dark)',
+            'type' => 'color',
+            'default' => 'hsl(211, 28%, 15%)',
+        ],
+        [
+            'name' => 'dark-background',
+            'label' => 'Background - Navy (Dark)',
+            'type' => 'color',
+            'default' => 'hsl(210, 22%, 9%)',
+        ],
+        [
+            'name' => 'dark-background-secondary',
+            'label' => 'Background - Secondary Navy (Dark)',
+            'type' => 'color',
+            'default' => 'hsl(211, 28%, 15%)',
+        ],
+        [
+            'name' => 'accent-yellow',
+            'label' => 'Accent - Warning Yellow',
+            'type' => 'color',
+            'default' => 'hsl(43, 96%, 56%)',
+        ],
+        [
+            'name' => 'accent-red',
+            'label' => 'Accent - Danger Red',
+            'type' => 'color',
+            'default' => 'hsl(0, 84%, 60%)',
+        ],
+    ],
+];

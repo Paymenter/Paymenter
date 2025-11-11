@@ -1,0 +1,45 @@
+<style>
+    :root {
+        /* Branding Colors (Light) */
+        --color-primary: {{ str_replace(',', '', preg_replace('/^hsl\((.+)\)$/', '$1', theme('primary', '229 100% 64%'))) }};
+        --color-secondary: {{ str_replace(',', '', preg_replace('/^hsl\((.+)\)$/', '$1', theme('secondary', '237 33% 60%'))) }};
+
+        /* Neutral Colors - Borders, Accents... (Light) */
+        --color-neutral: {{ str_replace(',', '', preg_replace('/^hsl\((.+)\)$/', '$1', theme('neutral', '220 25% 85%'))) }};
+
+        /* Text Colors (Light) */
+        --color-base: {{ str_replace(',', '', preg_replace('/^hsl\((.+)\)$/', '$1', theme('base', '0 0% 0%'))) }};
+        --color-muted: {{ str_replace(',', '', preg_replace('/^hsl\((.+)\)$/', '$1', theme('muted', '220 28% 25%'))) }};
+        --color-inverted: {{ str_replace(',', '', preg_replace('/^hsl\((.+)\)$/', '$1', theme('inverted', '100 100% 100%'))) }};
+
+        /* State Colors */
+        --color-success: {{ str_replace(',', '', preg_replace('/^hsl\((.+)\)$/', '$1', theme('secondary', '160 84% 39%'))) }};
+        --color-error: {{ str_replace(',', '', preg_replace('/^hsl\((.+)\)$/', '$1', theme('accent-red', '0 84% 60%'))) }};
+        --color-warning: {{ str_replace(',', '', preg_replace('/^hsl\((.+)\)$/', '$1', theme('accent-yellow', '43 96% 56%'))) }};
+        --color-inactive: 0 0% 63%;
+        --color-info: {{ str_replace(',', '', preg_replace('/^hsl\((.+)\)$/', '$1', theme('primary', '210 78% 58%'))) }};
+
+        /* Background Colors (Light) */
+        --color-background: {{ str_replace(',', '', preg_replace('/^hsl\((.+)\)$/', '$1', theme('background', '100 100% 100%'))) }};
+        --color-background-secondary: {{ str_replace(',', '', preg_replace('/^hsl\((.+)\)$/', '$1', theme('background-secondary', '0 0% 97%'))) }};
+    }
+
+    .dark {
+        /* Branding Colors (Dark) */
+        --color-primary: {{ str_replace(',', '', preg_replace('/^hsl\((.+)\)$/', '$1', theme('dark-primary', '229 100% 64%'))) }};
+        --color-secondary: {{ str_replace(',', '', preg_replace('/^hsl\((.+)\)$/', '$1', theme('dark-secondary', '237 33% 60%'))) }};
+
+        /* Neutral Colors - Borders, Accents... (Dark) */
+        --color-neutral: {{ str_replace(',', '', preg_replace('/^hsl\((.+)\)$/', '$1', theme('dark-neutral', '220 25% 29%'))) }};
+
+        /* Text Colors (Dark) */
+        --color-base: {{ str_replace(',', '', preg_replace('/^hsl\((.+)\)$/', '$1', theme('dark-base', '100 100% 100%'))) }};
+        --color-muted: {{ str_replace(',', '', preg_replace('/^hsl\((.+)\)$/', '$1', theme('dark-muted', '220 28% 25%'))) }};
+        --color-inverted: {{ str_replace(',', '', preg_replace('/^hsl\((.+)\)$/', '$1', theme('dark-inverted', '220 14% 60%'))) }};
+
+        /* Background Colors (Dark) */
+        --color-background: {{ str_replace(',', '', preg_replace('/^hsl\((.+)\)$/', '$1', theme('dark-background', '221 39% 11%'))) }};
+        --color-background-secondary: {{ str_replace(',', '', preg_replace('/^hsl\((.+)\)$/', '$1', theme('dark-background-secondary', '217 33% 16%'))) }};
+        --color-card: 211 28% 16%;
+    }
+</style>

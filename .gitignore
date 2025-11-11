@@ -19,3 +19,4 @@ yarn-error.log
 /.vscode
 themes/*
 !themes/default
+!themes/kila
