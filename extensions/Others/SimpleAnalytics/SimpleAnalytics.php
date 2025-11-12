@@ -20,12 +20,12 @@ class SimpleAnalytics extends Extension
         $alwaysEnable = $this->getConfigValue('always_enable', false);
 
         if ($alwaysEnable) {
-            return <<<HTML
+            return <<<'HTML'
 <script async src="https://scripts.simpleanalyticscdn.com/latest.js"></script>
 HTML;
         }
 
-        return <<<HTML
+        return <<<'HTML'
 <script>
 document.addEventListener('DOMContentLoaded', function () {
     if (document.cookie.indexOf('cookieConsent=accepted') !== -1) {
@@ -53,7 +53,10 @@ HTML;
     }
 
     public function enabled(): void {}
+
     public function disabled(): void {}
+
     public function updated(): void {}
+
     public function install(): void {}
 }
