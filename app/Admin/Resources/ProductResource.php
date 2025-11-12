@@ -303,7 +303,9 @@ class ProductResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('name')->searchable(),
+                TextColumn::make('name')->searchable(query: function (Builder $query, string $search): Builder {
+                    return $query->where('products.name', 'like', "%{$search}%");
+                }),
                 TextColumn::make('slug'),
                 TextColumn::make('category.name')->searchable(),
             ])
