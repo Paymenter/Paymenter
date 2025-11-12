@@ -71,6 +71,7 @@ return [
     'remove' => 'Kaldır',
     'remove_payment_method' => 'Ödeme Yöntemini Kaldır',
     'remove_payment_method_confirm' => 'Are you sure you want to remove :name? This action cannot be undone.',
+    'expires' => 'Expires :date',
     'cancel' => 'İptal',
     'confirm' => 'Evet, kaldır',
     'email_notifications' => 'E-Posta Bildirimleri',

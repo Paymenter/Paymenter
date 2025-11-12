@@ -2,12 +2,12 @@
 
 return [
     '404' => [
-        'title' => 'Page Not Found',
-        'message' => 'Sorry, the page you are looking for could not be found.',
-        'return_home' => 'Back to Home',
+        'title' => 'Seite konnte nicht gefunden werden',
+        'message' => 'Leider konnte die aufgerufene Seite nicht gefunden werden.',
+        'return_home' => 'Zurück zur Startseite',
     ],
     '500' => [
-        'title' => 'Server Error',
+        'title' => 'Interner Fehler',
         'message' => 'Hoppla, bei uns ist etwas schiefgelaufen. Bitte versuchen Sie es später erneut.',
     ],
 ];

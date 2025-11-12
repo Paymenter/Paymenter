@@ -2,12 +2,12 @@
 
 return [
     '404' => [
-        'title' => 'Page Not Found',
-        'message' => 'Sorry, the page you are looking for could not be found.',
-        'return_home' => 'Back to Home',
+        'title' => 'Halaman Tidak Ditemukan',
+        'message' => 'Maaf, Halaman yang Anda cari tidak dapat ditemukan.',
+        'return_home' => 'Kembali ke Beranda',
     ],
     '500' => [
-        'title' => 'Server Error',
-        'message' => 'Whoops, something went wrong on our end. Please try again later.',
+        'title' => 'Terjadi Kesalahan Server',
+        'message' => 'Ups, ada yang tidak beres di server kami. Silakan coba lagi nanti.',
     ],
 ];

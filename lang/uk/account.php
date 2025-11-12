@@ -71,6 +71,7 @@ return [
     'remove' => 'Видалити',
     'remove_payment_method' => 'Видалити спосіб оплати',
     'remove_payment_method_confirm' => 'Ви впевнені, що хочете видалити :name? Цю дію неможливо скасувати.',
+    'expires' => 'Expires :date',
     'cancel' => 'Скасувати',
     'confirm' => 'Так, видалити',
     'email_notifications' => 'Сповіщення електронною поштою',

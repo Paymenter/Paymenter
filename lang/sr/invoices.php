@@ -30,6 +30,7 @@ return [
     'gateway' => 'Platni prolaz',
     'payment_date' => 'Datum plaćanja',
     'payment_method' => 'Način plaćanja',
+    'download_pdf' => 'Preuzmi PDF',
     'amount' => 'Iznos',
     'date' => 'Datum',
     'due_date' => 'Rok',
@@ -47,10 +48,13 @@ return [
     'apply_credit' => 'Primeni kredite (:amount)',
     'no_invoices' => 'Nije pronađen nijedan račun.',
     'paid_with_credits' => ' Plaćeno kreditima',
+    'available_credits' => 'Dostupni krediti: :amount',
+    'account_credits' => 'Krediti na računu',
     'one_time_payment' => 'Jednokratno plaćanje',
     'use_for_recurring' => 'Koristi za periodična plaćanja',
     'pay_now' => 'Plati odmah',
     'apply_credits_and_continue' => 'Primeni kredite i nastavi',
     'apply_credits_and_pay' => 'Primeni kredite i plati',
+    'amount_due' => 'Dospeli iznos: :amount',
 
 ];

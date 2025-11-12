@@ -4,7 +4,7 @@ return [
     'ticket_details' => 'Hibajegy részletei',
     'tickets' => 'Hibajegyek',
     'subject' => 'Tárgy',
-    'status' => 'Állapot',
+    'status' => 'Státusz',
     'priority' => 'Prioritás',
     'department' => 'Részleg',
     'created_at' => 'Létrehozva',
