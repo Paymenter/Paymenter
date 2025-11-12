@@ -11,7 +11,7 @@
                 </article>
             </div>
         </div>
-
+        {!! hook('pages.home1') !!}
         <div class="container mt-4 flex flex-col gap-5">
 
             <h2 class="text-xl font-semibold">Services</h2>
@@ -48,5 +48,7 @@
             </div>
         </div>
     </div>
-    {!! hook('pages.home') !!}
+    {!! hook('pages.home2') !!}
+    {!! hook('pages.home3') !!}
+    {!! hook('pages.home4') !!}
 </div>
