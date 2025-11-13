@@ -55,7 +55,6 @@ class RoleResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('name')->sortable(),
-                // Show a single permissions summary (either 'All' or the count).
                 TextColumn::make('permissions_count')
                     ->label('permissions')
                     ->getStateUsing(fn (Role $record): string => in_array('*', $record->permissions) ? 'All' : (string) count($record->permissions))
