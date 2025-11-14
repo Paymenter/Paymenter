@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('settings', function (Blueprint $table) {
             $table->id();
-            $table->string('key', 255);
+            $table->string('key');
             $table->text('value')->nullable();
             $table->string('type')->default('string');
             $table->boolean('encrypted')->default(false);
