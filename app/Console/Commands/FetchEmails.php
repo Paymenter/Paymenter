@@ -54,7 +54,16 @@ class FetchEmails extends Command
                     continue;
                 }
 
-                $body = \EmailReplyParser\EmailReplyParser::parseReply($email->text());
+                // Get email body (supports both text and HTML emails)
+                $body = $this->getEmailBody($email);
+
+                // Check if email has any content
+                if (empty($body)) {
+                    // Log email without body as failed
+                    $this->failedEmailLog($email);
+                    $this->info('Skipped email with empty body: ' . $email->subject());
+                    continue;
+                }
 
                 // Check headers to see if this email is a reply
                 $replyTo = $email->inReplyTo();
@@ -97,7 +106,7 @@ class FetchEmails extends Command
                     'subject' => $email->subject(),
                     'from' => $email->from()->email(),
                     'to' => $email->to()[0]->email(),
-                    'body' => $email->text(),
+                    'body' => $this->getRawEmailBody($email),
                     'status' => 'processed',
                 ]);
 
@@ -135,6 +144,56 @@ class FetchEmails extends Command
         }
     }
 
+    /**
+     * Get email body from text or HTML content.
+     * Attempts to parse and remove quoted reply text.
+     */
+    private function getEmailBody($email): ?string
+    {
+        // Try to get plain text content first
+        $text = $email->text();
+
+        if (!empty($text)) {
+            // If we have plain text, use EmailReplyParser to remove quoted content
+            return \EmailReplyParser\EmailReplyParser::parseReply($text);
+        }
+
+        // If no plain text, try to get HTML and convert to text
+        $html = $email->html();
+        if (!empty($html)) {
+            // Strip HTML tags to get plain text
+            $text = strip_tags($html);
+            // Clean up extra whitespace
+            $text = preg_replace('/\s+/', ' ', $text);
+            $text = trim($text);
+
+            // Try to use EmailReplyParser (may not work perfectly with HTML-converted text)
+            if (!empty($text)) {
+                return \EmailReplyParser\EmailReplyParser::parseReply($text);
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Get raw email body for logging (text or HTML).
+     */
+    private function getRawEmailBody($email): ?string
+    {
+        $text = $email->text();
+        if (!empty($text)) {
+            return $text;
+        }
+
+        $html = $email->html();
+        if (!empty($html)) {
+            return $html;
+        }
+
+        return null;
+    }
+
     private function failedEmailLog($email): TicketMailLog
     {
         return TicketMailLog::create([
@@ -142,7 +201,7 @@ class FetchEmails extends Command
             'subject' => $email->subject(),
             'from' => $email->from()->email(),
             'to' => $email->to()[0]->email(),
-            'body' => $email->text(),
+            'body' => $this->getRawEmailBody($email),
             'status' => 'unprocessed',
         ]);
     }
