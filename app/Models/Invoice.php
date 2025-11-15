@@ -189,6 +189,6 @@ class Invoice extends Model implements Auditable
             $query->orWhere('id', $value);
         }
 
-        return $query->firstOrFail();
+        return $query->orderByRaw('(`number` = ?) DESC', [$value])->firstOrFail();
     }
 }
