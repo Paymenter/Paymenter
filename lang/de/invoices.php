@@ -31,7 +31,7 @@ return [
     'payment_date' => 'Zahlungsdatum',
     'payment_method' => 'Zahlungsmethode',
     'download_pdf' => 'Download PDF',
-    'amount' => 'Anzahl',
+    'amount' => 'Betrag',
     'date' => 'Datum',
     'due_date' => 'Fälligkeitsdatum',
     'payment_for_invoice' => 'Zahlung für Rechnung #:number',
