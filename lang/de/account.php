@@ -34,7 +34,7 @@ return [
         'two_factor_code_placeholder' => 'Dein Zwei-Faktor-Authentifizierungscode',
 
         'currency' => 'Währung',
-        'amount' => 'Anzahl',
+        'amount' => 'Betrag',
         'payment_gateway' => 'Zahlungs-Gateway',
     ],
 
