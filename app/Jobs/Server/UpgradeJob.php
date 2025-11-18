@@ -31,12 +31,11 @@ class UpgradeJob implements ShouldQueue
     {
         // $data is the data that will be used to send the email, data is coming from the extension itself
         try {
-            $data = ExtensionHelper::upgradeServer($this->service);
+            ExtensionHelper::upgradeServer($this->service);
         } catch (Exception $e) {
-            if ($e->getMessage() == 'No server assigned to this product') {
-                return;
+            if ($e->getMessage() !== 'No server assigned to this product') {
+                throw $e;
             }
-            throw $e;
         }
     }
 }
