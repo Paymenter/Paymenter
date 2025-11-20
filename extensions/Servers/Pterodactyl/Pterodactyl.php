@@ -274,7 +274,7 @@ class Pterodactyl extends Server
             if (Str::startsWith($key, 'ENV_')) {
                 $env_var_name = substr($key, 4); // remove ENV_ prefix
                 $environment[$env_var_name] = $value;
-           }
+            }
         }
 
         $orderUser = $service->user;
