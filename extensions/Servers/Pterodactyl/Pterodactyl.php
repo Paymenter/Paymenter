@@ -267,7 +267,7 @@ class Pterodactyl extends Server
             $environment[$variable['attributes']['env_variable']] = $settings[$variable['attributes']['env_variable']] ?? $variable['attributes']['default_value'];
         }
 
-        // allow for evnronment variable overrides from product settings
+        // allow for environment variable overrides from product settings
         // these would be set in the product configuration as ENV_VARIABLE_NAME
         // eg: SERVER_JARFILE => custom.jar
         foreach ($settings as $key => $value) {
