@@ -267,6 +267,16 @@ class Pterodactyl extends Server
             $environment[$variable['attributes']['env_variable']] = $settings[$variable['attributes']['env_variable']] ?? $variable['attributes']['default_value'];
         }
 
+        // allow for evnronment variable overrides from product settings
+        // these would be set in the product configuration as ENV_VARIABLE_NAME
+        // eg: SERVER_JARFILE => custom.jar
+        foreach ($settings as $key => $value) {
+            if (Str::startsWith($key, 'ENV_')) {
+                $env_var_name = substr($key, 4); // remove ENV_ prefix
+                $environment[$env_var_name] = $value;
+           }
+        }
+
         $orderUser = $service->user;
         // Get the user id if one already exists...
         $user = $this->request('/api/application/users', 'get', ['filter' => ['email' => $orderUser->email]])['data'][0]['attributes']['id'] ?? null;
