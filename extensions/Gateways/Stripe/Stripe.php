@@ -102,14 +102,6 @@ class Stripe extends Gateway
                 'description' => 'Stripe webhook secret',
                 'required' => false,
             ],
-            [
-                'name' => 'stripe_use_subscriptions',
-                'label' => 'Use subscriptions (Not used anymore)',
-                'type' => 'checkbox',
-                'description' => 'Enable this option if you want to use subscriptions with Stripe (if available)',
-                'required' => false,
-                'database_type' => 'boolean',
-            ],
         ];
     }
 
