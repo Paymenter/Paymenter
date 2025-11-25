@@ -55,6 +55,8 @@
                         <div x-data="{
                             drop: false,
                             selectedFiles: [],
+                            progress: 0,
+                            uploading: false,
                             handleDrop(event) {
                                 this.drop = false;
                                 if (event.dataTransfer.files && event.dataTransfer.files.length > 0) {
@@ -72,40 +74,52 @@
                                     }
                                 });
                             }                            
-                        }">
+                        }"
+                            x-on:livewire-upload-start="uploading = true"
+                            x-on:livewire-upload-finish="uploading = false; progress = 0;"
+                            x-on:livewire-upload-progress="progress = $event.detail.progress"
+                            x-on:livewire-upload-error="uploading = false; selectedFiles = []; progress = 0"
+                            x-on:livewire-upload-cancel="uploading = false; progress = 0;">
                             <div class="flex justify-center rounded-lg bg-background-secondary border border-dashed border-neutral px-6 py-2"
                                 @dragover.prevent="drop = true" @dragleave.prevent="drop = false"
                                 @drop.prevent="handleDrop($event)" :class="{'bg-background-secondary/50': drop}">
-                                <div class="text-center">
-                                    <template x-if="selectedFiles.length === 0">
-                                        <div>
-                                            <div class="flex text-sm text-primary-100">
-                                                <label for="attachments"
-                                                    class="relative cursor-pointer rounded-md font-semibold text-primary hover:text-primary/80">
-                                                    <span>
-                                                        {{ __('ticket.upload_attachments') }}
-                                                    </span>
-                                                </label>
-                                                <p class="pl-1 text-base/80">{{ __('ticket.or_drag_and_drop') }}</p>
+                                    <!-- Upload Progress Bar -->
+                                <div x-show="uploading" class="w-full text-center">
+                                    <div class="mb-2 text-sm font-medium text-primary-100">
+                                        {{ __('ticket.uploading_files') }}... (<span x-text="progress"></span>%)
+                                    </div>
+                                    <div class="w-full bg-primary-600 rounded-lg h-3 mb-4">
+                                        <div class="bg-success h-3 rounded-lg" :style="{ width: `${progress}%` }"></div>
+                                    </div>
+                                </div>
+                                <template x-if="selectedFiles.length === 0 && !uploading">
+                                    <div class="text-center">
+                                        <div class="flex text-sm text-primary-100">
+                                            <label for="attachments"
+                                                class="relative cursor-pointer rounded-md font-semibold text-primary hover:text-primary/80">
+                                                <span>
+                                                    {{ __('ticket.upload_attachments') }}
+                                                </span>
+                                            </label>
+                                            <p class="pl-1 text-base/80">{{ __('ticket.or_drag_and_drop') }}</p>
+                                        </div>
+                                        <p class="text-xs/5 text-base/50">{{ __('ticket.files_max') }}</p>
+                                    </div>
+                                </template>
+                                <div x-show="selectedFiles.length > 0 && !uploading" class="mt-2">
+                                    <h4 class="text-sm font-semibold">{{ __('ticket.selected_files') }}:</h4>
+                                    <div class="flex flex-wrap items-center justify-center gap-2 mt-1">
+                                        <template x-for="file in selectedFiles" :key="file.name">
+                                            <div
+                                                class="text-sm rounded-md bg-gray-100 flex items-center gap-2 dark:bg-gray-800 p-1 py-0 w-fit">
+                                                <span class="flex-1" x-text="file.name"></span>
+                                                <button type="button"
+                                                    class="text-red-500 hover:text-red-700 text-lg h-fit"
+                                                    @click="selectedFiles = selectedFiles.filter(f => f !== file); $refs.fileInput.value = ''">
+                                                    &times;
+                                                </button>
                                             </div>
-                                            <p class="text-xs/5 text-base/50">{{ __('ticket.files_max') }}</p>
-                                        </div>
-                                    </template>
-                                    <div x-show="selectedFiles.length > 0">
-                                        <h4 class="text-sm font-semibold">{{ __('ticket.selected_files') }}:</h4>
-                                        <div class="flex flex-wrap items-center justify-center gap-2 mt-1">
-                                            <template x-for="file in selectedFiles" :key="file.name">
-                                                <div
-                                                    class="text-sm rounded-md bg-gray-100 flex items-center gap-2 dark:bg-gray-800 p-1 py-0 w-fit">
-                                                    <span class="flex-1" x-text="file.name"></span>
-                                                    <button type="button"
-                                                        class="text-red-500 hover:text-red-700 text-lg h-fit"
-                                                        @click="selectedFiles = selectedFiles.filter(f => f !== file)">
-                                                        &times;
-                                                    </button>
-                                                </div>
-                                            </template>
-                                        </div>
+                                        </template>
                                     </div>
                                 </div>
                             </div>
@@ -113,6 +127,9 @@
                                 wire:model.live="attachments" x-ref="fileInput"
                                 @change="selectedFiles = Array.from($event.target.files)" />
                         </div>
+                        @error('attachments.*')
+                        <p class="text-sm text-red-500 mt-1">{{ $message }}</p>
+                        @enderror
                         <div class="mt-2 flex flex-col sm:flex-row gap-2 justify-end">
                             @if (!config('settings.ticket_client_closing_disabled', false) && $ticket->status !== 'closed')
                                 <x-button.danger type="button" class="sm:!w-fit order-2 sm:order-1"
