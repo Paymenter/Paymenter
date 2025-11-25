@@ -14,6 +14,7 @@ return [
     'or_drag_and_drop' => 'oder per Drag & Drop hier ablegen',
     'files_max' => 'Dateien bis zu 10 MB',
     'selected_files' => 'Ausgewählte Dateien',
+    'uploading_files' => 'Uploading files',
     'close_ticket' => 'Ticket schließen',
     'close_ticket_confirmation' => 'Möchten Du dieses Ticket wirklich schließen? Diese Aktion kann nicht rückgängig gemacht werden.',
     'close_ticket_success' => 'Ticket erfolgreich geschlossen.',
