@@ -1,23 +1,23 @@
 <?php
 
-namespace App\Listeners;
+namespace App\Services\Invoice;
 
-use App\Events\Invoice\Paid;
 use App\Models\Credit;
+use App\Models\Invoice;
 use App\Models\Service;
 use App\Models\ServiceUpgrade;
 use App\Services\Service\RenewServiceService;
 use App\Services\ServiceUpgrade\ServiceUpgradeService;
 
-class InvoicePaidListener
+class ProcessPaidInvoiceService
 {
     /**
-     * Handle the event.
+     * Handle the processing of a paid invoice.
      */
-    public function handle(Paid $event): void
+    public function handle(Invoice $invoice): void
     {
         // Update services if invoice is paid (suspended -> active etc.)
-        $event->invoice->items->each(function ($item) {
+        $invoice->items->each(function ($item) use ($invoice) {
             if ($item->reference_type == Service::class) {
                 $service = $item->reference;
                 if (!$service || !($service instanceof Service)) {
@@ -34,15 +34,15 @@ class InvoicePaidListener
                 (new ServiceUpgradeService)->handle($serviceUpgrade);
             } elseif ($item->reference_type == Credit::class) {
                 // Check if user has credits in this currency
-                $user = $item->invoice->user;
-                $credit = $user->credits()->where('currency_code', $item->invoice->currency_code)->first();
+                $user = $invoice->user;
+                $credit = $user->credits()->where('currency_code', $invoice->currency_code)->first();
 
                 if ($credit) {
                     $credit->amount += $item->price;
                     $credit->save();
                 } else {
                     $user->credits()->create([
-                        'currency_code' => $item->invoice->currency_code,
+                        'currency_code' => $invoice->currency_code,
                         'amount' => $item->price,
                     ]);
                 }

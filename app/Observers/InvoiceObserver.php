@@ -4,6 +4,7 @@ namespace App\Observers;
 
 use App\Events\Invoice as InvoiceEvent;
 use App\Models\Invoice;
+use App\Services\Invoice\ProcessPaidInvoiceService;
 
 class InvoiceObserver
 {
@@ -43,6 +44,7 @@ class InvoiceObserver
     public function updated(Invoice $invoice): void
     {
         if ($invoice->isDirty('status') && $invoice->status == 'paid') {
+            app(ProcessPaidInvoiceService::class)->handle($invoice);
             event(new InvoiceEvent\Paid($invoice));
         }
         event(new InvoiceEvent\Updated($invoice));
