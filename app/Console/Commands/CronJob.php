@@ -143,7 +143,10 @@ class CronJob extends Command
                 ServiceUpgrade::where('status', 'pending')->get()->each(function ($upgrade) use (&$number) {
                     if ($upgrade->service->expires_at < now()) {
                         $upgrade->update(['status' => 'cancelled']);
-                        $upgrade->invoice->update(['status' => 'cancelled']);
+                        // Somehow people manage to have an upgrade without an invoice
+                        if ($upgrade->invoice) {
+                            $upgrade->invoice->update(['status' => 'cancelled']);
+                        }
 
                         $number++;
 
