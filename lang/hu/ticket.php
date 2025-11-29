@@ -14,7 +14,7 @@ return [
     'or_drag_and_drop' => 'vagy húzd ide',
     'files_max' => 'Legfeljebb 10MB méretű fájl tölthető fel',
     'selected_files' => 'Fájlok kiválasztása',
-    'uploading_files' => 'Uploading files',
+    'uploading_files' => 'Fájlok feltöltése',
     'close_ticket' => 'Jegy lezárása',
     'close_ticket_confirmation' => 'Biztosan lezárod ezt a hibajegyet? Ez a művelet nem vonható vissza.',
     'close_ticket_success' => 'Hibajegy sikeresen lezárva.',
