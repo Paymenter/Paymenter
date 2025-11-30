@@ -14,6 +14,7 @@ return [
     'or_drag_and_drop' => 'ili prevuci i otpusti',
     'files_max' => 'Fajlovi do 10MB',
     'selected_files' => 'Izabrani fajlovi',
+    'uploading_files' => 'Uploading files',
     'close_ticket' => 'Zatvori tiket',
     'close_ticket_confirmation' => 'Da li ste sigurni da želite da zatvorite ovaj tiket? Ova radnja se ne može poništiti.',
     'close_ticket_success' => 'Tiket je uspešno zatvoren.',

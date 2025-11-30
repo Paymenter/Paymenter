@@ -14,6 +14,7 @@ return [
     'or_drag_and_drop' => 'ya da sürükleyip bırakın',
     'files_max' => 'Dosyalar en fazla 10 MB olabilir.',
     'selected_files' => 'Seçili Dosyalar',
+    'uploading_files' => 'Uploading files',
     'close_ticket' => 'Close Ticket',
     'close_ticket_confirmation' => 'Are you sure you want to close this ticket? This action cannot be undone.',
     'close_ticket_success' => 'Ticket closed successfully.',
