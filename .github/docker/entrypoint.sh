@@ -75,10 +75,9 @@ else
   echo -e "Storage symlink already exists."
 fi
 
-## set storage permissions to 777 and user nginx:nginx
+## set storage permissions to 777
 echo -e "Setting storage permissions."
 chmod -R 777 /app/storage/*
-chown -R nginx:nginx /app/storage
 
 ## make sure the db is set up
 echo -e "Migrating and Seeding D.B"
