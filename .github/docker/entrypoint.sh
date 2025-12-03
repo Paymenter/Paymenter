@@ -7,7 +7,14 @@ mkdir -p /var/log/supervisord/ /var/log/nginx/
 if [ -f /app/var/.env ]; then
   echo "external vars exist."
   rm -rf /app/.env
-  ln -s /app/var/.env /app/.env
+  
+  # Source the file to override environment variables
+  set -a
+  . /app/var/.env
+  set +a
+
+  # Merge local .env with defaults (local wins)
+  cat /app/var/.env /app/.env.example > /app/.env
 else
   echo "external vars don't exist."
   rm -rf /app/.env
@@ -26,6 +33,23 @@ else
 
   ln -s /app/var/.env /app/.env
 fi
+
+## Symlink themes and extensions
+[ -d "/app/var/themes" ] && for theme in /app/var/themes/*; do
+  [ -d "$theme" ] || continue
+  rm -rf "/app/themes/$(basename "$theme")"
+  ln -s "$theme" "/app/themes/"
+  echo "Linked theme: $(basename "$theme")"
+done
+
+[ -d "/app/var/extensions" ] && for extension in /app/var/extensions/*/*; do
+  [ -d "$extension" ] || continue
+  category=$(basename "$(dirname "$extension")")
+  mkdir -p "/app/extensions/$category"
+  rm -rf "/app/extensions/$category/$(basename "$extension")"
+  ln -s "$extension" "/app/extensions/$category/"
+  echo "Linked extension: $category/$(basename "$extension")"
+done
 
 if [[ -z $DB_PORT ]]; then
   echo -e "DB_PORT not specified, defaulting to 3306"
