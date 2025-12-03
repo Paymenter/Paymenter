@@ -3,7 +3,7 @@
 FROM --platform=$TARGETOS/$TARGETARCH dunglas/frankenphp:php8.3-alpine AS final
 WORKDIR /app
 
-RUN apk add --no-cache --update ca-certificates dcron curl git supervisor tar unzip libpng-dev libxml2-dev libzip-dev icu-dev linux-headers gmp-dev \
+RUN apk add --no-cache --update ca-certificates dcron curl git supervisor tar unzip libpng-dev libxml2-dev libzip-dev icu-dev linux-headers gmp-dev nodejs npm \
     && install-php-extensions bcmath gd pdo_mysql zip intl sockets gmp redis opcache pcntl igbinary apcu
 
 # Opcache configuration for high performance
@@ -49,6 +49,9 @@ RUN npm run build
 # Switch back to the final stage
 FROM final AS production
 COPY --from=build /app/public /app/public
+
+RUN sed -i 's/"build": "node vite.js"/"build": "cd var \&\& node ..\/vite.js"/' package.json \
+    && sed -i 's/"dev": "node vite.js dev"/"dev": "cd var \&\& node ..\/vite.js dev"/' package.json
 
 COPY .github/docker/supervisord.conf /etc/supervisord.conf
 

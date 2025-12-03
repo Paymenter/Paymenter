@@ -37,9 +37,17 @@ fi
 ## Symlink themes and extensions
 [ -d "/app/var/themes" ] && for theme in /app/var/themes/*; do
   [ -d "$theme" ] || continue
-  rm -rf "/app/themes/$(basename "$theme")"
-  ln -s "$theme" "/app/themes/"
-  echo "Linked theme: $(basename "$theme")"
+  theme_name=$(basename "$theme")
+
+  # Skip if it's the default theme and it's a symlink pointing to the system default theme
+  # This prevents a circular symlink loop where /app/themes/default -> /app/var/themes/default -> /app/themes/default
+  if [ "$theme_name" = "default" ] && [ -L "$theme" ] && [ "$(readlink -f "$theme")" = "/app/themes/default" ]; then
+    continue
+  fi
+
+  rm -rf "/app/themes/$theme_name"
+  ln -s "$theme" "/app/themes/$theme_name"
+  echo "Linked theme: $theme_name"
 done
 
 [ -d "/app/var/extensions" ] && for extension in /app/var/extensions/*/*; do
@@ -47,7 +55,7 @@ done
   category=$(basename "$(dirname "$extension")")
   mkdir -p "/app/extensions/$category"
   rm -rf "/app/extensions/$category/$(basename "$extension")"
-  ln -s "$extension" "/app/extensions/$category/"
+  ln -s "$extension" "/app/extensions/$category/$(basename "$extension")"
   echo "Linked extension: $category/$(basename "$extension")"
 done
 
@@ -64,6 +72,30 @@ do
   # wait for 1 seconds before check again
   sleep 1
 done
+
+## Symlink vendor directory if it doesn't exist in var
+if [ ! -d "/app/var/vendor" ]; then
+  echo "Linking vendor directory..."
+  ln -s /app/vendor /app/var/vendor
+fi
+
+## Symlink node_modules directory if it doesn't exist in var
+if [ ! -d "/app/var/node_modules" ]; then
+  echo "Linking node_modules directory..."
+  ln -s /app/node_modules /app/var/node_modules
+fi
+
+## Symlink public directory if it doesn't exist in var
+if [ ! -d "/app/var/public" ]; then
+  echo "Linking public directory..."
+  ln -s /app/public /app/var/public
+fi
+
+## Symlink default theme if it doesn't exist in var
+if [ ! -d "/app/var/themes/default" ]; then
+  echo "Linking default theme..."
+  ln -s /app/themes/default /app/var/themes/default
+fi
 
 ## check if storage symlink exists, if not create it
 if [ ! -L /app/public/storage ]; then
