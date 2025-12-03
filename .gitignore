@@ -22,3 +22,14 @@ extensions/Others/Pages
 extensions/Servers/LicenseManager
 extensions/Servers/Proxmox
 !themes/default
+database/mysql
+database/paymenter
+database/performance_schema
+database/sys
+database/aria_log*
+database/ib*
+database/undo*
+database/mariadb_upgrade_info
+database/multi-master.info
+database/*.log
+docker-compose.yml
