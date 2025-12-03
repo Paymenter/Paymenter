@@ -28,7 +28,7 @@ services:
     image: redis:alpine
     restart: always
   paymenter:
-    image: ghcr.io/paymenter/paymenter:master
+    image: ghcr.io/beingsuz/paymenter:latest
     restart: always
     ports:
       - "80:80"

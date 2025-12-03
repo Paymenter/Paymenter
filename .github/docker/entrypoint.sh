@@ -115,6 +115,12 @@ chmod -R 777 /app/storage/*
 echo -e "Migrating and Seeding D.B"
 php artisan migrate --seed --force
 
+## Optimize Laravel
+echo -e "Optimizing Laravel..."
+php artisan optimize
+php artisan view:cache
+php artisan event:cache
+
 ## start cronjobs for the queue
 echo -e "Starting cron jobs."
 crond -L /var/log/crond -l 5
