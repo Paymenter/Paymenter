@@ -149,6 +149,19 @@ class Cart
         if (Auth::check() && $coupon->hasExceededMaxUsesPerUser(Auth::id())) {
             throw new DisplayException('You have already used this coupon the maximum number of times allowed');
         }
+        if ($coupon->products->isNotEmpty()) {
+            $cart = self::get();
+            $applicable = false;
+            foreach ($cart->items as $item) {
+                if ($coupon->products->contains($item->product_id)) {
+                    $applicable = true;
+                    break;
+                }
+            }
+            if (!$applicable) {
+                throw new DisplayException('Coupon code is not valid for any items in your cart');
+            }
+        }
 
         return $coupon;
     }
