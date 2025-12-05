@@ -71,7 +71,7 @@ return [
     'remove' => 'Eltávolítás',
     'remove_payment_method' => 'Fizetési mód eltávolítása',
     'remove_payment_method_confirm' => 'Biztosan törölni szeretnéd a(z) :name felhasználót? Ez a művelet nem vonható vissza.',
-    'expires' => 'Expires :date',
+    'expires' => 'Lejár :date',
     'cancel' => 'Mégsem',
     'confirm' => 'Igen, eltávolítom',
     'email_notifications' => 'E-mail értesítések',
