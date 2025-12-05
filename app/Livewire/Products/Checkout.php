@@ -221,6 +221,20 @@ class Checkout extends Component
         // First we validate the plans
         $this->validate(attributes: $this->attributes());
 
+        // Has this product quantity = no?
+        if ($this->product->allow_quantity == 'disabled') {
+            // Check if the product is already in the cart
+            $item = Cart::get()->items()->where('product_id', $this->product->id)->when($this->cartProductKey, function ($query) {
+                $query->where('id', '!=', $this->cartProductKey);
+            })->get();
+
+            if ($item->isNotEmpty()) {
+                $this->notify('This product is already in your cart and cannot be added again.', 'error');
+
+                return;
+            }
+        }
+
         // Change configOptions so they also contain the name of the option (resulting in less database calls = faster speeds)
         $configOptions = $this->product->configOptions->map(function ($option) {
             if ($option->type == 'checkbox') {
