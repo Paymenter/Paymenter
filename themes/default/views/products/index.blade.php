@@ -27,7 +27,7 @@
                         @endif
                         @if ($childCategory->image)
                         <img src="{{ Storage::url($childCategory->image) }}" alt="{{ $childCategory->name }}"
-                            class="rounded-md {{ theme('small_images', false) ? 'w-14 h-fit' : 'w-full object-cover object-center' }}">
+                            class="aspect-square rounded-md {{ theme('small_images', false) ? 'w-14 h-fit' : 'w-full object-cover object-center' }}">
                         @endif
                         <h2 class="text-xl font-bold">{{ $childCategory->name }}</h2>
                         @if(theme('small_images', false))
@@ -55,7 +55,7 @@
                         @endif
                         @if ($product->image)
                         <img src="{{ Storage::url($product->image) }}" alt="{{ $product->name }}"
-                            class="rounded-md {{ theme('small_images', false) ? 'w-14 h-fit' : 'w-full object-cover object-center' }}">
+                            class="aspect-square rounded-md {{ theme('small_images', false) ? 'w-14 h-fit' : 'w-full object-cover object-center' }}">
                         @endif
                         <h2 class="text-xl font-bold">{{ $product->name }}</h2>
                         @if(theme('small_images', false))
