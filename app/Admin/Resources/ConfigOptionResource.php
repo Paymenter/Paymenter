@@ -43,6 +43,11 @@ class ConfigOptionResource extends Resource
                                 ->required()
                                 ->maxLength(255)
                                 ->placeholder('Enter the name of the configuration option'),
+                            TextInput::make('description')
+                                ->label('Description')
+                                ->columnSpanFull()
+                                ->maxLength(255)
+                                ->placeholder('Enter the description of the configuration option'),
                             TextInput::make('env_variable')
                                 ->label('Environment Variable')
                                 ->maxLength(255)
