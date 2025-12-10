@@ -31,6 +31,13 @@ class ComponentWithProperties extends Component
                 })
                 ->toArray();
         }
+        // Add missing properties with null value
+        foreach ($this->custom_properties as $custom_property) {
+            // For select types, we need to set an empty string as default value, so the placeholder is shown
+            if (!array_key_exists($custom_property->key, $this->properties) && $custom_property->type == 'select') {
+                $this->properties[$custom_property->key] = '';
+            }
+        }
     }
 
     public function getRulesForProperties(): array

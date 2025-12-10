@@ -30,7 +30,12 @@
 
         @case('select')
             <x-form.select name="properties.{{ $property->key }}" :label="$property->name"
-                wire:model="properties.{{ $property->key }}" :required="$property->required" :options="$property->allowed_values" :selected="$properties[$property->key] ?? ''" :disabled="$property->non_editable && isset($properties[$property->key])" />
+                class="has-[option:disabled:checked]:text-muted" wire:model="properties.{{ $property->key }}" :required="$property->required" :disabled="$property->non_editable && isset($properties[$property->key]) && !empty($properties[$property->key])">
+                <option disabled value="" style="color: hsl(var(--color-muted))">{{ __('common.select.placeholder', ['name' => $property->name]) }}</option>
+                @foreach ($property->allowed_values as $value)
+                    <option style="color: hsl(var(--color-base))" value="{{ $value }}">{{ $value }}</option>
+                @endforeach
+            </x-form.select>
         @break
 
         @case('text')
