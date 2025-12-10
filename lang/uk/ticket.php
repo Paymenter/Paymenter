@@ -14,6 +14,7 @@ return [
     'or_drag_and_drop' => 'або перетягніть сюди',
     'files_max' => 'Файли розміром до 10 МБ',
     'selected_files' => 'Вибрані файли',
+    'uploading_files' => 'Uploading files',
     'close_ticket' => 'Закрити заявку',
     'close_ticket_confirmation' => 'Ви впевнені, що хочете закрити цю заявку? Цю дію неможливо скасувати.',
     'close_ticket_success' => 'Заявку успішно закрито.',
