@@ -54,10 +54,20 @@ class Settings
                     'type' => 'select',
                     // Read languages from resources/lang directory
                     // The ternary operator is only present for now. Since there are no lang files, it returns [], which breaks the frontend, so we return ['en']
-                    'options' => glob(base_path('lang/*'), GLOB_ONLYDIR) ? array_map('basename', glob(base_path('lang/*'), GLOB_ONLYDIR)) : ['en'],
+                    'options' => self::getAvailableLanguages(),
                     'required' => true,
-                    'validation' => 'in:' . implode(',', glob(base_path('lang/*'), GLOB_ONLYDIR) ? array_map('basename', glob(base_path('lang/*'), GLOB_ONLYDIR)) : ['en']),
+                    'validation' => 'in:' . implode(',', self::getAvailableLanguages()),
                     'override' => 'app.locale',
+                ],
+                [
+                    'name' => 'allowed_languages',
+                    'label' => 'Allowed Languages',
+                    'type' => 'select',
+                    'options' => array_combine(self::getAvailableLanguages(), array_map('strtoupper', self::getAvailableLanguages())),
+                    'database_type' => 'array',
+                    'multiple' => true,
+                    'default' => self::getAvailableLanguages(),
+                    'required' => true,
                 ],
                 [
                     'name' => 'app_url',
@@ -337,6 +347,14 @@ class Settings
             ],
             'tickets' => [
                 [
+                    'name' => 'tickets_disabled',
+                    'label' => 'Disable Tickets',
+                    'type' => 'checkbox',
+                    'database_type' => 'boolean',
+                    'default' => false,
+                    'description' => 'Disable the ticket system. This will disable all client side ticket functionality, including the ability to create new tickets and view existing tickets.',
+                ],
+                [
                     'name' => 'ticket_departments',
                     'label' => 'Ticket Departments',
                     'type' => 'tags',
@@ -591,14 +609,6 @@ class Settings
                     'description' => 'Only allow existing users to log in. This will hide the registration page and prevent new users from signing up.',
                 ],
                 [
-                    'name' => 'tickets_disabled',
-                    'label' => 'Disable Tickets',
-                    'type' => 'checkbox',
-                    'database_type' => 'boolean',
-                    'default' => false,
-                    'description' => 'Disable the ticket system. This will disable all client side ticket functionality, including the ability to create new tickets and view existing tickets.',
-                ],
-                [
                     'name' => 'pagination',
                     'label' => 'Pagination',
                     'type' => 'number',
@@ -621,6 +631,15 @@ class Settings
         $settings['theme'] = [...$settings['theme'], ...Theme::getSettings()];
 
         return $settings;
+    }
+
+    private static function getAvailableLanguages(): array
+    {
+        return once(
+            fn () => glob(base_path('lang/*'), GLOB_ONLYDIR)
+            ? array_map('basename', glob(base_path('lang/*'), GLOB_ONLYDIR))
+            : ['en']
+        );
     }
 
     public static function tax(?User $user = null)

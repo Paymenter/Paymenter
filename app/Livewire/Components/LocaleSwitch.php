@@ -4,26 +4,25 @@ namespace App\Livewire\Components;
 
 use App\Classes\Cart;
 use App\Livewire\Component;
-use App\Models\Currency;
 
-/**
- * @deprecated This component is deprecated, use LocaleSwitch instead
- * @see \App\Livewire\Components\LocaleSwitch
- */
-class CurrencySwitch extends Component
+class LocaleSwitch extends Component
 {
+    public $currentLocale;
+
     public $currentCurrency;
 
     protected $currencies = [];
 
     public function mount()
     {
+        $this->currentLocale = session('locale', config('app.locale'));
         $this->currentCurrency = session('currency', config('settings.default_currency'));
-        $this->currencies = Currency::all()->map(fn ($currency) => [
+        $this->currencies = \App\Models\Currency::all()->map(fn ($currency) => [
             'value' => $currency->code,
             'label' => $currency->name,
         ])->values()->toArray();
-        if (Cart::items()->count() > 0 || count($this->currencies) <= 1) {
+
+        if ((count($this->currencies) <= 1 || \App\Classes\Cart::items()->count() > 0) && count(config('settings.allowed_languages', [])) <= 1) {
             $this->skipRender();
         }
     }
@@ -49,8 +48,24 @@ class CurrencySwitch extends Component
         return $this->redirect(request()->header('Referer', '/'), navigate: true);
     }
 
+    public function updatedCurrentLocale($locale)
+    {
+        if (!in_array($locale, config('settings.allowed_languages', []))) {
+            $this->notify('The selected language is not available.', 'error');
+
+            return;
+        }
+
+        session(['locale' => $locale]);
+        app()->setLocale($locale);
+
+        return $this->redirect(request()->header('Referer', '/'), navigate: true);
+    }
+
     public function render()
     {
-        return view('components.currency-switch');
+        $locales = config('settings.allowed_languages');
+
+        return view('components.locale-switch', compact('locales'));
     }
 }
