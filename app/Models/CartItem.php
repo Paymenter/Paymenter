@@ -68,6 +68,18 @@ class CartItem extends Model
 
                         return;
                     }
+                    // Calculate dynamic slider price
+                    if ($option->type === 'dynamic_slider') {
+                        if ($selected && isset($selected->value)) {
+                            $total += $option->calculateDynamicPrice(
+                                (float) $selected->value,
+                                $this->plan->billing_period,
+                                $this->plan->billing_unit
+                            );
+                        }
+
+                        return;
+                    }
                     if (!$selected || !isset($selected->value)) {
                         return;
                     }
