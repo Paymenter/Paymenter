@@ -191,7 +191,8 @@ class Cart extends Component
 
                 foreach ($item->config_options as $configOption) {
                     $configOption = (object) $configOption;
-                    if (in_array($configOption->option_type, ['text', 'number'])) {
+                    // Text, number and dynamic_slider store values as properties (not child option references)
+                    if (in_array($configOption->option_type, ['text', 'number', 'dynamic_slider'])) {
                         if (!isset($configOption->value)) {
                             continue;
                         }
