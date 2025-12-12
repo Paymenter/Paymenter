@@ -6,9 +6,9 @@
         <h1 class="text-2xl text-center mt-6">{{ __('auth.sign_in_title') }} </h1>
     </div>
     <x-form.input name="email" type="email" :label="__('general.input.email')"
-        :placeholder="__('general.input.email_placeholder')" wire:model="email" hideRequiredIndicator required />
+        :placeholder="__('general.input.email_placeholder')" wire:model="email" hideRequiredIndicator required autocomplete="email" />
     <x-form.input name="password" type="password" :label="__('general.input.password')"
-        :placeholder="__('general.input.password_placeholder')" required hideRequiredIndicator wire:model="password" />
+        :placeholder="__('general.input.password_placeholder')" required hideRequiredIndicator wire:model="password" autocomplete="current-password" />
     <div class="flex flex-row">
         <x-form.checkbox name="remember" label="Remember me" wire:model="remember" />
         <a class="text-sm text-secondary-500 text-secondary hover:underline ml-auto"

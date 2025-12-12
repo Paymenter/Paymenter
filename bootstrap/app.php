@@ -4,6 +4,7 @@ use App\Http\Middleware\Api\AdminApi;
 use App\Http\Middleware\CheckoutParameterMiddleware;
 use App\Http\Middleware\EnsureUserHasPermissions;
 use App\Http\Middleware\ImpersonateMiddleware;
+use App\Http\Middleware\LockSession;
 use App\Http\Middleware\ProxyMiddleware;
 use App\Http\Middleware\SetLocale;
 use App\Models\DebugLog;
@@ -28,6 +29,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'checkout' => CheckoutParameterMiddleware::class,
         ]);
         $middleware->web([
+            LockSession::class,
             SetLocale::class,
             ImpersonateMiddleware::class,
         ]);

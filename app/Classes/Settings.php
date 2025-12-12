@@ -159,6 +159,24 @@ class Settings
                         new Cidr(allowWildCard: true),
                     ],
                 ],
+                [
+                    'name' => 'session_validation',
+                    'label' => 'Session Validation',
+                    'type' => 'select',
+                    'options' => [
+                        'none' => 'None',
+                        'ip_admin' => 'Lock session to IP address (Admin)',
+                        'ip_client' => 'Lock session to IP address (Client)',
+                        'ip_both' => 'Lock session to IP address (Admin & Client)',
+                        'user_agent_admin' => 'Lock session to User Agent (Admin)',
+                        'user_agent_client' => 'Lock session to User Agent (Client)',
+                        'user_agent' => 'Lock session to User Agent (Admin & Client)',
+                        'ip_user_agent_admin' => 'Lock session to IP address and User Agent (Admin)',
+                        'ip_user_agent_client' => 'Lock session to IP address and User Agent (Client)',
+                        'ip_user_agent_both' => 'Lock session to IP address and User Agent (Admin & Client)',
+                    ],
+                    'default' => 'none',
+                ],
             ],
 
             'social-login' => [

@@ -22,7 +22,7 @@ class LocaleSwitch extends Component
             'label' => $currency->name,
         ])->values()->toArray();
 
-        if ((count($this->currencies) <= 1 || \App\Classes\Cart::items()->count() > 0) && count(config('settings.allowed_languages', [])) <= 1) {
+        if ((count($this->currencies) <= 1 || Cart::items()->count() > 0) && count(config('settings.allowed_languages', [])) <= 1) {
             $this->skipRender();
         }
     }
