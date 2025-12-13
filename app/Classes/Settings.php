@@ -431,7 +431,7 @@ class Settings
                     'type' => 'time',
                     'default' => '00:00',
                     'required' => true,
-                    'description' => 'Time the cron job should run daily (in 12 hour format).',
+                    'description' => 'Time the cron job should run daily.',
                 ],
                 [
                     'name' => 'cronjob_invoice',
