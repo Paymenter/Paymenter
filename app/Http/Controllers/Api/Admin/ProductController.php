@@ -38,7 +38,7 @@ class ProductController extends ApiController
             ->allowedSorts(['id', 'name', 'permissions', 'created_at'])
             ->simplePaginate(request('per_page', 15));
 
-        // Return the products as a JSON response
+        // Return the products as a JSON
         return ProductResource::collection($products);
     }
 
