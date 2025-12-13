@@ -8,6 +8,7 @@ use App\Http\Controllers\Api\Admin\ServiceController;
 use App\Http\Controllers\Api\Admin\TicketController;
 use App\Http\Controllers\Api\Admin\TicketMessageController;
 use App\Http\Controllers\Api\Admin\UserController;
+use App\Http\Controllers\Api\Admin\ProductController;
 use App\Http\Controllers\Api\ProfileController;
 use Illuminate\Support\Facades\Route;
 
@@ -29,5 +30,6 @@ Route::group(['middleware' => ['api.admin'], 'prefix' => 'v1/admin', 'as' => 'ap
         'invoice-items' => InvoiceItemController::class,
         'tickets' => TicketController::class,
         'ticket-messages' => TicketMessageController::class,
+        'products' => ProductController::class,
     ]);
 });
