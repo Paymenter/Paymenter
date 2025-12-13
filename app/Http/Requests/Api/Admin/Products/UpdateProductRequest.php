@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests\Api\Admin\Users;
+namespace App\Http\Requests\Api\Admin\Products;
 
 use App\Http\Requests\Api\Admin\AdminApiRequest;
 
@@ -11,12 +11,10 @@ class UpdateProductRequest extends AdminApiRequest
     public function rules(): array
     {
         return [
-            'first_name' => 'sometimes|nullable|string|max:255',
-            'last_name' => 'sometimes|nullable|string|max:255',
-            'email' => 'sometimes|required|email|max:255|unique:users,email,' . $this->route()->parameter('user')->id,
-            'password' => 'sometimes|string|min:8',
-            'email_verified_at' => 'sometimes|nullable|date',
-            'role_id' => 'sometimes|nullable|exists:roles,id',
+            'name' => 'sometimes|nullable|string|max:255',
+            'description' => 'sometimes|nullable|string|max:255',
+            'enabled' => 'sometimes|boolean',
+            'category_id' => 'sometimes|nullable|exists:categories,id',
         ];
     }
 }

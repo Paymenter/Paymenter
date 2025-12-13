@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests\Api\Admin\Users;
+namespace App\Http\Requests\Api\Admin\Products;
 
 use App\Http\Requests\Api\Admin\AdminApiRequest;
 
