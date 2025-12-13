@@ -606,7 +606,6 @@ class Settings
                         'wavatar' => 'Wavatar',
                         'retro' => 'Retro',
                         'robohash' => 'Robohash',
-                        'blank' => 'Blank',
                     ],
                     'default' => 'wavatar',
                 ],
