@@ -18,7 +18,7 @@ class ProductResource extends JsonApiResource
         'enabled',
         'created_at',
         'updated_at',
-        'image'
+        'image',
     ];
 
     public $relationships = [
