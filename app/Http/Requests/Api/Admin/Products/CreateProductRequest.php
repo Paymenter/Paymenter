@@ -11,10 +11,10 @@ class CreateProductRequest extends AdminApiRequest
     public function rules(): array
     {
         return [
-            'name' => 'sometimes|nullable|string|max:255',
-            'description' => 'sometimes|nullable|string|max:255',
-            'enabled' => 'sometimes|boolean',
-            'category_id' => 'sometimes|nullable|exists:categories,id',
+            'name' => 'required|string|max:255',
+            'description' => 'nullable|string|max:255',
+            'enabled' => 'boolean',
+            'category_id' => 'required|exists:categories,id',
         ];
     }
 }
