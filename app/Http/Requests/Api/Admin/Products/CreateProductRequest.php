@@ -13,7 +13,6 @@ class CreateProductRequest extends AdminApiRequest
         return [
             'name' => 'required|string|max:255',
             'description' => 'nullable|string|max:255',
-            'enabled' => 'boolean',
             'category_id' => 'required|exists:categories,id',
         ];
     }
