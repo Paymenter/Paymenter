@@ -9,9 +9,16 @@ class ProductResource extends JsonApiResource
     public $attributes = [
         'id',
         'name',
-        'permissions',
-        'updated_at',
+        'slug',
+        'description',
+        'stock',
+        'per_user_limit',
+        'allow_quantity',
+        'email_template',
+        'enabled',
         'created_at',
+        'updated_at',
+        'image'
     ];
 
     public $relationships = [
