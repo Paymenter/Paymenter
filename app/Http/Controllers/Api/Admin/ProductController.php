@@ -13,7 +13,6 @@ use App\Models\Product;
 use Dedoc\Scramble\Attributes\Group;
 use Dedoc\Scramble\Attributes\QueryParameter;
 use Spatie\QueryBuilder\QueryBuilder;
-use Illuminate\Support\Str;
 
 #[Group(name: 'Products', weight: 1)]
 class ProductController extends ApiController

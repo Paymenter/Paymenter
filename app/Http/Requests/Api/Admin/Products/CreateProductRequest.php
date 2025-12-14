@@ -19,7 +19,7 @@ class CreateProductRequest extends AdminApiRequest
                 'required',
                 'string',
                 'max:255',
-                Rule::unique('products', 'slug'), 
+                Rule::unique('products', 'slug'),
             ],
             'stock' => 'nullable|integer|min:0',
             'per_user_limit' => 'nullable|integer|min:0',
