@@ -23,7 +23,8 @@ class ProductController extends ApiController
         'description',
         'category_id',
         'enabled',
-        'slug'
+        'slug',
+        'stock',
     ];
 
     /**

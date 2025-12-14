@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Api\Admin\Products;
 
 use App\Http\Requests\Api\Admin\AdminApiRequest;
+use Illuminate\Validation\Rule;
 
 class CreateProductRequest extends AdminApiRequest
 {
@@ -18,13 +19,13 @@ class CreateProductRequest extends AdminApiRequest
                 'required',
                 'string',
                 'max:255',
-                function ($attribute, $value, $fail) {
-                    if (!empty($value) && \App\Models\Product::where('slug', $value)->exists()) {
-                        $fail('The slug already exists.');
-                    }
-                },
+                Rule::unique('products', 'slug'), 
             ],
-
+            'stock' => 'nullable|integer|min:0',
+            'per_user_limit' => 'nullable|integer|min:0',
+            'allow_quantity' => 'required|in:disabled,separated,combined',
+            'email_template' => 'nullable|string',
+            'hidden' => 'nullable|boolean',
         ];
     }
 }

@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Api\Admin\Products;
 
 use App\Http\Requests\Api\Admin\AdminApiRequest;
+use Illuminate\Validation\Rule;
 
 class UpdateProductRequest extends AdminApiRequest
 {
@@ -11,10 +12,20 @@ class UpdateProductRequest extends AdminApiRequest
     public function rules(): array
     {
         return [
-            'name' => 'sometimes|nullable|string|max:255',
-            'description' => 'sometimes|nullable|string|max:255',
-            'slug' => 'nullable|string|max:255|unique:products,slug',
-            'category_id' => 'sometimes|required|exists:categories,id',
+            'name' => 'required|string|max:255',
+            'description' => 'nullable|string|max:255',
+            'category_id' => 'required|exists:categories,id',
+            'slug' => [
+                'required',
+                'string',
+                'max:255',
+                Rule::unique('products', 'slug'), 
+            ],
+            'stock' => 'nullable|integer|min:0',
+            'per_user_limit' => 'nullable|integer|min:0',
+            'allow_quantity' => 'required|in:disabled,separated,combined',
+            'email_template' => 'nullable|string',
+            'hidden' => 'nullable|boolean',
         ];
     }
 }
