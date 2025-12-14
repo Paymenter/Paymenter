@@ -12,6 +12,7 @@ class CreateProductRequest extends AdminApiRequest
     {
         return [
             'name' => 'required|string|max:255',
+            'slug' => 'nullable|string|max:255|unique:products,slug',
             'description' => 'nullable|string|max:255',
             'category_id' => 'required|exists:categories,id',
         ];

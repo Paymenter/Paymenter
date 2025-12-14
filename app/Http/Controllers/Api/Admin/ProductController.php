@@ -13,6 +13,7 @@ use App\Models\Product;
 use Dedoc\Scramble\Attributes\Group;
 use Dedoc\Scramble\Attributes\QueryParameter;
 use Spatie\QueryBuilder\QueryBuilder;
+use Illuminate\Support\Str;
 
 #[Group(name: 'Products', weight: 1)]
 class ProductController extends ApiController
@@ -47,6 +48,19 @@ class ProductController extends ApiController
      */
     public function store(CreateProductRequest $request)
     {
+
+        $data = $request->validated();
+
+        if (empty($data['slug'])) {
+            $data['slug'] = Str::slug($data['name']);
+        }
+
+        if (Product::where('slug', $data['slug'])->exists()) {
+            return response()->json([
+                'message' => 'The slug already exists. Please provide a different name or slug.'
+            ], 422);
+        }
+
         // Validate and create the product
         $product = Product::create($request->validated());
 
