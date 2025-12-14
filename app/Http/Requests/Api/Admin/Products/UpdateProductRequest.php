@@ -13,6 +13,7 @@ class UpdateProductRequest extends AdminApiRequest
         return [
             'name' => 'sometimes|nullable|string|max:255',
             'description' => 'sometimes|nullable|string|max:255',
+            'slug' => 'nullable|string|max:255|unique:products,slug',
             'category_id' => 'sometimes|required|exists:categories,id',
         ];
     }

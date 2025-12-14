@@ -23,6 +23,7 @@ class ProductController extends ApiController
         'description',
         'category_id',
         'enabled',
+        'slug'
     ];
 
     /**
@@ -34,9 +35,9 @@ class ProductController extends ApiController
     {
         // Fetch products with pagination
         $products = QueryBuilder::for(Product::class)
-            ->allowedFilters(['name', 'permissions'])
+            ->allowedFilters(['name', 'slug'])
             ->allowedIncludes($this->allowedIncludes(self::INCLUDES))
-            ->allowedSorts(['id', 'name', 'permissions', 'created_at'])
+            ->allowedSorts(['id', 'name', 'slug', 'created_at'])
             ->simplePaginate(request('per_page', 15));
 
         // Return the products as a JSON
@@ -48,19 +49,6 @@ class ProductController extends ApiController
      */
     public function store(CreateProductRequest $request)
     {
-
-        $data = $request->validated();
-
-        if (empty($data['slug'])) {
-            $data['slug'] = Str::slug($data['name']);
-        }
-
-        if (Product::where('slug', $data['slug'])->exists()) {
-            return response()->json([
-                'message' => 'The slug already exists. Please provide a different name or slug.'
-            ], 422);
-        }
-
         // Validate and create the product
         $product = Product::create($request->validated());
 

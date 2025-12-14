@@ -12,9 +12,19 @@ class CreateProductRequest extends AdminApiRequest
     {
         return [
             'name' => 'required|string|max:255',
-            'slug' => 'nullable|string|max:255|unique:products,slug',
             'description' => 'nullable|string|max:255',
             'category_id' => 'required|exists:categories,id',
+            'slug' => [
+                'required',
+                'string',
+                'max:255',
+                function ($attribute, $value, $fail) {
+                    if (!empty($value) && \App\Models\Product::where('slug', $value)->exists()) {
+                        $fail('The slug already exists.');
+                    }
+                },
+            ],
+
         ];
     }
 }
