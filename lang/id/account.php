@@ -21,6 +21,7 @@ return [
     'sessions' => 'Sesi',
     'sessions_description' => 'Kelola dan keluar dari sesi aktif Anda pada browser dan perangkat lain.',
     'logout_sessions' => 'Keluar dari sesi ini',
+    'current_device' => 'Current device',
 
     'input' => [
         'current_password' => 'Kata sandi saat ini',
