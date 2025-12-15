@@ -21,6 +21,7 @@ return [
     'sessions' => 'Sessions',
     'sessions_description' => 'Manage and log out your active sessions on other browsers and devices.',
     'logout_sessions' => 'Log this session out',
+    'current_device' => 'Current device',
 
     'input' => [
         'current_password' => 'Current password',

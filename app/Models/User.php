@@ -134,7 +134,7 @@ class User extends Authenticatable implements Auditable, FilamentUser, HasAvatar
      */
     public function sessions()
     {
-        return $this->hasMany(Session::class);
+        return $this->hasMany(UserSession::class);
     }
 
     /**

@@ -65,12 +65,12 @@ class Price
             return;
         }
 
-        $this->price = $priceAndCurrency->price->price ?? $priceAndCurrency->price ?? null;
+        $this->price = (float) ($priceAndCurrency->price->price ?? $priceAndCurrency->price ?? null);
         $this->currency = $priceAndCurrency->currency;
         if (is_array($this->currency)) {
             $this->currency = (object) $this->currency;
         }
-        $this->setup_fee = $priceAndCurrency->price->setup_fee ?? $priceAndCurrency->setup_fee ?? null;
+        $this->setup_fee = (float) ($priceAndCurrency->price->setup_fee ?? $priceAndCurrency->setup_fee ?? null);
 
         // We save the original so we can revert back to it when removing a coupon
         $this->original_price = $this->price;

@@ -5,16 +5,20 @@
         <!-- Sessions -->
         <div class="bg-background-secondary rounded-lg p-4">
             <h5 class="text-lg font-bold pb-3">{{ __('account.sessions') }}</h5>
-            @foreach (Auth::user()->sessions->filter(fn ($session) => !$session->impersonating()) as $session)
+            @foreach (Auth::user()->sessions as $session)
             <div class="flex flex-row items-center justify-between py-2 border-b border-base/50">
                 <div>
                     <p class="text-sm text-primary-100">{{ $session->ip_address }} -
                         {{ $session->last_activity->diffForHumans() }}</p>
                     <p class="text-sm text-primary-400">{{ $session->formatted_device }}</p>
                 </div>
+                @if(!$session->is_current_device)
                 <x-button.primary wire:click="logoutSession('{{ $session->id }}')" class="text-sm !w-fit">
                     {{ __('account.logout_sessions') }}
                 </x-button.primary>
+                @else
+                <span class="text-sm text-primary-300 italic">{{ __('account.current_device') }}</span>
+                @endif
             </div>
             @endforeach
         </div>
