@@ -2,7 +2,7 @@
 
 namespace App\Admin\Widgets;
 
-use App\Models\Session;
+use App\Models\UserSession;
 use Filament\Widgets\Widget;
 use Illuminate\View\View;
 
@@ -16,8 +16,8 @@ class ActiveUsers extends Widget
 
     public function render(): View
     {
-        $baseQuery = Session::query()
-            ->where('last_activity', '>=', now()->subMinutes(5))
+        $baseQuery = UserSession::query()
+            ->where('last_activity', '>=', now()->subMinutes(10))
             ->whereNotNull('user_id')
             ->orderBy('last_activity', 'desc')
             ->with('user');
