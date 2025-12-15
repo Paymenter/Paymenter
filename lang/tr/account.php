@@ -21,6 +21,7 @@ return [
     'sessions' => 'Oturumlar',
     'sessions_description' => 'Diğer tarayıcılar ve cihazlardaki aktif oturumlarınızı yönetin ve çıkış yapın.',
     'logout_sessions' => 'Bu oturumdan çıkış yap',
+    'current_device' => 'Current device',
 
     'input' => [
         'current_password' => 'Mevcut şifre',
