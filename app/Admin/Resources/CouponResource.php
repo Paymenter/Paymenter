@@ -104,7 +104,12 @@ class CouponResource extends Resource
 
                 Select::make('products')
                     ->label('Products')
-                    ->relationship('products', 'name')
+                    ->relationship(
+                        name: 'products',
+                        titleAttribute: 'name',
+                        modifyQueryUsing: fn (\Illuminate\Database\Eloquent\Builder $query) => $query->with('category')
+                    )
+                    ->getOptionLabelFromRecordUsing(fn (\App\Models\Product $record) => "{$record->name} - {$record->category->name} (#{$record->id})")
                     ->multiple()
                     ->preload()
                     ->placeholder('Select the products that this coupon applies to')

@@ -14,5 +14,5 @@ return [
     'dashboard' => 'Kontrolna tabla',
     'tickets' => 'Tiketi',
     'admin' => 'Admin',
-    'notifications' => 'Notifications',
+    'notifications' => 'Obaveštenja',
 ];

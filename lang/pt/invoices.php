@@ -30,6 +30,7 @@ return [
     'gateway' => 'Gateway',
     'payment_date' => 'Data de pagamento',
     'payment_method' => 'Forma de pagamento',
+    'download_pdf' => 'Download PDF',
     'amount' => 'Quantidade',
     'date' => 'Data',
     'due_date' => 'Data Máxima',
@@ -47,9 +48,13 @@ return [
     'apply_credit' => 'Aplicar Crédito ( :amount )',
     'no_invoices' => 'Nenhuma fatura encontrada.',
     'paid_with_credits' => 'Pagar com Créditos',
+    'available_credits' => 'Available Credits: :amount',
+    'account_credits' => 'Account Credits',
     'one_time_payment' => 'Pagamento Único',
     'use_for_recurring' => 'Usar para Pagamentos Recorrentes',
     'pay_now' => 'Pagar Agora',
     'apply_credits_and_continue' => 'Aplicar Créditos e Continuar',
+    'apply_credits_and_pay' => 'Apply Credits and Pay',
+    'amount_due' => 'Amount Due: :amount',
 
 ];

@@ -16,10 +16,12 @@ use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Resources\Resource;
 use Filament\Schemas\Components\Section;
+use Filament\Schemas\Components\Utilities\Get as FormGet;
 use Filament\Schemas\Schema;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\ToggleColumn;
 use Filament\Tables\Table;
+use Illuminate\Support\Facades\Gate;
 
 class CustomPropertyResource extends Resource
 {
@@ -50,9 +52,13 @@ class CustomPropertyResource extends Resource
                     'checkbox' => 'Checkbox',
                     'radio' => 'Radio',
                     'date' => 'Date',
-                ])->required(),
+                ])
+                    ->required()
+                    ->live(),
                 Textarea::make('description')->nullable()->columnSpanFull()->rows(2),
-                TagsInput::make('allowed_values')->nullable(),
+                TagsInput::make('allowed_values')
+                    ->visible(fn (FormGet $get) => in_array($get('type'), ['select', 'radio']))
+                    ->nullable(),
                 TextInput::make('validation')->nullable(),
 
                 Section::make()
@@ -80,9 +86,12 @@ class CustomPropertyResource extends Resource
                     )),
                 TextColumn::make('key'),
                 TextColumn::make('type')->formatStateUsing(fn ($state) => str($state)->title()),
-                ToggleColumn::make('non_editable'),
-                ToggleColumn::make('required'),
-                ToggleColumn::make('show_on_invoice'),
+                ToggleColumn::make('non_editable')
+                    ->disabled(fn (): bool => Gate::denies('has-permission', 'admin.custom_properties.update')),
+                ToggleColumn::make('required')
+                    ->disabled(fn (): bool => Gate::denies('has-permission', 'admin.custom_properties.update')),
+                ToggleColumn::make('show_on_invoice')
+                    ->disabled(fn (): bool => Gate::denies('has-permission', 'admin.custom_properties.update')),
             ])
             ->filters([
                 //

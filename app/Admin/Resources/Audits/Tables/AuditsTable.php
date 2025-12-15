@@ -47,7 +47,13 @@ class AuditsTable
                             return self::TYPE_TO_RESOURCE[class_basename($record->auditable_type)]::getUrl('edit', [$record->auditable_id]);
                         }
                     })
-                    ->searchable(),
+                    ->searchable(query: function (Builder $query, string $search): Builder {
+                        return $query->where(function (Builder $query) use ($search) {
+                            $query->where('event', 'like', "%{$search}%")
+                                ->orWhere('auditable_type', 'like', "%{$search}%")
+                                ->orWhere('auditable_id', 'like', "%{$search}%");
+                        });
+                    }),
                 TextColumn::make('ip_address')
                     ->searchable(),
                 TextColumn::make('user_agent')

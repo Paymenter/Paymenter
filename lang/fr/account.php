@@ -71,6 +71,7 @@ return [
     'remove' => 'Supprimer',
     'remove_payment_method' => 'Supprimer le moyen de paiement',
     'remove_payment_method_confirm' => 'Êtes-vous sûr de vouloir supprimer :name ? Cette action ne peut être annulée.',
+    'expires' => 'Expires :date',
     'cancel' => 'Annuler',
     'confirm' => 'Oui, supprimer',
     'email_notifications' => 'Notifications d’email',

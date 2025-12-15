@@ -60,18 +60,7 @@
                 <livewire:components.cart />
 
                 <div class="items-center hidden md:flex mr-1">
-                    <x-dropdown>
-                        <x-slot:trigger>
-                            <div class="flex flex-col">
-                                <span class="text-sm text-base font-semibold text-nowrap">{{ strtoupper(app()->getLocale()) }} <span class="text-base/50 font-semibold">|</span> {{ \App\Models\Currency::find(session('currency', config('settings.default_currency')))?->name ?? session('currency', config('settings.default_currency')) }}</span>
-                            </div>
-                        </x-slot:trigger>
-                        <x-slot:content>
-                            <strong class="block p-2 text-xs font-semibold uppercase text-base/50"> Language </strong>
-                            <livewire:components.language-switch />
-                            <livewire:components.currency-switch />
-                        </x-slot:content>
-                    </x-dropdown>
+                    <livewire:components.locale-switch />
                     <x-theme-toggle />
                 </div>
 

@@ -29,7 +29,7 @@ class Overview extends BaseWidget
     {
         $chart = Trend::query(InvoiceTransaction::query()->where('status', \App\Enums\InvoiceTransactionStatus::Succeeded)->where('is_credit_transaction', false))
             ->between(
-                start: now()->subMonth(),
+                start: now()->subMonth()->startOfDay(),
                 end: now(),
             )
             ->perDay()->sum('amount');
@@ -37,7 +37,7 @@ class Overview extends BaseWidget
         $thisMonth = $chart->sum('aggregate');
 
         $lastMonth = InvoiceTransaction::query()
-            ->whereBetween('created_at', [now()->subMonths(2), now()->subMonth()])
+            ->whereBetween('created_at', [now()->subMonths(2)->startOfDay(), now()->subMonth()->endOfDay()])
             ->sum('amount');
 
         $increase = $thisMonth - $lastMonth;
@@ -57,7 +57,7 @@ class Overview extends BaseWidget
 
         $chart = Trend::model($model)
             ->between(
-                start: now()->subMonth(),
+                start: now()->subMonth()->startOfDay(),
                 end: now(),
             )
             ->perDay()
@@ -66,7 +66,7 @@ class Overview extends BaseWidget
         $thisMonth = $chart->sum('aggregate');
 
         $lastMonth = $model::query()
-            ->whereBetween('created_at', [now()->subMonths(2), now()->subMonth()])
+            ->whereBetween('created_at', [now()->subMonths(2)->startOfDay(), now()->subMonth()->endOfDay()])
             ->count();
 
         $increase = $thisMonth - $lastMonth;

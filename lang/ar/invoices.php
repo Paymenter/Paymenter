@@ -30,6 +30,7 @@ return [
     'gateway' => 'بوابة الدفع',
     'payment_date' => 'تاريخ الدفع',
     'payment_method' => 'طريقة الدفع',
+    'download_pdf' => 'Download PDF',
     'amount' => 'المبلغ',
     'date' => 'التاريخ',
     'due_date' => 'تاريخ الإستحقاق',
@@ -47,9 +48,13 @@ return [
     'apply_credit' => 'تطبيق الرصيد (:amount )',
     'no_invoices' => 'لم يتم العثور على فواتير.',
     'paid_with_credits' => 'مدفوعه عن طريق الرصيد',
+    'available_credits' => 'Available Credits: :amount',
+    'account_credits' => 'Account Credits',
     'one_time_payment' => 'الدفع لمره واحدة',
     'use_for_recurring' => 'استخدام للدفع المتكرر',
     'pay_now' => 'إدفع الآن',
     'apply_credits_and_continue' => 'إستخدم الرصيد وأستمر',
+    'apply_credits_and_pay' => 'Apply Credits and Pay',
+    'amount_due' => 'Amount Due: :amount',
 
 ];

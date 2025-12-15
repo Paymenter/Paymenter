@@ -29,11 +29,11 @@ return [
         'password' => 'Passwort',
         'password_placeholder' => 'Dein Passwort',
 
-        'password_confirmation' => 'Confirm Password',
-        'password_confirmation_placeholder' => 'Confirm your password',
+        'password_confirmation' => 'Passwort bestätigen',
+        'password_confirmation_placeholder' => 'Bestätigen dein Passwort',
     ],
 
     'all_rights_reserved' => 'Alle Rechte vorbehalten.',
     'update' => 'Aktualisierung',
-    'save' => 'Save',
+    'save' => 'Speichern',
 ];

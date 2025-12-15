@@ -30,6 +30,7 @@ return [
     'gateway' => 'Gateway',
     'payment_date' => 'Payment Date',
     'payment_method' => 'Payment Method',
+    'download_pdf' => 'Download PDF',
     'amount' => 'Amount',
     'date' => 'Date',
     'due_date' => 'Due Date',
@@ -47,10 +48,13 @@ return [
     'apply_credit' => 'Apply Credit ( :amount )',
     'no_invoices' => 'No invoices found.',
     'paid_with_credits' => 'Paid with Credits',
+    'available_credits' => 'Available Credits: :amount',
+    'account_credits' => 'Account Credits',
     'one_time_payment' => 'One-Time Payment',
     'use_for_recurring' => 'Use for Recurring Payments',
     'pay_now' => 'Pay Now',
     'apply_credits_and_continue' => 'Apply Credits and Continue',
     'apply_credits_and_pay' => 'Apply Credits and Pay',
+    'amount_due' => 'Amount Due: :amount',
 
 ];

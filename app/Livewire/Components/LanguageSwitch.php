@@ -4,6 +4,10 @@ namespace App\Livewire\Components;
 
 use App\Livewire\Component;
 
+/**
+ * @deprecated This component is deprecated, use LocaleSwitch instead
+ * @see \App\Livewire\Components\LocaleSwitch
+ */
 class LanguageSwitch extends Component
 {
     public $currentLocale;

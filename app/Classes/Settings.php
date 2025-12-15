@@ -54,10 +54,20 @@ class Settings
                     'type' => 'select',
                     // Read languages from resources/lang directory
                     // The ternary operator is only present for now. Since there are no lang files, it returns [], which breaks the frontend, so we return ['en']
-                    'options' => glob(base_path('lang/*'), GLOB_ONLYDIR) ? array_map('basename', glob(base_path('lang/*'), GLOB_ONLYDIR)) : ['en'],
+                    'options' => self::getAvailableLanguages(),
                     'required' => true,
-                    'validation' => 'in:' . implode(',', glob(base_path('lang/*'), GLOB_ONLYDIR) ? array_map('basename', glob(base_path('lang/*'), GLOB_ONLYDIR)) : ['en']),
+                    'validation' => 'in:' . implode(',', self::getAvailableLanguages()),
                     'override' => 'app.locale',
+                ],
+                [
+                    'name' => 'allowed_languages',
+                    'label' => 'Allowed Languages',
+                    'type' => 'select',
+                    'options' => array_combine(self::getAvailableLanguages(), array_map('strtoupper', self::getAvailableLanguages())),
+                    'database_type' => 'array',
+                    'multiple' => true,
+                    'default' => self::getAvailableLanguages(),
+                    'required' => true,
                 ],
                 [
                     'name' => 'app_url',
@@ -148,6 +158,24 @@ class Settings
                     'nested_validation' => [
                         new Cidr(allowWildCard: true),
                     ],
+                ],
+                [
+                    'name' => 'session_validation',
+                    'label' => 'Session Validation',
+                    'type' => 'select',
+                    'options' => [
+                        'none' => 'None',
+                        'ip_admin' => 'Lock session to IP address (Admin)',
+                        'ip_client' => 'Lock session to IP address (Client)',
+                        'ip_both' => 'Lock session to IP address (Admin & Client)',
+                        'user_agent_admin' => 'Lock session to User Agent (Admin)',
+                        'user_agent_client' => 'Lock session to User Agent (Client)',
+                        'user_agent' => 'Lock session to User Agent (Admin & Client)',
+                        'ip_user_agent_admin' => 'Lock session to IP address and User Agent (Admin)',
+                        'ip_user_agent_client' => 'Lock session to IP address and User Agent (Client)',
+                        'ip_user_agent_both' => 'Lock session to IP address and User Agent (Admin & Client)',
+                    ],
+                    'default' => 'none',
                 ],
             ],
 
@@ -337,6 +365,14 @@ class Settings
             ],
             'tickets' => [
                 [
+                    'name' => 'tickets_disabled',
+                    'label' => 'Disable Tickets',
+                    'type' => 'checkbox',
+                    'database_type' => 'boolean',
+                    'default' => false,
+                    'description' => 'Disable the ticket system. This will disable all client side ticket functionality, including the ability to create new tickets and view existing tickets.',
+                ],
+                [
                     'name' => 'ticket_departments',
                     'label' => 'Ticket Departments',
                     'type' => 'tags',
@@ -395,7 +431,7 @@ class Settings
                     'type' => 'time',
                     'default' => '00:00',
                     'required' => true,
-                    'description' => 'Time the cron job should run daily (in 24 hour format, e.g. 14:00 for 2 PM).',
+                    'description' => 'Time the cron job should run daily.',
                 ],
                 [
                     'name' => 'cronjob_invoice',
@@ -534,7 +570,7 @@ class Settings
                     'name' => 'invoice_number_format',
                     'label' => 'Invoice number format',
                     'type' => 'text',
-                    'default' => '{number}',
+                    'default' => 'INV-{number}',
                     'required' => false,
                     'description' => 'Format to use for invoice numbers. Use {number} to insert the zero padded number and use {year}, {month} and {day} placeholders to insert the current date. Example: INV-{year}-{month}-{day}-{number} or INV-{year}{number}. It must at least contain {number}.',
                     'validation' => 'regex:/{number}/',
@@ -590,14 +626,6 @@ class Settings
                     'description' => 'Only allow existing users to log in. This will hide the registration page and prevent new users from signing up.',
                 ],
                 [
-                    'name' => 'tickets_disabled',
-                    'label' => 'Disable Tickets',
-                    'type' => 'checkbox',
-                    'database_type' => 'boolean',
-                    'default' => false,
-                    'description' => 'Disable the ticket system. This will disable all client side ticket functionality, including the ability to create new tickets and view existing tickets.',
-                ],
-                [
                     'name' => 'pagination',
                     'label' => 'Pagination',
                     'type' => 'number',
@@ -620,6 +648,15 @@ class Settings
         $settings['theme'] = [...$settings['theme'], ...Theme::getSettings()];
 
         return $settings;
+    }
+
+    private static function getAvailableLanguages(): array
+    {
+        return once(
+            fn () => glob(base_path('lang/*'), GLOB_ONLYDIR)
+            ? array_map('basename', glob(base_path('lang/*'), GLOB_ONLYDIR))
+            : ['en']
+        );
     }
 
     public static function tax(?User $user = null)

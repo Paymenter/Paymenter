@@ -1,15 +1,15 @@
 <?php
 
 return [
-    'affiliate' => 'Partnerprogramra',
-    'signup-for-affiliate' => 'Csatlakozás az partnerprogramrahoz',
+    'affiliate' => 'Partnerprogram',
+    'signup-for-affiliate' => 'Csatlakozás a partnerprogramhoz',
     'code' => 'Kód',
     'visitors' => 'Látogatók',
     'total-visitors' => 'Összes látogató',
     'signups' => 'Regisztrációk',
     'total-signups' => 'Összes regisztráció',
-    'earnings' => 'Kereset',
-    'total-earnings' => 'Teljes jutalom',
+    'earnings' => 'Bevételek',
+    'total-earnings' => 'Összes bevétel',
     'your-affiliate-link' => 'Az ajánlói linked',
     'copy' => 'Másolás',
 

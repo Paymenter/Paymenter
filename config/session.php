@@ -16,8 +16,7 @@ return [
     |
     */
 
-    // We are querying the database for the session data, so we should use the database driver.
-    'driver' => 'database',
+    'driver' => env('SESSION_DRIVER', 'redis'),
 
     /*
     |--------------------------------------------------------------------------

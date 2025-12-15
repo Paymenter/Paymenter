@@ -74,7 +74,7 @@ return [
             'name' => 'muted',
             'label' => 'Muted - Text Color (Light)',
             'type' => 'color',
-            'default' => 'hsl(220, 28%, 25%)',
+            'default' => 'hsl(220 0% 53%)',
         ],
         [
             'name' => 'inverted',
@@ -122,7 +122,7 @@ return [
             'name' => 'dark-muted',
             'label' => 'Muted - Text Color (Dark)',
             'type' => 'color',
-            'default' => 'hsl(220, 28%, 25%)',
+            'default' => 'hsl(0, 0%, 40%)',
         ],
         [
             'name' => 'dark-inverted',

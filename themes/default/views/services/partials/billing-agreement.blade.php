@@ -1,4 +1,4 @@
-@if($service->status == 'active' && Auth::user()->billingAgreements->count() > 0)
+@if($service->plan->type == 'recurring' && $service->status == 'active' && Auth::user()->billingAgreements->count() > 0)
 <div class="flex items-center text-base">
     <!-- Auto paying using -->
     <span class="mr-2">{{ __(key: 'services.auto_pay') }}:</span>

@@ -30,6 +30,7 @@ return [
     'gateway' => 'Plateforme de paiement',
     'payment_date' => 'Date du paiement',
     'payment_method' => 'Mode de paiement',
+    'download_pdf' => 'Download PDF',
     'amount' => 'Montant',
     'date' => 'Date',
     'due_date' => 'Date limite de paiement',
@@ -47,9 +48,13 @@ return [
     'apply_credit' => 'Appliquer le crédit ( :amount )',
     'no_invoices' => 'Aucune facture trouvée.',
     'paid_with_credits' => 'Payé avec le crédit disponible',
+    'available_credits' => 'Available Credits: :amount',
+    'account_credits' => 'Account Credits',
     'one_time_payment' => 'Paiement unique',
     'use_for_recurring' => 'Utiliser pour les paiements récurrents',
     'pay_now' => 'Payer maintenant',
     'apply_credits_and_continue' => 'Utiliser le crédit et continuer',
+    'apply_credits_and_pay' => 'Apply Credits and Pay',
+    'amount_due' => 'Amount Due: :amount',
 
 ];

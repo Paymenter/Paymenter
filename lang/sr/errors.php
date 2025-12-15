@@ -2,12 +2,12 @@
 
 return [
     '404' => [
-        'title' => 'Page Not Found',
-        'message' => 'Sorry, the page you are looking for could not be found.',
-        'return_home' => 'Back to Home',
+        'title' => 'Stranica nije pronađena',
+        'message' => 'Žao nam je, stranica koju tražite nije pronađena.',
+        'return_home' => 'Nazad na početnu',
     ],
     '500' => [
-        'title' => 'Server Error',
-        'message' => 'Whoops, something went wrong on our end. Please try again later.',
+        'title' => 'Greška na serveru',
+        'message' => 'Ups, došlo je do greške na našoj strani. Molimo pokušajte ponovo kasnije.',
     ],
 ];

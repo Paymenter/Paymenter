@@ -18,24 +18,14 @@ class PaymentMethods extends Component
     #[Url('setup', except: false, nullable: true)]
     public $setupModalVisible = false;
 
-    #[Url('currency')]
-    public $currency;
-
     public $gateway;
 
     private $setup = null;
 
-    public $inactive = false;
-
-    public function mount()
-    {
-        $this->currency = session('currency', config('settings.default_currency'));
-    }
-
     #[Computed]
     private function gateways()
     {
-        $gateways = ExtensionHelper::getBillingAgreementGateways($this->currency);
+        $gateways = ExtensionHelper::getBillingAgreementGateways();
         if (count($gateways) > 0 && !$this->gateway) {
             $this->gateway = $gateways[0]->id;
         }
@@ -43,16 +33,10 @@ class PaymentMethods extends Component
         return $gateways;
     }
 
-    public function updatedCurrency()
-    {
-        $this->reset('gateway');
-    }
-
     public function updatedSetupModalVisible($value)
     {
-        // If we have only one gateway and currency, we can auto-select them
-        if ($value && count($this->gateways) === 1 && Currency::count() === 1) {
-            $this->currency = Currency::first()->code;
+        // If we have only one gateway, we can auto-select them
+        if ($value && count($this->gateways) === 1) {
             $this->gateway = $this->gateways[0]->id;
             $this->createBillingAgreement();
         }
@@ -61,7 +45,6 @@ class PaymentMethods extends Component
     public function createBillingAgreement()
     {
         $this->validate([
-            'currency' => 'required|exists:currencies,code',
             'gateway' => 'required',
         ]);
 
@@ -72,7 +55,7 @@ class PaymentMethods extends Component
             return;
         }
 
-        $this->setup = ExtensionHelper::createBillingAgreement(Auth::user(), Gateway::find($this->gateway), $this->currency);
+        $this->setup = ExtensionHelper::createBillingAgreement(Auth::user(), Gateway::find($this->gateway));
 
         // If setup is a string, it's a URL to redirect to
         if (is_string($this->setup)) {

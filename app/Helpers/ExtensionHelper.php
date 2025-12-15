@@ -406,13 +406,13 @@ class ExtensionHelper
         return self::getExtension('gateway', $gateway->extension, $gateway->settings)->charge($invoice, $invoice->remaining, $billingAgreement);
     }
 
-    public static function getBillingAgreementGateways($currency)
+    public static function getBillingAgreementGateways()
     {
         $gateways = [];
 
         foreach (Gateway::with('settings')->get() as $gateway) {
             if (self::hasFunction($gateway, 'supportsBillingAgreements')) {
-                if (self::getExtension('gateway', $gateway->extension, $gateway->settings)->supportsBillingAgreements($currency)) {
+                if (self::getExtension('gateway', $gateway->extension, $gateway->settings)->supportsBillingAgreements()) {
                     $gateways[] = $gateway;
                 }
             }

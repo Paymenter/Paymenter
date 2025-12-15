@@ -203,7 +203,8 @@ class InvoiceResource extends Resource
         return [
             'index' => ListInvoices::route('/'),
             'create' => CreateInvoice::route('/create'),
-            'edit' => EditInvoice::route('/{record}/edit'),
+            // Always use id for invoice route binding in admin
+            'edit' => EditInvoice::route('/{record:id}/edit'),
         ];
     }
 }

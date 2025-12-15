@@ -13,6 +13,7 @@ class Credit extends Model implements Auditable
     protected $fillable = [
         'currency_code',
         'amount',
+        'user_id',
     ];
 
     public function user()

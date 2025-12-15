@@ -92,7 +92,7 @@
         <div class="text-lg font-semibold flex justify-between">
             <h4>{{ __('product.total_today') }}:</h4> {{ $total }}
         </div>
-        @if ($total->setup_fee && $plan->type == 'recurring')
+        @if ($total->setup_fee > 0 && $plan->type == 'recurring')
             <div class="text- font-semibold flex justify-between ">
                 <h4>{{ __('product.then_after_x', ['time' => $plan->billing_period . ' ' . trans_choice(__('services.billing_cycles.' . $plan->billing_unit), $plan->billing_period)]) }}:
                 </h4> {{ $total->format($total->price) }}
@@ -101,7 +101,10 @@
         @if (($product->stock > 0 || !$product->stock) && $product->price()->available)
             <div>
                 <x-button.primary wire:click="checkout" wire:loading.attr="disabled">
-                    {{ __('product.checkout') }}
+                    <x-loading target="checkout" />
+                    <div wire:loading.remove wire:target="checkout">
+                        {{ __('product.checkout') }}
+                    </div>
                 </x-button.primary>
             </div>
         @endif

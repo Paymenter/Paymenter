@@ -103,18 +103,7 @@
         @endisset
         @endforeach
         <div class="flex flex-row items-center mt-4 justify-between md:hidden">
-            <x-dropdown>
-                <x-slot:trigger>
-                    <div class="flex flex-col">
-                        <span class="text-sm text-base font-semibold text-nowrap">{{ strtoupper(app()->getLocale()) }} <span class="text-base/50 font-semibold">|</span> {{ session('currency', config('settings.default_currency')) }}</span>
-                    </div>
-                </x-slot:trigger>
-                <x-slot:content>
-                    <strong class="block p-2 text-xs font-semibold uppercase text-base/50"> Language </strong>
-                    <livewire:components.language-switch />
-                    <livewire:components.currency-switch />
-                </x-slot:content>
-            </x-dropdown>
+            <livewire:components.locale-switch />
 
             <x-theme-toggle />
 

@@ -1,19 +1,19 @@
 <?php
 
 return [
-    'affiliate' => 'Affiliate',
-    'signup-for-affiliate' => 'Signup for Affiliate',
-    'code' => 'Code',
-    'visitors' => 'Visitors',
-    'total-visitors' => 'Total Visitors',
-    'signups' => 'Signups',
-    'total-signups' => 'Total Signups',
-    'earnings' => 'Earnings',
-    'total-earnings' => 'Total Earnings',
-    'your-affiliate-link' => 'Your affiliate link',
-    'copy' => 'Copy',
+    'affiliate' => 'Affiliati',
+    'signup-for-affiliate' => 'Registrati per creare affiliazioni',
+    'code' => 'Codice',
+    'visitors' => 'Visitatori',
+    'total-visitors' => 'Visitatori totali',
+    'signups' => 'Registrazioni',
+    'total-signups' => 'Iscrizioni Totali',
+    'earnings' => 'Guadagni',
+    'total-earnings' => 'Guadagni totali',
+    'your-affiliate-link' => 'Il tuo link di affiliazione',
+    'copy' => 'Copia',
 
-    'you-havent-signed-up-yet' => 'You have not signed up for affiliates program yet!',
-    'you-are-already-affiliated' => 'You have already signed up for affiliate program.',
-    'signup-success' => 'Successfully signed up for affiliate program!',
+    'you-havent-signed-up-yet' => 'Non sei ancora iscritto al programma di affiliazioni!',
+    'you-are-already-affiliated' => 'Ti sei già iscritto al programma di affiliazione.',
+    'signup-success' => 'Sei stato iscritto al programma di affiliazione!',
 ];

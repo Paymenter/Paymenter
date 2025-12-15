@@ -47,66 +47,107 @@ class ServiceUpgrade extends Model implements Auditable
 
     public function calculateProratedAmount($oldItem, $newItem): Price
     {
-        // Calculate the total number of days in the billing period
-        $billingPeriodDays = match ($this->service->plan->billing_unit) {
-            'day' => $this->service->plan->billing_period,
-            'week' => $this->service->plan->billing_period * 7,
-            'month' => $this->service->plan->billing_period * 30,
-            'year' => $this->service->plan->billing_period * 365,
-            default => 0,
-        };
-
-        // Calculate the remaining days until the service expires
-        if ($this->service->expires_at) {
-            $expiresAt = $this->service->expires_at->copy()->startOfDay();
-            $now = Carbon::now()->startOfDay();
-            $remainingDays = $expiresAt->diffInDays($now, true);
-            $remainingDays = min($remainingDays, $billingPeriodDays);
-
-            // Calculate the prorated amount
-            $newPrice = $newItem->price(null, $this->service->plan->billing_period, $this->service->plan->billing_unit, $this->service->currency_code);
-            if (empty($oldItem)) {
-                $oldPrice = 0;
-            } else {
-                $oldPrice = $oldItem->price(null, $this->service->plan->billing_period, $this->service->plan->billing_unit, $this->service->currency_code)->price;
-            }
-            $priceDifference = $newPrice->price - $oldPrice;
-            $total = ($priceDifference / $billingPeriodDays) * $remainingDays;
-        } else {
-            $total = $newItem->price(null, $this->service->plan->billing_period, $this->service->plan->billing_unit, $this->service->currency_code)->price;
+        if (
+            !$newItem ||
+            ($oldItem && (
+                (method_exists($newItem, 'is') && $newItem->is($oldItem)) ||
+                (isset($oldItem->id, $newItem->id) && $oldItem->id === $newItem->id)
+            ))
+        ) {
+            return $this->makePrice();
         }
 
-        return new Price([
-            'price' => $total,
-            'currency' => $this->service->currency,
-        ]);
+        $plan = $this->service->plan;
+        $newPrice = $newItem->price(null, $plan->billing_period, $plan->billing_unit, $this->service->currency_code)->price;
+
+        if (!$this->service->expires_at) {
+            return $this->makePrice($newPrice);
+        }
+
+        $billingPeriodDays = $this->getBillingPeriodDays();
+        $remainingDays = $this->getRemainingDays();
+        $priceDifference = $newPrice - $this->resolveOldItemPrice($oldItem);
+        $total = $billingPeriodDays > 0 ? ($priceDifference / $billingPeriodDays) * $remainingDays : $priceDifference;
+
+        return $this->makePrice($total);
     }
 
     public function calculatePrice(): Price
     {
-        $total = $this->calculateProratedAmount(
-            $this->service->product,
-            $this->product
-        )->price;
+        $total = $this->calculateProratedAmount($this->service->product, $this->product)->price;
 
         foreach ($this->configs as $config) {
-            $configValue = $config->configValue;
-            if (!$configValue) {
-                continue;
+            if ($configValue = $config->configValue) {
+                $oldPrice = $this->service->configs->where('config_option_id', $config->config_option_id)->first();
+                $total += $this->calculateProratedAmount($oldPrice?->configValue, $configValue)->price;
             }
-
-            $oldPrice = $this->service->configs->where('config_option_id', $config->config_option_id)->first();
-
-            $ctotal = $this->calculateProratedAmount(
-                $oldPrice ? $oldPrice->configValue : null,
-                $configValue
-            );
-            $total += $ctotal->price;
         }
 
+        // Cap refunds to what was actually paid when coupon exists
+        if ($total < 0 && $this->service->coupon_id) {
+            $total = max($total, -$this->getMaxRefundAmount());
+        }
+
+        return $this->makePrice($total);
+    }
+
+    protected function resolveOldItemPrice($oldItem): float
+    {
+        if (empty($oldItem)) {
+            return 0;
+        }
+
+        $price = $oldItem->price(
+            null,
+            $this->service->plan->billing_period,
+            $this->service->plan->billing_unit,
+            $this->service->currency_code
+        )->price ?? 0;
+
+        return (float) $price;
+    }
+
+    protected function makePrice(float $amount = 0): Price
+    {
         return new Price([
-            'price' => $total,
-            'currency' => $currency ?? $this->service->currency,
+            'price' => $amount,
+            'currency' => $this->service->currency,
         ]);
+    }
+
+    protected function getBillingPeriodDays(): int
+    {
+        $plan = $this->service->plan;
+
+        return match ($plan->billing_unit) {
+            'day' => $plan->billing_period,
+            'week' => $plan->billing_period * 7,
+            'month' => $plan->billing_period * 30,
+            'year' => $plan->billing_period * 365,
+            default => 0,
+        };
+    }
+
+    protected function getRemainingDays(): int
+    {
+        if (!$this->service->expires_at) {
+            return 0;
+        }
+        $billingPeriodDays = $this->getBillingPeriodDays();
+
+        return min($this->service->expires_at->copy()->startOfDay()->diffInDays(Carbon::now()->startOfDay(), true), $billingPeriodDays);
+    }
+
+    public function getMaxRefundAmount(): float
+    {
+        // We don't refund if service has no due date (one-time or free plans)
+        if (!$this->service->expires_at) {
+            return 0;
+        }
+        $billingPeriodDays = $this->getBillingPeriodDays();
+        $remainingDays = $this->getRemainingDays();
+        $paidAmount = (float) $this->service->calculatePrice();
+
+        return $billingPeriodDays > 0 ? ($paidAmount / $billingPeriodDays) * $remainingDays : $paidAmount;
     }
 }

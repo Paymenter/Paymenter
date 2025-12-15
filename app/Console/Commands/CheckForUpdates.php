@@ -58,12 +58,13 @@ class CheckForUpdates extends Command
                 $this->info('You are using the latest version: ' . config('app.version'));
             }
         }
-        // Check if we have a new latest stable version
+
         $setting = Setting::where('key', 'latest_version')->first();
-        if ($setting && $setting->value != $version['latest']) {
+        $currentVersion = config('app.version');
+
+        if ($setting && $setting->value != $version['latest'] && $currentVersion != $version['latest']) {
             // Send notification to all admins
             $this->info('New stable version detected, sending notification to system email address.');
-            $currentVersion = config('app.version');
 
             // Send notification to all admins
             NotificationHelper::sendSystemEmailNotification(

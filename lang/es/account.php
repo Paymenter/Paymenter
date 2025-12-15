@@ -71,6 +71,7 @@ return [
     'remove' => 'Remove',
     'remove_payment_method' => 'Remove Payment Method',
     'remove_payment_method_confirm' => 'Are you sure you want to remove :name? This action cannot be undone.',
+    'expires' => 'Expires :date',
     'cancel' => 'Cancel',
     'confirm' => 'Yes, Remove',
     'email_notifications' => 'Email Notifications',

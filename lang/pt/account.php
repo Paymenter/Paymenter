@@ -71,6 +71,7 @@ return [
     'remove' => 'Remover',
     'remove_payment_method' => 'Remover Método de Pagamento',
     'remove_payment_method_confirm' => 'Tem certeza que deseja remover :name? Esta ação não pode ser desfeita.',
+    'expires' => 'Expires :date',
     'cancel' => 'Cancelar',
     'confirm' => 'Sim, remover',
     'email_notifications' => 'Notificações via E-mail',

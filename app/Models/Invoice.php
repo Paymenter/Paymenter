@@ -168,4 +168,27 @@ class Invoice extends Model implements Auditable
             get: fn () => PDF::generateInvoice($this)
         );
     }
+
+    public function getRouteKey()
+    {
+        // Prefer using number if it’s set, otherwise fallback to id
+        return $this->number ?: $this->id;
+    }
+
+    public function resolveRouteBinding($value, $field = null)
+    {
+        if ($field) {
+            return $this->where($field, $value)->firstOrFail();
+        }
+
+        // Try to find by number first
+        $query = $this->where('number', $value);
+
+        // Only try to match by ID if value is numeric
+        if (is_numeric($value)) {
+            $query->orWhere('id', $value);
+        }
+
+        return $query->orderByRaw('(number = ?) DESC', [$value])->firstOrFail();
+    }
 }

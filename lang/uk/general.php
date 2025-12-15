@@ -7,7 +7,7 @@ return [
         'first_name_placeholder' => 'Ваше ім\'я',
         'last_name' => 'Прізвище',
         'last_name_placeholder' => 'Ваше прізвище',
-        'email' => 'Email',
+        'email' => 'Електронна пошта',
         'email_placeholder' => 'Ваша електронна адреса',
         'phone' => 'Телефон',
         'phone_placeholder' => 'Ваш номер телефону',
@@ -29,11 +29,11 @@ return [
         'password' => 'Пароль',
         'password_placeholder' => 'Ваш пароль',
 
-        'password_confirmation' => 'Confirm Password',
-        'password_confirmation_placeholder' => 'Confirm your password',
+        'password_confirmation' => 'Підтвердьте пароль',
+        'password_confirmation_placeholder' => 'Підтвердіть свій пароль',
     ],
 
     'all_rights_reserved' => 'Всі права захищені.',
     'update' => 'Оновити',
-    'save' => 'Save',
+    'save' => 'Зберегти',
 ];

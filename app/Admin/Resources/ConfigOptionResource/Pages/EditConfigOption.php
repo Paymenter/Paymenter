@@ -18,7 +18,7 @@ class EditConfigOption extends EditRecord
             DeleteAction::make('Delete')
                 ->requiresConfirmation()
                 ->modalDescription(
-                    fn (ConfigOption $record) => $record->children()->exists()
+                    fn (ConfigOption $record) => $record->serviceConfigs()->exists()
                         ? 'This config option has services connected to it. Deleting it will also delete it from the services it is associated with. Are you sure you want to delete this config option?'
                         : 'Are you sure you want to delete this config option?',
                 )

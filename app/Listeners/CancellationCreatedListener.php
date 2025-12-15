@@ -4,6 +4,7 @@ namespace App\Listeners;
 
 use App\Events\ServiceCancellation\Created;
 use App\Jobs\Server\TerminateJob;
+use App\Models\Service;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
 class CancellationCreatedListener implements ShouldQueue
@@ -14,7 +15,9 @@ class CancellationCreatedListener implements ShouldQueue
     public function handle(Created $event): void
     {
         if ($event->cancellation->type == 'immediate') {
-            TerminateJob::dispatch($event->cancellation->service);
+            if (in_array($event->cancellation->service->status, [Service::STATUS_ACTIVE, Service::STATUS_SUSPENDED])) {
+                TerminateJob::dispatch($event->cancellation->service);
+            }
 
             $event->cancellation->service->update([
                 'status' => 'cancelled',

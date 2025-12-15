@@ -68,6 +68,9 @@ class CartItem extends Model
 
                         return;
                     }
+                    if (!$selected || !isset($selected->value)) {
+                        return;
+                    }
 
                     $total += $option->children->where('id', $selected?->value)->first()?->price(billing_period: $this->plan->billing_period, billing_unit: $this->plan->billing_unit)->price;
                     $setup_fee += $option->children->where('id', $selected?->value)->first()?->price(billing_period: $this->plan->billing_period, billing_unit: $this->plan->billing_unit)->setup_fee;
@@ -79,16 +82,22 @@ class CartItem extends Model
                     'setup_fee' => $setup_fee,
                 ], apply_exclusive_tax: true);
 
-                if ($this->cart->coupon_id && $this->cart->coupon) {
-                    $coupon = $this->cart->coupon;
-                    $pdiscount = $coupon->calculateDiscount($price->price);
-                    $sdiscount = $coupon->calculateDiscount($price->setup_fee, 'setup_fee');
-
-                    $price->price -= $pdiscount;
-                    $price->setup_fee -= $sdiscount;
-
-                    $price->setDiscount($pdiscount + $sdiscount);
+                if (!$this->cart->coupon_id || !$this->cart->coupon) {
+                    return $price;
                 }
+
+                if ($this->cart->coupon->products->isNotEmpty() && !$this->cart->coupon->products->contains($this->product_id)) {
+                    return $price;
+                }
+
+                $coupon = $this->cart->coupon;
+                $pdiscount = $coupon->calculateDiscount($price->price);
+                $sdiscount = $coupon->calculateDiscount($price->setup_fee, 'setup_fee');
+
+                $price->price -= $pdiscount;
+                $price->setup_fee -= $sdiscount;
+
+                $price->setDiscount($pdiscount + $sdiscount);
 
                 return $price;
             }

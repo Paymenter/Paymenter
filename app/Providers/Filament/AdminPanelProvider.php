@@ -3,6 +3,8 @@
 namespace App\Providers\Filament;
 
 use App\Http\Middleware\ImpersonateMiddleware;
+use App\Http\Middleware\LockSession;
+use App\Http\Middleware\ResolveUserSession;
 use App\Models\Extension;
 use App\Providers\SettingsProvider;
 use Exception;
@@ -95,6 +97,8 @@ class AdminPanelProvider extends PanelProvider
                 EncryptCookies::class,
                 AddQueuedCookiesToResponse::class,
                 StartSession::class,
+                ResolveUserSession::class,
+                LockSession::class,
                 ImpersonateMiddleware::class,
                 AuthenticateSession::class,
                 ShareErrorsFromSession::class,

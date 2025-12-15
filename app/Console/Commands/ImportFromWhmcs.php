@@ -240,8 +240,8 @@ class ImportFromWhmcs extends Command
                     'email' => $record['email'],
                     'password' => $user['password'],
                     'email_verified_at' => $user['email_verified_at'] ? $user['email_verified_at'] : null,
-                    'updated_at' => $record['updated_at'],
-                    'created_at' => $record['created_at'],
+                    'updated_at' => $record['updated_at'] == '0000-00-00 00:00:00' ? now() : $record['updated_at'],
+                    'created_at' => $record['created_at'] == '0000-00-00 00:00:00' ? now() : $record['created_at'],
                 ];
 
                 // Custom properties
@@ -875,7 +875,7 @@ class ImportFromWhmcs extends Command
 
                 $data[] = [
                     'id' => $record['id'],
-                    'number' => !empty($record['invoicenum']) ? $record['invoicenum'] : $record['id'],
+                    'number' => !empty($record['invoicenum']) ? $record['invoicenum'] : null,
                     'user_id' => $record['userid'],
                     'status' => match ($record['status']) {
                         'Paid' => 'paid',

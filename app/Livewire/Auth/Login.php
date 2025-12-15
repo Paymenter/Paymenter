@@ -5,7 +5,7 @@ namespace App\Livewire\Auth;
 use App\Livewire\Component;
 use App\Models\User;
 use App\Traits\Captchable;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Facades\Session;
 use Livewire\Attributes\Validate;
@@ -22,7 +22,7 @@ class Login extends Component
 
     public $remember = false;
 
-    public function submit()
+    public function submit(\App\Actions\Auth\Login $loginAction)
     {
         $this->captcha();
         $this->validate();
@@ -35,28 +35,29 @@ class Login extends Component
 
         RateLimiter::increment('login:' . $this->email);
 
-        if (!Auth::attempt($this->only('email', 'password'), $this->remember)) {
+        // Manually validate credentials instead of Auth::attempt
+        $user = User::where('email', $this->email)->first();
+
+        if (!$user || !Hash::check($this->password, $user->password)) {
             $this->addError('email', 'These credentials do not match our records.');
 
             return;
         }
 
         // Check 2FA
-        if (Auth::user()->tfa_secret) {
+        if ($user->tfa_secret) {
             Session::put('2fa', [
-                'user_id' => Auth::id(),
+                'user_id' => $user->id,
                 'remember' => $this->remember,
                 'expires' => now()->addMinutes(5),
             ]);
-
-            Auth::logout();
 
             return $this->redirect(route('2fa'), true);
         }
 
         RateLimiter::clear('login:' . $this->email);
 
-        event(new \App\Events\Auth\Login(User::find(Auth::id())));
+        $loginAction->execute($user, $this->remember);
 
         $intendedUrl = session()->pull('url.intended', default: route('dashboard'));
         $isAdminRoute = str_starts_with($intendedUrl, url('/admin'));

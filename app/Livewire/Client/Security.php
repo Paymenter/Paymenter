@@ -4,6 +4,7 @@ namespace App\Livewire\Client;
 
 use App\Livewire\Component;
 use App\Models\Session;
+use App\Models\UserSession;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Livewire\Attributes\Locked;
@@ -106,8 +107,14 @@ class Security extends Component
         $this->twoFactorEnabled = false;
     }
 
-    public function logoutSession(Session $session)
+    public function logoutSession(UserSession $session)
     {
+        if ($session->user_id !== Auth::id()) {
+            $this->notify(__('Unauthorized'), 'error');
+
+            return;
+        }
+
         $session->delete();
 
         $this->notify(__('account.notifications.session_logged_out'));
