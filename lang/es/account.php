@@ -21,6 +21,7 @@ return [
     'sessions' => 'Sesiones',
     'sessions_description' => 'Administra y cierra sesión en tus sesiones activas en otros navegadores y dispositivos.',
     'logout_sessions' => 'Cerrar esta sesión',
+    'current_device' => 'Current device',
 
     'input' => [
         'current_password' => 'Contraseña actual',
