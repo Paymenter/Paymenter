@@ -21,6 +21,7 @@ return [
     'sessions' => 'Sessioner',
     'sessions_description' => 'Hantera och logga ut dina aktiva sessioner på andra webbläsare och enheter.',
     'logout_sessions' => 'Logga ut denna session',
+    'current_device' => 'Current device',
 
     'input' => [
         'current_password' => 'Nuvarande lösenord',
