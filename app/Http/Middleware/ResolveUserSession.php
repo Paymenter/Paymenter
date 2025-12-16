@@ -88,11 +88,8 @@ class ResolveUserSession
 
     private function fail(Request $request): Response
     {
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
-        Cookie::queue(Cookie::forget('paymenter_remember'));
-        Auth::logout();
+        app(\App\Actions\Auth\Logout::class)->execute();
 
-        return redirect('/');
+        return redirect('/tset');
     }
 }

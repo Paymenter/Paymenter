@@ -2,6 +2,8 @@
 
 namespace Tests;
 
+use App\Models\User;
+use App\Models\UserSession;
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
 
 abstract class TestCase extends BaseTestCase
@@ -57,5 +59,23 @@ abstract class TestCase extends BaseTestCase
             'product' => $product,
             'plan' => $plan,
         ];
+    }
+
+    /**
+     * Helper to create a user session and set it in the session
+     */
+    protected function loginUser(User $user, array $sessionData = []): array
+    {
+        $userSession = UserSession::create([
+            'user_id' => $user->id,
+            'ip_address' => request()->ip(),
+            'user_agent' => substr(request()->userAgent() ?? '', 0, 512),
+            'last_activity' => now(),
+            'expires_at' => null,
+        ]);
+
+        return array_merge([
+            'user_session' => $userSession->ulid,
+        ], $sessionData);
     }
 }

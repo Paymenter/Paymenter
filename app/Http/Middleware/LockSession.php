@@ -5,7 +5,6 @@ namespace App\Http\Middleware;
 use Closure;
 use Illuminate\Contracts\Session\Session;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
 
 class LockSession
@@ -66,10 +65,8 @@ class LockSession
 
     private function invalidateSession(Request $request)
     {
-        Auth::logout();
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
+        app(\App\Actions\Auth\Logout::class)->execute();
 
-        return redirect()->route('login');
+        return redirect('/');
     }
 }

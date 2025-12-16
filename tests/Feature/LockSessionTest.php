@@ -26,13 +26,13 @@ class LockSessionTest extends TestCase
         $user = User::factory()->create(['role_id' => 1]); // admin
 
         $this->withServerVariables(['REMOTE_ADDR' => '1.2.3.4'])
-            ->actingAs($user)
+            ->withSession($this->loginUser($user))
             ->get('/')
             ->assertOk();
 
         // Second request with same IP should still be OK
         $this->withServerVariables(['REMOTE_ADDR' => '1.2.3.4'])
-            ->actingAs($user)
+            ->withSession(session()->all())
             ->get('/')
             ->assertOk();
     }
@@ -45,15 +45,15 @@ class LockSessionTest extends TestCase
 
         // First request from initial IP
         $this->withServerVariables(['REMOTE_ADDR' => '1.2.3.4'])
-            ->actingAs($user)
+            ->withSession($this->loginUser($user))
             ->get('/')
             ->assertOk();
 
         // Second request from different IP should invalidate session
         $this->withServerVariables(['REMOTE_ADDR' => '5.6.7.8'])
-            ->actingAs($user)
+            ->withSession(session()->all())
             ->get('/')
-            ->assertRedirect('/login');
+            ->assertRedirect('/');
     }
 
     public function test_client_role_respects_ip_client_setting()
@@ -63,15 +63,15 @@ class LockSessionTest extends TestCase
         $user = User::factory()->create(['role_id' => null]); // client
 
         $this->withServerVariables(['REMOTE_ADDR' => '9.9.9.9'])
-            ->actingAs($user)
+            ->withSession($this->loginUser($user))
             ->get('/')
             ->assertOk();
 
         // Change client IP -> should redirect (locked)
         $this->withServerVariables(['REMOTE_ADDR' => '9.9.9.8'])
-            ->actingAs($user)
+            ->withSession(session()->all())
             ->get('/')
-            ->assertRedirect('/login');
+            ->assertRedirect('/');
     }
 
     public function test_user_agent_is_stored_and_allows_same_ua_for_admin()
@@ -83,13 +83,13 @@ class LockSessionTest extends TestCase
         $ua1 = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)';
 
         $this->withHeaders(['User-Agent' => $ua1])
-            ->actingAs($user)
+            ->withSession($this->loginUser($user))
             ->get('/')
             ->assertOk();
 
         // Same UA should still be OK
         $this->withHeaders(['User-Agent' => $ua1])
-            ->actingAs($user)
+            ->withSession(session()->all())
             ->get('/')
             ->assertOk();
     }
@@ -104,15 +104,15 @@ class LockSessionTest extends TestCase
         $ua2 = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)';
 
         $this->withHeaders(['User-Agent' => $ua1])
-            ->actingAs($user)
+            ->withSession($this->loginUser($user))
             ->get('/')
             ->assertOk();
 
         // Change UA -> should redirect
         $this->withHeaders(['User-Agent' => $ua2])
-            ->actingAs($user)
+            ->withSession(session()->all())
             ->get('/')
-            ->assertRedirect('/login');
+            ->assertRedirect('/');
     }
 
     public function test_user_agent_client_mode_respects_client_role()
@@ -125,15 +125,15 @@ class LockSessionTest extends TestCase
         $ua2 = 'Mozilla/5.0 (X11; Linux x86_64; rv:120)';
 
         $this->withHeaders(['User-Agent' => $ua1])
-            ->actingAs($user)
+            ->withSession($this->loginUser($user))
             ->get('/')
             ->assertOk();
 
         // Change UA -> should redirect
         $this->withHeaders(['User-Agent' => $ua2])
-            ->actingAs($user)
+            ->withSession(session()->all())
             ->get('/')
-            ->assertRedirect(route('login'));
+            ->assertRedirect('/');
     }
 
     public function test_no_validation_setting_allows_all_requests()
@@ -144,13 +144,14 @@ class LockSessionTest extends TestCase
 
         $this->withServerVariables(['REMOTE_ADDR' => '1.2.3.4'])
             ->withHeaders(['User-Agent' => 'TestAgent/1.0'])
-            ->actingAs($user)
+            ->withSession($this->loginUser($user))
             ->get('/')
             ->assertOk();
+
         // Change both IP and UA -> should still be OK
         $this->withServerVariables(['REMOTE_ADDR' => '5.6.7.8'])
             ->withHeaders(['User-Agent' => 'AnotherAgent/2.0'])
-            ->actingAs($user)
+            ->withSession(session()->all())
             ->get('/')
             ->assertOk();
     }
@@ -165,29 +166,29 @@ class LockSessionTest extends TestCase
 
         $this->withServerVariables(['REMOTE_ADDR' => '1.2.3.4'])
             ->withHeaders(['User-Agent' => $ua1])
-            ->actingAs($user)
+            ->withSession($this->loginUser($user))
             ->get('/')
             ->assertOk();
 
         // Change only IP -> should redirect
         $this->withServerVariables(['REMOTE_ADDR' => '5.6.7.8'])
             ->withHeaders(['User-Agent' => $ua1])
-            ->actingAs($user)
+            ->withSession(session()->all())
             ->get('/')
-            ->assertRedirect('/login');
+            ->assertRedirect('/');
 
         // Reset to original IP and UA
         $this->withServerVariables(['REMOTE_ADDR' => '1.2.3.4'])
             ->withHeaders(['User-Agent' => $ua1])
-            ->actingAs($user)
+            ->withSession($this->loginUser($user))
             ->get('/')
             ->assertOk();
 
         // Change only UA -> should redirect
         $this->withServerVariables(['REMOTE_ADDR' => '1.2.3.4'])
             ->withHeaders(['User-Agent' => 'DifferentAgent/3.0'])
-            ->actingAs($user)
+            ->withSession(session()->all())
             ->get('/')
-            ->assertRedirect('/login');
+            ->assertRedirect('/');
     }
 }

@@ -127,6 +127,6 @@ class LoginTest extends TestCase
     {
         $user = User::factory()->create();
 
-        $this->actingAs($user)->get('/admin/settings')->assertForbidden();
+        $this->actingAs($user)->withSession($this->loginUser($user))->get('/admin/settings')->assertForbidden();
     }
 }

@@ -3,29 +3,12 @@
 namespace App\Livewire\Auth;
 
 use App\Livewire\Component;
-use App\Models\UserSession;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Cookie;
-use Illuminate\Support\Facades\Session;
 
 class Logout extends Component
 {
-    public function logout()
+    public function logout(\App\Actions\Auth\Logout $logoutAction)
     {
-        // Delete the UserSession token to prevent reuse
-        if (Session::has('user_session')) {
-            $token = UserSession::firstWhere('ulid', Session::get('user_session'));
-            if ($token) {
-                $token->delete();
-            }
-        }
-
-        // Clear session and cookie
-        Session::invalidate();
-        Session::regenerateToken();
-        Cookie::queue(Cookie::forget('paymenter_remember'));
-
-        Auth::logout();
+        $logoutAction->execute();
 
         return redirect('/');
     }
