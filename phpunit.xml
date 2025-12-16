@@ -30,5 +30,6 @@
         <env name="MAIL_MAILER" value="array"/>
         <env name="QUEUE_CONNECTION" value="sync"/>
         <env name="CACHE_DRIVER" value="file" />
+        <env name="SESSION_DRIVER" value="file" />
     </php>
 </phpunit>
