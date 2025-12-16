@@ -6,66 +6,78 @@
                     <div
                         class="border border-gray-100 dark:border-gray-600 p-4 rounded-lg w-full max-w-[80%]  {{ $message->user_id === $this->record->user_id ? 'ml-auto' : 'mr-auto' }}"
                         @if ($loop->last) x-data x-init="$el.scrollIntoView()" @endif>
-                        <div class="flex justify-between">
-                            <div class="flex gap-2 items-center">
-                                <a class="text-lg font-semibold hover:underline"
-                                    href="{{ App\Admin\Resources\UserResource::getUrl('edit', ['record' => $message->user]) }}">
-                                    {{ $message->user->name }}
-                                </a>
-                                @if($message->ticketMailLog)
-                                    <x-filament::modal width="4xl">
-                                        <x-slot name="trigger">
-                                            <span class="text-sm text-gray-500 cursor-pointer hover:underline">
-                                                Imported from email 
-                                            </span>
-                                        </x-slot>
-                                        <x-slot name="heading">
-                                            {{ $message->ticketMailLog->subject }}
-                                        </x-slot>
+                        <div class="flex justify-between gap-4">
+                            <div class="flex items-center gap-4">
+                                <x-filament-panels::avatar.user
+                                    :user="$message->user"
+                                    class="size-7 shrink-0 rounded-full block"
+                                />
+                                <div class="flex flex-col">
+                                    <div class="flex gap-3 items-center">
 
-                                        {!! Str::markdown(e($message->ticketMailLog->body), [
-                                            'allow_unsafe_links' => false,
-                                            'renderer' => [
-                                                'soft_break' => "<br>"
-                                            ]
-                                        ]) !!}
-                                    </x-filament::modal>
-                                @endif
-                            </div>
-                            <div>
-                                @can('delete', $message)
-                                <button wire:click="deleteMessage({{ $message->id }})"
-                                    class="dark:text-danger-300 text-danger-600 p-0">
-                                    Delete
-                                </button>
-                                @endcan
-                            </div>
-                        </div>
-                        <p class="text-sm text-gray-500">{{ $message->created_at->diffForHumans() }}</p>
-                        <div class="mt-2 prose dark:prose-invert break-words overflow-x-auto max-w-full">
-                            {!! Str::markdown($message->message, [
-                                'html_input' => 'escape',
-                                'allow_unsafe_links' => false,
-                                'renderer' => [
-                                    'soft_break' => "<br>"
-                                ]
-                            ]) !!}
-                        </div>
-                        <div class="flex flex-wrap gap-x-2">
-                        @foreach($message->attachments as $attachment)
-                            <div class="mt-2">
-                                <a href="{{ route('tickets.attachments.show', $attachment) }}" class="text-sm rounded-md bg-gray-100 flex items-center dark:bg-gray-800 p-1 w-fit">
-                                    @if($attachment->canPreview())
-                                        <img src="{{ route('tickets.attachments.show', $attachment) }}" alt="{{ $attachment->filename }}" class="max-w-full">
-                                    @else
-                                        <x-ri-attachment-2 class="inline-block mr-1 size-4" />
-                                        {{ $attachment->filename }}
+                                        <a class="text-lg font-semibold hover:underline"
+                                        href="{{ App\Admin\Resources\UserResource::getUrl('edit', ['record' => $message->user]) }}">
+                                        {{ $message->user->name }}
+                                    </a>
+                                </div>
+                                <div class="flex gap-1">
+                                    <p class="text-sm text-gray-500">
+                                        {{ $message->created_at->diffForHumans() }}
+                                    </p>
+                                    @if($message->ticketMailLog)
+                                        <x-filament::modal width="4xl">
+                                            <x-slot name="trigger">
+                                                <span class="text-sm text-gray-500 cursor-pointer hover:underline">
+                                                    — Imported from email 
+                                                </span>
+                                            </x-slot>
+                                            <x-slot name="heading">
+                                                {{ $message->ticketMailLog->subject }}
+                                            </x-slot>
+                                            {!! Str::markdown(e($message->ticketMailLog->body), [
+                                                'allow_unsafe_links' => false,
+                                                'renderer' => [
+                                                    'soft_break' => "<br>"
+                                                ]
+                                            ]) !!}
+                                        </x-filament::modal>
                                     @endif
-                                </a>
+                                </div>
                             </div>
-                        @endforeach
+                        </div>
+                        <div>
+                            @can('delete', $message)
+                            <button wire:click="deleteMessage({{ $message->id }})"
+                                class="dark:text-danger-300 text-danger-600 p-0">
+                                Delete
+                            </button>
+                            @endcan
                         </div>
                     </div>
+                    <div class="mt-2 prose dark:prose-invert break-words overflow-x-auto max-w-full">
+                        {!! Str::markdown($message->message, [
+                            'html_input' => 'escape',
+                            'allow_unsafe_links' => false,
+                            'renderer' => [
+                                'soft_break' => "<br>"
+                            ]
+                        ]) !!}
+                    </div>
+                    <div class="flex flex-wrap gap-x-2">
+                    @foreach($message->attachments as $attachment)
+                        <div class="mt-2">
+                            <a href="{{ route('tickets.attachments.show', $attachment) }}" class="text-sm rounded-md bg-gray-100 flex items-center dark:bg-gray-800 p-1 w-fit">
+                                @if($attachment->canPreview())
+                                    <img src="{{ route('tickets.attachments.show', $attachment) }}" alt="{{ $attachment->filename }}" class="max-w-full">
+                                @else
+                                    <x-ri-attachment-2 class="inline-block mr-1 size-4" />
+                                    {{ $attachment->filename }}
+                                @endif
+                            </a>
+                        </div>
+                    @endforeach
+                    </div>
+                </div>
                 @endforeach
             </div>
             <form wire:submit="send">
