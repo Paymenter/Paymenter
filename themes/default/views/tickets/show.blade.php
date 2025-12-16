@@ -11,7 +11,7 @@
                         <div class="flex items-center justify-between gap-4">
                             <div class="flex items-center gap-3">
                                 <img src="{{ $message->user->avatar }}" class="size-8 rounded-full border border-neutral bg-background" alt="{{ $message->user->name }} avatar" />
-                                <div class="flex flex-col gap-1">
+                                <div class="flex flex-col">
                                     <h2 class="text-lg font-semibold">{{ $message->user->name }}</h2>
                                     <p class="text-sm text-gray-500">{{ $message->created_at->diffForHumans() }}</p>
                                 </div>
