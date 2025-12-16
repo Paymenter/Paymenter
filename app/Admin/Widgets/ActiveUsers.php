@@ -17,7 +17,7 @@ class ActiveUsers extends Widget
     public function render(): View
     {
         $baseQuery = UserSession::query()
-            ->where('last_activity', '>=', now()->subMinutes(10))
+            ->where('last_activity', '>=', now()->subMinutes(60))
             ->whereNotNull('user_id')
             ->orderBy('last_activity', 'desc')
             ->with('user');
