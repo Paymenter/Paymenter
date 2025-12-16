@@ -310,7 +310,6 @@ class DirectAdmin extends Server
         }
 
         $response = Http::withBasicAuth($properties['directadmin_username'], $properties['directadmin_password'])
-            ->accept('application/json')
             ->post(rtrim($this->config('host'), '/') . '/CMD_API_LOGIN_KEYS', [
                 'action' => 'create',
                 'type' => 'one_time_url',
@@ -319,8 +318,12 @@ class DirectAdmin extends Server
 
         $response = $this->parse($response);
 
+        if (!isset($response['error'])) {
+            throw new Exception('Unexpected DirectAdmin response while creating SSO link');
+        }
+
         if ($response['error'] != '0') {
-            throw new Exception('Error creating DirectAdmin SSO link: ' . $response['text']);
+            throw new Exception('Error creating DirectAdmin SSO link: ' . ($response['text'] ?? 'Unknown error'));
         }
 
         return $response['details'] ?? '';
