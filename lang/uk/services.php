@@ -55,7 +55,8 @@ return [
     'every_period' => 'Every :period :unit',
     'price_every_period' => ':price per :period :unit',
     'price_one_time' => ':price one time',
-    'expires_at' => 'Дійсний до',
+    'renews_in' => 'Renews in',
+    'renews_on' => 'Renews on',
     'auto_pay' => 'Автоматична оплата за допомогою',
     'auto_pay_not_configured' => 'Не налаштовано',
 
@@ -66,4 +67,10 @@ return [
 
     'remove_payment_method' => 'Видалити спосіб оплати',
     'remove_payment_method_confirm' => 'Ви дійсно бажаєте видалити платіжний метод ":name" з цього сервісу? Ваша служба більше не зможе автоматично сплачувати рахунки-фактури.',
+
+    'label' => 'Label',
+    'label_placeholder' => 'Enter a custom label for this service',
+    'label_modal_title' => 'Edit Service Label',
+    'update_label' => 'Update Label',
+
 ];
