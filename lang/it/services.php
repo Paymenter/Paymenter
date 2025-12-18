@@ -55,7 +55,8 @@ return [
     'every_period' => 'Ogni :period :unit',
     'price_every_period' => ':price al :period :unit',
     'price_one_time' => ':price una volta',
-    'expires_at' => 'Scade il',
+    'renews_in' => 'Renews in',
+    'renews_on' => 'Renews on',
     'auto_pay' => 'Pagamento automatico tramite',
     'auto_pay_not_configured' => 'Non configurato',
 
@@ -66,4 +67,10 @@ return [
 
     'remove_payment_method' => 'Rimuovi il metodo di pagamento',
     'remove_payment_method_confirm' => 'Sei sicuro di voler rimuovere il metodo di pagamento ":name" da questo servizio? Il tuo servizio non sarà più in grado di pagare le fatture in automatico.',
+
+    'label' => 'Label',
+    'label_placeholder' => 'Enter a custom label for this service',
+    'label_modal_title' => 'Edit Service Label',
+    'update_label' => 'Update Label',
+
 ];
