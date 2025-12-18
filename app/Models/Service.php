@@ -87,6 +87,20 @@ class Service extends Model implements Auditable
         );
     }
 
+    public function label(): Attribute
+    {
+        return Attribute::make(
+            get: fn ($value) => $value ?: $this->baseLabel
+        );
+    }
+
+    public function baseLabel(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => $this->product->name . ' #' . $this->id
+        );
+    }
+
     /**
      * Get the description for the next invoice item.
      */

@@ -1,4 +1,5 @@
 import { Livewire, Alpine } from '../../../vendor/livewire/livewire/dist/livewire.esm';
+import anchor from '@alpinejs/anchor'
 
 document.addEventListener('livewire:init', () => {
     Livewire.hook('request', ({ fail }) => {
@@ -96,14 +97,13 @@ Alpine.store('confirmation', {
     }
 })
 
+Alpine.plugin(anchor)
+
 if ('serviceWorker' in navigator) {
     navigator.serviceWorker
         .register('/service-worker.js')
         .then(function (registration) {
-            console.log(
-                'Service Worker registered with scope:',
-                registration.scope
-            )
+            // Yay! Registration successful
         })
         .catch(function (error) {
             console.log('Service Worker registration failed:', error)

@@ -18,10 +18,7 @@
             <div>
                 <h4 class="text-lg font-semibold">{{ __('services.product_details') }}:</h4>
                 <div class="mt-2">
-                    <div class="flex items-center text-base">
-                        <span class="mr-2">{{ __('services.name') }}:</span>
-                        <span class="text-base/50">{{ $service->product->name }}</span>
-                    </div>
+                    @include('services.partials.label')
                     <div class="flex items-center text-base">
                         <span class="mr-2">{{ __('services.price') }}:</span>
                         <span class="text-base/50">{{ $service->formattedPrice }}</span>
@@ -37,9 +34,10 @@
                             }}</span>
                     </div>
                     <div class="flex items-center text-base">
-                        <span class="mr-2">{{ __('services.expires_at') }}:</span>
-                        <span class="text-base/50">{{ $service->expires_at ? $service->expires_at->format('M d, Y')
-                            : 'N/A' }}</span>
+                        <span class="mr-2">{{ __('services.renews_on') }}:</span>
+                        <span class="text-base/50">
+                            {{ $service->expires_at->format('M d, Y') }}
+                        </span>
                     </div>
                     @endif
                     <div class="flex items-center text-base">

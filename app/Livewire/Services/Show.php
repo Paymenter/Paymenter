@@ -31,6 +31,11 @@ class Show extends Component
 
     public bool $showBillingAgreement = false;
 
+    #[Url('label', except: false)]
+    public bool $editLabel = false;
+
+    public ?string $label = null;
+
     public $selectedMethod;
 
     public function mount()
@@ -54,6 +59,7 @@ class Show extends Component
             }
             $this->currentView = $this->currentView ?? ($this->views[0]['name'] ?? null);
         }
+        $this->label = $this->service->label;
     }
 
     public function updatedShowBillingAgreement()
@@ -75,6 +81,19 @@ class Show extends Component
         $this->service->billing_agreement_id = null;
         $this->service->save();
         $this->selectedMethod = null;
+    }
+
+    public function updateLabel()
+    {
+        $this->validate([
+            'label' => 'nullable|string|max:255',
+        ]);
+
+        $this->service->label = $this->label;
+        $this->service->save();
+
+        $this->editLabel = false;
+        $this->notify('Service label updated successfully', 'success');
     }
 
     public function changeView($view)
