@@ -13,7 +13,7 @@ return [
     'two_factor_authentication_enabled' => 'La double authentification est maintenant activée pour votre compte.',
     'two_factor_authentication_enable' => 'Activer la double authentification',
     'two_factor_authentication_disable' => 'Désactiver la double authentification',
-    'two_factor_authentication_disable_description' => 'Are you sure you want to disable two-factor authentication? This will remove the extra layer of security from your account.',
+    'two_factor_authentication_disable_description' => 'Êtes-vous sûr de vouloir désactiver l\'authentification à deux facteurs ? Cela supprimera la couche de sécurité supplémentaire de votre compte.',
     'two_factor_authentication_enable_description' => 'Pour activer l\'authentification à deux facteurs, vous devez scanner le code QR ci-dessous avec une application d\'authentification comme Google Authenticator ou Authy.',
     'two_factor_authentication_qr_code' => 'Scannez le QR code ci-dessous avec votre app d\'authentification :',
     'two_factor_authentication_secret' => 'Ou saisissez le code suivant manuellement :',
@@ -21,7 +21,7 @@ return [
     'sessions' => 'Sessions',
     'sessions_description' => 'Gérer et déconnecter vos sessions actives sur les autres navigateurs et appareils.',
     'logout_sessions' => 'Déconnecter cette session',
-    'current_device' => 'Current device',
+    'current_device' => 'Cet appareil',
 
     'input' => [
         'current_password' => 'Mot de passe actuel',
@@ -72,7 +72,7 @@ return [
     'remove' => 'Supprimer',
     'remove_payment_method' => 'Supprimer le moyen de paiement',
     'remove_payment_method_confirm' => 'Êtes-vous sûr de vouloir supprimer :name ? Cette action ne peut être annulée.',
-    'expires' => 'Expires :date',
+    'expires' => 'Expire-le :date',
     'cancel' => 'Annuler',
     'confirm' => 'Oui, supprimer',
     'email_notifications' => 'Notifications d’email',
