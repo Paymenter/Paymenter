@@ -56,7 +56,7 @@ return [
     'price_every_period' => ':price per :period :unit',
     'price_one_time' => ':price one time',
     'renews_in' => 'Renews in',
-    'renews_on' => 'Renews on',
+    'renews_on' => 'Megújul ekkor:',
     'auto_pay' => 'Automatikus fizetés a következővel:',
     'auto_pay_not_configured' => 'Nincs konfigurálva',
 
