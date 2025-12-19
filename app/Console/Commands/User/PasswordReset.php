@@ -60,6 +60,9 @@ class PasswordReset extends Command implements PromptsForMissingInput
 
         $user->save();
 
+        // Revoke all existing sessions
+        $user->sessions()->delete();
+
         // Output the new password to the console
         $this->info("Password for user with email '{$email}' has been reset.");
         $this->info("New password: <options=bold;fg=red>{$password}</>");

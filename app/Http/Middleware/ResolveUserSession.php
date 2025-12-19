@@ -90,6 +90,6 @@ class ResolveUserSession
     {
         app(\App\Actions\Auth\Logout::class)->execute();
 
-        return redirect('/tset');
+        return redirect('/');
     }
 }

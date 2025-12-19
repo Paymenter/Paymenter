@@ -54,6 +54,9 @@ class Reset extends Component
 
                 $user->save();
 
+                // Revoke all existing sessions
+                $user->sessions()->delete();
+
                 event(new PasswordReset($user));
             }
         );
