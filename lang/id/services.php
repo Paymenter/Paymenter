@@ -55,8 +55,8 @@ return [
     'every_period' => 'Setiap :period :unit',
     'price_every_period' => ':price per :period :unit',
     'price_one_time' => ':price sekali',
-    'renews_in' => 'Renews in',
-    'renews_on' => 'Renews on',
+    'renews_in' => 'Diperpanjang dalam',
+    'renews_on' => 'Diperpanjang dalam',
     'auto_pay' => 'Pembayaran otomatis menggunakan',
     'auto_pay_not_configured' => 'Belum dikonfigurasi',
 
@@ -69,8 +69,8 @@ return [
     'remove_payment_method_confirm' => 'Apakah Anda yakin ingin menghapus metode pembayaran ":name" dari layanan ini? Layanan Anda tidak akan lagi dapat membayar faktur secara otomatis.',
 
     'label' => 'Label',
-    'label_placeholder' => 'Enter a custom label for this service',
-    'label_modal_title' => 'Edit Service Label',
-    'update_label' => 'Update Label',
+    'label_placeholder' => 'Masukkan label khusus untuk layanan ini',
+    'label_modal_title' => 'Edit Label Layanan',
+    'update_label' => 'Perbarui Label',
 
 ];
