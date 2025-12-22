@@ -12,7 +12,7 @@ class CreateAffiliateRequest extends AdminApiRequest
     {
         return [
             'user_id' => 'required|exists:users,id',
-            'code' => 'required|string|max:255|unique:affiliates,code',
+            'code' => 'required|string|max:255|unique:Paymenter\Extensions\Others\Affiliates\Models\Affiliate,code',
             'enabled' => 'nullable|boolean',
             'reward' => 'nullable|numeric|min:0|max:100',
         ];
