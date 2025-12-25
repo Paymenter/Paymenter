@@ -1,6 +1,5 @@
 x-common:
-  database:
-    &db-environment
+  database: &db-environment
     # Do not remove the "&db-password" from the end of the line below, it is important
     # for Paymenter functionality.
     MYSQL_PASSWORD: &db-password "CHANGE_ME"
@@ -24,17 +23,18 @@ services:
       <<: *db-environment
       MYSQL_DATABASE: "paymenter"
       MYSQL_USER: "paymenter"
+    networks:
+      - paymenter_nw
   cache:
     image: redis:alpine
     restart: always
+    networks:
+      - paymenter_nw
   paymenter:
     image: ghcr.io/paymenter/paymenter:latest
     restart: always
     ports:
       - "80:80"
-    links:
-      - database
-      - cache
     volumes:
       - "./:/app/var/"
       - "./storage/logs:/app/storage/logs"
@@ -47,8 +47,8 @@ services:
       DB_CONNECTION: "mariadb"
       DB_HOST: "database"
       DB_PORT: "3306"
+    networks:
+      - paymenter_nw
 networks:
-  default:
-    ipam:
-      config:
-        - subnet: 172.23.0.0/16
+  paymenter_nw:
+    driver: bridge
