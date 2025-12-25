@@ -43,6 +43,9 @@ COPY --from=build /app/public /app/public
 RUN cp -r /app/themes /app/themes_default && \
     cp -r /app/extensions /app/extensions_default
 
+# Environment variable to control default themes/extensions renewal
+ENV PAYMENTER_RENEW_DEFAULT=false
+
 COPY .github/docker/default.conf /etc/nginx/http.d/default.conf
 COPY .github/docker/www.conf /usr/local/etc/php-fpm.conf
 COPY .github/docker/supervisord.conf /etc/supervisord.conf
