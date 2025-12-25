@@ -39,6 +39,10 @@ RUN npm run build
 FROM final AS production
 COPY --from=build /app/public /app/public
 
+# Copy themes and extensions to backup locations for first-time initialization
+RUN cp -r /app/themes /app/themes_default && \
+    cp -r /app/extensions /app/extensions_default
+
 COPY .github/docker/default.conf /etc/nginx/http.d/default.conf
 COPY .github/docker/www.conf /usr/local/etc/php-fpm.conf
 COPY .github/docker/supervisord.conf /etc/supervisord.conf
