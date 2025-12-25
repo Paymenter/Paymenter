@@ -49,6 +49,11 @@ services:
       DB_CONNECTION: "mariadb"
       DB_HOST: "database"
       DB_PORT: "3306"
+      # Set to "true" to force refresh default themes and extensions from container
+      # Only default items (matching those in container) will be backed up to:
+      # ./themes/backups/YYYYMMDD_HHMMSS/ and ./extensions/backups/YYYYMMDD_HHMMSS/
+      # Custom themes/extensions will remain untouched
+      PAYMENTER_RENEW_DEFAULT: "false"
     networks:
       - paymenter_nw
 networks:
