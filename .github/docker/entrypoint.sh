@@ -51,29 +51,12 @@ else
   echo -e "Storage symlink already exists."
 fi
 
-## check if PAYMENTER_RENEW_DEFAULT is set to force refresh of themes and extensions
-if [ ! -z "$PAYMENTER_RENEW_DEFAULT" ] && [ "$PAYMENTER_RENEW_DEFAULT" = "true" ]; then
-  echo -e "PAYMENTER_RENEW_DEFAULT is set, backing up and renewing themes and extensions..."
-  TIMESTAMP=$(date +%Y%m%d_%H%M%S)
+## renew default themes and extensions unless PAYMENTER_SKIP_DEFAULT is set
+if [ -z "$PAYMENTER_SKIP_DEFAULT" ] || [ "$PAYMENTER_SKIP_DEFAULT" != "true" ]; then
+  echo -e "Renewing default themes and extensions..."
   
-  # Backup and renew themes - only default items
+  # Renew default themes
   if [ -d /app/themes_default ] && [ -d /app/themes ]; then
-    BACKUP_DIR="/app/themes/backups/$TIMESTAMP"
-    mkdir -p "$BACKUP_DIR"
-    echo -e "Backing up default themes to $BACKUP_DIR..."
-    
-    # Only backup items that exist in themes_default
-    for item in /app/themes_default/*; do
-      if [ -e "$item" ]; then
-        item_name=$(basename "$item")
-        if [ -e "/app/themes/$item_name" ]; then
-          cp -rp "/app/themes/$item_name" "$BACKUP_DIR/"
-          echo -e "  Backed up: $item_name"
-        fi
-      fi
-    done
-    
-    # Renew default themes
     echo -e "Renewing themes from defaults..."
     for item in /app/themes_default/*; do
       if [ -e "$item" ]; then
@@ -85,38 +68,44 @@ if [ ! -z "$PAYMENTER_RENEW_DEFAULT" ] && [ "$PAYMENTER_RENEW_DEFAULT" = "true" 
     done
   fi
   
-  # Backup and renew extensions - only default items
+  # Renew default extensions - only those that already exist
   if [ -d /app/extensions_default ] && [ -d /app/extensions ]; then
-    BACKUP_DIR="/app/extensions/backups/$TIMESTAMP"
-    mkdir -p "$BACKUP_DIR"
-    echo -e "Backing up default extensions to $BACKUP_DIR..."
-    
-    # Only backup items that exist in extensions_default
+    echo -e "Renewing extensions from defaults..."
+    updated_any=0
     for item in /app/extensions_default/*; do
       if [ -e "$item" ]; then
         item_name=$(basename "$item")
-        if [ -e "/app/extensions/$item_name" ]; then
-          cp -rp "/app/extensions/$item_name" "$BACKUP_DIR/"
-          echo -e "  Backed up: $item_name"
+        # Only update if extension category exists in /app/extensions
+        if [ -d "/app/extensions/$item_name" ]; then
+          # Check if any extensions in this category exist
+          if [ "$(ls -A /app/extensions/$item_name 2>/dev/null)" ]; then
+            # Renew extensions in this category
+            for ext_dir in "/app/extensions/$item_name"/*; do
+              if [ -d "$ext_dir" ]; then
+                ext_name=$(basename "$ext_dir")
+                default_ext="/app/extensions_default/$item_name/$ext_name"
+                if [ -d "$default_ext" ]; then
+                  rm -rf "$ext_dir"
+                  cp -rp "$default_ext" "$ext_dir"
+                  echo -e "  Renewed: $item_name/$ext_name"
+                  updated_any=1
+                fi
+              fi
+            done
+          fi
         fi
       fi
     done
-    
-    # Renew default extensions
-    echo -e "Renewing extensions from defaults..."
-    for item in /app/extensions_default/*; do
-      if [ -e "$item" ]; then
-        item_name=$(basename "$item")
-        rm -rf "/app/extensions/$item_name"
-        cp -rp "$item" "/app/extensions/"
-        echo -e "  Renewed: $item_name"
-      fi
-    done
+    if [ $updated_any -eq 0 ]; then
+      echo -e "  No extensions to renew."
+    fi
   fi
   
   chown -R nginx:nginx /app/themes /app/extensions
   chmod -R 755 /app/themes /app/extensions
-  echo -e "Default themes and extensions renewed. Backups stored in respective backup folders."
+  echo -e "Default themes and extensions renewed."
+else
+  echo -e "PAYMENTER_SKIP_DEFAULT is set, skipping renewal of default themes and extensions."
 fi
 
 ## copy default themes if themes directory is empty or doesn't exist
@@ -148,6 +137,7 @@ else
 fi
 
 ## set permissions for themes and extensions
+echo -e "Setting themes and extensions permissions."
 chown -R nginx:nginx /app/themes /app/extensions
 chmod -R 755 /app/themes /app/extensions
 
