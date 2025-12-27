@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'services' => 'Leistungen',
+    'services' => 'Dienstleistungen',
     'product' => 'Produkt',
     'price' => 'Preis',
     'status' => 'Status',
@@ -55,8 +55,8 @@ return [
     'every_period' => 'Jede :period :unit',
     'price_every_period' => ':price je :period :unit',
     'price_one_time' => ':price einmal',
-    'renews_in' => 'Renews in',
-    'renews_on' => 'Renews on',
+    'renews_in' => 'Wird erneuert in',
+    'renews_on' => 'Wird erneuert am',
     'auto_pay' => 'Automatische Zahlung mit',
     'auto_pay_not_configured' => 'Nicht konfiguriert',
 
@@ -68,9 +68,9 @@ return [
     'remove_payment_method' => 'Zahlungsmethode entfernen',
     'remove_payment_method_confirm' => 'Möchtest du die Zahlungsmethode „:name“ wirklich aus diesem Dienst entfernen? Der Dienst kann dann seine Rechnungen nicht mehr automatisch bezahlen.',
 
-    'label' => 'Label',
-    'label_placeholder' => 'Enter a custom label for this service',
-    'label_modal_title' => 'Edit Service Label',
-    'update_label' => 'Update Label',
+    'label' => 'Bezeichnung',
+    'label_placeholder' => 'Geben Sie eine benutzerdefinierte Bezeichnung für diesen Dienst ein',
+    'label_modal_title' => 'Dienstleistungsbezeichnung bearbeiten',
+    'update_label' => 'Bezeichnung aktualisieren',
 
 ];
