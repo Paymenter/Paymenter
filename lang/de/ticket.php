@@ -16,7 +16,7 @@ return [
     'selected_files' => 'Ausgewählte Dateien',
     'uploading_files' => 'Dateien werden hochgeladen',
     'close_ticket' => 'Ticket schließen',
-    'close_ticket_confirmation' => 'Möchtest du dieses Ticket wirklich schließen? Diese Aktion kann nicht rückgängig gemacht werden.',
+    'close_ticket_confirmation' => 'Möchten Sie dieses Ticket wirklich schließen? Diese Aktion kann nicht rückgängig gemacht werden.',
     'close_ticket_success' => 'Ticket erfolgreich geschlossen.',
     'close_ticket_already_closed' => 'Dieses Ticket ist bereits geschlossen.',
 
