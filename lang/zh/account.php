@@ -21,6 +21,7 @@ return [
     'sessions' => '工作階段',
     'sessions_description' => '管理並登出您在其他瀏覽器和裝置上的活動工作階段。',
     'logout_sessions' => '登出此工作階段',
+    'current_device' => 'Current device',
 
     'input' => [
         'current_password' => '目前密碼',

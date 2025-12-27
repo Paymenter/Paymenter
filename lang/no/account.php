@@ -21,6 +21,7 @@ return [
     'sessions' => 'Økter',
     'sessions_description' => 'Administrer og logg ut dine aktive økter i andre nettlesere og enheter.',
     'logout_sessions' => 'Logg ut denne økten',
+    'current_device' => 'Current device',
 
     'input' => [
         'current_password' => 'Nåværende passord',

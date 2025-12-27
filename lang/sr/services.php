@@ -55,7 +55,8 @@ return [
     'every_period' => 'Svakih :period :unit',
     'price_every_period' => ':price po :period :unit',
     'price_one_time' => ':price jednokratno',
-    'expires_at' => 'Ističe',
+    'renews_in' => 'Renews in',
+    'renews_on' => 'Renews on',
     'auto_pay' => 'Automatsko plaćanje putem',
     'auto_pay_not_configured' => 'Nije konfigurisano',
 
@@ -66,4 +67,10 @@ return [
 
     'remove_payment_method' => 'Ukloni način plaćanja',
     'remove_payment_method_confirm' => 'Da li ste sigurni da želite da uklonite način plaćanja ":name" sa ove usluge? Vaša usluga više neće moći da automatski plaća svoje račune.',
+
+    'label' => 'Label',
+    'label_placeholder' => 'Enter a custom label for this service',
+    'label_modal_title' => 'Edit Service Label',
+    'update_label' => 'Update Label',
+
 ];
