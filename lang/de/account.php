@@ -21,7 +21,7 @@ return [
     'sessions' => 'Sitzungen',
     'sessions_description' => 'Verwalte und melde deine aktiven Sitzungen auf anderen Browsern und Geräten ab.',
     'logout_sessions' => 'Diese Sitzung abmelden',
-    'current_device' => 'Current device',
+    'current_device' => 'Aktuelles Gerät',
 
     'input' => [
         'current_password' => 'Aktuelles Passwort',
