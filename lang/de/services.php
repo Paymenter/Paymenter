@@ -52,7 +52,7 @@ return [
         'month' => 'Monat|Monate',
         'year' => 'Jahr|Jahre',
     ],
-    'every_period' => 'Jede :period :unit',
+    'every_period' => 'Jeden :period :unit',
     'price_every_period' => ':price je :period :unit',
     'price_one_time' => ':price einmal',
     'renews_in' => 'Wird erneuert in',
