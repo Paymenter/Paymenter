@@ -13,7 +13,7 @@
             <div class="flex flex-row items-center">
                 <a href="{{ route('home') }}" class="flex flex-row items-center h-10 gap-2" wire:navigate>
                     <x-logo class="h-8" />
-                    @if(theme('logo_display', 'logo-and-name') != 'logo-only')
+                    @if(theme('logo_display', 'logo-and-name') != 'logo-only' && config('settings.company_name_show_in_header', true))
                     <span class="text-xl font-bold leading-none flex items-center">{{ config('app.name') }}</span>
                     @endif
                 </a>
@@ -60,7 +60,7 @@
                 <livewire:components.cart />
 
                 <div class="items-center hidden md:flex mr-1">
-                    <livewire:components.locale-switch />
+                    <livewire:components.language-switch />
                     <x-theme-toggle />
                 </div>
 

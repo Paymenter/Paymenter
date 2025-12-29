@@ -38,6 +38,14 @@ class Settings
                     'default' => 'Paymenter',
                 ],
                 [
+                    'name' => 'company_name_show_in_header',
+                    'label' => 'Show Company Name in Header',
+                    'type' => 'checkbox',
+                    'database_type' => 'boolean',
+                    'default' => true,
+                    'description' => 'Toggle to show or hide the company name in the header navigation.',
+                ],
+                [
                     'name' => 'timezone',
                     'label' => 'Timezone',
                     'type' => 'select',
