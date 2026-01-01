@@ -21,6 +21,7 @@ return [
     'sessions' => 'Sesije',
     'sessions_description' => 'Upravljajte i odjavite svoje aktivne sesije na drugim pregledačima i uređajima.',
     'logout_sessions' => 'Odjavi ovu sesiju',
+    'current_device' => 'Current device',
 
     'input' => [
         'current_password' => 'Trenutna lozinka',

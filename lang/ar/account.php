@@ -21,6 +21,7 @@ return [
     'sessions' => 'الجلسات',
     'sessions_description' => 'إدارة وتسجيل الخروج من جلساتك النشطة على المتصفحات والأجهزة الأخرى.',
     'logout_sessions' => 'تسجيل خروج هذه الجلسة',
+    'current_device' => 'Current device',
 
     'input' => [
         'current_password' => 'كلمة المرور الحالية',

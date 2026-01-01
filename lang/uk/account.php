@@ -21,6 +21,7 @@ return [
     'sessions' => 'Сесії',
     'sessions_description' => 'Керуйте та виходьте зі своїх активних сесій на інших браузерах і пристроях.',
     'logout_sessions' => 'Вийти з цієї сесії',
+    'current_device' => 'Current device',
 
     'input' => [
         'current_password' => 'Поточний пароль',

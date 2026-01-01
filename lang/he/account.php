@@ -21,6 +21,7 @@ return [
     'sessions' => 'חיבורים',
     'sessions_description' => 'ניהול וניתוק חיבורים קיימים בדפדפנים ומכשירים אחרים.',
     'logout_sessions' => 'ניתוק החיבור הנוכחי',
+    'current_device' => 'Current device',
 
     'input' => [
         'current_password' => 'הסיסמה הנוכחית',
