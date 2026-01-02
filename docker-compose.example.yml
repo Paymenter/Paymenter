@@ -41,6 +41,7 @@ services:
       - "./storage/public:/app/storage/app/public"
       - "./themes:/app/themes"
       - "./extensions:/app/extensions"
+      - "app:/app"
     environment:
       DB_PASSWORD: *db-password
       APP_ENV: "production"
@@ -74,3 +75,6 @@ services:
 networks:
   paymenter_nw:
     driver: bridge
+
+volumes:
+  app:
