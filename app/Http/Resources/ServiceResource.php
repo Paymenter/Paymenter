@@ -23,6 +23,6 @@ class ServiceResource extends JsonApiResource
         'order' => OrderResource::class,
         'product' => ProductResource::class,
         'invoices' => InvoiceResource::class,
-        'property' => PropertyResource::class,
+        'properties' => PropertyResource::class,
     ];
 }
