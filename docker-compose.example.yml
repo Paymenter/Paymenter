@@ -63,6 +63,7 @@ services:
       - "./themes:/app/themes"
       - "./extensions:/app/extensions"
       - "./:/app/var"
+      - "app:/app"
     command: >
       sh -c "echo '🔨 Asset Builder ready for npm commands' &&
       echo '📁 Working directory: /app' &&
