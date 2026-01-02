@@ -172,7 +172,7 @@ class DiscordNotifications extends Extension
             // Replace _ with space and capitalize the first letter
             $efields[] = [
                 'name' => $name,
-                'value' => (string) $value,
+                'value' => strlen((string) $value) > 1024 ? substr((string) $value, 0, 1021) . '...' : (string) $value,
                 'inline' => true,
             ];
         }
