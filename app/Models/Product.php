@@ -32,14 +32,9 @@ class Product extends Model implements Auditable
         return $this->belongsTo(Category::class);
     }
 
-    /**
-     * Get the price of the product.
-     * Use MorphOne if a product has only one active price.
-     */
     public function price(): BelongsTo
     {
-        // This assumes 'products' table has 'price_id' column
-        return $this->belongsTo(Price::class);
+        return $this->belongsTo(Price::class, 'price_id', 'id');
     }
 
     /**
