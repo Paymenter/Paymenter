@@ -47,13 +47,28 @@ class Plan extends Model implements Auditable
     public function price()
     {
         if ($this->type === 'free') {
-            return new PriceClass(['currency' => Currency::find(session('currency', config('settings.default_currency')))], free: true);
+            return new PriceClass([
+                'currency' => Currency::find(session('currency', config('settings.default_currency')))
+            ], free: true);
         }
+
         $currency = session('currency', config('settings.default_currency'));
+
+        // 1. Try to find the exact currency
         $price = $this->prices->where('currency_code', $currency)->first();
 
+        // 2. FAILSAFE: If not found, just grab the first available price
+        if (!$price) {
+            $price = $this->prices->first();
+        }
+
+        // 3. If STILL null, it means the plan has absolutely no prices in the DB
+        if (!$price) {
+            return null;
+        }
+
         return new PriceClass((object) [
-            'price' => $price,
+            'price' => $price, // Pass the whole object/value
             'setup_fee' => $price->setup_fee,
             'currency' => $price->currency,
         ]);
