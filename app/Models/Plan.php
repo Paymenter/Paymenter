@@ -47,10 +47,27 @@ class Plan extends Model implements Auditable
     public function price()
     {
         if ($this->type === 'free') {
-            return new PriceClass(['currency' => Currency::find(session('currency', config('settings.default_currency')))], free: true);
+            return new PriceClass([
+                'currency' => Currency::find(session('currency', config('settings.default_currency')))
+            ], free: true);
         }
+
         $currency = session('currency', config('settings.default_currency'));
+
+        // Find price matching the currency
         $price = $this->prices->where('currency_code', $currency)->first();
+
+        // --- FIX STARTS HERE ---
+        if (!$price) {
+            // Fallback: Try to get the first available price if the requested currency isn't found
+            $price = $this->prices->first();
+        }
+
+        // If absolutely no prices exist, return null or throw a safe error
+        if (!$price) {
+            return null;
+        }
+        // --- FIX ENDS HERE ---
 
         return new PriceClass((object) [
             'price' => $price,

@@ -27,12 +27,11 @@ class PlanResource extends JsonApiResource
     public function toRelationships($request): array
     {
         return [
-            // Merge existing standard relationships if needed,
-            // or just define them all here.
             'products' => fn () => ProductResource::collection($this->products),
 
-            // Define your custom calculated relationship
-            'price' => fn () => new PriceResource($this->price()),
+            'price' => fn () => $this->price()
+                ? new PriceResource($this->price())
+                : null, // Return null if no price exists
         ];
     }
 }
