@@ -20,7 +20,7 @@ class ProductController extends ApiController
     protected const INCLUDES = [
         'name',
         'description',
-        'category_id',
+        'category',
         'enabled',
         'slug',
         'stock',
