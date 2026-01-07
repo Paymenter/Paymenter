@@ -47,29 +47,13 @@ class Plan extends Model implements Auditable
     public function price()
     {
         if ($this->type === 'free') {
-            return new PriceClass([
-                'currency' => Currency::find(session('currency', config('settings.default_currency')))
-            ], free: true);
+            return new PriceClass(['currency' => Currency::find(session('currency', config('settings.default_currency')))], free: true);
         }
-
         $currency = session('currency', config('settings.default_currency'));
-
-        // FIX: Use the method `prices()` to get a Query Builder, then get()
-        // This ensures we actually hit the DB if the relationship wasn't eager loaded
-        $allPrices = $this->relationLoaded('prices') ? $this->prices : $this->prices()->get();
-
-        $price = $allPrices->where('currency_code', $currency)->first();
-
-        if (!$price) {
-            $price = $allPrices->first();
-        }
-
-        if (!$price) {
-            return null;
-        }
+        $price = $this->prices->where('currency_code', $currency)->first();
 
         return new PriceClass((object) [
-            'price' => $price, // CAREFUL: Ensure PriceClass handles the raw model
+            'price' => $price,
             'setup_fee' => $price->setup_fee,
             'currency' => $price->currency,
         ]);

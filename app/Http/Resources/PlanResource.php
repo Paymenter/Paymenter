@@ -29,10 +29,25 @@ class PlanResource extends JsonApiResource
         return [
             'products' => fn () => ProductResource::collection($this->products),
 
-            // This puts it in the 'relationships' key
-            'price' => fn () => $this->price()
-                ? new PriceResource($this->price())
-                : null,
+            'price' => function () {
+                // 1. Force fetch prices directly from DB for this plan
+                $dbPrice = Price::where('plan_id', $this->id)->first();
+
+                // 2. If no price exists in DB, return null immediately
+                if (!$dbPrice) {
+                    return null;
+                }
+
+                // 3. Construct the fake object expected by PriceResource
+                // We mock the object structure so PriceResource doesn't crash
+                $fakePriceObject = (object) [
+                    'price' => $dbPrice, // The Price Model
+                    'setup_fee' => $dbPrice->setup_fee,
+                    'currency' => $dbPrice->currency,
+                ];
+
+                return new PriceResource($fakePriceObject);
+            },
         ];
     }
 
