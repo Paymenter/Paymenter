@@ -32,6 +32,14 @@ class Product extends Model implements Auditable
     }
 
     /**
+     * Get the category of the product.
+     */
+    public function price(): BelongsTo
+    {
+        return $this->belongsTo(Price::class);
+    }
+
+    /**
      * Get the configurable options of the product.
      */
     public function configOptions(): HasManyThrough

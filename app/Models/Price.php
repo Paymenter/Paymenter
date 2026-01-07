@@ -29,4 +29,12 @@ class Price extends Model implements Auditable
     {
         return $this->belongsTo(Plan::class);
     }
+
+    /**
+     * Get the products of the category.
+     */
+    public function products(): HasMany
+    {
+        return $this->hasMany(Product::class);
+    }
 }
