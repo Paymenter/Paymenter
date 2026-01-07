@@ -10,9 +10,8 @@ class PriceResource extends JsonApiResource
         'price',
         'setup_fee',
         'currency',
+        'formatted', // Add this! The class generates formatted strings
     ];
 
-    public $relationships = [
-        'plan' => PlanResource::class,
-    ];
+    public $relationships = [];
 }

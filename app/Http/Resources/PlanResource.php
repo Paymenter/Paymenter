@@ -29,9 +29,8 @@ class PlanResource extends JsonApiResource
         return [
             'products' => fn () => ProductResource::collection($this->products),
 
-            // Call the accessor attribute we just made
-            'price' => fn () => $this->price_object
-                ? new PriceResource($this->price_object)
+            'price' => fn () => $this->price()
+                ? new PriceResource($this->price())
                 : null,
         ];
     }
