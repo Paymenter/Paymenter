@@ -16,6 +16,6 @@ class PlanResource extends JsonApiResource
 
     public $relationships = [
         'products' => ProductResource::class,
-        'price' => PriceResource::class,
+        'prices' => PriceResource::class,
     ];
 }
