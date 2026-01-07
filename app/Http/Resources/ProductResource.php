@@ -23,6 +23,6 @@ class ProductResource extends JsonApiResource
 
     public $relationships = [
         'category' => CategoryResource::class,
-        'price' => PriceResource::class,
+        'services' => ServiceResource::class,
     ];
 }
