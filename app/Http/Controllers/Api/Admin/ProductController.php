@@ -21,6 +21,7 @@ class ProductController extends ApiController
         'name',
         'description',
         'category',
+        'prices',
         'enabled',
         'slug',
         'stock',
