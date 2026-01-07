@@ -54,21 +54,22 @@ class Plan extends Model implements Auditable
 
         $currency = session('currency', config('settings.default_currency'));
 
-        // 1. Try to find the exact currency
-        $price = $this->prices->where('currency_code', $currency)->first();
+        // FIX: Use the method `prices()` to get a Query Builder, then get()
+        // This ensures we actually hit the DB if the relationship wasn't eager loaded
+        $allPrices = $this->relationLoaded('prices') ? $this->prices : $this->prices()->get();
 
-        // 2. FAILSAFE: If not found, just grab the first available price
+        $price = $allPrices->where('currency_code', $currency)->first();
+
         if (!$price) {
-            $price = $this->prices->first();
+            $price = $allPrices->first();
         }
 
-        // 3. If STILL null, it means the plan has absolutely no prices in the DB
         if (!$price) {
             return null;
         }
 
         return new PriceClass((object) [
-            'price' => $price, // Pass the whole object/value
+            'price' => $price, // CAREFUL: Ensure PriceClass handles the raw model
             'setup_fee' => $price->setup_fee,
             'currency' => $price->currency,
         ]);
