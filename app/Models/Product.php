@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use OwenIt\Auditing\Contracts\Auditable;
+use Illuminate\Database\Eloquent\Relations\MorphOne;
 
 class Product extends Model implements Auditable
 {
@@ -31,6 +32,13 @@ class Product extends Model implements Auditable
         return $this->belongsTo(Category::class);
     }
 
+    /**
+     * Get the price of the product.
+     */
+    public function price(): MorphOne
+    {
+        return $this->morphOne(Price::class, 'priceable');
+    }
     /**
      * Get the configurable options of the product.
      */
