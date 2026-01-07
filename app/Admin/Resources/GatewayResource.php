@@ -52,7 +52,11 @@ class GatewayResource extends Resource
                     ->label('Name')
                     ->required()
                     ->maxLength(255)
-                    ->unique(static::getModel(), 'name', ignoreRecord: true)
+                    ->unique(static::getModel(),
+                    'name',
+                    ignoreRecord: true,
+                    modifyRuleUsing: fn ($rule) => $rule->where('deleted_at', null)
+                    )
                     ->placeholder('Enter the name of the gateway'),
                 Select::make('extension')
                     ->label('Gateway')
