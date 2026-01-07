@@ -28,10 +28,7 @@ class PlanResource extends JsonApiResource
     {
         return [
             'products' => fn () => ProductResource::collection($this->products),
-
-            'price' => fn () => $this->price()
-                ? new PriceResource($this->price())
-                : null, // Return null if no price exists
+            'price' => fn () => $this->price() ? new PriceResource($this->price()) : null,
         ];
     }
 }
