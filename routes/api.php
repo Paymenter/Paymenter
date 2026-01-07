@@ -29,5 +29,6 @@ Route::group(['middleware' => ['api.admin'], 'prefix' => 'v1/admin', 'as' => 'ap
         'invoice-items' => InvoiceItemController::class,
         'tickets' => TicketController::class,
         'ticket-messages' => TicketMessageController::class,
+        'products' => ProductController::class,
     ]);
 });
