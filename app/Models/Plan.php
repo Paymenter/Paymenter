@@ -77,6 +77,33 @@ class Plan extends Model implements Auditable
         );
     }
 
+    public function priceObject(): Attribute
+    {
+        return Attribute::make(
+            get: function () {
+                // 1. Get Currency (Fallback for API/Admin)
+                $currency = session('currency') ?? config('settings.default_currency');
+
+                // 2. Fetch the Price Model (Lazy load safe)
+                $priceModel = $this->prices->where('currency_code', $currency)->first();
+
+                // 3. Fallback to first available if default currency missing
+                if (!$priceModel) {
+                    $priceModel = $this->prices->first();
+                }
+
+                // 4. Return NULL if genuinely no prices exist
+                if (!$priceModel) {
+                    return null;
+                }
+
+                // 5. Return the raw model or the custom class
+                // Ideally, return the MODEL so resources work best
+                return $priceModel;
+            }
+        );
+    }
+
     public function services()
     {
         return $this->hasMany(Service::class);
