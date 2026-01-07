@@ -36,19 +36,12 @@ class Product extends Model implements Auditable
      * Get the price of the product.
      * Use MorphOne if a product has only one active price.
      */
-    public function price(): MorphOne
+    public function price(): BelongsTo
     {
-        return $this->morphOne(Price::class, 'priceable');
+        // This assumes 'products' table has 'price_id' column
+        return $this->belongsTo(Price::class);
     }
 
-    /**
-     * if a product has multiple prices
-     * (e.g. monthly, yearly, different currencies).
-     */
-    public function prices(): MorphMany
-    {
-        return $this->morphMany(Price::class, 'priceable');
-    }
     /**
      * Get the configurable options of the product.
      */
