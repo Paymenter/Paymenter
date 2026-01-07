@@ -4,18 +4,15 @@ namespace App\Http\Resources;
 
 use TiMacDonald\JsonApi\JsonApiResource;
 
-class PlanResource extends JsonApiResource
+class PriceResource extends JsonApiResource
 {
     public $attributes = [
-        'name',
-        'type',
-        'billing_period',
-        'billing_unit',
-        'sort',
+        'price',
+        'setup_fee',
+        'currency',
     ];
 
     public $relationships = [
         'products' => ProductResource::class,
-        'price' => PriceResource::class,
     ];
 }
