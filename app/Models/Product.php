@@ -37,7 +37,7 @@ class Product extends Model implements Auditable
      */
     public function price(): MorphOne
     {
-        return $this->morphOne(Price::class);
+        return $this->morphOne(Price::class, '');
     }
     /**
      * Get the configurable options of the product.
