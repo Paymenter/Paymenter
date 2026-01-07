@@ -49,7 +49,7 @@ class PlanResource extends JsonApiResource
 
             // Add the price details directly here
             'price_details'  => $priceObj ? [
-                'price'     => $priceObj->price->price ?? null, // Access the inner value
+                'price'     => $priceObj->price, // Access the inner value
                 'setup_fee' => $priceObj->setup_fee,
                 'currency'  => $priceObj->currency,
             ] : null,
