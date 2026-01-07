@@ -36,6 +36,7 @@ class ProductController extends ApiController
     {
         // Fetch products with pagination
         $products = QueryBuilder::for(Product::class)
+            ->with(['category', 'plans.price'])
             ->allowedFilters(['name', 'slug'])
             ->allowedIncludes($this->allowedIncludes(self::INCLUDES))
             ->allowedSorts(['id', 'name', 'slug', 'created_at'])
