@@ -74,7 +74,7 @@ return [
             'name' => 'muted',
             'label' => 'Muted - Text Color (Light)',
             'type' => 'color',
-            'default' => 'hsl(220 0% 53%)',
+            'default' => 'hsl(220, 0%, 53%)',
         ],
         [
             'name' => 'inverted',
