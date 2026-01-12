@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'account' => 'Account',
+    'account' => 'Konto',
     'personal_details' => 'Personal details',
     'security' => 'Security',
     'credits' => 'Credits',
@@ -66,7 +66,7 @@ return [
         'expired' => 'Expired',
         'pending' => 'Pending',
     ],
-    'payment_method_added' => 'Payment method has been added.',
+    'payment_method_added' => '.',
     'payment_method_add_failed' => 'Failed to add payment method. Please try again.',
     'services_linked' => ':count service(s) linked',
     'remove' => 'Remove',
