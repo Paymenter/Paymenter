@@ -13,7 +13,7 @@ return [
     'two_factor_authentication_enabled' => 'Dvofaktorska autentifikacija je omogućena za vaš nalog.',
     'two_factor_authentication_enable' => 'Omogući dvofaktorsku autentifikaciju',
     'two_factor_authentication_disable' => 'Onemogući dvofaktorsku autentifikaciju',
-    'two_factor_authentication_disable_description' => 'Da li ste sigurni da želite da onemogućite dvofaktorsku autentifikaciju?',
+    'two_factor_authentication_disable_description' => 'Da li ste sigurni da želite da onemogućite dvofaktorsku autentifikaciju? Ovo će ukloniti dodatni sloj bezbednosti sa vašeg naloga.',
     'two_factor_authentication_enable_description' => 'Da biste omogućili dvofaktorsku autentifikaciju, potrebno je da skenirate QR kod ispod pomoću aplikacije za autentifikaciju kao što su Google Authenticator ili Authy.',
     'two_factor_authentication_qr_code' => 'Skenirajte QR kod ispod pomoću aplikacije za autentifikaciju:',
     'two_factor_authentication_secret' => 'Ili ručno unesite sledeći kod:',
@@ -21,7 +21,7 @@ return [
     'sessions' => 'Sesije',
     'sessions_description' => 'Upravljajte i odjavite svoje aktivne sesije na drugim pregledačima i uređajima.',
     'logout_sessions' => 'Odjavi ovu sesiju',
-    'current_device' => 'Current device',
+    'current_device' => 'Trenutni uređaj',
 
     'input' => [
         'current_password' => 'Trenutna lozinka',
