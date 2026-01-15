@@ -10,6 +10,6 @@ return [
     'confirm' => 'Potvrdi',
     'cancel' => 'Otkaži',
     'select' => [
-        'placeholder' => 'Please select :name',
+        'placeholder' => 'Molimo izaberite :name',
     ],
 ];
