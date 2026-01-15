@@ -2,8 +2,8 @@
 
 return [
     '404' => [
-        'title' => 'Page Not Found',
-        'message' => 'Sorry, the page you are looking for could not be found.',
+        'title' => '找不到頁面',
+        'message' => '抱歉，找不到您在尋找的頁面。',
         'return_home' => 'Back to Home',
     ],
     '500' => [
