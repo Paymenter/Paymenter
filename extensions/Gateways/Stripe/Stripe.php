@@ -26,10 +26,10 @@ use Str;
 #[ExtensionMeta(
     name: 'Stripe Gateway',
     description: 'Accept payments via Stripe.',
-    version: '1.0.0',
+    version: '1.0.1',
     author: 'Paymenter',
     url: 'https://paymenter.org/docs/extensions/stripe',
-    icon: 'data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PSIwIDAgNTEyIDUxMiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICAgIDxyZWN0IHdpZHRoPSI1MTIiIGhlaWdodD0iNTEyIiBmaWxsPSIjNTMzQUZEIiAvPgogICAgPHBhdGggZmlsbC1ydWxlPSJldmVub2RkIiBjbGlwLXJ1bGU9ImV2ZW5vZGQiIGQ9Ik0xMjggMzg0TDM4NCAzMjkuNzFWMTI4TDEyOCAxODIuOTI0VjM4NFoiIGZpbGw9IndoaXRlIiAvPgo8L3N2Zz4K'
+    icon: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj48cmVjdCB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgZmlsbD0iIzUzM0FGRCIvPjxwYXRoIGQ9Ik0xMjAgMzkyTDM5MiAzMzRWMTEyTDEyMCAxNz hWMzk yWiIgZmlsbD0iI2ZmZiIvPjwvc3ZnPg=='
 )]
 class Stripe extends Gateway
 {

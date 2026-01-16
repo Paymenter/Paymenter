@@ -9,7 +9,7 @@
             <p class="text-base/70 mb-4">{{ __('account.push_notifications_description') }}</p>
             <x-button.primary type="button" class="!w-fit" @click="subscribe"
                 x-bind:disabled="subscriptionStatus !== 'not_subscribed'">
-                <x-ri-notification-line class="size-5 mr-2" />
+                <x-ri-notification-line class="size-5" />
                 {{ __('account.enable_push_notifications') }}
             </x-button.primary>
             <div x-show="subscriptionStatus !== 'unknown'">
