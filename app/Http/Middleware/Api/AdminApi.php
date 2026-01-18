@@ -56,10 +56,6 @@ class AdminApi
             ], 429);
         }
 
-        if ($request->routeIs('api.v1.admin.products.index')) {
-            return $next($request);
-        }
-
         // Validate bearers token
         if (!$request->bearerToken()) {
             return response()->json(['error' => 'The request is missing a valid bearer token.'], 401);
