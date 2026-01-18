@@ -57,7 +57,7 @@ class AdminApi
         }
 
         if ($request->routeIs('api.v1.admin.products.index')) {
-            $request->attributes->set('api_key', "token");
+            $request->attributes->set('api_key', "..token");
             $request->attributes->set('api_key_permissions', []);
 
             return $next($request);
