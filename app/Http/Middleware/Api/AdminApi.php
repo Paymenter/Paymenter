@@ -65,7 +65,7 @@ class AdminApi
             return response()->json(['error' => 'The request is missing a valid bearer token.'], 401);
         }
 
-        /*$token = ApiKey::where('token', hash('sha256', $request->bearerToken()))
+        $token = ApiKey::where('token', hash('sha256', $request->bearerToken()))
             ->where('enabled', true)
             ->firstOr(function () {
                 abort(401, 'The provided API key is invalid or has been disabled.');
@@ -81,7 +81,7 @@ class AdminApi
 
         // Attach the token to the request for further use
         $request->attributes->set('api_key', $token);
-        $request->attributes->set('api_key_permissions', $token->permissions);*/
+        $request->attributes->set('api_key_permissions', $token->permissions);
 
         return $next($request);
     }
