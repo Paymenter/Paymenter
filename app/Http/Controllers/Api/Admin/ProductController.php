@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\Admin;
 
 use App\Http\Controllers\Api\ApiController;
+use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\Admin\Products\CreateProductRequest;
 use App\Http\Requests\Api\Admin\Products\DeleteProductRequest;
 use App\Http\Requests\Api\Admin\Products\GetProductRequest;
@@ -15,7 +16,7 @@ use Dedoc\Scramble\Attributes\QueryParameter;
 use Spatie\QueryBuilder\QueryBuilder;
 
 #[Group(name: 'Products', weight: 1)]
-class ProductController extends ApiController
+class ProductController extends Controller
 {
     protected const INCLUDES = [
         'name',
