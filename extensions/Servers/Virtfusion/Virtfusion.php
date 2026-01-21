@@ -248,12 +248,4 @@ class Virtfusion extends Server
 
         return rtrim($this->config('host'), '/') . $data['data']['authentication']['endpoint_complete'];
     }
-
-    public function migrateOption(string $key, ?string $value)
-    {
-        return match ($key) {
-            'ips' => ['key' => 'ipv4', 'value' => $value],
-            default => ['key' => $key, 'value' => $value]
-        };
-    }
 }
