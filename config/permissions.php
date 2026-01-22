@@ -241,7 +241,10 @@ return [
                 'delete' => 'Delete Credits',
             ],
             'products' => [
+                'create' => 'Create Products',
+                'update' => 'Update Products',
                 'view' => 'View Products',
+                'delete' => 'Delete Products',
             ],
             'categories' => [
                 'view' => 'View Categories',
