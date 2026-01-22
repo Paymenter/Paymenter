@@ -10,7 +10,7 @@ return [
     'subtotal' => 'Subtotal',
     'total' => 'Total',
 
-    'then_after_x' => 'Setelah pukul :waktu',
+    'then_after_x' => 'Setelah pukul :time',
     'order_summary' => 'Ringkasan Pesanan',
     'edit' => 'Ubah',
 
