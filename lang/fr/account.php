@@ -2,7 +2,7 @@
 
 return [
     'account' => 'Compte',
-    'personal_details' => 'Détails personnels',
+    'personal_details' => 'Informations personnelles',
     'security' => 'Sécurité',
     'credits' => 'Crédits',
 
@@ -70,7 +70,7 @@ return [
     'payment_method_add_failed' => 'Impossible d\'ajouter le mode de paiement. Veuillez réessayer.',
     'services_linked' => ':count service(s) lié(s)',
     'remove' => 'Supprimer',
-    'remove_payment_method' => 'Supprimer le moyen de paiement',
+    'remove_payment_method' => 'Supprimer le mode de paiement',
     'remove_payment_method_confirm' => 'Êtes-vous sûr de vouloir supprimer :name ? Cette action ne peut être annulée.',
     'expires' => 'Expire le :date',
     'cancel' => 'Annuler',
