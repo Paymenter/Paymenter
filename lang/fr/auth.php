@@ -15,7 +15,7 @@ return [
 
     'failed' => 'Ces identifiants n\'existent pas dans notre base.',
     'password' => 'Le mot de passe saisi est incorrect.',
-    'throttle' => 'Trop de tentatives de connexion. S’il vous plaît essayer à nouveau dans :seconds secondes.',
+    'throttle' => 'Trop de tentatives de connexion. Vous pourrez réessayer à nouveau dans :seconds secondes.',
 
     'sign_in' => 'Connexion',
     'sign_in_title' => 'Connectez-vous à votre compte',
@@ -42,7 +42,7 @@ return [
 
     'reset_password' => 'Réinitialiser le mot de passe',
 
-    'verify_2fa' => 'Vérifier l’authentification 2FA',
+    'verify_2fa' => 'Vérifier l\'authentification 2FA',
     'verify' => 'Vérifier',
 
     'verification' => [

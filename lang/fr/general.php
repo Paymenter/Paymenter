@@ -29,8 +29,8 @@ return [
         'password' => 'Mot de passe',
         'password_placeholder' => 'Votre mot de passe',
 
-        'password_confirmation' => 'Confirm Password',
-        'password_confirmation_placeholder' => 'Confirm your password',
+        'password_confirmation' => 'Confirmation de mot de passe',
+        'password_confirmation_placeholder' => 'Entrez à nouveau votre mot de passe',
     ],
 
     'all_rights_reserved' => 'Tous droits réservés.',
