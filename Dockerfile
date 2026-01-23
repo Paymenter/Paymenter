@@ -38,6 +38,10 @@ RUN npm run build
 # Switch back to the final stage
 FROM final AS production
 COPY --from=build /app/public /app/public
+COPY --from=build /app/node_modules /app/node_modules
+COPY --from=build /usr/local/bin/node /usr/local/bin/node
+COPY --from=build /usr/local/lib/node_modules /usr/local/lib/node_modules
+RUN ln -s /usr/local/lib/node_modules/npm/bin/npm-cli.js /usr/local/bin/npm
 
 # Copy themes and extensions to default locations for renewal on startup
 RUN cp -r /app/themes /app/themes_default && \
