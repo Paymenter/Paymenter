@@ -66,9 +66,9 @@ services:
       - "./:/app/var"
       - "app:/app"
     command: >
-      sh -c "echo '🔨 Asset Builder ready for npm commands' &&
-      echo '📁 Working directory: /app' &&
-      echo '💡 Usage: docker compose run --rm asset-builder npm install && npm run build' &&
+      sh -c "echo 'Asset Builder ready for npm commands' &&
+      echo 'Working directory: /app' &&
+      echo 'Usage: docker compose run --rm asset-builder npm install && npm run build' &&
       tail -f /dev/null"
     networks:
       - paymenter_nw
