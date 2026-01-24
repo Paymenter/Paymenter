@@ -4,10 +4,10 @@ return [
     '404' => [
         'title' => '找不到頁面',
         'message' => '抱歉，找不到您在尋找的頁面。',
-        'return_home' => 'Back to Home',
+        'return_home' => '回到首頁',
     ],
     '500' => [
-        'title' => 'Server Error',
-        'message' => 'Whoops, something went wrong on our end. Please try again later.',
+        'title' => '伺服器錯誤',
+        'message' => '抱歉，系統出了一點問題。請稍後再試。',
     ],
 ];
