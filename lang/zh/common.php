@@ -10,6 +10,6 @@ return [
     'confirm' => '確認',
     'cancel' => '取消',
     'select' => [
-        'placeholder' => 'Please select :name',
+        'placeholder' => '請選擇 :name',
     ],
 ];
