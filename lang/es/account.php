@@ -13,7 +13,7 @@ return [
     'two_factor_authentication_enabled' => 'La autenticación de dos factores está activada en tu cuenta.',
     'two_factor_authentication_enable' => 'Activar la autenticación de doble factor',
     'two_factor_authentication_disable' => 'Desactivar la autenticación de dos factores',
-    'two_factor_authentication_disable_description' => 'Are you sure you want to disable two-factor authentication? This will remove the extra layer of security from your account.',
+    'two_factor_authentication_disable_description' => '¿Está seguro de que desea desactivar la autenticación de dos factores? Esto eliminará la capa extra de seguridad de su cuenta.',
     'two_factor_authentication_enable_description' => 'Para habilitar la autenticación de dos factores, debes escanear el código QR a continuación con una aplicación de autenticación como Google Authenticator o Authy.',
     'two_factor_authentication_qr_code' => 'Escanea el código QR a continuación con tu aplicación de autenticación:',
     'two_factor_authentication_secret' => 'O introduce el siguiente código manualmente:',
@@ -21,7 +21,7 @@ return [
     'sessions' => 'Sesiones',
     'sessions_description' => 'Administra y cierra sesión en tus sesiones activas en otros navegadores y dispositivos.',
     'logout_sessions' => 'Cerrar esta sesión',
-    'current_device' => 'Current device',
+    'current_device' => 'Dispositivo actual',
 
     'input' => [
         'current_password' => 'Contraseña actual',
@@ -36,7 +36,7 @@ return [
 
         'currency' => 'Divisa',
         'amount' => 'Importe',
-        'payment_gateway' => 'Payment gateway',
+        'payment_gateway' => 'Pasarela de pago',
     ],
 
     'notifications' => [
@@ -52,14 +52,14 @@ return [
     'add_credit' => 'Añadir crédito',
     'credit_deposit' => 'Depósito de crédito (:currency)',
 
-    'payment_methods' => 'Payment Methods',
-    'recent_transactions' => 'Recent Transactions',
-    'saved_payment_methods' => 'Saved Payment Methods',
-    'setup_payment_method' => 'Set up a new payment method',
-    'no_saved_payment_methods' => 'You have no saved payment methods.',
-    'saved_payment_methods_description' => 'Manage your saved payment methods for faster checkout and automatic payments.',
-    'no_saved_payment_methods_description' => 'You can add a payment method to make future payments faster and easier, and enable automatic payments for your services.',
-    'add_payment_method' => 'Add payment method',
+    'payment_methods' => 'Métodos de pago',
+    'recent_transactions' => 'Transacciones recientes',
+    'saved_payment_methods' => 'Métodos de pago guardados',
+    'setup_payment_method' => 'Configurar un nuevo método de pago',
+    'no_saved_payment_methods' => 'No tienes ningún método de pago guardado.',
+    'saved_payment_methods_description' => 'Administre sus métodos de pago guardados para una compra más rápida y pagos automáticos.',
+    'no_saved_payment_methods_description' => 'Puede agregar un método de pago para hacer pagos futuros más rápidos y fáciles, y habilitar pagos automáticos para sus servicios.',
+    'add_payment_method' => 'Añadir método de pago',
     'payment_method_statuses' => [
         'active' => 'Active',
         'inactive' => 'Inactive',
