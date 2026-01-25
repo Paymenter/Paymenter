@@ -36,7 +36,22 @@
     {!! hook('head') !!}
 </head>
 
-<body class="w-full bg-background text-base min-h-screen flex flex-col antialiased" x-cloak x-data="{darkMode: $persist(window.matchMedia('(prefers-color-scheme: dark)').matches)}" :class="{'dark': darkMode}">
+<body class="w-full bg-background text-base min-h-screen flex flex-col antialiased"
+    x-cloak
+    x-data="{
+        theme: $persist('system').as('theme_mode'),
+        systemDark: window.matchMedia('(prefers-color-scheme: dark)').matches,
+        init() {
+            window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
+                this.systemDark = e.matches;
+            });
+        },
+        get isDark() {
+            return this.theme === 'dark' || (this.theme === 'system' && this.systemDark);
+        }
+    }"
+    :class="{'dark': isDark}"
+>
     {!! hook('body') !!}
     <x-navigation />
     <div class="w-full flex flex-grow">
@@ -55,7 +70,7 @@
         </div>
         <x-impersonating />
     </div>
-    @livewireScriptConfig 
+    @livewireScriptConfig
     {!! hook('footer') !!}
 </body>
 
