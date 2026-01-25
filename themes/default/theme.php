@@ -110,7 +110,7 @@ return [
             'name' => 'dark-neutral',
             'label' => 'Borders, Accents... (Dark)',
             'type' => 'color',
-            'default' => 'hsl(0, 0%, 7%)',
+            'default' => 'hsl(0, 0%, 17%)',
         ],
         [
             'name' => 'dark-base',
