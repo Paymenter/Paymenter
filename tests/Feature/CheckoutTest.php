@@ -112,11 +112,11 @@ class CheckoutTest extends TestCase
         // Change plan
         Livewire::test('products.checkout', ['category' => $this->product->product->category, 'product' => $this->product->product->slug])
             ->assertSee($this->product->product->name)
-            ->assertSee('$10,00')
+            ->assertSee('$10.00')
             ->set('plan_id', $plan->id)
             ->call('updatePricing')
             ->assertSee($this->product->plan->name)
-            ->assertSee('$20,00')
+            ->assertSee('$20.00')
             ->call('checkout');
 
         $this->assertDatabaseHas('carts', [
@@ -142,7 +142,7 @@ class CheckoutTest extends TestCase
 
         Livewire::test('products.checkout', ['category' => $this->product->product->category, 'product' => $this->product->product->slug])
             ->assertSee($this->product->product->name)
-            ->assertSee('$10,00')
+            ->assertSee('$10.00')
             ->set('plan_id', $plan->id)
             ->call('checkout')
             ->assertHasErrors(['plan_id' => 'exists']);

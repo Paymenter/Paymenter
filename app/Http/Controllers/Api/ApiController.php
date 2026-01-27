@@ -12,6 +12,7 @@ abstract class ApiController extends Controller
         'role' => 'roles',
         'user' => 'users',
         'ticket' => 'tickets',
+        'plans.prices' => 'products',
     ];
 
     protected function allowedIncludes($includes = []): array

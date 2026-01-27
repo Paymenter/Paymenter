@@ -41,7 +41,7 @@ class DatabaseSeeder extends Seeder
                 'name' => 'US Dollar',
                 'prefix' => '$',
                 'suffix' => '',
-                'format' => '1.000,00',
+                'format' => '1,000.00',
             ]);
         }
 

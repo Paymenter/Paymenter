@@ -2,7 +2,7 @@
     {{-- In work, do what you enjoy. --}}
     <x-dropdown width="w-84" :showArrow="false">
         <x-slot:trigger>
-            <div class="relative w-10 h-10 flex items-center justify-center rounded-lg hover:bg-neutral transition" x-data="{ hasNew: false }" x-on:new-notification.window="hasNew = true"
+            <div class="relative w-10 h-10 flex items-center justify-center rounded-lg hover:bg-neutral cursor-pointer transition" x-data="{ hasNew: false }" x-on:new-notification.window="hasNew = true"
                 @click="hasNew = false">
                 <x-ri-notification-3-fill class="size-4" ::class="{'animate-wiggle': hasNew}"/>
                 @if($this->notifications->where('read_at', null)->count() > 0)
