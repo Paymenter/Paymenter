@@ -14,11 +14,11 @@ return [
     'or_drag_and_drop' => 'o arrastra y suelta',
     'files_max' => 'Archivos de hasta 10 Mb',
     'selected_files' => 'Archivos seleccionados',
-    'uploading_files' => 'Uploading files',
-    'close_ticket' => 'Close Ticket',
-    'close_ticket_confirmation' => 'Are you sure you want to close this ticket? This action cannot be undone.',
-    'close_ticket_success' => 'Ticket closed successfully.',
-    'close_ticket_already_closed' => 'This ticket is already closed.',
+    'uploading_files' => 'Subiendo archivos',
+    'close_ticket' => 'Cerrar Ticket',
+    'close_ticket_confirmation' => '¿Está seguro de que desea cerrar este ticket? Esta acción no se puede deshacer.',
+    'close_ticket_success' => 'Ticket cerrado exitosamente.',
+    'close_ticket_already_closed' => 'Este ticket ya está cerrado.',
 
     'create_ticket' => 'Crear un ticket',
     'select_department' => 'Seleccionar Departamento',
@@ -32,5 +32,5 @@ return [
     'service' => 'Servicio',
     'select_service' => 'Selecciona el servicio',
     'create' => 'Crear',
-    'no_tickets' => 'No tickets found',
+    'no_tickets' => 'No se encontraron tickets',
 ];

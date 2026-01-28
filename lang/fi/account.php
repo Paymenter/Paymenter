@@ -21,6 +21,7 @@ return [
     'sessions' => 'Istunnot',
     'sessions_description' => 'Hallitse ja kirjaudu ulos aktiivisista istunnoistasi muissa selaimissa ja laitteissa.',
     'logout_sessions' => 'Kirjaudu ulos tästä istunnosta',
+    'current_device' => 'Current device',
 
     'input' => [
         'current_password' => 'Nykyinen salasana',
