@@ -4,12 +4,12 @@ return [
     '' => '',
 
     'button' => [
-        'view' => 'View',
-        'view_all' => 'View All',
+        'view' => 'Visa',
+        'view_all' => 'Visa Alla',
     ],
-    'confirm' => 'Confirm',
-    'cancel' => 'Cancel',
+    'confirm' => 'Bekräfta',
+    'cancel' => 'Avbryt',
     'select' => [
-        'placeholder' => 'Please select :name',
+        'placeholder' => 'Vänligen välj :name',
     ],
 ];
