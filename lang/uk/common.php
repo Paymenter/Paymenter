@@ -10,6 +10,6 @@ return [
     'confirm' => 'Підтвердити',
     'cancel' => 'Скасувати',
     'select' => [
-        'placeholder' => 'Please select :name',
+        'placeholder' => 'Будь ласка, вкажіть :name',
     ],
 ];
