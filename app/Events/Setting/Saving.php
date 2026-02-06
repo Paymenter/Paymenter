@@ -33,10 +33,13 @@ class Saving
         switch ($setting->type) {
             case 'boolean':
                 $setting->value = (bool) $setting->value;
+                break;
             case 'integer':
                 $setting->value = (int) $setting->value;
+                break;
             case 'float':
                 $setting->value = (float) $setting->value;
+                break;
             case 'array':
                 if (!is_string($setting->value) || is_null(json_decode($setting->value))) {
                     $setting->value = json_encode($setting->value);
