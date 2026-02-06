@@ -22,9 +22,10 @@ class EditUser extends EditRecord
                 ->label('Impersonate')
                 ->action(function ($record) {
                     session()->put('impersonating', $record->id);
+
                     $this->redirect('/dashboard');
                 })
-                ->hidden(fn ($record) => Auth::user()->hasPermission('impersonate', $record) == false || Auth::user()->id == $record->id),
+                ->hidden(fn ($record) => !Auth::user()->hasPermission('admin.users.impersonate') || Auth::user()->id == $record->id),
             AuditAction::make()->auditChildren([
                 'invoices',
                 'services',

@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\User;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -21,7 +22,22 @@ class ImpersonateMiddleware
                 // Unset session
                 session()->forget('impersonating');
             } else {
-                Auth::onceUsingId(session('impersonating'));
+                // Validate if admin user still has permission to impersonate
+                $adminUser = Auth::user();
+                if (!$adminUser || !$adminUser->hasPermission('admin.users.impersonate')) {
+                    session()->forget('impersonating');
+
+                    return $next($request);
+                }
+
+                $targetUser = User::find(session('impersonating'));
+                if (!$targetUser) {
+                    session()->forget('impersonating');
+
+                    return $next($request);
+                }
+
+                Auth::onceUsingId($targetUser->id);
             }
         }
 
