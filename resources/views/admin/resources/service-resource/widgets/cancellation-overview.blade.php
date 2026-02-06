@@ -2,9 +2,9 @@
     <div class="flex  gap-2 items-center">
         <x-ri-error-warning-line class="size-5 text-yellow-500" />
         @if($record->status === 'cancelled')
-        <p class="text-sm text-primary-100">This service is cancelled. Reason: <span class="font-medium">{{$record->cancellation->reason }}</span></p>
+        <p class="text-sm text-gray-950 dark:text-white">This service is cancelled. Reason: <span class="font-medium">{{$record->cancellation->reason }}</span></p>
         @else
-        <p class="text-sm text-primary-100">This service is pending cancellation{{ $record->expires_at ? ' on ' .
+        <p class="text-sm text-gray-950 dark:text-white">This service is pending cancellation{{ $record->expires_at ? ' on ' .
             $record->expires_at->format('d-m-Y') : '' }}. Reason: <span class="font-medium">{{
                 $record->cancellation->reason }}</span>
         </p>
