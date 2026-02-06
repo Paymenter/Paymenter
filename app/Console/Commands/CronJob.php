@@ -245,6 +245,9 @@ class CronJob extends Command
 
         $this->info('Successfully charged ' . $this->successFullCharges . ' invoices.');
 
+        // Remove old debug logs
+        \App\Models\DebugLog::where('created_at', '<', now()->subDays(30))->delete();
+
         // Check for updates
         $this->info('Checking for updates...');
 
