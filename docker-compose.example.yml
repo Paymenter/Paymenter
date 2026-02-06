@@ -41,6 +41,7 @@ services:
       - "./storage/public:/app/storage/app/public"
       - "./themes:/app/themes"
       - "./extensions:/app/extensions"
+      - "app:/app"
     environment:
       DB_PASSWORD: *db-password
       APP_ENV: "production"
@@ -54,6 +55,26 @@ services:
       PAYMENTER_SKIP_DEFAULT: "false"
     networks:
       - paymenter_nw
+  # Asset Builder Service - used to build frontend assets (themes/extensions)
+  asset-builder:
+    image: node:22-alpine
+    profiles: ["build"]
+    working_dir: /app
+    volumes:
+      - "./themes:/app/themes"
+      - "./extensions:/app/extensions"
+      - "./:/app/var"
+      - "app:/app"
+    command: >
+      sh -c "echo 'Asset Builder ready for npm commands' &&
+      echo 'Working directory: /app' &&
+      echo 'Usage: docker compose run --rm asset-builder npm install && npm run build' &&
+      tail -f /dev/null"
+    networks:
+      - paymenter_nw
 networks:
   paymenter_nw:
     driver: bridge
+
+volumes:
+  app:
