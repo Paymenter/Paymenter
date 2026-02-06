@@ -22,8 +22,8 @@ class Saving
             try {
                 $setting->value = Crypt::encryptString($setting->value);
             } catch (Throwable $th) {
-                // Normal `throw new Exception($th)` wasn't working here, so we are using dump-and-die for now.
-                dd($th, $setting->value);
+                report($th);
+                throw $th;
             }
 
             // An encrypted value can only be a string, so we refrain from converting its type

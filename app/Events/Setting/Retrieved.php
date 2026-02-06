@@ -22,8 +22,8 @@ class Retrieved
             try {
                 $setting->value = Crypt::decryptString($setting->value);
             } catch (Throwable $th) {
-                // Normal `throw new Exception($th)` wasn't working here, so we are using dump-and-die for now.
-                dd($th, $setting->value);
+                report($th);
+                $setting->value = null;
             }
         }
 
