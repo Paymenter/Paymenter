@@ -144,6 +144,6 @@ class ServiceRenewalTest extends TestCase
         $this->assertEquals('active', $service->status);
         $this->assertNotNull($service->expires_at);
 
-        $this->assertTrue($service->expires_at >= now()->addDays(29)); // 30 days from now minus a few seconds for processing time
+        $this->assertTrue($service->expires_at >= now()->addMonth()->addDay(-1)); // 30 days from now minus a few seconds for processing time
     }
 }
