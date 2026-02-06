@@ -49,6 +49,8 @@ class Register extends ComponentWithProperties
 
     public function submit()
     {
+        $this->captcha();
+        
         $validatedData = $this->validate();
 
         $user = User::create([
