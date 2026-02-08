@@ -1,12 +1,12 @@
 <div class="container mt-14 flex flex-col md:grid md:grid-cols-4 gap-6">
     <div class="flex flex-col gap-4 w-full col-span-3">
         <h1 class="text-3xl font-bold">{{ $product->name }}</h1>
-        <div class="flex flex-row w-full gap-4">
+        <div class="flex flex-col gap-4 md:flex-row md:items-start">
             @if ($product->image)
-                <img src="{{ Storage::url($product->image) }}" alt="{{ $product->name }}" class="max-w-40">
+                <img src="{{ Storage::url($product->image) }}" alt="{{ $product->name }}" class="h-32 w-32 md:h-40 md:w-40 rounded-md object-contain">
             @endif
-            <div class="max-h-28 overflow-y-auto w-full">
-                <article class="prose dark:prose-invert prose-sm">
+            <div class="w-full">
+                <article class="prose max-w-none dark:prose-invert">
                     {!! $product->description !!}
                 </article>
             </div>
