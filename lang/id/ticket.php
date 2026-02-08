@@ -14,7 +14,7 @@ return [
     'or_drag_and_drop' => 'atau seret dan lepas',
     'files_max' => 'Berkas hingga 10MB',
     'selected_files' => 'Berkas dipilh',
-    'uploading_files' => 'Uploading files',
+    'uploading_files' => 'Mengunggah file',
     'close_ticket' => 'Tutup tiket',
     'close_ticket_confirmation' => 'Apakah Anda yakin ingin menutup tiket ini? Tindakan ini tidak dapat dibatalkan.',
     'close_ticket_success' => 'Tiket berhasil ditutup.',

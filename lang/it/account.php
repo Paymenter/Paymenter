@@ -21,6 +21,7 @@ return [
     'sessions' => 'Sessioni',
     'sessions_description' => 'Gestisci e disconnetti le sessioni attive su altri browser e dispositivi.',
     'logout_sessions' => 'Disconnetti questa sessione',
+    'current_device' => 'Current device',
 
     'input' => [
         'current_password' => 'Password attuale',
