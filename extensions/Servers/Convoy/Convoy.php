@@ -258,7 +258,7 @@ class Convoy extends Server
         $data = [
             'node_id' => (int) $node,
             'user_id' => $user['id'],
-            'name' => Str::substr($hostname . ' ' . $service->user->name, 0, 40), # The server name must not be greater than 40 characters
+            'name' => Str::substr($hostname . ' ' . $service->user->name, 0, 40), // The server name must not be greater than 40 characters
             'hostname' => $hostname,
             'vmid' => null,
             'limits' => [
