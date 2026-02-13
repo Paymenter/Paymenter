@@ -19,8 +19,8 @@ return [
         'city_placeholder' => 'Ваше місто',
         'address' => 'Адреса',
         'address_placeholder' => 'Ваша адреса',
-        'address2' => 'Додаткова адреса',
-        'address2_placeholder' => 'Ваша додаткова адреса',
+        'address2' => 'Додаткова адреса 2',
+        'address2_placeholder' => 'Ваша додаткова адреса 2',
         'zip' => 'Поштовий індекс',
         'zip_placeholder' => 'Ваш поштовий індекс',
         'state' => 'Штат/Область',
@@ -30,7 +30,7 @@ return [
         'password_placeholder' => 'Ваш пароль',
 
         'password_confirmation' => 'Підтвердьте пароль',
-        'password_confirmation_placeholder' => 'Підтвердіть свій пароль',
+        'password_confirmation_placeholder' => 'Підтвердити пароль',
     ],
 
     'all_rights_reserved' => 'Всі права захищені.',

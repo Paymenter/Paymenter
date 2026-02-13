@@ -21,6 +21,7 @@ return [
     'sessions' => 'Сесії',
     'sessions_description' => 'Керуйте та виходьте зі своїх активних сесій на інших браузерах і пристроях.',
     'logout_sessions' => 'Вийти з цієї сесії',
+    'current_device' => 'Поточний пристрій',
 
     'input' => [
         'current_password' => 'Поточний пароль',
@@ -67,11 +68,11 @@ return [
     ],
     'payment_method_added' => 'Спосіб оплати було додано.',
     'payment_method_add_failed' => 'Не вдалося додати спосіб оплати. Будь ласка, спробуйте ще раз.',
-    'services_linked' => ':count пов’язаних послуг',
+    'services_linked' => 'Зв\'язано :count послуг(-и)',
     'remove' => 'Видалити',
     'remove_payment_method' => 'Видалити спосіб оплати',
     'remove_payment_method_confirm' => 'Ви впевнені, що хочете видалити :name? Цю дію неможливо скасувати.',
-    'expires' => 'Expires :date',
+    'expires' => 'Дійсний до',
     'cancel' => 'Скасувати',
     'confirm' => 'Так, видалити',
     'email_notifications' => 'Сповіщення електронною поштою',

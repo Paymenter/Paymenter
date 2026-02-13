@@ -36,7 +36,7 @@ return [
     ],
 
     'oauth' => [
-        'unverified_discord_account' => 'Ваш Discord-акаунт не підтверджено.',
+        'unverified_discord_account' => 'Ваш обліковий запис Discord не підтверджено.',
         'account_not_registered' => 'Ви не зареєстровані на цьому сайті.',
     ],
 

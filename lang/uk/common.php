@@ -9,4 +9,7 @@ return [
     ],
     'confirm' => 'Підтвердити',
     'cancel' => 'Скасувати',
+    'select' => [
+        'placeholder' => 'Будь ласка, вкажіть :name',
+    ],
 ];
