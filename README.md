@@ -48,6 +48,7 @@
 
 ## Getting Started
 
+
 #### Installation & Documentation
 
 For a detailed explanation of how to install and configure Paymenter, take a look at our [documentation here](https://paymenter.org/docs/getting-started/introduction/).
@@ -80,14 +81,10 @@ Paymenter is available under the MIT license, offering you the freedom to adapt 
 
 Thanks to all sponsors for helping fund Paymenter's development. [Interested in becoming a sponsor?](https://github.com/sponsors/Paymenter)
 
-<a href="https://nodedog.consulting/?rel=paymenter">
-  <img src="https://github.com/user-attachments/assets/d31a9ac5-aca4-476b-a678-55cc694df1aa" width="300">
+<a href="https://www.kuroit.com/?rel=paymenter">
+  <img src="https://github.com/user-attachments/assets/8d00b4bb-a66c-449f-94e4-cbb9ea1c0d11" width="400">
 </a>
-<br />
-<br />
-<a href="https://www.quape.com/?rel=paymenter">
-  <img src="https://github.com/user-attachments/assets/57e10ba9-0615-44a6-8d96-ce1cce6048a6" width="300">
-</a>
+
 
 ## License
 
