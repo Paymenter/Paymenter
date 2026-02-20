@@ -33,12 +33,14 @@
                             ])
                             }}</span>
                     </div>
+                    @if($service->expires_at)
                     <div class="flex items-center text-base">
                         <span class="mr-2">{{ __('services.renews_on') }}:</span>
                         <span class="text-base/50">
                             {{ $service->expires_at->format('M d, Y') }}
                         </span>
                     </div>
+                    @endif
                     @endif
                     <div class="flex items-center text-base">
                         <span class="mr-2">{{ __('services.status') }}:</span>
