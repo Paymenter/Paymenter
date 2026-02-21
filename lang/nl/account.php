@@ -21,6 +21,7 @@ return [
     'sessions' => 'Sessies',
     'sessions_description' => 'Beheer en log uw actieve sessies op andere browsers en apparaten uit.',
     'logout_sessions' => 'Deze sessie afmelden',
+    'current_device' => 'Current device',
 
     'input' => [
         'current_password' => 'Huidig wachtwoord',

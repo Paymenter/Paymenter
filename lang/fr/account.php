@@ -2,18 +2,18 @@
 
 return [
     'account' => 'Compte',
-    'personal_details' => 'Détails personnels',
+    'personal_details' => 'Informations personnelles',
     'security' => 'Sécurité',
     'credits' => 'Crédits',
 
     'change_password' => 'Modifier le mot de passe',
 
     'two_factor_authentication' => 'Double authentification',
-    'two_factor_authentication_description' => 'Ajoutez une couche de sécurité supplémentaire à votre compte en activant l’authentification à deux facteurs.',
+    'two_factor_authentication_description' => 'Ajoutez une couche de sécurité supplémentaire à votre compte en activant l\'authentification à deux facteurs.',
     'two_factor_authentication_enabled' => 'La double authentification est maintenant activée pour votre compte.',
     'two_factor_authentication_enable' => 'Activer la double authentification',
     'two_factor_authentication_disable' => 'Désactiver la double authentification',
-    'two_factor_authentication_disable_description' => 'Are you sure you want to disable two-factor authentication? This will remove the extra layer of security from your account.',
+    'two_factor_authentication_disable_description' => 'Voulez-vous vraiment désactiver la double authentification ? Cela aura pour conséquence d\'affaiblir la sécurité de votre compte.',
     'two_factor_authentication_enable_description' => 'Pour activer l\'authentification à deux facteurs, vous devez scanner le code QR ci-dessous avec une application d\'authentification comme Google Authenticator ou Authy.',
     'two_factor_authentication_qr_code' => 'Scannez le QR code ci-dessous avec votre app d\'authentification :',
     'two_factor_authentication_secret' => 'Ou saisissez le code suivant manuellement :',
@@ -21,6 +21,7 @@ return [
     'sessions' => 'Sessions',
     'sessions_description' => 'Gérer et déconnecter vos sessions actives sur les autres navigateurs et appareils.',
     'logout_sessions' => 'Déconnecter cette session',
+    'current_device' => 'Cet appareil',
 
     'input' => [
         'current_password' => 'Mot de passe actuel',
@@ -69,13 +70,13 @@ return [
     'payment_method_add_failed' => 'Impossible d\'ajouter le mode de paiement. Veuillez réessayer.',
     'services_linked' => ':count service(s) lié(s)',
     'remove' => 'Supprimer',
-    'remove_payment_method' => 'Supprimer le moyen de paiement',
+    'remove_payment_method' => 'Supprimer le mode de paiement',
     'remove_payment_method_confirm' => 'Êtes-vous sûr de vouloir supprimer :name ? Cette action ne peut être annulée.',
-    'expires' => 'Expires :date',
+    'expires' => 'Expire le :date',
     'cancel' => 'Annuler',
-    'confirm' => 'Oui, supprimer',
-    'email_notifications' => 'Notifications d’email',
-    'in_app_notifications' => 'Notifications dans l’application',
+    'confirm' => 'Confirmer la suppression',
+    'email_notifications' => 'Notifications d\'email',
+    'in_app_notifications' => 'Notifications dans l\'application',
     'notifications_description' => 'Gérez vos préférences de notification. Vous pouvez choisir de recevoir des notifications par e-mail, dans l\'application (push), ou les deux.',
     'notification' => 'Notification',
 

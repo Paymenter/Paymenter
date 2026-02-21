@@ -21,6 +21,7 @@ return [
     'sessions' => 'Sesje',
     'sessions_description' => 'Zarządzaj i wyloguj swoje aktywne sesje na innych przeglądarkach i urządzeniach.',
     'logout_sessions' => 'Wyloguj tę sesję',
+    'current_device' => 'Current device',
 
     'input' => [
         'current_password' => 'Obecne hasło',

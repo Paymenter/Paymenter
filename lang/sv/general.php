@@ -29,11 +29,11 @@ return [
         'password' => 'Lösenord',
         'password_placeholder' => 'Ditt lösenord',
 
-        'password_confirmation' => 'Confirm Password',
-        'password_confirmation_placeholder' => 'Confirm your password',
+        'password_confirmation' => 'Bekräfta lösenord',
+        'password_confirmation_placeholder' => 'Bekräfta ditt lösenord',
     ],
 
     'all_rights_reserved' => 'Alla rättigheter reserverade.',
     'update' => 'Uppdatera',
-    'save' => 'Save',
+    'save' => 'Spara',
 ];

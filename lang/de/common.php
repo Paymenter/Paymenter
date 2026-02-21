@@ -9,4 +9,7 @@ return [
     ],
     'confirm' => 'Bestätigen',
     'cancel' => 'Abbrechen',
+    'select' => [
+        'placeholder' => 'Bitte wählen Sie :name',
+    ],
 ];

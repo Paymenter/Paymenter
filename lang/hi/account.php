@@ -21,6 +21,7 @@ return [
     'sessions' => 'सेशंस',
     'sessions_description' => 'अन्य ब्राउज़र और डिवाइस पर अपनी सक्रिय सेशंस को प्रबंधित करें और लॉग आउट करें।',
     'logout_sessions' => 'इस सेशन को लॉग आउट करें',
+    'current_device' => 'Current device',
 
     'input' => [
         'current_password' => 'वर्तमान पासवर्ड',

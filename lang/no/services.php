@@ -55,15 +55,22 @@ return [
     'every_period' => 'Hver :period :unit',
     'price_every_period' => ':price per :period :unit',
     'price_one_time' => ':price en gang',
-    'expires_at' => 'Utløper den',
-    'auto_pay' => 'Auto paying using',
-    'auto_pay_not_configured' => 'Not configured',
+    'renews_in' => 'Fornyes om',
+    'renews_on' => 'Fornyes den',
+    'auto_pay' => 'Automatisk betaling med',
+    'auto_pay_not_configured' => 'Ikke konfigurert',
 
-    'no_services' => 'No services found',
-    'update_billing_agreement' => 'Update Billing Agreement',
-    'clear_billing_agreement' => 'Clear Billing Agreement',
-    'select_billing_agreement' => 'Select Billing Agreement',
+    'no_services' => 'Ingen tjenester funnet',
+    'update_billing_agreement' => 'Oppdater faktureringsavtale',
+    'clear_billing_agreement' => 'Tøm faktureringsavtale',
+    'select_billing_agreement' => 'Velg faktureringsavtale',
 
-    'remove_payment_method' => 'Remove Payment Method',
-    'remove_payment_method_confirm' => 'Are you sure you want to remove the payment method ":name" from this service? Your service will no longer be able to auto pay its invoices.',
+    'remove_payment_method' => 'Fjern betalingsmetode',
+    'remove_payment_method_confirm' => 'Er du sikker på at du vil fjerne betalingsmetoden ":name" fra denne tjenesten? Tjenesten din vil ikke lenger kunne betale sine fakturaer automatisk.',
+
+    'label' => 'Etikett',
+    'label_placeholder' => 'Angi en egendefinert etikett for denne tjenesten',
+    'label_modal_title' => 'Rediger tjenesteetikett',
+    'update_label' => 'Oppdater etikett',
+
 ];

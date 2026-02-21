@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'services' => 'Leistungen',
+    'services' => 'Dienstleistungen',
     'product' => 'Produkt',
     'price' => 'Preis',
     'status' => 'Status',
@@ -52,10 +52,11 @@ return [
         'month' => 'Monat|Monate',
         'year' => 'Jahr|Jahre',
     ],
-    'every_period' => 'Jede :period :unit',
+    'every_period' => 'Jeden :period :unit',
     'price_every_period' => ':price je :period :unit',
     'price_one_time' => ':price einmal',
-    'expires_at' => 'Gültig bis',
+    'renews_in' => 'Wird erneuert in',
+    'renews_on' => 'Wird erneuert am',
     'auto_pay' => 'Automatische Zahlung mit',
     'auto_pay_not_configured' => 'Nicht konfiguriert',
 
@@ -66,4 +67,10 @@ return [
 
     'remove_payment_method' => 'Zahlungsmethode entfernen',
     'remove_payment_method_confirm' => 'Möchtest du die Zahlungsmethode „:name“ wirklich aus diesem Dienst entfernen? Der Dienst kann dann seine Rechnungen nicht mehr automatisch bezahlen.',
+
+    'label' => 'Bezeichnung',
+    'label_placeholder' => 'Geben Sie eine benutzerdefinierte Bezeichnung für diesen Dienst ein',
+    'label_modal_title' => 'Dienstleistungsbezeichnung bearbeiten',
+    'update_label' => 'Bezeichnung aktualisieren',
+
 ];

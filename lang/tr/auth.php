@@ -13,43 +13,43 @@ return [
     |
     */
 
-    'failed' => 'Girilen bilgiler kayıtlarımızla eşleşmiyor.',
-    'password' => 'Şifre yanlış.',
-    'throttle' => 'Çok fazla giriş denemesi yaptınız. Lütfen :seconds saniye sonra yeniden deneyin.',
+    'failed' => 'These credentials do not match our records.',
+    'password' => 'The provided password is incorrect.',
+    'throttle' => 'Too many login attempts. Please try again in :seconds seconds.',
 
-    'sign_in' => 'Giriş yap',
-    'sign_in_title' => 'Hesabınıza giriş yapın',
-    'or_sign_in_with' => 'Ya da şununla giriş yap',
-    'forgot_password' => 'Şifrenizi mi unuttunuz?',
-    'dont_have_account' => 'Hesabınız yok mu?',
-    'already_have_account' => 'Zaten hesabınız var mı?',
+    'sign_in' => 'Sign in',
+    'sign_in_title' => 'Sign in to your account',
+    'or_sign_in_with' => 'Or sign in with',
+    'forgot_password' => 'Forgot your password?',
+    'dont_have_account' => 'Don\'t have an account?',
+    'already_have_account' => 'Already have an account?',
 
-    'sign_up' => 'Kayıt ol',
-    'sign_up_title' => 'Hesap oluştur',
+    'sign_up' => 'Sign up',
+    'sign_up_title' => 'Create your account',
 
-    'logout' => 'Çıkış yap',
+    'logout' => 'Çıkış Yap',
 
     'input' => [
-        'email' => 'E-posta',
-        'email_label' => 'E-Posta Adresi',
+        'email' => 'Email',
+        'email_label' => 'Email Address',
         'password' => 'Şifre',
     ],
 
     'oauth' => [
-        'unverified_discord_account' => 'Discord hesabınız doğrulanmamış.',
-        'account_not_registered' => 'Bu siteye kayıtlı değilsiniz.',
+        'unverified_discord_account' => 'Your Discord account is not verified.',
+        'account_not_registered' => 'You are not registered on this site.',
     ],
 
-    'reset_password' => 'Şifreyi sıfırla',
+    'reset_password' => 'Reset password',
 
-    'verify_2fa' => 'Doğrula (2FA)',
-    'verify' => 'Doğrula',
+    'verify_2fa' => 'Verify 2FA',
+    'verify' => 'Verify',
 
     'verification' => [
-        'notice' => 'E-posta adresinizi doğrulayın',
-        'sent' => 'E-posta adresinize yeni bir doğrulama bağlantısı gönderildi.',
-        'check_your_email' => 'Devam etmeden önce lütfen doğrulama bağlantısı için e-posta kutunuzu kontrol edin.',
-        'not_received' => 'Doğrulama e-postasını almadıysanız yeniden gönderilmesini talep edebilirsiniz.',
-        'request_another' => 'Doğrulama e-postasını yeniden gönder',
+        'notice' => 'Verify your email address',
+        'sent' => 'A new verification link has been sent to your email address.',
+        'check_your_email' => 'Before proceeding, please check your email for a verification link.',
+        'not_received' => 'If you did not receive the email you can request another verification email.',
+        'request_another' => 'Resend verification email',
     ],
 ];

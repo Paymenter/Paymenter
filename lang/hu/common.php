@@ -9,4 +9,7 @@ return [
     ],
     'confirm' => 'Megerősítés',
     'cancel' => 'Mégsem',
+    'select' => [
+        'placeholder' => 'Please select :name',
+    ],
 ];

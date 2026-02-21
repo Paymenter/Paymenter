@@ -9,4 +9,7 @@ return [
     ],
     'confirm' => 'Konfirmasi',
     'cancel' => 'Batalkan',
+    'select' => [
+        'placeholder' => 'Harap pilih :name',
+    ],
 ];
