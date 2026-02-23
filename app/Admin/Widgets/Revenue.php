@@ -92,7 +92,11 @@ class Revenue extends ChartWidget
                     'borderColor' => '#e3342f',
                 ],
             ],
-            'labels' => $revenue->map(fn (TrendValue $value) => $this->filter === 'today' ? Carbon::parse($value->date)->format('H:i') : Carbon::parse($value->date)->format('M d'))->toArray(),
+            'labels' => $revenue->map(fn (TrendValue $value) => match ($this->filter) {
+                'today' => Carbon::parse($value->date)->format('H:i'),
+                'year' => Carbon::parse($value->date)->format('M'),
+                default => Carbon::parse($value->date)->format('M d'),
+            })->toArray(),
         ];
     }
 
