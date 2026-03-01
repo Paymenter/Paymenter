@@ -21,7 +21,7 @@ return [
     'sessions' => 'Sesje',
     'sessions_description' => 'Zarządzaj i wyloguj swoje aktywne sesje na innych przeglądarkach i urządzeniach.',
     'logout_sessions' => 'Wyloguj tę sesję',
-    'current_device' => 'Current device',
+    'current_device' => 'Bieżące urządzenie',
 
     'input' => [
         'current_password' => 'Obecne hasło',
@@ -69,16 +69,16 @@ return [
     'payment_method_added' => 'Metoda płatności została dodana.',
     'payment_method_add_failed' => 'Nie udało się dodać metody płatności. Spróbuj ponownie.',
     'services_linked' => ':count service(s) linked',
-    'remove' => 'Remove',
-    'remove_payment_method' => 'Remove Payment Method',
-    'remove_payment_method_confirm' => 'Are you sure you want to remove :name? This action cannot be undone.',
+    'remove' => 'Usuń',
+    'remove_payment_method' => 'Usuń Metodę Płatności',
+    'remove_payment_method_confirm' => 'Czy na pewno chcesz usunąć :name? Tej akcji nie można cofnąć.',
     'expires' => 'Expires :date',
-    'cancel' => 'Cancel',
-    'confirm' => 'Yes, Remove',
+    'cancel' => 'Anuluj',
+    'confirm' => 'Tak, usuń',
     'email_notifications' => 'Email Notifications',
     'in_app_notifications' => 'In-App Notifications',
     'notifications_description' => 'Manage your notification preferences. You can choose to receive notifications via email, in-app (push), or both.',
-    'notification' => 'Notification',
+    'notification' => 'Powiadomienie',
 
     'push_notifications' => 'Push Notifications',
     'push_notifications_description' => 'Enable push notifications to receive real-time updates directly in your browser, even when you are not on the site.',
@@ -86,6 +86,6 @@ return [
     'push_status' => [
         'not_supported' => 'Push notifications are not supported by your browser.',
         'denied' => 'Push notifications are blocked. Please enable them in your browser settings.',
-        'subscribed' => 'Push notifications are enabled.',
+        'subscribed' => 'Powiadomienia push są włączone.',
     ],
 ];
