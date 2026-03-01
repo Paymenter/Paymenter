@@ -32,18 +32,18 @@ return [
     'upgrade_service' => 'Upgrade Service',
     'upgrade_choose_product' => 'Choose a product to upgrade to',
     'upgrade_choose_config' => 'Choose the configuration for the upgrade',
-    'next_step' => 'Next Step',
+    'next_step' => 'Następny Krok',
 
     'upgrade_pending' => 'You cannot upgrade whilst there is already an upgrade / downgrade invoice open',
 
-    'outstanding_invoice' => 'You have an outstanding invoice.',
+    'outstanding_invoice' => 'Masz zaległą fakturę.',
     'view_and_pay' => 'Click here to view and pay',
 
     'statuses' => [
-        'pending' => 'Pending',
+        'pending' => 'Oczekuje',
         'active' => 'Active',
         'cancelled' => 'Cancelled',
-        'suspended' => 'Suspended',
+        'suspended' => 'Zawieszone',
         'cancellation_pending' => 'Cancellation Pending',
     ],
     'billing_cycles' => [
