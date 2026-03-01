@@ -44,7 +44,7 @@ return [
     'payment_processing' => 'Payment Processing',
     'duplicate_payment' => 'There is already a payment being processed for this invoice. Paying again may result in duplicate charges.',
     'pay_with_one_time_method' => 'Or pay with a one-time method',
-    'pay_with_credits' => 'Pay with Credits',
+    'pay_with_credits' => 'Betaal met Credits',
     'apply_credit' => 'Apply Credit ( :amount )',
     'no_invoices' => 'No invoices found.',
     'paid_with_credits' => 'Paid with Credits',
