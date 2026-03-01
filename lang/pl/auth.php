@@ -48,7 +48,7 @@ return [
     'verification' => [
         'notice' => 'Zweryfikuj swój adres e-mail',
         'sent' => 'Nowy link weryfikacyjny został wysłany na Twój adres e-mail.',
-        'check_your_email' => 'Przed kontynuowanie, sprawdź swoją pocztę w poszukiwaniu linku weryfikacyjnego.',
+        'check_your_email' => 'Zanim przejdziesz dalej, sprawdź pocztę, powinieneś otrzymać link weryfikacyjny.',
         'not_received' => 'Jeśli nie otrzymałeś wiadomości e-mail, możesz poprosić o inny e-mail weryfikacyjny.',
         'request_another' => 'Wyślij email weryfikacyjny ponownie',
     ],
