@@ -35,6 +35,9 @@ return Application::configure(basePath: dirname(__DIR__))
             ImpersonateMiddleware::class,
             SetLocale::class,
         ]);
+        $middleware->preventRequestsDuringMaintenance(
+        except: ['admin', 'admin/*']
+    );
     })
     ->withEvents(discover: [
         __DIR__ . '/../app/Extensions',
