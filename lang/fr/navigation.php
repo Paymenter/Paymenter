@@ -2,10 +2,10 @@
 
 return [
     'home' => 'Accueil',
-    'shop' => 'Boutique',
+    'shop' => 'Offres',
     'cart' => 'Panier',
     'login' => 'Connexion',
-    'register' => 'S\'inscrire',
+    'register' => 'Inscription',
     'services' => 'Services',
     'invoices' => 'Factures',
     'account' => 'Compte',
