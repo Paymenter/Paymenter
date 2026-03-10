@@ -211,6 +211,30 @@ class NotificationHelper
         self::sendNotification('new_ticket_message', $data, $user);
     }
 
+    public static function guestTicketMessageNotification(string $email, TicketMessage $ticketMessage, array $data = []): void
+    {
+        $notification = NotificationTemplate::where('key', 'new_ticket_message')->first();
+        if (!$notification || !$notification->enabled || config('settings.mail_disable')) {
+            return;
+        }
+
+        $data['ticketMessage'] = $ticketMessage;
+        $mail = new Mail($notification, $data);
+
+        $emailLog = EmailLog::create([
+            'subject' => $mail->envelope()->subject,
+            'to' => $email,
+            'body' => $mail->render(),
+        ]);
+
+        $mail->email_log_id = $emailLog->id;
+
+        FacadesMail::to($email)
+            ->bcc($notification->bcc)
+            ->cc($notification->cc)
+            ->queue($mail);
+    }
+
     public static function emailVerificationNotification(User $user, array $data = []): void
     {
         $data['user'] = $user;

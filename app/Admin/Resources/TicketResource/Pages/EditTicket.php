@@ -108,8 +108,8 @@ class EditTicket extends EditRecord
             ->components([
                 TextEntry::make('user_id')
                     ->size(TextSize::Large)
-                    ->formatStateUsing(fn ($record) => $record->user->name)
-                    ->url(fn ($record) => UserResource::getUrl('edit', ['record' => $record->user]))
+                    ->formatStateUsing(fn ($record) => $record->ownerName())
+                    ->url(fn ($record) => $record->user ? UserResource::getUrl('edit', ['record' => $record->user]) : null)
                     ->label('User ID'),
                 TextEntry::make('subject')
                     ->size(TextSize::Large)
@@ -143,14 +143,14 @@ class EditTicket extends EditRecord
                     ->size(TextSize::Large)
                     ->label('Assigned To')
                     ->placeholder('No assigned user')
-                    ->formatStateUsing(fn ($record) => $record->assignedTo->name),
+                    ->formatStateUsing(fn ($record) => $record->assignedTo?->name),
 
                 TextEntry::make('service_id')
                     ->size(TextSize::Large)
                     ->label('Service')
                     ->url(fn ($record) => $record->service ? ServiceResource::getUrl('edit', ['record' => $record->service]) : null)
                     ->placeholder('No service')
-                    ->formatStateUsing(fn ($record) => "{$record->service->product->name} - " . ucfirst($record->service->status)),
+                    ->formatStateUsing(fn ($record) => $record->service ? "{$record->service->product->name} - " . ucfirst($record->service->status) : null),
 
                 Actions::make([
                     Action::make('Edit')

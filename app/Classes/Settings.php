@@ -422,6 +422,14 @@ class Settings
                     'required' => fn (Get $get) => $get('ticket_mail_piping'),
                     'encrypted' => true,
                 ],
+                [
+                    'name' => 'ticket_mail_create_guest_tickets',
+                    'label' => 'Create Guest Tickets From New Emails',
+                    'type' => 'checkbox',
+                    'database_type' => 'boolean',
+                    'default' => false,
+                    'description' => 'If enabled, emails that do not match an existing ticket reply are converted into new guest tickets.',
+                ],
             ],
 
             'cronjob' => [

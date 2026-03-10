@@ -158,9 +158,10 @@ class TicketResource extends Resource
                     ->formatStateUsing(fn (string $state) => ucfirst($state)),
                 TextColumn::make('department')
                     ->sortable(),
-                TextColumn::make('user.name')
-                    ->searchable(['first_name', 'last_name'])
-                    ->sortable(['first_name', 'last_name']),
+                TextColumn::make('owner')
+                    ->label('User')
+                    ->state(fn (Ticket $record) => $record->ownerName())
+                    ->searchable(['guest_name', 'guest_email']),
             ])
             ->filters([
                 SelectFilter::make('user')
