@@ -430,6 +430,14 @@ class Settings
                     'default' => false,
                     'description' => 'If enabled, emails that do not match an existing ticket reply are converted into new guest tickets.',
                 ],
+                [
+                    'name' => 'ticket_mail_link_existing_user',
+                    'label' => 'Link New Email Tickets To Existing Users',
+                    'type' => 'checkbox',
+                    'database_type' => 'boolean',
+                    'default' => false,
+                    'description' => 'Works together with "Create Guest Tickets From New Emails". If enabled, unmatched inbound emails are linked to an existing user account when the sender email address matches a known user.',
+                ],
             ],
 
             'cronjob' => [

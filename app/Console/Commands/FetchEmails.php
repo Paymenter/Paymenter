@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use App\Models\Ticket;
 use App\Models\TicketMailLog;
 use App\Models\TicketMessage;
+use App\Models\User;
 use DirectoryTree\ImapEngine\Mailbox;
 use EmailReplyParser\EmailReplyParser;
 use Illuminate\Console\Command;
@@ -148,10 +149,12 @@ class FetchEmails extends Command
             $guestName = Str::before($senderEmail, '@');
         }
 
+        $linkedUser = $this->resolveExistingUserForEmail($senderEmail);
+
         $ticket = Ticket::create([
-            'user_id' => null,
-            'guest_name' => $guestName,
-            'guest_email' => $senderEmail,
+            'user_id' => $linkedUser?->id,
+            'guest_name' => $linkedUser ? null : $guestName,
+            'guest_email' => $linkedUser ? null : $senderEmail,
             'department' => $this->resolveDepartment(),
             'subject' => $this->resolveSubject($email),
             'priority' => 'medium',
@@ -161,7 +164,7 @@ class FetchEmails extends Command
         $ticketMailLog = $this->createEmailLog($email, 'processed', $messageId);
 
         $message = $ticket->messages()->create([
-            'user_id' => null,
+            'user_id' => $ticket->user_id,
             'message' => $body,
             'ticket_mail_log_id' => $ticketMailLog->id,
         ]);
@@ -272,5 +275,16 @@ class FetchEmails extends Command
         }
 
         return $departments->first();
+    }
+
+    private function resolveExistingUserForEmail(string $email): ?User
+    {
+        if (!config('settings.ticket_mail_link_existing_user', false)) {
+            return null;
+        }
+
+        return User::query()
+            ->whereRaw('LOWER(email) = ?', [Str::lower($email)])
+            ->first();
     }
 }
