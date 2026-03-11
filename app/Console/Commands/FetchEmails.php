@@ -2,10 +2,11 @@
 
 namespace App\Console\Commands;
 
-use App\Models\TicketMailLog;
 use App\Models\Ticket;
+use App\Models\TicketMailLog;
 use App\Models\TicketMessage;
 use DirectoryTree\ImapEngine\Mailbox;
+use EmailReplyParser\EmailReplyParser;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\File;
@@ -13,6 +14,8 @@ use Illuminate\Support\Str;
 
 class FetchEmails extends Command
 {
+    private const DEFAULT_EMAIL_SUBJECT = 'Email ticket';
+
     /**
      * The name and signature of the console command.
      *
@@ -51,24 +54,32 @@ class FetchEmails extends Command
             $emails = $mailbox->inbox();
 
             foreach ($emails->messages()->since(now()->subDays(1))->withHeaders()->withBody()->get() as $email) {
-                if (TicketMailLog::where('message_id', $email->messageId())->exists()) {
+                $messageId = $this->resolveMessageId($email);
+                if (TicketMailLog::where('message_id', $messageId)->exists()) {
                     continue;
                 }
 
-                $body = \EmailReplyParser\EmailReplyParser::parseReply($email->text());
-                if (!trim($body)) {
-                    $body = (string) $email->text();
-                }
+                try {
+                    $body = EmailReplyParser::parseReply($email->text());
+                    if (!trim($body)) {
+                        $body = (string) $email->text();
+                    }
 
-                if ($this->processReplyEmail($email, $body)) {
-                    continue;
-                }
+                    if ($this->processReplyEmail($email, $body, $messageId)) {
+                        continue;
+                    }
 
-                if ($this->createGuestTicketFromEmail($email, $body)) {
-                    continue;
-                }
+                    if ($this->createGuestTicketFromEmail($email, $body, $messageId)) {
+                        continue;
+                    }
 
-                $this->failedEmailLog($email);
+                    $this->failedEmailLog($email, $messageId);
+                } catch (\Throwable $exception) {
+                    \Log::warning('Failed to process inbound ticket email.', [
+                        'message_id' => $messageId,
+                        'error' => $exception->getMessage(),
+                    ]);
+                }
             }
         } catch (\Exception $e) {
             \Log::error('FetchEmails failed: ' . $e->getMessage());
@@ -80,7 +91,7 @@ class FetchEmails extends Command
         }
     }
 
-    private function processReplyEmail($email, string $body): bool
+    private function processReplyEmail($email, string $body, string $messageId): bool
     {
         $replyTo = $email->inReplyTo();
         if (!$replyTo || count($replyTo) === 0) {
@@ -108,7 +119,7 @@ class FetchEmails extends Command
             return false;
         }
 
-        $ticketMailLog = $this->createEmailLog($email, 'processed');
+        $ticketMailLog = $this->createEmailLog($email, 'processed', $messageId);
 
         $message = $ticket->messages()->create([
             'message' => $body,
@@ -121,7 +132,7 @@ class FetchEmails extends Command
         return true;
     }
 
-    private function createGuestTicketFromEmail($email, string $body): bool
+    private function createGuestTicketFromEmail($email, string $body, string $messageId): bool
     {
         if (!config('settings.ticket_mail_create_guest_tickets', false)) {
             return false;
@@ -141,13 +152,13 @@ class FetchEmails extends Command
             'user_id' => null,
             'guest_name' => $guestName,
             'guest_email' => $senderEmail,
-            'department' => collect((array) config('settings.ticket_departments'))->first(),
-            'subject' => $email->subject() ?: 'Email ticket',
+            'department' => $this->resolveDepartment(),
+            'subject' => $this->resolveSubject($email),
             'priority' => 'medium',
             'status' => 'open',
         ]);
 
-        $ticketMailLog = $this->createEmailLog($email, 'processed');
+        $ticketMailLog = $this->createEmailLog($email, 'processed', $messageId);
 
         $message = $ticket->messages()->create([
             'user_id' => null,
@@ -160,11 +171,11 @@ class FetchEmails extends Command
         return true;
     }
 
-    private function createEmailLog($email, string $status): TicketMailLog
+    private function createEmailLog($email, string $status, string $messageId): TicketMailLog
     {
         return TicketMailLog::create([
-            'message_id' => $email->messageId(),
-            'subject' => $email->subject(),
+            'message_id' => $messageId,
+            'subject' => $this->resolveSubject($email),
             'from' => $email->from()?->email() ?: '',
             'to' => $this->resolveRecipient($email),
             'body' => $email->text(),
@@ -175,18 +186,26 @@ class FetchEmails extends Command
     private function storeAttachments($email, TicketMessage $message): void
     {
         foreach ($email->attachments() as $attachment) {
-            $extension = pathinfo($attachment->filename(), PATHINFO_EXTENSION);
-            $newName = Str::ulid() . ($extension ? '.' . $extension : '');
-            $path = 'tickets/uploads/' . $newName;
+            try {
+                $extension = pathinfo($attachment->filename(), PATHINFO_EXTENSION);
+                $newName = Str::ulid() . ($extension ? '.' . $extension : '');
+                $path = 'tickets/uploads/' . $newName;
 
-            $attachment->save(storage_path('app/' . $path));
+                $attachment->save(storage_path('app/' . $path));
 
-            $message->attachments()->create([
-                'path' => $path,
-                'filename' => $attachment->filename(),
-                'mime_type' => File::mimeType(storage_path('app/' . $path)),
-                'filesize' => File::size(storage_path('app/' . $path)),
-            ]);
+                $message->attachments()->create([
+                    'path' => $path,
+                    'filename' => $attachment->filename(),
+                    'mime_type' => File::mimeType(storage_path('app/' . $path)),
+                    'filesize' => File::size(storage_path('app/' . $path)),
+                ]);
+            } catch (\Throwable $exception) {
+                \Log::warning('Failed to store inbound ticket attachment.', [
+                    'ticket_message_id' => $message->id,
+                    'filename' => $attachment->filename(),
+                    'error' => $exception->getMessage(),
+                ]);
+            }
         }
     }
 
@@ -197,7 +216,7 @@ class FetchEmails extends Command
             return '';
         }
 
-        return $to[0]?->email() ?? '';
+        return $to[0]?->email() ?? (string) config('settings.ticket_mail_email', '');
     }
 
     private function normalizeEmail(?string $email): ?string
@@ -211,8 +230,47 @@ class FetchEmails extends Command
         return filter_var($email, FILTER_VALIDATE_EMAIL) ? $email : null;
     }
 
-    private function failedEmailLog($email): TicketMailLog
+    private function failedEmailLog($email, string $messageId): TicketMailLog
     {
-        return $this->createEmailLog($email, 'unprocessed');
+        return $this->createEmailLog($email, 'unprocessed', $messageId);
+    }
+
+    private function resolveMessageId($email): string
+    {
+        $messageId = trim((string) $email->messageId());
+        if ($messageId !== '') {
+            return $messageId;
+        }
+
+        $fallbackSeed = implode('|', [
+            $this->resolveSubject($email),
+            $this->normalizeEmail($email->from()?->email()) ?: '',
+            $this->resolveRecipient($email),
+            (string) $email->text(),
+        ]);
+
+        return 'generated-' . hash('sha256', $fallbackSeed);
+    }
+
+    private function resolveSubject($email): string
+    {
+        $subject = trim((string) $email->subject());
+
+        return $subject !== '' ? $subject : self::DEFAULT_EMAIL_SUBJECT;
+    }
+
+    private function resolveDepartment(): ?string
+    {
+        $departments = collect((array) config('settings.ticket_departments'))
+            ->filter(fn ($department) => is_string($department) && trim($department) !== '')
+            ->values();
+
+        if ($departments->isEmpty()) {
+            \Log::warning('No ticket departments configured. Guest ticket will be created without a department.');
+
+            return null;
+        }
+
+        return $departments->first();
     }
 }

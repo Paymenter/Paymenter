@@ -16,32 +16,39 @@ class TicketMessageCreatedListener
         $ticketUserId = $ticket->user_id;
         $messageUserId = $event->ticketMessage->user_id;
 
-        if ($ticketUserId) {
-            if ($ticketUserId !== $messageUserId) {
-                $ticket->update(['status' => 'replied']);
-
-                if ($ticket->user) {
-                    NotificationHelper::ticketMessageNotification($ticket->user, $event->ticketMessage);
-                }
+        if (!is_null($ticketUserId)) {
+            if ($messageUserId === $ticketUserId) {
+                $ticket->update(['status' => 'open']);
 
                 return;
             }
 
-            $ticket->update(['status' => 'open']);
+            if (is_null($messageUserId)) {
+                // Defensive fallback: treat unknown sender on user-owned tickets as client activity.
+                $ticket->update(['status' => 'open']);
+
+                return;
+            }
+
+            $ticket->update(['status' => 'replied']);
+
+            if ($ticket->user) {
+                NotificationHelper::ticketMessageNotification($ticket->user, $event->ticketMessage);
+            }
 
             return;
         }
 
-        if (is_null($messageUserId)) {
-            $ticket->update(['status' => 'open']);
+        if (!is_null($messageUserId)) {
+            $ticket->update(['status' => 'replied']);
+
+            if ($ticket->guest_email) {
+                NotificationHelper::guestTicketMessageNotification($ticket->guest_email, $event->ticketMessage);
+            }
 
             return;
         }
 
-        $ticket->update(['status' => 'replied']);
-
-        if ($ticket->guest_email) {
-            NotificationHelper::guestTicketMessageNotification($ticket->guest_email, $event->ticketMessage);
-        }
+        $ticket->update(['status' => 'open']);
     }
 }
