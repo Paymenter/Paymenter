@@ -27,6 +27,6 @@ class UserComponent extends Select
                 ->toArray())
             ->hint(fn ($get) => $get('user_id') ? new HtmlString('<a href="' . UserResource::getUrl('edit', ['record' => $get('user_id')]) . '" target="_blank">Go to User</a>') : null)
             ->live()
-            ->required();
+            ->required(false);
     }
 }
