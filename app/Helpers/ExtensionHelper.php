@@ -424,8 +424,8 @@ class ExtensionHelper
     /**
      * Create billing agreement
      *
-     * @param  \App\Models\User  $user
-     * @param  \App\Models\Gateway  $gateway
+     * @param  User  $user
+     * @param  Gateway  $gateway
      * @return string|view
      */
     public static function createBillingAgreement($user, $gateway)

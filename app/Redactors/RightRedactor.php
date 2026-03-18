@@ -3,8 +3,9 @@
 namespace App\Redactors;
 
 use Crypt;
+use OwenIt\Auditing\Contracts\AttributeRedactor;
 
-class RightRedactor implements \OwenIt\Auditing\Contracts\AttributeRedactor
+class RightRedactor implements AttributeRedactor
 {
     /**
      * {@inheritdoc}

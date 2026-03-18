@@ -6,7 +6,7 @@ use OwenIt\Auditing\Contracts\Auditable;
 
 class ApiKey extends Model implements Auditable
 {
-    use \App\Models\Traits\Auditable;
+    use Traits\Auditable;
 
     protected $fillable = [
         'name',

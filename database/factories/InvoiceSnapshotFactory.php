@@ -2,10 +2,11 @@
 
 namespace Database\Factories;
 
+use App\Models\InvoiceSnapshot;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\InvoiceSnapshot>
+ * @extends Factory<InvoiceSnapshot>
  */
 class InvoiceSnapshotFactory extends Factory
 {

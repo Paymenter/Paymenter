@@ -6,6 +6,7 @@ use App\Livewire\Component;
 use App\Models\UserSession;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Session;
 use Livewire\Attributes\Locked;
 use RobThree\Auth\Providers\Qr\EndroidQrCodeProvider;
 use RobThree\Auth\TwoFactorAuth;
@@ -54,7 +55,7 @@ class Security extends Component
         ]);
 
         // Destroy all other sessions
-        Auth::user()->sessions()->where('ulid', '!=', \Illuminate\Support\Facades\Session::get('user_session'))->delete();
+        Auth::user()->sessions()->where('ulid', '!=', Session::get('user_session'))->delete();
 
         $this->notify(__('account.notifications.password_changed'));
 
@@ -80,7 +81,7 @@ class Security extends Component
                 $this->showEnableTwoFactor = false;
 
                 // Destroy all other sessions
-                Auth::user()->sessions()->where('ulid', '!=', \Illuminate\Support\Facades\Session::get('user_session'))->delete();
+                Auth::user()->sessions()->where('ulid', '!=', Session::get('user_session'))->delete();
             } else {
                 $this->notify(__('account.notifications.two_factor_code_incorrect'), 'error');
             }

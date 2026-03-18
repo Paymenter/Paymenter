@@ -2,6 +2,12 @@
 
 namespace Tests\Feature;
 
+use App\Jobs\Server\SuspendJob;
+use App\Jobs\Server\TerminateJob;
+use App\Models\Service;
+use App\Models\Ticket;
+use App\Models\TicketMessage;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Queue;
 use Tests\TestCase;
@@ -16,7 +22,7 @@ class CronjobTest extends TestCase
     public function test_invoices_are_created_if_due_date_is_reached(): void
     {
         // Create a user
-        $user = \App\Models\User::factory()->create();
+        $user = User::factory()->create();
 
         // Set config cronjob_invoice
         // This is the number of days before the due date to send an invoice
@@ -25,7 +31,7 @@ class CronjobTest extends TestCase
         $product = $this->createProduct();
 
         // Create a subscription for the user
-        $service = \App\Models\Service::factory()->create([
+        $service = Service::factory()->create([
             'user_id' => $user->id,
             'plan_id' => $product->plan->id,
             'product_id' => $product->product->id,
@@ -50,7 +56,7 @@ class CronjobTest extends TestCase
 
     public function test_invoices_are_paid_with_credits_if_available(): void
     {
-        $user = \App\Models\User::factory()->create();
+        $user = User::factory()->create();
 
         $user->credits()->create([
             'currency_code' => 'USD',
@@ -64,7 +70,7 @@ class CronjobTest extends TestCase
         $product = $this->createProduct();
 
         // Create a subscription for the user
-        $service = \App\Models\Service::factory()->create([
+        $service = Service::factory()->create([
             'user_id' => $user->id,
             'plan_id' => $product->plan->id,
             'product_id' => $product->product->id,
@@ -90,7 +96,7 @@ class CronjobTest extends TestCase
     public function test_services_are_renewed_if_price_is_zero(): void
     {
         // Create a user
-        $user = \App\Models\User::factory()->create();
+        $user = User::factory()->create();
 
         // Set config cronjob_invoice
         // This is the number of days before the due date to send an invoice
@@ -99,7 +105,7 @@ class CronjobTest extends TestCase
         $product = $this->createProduct();
 
         // Create a subscription for the user
-        $service = \App\Models\Service::factory()->create([
+        $service = Service::factory()->create([
             'user_id' => $user->id,
             'plan_id' => $product->plan->id,
             'product_id' => $product->product->id,
@@ -124,7 +130,7 @@ class CronjobTest extends TestCase
     public function test_services_are_cancelled_if_not_paid_within_configured_days(): void
     {
         // Create a user
-        $user = \App\Models\User::factory()->create();
+        $user = User::factory()->create();
 
         // Set config cronjob_order_cancel
         config(['settings.cronjob_order_cancel' => 7]);
@@ -132,7 +138,7 @@ class CronjobTest extends TestCase
         $product = $this->createProduct();
 
         // Create a subscription for the user
-        $service = \App\Models\Service::factory()->create([
+        $service = Service::factory()->create([
             'user_id' => $user->id,
             'plan_id' => $product->plan->id,
             'product_id' => $product->product->id,
@@ -156,7 +162,7 @@ class CronjobTest extends TestCase
     public function test_services_are_suspended_if_due_date_has_passed(): void
     {
         // Create a user
-        $user = \App\Models\User::factory()->create();
+        $user = User::factory()->create();
 
         $product = $this->createProduct();
 
@@ -164,7 +170,7 @@ class CronjobTest extends TestCase
         config(['settings.cronjob_order_suspend' => 2]);
 
         // Create a subscription for the user
-        $service = \App\Models\Service::factory()->create([
+        $service = Service::factory()->create([
             'user_id' => $user->id,
             'plan_id' => $product->plan->id,
             'product_id' => $product->product->id,
@@ -188,7 +194,7 @@ class CronjobTest extends TestCase
             'currency_code' => 'USD',
         ]);
 
-        Queue::assertPushed(\App\Jobs\Server\SuspendJob::class, function ($job) use ($service) {
+        Queue::assertPushed(SuspendJob::class, function ($job) use ($service) {
             return $job->service->id === $service->id;
         });
 
@@ -202,7 +208,7 @@ class CronjobTest extends TestCase
     public function test_orders_are_terminated_if_due_date_is_overdue(): void
     {
         // Create a user
-        $user = \App\Models\User::factory()->create();
+        $user = User::factory()->create();
 
         // Set config cronjob_order_terminate
         config(['settings.cronjob_order_terminate' => 14]);
@@ -210,7 +216,7 @@ class CronjobTest extends TestCase
         $product = $this->createProduct();
 
         // Create a subscription for the user
-        $service = \App\Models\Service::factory()->create([
+        $service = Service::factory()->create([
             'user_id' => $user->id,
             'plan_id' => $product->plan->id,
             'product_id' => $product->product->id,
@@ -245,10 +251,10 @@ class CronjobTest extends TestCase
         // Check if the service was terminated
         $this->assertDatabaseHas('services', [
             'id' => $service->id,
-            'status' => \App\Models\Service::STATUS_CANCELLED,
+            'status' => Service::STATUS_CANCELLED,
         ]);
 
-        Queue::assertPushed(\App\Jobs\Server\TerminateJob::class, function ($job) use ($service) {
+        Queue::assertPushed(TerminateJob::class, function ($job) use ($service) {
             return $job->service->id === $service->id;
         });
 
@@ -262,13 +268,13 @@ class CronjobTest extends TestCase
     public function test_tickets_are_closed_if_no_response_for_x_days(): void
     {
         // Create a user
-        $user = \App\Models\User::factory()->create();
+        $user = User::factory()->create();
 
         // Set config cronjob_ticket_close
         config(['settings.cronjob_close_ticket' => 7]);
 
         // Create a ticket for the user
-        $ticket = \App\Models\Ticket::factory()->create([
+        $ticket = Ticket::factory()->create([
             'user_id' => $user->id,
             'status' => 'open',
         ]);
@@ -279,10 +285,10 @@ class CronjobTest extends TestCase
             'status' => 'open',
         ]);
 
-        $differentUser = \App\Models\User::factory()->create();
+        $differentUser = User::factory()->create();
 
         // Add message
-        \App\Models\TicketMessage::factory()->create([
+        TicketMessage::factory()->create([
             'ticket_id' => $ticket->id,
             'user_id' => $differentUser->id,
             'message' => 'This is a test message.',
@@ -303,9 +309,9 @@ class CronjobTest extends TestCase
     public function test_if_product_stock_is_incremented_on_termination(): void
     {
         $product = $this->createProduct(['stock' => 10]);
-        $user = \App\Models\User::factory()->create();
+        $user = User::factory()->create();
 
-        $service = \App\Models\Service::factory()->create([
+        $service = Service::factory()->create([
             'product_id' => $product->product->id,
             'status' => 'suspended',
             'expires_at' => now()->subDays(15),
@@ -322,7 +328,7 @@ class CronjobTest extends TestCase
         // Check if the service was terminated
         $this->assertDatabaseHas('services', [
             'id' => $service->id,
-            'status' => \App\Models\Service::STATUS_CANCELLED,
+            'status' => Service::STATUS_CANCELLED,
         ]);
 
         // Check if the product stock was incremented
@@ -335,9 +341,9 @@ class CronjobTest extends TestCase
     public function test_if_stock_is_null_it_does_not_increment_stock()
     {
         $product = $this->createProduct(['stock' => null]);
-        $user = \App\Models\User::factory()->create();
+        $user = User::factory()->create();
 
-        $service = \App\Models\Service::factory()->create([
+        $service = Service::factory()->create([
             'product_id' => $product->product->id,
             'status' => 'suspended',
             'expires_at' => now()->subDays(15),
@@ -353,16 +359,16 @@ class CronjobTest extends TestCase
         // Check if the service was terminated
         $this->assertDatabaseHas('services', [
             'id' => $service->id,
-            'status' => \App\Models\Service::STATUS_CANCELLED,
+            'status' => Service::STATUS_CANCELLED,
         ]);
     }
 
     public function test_if_stock_is_zero_it_does_increment_stock()
     {
         $product = $this->createProduct(['stock' => 0]);
-        $user = \App\Models\User::factory()->create();
+        $user = User::factory()->create();
 
-        $service = \App\Models\Service::factory()->create([
+        $service = Service::factory()->create([
             'product_id' => $product->product->id,
             'status' => 'suspended',
             'expires_at' => now()->subDays(15),
@@ -378,7 +384,7 @@ class CronjobTest extends TestCase
         // Check if the service was terminated
         $this->assertDatabaseHas('services', [
             'id' => $service->id,
-            'status' => \App\Models\Service::STATUS_CANCELLED,
+            'status' => Service::STATUS_CANCELLED,
         ]);
 
         // Check if the product stock was incremented

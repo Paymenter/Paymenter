@@ -7,9 +7,11 @@ use App\Classes\Extension\Gateway;
 use App\Events\Service\Updated;
 use App\Events\ServiceCancellation\Created;
 use App\Helpers\ExtensionHelper;
+use App\Models\BillingAgreement;
 use App\Models\Invoice;
 use App\Models\InvoiceItem;
 use App\Models\Service;
+use App\Models\User;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -33,7 +35,7 @@ class PayPal extends Gateway
         return $this->config('paypal_support_billing_agreements') ?? false;
     }
 
-    public function createBillingAgreement(\App\Models\User $user)
+    public function createBillingAgreement(User $user)
     {
         // Using PayPal Vaulting
         $url = $this->config('test_mode') ? 'https://api-m.sandbox.paypal.com' : 'https://api-m.paypal.com';
@@ -61,7 +63,7 @@ class PayPal extends Gateway
         return $result->links[1]->href;
     }
 
-    public function cancelBillingAgreement(\App\Models\BillingAgreement $billingAgreement): bool
+    public function cancelBillingAgreement(BillingAgreement $billingAgreement): bool
     {
         $url = $this->config('test_mode') ? 'https://api-m.sandbox.paypal.com' : 'https://api-m.paypal.com';
         $this->request('delete', $url . '/v3/vault/payment-tokens/' . $billingAgreement->external_reference);
@@ -100,7 +102,7 @@ class PayPal extends Gateway
         ]);
     }
 
-    public function charge(Invoice $invoice, $total, \App\Models\BillingAgreement $billingAgreement)
+    public function charge(Invoice $invoice, $total, BillingAgreement $billingAgreement)
     {
         $url = $this->config('test_mode') ? 'https://api-m.sandbox.paypal.com' : 'https://api-m.paypal.com';
         $result = $this->request('post', $url . '/v2/checkout/orders', [
@@ -321,7 +323,7 @@ class PayPal extends Gateway
             });
         } elseif ($body['event_type'] === 'VAULT.PAYMENT-TOKEN.DELETED') {
             // Find the billing agreement with this external reference
-            $billingAgreement = \App\Models\BillingAgreement::where('external_reference', $body['resource']['id'])->first();
+            $billingAgreement = BillingAgreement::where('external_reference', $body['resource']['id'])->first();
             if ($billingAgreement) {
                 $billingAgreement->delete();
             }

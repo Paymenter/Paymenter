@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use App\Models\TicketMailLog;
 use App\Models\TicketMessage;
 use DirectoryTree\ImapEngine\Mailbox;
+use EmailReplyParser\EmailReplyParser;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\File;
@@ -54,7 +55,7 @@ class FetchEmails extends Command
                     continue;
                 }
 
-                $body = \EmailReplyParser\EmailReplyParser::parseReply($email->text());
+                $body = EmailReplyParser::parseReply($email->text());
 
                 // Check headers to see if this email is a reply
                 $replyTo = $email->inReplyTo();

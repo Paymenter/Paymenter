@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Classes\Synths\PriceSynth;
+use App\Exceptions\ErrorHandler;
 use App\Helpers\ExtensionHelper;
 use App\Models\EmailLog;
 use App\Models\Extension;
@@ -123,7 +124,7 @@ class AppServiceProvider extends ServiceProvider
         });
 
         $this->app->singleton(Handler::class, function ($app) {
-            return new \App\Exceptions\ErrorHandler($app);
+            return new ErrorHandler($app);
         });
 
     }

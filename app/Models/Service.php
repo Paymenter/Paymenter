@@ -14,7 +14,7 @@ use OwenIt\Auditing\Contracts\Auditable;
 #[ObservedBy([ServiceObserver::class])]
 class Service extends Model implements Auditable
 {
-    use \App\Models\Traits\Auditable, HasFactory, HasProperties;
+    use HasFactory, HasProperties, Traits\Auditable;
 
     public const STATUS_PENDING = 'pending';
 

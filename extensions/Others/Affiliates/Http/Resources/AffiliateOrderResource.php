@@ -2,9 +2,10 @@
 
 namespace Paymenter\Extensions\Others\Affiliates\Http\Resources;
 
+use App\Models\AffiliateOrder;
 use TiMacDonald\JsonApi\JsonApiResource;
 
-/** @mixin \App\Models\AffiliateOrder */
+/** @mixin AffiliateOrder */
 class AffiliateOrderResource extends JsonApiResource
 {
     public $attributes = [

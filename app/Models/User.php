@@ -22,7 +22,7 @@ use OwenIt\Auditing\Contracts\Auditable;
 #[ObservedBy([UserObserver::class])]
 class User extends Authenticatable implements Auditable, FilamentUser, HasAvatar
 {
-    use \App\Models\Traits\Auditable, HasApiTokens, HasFactory, HasProperties, Notifiable;
+    use HasApiTokens, HasFactory, HasProperties, Notifiable, Traits\Auditable;
 
     /**
      * The attributes that are mass assignable.

@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\Ticket;
+use App\Models\User;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -13,8 +15,8 @@ return new class extends Migration
     {
         Schema::create('ticket_messages', function (Blueprint $table) {
             $table->id();
-            $table->foreignIdFor(\App\Models\Ticket::class)->constrained()->cascadeOnDelete();
-            $table->foreignIdFor(\App\Models\User::class)->constrained()->cascadeOnDelete();
+            $table->foreignIdFor(Ticket::class)->constrained()->cascadeOnDelete();
+            $table->foreignIdFor(User::class)->constrained()->cascadeOnDelete();
             $table->text('message');
             $table->timestamps();
         });

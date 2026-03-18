@@ -2,8 +2,11 @@
 
 namespace Database\Seeders;
 
+use App\Classes\Settings;
+use App\Models\Currency;
 use App\Models\Role;
 use App\Models\Setting;
+use App\Providers\SettingsProvider;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -16,7 +19,7 @@ class DatabaseSeeder extends Seeder
         // User::factory(10)->create();
         Role::updateOrCreate(['name' => 'admin'], ['permissions' => ['*']]);
 
-        foreach (\App\Classes\Settings::settings() as $settings) {
+        foreach (Settings::settings() as $settings) {
             foreach ($settings as $setting) {
                 if (!isset($setting['default'])) {
                     continue;
@@ -35,8 +38,8 @@ class DatabaseSeeder extends Seeder
         }
 
         // Seed default currency (USD)
-        if (\App\Models\Currency::count() === 0) {
-            \App\Models\Currency::create([
+        if (Currency::count() === 0) {
+            Currency::create([
                 'code' => 'USD',
                 'name' => 'US Dollar',
                 'prefix' => '$',
@@ -45,7 +48,7 @@ class DatabaseSeeder extends Seeder
             ]);
         }
 
-        \App\Providers\SettingsProvider::flushCache();
+        SettingsProvider::flushCache();
 
         $this->call([
             EmailTemplateSeeder::class,

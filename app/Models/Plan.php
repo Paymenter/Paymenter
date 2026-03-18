@@ -9,7 +9,7 @@ use OwenIt\Auditing\Contracts\Auditable;
 
 class Plan extends Model implements Auditable
 {
-    use \App\Models\Traits\Auditable, HasFactory;
+    use HasFactory, Traits\Auditable;
 
     public $timestamps = false;
 

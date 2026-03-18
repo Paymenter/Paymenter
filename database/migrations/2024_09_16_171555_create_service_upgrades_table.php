@@ -1,5 +1,9 @@
 <?php
 
+use App\Models\Invoice;
+use App\Models\Plan;
+use App\Models\Product;
+use App\Models\Service;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -13,10 +17,10 @@ return new class extends Migration
     {
         Schema::create('service_upgrades', function (Blueprint $table) {
             $table->id();
-            $table->foreignIdFor(\App\Models\Service::class)->constrained()->cascadeOnDelete();
-            $table->foreignIdFor(\App\Models\Plan::class)->constrained()->cascadeOnDelete();
-            $table->foreignIdFor(\App\Models\Product::class)->constrained()->cascadeOnDelete();
-            $table->foreignIdFor(\App\Models\Invoice::class)->constrained()->cascadeOnDelete();
+            $table->foreignIdFor(Service::class)->constrained()->cascadeOnDelete();
+            $table->foreignIdFor(Plan::class)->constrained()->cascadeOnDelete();
+            $table->foreignIdFor(Product::class)->constrained()->cascadeOnDelete();
+            $table->foreignIdFor(Invoice::class)->constrained()->cascadeOnDelete();
             $table->string('status')->default('pending');
             $table->string('type')->default('product');
             $table->timestamps();

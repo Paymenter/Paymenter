@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\Service;
+use App\Models\User;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -17,9 +19,9 @@ return new class extends Migration
             $table->string('status')->default('open');
             $table->string('priority')->default('normal');
             $table->string('department')->nullable();
-            $table->foreignIdFor(\App\Models\User::class)->constrained()->cascadeOnDelete();
-            $table->foreignIdFor(\App\Models\User::class, 'assigned_to')->nullable()->constrained('users')->nullOnDelete();
-            $table->foreignIdFor(\App\Models\Service::class)->nullable()->constrained()->nullOnDelete();
+            $table->foreignIdFor(User::class)->constrained()->cascadeOnDelete();
+            $table->foreignIdFor(User::class, 'assigned_to')->nullable()->constrained('users')->nullOnDelete();
+            $table->foreignIdFor(Service::class)->nullable()->constrained()->nullOnDelete();
             $table->timestamps();
         });
     }

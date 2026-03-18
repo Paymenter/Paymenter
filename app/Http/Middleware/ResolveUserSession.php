@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Actions\Auth\Logout;
 use App\Models\UserSession;
 use Closure;
 use Illuminate\Http\Request;
@@ -14,7 +15,7 @@ class ResolveUserSession
     /**
      * Handle an incoming request.
      *
-     * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
+     * @param  Closure(Request): (Response)  $next
      */
     public function handle(Request $request, Closure $next): Response
     {
@@ -88,7 +89,7 @@ class ResolveUserSession
 
     private function fail(Request $request): Response
     {
-        app(\App\Actions\Auth\Logout::class)->execute();
+        app(Logout::class)->execute();
 
         return redirect('/');
     }

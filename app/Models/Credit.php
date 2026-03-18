@@ -8,7 +8,7 @@ use OwenIt\Auditing\Contracts\Auditable;
 
 class Credit extends Model implements Auditable
 {
-    use \App\Models\Traits\Auditable;
+    use Traits\Auditable;
 
     protected $fillable = [
         'currency_code',

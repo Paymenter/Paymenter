@@ -10,7 +10,7 @@ use OwenIt\Auditing\Contracts\Auditable;
 
 class BillingAgreement extends Model implements Auditable
 {
-    use \App\Models\Traits\Auditable, HasProperties, HasUlids, SoftDeletes;
+    use HasProperties, HasUlids, SoftDeletes, Traits\Auditable;
 
     protected $fillable = [
         'ulid',

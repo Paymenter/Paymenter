@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Classes\Price;
+use App\Enums\InvoiceTransactionStatus;
 use App\Observers\InvoiceTransactionObserver;
 use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Casts\Attribute;
@@ -12,7 +13,7 @@ use OwenIt\Auditing\Contracts\Auditable;
 #[ObservedBy([InvoiceTransactionObserver::class])]
 class InvoiceTransaction extends Model implements Auditable
 {
-    use \App\Models\Traits\Auditable, HasFactory;
+    use HasFactory, Traits\Auditable;
 
     protected $fillable = [
         'invoice_id',
@@ -27,7 +28,7 @@ class InvoiceTransaction extends Model implements Auditable
     protected $casts = [
         'amount' => 'decimal:2',
         'fee' => 'decimal:2',
-        'status' => \App\Enums\InvoiceTransactionStatus::class,
+        'status' => InvoiceTransactionStatus::class,
     ];
 
     public function invoice()

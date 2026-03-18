@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Auth;
 
+use App\Actions\Auth\Login;
 use App\Livewire\Component;
 use App\Models\User;
 use Illuminate\Support\Facades\Cache;
@@ -22,7 +23,7 @@ class Tfa extends Component
         }
     }
 
-    public function verify(\App\Actions\Auth\Login $loginAction)
+    public function verify(Login $loginAction)
     {
         $this->validate([
             'code' => 'required|numeric',

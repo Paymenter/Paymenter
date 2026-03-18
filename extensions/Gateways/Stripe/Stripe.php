@@ -13,9 +13,11 @@ use App\Models\Extension;
 use App\Models\Invoice;
 use App\Models\InvoiceTransaction;
 use App\Models\Service;
+use App\Models\User;
 use Carbon\Carbon;
 use Exception;
 use Filament\Notifications\Notification;
+use Illuminate\Http\Client\RequestException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Event;
@@ -595,7 +597,7 @@ class Stripe extends Gateway
 
     private function setupBillingAgreement($setupIntent)
     {
-        $user = \App\Models\User::findOrFail($setupIntent->metadata->user_id);
+        $user = User::findOrFail($setupIntent->metadata->user_id);
 
         // Get setup intent with expanded data
         $setupIntent = $this->request('get', '/setup_intents/' . $setupIntent->id, [
@@ -705,7 +707,7 @@ class Stripe extends Gateway
                 'metadata' => ['invoice_id' => $invoice->id, 'billing_agreement_id' => $billingAgreement->id],
             ]);
         } catch (Exception $e) {
-            if ($e instanceof \Illuminate\Http\Client\RequestException && $e->response->status() === 400) {
+            if ($e instanceof RequestException && $e->response->status() === 400) {
                 $error = $e->response->object()->error;
                 // If error is invalid_request_error and message contains "The provided currency" we can show the message
                 if ($error->type === 'invalid_request_error' && Str::contains($error->message, 'The currency provided')) {

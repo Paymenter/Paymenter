@@ -2,12 +2,13 @@
 
 namespace App\Models;
 
+use Database\Factories\InvoiceSnapshotFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class InvoiceSnapshot extends Model
 {
-    /** @use HasFactory<\Database\Factories\InvoiceSnapshotFactory> */
+    /** @use HasFactory<InvoiceSnapshotFactory> */
     use HasFactory;
 
     protected $fillable = [

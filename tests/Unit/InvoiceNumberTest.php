@@ -3,6 +3,7 @@
 namespace Tests\Unit;
 
 use App\Models\Invoice;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -15,7 +16,7 @@ class InvoiceNumberTest extends TestCase
      */
     public function test_invoice_number_generation(): void
     {
-        $user = \App\Models\User::factory()->create();
+        $user = User::factory()->create();
         // Generate first invoice
         config(['settings.invoice_number' => 1000]);
 
@@ -43,7 +44,7 @@ class InvoiceNumberTest extends TestCase
 
     public function test_invoice_number_generation_proforma(): void
     {
-        $user = \App\Models\User::factory()->create();
+        $user = User::factory()->create();
         // Generate first invoice
         config(['settings.invoice_number' => 2000]);
         config(['settings.invoice_proforma' => true]);

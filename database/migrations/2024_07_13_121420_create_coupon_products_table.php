@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\Coupon;
+use App\Models\Product;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -13,8 +15,8 @@ return new class extends Migration
     {
         Schema::create('coupon_products', function (Blueprint $table) {
             $table->id();
-            $table->foreignIdFor(\App\Models\Coupon::class)->constrained()->cascadeOnDelete();
-            $table->foreignIdFor(\App\Models\Product::class)->constrained()->cascadeOnDelete();
+            $table->foreignIdFor(Coupon::class)->constrained()->cascadeOnDelete();
+            $table->foreignIdFor(Product::class)->constrained()->cascadeOnDelete();
         });
     }
 

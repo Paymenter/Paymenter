@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\ConfigOption;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -21,7 +22,7 @@ return new class extends Migration
             $table->timestamps();
         });
         Schema::table('config_options', function (Blueprint $table) {
-            $table->foreignIdFor(\App\Models\ConfigOption::class, 'parent_id')->nullable()->constrained('config_options')->after('hidden')->cascadeOnDelete();
+            $table->foreignIdFor(ConfigOption::class, 'parent_id')->nullable()->constrained('config_options')->after('hidden')->cascadeOnDelete();
         });
     }
 
