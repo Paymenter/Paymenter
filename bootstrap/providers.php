@@ -1,8 +1,13 @@
 <?php
 
+use App\Providers\AppServiceProvider;
+use App\Providers\Filament\AdminPanelProvider;
+use App\Providers\SettingsProvider;
+use SocialiteProviders\Manager\ServiceProvider;
+
 return [
-    App\Providers\AppServiceProvider::class,
-    App\Providers\SettingsProvider::class,
-    App\Providers\Filament\AdminPanelProvider::class,
-    \SocialiteProviders\Manager\ServiceProvider::class,
+    AppServiceProvider::class,
+    SettingsProvider::class,
+    AdminPanelProvider::class,
+    ServiceProvider::class,
 ];

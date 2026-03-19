@@ -2,6 +2,7 @@
 
 namespace App\Admin\Widgets;
 
+use App\Enums\InvoiceTransactionStatus;
 use App\Models\InvoiceTransaction;
 use App\Models\Service;
 use App\Models\Ticket;
@@ -27,7 +28,7 @@ class Overview extends BaseWidget
 
     private function invoiceTransaction()
     {
-        $chart = Trend::query(InvoiceTransaction::query()->where('status', \App\Enums\InvoiceTransactionStatus::Succeeded)->where('is_credit_transaction', false))
+        $chart = Trend::query(InvoiceTransaction::query()->where('status', InvoiceTransactionStatus::Succeeded)->where('is_credit_transaction', false))
             ->between(
                 start: now()->subMonth()->startOfDay(),
                 end: now(),

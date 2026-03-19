@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Actions\Auth\Logout;
 use Closure;
 use Illuminate\Contracts\Session\Session;
 use Illuminate\Http\Request;
@@ -12,7 +13,7 @@ class LockSession
     /**
      * Handle an incoming request.
      *
-     * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
+     * @param  Closure(Request): (Response)  $next
      */
     public function handle(Request $request, Closure $next): Response
     {
@@ -65,7 +66,7 @@ class LockSession
 
     private function invalidateSession(Request $request)
     {
-        app(\App\Actions\Auth\Logout::class)->execute();
+        app(Logout::class)->execute();
 
         return redirect('/');
     }

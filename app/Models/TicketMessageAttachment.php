@@ -17,7 +17,7 @@ class TicketMessageAttachment extends Model
     protected static function booted()
     {
         static::creating(function ($model) {
-            $model->uuid = (string) \Illuminate\Support\Str::uuid();
+            $model->uuid = (string) Str::uuid();
         });
     }
 

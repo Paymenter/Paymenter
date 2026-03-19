@@ -1,5 +1,7 @@
 <?php
 
+use App\Helpers\ApiDocumentation\AllowedIncludesExtension;
+use App\Helpers\ApiDocumentation\RequestUserExtension;
 use Dedoc\Scramble\Http\Middleware\RestrictedDocsAccess;
 
 return [
@@ -108,7 +110,7 @@ return [
     ],
 
     'extensions' => [
-        \App\Helpers\ApiDocumentation\RequestUserExtension::class,
-        \App\Helpers\ApiDocumentation\AllowedIncludesExtension::class,
+        RequestUserExtension::class,
+        AllowedIncludesExtension::class,
     ],
 ];

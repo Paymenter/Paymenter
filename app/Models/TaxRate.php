@@ -7,7 +7,7 @@ use OwenIt\Auditing\Contracts\Auditable;
 
 class TaxRate extends Model implements Auditable
 {
-    use \App\Models\Traits\Auditable, HasFactory;
+    use HasFactory, Traits\Auditable;
 
     protected $fillable = ['name', 'rate', 'country'];
 }

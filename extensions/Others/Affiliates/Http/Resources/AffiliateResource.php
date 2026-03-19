@@ -3,9 +3,10 @@
 namespace Paymenter\Extensions\Others\Affiliates\Http\Resources;
 
 use App\Http\Resources\UserResource;
+use App\Models\Affiliate;
 use TiMacDonald\JsonApi\JsonApiResource;
 
-/** @mixin \App\Models\Affiliate */
+/** @mixin Affiliate */
 class AffiliateResource extends JsonApiResource
 {
     public $attributes = [

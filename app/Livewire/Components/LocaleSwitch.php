@@ -4,6 +4,7 @@ namespace App\Livewire\Components;
 
 use App\Classes\Cart;
 use App\Livewire\Component;
+use App\Models\Currency;
 
 class LocaleSwitch extends Component
 {
@@ -17,7 +18,7 @@ class LocaleSwitch extends Component
     {
         $this->currentLocale = session('locale', config('app.locale'));
         $this->currentCurrency = session('currency', config('settings.default_currency'));
-        $this->currencies = \App\Models\Currency::all()->map(fn ($currency) => [
+        $this->currencies = Currency::all()->map(fn ($currency) => [
             'value' => $currency->code,
             'label' => $currency->name,
         ])->values()->toArray();

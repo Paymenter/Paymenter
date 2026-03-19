@@ -3,7 +3,9 @@
 namespace App\Admin\Resources\CurrencyResource\Pages;
 
 use App\Admin\Resources\CurrencyResource;
+use App\Models\Cart;
 use App\Models\Currency;
+use App\Models\Price;
 use Filament\Actions\DeleteAction;
 use Filament\Notifications\Notification;
 use Filament\Resources\Pages\EditRecord;
@@ -47,8 +49,8 @@ class EditCurrency extends EditRecord
             })
                 ->after(function (DeleteAction $action, Currency $record) {
                     // Remove carts with this currency
-                    \App\Models\Cart::where('currency_code', $record->code)->delete();
-                    \App\Models\Price::where('currency_code', $record->code)->delete();
+                    Cart::where('currency_code', $record->code)->delete();
+                    Price::where('currency_code', $record->code)->delete();
                 }),
         ];
     }

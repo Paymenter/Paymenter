@@ -4,6 +4,8 @@ namespace App\Admin\Pages;
 
 use App\Admin\Clusters\Extensions;
 use App\Admin\Resources\ExtensionResource;
+use App\Admin\Resources\GatewayResource;
+use App\Admin\Resources\ServerResource;
 use App\Helpers\ExtensionHelper;
 use App\Services\Extensions\UploadExtensionService;
 use Filament\Actions\Action;
@@ -183,14 +185,14 @@ class Extension extends Page implements HasActions, HasTable
                                 case 'server':
                                     Notification::make()
                                         ->title('Extension uploaded successfully')
-                                        ->body('Server uploaded successfully. Please go to the <a class="text-primary-600" wire:navigate href="' . \App\Admin\Resources\ServerResource::getUrl() . '">Servers</a> page to install the new server extension.')
+                                        ->body('Server uploaded successfully. Please go to the <a class="text-primary-600" wire:navigate href="' . ServerResource::getUrl() . '">Servers</a> page to install the new server extension.')
                                         ->success()
                                         ->send();
                                     break;
                                 case 'gateway':
                                     Notification::make()
                                         ->title('Extension uploaded successfully')
-                                        ->body('Gateway uploaded successfully. Please go to the <a class="text-primary-600" wire:navigate href="' . \App\Admin\Resources\GatewayResource::getUrl() . '">Gateways</a> page to install the new gateway extension.')
+                                        ->body('Gateway uploaded successfully. Please go to the <a class="text-primary-600" wire:navigate href="' . GatewayResource::getUrl() . '">Gateways</a> page to install the new gateway extension.')
                                         ->success()
                                         ->send();
                                     break;

@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Minishlink\WebPush\Subscription;
 
 class NotificationSubscription extends Model
 {
@@ -25,7 +26,7 @@ class NotificationSubscription extends Model
 
     public function subscription()
     {
-        return \Minishlink\WebPush\Subscription::create([
+        return Subscription::create([
             'endpoint' => $this->endpoint,
             'publicKey' => $this->p256dh_key,
             'authToken' => $this->auth_key,

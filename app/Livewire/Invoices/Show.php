@@ -3,6 +3,7 @@
 namespace App\Livewire\Invoices;
 
 use App\Classes\PDF;
+use App\Enums\InvoiceTransactionStatus;
 use App\Helpers\ExtensionHelper;
 use App\Livewire\Component;
 use App\Models\Gateway;
@@ -37,7 +38,7 @@ class Show extends Component
         if (Request::has('checkPayment') && $this->invoice->status === 'pending') {
             $this->checkPayment = true;
         }
-        if ($this->invoice->transactions()->where('status', \App\Enums\InvoiceTransactionStatus::Processing)->exists()) {
+        if ($this->invoice->transactions()->where('status', InvoiceTransactionStatus::Processing)->exists()) {
             $this->checkPayment = true;
         }
 
@@ -201,7 +202,7 @@ class Show extends Component
         // Check for transactions that failed since lastChecked
         if ($this->lastChecked) {
             $failedSinceLastCheck = $this->invoice->transactions()
-                ->where('status', \App\Enums\InvoiceTransactionStatus::Failed)
+                ->where('status', InvoiceTransactionStatus::Failed)
                 ->where('updated_at', '>', $this->lastChecked)
                 ->exists();
 

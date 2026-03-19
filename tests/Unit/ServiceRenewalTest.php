@@ -2,6 +2,9 @@
 
 namespace Tests\Unit;
 
+use App\Models\Invoice;
+use App\Models\Service;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -12,11 +15,11 @@ class ServiceRenewalTest extends TestCase
     public function test_service_duedate_is_set(): void
     {
         // Create a user
-        $user = \App\Models\User::factory()->create();
+        $user = User::factory()->create();
         $product = $this->createProduct();
 
         // Create a subscription for the user
-        $service = \App\Models\Service::factory()->create([
+        $service = Service::factory()->create([
             'user_id' => $user->id,
             'plan_id' => $product->plan->id,
             'product_id' => $product->product->id,
@@ -26,14 +29,14 @@ class ServiceRenewalTest extends TestCase
         ]);
 
         // Create an invoice for the service renewal
-        $invoice = \App\Models\Invoice::factory()->create([
+        $invoice = Invoice::factory()->create([
             'user_id' => $user->id,
             'status' => 'pending',
             'currency_code' => 'USD',
         ]);
         $invoice->items()->create([
             'reference_id' => $service->id,
-            'reference_type' => \App\Models\Service::class,
+            'reference_type' => Service::class,
             'description' => 'Service Renewal',
             'quantity' => 1,
             'price' => 10.00,
@@ -55,11 +58,11 @@ class ServiceRenewalTest extends TestCase
     public function test_service_duedate_is_extended_when_active(): void
     {
         // Create a user
-        $user = \App\Models\User::factory()->create();
+        $user = User::factory()->create();
         $product = $this->createProduct();
 
         // Create a subscription for the user
-        $service = \App\Models\Service::factory()->create([
+        $service = Service::factory()->create([
             'user_id' => $user->id,
             'plan_id' => $product->plan->id,
             'product_id' => $product->product->id,
@@ -70,7 +73,7 @@ class ServiceRenewalTest extends TestCase
         ]);
 
         // Create an invoice for the service renewal
-        $invoice = \App\Models\Invoice::factory()->create([
+        $invoice = Invoice::factory()->create([
             'user_id' => $user->id,
             'status' => 'pending',
             'currency_code' => 'USD',
@@ -78,7 +81,7 @@ class ServiceRenewalTest extends TestCase
 
         $invoice->items()->create([
             'reference_id' => $service->id,
-            'reference_type' => \App\Models\Service::class,
+            'reference_type' => Service::class,
             'description' => 'Service Renewal',
             'quantity' => 1,
             'price' => 10.00,
@@ -102,11 +105,11 @@ class ServiceRenewalTest extends TestCase
     public function test_service_duedate_is_set_from_now_when_suspended(): void
     {
         // Create a user
-        $user = \App\Models\User::factory()->create();
+        $user = User::factory()->create();
         $product = $this->createProduct();
 
         // Create a subscription for the user
-        $service = \App\Models\Service::factory()->create([
+        $service = Service::factory()->create([
             'user_id' => $user->id,
             'plan_id' => $product->plan->id,
             'product_id' => $product->product->id,
@@ -117,7 +120,7 @@ class ServiceRenewalTest extends TestCase
         ]);
 
         // Create an invoice for the service renewal
-        $invoice = \App\Models\Invoice::factory()->create([
+        $invoice = Invoice::factory()->create([
             'user_id' => $user->id,
             'status' => 'pending',
             'currency_code' => 'USD',
@@ -125,7 +128,7 @@ class ServiceRenewalTest extends TestCase
 
         $invoice->items()->create([
             'reference_id' => $service->id,
-            'reference_type' => \App\Models\Service::class,
+            'reference_type' => Service::class,
             'description' => 'Service Renewal',
             'quantity' => 1,
             'price' => 10.00,

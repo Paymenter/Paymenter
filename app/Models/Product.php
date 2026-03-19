@@ -12,7 +12,7 @@ use OwenIt\Auditing\Contracts\Auditable;
 
 class Product extends Model implements Auditable
 {
-    use \App\Models\Traits\Auditable, HasFactory, HasPlans;
+    use HasFactory, HasPlans, Traits\Auditable;
 
     protected $guarded = [];
 

@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Invoice;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -13,7 +14,7 @@ return new class extends Migration
     {
         Schema::create('invoice_transactions', function (Blueprint $table) {
             $table->id();
-            $table->foreignIdFor(App\Models\Invoice::class)->constrained()->cascadeOnDelete();
+            $table->foreignIdFor(Invoice::class)->constrained()->cascadeOnDelete();
             $table->unsignedBigInteger('gateway_id')->nullable();
             $table->foreign('gateway_id')->references('id')->on('extensions')->cascadeOnDelete();
             $table->decimal('amount', 17, 2);

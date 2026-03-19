@@ -2,6 +2,8 @@
 
 namespace Tests\Feature\Invoices;
 
+use App\Enums\InvoiceTransactionStatus;
+use App\Helpers\ExtensionHelper;
 use App\Models\Invoice;
 use App\Models\Service;
 use App\Models\User;
@@ -44,7 +46,7 @@ class InvoicePaymentProcessingTest extends TestCase
         // Add partial payment
         $invoice->transactions()->create([
             'amount' => 30.00,
-            'status' => \App\Enums\InvoiceTransactionStatus::Succeeded,
+            'status' => InvoiceTransactionStatus::Succeeded,
         ]);
 
         $this->assertEquals(70.00, $invoice->fresh()->remaining);
@@ -55,7 +57,7 @@ class InvoicePaymentProcessingTest extends TestCase
         $invoice = $this->createInvoiceWithItem(100.00);
 
         // Process full payment
-        \App\Helpers\ExtensionHelper::addPayment(
+        ExtensionHelper::addPayment(
             $invoice->id,
             'TestGateway',
             100.00,
@@ -80,7 +82,7 @@ class InvoicePaymentProcessingTest extends TestCase
         $invoice = $this->createInvoiceWithItem(100.00);
 
         // Process partial payment
-        \App\Helpers\ExtensionHelper::addPayment($invoice->id, 'TestGateway', 60.00);
+        ExtensionHelper::addPayment($invoice->id, 'TestGateway', 60.00);
 
         $invoice->refresh();
 
@@ -93,7 +95,7 @@ class InvoicePaymentProcessingTest extends TestCase
         $invoice = $this->createInvoiceWithItem(100.00);
 
         // Process overpayment
-        \App\Helpers\ExtensionHelper::addPayment($invoice->id, 'TestGateway', 150.00);
+        ExtensionHelper::addPayment($invoice->id, 'TestGateway', 150.00);
 
         $invoice->refresh();
 
@@ -124,7 +126,7 @@ class InvoicePaymentProcessingTest extends TestCase
         ]);
 
         // Pay the invoice
-        \App\Helpers\ExtensionHelper::addPayment($invoice->id, 'Stripe', 100.00);
+        ExtensionHelper::addPayment($invoice->id, 'Stripe', 100.00);
 
         $service->refresh();
 
@@ -137,13 +139,13 @@ class InvoicePaymentProcessingTest extends TestCase
         $invoice = $this->createInvoiceWithItem(100.00);
 
         // First payment
-        \App\Helpers\ExtensionHelper::addPayment($invoice->id, 'Stripe', 30.00);
+        ExtensionHelper::addPayment($invoice->id, 'Stripe', 30.00);
 
         // Second payment
-        \App\Helpers\ExtensionHelper::addPayment($invoice->id, 'PayPal', 40.00);
+        ExtensionHelper::addPayment($invoice->id, 'PayPal', 40.00);
 
         // Third payment completes it
-        \App\Helpers\ExtensionHelper::addPayment($invoice->id, 'Stripe', 30.00);
+        ExtensionHelper::addPayment($invoice->id, 'Stripe', 30.00);
 
         $invoice->refresh();
 
@@ -156,7 +158,7 @@ class InvoicePaymentProcessingTest extends TestCase
     {
         $invoice = $this->createInvoiceWithItem(100.00);
 
-        \App\Helpers\ExtensionHelper::addPayment(
+        ExtensionHelper::addPayment(
             $invoice->id,
             'Stripe',
             100.00,
@@ -174,7 +176,7 @@ class InvoicePaymentProcessingTest extends TestCase
         $invoice = $this->createInvoiceWithItem(100.00);
 
         // Initial payment without fee
-        \App\Helpers\ExtensionHelper::addPayment(
+        ExtensionHelper::addPayment(
             $invoice->id,
             'Stripe',
             100.00,
@@ -185,7 +187,7 @@ class InvoicePaymentProcessingTest extends TestCase
         $this->assertEquals(0, $transaction->fee);
 
         // Update fee (from Stripe webhook)
-        \App\Helpers\ExtensionHelper::addPaymentFee('pi_123', 2.90);
+        ExtensionHelper::addPaymentFee('pi_123', 2.90);
 
         $transaction = $invoice->transactions()->first();
         $this->assertEquals(2.90, $transaction->fee);

@@ -12,7 +12,7 @@ use OwenIt\Auditing\Contracts\Auditable;
 #[ObservedBy(CategoryObserver::class)]
 class Category extends Model implements Auditable
 {
-    use \App\Models\Traits\Auditable, HasFactory;
+    use HasFactory, Traits\Auditable;
 
     protected $guarded = [];
 

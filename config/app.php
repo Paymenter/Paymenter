@@ -1,6 +1,9 @@
 <?php
 
+use App\Classes\Cart;
+use App\Helpers\ExtensionHelper;
 use Illuminate\Support\Facades\Facade;
+use Illuminate\Support\Facades\Redis;
 
 return [
 
@@ -163,9 +166,9 @@ return [
     ],
 
     'aliases' => Facade::defaultAliases()->merge([
-        'Redis' => Illuminate\Support\Facades\Redis::class,
-        'Cart' => App\Classes\Cart::class,
-        'ExtensionHelper' => App\Helpers\ExtensionHelper::class,
+        'Redis' => Redis::class,
+        'Cart' => Cart::class,
+        'ExtensionHelper' => ExtensionHelper::class,
     ])->toArray(),
 
     'countries' => [

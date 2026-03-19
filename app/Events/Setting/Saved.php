@@ -2,6 +2,7 @@
 
 namespace App\Events\Setting;
 
+use App\Classes\Settings;
 use App\Models\Setting;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Foundation\Events\Dispatchable;
@@ -20,7 +21,7 @@ class Saved
         // This event is dispatched after a setting is saved.
         // We are gonna overwrite the value of the setting
         if ($setting->settingable_type === null) {
-            $cSetting = \App\Classes\Settings::getSetting($setting->key);
+            $cSetting = Settings::getSetting($setting->key);
             // Set the config value for the setting
             $settings = config('settings', []);
             $settings[$setting->key] = $setting->value;

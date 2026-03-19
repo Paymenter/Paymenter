@@ -2,10 +2,11 @@
 
 namespace Database\Factories;
 
+use App\Models\TicketMessage;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\TicketMessage>
+ * @extends Factory<TicketMessage>
  */
 class TicketMessageFactory extends Factory
 {

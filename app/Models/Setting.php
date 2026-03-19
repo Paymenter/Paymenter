@@ -11,7 +11,7 @@ use OwenIt\Auditing\Contracts\Auditable;
 
 class Setting extends Model implements Auditable
 {
-    use \App\Models\Traits\Auditable, HasFactory;
+    use HasFactory, Traits\Auditable;
 
     /**
      * The attributes that are mass assignable.

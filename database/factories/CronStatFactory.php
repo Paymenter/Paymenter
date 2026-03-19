@@ -2,10 +2,11 @@
 
 namespace Database\Factories;
 
+use App\Models\CronStat;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\CronStat>
+ * @extends Factory<CronStat>
  */
 class CronStatFactory extends Factory
 {

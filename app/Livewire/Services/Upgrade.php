@@ -7,6 +7,7 @@ use App\Livewire\Component;
 use App\Models\Invoice;
 use App\Models\Product;
 use App\Models\Service;
+use App\Models\ServiceConfig;
 use App\Models\ServiceUpgrade;
 use App\Models\User;
 use App\Services\ServiceUpgrade\ServiceUpgradeService;
@@ -63,7 +64,7 @@ class Upgrade extends Component
                 continue;
             }
 
-            $configs->push(new \App\Models\ServiceConfig([
+            $configs->push(new ServiceConfig([
                 'config_option_id' => $optionId,
                 'config_value_id' => $value,
             ]));

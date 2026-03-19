@@ -6,7 +6,7 @@ use App\Livewire\Component;
 
 /**
  * @deprecated This component is deprecated, use LocaleSwitch instead
- * @see \App\Livewire\Components\LocaleSwitch
+ * @see LocaleSwitch
  */
 class LanguageSwitch extends Component
 {

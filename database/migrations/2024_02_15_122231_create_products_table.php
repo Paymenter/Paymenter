@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Server;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -22,7 +23,7 @@ return new class extends Migration
             $table->integer('per_user_limit')->nullable();
             $table->unsignedTinyInteger('sort')->nullable();
             $table->enum('allow_quantity', ['disabled', 'separated', 'combined'])->default('disabled');
-            $table->foreignIdFor(\App\Models\Server::class, 'server_id')->nullable();
+            $table->foreignIdFor(Server::class, 'server_id')->nullable();
             $table->text('email_template')->nullable();
             $table->timestamps();
         });

@@ -2,10 +2,11 @@
 
 namespace Database\Factories;
 
+use App\Models\Service;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Service>
+ * @extends Factory<Service>
  */
 class ServiceFactory extends Factory
 {
@@ -20,10 +21,10 @@ class ServiceFactory extends Factory
             'price' => $this->faker->randomFloat(2, 1),
             'currency_code' => 'USD',
             'status' => $this->faker->randomElement([
-                \App\Models\Service::STATUS_PENDING,
-                \App\Models\Service::STATUS_ACTIVE,
-                \App\Models\Service::STATUS_CANCELLED,
-                \App\Models\Service::STATUS_SUSPENDED,
+                Service::STATUS_PENDING,
+                Service::STATUS_ACTIVE,
+                Service::STATUS_CANCELLED,
+                Service::STATUS_SUSPENDED,
             ]),
         ];
     }

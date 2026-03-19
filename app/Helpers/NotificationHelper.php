@@ -4,6 +4,7 @@ namespace App\Helpers;
 
 use App\Classes\PDF;
 use App\Mail\Mail;
+use App\Mail\SystemMail;
 use App\Models\EmailLog;
 use App\Models\Invoice;
 use App\Models\Notification;
@@ -64,7 +65,7 @@ class NotificationHelper
         if (!$email || config('settings.mail_disable')) {
             return;
         }
-        $mail = new \App\Mail\SystemMail([
+        $mail = new SystemMail([
             'subject' => $subject,
             'body' => $body,
         ]);
