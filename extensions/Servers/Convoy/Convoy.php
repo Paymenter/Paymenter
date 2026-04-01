@@ -8,6 +8,7 @@ use App\Models\Service;
 use Exception;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
+use Paymenter\Extensions\Servers\Convoy\Rules\Hostname;
 
 class Convoy extends Server
 {
@@ -163,7 +164,7 @@ class Convoy extends Server
                 'label' => 'Hostname',
                 'placeholder' => 'server.example.com',
                 'required' => true,
-                'validation' => 'required|string|max:40|regex:/^(?=.{1,40}$)(?!-)[A-Za-z0-9-]+(?<!-)(\.(?!-)[A-Za-z0-9-]+(?<!-))*$/', // Validate hostname
+                'validation' => ['required', 'string', 'max:40', new Hostname()],
             ],
         ];
     }
