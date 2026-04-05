@@ -1,7 +1,7 @@
-@import "tailwindcss";
+@import 'tailwindcss';
 
 @plugin '@tailwindcss/forms' {
-    strategy: class;
+  strategy: class;
 }
 
 @plugin '@tailwindcss/typography';
@@ -14,113 +14,115 @@
 @source "../../../extensions/Others/Pages";
 
 @theme {
-    /* Font Family */
-    --font-sans: "Nunito", ui-sans-serif, system-ui, sans-serif;
+  /* Font Family */
+  --font-sans: "Nunito", ui-sans-serif, system-ui, sans-serif;
 
-    --animate-wiggle: wiggle 1s ease-in-out infinite;
-    @keyframes wiggle {
-        0%,
-        100% {
-            transform: rotate(-20deg);
-        }
-        50% {
-            transform: rotate(20deg);
-        }
-    }
+  /* Custom Palette Integration */
+  --color-brand-teal: #1FC8B6;
+  --color-brand-cyan: #00E0FF;
+  --color-brand-purple: #7C3AED;
+  --color-brand-blue: #3B82F6;
+  --color-brand-success: #22C55E;
+  
+  /* Deep Blue Gradient */
+  --bg-gradient-cyber: linear-gradient(135deg, #1A2A6C 0%, #0B0F14 100%);
+
+  --animate-wiggle: wiggle 1s ease-in-out infinite;
+  @keyframes wiggle {
+    0%, 100% { transform: rotate(-20deg); }
+    50% { transform: rotate(20deg); }
+  }
 }
 
 @theme inline {
-    /* Branding Colors */
-    --color-primary: hsl(var(--color-primary));
-    --color-secondary: hsl(var(--color-secondary));
-
-    /* Neutral Colors */
-    --color-neutral: hsl(var(--color-neutral));
-
-    /* Text Colors */
-    --color-base: hsl(var(--color-base));
-    --color-muted: hsl(var(--color-muted));
-    --color-inverted: hsl(var(--color-inverted));
-
-    /* State Colors */
-    --color-success: hsl(var(--color-success));
-    --color-error: hsl(var(--color-error));
-    --color-warning: hsl(var(--color-warning));
-    --color-inactive: hsl(var(--color-inactive));
-    --color-info: hsl(var(--color-info));
-
-    /* Background Colors */
-    --color-background: hsl(var(--color-background));
-    --color-background-secondary: hsl(var(--color-background-secondary));
+  /* Branding Colors mapped to Paymenter Variables */
+  --color-primary: hsl(var(--color-primary));
+  --color-secondary: hsl(var(--color-secondary));
+  
+  /* Neutral Colors */
+  --color-neutral: hsl(var(--color-neutral));
+  
+  /* Text Colors */
+  --color-base: hsl(var(--color-base));
+  --color-muted: hsl(var(--color-muted));
+  --color-inverted: hsl(var(--color-inverted));
+  
+  /* State Colors */
+  --color-success: #22C55E; /* Applied Success Green */
+  --color-error: hsl(var(--color-error));
+  --color-warning: hsl(var(--color-warning));
+  --color-inactive: hsl(var(--color-inactive));
+  --color-info: #3B82F6; /* Applied Blue Highlight */
+  
+  /* Background Colors */
+  --color-background: hsl(var(--color-background));
+  --color-background-secondary: hsl(var(--color-background-secondary));
 }
 
-/*
-The default border color has changed to `currentColor` in Tailwind CSS v4,
-so we've added these compatibility styles to make sure everything still
-looks the same as it did with Tailwind CSS v3.
-
-If we ever want to remove these styles, we need to add an explicit border
-color utility to any element that depends on these defaults.
-*/
 @layer base {
-    *,
-    ::after,
-    ::before,
-    ::backdrop,
-    ::file-selector-button {
-        border-color: var(--color-gray-200, currentColor);
-    }
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    /* Use a softer border for the Dark UI */
+    border-color: var(--color-neutral, currentColor);
+  }
+
+  body {
+    @apply bg-[--color-background] text-[--color-base] antialiased;
+  }
 }
 
-@utility card {
-    @apply bg-background-secondary rounded-xl border border-neutral text-base;
+/* Glass Effect Utility */
+@utility glass-card {
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
 }
 
 @utility container {
-    @apply max-w-[1380px] mx-auto px-4 sm:px-6 lg:px-8;
+  @apply max-w-[1380px] mx-auto px-4 sm:px-6 lg:px-8;
 }
 
 @utility text-nowrap {
-    text-wrap: nowrap;
+  text-wrap: nowrap;
 }
 
 @utility text-wrap {
-    text-wrap: wrap;
+  text-wrap: wrap;
 }
 
-@import "./easymde.css";
+@import './easymde.css';
 
+/* Custom Scrollbar with your Brand Teal */
 ::-webkit-scrollbar {
     background: transparent;
-    width: 12px;
-    height: 12px;
+    width: 8px; /* Slightly thinner for modern look */
+    height: 8px;
 }
 
 ::-webkit-scrollbar-thumb {
     border: solid 0 rgb(0 0 0 / 0%);
-    border-right-width: 4px;
-    border-left-width: 4px;
-    -webkit-border-radius: 9px 4px;
-    -webkit-box-shadow:
-        inset 0 0 0 1px hsl(var(--color-primary)),
-        inset 0 0 0 4px hsl(var(--color-primary));
+    background-color: var(--color-brand-teal); /* Use #1FC8B6 */
+    border-radius: 20px;
+    /* Subtle glow on the scrollbar */
+    box-shadow: 0 0 5px var(--color-brand-teal);
 }
 
 ::-webkit-scrollbar-track {
-    background: transparent;
+    background: rgba(0, 0, 0, 0.1);
 }
 
-::-webkit-scrollbar-track-piece {
-    background: transparent;
-    margin: 4px 0;
+::-webkit-scrollbar-thumb:hover {
+    background-color: var(--color-brand-cyan); /* Hover to #00E0FF */
 }
 
+/* Fix for horizontal scrollbars */
 ::-webkit-scrollbar-thumb:horizontal {
-    border-right-width: 0;
-    border-left-width: 0;
-    border-top-width: 4px;
-    border-bottom-width: 4px;
-    -webkit-border-radius: 4px 9px;
+    border-radius: 20px;
 }
 
 ::-webkit-scrollbar-corner {

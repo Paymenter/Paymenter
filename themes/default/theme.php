@@ -1,8 +1,8 @@
 <?php
 
 return [
-    'name' => 'Default',
-    'author' => 'Paymenter',
+    'name' => 'Nexaura - Light Customizable Theme',
+    'author' => 'VyzXtreme Aka Vansh',
     'url' => 'https://paymenter.org',
 
     'settings' => [
@@ -46,101 +46,107 @@ return [
             'type' => 'markdown',
             'default' => 'Welcome to Paymenter!',
         ],
+
+        /* --- LIGHT MODE SETTINGS --- */
+        /* Note: Keeping these clean and readable while maintaining your brand vibe */
         [
             'name' => 'primary',
             'label' => 'Primary - Brand Color (Light)',
             'type' => 'color',
-            'default' => 'hsl(229, 100%, 64%)',
+            'default' => 'hsl(173, 73%, 45%)', // #1FC8B6
         ],
         [
             'name' => 'secondary',
             'label' => 'Secondary - Brand Color (Light)',
             'type' => 'color',
-            'default' => 'hsl(237, 33%, 60%)',
+            'default' => 'hsl(187, 100%, 50%)', // #00E0FF
         ],
         [
             'name' => 'neutral',
             'label' => 'Borders, Accents... (Light)',
             'type' => 'color',
-            'default' => 'hsl(220, 25%, 85%)',
+            'default' => 'hsl(214, 32%, 91%)', // Based on #A0AEC0 (lighter)
         ],
         [
             'name' => 'base',
             'label' => 'Base - Text Color (Light)',
             'type' => 'color',
-            'default' => 'hsl(0, 0%, 0%)',
+            'default' => 'hsl(215, 21%, 11%)', // Near black for readability
         ],
         [
             'name' => 'muted',
             'label' => 'Muted - Text Color (Light)',
             'type' => 'color',
-            'default' => 'hsl(220, 0%, 53%)',
+            'default' => 'hsl(220, 9%, 46%)', // #6B7280
         ],
         [
             'name' => 'inverted',
             'label' => 'Inverted - Text Color (Light)',
             'type' => 'color',
-            'default' => 'hsl(100, 100%, 100%)',
+            'default' => 'hsl(0, 0%, 100%)', // #FFFFFF
         ],
         [
             'name' => 'background',
             'label' => 'Background - Color (Light)',
             'type' => 'color',
-            'default' => 'hsl(100, 100%, 100%)',
+            'default' => 'hsl(0, 0%, 100%)',
         ],
         [
             'name' => 'background-secondary',
             'label' => 'Background - Secondary Color (Light)',
             'type' => 'color',
-            'default' => 'hsl(0, 0%, 97%)',
+            'default' => 'hsl(210, 20%, 98%)',
         ],
+
+        /* --- DARK MODE SETTINGS --- */
+        /* This is where your requested palette shines */
         [
             'name' => 'dark-primary',
             'label' => 'Primary - Brand Color (Dark)',
             'type' => 'color',
-            'default' => 'hsl(229, 100%, 64%)',
+            'default' => 'hsl(173, 73%, 45%)', // #1FC8B6
         ],
         [
             'name' => 'dark-secondary',
             'label' => 'Secondary - Brand Color (Dark)',
             'type' => 'color',
-            'default' => 'hsl(237, 33%, 60%)',
+            'default' => 'hsl(261, 80%, 63%)', // #7C3AED (Purple Glow)
         ],
         [
             'name' => 'dark-neutral',
             'label' => 'Borders, Accents... (Dark)',
             'type' => 'color',
-            'default' => 'hsl(0, 0%, 17%)',
+            'default' => 'hsl(210, 31%, 11%)', // #121A22
         ],
         [
             'name' => 'dark-base',
             'label' => 'Base - Text Color (Dark)',
             'type' => 'color',
-            'default' => 'hsl(100, 100%, 100%)',
+            'default' => 'hsl(0, 0%, 100%)', // #FFFFFF
         ],
         [
             'name' => 'dark-muted',
             'label' => 'Muted - Text Color (Dark)',
             'type' => 'color',
-            'default' => 'hsl(0, 0%, 40%)',
+            'default' => 'hsl(214, 20%, 69%)', // #A0AEC0
         ],
         [
             'name' => 'dark-inverted',
             'label' => 'Inverted - Text Color (Dark)',
             'type' => 'color',
-            'default' => 'hsl(220, 14%, 60%)',
+            'default' => 'hsl(220, 9%, 46%)', // #6B7280
         ],
         [
             'name' => 'dark-background',
             'label' => 'Background - Color (Dark)',
             'type' => 'color',
-            'default' => 'hsl(240, 18%, 9%)',
+            'default' => 'hsl(213, 29%, 6%)', // #0B0F14
         ],
         [
             'name' => 'dark-background-secondary',
             'label' => 'Background - Secondary Color (Dark)',
             'type' => 'color',
-            'default' => 'hsl(240, 13%, 11%)',
+            'default' => 'hsl(210, 31%, 11%)', // #121A22
         ],
     ],
 ];
