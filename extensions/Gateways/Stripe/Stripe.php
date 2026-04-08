@@ -567,27 +567,16 @@ class Stripe extends Gateway
                 $payload['description'] = $props['company_name'];
             }
 
-            $address = [];
-            if (!empty($props['address'])) {
-                $address['line1'] = $props['address'];
-            }
-            if (!empty($props['address2'])) {
-                $address['line2'] = $props['address2'];
-            }
-            if (!empty($props['city'])) {
-                $address['city'] = $props['city'];
-            }
-            if (!empty($props['state'])) {
-                $address['state'] = $props['state'];
-            }
-            if (!empty($props['zip'])) {
-                $address['postal_code'] = $props['zip'];
-            }
-            if (!empty($props['country'])) {
-                $address['country'] = $props['country'];
-            }
+            $address = array_filter([
+                'line1'       => $props['address']  ?? null,
+                'line2'       => $props['address2'] ?? null,
+                'city'        => $props['city']     ?? null,
+                'state'       => $props['state']    ?? null,
+                'postal_code' => $props['zip']      ?? null,
+                'country'     => $props['country']  ?? null,
+            ]);
 
-            if (!empty($address)) {
+            if ($address) {
                 $payload['address'] = $address;
             }
 
