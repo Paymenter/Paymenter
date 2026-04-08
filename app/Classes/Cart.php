@@ -126,7 +126,7 @@ class Cart
             return sprintf('cart-add:user:%s', Auth::id());
         }
 
-        if (session()->has('_token') && session()->getId()) {
+        if (session()->getId()) {
             return sprintf('cart-add:session:%s', session()->getId());
         }
 
