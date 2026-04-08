@@ -177,18 +177,16 @@ class Stripe extends Gateway
             'metadata' => ['invoice_id' => $invoice->id],
         ];
 
-        // Always create/get a Stripe customer for authenticated users, use detailed info based on setting
-        if ($invoice->user) {
-            try {
-                $includeDetails = (bool) $this->config('stripe_create_customers');
-                $customer = $this->createOrGetStripeCustomer($invoice->user, $includeDetails);
-                if (!empty($customer->id)) {
-                    $intentData['customer'] = $customer->id;
-                }
-            } catch (Exception $e) {
-                // ignore customer creation errors and continue without customer
+        try {
+            $includeDetails = (bool) $this->config('stripe_create_customers');
+            $customer = $this->createOrGetStripeCustomer($invoice->user, $includeDetails);
+            if (!empty($customer->id)) {
+                $intentData['customer'] = $customer->id;
             }
+        } catch (Exception $e) {
+            // ignore customer creation errors and continue without customer
         }
+        
         $intent = $this->request('post', '/payment_intents', $intentData);
 
         // Pay the invoice using Stripe
