@@ -164,7 +164,7 @@ class Convoy extends Server
                 'label' => 'Hostname',
                 'placeholder' => 'server.example.com',
                 'required' => true,
-                'validation' => ['required', 'string', 'max:40', new Hostname()],
+                'validation' => ['required', 'string', 'max:40', new Hostname],
             ],
         ];
     }
