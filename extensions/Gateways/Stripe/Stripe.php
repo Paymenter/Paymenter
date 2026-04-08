@@ -188,7 +188,7 @@ class Stripe extends Gateway
         } catch (Exception $e) {
             // ignore customer creation errors and continue without customer
         }
-        
+
         $intent = $this->request('post', '/payment_intents', $intentData);
 
         // Pay the invoice using Stripe
@@ -534,7 +534,7 @@ class Stripe extends Gateway
      * Ensure a Stripe Customer exists for the given user. If a customer already
      * exists it will be returned; otherwise a new customer will be created.
      *
-     * @param bool $includeDetails Whether to include address, phone, and company details
+     * @param  bool  $includeDetails  Whether to include address, phone, and company details
      * @return object Stripe customer object
      */
     private function createOrGetStripeCustomer($user, $includeDetails = true)
@@ -568,12 +568,12 @@ class Stripe extends Gateway
             }
 
             $address = array_filter([
-                'line1'       => $props['address']  ?? null,
-                'line2'       => $props['address2'] ?? null,
-                'city'        => $props['city']     ?? null,
-                'state'       => $props['state']    ?? null,
-                'postal_code' => $props['zip']      ?? null,
-                'country'     => $props['country']  ?? null,
+                'line1' => $props['address'] ?? null,
+                'line2' => $props['address2'] ?? null,
+                'city' => $props['city'] ?? null,
+                'state' => $props['state'] ?? null,
+                'postal_code' => $props['zip'] ?? null,
+                'country' => $props['country'] ?? null,
             ]);
 
             if ($address) {
