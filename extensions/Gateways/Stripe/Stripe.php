@@ -98,6 +98,13 @@ class Stripe extends Gateway
                 'required' => true,
             ],
             [
+                'name' => 'stripe_create_customers',
+                'label' => 'Create detailed Stripe customers',
+                'type' => 'checkbox',
+                'description' => 'Controls the level of detail for Stripe customers. When enabled, customers include full address, phone, and company details. When disabled, customers include only basic information (name, email, user ID). Applies to both one-time payments and billing agreements.',
+                'required' => false,
+            ],
+            [
                 'name' => 'stripe_webhook_secret',
                 'label' => 'Stripe webhook secret (auto generated)',
                 'type' => 'text',
@@ -164,13 +171,25 @@ class Stripe extends Gateway
 
     public function pay($invoice, $total)
     {
-        $intent = $this->request('post', '/payment_intents', [
+        $intentData = [
             'description' => __('invoices.payment_for_invoice', ['number' => $invoice->number ?? $invoice->id]),
             'amount' => $total * 100,
             'currency' => $invoice->currency_code,
             'automatic_payment_methods' => ['enabled' => 'true'],
             'metadata' => ['invoice_id' => $invoice->id],
-        ]);
+        ];
+
+        try {
+            $includeDetails = (bool) $this->config('stripe_create_customers');
+            $customer = $this->createOrGetStripeCustomer($invoice->user, $includeDetails);
+            if (!empty($customer->id)) {
+                $intentData['customer'] = $customer->id;
+            }
+        } catch (Exception $e) {
+            // ignore customer creation errors and continue without customer
+        }
+        
+        $intent = $this->request('post', '/payment_intents', $intentData);
 
         // Pay the invoice using Stripe
         return view('gateways.stripe::pay', ['invoice' => $invoice, 'total' => $total, 'intent' => $intent, 'stripePublishableKey' => $this->config('stripe_publishable_key')]);
@@ -511,38 +530,73 @@ class Stripe extends Gateway
         return true;
     }
 
-    public function createBillingAgreement($user)
+    /**
+     * Ensure a Stripe Customer exists for the given user. If a customer already
+     * exists it will be returned; otherwise a new customer will be created.
+     *
+     * @param bool $includeDetails Whether to include address, phone, and company details
+     * @return object Stripe customer object
+     */
+    private function createOrGetStripeCustomer($user, $includeDetails = true)
     {
-        // Create a billing agreement for the given user.
-        // We create a SetupIntent and return the client secret to the frontend
-        $stripeCustomerId = $user->properties->where('key', 'stripe_id')->first();
-        // Create customer if not exists
-        if (!$stripeCustomerId) {
-            $customer = $this->request('post', '/customers', [
-                'email' => $user->email,
-                'name' => $user->name,
-                'metadata' => ['user_id' => $user->id],
-            ]);
-            $user->properties()->updateOrCreate(['key' => 'stripe_id'], ['value' => $customer->id]);
-        } else {
+        $stripeCustomerId = $user->properties()->where('key', 'stripe_id')->first();
+
+        if ($stripeCustomerId) {
             try {
                 $customer = $this->request('get', '/customers/' . $stripeCustomerId->value);
-                if (isset($customer->deleted)) {
-                    $customer = null;
+                if (!isset($customer->deleted)) {
+                    return $customer;
                 }
             } catch (Exception $e) {
-                // Customer not found, create a new one
-                $customer = null;
-            }
-            if (!$customer) {
-                $customer = $this->request('post', '/customers', [
-                    'email' => $user->email,
-                    'name' => $user->name,
-                    'metadata' => ['user_id' => $user->id],
-                ]);
-                $user->properties()->updateOrCreate(['key' => 'stripe_id'], ['value' => $customer->id]);
+                // continue and create a new customer
             }
         }
+
+        // Build basic payload
+        $payload = [
+            'email' => $user->email,
+            'name' => $user->name,
+            'metadata' => ['user_id' => $user->id],
+        ];
+
+        // Add detailed information if requested
+        if ($includeDetails) {
+            $props = $user->properties()->pluck('value', 'key')->toArray();
+
+            if (!empty($props['company_name'])) {
+                $payload['description'] = $props['company_name'];
+            }
+
+            $address = array_filter([
+                'line1'       => $props['address']  ?? null,
+                'line2'       => $props['address2'] ?? null,
+                'city'        => $props['city']     ?? null,
+                'state'       => $props['state']    ?? null,
+                'postal_code' => $props['zip']      ?? null,
+                'country'     => $props['country']  ?? null,
+            ]);
+
+            if ($address) {
+                $payload['address'] = $address;
+            }
+
+            if (!empty($props['phone'])) {
+                $payload['phone'] = $props['phone'];
+            }
+        }
+
+        $customer = $this->request('post', '/customers', $payload);
+
+        $user->properties()->updateOrCreate(['key' => 'stripe_id'], ['value' => $customer->id]);
+
+        return $customer;
+    }
+
+    public function createBillingAgreement($user)
+    {
+        // Create or fetch a Stripe customer for this user, use detailed info based on setting
+        $includeDetails = (bool) $this->config('stripe_create_customers');
+        $customer = $this->createOrGetStripeCustomer($user, $includeDetails);
 
         $setupIntent = $this->request('post', '/setup_intents', [
             'metadata' => [
