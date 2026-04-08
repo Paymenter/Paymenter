@@ -54,7 +54,7 @@ class Cart
         return $cart;
     }
 
-    protected const DEFAULT_MAX_ITEMS = 20;
+    protected const DEFAULT_MAX_ITEMS = 15;
     protected const DEFAULT_RATE_LIMIT_MAX_ATTEMPTS = 10;
     protected const DEFAULT_RATE_LIMIT_DECAY_MINUTES = 1;
 
@@ -99,19 +99,18 @@ class Cart
 
     protected static function ensureCartItemLimit($cart, $key = null)
     {
-        $maxItems = config('cart.max_items', self::DEFAULT_MAX_ITEMS);
         $existingItem = $key ? $cart->items()->where('id', $key)->exists() : false;
 
-        if (!$existingItem && $cart->items()->count() >= $maxItems) {
-            throw new DisplayException("Your cart cannot contain more than {$maxItems} items.");
+        if (!$existingItem && $cart->items()->count() >= self::DEFAULT_MAX_ITEMS) {
+            throw new DisplayException("Your cart cannot contain more than " . self::DEFAULT_MAX_ITEMS . " items.");
         }
     }
 
     protected static function checkRateLimit()
     {
         $key = self::resolveRateLimiterKey();
-        $maxAttempts = config('cart.rate_limit.max_attempts', self::DEFAULT_RATE_LIMIT_MAX_ATTEMPTS);
-        $decayMinutes = config('cart.rate_limit.decay_minutes', self::DEFAULT_RATE_LIMIT_DECAY_MINUTES);
+        $maxAttempts = self::DEFAULT_RATE_LIMIT_MAX_ATTEMPTS;
+        $decayMinutes = self::DEFAULT_RATE_LIMIT_DECAY_MINUTES;
 
         if (RateLimiter::tooManyAttempts($key, $maxAttempts)) {
             throw new DisplayException('You are adding items too quickly. Please wait a moment and try again.');
