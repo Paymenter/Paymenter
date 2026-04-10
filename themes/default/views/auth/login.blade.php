@@ -21,6 +21,8 @@
 
     <x-button.primary class="w-full" type="submit">{{ __('auth.sign_in') }}</x-button.primary>
 
+    {!! hook('auth.login') !!}
+
     @if (config('settings.oauth_github') || config('settings.oauth_google') || config('settings.oauth_discord'))
     <div class="flex flex-col items-center mt-4">
         <div class="my-5 flex items-center w-full">
