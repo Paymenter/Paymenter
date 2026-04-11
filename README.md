@@ -81,6 +81,13 @@ Paymenter is available under the MIT license, offering you the freedom to adapt 
 
 Thanks to all sponsors for helping fund Paymenter's development. [Interested in becoming a sponsor?](https://github.com/sponsors/Paymenter)
 
+
+<a href="https://www.kuroit.com/?rel=paymenter">
+  <img src="https://github.com/user-attachments/assets/8d00b4bb-a66c-449f-94e4-cbb9ea1c0d11" width="400">
+</a>
+
+<br />
+
 <a href="https://mcsets.com/?rel=paymenter">
   <img src="https://github.com/user-attachments/assets/7a0f5725-a562-4cdc-90f9-428899241294" width="400">
 </a>
