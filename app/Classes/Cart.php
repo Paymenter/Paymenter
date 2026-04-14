@@ -8,6 +8,7 @@ use App\Models\Plan;
 use App\Models\Product;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cookie;
+use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Facades\Session;
 
 class Cart
@@ -53,10 +54,17 @@ class Cart
         return $cart;
     }
 
+    protected const DEFAULT_MAX_ITEMS = 15;
+    protected const DEFAULT_RATE_LIMIT_MAX_ATTEMPTS = 10;
+    protected const DEFAULT_RATE_LIMIT_DECAY_MINUTES = 1;
+
     public static function add(Product $product, Plan $plan, $configOptions, $checkoutConfig, $quantity = 1, $key = null)
     {
+        self::checkRateLimit();
+
         // Match on key
         $cart = self::createCart();
+        self::ensureCartItemLimit($cart, $key);
 
         $item = $cart->items()->updateOrCreate([
             'id' => $key,
@@ -87,6 +95,37 @@ class Cart
 
         // Return index of the newly added item
         return $item->id;
+    }
+
+    protected static function ensureCartItemLimit($cart, $key = null)
+    {
+        $existingItem = $key ? $cart->items()->where('id', $key)->exists() : false;
+
+        if (!$existingItem && $cart->items()->count() >= self::DEFAULT_MAX_ITEMS) {
+            throw new DisplayException("Your cart cannot contain more than " . self::DEFAULT_MAX_ITEMS . " items.");
+        }
+    }
+
+    protected static function checkRateLimit()
+    {
+        $key = self::resolveRateLimiterKey();
+        $maxAttempts = self::DEFAULT_RATE_LIMIT_MAX_ATTEMPTS;
+        $decayMinutes = self::DEFAULT_RATE_LIMIT_DECAY_MINUTES;
+
+        if (RateLimiter::tooManyAttempts($key, $maxAttempts)) {
+            throw new DisplayException('You are adding items too quickly. Please wait a moment and try again.');
+        }
+
+        RateLimiter::hit($key, $decayMinutes * 60);
+    }
+
+    protected static function resolveRateLimiterKey()
+    {
+        if (Auth::check()) {
+            return sprintf('cart-add:user:%s', Auth::id());
+        }
+
+        return sprintf('cart-add:ip:%s', request()->ip());
     }
 
     public static function remove($index)
