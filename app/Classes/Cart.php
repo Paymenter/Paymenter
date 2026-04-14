@@ -55,7 +55,9 @@ class Cart
     }
 
     protected const DEFAULT_MAX_ITEMS = 15;
+
     protected const DEFAULT_RATE_LIMIT_MAX_ATTEMPTS = 10;
+
     protected const DEFAULT_RATE_LIMIT_DECAY_MINUTES = 1;
 
     public static function add(Product $product, Plan $plan, $configOptions, $checkoutConfig, $quantity = 1, $key = null)
@@ -102,7 +104,7 @@ class Cart
         $existingItem = $key ? $cart->items()->where('id', $key)->exists() : false;
 
         if (!$existingItem && $cart->items()->count() >= self::DEFAULT_MAX_ITEMS) {
-            throw new DisplayException("Your cart cannot contain more than " . self::DEFAULT_MAX_ITEMS . " items.");
+            throw new DisplayException('Your cart cannot contain more than ' . self::DEFAULT_MAX_ITEMS . ' items.');
         }
     }
 
