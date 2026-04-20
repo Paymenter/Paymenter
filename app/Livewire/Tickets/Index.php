@@ -16,7 +16,7 @@ class Index extends Component
     public function render()
     {
         return view('tickets.index', [
-            'tickets' => Ticket::where('user_id', Auth::id())->latest()->paginate(config('settings.pagination')),
+            'tickets' => Ticket::where('user_id', Auth::id())->with('latestMessage')->latest()->paginate(config('settings.pagination')),
         ])->layoutData([
             'title' => 'Tickets',
             'sidebar' => true,
