@@ -65,7 +65,7 @@ class LocaleSwitch extends Component
 
     public function render()
     {
-        $locales = config('settings.allowed_languages');
+        $locales = config('settings.allowed_languages', []);
 
         return view('components.locale-switch', compact('locales'));
     }
