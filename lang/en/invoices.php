@@ -10,6 +10,8 @@ return [
     'id' => 'ID',
     'total' => 'Total',
     'subtotal' => 'Subtotal',
+    'discount' => 'Discount',
+    'net' => 'Net',
     'invoice' => 'Invoice #:id',
     'proforma_invoice' => 'Proforma Invoice #:id',
     'unit_price' => 'Unit Price',
@@ -56,5 +58,6 @@ return [
     'apply_credits_and_continue' => 'Apply Credits and Continue',
     'apply_credits_and_pay' => 'Apply Credits and Pay',
     'amount_due' => 'Amount Due: :amount',
+    'more_items' => '+:count more item|+:count more items',
 
 ];
