@@ -67,6 +67,7 @@
                         <span class="text-yellow-500">{{ __('invoices.payment_pending') }}</span>
                         @endif
                     </div>
+                    @if($this->hasPaymentOptions)
                     <x-button.primary wire:click="$set('showPayModal', true)" class="mt-2" wire:loading.attr="disabled"
                         wire:target="$set('showPayModal')">
                         <span wire:loading wire:target="pay">Processing...</span>
@@ -74,9 +75,14 @@
                     </x-button.primary>
                     @endif
                     @endif
+                    @endif
                 </div>
             </div>
 
+            @php
+                $visibleItems = $invoice->items->filter(fn ($item) => $item->price >= 0);
+                $showQtyColumns = $visibleItems->some(fn ($i) => $i->quantity != 1 || !empty($i->unit));
+            @endphp
             <div class="mt-12 border-b border-neutral overflow-x-auto">
                 <table class="w-full">
                     <thead class="bg-background border border-neutral rounded-lg">
@@ -85,12 +91,14 @@
                                 class="p-4 text-xs font-semibold tracking-wider text-left uppercase rounded-l-lg">
                                 {{ __('invoices.item') }}
                             </th>
+                            @if($showQtyColumns)
                             <th scope="col" class="p-4 text-xs font-semibold tracking-wider text-left uppercase">
                                 {{ __('invoices.price') }}
                             </th>
                             <th scope="col" class="p-4 text-xs font-semibold tracking-wider text-left uppercase">
                                 {{ __('invoices.quantity') }}
                             </th>
+                            @endif
                             <th scope="col"
                                 class="p-4 text-xs font-semibold tracking-wider text-left uppercase rounded-r-lg">
                                 {{ __('invoices.total') }}
@@ -98,30 +106,53 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($invoice->items as $item)
+                        @foreach ($visibleItems as $item)
                         <tr>
-                            <td class="p-4 font-normal whitespace-nowrap">
+                            <td class="p-4 font-normal">
                                 @if(in_array($item->reference_type, ['App\Models\Service', 'App\Models\ServiceUpgrade']))
                                 <a href="{{ route('services.show', $item->reference_type == 'App\Models\Service' ? $item->reference_id : $item->reference->service_id) }}"
-                                    class="hover:underline underline-offset-2">{{ $item->description }}
+                                    class="hover:underline underline-offset-2 prose prose-sm dark:prose-invert max-w-none">{!! \Illuminate\Support\Str::markdown($item->description ?? '', ['html_input' => 'strip', 'renderer' => ['soft_break' => "<br />\n"]]) !!}
                                 </a>
                                 @else
-                                {{ $item->description }}
+                                <div class="prose prose-sm dark:prose-invert max-w-none">{!! \Illuminate\Support\Str::markdown($item->description ?? '', ['html_input' => 'strip', 'renderer' => ['soft_break' => "<br />\n"]]) !!}</div>
                                 @endif
                             </td>
-                            <td class="p-4 font-normal whitespace-nowrap text-base">{{ $item->formattedPrice }}
-                            </td>
-                            <td class="p-4 font-normal whitespace-nowrap">{{ $item->quantity }}</td>
+                            @if($showQtyColumns)
+                            <td class="p-4 font-normal whitespace-nowrap text-base">{{ $item->formattedPrice }}</td>
+                            <td class="p-4 font-normal whitespace-nowrap">{{ $item->quantity }}{{ $item->unit ? ' ' . $item->unit : '' }}</td>
+                            @endif
                             <td class="p-4 whitespace-nowrap font-semibold">{{ $item->formattedTotal }}</td>
                         </tr>
                         @endforeach
                     </tbody>
                 </table>
             </div>
+            @php
+                $beforeTaxDiscountItems = $invoice->items->filter(fn ($i) => $i->price < 0 && ! $i->apply_after_tax);
+                $afterTaxDiscountItems = $invoice->items->filter(fn ($i) => $i->price < 0 && $i->apply_after_tax);
+                $positiveItemsTotal = $visibleItems->sum(fn ($i) => $i->price * $i->quantity);
+                $hasBeforeDiscount = $beforeTaxDiscountItems->isNotEmpty();
+                $hasTax = $invoice->formattedTotal->tax > 0;
+            @endphp
             <div class="space-y-3 sm:text-right sm:ml-auto sm:w-72 mt-10">
-                @if ($invoice->formattedTotal->tax > 0)
+                @if ($hasBeforeDiscount)
                 <div class="flex justify-between">
-                    <div class="text-sm font-medium text-gray-500 uppercase dark:text-base">{{ __('invoices.subtotal') }}
+                    <div class="text-sm font-medium text-gray-500 uppercase dark:text-base">{{ __('invoices.subtotal') }}</div>
+                    <div class="text-base font-medium text-gray-900 dark:text-white">
+                        {{ $invoice->formattedTotal->format($positiveItemsTotal) }}
+                    </div>
+                </div>
+                @foreach ($beforeTaxDiscountItems as $discountItem)
+                <div class="flex justify-between">
+                    <div class="text-sm font-medium text-gray-500 uppercase dark:text-base">{{ $discountItem->description }}</div>
+                    <div class="text-base font-medium text-gray-900 dark:text-white">{{ $discountItem->formattedTotal }}</div>
+                </div>
+                @endforeach
+                @endif
+                @if ($hasTax)
+                <div class="flex justify-between">
+                    <div class="text-sm font-medium text-gray-500 uppercase dark:text-base">
+                        {{ $hasBeforeDiscount ? __('invoices.net') : __('invoices.subtotal') }}
                     </div>
                     <div class="text-base font-medium text-gray-900 dark:text-white">
                         {{ $invoice->formattedTotal->format($invoice->formattedTotal->subtotal) }}
@@ -136,10 +167,16 @@
                     </div>
                 </div>
                 @endif
+                @foreach ($afterTaxDiscountItems as $discountItem)
                 <div class="flex justify-between">
-                    <div class="text-base font-semibold text-gray-900 uppercase dark:text-white">Total</div>
+                    <div class="text-sm font-medium text-gray-500 uppercase dark:text-base">{{ $discountItem->description }}</div>
+                    <div class="text-base font-medium text-gray-900 dark:text-white">{{ $discountItem->formattedTotal }}</div>
+                </div>
+                @endforeach
+                <div class="flex justify-between">
+                    <div class="text-base font-semibold text-gray-900 uppercase dark:text-white">{{ __('invoices.total') }}</div>
                     <div class="text-base font-bold text-gray-900 dark:text-white">
-                        {{ $invoice->formattedTotal }}
+                        {{ $invoice->formattedGrandTotal }}
                     </div>
                 </div>
             </div>
