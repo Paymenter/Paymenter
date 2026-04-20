@@ -14,6 +14,7 @@ use Filament\Actions\EditAction;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Toggle;
 use Filament\Resources\Resource;
 use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Schema;
@@ -104,6 +105,21 @@ class CouponResource extends Resource
                 DatePicker::make('expires_at')
                     ->label('Expires At'),
 
+                Toggle::make('apply_after_tax')
+                    ->label(__('admin.coupon.apply_after_tax'))
+                    ->helperText(__('admin.coupon.apply_after_tax_helper'))
+                    ->default(false)
+                    ->columnSpanFull(),
+
+                Select::make('role_id')
+                    ->label(__('admin.coupon.restrict_to_role'))
+                    ->relationship('role', 'name')
+                    ->searchable()
+                    ->preload()
+                    ->nullable()
+                    ->placeholder(__('admin.coupon.restrict_to_role_placeholder'))
+                    ->helperText(__('admin.coupon.restrict_to_role_helper')),
+
                 Select::make('products')
                     ->label('Products')
                     ->relationship(
@@ -125,6 +141,7 @@ class CouponResource extends Resource
             ->columns([
                 TextColumn::make('code')->searchable(),
                 TextColumn::make('value')->searchable()->formatStateUsing(fn ($record) => $record->value . ($record->type === 'percentage' ? '%' : config('settings.default_currency'))),
+                TextColumn::make('role.name')->label(__('admin.coupon.restrict_to_role_column'))->placeholder(__('admin.coupon.restrict_to_role_public'))->sortable(),
             ])
             ->filters([
                 //

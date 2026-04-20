@@ -178,6 +178,10 @@ class Cart
             throw new DisplayException('Coupon code not found');
         }
 
+        if ($coupon->role_id && Auth::user()?->role_id !== $coupon->role_id) {
+            throw new DisplayException('Coupon code not found');
+        }
+
         if ($coupon->expires_at && $coupon->expires_at->isPast()) {
             throw new DisplayException('Coupon code has expired');
         }
