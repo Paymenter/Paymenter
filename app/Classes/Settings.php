@@ -2,6 +2,8 @@
 
 namespace App\Classes;
 
+use App\Admin\Actions\ResetColorsAction;
+use App\Admin\Actions\SendTestEmailAction;
 use App\Models\Currency;
 use App\Models\Setting;
 use App\Models\TaxRate;
@@ -286,6 +288,7 @@ class Settings
                     'type' => 'text',
                     'required' => fn (Get $get) => !$get('mail_disable'),
                     'override' => 'mail.mailers.smtp.host',
+                    'action' => SendTestEmailAction::class,
                 ],
                 [
                     'name' => 'mail_port',
@@ -541,6 +544,7 @@ class Settings
                     // Read themes from themes directory
                     'options' => array_map('basename', glob(base_path('themes/*'), GLOB_ONLYDIR)),
                     'validation' => 'in:' . implode(',', array_map('basename', glob(base_path('themes/*'), GLOB_ONLYDIR))),
+                    'action' => ResetColorsAction::class,
                 ],
             ],
             'invoices' => [

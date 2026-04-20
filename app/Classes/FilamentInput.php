@@ -89,6 +89,7 @@ class FilamentInput
                     ->suffix($setting->suffix ?? null)
                     ->prefix($setting->prefix ?? null)
                     ->disabled($setting->disabled ?? false)
+                    ->hintActions(isset($setting->action) ? [($setting->action)::make()] : [])
                     ->rules($setting->validation ?? []);
                 break;
 
@@ -118,6 +119,7 @@ class FilamentInput
                     ->suffix($setting->suffix ?? null)
                     ->prefix($setting->prefix ?? null)
                     ->disabled($setting->disabled ?? false)
+                    ->hintActions(isset($setting->action) ? [($setting->action)::make()] : [])
                     ->rules($setting->validation ?? []);
                 break;
 
