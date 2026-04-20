@@ -22,3 +22,27 @@ extensions/Others/Pages
 extensions/Servers/LicenseManager
 extensions/Servers/Proxmox
 !themes/default
+
+# Local/Obsidian fork additions
+AGENTS.md
+paymenter.tar.gz
+
+# Custom extensions (Obsidian fork-specific, not in upstream)
+extensions/Gateways/FreeTrial/
+extensions/Others/Blog/
+extensions/Others/CreditsPlus/
+extensions/Others/CustomCSS/
+extensions/Others/DynamicPterodactyl/
+extensions/Others/GoogleAnalytics/
+extensions/Others/GoogleTagManager/
+extensions/Others/SocialBase/
+
+# Custom branding
+public/obsidian/
+
+# Built Vite output
+public/assets/
+
+# Filament compiled assets (rebuilt by `php artisan filament:assets`)
+public/css/filament/
+public/js/filament/
