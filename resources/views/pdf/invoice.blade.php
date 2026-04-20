@@ -44,16 +44,8 @@
             text-align: right;
         }
 
-        table tr td {
-            padding: 0;
-        }
-
         table tr td:last-child {
             text-align: right;
-        }
-
-        .invoice-items tbody tr:first-child td {
-            padding-top: 10px;
         }
 
         .invoice-info {
@@ -62,6 +54,23 @@
 
         .invoice-info td {
             padding: 2px 0;
+        }
+
+        .invoice-items td {
+            padding: 10px 16px 10px 0;
+            border-bottom: 1px solid #eee;
+            vertical-align: top;
+        }
+
+        .invoice-items th {
+            padding-right: 16px;
+        }
+
+        .invoice-items th:last-child,
+        .invoice-items td:last-child {
+            padding-right: 0;
+            white-space: nowrap;
+            min-width: 70px;
         }
 
         .totals-section {
@@ -102,6 +111,25 @@
             font-weight: bold;
             color: #000;
         }
+
+        .invoice-items td p {
+            margin: 0 0 4px 0;
+            padding: 0;
+        }
+
+        .invoice-items td p:last-child {
+            margin-bottom: 0;
+        }
+
+        .invoice-items td ul,
+        .invoice-items td ol {
+            margin: 4px 0;
+            padding-left: 16px;
+        }
+
+        .invoice-items td.item-description {
+            font-size: 0.8em;
+        }
     </style>
 </head>
 
@@ -113,7 +141,6 @@
     </div>
     @endif
 
-    <!-- Invoice status -->
     <div style="margin-bottom: 20px;font-size: 20px">
         <strong>{{ __('invoices.status') }}:</strong><span
             style="@if($invoice->status == 'paid') color: green; @else color: orange; @endif">
@@ -141,54 +168,82 @@
     <p>{{ __('invoices.invoice_no') }}: <strong>{{ $invoice->number }}</strong></p>
     @endif
 
+    @php
+        $visibleItems = $invoice->items->filter(fn ($item) => $item->price >= 0);
+        $showQtyColumns = $visibleItems->some(fn ($i) => $i->quantity != 1 || !empty($i->unit));
+    @endphp
     <table style="margin-top: 40px;" class="invoice-items">
         <thead>
             <tr>
                 <th>{{ __('invoices.item') }}</th>
+                @if($showQtyColumns)
                 <th style="width: 100px">{{ __('invoices.quantity') }}</th>
                 <th>{{ __('invoices.unit_price') }}</th>
+                @endif
                 <th>{{ __('invoices.total') }}</th>
             </tr>
         </thead>
         <tbody>
-            @foreach($invoice->items as $item)
+            @foreach($visibleItems as $item)
+            @php
+                $descHtml = \Illuminate\Support\Str::markdown($item->description ?? '', ['html_input' => 'strip', 'renderer' => ['soft_break' => "<br>\n"]]);
+                $descHtml = trim(preg_replace('/<\/?p>/', '', $descHtml));
+                $descHtml = preg_replace('/(<br>\s*)+$/', '', $descHtml);
+            @endphp
             <tr>
-                <td>{{ $item->description }}</td>
-                <td>{{ $item->quantity }}</td>
+                <td class="item-description">{!! $descHtml !!}</td>
+                @if($showQtyColumns)
+                <td>{{ $item->quantity }}{{ $item->unit ? ' ' . $item->unit : '' }}</td>
                 <td>{{ $item->formattedPrice }}</td>
+                @endif
                 <td>{{ $item->formattedTotal }}</td>
             </tr>
             @endforeach
         </tbody>
     </table>
 
-    <!-- Totals Section -->
+    @php
+        $beforeTaxDiscountItems = $invoice->items->filter(fn ($i) => $i->price < 0 && ! $i->apply_after_tax);
+        $afterTaxDiscountItems = $invoice->items->filter(fn ($i) => $i->price < 0 && $i->apply_after_tax);
+        $positiveItemsTotal = $visibleItems->sum(fn ($i) => $i->price * $i->quantity);
+        $hasBeforeDiscount = $beforeTaxDiscountItems->isNotEmpty();
+        $hasTax = $invoice->formattedTotal->tax > 0;
+    @endphp
     <div class="totals-section">
-        @if ($invoice->formattedTotal->tax > 0)
         <table class="totals-table">
+            @if ($hasBeforeDiscount)
             <tr>
                 <td class="label">{{ __('invoices.subtotal') }}</td>
-                <td class="amount">{{ $invoice->formattedTotal->format($invoice->formattedTotal->price - $invoice->formattedTotal->tax) }}</td>
+                <td class="amount">{{ $invoice->formattedTotal->format($positiveItemsTotal) }}</td>
+            </tr>
+            @foreach ($beforeTaxDiscountItems as $discountItem)
+            <tr>
+                <td class="label">{{ $discountItem->description }}</td>
+                <td class="amount">{{ $discountItem->formattedTotal }}</td>
+            </tr>
+            @endforeach
+            @endif
+            @if ($hasTax)
+            <tr>
+                <td class="label">{{ $hasBeforeDiscount ? __('invoices.net') : __('invoices.subtotal') }}</td>
+                <td class="amount">{{ $invoice->formattedTotal->format($invoice->formattedTotal->subtotal) }}</td>
             </tr>
             <tr>
-                <td class="label">
-                    {{ $invoice->tax->name }} ({{ $invoice->tax->rate }}%)
-                </td>
+                <td class="label">{{ $invoice->tax->name }} ({{ $invoice->tax->rate }}%)</td>
                 <td class="amount">{{ $invoice->formattedTotal->formatted->tax }}</td>
             </tr>
+            @endif
+            @foreach ($afterTaxDiscountItems as $discountItem)
+            <tr>
+                <td class="label">{{ $discountItem->description }}</td>
+                <td class="amount">{{ $discountItem->formattedTotal }}</td>
+            </tr>
+            @endforeach
             <tr class="total-row">
                 <td class="label">{{ __('invoices.total') }}</td>
-                <td class="amount">{{ $invoice->formattedTotal }}</td>
+                <td class="amount">{{ $invoice->formattedGrandTotal }}</td>
             </tr>
         </table>
-        @else
-        <table class="totals-table">
-            <tr class="total-row">
-                <td class="label">{{ __('invoices.total') }}</td>
-                <td class="amount">{{ $invoice->formattedTotal }}</td>
-            </tr>
-        </table>
-        @endif
     </div>
 
     <div style="clear: both;"></div>

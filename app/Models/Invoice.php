@@ -32,11 +32,6 @@ class Invoice extends Model implements Auditable
 
     public bool $send_create_email = true;
 
-    /**
-     * Total of the invoice.
-     *
-     * @return string
-     */
     public function total(): Attribute
     {
         return Attribute::make(
@@ -44,35 +39,62 @@ class Invoice extends Model implements Auditable
         );
     }
 
-    /**
-     * Total of the invoice.
-     *
-     * @return string
-     */
+    public function taxableTotal(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => $this->items
+                ->filter(fn ($item) => ! $item->apply_after_tax)
+                ->sum(fn ($item) => $item->price * $item->quantity)
+        );
+    }
+
+    public function afterTaxTotal(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => $this->items
+                ->filter(fn ($item) => $item->apply_after_tax)
+                ->sum(fn ($item) => $item->price * $item->quantity)
+        );
+    }
+
+    public function grandTotal(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => round((float) $this->formattedTotal->total + $this->afterTaxTotal, 2)
+        );
+    }
+
     public function formattedTotal(): Attribute
     {
         return Attribute::make(
-            get: fn () => new Price(['price' => $this->total, 'currency' => $this->currency, 'tax' => $this->tax])
+            get: fn () => new Price(
+                ['price' => $this->taxableTotal, 'currency' => $this->currency],
+                false,
+                false,
+                config('settings.tax_type', 'inclusive') === 'exclusive',
+                $this->tax
+            )
         );
     }
 
-    /**
-     * Formatted remaining amount of the invoice.
-     */
+    public function formattedGrandTotal(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => $this->formattedTotal->format($this->grandTotal)
+        );
+    }
+
     public function formattedRemaining(): Attribute
     {
         return Attribute::make(
-            get: fn () => new Price(['price' => $this->remaining, 'currency' => $this->currency, 'tax' => $this->tax])
+            get: fn () => $this->formattedTotal->format($this->remaining)
         );
     }
 
-    /**
-     * Remaining amount of the invoice.
-     */
     public function remaining(): Attribute
     {
         return Attribute::make(
-            get: fn () => $this->total - $this->transactions->where('status', InvoiceTransactionStatus::Succeeded)->sum('amount')
+            get: fn () => round($this->grandTotal - $this->transactions->where('status', InvoiceTransactionStatus::Succeeded)->sum('amount'), 2)
         );
     }
 

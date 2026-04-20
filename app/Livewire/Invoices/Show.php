@@ -69,6 +69,22 @@ class Show extends Component
     }
 
     #[Computed]
+    public function hasPaymentOptions(): bool
+    {
+        if (count($this->gateways) > 0) {
+            return true;
+        }
+        if ($this->savedPaymentMethods->isNotEmpty()) {
+            return true;
+        }
+
+        return Auth::user()->credits()
+            ->where('currency_code', $this->invoice->currency_code)
+            ->where('amount', '>', 0)
+            ->exists();
+    }
+
+    #[Computed]
     public function recurringServices()
     {
         return $this->invoice->items()

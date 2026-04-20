@@ -42,4 +42,9 @@ class Ticket extends Model implements Auditable
     {
         return $this->hasMany(TicketMessage::class);
     }
+
+    public function latestMessage()
+    {
+        return $this->hasOne(TicketMessage::class)->latestOfMany();
+    }
 }

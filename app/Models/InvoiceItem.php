@@ -17,15 +17,18 @@ class InvoiceItem extends Model implements Auditable
     protected $fillable = [
         'invoice_id',
         'quantity',
+        'unit',
         'price',
         'description',
         'gateway_id',
         'reference_id',
         'reference_type',
+        'apply_after_tax',
     ];
 
     protected $casts = [
         'price' => 'decimal:2',
+        'apply_after_tax' => 'boolean',
     ];
 
     public function invoice()
