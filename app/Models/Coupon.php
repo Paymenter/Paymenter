@@ -19,6 +19,8 @@ class Coupon extends Model implements Auditable
         'starts_at',
         'expires_at',
         'recurring',
+        'apply_after_tax',
+        'role_id',
     ];
 
     protected $casts = [
@@ -27,11 +29,17 @@ class Coupon extends Model implements Auditable
         'max_uses' => 'integer',
         'max_uses_per_user' => 'integer',
         'value' => 'float',
+        'apply_after_tax' => 'boolean',
     ];
 
     /**
      * Get the products that belong to the option.
      */
+    public function role()
+    {
+        return $this->belongsTo(Role::class);
+    }
+
     public function products()
     {
         return $this->belongsToMany(Product::class, 'coupon_products');
