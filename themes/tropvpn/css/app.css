@@ -1,0 +1,196 @@
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap');
+@import "tailwindcss";
+@plugin '@tailwindcss/forms' {
+    strategy: class;
+}
+@plugin '@tailwindcss/typography';
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@source "../views";
+@source "../../../extensions/**/*.blade.php";
+@source "../../../extensions/Servers/Proxmox";
+@source "../../../extensions/Others/Pages";
+
+@theme {
+    --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+    --font-display: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
+    --font-mono: "Geist Mono", ui-monospace, monospace;
+
+    @keyframes shimmer {
+        0%   { transform: translateX(-100%); }
+        100% { transform: translateX(100%); }
+    }
+    @keyframes pulse-glow {
+        0%, 100% { opacity: 1; }
+        50%       { opacity: 0.5; }
+    }
+    @keyframes float {
+        0%, 100% { transform: translateY(0); }
+        50%       { transform: translateY(-6px); }
+    }
+    --animate-shimmer: shimmer 2.5s ease-in-out infinite;
+    --animate-pulse-glow: pulse-glow 2s ease-in-out infinite;
+    --animate-float: float 3s ease-in-out infinite;
+}
+
+@theme inline {
+    /* ── Branding ─────────────────────────────────────────────────── */
+    --color-primary:              hsl(var(--color-primary-raw));
+    --color-secondary:            hsl(var(--color-secondary-raw));
+
+    /* ── Neutrals ─────────────────────────────────────────────────── */
+    --color-neutral:              hsl(var(--color-neutral-raw));
+
+    /* ── Text ─────────────────────────────────────────────────────── */
+    --color-base:                 hsl(var(--color-base-raw));
+    --color-muted:                hsl(var(--color-muted-raw));
+    --color-inverted:             hsl(var(--color-inverted-raw));
+
+    /* ── State ────────────────────────────────────────────────────── */
+    --color-success:              hsl(142 71% 45%);
+    --color-error:                hsl(0 75% 60%);
+    --color-warning:              hsl(25 95% 53%);
+    --color-inactive:             hsl(0 0% 63%);
+    --color-info:                 hsl(210 100% 60%);
+
+    /* ── Backgrounds ──────────────────────────────────────────────── */
+    --color-background:           hsl(var(--color-background-raw));
+    --color-background-secondary: hsl(var(--color-background-secondary-raw));
+
+    /* ── Radius ───────────────────────────────────────────────────── */
+    --radius:                     0.75rem;
+    --radius-sm:                  0.5rem;
+    --radius-lg:                  1rem;
+    --radius-xl:                  1.25rem;
+    --radius-2xl:                 1.5rem;
+}
+
+/* ── Base styles ──────────────────────────────────────────────────────────── */
+* {
+    border-color: hsl(var(--color-neutral-raw));
+}
+
+body {
+    font-family: var(--font-sans);
+    background-color: hsl(var(--color-background-raw));
+    color: hsl(var(--color-base-raw));
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-display);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+}
+
+/* ── Custom utilities ─────────────────────────────────────────────────────── */
+@utility glass {
+    background-color: hsl(var(--color-background-secondary-raw) / 0.6);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid hsl(var(--color-neutral-raw) / 0.6);
+}
+
+@utility gradient-text {
+    background: linear-gradient(
+        135deg,
+        hsl(var(--color-primary-raw)),
+        hsl(var(--color-secondary-raw))
+    );
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+@utility gradient-border {
+    position: relative;
+    border: 1px solid transparent;
+    background-clip: padding-box;
+
+    &::before {
+        content: '';
+        position: absolute;
+        inset: -1px;
+        border-radius: inherit;
+        padding: 1px;
+        background: linear-gradient(
+            135deg,
+            hsl(var(--color-primary-raw) / 0.4),
+            hsl(var(--color-secondary-raw) / 0.4)
+        );
+        -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+        mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+        -webkit-mask-composite: destination-out;
+        mask-composite: exclude;
+        pointer-events: none;
+    }
+}
+
+@utility glow-primary {
+    box-shadow: 0 0 20px hsl(var(--color-primary-raw) / 0.4),
+                0 0 40px hsl(var(--color-primary-raw) / 0.15);
+}
+
+@utility glow-primary-sm {
+    box-shadow: 0 0 10px hsl(var(--color-primary-raw) / 0.3),
+                0 0 20px hsl(var(--color-primary-raw) / 0.1);
+}
+
+@utility card {
+    background-color: hsl(var(--color-background-secondary-raw));
+    border: 1px solid hsl(var(--color-neutral-raw));
+    border-radius: var(--radius-xl);
+    padding: 1.5rem;
+    transition: box-shadow 0.2s ease, border-color 0.2s ease;
+
+    &:hover {
+        border-color: hsl(var(--color-primary-raw) / 0.3);
+        box-shadow: 0 4px 24px hsl(var(--color-primary-raw) / 0.08);
+    }
+}
+
+/* ── Scrollbar ────────────────────────────────────────────────────────────── */
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+::-webkit-scrollbar-track {
+    background: hsl(var(--color-background-raw));
+}
+::-webkit-scrollbar-thumb {
+    background: hsl(var(--color-neutral-raw));
+    border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: hsl(var(--color-primary-raw) / 0.6);
+}
+
+/* ── Focus rings ──────────────────────────────────────────────────────────── */
+:focus-visible {
+    outline: 2px solid hsl(var(--color-primary-raw));
+    outline-offset: 2px;
+    border-radius: var(--radius-sm);
+}
+
+/* ── Prose overrides ──────────────────────────────────────────────────────── */
+.prose {
+    --tw-prose-body: hsl(var(--color-base-raw));
+    --tw-prose-headings: hsl(var(--color-base-raw));
+    --tw-prose-links: hsl(var(--color-primary-raw));
+    --tw-prose-bold: hsl(var(--color-base-raw));
+    --tw-prose-counters: hsl(var(--color-muted-raw));
+    --tw-prose-bullets: hsl(var(--color-muted-raw));
+    --tw-prose-hr: hsl(var(--color-neutral-raw));
+    --tw-prose-quotes: hsl(var(--color-base-raw));
+    --tw-prose-quote-borders: hsl(var(--color-primary-raw));
+    --tw-prose-code: hsl(var(--color-primary-raw));
+    --tw-prose-pre-bg: hsl(var(--color-background-secondary-raw));
+}
+
+/* ── Selection ────────────────────────────────────────────────────────────── */
+::selection {
+    background-color: hsl(var(--color-primary-raw) / 0.25);
+    color: hsl(var(--color-base-raw));
+}
