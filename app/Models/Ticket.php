@@ -19,6 +19,8 @@ class Ticket extends Model implements Auditable
         'priority',
         'department',
         'user_id',
+        'guest_name',
+        'guest_email',
         'assigned_to',
         'service_id',
     ];
@@ -41,5 +43,19 @@ class Ticket extends Model implements Auditable
     public function messages()
     {
         return $this->hasMany(TicketMessage::class);
+    }
+
+    public function ownerEmail(): ?string
+    {
+        return $this->user?->email ?? $this->guest_email;
+    }
+
+    public function ownerName(): string
+    {
+        if ($this->user) {
+            return (string) $this->user->name;
+        }
+
+        return $this->guest_name ?: ($this->guest_email ?: 'Guest');
     }
 }

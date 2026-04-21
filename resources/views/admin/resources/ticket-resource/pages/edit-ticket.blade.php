@@ -15,10 +15,16 @@
                                 <div class="flex flex-col">
                                     <div class="flex gap-3 items-center">
 
-                                        <a class="text-lg font-semibold hover:underline"
-                                        href="{{ App\Admin\Resources\UserResource::getUrl('edit', ['record' => $message->user]) }}">
-                                        {{ $message->user->name }}
-                                    </a>
+                                @if($message->user)
+                                            <a class="text-lg font-semibold hover:underline"
+                                            href="{{ App\Admin\Resources\UserResource::getUrl('edit', ['record' => $message->user]) }}">
+                                            {{ $message->user->name }}
+                                        </a>
+                                @else
+                                    <span class="text-lg font-semibold">
+                                        {{ $this->record->ownerName() }}
+                                    </span>
+                                @endif
                                 </div>
                                 <div class="flex gap-1">
                                     <p class="text-sm text-gray-500">
