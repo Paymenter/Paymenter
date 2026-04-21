@@ -25,5 +25,5 @@ return [
     'use_credits' => 'Utiliser le crédit',
     'tos' => 'J’accepte les ',
     'tos_link' => 'Conditions Générales de Vente',
-    'tos_required' => 'Vous devez accepter nos conditions générales de vente.',
+    'tos_required' => 'Vous devez accepter nos Conditions Générales de Vente.',
 ];
