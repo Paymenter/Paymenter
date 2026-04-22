@@ -35,8 +35,8 @@ class SettingsProvider extends ServiceProvider
         }
         try {
             // Load settings from cache
-            $settings = Cache::get('settings', []);
-            if (empty($settings)) {
+            $settings = Cache::get('settings');
+            if (!($settings instanceof \Illuminate\Support\Collection) || !$settings->has('theme')) {
                 $settings = Setting::where('settingable_type', null)->get()->pluck('value', 'key');
                 Cache::put('settings', $settings);
             }
