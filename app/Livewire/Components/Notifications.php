@@ -4,6 +4,7 @@ namespace App\Livewire\Components;
 
 use App\Livewire\Component;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\On;
 
@@ -37,6 +38,35 @@ class Notifications extends Component
         }
 
         $notification->markAsRead();
+        unset($this->notifications);
+    }
+
+    public function markAsUnread($id)
+    {
+        $notification = Auth::user()->notifications()->where('id', $id)->first();
+        if (!$notification) {
+            return;
+        }
+
+        DB::table('notifications')->where('id', $notification->id)->update(['read_at' => null]);
+        unset($this->notifications);
+    }
+
+    public function deleteNotification($id)
+    {
+        $notification = Auth::user()->notifications()->where('id', $id)->first();
+        if (!$notification) {
+            return;
+        }
+
+        $notification->delete();
+        unset($this->notifications);
+    }
+
+    public function deleteAllNotifications()
+    {
+        Auth::user()->notifications()->delete();
+        unset($this->notifications);
     }
 
     public function render()
