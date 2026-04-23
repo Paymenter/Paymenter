@@ -23,10 +23,11 @@
         <env name="BCRYPT_ROUNDS" value="4"/>
         <env name="CACHE_STORE" value="array"/>
         <env name="DB_CONNECTION" value="mariadb"/>
-        <env name="DB_USERNAME" value="root"/>
+        <env name="DB_USERNAME" value="paymenter"/>
         <env name="DB_DATABASE" value="paymenter_test"/>
         <env name="DB_HOST" value="127.0.0.1"/>
         <env name="DB_PORT" value="3306"/>
+        <!-- DB_PASSWORD: set in .env or CI secret; do not commit real credentials -->
         <env name="MAIL_MAILER" value="array"/>
         <env name="PULSE_ENABLED" value="false"/>
         <env name="QUEUE_CONNECTION" value="sync"/>

@@ -102,6 +102,12 @@ class Checkout extends Component
         $total = $this->plan->price()->price;
         $setup_fee = $this->plan->price()->setup_fee;
 
+        // Add shared dynamic slider base price once per product (not per-slider)
+        $hasDynamicSlider = $this->product->configOptions->contains(fn ($option) => $option->type === 'dynamic_slider');
+        if ($hasDynamicSlider) {
+            $total += $this->plan->dynamicSliderBasePrice();
+        }
+
         $this->product->configOptions->each(function ($option) use (&$total, &$setup_fee) {
             // Check if checkbox is set, if so, add price if checked
             if ($option->type === 'checkbox' && (isset($this->configOptions[$option->id]) && $this->configOptions[$option->id])) {
@@ -117,10 +123,10 @@ class Checkout extends Component
 
                 return;
             }
-            // Calculate dynamic slider price
+            // Calculate dynamic slider price using delta (marginal only, base price handled above)
             if ($option->type === 'dynamic_slider') {
                 $value = $this->configOptions[$option->id] ?? $option->getMetadata('default', 0);
-                $total += $option->calculateDynamicPrice((float) $value, $this->plan->billing_period, $this->plan->billing_unit);
+                $total += $option->calculateDynamicPriceDelta((float) $value, $this->plan->billing_period, $this->plan->billing_unit);
 
                 return;
             }

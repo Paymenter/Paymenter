@@ -6,8 +6,11 @@ use App\Admin\Resources\ConfigOptionResource\Pages\CreateConfigOption;
 use App\Admin\Resources\ConfigOptionResource\Pages\EditConfigOption;
 use App\Admin\Resources\ConfigOptionResource\Pages\ListConfigOptions;
 use App\Models\ConfigOption;
+use App\Rules\DynamicSliderPricingRule;
 use Filament\Actions\EditAction;
 use Filament\Forms\Components\Checkbox;
+use Filament\Forms\Components\Hidden;
+use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
@@ -66,9 +69,13 @@ class ConfigOptionResource extends Resource
                             Checkbox::make('hidden')
                                 ->label('Hidden'),
                             Checkbox::make('upgradable')
-                                ->visible(fn (Get $get): bool => in_array($get('type'), ['select', 'radio', 'slider', 'dynamic_slider']))
+                                ->visible(fn (Get $get): bool => in_array($get('type'), ['select', 'radio', 'slider'], true))
                                 ->label('Upgradable')
                                 ->helperText('If enabled, this configuration option can be upgraded in the future.'),
+                            Placeholder::make('upgradable_dynamic_slider_notice')
+                                ->label('Upgradable')
+                                ->content('Dynamic sliders are not yet upgradable.')
+                                ->visible(fn (Get $get): bool => $get('type') === 'dynamic_slider'),
                             Select::make('products')
                                 ->label('Products')
                                 ->relationship('products', 'name')
@@ -119,6 +126,10 @@ class ConfigOptionResource extends Resource
                         Tab::make('Dynamic Slider Settings')
                             ->visible(fn (Get $get): bool => $get('type') === 'dynamic_slider')
                             ->schema([
+                                // Hidden field for server-side pricing validation
+                                Hidden::make('metadata.pricing')
+                                    ->rules([new DynamicSliderPricingRule()])
+                                    ->dehydrated(true),
                                 Select::make('metadata.resource_type')
                                     ->label('Resource Type')
                                     ->options([

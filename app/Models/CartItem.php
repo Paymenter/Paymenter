@@ -46,10 +46,17 @@ class CartItem extends Model
     {
         return Attribute::make(
             get: function () {
-                $total = 0;
-                $setup_fee = 0;
-                $total += $this->plan->price()->price;
-                $setup_fee += $this->plan->price()->setup_fee;
+                $total = $this->plan->price()->price;
+                $setup_fee = $this->plan->price()->setup_fee;
+
+                // Add shared dynamic slider base price once per product (not per-slider).
+                $hasDynamicSlider = $this->product->configOptions->contains(
+                    fn ($option) => $option->type === 'dynamic_slider'
+                );
+                if ($hasDynamicSlider) {
+                    $total += $this->plan->dynamicSliderBasePrice();
+                }
+
                 $this->product->configOptions->each(function ($option) use (&$total, &$setup_fee) {
                     $selected = (object) collect($this->config_options)->firstWhere('option_id', $option->id);
 
@@ -63,15 +70,13 @@ class CartItem extends Model
 
                     // Skip text, number and checkbox types as they have no price
                     if (in_array($option->type, ['text', 'number', 'checkbox'])) {
-                        $total += 0;
-                        $setup_fee += 0;
-
                         return;
                     }
-                    // Calculate dynamic slider price
+
+                    // Calculate dynamic slider marginal price (base handled above)
                     if ($option->type === 'dynamic_slider') {
                         if ($selected && isset($selected->value)) {
-                            $total += $option->calculateDynamicPrice(
+                            $total += $option->calculateDynamicPriceDelta(
                                 (float) $selected->value,
                                 $this->plan->billing_period,
                                 $this->plan->billing_unit
@@ -80,7 +85,8 @@ class CartItem extends Model
 
                         return;
                     }
-                    if (!$selected || !isset($selected->value)) {
+
+                    if (! $selected || ! isset($selected->value)) {
                         return;
                     }
 
@@ -94,11 +100,11 @@ class CartItem extends Model
                     'setup_fee' => $setup_fee,
                 ], apply_exclusive_tax: true);
 
-                if (!$this->cart->coupon_id || !$this->cart->coupon) {
+                if (! $this->cart->coupon_id || ! $this->cart->coupon) {
                     return $price;
                 }
 
-                if ($this->cart->coupon->products->isNotEmpty() && !$this->cart->coupon->products->contains($this->product_id)) {
+                if ($this->cart->coupon->products->isNotEmpty() && ! $this->cart->coupon->products->contains($this->product_id)) {
                     return $price;
                 }
 

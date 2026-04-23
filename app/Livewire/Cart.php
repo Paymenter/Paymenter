@@ -203,6 +203,18 @@ class Cart extends Component
                             'value' => $configOption->value,
                         ]);
 
+                        // Dual-write dynamic_slider selections as ServiceConfig rows so
+                        // Service::calculatePrice() can recalculate without reading properties.
+                        if ($configOption->option_type === 'dynamic_slider') {
+                            $service->configs()->updateOrCreate(
+                                ['config_option_id' => $configOption->option_id],
+                                [
+                                    'config_value_id' => null,
+                                    'slider_value' => (float) $configOption->value,
+                                ]
+                            );
+                        }
+
                         continue;
                     }
                     if (!isset($configOption->value) || $configOption->value === null) {

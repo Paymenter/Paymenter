@@ -11,8 +11,11 @@ class ServiceConfig extends Model implements Auditable
 
     protected $fillable = [
         'service_id',
+        'configurable_id',
+        'configurable_type',
         'config_option_id',
         'config_value_id',
+        'slider_value',
     ];
 
     /**

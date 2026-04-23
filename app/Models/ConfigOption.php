@@ -46,10 +46,11 @@ class ConfigOption extends Model implements Auditable
     }
 
     /**
-     * Calculate dynamic slider price for a given value
-     * Supports linear, tiered, and base_addon pricing models
+     * Calculate the marginal (delta) price for a dynamic slider value.
+     * Does NOT include the shared per-product base_price — that is handled
+     * at the plan level via Plan::dynamicSliderBasePrice().
      */
-    public function calculateDynamicPrice(float $value, int $billingPeriod = 1, string $billingUnit = 'month'): float
+    public function calculateDynamicPriceDelta(float $value, int $billingPeriod = 1, string $billingUnit = 'month'): float
     {
         if (! $this->isDynamicSlider()) {
             return 0;
@@ -58,39 +59,53 @@ class ConfigOption extends Model implements Auditable
         $pricing = $this->metadata['pricing'] ?? [];
         $model = $pricing['model'] ?? 'linear';
 
-        $monthlyPrice = match ($model) {
-            'tiered' => $this->calculateTieredPrice($value, $pricing),
-            'base_addon' => $this->calculateBaseAddonPrice($value, $pricing),
-            default => $this->calculateLinearPrice($value, $pricing),
+        $monthlyDelta = match ($model) {
+            'linear'     => $this->calculateLinearDelta($value, $pricing),
+            'tiered'     => $this->calculateTieredDelta($value, $pricing),
+            'base_addon' => $this->calculateBaseAddonDelta($value, $pricing),
+            default      => throw new \InvalidArgumentException("Unknown dynamic_slider pricing model: ".var_export($model, true)),
         };
 
-        return $monthlyPrice * $this->getBillingMultiplier($billingPeriod, $billingUnit);
+        return $monthlyDelta * $this->getBillingMultiplier($billingPeriod, $billingUnit);
     }
 
     /**
-     * Calculate linear pricing: base_price + (displayValue * rate_per_unit)
+     * @deprecated Use calculateDynamicPriceDelta() for the marginal charge and add
+     *             plan->dynamicSliderBasePrice() once per product for the shared base.
+     *             This alias returns delta + sharedBase so existing callers see the
+     *             same total they always did (base_price counted once, not per-slider).
      */
-    private function calculateLinearPrice(float $value, array $pricing): float
+    public function calculateDynamicPrice(float $value, int $billingPeriod = 1, string $billingUnit = 'month'): float
+    {
+        $pricing = $this->metadata['pricing'] ?? [];
+        $sharedBase = (float) ($pricing['base_price'] ?? 0);
+        $multiplier = $this->getBillingMultiplier($billingPeriod, $billingUnit);
+
+        return $this->calculateDynamicPriceDelta($value, $billingPeriod, $billingUnit)
+            + ($sharedBase * $multiplier);
+    }
+
+    /**
+     * Calculate linear marginal price: (displayValue * rate_per_unit) — no base_price.
+     */
+    private function calculateLinearDelta(float $value, array $pricing): float
     {
         $displayDivisor = $this->metadata['display_divisor'] ?? 1;
         $displayValue = $value / $displayDivisor;
-
-        $basePrice = $pricing['base_price'] ?? 0;
         $ratePerUnit = $pricing['rate_per_unit'] ?? 0;
 
-        return $basePrice + ($displayValue * $ratePerUnit);
+        return $displayValue * $ratePerUnit;
     }
 
     /**
-     * Calculate tiered pricing: volume discounts at breakpoints
-     * Example: First 4GB at $3/GB, next 12GB at $2.50/GB, rest at $2/GB
+     * Calculate tiered marginal price — no base_price.
      */
-    private function calculateTieredPrice(float $value, array $pricing): float
+    private function calculateTieredDelta(float $value, array $pricing): float
     {
         $displayDivisor = $this->metadata['display_divisor'] ?? 1;
         $remainingUnits = $value / $displayDivisor;
 
-        $total = $pricing['base_price'] ?? 0;
+        $total = 0.0;
         $previousLimit = 0;
 
         foreach ($pricing['tiers'] ?? [] as $tier) {
@@ -111,21 +126,19 @@ class ConfigOption extends Model implements Auditable
     }
 
     /**
-     * Calculate base+addon pricing: included units free, then overage rate
-     * Example: 4GB included, $2.50/GB for additional
+     * Calculate base+addon marginal price — no base_price.
      */
-    private function calculateBaseAddonPrice(float $value, array $pricing): float
+    private function calculateBaseAddonDelta(float $value, array $pricing): float
     {
         $displayDivisor = $this->metadata['display_divisor'] ?? 1;
         $displayValue = $value / $displayDivisor;
 
-        $basePrice = $pricing['base_price'] ?? 0;
         $includedUnits = $pricing['included_units'] ?? 0;
         $overageRate = $pricing['overage_rate'] ?? 0;
 
         $overageUnits = max(0, $displayValue - $includedUnits);
 
-        return $basePrice + ($overageUnits * $overageRate);
+        return $overageUnits * $overageRate;
     }
 
     /**

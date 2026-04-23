@@ -81,4 +81,14 @@ class Plan extends Model implements Auditable
     {
         return $this->hasMany(Service::class);
     }
+
+    /**
+     * The shared base price charged once per product for dynamic-slider products.
+     * Stored in plans.dynamic_slider_base_price (nullable decimal 10,2).
+     * Returns 0.0 when the column is null (no base price configured).
+     */
+    public function dynamicSliderBasePrice(): float
+    {
+        return (float) ($this->dynamic_slider_base_price ?? 0);
+    }
 }

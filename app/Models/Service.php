@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use OwenIt\Auditing\Contracts\Auditable;
+use Illuminate\Support\Facades\Log;
 
 #[ObservedBy([ServiceObserver::class])]
 class Service extends Model implements Auditable
@@ -209,7 +210,73 @@ class Service extends Model implements Auditable
         // Calculate the price based on the plan and config options
         $price = $this->plan->price()->price;
 
-        $this->configs->each(function ($config) use (&$price) {
+        // Resolve effective slider value once per dynamic_slider config: prefer
+        // the migrated slider_value, fall back to the legacy property bag (set
+        // by the dual-write path before the backfill artisan command runs).
+        $propertyValues = $this->properties()->pluck('value', 'key');
+
+        $resolvedSliderValues = $this->configs->mapWithKeys(function ($config) use ($propertyValues) {
+            $configOption = $config->configOption;
+            if (! $configOption || $configOption->type !== 'dynamic_slider') {
+                return [];
+            }
+
+            $sliderValue = $config->slider_value;
+
+            if ($sliderValue === null) {
+                $propertyKey   = $configOption->env_variable ?: $configOption->name;
+                $propertyValue = $propertyValues->get($propertyKey);
+                if ($propertyValue !== null && is_numeric($propertyValue)) {
+                    $sliderValue = (float) $propertyValue;
+                }
+            }
+
+            return $sliderValue !== null ? [$config->id => (float) $sliderValue] : [];
+        });
+
+        // Add shared dynamic_slider base price once per product, but only when at
+        // least one slider value can be resolved. This avoids charging the base
+        // alone during the backfill window when slider_value is null and no legacy
+        // property is available — which would otherwise under/overcharge customers.
+        if ($resolvedSliderValues->isNotEmpty()) {
+            $price += $this->plan->dynamicSliderBasePrice();
+        }
+
+        $this->configs->each(function ($config) use (&$price, $propertyValues, $resolvedSliderValues) {
+            $configOption = $config->configOption;
+
+            // Handle dynamic_slider configs (priced via slider_value or migrated property).
+            if ($configOption && $configOption->type === 'dynamic_slider') {
+                $sliderValue = $resolvedSliderValues->get($config->id);
+
+                if ($sliderValue !== null) {
+                    // Read-time consistency check: warn when the migrated property
+                    // diverges from a stored slider_value. Only meaningful once
+                    // slider_value is set; during the backfill window the property
+                    // is the only source so no divergence is possible.
+                    if ($config->slider_value !== null) {
+                        $propertyKey   = $configOption->env_variable ?: $configOption->name;
+                        $propertyValue = $propertyValues->get($propertyKey);
+                        if ($propertyValue !== null && abs((float) $propertyValue - (float) $sliderValue) > 1e-6) {
+                            Log::warning('dynamic_slider value divergence detected', [
+                                'service_id'       => $this->id,
+                                'config_option_id' => $configOption->id,
+                                'property_value'   => $propertyValue,
+                                'slider_value'     => $config->slider_value,
+                            ]);
+                        }
+                    }
+
+                    $price += $configOption->calculateDynamicPriceDelta(
+                        $sliderValue,
+                        $this->plan->billing_period,
+                        $this->plan->billing_unit
+                    );
+                }
+
+                return;
+            }
+
             $configValue = $config->configValue;
             if ($configValue) {
                 $price += $configValue->price(null, $this->plan->billing_period, $this->plan->billing_unit, $this->currency_code)->price;
