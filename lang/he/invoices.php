@@ -30,7 +30,7 @@ return [
     'gateway' => 'שיטת תשלום',
     'payment_date' => 'תאריך תשלום',
     'payment_method' => 'צורת תשלום',
-    'download_pdf' => 'Download PDF',
+    'download_pdf' => 'הורד PDF',
     'amount' => 'סכום',
     'date' => 'תאריך',
     'due_date' => 'תאריך יעד',
@@ -39,7 +39,7 @@ return [
     'transaction_statuses' => [
         'succeeded' => 'Succeeded',
         'processing' => 'Processing',
-        'failed' => 'Failed',
+        'failed' => 'כשל',
     ],
     'payment_processing' => 'Payment Processing',
     'duplicate_payment' => 'There is already a payment being processed for this invoice. Paying again may result in duplicate charges.',

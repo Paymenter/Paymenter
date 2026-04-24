@@ -11,7 +11,7 @@ return [
     'total' => 'Összesen',
 
     'then_after_x' => 'Ezután :time múlva',
-    'order_summary' => 'Megrendelések áttekintése',
+    'order_summary' => 'Megrendelés áttekintése',
     'edit' => 'Szerkesztés',
 
     'apply' => 'Alkalmazás',

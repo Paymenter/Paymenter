@@ -2,12 +2,12 @@
 
 return [
     '404' => [
-        'title' => 'Page Not Found',
-        'message' => 'Sorry, the page you are looking for could not be found.',
-        'return_home' => 'Back to Home',
+        'title' => 'Side ikke funnet',
+        'message' => 'Beklager, siden du leter etter finnes ikke.',
+        'return_home' => 'Tilbake til startsiden',
     ],
     '500' => [
-        'title' => 'Server Error',
-        'message' => 'Whoops, something went wrong on our end. Please try again later.',
+        'title' => 'Serverfeil',
+        'message' => 'Oida! Noe gikk galt på vår side. Prøv igjen senere.',
     ],
 ];
