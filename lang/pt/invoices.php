@@ -30,7 +30,7 @@ return [
     'gateway' => 'Gateway',
     'payment_date' => 'Data de pagamento',
     'payment_method' => 'Forma de pagamento',
-    'download_pdf' => 'Download PDF',
+    'download_pdf' => 'Baixar documento PDF',
     'amount' => 'Quantidade',
     'date' => 'Data',
     'due_date' => 'Data Máxima',

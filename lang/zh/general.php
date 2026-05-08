@@ -29,11 +29,11 @@ return [
         'password' => '密碼',
         'password_placeholder' => '您的密碼',
 
-        'password_confirmation' => 'Confirm Password',
-        'password_confirmation_placeholder' => 'Confirm your password',
+        'password_confirmation' => '確認密碼',
+        'password_confirmation_placeholder' => '確認您的密碼',
     ],
 
     'all_rights_reserved' => '版權所有。',
     'update' => '更新',
-    'save' => 'Save',
+    'save' => '儲存',
 ];

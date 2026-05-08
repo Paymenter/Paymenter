@@ -21,6 +21,7 @@ return [
     'sessions' => 'Munkamenetek',
     'sessions_description' => 'Kezeld, és jelentkezz ki aktív munkameneteidből más böngészőkön és eszközökön.',
     'logout_sessions' => 'Ez a munkamenet kijelentkeztetése',
+    'current_device' => 'Current device',
 
     'input' => [
         'current_password' => 'Jelenlegi jelszó',

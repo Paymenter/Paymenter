@@ -55,7 +55,8 @@ return [
     'every_period' => 'كل :period :Unit',
     'price_every_period' => ':price لكل :period :Unit',
     'price_one_time' => ':price مرة واحدة',
-    'expires_at' => 'تنتهي في',
+    'renews_in' => 'Renews in',
+    'renews_on' => 'Renews on',
     'auto_pay' => 'دفع تلقائي بإستخدام',
     'auto_pay_not_configured' => 'لم يتم الإعداد',
 
@@ -66,4 +67,10 @@ return [
 
     'remove_payment_method' => 'إزالة طريقة الدفع',
     'remove_payment_method_confirm' => 'هل أنت متأكد من أنك تريد إزالة طريقة الدفع ":name" من هذه الخدمة؟ لن تتمكن خدمتك بعد الآن من دفع الفواتير تلقائيًا.',
+
+    'label' => 'Label',
+    'label_placeholder' => 'Enter a custom label for this service',
+    'label_modal_title' => 'Edit Service Label',
+    'update_label' => 'Update Label',
+
 ];

@@ -55,15 +55,22 @@ return [
     'every_period' => 'Cada :period :unit',
     'price_every_period' => ':price por :period :unit',
     'price_one_time' => ':price una sola vez',
-    'expires_at' => 'Vence el',
-    'auto_pay' => 'Auto paying using',
-    'auto_pay_not_configured' => 'Not configured',
+    'renews_in' => 'Renueva en',
+    'renews_on' => 'Se renueva él',
+    'auto_pay' => 'Auto pago usando',
+    'auto_pay_not_configured' => 'No configurado',
 
-    'no_services' => 'No services found',
-    'update_billing_agreement' => 'Update Billing Agreement',
-    'clear_billing_agreement' => 'Clear Billing Agreement',
-    'select_billing_agreement' => 'Select Billing Agreement',
+    'no_services' => 'No se encontraron servicios',
+    'update_billing_agreement' => 'Actualizar acuerdo de facturación',
+    'clear_billing_agreement' => 'Borrar acuerdo de facturación',
+    'select_billing_agreement' => 'Seleccionar acuerdo de facturación',
 
-    'remove_payment_method' => 'Remove Payment Method',
-    'remove_payment_method_confirm' => 'Are you sure you want to remove the payment method ":name" from this service? Your service will no longer be able to auto pay its invoices.',
+    'remove_payment_method' => 'Eliminar método de pago',
+    'remove_payment_method_confirm' => '¿Está seguro que desea eliminar el método de pago ":name" de este servicio? Su servicio ya no podrá pagar sus facturas automáticamente.',
+
+    'label' => 'Etiqueta',
+    'label_placeholder' => 'Introduzca una etiqueta personalizada para este servicio',
+    'label_modal_title' => 'Editar etiqueta del servicio',
+    'update_label' => 'Actualizar etiqueta',
+
 ];

@@ -9,4 +9,7 @@ return [
     ],
     'confirm' => 'Potvrdi',
     'cancel' => 'Otkaži',
+    'select' => [
+        'placeholder' => 'Molimo izaberite :name',
+    ],
 ];

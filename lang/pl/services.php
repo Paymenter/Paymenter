@@ -32,18 +32,18 @@ return [
     'upgrade_service' => 'Upgrade Service',
     'upgrade_choose_product' => 'Choose a product to upgrade to',
     'upgrade_choose_config' => 'Choose the configuration for the upgrade',
-    'next_step' => 'Next Step',
+    'next_step' => 'Następny Krok',
 
     'upgrade_pending' => 'You cannot upgrade whilst there is already an upgrade / downgrade invoice open',
 
-    'outstanding_invoice' => 'You have an outstanding invoice.',
+    'outstanding_invoice' => 'Masz zaległą fakturę.',
     'view_and_pay' => 'Click here to view and pay',
 
     'statuses' => [
-        'pending' => 'Pending',
+        'pending' => 'Oczekuje',
         'active' => 'Active',
         'cancelled' => 'Cancelled',
-        'suspended' => 'Suspended',
+        'suspended' => 'Zawieszone',
         'cancellation_pending' => 'Cancellation Pending',
     ],
     'billing_cycles' => [
@@ -55,7 +55,8 @@ return [
     'every_period' => 'Every :period :unit',
     'price_every_period' => ':price per :period :unit',
     'price_one_time' => ':price one time',
-    'expires_at' => 'Expires at',
+    'renews_in' => 'Renews in',
+    'renews_on' => 'Renews on',
     'auto_pay' => 'Auto paying using',
     'auto_pay_not_configured' => 'Not configured',
 
@@ -66,4 +67,10 @@ return [
 
     'remove_payment_method' => 'Remove Payment Method',
     'remove_payment_method_confirm' => 'Are you sure you want to remove the payment method ":name" from this service? Your service will no longer be able to auto pay its invoices.',
+
+    'label' => 'Label',
+    'label_placeholder' => 'Enter a custom label for this service',
+    'label_modal_title' => 'Edit Service Label',
+    'update_label' => 'Update Label',
+
 ];

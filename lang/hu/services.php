@@ -55,7 +55,8 @@ return [
     'every_period' => 'Minden :period :unit',
     'price_every_period' => ':price per :period :unit',
     'price_one_time' => ':price one time',
-    'expires_at' => 'Lejár ilyenkor',
+    'renews_in' => 'Renews in',
+    'renews_on' => 'Megújul ekkor:',
     'auto_pay' => 'Automatikus fizetés a következővel:',
     'auto_pay_not_configured' => 'Nincs konfigurálva',
 
@@ -66,4 +67,10 @@ return [
 
     'remove_payment_method' => 'Fizetési mód eltávolítása',
     'remove_payment_method_confirm' => 'Biztosan eltávolítod a(z) „:name” fizetési módot ebből a megrendelésből? A rendszerünk a továbbiakban nem fogja tudni automatikusan kifizetni a díjbekérőit.',
+
+    'label' => 'Label',
+    'label_placeholder' => 'Enter a custom label for this service',
+    'label_modal_title' => 'Edit Service Label',
+    'update_label' => 'Update Label',
+
 ];
