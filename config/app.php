@@ -96,6 +96,7 @@ return [
     'available_locales' => [
         'ar' => 'العربية',
         'bn' => 'বাংলা',
+        'da' => 'Dansk',
         'de' => 'Deutsch',
         'en' => 'English',
         'es' => 'Español',
@@ -106,18 +107,17 @@ return [
         'hu' => 'Magyar',
         'id' => 'Bahasa Indonesia',
         'it' => 'Italiano',
-        'sv' => 'Svenska',
-        'uk' => 'Українська',
         'ko' => '한국어',
         'lv' => 'Latviešu',
         'nl' => 'Nederlands',
         'no' => 'Norsk',
-        'pt' => 'Português',
         'pl' => 'Polski',
+        'pt' => 'Português',
         'sr' => 'Српски',
+        'sv' => 'Svenska',
         'tr' => 'Türkçe',
+        'uk' => 'Українська',
         'zh' => '中文',
-
     ],
 
     'rtl_locales' => [
