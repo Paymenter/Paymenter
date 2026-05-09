@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Client;
 
+use App\Helpers\NotificationHelper;
 use App\Livewire\ComponentWithProperties;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
@@ -46,7 +47,14 @@ class Account extends ComponentWithProperties
         /** @var User $user */
         $user = Auth::user();
         $user->update($validatedData);
-
+        
+        // If email was changed, we should mark it as unverified and send a new verification email
+        if ($user->wasChanged('email')) {
+            $user->email_verified_at = null;
+            $user->save();
+            NotificationHelper::emailVerificationNotification($user);
+        }
+        
         if (array_key_exists('properties', $validatedData)) {
             $this->updateProperties($user, $validatedData['properties']);
         }
