@@ -109,7 +109,7 @@ class PayPal extends Gateway
             'intent' => 'CAPTURE',
             'purchase_units' => [
                 [
-                    'invoice_id' => $invoice->id,
+                    'custom_id' => $invoice->id,
                     'amount' => [
                         'currency_code' => $invoice->currency_code,
                         'value' => $total,
@@ -241,7 +241,7 @@ class PayPal extends Gateway
             'intent' => 'CAPTURE',
             'purchase_units' => [
                 [
-                    'invoice_id' => $invoice->id,
+                    'custom_id' => $invoice->id,
                     'amount' => [
                         'currency_code' => $invoice->currency_code,
                         'value' => $total,
@@ -276,7 +276,11 @@ class PayPal extends Gateway
             'intent' => 'CAPTURE',
         ]);
 
-        ExtensionHelper::addPayment($order->purchase_units[0]->invoice_id, 'PayPal', $response->purchase_units[0]->payments->captures[0]->amount->value, $response->purchase_units[0]->payments->captures[0]->seller_receivable_breakdown->paypal_fee->value, $response->purchase_units[0]->payments->captures[0]->id);
+        if (isset($response->name) && $response->name === 'UNPROCESSABLE_ENTITY') {
+            return response()->json($response, 422);
+        }
+
+        ExtensionHelper::addPayment($response->purchase_units[0]->payments->captures[0]->custom_id, 'PayPal', $response->purchase_units[0]->payments->captures[0]->amount->value, $response->purchase_units[0]->payments->captures[0]->seller_receivable_breakdown->paypal_fee->value, $response->purchase_units[0]->payments->captures[0]->id);
 
         return $response;
     }
@@ -329,8 +333,8 @@ class PayPal extends Gateway
         } elseif ($body['event_type'] === 'PAYMENT.CAPTURE.COMPLETED' && isset($body['resource']['supplementary_data']['related_ids']['order_id'])) {
             $orderID = $body['resource']['supplementary_data']['related_ids']['order_id'];
             $order = $this->request('get', ($this->config('test_mode') ? 'https://api-m.sandbox.paypal.com' : 'https://api-m.paypal.com') . '/v2/checkout/orders/' . $orderID);
-            if (isset($order->purchase_units[0]->invoice_id)) {
-                ExtensionHelper::addPayment($order->purchase_units[0]->invoice_id, 'PayPal', $order->purchase_units[0]->payments->captures[0]->amount->value, $order->purchase_units[0]->payments->captures[0]->seller_receivable_breakdown->paypal_fee->value, $body['resource']['id']);
+            if (isset($order->purchase_units[0]->payments->captures[0]->custom_id)) {
+                ExtensionHelper::addPayment($order->purchase_units[0]->payments->captures[0]->custom_id, 'PayPal', $order->purchase_units[0]->payments->captures[0]->amount->value, $order->purchase_units[0]->payments->captures[0]->seller_receivable_breakdown->paypal_fee->value, $body['resource']['id']);
             }
         }
 
