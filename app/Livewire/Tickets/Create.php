@@ -34,7 +34,7 @@ class Create extends Component
         // Add rules for the department
         $this->validate([
             'department' => count((array) config('settings.ticket_departments')) > 0 ? 'required|in:' . implode(',', array_values((array) config('settings.ticket_departments'))) : '',
-            'service' => 'nullable|exists:services,id',
+            'service' => 'nullable|exists:services,id,user_id,' . Auth::id(),
             'subject' => 'required|string',
             'message' => 'required|string',
             'priority' => 'required|in:low,medium,high',
