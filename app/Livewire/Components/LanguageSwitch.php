@@ -10,7 +10,7 @@ use App\Livewire\Component;
  */
 class LanguageSwitch extends Component
 {
-    public $currentLocale;
+    public string $currentLocale;
 
     public function mount()
     {

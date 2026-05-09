@@ -8,7 +8,7 @@ use Livewire\Attributes\On;
 
 class Cart extends Component
 {
-    public $cartCount;
+    public int $cartCount;
 
     public function mount()
     {

@@ -8,11 +8,11 @@ use App\Models\Currency;
 
 class LocaleSwitch extends Component
 {
-    public $currentLocale;
+    public string $currentLocale;
 
-    public $currentCurrency;
+    public string $currentCurrency;
 
-    protected $currencies = [];
+    protected array $currencies = [];
 
     public function mount()
     {

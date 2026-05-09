@@ -20,7 +20,7 @@ class Login extends Component
     #[Validate('required')]
     public string $password = '';
 
-    public $remember = false;
+    public bool $remember = false;
 
     public function submit(\App\Actions\Auth\Login $loginAction)
     {

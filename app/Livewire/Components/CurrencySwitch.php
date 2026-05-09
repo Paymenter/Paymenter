@@ -12,7 +12,7 @@ use App\Models\Currency;
  */
 class CurrencySwitch extends Component
 {
-    public $currentCurrency;
+    public string $currentCurrency;
 
     protected $currencies = [];
 
