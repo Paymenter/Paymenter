@@ -284,19 +284,18 @@ class PayPal extends Gateway
     public function webhook(Request $request)
     {
         $body = $request->getContent();
-        $sigString = $request->header('PAYPAL-TRANSMISSION-ID') . '|' . $request->header('PAYPAL-TRANSMISSION-TIME') . '|' . $this->config('webhook_id') . '|' . crc32($body);
-        $pubKey = openssl_pkey_get_public(file_get_contents($request->header('PAYPAL-CERT-URL')));
-        $details = openssl_pkey_get_details($pubKey);
-        $verifyResult = openssl_verify(
-            $sigString,
-            base64_decode(
-                $request->header('PAYPAL-TRANSMISSION-SIG')
-            ),
-            $details['key'],
-            'sha256WithRSAEncryption'
-        );
-        if ($verifyResult !== 1) {
-            return response()->json(['status' => 'error']);
+        $verification = $this->request('post', ($this->config('test_mode') ? 'https://api-m.sandbox.paypal.com' : 'https://api-m.paypal.com') . '/v1/notifications/verify-webhook-signature', [
+            'auth_algo' => $request->header('PAYPAL-AUTH-ALGO'),
+            'cert_url' => $request->header('PAYPAL-CERT-URL'),
+            'transmission_id' => $request->header('PAYPAL-TRANSMISSION-ID'),
+            'transmission_sig' => $request->header('PAYPAL-TRANSMISSION-SIG'),
+            'transmission_time' => $request->header('PAYPAL-TRANSMISSION-TIME'),
+            'webhook_id' => $this->config('webhook_id'),
+            'webhook_event' => json_decode($body, true),
+        ]);
+
+        if (($verification->verification_status ?? null) !== 'SUCCESS') {
+            return response()->json(['status' => 'error'], 400);
         }
 
         $body = $request->json()->all();
