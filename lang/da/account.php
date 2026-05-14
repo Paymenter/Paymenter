@@ -66,7 +66,7 @@ return [
         'expired' => 'Expired',
         'pending' => 'Pending',
     ],
-    'payment_method_added' => '.',
+    'payment_method_added' => 'Betalingsmetode er blevet tilføjet.',
     'payment_method_add_failed' => 'Failed to add payment method. Please try again.',
     'services_linked' => ':count service(s) linked',
     'remove' => 'Remove',
