@@ -187,9 +187,10 @@ class AppServiceProvider extends ServiceProvider
                 new TableExtension,
             ]);
         });
-        Passport::clientModel(OauthClient::class);
+        Passport::useClientModel(OauthClient::class);
         Passport::ignoreRoutes();
         Passport::tokensCan(ScopeRegistry::getAll());
+        Passport::authorizationView('vendor.passport.authorize');
 
         if (class_exists(Scramble::class)) {
             Scramble::configure()

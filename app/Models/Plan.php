@@ -43,13 +43,15 @@ class Plan extends Model implements Auditable
 
     /**
      * Get the price of the plan.
+     *
+     * @param  string|null  $currency  Optional currency code to get the price for. If not provided, it will use the current session currency or default currency.
      */
-    public function price()
+    public function price($currency = null): PriceClass
     {
         if ($this->type === 'free') {
-            return new PriceClass(['currency' => Currency::find(session('currency', config('settings.default_currency')))], free: true);
+            return new PriceClass(['currency' => Currency::find($currency ?? session('currency', config('settings.default_currency')))], free: true);
         }
-        $currency = session('currency', config('settings.default_currency'));
+        $currency = $currency ?? session('currency', config('settings.default_currency'));
         $price = $this->prices->where('currency_code', $currency)->first();
 
         return new PriceClass((object) [
