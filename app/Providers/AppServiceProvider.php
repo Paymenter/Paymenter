@@ -191,6 +191,7 @@ class AppServiceProvider extends ServiceProvider
         Passport::ignoreRoutes();
         Passport::tokensCan(ScopeRegistry::getAll());
         Passport::authorizationView('vendor.passport.authorize');
+        Passport::$validateKeyPermissions = false;
 
         if (class_exists(Scramble::class)) {
             Scramble::configure()
