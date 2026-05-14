@@ -25,5 +25,5 @@ return [
     'use_credits' => 'Use credits',
     'tos' => 'I agree to the ',
     'tos_link' => 'Terms of Service',
-    'tos_required' => 'You must agree to the Terms of Service',
+    'tos_required' => 'Du skal accepterer terms of service',
 ];
