@@ -15,5 +15,5 @@ return [
 
     'you-havent-signed-up-yet' => 'You have not signed up for affiliates program yet!',
     'you-are-already-affiliated' => 'You have already signed up for affiliate program.',
-    'signup-success' => 'Successfully signed up for affiliate program!',
+    'signup-success' => 'Du er nu en del af vores partner program!',
 ];
