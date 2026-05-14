@@ -50,6 +50,6 @@ return [
         'sent' => 'A new verification link has been sent to your email address.',
         'check_your_email' => 'Before proceeding, please check your email for a verification link.',
         'not_received' => 'If you did not receive the email you can request another verification email.',
-        'request_another' => 'Resend verification email',
+        'request_another' => 'Gensend verificerings link',
     ],
 ];
