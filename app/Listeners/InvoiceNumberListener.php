@@ -15,7 +15,12 @@ class InvoiceNumberListener
     public function handle(Creating|Updating $event): void
     {
         if ($event instanceof Updating) {
-            if ($event->invoice->isDirty('status') && $event->invoice->status == 'paid' && !$event->invoice->number) {
+            $isTransitioningFromDraft = $event->invoice->getOriginal('status') === Invoice::STATUS_DRAFT;
+            $isChangingToPendingOrPaid = $event->invoice->isDirty('status') &&
+                in_array($event->invoice->status, ['pending', 'paid']);
+
+            if (($isTransitioningFromDraft && $isChangingToPendingOrPaid && !$event->invoice->number) ||
+                ($event->invoice->isDirty('status') && $event->invoice->status == 'paid' && !$event->invoice->number)) {
                 $this->setInvoiceNumber($event);
             }
         } elseif ($event instanceof Creating && !config('settings.invoice_proforma', false)) {
