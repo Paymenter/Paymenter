@@ -2,17 +2,19 @@
 
 namespace App\Listeners;
 
+use App\Events\CreditNote\Creating as CreditNoteCreating;
 use App\Events\Invoice\Creating;
 use App\Events\Invoice\Updating;
-use App\Models\Invoice;
+use App\Models\Model;
 use App\Models\Setting;
+use App\Models\Invoice;
 
 class InvoiceNumberListener
 {
     /**
      * Handle the event.
      */
-    public function handle(Creating|Updating $event): void
+    public function handle(Creating|Updating|CreditNoteCreating $event): void
     {
         if ($event instanceof Updating) {
             $isTransitioningFromDraft = $event->invoice->getOriginal('status') === Invoice::STATUS_DRAFT;
@@ -21,34 +23,33 @@ class InvoiceNumberListener
 
             if (($isTransitioningFromDraft && $isChangingToPendingOrPaid && !$event->invoice->number) ||
                 ($event->invoice->isDirty('status') && $event->invoice->status == 'paid' && !$event->invoice->number)) {
-                $this->setInvoiceNumber($event);
+                $this->setNumber($event->invoice, 'invoice');
             }
         } elseif ($event instanceof Creating && !config('settings.invoice_proforma', false)) {
-            $this->setInvoiceNumber($event);
+            $this->setNumber($event->invoice, 'invoice');
+        } elseif ($event instanceof CreditNoteCreating) {
+            $this->setNumber($event->creditNote, 'credit_note');
         }
     }
 
-    private function setInvoiceNumber(Creating|Updating $event): void
+    private function setNumber(Model $model, string $prefix): void
     {
-        // Get the next invoice number
-        $number = config('settings.invoice_number', 1) + 1;
-        // Update setting
+        $number = config("settings.{$prefix}_number", 1) + 1;
+
         Setting::updateOrCreate([
-            'key' => 'invoice_number',
+            'key' => "{$prefix}_number",
         ], [
             'value' => $number,
         ]);
-        // Pad the invoice number with leading zeros
-        $paddedNumber = str_pad($number, config('settings.invoice_number_padding', 1), '0', STR_PAD_LEFT);
 
-        // Format the invoice number
-        $formattedNumber = config('settings.invoice_number_format', '{number}');
+        $paddedNumber = str_pad($number, config("settings.{$prefix}_number_padding", 1), '0', STR_PAD_LEFT);
+
+        $formattedNumber = config("settings.{$prefix}_number_format", '{number}');
         $formattedNumber = str_replace('{number}', $paddedNumber, $formattedNumber);
         $formattedNumber = str_replace('{year}', now()->format('Y'), $formattedNumber);
         $formattedNumber = str_replace('{month}', now()->format('m'), $formattedNumber);
         $formattedNumber = str_replace('{day}', now()->format('d'), $formattedNumber);
 
-        // Set the invoice number
-        $event->invoice->number = $formattedNumber;
+        $model->number = $formattedNumber;
     }
 }
