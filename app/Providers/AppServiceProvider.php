@@ -15,6 +15,7 @@ use Dedoc\Scramble\Scramble;
 use Dedoc\Scramble\Support\Generator\OpenApi;
 use Dedoc\Scramble\Support\Generator\SecurityScheme;
 use Exception;
+use Illuminate\Auth\Access\Response;
 use Illuminate\Foundation\Exceptions\Handler;
 use Illuminate\Http\Request;
 use Illuminate\Queue\Events\JobFailed;
@@ -147,6 +148,8 @@ class AppServiceProvider extends ServiceProvider
         Event::listen(function (SocialiteWasCalled $event) {
             $event->extendSocialite('discord', Provider::class);
         });
+
+        Gate::defaultDenialResponse(Response::denyAsNotFound());
 
         try {
             foreach (
