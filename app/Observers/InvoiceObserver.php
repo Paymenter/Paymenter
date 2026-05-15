@@ -51,7 +51,7 @@ class InvoiceObserver
      */
     public function updated(Invoice $invoice): void
     {
-        if($invoice->getOriginal('status') === Invoice::STATUS_DRAFT && $invoice->status == Invoice::STATUS_PENDING) {
+        if($invoice->getOriginal('status') === Invoice::STATUS_DRAFT && $invoice->status === Invoice::STATUS_PENDING) {
             event(new InvoiceEvent\Created($invoice));
 
             $sendEmail = $invoice->send_create_email;
