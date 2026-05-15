@@ -43,6 +43,10 @@ class InvoiceObserver
      */
     public function updating(Invoice $invoice): void
     {
+        if ($invoice->isDirty('status') && $invoice->getOriginal('status') !== Invoice::STATUS_DRAFT) {
+            throw new \Exception('Cannot change status of invoice that is not in draft');
+        }
+
         event(new InvoiceEvent\Updating($invoice));
     }
 
