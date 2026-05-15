@@ -2,10 +2,10 @@
 
 return [
 
-    'reset' => 'Your password has been reset.',
-    'sent' => 'We have emailed your password reset link.',
-    'throttled' => 'Please wait before retrying.',
-    'token' => 'This password reset token is invalid.',
+    'reset' => 'Dit kodeord er blevet ændret.',
+    'sent' => 'Vi har sendt dig en mail med et link til nulstilling af dit kodeord.',
+    'throttled' => 'Vent venligst inden du prøver igen.',
+    'token' => 'Nulstillingsnøglen til denne adgangskode er ugyldig.',
     'user' => "Der findes ikke en bruger med denne email.",
 
 ];
