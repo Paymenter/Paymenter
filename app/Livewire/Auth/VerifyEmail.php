@@ -23,7 +23,7 @@ class VerifyEmail extends Component
     {
         $this->captcha();
 
-        if (RateLimiter::tooManyAttempts('email-verification', 1)) {
+        if (RateLimiter::tooManyAttempts('email-verification' . Auth::id(), 1)) {
             $this->addError('code', 'Too many attempts. Try again later.');
 
             return;
@@ -31,7 +31,7 @@ class VerifyEmail extends Component
 
         NotificationHelper::emailVerificationNotification(Auth::user());
 
-        RateLimiter::hit('email-verification', 120);
+        RateLimiter::hit('email-verification' . Auth::id(), 120);
 
         $this->notify('Verification email sent.');
     }
