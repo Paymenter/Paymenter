@@ -1,11 +1,11 @@
 <?php
 
 return [
-    'dashboard_title' => 'Dashboard',
-    'welcome_back' => 'Welcome back, :name!',
-    'dashboard_description' => 'Manage your active services, invoices, tickets, and stay updated here.',
-    'open_tickets' => 'Open Tickets',
-    'unpaid_invoices' => 'Unpaid Invoices',
-    'active_services' => 'Active Services',
+    'dashboard_title' => 'Kontrolpanel',
+    'welcome_back' => 'Velkommen tilbage :name!',
+    'dashboard_description' => 'Administrer dine aktive services, fakturaer, tickets og hold dig opdateret her.',
+    'open_tickets' => 'Åbne tickets',
+    'unpaid_invoices' => 'Ubetalte fakturaer',
+    'active_services' => 'Aktive services',
     'view_all' => 'Vis alle',
 ];
