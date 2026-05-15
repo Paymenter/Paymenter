@@ -4,10 +4,13 @@ namespace App\Models;
 
 use App\Classes\Price;
 use App\Enums\CreditNoteType;
+use App\Observers\CreditNoteObserver;
+use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use OwenIt\Auditing\Contracts\Auditable;
 
+#[ObservedBy([CreditNoteObserver::class])]
 class CreditNote extends Model implements Auditable
 {
     use HasFactory, Traits\Auditable;
