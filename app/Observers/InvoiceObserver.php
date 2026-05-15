@@ -15,7 +15,6 @@ class InvoiceObserver
     public function creating(Invoice $invoice): void
     {
         if ($invoice->status === Invoice::STATUS_DRAFT) {
-            Log::info('status draft creating');
             return;
         }
 
@@ -28,7 +27,6 @@ class InvoiceObserver
     public function created(Invoice $invoice): void
     {
         if ($invoice->status === Invoice::STATUS_DRAFT) {
-            Log::info('status draft created');
             return;
         }
 
