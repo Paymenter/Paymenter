@@ -36,7 +36,7 @@ class InvoicePolicy extends BasePolicy
      */
     public function update(User $user, Invoice $invoice): bool
     {
-        return $this->adminPermission($user, 'admin.invoices.update') || $invoice->user_id === $user->id;
+        return ($this->adminPermission($user, 'admin.invoices.update') || $invoice->user_id === $user->id) && $invoice->status == Invoice::STATUS_DRAFT;
     }
 
     /**
