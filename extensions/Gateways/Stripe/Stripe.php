@@ -22,6 +22,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\View;
 use Str;
 
@@ -37,46 +38,46 @@ class Stripe extends Gateway
 {
     private const API_VERSION = '2025-07-30.basil';
 
-    public function boot()
-    {
-        require __DIR__ . '/routes.php';
-        // Register webhook route
-        View::addNamespace('gateways.stripe', __DIR__ . '/resources/views');
+    // public function boot()
+    // {
+    //     require __DIR__ . '/routes.php';
+    //     // Register webhook route
+    //     View::addNamespace('gateways.stripe', __DIR__ . '/resources/views');
 
-        Event::listen(Updated::class, function (Updated $event) {
-            if ($event->service->properties->where('key', 'has_stripe_subscription')->first()?->value !== '1' || !$event->service->subscription_id) {
-                // If the service is not a stripe subscription, skip
-                return;
-            }
-            if ($event->service->isDirty('price') || $event->service->isDirty('expires_at')) {
-                try {
-                    $this->updateSubscription($event->service);
-                } catch (Exception $e) {
-                }
-            }
-            // Check if the service is canceled
-            if ($event->service->isDirty('status') && $event->service->status === Service::STATUS_CANCELLED) {
-                try {
-                    $this->cancelSubscription($event->service);
-                } catch (Exception $e) {
-                    // Ignore exception
-                }
-            }
-        });
+    //     Event::listen(Updated::class, function (Updated $event) {
+    //         if ($event->service->properties->where('key', 'has_stripe_subscription')->first()?->value !== '1' || !$event->service->subscription_id) {
+    //             // If the service is not a stripe subscription, skip
+    //             return;
+    //         }
+    //         if ($event->service->isDirty('price') || $event->service->isDirty('expires_at')) {
+    //             try {
+    //                 $this->updateSubscription($event->service);
+    //             } catch (Exception $e) {
+    //             }
+    //         }
+    //         // Check if the service is canceled
+    //         if ($event->service->isDirty('status') && $event->service->status === Service::STATUS_CANCELLED) {
+    //             try {
+    //                 $this->cancelSubscription($event->service);
+    //             } catch (Exception $e) {
+    //                 // Ignore exception
+    //             }
+    //         }
+    //     });
 
-        Event::listen(Created::class, function (Created $event) {
-            $service = $event->cancellation->service;
-            if ($service->properties->where('key', 'has_stripe_subscription')->first()?->value !== '1' || !$service->subscription_id) {
-                // If the service is not a stripe subscription, skip
-                return;
-            }
-            try {
-                $this->cancelSubscription($service);
-            } catch (Exception $e) {
-                // Ignore exception
-            }
-        });
-    }
+    //     Event::listen(Created::class, function (Created $event) {
+    //         $service = $event->cancellation->service;
+    //         if ($service->properties->where('key', 'has_stripe_subscription')->first()?->value !== '1' || !$service->subscription_id) {
+    //             // If the service is not a stripe subscription, skip
+    //             return;
+    //         }
+    //         try {
+    //             $this->cancelSubscription($service);
+    //         } catch (Exception $e) {
+    //             // Ignore exception
+    //         }
+    //     });
+    // }
 
     public function getConfig($values = [])
     {
@@ -123,6 +124,11 @@ class Stripe extends Gateway
     {
         if (!empty($gateway->settings()->where('key', 'stripe_webhook_secret')->first()->value)) {
             return;
+        }
+
+        // If the extension isn't enabled, try to boot it
+        if (!Route::has('extensions.gateways.stripe.webhook')) {
+            require __DIR__ . '/routes.php';
         }
 
         // Check if webhook already exists
