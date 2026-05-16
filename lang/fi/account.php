@@ -13,7 +13,7 @@ return [
     'two_factor_authentication_enabled' => 'Kaksivaiheinen todennus on käytössä tililläsi.',
     'two_factor_authentication_enable' => 'Ota käyttöön kaksivaiheinen tunnistautuminen',
     'two_factor_authentication_disable' => 'Poista käytöstä kaksivaiheinen tunnistautuminen',
-    'two_factor_authentication_disable_description' => 'Are you sure you want to disable two-factor authentication? This will remove the extra layer of security from your account.',
+    'two_factor_authentication_disable_description' => 'Oletko varma, että haluat poistaa kaksivaiheisen todennuksen käytöstä? Tämä poistaa ylimääräisen suojaustason tililtäsi.',
     'two_factor_authentication_enable_description' => 'Ottaaksesi käyttöön kaksivaiheisen todennuksen, sinun täytyy skannata alla oleva QR-koodi autentikointisovelluksella, kuten Google Authenticator tai Authy.',
     'two_factor_authentication_qr_code' => 'Skannaa alla oleva QR-koodi tunnistautumissovelluksellasi:',
     'two_factor_authentication_secret' => 'Tai kirjoita seuraava koodi manuaalisesti:',
@@ -21,7 +21,7 @@ return [
     'sessions' => 'Istunnot',
     'sessions_description' => 'Hallitse ja kirjaudu ulos aktiivisista istunnoistasi muissa selaimissa ja laitteissa.',
     'logout_sessions' => 'Kirjaudu ulos tästä istunnosta',
-    'current_device' => 'Current device',
+    'current_device' => 'Tämänhetkinen laite',
 
     'input' => [
         'current_password' => 'Nykyinen salasana',
@@ -36,7 +36,7 @@ return [
 
         'currency' => 'Valuutta',
         'amount' => 'Summa',
-        'payment_gateway' => 'Payment gateway',
+        'payment_gateway' => 'Maksutavat',
     ],
 
     'notifications' => [
@@ -52,7 +52,7 @@ return [
     'add_credit' => 'Lisää krediittejä',
     'credit_deposit' => 'Krediittien talletus (:currency)',
 
-    'payment_methods' => 'Payment Methods',
+    'payment_methods' => 'Maksutavat',
     'recent_transactions' => 'Recent Transactions',
     'saved_payment_methods' => 'Saved Payment Methods',
     'setup_payment_method' => 'Set up a new payment method',
