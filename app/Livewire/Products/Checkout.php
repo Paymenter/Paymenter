@@ -268,8 +268,14 @@ class Checkout extends Component
             ];
         });
 
-        Cart::add($this->product, $this->plan, $configOptions, $this->checkoutConfig, key: $this->cartProductKey);
+        // Ensure checkout config has only the allowed keys and values 
+        $checkoutConfig = [];
+        foreach ($this->getCheckoutConfig() as $config) {
+            $checkoutConfig[$config['name']] = $this->checkoutConfig[$config['name']] ?? null;
+        }
 
+        Cart::add($this->product, $this->plan, $configOptions, $checkoutConfig, key: $this->cartProductKey);
+        
         $this->dispatch('cartUpdated');
 
         return $this->redirect(route('cart'), true);
