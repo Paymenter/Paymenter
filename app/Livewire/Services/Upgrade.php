@@ -163,10 +163,13 @@ class Upgrade extends Component
         $upgrade->save();
 
         if ($this->configOptions) {
-            foreach ($this->configOptions as $optionId => $value) {
+            foreach ($this->upgradeProduct->upgradableConfigOptions as $option) {
+                if (!isset($this->configOptions[$option->id])) {
+                    continue;
+                }
                 $upgrade->configs()->create([
-                    'config_option_id' => $optionId,
-                    'config_value_id' => $value,
+                    'config_option_id' => $option->id,
+                    'config_value_id' => $this->configOptions[$option->id],
                 ]);
             }
         }
