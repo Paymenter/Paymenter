@@ -163,7 +163,11 @@ class Upgrade extends Component
         $upgrade->save();
 
         if ($this->configOptions) {
+            $allowedOptionIds = $this->upgradeProduct->upgradableConfigOptions->pluck('id')->toArray();
             foreach ($this->configOptions as $optionId => $value) {
+                if (!in_array($optionId, $allowedOptionIds)) {
+                    continue;
+                }
                 $upgrade->configs()->create([
                     'config_option_id' => $optionId,
                     'config_value_id' => $value,
