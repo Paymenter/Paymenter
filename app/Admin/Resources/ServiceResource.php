@@ -37,6 +37,21 @@ class ServiceResource extends Resource
 {
     protected static ?string $model = Service::class;
 
+    public static function getNavigationLabel(): string
+    {
+        return __('services.services');
+    }
+
+    public static function getModelLabel(): string
+    {
+        return __('services.service_label');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('services.services_plural_label');
+    }
+
     protected static string|\BackedEnum|null $navigationIcon = 'ri-function-line';
 
     protected static string|\BackedEnum|null $activeNavigationIcon = 'ri-function-fill';
@@ -58,7 +73,7 @@ class ServiceResource extends Resource
         return $schema
             ->components([
                 Select::make('product_id')
-                    ->label('Product')
+                    ->label(__('services.product'))
                     ->required()
                     ->relationship(
                         name: 'product',
@@ -69,42 +84,42 @@ class ServiceResource extends Resource
                     ->searchable()
                     ->live()
                     ->preload()
-                    ->placeholder('Select the product'),
+                    ->placeholder(__('services.select_product')),
                 Select::make('plan_id')
-                    ->label('Plan')
+                    ->label(__('services.plan'))
                     ->required()
                     ->relationship('plan', 'name', fn (Builder $query, Get $get) => $query->where('priceable_id', $get('product_id'))->where('priceable_type', Product::class))
                     ->searchable()
                     ->preload()
                     ->disabled(fn (Get $get) => !$get('product_id'))
-                    ->placeholder('Select the plan'),
+                    ->placeholder(__('services.select_plan')),
                 UserComponent::make('user_id'),
                 Select::make('status')
-                    ->label('Status')
+                    ->label(__('services.status'))
                     ->required()
                     ->options([
-                        // active, pending, suspended, cancelled
-                        'active' => 'Active',
-                        'pending' => 'Pending',
-                        'suspended' => 'Suspended',
-                        'cancelled' => 'Cancelled',
+                        'active' => __('services.statuses.active'),
+                        'pending' => __('services.statuses.pending'),
+                        'suspended' => __('services.statuses.suspended'),
+                        'cancelled' => __('services.statuses.cancelled'),
                     ])
                     ->default('pending'),
                 TextInput::make('quantity')
-                    ->label('Quantity')
+                    ->label(__('services.quantity_label'))
                     ->required()
-                    ->placeholder('Enter the quantity'),
+                    ->placeholder(__('services.enter_quantity')),
                 DatePicker::make('expires_at')
-                    ->label('Expires At')
+                    ->label(__('services.expires_at'))
                     ->required(fn (Get $get) => $get('plan')?->type != 'one-time' && $get('plan')?->type != 'free' && $get('status') !== 'pending')
-                    ->placeholder('Select the expiration date'),
+                    ->placeholder(__('services.select_expiration_date')),
                 Select::make('coupon_id')
-                    ->label('Coupon')
+                    ->label(__('services.coupon'))
                     ->relationship('coupon', 'code')
                     ->searchable()
                     ->preload()
-                    ->placeholder('Select the coupon'),
+                    ->placeholder(__('services.select_coupon')),
                 Select::make('currency_code')
+                    ->label(__('orders.currency'))
                     ->options(function (Get $get, ?string $state) {
                         $pricing = collect($get('../../pricing'))->pluck('currency_code');
                         if ($state !== null) {
@@ -123,7 +138,7 @@ class ServiceResource extends Resource
                     ->required(),
                 TextInput::make('price')
                     ->required()
-                    ->label('Price')
+                    ->label(__('services.price_col'))
                     // Suffix based on chosen currency
                     ->prefix(fn (Get $get) => Currency::where('code', $get('currency_code'))->first()?->prefix)
                     ->suffix(fn (Get $get) => Currency::where('code', $get('currency_code'))->first()?->suffix)
@@ -136,41 +151,41 @@ class ServiceResource extends Resource
                     ->numeric()
                     ->minValue(0)
                     ->hintAction(
-                        Action::make('Recalculate Price')
+                        Action::make('recalculate_price')
                             ->action(function (Component $component, Service $service) {
                                 if ($service) {
-                                    Notification::make('Price Recalculated')
-                                        ->title('The price has been successfully recalculated')
+                                    Notification::make('price_recalculated')
+                                        ->title(__('services.price_recalculated_title'))
                                         ->success()
                                         ->send();
                                     // Update the form field
                                     $component->state($service->calculatePrice());
                                 }
                             })
-                            ->label('Recalculate Price')
+                            ->label(__('services.recalculate_price'))
                             ->icon('ri-refresh-line')
                     ),
                 Select::make('billing_agreement_id')
-                    ->label('Billing Agreement')
+                    ->label(__('services.billing_agreement'))
                     ->relationship('billingAgreement', 'name', fn (Builder $query, Get $get) => $query->where('user_id', $get('user_id')))
                     ->searchable()
                     ->preload()
-                    ->placeholder('Select the billing agreement'),
+                    ->placeholder(__('services.select_billing_agreement_admin')),
                 TextInput::make('subscription_id')
-                    ->label('Subscription ID (deprecated)')
+                    ->label(__('services.subscription_id'))
                     ->nullable()
-                    ->placeholder('Enter the subscription ID')
+                    ->placeholder(__('services.enter_subscription_id'))
                     ->hintAction(
-                        Action::make('Cancel Subscription ID')
+                        Action::make('cancel_subscription')
                             ->action(function (Component $component) {
                                 if (ExtensionHelper::cancelSubscription($component->getRecord())) {
-                                    Notification::make('Subscription Cancelled')
-                                        ->title('The subscription has been successfully cancelled')
+                                    Notification::make('subscription_cancelled')
+                                        ->title(__('services.subscription_cancelled_title'))
                                         ->success()
                                         ->send();
                                 } else {
-                                    Notification::make('Subscription Not Cancelled')
-                                        ->title('The subscription could not be cancelled')
+                                    Notification::make('subscription_not_cancelled')
+                                        ->title(__('services.subscription_not_cancelled_title'))
                                         ->error()
                                         ->send();
                                 }
@@ -178,7 +193,7 @@ class ServiceResource extends Resource
                                 $component->getRecord()->update(['subscription_id' => null]);
                             })
                             ->requiresConfirmation()
-                            ->label('Cancel Subscription')
+                            ->label(__('services.cancel_subscription'))
                             ->hidden(fn (Component $component) => !$component->getRecord()?->subscription_id),
                     ),
             ]);
@@ -189,14 +204,14 @@ class ServiceResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('id')
-                    ->label('ID')
+                    ->label(__('services.id'))
                     ->sortable()
                     ->searchable(),
                 TextColumn::make('user.name')
-                    ->label('User')
+                    ->label(__('services.user'))
                     ->searchable(true, fn (Builder $query, string $search) => $query->whereHas('user', fn (Builder $query) => $query->where('first_name', 'like', "%$search%")->orWhere('last_name', 'like', "%$search%"))),
                 TextColumn::make('product.name')
-                    ->label('Product')
+                    ->label(__('services.product'))
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('status')
@@ -207,40 +222,40 @@ class ServiceResource extends Resource
                         'cancelled' => 'danger',
                         'suspended' => 'warning',
                     })
-                    ->formatStateUsing(fn (string $state) => ucfirst($state))
-                    ->label('Status')
+                    ->formatStateUsing(fn (string $state) => __('services.statuses.' . $state))
+                    ->label(__('services.status'))
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('expires_at')
-                    ->label('Expires At')
+                    ->label(__('services.expires_at'))
                     ->date()
                     ->searchable()
                     ->sortable(),
             ])
             ->filters([
                 SelectFilter::make('status')
-                    ->label('Status')
+                    ->label(__('services.status'))
                     ->options([
-                        'active' => 'Active',
-                        'pending' => 'Pending',
-                        'suspended' => 'Suspended',
-                        'cancelled' => 'Cancelled',
+                        'active' => __('services.statuses.active'),
+                        'pending' => __('services.statuses.pending'),
+                        'suspended' => __('services.statuses.suspended'),
+                        'cancelled' => __('services.statuses.cancelled'),
                     ]),
                 SelectFilter::make('user')
-                    ->label('User')
+                    ->label(__('services.user'))
                     ->relationship('user', 'id')
                     ->getOptionLabelFromRecordUsing(fn ($record) => $record->name . ' (' . $record->email . ')')
                     ->searchable()
                     ->preload(),
                 SelectFilter::make('product')
-                    ->label('Product')
+                    ->label(__('services.product'))
                     ->relationship('product', 'name')
                     ->searchable()
                     ->preload(),
                 Filter::make('expires_at')
                     ->form([
-                        DatePicker::make('expires_from')->label('Expires From'),
-                        DatePicker::make('expires_until')->label('Expires Until'),
+                        DatePicker::make('expires_from')->label(__('services.expires_from')),
+                        DatePicker::make('expires_until')->label(__('services.expires_until')),
                     ])
                     ->query(function (Builder $query, array $data): Builder {
                         return $query

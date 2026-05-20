@@ -23,6 +23,21 @@ class ServiceCancellationResource extends Resource
 {
     protected static ?string $model = ServiceCancellation::class;
 
+    public static function getNavigationLabel(): string
+    {
+        return __('services.cancellations');
+    }
+
+    public static function getModelLabel(): string
+    {
+        return __('services.cancellation_label');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('services.cancellations_plural_label');
+    }
+
     protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-rectangle-stack';
 
     protected static ?string $cluster = Services::class;
@@ -34,20 +49,23 @@ class ServiceCancellationResource extends Resource
         return $schema
             ->components([
                 Select::make('service_id')
+                    ->label(__('services.service'))
                     ->relationship('service', 'id', fn (Builder $query) => $query->where('status', 'active'))
                     ->getOptionLabelFromRecordUsing(fn ($record) => $record->product->name . ' - ' . $record->plan->name . '  #' . $record->id . ($record->user ? ' (' . $record->user->email . ')' : ''))
                     ->searchable()
                     ->preload()
                     ->disabledOn('edit')
-                    ->hint(fn ($get) => $get('service_id') ? new HtmlString('<a href="' . ServiceResource::getUrl('edit', ['record' => $get('service_id')]) . '" target="_blank">Go to Service</a>') : null)
+                    ->hint(fn ($get) => $get('service_id') ? new HtmlString('<a href="' . ServiceResource::getUrl('edit', ['record' => $get('service_id')]) . '" target="_blank">' . __('services.go_to_service') . '</a>') : null)
                     ->required(),
                 TextInput::make('reason')
+                    ->label(__('services.reason'))
                     ->maxLength(255)
                     ->default(null),
                 Select::make('type')
+                    ->label(__('services.type'))
                     ->options([
-                        'end_of_period' => 'End of Period',
-                        'immediate' => 'Immediate',
+                        'end_of_period' => __('services.end_of_period'),
+                        'immediate' => __('services.immediate'),
                     ])
                     ->disabledOn('edit')
                     ->required(),
@@ -59,17 +77,23 @@ class ServiceCancellationResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('service_id')
+                    ->label(__('services.service'))
                     ->formatStateUsing(fn ($record) => $record->service->product->name . ' - ' . $record->service->plan->name . '  #' . $record->service->id . ($record->service?->user ? ' (' . $record->service->user->email . ')' : ''))
                     ->url(fn ($record) => ServiceResource::getUrl('edit', ['record' => $record->service_id]))
                     ->sortable(),
                 TextColumn::make('reason')
+                    ->label(__('services.reason'))
                     ->searchable(),
-                TextColumn::make('type'),
+                TextColumn::make('type')
+                    ->label(__('services.type'))
+                    ->formatStateUsing(fn (string $state) => __('services.' . $state)),
                 TextColumn::make('created_at')
+                    ->label(__('users.created_at'))
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('updated_at')
+                    ->label(__('users.updated_at'))
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
