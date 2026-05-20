@@ -27,6 +27,21 @@ class CustomPropertyResource extends Resource
 {
     protected static ?string $model = CustomProperty::class;
 
+    public static function getNavigationLabel(): string
+    {
+        return __('custom_properties.custom_properties');
+    }
+
+    public static function getModelLabel(): string
+    {
+        return __('custom_properties.custom_property_label');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('custom_properties.custom_properties_plural_label');
+    }
+
     protected static string|\UnitEnum|null $navigationGroup = 'Configuration';
 
     protected static string|\BackedEnum|null $navigationIcon = 'ri-list-settings-line';
@@ -38,28 +53,42 @@ class CustomPropertyResource extends Resource
         return $schema
             ->components([
                 TextInput::make('name')
+                    ->label(__('custom_properties.name'))
                     ->required()
                     ->maxLength(255),
-                TextInput::make('key')->required(),
-                Select::make('model')->options([
-                    'App\Models\User' => 'User',
-                ])->required(),
-                Select::make('type')->options([
-                    'string' => 'Short Text',
-                    'text' => 'Long Text',
-                    'number' => 'Number',
-                    'select' => 'Select',
-                    'checkbox' => 'Checkbox',
-                    'radio' => 'Radio',
-                    'date' => 'Date',
-                ])
+                TextInput::make('key')
+                    ->label(__('custom_properties.key'))
+                    ->required(),
+                Select::make('model')
+                    ->label(__('custom_properties.model'))
+                    ->options([
+                        'App\Models\User' => __('custom_properties.models.App\Models\User'),
+                    ])->required(),
+                Select::make('type')
+                    ->label(__('custom_properties.type'))
+                    ->options([
+                        'string' => __('custom_properties.types.string'),
+                        'text' => __('custom_properties.types.text'),
+                        'number' => __('custom_properties.types.number'),
+                        'select' => __('custom_properties.types.select'),
+                        'checkbox' => __('custom_properties.types.checkbox'),
+                        'radio' => __('custom_properties.types.radio'),
+                        'date' => __('custom_properties.types.date'),
+                    ])
                     ->required()
                     ->live(),
-                Textarea::make('description')->nullable()->columnSpanFull()->rows(2),
+                Textarea::make('description')
+                    ->label(__('custom_properties.description'))
+                    ->nullable()
+                    ->columnSpanFull()
+                    ->rows(2),
                 TagsInput::make('allowed_values')
+                    ->label(__('custom_properties.allowed_values'))
                     ->visible(fn (FormGet $get) => in_array($get('type'), ['select', 'radio']))
                     ->nullable(),
-                TextInput::make('validation')->nullable(),
+                TextInput::make('validation')
+                    ->label(__('custom_properties.validation'))
+                    ->nullable(),
 
                 Section::make()
                     ->columns([
@@ -67,9 +96,15 @@ class CustomPropertyResource extends Resource
                         'md' => 3,
                     ])
                     ->schema([
-                        Toggle::make('non_editable')->default(false),
-                        Toggle::make('required')->default(false),
-                        Toggle::make('show_on_invoice')->default(false),
+                        Toggle::make('non_editable')
+                            ->label(__('custom_properties.non_editable'))
+                            ->default(false),
+                        Toggle::make('required')
+                            ->label(__('custom_properties.required'))
+                            ->default(false),
+                        Toggle::make('show_on_invoice')
+                            ->label(__('custom_properties.show_on_invoice'))
+                            ->default(false),
                     ]),
             ]);
     }
@@ -78,19 +113,25 @@ class CustomPropertyResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('name')->label('Property')
+                TextColumn::make('name')->label(__('custom_properties.property'))
                     ->description(fn (CustomProperty $record): string => mb_strimwidth(($record->description ?? ''),
                         0,
                         75,
                         '...'
                     )),
-                TextColumn::make('key'),
-                TextColumn::make('type')->formatStateUsing(fn ($state) => str($state)->title()),
+                TextColumn::make('key')
+                    ->label(__('custom_properties.key')),
+                TextColumn::make('type')
+                    ->label(__('custom_properties.type'))
+                    ->formatStateUsing(fn ($state) => __('custom_properties.types.' . $state) ?? str($state)->title()),
                 ToggleColumn::make('non_editable')
+                    ->label(__('custom_properties.non_editable'))
                     ->disabled(fn (): bool => Gate::denies('has-permission', 'admin.custom_properties.update')),
                 ToggleColumn::make('required')
+                    ->label(__('custom_properties.required'))
                     ->disabled(fn (): bool => Gate::denies('has-permission', 'admin.custom_properties.update')),
                 ToggleColumn::make('show_on_invoice')
+                    ->label(__('custom_properties.show_on_invoice'))
                     ->disabled(fn (): bool => Gate::denies('has-permission', 'admin.custom_properties.update')),
             ])
             ->filters([
