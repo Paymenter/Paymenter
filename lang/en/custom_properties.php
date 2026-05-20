@@ -5,7 +5,6 @@ return [
     'custom_property_label' => 'custom property',
     'custom_properties_plural_label' => 'custom properties',
     
-    // Fields
     'name' => 'Name',
     'property' => 'Property',
     'key' => 'Key',
@@ -18,12 +17,10 @@ return [
     'required' => 'Required',
     'show_on_invoice' => 'Show on Invoice',
     
-    // Models
     'models' => [
         'App\Models\User' => 'User',
     ],
     
-    // Types
     'types' => [
         'string' => 'Short Text',
         'text' => 'Long Text',

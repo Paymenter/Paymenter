@@ -5,7 +5,6 @@ return [
     'coupon_label' => 'coupon',
     'coupons_plural_label' => 'coupons',
     
-    // Fields
     'code' => 'Code',
     'enter_code' => 'Enter the code of the coupon',
     'value' => 'Value',
@@ -26,13 +25,11 @@ return [
     'products_placeholder' => 'Select the products that this coupon applies to',
     'products_hint' => 'Leave empty to apply the coupon to all products',
     
-    // Types
     'types' => [
         'percentage' => 'Percentage',
         'fixed' => 'Fixed amount',
     ],
     
-    // Applies To options
     'applies_to_options' => [
         'all' => 'Price and Setup Fee',
         'price' => 'Price only',

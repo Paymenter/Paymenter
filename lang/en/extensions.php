@@ -6,7 +6,6 @@ return [
     'extensions_plural_label' => 'extensions',
     'available_extensions' => 'Available Extensions',
     
-    // Fields & General
     'name' => 'Name',
     'type' => 'Type',
     'enabled' => 'Enabled',
@@ -18,7 +17,6 @@ return [
     'description' => 'Description',
     'install' => 'Install',
     
-    // Page tabs & Filters
     'browse_marketplace' => 'Browse Marketplace',
     'ready_to_install' => 'Ready to Install / Upload',
     'search_placeholder' => 'Search extensions by name...',
@@ -26,14 +24,12 @@ return [
     'extensions_filter' => 'Extensions',
     'themes_filter' => 'Themes',
     
-    // Errors & Statuses
     'something_went_wrong' => 'Something went wrong',
     'no_extensions_found' => 'No extensions found',
     'no_extensions_found_desc' => 'Try adjusting your search or filter criteria.',
     'marketplace_unavailable' => 'The Paymenter Marketplace is currently unavailable. Please try again later.',
     'marketplace_connection_failed' => 'Failed to connect to the Paymenter Marketplace. Please check your server\'s internet connection.',
     
-    // Table Details
     'table_description' => 'List of available extensions (not gateway or server extensions) that can be installed.',
     'installed_success_title' => 'Extension Installed',
     'installed_success_body' => 'The extension has been successfully installed.',

@@ -4,7 +4,6 @@ return [
     'settings' => 'Settings',
     'saved_successfully' => 'Saved successfully!',
     
-    // Group categories
     'groups' => [
         'general' => 'General',
         'security' => 'Security',
@@ -19,9 +18,7 @@ return [
         'other' => 'Other',
     ],
     
-    // Labels
     'labels' => [
-        // General
         'company_name' => 'Company Name',
         'timezone' => 'Timezone',
         'app_language' => 'Default Language',
@@ -33,14 +30,12 @@ return [
         'system_email_address' => 'System Email Address',
         'tos' => 'Terms of Service',
         
-        // Security
         'captcha' => 'Captcha',
         'captcha_site_key' => 'Captcha Site Key',
         'captcha_secret' => 'Captcha Secret',
         'trusted_proxies' => 'Trusted Proxies',
         'session_validation' => 'Session Validation',
         
-        // Social
         'oauth_google' => 'Google Enabled',
         'oauth_google_client_id' => 'Google Client ID',
         'oauth_google_client_secret' => 'Google Client Secret',
@@ -51,11 +46,9 @@ return [
         'oauth_discord_client_id' => 'Discord Client ID',
         'oauth_discord_client_secret' => 'Discord Client Secret',
         
-        // Tax
         'tax_enabled' => 'Tax Enabled',
         'tax_type' => 'Tax Type',
         
-        // Mail
         'mail_disable' => 'Disable Mail',
         'mail_must_verify' => 'Users must verify email before buying',
         'mail_host' => 'Mail Host',
@@ -69,7 +62,6 @@ return [
         'mail_footer' => 'Footer',
         'mail_css' => 'Mail CSS',
         
-        // Tickets
         'tickets_disabled' => 'Disable Tickets',
         'ticket_departments' => 'Ticket Departments',
         'ticket_client_closing_disabled' => 'Disallow clients from closing tickets',
@@ -79,7 +71,6 @@ return [
         'ticket_mail_email' => 'Email Address',
         'ticket_mail_password' => 'Email Password',
         
-        // Cronjob
         'cronjob_time' => 'Cron Job Time',
         'cronjob_invoice' => 'Send invoice if due date is x days away',
         'cronjob_invoice_reminder' => 'Send invoice reminder if due date is x days away',
@@ -89,7 +80,6 @@ return [
         'cronjob_delete_email_logs' => 'Delete email logs older than x days',
         'cronjob_close_ticket' => 'Close tickets if no response for x days',
         
-        // Credits
         'credits_enabled' => 'Credits Enabled',
         'credits_minimum_deposit' => 'Minimum Deposit',
         'credits_maximum_deposit' => 'Maximum Deposit',
@@ -97,7 +87,6 @@ return [
         'credits_auto_use' => 'Automatically use credits',
         'credits_on_downgrade' => 'Enable credits on service downgrade',
         
-        // Invoices
         'bill_to_text' => 'Bill To Text',
         'invoice_number' => 'Invoice Number',
         'invoice_number_padding' => 'Invoice Number Padding',
@@ -105,18 +94,15 @@ return [
         'invoice_proforma' => 'Proforma Invoices',
         'invoice_snapshot' => 'Invoice Snapshot',
         
-        // Other
         'gravatar_default' => 'Gravatar Default',
         'default_currency' => 'Default Currency',
         'registration_disabled' => 'Disable User Registration',
         'pagination' => 'Pagination',
         'debug' => 'Debug Mode',
         
-        // Theme / Colors
         'theme' => 'Theme',
     ],
     
-    // Options for select lists
     'options' => [
         'captcha' => [
             'disabled' => 'Disabled',

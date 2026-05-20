@@ -6,7 +6,6 @@ return [
     'user_label' => 'user',
     'users_plural_label' => 'users',
 
-    // Fields
     'first_name' => 'First name',
     'last_name' => 'Last name',
     'email' => 'Email',
@@ -17,10 +16,8 @@ return [
     'has_active_services' => 'Has Active Services',
     'earnings' => 'Earnings',
 
-    // Edit Page Actions
     'impersonate' => 'Impersonate',
 
-    // Sub-navigation & pages
     'products_services' => 'Products/Services',
     'product' => 'Product',
     'quantity' => 'Quantity',
@@ -29,7 +26,6 @@ return [
     'invoices' => 'Invoices',
     'tickets' => 'Tickets',
 
-    // Columns & General
     'id' => 'ID',
     'name' => 'Name',
     'external_reference' => 'External Reference',
@@ -44,7 +40,6 @@ return [
     'created_at' => 'Created At',
     'updated_at' => 'Updated At',
 
-    // Status / Option fields
     'paid' => 'Paid',
     'pending' => 'Pending',
     'cancelled' => 'Cancelled',

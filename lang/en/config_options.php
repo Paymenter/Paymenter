@@ -5,11 +5,9 @@ return [
     'config_option_label' => 'configuration option',
     'config_options_plural_label' => 'configuration options',
     
-    // Tabs
     'general' => 'General',
     'options' => 'Options',
     
-    // Fields
     'name' => 'Name',
     'enter_name' => 'Enter the name of the configuration option',
     'description' => 'Description',
@@ -27,11 +25,9 @@ return [
     'enter_option_env_variable' => 'Enter the environment variable name',
     'pricing' => 'Pricing',
     
-    // Boolean
     'yes' => 'Yes',
     'no' => 'No',
     
-    // Types
     'types' => [
         'text' => 'Text',
         'number' => 'Number',

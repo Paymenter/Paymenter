@@ -5,7 +5,6 @@ return [
     'server_label' => 'server',
     'servers_plural_label' => 'servers',
     
-    // Fields
     'name' => 'Name',
     'enter_name' => 'Enter the name of the server',
     'server' => 'Server',

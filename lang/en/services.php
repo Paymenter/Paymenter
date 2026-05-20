@@ -73,7 +73,6 @@ return [
     'label_modal_title' => 'Edit Service Label',
     'update_label' => 'Update Label',
 
-    // Administration / Services
     'service_label' => 'service',
     'services_plural_label' => 'services',
     'select_product' => 'Select the product',
@@ -100,7 +99,6 @@ return [
     'expires_from' => 'Expires From',
     'expires_until' => 'Expires Until',
 
-    // Administration / Cancellations
     'cancellation_label' => 'service cancellation',
     'cancellations_plural_label' => 'service cancellations',
     'cancellations' => 'Service Cancellations',

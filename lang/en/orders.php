@@ -6,7 +6,6 @@ return [
     'order_label' => 'order',
     'orders_plural_label' => 'orders',
     
-    // Form fields
     'currency' => 'Currency',
     'currency_helper' => 'Does not convert the price, only displays the currency symbol',
     'currency_placeholder' => 'Select the currency',
@@ -27,7 +26,6 @@ return [
     'cancel_subscription_error_title' => 'Subscription Not Cancelled',
     'cancel_subscription_error' => 'The subscription could not be cancelled',
     
-    // Table columns
     'id' => 'ID',
     'user' => 'User',
     'total' => 'Total',

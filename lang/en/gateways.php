@@ -5,7 +5,6 @@ return [
     'gateway_label' => 'gateway',
     'gateways_plural_label' => 'gateways',
     
-    // Fields
     'name' => 'Name',
     'enter_name' => 'Enter the name of the gateway',
     'gateway' => 'Gateway',

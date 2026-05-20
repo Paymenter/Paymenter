@@ -6,13 +6,11 @@ return [
     'product_label' => 'product',
     'products_plural_label' => 'products',
 
-    // Tabs
     'general' => 'General',
     'pricing' => 'Pricing',
     'upgrades' => 'Upgrades',
     'server' => 'Server',
 
-    // General fields
     'name' => 'Name',
     'slug' => 'Slug',
     'stock' => 'Stock',
@@ -29,13 +27,10 @@ return [
     'image' => 'Image',
     'category' => 'Category',
 
-    // Upgrades tab
     'upgrades_placeholder' => 'Select the products that this product can upgrade to',
 
-    // Server tab
     'refresh' => 'Refresh',
 
-    // Pricing tab (Plans)
     'plans' => 'Plans',
     'add_new_plan' => 'Add new plan',
     'plan_delete_error_title' => 'Whoops!',

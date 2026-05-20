@@ -5,7 +5,6 @@ return [
     'currency_label' => 'currency',
     'currencies_plural_label' => 'currencies',
     
-    // Fields
     'code' => 'Code',
     'enter_code' => 'Enter the currency code',
     'name' => 'Name',
