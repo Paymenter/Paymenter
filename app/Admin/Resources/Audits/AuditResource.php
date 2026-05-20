@@ -22,6 +22,21 @@ class AuditResource extends Resource
 
     protected static string|\UnitEnum|null $navigationGroup = 'System';
 
+    public static function getNavigationLabel(): string
+    {
+        return __('audits.audits');
+    }
+
+    public static function getModelLabel(): string
+    {
+        return __('audits.audit');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('audits.audits');
+    }
+
     public static function infolist(Schema $schema): Schema
     {
         return AuditInfolist::configure($schema);
