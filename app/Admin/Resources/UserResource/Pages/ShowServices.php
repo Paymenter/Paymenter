@@ -19,7 +19,7 @@ class ShowServices extends ManageRelatedRecords
 
     public static function getNavigationLabel(): string
     {
-        return 'Products/Services';
+        return __('users.products_services');
     }
 
     public function table(Table $table): Table
@@ -28,14 +28,17 @@ class ShowServices extends ManageRelatedRecords
             ->recordTitleAttribute('product.name')
             ->columns([
                 TextColumn::make('id')
-                    ->label('ID')
+                    ->label(__('users.id'))
                     ->sortable(),
-                TextColumn::make('product.name'),
-                TextColumn::make('quantity'),
-                TextColumn::make('formattedPrice')->label('Price'),
+                TextColumn::make('product.name')
+                    ->label(__('users.product')),
+                TextColumn::make('quantity')
+                    ->label(__('users.quantity')),
+                TextColumn::make('formattedPrice')->label(__('products.price')),
                 TextColumn::make('status')
+                    ->label(__('users.status'))
                     ->badge()
-                    ->formatStateUsing(fn (string $state) => ucfirst($state))
+                    ->formatStateUsing(fn (string $state) => __('services.statuses.' . $state))
                     ->color(fn (string $state): string => match ($state) {
                         'active' => 'success',
                         'pending' => 'warning',

@@ -20,7 +20,7 @@ class ShowInvoices extends ManageRelatedRecords
 
     public static function getNavigationLabel(): string
     {
-        return 'Invoices';
+        return __('users.invoices');
     }
 
     public function table(Table $table): Table
@@ -28,12 +28,13 @@ class ShowInvoices extends ManageRelatedRecords
         return $table
             ->recordTitleAttribute('product.name')
             ->columns([
-                TextColumn::make('id')->sortable(),
-                TextColumn::make('formattedTotal')->label('Total'),
+                TextColumn::make('id')
+                    ->label(__('users.id'))
+                    ->sortable(),
+                TextColumn::make('formattedTotal')->label(__('users.total')),
                 TextColumn::make('status')
-                    ->label('Status')
-                    // Make first letter uppercase
-                    ->formatStateUsing(fn (string $state): string => ucfirst($state))
+                    ->label(__('users.status'))
+                    ->formatStateUsing(fn (string $state): string => __('users.' . $state))
                     ->badge()
                     ->color(fn (string $state): string => match ($state) {
                         'paid' => 'success',
@@ -43,11 +44,11 @@ class ShowInvoices extends ManageRelatedRecords
             ])
             ->filters([
                 SelectFilter::make('status')
-                    ->label('Status')
+                    ->label(__('users.status'))
                     ->options([
-                        'paid' => 'Paid',
-                        'pending' => 'Pending',
-                        'cancelled' => 'Cancelled',
+                        'paid' => __('users.paid'),
+                        'pending' => __('users.pending'),
+                        'cancelled' => __('users.cancelled'),
                     ]),
             ])
             ->recordActions([

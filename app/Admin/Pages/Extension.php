@@ -39,8 +39,15 @@ class Extension extends Page implements HasActions, HasTable
 
     protected static string|\BackedEnum|null $activeNavigationIcon = 'ri-download-2-fill';
 
-    // Label for the navigation item
-    protected static ?string $navigationLabel = 'Available Extensions';
+    public static function getNavigationLabel(): string
+    {
+        return __('extensions.available_extensions');
+    }
+
+    public function getTitle(): string|\Illuminate\Contracts\Support\Htmlable
+    {
+        return __('extensions.available_extensions');
+    }
 
     #[Url(except: 'marketplace', as: 'tab')]
     public string $activeTab = 'marketplace';
@@ -75,10 +82,10 @@ class Extension extends Page implements HasActions, HasTable
                 return $response->json('extensions', []);
             });
             if (is_null($this->allExtensions)) {
-                $this->error = 'The Paymenter Marketplace is currently unavailable. Please try again later.';
+                $this->error = __('extensions.marketplace_unavailable');
             }
         } catch (ConnectionException $e) {
-            $this->error = 'Failed to connect to the Paymenter Marketplace. Please check your server\'s internet connection.';
+            $this->error = __('extensions.marketplace_connection_failed');
             logger()->error('Paymenter Marketplace API connection failed: ' . $e->getMessage());
         }
     }
@@ -128,24 +135,24 @@ class Extension extends Page implements HasActions, HasTable
     {
         return $table
             ->records(fn () => collect(ExtensionHelper::getInstallableExtensions()))
-            ->description('List of available extensions (not gateway or server extensions) that can be installed.')
+            ->description(__('extensions.table_description'))
             ->columns([
                 ImageColumn::make('meta.icon')
-                    ->label('Icon')
+                    ->label(__('extensions.icon'))
                     ->state(fn ($record) => $record['meta']?->icon ? $record['meta']->icon : 'ri-puzzle-fill'),
                 TextColumn::make('meta.name')
-                    ->label('Extension Name')
+                    ->label(__('extensions.extension_name'))
                     ->searchable()
                     ->sortable()
                     ->state(fn ($record) => $record['meta'] ? $record['meta']->name . ' (' . $record['meta']->author . ')' : $record['name']),
                 TextColumn::make('meta.description')
-                    ->label('Description')
+                    ->label(__('extensions.description'))
                     ->searchable()
                     ->sortable(),
             ])
             ->recordActions([
                 Action::make('install')
-                    ->label('Install')
+                    ->label(__('extensions.install'))
                     ->action(function ($record) {
                         $extension = \App\Models\Extension::create([
                             'name' => $record['name'],
@@ -155,8 +162,8 @@ class Extension extends Page implements HasActions, HasTable
                         ExtensionHelper::call($extension, 'installed', mayFail: true);
 
                         Notification::make()
-                            ->title('Extension Installed')
-                            ->body('The extension has been successfully installed.')
+                            ->title(__('extensions.installed_success_title'))
+                            ->body(__('extensions.installed_success_body'))
                             ->success()
                             ->send();
 
@@ -166,11 +173,11 @@ class Extension extends Page implements HasActions, HasTable
             ])
             ->headerActions([
                 Action::make('upload')
-                    ->label('Upload Extension')
+                    ->label(__('extensions.upload_extension'))
                     ->icon('ri-upload-2-line')
                     ->form([
                         FileUpload::make('file')
-                            ->label('Extension File')
+                            ->label(__('extensions.extension_file'))
                             ->required()
                             ->acceptedFileTypes(['application/zip', 'application/x-zip-compressed'])
                             ->directory('extensions/uploaded')
@@ -184,30 +191,30 @@ class Extension extends Page implements HasActions, HasTable
                             switch ($type) {
                                 case 'server':
                                     Notification::make()
-                                        ->title('Extension uploaded successfully')
-                                        ->body('Server uploaded successfully. Please go to the <a class="text-primary-600" wire:navigate href="' . ServerResource::getUrl() . '">Servers</a> page to install the new server extension.')
+                                        ->title(__('extensions.uploaded_success'))
+                                        ->body(__('extensions.uploaded_server_body', ['url' => ServerResource::getUrl()]))
                                         ->success()
                                         ->send();
                                     break;
                                 case 'gateway':
                                     Notification::make()
-                                        ->title('Extension uploaded successfully')
-                                        ->body('Gateway uploaded successfully. Please go to the <a class="text-primary-600" wire:navigate href="' . GatewayResource::getUrl() . '">Gateways</a> page to install the new gateway extension.')
+                                        ->title(__('extensions.uploaded_success'))
+                                        ->body(__('extensions.uploaded_gateway_body', ['url' => GatewayResource::getUrl()]))
                                         ->success()
                                         ->send();
                                     break;
                                 default:
                                     // Unknown type, just stay on the page
                                     Notification::make()
-                                        ->title('Extension uploaded successfully')
-                                        ->body('It should now be available on the "Ready to Install" tab.')
+                                        ->title(__('extensions.uploaded_success'))
+                                        ->body(__('extensions.uploaded_generic_body'))
                                         ->success()
                                         ->send();
                                     break;
                             }
                         } catch (\Exception $e) {
                             Notification::make()
-                                ->title('Failed to upload extension')
+                                ->title(__('extensions.upload_failed'))
                                 ->body($e->getMessage())
                                 ->danger()
                                 ->send();

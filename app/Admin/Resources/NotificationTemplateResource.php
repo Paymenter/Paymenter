@@ -31,40 +31,58 @@ class NotificationTemplateResource extends Resource
 
     protected static string|\UnitEnum|null $navigationGroup = 'Other';
 
+    public static function getNavigationLabel(): string
+    {
+        return __('notifications.notification_templates');
+    }
+
+    public static function getModelLabel(): string
+    {
+        return __('notifications.notification_template');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('notifications.notification_templates');
+    }
+
     public static function form(Schema $schema): Schema
     {
         return $schema
             ->components([
                 TextInput::make('key')
+                    ->label(__('notifications.key'))
                     ->required()
                     ->disabledOn('edit')
                     ->maxLength(255),
                 Toggle::make('enabled')
+                    ->label(__('notifications.enabled'))
                     ->required(),
                 TextInput::make('edit_preference_message')
-                    ->label('Edit Preference Message')
-                    ->hint('This message will be shown to users when they edit their notification preferences for this template.')
+                    ->label(__('notifications.edit_pref_msg'))
+                    ->hint(__('notifications.edit_pref_msg_hint'))
                     ->columnSpanFull(),
-                Section::make('Email Template')
-                    ->description('Define the subject and body of the email template. You can use either Markdown or HTML for the body content.')
+                Section::make(__('notifications.email_template'))
+                    ->description(__('notifications.email_template_desc'))
                     ->columns(2)
                     ->columnSpanFull()
                     ->collapsible()
                     ->schema([
                         TextInput::make('subject')
+                            ->label(__('notifications.subject'))
                             ->required()
                             ->maxLength(255),
                         Select::make('mail_enabled')
-                            ->label('Mail Enabled')
+                            ->label(__('notifications.mail_enabled'))
                             ->options([
-                                NotificationEnabledStatus::ChoiceOn->value => 'User Choice, Default On',
-                                NotificationEnabledStatus::ChoiceOff->value => 'User Choice, Default Off',
-                                NotificationEnabledStatus::Force->value => 'Force On',
-                                NotificationEnabledStatus::Never->value => 'Force Off',
+                                NotificationEnabledStatus::ChoiceOn->value => __('notifications.choice_on'),
+                                NotificationEnabledStatus::ChoiceOff->value => __('notifications.choice_off'),
+                                NotificationEnabledStatus::Force->value => __('notifications.force_on'),
+                                NotificationEnabledStatus::Never->value => __('notifications.force_off'),
                             ])
                             ->required(),
                         MarkdownEditor::make('body')
-                            ->hint('Use either Markdown or HTML to compose the email body.')
+                            ->hint(__('notifications.body_hint'))
                             ->disableAllToolbarButtons()
                             ->required()
                             ->columnSpanFull(),
@@ -75,37 +93,37 @@ class NotificationTemplateResource extends Resource
                             ->nestedRecursiveRules(['required', 'email'])
                             ->placeholder('mail@example.com'),
                     ]),
-                Section::make('In-App Notification (push)')
-                    ->description('Define the title and body of the in-app notification that users will receive.')
+                Section::make(__('notifications.in_app_notification'))
+                    ->description(__('notifications.in_app_notification_desc'))
                     ->columns(2)
                     ->columnSpanFull()
                     ->collapsible()
                     ->schema([
                         TextInput::make('in_app_title')
-                            ->label('In-App Title')
+                            ->label(__('notifications.in_app_title'))
                             ->required(fn (Get $get) => $get('in_app_enabled') !== NotificationEnabledStatus::Never->value)
                             ->disabled(fn (Get $get) => $get('in_app_enabled') === NotificationEnabledStatus::Never->value)
                             ->maxLength(255),
                         Select::make('in_app_enabled')
-                            ->label('In-App Enabled')
+                            ->label(__('notifications.in_app_enabled'))
                             ->options([
-                                NotificationEnabledStatus::ChoiceOn->value => 'User Choice, Default On',
-                                NotificationEnabledStatus::ChoiceOff->value => 'User Choice, Default Off',
-                                NotificationEnabledStatus::Force->value => 'Force On',
-                                NotificationEnabledStatus::Never->value => 'Force Off',
+                                NotificationEnabledStatus::ChoiceOn->value => __('notifications.choice_on'),
+                                NotificationEnabledStatus::ChoiceOff->value => __('notifications.choice_off'),
+                                NotificationEnabledStatus::Force->value => __('notifications.force_on'),
+                                NotificationEnabledStatus::Never->value => __('notifications.force_off'),
                             ])
                             ->live()
                             ->required(),
                         TextInput::make('in_app_body')
-                            ->label('In-App Body')
+                            ->label(__('notifications.in_app_body'))
                             ->required(fn (Get $get) => $get('in_app_enabled') !== NotificationEnabledStatus::Never->value)
                             ->disabled(fn (Get $get) => $get('in_app_enabled') === NotificationEnabledStatus::Never->value)
                             ->columnSpanFull(),
                         TextInput::make('in_app_url')
-                            ->label('In-App URL')
+                            ->label(__('notifications.in_app_url'))
                             ->maxLength(255)
                             ->placeholder('{{ route("invoices.show", $invoice) }}')
-                            ->hint('Supports dynamic variables like {{ route("invoices.show", $invoice) }}')
+                            ->hint(__('notifications.in_app_url_hint'))
                             ->disabled(fn (Get $get) => $get('in_app_enabled') === NotificationEnabledStatus::Never->value)
                             ->columnSpanFull(),
                     ]),
@@ -118,8 +136,10 @@ class NotificationTemplateResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('subject')
+                    ->label(__('notifications.subject'))
                     ->searchable(),
                 IconColumn::make('enabled')
+                    ->label(__('notifications.enabled'))
                     ->boolean(),
             ])
             ->filters([

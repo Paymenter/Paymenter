@@ -60,17 +60,17 @@ class TicketResource extends Resource
         return $schema
             ->components([
                 TextInput::make('subject')
-                    ->label('Subject')
+                    ->label(__('ticket.subject'))
                     ->columnSpan(function ($record) {
                         return $record ? 2 : 1;
                     })
                     ->required(),
                 Select::make('status')
-                    ->label('Status')
+                    ->label(__('ticket.status'))
                     ->options([
-                        'open' => 'Open',
-                        'closed' => 'Closed',
-                        'replied' => 'Replied',
+                        'open' => __('ticket.open'),
+                        'closed' => __('ticket.closed'),
+                        'replied' => __('ticket.replied'),
                     ])
                     ->columnSpan(function ($record) {
                         return $record ? 2 : 1;
@@ -78,11 +78,11 @@ class TicketResource extends Resource
                     ->default('open')
                     ->required(),
                 Select::make('priority')
-                    ->label('Priority')
+                    ->label(__('ticket.priority'))
                     ->options([
-                        'low' => 'Low',
-                        'medium' => 'Medium',
-                        'high' => 'High',
+                        'low' => __('ticket.low'),
+                        'medium' => __('ticket.medium'),
+                        'high' => __('ticket.high'),
                     ])
                     ->columnSpan(function ($record) {
                         return $record ? 2 : 1;
@@ -90,7 +90,7 @@ class TicketResource extends Resource
                     ->default('medium')
                     ->required(),
                 Select::make('department')
-                    ->label('Department')
+                    ->label(__('ticket.department'))
                     ->options(array_combine(config('settings.ticket_departments'), config('settings.ticket_departments')))
                     ->columnSpan(function ($record) {
                         return $record ? 2 : 1;
@@ -99,7 +99,7 @@ class TicketResource extends Resource
                     return $record ? 2 : 1;
                 }),
                 Select::make('assigned_to')
-                    ->label('Assigned To')
+                    ->label(__('ticket.assigned_to'))
                     ->searchable()
                     ->preload()
                     ->relationship('user', 'id', fn (Builder $query) => $query->where('role_id', '!=', null))
@@ -108,7 +108,7 @@ class TicketResource extends Resource
                         return $record ? 2 : 1;
                     }),
                 Select::make('service_id')
-                    ->label('Service')
+                    ->label(__('ticket.service'))
                     ->relationship('service', 'id', function (Builder $query, Get $get) {
                         $query->where('user_id', $get('user_id'));
                     })
@@ -119,7 +119,7 @@ class TicketResource extends Resource
                     ->disabled(fn (Get $get) => !$get('user_id')),
                 MarkdownEditor::make('message')
                     ->columnSpan(2)
-                    ->label('Initial Message')
+                    ->label(__('ticket.initial_message'))
                     ->hiddenOn('edit')
                     ->columnSpan(function ($record) {
                         return $record ? 2 : 1;
@@ -136,9 +136,11 @@ class TicketResource extends Resource
                     ->label('ID')
                     ->sortable(),
                 TextColumn::make('subject')
+                    ->label(__('ticket.subject'))
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('status')
+                    ->label(__('ticket.status'))
                     ->sortable()
                     ->badge()
                     ->color(fn (Ticket $record) => match ($record->status) {
@@ -146,8 +148,9 @@ class TicketResource extends Resource
                         'closed' => 'danger',
                         'replied' => 'warning',
                     })
-                    ->formatStateUsing(fn (string $state) => ucfirst($state)),
+                    ->formatStateUsing(fn (string $state) => __('ticket.' . $state)),
                 TextColumn::make('priority')
+                    ->label(__('ticket.priority'))
                     ->sortable()
                     ->badge()
                     ->color(fn (Ticket $record) => match ($record->priority) {
@@ -155,31 +158,35 @@ class TicketResource extends Resource
                         'medium' => 'gray',
                         'high' => 'danger',
                     })
-                    ->formatStateUsing(fn (string $state) => ucfirst($state)),
+                    ->formatStateUsing(fn (string $state) => __('ticket.' . $state)),
                 TextColumn::make('department')
+                    ->label(__('ticket.department'))
                     ->sortable(),
                 TextColumn::make('user.name')
+                    ->label(__('ticket.user'))
                     ->searchable(['first_name', 'last_name'])
                     ->sortable(['first_name', 'last_name']),
             ])
             ->filters([
                 SelectFilter::make('user')
-                    ->label('User')
+                    ->label(__('ticket.user'))
                     ->relationship('user', 'id')
-                    ->indicateUsing(fn ($data) => $data['value'] ? 'User: ' . User::find($data['value'])->name : null)
+                    ->indicateUsing(fn ($data) => $data['value'] ? __('ticket.user') . ': ' . User::find($data['value'])->name : null)
                     ->getOptionLabelFromRecordUsing(fn ($record) => $record->name),
                 SelectFilter::make('priority')
+                    ->label(__('ticket.priority'))
                     ->options([
-                        'low' => 'Low',
-                        'medium' => 'Medium',
-                        'high' => 'High',
+                        'low' => __('ticket.low'),
+                        'medium' => __('ticket.medium'),
+                        'high' => __('ticket.high'),
                     ]),
                 SelectFilter::make('department')
+                    ->label(__('ticket.department'))
                     ->options(array_combine(config('settings.ticket_departments'), config('settings.ticket_departments')), config('settings.ticket_departments')),
                 SelectFilter::make('assigned_to')
-                    ->label('Assigned To')
+                    ->label(__('ticket.assigned_to'))
                     ->relationship('user', 'id', fn (Builder $query) => $query->where('role_id', '!=', null))
-                    ->indicateUsing(fn ($data) => $data['value'] ? 'Assigned to: ' . User::find($data['value'])->name : null)
+                    ->indicateUsing(fn ($data) => $data['value'] ? __('ticket.assigned_to') . ': ' . User::find($data['value'])->name : null)
                     ->getOptionLabelFromRecordUsing(fn ($record) => $record->name),
             ])
             ->recordActions([

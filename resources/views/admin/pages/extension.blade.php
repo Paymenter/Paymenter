@@ -8,7 +8,7 @@
                     'border-primary-500 text-primary-600' => $activeTab === 'marketplace',
                     'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300 dark:hover:border-gray-600' => $activeTab !== 'marketplace',
                 ])>
-                Browse Marketplace
+                {{ __('extensions.browse_marketplace') }}
             </button>
             <button
                 wire:click="$set('activeTab', 'installable')"
@@ -17,7 +17,7 @@
                     'border-primary-500 text-primary-600' => $activeTab === 'installable',
                     'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300 dark:hover:border-gray-600' => $activeTab !== 'installable',
                 ])>
-                Ready to Install / Upload
+                {{ __('extensions.ready_to_install') }}
             </button>
         </nav>
     </div>
@@ -26,7 +26,7 @@
             <div class="flex flex-col gap-4">
                 <div class="relative">
                     <div class="absolute inset-y-0 flex items-center pointer-events-none start-0 ps-3"><x-ri-search-line class="w-5 h-5 text-gray-400" /></div>
-                    <input type="search" placeholder="Search extensions by name..." wire:model.live.debounce.500ms="search" class="block w-full p-3 border-gray-300 rounded-lg shadow-sm ps-10 bg-gray-50 dark:bg-gray-700 dark:border-gray-600 focus:ring-primary-500 focus:border-primary-500">
+                    <input type="search" placeholder="{{ __('extensions.search_placeholder') }}" wire:model.live.debounce.500ms="search" class="block w-full p-3 border-gray-300 rounded-lg shadow-sm ps-10 bg-gray-50 dark:bg-gray-700 dark:border-gray-600 focus:ring-primary-500 focus:border-primary-500">
                 </div>
                 <div class="flex items-center space-x-2">
                     @php
@@ -34,21 +34,21 @@
                         $activeClasses = 'bg-primary-600 border-primary-600 text-white hover:bg-primary-700';
                         $inactiveClasses = 'bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700';
                     @endphp
-                    <button wire:click="$set('filter', 'all')" @class([$baseClasses, $activeClasses => $this->filter === 'all', $inactiveClasses => $this->filter !== 'all'])>All</button>
-                    <button wire:click="$set('filter', 'extension')" @class([$baseClasses, $activeClasses => $this->filter === 'extension', $inactiveClasses => $this->filter !== 'extension'])>Extensions</button>
-                    <button wire:click="$set('filter', 'theme')" @class([$baseClasses, $activeClasses => $this->filter === 'theme', $inactiveClasses => $this->filter !== 'theme'])>Themes</button>
+                    <button wire:click="$set('filter', 'all')" @class([$baseClasses, $activeClasses => $this->filter === 'all', $inactiveClasses => $this->filter !== 'all'])>{{ __('extensions.all') }}</button>
+                    <button wire:click="$set('filter', 'extension')" @class([$baseClasses, $activeClasses => $this->filter === 'extension', $inactiveClasses => $this->filter !== 'extension'])>{{ __('extensions.extensions_filter') }}</button>
+                    <button wire:click="$set('filter', 'theme')" @class([$baseClasses, $activeClasses => $this->filter === 'theme', $inactiveClasses => $this->filter !== 'theme'])>{{ __('extensions.themes_filter') }}</button>
                 </div>
             </div>
             <div class="mt-6">
                 @if($this->error)
                     <div class="p-4 text-center text-gray-500 bg-white border border-gray-300 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-600 dark:text-gray-400">
-                        <h3 class="text-xl font-semibold text-gray-700 dark:text-gray-200">Something went wrong</h3>
+                        <h3 class="text-xl font-semibold text-gray-700 dark:text-gray-200">{{ __('extensions.something_went_wrong') }}</h3>
                         <p class="mt-2">{{ $this->error }}</p>
                     </div>
                 @elseif($this->extensions->isEmpty())
                     <div class="p-4 text-center text-gray-500 bg-white border border-gray-300 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-600 dark:text-gray-400">
-                        <h3 class="text-xl font-semibold text-gray-700 dark:text-gray-200">No extensions found</h3>
-                        <p class="mt-2">Try adjusting your search or filter criteria.</p>
+                        <h3 class="text-xl font-semibold text-gray-700 dark:text-gray-200">{{ __('extensions.no_extensions_found') }}</h3>
+                        <p class="mt-2">{{ __('extensions.no_extensions_found_desc') }}</p>
                     </div>
                 @else
                     <div>

@@ -34,6 +34,21 @@ class OrderResource extends Resource
 {
     protected static ?string $model = Order::class;
 
+    public static function getNavigationLabel(): string
+    {
+        return __('orders.orders');
+    }
+
+    public static function getModelLabel(): string
+    {
+        return __('orders.order_label');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('orders.orders_plural_label');
+    }
+
     protected static string|\BackedEnum|null $navigationIcon = 'ri-shopping-bag-4-line';
 
     protected static string|\BackedEnum|null $activeNavigationIcon = 'ri-shopping-bag-4-fill';
@@ -50,7 +65,7 @@ class OrderResource extends Resource
                         $set('services', collect($get('services'))->map(fn ($service) => array_merge($service, ['user_id' => $get('user_id')]))->toArray());
                     }),
                 Select::make('currency_code')
-                    ->label('Currency')
+                    ->label(__('orders.currency'))
                     ->required()
                     ->live()
                     ->afterStateUpdated(function (Set $set, Get $get) {
@@ -58,11 +73,11 @@ class OrderResource extends Resource
                         $set('services', collect($get('services'))->map(fn ($service) => array_merge($service, ['currency_code' => $get('currency_code')]))->toArray());
                     })
                     ->options(Currency::query()->pluck('code', 'code'))
-                    ->helperText('Does not convert the price, only displays the currency symbol')
-                    ->placeholder('Select the currency'),
+                    ->helperText(__('orders.currency_helper'))
+                    ->placeholder(__('orders.currency_placeholder')),
                 Repeater::make('services')
                     ->relationship('services')
-                    ->label('Services')
+                    ->label(__('orders.services'))
                     ->columnSpanFull()
                     ->columns(2)
                     ->schema([
@@ -71,7 +86,7 @@ class OrderResource extends Resource
                         Hidden::make('currency_code')
                             ->default(fn (Get $get) => $get('../../currency_code')),
                         Select::make('product_id')
-                            ->label('Product')
+                            ->label(__('orders.product'))
                             ->required()
                             ->relationship(
                                 name: 'product',
@@ -83,9 +98,9 @@ class OrderResource extends Resource
                             ->preload()
                             ->live()
                             ->afterStateUpdated(fn (Set $set) => $set('plan_id', null))
-                            ->placeholder('Select the product'),
+                            ->placeholder(__('orders.product_placeholder')),
                         Select::make('plan_id')
-                            ->label('Plan')
+                            ->label(__('orders.plan'))
                             ->required()
                             ->relationship('plan', 'name', fn (Builder $query, Get $get) => $query->where('priceable_type', Product::class)->where('priceable_id', $get('product_id')))
                             ->searchable()
@@ -103,37 +118,38 @@ class OrderResource extends Resource
                                 }
                                 $set('price', $plan->price);
                             })
-                            ->placeholder('Select the plan'),
+                            ->placeholder(__('orders.plan_placeholder')),
                         TextInput::make('quantity')
-                            ->label('Quantity')
+                            ->label(__('orders.quantity'))
                             ->required()
-                            ->placeholder('Enter the quantity'),
+                            ->placeholder(__('orders.quantity_placeholder')),
                         TextInput::make('price')
                             ->suffix(fn (Component $component, Get $get) => $component->getRecord()?->currency->suffix ?? Currency::where('code', $get('../../currency_code'))->first()?->suffix)
                             ->prefix(fn (Component $component, Get $get) => $component->getRecord()?->currency->prefix ?? Currency::where('code', $get('../../currency_code'))->first()?->prefix)
-                            ->label('Price')
+                            ->label(__('orders.price'))
                             ->required()
                             ->mask(RawJs::make(
                                 <<<'JS'
                                     $money($input, '.', '', 2)
                                 JS
                             ))
-                            ->placeholder('Enter the price'),
+                            ->placeholder(__('orders.price_placeholder')),
                         TextInput::make('subscription_id')
-                            ->label('Subscription ID')
+                            ->label(__('orders.subscription_id'))
                             ->nullable()
-                            ->placeholder('Enter the subscription ID')
+                            ->placeholder(__('orders.subscription_id_placeholder')),
+                        Hidden::make('cancel_subscription')
                             ->hintActions([
                                 Action::make('Cancel Subscription ID')
                                     ->action(function (Component $component) {
                                         if (ExtensionHelper::cancelSubscription($component->getRecord())) {
                                             Notification::make('Subscription Cancelled')
-                                                ->title('The subscription has been successfully cancelled')
+                                                ->title(__('orders.cancel_subscription_success'))
                                                 ->success()
                                                 ->send();
                                         } else {
                                             Notification::make('Subscription Not Cancelled')
-                                                ->title('The subscription could not be cancelled')
+                                                ->title(__('orders.cancel_subscription_error'))
                                                 ->error()
                                                 ->send();
                                         }
@@ -141,7 +157,7 @@ class OrderResource extends Resource
                                         $component->getRecord()->update(['subscription_id' => null]);
                                     })
                                     ->requiresConfirmation()
-                                    ->label('Cancel Subscription')
+                                    ->label(__('orders.cancel_subscription'))
                                     ->hidden(fn (Component $component) => !$component->getRecord()?->subscription_id),
                             ]),
                     ]),
@@ -153,20 +169,20 @@ class OrderResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('id')
-                    ->label('ID')
+                    ->label(__('orders.id'))
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('user.name')
-                    ->label('User')
+                    ->label(__('orders.user'))
                     ->searchable(query: fn (Builder $query, $search) => $query->whereHas('user', fn (Builder $query) => $query->where('first_name', 'like', "%$search%")->orWhere('last_name', 'like', "%$search%"))),
                 TextColumn::make('currency.code')
-                    ->label('Currency')
+                    ->label(__('orders.currency'))
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('formattedTotal')
-                    ->label('Total'),
+                    ->label(__('orders.total')),
                 TextColumn::make('updated_at')
-                    ->label('Updated At')
+                    ->label(__('orders.updated_at'))
                     ->searchable()
                     ->sortable(),
             ])

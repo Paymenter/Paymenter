@@ -21,8 +21,8 @@ class Overview extends BaseWidget
     {
         return [
             $this->invoiceTransaction(),
-            $this->getData(Ticket::class, 'Tickets'),
-            $this->getData(Service::class, 'Services'),
+            $this->getData(Ticket::class, 'Tickets', __('dashboard.tickets')),
+            $this->getData(Service::class, 'Services', __('dashboard.services')),
         ];
     }
 
@@ -45,14 +45,18 @@ class Overview extends BaseWidget
 
         $percentageIncrease = $lastMonth > 0 ? (($thisMonth - $lastMonth) / $lastMonth) * 100 : 0;
 
-        return Stat::make('Revenue', $thisMonth)
-            ->description($increase >= 0 ? 'Increased by ' . number_format($percentageIncrease, 2) . '% (last 30 days)' : 'Decreased by ' . number_format($percentageIncrease, 2) . '% (last 30 days)')
+        $description = $increase >= 0 
+            ? __('dashboard.increased_by', ['percentage' => number_format($percentageIncrease, 2)])
+            : __('dashboard.decreased_by', ['percentage' => number_format($percentageIncrease, 2)]);
+
+        return Stat::make(__('dashboard.revenue'), $thisMonth)
+            ->description($description)
             ->descriptionIcon($increase >= 0 ? 'heroicon-m-arrow-trending-up' : 'heroicon-m-arrow-trending-down')
             ->chart($chart->map(fn (TrendValue $value) => $value->aggregate)->toArray())
             ->color($increase >= 0 ? 'success' : 'danger');
     }
 
-    private function getData($model, $name, $sum = false)
+    private function getData($model, $key, $translatedName, $sum = false)
     {
         $model = $model instanceof Model ? get_class($model) : $model;
 
@@ -74,8 +78,12 @@ class Overview extends BaseWidget
 
         $percentageIncrease = $lastMonth > 0 ? (($thisMonth - $lastMonth) / $lastMonth) * 100 : 0;
 
-        return Stat::make($name, $thisMonth)
-            ->description($increase >= 0 ? 'Increased by ' . number_format($percentageIncrease, 2) . '% (last 30 days)' : 'Decreased by ' . number_format($percentageIncrease, 2) . '% (last 30 days)')
+        $description = $increase >= 0 
+            ? __('dashboard.increased_by', ['percentage' => number_format($percentageIncrease, 2)])
+            : __('dashboard.decreased_by', ['percentage' => number_format($percentageIncrease, 2)]);
+
+        return Stat::make($translatedName, $thisMonth)
+            ->description($description)
             ->descriptionIcon($increase >= 0 ? 'heroicon-m-arrow-trending-up' : 'heroicon-m-arrow-trending-down')
             ->chart($chart->map(fn (TrendValue $value) => $value->aggregate)->toArray())
             ->color($increase >= 0 ? 'success' : 'danger');

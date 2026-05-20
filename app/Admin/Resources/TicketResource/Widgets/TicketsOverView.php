@@ -13,11 +13,11 @@ class TicketsOverView extends BaseWidget
     protected function getStats(): array
     {
         return [
-            Stat::make('Open Tickets', Ticket::where('status', 'open')->count())
+            Stat::make(__('ticket.open_tickets'), Ticket::where('status', 'open')->count())
                 ->color('success'),
-            Stat::make('Closed Tickets', Ticket::where('status', 'closed')->count())
+            Stat::make(__('ticket.closed_tickets'), Ticket::where('status', 'closed')->count())
                 ->color('danger'),
-            Stat::make('Replied Tickets', Ticket::where('status', 'replied')->count())
+            Stat::make(__('ticket.replied_tickets'), Ticket::where('status', 'replied')->count())
                 ->color('gray'),
         ];
     }

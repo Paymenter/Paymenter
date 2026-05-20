@@ -32,6 +32,21 @@ class UserResource extends Resource
 {
     protected static ?string $model = User::class;
 
+    public static function getNavigationLabel(): string
+    {
+        return __('users.users');
+    }
+
+    public static function getModelLabel(): string
+    {
+        return __('users.user_label');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('users.users_plural_label');
+    }
+
     protected static string|\UnitEnum|null $navigationGroup = 'Administration';
 
     protected static string|\BackedEnum|null $navigationIcon = 'ri-group-line';
@@ -52,24 +67,24 @@ class UserResource extends Resource
     {
         return $schema
             ->components([
-                TextInput::make('first_name')->translateLabel()->required(),
-                TextInput::make('last_name')->translateLabel()->required(),
-                TextInput::make('email')->translateLabel()->email()->required()->unique('users', 'email', ignoreRecord: true),
+                TextInput::make('first_name')->label(__('users.first_name'))->required(),
+                TextInput::make('last_name')->label(__('users.last_name'))->required(),
+                TextInput::make('email')->label(__('users.email'))->email()->required()->unique('users', 'email', ignoreRecord: true),
 
-                TextInput::make('password')->translateLabel()->password()->revealable()
+                TextInput::make('password')->label(__('users.password'))->password()->revealable()
                     ->dehydrateStateUsing(fn (string $state): string => Hash::make($state))
                     ->dehydrated(fn (?string $state): bool => filled($state))
                     ->required(fn (string $operation): bool => $operation === 'create'),
-                Select::make('role_id')->translateLabel()->relationship('role', 'name')->searchable()->preload(),
+                Select::make('role_id')->label(__('users.role'))->relationship('role', 'name')->searchable()->preload(),
                 Toggle::make('tfa_secret')
-                    ->label('Two Factor Authentication')
+                    ->label(__('users.tfa_enabled'))
                     ->disabled(fn ($record) => !$record?->tfa_secret)
                     ->dehydrateStateUsing(fn ($state, $record) => $state ? $record->tfa_secret : null)
                     ->formatStateUsing(fn ($record) => $record && $record->tfa_secret ? true : false)
                     ->hiddenOn(['create']),
 
                 Toggle::make('email_verified_at')
-                    ->label('Email Verified')
+                    ->label(__('users.email_verified'))
                     ->dehydrateStateUsing(function ($state, $record) {
                         if ($state && !$record->email_verified_at) {
                             return now();
@@ -86,6 +101,7 @@ class UserResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('first_name')
+                    ->label(__('users.first_name'))
                     ->searchable()
                     ->sortable()
                     ->description(function (User $user) {
@@ -93,24 +109,36 @@ class UserResource extends Resource
                             return null;
                         }
 
-                        return 'Earnings - ' . implode(', ', $user->credits->map(function (Credit $credit) {
+                        return __('users.earnings') . ' - ' . implode(', ', $user->credits->map(function (Credit $credit) {
                             return "$credit->currency_code: $credit->amount";
                         })->toArray());
                     }),
-                TextColumn::make('last_name')->searchable()->sortable(),
-                TextColumn::make('email')->searchable()->sortable(),
-                TextColumn::make('role.name')->sortable(),
-                TextColumn::make('created_at')->dateTime()->sortable(),
+                TextColumn::make('last_name')
+                    ->label(__('users.last_name'))
+                    ->searchable()
+                    ->sortable(),
+                TextColumn::make('email')
+                    ->label(__('users.email'))
+                    ->searchable()
+                    ->sortable(),
+                TextColumn::make('role.name')
+                    ->label(__('users.role'))
+                    ->sortable(),
+                TextColumn::make('created_at')
+                    ->label(__('users.created_at'))
+                    ->dateTime()
+                    ->sortable(),
             ])
             ->filters([
                 SelectFilter::make('role')
+                    ->label(__('users.role'))
                     ->relationship('role', 'name')
                     ->searchable()
                     ->preload(),
                 Filter::make('email_verified')
-                    ->label('Email Verified'),
+                    ->label(__('users.email_verified')),
                 Filter::make('has_active_services')
-                    ->label('Has Active Services')
+                    ->label(__('users.has_active_services'))
                     ->query(fn ($query) => $query->whereHas('services', function ($q) {
                         $q->where('status', 'active');
                     })),

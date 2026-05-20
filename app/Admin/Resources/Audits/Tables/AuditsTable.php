@@ -36,11 +36,13 @@ class AuditsTable
         return $table
             ->columns([
                 TextColumn::make('user_id')
+                    ->label(__('audits.user'))
                     ->url(fn (Audit $record): string => $record->user_id ? UserResource::getUrl('edit', [$record->user_id]) : '')
                     ->formatStateUsing(fn (Audit $record): string => $record->user ? $record->user->name : 'User #' . $record->user_id)
-                    ->placeholder('System')
+                    ->placeholder(__('audits.system'))
                     ->sortable(),
                 TextColumn::make('event')
+                    ->label(__('audits.event'))
                     ->formatStateUsing(fn (Audit $record): string => $record->event . ' - ' . class_basename($record->auditable_type) . ' (' . $record->auditable_id . ')')
                     ->url(function (Audit $record) {
                         if ($record->event != 'deleted' && isset(self::TYPE_TO_RESOURCE[class_basename($record->auditable_type)])) {
@@ -55,15 +57,19 @@ class AuditsTable
                         });
                     }),
                 TextColumn::make('ip_address')
+                    ->label(__('audits.ip_address'))
                     ->searchable(),
                 TextColumn::make('user_agent')
+                    ->label(__('audits.user_agent'))
                     ->toggleable(isToggledHiddenByDefault: true)
                     ->searchable(),
                 TextColumn::make('created_at')
+                    ->label(__('audits.created_at'))
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('updated_at')
+                    ->label(__('audits.updated_at'))
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),

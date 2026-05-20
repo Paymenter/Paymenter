@@ -62,11 +62,11 @@ class AdminPanelProvider extends PanelProvider
             ->discoverClusters(in: app_path('Admin/Clusters'), for: 'App\\Admin\\Clusters')
             ->userMenuItems([
                 'exit_admin' => MenuItem::make()
-                    ->label('Exit Admin')
+                    ->label(__('navigation.exit_admin'))
                     ->url('/')
                     ->icon('heroicon-s-arrow-uturn-left'),
                 'logout' => Action::make('logout')
-                    ->label('Sign out')
+                    ->label(__('navigation.sign_out'))
                     ->icon(FilamentIcon::resolve(PanelsIconAlias::USER_MENU_LOGOUT_BUTTON) ?? Heroicon::ArrowLeftOnRectangle)
                     ->url(fn () => $panel->getLogoutUrl())
                     ->postToUrl(),

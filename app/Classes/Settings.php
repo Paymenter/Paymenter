@@ -652,6 +652,65 @@ class Settings
         // Set theme settings
         $settings['theme'] = [...$settings['theme'], ...Theme::getSettings()];
 
+        foreach ($settings as $groupKey => $groupSettings) {
+            foreach ($groupSettings as $itemKey => $setting) {
+                if (is_array($setting) && isset($setting['name'])) {
+                    $name = $setting['name'];
+
+                    // Translate Label
+                    $translatedLabel = __('settings.labels.' . $name);
+                    if ($translatedLabel !== 'settings.labels.' . $name) {
+                        $settings[$groupKey][$itemKey]['label'] = $translatedLabel;
+                    }
+
+                    // Translate Description
+                    $translatedDesc = __('settings.descriptions.' . $name);
+                    if ($translatedDesc !== 'settings.descriptions.' . $name) {
+                        $settings[$groupKey][$itemKey]['description'] = $translatedDesc;
+                    }
+
+                    // Translate Options if present
+                    if (isset($setting['options']) && is_array($setting['options'])) {
+                        $options = [];
+                        $keys = array_keys($setting['options']);
+                        $isSequential = $keys === range(0, count($keys) - 1);
+
+                        foreach ($setting['options'] as $oKey => $oVal) {
+                            if (is_array($oVal)) {
+                                $optKey = $oVal['value'];
+                                $optVal = $oVal['label'];
+                            } else {
+                                if ($isSequential) {
+                                    $optKey = $oVal;
+                                    $optVal = $oVal;
+                                } else {
+                                    $optKey = $oKey;
+                                    $optVal = $oVal;
+                                }
+                            }
+
+                            $translatedOption = __('settings.options.' . $name . '.' . $optKey);
+                            $translatedVal = $translatedOption !== 'settings.options.' . $name . '.' . $optKey ? $translatedOption : $optVal;
+
+                            if (is_array($oVal)) {
+                                $options[] = [
+                                    'value' => $optKey,
+                                    'label' => $translatedVal,
+                                ];
+                            } else {
+                                if ($isSequential) {
+                                    $options[] = $translatedVal;
+                                } else {
+                                    $options[$optKey] = $translatedVal;
+                                }
+                            }
+                        }
+                        $settings[$groupKey][$itemKey]['options'] = $options;
+                    }
+                }
+            }
+        }
+
         return $settings;
     }
 

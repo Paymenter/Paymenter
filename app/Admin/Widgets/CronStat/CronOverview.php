@@ -27,15 +27,15 @@ class CronOverview extends StatsOverviewWidget
         }
 
         return [
-            Stat::make('Last scheduler run', $lastRun ? Carbon::parse($lastRun)->diffForHumans() : 'Never')
+            Stat::make(__('cron.last_scheduler_run'), $lastRun ? Carbon::parse($lastRun)->diffForHumans() : __('cron.never'))
                 ->extraAttributes([
                     'class' => $lastRun && Carbon::parse($lastRun)->gt(Carbon::now()->subMinutes(5)) ? 'success' : 'error',
                 ]),
-            Stat::make('Last cron run', $lastCronRun ? Carbon::parse($lastCronRun)->diffForHumans() : 'Never')
+            Stat::make(__('cron.last_cron_run'), $lastCronRun ? Carbon::parse($lastCronRun)->diffForHumans() : __('cron.never'))
                 ->extraAttributes([
                     'class' => $lastCronRun && Carbon::parse($lastCronRun)->gt(Carbon::now()->subHours(24)) ? 'success' : 'error',
                 ]),
-            Stat::make('Next cron run', $nextRun->diffForHumans()),
+            Stat::make(__('cron.next_run'), $nextRun->diffForHumans()),
         ];
     }
 }

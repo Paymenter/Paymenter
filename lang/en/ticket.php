@@ -33,4 +33,17 @@ return [
     'select_service' => 'Select Service',
     'create' => 'Create',
     'no_tickets' => 'No tickets found',
+
+    'all_tickets' => 'All Tickets',
+    'open_tickets' => 'Open Tickets',
+    'replied_tickets' => 'Replied Tickets',
+    'closed_tickets' => 'Closed Tickets',
+
+    'open' => 'Open',
+    'closed' => 'Closed',
+    'replied' => 'Replied',
+    'assigned_to' => 'Assigned To',
+    'initial_message' => 'Initial Message',
+    'user' => 'User',
+    'go_to_user' => 'Go to User',
 ];

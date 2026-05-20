@@ -3,42 +3,42 @@
     <script src="{{ asset('js/ansi_up/ansi_up.min.js') }}"></script>
     @endassets
     @if(config('app.version') == 'beta')
-    <div>
-        <strong>Warning:</strong> You are using a beta version of the application. This can cause problems
+    <div class="p-4 border border-warning-300 bg-warning-50 text-warning-800 rounded-lg dark:bg-warning-950/20 dark:border-warning-800/30 dark:text-warning-400">
+        {!! __('updates.beta_warning') !!}
     </div>
     @endif
 
 
     @if(config('app.version') == 'beta' && config('settings.latest_commit') != config('app.commit'))
-    <div class="flex flex-col gap-1">
-        <div>
-            <strong>Latest commit:</strong> {{ config('settings.latest_commit') }}
+    <div class="flex flex-col gap-3">
+        <div class="space-y-1">
+            <div>
+                <strong>{{ __('updates.latest_commit') }} :</strong> {{ config('settings.latest_commit') }}
+            </div>
+            <div>
+                <strong>{{ __('updates.your_commit') }} :</strong> {{ config('app.commit') }}
+            </div>
         </div>
-        <div>
-            <strong>Your commit:</strong> {{ config('app.commit') }}
-        </div>
-        <p>See <a
-                href="https://paymenter.org/docs/installation/updating">https://paymenter.org/docs/installation/updating</a>
-            on how to update</p>
+        <p>{!! __('updates.updating_instructions', ['url' => 'https://paymenter.org/docs/installation/updating']) !!}</p>
 
-        <p class="mt-2">OR try the web updater (This is a beta feature, use at your own risk)</p>
+        <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">{{ __('updates.web_updater_notice') }}</p>
         <div class="mt-2">
             {{ $this->update }}
         </div>
     </div>
     @elseif(config('app.version') != config('settings.latest_version') && config('app.version') != 'beta')
-    <div class="flex flex-col gap-1">
-        <div>
-            <strong>Latest version:</strong> {{ config('settings.latest_version') }}
+    <div class="flex flex-col gap-3">
+        <div class="space-y-1">
+            <div>
+                <strong>{{ __('updates.latest_version') }} :</strong> {{ config('settings.latest_version') }}
+            </div>
+            <div>
+                <strong>{{ __('updates.your_version') }} :</strong> {{ config('app.version') }}
+            </div>
         </div>
-        <div>
-            <strong>Your version:</strong> {{ config('app.version') }}
-        </div>
-        <p>See <a
-                href="https://paymenter.org/docs/installation/updating">https://paymenter.org/docs/installation/updating</a>
-            on how to update</p>
+        <p>{!! __('updates.updating_instructions', ['url' => 'https://paymenter.org/docs/installation/updating']) !!}</p>
 
-        <p class="mt-2">OR try the web updater (This is a beta feature, use at your own risk)</p>
+        <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">{{ __('updates.web_updater_notice') }}</p>
         <div class="mt-2">
             {{ $this->update }}
         </div>
@@ -46,12 +46,12 @@
     @else
     <div class="flex flex-col gap-1">
         <div>
-            <strong>Latest version:</strong> {{ config('settings.latest_version') }}
+            <strong>{{ __('updates.latest_version') }} :</strong> {{ config('settings.latest_version') }}
         </div>
         <div>
-            <strong>Your version:</strong> {{ config('app.version') }}
+            <strong>{{ __('updates.your_version') }} :</strong> {{ config('app.version') }}
         </div>
-        <p>You are up to date!</p>
+        <p>{{ __('updates.up_to_date') }}</p>
     </div>
     @endif
     <code>

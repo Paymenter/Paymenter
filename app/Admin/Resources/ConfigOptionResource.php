@@ -24,6 +24,21 @@ class ConfigOptionResource extends Resource
 {
     protected static ?string $model = ConfigOption::class;
 
+    public static function getNavigationLabel(): string
+    {
+        return __('config_options.config_options');
+    }
+
+    public static function getModelLabel(): string
+    {
+        return __('config_options.config_option_label');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('config_options.config_options_plural_label');
+    }
+
     protected static string|\UnitEnum|null $navigationGroup = 'Configuration';
 
     protected static string|\BackedEnum|null $navigationIcon = 'ri-equalizer-2-line';
@@ -37,54 +52,54 @@ class ConfigOptionResource extends Resource
                 Tabs::make()
                     ->columnSpanFull()
                     ->schema([
-                        Tab::make('General')->schema([
+                        Tab::make(__('config_options.general'))->schema([
                             TextInput::make('name')
-                                ->label('Name')
+                                ->label(__('config_options.name'))
                                 ->required()
                                 ->maxLength(255)
-                                ->placeholder('Enter the name of the configuration option'),
+                                ->placeholder(__('config_options.enter_name')),
                             TextInput::make('description')
-                                ->label('Description')
+                                ->label(__('config_options.description'))
                                 ->columnSpanFull()
                                 ->maxLength(255)
-                                ->placeholder('Enter the description of the configuration option'),
+                                ->placeholder(__('config_options.enter_description')),
                             TextInput::make('env_variable')
-                                ->label('Environment Variable')
+                                ->label(__('config_options.env_variable'))
                                 ->maxLength(255)
-                                ->placeholder('Enter the environment variable name'),
+                                ->placeholder(__('config_options.enter_env_variable')),
                             Select::make('type')
-                                ->label('Type')
+                                ->label(__('config_options.type'))
                                 ->native(false)
                                 ->required()
                                 ->reactive()
                                 ->options([
-                                    'text' => 'Text',
-                                    'number' => 'Number',
-                                    'select' => 'Select',
-                                    'radio' => 'Radio',
-                                    'checkbox' => 'Checkbox',
-                                    'slider' => 'Slider',
+                                    'text' => __('config_options.types.text'),
+                                    'number' => __('config_options.types.number'),
+                                    'select' => __('config_options.types.select'),
+                                    'radio' => __('config_options.types.radio'),
+                                    'checkbox' => __('config_options.types.checkbox'),
+                                    'slider' => __('config_options.types.slider'),
                                 ]),
                             Checkbox::make('hidden')
-                                ->label('Hidden'),
+                                ->label(__('config_options.hidden')),
                             Checkbox::make('upgradable')
                                 ->visible(fn (Get $get): bool => in_array($get('type'), ['select', 'radio', 'slider']))
-                                ->label('Upgradable')
-                                ->helperText('If enabled, this configuration option can be upgraded in the future.'),
+                                ->label(__('config_options.upgradable'))
+                                ->helperText(__('config_options.upgradable_helper')),
                             Select::make('products')
-                                ->label('Products')
+                                ->label(__('config_options.products'))
                                 ->relationship('products', 'name')
                                 ->multiple()
                                 ->preload()
-                                ->placeholder('Select the products that this configuration option belongs to'),
+                                ->placeholder(__('config_options.select_products')),
                         ]),
-                        Tab::make('Options')
+                        Tab::make(__('config_options.options'))
                             ->visible(fn (Get $get): bool => in_array($get('type'), ['select', 'radio', 'slider', 'checkbox']))
                             ->schema([
                                 Repeater::make('Options')
                                     ->relationship('children')
-                                    ->label('Options')
-                                    ->addActionLabel('Add Option')
+                                    ->label(__('config_options.options'))
+                                    ->addActionLabel(__('config_options.add_option'))
                                     ->columnSpanFull()
                                     ->itemLabel(fn (array $state) => $state['name'])
                                     ->collapsible()
@@ -104,18 +119,18 @@ class ConfigOptionResource extends Resource
                                     ->minItems(1)
                                     ->schema([
                                         TextInput::make('name')
-                                            ->label('Name')
+                                            ->label(__('config_options.name'))
                                             ->required()
                                             ->live()
                                             ->maxLength(255)
-                                            ->placeholder('Enter the name of the configuration option'),
+                                            ->placeholder(__('config_options.enter_option_name')),
                                         TextInput::make('env_variable')
-                                            ->label('Environment Variable')
+                                            ->label(__('config_options.env_variable'))
                                             ->required()
                                             ->maxLength(255)
-                                            ->placeholder('Enter the environment variable name'),
+                                            ->placeholder(__('config_options.enter_option_env_variable')),
                                         // if the type is select, radio or checkbox then allow unlimited children (otherwise only allow 1)
-                                        ProductResource::plan()->columnSpanFull()->label('Pricing')->reorderable(false)->deleteAction(null),
+                                        ProductResource::plan()->columnSpanFull()->label(__('config_options.pricing'))->reorderable(false)->deleteAction(null),
                                     ]),
                             ]),
                     ]),
@@ -127,20 +142,22 @@ class ConfigOptionResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('name')
-                    ->label('Name')
+                    ->label(__('config_options.name'))
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('env_variable')
-                    ->label('Environment Variable')
+                    ->label(__('config_options.env_variable'))
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('type')
-                    ->label('Type')
+                    ->label(__('config_options.type'))
+                    ->formatStateUsing(fn (string $state) => __('config_options.types.' . $state) ?? $state)
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('hidden')
                     ->badge()
-                    ->label('Hidden')
+                    ->label(__('config_options.hidden'))
+                    ->formatStateUsing(fn ($state) => $state ? __('config_options.yes') : __('config_options.no'))
                     ->sortable(),
             ])
             ->modifyQueryUsing(fn (Builder $query) => $query->where('parent_id', null))

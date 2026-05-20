@@ -26,6 +26,21 @@ class CouponResource extends Resource
 {
     protected static ?string $model = Coupon::class;
 
+    public static function getNavigationLabel(): string
+    {
+        return __('coupons.coupons');
+    }
+
+    public static function getModelLabel(): string
+    {
+        return __('coupons.coupon_label');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('coupons.coupons_plural_label');
+    }
+
     protected static string|\BackedEnum|null $navigationIcon = 'ri-coupon-line';
 
     protected static string|\BackedEnum|null $activeNavigationIcon = 'ri-coupon-fill';
@@ -37,14 +52,14 @@ class CouponResource extends Resource
         return $schema
             ->components([
                 TextInput::make('code')
-                    ->label('Code')
+                    ->label(__('coupons.code'))
                     ->required()
                     ->maxLength(255)
                     ->unique(static::getModel(), 'code', ignoreRecord: true)
-                    ->placeholder('Enter the code of the coupon'),
+                    ->placeholder(__('coupons.enter_code')),
 
                 TextInput::make('value')
-                    ->label('Value')
+                    ->label(__('coupons.value'))
                     ->required()
                     ->numeric()
                     ->minValue(0)
@@ -55,57 +70,57 @@ class CouponResource extends Resource
                         JS
                     ))
                     ->suffix(fn (Get $get) => $get('type') === 'percentage' ? '%' : config('settings.default_currency'))
-                    ->placeholder('Enter the value of the coupon'),
+                    ->placeholder(__('coupons.enter_value')),
 
                 Select::make('type')
-                    ->label('Type')
+                    ->label(__('coupons.type'))
                     ->required()
                     ->default('percentage')
                     ->live()
                     ->options([
-                        'percentage' => 'Percentage',
-                        'fixed' => 'Fixed amount',
+                        'percentage' => __('coupons.types.percentage'),
+                        'fixed' => __('coupons.types.fixed'),
                     ])
-                    ->placeholder('Select the type of the coupon'),
+                    ->placeholder(__('coupons.select_type')),
                 Select::make('applies_to')
-                    ->label('Applies To')
+                    ->label(__('coupons.applies_to'))
                     ->required()
                     ->default('all')
                     ->options([
-                        'all' => 'Price and Setup Fee',
-                        'price' => 'Price only',
-                        'setup_fee' => 'Setup Fee only',
+                        'all' => __('coupons.applies_to_options.all'),
+                        'price' => __('coupons.applies_to_options.price'),
+                        'setup_fee' => __('coupons.applies_to_options.setup_fee'),
                     ]),
 
                 TextInput::make('recurring')
-                    ->label('Recurring')
+                    ->label(__('coupons.recurring'))
                     ->numeric()
                     ->nullable()
                     ->minValue(0)
                     ->hidden(fn (Get $get) => $get('applies_to') === 'free_setup')
-                    ->placeholder('How many billing cycles the discount will be applied')
-                    ->helperText('Enter 0 to apply it to all billing cycles, 1 (or leave empty) to apply it only to the first billing cycle, etc.'),
+                    ->placeholder(__('coupons.recurring_placeholder'))
+                    ->helperText(__('coupons.recurring_helper')),
 
                 TextInput::make('max_uses')
-                    ->label('Max Uses')
+                    ->label(__('coupons.max_uses'))
                     ->numeric()
                     ->minValue(0)
-                    ->placeholder('Enter the maximum number of total uses of the coupon'),
+                    ->placeholder(__('coupons.max_uses_placeholder')),
 
                 TextInput::make('max_uses_per_user')
-                    ->label('Max Uses Per User')
+                    ->label(__('coupons.max_uses_per_user'))
                     ->numeric()
                     ->minValue(0)
-                    ->placeholder('Enter the maximum number of uses per user'),
+                    ->placeholder(__('coupons.max_uses_per_user_placeholder')),
 
                 DatePicker::make('starts_at')
-                    ->label('Starts At'),
+                    ->label(__('coupons.starts_at')),
 
                 DatePicker::make('expires_at')
-                    ->label('Expires At'),
+                    ->label(__('coupons.expires_at')),
 
                 Select::make('products')
-                    ->label('Products')
+                    ->label(__('coupons.products'))
                     ->relationship(
                         name: 'products',
                         titleAttribute: 'name',
@@ -114,8 +129,8 @@ class CouponResource extends Resource
                     ->getOptionLabelFromRecordUsing(fn (Product $record) => "{$record->name} - {$record->category->name} (#{$record->id})")
                     ->multiple()
                     ->preload()
-                    ->placeholder('Select the products that this coupon applies to')
-                    ->hint('Leave empty to apply the coupon to all products'),
+                    ->placeholder(__('coupons.products_placeholder'))
+                    ->hint(__('coupons.products_hint')),
             ]);
     }
 
@@ -123,8 +138,13 @@ class CouponResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('code')->searchable(),
-                TextColumn::make('value')->searchable()->formatStateUsing(fn ($record) => $record->value . ($record->type === 'percentage' ? '%' : config('settings.default_currency'))),
+                TextColumn::make('code')
+                    ->label(__('coupons.code'))
+                    ->searchable(),
+                TextColumn::make('value')
+                    ->label(__('coupons.value'))
+                    ->searchable()
+                    ->formatStateUsing(fn ($record) => $record->value . ($record->type === 'percentage' ? '%' : config('settings.default_currency'))),
             ])
             ->filters([
                 //

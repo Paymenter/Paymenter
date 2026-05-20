@@ -21,8 +21,8 @@ class ManageApis extends ManageRecords
                 $data['type'] = 'admin';
 
                 Notification::make()
-                    ->title('API Token Created')
-                    ->body(Str::markdown("Here is your new API token. Please copy it now, as it will not be shown again.\nToken: ```" . $token . '```'))
+                    ->title(__('apis.token_created'))
+                    ->body(Str::markdown(__('apis.token_created_body', ['token' => $token])))
                     ->icon('heroicon-o-key')
                     ->success()
                     ->persistent()
