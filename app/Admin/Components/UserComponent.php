@@ -12,7 +12,7 @@ class UserComponent extends Select
     public static function make(?string $name = null): static
     {
         return parent::make($name)
-            ->label('User')
+            ->label(__('ticket.user'))
             ->relationship('user', 'id')
             ->searchable()
             ->preload()
@@ -25,7 +25,7 @@ class UserComponent extends Select
                 ->get()
                 ->mapWithKeys(fn ($user) => [$user->id => $user->name . ' (' . $user->email . ')'])
                 ->toArray())
-            ->hint(fn ($get) => $get('user_id') ? new HtmlString('<a href="' . UserResource::getUrl('edit', ['record' => $get('user_id')]) . '" target="_blank">Go to User</a>') : null)
+            ->hint(fn ($get) => $get('user_id') ? new HtmlString('<a href="' . UserResource::getUrl('edit', ['record' => $get('user_id')]) . '" target="_blank">' . __('ticket.go_to_user') . '</a>') : null)
             ->live()
             ->required();
     }

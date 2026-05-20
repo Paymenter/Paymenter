@@ -110,10 +110,10 @@ class EditTicket extends EditRecord
                     ->size(TextSize::Large)
                     ->formatStateUsing(fn ($record) => $record->user->name)
                     ->url(fn ($record) => UserResource::getUrl('edit', ['record' => $record->user]))
-                    ->label('User ID'),
+                    ->label(__('ticket.user')),
                 TextEntry::make('subject')
                     ->size(TextSize::Large)
-                    ->label('Subject'),
+                    ->label(__('ticket.subject')),
                 TextEntry::make('status')
                     ->size(TextSize::Large)
                     ->badge()
@@ -123,7 +123,7 @@ class EditTicket extends EditRecord
                         'closed' => 'danger',
                         'replied' => 'gray',
                     })
-                    ->label('Status'),
+                    ->label(__('ticket.status')),
                 TextEntry::make('priority')
                     ->size(TextSize::Large)
                     ->badge()
@@ -133,21 +133,21 @@ class EditTicket extends EditRecord
                         'medium' => 'gray',
                         'high' => 'danger',
                     })
-                    ->label('Priority'),
+                    ->label(__('ticket.priority')),
                 TextEntry::make('department')
                     ->size(TextSize::Large)
                     ->placeholder('No department')
-                    ->label('Department'),
+                    ->label(__('ticket.department')),
 
                 TextEntry::make('assigned_to')
                     ->size(TextSize::Large)
-                    ->label('Assigned To')
+                    ->label(__('ticket.assigned_to'))
                     ->placeholder('No assigned user')
                     ->formatStateUsing(fn ($record) => $record->assignedTo->name),
 
                 TextEntry::make('service_id')
                     ->size(TextSize::Large)
-                    ->label('Service')
+                    ->label(__('ticket.service'))
                     ->url(fn ($record) => $record->service ? ServiceResource::getUrl('edit', ['record' => $record->service]) : null)
                     ->placeholder('No service')
                     ->formatStateUsing(fn ($record) => "{$record->service->product->name} - " . ucfirst($record->service->status)),
@@ -159,35 +159,35 @@ class EditTicket extends EditRecord
                                 ->columns(2)
                                 ->components([
                                     Select::make('status')
-                                        ->label('Status')
+                                        ->label(__('ticket.status'))
                                         ->options([
-                                            'open' => 'Open',
-                                            'closed' => 'Closed',
-                                            'replied' => 'Replied',
+                                            'open' => __('ticket.open'),
+                                            'closed' => __('ticket.closed'),
+                                            'replied' => __('ticket.replied'),
                                         ])
                                         ->default('open')
                                         ->required(),
                                     Select::make('priority')
-                                        ->label('Priority')
+                                        ->label(__('ticket.priority'))
                                         ->options([
-                                            'low' => 'Low',
-                                            'medium' => 'Medium',
-                                            'high' => 'High',
+                                            'low' => __('ticket.low'),
+                                            'medium' => __('ticket.medium'),
+                                            'high' => __('ticket.high'),
                                         ])
                                         ->default('medium')
                                         ->required(),
                                     Select::make('department')
-                                        ->label('Department')
+                                        ->label(__('ticket.department'))
                                         ->options(array_combine(config('settings.ticket_departments'), config('settings.ticket_departments'))),
                                     UserComponent::make('user_id'),
                                     Select::make('assigned_to')
-                                        ->label('Assigned To')
+                                        ->label(__('ticket.assigned_to'))
                                         ->relationship('assignedTo', 'id', fn (Builder $query) => $query->where('role_id', '!=', null))
                                         ->searchable()
                                         ->preload()
                                         ->getOptionLabelFromRecordUsing(fn ($record) => $record->name),
                                     Select::make('service_id')
-                                        ->label('Service')
+                                        ->label(__('ticket.service'))
                                         ->relationship('service', 'id', function (Builder $query, Get $get) {
                                             $query->where('user_id', $get('user_id'));
                                         })

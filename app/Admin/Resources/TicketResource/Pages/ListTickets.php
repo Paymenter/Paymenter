@@ -30,15 +30,15 @@ class ListTickets extends ListRecords
     public function getTabs(): array
     {
         return [
-            'all' => Tab::make('All Tickets')
+            'all' => Tab::make(__('ticket.all_tickets'))
                 ->icon('heroicon-m-user-group'),
-            'open' => Tab::make('Open Tickets')
+            'open' => Tab::make(__('ticket.open_tickets'))
                 ->icon('heroicon-o-lock-open')
                 ->modifyQueryUsing(fn (Builder $query) => $query->where('status', 'open')),
-            'replied' => Tab::make('Replied Tickets')
+            'replied' => Tab::make(__('ticket.replied_tickets'))
                 ->icon('heroicon-o-chat-bubble-left-right')
                 ->modifyQueryUsing(fn (Builder $query) => $query->where('status', 'replied')),
-            'closed' => Tab::make('Closed Tickets')
+            'closed' => Tab::make(__('ticket.closed_tickets'))
                 ->icon('heroicon-o-lock-closed')
                 ->modifyQueryUsing(fn (Builder $query) => $query->where('status', 'closed')),
         ];
