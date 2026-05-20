@@ -68,7 +68,7 @@
                     @endif
                     <div class="flex items-center gap-2 mb-2">
                         <span class="text-lg font-semibold text-gray-900 dark:text-white">{{ $product->price()->formatted->total }}</span>
-                        @if($product->price()->tax > 0)
+                        @if(config('settings.tax_type') === 'mixed' && $product->price()->tax > 0)
                         <span class="text-sm text-gray-500 dark:text-gray-400">{{ $product->price()->format($product->price()->subtotal) }} {{ __('product.ex_vat') }}</span>
                         @endif
                     </div>

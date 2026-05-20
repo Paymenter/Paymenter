@@ -262,6 +262,7 @@ class Settings
                     'options' => [
                         'inclusive' => 'Inclusive (Price includes tax)',
                         'exclusive' => 'Exclusive (Price does not include tax)',
+                        'mixed' => 'Mixed (Price is exclusive, displayed as inclusive)',
                     ],
                     'default' => 'inclusive',
                 ],
