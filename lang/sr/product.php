@@ -26,4 +26,5 @@ return [
     'tos' => 'Slažem se sa',
     'tos_link' => 'Uslovi korišćenja',
     'tos_required' => 'Potrebno je da prihvatite Uslove korišćenja',
+    'ex_vat' => 'bez PDV-a',
 ];

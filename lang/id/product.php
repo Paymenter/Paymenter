@@ -26,4 +26,5 @@ return [
     'tos' => 'Saya setuju dengan ',
     'tos_link' => 'Syarat dan Ketentuan',
     'tos_required' => 'Anda harus menyetujui persyaratan layanan',
+    'ex_vat' => 'belum termasuk PPN',
 ];

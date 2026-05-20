@@ -26,4 +26,5 @@ return [
     'tos' => 'Jeg samtykker til',
     'tos_link' => 'Vilkår for bruk ',
     'tos_required' => 'Du må godta vilkårene for bruk',
+    'ex_vat' => 'eks. mva',
 ];

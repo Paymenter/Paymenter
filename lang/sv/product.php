@@ -26,4 +26,5 @@ return [
     'tos' => 'Jag samtycker till',
     'tos_link' => 'Användarvillkor',
     'tos_required' => 'Du måste acceptera användarvillkoren',
+    'ex_vat' => 'exkl. moms',
 ];

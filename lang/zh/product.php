@@ -26,4 +26,5 @@ return [
     'tos' => '我同意 ',
     'tos_link' => '服務條款',
     'tos_required' => '您必須同意服務條款',
+    'ex_vat' => '不含增值稅',
 ];

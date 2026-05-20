@@ -26,4 +26,5 @@ return [
     'tos' => 'J’accepte les ',
     'tos_link' => 'Conditions Générales de Vente',
     'tos_required' => 'Vous devez accepter nos Conditions Générales de Vente.',
+    'ex_vat' => 'hors TVA',
 ];

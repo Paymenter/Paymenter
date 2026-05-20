@@ -26,4 +26,5 @@ return [
     'tos' => 'Ik accepteer de ',
     'tos_link' => 'Algemene voorwaarden',
     'tos_required' => 'U moet akkoord gaan met de algemene voorwaarden',
+    'ex_vat' => 'excl. BTW',
 ];

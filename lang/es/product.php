@@ -25,5 +25,6 @@ return [
     'use_credits' => 'Usar créditos',
     'tos' => 'Estoy de acuerdo con los ',
     'tos_link' => 'Términos del Servicio',
+    'ex_vat' => 'sin IVA',
     'tos_required' => 'Debes aceptar los Términos del Servicio',
 ];

@@ -26,4 +26,5 @@ return [
     'tos' => 'Hyväksyn ',
     'tos_link' => 'käyttöehdot',
     'tos_required' => 'Sinun on hyväksyttävä käyttöehdot',
+    'ex_vat' => 'ilman ALV',
 ];

@@ -26,4 +26,5 @@ return [
     'tos' => 'Zgadzam się na warunki licencji ',
     'tos_link' => 'Warunki korzystania z usługi',
     'tos_required' => 'Musisz zaakceptować warunki korzystania z usługi',
+    'ex_vat' => 'bez VAT',
 ];

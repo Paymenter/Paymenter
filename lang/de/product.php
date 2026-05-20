@@ -25,5 +25,6 @@ return [
     'use_credits' => 'Credits benutzen',
     'tos' => 'Ich stimme folgendem zu ',
     'tos_link' => 'Nutzungsbedingungen',
-    'tos_required' => 'Du musst die Nutzungsbedingungen akzeptieren',
+        'tos_required' => 'Du musst unseren Nutzungsbedingungen zustimmen.',
+        'ex_vat' => 'ohne MwSt.',
 ];

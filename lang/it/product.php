@@ -26,4 +26,5 @@ return [
     'tos' => 'Sono d\'accordo con i ',
     'tos_link' => 'Termini di servizio',
     'tos_required' => 'Devi accettare i Termini di Servizio.',
+    'ex_vat' => 'escl. IVA',
 ];

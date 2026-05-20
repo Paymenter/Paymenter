@@ -26,4 +26,5 @@ return [
     'tos' => 'Elfogadom a(z) ',
     'tos_link' => 'Általános szerződési feltételek',
     'tos_required' => 'El kell fogadnod az Általános szerződési feltételeket',
+    'ex_vat' => 'ÁFA nélkül',
 ];
