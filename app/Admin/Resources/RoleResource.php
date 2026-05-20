@@ -21,6 +21,21 @@ class RoleResource extends Resource
 {
     protected static ?string $model = Role::class;
 
+    public static function getNavigationLabel(): string
+    {
+        return __('roles.roles');
+    }
+
+    public static function getModelLabel(): string
+    {
+        return __('roles.role_label');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('roles.roles_plural_label');
+    }
+
     protected static string|\UnitEnum|null $navigationGroup = 'Configuration';
 
     protected static string|\BackedEnum|null $navigationIcon = 'ri-shield-user-line';
@@ -33,20 +48,29 @@ class RoleResource extends Resource
             array_merge_recursive(...Event::dispatch('permissions', []))
         ));
 
+        $permissions = array_merge(Arr::dot(config('permissions.role')), $extensionPermissions);
+        $translatedPermissions = [];
+        foreach ($permissions as $key => $defaultLabel) {
+            $translationKey = 'permissions.' . $key;
+            $translatedLabel = __($translationKey);
+            $translatedPermissions[$key] = ($translatedLabel !== $translationKey) ? $translatedLabel : $defaultLabel;
+        }
+
         return $schema
             ->components([
                 TextInput::make('name')
+                    ->label(__('roles.name'))
                     ->unique(ignoreRecord: true)
                     ->required()
                     ->maxLength(255),
                 // Split permission UI into core and extension
                 CheckboxList::make('permissions')
                     ->label(false)
-                    ->options(array_merge(Arr::dot(config('permissions.role')), $extensionPermissions))
+                    ->options($translatedPermissions)
                     ->columns(4)
                     ->bulkToggleable()
                     ->searchable()
-                    ->noSearchResultsMessage('Permission could not be found')->columnSpanFull(),
+                    ->noSearchResultsMessage(__('roles.permission_not_found'))->columnSpanFull(),
             ])->columns(1);
     }
 
@@ -54,10 +78,12 @@ class RoleResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('name')->sortable(),
+                TextColumn::make('name')
+                    ->label(__('roles.name'))
+                    ->sortable(),
                 TextColumn::make('permissions_count')
-                    ->label('permissions')
-                    ->getStateUsing(fn (Role $record): string => in_array('*', $record->permissions) ? 'All' : (string) count($record->permissions))
+                    ->label(__('roles.permissions'))
+                    ->getStateUsing(fn (Role $record): string => in_array('*', $record->permissions) ? __('roles.all') : (string) count($record->permissions))
                     ->sortable(),
             ])
             ->filters([
