@@ -28,6 +28,21 @@ class CategoryResource extends Resource
 {
     protected static ?string $model = Category::class;
 
+    public static function getNavigationLabel(): string
+    {
+        return __('categories.categories');
+    }
+
+    public static function getModelLabel(): string
+    {
+        return __('categories.category_label');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('categories.categories_plural_label');
+    }
+
     protected static string|\UnitEnum|null $navigationGroup = 'Administration';
 
     protected static string|\BackedEnum|null $navigationIcon = 'ri-folder-6-line';
@@ -41,6 +56,7 @@ class CategoryResource extends Resource
         return $schema
             ->components([
                 TextInput::make('name')
+                    ->label(__('categories.name'))
                     ->required()
                     ->maxLength(255)
                     ->live(onBlur: true)
@@ -52,18 +68,20 @@ class CategoryResource extends Resource
                         $set('slug', Str::slug($state));
                     }),
                 TextInput::make('slug')
+                    ->label(__('categories.slug'))
                     ->required(),
                 RichEditor::make('description')
+                    ->label(__('categories.description'))
                     ->required(),
                 Select::make('parent_id')
                     ->relationship('parent', 'name')
                     ->searchable()
                     ->preload()
-                    ->label('Parent Category')
+                    ->label(__('categories.parent_category'))
                     // Disallow having same category as it's own parent
                     ->disableOptionWhen(fn (string $value, ?Category $record): bool => $record && (int) $value === $record->id),
                 FileUpload::make('image')
-                    ->label('Image')
+                    ->label(__('categories.image'))
                     ->nullable()
                     ->visibility('public')
                     ->disk('public')
@@ -77,9 +95,11 @@ class CategoryResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('name')
+                    ->label(__('categories.name'))
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('slug')
+                    ->label(__('categories.slug'))
                     ->searchable()
                     ->sortable(),
             ])
@@ -95,8 +115,8 @@ class CategoryResource extends Resource
                         foreach ($records as $record) {
                             if ($record->products()->exists() || $record->children()->exists()) {
                                 Notification::make()
-                                    ->title('Cannot delete category')
-                                    ->body('The category has products or children categories.')
+                                    ->title(__('categories.delete_error_title'))
+                                    ->body(__('categories.delete_error_body'))
                                     ->duration(5000)
                                     ->icon('ri-error-warning-line')
                                     ->danger()
