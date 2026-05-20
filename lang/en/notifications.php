@@ -1,0 +1,26 @@
+<?php
+
+return [
+    'notification_template' => 'Notification Template',
+    'notification_templates' => 'Notification Templates',
+    'key' => 'Key',
+    'enabled' => 'Enabled',
+    'edit_pref_msg' => 'Edit Preference Message',
+    'edit_pref_msg_hint' => 'This message will be shown to users when they edit their notification preferences for this template.',
+    'email_template' => 'Email Template',
+    'email_template_desc' => 'Define the subject and body of the email template. You can use either Markdown or HTML for the body content.',
+    'subject' => 'Subject',
+    'mail_enabled' => 'Mail Enabled',
+    'choice_on' => 'User Choice, Default On',
+    'choice_off' => 'User Choice, Default Off',
+    'force_on' => 'Force On',
+    'force_off' => 'Force Off',
+    'body_hint' => 'Use either Markdown or HTML to compose the email body.',
+    'in_app_notification' => 'In-App Notification (push)',
+    'in_app_notification_desc' => 'Define the title and body of the in-app notification that users will receive.',
+    'in_app_title' => 'In-App Title',
+    'in_app_enabled' => 'In-App Enabled',
+    'in_app_body' => 'In-App Body',
+    'in_app_url' => 'In-App URL',
+    'in_app_url_hint' => 'Supports dynamic variables like {{ route("invoices.show", $invoice) }}',
+];
