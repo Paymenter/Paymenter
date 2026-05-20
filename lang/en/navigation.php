@@ -15,4 +15,6 @@ return [
     'tickets' => 'Tickets',
     'admin' => 'Admin',
     'notifications' => 'Notifications',
+    'exit_admin' => 'Exit Admin',
+    'sign_out' => 'Sign out',
 ];
