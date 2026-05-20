@@ -42,6 +42,21 @@ class ProductResource extends Resource
 {
     protected static ?string $model = Product::class;
 
+    public static function getNavigationLabel(): string
+    {
+        return __('products.products');
+    }
+
+    public static function getModelLabel(): string
+    {
+        return __('products.product_label');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('products.products_plural_label');
+    }
+
     protected static string|\UnitEnum|null $navigationGroup = 'Administration';
 
     protected static string|\BackedEnum|null $navigationIcon = 'ri-instance-line';
@@ -57,10 +72,11 @@ class ProductResource extends Resource
                 Tabs::make('Tabs')
                     ->persistTabInQueryString()
                     ->tabs([
-                        Tab::make('General')
+                        Tab::make(__('products.general'))
                             ->columns(2)
                             ->schema([
                                 TextInput::make('name')
+                                    ->label(__('products.name'))
                                     ->required()
                                     ->maxLength(255)
                                     ->live(onBlur: true)
@@ -71,25 +87,40 @@ class ProductResource extends Resource
 
                                         $set('slug', Str::slug($state));
                                     }),
-                                TextInput::make('slug')->required()->unique(ignoreRecord: true),
-                                TextInput::make('stock')->integer()->nullable(),
-                                TextInput::make('per_user_limit')->integer()->nullable(),
-                                Select::make('allow_quantity')->options([
-                                    'disabled' => 'No',
-                                    'separated' => 'Separated',
-                                    'combined' => 'Combined',
-                                ])->default('separated')
+                                TextInput::make('slug')
+                                    ->label(__('products.slug'))
+                                    ->required()
+                                    ->unique(ignoreRecord: true),
+                                TextInput::make('stock')
+                                    ->label(__('products.stock'))
+                                    ->integer()
+                                    ->nullable(),
+                                TextInput::make('per_user_limit')
+                                    ->label(__('products.per_user_limit'))
+                                    ->integer()
+                                    ->nullable(),
+                                Select::make('allow_quantity')
+                                    ->label(__('products.allow_quantity'))
+                                    ->options([
+                                        'disabled' => __('products.no'),
+                                        'separated' => __('products.separated'),
+                                        'combined' => __('products.combined'),
+                                    ])->default('separated')
                                     ->required(),
                                 Textarea::make('email_template')
-                                    ->hint('This snippet will be used in the email template.')
+                                    ->label(__('products.email_template'))
+                                    ->hint(__('products.email_template_hint'))
                                     ->nullable(),
                                 Checkbox::make('hidden')
-                                    ->label('Hide product')
-                                    ->hint('Hide the product from the client area.'),
+                                    ->label(__('products.hide_product'))
+                                    ->hint(__('products.hide_product_hint')),
 
-                                RichEditor::make('description')->nullable()->columnSpanFull(),
+                                RichEditor::make('description')
+                                    ->label(__('products.description'))
+                                    ->nullable()
+                                    ->columnSpanFull(),
                                 FileUpload::make('image')
-                                    ->label('Image')
+                                    ->label(__('products.image'))
                                     ->nullable()
                                     ->visibility('public')
                                     ->imageEditor()
@@ -97,35 +128,37 @@ class ProductResource extends Resource
                                     ->disk('public')
                                     ->acceptedFileTypes(['image/*']),
                                 Select::make('category_id')
+                                    ->label(__('products.category'))
                                     ->relationship('category', 'name')
                                     ->searchable()
                                     ->preload()
                                     ->createOptionForm(fn (Schema $schema) => CategoryResource::form($schema))
                                     ->required(),
                             ]),
-                        Tab::make('Pricing')
+                        Tab::make(__('products.pricing'))
                             ->schema([self::plan()]),
 
-                        Tab::make('Upgrades')
+                        Tab::make(__('products.upgrades'))
                             ->schema([
                                 // Select input for the products this product can upgrade to (hasmany relationship)
                                 Select::make('upgrades')
-                                    ->label('Upgrades')
+                                    ->label(__('products.upgrades'))
                                     ->relationship('upgrades', 'name', ignoreRecord: true)
                                     ->multiple()
                                     ->preload()
-                                    ->placeholder('Select the products that this product can upgrade to'),
+                                    ->placeholder(__('products.upgrades_placeholder')),
                             ]),
 
-                        Tab::make('Server')
+                        Tab::make(__('products.server'))
                             ->schema([
                                 Select::make('server_id')
+                                    ->label(__('products.server'))
                                     ->relationship('server', 'name')
                                     ->searchable()
                                     ->preload()
                                     ->hintAction(
                                         Action::make('refresh')
-                                            ->label('Refresh')
+                                            ->label(__('products.refresh'))
                                             ->action(fn () => Cache::set('product_config', null, 0))
                                             ->hidden(fn (Get $get) => $get('server_id') === null)
                                     )
@@ -170,7 +203,8 @@ class ProductResource extends Resource
     public static function plan()
     {
         return Repeater::make('plan')
-            ->addActionLabel('Add new plan')
+            ->label(__('products.plans'))
+            ->addActionLabel(__('products.add_new_plan'))
             ->relationship('plans')
             ->name('name')
             ->reorderable()
@@ -193,8 +227,8 @@ class ProductResource extends Resource
                     $plan = $record->plans()->find($state[$key]['id']);
                     if ($plan->services()->count() > 0) {
                         Notification::make()
-                            ->title('Whoops!')
-                            ->body('You cannot delete this plan because it is being used by one or more services.')
+                            ->title(__('products.plan_delete_error_title'))
+                            ->body(__('products.plan_delete_error_body'))
                             ->danger()
                             ->send();
                         $action->cancel();
@@ -204,14 +238,16 @@ class ProductResource extends Resource
             ->itemLabel(fn (array $state) => $state['name'])
             ->schema([
                 TextInput::make('name')
+                    ->label(__('products.name'))
                     ->required()
                     ->live(onBlur: true)
                     ->maxLength(255),
                 Select::make('type')
+                    ->label(__('products.type'))
                     ->options([
-                        'free' => 'Free',
-                        'one-time' => 'One Time',
-                        'recurring' => 'Recurring',
+                        'free' => __('products.free'),
+                        'one-time' => __('products.one_time'),
+                        'recurring' => __('products.recurring'),
                     ])
                     ->required()
                     ->live(debounce: 300)
@@ -221,30 +257,30 @@ class ProductResource extends Resource
                             $set('price', 0);
                         }
                     })
-                    ->placeholder('Select the type of the price')
+                    ->placeholder(__('products.select_type_placeholder'))
                     ->default('free'),
 
                 TextInput::make('billing_period')
                     ->required()
-                    ->label('Time Interval')
+                    ->label(__('products.time_interval'))
                     ->default(1)
                     ->hidden(fn (Get $get) => $get('type') !== 'recurring'),
 
                 Select::make('billing_unit')
                     ->options([
-                        'day' => 'Day',
-                        'week' => 'Week',
-                        'month' => 'Month',
-                        'year' => 'Year',
+                        'day' => __('products.day'),
+                        'week' => __('products.week'),
+                        'month' => __('products.month'),
+                        'year' => __('products.year'),
                     ])
-                    ->label('Billing period')
+                    ->label(__('products.billing_unit'))
                     ->required()
                     ->default('month')
                     ->hidden(fn (Get $get) => $get('type') !== 'recurring'),
                 Repeater::make('pricing')
                     ->hidden(fn (Get $get) => $get('type') === 'free')
                     ->columns(3)
-                    ->addActionLabel('Add new price')
+                    ->addActionLabel(__('products.add_new_price'))
                     ->reorderable(false)
                     ->relationship('prices')
                     ->columnSpanFull()
@@ -253,6 +289,7 @@ class ProductResource extends Resource
                     ->itemLabel(fn (array $state) => $state['currency_code'])
                     ->schema([
                         Select::make('currency_code')
+                            ->label(__('products.currency'))
                             ->options(function (Get $get, ?string $state) {
                                 $pricing = collect($get('../../pricing'))->pluck('currency_code');
                                 if ($state !== null) {
@@ -271,7 +308,7 @@ class ProductResource extends Resource
                             ->required(),
                         TextInput::make('price')
                             ->required()
-                            ->label('Price')
+                            ->label(__('products.price'))
                             // Suffix based on chosen currency
                             ->prefix(fn (Get $get) => Currency::where('code', $get('currency_code'))->first()?->prefix)
                             ->suffix(fn (Get $get) => Currency::where('code', $get('currency_code'))->first()?->suffix)
@@ -285,7 +322,7 @@ class ProductResource extends Resource
                             ->minValue(0)
                             ->hidden(fn (Get $get) => $get('type') === 'free'),
                         TextInput::make('setup_fee')
-                            ->label('Setup fee')
+                            ->label(__('products.setup_fee'))
                             ->live(onBlur: true)
                             ->mask(RawJs::make(
                                 <<<'JS'
@@ -303,14 +340,20 @@ class ProductResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('name')->searchable(query: function (Builder $query, string $search): Builder {
-                    return $query->where('products.name', 'like', "%{$search}%");
-                }),
-                TextColumn::make('slug'),
-                TextColumn::make('category.name')->searchable(),
+                TextColumn::make('name')
+                    ->label(__('products.name'))
+                    ->searchable(query: function (Builder $query, string $search): Builder {
+                        return $query->where('products.name', 'like', "%{$search}%");
+                    }),
+                TextColumn::make('slug')
+                    ->label(__('products.slug')),
+                TextColumn::make('category.name')
+                    ->label(__('products.category'))
+                    ->searchable(),
             ])
             ->filters([
                 SelectFilter::make('category')
+                    ->label(__('products.category'))
                     ->relationship('category', 'name')
                     ->searchable()
                     ->preload(),
