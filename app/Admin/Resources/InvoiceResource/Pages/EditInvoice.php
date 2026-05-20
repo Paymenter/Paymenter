@@ -8,6 +8,7 @@ use App\Classes\PDF;
 use App\Models\Invoice;
 use Filament\Actions\Action;
 use Filament\Actions\DeleteAction;
+use Filament\Notifications\Notification;
 use Filament\Resources\Pages\EditRecord;
 
 class EditInvoice extends EditRecord
@@ -17,6 +18,15 @@ class EditInvoice extends EditRecord
     protected function getHeaderActions(): array
     {
         return [
+            Action::make('publish')
+                ->label('Publish')
+                ->action(function (Invoice $record) {
+                   $this->changeInvoiceStatusToPending($record);
+                })
+                ->visible(fn (Invoice $record): bool => $record->status === Invoice::STATUS_DRAFT)
+                ->requiresConfirmation()
+                ->color('success')
+                ->icon('heroicon-o-check-circle'),
             DeleteAction::make(),
             Action::make('pdf')
                 ->label('Download PDF')
@@ -31,5 +41,10 @@ class EditInvoice extends EditRecord
                     'transactions',
                 ]),
         ];
+    }
+
+    protected function changeInvoiceStatusToPending(Invoice $invoice): void{
+        $invoice->status = Invoice::STATUS_PENDING;
+        $invoice->save();
     }
 }
