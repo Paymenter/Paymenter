@@ -50,6 +50,14 @@ class ApiResource extends Resource
             array_merge_recursive(...Event::dispatch('api.permissions', []))
         ));
 
+        $permissions = array_merge(Arr::dot(config('permissions.api')), $extensionApiPermissions);
+        $translatedPermissions = [];
+        foreach ($permissions as $key => $defaultLabel) {
+            $translationKey = 'permissions.' . $key;
+            $translatedLabel = __($translationKey);
+            $translatedPermissions[$key] = ($translatedLabel !== $translationKey) ? $translatedLabel : $defaultLabel;
+        }
+
         return $schema
             ->components([
                 TextInput::make('name')
@@ -65,7 +73,7 @@ class ApiResource extends Resource
                     ->label(__('apis.active_status')),
 
                 CheckboxList::make('permissions')
-                    ->options(array_merge(Arr::dot(config('permissions.api')), $extensionApiPermissions))
+                    ->options($translatedPermissions)
                     ->columns(4)
                     ->bulkToggleable()
                     ->searchable()
