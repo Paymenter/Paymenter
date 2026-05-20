@@ -45,8 +45,8 @@ class CreateOauthClient extends CreateRecord
 
         // Show persisted client secret only once after creation
         Notification::make()
-            ->title('OAuth Client Created')
-            ->body(Str::markdown("Here is the client secret for the OAuth client you just created. Please copy it now, as it will not be shown again.\n\n Client Secret:\n ```" . $record->plainSecret . '```'))
+            ->title(__('oauth.client_created'))
+            ->body(Str::markdown(__('oauth.client_created_body', ['secret' => $record->plainSecret])))
             ->icon('heroicon-o-lock-closed')
             ->persistent()
             ->success()
