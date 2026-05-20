@@ -26,6 +26,21 @@ class ExtensionResource extends Resource
 {
     protected static ?string $model = Extension::class;
 
+    public static function getNavigationLabel(): string
+    {
+        return __('extensions.extensions');
+    }
+
+    public static function getModelLabel(): string
+    {
+        return __('extensions.extension_label');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('extensions.extensions_plural_label');
+    }
+
     protected static string|\BackedEnum|null $navigationIcon = 'ri-puzzle-line';
 
     protected static string|\BackedEnum|null $activeNavigationIcon = 'ri-puzzle-fill';
@@ -46,10 +61,11 @@ class ExtensionResource extends Resource
     {
         return $schema
             ->components([
-                Toggle::make('enabled'),
-                Section::make('Extension Settings')
+                Toggle::make('enabled')
+                    ->label(__('extensions.enabled')),
+                Section::make(__('extensions.settings_heading'))
                     ->columnSpanFull()
-                    ->description('Specific settings for the selected extension')
+                    ->description(__('extensions.settings_description'))
                     ->schema([
                         Grid::make()->schema(fn (Get $get) => ExtensionHelper::getConfigAsInputs('other', $get('extension'), $get('settings')))->key('settings'),
                     ]),
@@ -61,13 +77,15 @@ class ExtensionResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('name')
+                    ->label(__('extensions.name'))
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('type')
+                    ->label(__('extensions.type'))
                     ->searchable()
                     ->sortable(),
                 IconColumn::make('enabled')
-                    ->label('Enabled')
+                    ->label(__('extensions.enabled'))
                     ->boolean()
                     ->sortable(),
             ])
@@ -79,7 +97,7 @@ class ExtensionResource extends Resource
             ])
             ->headerActions([
                 Action::make('create')
-                    ->label('Install Extension')
+                    ->label(__('extensions.install_extension'))
                     ->url(fn () => \App\Admin\Pages\Extension::getUrl(['tab' => 'installable'])),
             ]);
     }

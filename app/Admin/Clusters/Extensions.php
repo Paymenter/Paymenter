@@ -12,6 +12,11 @@ class Extensions extends Cluster
 
     public static string|\UnitEnum|null $navigationGroup = 'Extensions';
 
+    public static function getNavigationLabel(): string
+    {
+        return __('extensions.extensions');
+    }
+
     protected static ?int $navigationSort = 0;
 
     protected static ?string $slug = 'extensions';
