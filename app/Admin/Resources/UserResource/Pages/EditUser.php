@@ -19,7 +19,7 @@ class EditUser extends EditRecord
             DeleteAction::make()
                 ->hidden(fn ($record) => Auth::user()->id == $record->id),
             Action::make('impersonate')
-                ->label('Impersonate')
+                ->label(__('users.impersonate'))
                 ->action(function ($record) {
                     session()->put('impersonating', $record->id);
 

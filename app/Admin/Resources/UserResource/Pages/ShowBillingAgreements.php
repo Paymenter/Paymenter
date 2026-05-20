@@ -18,7 +18,7 @@ class ShowBillingAgreements extends ManageRelatedRecords
 
     public static function getNavigationLabel(): string
     {
-        return 'Billing Agreements';
+        return __('users.billing_agreements');
     }
 
     public function table(Table $table): Table
@@ -27,12 +27,12 @@ class ShowBillingAgreements extends ManageRelatedRecords
             ->recordTitleAttribute('name')
             ->columns([
                 TextColumn::make('name')
-                    ->label('Name'),
+                    ->label(__('users.name')),
                 TextColumn::make('external_reference')
-                    ->label('External Reference'),
+                    ->label(__('users.external_reference')),
                 TextColumn::make('gateway.name')
                     ->url(fn ($record) => GatewayResource::getUrl('edit', ['record' => $record->gateway_id]))
-                    ->label('Gateway'),
+                    ->label(__('users.gateway')),
             ]);
     }
 }

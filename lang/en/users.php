@@ -1,0 +1,57 @@
+<?php
+
+return [
+    'users' => 'Users',
+    'user' => 'user',
+    'user_label' => 'user',
+    'users_plural_label' => 'users',
+
+    // Fields
+    'first_name' => 'First name',
+    'last_name' => 'Last name',
+    'email' => 'Email',
+    'password' => 'Password',
+    'role' => 'Role',
+    'tfa_enabled' => 'Two Factor Authentication',
+    'email_verified' => 'Email Verified',
+    'has_active_services' => 'Has Active Services',
+    'earnings' => 'Earnings',
+
+    // Edit Page Actions
+    'impersonate' => 'Impersonate',
+
+    // Sub-navigation & pages
+    'products_services' => 'Products/Services',
+    'product' => 'Product',
+    'quantity' => 'Quantity',
+    'billing_agreements' => 'Billing Agreements',
+    'credits' => 'Credits',
+    'invoices' => 'Invoices',
+    'tickets' => 'Tickets',
+
+    // Columns & General
+    'id' => 'ID',
+    'name' => 'Name',
+    'external_reference' => 'External Reference',
+    'gateway' => 'Gateway',
+    'amount' => 'Amount',
+    'formatted_amount' => 'Formatted Amount',
+    'total' => 'Total',
+    'status' => 'Status',
+    'subject' => 'Subject',
+    'priority' => 'Priority',
+    'department' => 'Department',
+    'created_at' => 'Created At',
+    'updated_at' => 'Updated At',
+
+    // Status / Option fields
+    'paid' => 'Paid',
+    'pending' => 'Pending',
+    'cancelled' => 'Cancelled',
+    'open' => 'Open',
+    'closed' => 'Closed',
+    'replied' => 'Replied',
+    'low' => 'Low',
+    'medium' => 'Medium',
+    'high' => 'High',
+];

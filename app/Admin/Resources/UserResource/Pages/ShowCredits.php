@@ -26,7 +26,7 @@ class ShowCredits extends ManageRelatedRecords
 
     public static function getNavigationLabel(): string
     {
-        return 'Credits';
+        return __('users.credits');
     }
 
     public function form(Schema $schema): Schema
@@ -34,6 +34,7 @@ class ShowCredits extends ManageRelatedRecords
         return $schema
             ->components([
                 Select::make('currency_code')
+                    ->label(__('orders.currency'))
                     ->options(function () {
                         $existing_currencies = $this->getOwnerRecord()->credits->pluck('currency_code');
 
@@ -43,7 +44,7 @@ class ShowCredits extends ManageRelatedRecords
                     ->required(),
                 TextInput::make('amount')
                     ->required()
-                    ->label('Amount')
+                    ->label(__('users.amount'))
                     // Suffix based on chosen currency
                     ->prefix(fn (Get $get) => Currency::where('code', $get('currency_code'))->first()?->prefix)
                     ->suffix(fn (Get $get) => Currency::where('code', $get('currency_code'))->first()?->suffix)
@@ -64,9 +65,10 @@ class ShowCredits extends ManageRelatedRecords
         return $table
             ->recordTitleAttribute('currency.code')
             ->columns([
-                TextColumn::make('currency.code'),
-                TextColumn::make('formattedAmount')->label('Formatted Amount'),
-                TextInputColumn::make('amount')->label('Amount'),
+                TextColumn::make('currency.code')
+                    ->label(__('orders.currency')),
+                TextColumn::make('formattedAmount')->label(__('users.formatted_amount')),
+                TextInputColumn::make('amount')->label(__('users.amount')),
             ])
             ->filters([])
             ->headerActions([

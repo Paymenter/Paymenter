@@ -18,7 +18,7 @@ class ShowTickets extends ManageRelatedRecords
 
     public static function getNavigationLabel(): string
     {
-        return 'Tickets';
+        return __('users.tickets');
     }
 
     public function table(Table $table): Table
@@ -27,9 +27,11 @@ class ShowTickets extends ManageRelatedRecords
             ->recordTitleAttribute('name')
             ->columns([
                 TextColumn::make('subject')
+                    ->label(__('users.subject'))
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('status')
+                    ->label(__('users.status'))
                     ->sortable()
                     ->badge()
                     ->color(fn (Ticket $record) => match ($record->status) {
@@ -37,8 +39,9 @@ class ShowTickets extends ManageRelatedRecords
                         'closed' => 'danger',
                         'replied' => 'warning',
                     })
-                    ->formatStateUsing(fn (string $state) => ucfirst($state)),
+                    ->formatStateUsing(fn (string $state) => __('users.' . $state)),
                 TextColumn::make('priority')
+                    ->label(__('users.priority'))
                     ->sortable()
                     ->badge()
                     ->color(fn (Ticket $record) => match ($record->priority) {
@@ -46,10 +49,12 @@ class ShowTickets extends ManageRelatedRecords
                         'medium' => 'gray',
                         'high' => 'danger',
                     })
-                    ->formatStateUsing(fn (string $state) => ucfirst($state)),
+                    ->formatStateUsing(fn (string $state) => __('users.' . $state)),
                 TextColumn::make('department')
+                    ->label(__('users.department'))
                     ->sortable(),
                 TextColumn::make('user.name')
+                    ->label(__('users.user'))
                     ->searchable(['first_name', 'last_name'])
                     ->sortable(['first_name', 'last_name']),
             ]);
