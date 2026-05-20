@@ -24,11 +24,19 @@ class Settings extends Page implements HasForms
 
     protected static string|\UnitEnum|null $navigationGroup = 'System';
 
-    protected static ?string $title = 'Settings';
-
     protected static string|\BackedEnum|null $navigationIcon = 'ri-settings-3-line';
 
     protected static string|\BackedEnum|null $activeNavigationIcon = 'ri-settings-3-fill';
+
+    public static function getNavigationLabel(): string
+    {
+        return __('settings.settings');
+    }
+
+    public function getTitle(): string|\Illuminate\Contracts\Support\Htmlable
+    {
+        return __('settings.settings');
+    }
 
     protected string $view = 'admin.pages.settings';
 
@@ -51,8 +59,11 @@ class Settings extends Page implements HasForms
         $tabs = [];
 
         foreach (ClassesSettings::settings() as $key => $categories) {
+            $translatedTab = __('settings.groups.' . $key);
+            $tabLabel = $translatedTab !== 'settings.groups.' . $key ? $translatedTab : ucwords(str_replace('-', ' ', $key));
+
             $tab = Tab::make($key)
-                ->label(ucwords(str_replace('-', ' ', $key)))
+                ->label($tabLabel)
                 ->schema(function () use ($categories) {
                     $inputs = [];
                     foreach ($categories as $setting) {
@@ -120,7 +131,7 @@ class Settings extends Page implements HasForms
         }
 
         Notification::make()
-            ->title('Saved successfully!')
+            ->title(__('settings.saved_successfully'))
             ->success()
             ->send();
     }
