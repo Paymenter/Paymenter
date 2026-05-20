@@ -28,6 +28,21 @@ class ServerResource extends Resource
 {
     protected static ?string $model = Server::class;
 
+    public static function getNavigationLabel(): string
+    {
+        return __('servers.servers');
+    }
+
+    public static function getModelLabel(): string
+    {
+        return __('servers.server_label');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('servers.servers_plural_label');
+    }
+
     protected static string|\UnitEnum|null $navigationGroup = 'Extensions';
 
     protected static string|\BackedEnum|null $navigationIcon = 'ri-server-line';
@@ -51,7 +66,7 @@ class ServerResource extends Resource
         return $schema
             ->components([
                 TextInput::make('name')
-                    ->label('Name')
+                    ->label(__('servers.name'))
                     ->required()
                     ->maxLength(255)
                     ->unique(
@@ -60,9 +75,9 @@ class ServerResource extends Resource
                         ignoreRecord: true,
                         modifyRuleUsing: fn ($rule) => $rule->where('deleted_at', null)
                     )
-                    ->placeholder('Enter the name of the server'),
+                    ->placeholder(__('servers.enter_name')),
                 Select::make('extension')
-                    ->label('Server')
+                    ->label(__('servers.server'))
                     ->required()
                     ->searchable()
                     ->options(array_combine(
@@ -76,7 +91,7 @@ class ServerResource extends Resource
                         ->getComponent('settings')
                         ->getChildSchema()
                         ->fill())
-                    ->placeholder('Select the type of the server')
+                    ->placeholder(__('servers.select_server'))
                     ->hintAction(
                         Action::make('Test Configuration')
                             ->action(function (Get $get, $record) {
@@ -85,23 +100,23 @@ class ServerResource extends Resource
 
                                 if ($connection === true) {
                                     Notification::make()
-                                        ->title('Configuration is correct')
+                                        ->title(__('servers.config_correct'))
                                         ->success()->send();
                                 } else {
                                     Notification::make()
-                                        ->title('Connection failed: ' . $connection)
+                                        ->title(__('servers.connection_failed') . $connection)
                                         ->danger()->send();
                                 }
                             })
-                            ->label('Test Connection')
+                            ->label(__('servers.test_connection'))
                             ->hidden(function ($record) {
                                 // If record is empty or textConfig is not available, then hide the button
                                 return empty($record) || !ExtensionHelper::hasFunction($record, 'testConfig');
                             })
                     ),
-                Section::make('Server Settings')
+                Section::make(__('servers.settings_heading'))
                     ->columnSpanFull()
-                    ->description('Specific settings for the selected server')
+                    ->description(__('servers.settings_description'))
                     ->schema([
                         Grid::make()->schema(fn (Get $get) => ExtensionHelper::getConfigAsInputs('server', $get('extension'), $get('settings')))->key('settings'),
                     ]),
@@ -112,7 +127,9 @@ class ServerResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('name')->searchable(),
+                TextColumn::make('name')
+                    ->label(__('servers.name'))
+                    ->searchable(),
             ])
             ->filters([
                 //
