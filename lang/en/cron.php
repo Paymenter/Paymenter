@@ -1,0 +1,25 @@
+<?php
+
+return [
+    'cron_statistics' => 'Cron Statistics',
+    'select_date' => 'Select Date',
+    'last_scheduler_run' => 'Last scheduler run',
+    'last_cron_run' => 'Last cron run',
+    'next_run' => 'Next run',
+    'never' => 'Never',
+    'invoices_created' => 'Invoices Created',
+    'invoices_created_desc' => 'Total renewal invoices created on :date',
+    'services_suspended' => 'Services Suspended',
+    'services_suspended_desc' => 'Total overdue services suspended on :date',
+    'services_terminated' => 'Services Terminated',
+    'services_terminated_desc' => 'Total overdue services terminated on :date',
+    'tickets_closed' => 'Tickets Closed',
+    'tickets_closed_desc' => 'Total inactive tickets closed on :date',
+    'invoices_charged' => 'Invoices Charged',
+    'invoices_charged_desc' => 'Total invoices charged on :date',
+    'cron_table' => 'Cron Table',
+    'today' => 'Today',
+    'last_week' => 'Last week',
+    'last_month' => 'Last month',
+    'this_year' => 'This year',
+];

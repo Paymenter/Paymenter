@@ -21,7 +21,10 @@ class CronTable extends ChartWidget
 
     protected ?string $maxHeight = '300px';
 
-    protected ?string $heading = 'Cron Table';
+    public function getHeading(): string
+    {
+        return __('cron.cron_table');
+    }
 
     // Start at zero (chartjs option)
     protected ?array $options = [
@@ -51,7 +54,7 @@ class CronTable extends ChartWidget
         return [
             'datasets' => [
                 [
-                    'label' => 'Invoices Created',
+                    'label' => __('cron.invoices_created'),
 
                     'data' => $invoicesCreated->map(fn (TrendValue $value) => $value->aggregate),
                     'backgroundColor' => 'rgba(54, 162, 235, 0.5)',
@@ -59,21 +62,21 @@ class CronTable extends ChartWidget
                     'borderWidth' => 1,
                 ],
                 [
-                    'label' => 'Services Suspended',
+                    'label' => __('cron.services_suspended'),
                     'data' => $servicesSuspended->map(fn (TrendValue $value) => $value->aggregate),
                     'backgroundColor' => 'rgba(255, 206, 86, 0.5)',
                     'borderColor' => 'rgba(255, 206, 86, 1)',
                     'borderWidth' => 1,
                 ],
                 [
-                    'label' => 'Services Terminated',
+                    'label' => __('cron.services_terminated'),
                     'data' => $servicesTerminated->map(fn (TrendValue $value) => $value->aggregate),
                     'backgroundColor' => 'rgba(255, 99, 132, 0.5)',
                     'borderColor' => 'rgba(255, 99, 132, 1)',
                     'borderWidth' => 1,
                 ],
                 [
-                    'label' => 'Invoices Charged',
+                    'label' => __('cron.invoices_charged'),
                     'data' => $invoicesCharged->map(fn (TrendValue $value) => $value->aggregate),
                     'backgroundColor' => 'rgba(75, 192, 192, 0.5)',
                     'borderColor' => 'rgba(75, 192, 192, 1)',
@@ -99,10 +102,10 @@ class CronTable extends ChartWidget
     protected function getFilters(): ?array
     {
         return [
-            'today' => 'Today',
-            'week' => 'Last week',
-            'month' => 'Last month',
-            'year' => 'This year',
+            'today' => __('cron.today'),
+            'week' => __('cron.last_week'),
+            'month' => __('cron.last_month'),
+            'year' => __('cron.this_year'),
         ];
     }
 

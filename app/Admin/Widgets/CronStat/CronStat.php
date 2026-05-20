@@ -24,17 +24,19 @@ class CronStat extends StatsOverviewWidget
     {
         $date = $this->pageFilters['date'] ?? now()->toDateString();
 
+        $formattedDate = Carbon::parse($date)->toFormattedDateString();
+
         return [
-            Stat::make('Invoices Created', \App\Models\CronStat::where('key', 'invoices_created')->where('date', $date)->sum('value'))
-                ->description('Total renewal invoices created on ' . Carbon::parse($date)->toFormattedDateString()),
-            Stat::make('Services Suspended', \App\Models\CronStat::where('key', 'services_suspended')->where('date', $date)->sum('value'))
-                ->description('Total overdue services suspended on ' . Carbon::parse($date)->toFormattedDateString()),
-            Stat::make('Services Terminated', \App\Models\CronStat::where('key', 'services_terminated')->where('date', $date)->sum('value'))
-                ->description('Total overdue services terminated on ' . Carbon::parse($date)->toFormattedDateString()),
-            Stat::make('Tickets Closed', \App\Models\CronStat::where('key', 'tickets_closed')->where('date', $date)->sum('value'))
-                ->description('Total inactive tickets closed on ' . Carbon::parse($date)->toFormattedDateString()),
-            Stat::make('Invoices Charged', \App\Models\CronStat::where('key', 'invoice_charged')->where('date', $date)->sum('value'))
-                ->description('Total invoices charged on ' . Carbon::parse($date)->toFormattedDateString()),
+            Stat::make(__('cron.invoices_created'), \App\Models\CronStat::where('key', 'invoices_created')->where('date', $date)->sum('value'))
+                ->description(__('cron.invoices_created_desc', ['date' => $formattedDate])),
+            Stat::make(__('cron.services_suspended'), \App\Models\CronStat::where('key', 'services_suspended')->where('date', $date)->sum('value'))
+                ->description(__('cron.services_suspended_desc', ['date' => $formattedDate])),
+            Stat::make(__('cron.services_terminated'), \App\Models\CronStat::where('key', 'services_terminated')->where('date', $date)->sum('value'))
+                ->description(__('cron.services_terminated_desc', ['date' => $formattedDate])),
+            Stat::make(__('cron.tickets_closed'), \App\Models\CronStat::where('key', 'tickets_closed')->where('date', $date)->sum('value'))
+                ->description(__('cron.tickets_closed_desc', ['date' => $formattedDate])),
+            Stat::make(__('cron.invoices_charged'), \App\Models\CronStat::where('key', 'invoice_charged')->where('date', $date)->sum('value'))
+                ->description(__('cron.invoices_charged_desc', ['date' => $formattedDate])),
         ];
     }
 }

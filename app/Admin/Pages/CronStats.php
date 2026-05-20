@@ -17,8 +17,6 @@ class CronStats extends Dashboard
 
     protected static string|\UnitEnum|null $navigationGroup = 'System';
 
-    protected static ?string $title = 'Cron Statistics';
-
     protected static string|\BackedEnum|null $navigationIcon = 'ri-time-line';
 
     protected static string|\BackedEnum|null $activeNavigationIcon = 'ri-time-fill';
@@ -26,6 +24,16 @@ class CronStats extends Dashboard
     protected static ?int $navigationSort = 4;
 
     protected static string $routePath = 'cron-stats';
+
+    public static function getNavigationLabel(): string
+    {
+        return __('cron.cron_statistics');
+    }
+
+    public function getTitle(): string|\Illuminate\Contracts\Support\Htmlable
+    {
+        return __('cron.cron_statistics');
+    }
 
     protected function getHeaderActions(): array
     {
@@ -35,7 +43,7 @@ class CronStats extends Dashboard
                 ->schema([
                     DatePicker::make('date')
                         ->default(now())
-                        ->label('Select Date')
+                        ->label(__('cron.select_date'))
                         ->required(),
                 ]),
         ];
