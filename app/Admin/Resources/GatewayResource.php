@@ -26,6 +26,21 @@ class GatewayResource extends Resource
 {
     protected static ?string $model = Gateway::class;
 
+    public static function getNavigationLabel(): string
+    {
+        return __('gateways.gateways');
+    }
+
+    public static function getModelLabel(): string
+    {
+        return __('gateways.gateway_label');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('gateways.gateways_plural_label');
+    }
+
     protected static string|\UnitEnum|null $navigationGroup = 'Extensions';
 
     protected static string|\BackedEnum|null $navigationIcon = 'ri-secure-payment-line';
@@ -49,7 +64,7 @@ class GatewayResource extends Resource
         return $schema
             ->components([
                 TextInput::make('name')
-                    ->label('Name')
+                    ->label(__('gateways.name'))
                     ->required()
                     ->maxLength(255)
                     ->unique(static::getModel(),
@@ -57,9 +72,9 @@ class GatewayResource extends Resource
                         ignoreRecord: true,
                         modifyRuleUsing: fn ($rule) => $rule->where('deleted_at', null)
                     )
-                    ->placeholder('Enter the name of the gateway'),
+                    ->placeholder(__('gateways.enter_name')),
                 Select::make('extension')
-                    ->label('Gateway')
+                    ->label(__('gateways.gateway'))
                     ->required()
                     ->searchable()
                     ->unique(
@@ -78,10 +93,10 @@ class GatewayResource extends Resource
                         ->getComponent('settings')
                         ->getChildComponentContainer()
                         ->fill())
-                    ->placeholder('Select the type of the gateway'),
-                Section::make('Gateway Settings')
+                    ->placeholder(__('gateways.select_gateway')),
+                Section::make(__('gateways.settings_heading'))
                     ->columnSpanFull()
-                    ->description('Specific settings for the selected gateway')
+                    ->description(__('gateways.settings_description'))
                     ->schema([
                         Grid::make()->schema(fn (Get $get) => ExtensionHelper::getConfigAsInputs('gateway', $get('extension'), $get('settings')))->key('settings'),
                     ]),
@@ -92,7 +107,9 @@ class GatewayResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('name')->searchable(),
+                TextColumn::make('name')
+                    ->label(__('gateways.name'))
+                    ->searchable(),
             ])
             ->filters([
                 //
