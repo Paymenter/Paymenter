@@ -66,9 +66,12 @@
                         {!! $product->description !!}
                     </article>
                     @endif
-                    <h3 class="text-lg font-semibold mb-2">
-                        {{ $product->price()->formatted->price }}
-                    </h3>
+                    <div class="flex items-center gap-2 mb-2">
+                        <span class="text-lg font-semibold text-gray-900 dark:text-white">{{ $product->price()->formatted->total }}</span>
+                        @if($product->price()->tax > 0)
+                        <span class="text-sm text-gray-500 dark:text-gray-400">{{ $product->price()->format($product->price()->subtotal) }} {{ __('product.ex_vat') }}</span>
+                        @endif
+                    </div>
                     <div class="mt-auto pt-2 flex items-center gap-2">
                         @if($product->stock !== 0 && $product->price()->available && theme('direct_checkout', false))
                         <a href="{{ route('products.checkout', ['category' => $product->category, 'product' => $product->slug]) }}"

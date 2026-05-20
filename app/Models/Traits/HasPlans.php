@@ -74,6 +74,6 @@ trait HasPlans
             }
         }
 
-        return new Price($priceAndCurrency, dontShowUnavailablePrice: $this->dontShowUnavailablePrice ?? false);
+        return new Price($priceAndCurrency, dontShowUnavailablePrice: $this->dontShowUnavailablePrice ?? false, apply_exclusive_tax: true);
     }
 }
