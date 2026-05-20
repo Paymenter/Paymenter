@@ -13,7 +13,10 @@ use Flowframe\Trend\TrendValue;
 
 class Revenue extends ChartWidget
 {
-    protected ?string $heading = 'Revenue';
+    public function getHeading(): string
+    {
+        return __('dashboard.revenue');
+    }
 
     public ?string $filter = 'week';
 
@@ -22,10 +25,10 @@ class Revenue extends ChartWidget
     protected function getFilters(): ?array
     {
         return [
-            'today' => 'Last 24 hours',
-            'week' => 'Last 7 days',
-            'month' => 'Last 30 days',
-            'year' => 'Last 365 days',
+            'today' => __('dashboard.last_24_hours'),
+            'week' => __('dashboard.last_7_days'),
+            'month' => __('dashboard.last_30_days'),
+            'year' => __('dashboard.last_365_days'),
         ];
     }
 
@@ -74,19 +77,19 @@ class Revenue extends ChartWidget
         return [
             'datasets' => [
                 [
-                    'label' => 'Revenue',
+                    'label' => __('dashboard.revenue'),
                     'data' => $revenue->map(fn (TrendValue $value) => $value->aggregate)->toArray(),
                     'backgroundColor' => '#3490dc',
                     'borderColor' => '#3490dc',
                 ],
                 [
-                    'label' => 'Net Revenue',
+                    'label' => __('dashboard.net_revenue'),
                     'data' => $netRevenue->map(fn (TrendValue $value) => $value->aggregate)->toArray(),
                     'backgroundColor' => '#38c172',
                     'borderColor' => '#38c172',
                 ],
                 [
-                    'label' => 'New Orders',
+                    'label' => __('dashboard.new_orders'),
                     'data' => $newOrders->map(fn (TrendValue $value) => $value->aggregate)->toArray(),
                     'backgroundColor' => '#e3342f',
                     'borderColor' => '#e3342f',

@@ -1,6 +1,6 @@
 {{-- Had to put a lot outside the <a> since it would always trigger redirect, layout shouldn't be changed at all --}}
 <x-filament-widgets::widget>
-    <x-filament::section heading="Active Users ({{ $onlineCount }})">
+    <x-filament::section heading="{{ __('dashboard.active_users') }} ({{ $onlineCount }})">
         @foreach($sessions as $session)
             @if(!$session->user)
                 @continue
@@ -24,7 +24,7 @@
                             copied = true;
                             setTimeout(() => copied = false, 2000);
                         "
-                        x-text="copied ? 'Copied!' : '{{ $session->ip_address }}'"
+                        x-text="copied ? '{{ __('dashboard.copied') }}' : '{{ $session->ip_address }}'"
                     ></p>
                 </div>
             </div>

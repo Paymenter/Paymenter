@@ -12,7 +12,10 @@ class ActiveUsers extends Widget
 
     protected static ?int $sort = 2;
 
-    protected static string $title = 'Active Users';
+    public static function getTitle(): string
+    {
+        return __('dashboard.active_users');
+    }
 
     public function render(): View
     {

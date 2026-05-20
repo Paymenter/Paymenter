@@ -12,6 +12,11 @@ class Support extends BaseWidget
 {
     protected static ?string $pollingInterval = '30s';
 
+    public function getHeading(): string
+    {
+        return __('dashboard.active_tickets');
+    }
+
     public function table(Table $table): Table
     {
         return $table
@@ -25,9 +30,9 @@ class Support extends BaseWidget
             )
             ->columns([
                 TextColumn::make('subject')
-                    ->label('Subject'),
+                    ->label(__('dashboard.subject')),
                 TextColumn::make('status')
-                    ->label('Status')
+                    ->label(__('dashboard.status'))
                     ->badge()
                     ->color(fn (Ticket $record) => match ($record->status) {
                         'open' => 'success',
@@ -36,9 +41,9 @@ class Support extends BaseWidget
                     })
                     ->formatStateUsing(fn (string $state) => ucfirst($state)),
                 TextColumn::make('user.name')
-                    ->label('User'),
+                    ->label(__('dashboard.user')),
                 TextColumn::make('created_at')
-                    ->label('Created At'),
+                    ->label(__('dashboard.created_at')),
             ])
             ->recordUrl(fn (Ticket $record) => TicketResource::getUrl('edit', ['record' => $record]))
             ->paginated(false);
