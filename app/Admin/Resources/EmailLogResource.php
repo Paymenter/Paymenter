@@ -25,21 +25,36 @@ class EmailLogResource extends Resource
 
     protected static string|\UnitEnum|null $navigationGroup = 'Other';
 
+    public static function getNavigationLabel(): string
+    {
+        return __('emails.email_logs');
+    }
+
+    public static function getModelLabel(): string
+    {
+        return __('emails.email_log');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('emails.email_logs');
+    }
+
     public static function infolist(Schema $schema): Schema
     {
         return $schema
             ->components([
                 TextEntry::make('subject')
                     ->size(TextSize::Medium)
-                    ->label('Subject'),
+                    ->label(__('emails.subject')),
                 TextEntry::make('to')
                     ->size(TextSize::Medium)
-                    ->label('To'),
+                    ->label(__('emails.to')),
                 TextEntry::make('sent_at')
                     ->size(TextSize::Medium)
                     ->date()
                     ->hidden(fn ($state) => $state === null)
-                    ->label('Sent At'),
+                    ->label(__('emails.sent_at')),
                 TextEntry::make('status')
                     ->badge()
                     ->color(fn (EmailLog $record) => match ($record->status) {
@@ -47,14 +62,14 @@ class EmailLogResource extends Resource
                         'sent' => 'success',
                         'failed' => 'danger',
                     })
-                    ->formatStateUsing(fn (string $state) => ucfirst($state))
-                    ->label('Status'),
+                    ->formatStateUsing(fn (string $state) => __('emails.' . $state))
+                    ->label(__('emails.status')),
 
                 TextEntry::make('error')
                     ->columnSpanFull()
                     ->size(TextSize::Medium)
                     ->hidden(fn ($state) => $state === null)
-                    ->label('Error'),
+                    ->label(__('emails.error')),
                 View::make('admin.infolists.components.iframe')->columnSpanFull(),
             ]);
     }
@@ -64,20 +79,24 @@ class EmailLogResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('subject')
+                    ->label(__('emails.subject'))
                     ->searchable(),
                 TextColumn::make('to')
+                    ->label(__('emails.to'))
                     ->searchable(),
                 TextColumn::make('sent_at')
+                    ->label(__('emails.sent_at'))
                     ->dateTime()
                     ->sortable(),
                 TextColumn::make('status')
+                    ->label(__('emails.status'))
                     ->badge()
                     ->color(fn (EmailLog $record) => match ($record->status) {
                         'pending' => 'gray',
                         'sent' => 'success',
                         'failed' => 'danger',
                     })
-                    ->formatStateUsing(fn (string $state) => ucfirst($state))
+                    ->formatStateUsing(fn (string $state) => __('emails.' . $state))
                     ->searchable(),
             ])
             ->defaultSort(function (Builder $query): Builder {
