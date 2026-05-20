@@ -18,18 +18,21 @@ class InvoiceTransactionsTable
         return $table
             ->columns([
                 TextColumn::make('invoice_id')
+                    ->label(__('invoices.invoice_id'))
                     ->url(fn (InvoiceTransaction $record): string => InvoiceResource::getUrl('edit', ['record' => $record->invoice_id]))
                     ->numeric()
                     ->sortable(),
                 TextColumn::make('gateway.name')
+                    ->label(__('invoices.gateway'))
                     ->sortable(),
                 TextColumn::make('formattedAmount')
-                    ->label('Amount')
+                    ->label(__('invoices.amount'))
                     ->sortable(),
                 TextColumn::make('formattedFee')
-                    ->label('Fee')
+                    ->label(__('invoices.fee'))
                     ->sortable(),
                 TextColumn::make('transaction_id')
+                    ->label(__('invoices.transaction_id'))
                     ->searchable(),
                 TextColumn::make('status')
                     ->sortable()
@@ -40,13 +43,15 @@ class InvoiceTransactionsTable
                         InvoiceTransactionStatus::Failed => 'danger',
                         default => null,
                     })
-                    ->formatStateUsing(fn (InvoiceTransactionStatus $state): string => ucfirst($state->value))
-                    ->label('Status'),
+                    ->formatStateUsing(fn (InvoiceTransactionStatus $state): string => __('invoices.transaction_statuses.' . $state->value))
+                    ->label(__('invoices.status')),
                 TextColumn::make('created_at')
+                    ->label(__('invoices.created_at'))
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('updated_at')
+                    ->label(__('invoices.updated_at'))
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),

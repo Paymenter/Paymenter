@@ -37,6 +37,21 @@ class InvoiceResource extends Resource
 
     protected static ?string $cluster = InvoiceCluster::class;
 
+    public static function getNavigationLabel(): string
+    {
+        return __('invoices.invoices');
+    }
+
+    public static function getModelLabel(): string
+    {
+        return __('invoices.invoice_label');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('invoices.invoices_plural_label');
+    }
+
     protected static string|\BackedEnum|null $navigationIcon = 'ri-receipt-line';
 
     protected static string|\BackedEnum|null $activeNavigationIcon = 'ri-receipt-fill';
@@ -57,46 +72,46 @@ class InvoiceResource extends Resource
             ->components([
                 UserComponent::make('user_id'),
                 TextInput::make('number')
-                    ->label('Invoice Number')
-                    ->helperText('The invoice number will be generated automatically')
+                    ->label(__('invoices.invoice_number'))
+                    ->helperText(__('invoices.invoice_number_helper'))
                     ->disabled(),
                 DatePicker::make('created_at')
-                    ->label('Issued At')
+                    ->label(__('invoices.issued_at'))
                     ->required()
                     ->default(now())
-                    ->placeholder('Select the date and time the invoice was issued'),
+                    ->placeholder(__('invoices.issued_at_placeholder')),
                 DatePicker::make('due_at')
-                    ->label('Due At')
+                    ->label(__('invoices.due_at'))
                     ->required()
                     ->default(now()->addDays(7))
-                    ->placeholder('Select the date and time the invoice is due'),
+                    ->placeholder(__('invoices.due_at_placeholder')),
                 Select::make('status')
-                    ->label('Status')
+                    ->label(__('invoices.status'))
                     ->required()
                     ->options([
-                        'paid' => 'Paid',
-                        'pending' => 'Pending',
-                        'cancelled' => 'Cancelled',
+                        'paid' => __('invoices.paid'),
+                        'pending' => __('invoices.pending'),
+                        'cancelled' => __('invoices.cancelled'),
                     ])
                     ->default('pending')
-                    ->placeholder('Select the status of the invoice'),
+                    ->placeholder(__('invoices.status_placeholder')),
                 Select::make('currency_code')
-                    ->label('Currency')
+                    ->label(__('invoices.currency'))
                     ->required()
                     ->relationship('currency', 'code')
-                    ->placeholder('Select the currency'),
+                    ->placeholder(__('invoices.currency_placeholder')),
                 Toggle::make('send_email')
-                    ->label('Send Email')
+                    ->label(__('invoices.send_email'))
                     ->hiddenOn('edit')
                     ->default(true),
                 Repeater::make('items')
                     ->relationship('items')
-                    ->label('Items')
+                    ->label(__('invoices.items'))
                     ->columnSpanFull()
                     ->columns(2)
                     ->schema([
                         TextInput::make('price')
-                            ->label('Price')
+                            ->label(__('invoices.price'))
                             // Grab invoice currency
                             ->prefix(fn (Get $get): ?string => Currency::where('code', $get('../../currency_code'))->first()?->prefix)
                             ->suffix(fn (Get $get): ?string => Currency::where('code', $get('../../currency_code'))->first()?->suffix)
@@ -107,24 +122,24 @@ class InvoiceResource extends Resource
                                     $money($input, '.', '', 2)
                                 JS
                             ))
-                            ->placeholder('Enter the price of the product'),
+                            ->placeholder(__('invoices.price_placeholder')),
                         TextInput::make('quantity')
-                            ->label('Quantity')
+                            ->label(__('invoices.quantity'))
                             ->required()
                             ->numeric()
-                            ->placeholder('Enter the quantity of the product'),
+                            ->placeholder(__('invoices.quantity_placeholder')),
                         TextInput::make('description')
-                            ->label('Description')
+                            ->label(__('invoices.description'))
                             ->required()
                             ->hintAction(
                                 Action::make('View Service')
                                     ->url(function (Get $get) {
                                         return ServiceResource::getUrl('edit', ['record' => $get('reference_id')]);
                                     })
-                                    ->label('View Service')
+                                    ->label(__('invoices.view_service'))
                                     ->hidden(fn (Get $get): bool => !in_array($get('reference_type'), [Service::class, ServiceUpgrade::class]))
                             )
-                            ->placeholder('Enter the description of the product'),
+                            ->placeholder(__('invoices.description_placeholder')),
                         Hidden::make('reference_type'),
                         Hidden::make('reference_id'),
                     ]),
@@ -137,19 +152,20 @@ class InvoiceResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('id')
-                    ->label('ID')
+                    ->label(__('invoices.id'))
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('number')
+                    ->label(__('invoices.invoice_no'))
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('user.name')
-                    ->label('User')
+                    ->label(__('invoices.user'))
                     ->searchable(true, fn (Builder $query, string $search) => $query->whereHas('user', fn (Builder $query) => $query->where('first_name', 'like', "%$search%")->orWhere('last_name', 'like', "%$search%"))),
                 TextColumn::make('status')
-                    ->label('Status')
-                    // Make first letter uppercase
-                    ->formatStateUsing(fn (string $state): string => ucfirst($state))
+                    ->label(__('invoices.status'))
+                    // Localize status
+                    ->formatStateUsing(fn (string $state): string => __('invoices.' . $state))
                     ->badge()
                     ->color(fn (string $state): string => match ($state) {
                         'paid' => 'success',
@@ -159,14 +175,14 @@ class InvoiceResource extends Resource
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('created_at')
-                    ->label('Issued At')
+                    ->label(__('invoices.issued_at'))
                     ->date()
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('formattedTotal')
-                    ->label('Total'),
+                    ->label(__('invoices.total')),
                 TextColumn::make('formattedRemaining')
-                    ->label('Remaining'),
+                    ->label(__('invoices.remaining')),
             ])
             ->defaultSort(function (Builder $query): Builder {
                 return $query
@@ -174,11 +190,11 @@ class InvoiceResource extends Resource
             })
             ->filters([
                 SelectFilter::make('status')
-                    ->label('Status')
+                    ->label(__('invoices.status'))
                     ->options([
-                        'paid' => 'Paid',
-                        'pending' => 'Pending',
-                        'cancelled' => 'Cancelled',
+                        'paid' => __('invoices.paid'),
+                        'pending' => __('invoices.pending'),
+                        'cancelled' => __('invoices.cancelled'),
                     ]),
             ])
             ->recordActions([

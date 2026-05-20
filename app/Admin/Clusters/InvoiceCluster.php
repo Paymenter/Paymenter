@@ -13,7 +13,10 @@ class InvoiceCluster extends Cluster
 
     public static string|\UnitEnum|null $navigationGroup = 'Administration';
 
-    public static ?string $navigationLabel = 'Invoices';
+    public static function getNavigationLabel(): string
+    {
+        return __('invoices.invoices');
+    }
 
     public static function getNavigationBadge(): ?string
     {
