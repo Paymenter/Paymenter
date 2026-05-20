@@ -28,6 +28,21 @@ class ApiResource extends Resource
 
     protected static string|\UnitEnum|null $navigationGroup = 'Other';
 
+    public static function getNavigationLabel(): string
+    {
+        return __('apis.api_keys');
+    }
+
+    public static function getModelLabel(): string
+    {
+        return __('apis.api_key');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('apis.api_keys');
+    }
+
     public static function form(Schema $schema): Schema
     {
 
@@ -40,21 +55,21 @@ class ApiResource extends Resource
                 TextInput::make('name')
                     ->required()
                     ->maxLength(255)
-                    ->label('API Name'),
+                    ->label(__('apis.api_name')),
                 TagsInput::make('ip_addresses')
-                    ->label('Allowed IP Addresses')
-                    ->placeholder('Enter IP addresses'),
+                    ->label(__('apis.allowed_ips'))
+                    ->placeholder(__('apis.enter_ips')),
                 Toggle::make('enabled')
                     ->default(true)
                     ->visibleOn('edit')
-                    ->label('Active Status'),
+                    ->label(__('apis.active_status')),
 
                 CheckboxList::make('permissions')
                     ->options(array_merge(Arr::dot(config('permissions.api')), $extensionApiPermissions))
                     ->columns(4)
                     ->bulkToggleable()
                     ->searchable()
-                    ->noSearchResultsMessage('Permission could not be found'),
+                    ->noSearchResultsMessage(__('apis.no_permission_found')),
 
             ])
             ->columns(1);
@@ -64,15 +79,17 @@ class ApiResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('name'),
+                TextColumn::make('name')
+                    ->label(__('apis.name')),
                 TextColumn::make('ip_addresses')
                     ->formatStateUsing(fn ($state) => is_array($state) ? implode(', ', $state) : $state)
-                    ->label('Allowed IP Addresses'),
+                    ->label(__('apis.allowed_ips')),
                 IconColumn::make('enabled')
+                    ->label(__('apis.active_status'))
                     ->boolean(),
                 TextColumn::make('last_used_at')
                     ->dateTime()
-                    ->label('Last Used At')
+                    ->label(__('apis.last_used_at'))
                     ->sortable()
                     ->toggleable(),
             ])
