@@ -20,6 +20,21 @@ class CurrencyResource extends Resource
 {
     protected static ?string $model = Currency::class;
 
+    public static function getNavigationLabel(): string
+    {
+        return __('currencies.currencies');
+    }
+
+    public static function getModelLabel(): string
+    {
+        return __('currencies.currency_label');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('currencies.currencies_plural_label');
+    }
+
     protected static string|\UnitEnum|null $navigationGroup = 'Configuration';
 
     protected static string|\BackedEnum|null $navigationIcon = 'ri-money-dollar-circle-line';
@@ -31,28 +46,28 @@ class CurrencyResource extends Resource
         return $schema
             ->components([
                 TextInput::make('code')
-                    ->label('Code')
+                    ->label(__('currencies.code'))
                     ->required()
                     ->maxLength(3)
                     ->disabledOn('edit')
                     ->unique(static::getModel(), 'code', ignoreRecord: true)
-                    ->placeholder('Enter the currency code'),
+                    ->placeholder(__('currencies.enter_code')),
                 TextInput::make('name')
-                    ->label('Name')
-                    ->helperText('Display name for customers, e.g., US Dollar')
+                    ->label(__('currencies.name'))
+                    ->helperText(__('currencies.name_helper'))
                     ->required()
                     ->maxLength(255)
-                    ->placeholder('Enter the currency name'),
+                    ->placeholder(__('currencies.enter_name')),
                 TextInput::make('prefix')
-                    ->label('Prefix')
+                    ->label(__('currencies.prefix'))
                     ->maxLength(10)
-                    ->placeholder('Enter the currency prefix'),
+                    ->placeholder(__('currencies.enter_prefix')),
                 TextInput::make('suffix')
-                    ->label('Suffix')
+                    ->label(__('currencies.suffix'))
                     ->maxLength(10)
-                    ->placeholder('Enter the currency suffix'),
+                    ->placeholder(__('currencies.enter_suffix')),
                 Select::make('format')
-                    ->label('Format')
+                    ->label(__('currencies.format'))
                     ->options([
                         '1.000,00' => '1.000,00',
                         '1,000.00' => '1,000.00',
@@ -68,15 +83,15 @@ class CurrencyResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('code')
-                    ->label('Code')
+                    ->label(__('currencies.code'))
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('prefix')
-                    ->label('Prefix')
+                    ->label(__('currencies.prefix'))
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('suffix')
-                    ->label('Suffix')
+                    ->label(__('currencies.suffix'))
                     ->searchable()
                     ->sortable(),
             ])
