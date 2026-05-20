@@ -23,6 +23,16 @@ class Updates extends Page implements HasForms
 
     protected static string|\UnitEnum|null $navigationGroup = 'System';
 
+    public static function getNavigationLabel(): string
+    {
+        return __('updates.updates');
+    }
+
+    public function getTitle(): string|\Illuminate\Contracts\Support\Htmlable
+    {
+        return __('updates.updates');
+    }
+
     protected function getHeaderActions(): array
     {
         return [
@@ -30,7 +40,7 @@ class Updates extends Page implements HasForms
                 ->action(function () {
                     Artisan::call(CheckForUpdates::class);
                 })
-                ->label('Check for updates'),
+                ->label(__('updates.check_for_updates')),
         ];
     }
 
@@ -55,7 +65,7 @@ class Updates extends Page implements HasForms
                     'output' => $output->fetch(),
                 ]);
             })
-            ->label('Update');
+            ->label(__('updates.update'));
     }
 
     public static function canAccess(): bool
