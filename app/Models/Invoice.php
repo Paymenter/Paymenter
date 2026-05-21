@@ -160,6 +160,11 @@ class Invoice extends Model implements Auditable
         return $this->hasMany(InvoiceTransaction::class);
     }
 
+    public function adjustmentNotes()
+    {
+        return $this->hasMany(AdjustmentNote::class);
+    }
+
     public function snapshot()
     {
         return $this->hasOne(InvoiceSnapshot::class);
