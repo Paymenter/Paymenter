@@ -22,7 +22,7 @@ class InvoiceNumberListener
                 in_array($event->invoice->status, [Invoice::STATUS_PENDING, Invoice::STATUS_PAID]);
 
             if (($isTransitioningFromDraft && $isChangingToPendingOrPaid && !$event->invoice->number) ||
-                ($event->invoice->wasChanged('status') && $event->invoice->status === Invoice::STATUS_PAID && !$event->invoice->number)) {
+                ($event->invoice->isDirty('status') && $event->invoice->status === Invoice::STATUS_PAID && !$event->invoice->number)) {
                 $this->setNumber($event->invoice, 'invoice');
             }
         } elseif ($event instanceof Creating && !config('settings.invoice_proforma', false)) {
