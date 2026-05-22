@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Classes\PDF;
 use App\Classes\Price;
 use App\Classes\Settings;
+use App\Enums\AdjustmentNoteType;
 use App\Enums\InvoiceTransactionStatus;
 use App\Models\Traits\HasProperties;
 use App\Observers\InvoiceObserver;
@@ -34,6 +35,14 @@ class Invoice extends Model implements Auditable
 
     public bool $send_create_email = true;
 
+    public function createCancellationCreditNote(): void {
+        $this->adjustmentNotes()->create([
+            'type' => AdjustmentNoteType::Credit->value,
+            'amount' => -1 * abs($this->total),
+            'description' => 'Automatic credit note generated after overdue invoice cancellation.',
+            'is_admin_only' => true,
+        ]);
+    }
     /**
      * Total of the invoice.
      *
@@ -158,6 +167,11 @@ class Invoice extends Model implements Auditable
     public function transactions()
     {
         return $this->hasMany(InvoiceTransaction::class);
+    }
+
+    public function adjustmentNotes()
+    {
+        return $this->hasMany(AdjustmentNote::class);
     }
 
     public function snapshot()

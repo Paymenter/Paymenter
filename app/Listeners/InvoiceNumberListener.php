@@ -2,6 +2,7 @@
 
 namespace App\Listeners;
 
+use App\Events\AdjustmentNote\Creating as AdjustmentNoteCreating;
 use App\Events\CreditNote\Creating as CreditNoteCreating;
 use App\Events\Invoice\Creating;
 use App\Events\Invoice\Updating;
@@ -14,7 +15,7 @@ class InvoiceNumberListener
     /**
      * Handle the event.
      */
-    public function handle(Creating|Updating|CreditNoteCreating $event): void
+    public function handle(Creating|Updating|CreditNoteCreating|AdjustmentNoteCreating $event): void
     {
         if ($event instanceof Updating) {
             $isTransitioningFromDraft = $event->invoice->getOriginal('status') === Invoice::STATUS_DRAFT;
@@ -29,6 +30,8 @@ class InvoiceNumberListener
             $this->setNumber($event->invoice, 'invoice');
         } elseif ($event instanceof CreditNoteCreating) {
             $this->setNumber($event->creditNote, 'credit_note');
+        } elseif ($event instanceof AdjustmentNoteCreating) {
+            $this->setNumber($event->adjustmentNote, 'adjustment_note');
         }
     }
 

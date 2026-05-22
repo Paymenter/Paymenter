@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Events\CreditNote;
+namespace App\Events\AdjustmentNote;
 
-use App\Models\CreditNote;
+use App\Models\AdjustmentNote;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
@@ -14,5 +14,5 @@ class Creating
     /**
      * Create a new event instance.
      */
-    public function __construct(public CreditNote $creditNote) {}
+    public function __construct(public AdjustmentNote $adjustmentNote) {}
 }

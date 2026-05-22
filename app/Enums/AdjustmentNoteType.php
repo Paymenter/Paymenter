@@ -2,7 +2,7 @@
 
 namespace App\Enums;
 
-enum CreditNoteType: string
+enum AdjustmentNoteType: string
 {
     case Credit = 'credit';
     case Debit = 'debit';

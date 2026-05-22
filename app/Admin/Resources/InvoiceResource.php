@@ -7,6 +7,8 @@ use App\Admin\Components\UserComponent;
 use App\Admin\Resources\InvoiceResource\Pages\CreateInvoice;
 use App\Admin\Resources\InvoiceResource\Pages\EditInvoice;
 use App\Admin\Resources\InvoiceResource\Pages\ListInvoices;
+use App\Admin\Resources\InvoiceResource\Pages\ViewInvoice;
+use App\Admin\Resources\InvoiceResource\RelationManagers\AdjustmentNotesRelationManager;
 use App\Admin\Resources\InvoiceResource\RelationManagers\TransactionsRelationManager;
 use App\Models\Currency;
 use App\Models\Invoice;
@@ -16,6 +18,7 @@ use Filament\Actions\Action;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
+use Filament\Actions\ViewAction;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Repeater;
@@ -183,6 +186,7 @@ class InvoiceResource extends Resource
                     ]),
             ])
             ->recordActions([
+                ViewAction::make(),
                 EditAction::make(),
             ])
             ->toolbarActions([
@@ -196,6 +200,7 @@ class InvoiceResource extends Resource
     {
         return [
             TransactionsRelationManager::class,
+            AdjustmentNotesRelationManager::class,
         ];
     }
 
@@ -205,6 +210,7 @@ class InvoiceResource extends Resource
             'index' => ListInvoices::route('/'),
             'create' => CreateInvoice::route('/create'),
             // Always use id for invoice route binding in admin
+            'view' => ViewInvoice::route('/{record:id}'),
             'edit' => EditInvoice::route('/{record:id}/edit'),
         ];
     }
