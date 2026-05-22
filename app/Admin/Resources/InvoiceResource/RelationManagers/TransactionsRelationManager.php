@@ -2,6 +2,7 @@
 
 namespace App\Admin\Resources\InvoiceResource\RelationManagers;
 
+use App\Models\Invoice;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\CreateAction;
 use Filament\Actions\DeleteAction;
@@ -17,6 +18,11 @@ use Filament\Tables\Table;
 class TransactionsRelationManager extends RelationManager
 {
     protected static string $relationship = 'transactions';
+
+    protected function canModifyTransactions(): bool
+    {
+        return $this->getOwnerRecord()?->status === Invoice::STATUS_PENDING;
+    }
 
     public function form(Schema $schema): Schema
     {
@@ -65,15 +71,22 @@ class TransactionsRelationManager extends RelationManager
                 //
             ])
             ->headerActions([
-                CreateAction::make(),
+                CreateAction::make()
+                    ->visible(fn (): bool => $this->canModifyTransactions()),
             ])
             ->recordActions([
-                DeleteAction::make(),
+                DeleteAction::make()
+                    ->visible(fn (): bool => $this->canModifyTransactions()),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
                     DeleteBulkAction::make(),
                 ]),
             ]);
+    }
+
+
+    public function isReadOnly(): bool {
+        return false;
     }
 }

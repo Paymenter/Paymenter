@@ -8,7 +8,6 @@ use App\Classes\PDF;
 use App\Models\Invoice;
 use Filament\Actions\Action;
 use Filament\Actions\DeleteAction;
-use Filament\Notifications\Notification;
 use Filament\Resources\Pages\EditRecord;
 
 class EditInvoice extends EditRecord

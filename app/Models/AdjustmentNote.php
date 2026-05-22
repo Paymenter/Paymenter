@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use App\Classes\Price;
-use App\Enums\AdjustmentNoteType;
 use App\Observers\AdjustmentNoteObserver;
 use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Casts\Attribute;
@@ -25,7 +24,6 @@ class AdjustmentNote extends Model implements Auditable
     ];
 
     protected $casts = [
-        'type' => AdjustmentNoteType::class,
         'amount' => 'decimal:2',
         'is_admin_only' => 'boolean',
     ];

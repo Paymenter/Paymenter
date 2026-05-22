@@ -2,6 +2,7 @@
 
 namespace App\Admin\Resources\InvoiceResource\RelationManagers;
 
+use App\Models\Invoice;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Forms\Components\Hidden;
@@ -23,6 +24,11 @@ class AdjustmentNotesRelationManager extends RelationManager
     protected static string $relationship = 'adjustmentNotes';
 
     protected static ?string $title = 'Adjustment Notes';
+
+    protected function canModifyAdjustmentNotes(): bool
+    {
+        return $this->getOwnerRecord()?->status === Invoice::STATUS_PENDING;
+    }
 
     public function form(Schema $schema): Schema
     {
@@ -94,11 +100,14 @@ class AdjustmentNotesRelationManager extends RelationManager
                     ->sortable(),
             ])
             ->headerActions([
-                CreateAction::make(),
+                CreateAction::make()
+                    ->visible(fn (): bool => $this->canModifyAdjustmentNotes()),
             ])
             ->recordActions([
-                EditAction::make(),
-                DeleteAction::make(),
+                EditAction::make()
+                    ->visible(fn (): bool => $this->canModifyAdjustmentNotes()),
+                DeleteAction::make()
+                    ->visible(fn (): bool => $this->canModifyAdjustmentNotes()),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
@@ -107,4 +116,8 @@ class AdjustmentNotesRelationManager extends RelationManager
             ])
             ->defaultSort('created_at', 'desc');
     }
+    public function isReadOnly(): bool {
+        return false;
+    }
+
 }
