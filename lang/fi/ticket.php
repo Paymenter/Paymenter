@@ -14,11 +14,11 @@ return [
     'or_drag_and_drop' => 'tai vedä ja pudota',
     'files_max' => 'Tiedostot enintään 10Mt',
     'selected_files' => 'Valitut tiedostot',
-    'uploading_files' => 'Uploading files',
-    'close_ticket' => 'Close Ticket',
-    'close_ticket_confirmation' => 'Are you sure you want to close this ticket? This action cannot be undone.',
-    'close_ticket_success' => 'Ticket closed successfully.',
-    'close_ticket_already_closed' => 'This ticket is already closed.',
+    'uploading_files' => 'Ladataan tiedostoja',
+    'close_ticket' => 'Sulje tukipyyntö',
+    'close_ticket_confirmation' => 'Oletko varma, että haluat poistaa tämän tukilipukkeen? Tätä toimintoa ei voi peruuttaa.',
+    'close_ticket_success' => 'Tukipyyntö suljettu onnistuneesti.',
+    'close_ticket_already_closed' => 'Tämä tukipyyntö on jo suljettu.',
 
     'create_ticket' => 'Luo uusi tukipyyntö',
     'select_department' => 'Valitse osasto',
@@ -32,5 +32,5 @@ return [
     'service' => 'Palvelu',
     'select_service' => 'Valitse palvelu',
     'create' => 'Luo',
-    'no_tickets' => 'No tickets found',
+    'no_tickets' => 'Tukipyyntöjä ei löytynyt',
 ];
