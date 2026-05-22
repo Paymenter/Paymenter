@@ -18,6 +18,8 @@ class Invoice extends Model implements Auditable
 {
     use HasFactory, HasProperties, Traits\Auditable;
 
+    public const STATUS_DRAFT = 'draft';
+
     public const STATUS_PENDING = 'pending';
 
     public const STATUS_PAID = 'paid';

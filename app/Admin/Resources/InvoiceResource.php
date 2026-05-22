@@ -76,7 +76,8 @@ class InvoiceResource extends Resource
                     ->options([
                         'paid' => 'Paid',
                         'pending' => 'Pending',
-                        'cancelled' => 'Cancelled',
+                        'draft' => 'Draft',
+                        'cancelled' => 'Cancelled'
                     ])
                     ->default('pending')
                     ->placeholder('Select the status of the invoice'),
