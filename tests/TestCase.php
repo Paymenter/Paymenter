@@ -7,12 +7,10 @@ use App\Models\Price;
 use App\Models\Product;
 use App\Models\User;
 use App\Models\UserSession;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
 
 abstract class TestCase extends BaseTestCase
 {
-    use RefreshDatabase;
 
     protected bool $seed = true;
 
