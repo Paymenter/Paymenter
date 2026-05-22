@@ -45,7 +45,8 @@ class AdjustmentNoteResource extends Resource
                     ->required()
                     ->searchable()
                     ->preload()
-                    ->placeholder('Select an invoice'),
+                    ->placeholder('Select an invoice')
+                    ->default(request()->query('invoice_id')),
                 TextInput::make('number')
                     ->label('Number')
                     ->helperText('The number will be generated automatically')

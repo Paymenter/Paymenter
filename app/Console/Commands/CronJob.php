@@ -126,7 +126,16 @@ class CronJob extends Command
                 Service::where('status', 'pending')->whereDoesntHave('invoices', function ($query) {
                     $query->where('status', 'paid');
                 })->where('created_at', '<', now()->subDays((int) config('settings.cronjob_order_cancel', 7)))->get()->each(function ($service) use (&$number) {
-                    $service->invoices()->where('status', 'pending')->update(['status' => 'cancelled']);
+                    $service->invoices()
+                        ->where('status', 'pending')
+                        ->get()
+                        ->each(function ($invoice) {
+                            $invoice->createCancellationCreditNote();
+                            $invoice->update([
+                                'status' => 'cancelled',
+                            ]);
+                        });
+
 
                     $service->update(['status' => 'cancelled']);
 

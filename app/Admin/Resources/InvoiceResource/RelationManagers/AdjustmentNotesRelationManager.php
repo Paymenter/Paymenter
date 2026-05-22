@@ -111,7 +111,8 @@ class AdjustmentNotesRelationManager extends RelationManager
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
-                    DeleteBulkAction::make(),
+                    DeleteBulkAction::make()
+                        ->visible(fn (): bool => $this->canModifyAdjustmentNotes()),
                 ]),
             ])
             ->defaultSort('created_at', 'desc');

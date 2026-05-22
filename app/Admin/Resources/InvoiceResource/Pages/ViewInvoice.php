@@ -8,6 +8,7 @@ use App\Admin\Resources\InvoiceResource\RelationManagers\TransactionsRelationMan
 use App\Models\Invoice;
 use Filament\Actions\Action;
 use Filament\Resources\Pages\ViewRecord;
+use App\Classes\PDF;
 use Filament\Schemas\Components\Section;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Infolists\Components\RepeatableEntry;
@@ -76,7 +77,7 @@ class ViewInvoice extends ViewRecord
                 ->label('Download PDF')
                 ->action(function (Invoice $invoice) {
                     return response()->streamDownload(function () use ($invoice) {
-                        echo \App\Classes\PDF::generateInvoice($invoice)->stream();
+                        echo PDF::generateInvoice($invoice)->stream();
                     }, 'invoice-' . ($invoice->number ?? $invoice->id) . '.pdf');
                 }),
         ];
