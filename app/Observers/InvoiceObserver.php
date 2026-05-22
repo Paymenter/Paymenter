@@ -40,10 +40,6 @@ class InvoiceObserver
      */
     public function updating(Invoice $invoice): void
     {
-        if ($invoice->isDirty('status') && $invoice->getOriginal('status') !== Invoice::STATUS_DRAFT) {
-            throw new \Exception('Cannot change status of invoice that is not in draft');
-        }
-
         event(new InvoiceEvent\Updating($invoice));
     }
 
@@ -52,6 +48,10 @@ class InvoiceObserver
      */
     public function updated(Invoice $invoice): void
     {
+        if($invoice->status === Invoice::STATUS_CANCELLED){
+            $invoice->createCancellationCreditNote();
+        }
+
         if($invoice->getOriginal('status') === Invoice::STATUS_DRAFT && $invoice->status === Invoice::STATUS_PENDING) {
             $this->createSnapshot($invoice);
             event(new InvoiceEvent\Created($invoice));
