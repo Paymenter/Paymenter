@@ -27,7 +27,7 @@ class Invoice extends Model implements Auditable
 
     public const STATUS_CANCELLED = 'cancelled';
 
-    protected $fillable = ['number', 'user_id', 'currency_code', 'due_at', 'status'];
+    protected $fillable = ['number', 'user_id', 'currency_code', 'due_at', 'status', 'cancellation_reason'];
 
     protected $casts = [
         'due_at' => 'date',
@@ -35,11 +35,11 @@ class Invoice extends Model implements Auditable
 
     public bool $send_create_email = true;
 
-    public function createCancellationCreditNote(): void {
+    public function createCancellationCreditNote($description = null): void {
         $this->adjustmentNotes()->create([
             'type' => AdjustmentNoteType::Credit->value,
             'amount' => -1 * abs($this->total),
-            'description' => 'Automatic credit note generated after overdue invoice cancellation.',
+            'description' => $description ?? 'Automatic credit note generated after overdue invoice cancellation.',
             'is_admin_only' => true,
         ]);
     }
@@ -52,6 +52,8 @@ class Invoice extends Model implements Auditable
     {
         return Attribute::make(
             get: fn () => $this->items->sum(fn ($item) => $item->price * $item->quantity)
+                + $this->adjustmentNotes->where('type', AdjustmentNoteType::Debit->value)->sum('amount')
+                - $this->adjustmentNotes->where('type', AdjustmentNoteType::Credit->value)->sum('amount')
         );
     }
 
@@ -64,6 +66,27 @@ class Invoice extends Model implements Auditable
     {
         return Attribute::make(
             get: fn () => new Price(['price' => $this->total, 'currency' => $this->currency, 'tax' => $this->tax])
+        );
+    }
+
+    /**
+     * Current balance of the invoice, accounting for total + debit notes - credit notes - succeeded transactions.
+     */
+    public function currentBalance(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => $this->total
+                - $this->transactions->where('status', InvoiceTransactionStatus::Succeeded)->sum('amount')
+        );
+    }
+
+    /**
+     * Formatted current balance of the invoice.
+     */
+    public function formattedCurrentBalance(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => new Price(['price' => $this->currentBalance, 'currency' => $this->currency, 'tax' => $this->tax])
         );
     }
 

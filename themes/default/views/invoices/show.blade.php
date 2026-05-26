@@ -210,6 +210,61 @@
             </div>
             @endif
 
+            @php
+                $clientAdjustmentNotes = $invoice->adjustmentNotes->where('is_admin_only', false);
+            @endphp
+            @if ($clientAdjustmentNotes->isNotEmpty())
+            <div class="mt-12">
+                <h2 class="text-2xl font-bold">{{ __('invoices.ledger_adjustments') }}</h2>
+                <div class="mt-4 overflow-x-auto">
+                    <table class="w-full">
+                        <thead class="bg-background border border-neutral rounded-lg">
+                            <tr>
+                                <th scope="col"
+                                    class="p-4 text-xs font-semibold tracking-wider text-left uppercase rounded-l-lg">
+                                    {{ __('invoices.date') }}
+                                </th>
+                                <th scope="col" class="p-4 text-xs font-semibold tracking-wider text-left uppercase">
+                                    {{ __('invoices.type') }}
+                                </th>
+                                <th scope="col" class="p-4 text-xs font-semibold tracking-wider text-left uppercase">
+                                    {{ __('invoices.description') }}
+                                </th>
+                                <th scope="col"
+                                    class="p-4 text-xs font-semibold tracking-wider text-left uppercase rounded-r-lg">
+                                    {{ __('invoices.amount') }}
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach ($clientAdjustmentNotes->sortByDesc('created_at') as $note)
+                            <tr>
+                                <td class="p-4 font-normal whitespace-nowrap">
+                                    {{ $note->created_at->format('d M Y H:i') }}
+                                </td>
+                                <td class="p-4 font-normal whitespace-nowrap">
+                                    @if($note->type === \App\Enums\AdjustmentNoteType::Credit->value)
+                                    <span class="text-green-600 font-semibold">{{ __('invoices.credit_note') }}</span>
+                                    @elseif($note->type === \App\Enums\AdjustmentNoteType::Debit->value)
+                                    <span class="text-red-600 font-semibold">{{ __('invoices.debit_note') }}</span>
+                                    @endif
+                                </td>
+                                <td class="p-4 font-normal whitespace-nowrap">
+                                    {{ $note->description }}
+                                </td>
+                                <td class="p-4 font-normal whitespace-nowrap">
+                                    <span class="{{ $note->type === \App\Enums\AdjustmentNoteType::Credit->value ? 'text-green-600' : 'text-red-600' }}">
+                                        {{ $note->type === \App\Enums\AdjustmentNoteType::Credit->value ? '-' : '+' }}{{ $note->formattedAmount }}
+                                    </span>
+                                </td>
+                            </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            @endif
+
         </div>
 
     </div>

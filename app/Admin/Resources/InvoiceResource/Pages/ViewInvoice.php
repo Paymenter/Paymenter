@@ -5,8 +5,10 @@ namespace App\Admin\Resources\InvoiceResource\Pages;
 use App\Admin\Resources\InvoiceResource;
 use App\Admin\Resources\InvoiceResource\RelationManagers\AdjustmentNotesRelationManager;
 use App\Admin\Resources\InvoiceResource\RelationManagers\TransactionsRelationManager;
+use App\Enums\CancellationReason;
 use App\Models\Invoice;
 use Filament\Actions\Action;
+use Filament\Forms\Components\Select;
 use Filament\Resources\Pages\ViewRecord;
 use App\Classes\PDF;
 use Filament\Schemas\Components\Section;
@@ -48,7 +50,7 @@ class ViewInvoice extends ViewRecord
                             ->date(),
                         TextEntry::make('formattedTotal')
                             ->label('Total'),
-                        TextEntry::make('formattedRemaining')
+                        TextEntry::make('formattedCurrentBalance')
                             ->label('Remaining'),
                     ])
                     ->columns(3),
@@ -73,6 +75,24 @@ class ViewInvoice extends ViewRecord
     protected function getHeaderActions(): array
     {
         return [
+            Action::make('cancel')
+                ->label('Cancel Invoice')
+                ->icon('heroicon-o-x-circle')
+                ->color('danger')
+                ->requiresConfirmation()
+                ->form([
+                    Select::make('cancellation_reason')
+                        ->label('Cancellation Reason')
+                        ->options(CancellationReason::class)
+                        ->required(),
+                ])
+                ->action(function (Invoice $invoice, array $data) {
+                    $invoice->update([
+                        'status' => Invoice::STATUS_CANCELLED,
+                        'cancellation_reason' => $data['cancellation_reason'],
+                    ]);
+                })
+                ->visible(fn (Invoice $invoice): bool => $invoice->status !== Invoice::STATUS_CANCELLED),
             Action::make('pdf')
                 ->label('Download PDF')
                 ->action(function (Invoice $invoice) {

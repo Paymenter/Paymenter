@@ -14,7 +14,9 @@ use App\Models\Currency;
 use App\Models\Invoice;
 use App\Models\Service;
 use App\Models\ServiceUpgrade;
+use App\Enums\CancellationReason;
 use Filament\Actions\Action;
+use Filament\Actions\BulkAction;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
@@ -33,6 +35,7 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 
 class InvoiceResource extends Resource
 {
@@ -169,7 +172,7 @@ class InvoiceResource extends Resource
                     ->sortable(),
                 TextColumn::make('formattedTotal')
                     ->label('Total'),
-                TextColumn::make('formattedRemaining')
+                TextColumn::make('formattedCurrentBalance')
                     ->label('Remaining'),
             ])
             ->defaultSort(function (Builder $query): Builder {
@@ -191,6 +194,24 @@ class InvoiceResource extends Resource
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
+                    BulkAction::make('cancel')
+                        ->label('Cancel')
+                        ->icon('heroicon-o-x-circle')
+                        ->color('danger')
+                        ->requiresConfirmation()
+                        ->form([
+                            Select::make('cancellation_reason')
+                                ->label('Cancellation Reason')
+                                ->options(CancellationReason::class)
+                                ->required(),
+                        ])
+                        ->action(function (Collection $records, array $data) {
+                            $records->update([
+                                'status' => Invoice::STATUS_CANCELLED,
+                                'cancellation_reason' => $data['cancellation_reason'],
+                            ]);
+                        })
+                        ->visible(fn (): bool => auth()->user()->can('update', Invoice::class)),
                     DeleteBulkAction::make(),
                 ]),
             ]);

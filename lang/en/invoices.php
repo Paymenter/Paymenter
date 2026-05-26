@@ -56,5 +56,10 @@ return [
     'apply_credits_and_continue' => 'Apply Credits and Continue',
     'apply_credits_and_pay' => 'Apply Credits and Pay',
     'amount_due' => 'Amount Due: :amount',
+    'ledger_adjustments' => 'Ledger / Adjustments',
+    'type' => 'Type',
+    'description' => 'Description',
+    'credit_note' => 'Credit Note',
+    'debit_note' => 'Debit Note',
 
 ];
