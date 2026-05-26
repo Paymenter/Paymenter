@@ -7,7 +7,7 @@
             <div class="bg-secondary/10 p-2 rounded-lg">
                 <x-ri-instance-line class="size-5 text-secondary" />
             </div>
-            <span class="font-medium">{{ $service->product->name }}</span>
+            <span class="font-medium">{{ $service->label }}</span>
             </div>
             <div class="size-5 rounded-md p-0.5
                 @if ($service->status == 'active') text-success bg-success/20 
