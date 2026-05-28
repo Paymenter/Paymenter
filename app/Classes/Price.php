@@ -78,7 +78,7 @@ class Price
 
         // Calculate taxes
         if (config('settings.tax_enabled', false)) {
-            $tax ??= Settings::tax();
+            $tax ??= $priceAndCurrency->tax ?? Settings::tax();
             if ($tax) {
                 // Inclusive has the tax included in the price
                 if (config('settings.tax_type', 'inclusive') == 'inclusive' || !$apply_exclusive_tax) {
