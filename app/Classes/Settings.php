@@ -597,6 +597,14 @@ class Settings
                     'description' => 'When enabled, invoices can only be edited while in draft status. Once published, they become read-only. Disable this to allow editing invoices at any status.',
                 ],
                 [
+                    'name' => 'immutable_invoices_lock_before',
+                    'label' => 'Lock Invoices Created Before',
+                    'type' => 'date',
+                    'default' => null,
+                    'required' => false,
+                    'description' => 'Invoices created before this date remain fully editable, regardless of status. Only invoices created on or after this date are subject to draft-only immutability. Set automatically on upgrade; change or clear to adjust.',
+                ],
+                [
                     'name' => 'invoice_snapshot',
                     'label' => 'Invoice Snapshot',
                     'type' => 'checkbox',
