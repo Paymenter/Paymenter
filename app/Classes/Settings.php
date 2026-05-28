@@ -605,6 +605,14 @@ class Settings
                     'description' => 'Invoices created before this date remain fully editable, regardless of status. Only invoices created on or after this date are subject to draft-only immutability. Set automatically on upgrade; change or clear to adjust.',
                 ],
                 [
+                    'name' => 'notes_client_visible',
+                    'label' => 'Show Adjustment Notes to Clients',
+                    'type' => 'checkbox',
+                    'database_type' => 'boolean',
+                    'default' => true,
+                    'description' => 'Show the ledger adjustments section (credit/debit notes) to clients on the invoice page. When disabled, only admin-only notes are visible in the admin panel.',
+                ],
+                [
                     'name' => 'invoice_snapshot',
                     'label' => 'Invoice Snapshot',
                     'type' => 'checkbox',
