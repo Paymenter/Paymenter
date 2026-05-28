@@ -33,7 +33,7 @@ class AdminApi
         }
 
         $token->last_used_at = now();
-        $token->save();
+        $token->saveQuietly();
 
         // Attach the token to the request for further use
         $request->attributes->set('api_key', $token);
