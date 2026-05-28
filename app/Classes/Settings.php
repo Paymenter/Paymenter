@@ -598,11 +598,20 @@ class Settings
                 ],
                 [
                     'name' => 'immutable_invoices_lock_before',
-                    'label' => 'Lock Invoices Created Before',
-                    'type' => 'date',
+                    'label' => 'Lock Invoices Created Before Upgrade',
+                    'type' => 'checkbox',
+                    'database_type' => 'boolean',
+                    'default' => true,
+                    'description' => 'When enabled, invoices created before the upgrade date remain fully editable regardless of status. Only invoices created on or after the upgrade date are subject to draft-only immutability. Disable to apply immutability to all invoices.',
+                ],
+                [
+                    'name' => 'immutable_invoices_lock_date',
+                    'label' => 'Upgrade Lock Date',
+                    'type' => 'text',
+                    'database_type' => 'date',
                     'default' => null,
-                    'required' => false,
-                    'description' => 'Invoices created before this date remain fully editable, regardless of status. Only invoices created on or after this date are subject to draft-only immutability. Set automatically on upgrade; change or clear to adjust.',
+                    'disabled' => true,
+                    'description' => 'This date was set automatically during upgrade. Invoices created before this date are exempt from immutability when the toggle above is enabled. To change this date, run the migration again or update it directly in the database.',
                 ],
                 [
                     'name' => 'notes_client_visible',
@@ -610,7 +619,7 @@ class Settings
                     'type' => 'checkbox',
                     'database_type' => 'boolean',
                     'default' => true,
-                    'description' => 'Show the ledger adjustments section (credit/debit notes) to clients on the invoice page. When disabled, only admin-only notes are visible in the admin panel.',
+                    'description' => 'Show the adjustments section (credit/debit notes) to clients on the invoice page. When disabled, only admin-only notes are visible in the admin panel.',
                 ],
                 [
                     'name' => 'invoice_snapshot',
@@ -729,7 +738,6 @@ class Settings
             $taxRate = TaxRate::whereIn('country', [$country, 'all'])
                 ->orderByRaw('country = ? desc', [$country])
                 ->first();
-
             return $taxRate ?: 0;
         });
     }

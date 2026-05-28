@@ -106,8 +106,8 @@ class ViewInvoice extends ViewRecord
     public function getRelationManagers(): array
     {
         return [
-            TransactionsRelationManager::class,
             AdjustmentNotesRelationManager::class,
+            TransactionsRelationManager::class,
         ];
     }
 

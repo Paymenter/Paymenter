@@ -70,13 +70,15 @@ class Invoice extends Model implements Auditable
     }
 
     /**
-     * Current balance of the invoice, accounting for total + debit notes - credit notes - succeeded transactions.
+     * Current balance of the invoice, accounting for total + debit notes - credit notes - succeeded transactions (net of refunds).
      */
     public function currentBalance(): Attribute
     {
         return Attribute::make(
             get: fn () => $this->total
-                - $this->transactions->where('status', InvoiceTransactionStatus::Succeeded)->sum('amount')
+                - $this->transactions->where('status', InvoiceTransactionStatus::Succeeded)->sum(function ($txn) {
+                    return $txn->amount - $txn->refunded_amount;
+                })
         );
     }
 
@@ -101,12 +103,14 @@ class Invoice extends Model implements Auditable
     }
 
     /**
-     * Remaining amount of the invoice.
+     * Remaining amount of the invoice, net of refunded amounts.
      */
     public function remaining(): Attribute
     {
         return Attribute::make(
-            get: fn () => $this->total - $this->transactions->where('status', InvoiceTransactionStatus::Succeeded)->sum('amount')
+            get: fn () => $this->total - $this->transactions->where('status', InvoiceTransactionStatus::Succeeded)->sum(function ($txn) {
+                return $txn->amount - $txn->refunded_amount;
+            })
         );
     }
 
@@ -125,7 +129,6 @@ class Invoice extends Model implements Auditable
                 ])
             );
         }
-
         return Attribute::make(
             get: fn () => Settings::tax($this->user)
         );

@@ -136,6 +136,19 @@
                     </div>
                 </div>
                 @endif
+                @php
+                    $adjustmentsTotal = $invoice->adjustmentNotes->sum('amount');
+                    $adjustmentsPrice = new App\Classes\Price(['price' => $adjustmentsTotal, 'currency' => $invoice->currency]);
+                @endphp
+                @if($adjustmentsTotal != 0)
+                <div class="flex justify-between">
+                    <div class="text-sm font-medium text-gray-500 uppercase dark:text-base">{{ __('invoices.ledger_adjustments') }}
+                    </div>
+                    <div class="text-base font-medium text-gray-900 dark:text-white">
+                        {{ $adjustmentsPrice->format($adjustmentsTotal) }}
+                    </div>
+                </div>
+                @endif
                 <div class="flex justify-between">
                     <div class="text-base font-semibold text-gray-900 uppercase dark:text-white">Total</div>
                     <div class="text-base font-bold text-gray-900 dark:text-white">
@@ -164,6 +177,9 @@
                                 <th scope="col" class="p-4 text-xs font-semibold tracking-wider text-left uppercase">
                                     {{ __('invoices.amount') }}
                                 </th>
+                                <th scope="col" class="p-4 text-xs font-semibold tracking-wider text-left uppercase">
+                                    {{ __('invoices.refunded_amount') }}
+                                </th>
                                 <th scope="col"
                                     class="p-4 text-xs font-semibold tracking-wider text-left uppercase rounded-r-lg">
                                     {{ __('invoices.status') }}
@@ -186,6 +202,13 @@
                                     @endif
                                 </td>
                                 <td class="p-4 font-normal whitespace-nowrap">{{ $transaction->formattedAmount }}
+                                </td>
+                                <td class="p-4 font-normal whitespace-nowrap">
+                                    @if($transaction->refunded_amount > 0)
+                                    {{ $transaction->formattedRefundedAmount }}
+                                    @else
+                                    -
+                                    @endif
                                 </td>
                                 <td class="p-4 font-normal whitespace-nowrap">
                                     @if($transaction->status == \App\Enums\InvoiceTransactionStatus::Succeeded)
@@ -254,7 +277,7 @@
                                 </td>
                                 <td class="p-4 font-normal whitespace-nowrap">
                                     <span class="{{ $note->type === \App\Enums\AdjustmentNoteType::Credit->value ? 'text-green-600' : 'text-red-600' }}">
-                                        {{ $note->type === \App\Enums\AdjustmentNoteType::Credit->value ? '-' : '+' }}{{ $note->formattedAmount }}
+                                        {{ $note->formattedAmount }}
                                     </span>
                                 </td>
                             </tr>
@@ -263,7 +286,6 @@
                     </table>
                 </div>
             </div>
-            @endif
             @endif
 
         </div>

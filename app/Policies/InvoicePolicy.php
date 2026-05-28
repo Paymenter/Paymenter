@@ -69,7 +69,11 @@ class InvoicePolicy extends BasePolicy
         return $user->hasPermission('admin.invoices.deleteAny');
     }
 
-    public function invoiceCreatedBeforeImmutableUpdate(Invoice $invoice){
-        return ($lockBefore = config('settings.immutable_invoices_lock_before')) && $invoice?->created_at->isBefore($lockBefore);
+    public function invoiceCreatedBeforeImmutableUpdate(Invoice $invoice)
+    {
+        $lockBeforeEnabled = config('settings.immutable_invoices_lock_before', true);
+        $lockDate = config('settings.immutable_invoices_lock_date');
+
+        return $lockBeforeEnabled && $lockDate && $invoice?->created_at->isBefore($lockDate);
     }
 }
