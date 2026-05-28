@@ -53,7 +53,7 @@ class Invoice extends Model implements Auditable
         return Attribute::make(
             get: fn () => $this->items->sum(fn ($item) => $item->price * $item->quantity)
                 + $this->adjustmentNotes->where('type', AdjustmentNoteType::Debit->value)->sum('amount')
-                - $this->adjustmentNotes->where('type', AdjustmentNoteType::Credit->value)->sum('amount')
+                + $this->adjustmentNotes->where('type', AdjustmentNoteType::Credit->value)->sum('amount')
         );
     }
 

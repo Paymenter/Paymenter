@@ -5,6 +5,7 @@ namespace App\Classes\Extension;
 use App\Models\BillingAgreement;
 use App\Models\Card;
 use App\Models\Invoice;
+use App\Models\InvoiceTransaction;
 use App\Models\User;
 use Illuminate\Support\Facades\View;
 
@@ -57,6 +58,27 @@ abstract class Gateway extends Extension
      * @return bool
      */
     public function charge(Invoice $invoice, $total, BillingAgreement $billingAgreement)
+    {
+        throw new \Exception('Not implemented');
+    }
+
+    /**
+     * Check if gateway supports refunds.
+     */
+    public function supportsRefunds(): bool
+    {
+        return false;
+    }
+
+    /**
+     * Refund the given transaction for the given amount.
+     * If the amount equals the full transaction amount, it's a full refund.
+     * Otherwise, it's a partial refund.
+     *
+     * @param  float  $amount
+     * @return bool
+     */
+    public function refund(InvoiceTransaction $transaction, $amount)
     {
         throw new \Exception('Not implemented');
     }

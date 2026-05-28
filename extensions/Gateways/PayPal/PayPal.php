@@ -10,6 +10,7 @@ use App\Helpers\ExtensionHelper;
 use App\Models\BillingAgreement;
 use App\Models\Invoice;
 use App\Models\InvoiceItem;
+use App\Models\InvoiceTransaction;
 use App\Models\Service;
 use App\Models\User;
 use Exception;
@@ -236,7 +237,6 @@ class PayPal extends Gateway
     public function pay($invoice, $total)
     {
         $url = $this->config('test_mode') ? 'https://api-m.sandbox.paypal.com' : 'https://api-m.paypal.com';
-
         $order = $this->request('post', $url . '/v2/checkout/orders', [
             'intent' => 'CAPTURE',
             'purchase_units' => [
@@ -373,6 +373,31 @@ class PayPal extends Gateway
         ]);
 
         $service->properties()->where('key', 'has_paypal_subscription')->delete();
+
+        return true;
+    }
+
+    public function supportsRefunds(): bool
+    {
+        return true;
+    }
+
+    public function refund(InvoiceTransaction $transaction, $amount): bool
+    {
+        $captureId = $transaction->transaction_id;
+
+        if (!$captureId) {
+            throw new \Exception('Transaction has no PayPal capture ID.');
+        }
+
+        $url = $this->config('test_mode') ? 'https://api-m.sandbox.paypal.com' : 'https://api-m.paypal.com';
+
+        $this->request('post', $url . '/v2/payments/captures/' . $captureId . '/refund', [
+            'amount' => [
+                'currency_code' => $transaction->invoice->currency_code,
+                'value' => number_format($amount, 2, '.', ''),
+            ],
+        ]);
 
         return true;
     }

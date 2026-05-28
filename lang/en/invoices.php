@@ -61,5 +61,13 @@ return [
     'description' => 'Description',
     'credit_note' => 'Credit Note',
     'debit_note' => 'Debit Note',
+    'refund' => 'Refund',
+    'refunded_amount' => 'Refunded',
+    'refundable_amount' => 'Refundable: :amount',
+    'refund_transaction' => 'Refund Transaction #:id',
+    'refund_amount_positive' => 'The refund amount must be greater than 0.',
+    'refund_amount_exceeds_refundable' => 'The refund amount cannot exceed the refundable amount of :max.',
+    'refund_success' => 'Refund processed successfully.',
+    'refund_failed' => 'Refund failed.',
 
 ];

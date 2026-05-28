@@ -4,7 +4,9 @@ namespace App\Helpers;
 
 use App\Attributes\ExtensionMeta;
 use App\Classes\FilamentInput;
+use App\Enums\AdjustmentNoteType;
 use App\Enums\InvoiceTransactionStatus;
+use App\Models\AdjustmentNote;
 use App\Models\BillingAgreement;
 use App\Models\Extension;
 use App\Models\Gateway;
@@ -533,6 +535,48 @@ class ExtensionHelper
                 if (self::getExtension('gateway', $gateway->extension, $gateway->settings)->cancelSubscription($service)) {
                     return true;
                 }
+            }
+        }
+
+        return false;
+    }
+
+    public static function refund(InvoiceTransaction $transaction, float $amount): bool
+    {
+        $invoice = $transaction->invoice;
+
+        if ($amount <= 0) {
+            throw new \InvalidArgumentException('Refund amount must be greater than 0.');
+        }
+
+        $refundable = $transaction->amount - $transaction->refunded_amount;
+        if ($amount > $refundable) {
+            throw new \InvalidArgumentException(
+                "Refund amount ({$amount}) exceeds refundable amount ({$refundable}) for this transaction."
+            );
+        }
+
+        $gateway = $transaction->gateway;
+
+        if ($gateway && self::hasFunction($gateway, 'supportsRefunds') && self::hasFunction($gateway, 'refund')) {
+            $gatewayInstance = self::getExtension('gateway', $gateway->extension, $gateway->settings);
+
+            if ($gatewayInstance->supportsRefunds()) {
+                $success = $gatewayInstance->refund($transaction, $amount);
+
+                if (!$success) {
+                    throw new \RuntimeException('Gateway refund failed for transaction #' . $transaction->id);
+                }
+
+                $transaction->refunded_amount = $transaction->refunded_amount + $amount;
+                $transaction->save();
+
+                $invoice->adjustmentNotes()->create([
+                    'type' => AdjustmentNoteType::Credit->value,
+                    'amount' => -1 * abs($amount),
+                    'description' => 'Refund for transaction #' . $transaction->id . ' (' . ($transaction->transaction_id ?? 'manual') . ')',
+                ]);
+                return true;
             }
         }
 

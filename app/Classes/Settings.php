@@ -589,6 +589,14 @@ class Settings
                     'description' => 'Proforma invoices will not be assigned an official invoice number until payment is received and will be marked as "Proforma".',
                 ],
                 [
+                    'name' => 'immutable_invoices_enabled',
+                    'label' => 'Immutable Invoices',
+                    'type' => 'checkbox',
+                    'database_type' => 'boolean',
+                    'default' => true,
+                    'description' => 'When enabled, invoices can only be edited while in draft status. Once published, they become read-only. Disable this to allow editing invoices at any status.',
+                ],
+                [
                     'name' => 'invoice_snapshot',
                     'label' => 'Invoice Snapshot',
                     'type' => 'checkbox',
