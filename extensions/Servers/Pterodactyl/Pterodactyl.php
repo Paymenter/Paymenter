@@ -255,8 +255,21 @@ class Pterodactyl extends Server
         if ($this->getServer($service->id, failIfNotFound: false)) {
             throw new Exception('Server already exists');
         }
+        $originalMemory = $settings['memory'] ?? 0;
         // Smash the properties into the settings
         $settings = array_merge($settings, $properties);
+
+        if (is_string($settings['memory'])) {
+            $settings['memory'] = preg_replace_callback(
+                '/\{memory\}\s*\+\s*(\d+)/',
+                fn($matches) => (int)$originalMemory + (int)$matches[1],
+                $settings['memory']
+            );
+            if ($settings['memory'] === '{memory}') {
+                $settings['memory'] = $originalMemory;
+            }
+        }
+        $settings['memory'] = (int) $settings['memory'];
 
         $eggData = $this->request('/api/application/nests/' . $settings['nest_id'] . '/eggs/' . $settings['egg_id'], data: ['include' => 'variables']);
         if (!isset($eggData['attributes'])) {
