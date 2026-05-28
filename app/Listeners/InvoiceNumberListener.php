@@ -6,6 +6,7 @@ use App\Events\Invoice\Creating;
 use App\Events\Invoice\Updating;
 use App\Models\Invoice;
 use App\Models\Setting;
+use Illuminate\Support\Facades\DB;
 
 class InvoiceNumberListener
 {
@@ -25,14 +26,35 @@ class InvoiceNumberListener
 
     private function setInvoiceNumber(Creating|Updating $event): void
     {
-        // Get the next invoice number
-        $number = config('settings.invoice_number', 1) + 1;
-        // Update setting
-        Setting::updateOrCreate([
-            'key' => 'invoice_number',
-        ], [
-            'value' => $number,
-        ]);
+        // Use atomic increment with lock to prevent race conditions, and skip numbers that already exist.
+        $formattedNumber = DB::transaction(function () {
+            $setting = Setting::where('key', 'invoice_number')->lockForUpdate()->first();
+            $number = max($setting ? (int) $setting->value : 1, (int) (Invoice::max('id') ?? 0));
+
+            for ($attempts = 0; $attempts < 1000; $attempts++) {
+                $number++;
+                $formattedNumber = $this->formatInvoiceNumber($number);
+
+                if (!Invoice::where('number', $formattedNumber)->exists()) {
+                    Setting::updateOrCreate([
+                        'key' => 'invoice_number',
+                    ], [
+                        'value' => $number,
+                    ]);
+
+                    return $formattedNumber;
+                }
+            }
+
+            throw new \RuntimeException('Unable to generate a unique invoice number.');
+        });
+
+        // Set the invoice number
+        $event->invoice->number = $formattedNumber;
+    }
+
+    private function formatInvoiceNumber(int $number): string
+    {
         // Pad the invoice number with leading zeros
         $paddedNumber = str_pad($number, config('settings.invoice_number_padding', 1), '0', STR_PAD_LEFT);
 
@@ -43,7 +65,6 @@ class InvoiceNumberListener
         $formattedNumber = str_replace('{month}', now()->format('m'), $formattedNumber);
         $formattedNumber = str_replace('{day}', now()->format('d'), $formattedNumber);
 
-        // Set the invoice number
-        $event->invoice->number = $formattedNumber;
+        return $formattedNumber;
     }
 }
