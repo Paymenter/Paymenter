@@ -30,12 +30,11 @@
             </button>
         </div>
     </x-slot>
-    <div class="space-y-4">
+    <div class="space-y-4" x-data="{ selected: $wire.entangle('selectedMethod') }">
         @foreach(Auth::user()->billingAgreements as $agreement)
-        <div wire:click="$set('selectedMethod', '{{ $agreement->ulid }}')"
-            class="flex items-center justify-between p-4 bg-background-secondary border rounded-lg cursor-pointer transition-all
-                    {{ $selectedMethod === $agreement->ulid ? 'border-primary ring-2 ring-primary' : 'border-neutral hover:border-neutral-focus' }}"
-            wire:loading.class="opacity-50 pointer-events-none" wire:target="selectedMethod,processPayment">
+        <div @click="selected = '{{ $agreement->ulid }}'"
+            class="flex items-center justify-between p-4 bg-background-secondary border rounded-lg cursor-pointer transition-all"
+            :class="selected === '{{ $agreement->ulid }}' ? 'border-primary ring-2 ring-primary' : 'border-neutral hover:border-neutral-focus'">
             <div class="flex items-center gap-4">
                 <div>
                     @switch(strtolower($agreement->type))
@@ -77,10 +76,11 @@
                 </div>
             </div>
             <div
-                class="size-5 rounded-full border border-neutral flex items-center justify-center
-                                    {{ $selectedMethod === $agreement->ulid ? 'border-primary bg-primary' : 'border-neutral-focus' }}">
-                @if($selectedMethod === $agreement->ulid)
-                <x-ri-check-line class="size-4 text-white" /> @endif
+                class="size-5 rounded-full border border-neutral flex items-center justify-center"
+                :class="selected === '{{ $agreement->ulid }}' ? 'border-primary bg-primary' : 'border-neutral-focus'">
+                <template x-if="selected === '{{ $agreement->ulid }}'">
+                    <x-ri-check-line class="size-4 text-white" />
+                </template>
             </div>
         </div>
         @endforeach

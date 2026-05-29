@@ -1,5 +1,5 @@
-<div>
-    <!-- Show apply credits button if available -->
+<div x-data="{ selected: $wire.entangle('selectedMethod') }">
+    {{-- Show apply credits button if available --}}
     @php
     $credit = Auth::user()->credits()
     ->where('currency_code', $invoice->currency_code)
@@ -10,9 +10,9 @@
     @if($credit && !$itemHasCredit)
     <div class="mb-6">
         <h3 class="text-lg font-semibold mb-2">{{ __('invoices.pay_with_credits') }}</h3>
-        <div wire:click="$set('selectedMethod', 'credit')"
-            wire:loading.class="opacity-50 pointer-events-none" wire:target="selectedMethod,processPayment"
-            class="flex items-center justify-between p-4 bg-background-secondary border border-neutral rounded-lg cursor-pointer transition-all {{ $selectedMethod === 'credit' ? 'border-primary ring-2 ring-primary' : 'border-neutral hover:border-neutral-focus' }}">
+        <div @click="selected = 'credit'"
+            class="flex items-center justify-between p-4 bg-background-secondary border border-neutral rounded-lg cursor-pointer transition-all"
+            :class="selected === 'credit' ? 'border-primary ring-2 ring-primary' : 'border-neutral hover:border-neutral-focus'">
             <div class="flex items-center space-x-4">
                 <div class="text-xl">
                     <x-ri-copper-coin-line class="size-6 text-primary" />
@@ -23,9 +23,11 @@
                 </div>
             </div>
             <div
-                class="size-5 rounded-full bg-background-secondary border border-neutral flex items-center justify-center {{ $selectedMethod === 'credit' ? 'border-primary bg-primary' : 'border-neutral-focus' }}">
-                @if($selectedMethod === 'credit')
-                <x-ri-check-line class="size-4 text-white" /> @endif
+                class="size-5 rounded-full bg-background-secondary border border-neutral flex items-center justify-center"
+                :class="selected === 'credit' ? 'border-primary bg-primary' : 'border-neutral-focus'">
+                <template x-if="selected === 'credit'">
+                    <x-ri-check-line class="size-4 text-white" />
+                </template>
             </div>
         </div>
     </div>
@@ -36,10 +38,9 @@
         <h3 class="text-lg font-semibold mb-2">{{ __('account.saved_payment_methods') }}</h3>
         <div class="space-y-3">
             @foreach($this->savedPaymentMethods as $method)
-            <div wire:click="$set('selectedMethod', '{{ $method->ulid }}')"
-                class="flex items-center justify-between p-4 bg-background-secondary border rounded-lg cursor-pointer transition-all
-                    {{ $selectedMethod === $method->ulid ? 'border-primary ring-2 ring-primary' : 'border-neutral hover:border-neutral-focus' }}"
-                    wire:loading.class="opacity-50 pointer-events-none" wire:target="selectedMethod,processPayment">
+            <div @click="selected = '{{ $method->ulid }}'"
+                class="flex items-center justify-between p-4 bg-background-secondary border rounded-lg cursor-pointer transition-all"
+                :class="selected === '{{ $method->ulid }}' ? 'border-primary ring-2 ring-primary' : 'border-neutral hover:border-neutral-focus'">
                 <div class="flex items-center gap-4">
                     <div>
                         @switch(strtolower($method->type))
@@ -81,10 +82,11 @@
                     </div>
                 </div>
                 <div
-                    class="size-5 rounded-full border border-neutral flex items-center justify-center
-                                    {{ $selectedMethod === $method->ulid ? 'border-primary bg-primary' : 'border-neutral-focus' }}">
-                    @if($selectedMethod === $method->ulid)
-                    <x-ri-check-line class="size-4 text-white" /> @endif
+                    class="size-5 rounded-full border border-neutral flex items-center justify-center"
+                    :class="selected === '{{ $method->ulid }}' ? 'border-primary bg-primary' : 'border-neutral-focus'">
+                    <template x-if="selected === '{{ $method->ulid }}'">
+                        <x-ri-check-line class="size-4 text-white" />
+                    </template>
                 </div>
             </div>
             @endforeach
@@ -110,9 +112,9 @@
         </button>
         <div class="space-y-3 mt-3" x-show="showOneTime" x-transition>
             @foreach($this->gateways as $method)
-            <div wire:click="$set('selectedMethod', 'gateway-{{ $method->id }}')"
-                class="flex items-center justify-between p-4 border rounded-lg cursor-pointer transition-all {{ $selectedMethod === 'gateway-' . $method->id ? 'border-primary ring-2 ring-primary' : 'border-neutral hover:border-neutral-focus' }}"
-                wire:loading.class="opacity-50 pointer-events-none" wire:target="selectedMethod,processPayment">
+            <div @click="selected = 'gateway-{{ $method->id }}'"
+                class="flex items-center justify-between p-4 border rounded-lg cursor-pointer transition-all"
+                :class="selected === 'gateway-{{ $method->id }}' ? 'border-primary ring-2 ring-primary' : 'border-neutral hover:border-neutral-focus'">
                 <div class="flex items-center space-x-4">
                     <div
                         class="bg-background-secondary border border-neutral rounded-lg overflow-hidden flex items-center justify-center h-9 w-9">
@@ -129,9 +131,11 @@
                     </div>
                 </div>
                 <div
-                    class="size-5 rounded-full bg-background-secondary border border-neutral flex items-center justify-center {{ $selectedMethod === 'gateway-' . $method->id ? 'border-primary bg-primary' : 'border-neutral-focus' }}">
-                    @if($selectedMethod === 'gateway-' . $method->id)
-                    <x-ri-check-line class="size-4 text-white" /> @endif
+                    class="size-5 rounded-full bg-background-secondary border border-neutral flex items-center justify-center"
+                    :class="selected === 'gateway-{{ $method->id }}' ? 'border-primary bg-primary' : 'border-neutral-focus'">
+                    <template x-if="selected === 'gateway-{{ $method->id }}'">
+                        <x-ri-check-line class="size-4 text-white" />
+                    </template>
                 </div>
             </div>
             @endforeach
@@ -139,24 +143,22 @@
     </div>
     @endif
 
-    @if($selectedMethod && $selectedMethod !== 'credit' && !str_starts_with($selectedMethod, 'gateway-') && $this->recurringServices()->exists())
-    <div class="mt-4 p-2">
-        <x-form.toggle :label="__('invoices.use_for_recurring')" wire:model.live="setAsDefault" />
-    </div>
-    @endif
+    <template x-if="selected && selected !== 'credit' && !selected.startsWith('gateway-')">
+        <div>
+            @if($this->recurringServices()->exists())
+            <div class="mt-4 p-2">
+                <x-form.toggle :label="__('invoices.use_for_recurring')" wire:model.live="setAsDefault" />
+            </div>
+            @endif
+        </div>
+    </template>
 
     <div class="mt-6">
         <x-button.primary class="w-full" wire:click="processPayment" wire:loading.attr="disabled"
-            :disabled="!$selectedMethod">
+            x-bind:disabled="!selected">
             <x-loading target="processPayment" />
             <div wire:loading.remove wire:target="processPayment">
-                @if($selectedMethod === 'credit' && $credit && $credit->amount >= $invoice->formattedRemaining->total)
-                {{ __('invoices.apply_credits_and_pay') }}
-                @elseif($selectedMethod === 'credit' && $credit)
-                {{ __('invoices.apply_credit_and_continue', ['amount' => $credit->formattedAmount]) }}
-                @else
                 {{ __('invoices.pay_now', ['amount' => $invoice->formattedRemaining]) }}
-                @endif
             </div>
         </x-button.primary>
     </div>
