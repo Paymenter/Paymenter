@@ -13,6 +13,7 @@ use App\Models\User;
 use App\Services\ServiceUpgrade\ServiceUpgradeService;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\Rule;
 use Livewire\Attributes\Computed;
 
 class Upgrade extends Component
@@ -123,7 +124,10 @@ class Upgrade extends Component
                 $rules["configOptions.{$option->id}"] = ['required'];
             } elseif ($option->type === 'checkbox') {
             } else {
-                $rules["configOptions.{$option->id}"] = ['required', 'exists:config_options,id'];
+                $rules["configOptions.{$option->id}"] = [
+                    'required',
+                    Rule::in($option->children->pluck('id')->toArray()),
+                ];
             }
         }
 
