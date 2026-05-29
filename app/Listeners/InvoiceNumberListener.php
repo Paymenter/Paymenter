@@ -4,8 +4,8 @@ namespace App\Listeners;
 
 use App\Events\Invoice\Creating;
 use App\Events\Invoice\Updating;
-use App\Models\Invoice;
 use App\Models\Setting;
+use Illuminate\Support\Facades\DB;
 
 class InvoiceNumberListener
 {
@@ -25,14 +25,25 @@ class InvoiceNumberListener
 
     private function setInvoiceNumber(Creating|Updating $event): void
     {
-        // Get the next invoice number
-        $number = config('settings.invoice_number', 1) + 1;
-        // Update setting
-        Setting::updateOrCreate([
-            'key' => 'invoice_number',
-        ], [
-            'value' => $number,
-        ]);
+        $formattedNumber = DB::transaction(function () {
+            $setting = Setting::where('key', 'invoice_number')->lockForUpdate()->first();
+            $number = (int) ($setting?->value ?? 0);
+            $number++;
+
+            Setting::updateOrCreate([
+                'key' => 'invoice_number',
+            ], [
+                'value' => $number,
+            ]);
+
+            return $this->formatInvoiceNumber($number);
+        });
+
+        $event->invoice->number = $formattedNumber;
+    }
+
+    private function formatInvoiceNumber(int $number): string
+    {
         // Pad the invoice number with leading zeros
         $paddedNumber = str_pad($number, config('settings.invoice_number_padding', 1), '0', STR_PAD_LEFT);
 
@@ -43,7 +54,6 @@ class InvoiceNumberListener
         $formattedNumber = str_replace('{month}', now()->format('m'), $formattedNumber);
         $formattedNumber = str_replace('{day}', now()->format('d'), $formattedNumber);
 
-        // Set the invoice number
-        $event->invoice->number = $formattedNumber;
+        return $formattedNumber;
     }
 }
