@@ -4,7 +4,6 @@ namespace App\Listeners;
 
 use App\Events\Invoice\Creating;
 use App\Events\Invoice\Updating;
-use App\Models\Invoice;
 use App\Models\Setting;
 use Illuminate\Support\Facades\DB;
 
@@ -26,30 +25,20 @@ class InvoiceNumberListener
 
     private function setInvoiceNumber(Creating|Updating $event): void
     {
-        // Use atomic increment with lock to prevent race conditions, and skip numbers that already exist.
         $formattedNumber = DB::transaction(function () {
             $setting = Setting::where('key', 'invoice_number')->lockForUpdate()->first();
-            $number = max($setting ? (int) $setting->value : 1, (int) (Invoice::max('id') ?? 0));
+            $number = (int) ($setting?->value ?? 0);
+            $number++;
 
-            for ($attempts = 0; $attempts < 1000; $attempts++) {
-                $number++;
-                $formattedNumber = $this->formatInvoiceNumber($number);
+            Setting::updateOrCreate([
+                'key' => 'invoice_number',
+            ], [
+                'value' => $number,
+            ]);
 
-                if (!Invoice::where('number', $formattedNumber)->exists()) {
-                    Setting::updateOrCreate([
-                        'key' => 'invoice_number',
-                    ], [
-                        'value' => $number,
-                    ]);
-
-                    return $formattedNumber;
-                }
-            }
-
-            throw new \RuntimeException('Unable to generate a unique invoice number.');
+            return $this->formatInvoiceNumber($number);
         });
 
-        // Set the invoice number
         $event->invoice->number = $formattedNumber;
     }
 
