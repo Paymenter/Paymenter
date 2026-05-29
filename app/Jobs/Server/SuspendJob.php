@@ -41,6 +41,19 @@ class SuspendJob implements ShouldQueue
         }
 
         if ($this->sendNotification) {
+            // Find the pending renewal invoice for this service so we can
+            // include the amount due and a direct payment link in the notification
+            $pendingInvoice = $this->service->invoices()
+                ->where('status', 'pending')
+                ->latest()
+                ->first();
+
+            if ($pendingInvoice) {
+                $data['invoice'] = $pendingInvoice;
+                $data['invoiceTotal'] = $pendingInvoice->formattedTotal;
+                $data['invoiceItems'] = $pendingInvoice->items;
+            }
+
             NotificationHelper::serverSuspendedNotification($this->service->user, $this->service, is_array($data) ? $data : []);
         }
     }

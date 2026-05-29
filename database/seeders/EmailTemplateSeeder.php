@@ -172,10 +172,37 @@ class EmailTemplateSeeder extends Seeder
                 **Service details**
                 - Name: {{ $service->product->name }}
 
-                Please pay the invoice to reactivate the service.
+                @isset($invoice)
+                **Invoice details**
+                - Invoice #: {{ $invoice->id }}
+                - Amount due: **{{ $invoiceTotal }}**
+
+                <div class="table">
+
+                |   Item   | Quantity |  Price   |
+                | :------: | :------: | :------: |
+                @foreach ($invoiceItems as $item)
+                | {{ $item->description }} | {{ $item->quantity }} | {{ $item->price }} |
+                @endforeach
+                </div>
+
+                <div class="action">
+                	<a class="button button-blue" href="{{ route('invoices.show', $invoice) }}">
+                		Pay Invoice & Reactivate
+                	</a>
+                </div>
+                @else
+                Please pay the outstanding invoice to reactivate your service.
+
+                <div class="action">
+                	<a class="button button-blue" href="{{ route('invoices') }}">
+                		View Invoices
+                	</a>
+                </div>
+                @endisset
                 HTML,
             'in_app_title' => 'Service suspended',
-            'in_app_body' => 'Your service {{ $service->product->name }} has been suspended due to a payment failure. Please pay the invoice to reactivate the service.',
+            'in_app_body' => 'Your service {{ $service->product->name }} has been suspended. @isset($invoice) Pay {{ $invoiceTotal }} to reactivate. @endisset',
             'mail_enabled' => 'force',
             'in_app_enabled' => 'choice_on',
             'edit_preference_message' => 'Alert me about service suspensions',
