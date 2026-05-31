@@ -38,7 +38,11 @@ class Create extends Component
             'subject' => 'required|string',
             'message' => 'required|string',
             'priority' => 'required|in:low,medium,high',
-            'attachments.*' => 'file|max:10240',
+            'attachments.*' => [
+                'file',
+                'max:10240',
+                'mimes:jpg,jpeg,png,gif,webp,pdf,txt,doc,docx,xls,xlsx,csv,zip,tar,gz,7z,mp4,mp3,ogg,wav',
+            ],
         ]);
 
         $rateLimitKey = 'create-ticket:' . Auth::id();
