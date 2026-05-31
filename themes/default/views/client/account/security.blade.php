@@ -50,15 +50,16 @@
             <h5 class="text-lg font-bold pb-3">{{ __('account.two_factor_authentication') }}</h5>
             @if ($twoFactorEnabled)
             <p class="text-sm text-primary-100">{{ __('account.two_factor_authentication_enabled') }}</p>
-            <x-button.primary class="w-full mt-4" x-on:click="$store.confirmation.confirm({
-                                title: '{{ __('account.two_factor_authentication_disable') }}',
-                                message: '{{ __('account.two_factor_authentication_disable_description') }}',
-                                confirmText: '{{ __('account.confirm') }}',
-                                cancelText: '{{ __('account.cancel') }}',
-                                callback: () => $wire.disableTwoFactor()
-                            })">
-                {{ __('account.two_factor_authentication_disable') }}
-            </x-button.primary>
+            <form wire:submit.prevent="disableTwoFactor" class="mt-4">
+                <x-form.input name="disableTfaPassword" type="password"
+                    :label="__('account.input.current_password')"
+                    :placeholder="__('account.input.current_password')"
+                    wire:model="disableTfaPassword"
+                    required />
+                <x-button.primary type="submit" class="w-full mt-4">
+                    {{ __('account.two_factor_authentication_disable') }}
+                </x-button.primary>
+            </form>
             @else
             <p class="text-sm text-primary-100">{{ __('account.two_factor_authentication_description') }}</p>
             <x-button.primary wire:click="enableTwoFactor" class="w-full mt-4">
