@@ -35,8 +35,9 @@ class Support extends BaseWidget
                         'replied' => 'warning',
                     })
                     ->formatStateUsing(fn (string $state) => ucfirst($state)),
-                TextColumn::make('user.name')
-                    ->label('User'),
+                TextColumn::make('owner')
+                    ->label('User')
+                    ->state(fn (Ticket $record) => $record->ownerName()),
                 TextColumn::make('created_at')
                     ->label('Created At'),
             ])
