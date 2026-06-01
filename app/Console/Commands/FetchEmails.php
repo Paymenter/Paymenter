@@ -55,7 +55,17 @@ class FetchEmails extends Command
                     continue;
                 }
 
-                $body = EmailReplyParser::parseReply($email->text());
+                $rawBody = $email->text() ?? (function($html) {
+                    $dom = new \DOMDocument();
+                    @$dom->loadHTML('<?xml encoding="utf-8" ?>' . $html, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
+                    foreach (iterator_to_array($dom->getElementsByTagName('blockquote')) as $node) {
+                        $node->parentNode->removeChild($node);
+                    }
+                    $text = strip_tags($dom->saveHTML());
+                    $text = preg_replace('/On .+wrote:\s*/s', '', $text);
+                    return trim($text);
+                })($email->html()) ?? '';
+                $body = EmailReplyParser::parseReply($rawBody);
 
                 // Check headers to see if this email is a reply
                 $replyTo = $email->inReplyTo();
@@ -98,7 +108,7 @@ class FetchEmails extends Command
                     'subject' => $email->subject(),
                     'from' => $email->from()->email(),
                     'to' => $email->to()[0]->email(),
-                    'body' => $email->text(),
+                    'body' => $email->text() ?? $email->html() ?? '',
                     'status' => 'processed',
                 ]);
 
@@ -143,7 +153,7 @@ class FetchEmails extends Command
             'subject' => $email->subject(),
             'from' => $email->from()->email(),
             'to' => $email->to()[0]->email(),
-            'body' => $email->text(),
+            'body' => $email->text() ?? $email->html() ?? '',
             'status' => 'unprocessed',
         ]);
     }
