@@ -97,12 +97,25 @@ class Security extends Component
         }
     }
 
+    public string $disableTfaPassword = '';
+
     public function disableTwoFactor()
     {
+        $this->validate([
+            'disableTfaPassword' => 'required|string',
+        ]);
+
+        if (!Hash::check($this->disableTfaPassword, Auth::user()->password)) {
+            $this->addError('disableTfaPassword', __('account.notifications.password_incorrect'));
+
+            return;
+        }
+
         Auth::user()->update([
             'tfa_secret' => null,
         ]);
 
+        $this->reset('disableTfaPassword');
         $this->notify(__('account.notifications.two_factor_disabled'));
 
         $this->twoFactorEnabled = false;

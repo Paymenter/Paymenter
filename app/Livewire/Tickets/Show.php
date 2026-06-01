@@ -21,7 +21,11 @@ class Show extends Component
     #[Locked]
     public Ticket $ticket;
 
-    #[Validate(['attachments.*' => 'file|max:10240'])]
+    #[Validate(['attachments.*' => [
+        'file',
+        'max:10240',
+        'mimes:jpg,jpeg,png,gif,webp,pdf,txt,doc,docx,xls,xlsx,csv,zip,tar,gz,7z,mp4,mp3,ogg,wav',
+    ]])]
     public array $attachments = [];
 
     #[Rule('required', 'string')]
