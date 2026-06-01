@@ -2,11 +2,11 @@
 
 namespace App\Livewire\Auth;
 
+use App\Actions\Auth\Login;
 use App\Attributes\DisabledIf;
 use App\Livewire\ComponentWithProperties;
 use App\Models\User;
 use App\Traits\Captchable;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules\Password;
 
@@ -48,7 +48,7 @@ class Register extends ComponentWithProperties
         return array_merge($rules, $this->getRulesForProperties());
     }
 
-    public function submit()
+    public function submit(Login $login)
     {
         $this->captcha();
 
@@ -65,7 +65,7 @@ class Register extends ComponentWithProperties
             $this->updateProperties($user, $validatedData['properties']);
         }
 
-        Auth::login($user);
+        $login->execute($user);
 
         return $this->redirectIntended(route('dashboard'), true);
     }
