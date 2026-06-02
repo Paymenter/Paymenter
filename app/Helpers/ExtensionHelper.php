@@ -558,29 +558,37 @@ class ExtensionHelper
 
         $gateway = $transaction->gateway;
 
-        if ($gateway && self::hasFunction($gateway, 'supportsRefunds') && self::hasFunction($gateway, 'refund')) {
-            $gatewayInstance = self::getExtension('gateway', $gateway->extension, $gateway->settings);
-
-            if ($gatewayInstance->supportsRefunds()) {
-                $success = $gatewayInstance->refund($transaction, $amount);
-
-                if (!$success) {
-                    throw new \RuntimeException('Gateway refund failed for transaction #' . $transaction->id);
-                }
-
-                $transaction->refunded_amount = $transaction->refunded_amount + $amount;
-                $transaction->save();
-
-                $invoice->adjustmentNotes()->create([
-                    'type' => AdjustmentNoteType::Credit->value,
-                    'amount' => -1 * abs($amount),
-                    'description' => 'Refund for transaction #' . $transaction->id . ' (' . ($transaction->transaction_id ?? 'manual') . ')',
-                ]);
-                return true;
-            }
+        if (!$gateway || !self::hasFunction($gateway, 'supportsRefunds') || !self::hasFunction($gateway, 'refund')) {
+            return false;
         }
 
-        return false;
+        return self::handleRefund($transaction, $amount, $gateway, $invoice);
+    }
+
+    private static function handleRefund(InvoiceTransaction $transaction, float $amount, $gateway, Invoice $invoice): bool
+    {
+        $gatewayInstance = self::getExtension('gateway', $gateway->extension, $gateway->settings);
+
+        if (!$gatewayInstance->supportsRefunds()) {
+            return false;
+        }
+
+        $success = $gatewayInstance->refund($transaction, $amount);
+
+        if (!$success) {
+            throw new \RuntimeException('Gateway refund failed for transaction #' . $transaction->id);
+        }
+
+        $transaction->refunded_amount = $transaction->refunded_amount + $amount;
+        $transaction->save();
+
+        $invoice->adjustmentNotes()->create([
+            'type' => AdjustmentNoteType::Credit->value,
+            'amount' => -1 * abs($amount),
+            'description' => 'Refund for transaction #' . $transaction->id . ' (' . ($transaction->transaction_id ?? 'manual') . ')',
+        ]);
+
+        return true;
     }
 
     /* SERVER RELATED FUNCTIONS */

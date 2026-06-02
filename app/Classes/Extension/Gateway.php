@@ -72,8 +72,6 @@ abstract class Gateway extends Extension
 
     /**
      * Refund the given transaction for the given amount.
-     * If the amount equals the full transaction amount, it's a full refund.
-     * Otherwise, it's a partial refund.
      *
      * @param  float  $amount
      * @return bool

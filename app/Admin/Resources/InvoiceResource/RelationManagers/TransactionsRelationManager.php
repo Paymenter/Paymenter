@@ -112,18 +112,11 @@ class TransactionsRelationManager extends RelationManager
                         try {
                             ExtensionHelper::refund($record, (float) $data['amount']);
 
-                            Notification::make()
-                                ->title(__('invoices.refund_success'))
-                                ->success()
-                                ->send();
+                            $this->notifyRefundResult(true);
 
                             $action->success();
                         } catch (\Exception $e) {
-                            Notification::make()
-                                ->title(__('invoices.refund_failed'))
-                                ->body($e->getMessage())
-                                ->danger()
-                                ->send();
+                            $this->notifyRefundResult(false, $e->getMessage());
 
                             $action->halt();
                         }
@@ -144,6 +137,15 @@ class TransactionsRelationManager extends RelationManager
             ]);
     }
 
+
+    private function notifyRefundResult(bool $success, ?string $errorMessage = null): void
+    {
+        Notification::make()
+            ->title(__($success ? 'invoices.refund_success' : 'invoices.refund_failed'))
+            ->when(!$success, fn (Notification $notification) => $notification->body($errorMessage))
+            ->{$success ? 'success' : 'danger'}()
+            ->send();
+    }
 
     public function isReadOnly(): bool {
         return false;
