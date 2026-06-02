@@ -42,11 +42,11 @@ class InvoicePolicy extends BasePolicy
 
         $canEdit = $this->adminPermission($user, 'admin.invoices.update') || $invoice->user_id === $user->id;
 
-        if (!config('settings.immutable_invoices_enabled', true)) {
+        if ($this->invoiceCreatedBeforeImmutableUpdate($invoice)) {
             return $canEdit;
         }
 
-        if ($this->invoiceCreatedBeforeImmutableUpdate($invoice)) {
+        if (!config('settings.immutable_invoices_enabled', true)) {
             return $canEdit;
         }
 

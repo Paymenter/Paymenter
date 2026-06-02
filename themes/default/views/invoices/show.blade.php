@@ -234,7 +234,7 @@
             @endif
 
             @php
-                $clientAdjustmentNotes = $invoice->adjustmentNotes->where('is_admin_only', false);
+                $clientAdjustmentNotes = $invoice->adjustmentNotes->get();
             @endphp
             @if ($clientAdjustmentNotes->isNotEmpty() && config('settings.notes_client_visible', true))
             <div class="mt-12">

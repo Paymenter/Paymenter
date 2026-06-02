@@ -26,7 +26,7 @@ class TransactionsRelationManager extends RelationManager
 
     protected function canModifyTransactions(): bool
     {
-        return $this->getOwnerRecord()?->status === Invoice::STATUS_PENDING;
+        return !config('settings.immutable_invoices_enabled') || $this->getOwnerRecord()?->status === Invoice::STATUS_PENDING;
     }
 
     public function form(Schema $schema): Schema

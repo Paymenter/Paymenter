@@ -25,7 +25,8 @@ class EditInvoice extends EditRecord
                 ->visible(fn (Invoice $record): bool => $record->status === Invoice::STATUS_DRAFT)
                 ->requiresConfirmation()
                 ->color('success')
-                ->icon('heroicon-o-check-circle'),
+                ->icon('heroicon-o-check-circle')
+                ->successRedirectUrl(InvoiceResource::getUrl('index')),
             DeleteAction::make(),
             Action::make('pdf')
                 ->label('Download PDF')

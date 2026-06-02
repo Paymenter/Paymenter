@@ -40,7 +40,6 @@ class Invoice extends Model implements Auditable
             'type' => AdjustmentNoteType::Credit->value,
             'amount' => -1 * abs($this->total),
             'description' => $description ?? 'Automatic credit note generated after overdue invoice cancellation.',
-            'is_admin_only' => true,
         ]);
     }
     /**
