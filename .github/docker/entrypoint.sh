@@ -56,9 +56,9 @@ if [ -z "$PAYMENTER_SKIP_DEFAULT" ] || [ "$PAYMENTER_SKIP_DEFAULT" != "true" ]; 
   echo -e "Renewing default themes and extensions..."
   
   # Renew default themes
-  if [ -d /app/themes_default ] && [ -d /app/themes ]; then
+  if [ -d /app/default/themes ] && [ -d /app/themes ]; then
     echo -e "Renewing themes from defaults..."
-    for item in /app/themes_default/*; do
+    for item in /app/default/themes/*; do
       if [ -e "$item" ]; then
         item_name=$(basename "$item")
         rm -rf "/app/themes/$item_name"
@@ -69,10 +69,10 @@ if [ -z "$PAYMENTER_SKIP_DEFAULT" ] || [ "$PAYMENTER_SKIP_DEFAULT" != "true" ]; 
   fi
   
   # Renew default extensions - only those that already exist
-  if [ -d /app/extensions_default ] && [ -d /app/extensions ]; then
+  if [ -d /app/default/extensions ] && [ -d /app/extensions ]; then
     echo -e "Renewing extensions from defaults..."
     updated_any=0
-    for item in /app/extensions_default/*; do
+    for item in /app/default/extensions/*; do
       if [ -e "$item" ]; then
         item_name=$(basename "$item")
         # Only update if extension category exists in /app/extensions
@@ -83,7 +83,7 @@ if [ -z "$PAYMENTER_SKIP_DEFAULT" ] || [ "$PAYMENTER_SKIP_DEFAULT" != "true" ]; 
             for ext_dir in "/app/extensions/$item_name"/*; do
               if [ -d "$ext_dir" ]; then
                 ext_name=$(basename "$ext_dir")
-                default_ext="/app/extensions_default/$item_name/$ext_name"
+                default_ext="/app/default/extensions/$item_name/$ext_name"
                 if [ -d "$default_ext" ]; then
                   rm -rf "$ext_dir"
                   cp -rp "$default_ext" "$ext_dir"
@@ -112,8 +112,8 @@ fi
 if [ ! -d /app/themes ] || [ -z "$(ls -A /app/themes 2>/dev/null)" ]; then
   echo -e "Themes directory is empty, copying default themes..."
   mkdir -p /app/themes
-  if [ -d /app/themes_default ]; then
-    cp -rp /app/themes_default/. /app/themes/
+  if [ -d /app/default/themes ]; then
+    cp -rp /app/default/themes/. /app/themes/
     chown -R nginx:nginx /app/themes
     chmod -R 755 /app/themes
     echo -e "Default themes copied."
@@ -126,14 +126,35 @@ fi
 if [ ! -d /app/extensions ] || [ -z "$(ls -A /app/extensions 2>/dev/null)" ]; then
   echo -e "Extensions directory is empty, copying default extensions..."
   mkdir -p /app/extensions
-  if [ -d /app/extensions_default ]; then
-    cp -rp /app/extensions_default/. /app/extensions/
+  if [ -d /app/default/extensions ]; then
+    cp -rp /app/default/extensions/. /app/extensions/
     chown -R nginx:nginx /app/extensions
     chmod -R 755 /app/extensions
     echo -e "Default extensions copied."
   fi
 else
   echo -e "Extensions directory already populated."
+fi
+
+## seed / renew the default theme's compiled bundle when a /app/default/build
+## snapshot exists (heavy image). Safe no-op on the standard image. The bundled
+## `default` theme writes to /app/public/default/ via laravel-vite-plugin's
+## buildDirectory.
+if [ -d /app/default/build ]; then
+  if [ ! -d /app/public/default ] || [ -z "$(ls -A /app/public/default 2>/dev/null)" ]; then
+    echo -e "public/default is empty, seeding from defaults..."
+    mkdir -p /app/public/default
+    cp -rp /app/default/build/. /app/public/default/
+    chown -R nginx:nginx /app/public/default
+    echo -e "Default public/default seeded."
+  elif [ -z "$PAYMENTER_SKIP_DEFAULT" ] || [ "$PAYMENTER_SKIP_DEFAULT" != "true" ]; then
+    echo -e "Renewing public/default from defaults..."
+    rm -rf /app/public/default/*
+    cp -rp /app/default/build/. /app/public/default/
+    chown -R nginx:nginx /app/public/default
+  else
+    echo -e "PAYMENTER_SKIP_DEFAULT is set, leaving public/default untouched."
+  fi
 fi
 
 ## set permissions for themes and extensions

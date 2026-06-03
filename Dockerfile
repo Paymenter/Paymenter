@@ -39,9 +39,12 @@ RUN npm run build
 FROM final AS production
 COPY --from=build /app/public /app/public
 
-# Copy themes and extensions to default locations for renewal on startup
-RUN cp -r /app/themes /app/themes_default && \
-    cp -r /app/extensions /app/extensions_default
+# Copy themes, extensions and (in heavy) the built bundle to a single
+# /app/default/ tree so the entrypoint can renew bind-mounted copies
+# on startup.
+RUN mkdir -p /app/default && \
+    cp -r /app/themes      /app/default/themes && \
+    cp -r /app/extensions  /app/default/extensions
 
 # Environment variable to skip default themes/extensions renewal
 # Set PAYMENTER_SKIP_DEFAULT=true to keep any custom modifications to defaults

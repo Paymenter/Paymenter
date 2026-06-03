@@ -70,6 +70,27 @@ services:
       - "./storage/public:/app/storage/app/public" # user uploads
       - "./themes:/app/themes" # user-customizable themes
       - "./extensions:/app/extensions" # user-customizable extensions
+      # ---------------------------------------------------------------
+      # OPTIONAL: persist the default theme's compiled bundle across
+      # container recreates. The bundled `default` theme writes its
+      # Vite output to /app/public/default/ (see
+      # themes/default/vite.config.js -> buildDirectory: 'default/').
+      #
+      # Convention: ./build/<themename> on the host  <->  /app/public/<themename>
+      # in the container. One subdirectory per theme, all under ./build/.
+      #
+      # Safe to enable on a fresh setup: when the host directory is
+      # empty the entrypoint seeds it from the image's baked-in snapshot
+      # at /app/default/build, so the theme keeps working.
+      #
+      # On image updates the entrypoint refreshes this directory from
+      # the new image (unless PAYMENTER_SKIP_DEFAULT is set).
+      #
+      # For CUSTOM themes that set their own buildDirectory (e.g.
+      # 'mytheme/'), add a parallel mount following the same pattern:
+      #   - "./build/mytheme:/app/public/mytheme"
+      # ---------------------------------------------------------------
+      # - "./build/default:/app/public/default"
     environment:
       DB_PASSWORD: *db-password
       APP_ENV: "production"

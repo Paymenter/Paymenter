@@ -77,10 +77,15 @@ COPY --from=build /app/public        /app/public
 # out of the box on first `docker compose exec`.
 COPY --from=build /app/node_modules  /app/node_modules
 
-# Snapshot default themes and extensions so the entrypoint can
-# renew the bind-mounted copies on every container start.
-RUN cp -r /app/themes      /app/themes_default \
- && cp -r /app/extensions  /app/extensions_default
+# Snapshot default themes, extensions and the default theme's compiled
+# public bundle into a single /app/default/ tree so the entrypoint can
+# seed/renew bind-mounted copies on every start. (laravel-vite-plugin
+# writes to public/<buildDirectory>/; the bundled `default` theme uses
+# buildDirectory: 'default/'.)
+RUN mkdir -p /app/default && \
+    cp -r /app/themes         /app/default/themes && \
+    cp -r /app/extensions     /app/default/extensions && \
+    cp -r /app/public/default /app/default/build
 
 # Pre-create the persistent .env directory expected by entrypoint.sh
 # (mounted as ./var:/app/var in docker-compose.heavy.yml).
