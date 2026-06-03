@@ -59,3 +59,34 @@ jobs:
           tags: ${{ steps.metadata.outputs.tags }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
+
+      # ---------------------------------------------------------------- #
+      # Heavy image                                                      #
+      # ---------------------------------------------------------------- #
+      # Self-contained variant (PHP vendor, built assets, default themes
+      # and default extensions all baked in). Designed to be used with
+      # docker-compose.heavy.yml — no asset-builder sidecar and no `app:`
+      # named volume, so `docker compose pull` is enough to update.
+      - name: Fetch heavy metadata
+        id: metadata_heavy
+        uses: docker/metadata-action@v4
+        with:
+          images: ghcr.io/paymenter/paymenter
+          flavor: |
+            latest=false
+          tags: |
+            type=raw,value=heavy,enable=${{ github.event_name == 'release' && github.event.action == 'published' && github.event.release.prerelease == false }}
+            type=ref,event=tag,prefix=heavy-
+            type=ref,event=branch,prefix=heavy-
+
+      - name: Build and Push (heavy)
+        uses: docker/build-push-action@v3
+        with:
+          context: .
+          file: ./Dockerfile.heavy
+          push: ${{ github.event_name != 'pull_request' }}
+          platforms: linux/amd64,linux/arm64
+          labels: ${{ steps.metadata_heavy.outputs.labels }}
+          tags: ${{ steps.metadata_heavy.outputs.tags }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
