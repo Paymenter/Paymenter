@@ -20,12 +20,10 @@ class AdjustmentNote extends Model implements Auditable
         'number',
         'amount',
         'description',
-        'is_admin_only',
     ];
 
     protected $casts = [
         'amount' => 'decimal:2',
-        'is_admin_only' => 'boolean',
     ];
 
     public function invoice()

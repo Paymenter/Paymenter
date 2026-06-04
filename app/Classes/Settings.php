@@ -589,6 +589,39 @@ class Settings
                     'description' => 'Proforma invoices will not be assigned an official invoice number until payment is received and will be marked as "Proforma".',
                 ],
                 [
+                    'name' => 'immutable_invoices_enabled',
+                    'label' => 'Immutable Invoices',
+                    'type' => 'checkbox',
+                    'database_type' => 'boolean',
+                    'default' => true,
+                    'description' => 'When enabled, invoices can only be edited while in draft status. Once published, they become read-only. Disable this to allow editing invoices at any status.',
+                ],
+                [
+                    'name' => 'immutable_invoices_lock_before',
+                    'label' => 'Lock Invoices Created Before Upgrade',
+                    'type' => 'checkbox',
+                    'database_type' => 'boolean',
+                    'default' => true,
+                    'description' => 'When enabled, invoices created before the upgrade date remain fully editable regardless of status. Only invoices created on or after the upgrade date are subject to draft-only immutability. Disable to apply immutability to all invoices.',
+                ],
+                [
+                    'name' => 'immutable_invoices_lock_date',
+                    'label' => 'Upgrade Lock Date',
+                    'type' => 'text',
+                    'database_type' => 'date',
+                    'default' => null,
+                    'disabled' => true,
+                    'description' => 'This date was set automatically during upgrade. Invoices created before this date are exempt from immutability when the toggle above is enabled. To change this date, run the migration again or update it directly in the database.',
+                ],
+                [
+                    'name' => 'notes_client_visible',
+                    'label' => 'Show Adjustment Notes to Clients',
+                    'type' => 'checkbox',
+                    'database_type' => 'boolean',
+                    'default' => true,
+                    'description' => 'Show the adjustments section (credit/debit notes) to clients on the invoice page. When disabled, only admin-only notes are visible in the admin panel.',
+                ],
+                [
                     'name' => 'invoice_snapshot',
                     'label' => 'Invoice Snapshot',
                     'type' => 'checkbox',
@@ -705,7 +738,6 @@ class Settings
             $taxRate = TaxRate::whereIn('country', [$country, 'all'])
                 ->orderByRaw('country = ? desc', [$country])
                 ->first();
-
             return $taxRate ?: 0;
         });
     }

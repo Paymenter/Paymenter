@@ -72,10 +72,6 @@ class AdjustmentNoteResource extends Resource
                 Textarea::make('description')
                     ->label('Description')
                     ->placeholder('Enter a description'),
-                Toggle::make('is_admin_only')
-                    ->label('Admin Only')
-                    ->helperText('If enabled, this adjustment note will only be visible to admins')
-                    ->default(false),
             ]);
     }
 
@@ -110,10 +106,6 @@ class AdjustmentNoteResource extends Resource
                     ->label('Description')
                     ->limit(50)
                     ->searchable(),
-                IconColumn::make('is_admin_only')
-                    ->label('Admin Only')
-                    ->boolean()
-                    ->sortable(),
                 TextColumn::make('created_at')
                     ->label('Created At')
                     ->dateTime()

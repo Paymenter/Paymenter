@@ -49,7 +49,7 @@ class InvoiceObserver
     public function updated(Invoice $invoice): void
     {
         if($invoice->status === Invoice::STATUS_CANCELLED){
-            $invoice->createCancellationCreditNote();
+            $invoice->createCancellationCreditNote($invoice->cancellation_reason);
         }
 
         if($invoice->getOriginal('status') === Invoice::STATUS_DRAFT && $invoice->status === Invoice::STATUS_PENDING) {
