@@ -6,7 +6,7 @@
         <option value="immediate">{{ __('services.cancel_immediate') }}</option>
     </x-form.select>
 
-    <x-form.textarea name="reason" label="{{ __('services.cancel_reason') }}" required wire:model="reason" />
+    <x-form.textarea name="reason" label="{{ __('services.cancel_reason') }}" maxlength="255" required wire:model="reason" />
 
     <!-- Show you'll lose data warning if immediate cancellation is selected -->
     <template x-if="$wire.type === 'immediate'">
