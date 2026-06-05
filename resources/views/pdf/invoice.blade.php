@@ -220,9 +220,9 @@
     <div style="clear: both;"></div>
 
     @php
-        $clientAdjustmentNotes = $invoice->adjustmentNotes->get();
+        $clientAdjustmentNotes = $invoice->adjustmentNotes();
     @endphp
-    @if ($clientAdjustmentNotes->isNotEmpty() && config('settings.notes_client_visible', true))
+    @if (config('settings.notes_client_visible', true))
     <div class="section-title">{{ __('invoices.ledger_adjustments') }}</div>
     <table style="margin-top: 10px;" class="invoice-items">
         <thead>
@@ -234,7 +234,7 @@
             </tr>
         </thead>
         <tbody>
-            @foreach ($clientAdjustmentNotes->sortByDesc('created_at') as $note)
+            @foreach ($clientAdjustmentNotes as $note)
             <tr>
                 <td>{{ $note->created_at->format('d/m/Y') }}</td>
                 <td>

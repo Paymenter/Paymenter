@@ -234,9 +234,9 @@
             @endif
 
             @php
-                $clientAdjustmentNotes = $invoice->adjustmentNotes->get();
+                $clientAdjustmentNotes = $invoice->adjustmentNotes();
             @endphp
-            @if ($clientAdjustmentNotes->isNotEmpty() && config('settings.notes_client_visible', true))
+            @if (config('settings.notes_client_visible', true))
             <div class="mt-12">
                 <h2 class="text-2xl font-bold">{{ __('invoices.ledger_adjustments') }}</h2>
                 <div class="mt-4 overflow-x-auto">
@@ -260,7 +260,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($clientAdjustmentNotes->sortByDesc('created_at') as $note)
+                            @foreach ($clientAdjustmentNotes as $note)
                             <tr>
                                 <td class="p-4 font-normal whitespace-nowrap">
                                     {{ $note->created_at->format('d M Y H:i') }}
