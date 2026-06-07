@@ -54,6 +54,13 @@ class Plan extends Model implements Auditable
         $currency = $currency ?? session('currency', config('settings.default_currency'));
         $price = $this->prices->where('currency_code', $currency)->first();
 
+        // Safety net: plan may have no price in the requested currency (e.g. a
+        // single-currency plan reached via a stale cart/session or direct link).
+        // Return an unpriced PriceClass instead of dereferencing null (#setup_fee).
+        if (! $price) {
+            return new PriceClass(['currency' => Currency::find($currency)]);
+        }
+
         return new PriceClass((object) [
             'price' => $price,
             'setup_fee' => $price->setup_fee,

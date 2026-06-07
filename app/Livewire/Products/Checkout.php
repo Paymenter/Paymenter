@@ -59,8 +59,19 @@ class Checkout extends Component
             }
             $this->checkoutConfig = (array) $item->checkout_config;
         } else {
-            // Set the first plan as default
-            $this->plan = $this->plan_id ? $this->product->plans->findOrFail($this->plan_id) : $this->product->plans->first();
+            // Auto-switch the session currency when the requested/first plan has
+            // no price in the active currency (single-currency plans reached via
+            // a direct link or stale session). Prevents selecting a plan whose
+            // price() resolves to null -> "read property setup_fee on null" 500.
+            $this->autoSwitchCurrencyIfNeeded();
+
+            // Select among plans priced in the active currency, not all plans.
+            $available = $this->product->availablePlans();
+            $this->plan = ($this->plan_id ? $available->firstWhere('id', $this->plan_id) : null) ?? $available->first();
+            if (!$this->plan) {
+                // Product has no plan priced in any currency - treat as unavailable.
+                return $this->redirect(route('products.show', ['category' => $this->category, 'product' => $this->product]), true);
+            }
             $this->plan_id = $this->plan->id;
 
             // Prepare the config options
@@ -89,6 +100,34 @@ class Checkout extends Component
         // This is only done when the user is not editing the cart item
         if ($this->product->plans->count() === 1 && empty($this->configOptions) && empty($this->checkoutConfig)) {
             $this->checkout();
+        }
+    }
+
+    // Switch the session currency to one that prices the requested/first plan,
+    // mirroring Products\Show. No-op when the active currency already works or
+    // when the cart already holds items (its currency is locked at creation).
+    protected function autoSwitchCurrencyIfNeeded()
+    {
+        if (Cart::items()->isNotEmpty()) {
+            return;
+        }
+
+        $currency = session('currency', config('settings.default_currency'));
+
+        // Active currency already prices the requested (or first) plan? Done.
+        $available = $this->product->availablePlans($currency);
+        if ($available->isNotEmpty() && (!$this->plan_id || $available->contains('id', $this->plan_id))) {
+            return;
+        }
+
+        // Pick a currency that supports the requested plan, else the product.
+        $requestedPlan = $this->plan_id ? $this->product->plans->firstWhere('id', $this->plan_id) : null;
+        $target = $requestedPlan
+            ? $requestedPlan->prices->pluck('currency_code')->first()
+            : $this->product->getAvailableCurrencies()->first();
+
+        if ($target && $target !== $currency) {
+            session(['currency' => $target]);
         }
     }
 

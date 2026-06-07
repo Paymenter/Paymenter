@@ -48,8 +48,8 @@ class CartItem extends Model
             get: function () {
                 $total = 0;
                 $setup_fee = 0;
-                $total += $this->plan->price()->price;
-                $setup_fee += $this->plan->price()->setup_fee;
+                $total += $this->plan->price($this->cart->currency_code)->price;
+                $setup_fee += $this->plan->price($this->cart->currency_code)->setup_fee;
                 $this->product->configOptions->each(function ($option) use (&$total, &$setup_fee) {
                     $selected = (object) collect($this->config_options)->firstWhere('option_id', $option->id);
 
@@ -78,7 +78,7 @@ class CartItem extends Model
 
                 $price = new Price([
                     'price' => $total,
-                    'currency' => $this->plan->price()->currency,
+                    'currency' => $this->plan->price($this->cart->currency_code)->currency,
                     'setup_fee' => $setup_fee,
                 ], apply_exclusive_tax: true);
 
