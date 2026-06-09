@@ -30,7 +30,9 @@ class Login extends Component
         $emailKey = strtolower($this->email);
 
         if (RateLimiter::tooManyAttempts('login:' . $emailKey . ':' . request()->ip(), 5)) {
-            $this->addError('email', 'Too many login attempts. Please try again in 60 seconds.');
+            $this->addError('email', __('auth.throttle', [
+                'seconds' => RateLimiter::availableIn('login:' . $emailKey . ':' . request()->ip()),
+            ]));
 
             return;
         }
@@ -41,7 +43,7 @@ class Login extends Component
         $user = User::where('email', $this->email)->first();
 
         if (!$user || !Hash::check($this->password, $user->password)) {
-            $this->addError('email', 'These credentials do not match our records.');
+            $this->addError('email', __('auth.failed'));
 
             return;
         }
