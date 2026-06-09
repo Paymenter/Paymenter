@@ -220,7 +220,7 @@
     <div style="clear: both;"></div>
 
     @php
-        $clientAdjustmentNotes = $invoice->adjustmentNotes();
+        $clientAdjustmentNotes = $invoice->adjustmentNotes;
     @endphp
     @if (config('settings.notes_client_visible', true))
     <div class="section-title">{{ __('invoices.ledger_adjustments') }}</div>

@@ -69,5 +69,6 @@ return [
     'refund_amount_exceeds_refundable' => 'The refund amount cannot exceed the refundable amount of :max.',
     'refund_success' => 'Refund processed successfully.',
     'refund_failed' => 'Refund failed.',
+    'deleted_user' => 'Deleted User',
 
 ];

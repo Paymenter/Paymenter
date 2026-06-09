@@ -142,9 +142,9 @@ class Invoice extends Model implements Auditable
         }
 
         return Attribute::make(
-            get: fn () => $this->user->properties()->with('parent_property')->whereHas('parent_property', function ($query) {
+            get: fn () => $this->user?->properties()->with('parent_property')->whereHas('parent_property', function ($query) {
                 $query->where('show_on_invoice', true);
-            })->pluck('value', 'key')->toArray()
+            })->pluck('value', 'key')->toArray() ?? []
         );
     }
 
@@ -157,7 +157,7 @@ class Invoice extends Model implements Auditable
         }
 
         return Attribute::make(
-            get: fn () => $this->user->name
+            get: fn () => $this->user?->name ?? __('invoices.deleted_user')
         );
     }
 
