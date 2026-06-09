@@ -42,7 +42,7 @@ class Checkout extends Component
     public function mount($product)
     {
         $this->product = $this->category->products()->where('slug', $product)->firstOrFail();
-        if ($this->product->stock === 0) {
+        if ($this->product->stock === 0 || !$this->product->price()->available) {
             return $this->redirect(route('products.show', ['category' => $this->category, 'product' => $this->product]), true);
         }
 
