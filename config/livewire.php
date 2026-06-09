@@ -155,5 +155,23 @@ return [
     |
     */
 
+    /*
+    |---------------------------------------------------------------------------
+    | Payload Guards
+    |---------------------------------------------------------------------------
+    |
+    | These settings protect against malicious or oversized payloads that could
+    | cause denial of service. The default values should feel reasonable for
+    | most web applications. Each can be set to null to disable the limit.
+    |
+    */
+
+    'payload' => [
+        'max_size' => 1024 * 1024,   // 1MB - maximum request payload size in bytes
+        'max_nesting_depth' => 20,   // Maximum depth of dot-notation property paths
+        'max_calls' => 50,           // Maximum method calls per request
+        'max_components' => 200,     // Maximum components per batch request
+    ],
+
     'pagination_theme' => 'tailwind',
 ];
