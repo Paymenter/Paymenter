@@ -406,6 +406,21 @@ class ExtensionHelper
         return self::getExtension('gateway', $gateway->extension, $gateway->settings)->charge($invoice, $invoice->remaining, $billingAgreement);
     }
 
+    /**
+     * Ask every gateway to verify whether the given invoice has been paid.
+     *
+     * Used when the customer returns from a redirect checkout to confirm the
+     * payment directly with the gateway, without waiting for a webhook. Each
+     * gateway decides for itself (based on the current request) whether it
+     * applies, so this is safe to call for any pending invoice.
+     */
+    public static function checkPayment(Invoice $invoice): void
+    {
+        foreach (Gateway::with('settings')->get() as $gateway) {
+            self::getExtension('gateway', $gateway->extension, $gateway->settings)->checkPayment($invoice);
+        }
+    }
+
     public static function getBillingAgreementGateways()
     {
         $gateways = [];

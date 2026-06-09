@@ -36,7 +36,15 @@ class Show extends Component
     public function mount()
     {
         if (Request::has('checkPayment') && $this->invoice->status === 'pending') {
-            $this->checkPayment = true;
+            // Returning from an off-site checkout: confirm the payment directly
+            // with the gateway so activation doesn't depend on a webhook (which
+            // may not reach local / test environments).
+            ExtensionHelper::checkPayment($this->invoice);
+            $this->invoice->refresh();
+
+            if ($this->invoice->status === 'pending') {
+                $this->checkPayment = true;
+            }
         }
         if ($this->invoice->transactions()->where('status', InvoiceTransactionStatus::Processing)->exists()) {
             $this->checkPayment = true;

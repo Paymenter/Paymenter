@@ -237,6 +237,44 @@ class Stripe extends Gateway
         return view('gateways.stripe::pay', ['invoice' => $invoice, 'total' => $total, 'intent' => $intent, 'stripePublishableKey' => $this->config('stripe_publishable_key')]);
     }
 
+    /**
+     * Confirm a payment on return from Stripe's redirect checkout.
+     *
+     * Stripe appends `payment_intent` to the return URL, so we can verify the
+     * payment directly with the API instead of waiting for the webhook (which
+     * is unreachable in most local / test setups). Idempotent: addPayment is
+     * keyed by the PaymentIntent id, so a later webhook won't double-count it.
+     */
+    public function checkPayment(Invoice $invoice): void
+    {
+        $paymentIntentId = request()->input('payment_intent');
+        if (!$paymentIntentId) {
+            return;
+        }
+
+        try {
+            $paymentIntent = $this->request('get', '/payment_intents/' . $paymentIntentId);
+        } catch (Exception $e) {
+            return;
+        }
+
+        // Only act on an intent that actually belongs to this invoice
+        if (($paymentIntent->metadata->invoice_id ?? null) != $invoice->id) {
+            return;
+        }
+
+        $amount = $this->fromStripeAmount($paymentIntent->amount, $paymentIntent->currency);
+
+        switch ($paymentIntent->status) {
+            case 'succeeded':
+                ExtensionHelper::addPayment($invoice->id, 'Stripe', $amount, null, $paymentIntent->id);
+                break;
+            case 'processing':
+                ExtensionHelper::addProcessingPayment($invoice->id, 'Stripe', $amount, null, $paymentIntent->id);
+                break;
+        }
+    }
+
     public function webhook(Request $request)
     {
         if (!$this->isValidSignature($request->getContent(), $request->header('Stripe-Signature'), $this->config('stripe_webhook_secret'))) {

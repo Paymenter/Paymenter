@@ -60,4 +60,18 @@ abstract class Gateway extends Extension
     {
         throw new \Exception('Not implemented');
     }
+
+    /**
+     * Verify a payment for the given invoice directly with the gateway.
+     *
+     * Called when the customer returns from an off-site / redirect checkout, so
+     * that activation does not depend on an asynchronous webhook (which may be
+     * unreachable in local / test environments). Implementations decide for
+     * themselves — based on the current request — whether they apply, and must
+     * be idempotent: recording the same payment again is safe. Default: no-op.
+     */
+    public function checkPayment(Invoice $invoice): void
+    {
+        // No-op by default; gateways that redirect off-site should override this.
+    }
 }
