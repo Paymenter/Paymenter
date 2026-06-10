@@ -75,8 +75,8 @@
     </div>
     @endif
 
-    <!-- Adjustment Note type -->
-    <div style="margin-bottom: 20px;font-size: 20px">
+    <!-- Adjustment Note type and status -->
+    <div style="margin-bottom: 10px;font-size: 20px">
         <strong>{{ __('invoices.type') }}:</strong>
         <span style="@if($adjustmentNote->type === \App\Enums\AdjustmentNoteType::Credit->value) color: green; @else color: red; @endif">
             @if($adjustmentNote->type === \App\Enums\AdjustmentNoteType::Credit->value)
@@ -84,6 +84,12 @@
             @elseif($adjustmentNote->type === \App\Enums\AdjustmentNoteType::Debit->value)
                 {{ __('invoices.debit_note') }}
             @endif
+        </span>
+    </div>
+    <div style="margin-bottom: 20px;font-size: 20px">
+        <strong>{{ __('invoices.status') }}:</strong>
+        <span style="@if($adjustmentNote->status === \App\Enums\AdjustmentNoteStatus::Voided) color: red; @else color: green; @endif">
+            {{ ucfirst($adjustmentNote->status instanceof \App\Enums\AdjustmentNoteStatus ? $adjustmentNote->status->value : $adjustmentNote->status) }}
         </span>
     </div>
 

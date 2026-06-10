@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Classes\Price;
+use App\Enums\AdjustmentNoteStatus;
 use App\Observers\AdjustmentNoteObserver;
 use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Casts\Attribute;
@@ -20,10 +21,12 @@ class AdjustmentNote extends Model implements Auditable
         'number',
         'amount',
         'description',
+        'status',
     ];
 
     protected $casts = [
         'amount' => 'decimal:2',
+        'status' => AdjustmentNoteStatus::class,
     ];
 
     public function invoice()

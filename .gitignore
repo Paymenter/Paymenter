@@ -23,3 +23,4 @@ extensions/Others/Pages
 extensions/Servers/LicenseManager
 extensions/Servers/Proxmox
 !themes/default
+.DS_Store
