@@ -10,8 +10,8 @@ use App\Models\Gateway;
 use App\Models\Invoice;
 use App\Models\Service;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Request;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\Locked;
 use Livewire\Attributes\Url;
@@ -91,6 +91,9 @@ class Show extends Component
 
     public function processPayment()
     {
+        if ($this->invoice->status !== 'pending') {
+            return $this->notify(__('This invoice cannot be paid.'), 'error');
+        }
         if (is_null($this->selectedMethod)) {
             return;
         }
