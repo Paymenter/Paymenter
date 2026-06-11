@@ -221,7 +221,7 @@ class Service extends Model implements Auditable
     public function calculatePrice()
     {
         // Calculate the price based on the plan and config options
-        $price = $this->plan->price()->price;
+        $price = $this->plan->price($this->currency_code)->price;
 
         $this->configs->each(function ($config) use (&$price) {
             $configValue = $config->configValue;

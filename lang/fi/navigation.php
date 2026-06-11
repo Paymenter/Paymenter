@@ -14,5 +14,5 @@ return [
     'dashboard' => 'Kotinäkymä',
     'tickets' => 'Tukipyynnöt',
     'admin' => 'Ylläpitäjä',
-    'notifications' => 'Notifications',
+    'notifications' => 'Ilmoitukset',
 ];

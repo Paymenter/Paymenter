@@ -20,9 +20,10 @@
                     },
                     submit() {
                         let code = this.getCode();
-                        @this.set('code', code).then(() => {
-                            $wire.verify();
-                        });
+
+                        // Set code client-side and trigger a single verify request.
+                        $wire.set('code', code, false);
+                        $wire.verify();
                     },
                     fillInputs(val) {
                         $refs.num1.value = val[0] || '';
@@ -62,6 +63,7 @@
                         x-on:input="handleAutofill($event)"
                         x-on:paste="handlePaste"
                         type="text"
+                        inputmode="numeric"
                         autofocus
                         class="block w-9 rounded-lg border border-neutral px-2 py-1.5 text-center text-sm/6 placeholder-neutral/80 focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none bg-background"
                     />

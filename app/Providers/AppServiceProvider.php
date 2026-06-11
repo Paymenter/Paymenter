@@ -15,6 +15,7 @@ use Dedoc\Scramble\Scramble;
 use Dedoc\Scramble\Support\Generator\OpenApi;
 use Dedoc\Scramble\Support\Generator\SecurityScheme;
 use Exception;
+use Illuminate\Auth\Access\Response;
 use Illuminate\Foundation\Exceptions\Handler;
 use Illuminate\Http\Request;
 use Illuminate\Queue\Events\JobFailed;
@@ -148,6 +149,8 @@ class AppServiceProvider extends ServiceProvider
             $event->extendSocialite('discord', Provider::class);
         });
 
+        Gate::defaultDenialResponse(Response::denyAsNotFound());
+
         try {
             foreach (
                 collect(Extension::where(function ($query) {
@@ -187,9 +190,11 @@ class AppServiceProvider extends ServiceProvider
                 new TableExtension,
             ]);
         });
-        Passport::clientModel(OauthClient::class);
+        Passport::useClientModel(OauthClient::class);
         Passport::ignoreRoutes();
         Passport::tokensCan(ScopeRegistry::getAll());
+        Passport::authorizationView('vendor.passport.authorize');
+        Passport::$validateKeyPermissions = false;
 
         if (class_exists(Scramble::class)) {
             Scramble::configure()

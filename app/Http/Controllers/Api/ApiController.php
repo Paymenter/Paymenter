@@ -25,8 +25,10 @@ abstract class ApiController extends Controller
             $relation = self::MAPPED_INCLUDES[$include] ?? $include;
 
             if (
+                // If the user has specific permission to view the relation
                 in_array('admin.' . $relation . '.view', request()->attributes->get('api_key_permissions', [])) ||
-                !in_array('admin.' . $relation . '.view', config('permissions.api.admin', []))
+                // Or if there is no specific permission defined for the relation
+                config('permissions.api.admin.' . $relation . '.view') === null
             ) {
                 $allowedIncludes[] = $include;
             }

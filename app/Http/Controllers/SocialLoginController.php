@@ -68,7 +68,11 @@ class SocialLoginController extends Controller
         } elseif ($provider == 'google') {
             $oauth_user = $this->google_driver->user();
 
-            return $this->findUserAndLogin($this->google_driver->user()->email);
+            if (!$oauth_user->user['email_verified']) {
+                return redirect()->route('login')->with('error', __('auth.oauth.unverified_google_account'));
+            }
+
+            return $this->findUserAndLogin($oauth_user->email);
         } elseif ($provider == 'github') {
             $oauth_user = $this->github_driver->user();
 

@@ -3,8 +3,11 @@
 namespace App\Admin\Resources\OauthClientResource\Pages;
 
 use App\Admin\Resources\OauthClientResource;
+use Filament\Notifications\Notification;
 use Filament\Resources\Pages\CreateRecord;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Js;
+use Illuminate\Support\Str;
 use Laravel\Passport\ClientRepository;
 use Laravel\Passport\Passport;
 use phpseclib3\Crypt\RSA;
@@ -34,7 +37,20 @@ class CreateOauthClient extends CreateRecord
         }
 
         $clientRepository = new ClientRepository;
-        $record = $clientRepository->create(null, $data['name'], $data['redirect']);
+        $record = $clientRepository->createAuthorizationCodeGrantClient($data['name'], explode(',', $data['redirect']));
+
+        $this->js(
+            'window.navigator.clipboard.writeText(' . Js::from($record->plainSecret) . ');'
+        );
+
+        // Show persisted client secret only once after creation
+        Notification::make()
+            ->title('OAuth Client Created')
+            ->body(Str::markdown("Here is the client secret for the OAuth client you just created. Please copy it now, as it will not be shown again.\n\n Client Secret:\n ```" . $record->plainSecret . '```'))
+            ->icon('heroicon-o-lock-closed')
+            ->persistent()
+            ->success()
+            ->send();
 
         return $record;
     }
