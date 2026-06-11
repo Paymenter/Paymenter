@@ -94,6 +94,7 @@ class Show extends Component
         if ($this->invoice->status !== 'pending') {
             return $this->notify(__('This invoice cannot be paid.'), 'error');
         }
+
         if (is_null($this->selectedMethod)) {
             return;
         }
@@ -129,10 +130,6 @@ class Show extends Component
     {
         if (!in_array($methodId, array_column($this->gateways, 'id'))) {
             return $this->notify(__('Invalid payment method.'), 'error');
-        }
-
-        if ($this->invoice->status !== 'pending') {
-            return $this->notify(__('This invoice cannot be paid.'), 'error');
         }
 
         $this->pay = ExtensionHelper::pay(Gateway::where('id', $methodId)->first(), $this->invoice);
@@ -175,10 +172,6 @@ class Show extends Component
 
         if (!in_array($agreement->gateway->id, array_column($this->paymentMethods, 'id'))) {
             return $this->notify(__('This payment method cannot be used for this invoice.'), 'error');
-        }
-
-        if ($this->invoice->status !== 'pending') {
-            return $this->notify(__('This invoice cannot be paid.'), 'error');
         }
 
         $success = ExtensionHelper::charge($agreement->gateway, $this->invoice, $agreement);
