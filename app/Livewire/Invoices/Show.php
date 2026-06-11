@@ -11,6 +11,7 @@ use App\Models\Invoice;
 use App\Models\Service;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Request;
+use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\Locked;
 use Livewire\Attributes\Url;
@@ -140,24 +141,26 @@ class Show extends Component
 
     private function payWithCredit()
     {
-        $credit = Auth::user()->credits()->where('currency_code', $this->invoice->currency_code)->lockForUpdate()->first();
-        if ($credit && $credit->amount > 0) {
-            // Is it more credits or less credits than the total price?
-            if ($credit->amount >= $this->invoice->remaining) {
-                $credit->amount -= $this->invoice->remaining;
-                $credit->save();
-                ExtensionHelper::addPayment($this->invoice->id, null, amount: $this->invoice->remaining, isCreditTransaction: true);
+        DB::transaction(function () {
+            $credit = Auth::user()->credits()->where('currency_code', $this->invoice->currency_code)->lockForUpdate()->first();
+            if ($credit && $credit->amount > 0) {
+                // Is it more credits or less credits than the total price?
+                if ($credit->amount >= $this->invoice->remaining) {
+                    $credit->amount -= $this->invoice->remaining;
+                    $credit->save();
+                    ExtensionHelper::addPayment($this->invoice->id, null, amount: $this->invoice->remaining, isCreditTransaction: true);
 
-                return $this->redirect(route('invoices.show', $this->invoice), true);
-            } else {
-                ExtensionHelper::addPayment($this->invoice->id, null, amount: $credit->amount, isCreditTransaction: true);
-                $credit->amount = 0;
-                $credit->save();
+                    return $this->redirect(route('invoices.show', $this->invoice), true);
+                } else {
+                    ExtensionHelper::addPayment($this->invoice->id, null, amount: $credit->amount, isCreditTransaction: true);
+                    $credit->amount = 0;
+                    $credit->save();
 
-                $this->invoice = $this->invoice->fresh();
-                $this->notify(__('Part of the invoice has been paid with credits. Please pay the remaining amount'));
+                    $this->invoice = $this->invoice->fresh();
+                    $this->notify(__('Part of the invoice has been paid with credits. Please pay the remaining amount'));
+                }
             }
-        }
+        });
     }
 
     private function payWithSavedMethod($agreementUlid)
