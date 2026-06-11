@@ -236,7 +236,7 @@
             @php
                 $clientAdjustmentNotes = $invoice->adjustmentNotes;
             @endphp
-            @if (config('settings.notes_client_visible', true))
+            @if (config('settings.notes_client_visible', true) && $clientAdjustmentNotes->isNotEmpty())
             <div class="mt-12">
                 <h2 class="text-2xl font-bold">{{ __('invoices.ledger_adjustments') }}</h2>
                 <div class="mt-4 overflow-x-auto">
