@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Classes\PDF;
 use App\Classes\Price;
 use App\Classes\Settings;
+use App\Enums\AdjustmentNoteStatus;
 use App\Enums\AdjustmentNoteType;
 use App\Enums\InvoiceTransactionStatus;
 use App\Models\Traits\HasProperties;
@@ -51,8 +52,14 @@ class Invoice extends Model implements Auditable
     {
         return Attribute::make(
             get: fn () => $this->items->sum(fn ($item) => $item->price * $item->quantity)
-                + $this->adjustmentNotes->where('type', AdjustmentNoteType::Debit->value)->sum('amount')
-                + $this->adjustmentNotes->where('type', AdjustmentNoteType::Credit->value)->sum('amount')
+                + $this->adjustmentNotes
+                    ->where('status', AdjustmentNoteStatus::Active->value)
+                    ->where('type', AdjustmentNoteType::Debit->value)
+                    ->sum('amount')
+                + $this->adjustmentNotes
+                    ->where('status', AdjustmentNoteStatus::Active->value)
+                    ->where('type', AdjustmentNoteType::Credit->value)
+                    ->sum('amount')
         );
     }
 
@@ -142,9 +149,9 @@ class Invoice extends Model implements Auditable
         }
 
         return Attribute::make(
-            get: fn () => $this->user->properties()->with('parent_property')->whereHas('parent_property', function ($query) {
+            get: fn () => $this->user?->properties()->with('parent_property')->whereHas('parent_property', function ($query) {
                 $query->where('show_on_invoice', true);
-            })->pluck('value', 'key')->toArray()
+            })->pluck('value', 'key')->toArray() ?? []
         );
     }
 
@@ -157,7 +164,7 @@ class Invoice extends Model implements Auditable
         }
 
         return Attribute::make(
-            get: fn () => $this->user->name
+            get: fn () => $this->user?->name ?? __('invoices.deleted_user')
         );
     }
 

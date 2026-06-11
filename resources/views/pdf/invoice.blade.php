@@ -220,7 +220,7 @@
     <div style="clear: both;"></div>
 
     @php
-        $clientAdjustmentNotes = $invoice->adjustmentNotes();
+        $clientAdjustmentNotes = $invoice->adjustmentNotes;
     @endphp
     @if (config('settings.notes_client_visible', true))
     <div class="section-title">{{ __('invoices.ledger_adjustments') }}</div>
@@ -229,6 +229,7 @@
             <tr>
                 <th>{{ __('invoices.date') }}</th>
                 <th>{{ __('invoices.type') }}</th>
+                <th>{{ __('invoices.status') }}</th>
                 <th>{{ __('invoices.description') }}</th>
                 <th>{{ __('invoices.amount') }}</th>
             </tr>
@@ -243,6 +244,11 @@
                     @elseif($note->type === \App\Enums\AdjustmentNoteType::Debit->value)
                     {{ __('invoices.debit_note') }}
                     @endif
+                </td>
+                <td>
+                    <span style="@if($note->status === \App\Enums\AdjustmentNoteStatus::Voided) color: red; text-decoration: line-through; @else color: green; @endif">
+                        {{ ucfirst($note->status instanceof \App\Enums\AdjustmentNoteStatus ? $note->status->value : $note->status) }}
+                    </span>
                 </td>
                 <td>{{ $note->description }}</td>
                 <td>{{ $note->formattedAmount }}</td>

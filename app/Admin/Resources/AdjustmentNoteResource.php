@@ -6,6 +6,7 @@ use App\Admin\Clusters\InvoiceCluster;
 use App\Admin\Resources\AdjustmentNoteResource\Pages\CreateAdjustmentNote;
 use App\Admin\Resources\AdjustmentNoteResource\Pages\EditAdjustmentNote;
 use App\Admin\Resources\AdjustmentNoteResource\Pages\ListAdjustmentNotes;
+use App\Enums\AdjustmentNoteStatus;
 use App\Models\AdjustmentNote;
 use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Select;
@@ -72,6 +73,11 @@ class AdjustmentNoteResource extends Resource
                 Textarea::make('description')
                     ->label('Description')
                     ->placeholder('Enter a description'),
+                Select::make('status')
+                    ->label('Status')
+                    ->options(AdjustmentNoteStatus::class)
+                    ->default(AdjustmentNoteStatus::Active->value)
+                    ->required(),
             ]);
     }
 
@@ -101,6 +107,15 @@ class AdjustmentNoteResource extends Resource
                     ->sortable(),
                 TextColumn::make('formattedAmount')
                     ->label('Amount')
+                    ->sortable(),
+                TextColumn::make('status')
+                    ->label('Status')
+                    ->badge()
+                    ->color(fn ($state): string => match ($state instanceof AdjustmentNoteStatus ? $state->value : $state) {
+                        AdjustmentNoteStatus::Active->value => 'success',
+                        AdjustmentNoteStatus::Voided->value => 'danger',
+                    })
+                    ->formatStateUsing(fn ($state): string => $state instanceof AdjustmentNoteStatus ? $state->value : ucfirst($state))
                     ->sortable(),
                 TextColumn::make('description')
                     ->label('Description')

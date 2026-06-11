@@ -2,20 +2,20 @@
 
 namespace App\Admin\Resources\InvoiceResource\RelationManagers;
 
+use App\Enums\AdjustmentNoteStatus;
 use App\Models\Invoice;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Forms\Components\Hidden;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
-use Filament\Forms\Components\Toggle;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Schemas\Schema;
 use Filament\Support\RawJs;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\CreateAction;
 use Filament\Actions\EditAction;
-use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 
@@ -59,6 +59,11 @@ class AdjustmentNotesRelationManager extends RelationManager
                 Textarea::make('description')
                     ->label('Description')
                     ->placeholder('Enter a description'),
+                Select::make('status')
+                    ->label('Status')
+                    ->options(AdjustmentNoteStatus::class)
+                    ->default(AdjustmentNoteStatus::Active->value)
+                    ->required(),
             ]);
     }
 
@@ -81,6 +86,15 @@ class AdjustmentNotesRelationManager extends RelationManager
                     ->sortable(),
                 TextColumn::make('formattedAmount')
                     ->label('Amount')
+                    ->sortable(),
+                TextColumn::make('status')
+                    ->label('Status')
+                    ->badge()
+                    ->color(fn ($state): string => match ($state instanceof AdjustmentNoteStatus ? $state->value : $state) {
+                        AdjustmentNoteStatus::Active->value => 'success',
+                        AdjustmentNoteStatus::Voided->value => 'danger',
+                    })
+                    ->formatStateUsing(fn ($state): string => $state instanceof AdjustmentNoteStatus ? $state->value : ucfirst($state))
                     ->sortable(),
                 TextColumn::make('description')
                     ->label('Description')
