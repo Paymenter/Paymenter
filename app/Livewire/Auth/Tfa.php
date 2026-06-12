@@ -31,6 +31,12 @@ class Tfa extends Component
 
         $session = Session::get('2fa');
 
+        if (!$session || $session['expires'] < now()) {
+            Session::forget('2fa');
+
+            return $this->redirect(route('login'), true);
+        }
+
         if (RateLimiter::tooManyAttempts('2fa:' . $session['user_id'], 5)) {
             $this->addError('code', 'Too many attempts.');
 

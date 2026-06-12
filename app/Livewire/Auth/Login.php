@@ -27,19 +27,23 @@ class Login extends Component
         $this->captcha();
         $this->validate();
 
-        if (RateLimiter::tooManyAttempts('login:' . $this->email, 5)) {
-            $this->addError('email', 'Too many login attempts. Please try again in 60 seconds.');
+        $emailKey = strtolower($this->email);
+
+        if (RateLimiter::tooManyAttempts('login:' . $emailKey . ':' . request()->ip(), 5)) {
+            $this->addError('email', __('auth.throttle', [
+                'seconds' => RateLimiter::availableIn('login:' . $emailKey . ':' . request()->ip()),
+            ]));
 
             return;
         }
 
-        RateLimiter::increment('login:' . $this->email);
+        RateLimiter::increment('login:' . $emailKey . ':' . request()->ip());
 
         // Manually validate credentials instead of Auth::attempt
         $user = User::where('email', $this->email)->first();
 
         if (!$user || !Hash::check($this->password, $user->password)) {
-            $this->addError('email', 'These credentials do not match our records.');
+            $this->addError('email', __('auth.failed'));
 
             return;
         }
@@ -55,7 +59,7 @@ class Login extends Component
             return $this->redirect(route('2fa'), true);
         }
 
-        RateLimiter::clear('login:' . $this->email);
+        RateLimiter::clear('login:' . $emailKey . ':' . request()->ip());
 
         $loginAction->execute($user, $this->remember);
 

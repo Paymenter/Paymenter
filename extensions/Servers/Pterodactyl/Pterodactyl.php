@@ -85,9 +85,12 @@ class Pterodactyl extends Server
 
         $eggList = [];
         if (isset($values['nest_id']) && $values['nest_id'] !== '') {
-            $eggs = $this->request('/api/application/nests/' . $values['nest_id'] . '/eggs');
-            foreach ($eggs['data'] as $egg) {
-                $eggList[$egg['attributes']['id']] = $egg['attributes']['name'];
+            try {
+                $eggs = $this->request('/api/application/nests/' . $values['nest_id'] . '/eggs');
+                foreach ($eggs['data'] as $egg) {
+                    $eggList[$egg['attributes']['id']] = $egg['attributes']['name'];
+                }
+            } catch (Exception $e) {
             }
         }
 

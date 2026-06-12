@@ -40,8 +40,8 @@ class RegisterTest extends TestCase
             ->set('first_name', 'Corwin')
             ->set('last_name', 'Corwin')
             ->set('email', 'corwin@paymenter.org')
-            ->set('password', 'password')
-            ->set('password_confirmation', 'password')
+            ->set('password', 'passw0rd')
+            ->set('password_confirmation', 'passw0rd')
             ->call('submit');
 
         $response->assertHasNoErrors();
@@ -60,7 +60,7 @@ class RegisterTest extends TestCase
             ->set('first_name', 'Corwin')
             ->set('last_name', 'Corwin')
             ->set('email', 'corwin@paymenter.org')
-            ->set('password', 'password')
+            ->set('password', 'passw0rd')
             ->set('password_confirmation', 'pswrd')
             ->call('submit');
 
@@ -79,8 +79,8 @@ class RegisterTest extends TestCase
 
         $response = Livewire::test(Register::class)
             ->set('email', 'corwin@paymenter.org')
-            ->set('password', 'password')
-            ->set('password_confirmation', 'password')
+            ->set('password', 'passw0rd')
+            ->set('password_confirmation', 'passw0rd')
             ->call('submit');
 
         $response->assertHasErrors('first_name')

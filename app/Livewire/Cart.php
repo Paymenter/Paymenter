@@ -14,6 +14,7 @@ use App\Models\User;
 use Exception;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\RateLimiter;
 use Livewire\Attributes\Locked;
 
 class Cart extends Component
@@ -56,6 +57,13 @@ class Cart extends Component
         if ($this->coupon && ClassesCart::get()->coupon_id) {
             return $this->notify('Coupon code already applied', 'error');
         }
+        // Rate limit to prevent abuse
+        if (RateLimiter::tooManyAttempts('apply_coupon_' . request()->ip(), 5)) {
+            return $this->notify('Too many attempts. Please try again later.', 'error');
+        }
+
+        RateLimiter::hit('apply_coupon_' . request()->ip());
+
         try {
             $cart = ClassesCart::applyCoupon($this->coupon);
         } catch (DisplayException $e) {
@@ -163,7 +171,7 @@ class Cart extends Component
             // Create the services
             foreach ($cart->items as $item) {
                 // Is it a lifetime coupon, then we can adjust the price of the service
-                if ($this->coupon && ($this->coupon->recurring === null || (int) $this->coupon->recurring == 1)) {
+                if (is_object($this->coupon) && ($this->coupon->recurring === null || (int) $this->coupon->recurring == 1)) {
                     // Apply coupon only to first billing cycle (use original price for recurring)
                     $price = $item->price->original_price;
                 } else {

@@ -14,7 +14,7 @@ class Cancel extends Component
     #[Validate('required|in:end_of_period,immediate')]
     public $type = 'end_of_period';
 
-    #[Validate('required')]
+    #[Validate('required|max:255')]
     public $reason = '';
 
     public function cancelService()

@@ -130,6 +130,8 @@ RUN chmod -R 755 storage bootstrap/cache extensions
 # Run the database migrations.
 RUN php artisan migrate --force --seed
 
+RUN php artisan passport:hash --force
+
 # Change to default theme.
 RUN php artisan app:settings:change theme default
 

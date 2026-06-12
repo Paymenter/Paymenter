@@ -3,12 +3,12 @@
 return [
 
     'cronjob' => [
-        'invoices_created' => 'Invoices created',
-        'orders_cancelled' => 'Orders cancelled',
-        'upgrade_invoices_updated' => 'Upgrade invoices updated',
-        'services_suspended' => 'Services suspended',
-        'services_terminated' => 'Services terminated',
-        'tickets_closed' => 'Tickets closed',
-        'email_logs_deleted' => 'Email logs deleted',
+        'invoices_created' => 'Luodut laskut',
+        'orders_cancelled' => 'Tilaukset peruutettu',
+        'upgrade_invoices_updated' => 'Päivityslaskut päivitetty',
+        'services_suspended' => 'Palvelut jäädytetty',
+        'services_terminated' => 'Palvelut lopetettu',
+        'tickets_closed' => 'Suljetut liput',
+        'email_logs_deleted' => 'Sähköpostilokit poistettu',
     ],
 ];
