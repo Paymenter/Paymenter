@@ -12,9 +12,9 @@
         "@tailwindcss/typography": "^0.5.16",
         "@tailwindcss/vite": "^4.1.11",
         "easymde": "^2.20.0",
-        "laravel-vite-plugin": "^2.0",
+        "laravel-vite-plugin": "^3.1",
         "tailwindcss": "^4.1.11",
-        "vite": "^7.3"
+        "vite": "^8.0"
     },
     "dependencies": {
         "@alpinejs/anchor": "^3.15.3"
