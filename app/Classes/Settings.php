@@ -143,13 +143,13 @@ class Settings
                     'name' => 'captcha_site_key',
                     'label' => 'Captcha Site Key',
                     'type' => 'text',
-                    'required' => fn (Get $get) => $get('captcha') && $get('captcha') !== 'disabled',
+                    'required' => fn(Get $get) => $get('captcha') && $get('captcha') !== 'disabled',
                 ],
                 [
                     'name' => 'captcha_secret',
                     'label' => 'Captcha Secret',
                     'type' => 'text',
-                    'required' => fn (Get $get) => $get('captcha') && $get('captcha') !== 'disabled',
+                    'required' => fn(Get $get) => $get('captcha') && $get('captcha') !== 'disabled',
                 ],
 
                 [
@@ -287,7 +287,7 @@ class Settings
                     'name' => 'mail_host',
                     'label' => 'Mail Host',
                     'type' => 'text',
-                    'required' => fn (Get $get) => !$get('mail_disable'),
+                    'required' => fn(Get $get) => !$get('mail_disable'),
                     'override' => 'mail.mailers.smtp.host',
                     'action' => SendTestEmailAction::class,
                 ],
@@ -295,21 +295,21 @@ class Settings
                     'name' => 'mail_port',
                     'label' => 'Mail Port',
                     'type' => 'text',
-                    'required' => fn (Get $get) => !$get('mail_disable'),
+                    'required' => fn(Get $get) => !$get('mail_disable'),
                     'override' => 'mail.mailers.smtp.port',
                 ],
                 [
                     'name' => 'mail_username',
                     'label' => 'Mail Username',
                     'type' => 'text',
-                    'required' => fn (Get $get) => !$get('mail_disable'),
+                    'required' => fn(Get $get) => !$get('mail_disable'),
                     'override' => 'mail.mailers.smtp.username',
                 ],
                 [
                     'name' => 'mail_password',
                     'label' => 'Mail Password',
                     'type' => 'password',
-                    'required' => fn (Get $get) => !$get('mail_disable'),
+                    'required' => fn(Get $get) => !$get('mail_disable'),
                     'encrypted' => true,
                     'override' => 'mail.mailers.smtp.password',
                 ],
@@ -330,14 +330,14 @@ class Settings
                     'name' => 'mail_from_address',
                     'label' => 'Mail From Address',
                     'type' => 'email',
-                    'required' => fn (Get $get) => !$get('mail_disable'),
+                    'required' => fn(Get $get) => !$get('mail_disable'),
                     'override' => 'mail.from.address',
                 ],
                 [
                     'name' => 'mail_from_name',
                     'label' => 'Mail From Name',
                     'type' => 'text',
-                    'required' => fn (Get $get) => !$get('mail_disable'),
+                    'required' => fn(Get $get) => !$get('mail_disable'),
                     'override' => 'mail.from.name',
                 ],
 
@@ -346,7 +346,7 @@ class Settings
                     'name' => 'mail_header',
                     'label' => 'Header',
                     'type' => 'markdown',
-                    'required' => fn (Get $get) => !$get('mail_disable'),
+                    'required' => fn(Get $get) => !$get('mail_disable'),
                     'default' => '',
                     'disable_toolbar' => true,
                 ],
@@ -354,7 +354,7 @@ class Settings
                     'name' => 'mail_footer',
                     'label' => 'Footer',
                     'type' => 'markdown',
-                    'required' => fn (Get $get) => !$get('mail_disable'),
+                    'required' => fn(Get $get) => !$get('mail_disable'),
                     'default' => '',
                     'disable_toolbar' => true,
                 ],
@@ -362,7 +362,7 @@ class Settings
                     'name' => 'mail_css',
                     'label' => 'Mail CSS',
                     'type' => 'markdown',
-                    'required' => fn (Get $get) => !$get('mail_disable'),
+                    'required' => fn(Get $get) => !$get('mail_disable'),
                     'default' => '',
                     'disable_toolbar' => true,
                 ],
@@ -404,26 +404,26 @@ class Settings
                     'name' => 'ticket_mail_host',
                     'label' => 'Email Host',
                     'type' => 'text',
-                    'required' => fn (Get $get) => $get('ticket_mail_piping'),
+                    'required' => fn(Get $get) => $get('ticket_mail_piping'),
                 ],
                 [
                     'name' => 'ticket_mail_port',
                     'label' => 'Email Port',
                     'type' => 'number',
-                    'required' => fn (Get $get) => $get('ticket_mail_piping'),
+                    'required' => fn(Get $get) => $get('ticket_mail_piping'),
                     'default' => 993,
                 ],
                 [
                     'name' => 'ticket_mail_email',
                     'label' => 'Email Address',
                     'type' => 'email',
-                    'required' => fn (Get $get) => $get('ticket_mail_piping'),
+                    'required' => fn(Get $get) => $get('ticket_mail_piping'),
                 ],
                 [
                     'name' => 'ticket_mail_password',
                     'label' => 'Email Password',
                     'type' => 'password',
-                    'required' => fn (Get $get) => $get('ticket_mail_piping'),
+                    'required' => fn(Get $get) => $get('ticket_mail_piping'),
                     'encrypted' => true,
                 ],
             ],
@@ -589,12 +589,70 @@ class Settings
                     'description' => 'Proforma invoices will not be assigned an official invoice number until payment is received and will be marked as "Proforma".',
                 ],
                 [
+                    'name' => 'immutable_invoices_enabled',
+                    'label' => 'Immutable Invoices',
+                    'type' => 'checkbox',
+                    'database_type' => 'boolean',
+                    'default' => true,
+                    'description' => 'When enabled, invoices can only be edited while in draft status. Once published, they become read-only. Disable this to allow editing invoices at any status.',
+                ],
+                [
+                    'name' => 'immutable_invoices_lock_before',
+                    'label' => 'Lock Invoices Created Before Upgrade',
+                    'type' => 'checkbox',
+                    'database_type' => 'boolean',
+                    'default' => true,
+                    'description' => 'When enabled, invoices created before the upgrade date remain fully editable regardless of status. Only invoices created on or after the upgrade date are subject to draft-only immutability. Disable to apply immutability to all invoices.',
+                ],
+                [
+                    'name' => 'immutable_invoices_lock_date',
+                    'label' => 'Upgrade Lock Date',
+                    'type' => 'text',
+                    'database_type' => 'date',
+                    'default' => null,
+                    'disabled' => true,
+                    'description' => 'This date was set automatically during upgrade. Invoices created before this date are exempt from immutability when the toggle above is enabled. To change this date, run the migration again or update it directly in the database.',
+                ],
+                [
+                    'name' => 'notes_client_visible',
+                    'label' => 'Show Adjustment Notes to Clients',
+                    'type' => 'checkbox',
+                    'database_type' => 'boolean',
+                    'default' => true,
+                    'description' => 'Show the adjustments section (credit/debit notes) to clients on the invoice page. When disabled, only admin-only notes are visible in the admin panel.',
+                ],
+                [
                     'name' => 'invoice_snapshot',
                     'label' => 'Invoice Snapshot',
                     'type' => 'checkbox',
                     'database_type' => 'boolean',
                     'default' => true,
                     'description' => 'Save a snapshot of important data (name, address, etc.) on the invoice when it is paid. This ensures that if someone changes their details later, old invoices will still have the correct information.',
+                ],
+                [
+                    'name' => 'credit_note_number',
+                    'label' => 'Credit/Debit Note Number',
+                    'type' => 'number',
+                    'default' => 1,
+                    'required' => false,
+                    'description' => 'The next credit/debit note number to use. This will be incremented automatically.',
+                ],
+                [
+                    'name' => 'credit_note_number_padding',
+                    'label' => 'Credit/Debit Note Number Padding',
+                    'type' => 'number',
+                    'default' => 1,
+                    'required' => false,
+                    'description' => 'Number of digits to use for credit/debit note numbers. Example: 0001, 0002, etc.',
+                ],
+                [
+                    'name' => 'credit_note_number_format',
+                    'label' => 'Credit/Debit Note Number Format',
+                    'type' => 'text',
+                    'default' => 'CN-{number}',
+                    'required' => false,
+                    'description' => 'Format to use for credit/debit note numbers. Use {number} to insert the zero padded number and use {year}, {month} and {day} placeholders to insert the current date. Example: CN-{year}-{month}-{day}-{number} or CN-{year}{number}. It must at least contain {number}.',
+                    'validation' => 'regex:/{number}/',
                 ],
             ],
             'other' => [
@@ -658,9 +716,9 @@ class Settings
     private static function getAvailableLanguages(): array
     {
         return once(
-            fn () => glob(base_path('lang/*'), GLOB_ONLYDIR)
-            ? array_map('basename', glob(base_path('lang/*'), GLOB_ONLYDIR))
-            : ['en']
+            fn() => glob(base_path('lang/*'), GLOB_ONLYDIR)
+                ? array_map('basename', glob(base_path('lang/*'), GLOB_ONLYDIR))
+                : ['en']
         );
     }
 
@@ -680,7 +738,6 @@ class Settings
             $taxRate = TaxRate::whereIn('country', [$country, 'all'])
                 ->orderByRaw('country = ? desc', [$country])
                 ->first();
-
             return $taxRate ?: 0;
         });
     }

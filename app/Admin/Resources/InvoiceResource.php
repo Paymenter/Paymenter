@@ -7,15 +7,20 @@ use App\Admin\Components\UserComponent;
 use App\Admin\Resources\InvoiceResource\Pages\CreateInvoice;
 use App\Admin\Resources\InvoiceResource\Pages\EditInvoice;
 use App\Admin\Resources\InvoiceResource\Pages\ListInvoices;
+use App\Admin\Resources\InvoiceResource\Pages\ViewInvoice;
+use App\Admin\Resources\InvoiceResource\RelationManagers\AdjustmentNotesRelationManager;
 use App\Admin\Resources\InvoiceResource\RelationManagers\TransactionsRelationManager;
 use App\Models\Currency;
 use App\Models\Invoice;
 use App\Models\Service;
 use App\Models\ServiceUpgrade;
+use App\Enums\CancellationReason;
 use Filament\Actions\Action;
+use Filament\Actions\BulkAction;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
+use Filament\Actions\ViewAction;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Repeater;
@@ -30,6 +35,7 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 
 class InvoiceResource extends Resource
 {
@@ -76,7 +82,8 @@ class InvoiceResource extends Resource
                     ->options([
                         'paid' => 'Paid',
                         'pending' => 'Pending',
-                        'cancelled' => 'Cancelled',
+                        'draft' => 'Draft',
+                        'cancelled' => 'Cancelled'
                     ])
                     ->default('pending')
                     ->placeholder('Select the status of the invoice'),
@@ -165,7 +172,7 @@ class InvoiceResource extends Resource
                     ->sortable(),
                 TextColumn::make('formattedTotal')
                     ->label('Total'),
-                TextColumn::make('formattedRemaining')
+                TextColumn::make('formattedCurrentBalance')
                     ->label('Remaining'),
             ])
             ->defaultSort(function (Builder $query): Builder {
@@ -182,10 +189,29 @@ class InvoiceResource extends Resource
                     ]),
             ])
             ->recordActions([
+                ViewAction::make(),
                 EditAction::make(),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
+                    BulkAction::make('cancel')
+                        ->label('Cancel')
+                        ->icon('heroicon-o-x-circle')
+                        ->color('danger')
+                        ->requiresConfirmation()
+                        ->form([
+                            Select::make('cancellation_reason')
+                                ->label('Cancellation Reason')
+                                ->options(CancellationReason::class)
+                                ->required(),
+                        ])
+                        ->action(function (Collection $records, array $data) {
+                            $records->update([
+                                'status' => Invoice::STATUS_CANCELLED,
+                                'cancellation_reason' => $data['cancellation_reason'],
+                            ]);
+                        })
+                        ->visible(fn (): bool => auth()->user()->can('update', Invoice::class)),
                     DeleteBulkAction::make(),
                 ]),
             ]);
@@ -195,6 +221,7 @@ class InvoiceResource extends Resource
     {
         return [
             TransactionsRelationManager::class,
+            AdjustmentNotesRelationManager::class,
         ];
     }
 
@@ -204,6 +231,7 @@ class InvoiceResource extends Resource
             'index' => ListInvoices::route('/'),
             'create' => CreateInvoice::route('/create'),
             // Always use id for invoice route binding in admin
+            'view' => ViewInvoice::route('/{record:id}'),
             'edit' => EditInvoice::route('/{record:id}/edit'),
         ];
     }

@@ -5,6 +5,7 @@ namespace App\Classes;
 use App\Classes\Pdf\ContentPdfWrapper;
 use App\Classes\Pdf\FilePdfWrapper;
 use App\Events\Invoice\GeneratePdf;
+use App\Models\AdjustmentNote;
 use App\Models\Invoice;
 use Barryvdh\DomPDF\Facade\Pdf as DomPDF;
 
@@ -23,6 +24,11 @@ class PDF
 
         // Fall back to default PDF generation
         return DomPDF::loadView('pdf.invoice', ['invoice' => $invoice]);
+    }
+
+    public static function generateAdjustmentNote(AdjustmentNote $adjustmentNote)
+    {
+        return DomPDF::loadView('pdf.adjustment-note', ['adjustmentNote' => $adjustmentNote]);
     }
 
     private static function processPdfFromEvent(GeneratePdf $event)
