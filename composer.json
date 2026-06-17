@@ -1,13 +1,12 @@
 {
     "name": "paymenter/paymenter",
     "type": "project",
-    "description": "The skeleton application for the Laravel framework.",
+    "description": "Paymenter is a self-hosted, open-source, and free invoicing and billing software built with Laravel.",
     "keywords": [
         "laravel",
         "framework"
     ],
     "license": "MIT",
-    "version": "dev-master",
     "require": {
         "php": "^8.3 || ^8.4",
         "ext-intl": "*",
