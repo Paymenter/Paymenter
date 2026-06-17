@@ -3,8 +3,15 @@
     "type": "project",
     "description": "Paymenter is a self-hosted, open-source, and free invoicing and billing software built with Laravel.",
     "keywords": [
+        "invoicing",
+        "billing",
         "laravel",
-        "framework"
+        "open-source",
+        "self-hosted",
+        "subscription",
+        "payment",
+        "invoice",
+        "billing software"
     ],
     "license": "MIT",
     "require": {
