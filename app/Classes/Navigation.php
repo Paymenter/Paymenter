@@ -16,7 +16,7 @@ class Navigation
                 $query->whereHas('children')->orWhereHas('products', function ($query) {
                     $query->where('hidden', false);
                 });
-            })->get();
+            })->orderBy('sort')->get();
 
             $routes = [
                 [
