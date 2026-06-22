@@ -65,7 +65,7 @@
                     @endforeach
                 </div>
             </div>
-            @if($service->cancellable || $service->upgradable || count($buttons) > 0)
+            @if($service->cancellable || $service->upgradable || $service->upgrade()->where('status', 'pending')->exists() || count($buttons) > 0)
             <div>
                 <h4 class="text-lg font-semibold">{{ __('services.actions') }}:</h4>
                 <div class="mt-2 flex flex-row gap-2 flex-wrap">
@@ -77,10 +77,23 @@
                     </a>
                     @endif
                     @if($service->upgrade()->where('status', 'pending')->exists())
-                    <x-button.primary class="h-fit !w-fit"
-                        @click="Alpine.store('notifications').addNotification([{message: '{{ __('services.upgrade_pending') }}', type: 'error'}])">
-                        <span>{{ __('services.upgrade') }}</span>
-                    </x-button.primary>
+                    @php $pendingUpgrade = $service->upgrade()->where('status', 'pending')->first(); @endphp
+                    <span class="inline-flex items-center gap-1 px-3 py-1.5 rounded-md bg-background-secondary border border-neutral text-base/50 text-sm font-medium">
+                        <x-loading class="size-4" />
+                        {{ __('services.upgrading') }}
+                    </span>
+                    @if($pendingUpgrade->invoice_id)
+                    <a href="{{ route('invoices.show', $pendingUpgrade->invoice_id) }}">
+                        <x-button.secondary class="h-fit !w-fit">
+                            <span>{{ __('services.view_upgrade_invoice') }}</span>
+                        </x-button.secondary>
+                    </a>
+                    @endif
+                    <x-button.danger class="h-fit !w-fit" wire:click="cancelUpgrade"
+                        wire:confirm="{{ __('services.cancel_upgrade_confirm') }}">
+                        <span wire:loading.remove wire:target="cancelUpgrade">{{ __('services.cancel_upgrade') }}</span>
+                        <x-loading target="cancelUpgrade" />
+                    </x-button.danger>
                     @endif
                     @if($service->cancellable)
                     <x-button.danger class="h-fit !w-fit" wire:click="$set('showCancel', true)">
