@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('number')->nullable()->unique();
             $table->decimal('amount', 16, 2);
             $table->text('description')->nullable();
-            $table->string('status')->default('active')->after('description');
+            $table->string('status')->default('active');
             $table->timestamps();
         });
     }
