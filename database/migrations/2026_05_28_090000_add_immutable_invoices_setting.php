@@ -35,7 +35,7 @@ return new class extends Migration
             Setting::updateOrCreate(
                 ['key' => 'immutable_invoices_lock_before'],
                 [
-                    'value' => 'false',
+                    'value' => 'true',
                     'settingable_type' => null,
                     'type' => 'boolean',
                     'encrypted' => false,
