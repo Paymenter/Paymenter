@@ -18,6 +18,7 @@ class DatabaseSeeder extends Seeder
     {
         // User::factory(10)->create();
         Role::updateOrCreate(['name' => 'admin'], ['permissions' => ['*']]);
+        $this->call(LocationCatalogSeeder::class);
 
         foreach (Settings::settings() as $settings) {
             foreach ($settings as $setting) {

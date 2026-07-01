@@ -5,6 +5,7 @@ namespace App\Admin\Resources;
 use App\Admin\Resources\ServerResource\Pages\CreateServer;
 use App\Admin\Resources\ServerResource\Pages\EditServer;
 use App\Admin\Resources\ServerResource\Pages\ListServers;
+use App\Admin\Resources\ServerResource\RelationManagers\ProviderLocationOfferingsRelationManager;
 use App\Helpers\ExtensionHelper;
 use App\Models\Server;
 use Filament\Actions\Action;
@@ -130,7 +131,7 @@ class ServerResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            ProviderLocationOfferingsRelationManager::class,
         ];
     }
 

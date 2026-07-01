@@ -55,6 +55,11 @@ class Product extends Model implements Auditable
         return $this->hasMany(Service::class);
     }
 
+    public function locationOfferings(): HasMany
+    {
+        return $this->hasMany(ProductLocationOffering::class)->orderBy('sort_order');
+    }
+
     /**
      * Get the settings of the product.
      */

@@ -119,6 +119,20 @@ return [
                 'delete' => 'Delete Config Options',
                 'deleteAny' => 'Bulk Delete Config Options',
             ],
+            'location_groups' => [
+                'create' => 'Create Location Groups',
+                'update' => 'Update Location Groups',
+                'viewAny' => 'View Location Groups',
+                'delete' => 'Delete Location Groups',
+                'deleteAny' => 'Bulk Delete Location Groups',
+            ],
+            'location_options' => [
+                'create' => 'Create Location Options',
+                'update' => 'Update Location Options',
+                'viewAny' => 'View Location Options',
+                'delete' => 'Delete Location Options',
+                'deleteAny' => 'Bulk Delete Location Options',
+            ],
             'tax_rates' => [
                 'create' => 'Create Tax Rates',
                 'update' => 'Update Tax Rates',

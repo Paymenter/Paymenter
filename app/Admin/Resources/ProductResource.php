@@ -5,6 +5,7 @@ namespace App\Admin\Resources;
 use App\Admin\Resources\ProductResource\Pages\CreateProduct;
 use App\Admin\Resources\ProductResource\Pages\EditProduct;
 use App\Admin\Resources\ProductResource\Pages\ListProducts;
+use App\Admin\Resources\ProductResource\RelationManagers\LocationOfferingsRelationManager;
 use App\Classes\FilamentInput;
 use App\Helpers\ExtensionHelper;
 use App\Models\Currency;
@@ -323,6 +324,13 @@ class ProductResource extends Resource
                     ->orderBy('sort', 'asc');
             })
             ->defaultGroup('category.name');
+    }
+
+    public static function getRelations(): array
+    {
+        return [
+            LocationOfferingsRelationManager::class,
+        ];
     }
 
     public static function getPages(): array
