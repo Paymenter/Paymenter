@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('number')->nullable()->unique();
             $table->decimal('amount', 16, 2);
             $table->text('description')->nullable();
-            $table->boolean('is_admin_only')->default(false);
+            $table->string('status')->default('active')->after('description');
             $table->timestamps();
         });
     }

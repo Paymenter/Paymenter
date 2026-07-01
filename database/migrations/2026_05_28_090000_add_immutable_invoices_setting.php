@@ -42,6 +42,16 @@ return new class extends Migration
                 ],
             );
         }
+
+        Setting::updateOrCreate(
+            ['key' => 'notes_client_visible'],
+            [
+                'value' => 'true',
+                'settingable_type' => null,
+                'type' => 'boolean',
+                'encrypted' => false,
+            ],
+        );
     }
 
     /**
@@ -49,6 +59,11 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Setting::whereIn('key', ['immutable_invoices_enabled', 'immutable_invoices_lock_before', 'immutable_invoices_lock_date'])->delete();
+        Setting::whereIn('key', [
+            'immutable_invoices_enabled',
+            'immutable_invoices_lock_before',
+            'immutable_invoices_lock_date',
+            'notes_client_visible',
+        ])->delete();
     }
 };
