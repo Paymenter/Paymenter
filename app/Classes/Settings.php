@@ -593,7 +593,7 @@ class Settings
                     'label' => 'Immutable Invoices',
                     'type' => 'checkbox',
                     'database_type' => 'boolean',
-                    'default' => true,
+                    'default' => false,
                     'description' => 'When enabled, invoices can only be edited while in draft status. Once published, they become read-only. Disable this to allow editing invoices at any status.',
                 ],
                 [
