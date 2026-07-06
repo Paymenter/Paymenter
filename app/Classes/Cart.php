@@ -8,6 +8,7 @@ use App\Models\Plan;
 use App\Models\Product;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cookie;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Facades\Session;
 
@@ -172,39 +173,41 @@ class Cart
      */
     public static function validateCoupon($coupon_code)
     {
-        $coupon = Coupon::where('code', $coupon_code)->first();
+        return DB::transaction(function () use ($coupon_code) {
+            $coupon = Coupon::where('code', $coupon_code)->lockForUpdate()->first();
 
-        if (!$coupon) {
-            throw new DisplayException('Coupon code not found');
-        }
+            if (!$coupon) {
+                throw new DisplayException('Coupon code not found');
+            }
 
-        if ($coupon->expires_at && $coupon->expires_at->isPast()) {
-            throw new DisplayException('Coupon code has expired');
-        }
-        if ($coupon->starts_at && $coupon->starts_at->isFuture()) {
-            throw new DisplayException('Coupon code is not active yet');
-        }
-        if ($coupon->max_uses && $coupon->services->count() >= $coupon->max_uses) {
-            throw new DisplayException('Coupon code has reached its maximum uses');
-        }
-        if (Auth::check() && $coupon->hasExceededMaxUsesPerUser(Auth::id())) {
-            throw new DisplayException('You have already used this coupon the maximum number of times allowed');
-        }
-        if ($coupon->products->isNotEmpty()) {
-            $cart = self::get();
-            $applicable = false;
-            foreach ($cart->items as $item) {
-                if ($coupon->products->contains($item->product_id)) {
-                    $applicable = true;
-                    break;
+            if ($coupon->expires_at && $coupon->expires_at->isPast()) {
+                throw new DisplayException('Coupon code has expired');
+            }
+            if ($coupon->starts_at && $coupon->starts_at->isFuture()) {
+                throw new DisplayException('Coupon code is not active yet');
+            }
+            if ($coupon->max_uses && $coupon->services()->count() >= $coupon->max_uses) {
+                throw new DisplayException('Coupon code has reached its maximum uses');
+            }
+            if (Auth::check() && $coupon->hasExceededMaxUsesPerUser(Auth::id())) {
+                throw new DisplayException('You have already used this coupon the maximum number of times allowed');
+            }
+            if ($coupon->products->isNotEmpty()) {
+                $cart = self::get();
+                $applicable = false;
+                foreach ($cart->items as $item) {
+                    if ($coupon->products->contains($item->product_id)) {
+                        $applicable = true;
+                        break;
+                    }
+                }
+                if (!$applicable) {
+                    throw new DisplayException('Coupon code is not valid for any items in your cart');
                 }
             }
-            if (!$applicable) {
-                throw new DisplayException('Coupon code is not valid for any items in your cart');
-            }
-        }
 
-        return $coupon;
+            return $coupon;
+        });
     }
 
     public static function applyCoupon($code)
@@ -214,6 +217,7 @@ class Cart
         }
 
         RateLimiter::hit('apply_coupon_' . request()->ip());
+
         $coupon = self::validateCoupon($code);
 
         $wasSuccessful = false;
