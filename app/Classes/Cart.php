@@ -209,6 +209,11 @@ class Cart
 
     public static function applyCoupon($code)
     {
+        if (RateLimiter::tooManyAttempts('apply_coupon_' . request()->ip(), 5)) {
+            throw new DisplayException('Too many attempts. Please try again later.');
+        }
+
+        RateLimiter::hit('apply_coupon_' . request()->ip());
         $coupon = self::validateCoupon($code);
 
         $wasSuccessful = false;

@@ -14,7 +14,6 @@ use App\Models\User;
 use Exception;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\RateLimiter;
 use Livewire\Attributes\Locked;
 
 class Cart extends Component
@@ -57,12 +56,6 @@ class Cart extends Component
         if ($this->coupon && ClassesCart::get()->coupon_id) {
             return $this->notify('Coupon code already applied', 'error');
         }
-        // Rate limit to prevent abuse
-        if (RateLimiter::tooManyAttempts('apply_coupon_' . request()->ip(), 5)) {
-            return $this->notify('Too many attempts. Please try again later.', 'error');
-        }
-
-        RateLimiter::hit('apply_coupon_' . request()->ip());
 
         try {
             $cart = ClassesCart::applyCoupon($this->coupon);
