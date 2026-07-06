@@ -8,21 +8,20 @@ use App\Admin\Resources\AdjustmentNoteResource\Pages\EditAdjustmentNote;
 use App\Admin\Resources\AdjustmentNoteResource\Pages\ListAdjustmentNotes;
 use App\Enums\AdjustmentNoteStatus;
 use App\Models\AdjustmentNote;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\EditAction;
 use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
-use Filament\Actions\BulkActionGroup;
-use Filament\Actions\DeleteBulkAction;
-use Filament\Actions\EditAction;
-use Filament\Forms\Components\Toggle;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\RawJs;
-use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 
 class AdjustmentNoteResource extends Resource
 {
@@ -36,18 +35,20 @@ class AdjustmentNoteResource extends Resource
 
     protected static ?string $navigationLabel = 'Adjustment Notes';
 
+    protected static ?int $navigationSort = 3;
+
     public static function form(Schema $schema): Schema
     {
         return $schema
             ->components([
                 Select::make('invoice_id')
                     ->label('Invoice')
-                    ->relationship('invoice', 'number')
+                    ->relationship('invoice', modifyQueryUsing: fn (Builder $query) => $query->with('user')->orderByDesc('id'))
+                    ->getOptionLabelFromRecordUsing(fn (Model $record) => ($record->number ? "#$record->number" : $record->id) . " ({$record->user->email})")
                     ->required()
                     ->searchable()
                     ->preload()
-                    ->placeholder('Select an invoice')
-                    ->default(request()->query('invoice_id')),
+                    ->placeholder('Select an invoice'),
                 TextInput::make('number')
                     ->label('Number')
                     ->helperText('The number will be generated automatically')

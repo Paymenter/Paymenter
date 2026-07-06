@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('invoice_transactions', function (Blueprint $table) {
-            $table->decimal('refunded_amount', 12, 2)->default(0)->after('amount');
+            $table->decimal('refunded_amount', 17, 2)->default(0)->after('amount');
         });
     }
 
