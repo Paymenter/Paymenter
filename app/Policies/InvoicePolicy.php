@@ -42,11 +42,11 @@ class InvoicePolicy extends BasePolicy
 
         $canEdit = $this->adminPermission($user, 'admin.invoices.update') || $invoice->user_id === $user->id;
 
-        if ($this->invoiceCreatedBeforeImmutableUpdate($invoice)) {
+        if (!config('settings.immutable_invoices_enabled', false)) {
             return $canEdit;
         }
 
-        if (!config('settings.immutable_invoices_enabled', true)) {
+        if ($this->invoiceCreatedBeforeImmutableUpdate($invoice)) {
             return $canEdit;
         }
 
@@ -71,9 +71,9 @@ class InvoicePolicy extends BasePolicy
 
     public function invoiceCreatedBeforeImmutableUpdate(Invoice $invoice)
     {
-        $lockBeforeEnabled = config('settings.immutable_invoices_lock_before', true);
+        $lockBeforeEnabled = config('settings.immutable_invoices_lock_before', false);
         $lockDate = config('settings.immutable_invoices_lock_date');
 
-        return $lockBeforeEnabled && $lockDate && $invoice?->created_at->isBefore($lockDate);
+        return $lockBeforeEnabled && $lockDate && $invoice->created_at->isBefore($lockDate);
     }
 }

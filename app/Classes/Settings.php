@@ -601,8 +601,8 @@ class Settings
                     'label' => 'Lock Invoices Created Before Upgrade',
                     'type' => 'checkbox',
                     'database_type' => 'boolean',
-                    'default' => true,
-                    'description' => 'When enabled, invoices created before the upgrade date remain fully editable regardless of status. Only invoices created on or after the upgrade date are subject to draft-only immutability. Disable to apply immutability to all invoices.',
+                    'default' => false,
+                    'description' => 'When enabled, invoices created before the upgrade date remain fully editable regardless of status. Disable to apply draft-only immutability to all invoices.',
                 ],
                 [
                     'name' => 'immutable_invoices_lock_date',
@@ -611,14 +611,14 @@ class Settings
                     'database_type' => 'date',
                     'default' => null,
                     'disabled' => true,
-                    'description' => 'This date was set automatically during upgrade. Invoices created before this date are exempt from immutability when the toggle above is enabled. To change this date, run the migration again or update it directly in the database.',
+                    'description' => 'Invoices created before this date remain editable regardless of status (when the lock toggle above is enabled). Set automatically during upgrade.',
                 ],
                 [
                     'name' => 'notes_client_visible',
                     'label' => 'Show Adjustment Notes to Clients',
                     'type' => 'checkbox',
                     'database_type' => 'boolean',
-                    'default' => true,
+                    'default' => false,
                     'description' => 'Show the adjustments section (credit/debit notes) to clients on the invoice page. When disabled, only admin-only notes are visible in the admin panel.',
                 ],
                 [

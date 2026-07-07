@@ -20,6 +20,15 @@ class ViewInvoice extends ViewRecord
 {
     protected static string $resource = InvoiceResource::class;
 
+    public function mount(int | string $record): void
+    {
+        parent::mount($record);
+
+        if (!config('settings.immutable_invoices_enabled', false)) {
+            redirect(InvoiceResource::getUrl('edit', ['record' => $record]));
+        }
+    }
+
     public function infolist(Schema $schema): Schema
     {
         return $schema
@@ -33,13 +42,13 @@ class ViewInvoice extends ViewRecord
                         TextEntry::make('status')
                             ->label('Status')
                             ->badge()
-                            ->color(fn (string $state): string => match ($state) {
+                            ->color(fn(string $state): string => match ($state) {
                                 'paid' => 'success',
                                 'pending' => 'warning',
                                 'draft' => 'gray',
                                 default => 'danger',
                             })
-                            ->formatStateUsing(fn (string $state): string => ucfirst($state)),
+                            ->formatStateUsing(fn(string $state): string => ucfirst($state)),
                         TextEntry::make('currency.code')
                             ->label('Currency'),
                         TextEntry::make('created_at')
@@ -63,7 +72,7 @@ class ViewInvoice extends ViewRecord
                                     ->label('Description'),
                                 TextEntry::make('price')
                                     ->label('Price')
-                                    ->money(fn ($record) => $record->invoice->currency_code ?? 'USD'),
+                                    ->money(fn($record) => $record->invoice->currency_code ?? 'USD'),
                                 TextEntry::make('quantity')
                                     ->label('Quantity'),
                             ])
@@ -92,7 +101,7 @@ class ViewInvoice extends ViewRecord
                         'cancellation_reason' => $data['cancellation_reason'],
                     ]);
                 })
-                ->visible(fn (Invoice $invoice): bool => $invoice->status !== Invoice::STATUS_CANCELLED),
+                ->visible(fn(Invoice $invoice): bool => $invoice->status !== Invoice::STATUS_CANCELLED),
             Action::make('pdf')
                 ->label('Download PDF')
                 ->action(function (Invoice $invoice) {
@@ -106,9 +115,8 @@ class ViewInvoice extends ViewRecord
     public function getRelationManagers(): array
     {
         return [
-            AdjustmentNotesRelationManager::class,
             TransactionsRelationManager::class,
+            AdjustmentNotesRelationManager::class
         ];
     }
-
 }

@@ -222,7 +222,7 @@
     @php
         $clientAdjustmentNotes = $invoice->adjustmentNotes;
     @endphp
-    @if (config('settings.notes_client_visible', true) && $clientAdjustmentNotes->isNotEmpty())
+    @if (config('settings.notes_client_visible', false) && $clientAdjustmentNotes->isNotEmpty())
     <div class="section-title">{{ __('invoices.ledger_adjustments') }}</div>
     <table style="margin-top: 10px;" class="invoice-items">
         <thead>

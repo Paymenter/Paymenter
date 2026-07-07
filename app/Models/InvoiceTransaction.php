@@ -49,7 +49,7 @@ class InvoiceTransaction extends Model implements Auditable
     public function refundableAmount(): Attribute
     {
         return Attribute::make(
-            get: fn () => $this->amount - $this->refunded_amount
+            get: fn() => $this->amount - $this->refunded_amount
         );
     }
 
@@ -59,7 +59,7 @@ class InvoiceTransaction extends Model implements Auditable
     public function formattedFee(): Attribute
     {
         return Attribute::make(
-            get: fn () => new Price(['price' => $this->fee, 'currency' => $this->invoice->currency])
+            get: fn() => new Price(['price' => $this->fee, 'currency' => $this->invoice->currency])
         );
     }
 
@@ -69,7 +69,7 @@ class InvoiceTransaction extends Model implements Auditable
     public function formattedAmount(): Attribute
     {
         return Attribute::make(
-            get: fn () => new Price(['price' => $this->amount, 'currency' => $this->invoice->currency])
+            get: fn() => new Price(['price' => $this->amount, 'currency' => $this->invoice->currency])
         );
     }
 
@@ -79,7 +79,17 @@ class InvoiceTransaction extends Model implements Auditable
     public function formattedRefundedAmount(): Attribute
     {
         return Attribute::make(
-            get: fn () => new Price(['price' => $this->refunded_amount, 'currency' => $this->invoice->currency])
+            get: fn() => new Price(['price' => $this->refunded_amount, 'currency' => $this->invoice->currency])
+        );
+    }
+
+    /**
+     * Formatted refundable amount of the invoice.
+     */
+    public function formattedRefundableAmount(): Attribute
+    {
+        return Attribute::make(
+            get: fn() => new Price(['price' => $this->refundable_amount, 'currency' => $this->invoice->currency])
         );
     }
 }
