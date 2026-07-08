@@ -803,7 +803,7 @@ class Stripe extends Gateway
     {
         [$timestamp, $signature] = $this->getHeaderValues($sig_header);
 
-        if (empty($timestamp) || empty($signature)) {
+        if (empty($timestamp) || empty($signature) || empty($secret)) {
             return false;
         }
 
