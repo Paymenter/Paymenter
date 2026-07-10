@@ -46,6 +46,7 @@ class CartItem extends Model
     {
         return Attribute::make(
             get: function () {
+                \App\Models\ConfigOption::setProductContext($this->product);
                 $total = 0;
                 $setup_fee = 0;
                 $total += $this->plan->price()->price;

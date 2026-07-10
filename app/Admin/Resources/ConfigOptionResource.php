@@ -76,6 +76,7 @@ class ConfigOptionResource extends Resource
                                 ->relationship('products', 'name')
                                 ->multiple()
                                 ->preload()
+                                ->live()
                                 ->placeholder('Select the products that this configuration option belongs to'),
                         ]),
                         Tab::make('Options')
@@ -114,6 +115,16 @@ class ConfigOptionResource extends Resource
                                             ->required()
                                             ->maxLength(255)
                                             ->placeholder('Enter the environment variable name'),
+                                        Select::make('products')
+                                            ->label('Products')
+                                            ->relationship('products', 'name', fn (Builder $query, Get $get) => $query->whereIn('products.id', $get('../../products') ?? []))
+                                            ->multiple()
+                                            ->preload()
+                                            ->placeholder('Select the products that this option belongs to')
+                                            ->default(function (Get $get) {
+                                                return $get('../../products') ?? [];
+                                            })
+                                            ->columnSpanFull(),
                                         // if the type is select, radio or checkbox then allow unlimited children (otherwise only allow 1)
                                         ProductResource::plan()->columnSpanFull()->label('Pricing')->reorderable(false)->deleteAction(null),
                                     ]),
@@ -148,7 +159,52 @@ class ConfigOptionResource extends Resource
                 //
             ])
             ->recordActions([
-                EditAction::make(),
+                \Filament\Actions\EditAction::make(),
+                \Filament\Actions\Action::make('clone')
+                    ->label('Clone')
+                    ->icon('heroicon-o-document-duplicate')
+                    ->color('info')
+                    ->action(function (ConfigOption $record) {
+                        \Illuminate\Support\Facades\DB::transaction(function () use ($record) {
+                            // 1. Replicate parent
+                            $clone = $record->replicate();
+                            $clone->name = $clone->name . ' (Clone)';
+                            $clone->save();
+
+                            // 2. Replicate children
+                            foreach ($record->children as $child) {
+                                $childClone = $child->replicate();
+                                $childClone->parent_id = $clone->id;
+                                $childClone->save();
+
+                                // 3. Replicate plans under the child
+                                foreach ($child->plans as $plan) {
+                                    $planClone = $plan->replicate();
+                                    $planClone->priceable_id = $childClone->id;
+                                    $planClone->priceable_type = get_class($childClone);
+                                    $planClone->save();
+
+                                    // 4. Replicate prices under the plan
+                                    foreach ($plan->prices as $price) {
+                                        $priceClone = $price->replicate();
+                                        $priceClone->plan_id = $planClone->id;
+                                        $priceClone->save();
+                                    }
+                                }
+
+                                // 5. Replicate product mapping for child options
+                                $childClone->products()->sync($child->products->pluck('id'));
+                            }
+
+                            // 6. Replicate product mapping for parent option
+                            $clone->products()->sync($record->products->pluck('id'));
+                        });
+
+                        \Filament\Notifications\Notification::make()
+                            ->title('Config Option Cloned Successfully')
+                            ->success()
+                            ->send();
+                    })
             ])
             ->defaultSort(function (Builder $query): Builder {
                 return $query
