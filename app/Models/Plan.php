@@ -54,6 +54,12 @@ class Plan extends Model implements Auditable
         $currency = $currency ?? session('currency', config('settings.default_currency'));
         $price = $this->prices->where('currency_code', $currency)->first();
 
+        // No price configured for this currency: return an unavailable price
+        // instead of dereferencing null (mirrors HasPlans::price()).
+        if (!$price) {
+            return new PriceClass(['price' => null, 'currency' => null]);
+        }
+
         return new PriceClass((object) [
             'price' => $price,
             'setup_fee' => $price->setup_fee,
