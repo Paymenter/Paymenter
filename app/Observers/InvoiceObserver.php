@@ -22,11 +22,11 @@ class InvoiceObserver
      */
     public function created(Invoice $invoice): void
     {
+        event(new InvoiceEvent\Created($invoice));
+
         if ($invoice->status === Invoice::STATUS_DRAFT) {
             return;
         }
-
-        event(new InvoiceEvent\Created($invoice));
 
         $sendEmail = $invoice->send_create_email;
 
@@ -48,11 +48,11 @@ class InvoiceObserver
      */
     public function updated(Invoice $invoice): void
     {
-        if($invoice->status === Invoice::STATUS_CANCELLED){
+        if ($invoice->status === Invoice::STATUS_CANCELLED) {
             $invoice->createCancellationCreditNote($invoice->cancellation_reason);
         }
 
-        if($invoice->getOriginal('status') === Invoice::STATUS_DRAFT && $invoice->status === Invoice::STATUS_PENDING) {
+        if ($invoice->getOriginal('status') === Invoice::STATUS_DRAFT && $invoice->status === Invoice::STATUS_PENDING) {
             $this->createSnapshot($invoice);
             event(new InvoiceEvent\Created($invoice));
 

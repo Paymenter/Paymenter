@@ -3,7 +3,6 @@
 namespace App\Admin\Resources\AdjustmentNoteResource\Pages;
 
 use App\Admin\Resources\AdjustmentNoteResource;
-use App\Classes\PDF;
 use App\Enums\AdjustmentNoteStatus;
 use App\Models\AdjustmentNote;
 use Filament\Actions\Action;
@@ -19,15 +18,15 @@ class EditAdjustmentNote extends EditRecord
     {
         return [
             Action::make('void')
-                ->label(fn (AdjustmentNote $record): string => $record->status === AdjustmentNoteStatus::Voided ? 'Unvoid' : 'Void')
-                ->color(fn (AdjustmentNote $record): string => $record->status === AdjustmentNoteStatus::Voided ? 'success' : 'danger')
-                ->icon(fn (AdjustmentNote $record): string => $record->status === AdjustmentNoteStatus::Voided ? 'heroicon-o-arrow-uturn-left' : 'heroicon-o-x-circle')
+                ->label(fn(AdjustmentNote $record): string => $record->status === AdjustmentNoteStatus::Voided ? 'Unvoid' : 'Void')
+                ->color(fn(AdjustmentNote $record): string => $record->status === AdjustmentNoteStatus::Voided ? 'success' : 'danger')
+                ->icon(fn(AdjustmentNote $record): string => $record->status === AdjustmentNoteStatus::Voided ? 'heroicon-o-arrow-uturn-left' : 'heroicon-o-x-circle')
                 ->requiresConfirmation()
-                ->modalHeading(fn (AdjustmentNote $record): string => $record->status === AdjustmentNoteStatus::Voided ? 'Unvoid adjustment note' : 'Void adjustment note')
-                ->modalDescription(fn (AdjustmentNote $record): string => $record->status === AdjustmentNoteStatus::Voided
+                ->modalHeading(fn(AdjustmentNote $record): string => $record->status === AdjustmentNoteStatus::Voided ? 'Unvoid adjustment note' : 'Void adjustment note')
+                ->modalDescription(fn(AdjustmentNote $record): string => $record->status === AdjustmentNoteStatus::Voided
                     ? 'Are you sure you want to unvoid this adjustment note? Its amount will be included in the invoice total again.'
                     : 'Are you sure you want to void this adjustment note? Its amount will be excluded from the invoice total.')
-                ->modalSubmitActionLabel(fn (AdjustmentNote $record): string => $record->status === AdjustmentNoteStatus::Voided ? 'Unvoid' : 'Void')
+                ->modalSubmitActionLabel(fn(AdjustmentNote $record): string => $record->status === AdjustmentNoteStatus::Voided ? 'Unvoid' : 'Void')
                 ->action(function (AdjustmentNote $record) {
                     $newStatus = $record->status === AdjustmentNoteStatus::Voided
                         ? AdjustmentNoteStatus::Active
@@ -38,13 +37,6 @@ class EditAdjustmentNote extends EditRecord
                         ->title($newStatus === AdjustmentNoteStatus::Voided ? 'Adjustment note voided' : 'Adjustment note unvoided')
                         ->success()
                         ->send();
-                }),
-            Action::make('pdf')
-                ->label('Download PDF')
-                ->action(function (AdjustmentNote $adjustmentNote) {
-                    return response()->streamDownload(function () use ($adjustmentNote) {
-                        echo PDF::generateAdjustmentNote($adjustmentNote)->stream();
-                    }, 'adjustment-note-' . ($adjustmentNote->number ?? $adjustmentNote->id) . '.pdf');
                 }),
             DeleteAction::make(),
         ];
