@@ -15,9 +15,6 @@ use App\Models\Invoice;
 use App\Models\Service;
 use App\Models\ServiceUpgrade;
 use Filament\Actions\Action;
-use Filament\Actions\BulkAction;
-use Filament\Actions\BulkActionGroup;
-use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Actions\ViewAction;
 use Filament\Forms\Components\DatePicker;
@@ -34,7 +31,6 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Collection;
 
 class InvoiceResource extends Resource
 {
@@ -191,28 +187,23 @@ class InvoiceResource extends Resource
                 ViewAction::make()
                     ->visible(fn(): bool => config('settings.immutable_invoices_enabled', false)),
                 EditAction::make(),
-            ])
-            ->toolbarActions([
-                BulkActionGroup::make([
-                    BulkAction::make('cancel')
-                        ->label('Cancel')
-                        ->icon('heroicon-o-x-circle')
-                        ->color('danger')
-                        ->requiresConfirmation()
-                        ->form([
-                            TextInput::make('cancellation_reason')
-                                ->label('Cancellation Reason')
-                                ->required(),
-                        ])
-                        ->action(function (Collection $records, array $data) {
-                            $records->update([
-                                'status' => Invoice::STATUS_CANCELLED,
-                                'cancellation_reason' => $data['cancellation_reason'],
-                            ]);
-                        })
-                        ->visible(fn(): bool => auth()->user()->can('update', Invoice::class)),
-                    DeleteBulkAction::make(),
-                ]),
+                Action::make('cancel')
+                    ->label('Cancel')
+                    ->icon('heroicon-o-x-circle')
+                    ->color('danger')
+                    ->requiresConfirmation()
+                    ->form([
+                        TextInput::make('cancellation_reason')
+                            ->label('Cancellation Reason')
+                            ->required(),
+                    ])
+                    ->action(function (Invoice $record, array $data) {
+                        $record->update([
+                            'status' => Invoice::STATUS_CANCELLED,
+                            'cancellation_reason' => $data['cancellation_reason'],
+                        ]);
+                    })
+                    ->visible(fn(Invoice $record): bool => auth()->user()->can('update', Invoice::class) && !in_array($record->status, [Invoice::STATUS_CANCELLED, Invoice::STATUS_PAID])),
             ]);
     }
 
