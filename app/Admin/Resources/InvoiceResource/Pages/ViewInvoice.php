@@ -6,12 +6,11 @@ use App\Admin\Resources\InvoiceResource;
 use App\Admin\Resources\InvoiceResource\RelationManagers\AdjustmentNotesRelationManager;
 use App\Admin\Resources\InvoiceResource\RelationManagers\TransactionsRelationManager;
 use App\Admin\Resources\ServiceResource;
-use App\Enums\CancellationReason;
 use App\Models\Invoice;
 use App\Models\Service;
 use App\Models\ServiceUpgrade;
 use Filament\Actions\Action;
-use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TextInput;
 use Filament\Resources\Pages\ViewRecord;
 use App\Classes\PDF;
 use Filament\Schemas\Components\Section;
@@ -97,9 +96,8 @@ class ViewInvoice extends ViewRecord
                 ->color('danger')
                 ->requiresConfirmation()
                 ->form([
-                    Select::make('cancellation_reason')
+                    TextInput::make('cancellation_reason')
                         ->label('Cancellation Reason')
-                        ->options(CancellationReason::class)
                         ->required(),
                 ])
                 ->action(function (Invoice $invoice, array $data) {

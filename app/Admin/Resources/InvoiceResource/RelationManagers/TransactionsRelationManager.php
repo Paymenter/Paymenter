@@ -12,6 +12,7 @@ use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Toggle;
 use Filament\Notifications\Notification;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Schemas\Schema;
@@ -109,10 +110,18 @@ class TransactionsRelationManager extends RelationManager
                                     }
                                 },
                             ]),
+                        Toggle::make('refund_via_gateway')
+                            ->label(__('invoices.refund_via_gateway'))
+                            ->default(false)
+                            ->visible(fn(InvoiceTransaction $record): bool => $record->gateway && $record->gateway->extension && ExtensionHelper::hasFunction($record->gateway, 'supportsRefunds') && ExtensionHelper::hasFunction($record->gateway, 'refund')),
                     ])
                     ->action(function (InvoiceTransaction $record, array $data, Action $action): void {
                         try {
-                            ExtensionHelper::refund($record, (float) $data['amount']);
+                            if (!empty($data['refund_via_gateway']) && $record->gateway) {
+                                ExtensionHelper::refund($record, (float) $data['amount']);
+                            } else {
+                                ExtensionHelper::refundLocally($record, (float) $data['amount']);
+                            }
 
                             $this->notifyRefundResult(true);
 

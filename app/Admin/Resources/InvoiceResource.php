@@ -14,7 +14,6 @@ use App\Models\Currency;
 use App\Models\Invoice;
 use App\Models\Service;
 use App\Models\ServiceUpgrade;
-use App\Enums\CancellationReason;
 use Filament\Actions\Action;
 use Filament\Actions\BulkAction;
 use Filament\Actions\BulkActionGroup;
@@ -201,9 +200,8 @@ class InvoiceResource extends Resource
                         ->color('danger')
                         ->requiresConfirmation()
                         ->form([
-                            Select::make('cancellation_reason')
+                            TextInput::make('cancellation_reason')
                                 ->label('Cancellation Reason')
-                                ->options(CancellationReason::class)
                                 ->required(),
                         ])
                         ->action(function (Collection $records, array $data) {
