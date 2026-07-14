@@ -5,8 +5,11 @@ namespace App\Admin\Resources\InvoiceResource\Pages;
 use App\Admin\Resources\InvoiceResource;
 use App\Admin\Resources\InvoiceResource\RelationManagers\AdjustmentNotesRelationManager;
 use App\Admin\Resources\InvoiceResource\RelationManagers\TransactionsRelationManager;
+use App\Admin\Resources\ServiceResource;
 use App\Enums\CancellationReason;
 use App\Models\Invoice;
+use App\Models\Service;
+use App\Models\ServiceUpgrade;
 use Filament\Actions\Action;
 use Filament\Forms\Components\Select;
 use Filament\Resources\Pages\ViewRecord;
@@ -69,7 +72,11 @@ class ViewInvoice extends ViewRecord
                             ->label('')
                             ->schema([
                                 TextEntry::make('description')
-                                    ->label('Description'),
+                                    ->label('Description')
+                                    ->url(fn($record) => in_array($record->reference_type, [Service::class, ServiceUpgrade::class])
+                                        ? ServiceResource::getUrl('edit', ['record' => $record->reference_type == Service::class ? $record->reference_id : $record->reference->service_id])
+                                        : null)
+                                    ->color(fn($record) => in_array($record->reference_type, [Service::class, ServiceUpgrade::class]) ? 'primary' : null),
                                 TextEntry::make('price')
                                     ->label('Price')
                                     ->money(fn($record) => $record->invoice->currency_code ?? 'USD'),
