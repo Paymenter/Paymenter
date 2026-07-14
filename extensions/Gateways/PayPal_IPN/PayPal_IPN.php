@@ -91,10 +91,15 @@ class PayPal_IPN extends Gateway
         // Check if the response is verified
         if ($response->body() == 'VERIFIED') {
             // Validate owner and amount
-            if ($request->receiver_email !== $this->config('email')) {
+            if (strtolower($request->receiver_email) !== strtolower($this->config('email'))) {
                 return;
             }
             if ($request->payment_status !== 'Completed') {
+                return;
+            }
+            // Validate currency and amount
+            $invoice = Invoice::find($request->item_number);
+            if (!$invoice || $request->mc_currency !== $invoice->currency_code) {
                 return;
             }
             ExtensionHelper::addPayment($request->item_number, 'PayPal', $request->mc_gross, $request->mc_fee, transactionId: $request->txn_id);

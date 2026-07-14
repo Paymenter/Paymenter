@@ -9,12 +9,12 @@ use App\Helpers\ExtensionHelper;
 use App\Jobs\Server\CreateJob;
 use App\Models\Invoice;
 use App\Models\Order;
+use App\Models\Product;
 use App\Models\Service;
 use App\Models\User;
 use Exception;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\RateLimiter;
 use Livewire\Attributes\Locked;
 
 class Cart extends Component
@@ -57,12 +57,6 @@ class Cart extends Component
         if ($this->coupon && ClassesCart::get()->coupon_id) {
             return $this->notify('Coupon code already applied', 'error');
         }
-        // Rate limit to prevent abuse
-        if (RateLimiter::tooManyAttempts('apply_coupon_' . request()->ip(), 5)) {
-            return $this->notify('Too many attempts. Please try again later.', 'error');
-        }
-
-        RateLimiter::hit('apply_coupon_' . request()->ip());
 
         try {
             $cart = ClassesCart::applyCoupon($this->coupon);
@@ -116,39 +110,40 @@ class Cart extends Component
             return $this->notify('You must accept the terms of service', 'error');
         }
 
-        // Re-validate coupon if one exists
-        if (ClassesCart::get()->coupon && !ClassesCart::validateAndRefreshCoupon()) {
-            $this->coupon = null;
-            $this->updateTotal();
-
-            return $this->notify('This coupon can no longer be used', 'error');
-        }
-
         // Start database transaction
         DB::beginTransaction();
         try {
             $cart = ClassesCart::get();
 
             $user = User::where('id', Auth::id())->lockForUpdate()->first();
+
+            if ($cart->coupon && !ClassesCart::validateAndRefreshCoupon()) {
+                DB::rollBack();
+                $this->coupon = null;
+                $this->updateTotal();
+
+                return $this->notify('This coupon can no longer be used', 'error');
+            }
             // Lock the orderproducts
             foreach ($cart->items as $item) {
                 // Make sure we have the latest product data and lock it
-                $item->product->lockForUpdate();
+                $product = Product::where('id', $item->product->id)->lockForUpdate()->first();
 
-                if (
-                    $item->product->per_user_limit > 0 && ($user->services->where('product_id', $item->product->id)->count() >= $item->product->per_user_limit ||
-                        $cart->items->filter(fn($it) => $it->product->id == $item->product->id)->sum(fn($it) => $it->quantity) + $user->services->where('product_id', $item->product->id)->count() > $item->product->per_user_limit
-                    )
-                ) {
-                    throw new DisplayException(__('product.user_limit', ['product' => $item->product->name]));
+                if ($product->per_user_limit > 0) {
+                    $existingServiceCount = $user->services()->where('product_id', $product->id)->count();
+                    $cartQuantityForProduct = $cart->items->filter(fn ($it) => $it->product->id == $product->id)->sum(fn ($it) => $it->quantity);
+
+                    if ($existingServiceCount >= $product->per_user_limit || ($cartQuantityForProduct + $existingServiceCount) > $product->per_user_limit) {
+                        throw new DisplayException(__('product.user_limit', ['product' => $product->name]));
+                    }
                 }
-                if ($item->product->stock !== null) {
-                    if ($item->product->stock < $item->quantity) {
-                        throw new DisplayException(__('product.out_of_stock', ['product' => $item->product->name]));
+                if ($product->stock !== null) {
+                    if ($product->stock < $item->quantity) {
+                        throw new DisplayException(__('product.out_of_stock', ['product' => $product->name]));
                     }
 
-                    $item->product->stock -= $item->quantity;
-                    $item->product->save();
+                    $product->stock -= $item->quantity;
+                    $product->save();
                 }
             }
             // Create the order

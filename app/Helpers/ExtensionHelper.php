@@ -473,17 +473,20 @@ class ExtensionHelper
             $gateway = Gateway::where('extension', $gateway)->first();
         }
 
-        $invoice = Invoice::findOrFail($invoice);
+        $transaction = DB::transaction(function () use ($invoice, $gateway, $amount, $fee, $transactionId, $status, $isCreditTransaction) {
+            // Lock the invoice for update to prevent race conditions
+            $invoice = Invoice::where('id', $invoice instanceof Invoice ? $invoice->id : $invoice)->lockForUpdate()->firstOrFail();
 
-        if (!$transactionId) {
-            $transaction = $invoice->transactions()->create([
-                'gateway_id' => $gateway?->id,
-                'amount' => $amount,
-                'fee' => $fee,
-                'status' => $status,
-                'is_credit_transaction' => $isCreditTransaction,
-            ]);
-        } else {
+            if (!$transactionId) {
+                return $invoice->transactions()->create([
+                    'gateway_id' => $gateway?->id,
+                    'amount' => $amount,
+                    'fee' => $fee,
+                    'status' => $status,
+                    'is_credit_transaction' => $isCreditTransaction,
+                ]);
+            }
+
             $updateData = [
                 'gateway_id' => $gateway?->id,
                 'amount' => $amount,
@@ -494,13 +497,13 @@ class ExtensionHelper
                 $updateData['fee'] = $fee;
             }
 
-            $transaction = $invoice->transactions()->updateOrCreate(
+            return $invoice->transactions()->updateOrCreate(
                 [
                     'transaction_id' => $transactionId,
                 ],
                 $updateData
             );
-        }
+        });
 
         return $transaction;
     }

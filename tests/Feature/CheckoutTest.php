@@ -145,6 +145,6 @@ class CheckoutTest extends TestCase
             ->assertSee('$10.00')
             ->set('plan_id', $plan->id)
             ->call('checkout')
-            ->assertHasErrors(['plan_id' => 'exists']);
+            ->assertHasErrors(['plan_id' => 'in']);
     }
 }
