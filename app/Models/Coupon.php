@@ -11,6 +11,7 @@ class Coupon extends Model implements Auditable
 
     protected $fillable = [
         'type',
+        'applies_to',
         'time',
         'code',
         'value',
