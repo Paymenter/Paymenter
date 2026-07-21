@@ -13,6 +13,8 @@ class TicketResource extends JsonApiResource
         'priority',
         'assigned_to',
         'user_id',
+        'guest_name',
+        'guest_email',
         'department',
         'updated_at',
         'created_at',
