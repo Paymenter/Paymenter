@@ -36,7 +36,7 @@ class Product extends Model implements Auditable
      */
     public function configOptions(): HasManyThrough
     {
-        return $this->hasManyThrough(ConfigOption::class, ConfigOptionProduct::class, 'product_id', 'id', 'id', 'config_option_id')->where('config_options.hidden', false)->orderBy('config_options.sort', 'asc')->orderBy('config_options.id', 'desc');
+        return $this->hasManyThrough(ConfigOption::class, ConfigOptionProduct::class, 'product_id', 'id', 'id', 'config_option_id')->where('config_options.hidden', false)->whereNull('config_options.parent_id')->orderBy('config_options.sort', 'asc')->orderBy('config_options.id', 'desc');
     }
 
     /**
@@ -76,6 +76,6 @@ class Product extends Model implements Auditable
      */
     public function upgradableConfigOptions(): HasManyThrough
     {
-        return $this->hasManyThrough(ConfigOption::class, ConfigOptionProduct::class, 'product_id', 'id', 'id', 'config_option_id')->where('config_options.hidden', false)->where('config_options.upgradable', true)->orderBy('config_options.sort', 'asc')->orderBy('config_options.id', 'desc');
+        return $this->hasManyThrough(ConfigOption::class, ConfigOptionProduct::class, 'product_id', 'id', 'id', 'config_option_id')->where('config_options.hidden', false)->where('config_options.upgradable', true)->whereNull('config_options.parent_id')->orderBy('config_options.sort', 'asc')->orderBy('config_options.id', 'desc');
     }
 }

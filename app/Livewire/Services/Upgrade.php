@@ -28,6 +28,25 @@ class Upgrade extends Component
 
     public $configOptions = [];
 
+    public function boot()
+    {
+        \App\Models\ConfigOption::setProductContext($this->upgradeProduct);
+        $this->filterConfigOptions();
+    }
+
+    protected function filterConfigOptions()
+    {
+        if ($this->upgradeProduct instanceof \App\Models\Product && $this->upgradeProduct->relationLoaded('upgradableConfigOptions')) {
+            $filtered = $this->upgradeProduct->upgradableConfigOptions->filter(function ($option) {
+                if (in_array($option->type, ['select', 'radio', 'slider', 'checkbox'])) {
+                    return $option->children->isNotEmpty();
+                }
+                return true;
+            });
+            $this->upgradeProduct->setRelation('upgradableConfigOptions', $filtered);
+        }
+    }
+
     public function mount()
     {
         $this->authorize('view', $this->service);
@@ -38,6 +57,9 @@ class Upgrade extends Component
             return $this->redirect(route('services.show', $this->service), true);
         }
         $this->upgradeProduct = $this->service->product;
+        \App\Models\ConfigOption::setProductContext($this->upgradeProduct);
+        $this->upgradeProduct->load(['upgradableConfigOptions.children']);
+        $this->filterConfigOptions();
         $this->upgrade = $this->service->product->id;
         $this->totalToday();
 
@@ -86,6 +108,9 @@ class Upgrade extends Component
             return;
         }
         $this->upgradeProduct = Product::findOrFail($upgrade);
+        \App\Models\ConfigOption::setProductContext($this->upgradeProduct);
+        $this->upgradeProduct->load(['upgradableConfigOptions.children']);
+        $this->filterConfigOptions();
     }
 
     public function nextStep()
