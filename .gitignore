@@ -9,6 +9,7 @@
 .env.backup
 .env.production
 .phpunit.result.cache
+database/database.sqlite
 Homestead.json
 Homestead.yaml
 auth.json
@@ -22,3 +23,4 @@ extensions/Others/Pages
 extensions/Servers/LicenseManager
 extensions/Servers/Proxmox
 !themes/default
+.DS_Store

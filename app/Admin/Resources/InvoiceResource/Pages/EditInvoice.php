@@ -14,9 +14,28 @@ class EditInvoice extends EditRecord
 {
     protected static string $resource = InvoiceResource::class;
 
+    public function mount(int | string $record): void
+    {
+        parent::mount($record);
+
+        if (config('settings.immutable_invoices_enabled', false)) {
+            redirect(InvoiceResource::getUrl('view', ['record' => $record]));
+        }
+    }
+
     protected function getHeaderActions(): array
     {
         return [
+            Action::make('publish')
+                ->label('Publish')
+                ->action(function (Invoice $record) {
+                    $this->changeInvoiceStatusToPending($record);
+                })
+                ->visible(fn(Invoice $record): bool => $record->status === Invoice::STATUS_DRAFT)
+                ->requiresConfirmation()
+                ->color('success')
+                ->icon('heroicon-o-check-circle')
+                ->successRedirectUrl(InvoiceResource::getUrl('index')),
             DeleteAction::make(),
             Action::make('pdf')
                 ->label('Download PDF')
@@ -31,5 +50,11 @@ class EditInvoice extends EditRecord
                     'transactions',
                 ]),
         ];
+    }
+
+    protected function changeInvoiceStatusToPending(Invoice $invoice): void
+    {
+        $invoice->status = Invoice::STATUS_PENDING;
+        $invoice->save();
     }
 }

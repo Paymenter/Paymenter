@@ -45,7 +45,7 @@ class Cart extends Component
 
             return;
         }
-        $this->total = new Price(['price' => ClassesCart::items()->sum(fn ($item) => $item->price->total * $item->quantity), 'currency' => ClassesCart::get()->currency]);
+        $this->total = new Price(['price' => ClassesCart::items()->sum(fn($item) => $item->price->total * $item->quantity), 'currency' => ClassesCart::get()->currency]);
         $this->gateways = ExtensionHelper::getCheckoutGateways($this->total->total, $this->total->currency->code, 'cart', ClassesCart::items());
         if (count($this->gateways) > 0 && !array_search($this->gateway, array_column($this->gateways, 'id')) !== false) {
             $this->gateway = $this->gateways[0]->id;
@@ -159,6 +159,7 @@ class Cart extends Component
                     'user_id' => $user->id,
                     'due_at' => now()->addDays(7),
                     'currency_code' => $cart->currency_code,
+                    'status' => config('settings.immutable_invoices_enabled', false) ? Invoice::STATUS_DRAFT : Invoice::STATUS_PENDING,
                 ]);
                 $invoice->save();
             }

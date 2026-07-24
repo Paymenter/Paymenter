@@ -24,6 +24,7 @@ class InvoiceNumberTest extends TestCase
 
         $invoice = new Invoice;
         $invoice->user_id = $user->id;
+        $invoice->status = Invoice::STATUS_DRAFT;
         $invoice->currency_code = 'USD';
         $invoice->save();
 
@@ -37,6 +38,7 @@ class InvoiceNumberTest extends TestCase
         // Do it once more for good measure
         $invoice2 = new Invoice;
         $invoice2->user_id = $user->id;
+        $invoice2->status = Invoice::STATUS_DRAFT;
         $invoice2->currency_code = 'USD';
         $invoice2->save();
 
@@ -59,6 +61,7 @@ class InvoiceNumberTest extends TestCase
 
         $invoice = new Invoice;
         $invoice->user_id = $user->id;
+        $invoice->status = Invoice::STATUS_DRAFT;
         $invoice->currency_code = 'USD';
         $invoice->save();
 
