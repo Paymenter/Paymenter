@@ -2,7 +2,7 @@
 
 namespace App\Livewire\Services;
 
-use App\Events\Invoice\Created as InvoiceCreated;
+use App\Exceptions\DisplayException;
 use App\Livewire\Component;
 use App\Models\Invoice;
 use App\Models\Product;
@@ -13,10 +13,9 @@ use App\Models\User;
 use App\Services\ServiceUpgrade\ServiceUpgradeService;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
 use Livewire\Attributes\Computed;
-use Illuminate\Support\Facades\DB;
-use App\Exceptions\DisplayException;
 
 class Upgrade extends Component
 {
