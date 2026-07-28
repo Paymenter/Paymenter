@@ -18,7 +18,7 @@ COPY . ./
 RUN composer install --no-dev --optimize-autoloader
 
 RUN cp .env.example .env \
-    && chmod 777 -R bootstrap storage/* \
+    && chmod 775 -R bootstrap storage/* \
     && rm -rf .env bootstrap/cache/*.php \
     && chown -R nginx:nginx . \
     && rm /usr/local/etc/php-fpm.conf \
