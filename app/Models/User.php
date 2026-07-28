@@ -35,9 +35,6 @@ class User extends Authenticatable implements Auditable, FilamentUser, HasAvatar
         'last_name',
         'email',
         'password',
-        'role_id',
-        'tfa_secret',
-        'email_verified_at',
     ];
 
     /**
