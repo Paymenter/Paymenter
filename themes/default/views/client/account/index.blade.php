@@ -12,6 +12,13 @@
             <x-form.input name="email" type="email" :label="__('general.input.email')"
                 :placeholder="__('general.input.email_placeholder')" required wire:model="email" dirty />
 
+            <x-form.select name="preferred_language" :label="__('general.input.preferred_language')" required
+                wire:model="preferred_language" dirty>
+                @foreach ($languageOptions as $code => $label)
+                    <option value="{{ $code }}" @selected($preferred_language === $code)>{{ $label }}</option>
+                @endforeach
+            </x-form.select>
+
             <x-form.properties :custom_properties="$custom_properties" :properties="$properties" dirty />
         </div>
 

@@ -11,6 +11,7 @@ use App\Admin\Resources\UserResource\Pages\ShowCredits;
 use App\Admin\Resources\UserResource\Pages\ShowInvoices;
 use App\Admin\Resources\UserResource\Pages\ShowServices;
 use App\Admin\Resources\UserResource\Pages\ShowTickets;
+use App\Classes\Settings;
 use App\Models\Credit;
 use App\Models\User;
 use Filament\Actions\EditAction;
@@ -55,6 +56,11 @@ class UserResource extends Resource
                 TextInput::make('first_name')->translateLabel()->required(),
                 TextInput::make('last_name')->translateLabel()->required(),
                 TextInput::make('email')->translateLabel()->email()->required()->unique('users', 'email', ignoreRecord: true),
+                Select::make('preferred_language')
+                    ->label('Preferred Language')
+                    ->options(fn (): array => Settings::getAllowedLanguageOptions())
+                    ->searchable()
+                    ->nullable(),
 
                 TextInput::make('password')->translateLabel()->password()->revealable()
                     ->dehydrateStateUsing(fn (string $state): string => Hash::make($state))

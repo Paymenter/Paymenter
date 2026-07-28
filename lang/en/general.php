@@ -9,6 +9,7 @@ return [
         'last_name_placeholder' => 'Your last name',
         'email' => 'Email',
         'email_placeholder' => 'Your email address',
+        'preferred_language' => 'Preferred language',
         'phone' => 'Phone',
         'phone_placeholder' => 'Your phone number',
         'company_name' => 'Company name',

@@ -5,6 +5,7 @@ namespace App\Livewire\Components;
 use App\Classes\Cart;
 use App\Livewire\Component;
 use App\Models\Currency;
+use Illuminate\Support\Facades\Auth;
 
 class LocaleSwitch extends Component
 {
@@ -16,7 +17,10 @@ class LocaleSwitch extends Component
 
     public function mount()
     {
-        $this->currentLocale = session('locale', config('app.locale'));
+        $this->currentLocale = session(
+            'locale',
+            Auth::user()?->preferred_language ?: config('app.locale')
+        );
         $this->currentCurrency = session('currency', config('settings.default_currency'));
         $this->currencies = Currency::all()->map(fn ($currency) => [
             'value' => $currency->code,
@@ -59,6 +63,10 @@ class LocaleSwitch extends Component
 
         session(['locale' => $locale]);
         app()->setLocale($locale);
+
+        if (Auth::check()) {
+            Auth::user()->update(['preferred_language' => $locale]);
+        }
 
         return $this->redirect(request()->header('Referer', '/'), navigate: true);
     }

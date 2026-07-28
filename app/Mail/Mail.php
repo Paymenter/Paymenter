@@ -18,18 +18,37 @@ class Mail extends Mailable
 
     public array $data = [];
 
+    /**
+     * Kept for listeners (e.g. ticket reply headers). Rendering uses resolved strings.
+     */
     public NotificationTemplate $emailTemplate;
 
     /**
+     * Resolved subject template (captured before queue serialization).
+     */
+    public string $resolvedSubject;
+
+    /**
+     * Resolved body template (captured before queue serialization).
+     */
+    public string $resolvedBody;
+
+    /**
      * Create a new message instance.
+     *
+     * Subject/body are stored as plain strings so queued workers do not reload
+     * untranslated base columns from the database.
      */
     public function __construct(
         NotificationTemplate $emailTemplate,
         array $data = []
     ) {
         $this->emailTemplate = $emailTemplate;
+        $this->resolvedSubject = (string) $emailTemplate->subject;
+        $this->resolvedBody = (string) $emailTemplate->body;
         $this->data = $data;
-        $this->data['body'] = $this->emailTemplate->body;
+        $this->data['body'] = $this->resolvedBody;
+        $this->data['emailTemplate'] = $emailTemplate;
     }
 
     /**
@@ -38,7 +57,7 @@ class Mail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: BladeCompiler::render($this->emailTemplate->subject, $this->data),
+            subject: BladeCompiler::render($this->resolvedSubject, $this->data),
         );
     }
 

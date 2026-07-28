@@ -20,6 +20,7 @@ use Filament\Schemas\Schema;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 
 class NotificationTemplateResource extends Resource
 {
@@ -52,7 +53,7 @@ class NotificationTemplateResource extends Resource
                     ->collapsible()
                     ->schema([
                         TextInput::make('subject')
-                            ->required()
+                            ->required(fn ($livewire): bool => !($livewire instanceof EditNotificationTemplate) || $livewire->isEditingDefaultLocale())
                             ->maxLength(255),
                         Select::make('mail_enabled')
                             ->label('Mail Enabled')
@@ -66,7 +67,7 @@ class NotificationTemplateResource extends Resource
                         MarkdownEditor::make('body')
                             ->hint('Use either Markdown or HTML to compose the email body.')
                             ->disableAllToolbarButtons()
-                            ->required()
+                            ->required(fn ($livewire): bool => !($livewire instanceof EditNotificationTemplate) || $livewire->isEditingDefaultLocale())
                             ->columnSpanFull(),
                         TagsInput::make('cc')
                             ->placeholder('mail@example.com')
@@ -83,7 +84,7 @@ class NotificationTemplateResource extends Resource
                     ->schema([
                         TextInput::make('in_app_title')
                             ->label('In-App Title')
-                            ->required(fn (Get $get) => $get('in_app_enabled') !== NotificationEnabledStatus::Never->value)
+                            ->required(fn (Get $get, $livewire): bool => $get('in_app_enabled') !== NotificationEnabledStatus::Never->value && (!($livewire instanceof EditNotificationTemplate) || $livewire->isEditingDefaultLocale()))
                             ->disabled(fn (Get $get) => $get('in_app_enabled') === NotificationEnabledStatus::Never->value)
                             ->maxLength(255),
                         Select::make('in_app_enabled')
@@ -98,7 +99,7 @@ class NotificationTemplateResource extends Resource
                             ->required(),
                         TextInput::make('in_app_body')
                             ->label('In-App Body')
-                            ->required(fn (Get $get) => $get('in_app_enabled') !== NotificationEnabledStatus::Never->value)
+                            ->required(fn (Get $get, $livewire): bool => $get('in_app_enabled') !== NotificationEnabledStatus::Never->value && (!($livewire instanceof EditNotificationTemplate) || $livewire->isEditingDefaultLocale()))
                             ->disabled(fn (Get $get) => $get('in_app_enabled') === NotificationEnabledStatus::Never->value)
                             ->columnSpanFull(),
                         TextInput::make('in_app_url')
@@ -117,8 +118,42 @@ class NotificationTemplateResource extends Resource
     {
         return $table
             ->columns([
+                TextColumn::make('key')
+                    ->searchable()
+                    ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('subject')
                     ->searchable(),
+                TextColumn::make('available_locales')
+                    ->label('Languages')
+                    ->badge()
+                    ->getStateUsing(function (NotificationTemplate $record): array {
+                        $locales = array_map(
+                            static fn (string $locale): string => strtoupper($locale),
+                            $record->availableLocales()
+                        );
+
+                        if (count($locales) <= 5) {
+                            return $locales;
+                        }
+
+                        return [
+                            ...array_slice($locales, 0, 5),
+                            '[...]',
+                        ];
+                    })
+                    ->color('primary')
+                    ->tooltip(function (string $state, NotificationTemplate $record): ?string {
+                        if ($state !== '[...]') {
+                            return null;
+                        }
+
+                        $locales = array_map(
+                            static fn (string $locale): string => strtoupper($locale),
+                            $record->availableLocales()
+                        );
+
+                        return implode(', ', array_slice($locales, 5));
+                    }),
                 IconColumn::make('enabled')
                     ->boolean(),
             ])
@@ -130,11 +165,14 @@ class NotificationTemplateResource extends Resource
             ]);
     }
 
+    public static function getEloquentQuery(): Builder
+    {
+        return parent::getEloquentQuery()->with('translations');
+    }
+
     public static function getRelations(): array
     {
-        return [
-            //
-        ];
+        return [];
     }
 
     public static function getPages(): array

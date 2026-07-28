@@ -655,13 +655,62 @@ class Settings
         return $settings;
     }
 
-    private static function getAvailableLanguages(): array
+    /**
+     * Languages shipped with Paymenter (folders under lang/), independent of allowed_languages.
+     *
+     * @return list<string>
+     */
+    public static function getAvailableLanguages(): array
     {
         return once(
             fn () => glob(base_path('lang/*'), GLOB_ONLYDIR)
             ? array_map('basename', glob(base_path('lang/*'), GLOB_ONLYDIR))
             : ['en']
         );
+    }
+
+    /**
+     * Locale options for admin UIs that may include languages outside allowed_languages.
+     *
+     * @return array<string, string>
+     */
+    public static function getAvailableLanguageOptions(): array
+    {
+        $locales = self::getAvailableLanguages();
+        $labels = config('app.available_locales', []);
+
+        $options = [];
+        foreach ($locales as $locale) {
+            $options[$locale] = $labels[$locale] ?? strtoupper($locale);
+        }
+
+        return $options;
+    }
+
+    /**
+     * Locale options limited to settings.allowed_languages (intersected with installed langs).
+     *
+     * @return array<string, string>
+     */
+    public static function getAllowedLanguageOptions(): array
+    {
+        $allowed = config('settings.allowed_languages', []);
+        if (!is_array($allowed) || $allowed === []) {
+            $allowed = self::getAvailableLanguages();
+        }
+
+        $available = self::getAvailableLanguages();
+        $labels = config('app.available_locales', []);
+
+        $options = [];
+        foreach ($allowed as $locale) {
+            if (!in_array($locale, $available, true)) {
+                continue;
+            }
+            $options[$locale] = $labels[$locale] ?? strtoupper($locale);
+        }
+
+        return $options !== [] ? $options : self::getAvailableLanguageOptions();
     }
 
     public static function tax(?User $user = null)

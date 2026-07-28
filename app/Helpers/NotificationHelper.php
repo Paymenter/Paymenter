@@ -97,7 +97,9 @@ class NotificationHelper
             'user_id' => $user->id,
             'title' => BladeCompiler::render($notification->in_app_title, $data),
             'body' => BladeCompiler::render($notification->in_app_body, $data),
-            'url' => isset($notification->in_app_url) ? BladeCompiler::render($notification->in_app_url, $data) : null,
+            'url' => filled($notification->in_app_url)
+                ? BladeCompiler::render($notification->in_app_url, $data)
+                : null,
             'show_in_app' => $show_in_app,
             'show_as_push' => $show_as_push,
         ]);
@@ -116,14 +118,42 @@ class NotificationHelper
             return;
         }
 
-        $userPreference = $user->notificationsPreferences()->where('notification_template_id', $notification->id)->first();
+        $locale = $data['locale'] ?? null;
 
-        if ($notification->isEnabledForPreference($userPreference, 'mail') && !config('settings.mail_disable')) {
-            self::sendEmailNotification($notification, $data, $user, $attachments);
+        if (! is_string($locale) || $locale === '') {
+            $locale = $user->preferred_language;
         }
 
-        if ($notification->isEnabledForPreference($userPreference, 'app')) {
-            self::sendInAppNotification($notification, $data, $user, $show_in_app, $show_as_push);
+        if (! is_string($locale) || $locale === '') {
+            $locale = config('app.locale');
+            if (app()->bound('session')) {
+                try {
+                    $sessionLocale = session()->get('locale');
+                    if (is_string($sessionLocale) && $sessionLocale !== '') {
+                        $locale = $sessionLocale;
+                    }
+                } catch (\Throwable) {
+                    // Queues / tests may lack an encryptable session — keep preferred/config locale.
+                }
+            }
+        }
+
+        $previousLocale = app()->getLocale();
+        app()->setLocale($locale);
+
+        try {
+            $resolved = $notification->resolveForLocale($locale);
+            $userPreference = $user->notificationsPreferences()->where('notification_template_id', $notification->id)->first();
+
+            if ($notification->isEnabledForPreference($userPreference, 'mail') && !config('settings.mail_disable')) {
+                self::sendEmailNotification($resolved, $data, $user, $attachments);
+            }
+
+            if ($notification->isEnabledForPreference($userPreference, 'app')) {
+                self::sendInAppNotification($resolved, $data, $user, $show_in_app, $show_as_push);
+            }
+        } finally {
+            app()->setLocale($previousLocale);
         }
     }
 
