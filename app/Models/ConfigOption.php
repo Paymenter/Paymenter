@@ -19,6 +19,7 @@ class ConfigOption extends Model implements Auditable
         'type',
         'sort',
         'hidden',
+        'required',
         'parent_id',
         'upgradable',
     ];

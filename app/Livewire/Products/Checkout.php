@@ -157,7 +157,9 @@ class Checkout extends Component
             if (in_array($option->type, ['text', 'number'])) {
                 $rules["configOptions.{$option->id}"] = ['required'];
             } elseif ($option->type === 'checkbox') {
-                // No validation needed for checkbox
+                if ($option->required) {
+                    $rules["configOptions.{$option->id}"] = ['accepted'];
+                }
             } else {
                 $rules["configOptions.{$option->id}"] = [
                     'required',

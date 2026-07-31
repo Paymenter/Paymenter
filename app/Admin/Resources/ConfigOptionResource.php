@@ -67,6 +67,10 @@ class ConfigOptionResource extends Resource
                                 ]),
                             Checkbox::make('hidden')
                                 ->label('Hidden'),
+                            Checkbox::make('required')
+                                ->visible(fn (Get $get): bool => $get('type') === 'checkbox')
+                                ->label('Required')
+                                ->helperText('Require the customer to opt in for this checkbox option.'),
                             Checkbox::make('upgradable')
                                 ->visible(fn (Get $get): bool => in_array($get('type'), ['select', 'radio', 'slider']))
                                 ->label('Upgradable')
