@@ -1,0 +1,161 @@
+<?php
+
+namespace Paymenter\Extensions\Others\CyberpunkTheme;
+
+use App\Attributes\ExtensionMeta;
+use App\Classes\Extension\Extension;
+use App\Helpers\ExtensionHelper;
+use Illuminate\Support\Facades\Event;
+use Illuminate\Support\Facades\View;
+use Livewire\Livewire;
+use Paymenter\Extensions\Others\CyberpunkTheme\Http\Middleware\CountVisit;
+use Paymenter\Extensions\Others\CyberpunkTheme\Support\Config;
+use Paymenter\Extensions\Others\CyberpunkTheme\Support\Installer;
+
+#[ExtensionMeta(
+    name: 'Cyberpunk Theme',
+    description: 'Tema Cyberpunk totalmente personalizable para Paymenter: banner con marketing rotativo, comunidad de usuarios, reseñas en productos, avatares, contadores y paletas de colores.',
+    version: '1.0.0',
+    author: 'Sky Ultra Plus',
+    url: 'https://skyultraplus.com',
+    icon: 'ri-cpu-line',
+)]
+class CyberpunkTheme extends Extension
+{
+    public function __construct(public $config = []) {}
+
+    /**
+     * Ajustes propios de la extensión (los del tema se editan en su
+     * propia página "Cyberpunk Theme" del panel de administración).
+     */
+    public function getConfig($values = [])
+    {
+        return [
+            [
+                'name' => 'community_enabled',
+                'label' => 'Activar comunidad',
+                'type' => 'checkbox',
+                'default' => true,
+                'description' => 'Publicaciones, likes y comentarios de los usuarios.',
+            ],
+            [
+                'name' => 'reviews_enabled',
+                'label' => 'Activar reseñas en productos',
+                'type' => 'checkbox',
+                'default' => true,
+                'description' => 'Los clientes pueden dar like y comentar en los planes.',
+            ],
+            [
+                'name' => 'count_visits',
+                'label' => 'Contar visitas',
+                'type' => 'checkbox',
+                'default' => true,
+                'description' => 'Registra visitas únicas por día para el contador del inicio.',
+            ],
+            [
+                'name' => 'auto_moderate',
+                'label' => 'Aprobar publicaciones automáticamente',
+                'type' => 'checkbox',
+                'default' => true,
+                'description' => 'Si se desactiva, las publicaciones necesitan aprobación del administrador.',
+            ],
+        ];
+    }
+
+    /**
+     * Instalación: migraciones + copia del tema + ajustes por defecto.
+     */
+    public function installed()
+    {
+        ExtensionHelper::runMigrations('extensions/Others/CyberpunkTheme/database/migrations');
+
+        // No sobreescribimos ajustes existentes: installed() puede llamarse
+        // más de una vez (subida del ZIP + instalación desde el panel).
+        Installer::install(overwriteSettings: false);
+    }
+
+    public function upgraded($oldVersion = null)
+    {
+        ExtensionHelper::runMigrations('extensions/Others/CyberpunkTheme/database/migrations');
+
+        Installer::install(overwriteSettings: false);
+    }
+
+    public function uninstalled()
+    {
+        ExtensionHelper::rollbackMigrations('extensions/Others/CyberpunkTheme/database/migrations');
+    }
+
+    public function boot()
+    {
+        // El tema comprueba esta bandera para saber si puede usar la comunidad,
+        // las reseñas y los avatares (helper cyber_ext()).
+        config(['cyberpunk.booted' => true]);
+
+        View::addNamespace('cyberpunk', __DIR__ . '/resources/views');
+
+        require __DIR__ . '/routes/web.php';
+
+        Livewire::component('cyberpunk.community', Livewire\Community::class);
+        Livewire::component('cyberpunk.community-preview', Livewire\CommunityPreview::class);
+        Livewire::component('cyberpunk.product-reviews', Livewire\ProductReviews::class);
+        Livewire::component('cyberpunk.avatar', Livewire\Avatar::class);
+        Livewire::component('cyberpunk.custom-page', Livewire\CustomPage::class);
+
+        if (Config::bool('count_visits', true)) {
+            ExtensionHelper::registerMiddleware(CountVisit::class);
+        }
+
+        // Enlaces en la barra de navegación: páginas personalizadas + comunidad
+        Event::listen('navigation', function () {
+            $links = [];
+
+            if (function_exists('cyber_pages')) {
+                foreach (cyber_pages(true) as $page) {
+                    $links[] = [
+                        'name' => $page['title'],
+                        'url' => url('/p/' . $page['slug']),
+                        'icon' => $page['icon'] ?? 'ri-file-text',
+                        'priority' => 40 + (int) ($page['sort'] ?? 0),
+                    ];
+                }
+            }
+
+            if (Config::themeBool('community_enabled', true)) {
+                $links[] = [
+                    'name' => Config::theme('community_name', 'Comunidad'),
+                    'url' => url('/' . Config::communitySlug()),
+                    'icon' => 'ri-chat-smile-2',
+                    'priority' => 35,
+                ];
+            }
+
+            return $links;
+        });
+
+        // Enlace también en la barra lateral del cliente
+        Event::listen('navigation.dashboard', function () {
+            if (!Config::themeBool('community_enabled', true)) {
+                return [];
+            }
+
+            return [
+                [
+                    'name' => Config::theme('community_name', 'Comunidad'),
+                    'url' => url('/' . Config::communitySlug()),
+                    'icon' => 'ri-chat-smile-2',
+                    'priority' => 45,
+                ],
+            ];
+        });
+
+        $permissions = [
+            'admin.cyberpunk.view' => 'Ver configuración del tema Cyberpunk',
+            'admin.cyberpunk.update' => 'Editar configuración del tema Cyberpunk',
+            'admin.cyberpunk.moderate' => 'Moderar la comunidad del tema Cyberpunk',
+        ];
+
+        Event::listen('permissions', fn () => $permissions);
+        Event::listen('api.permissions', fn () => $permissions);
+    }
+}

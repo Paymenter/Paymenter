@@ -1,0 +1,660 @@
+<?php
+
+namespace Paymenter\Extensions\Others\CyberpunkTheme\Admin\Pages;
+
+use Filament\Actions\Action;
+use Filament\Actions\Concerns\InteractsWithActions;
+use Filament\Actions\Contracts\HasActions;
+use Filament\Forms\Components\ColorPicker;
+use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\Repeater;
+use Filament\Forms\Components\RichEditor;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Toggle;
+use Filament\Forms\Concerns\InteractsWithForms;
+use Filament\Forms\Contracts\HasForms;
+use Filament\Notifications\Notification;
+use Filament\Pages\Page;
+use Filament\Schemas\Components\Section;
+use Filament\Schemas\Components\Tabs;
+use Filament\Schemas\Components\Tabs\Tab;
+use Filament\Schemas\Schema;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
+use Spatie\Color\Factory as ColorFactory;
+use Paymenter\Extensions\Others\CyberpunkTheme\Support\Config;
+use Paymenter\Extensions\Others\CyberpunkTheme\Support\Defaults;
+use Paymenter\Extensions\Others\CyberpunkTheme\Support\Installer;
+use Paymenter\Extensions\Others\CyberpunkTheme\Support\Palettes;
+use Paymenter\Extensions\Others\CyberpunkTheme\Support\Visits;
+
+/**
+ * Página de personalización completa del tema Cyberpunk.
+ */
+class CyberpunkThemePage extends Page implements HasActions, HasForms
+{
+    use InteractsWithActions, InteractsWithForms;
+
+    protected string $view = 'cyberpunk::admin.theme-page';
+
+    protected static string|\UnitEnum|null $navigationGroup = 'Extensions';
+
+    protected static ?string $navigationLabel = 'Cyberpunk Theme';
+
+    protected static ?string $title = 'Cyberpunk Theme';
+
+    protected static string|\BackedEnum|null $navigationIcon = 'ri-cpu-line';
+
+    protected static ?int $navigationSort = 1;
+
+    public ?array $data = [];
+
+    public string $palette = '';
+
+    public function mount(): void
+    {
+        $this->form->fill(Config::all());
+    }
+
+    // ------------------------------------------------------------------
+    public function form(Schema $schema): Schema
+    {
+        return $schema
+            ->components([
+                Tabs::make('cyberpunk')
+                    ->persistTabInQueryString()
+                    ->columnSpanFull()
+                    ->tabs([
+                        $this->generalTab(),
+                        $this->appearanceTab(),
+                        $this->bannerTab(),
+                        $this->marketingTab(),
+                        $this->pagesTab(),
+                        $this->communityTab(),
+                        $this->socialsTab(),
+                    ]),
+            ])
+            ->statePath('data');
+    }
+
+    protected function generalTab(): Tab
+    {
+        return Tab::make('General')
+            ->icon('ri-settings-3-line')
+            ->schema([
+                Section::make('Secciones del inicio')
+                    ->description('Activa o desactiva cada bloque de la página principal.')
+                    ->columns(3)
+                    ->schema([
+                        Toggle::make('banner_enabled')->label('Banner principal'),
+                        Toggle::make('marketing_enabled')->label('Bloques de marketing'),
+                        Toggle::make('stats_enabled')->label('Estadísticas'),
+                        Toggle::make('uptime_enabled')->label('Contador de tiempo activo'),
+                        Toggle::make('visitors_enabled')->label('Contador de visitas'),
+                        Toggle::make('quick_links_enabled')->label('Accesos rápidos'),
+                        Toggle::make('socials_enabled')->label('Redes sociales'),
+                        Toggle::make('community_enabled')->label('Comunidad'),
+                        Toggle::make('reviews_enabled')->label('Reseñas en productos'),
+                    ]),
+
+                Section::make('Tienda')
+                    ->columns(3)
+                    ->schema([
+                        Toggle::make('direct_checkout')
+                            ->label('Checkout directo')
+                            ->helperText('Saltar la página del producto.'),
+                        Toggle::make('small_images')->label('Imágenes pequeñas'),
+                        Toggle::make('show_category_description')->label('Descripción de categorías'),
+                    ]),
+
+                Section::make('Textos')
+                    ->columns(2)
+                    ->schema([
+                        Select::make('logo_display')
+                            ->label('Mostrar logo')
+                            ->options([
+                                'logo-and-name' => 'Logo y nombre',
+                                'logo-only' => 'Sólo logo',
+                            ]),
+                        TextInput::make('footer_text')
+                            ->label('Texto del pie de página')
+                            ->maxLength(255),
+                        Textarea::make('home_page_text')
+                            ->label('Texto extra del inicio (markdown)')
+                            ->rows(4)
+                            ->columnSpanFull()
+                            ->helperText('Opcional. Se muestra debajo del marketing.'),
+                    ]),
+            ]);
+    }
+
+    protected function appearanceTab(): Tab
+    {
+        return Tab::make('Apariencia')
+            ->icon('ri-palette-line')
+            ->schema([
+                Section::make('Paletas de colores')
+                    ->description('Aplica una paleta creada por el sistema con un clic, o define los colores a mano más abajo.')
+                    ->schema([
+                        Select::make('palette_choice')
+                            ->label('Paleta')
+                            ->options(Palettes::options())
+                            ->live()
+                            ->afterStateUpdated(function ($state, $set) {
+                                if (!$state) {
+                                    return;
+                                }
+
+                                foreach (Palettes::colors($state) as $key => $value) {
+                                    $set($key, $value);
+                                }
+
+                                Notification::make()
+                                    ->title('Paleta cargada')
+                                    ->body('Pulsa "Guardar cambios" para aplicarla en la web.')
+                                    ->success()
+                                    ->send();
+                            })
+                            ->dehydrated(false)
+                            ->helperText('Al elegir una paleta se rellenan todos los colores de abajo.'),
+                    ]),
+
+                Section::make('Colores — modo oscuro')
+                    ->description('El tema Cyberpunk está pensado para el modo oscuro.')
+                    ->columns(3)
+                    ->schema([
+                        $this->colorField('dark-primary', 'Primario'),
+                        $this->colorField('dark-secondary', 'Secundario'),
+                        $this->colorField('dark-accent', 'Acento (neón)'),
+                        $this->colorField('dark-background', 'Fondo'),
+                        $this->colorField('dark-background-secondary', 'Fondo secundario'),
+                        $this->colorField('dark-neutral', 'Bordes'),
+                        $this->colorField('dark-base', 'Texto'),
+                        $this->colorField('dark-muted', 'Texto apagado'),
+                        $this->colorField('dark-inverted', 'Texto invertido'),
+                    ]),
+
+                Section::make('Colores — modo claro')
+                    ->columns(3)
+                    ->collapsed()
+                    ->schema([
+                        $this->colorField('primary', 'Primario'),
+                        $this->colorField('secondary', 'Secundario'),
+                        $this->colorField('accent', 'Acento (neón)'),
+                        $this->colorField('background', 'Fondo'),
+                        $this->colorField('background-secondary', 'Fondo secundario'),
+                        $this->colorField('neutral', 'Bordes'),
+                        $this->colorField('base', 'Texto'),
+                        $this->colorField('muted', 'Texto apagado'),
+                        $this->colorField('inverted', 'Texto invertido'),
+                    ]),
+
+                Section::make('Efectos y fondo')
+                    ->columns(3)
+                    ->schema([
+                        Toggle::make('effect_neon')->label('Resplandor neón'),
+                        Toggle::make('effect_scanlines')->label('Líneas de escaneo'),
+                        Toggle::make('effect_grid')->label('Rejilla de fondo'),
+                        Toggle::make('effect_glitch')->label('Glitch en títulos'),
+                        Toggle::make('effect_noise')->label('Ruido de pantalla'),
+                        Select::make('font_family')
+                            ->label('Tipografía')
+                            ->options([
+                                'system' => 'Sistema (más rápida)',
+                                'orbitron' => 'Orbitron (futurista)',
+                                'rajdhani' => 'Rajdhani (tecnológica)',
+                                'share-tech' => 'Share Tech Mono (terminal)',
+                            ]),
+                        FileUpload::make('background_image')
+                            ->label('Imagen de fondo del sitio')
+                            ->image()
+                            ->disk('public')
+                            ->visibility('public')
+                            ->directory('cyberpunk/backgrounds')
+                            ->columnSpan(2)
+                            ->helperText('Opcional. Déjalo vacío para usar sólo el color de fondo.'),
+                        TextInput::make('background_overlay')
+                            ->label('Opacidad de la capa (%)')
+                            ->numeric()
+                            ->minValue(0)
+                            ->maxValue(100)
+                            ->helperText('100 = fondo sólido, 0 = imagen totalmente visible.'),
+                    ]),
+            ]);
+    }
+
+    /**
+     * Selector de color que siempre guarda el valor en formato hsl(),
+     * que es el que usan las variables CSS del tema.
+     */
+    protected function colorField(string $name, string $label): ColorPicker
+    {
+        return ColorPicker::make($name)
+            ->label($label)
+            ->hsl()
+            ->live()
+            ->rules([
+                function () {
+                    return function (string $attribute, $value, \Closure $fail) {
+                        if ($value === null || $value === '') {
+                            return;
+                        }
+
+                        try {
+                            ColorFactory::fromString(trim((string) $value));
+                        } catch (\Exception $e) {
+                            $fail('El color no es válido.');
+                        }
+                    };
+                },
+            ])
+            ->afterStateUpdated(function ($state, callable $set) use ($name) {
+                if ($state === null || $state === '') {
+                    return;
+                }
+
+                try {
+                    $set($name, preg_replace('/,\s*/', ', ', ColorFactory::fromString(trim((string) $state))->toHsl()->__toString()));
+                } catch (\Exception $e) {
+                    // Dejamos el valor tal cual si no se puede convertir.
+                }
+            });
+    }
+
+    protected function bannerTab(): Tab
+    {
+        return Tab::make('Banner')
+            ->icon('ri-slideshow-line')
+            ->schema([
+                Section::make('Ajustes del banner')
+                    ->description('El banner se activa o desactiva desde la pestaña General.')
+                    ->columns(2)
+                    ->schema([
+                        TextInput::make('banner_interval')
+                            ->label('Cambio de imagen cada (ms)')
+                            ->numeric()
+                            ->minValue(1500)
+                            ->helperText('6000 = 6 segundos.'),
+                    ]),
+
+                Section::make('Diapositivas')
+                    ->description('Cada diapositiva puede tener su propia imagen, título, texto y botón.')
+                    ->schema([
+                        Repeater::make('banner_slides')
+                            ->label('')
+                            ->columns(2)
+                            ->reorderable()
+                            ->collapsible()
+                            ->itemLabel(fn (array $state): ?string => $state['title'] ?? 'Diapositiva')
+                            ->defaultItems(1)
+                            ->addActionLabel('Añadir diapositiva')
+                            ->schema([
+                                Toggle::make('enabled')->label('Activa')->default(true),
+                                FileUpload::make('image')
+                                    ->label('Imagen')
+                                    ->image()
+                                    ->disk('public')
+                                    ->visibility('public')
+                                    ->directory('cyberpunk/banner'),
+                                TextInput::make('title')->label('Título')->maxLength(120),
+                                Textarea::make('subtitle')->label('Texto')->rows(2)->maxLength(300),
+                                TextInput::make('button_label')->label('Texto del botón')->maxLength(60),
+                                TextInput::make('button_url')
+                                    ->label('URL del botón')
+                                    ->helperText('Vacío = el sistema detecta la tienda automáticamente.'),
+                            ]),
+                    ]),
+
+                Section::make('Palabras de marketing en movimiento')
+                    ->description('Se muestran rotando en el banner y en la cinta deslizante.')
+                    ->schema([
+                        Repeater::make('marketing_words')
+                            ->label('')
+                            ->simple(
+                                TextInput::make('text')->label('Frase')->required()->maxLength(120)
+                            )
+                            ->reorderable()
+                            ->addActionLabel('Añadir frase'),
+                    ]),
+            ]);
+    }
+
+    protected function marketingTab(): Tab
+    {
+        return Tab::make('Marketing')
+            ->icon('ri-megaphone-line')
+            ->schema([
+                Section::make('Encabezado de la sección')
+                    ->columns(2)
+                    ->schema([
+                        TextInput::make('marketing_title')->label('Título')->maxLength(150),
+                        TextInput::make('marketing_subtitle')->label('Subtítulo')->maxLength(255),
+                    ]),
+
+                Section::make('Tarjetas de servicios')
+                    ->description('Se muestran ANTES de los productos, en la página de inicio.')
+                    ->schema([
+                        Repeater::make('marketing_cards')
+                            ->label('')
+                            ->columns(2)
+                            ->reorderable()
+                            ->collapsible()
+                            ->itemLabel(fn (array $state): ?string => $state['title'] ?? 'Tarjeta')
+                            ->addActionLabel('Añadir tarjeta')
+                            ->schema([
+                                Toggle::make('enabled')->label('Activa')->default(true),
+                                TextInput::make('icon')
+                                    ->label('Icono')
+                                    ->default('ri-server-fill')
+                                    ->helperText('Iconos Remix, por ejemplo: ri-server-fill, ri-whatsapp-fill'),
+                                TextInput::make('title')->label('Título')->required()->maxLength(80),
+                                TextInput::make('url')->label('Enlace (opcional)'),
+                                Textarea::make('description')->label('Descripción')->rows(2)->columnSpanFull()->maxLength(255),
+                            ]),
+                    ]),
+
+                Section::make('Ventajas')
+                    ->description('Fila de ventajas cortas debajo de las tarjetas.')
+                    ->schema([
+                        Repeater::make('features')
+                            ->label('')
+                            ->columns(3)
+                            ->reorderable()
+                            ->collapsible()
+                            ->itemLabel(fn (array $state): ?string => $state['title'] ?? 'Ventaja')
+                            ->addActionLabel('Añadir ventaja')
+                            ->schema([
+                                TextInput::make('icon')->label('Icono')->default('ri-check-double-fill'),
+                                TextInput::make('title')->label('Título')->required()->maxLength(80),
+                                TextInput::make('description')->label('Descripción')->maxLength(150),
+                            ]),
+                    ]),
+
+                Section::make('Accesos rápidos')
+                    ->description('Si lo dejas vacío, el sistema detecta y enlaza automáticamente las categorías de la tienda.')
+                    ->schema([
+                        Repeater::make('quick_links')
+                            ->label('')
+                            ->columns(2)
+                            ->reorderable()
+                            ->collapsible()
+                            ->itemLabel(fn (array $state): ?string => $state['label'] ?? 'Acceso')
+                            ->addActionLabel('Añadir acceso rápido')
+                            ->schema([
+                                Toggle::make('enabled')->label('Activo')->default(true),
+                                TextInput::make('icon')->label('Icono')->default('ri-flashlight-fill'),
+                                TextInput::make('label')->label('Nombre')->required()->maxLength(80),
+                                TextInput::make('url')->label('URL')->required(),
+                                TextInput::make('description')->label('Descripción')->maxLength(120),
+                                Select::make('target')
+                                    ->label('Abrir en')
+                                    ->options(['' => 'Misma pestaña', '_blank' => 'Pestaña nueva']),
+                            ]),
+                    ]),
+            ]);
+    }
+
+    protected function pagesTab(): Tab
+    {
+        return Tab::make('Páginas')
+            ->icon('ri-pages-line')
+            ->schema([
+                Section::make('Páginas personalizadas')
+                    ->description('Crea páginas nuevas con tu propio HTML. Aparecerán en la barra de navegación y estarán disponibles en /p/tu-slug')
+                    ->schema([
+                        Repeater::make('custom_pages')
+                            ->label('')
+                            ->columns(2)
+                            ->reorderable()
+                            ->collapsible()
+                            ->itemLabel(fn (array $state): ?string => $state['title'] ?? 'Página')
+                            ->addActionLabel('Añadir página')
+                            ->schema([
+                                TextInput::make('title')
+                                    ->label('Nombre')
+                                    ->required()
+                                    ->live(onBlur: true)
+                                    ->maxLength(80)
+                                    ->afterStateUpdated(function ($state, $set, $get) {
+                                        if (!$get('slug')) {
+                                            $set('slug', Str::slug((string) $state));
+                                        }
+                                    }),
+                                TextInput::make('slug')
+                                    ->label('Slug (URL)')
+                                    ->required()
+                                    ->prefix(url('/p') . '/')
+                                    ->rule('regex:/^[A-Za-z0-9_-]+$/')
+                                    ->maxLength(60),
+                                Toggle::make('enabled')->label('Publicada')->default(true),
+                                Toggle::make('in_navigation')->label('Mostrar en la barra de navegación')->default(true),
+                                Toggle::make('show_title')->label('Mostrar el título en la página')->default(true),
+                                TextInput::make('icon')->label('Icono')->default('ri-file-text'),
+                                TextInput::make('sort')->label('Orden')->numeric()->default(0),
+                                TextInput::make('description')->label('Descripción corta')->maxLength(200),
+                                RichEditor::make('content')
+                                    ->label('Contenido')
+                                    ->columnSpanFull()
+                                    ->helperText('Puedes escribir texto con formato o pegar HTML directamente.'),
+                            ]),
+                    ]),
+            ]);
+    }
+
+    protected function communityTab(): Tab
+    {
+        return Tab::make('Comunidad')
+            ->icon('ri-chat-smile-2-line')
+            ->schema([
+                Section::make('Sección de comunidad')
+                    ->description('La comunidad y las reseñas se activan o desactivan desde la pestaña General.')
+                    ->columns(2)
+                    ->schema([
+                        Toggle::make('avatar_uploads_enabled')->label('Permitir avatares personalizados'),
+                        TextInput::make('community_name')
+                            ->label('Nombre de la sección')
+                            ->maxLength(60)
+                            ->helperText('Aparece en la barra de navegación.'),
+                        TextInput::make('community_slug')
+                            ->label('URL de la sección')
+                            ->prefix(url('/') . '/')
+                            ->rule('regex:/^[A-Za-z0-9_-]+$/')
+                            ->maxLength(60)
+                            ->helperText('Al cambiarla se actualiza la ruta pública.'),
+                        Textarea::make('community_description')
+                            ->label('Descripción')
+                            ->rows(2)
+                            ->columnSpanFull()
+                            ->maxLength(255),
+                        TextInput::make('community_media_limit')
+                            ->label('Máximo de archivos por publicación')
+                            ->numeric()
+                            ->minValue(1)
+                            ->maxValue(10)
+                            ->helperText('Las reseñas de los planes se activan en la pestaña General. El plan con más likes y comentarios recibe la etiqueta "Más popular".'),
+                    ]),
+            ]);
+    }
+
+    protected function socialsTab(): Tab
+    {
+        return Tab::make('Redes sociales')
+            ->icon('ri-share-circle-line')
+            ->schema([
+                Section::make('Enlaces')
+                    ->description('Deja en blanco las redes que no uses: no se mostrarán en la web. El bloque se activa desde la pestaña General.')
+                    ->columns(2)
+                    ->schema([
+                        TextInput::make('social_facebook')->label('Facebook')->url()->prefixIcon('ri-facebook-circle-fill'),
+                        TextInput::make('social_discord')->label('Discord')->url()->prefixIcon('ri-discord-fill'),
+                        TextInput::make('social_instagram')->label('Instagram')->url()->prefixIcon('ri-instagram-fill'),
+                        TextInput::make('social_whatsapp_channel')->label('Canal de WhatsApp')->url()->prefixIcon('ri-whatsapp-fill'),
+                        TextInput::make('social_whatsapp_group')->label('Grupo de WhatsApp')->url()->prefixIcon('ri-group-2-fill'),
+                        TextInput::make('social_telegram')->label('Telegram')->url()->prefixIcon('ri-telegram-fill'),
+                        TextInput::make('social_youtube')->label('YouTube')->url()->prefixIcon('ri-youtube-fill'),
+                        TextInput::make('social_tiktok')->label('TikTok')->url()->prefixIcon('ri-tiktok-fill'),
+                        TextInput::make('social_x')->label('X / Twitter')->url()->prefixIcon('ri-twitter-x-fill'),
+                        TextInput::make('social_github')->label('GitHub')->url()->prefixIcon('ri-github-fill'),
+                    ]),
+            ]);
+    }
+
+    // ------------------------------------------------------------------
+    protected function getHeaderActions(): array
+    {
+        return [
+            Action::make('save')
+                ->label('Guardar cambios')
+                ->icon('ri-save-3-line')
+                ->action('save')
+                ->keyBindings(['mod+s']),
+
+            Action::make('activate')
+                ->label(Installer::isActive() ? 'Tema activo' : 'Activar tema')
+                ->icon('ri-magic-line')
+                ->color(Installer::isActive() ? 'gray' : 'success')
+                ->disabled(Installer::isActive())
+                ->requiresConfirmation()
+                ->modalDescription('El tema Cyberpunk pasará a ser el tema activo de la tienda.')
+                ->action(function () {
+                    $this->authorizeUpdate();
+
+                    if (Installer::activateTheme()) {
+                        Notification::make()->title('Tema Cyberpunk activado')->success()->send();
+                    } else {
+                        Notification::make()
+                            ->title('No se pudo activar')
+                            ->body('No se encontró la carpeta themes/cyberpunk. Usa "Reinstalar archivos".')
+                            ->danger()
+                            ->send();
+                    }
+                }),
+
+            Action::make('reinstall')
+                ->label('Reinstalar archivos')
+                ->icon('ri-refresh-line')
+                ->color('warning')
+                ->requiresConfirmation()
+                ->modalDescription('Vuelve a copiar el tema y los assets compilados desde la extensión. No borra tu configuración.')
+                ->action(function () {
+                    $this->authorizeUpdate();
+
+                    $report = Installer::install(overwriteSettings: false, activate: false);
+
+                    if (count($report['errors']) > 0) {
+                        Notification::make()
+                            ->title('Reinstalación con avisos')
+                            ->body(implode(' · ', $report['errors']))
+                            ->warning()
+                            ->send();
+
+                        return;
+                    }
+
+                    Notification::make()->title('Archivos del tema reinstalados')->success()->send();
+                }),
+
+            Action::make('resetVisits')
+                ->label('Reiniciar visitas')
+                ->icon('ri-eye-off-line')
+                ->color('gray')
+                ->requiresConfirmation()
+                ->action(function () {
+                    $this->authorizeUpdate();
+                    Visits::reset();
+                    Notification::make()->title('Contador de visitas reiniciado')->success()->send();
+                }),
+
+            Action::make('resetAll')
+                ->label('Restablecer todo')
+                ->icon('ri-arrow-go-back-line')
+                ->color('danger')
+                ->requiresConfirmation()
+                ->modalHeading('Restablecer la configuración de fábrica')
+                ->modalDescription('Se borrarán TODOS los ajustes del tema (colores, banner, marketing, páginas y redes) y se volverá a la configuración original. Las publicaciones de la comunidad no se tocan.')
+                ->action(function () {
+                    $this->authorizeUpdate();
+
+                    Config::reset();
+                    $this->form->fill(Config::all());
+
+                    Notification::make()->title('Configuración restablecida')->success()->send();
+                }),
+        ];
+    }
+
+    public function save(): void
+    {
+        $this->authorizeUpdate();
+
+        $data = $this->form->getState();
+
+        // Normalizamos las listas para no guardar filas vacías
+        foreach (Config::ARRAY_KEYS as $key) {
+            if (!isset($data[$key]) || !is_array($data[$key])) {
+                $data[$key] = [];
+                continue;
+            }
+
+            $data[$key] = array_values(array_filter($data[$key], function ($item) {
+                if (!is_array($item)) {
+                    return $item !== null && $item !== '';
+                }
+
+                return count(array_filter($item, fn ($value) => $value !== null && $value !== '' && $value !== false)) > 0;
+            }));
+        }
+
+        // El slug de la comunidad siempre limpio
+        if (isset($data['community_slug'])) {
+            $data['community_slug'] = Str::slug((string) $data['community_slug']) ?: 'comunidad';
+        }
+
+        Config::save($data);
+
+        Notification::make()
+            ->title('Configuración guardada')
+            ->body('Los cambios ya están aplicados en la web.')
+            ->success()
+            ->send();
+    }
+
+    protected function authorizeUpdate(): void
+    {
+        /** @var \App\Models\User $user */
+        $user = Auth::user();
+
+        abort_unless($user && ($user->hasPermission('admin.settings.update') || $user->hasPermission('admin.cyberpunk.update')), 403);
+    }
+
+    public static function canAccess(): bool
+    {
+        /** @var \App\Models\User $user */
+        $user = Auth::user();
+
+        return $user && ($user->hasPermission('admin.settings.view') || $user->hasPermission('admin.cyberpunk.view'));
+    }
+
+    public function getSubheading(): ?string
+    {
+        $state = Installer::isActive() ? 'activo' : 'no activo';
+        $assets = Installer::hasAssets() ? 'assets compilados listos' : 'faltan los assets compilados';
+
+        return "Tema {$state} · {$assets}";
+    }
+
+    /**
+     * Datos auxiliares para la vista.
+     */
+    public function getViewData(): array
+    {
+        return [
+            'themeActive' => Installer::isActive(),
+            'hasAssets' => Installer::hasAssets(),
+            'palettes' => Palettes::all(),
+            'defaults' => Defaults::settings(),
+        ];
+    }
+}
