@@ -1,40 +1,62 @@
-# Cyberpunk Theme — paquete distribuible
+# Cyberpunk Theme para Paymenter — Sky Ultra Plus
 
-Este directorio contiene el paquete completo del **tema Cyberpunk para Paymenter**
-creado para *Sky Ultra Plus*. No modifica ningún archivo del núcleo de Paymenter
-ni del tema `default`.
+Dos paquetes, según cómo lo quieras instalar. **Ninguno modifica el núcleo de
+Paymenter ni el tema `default`.**
 
-## Contenido
+| Archivo | Qué es | Dónde se instala |
+|---|---|---|
+| `cyberpunk-theme.zip` | **El tema** (vía oficial de Paymenter) + assets compilados + la extensión + `instalar.sh` | `themes/cyberpunk`, `public/cyberpunk` y, opcional, `extensions/Others/` |
+| `CyberpunkTheme.zip` | **Sólo la extensión** (lleva el tema dentro y lo copia sola) | Subidor de ZIP del panel: Admin → Extensions → Upload Extension |
 
-| Ruta | Qué es |
-|---|---|
-| `CyberpunkTheme/` | Código fuente de la extensión + el tema + los assets compilados |
-| `CyberpunkTheme-v1.0.0.zip` | **El archivo que se sube** en Admin → Extensions → Upload Extension |
+## Importante: Paymenter no sube temas desde el panel
 
-## Instalación rápida
+Verificado en el código de este mismo repositorio:
 
-1. Descarga `CyberpunkTheme-v1.0.0.zip`.
-2. Panel de Paymenter → **Admin → Extensions → Available Extensions**.
-3. **Upload Extension** → sube el ZIP.
-4. Pestaña **Ready to Install** → instala *Cyberpunk Theme*.
-5. En la pantalla de la extensión activa el interruptor **Enabled** y guarda.
-6. Ve a **Admin → Extensions → Cyberpunk Theme** para personalizarlo todo.
+- `app/Admin/Pages/Extension.php` → `UploadExtensionService` es el **único** subidor
+  de ZIP del panel, y sólo acepta clases que heredan de `Extension`, `Gateway` o
+  `Server`; las mueve a `extensions/`, nunca a `themes/`.
+- Los temas se descubren en disco: `app/Classes/Settings.php` los lista con
+  `glob(base_path('themes/*'))` y se seleccionan en **Admin → Settings → Theme**.
+- `php artisan app:theme:create` sólo copia carpetas dentro de `themes/`.
 
-Durante el paso 4 el instalador copia el tema a `themes/cyberpunk`, copia los assets
-ya compilados a `public/cyberpunk`, ejecuta las migraciones, crea la configuración
-por defecto (marketing en español) y deja el tema activo. No hace falta Node ni npm.
+Por eso un tema se instala **copiando archivos a `themes/<nombre>/`**, como indica la
+documentación oficial. `cyberpunk-theme.zip` hace exactamente eso.
 
-## Documentación completa
+`CyberpunkTheme.zip` existe sólo como atajo: es una extensión de verdad (por eso el
+subidor la acepta) que, al instalarse, copia el tema a `themes/cyberpunk` por ti.
 
-Está en [`CyberpunkTheme/README.md`](CyberpunkTheme/README.md).
+## Instalación recomendada
 
-## Regenerar el ZIP tras un cambio
+```bash
+unzip cyberpunk-theme.zip
+cd cyberpunk-theme
+bash instalar.sh /ruta/a/paymenter
+```
+
+Instrucciones completas, instalación manual y solución de problemas del subidor:
+[`LEEME.md`](LEEME.md).
+
+Documentación del tema y de todas sus opciones:
+[`CyberpunkTheme/README.md`](CyberpunkTheme/README.md).
+
+## Regenerar los ZIP tras un cambio
 
 ```bash
 # desde la raíz de Paymenter
-npm run build cyberpunk                       # recompila los assets del tema
-rm -rf cyberpunk-theme/CyberpunkTheme/theme cyberpunk-theme/CyberpunkTheme/assets
-cp -r themes/cyberpunk  cyberpunk-theme/CyberpunkTheme/theme
-cp -r public/cyberpunk  cyberpunk-theme/CyberpunkTheme/assets
-cd cyberpunk-theme && zip -r CyberpunkTheme-v1.0.0.zip CyberpunkTheme
+npm run build cyberpunk
+
+cd cyberpunk-theme
+rm -rf CyberpunkTheme/theme CyberpunkTheme/assets
+cp -r ../themes/cyberpunk      CyberpunkTheme/theme
+cp -r ../public/cyberpunk      CyberpunkTheme/assets
+zip -rq CyberpunkTheme.zip CyberpunkTheme
+
+mkdir -p build-tmp/cyberpunk-theme
+cp -r ../themes/cyberpunk build-tmp/cyberpunk-theme/cyberpunk
+mkdir -p build-tmp/cyberpunk-theme/public
+cp -r ../public/cyberpunk/. build-tmp/cyberpunk-theme/public/
+cp -r CyberpunkTheme build-tmp/cyberpunk-theme/CyberpunkTheme
+cp instalar.sh LEEME.md build-tmp/cyberpunk-theme/
+(cd build-tmp && zip -rq ../cyberpunk-theme.zip cyberpunk-theme)
+rm -rf build-tmp
 ```

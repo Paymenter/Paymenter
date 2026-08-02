@@ -69,7 +69,9 @@ class Installer
         $destination = base_path('themes/' . Config::THEME);
 
         if (!is_dir($source)) {
-            throw new \RuntimeException('No se encontró la carpeta del tema dentro de la extensión.');
+            // La extensión puede instalarse sin el tema dentro cuando éste ya
+            // se copió a mano o con instalar.sh. No es un error.
+            return false;
         }
 
         if (!is_dir(dirname($destination))) {
