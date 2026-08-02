@@ -1,12 +1,38 @@
 # Tema Cyberpunk para Paymenter — Sky Ultra Plus
 
-Paquetes disponibles:
+Paquetes disponibles (elige según lo que admita tu servidor):
 
-| Paquete | Qué instala | Dónde |
-|---|---|---|
-| `cyberpunk-tema.zip` | **El tema** (obligatorio) | `themes/cyberpunk` + `public/cyberpunk` |
-| `cyberpunk-extension.zip` | **La extensión** (opcional) | `extensions/Others/CyberpunkTheme` |
-| `cyberpunk-todo-en-uno.zip` | **Extensión + tema dentro**: instala las dos cosas de una vez | todo lo anterior |
+| Paquete | Qué instala | Dónde | Tamaño |
+|---|---|---|---|
+| `cyberpunk-extension.zip` | La extensión sola | `extensions/Others/CyberpunkTheme` | 58 KB |
+| `cyberpunk-extension-con-tema.zip` | Extensión + tema (sin estilos) | `extensions/…` + `themes/cyberpunk` | 190 KB |
+| `cyberpunk-assets.zip` | Sólo los estilos compilados | `public/cyberpunk` | 223 KB |
+| `cyberpunk-tema.zip` | El tema completo + estilos | `themes/cyberpunk` + `public/cyberpunk` | 361 KB |
+| `cyberpunk-todo-en-uno.zip` | Todo de una vez | las tres carpetas | 413 KB |
+
+## Si el subidor del panel rechaza los archivos grandes
+
+Si `cyberpunk-extension.zip` (58 KB) sube pero `cyberpunk-todo-en-uno.zip` (413 KB)
+no, tu servidor tiene un límite de subida bajo. Compruébalo:
+
+```bash
+php -i | grep -E "upload_max_filesize|post_max_size|memory_limit"
+grep -r client_max_body_size /etc/nginx/ 2>/dev/null
+```
+
+Súbelo (por ejemplo a 20M) en tu `php.ini` y, si usas Nginx, añade
+`client_max_body_size 20M;` dentro del bloque `server`. Después reinicia
+PHP-FPM y Nginx.
+
+Mientras tanto, la combinación que funciona con límites bajos es:
+
+1. Sube por el panel `cyberpunk-extension-con-tema.zip` (190 KB) → instala la
+   extensión **y** el tema.
+2. Copia por FTP el contenido de `cyberpunk-assets.zip` a `public/cyberpunk/`.
+
+> El tema **no se activa solo** si faltan los estilos: se quedaría la tienda sin
+> diseño. En cuanto copies los assets, entra en **Admin → Extensions → Cyberpunk
+> Theme** y pulsa **Activar tema**.
 
 El **tema funciona solo**. La **extensión** añade el panel de personalización,
 la comunidad, las reseñas en los planes, los avatares y el contador de visitas.

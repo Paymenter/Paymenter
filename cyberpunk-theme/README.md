@@ -4,18 +4,24 @@ Dos paquetes separados. **Ninguno modifica el núcleo de Paymenter ni el tema `d
 
 | Archivo | Qué es | Se instala en | Tamaño |
 |---|---|---|---|
-| `cyberpunk-tema.zip` | **El tema** (obligatorio) + assets ya compilados + `instalar.sh` | `themes/cyberpunk` y `public/cyberpunk` | 362 KB |
-| `cyberpunk-extension.zip` | **La extensión** (opcional): panel de personalización, comunidad, reseñas, avatares, visitas | `extensions/Others/CyberpunkTheme` | 58 KB |
-| `cyberpunk-todo-en-uno.zip` | **Extensión + tema dentro**: al instalarla copia el tema sola | todo lo anterior de una vez | 414 KB |
+| `cyberpunk-extension.zip` | **La extensión sola** | `extensions/Others/CyberpunkTheme` | 58 KB |
+| `cyberpunk-extension-con-tema.zip` | **Extensión + tema**, sin los estilos compilados | `extensions/…` y `themes/cyberpunk` | 190 KB |
+| `cyberpunk-assets.zip` | **Sólo los estilos compilados** (CSS y JS) | `public/cyberpunk` | 223 KB |
+| `cyberpunk-tema.zip` | **El tema completo** + estilos + `instalar.sh` | `themes/cyberpunk` y `public/cyberpunk` | 361 KB |
+| `cyberpunk-todo-en-uno.zip` | **Todo**: extensión + tema + estilos | las tres carpetas de una vez | 413 KB |
 
 El tema funciona por sí solo; la extensión añade el panel de administración y las
 funciones sociales encima.
 
-**¿Cuál usar?** Si el subidor del panel te funciona, sube directamente
-`cyberpunk-todo-en-uno.zip`: al instalarlo copia el tema a `themes/cyberpunk`, los
-assets a `public/cyberpunk` y lo deja activo. Para eso necesita que el usuario del
-servidor web pueda escribir en `themes/` y `public/`. Si no, usa los dos paquetes
-separados por terminal.
+**¿Cuál usar?**
+
+- **Por terminal (siempre funciona):** `cyberpunk-tema.zip` + `cyberpunk-extension.zip`.
+- **Todo desde el panel:** `cyberpunk-todo-en-uno.zip` (necesita que el subidor
+  admita 413 KB y que el usuario web pueda escribir en `themes/` y `public/`).
+- **Si el subidor rechaza archivos grandes:** sube `cyberpunk-extension-con-tema.zip`
+  (190 KB) por el panel y copia `cyberpunk-assets.zip` a `public/cyberpunk/` por FTP.
+
+Los ZIP se generan con `bash build.sh` a partir de las fuentes de esta carpeta.
 
 ## Instalación rápida
 

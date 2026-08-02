@@ -521,6 +521,17 @@ class CyberpunkThemePage extends Page implements HasActions, HasForms
                 ->action(function () {
                     $this->authorizeUpdate();
 
+                    if (!Installer::hasAssets()) {
+                        Notification::make()
+                            ->title('Faltan los estilos del tema')
+                            ->body('No existe public/cyberpunk/manifest.json. Copia la carpeta public/ del paquete o ejecuta "npm run build cyberpunk" antes de activarlo, o la tienda se verá sin diseño.')
+                            ->danger()
+                            ->persistent()
+                            ->send();
+
+                        return;
+                    }
+
                     if (Installer::activateTheme()) {
                         Notification::make()->title('Tema Cyberpunk activado')->success()->send();
                     } else {

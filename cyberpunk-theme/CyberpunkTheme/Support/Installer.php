@@ -47,9 +47,15 @@ class Installer
             $report['errors'][] = 'Ajustes: ' . $e->getMessage();
         }
 
+        // Sólo activamos el tema si los estilos están en public/<tema>/.
+        // Activarlo sin ellos dejaría la tienda sin diseño.
         if ($activate) {
             try {
-                $report['activated'] = self::activateTheme();
+                if (self::hasAssets()) {
+                    $report['activated'] = self::activateTheme();
+                } else {
+                    $report['errors'][] = 'No se activó el tema porque faltan los assets compilados en public/' . Config::THEME . '. Copia la carpeta public/ del paquete o ejecuta: npm run build ' . Config::THEME;
+                }
             } catch (\Throwable $e) {
                 $report['errors'][] = 'Activación: ' . $e->getMessage();
             }
