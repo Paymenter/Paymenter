@@ -20,7 +20,7 @@
 <x-modal :title="__('services.label_modal_title')" open="{{ $editLabel }}">
     <x-slot name="closeTrigger">
         <div class="flex gap-4">
-            <button wire:click="$set('editLabel', false)" @click="open = false" class="text-primary-100">
+            <button wire:click="$set('editLabel', false)" @click="open = false" class="text-base">
                 <x-ri-close-fill class="size-6" />
             </button>
         </div>

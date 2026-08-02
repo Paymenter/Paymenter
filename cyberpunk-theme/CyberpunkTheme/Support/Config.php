@@ -28,6 +28,8 @@ class Config
         'features',
         'custom_pages',
         'quick_links',
+        'anim_light',
+        'anim_dark',
     ];
 
     /** Claves booleanas */
@@ -210,5 +212,7 @@ class Config
         \Illuminate\Support\Facades\Cache::forget('cyberpunk.home.stats');
         \Illuminate\Support\Facades\Cache::forget('cyberpunk.quick_links.auto');
         \Illuminate\Support\Facades\Cache::forget('cyberpunk.reviews.popular');
+        \Illuminate\Support\Facades\Cache::forget('cyberpunk.reviews.stats');
+        \Illuminate\Support\Facades\Cache::forget('cyberpunk.visits');
     }
 }

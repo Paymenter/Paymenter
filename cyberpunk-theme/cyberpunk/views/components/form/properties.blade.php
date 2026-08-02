@@ -22,7 +22,7 @@
                         @checked($properties[$property->key] === $value ?? false) label="{{ $value }}" @required($property->required)
                         wire:model="properties.{{ $property->key }}" :disabled="$property->non_editable && isset($properties[$property->key])"
                         class="form-radio size-4 text-primary rounded-full focus:ring-secondary hover:bg-secondary ring-offset-primary-800 focus:ring-2 bg-background-secondary border-neutral" />
-                    <label class="ml-2 text-sm text-primary-100"
+                    <label class="ml-2 text-sm text-base"
                         for="properties.{{ $property->key }}">{{ $value }}</label>
                 </div>
             @endforeach

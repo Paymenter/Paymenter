@@ -10,7 +10,17 @@ $popular = cyber_ext() && cyber_bool('reviews_enabled', true)
 
 <div class="container mt-10 pb-10">
     {{-- Cabecera de categoría --}}
-    <div class="cyber-card cyber-clip p-6 md:p-8 relative overflow-hidden">
+    <div class="cyber-card cyber-clip relative overflow-hidden">
+        @if($category->image)
+        {{-- Imagen de la categoría, igual que en los productos --}}
+        <div class="relative h-48 md:h-64 w-full overflow-hidden">
+            <img src="{{ Storage::url($category->image) }}" alt="{{ $category->name }}"
+                class="w-full h-full object-cover object-center">
+            <div class="absolute inset-0 bg-gradient-to-t from-background-secondary via-background-secondary/60 to-transparent"></div>
+        </div>
+        @endif
+
+        <div class="p-6 md:p-8 relative">
         <div class="absolute inset-0 cyber-gradient opacity-[0.07] pointer-events-none"></div>
         <div class="relative flex flex-col lg:flex-row lg:items-end justify-between gap-6">
             <div>
@@ -43,6 +53,7 @@ $popular = cyber_ext() && cyber_bool('reviews_enabled', true)
                 </div>
                 @endif
             </div>
+        </div>
         </div>
     </div>
 

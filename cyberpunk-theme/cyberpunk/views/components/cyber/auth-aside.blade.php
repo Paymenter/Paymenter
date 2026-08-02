@@ -5,7 +5,7 @@ $interval = max(1500, (int) cyber_cfg('banner_interval', 6000));
 $socials = cyber_socials();
 @endphp
 
-<div class="relative hidden lg:flex flex-col justify-between overflow-hidden rounded-2xl border border-neutral cyber-clip min-h-[560px] p-10"
+<div class="relative flex flex-col justify-between overflow-hidden rounded-2xl border border-neutral cyber-clip min-h-[380px] lg:min-h-[560px] p-6 sm:p-10"
     x-data="{
         slide: 0,
         total: {{ max(1, count($slides)) }},

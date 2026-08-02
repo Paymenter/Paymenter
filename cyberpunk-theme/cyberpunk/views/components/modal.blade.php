@@ -15,9 +15,9 @@
                 x-transition:enter-end="opacity-100 scale-100" x-transition:leave="transition ease-in duration-300"
                 x-transition:leave-start="opacity-100 scale-100" x-transition:leave-end="opacity-0 scale-90">
                 <div class="flex justify-between items-center">
-                    <h2 class="text-2xl font-semibold text-primary-100">{{ $title }}</h2>
+                    <h2 class="text-2xl font-semibold text-base">{{ $title }}</h2>
                     @if ($closable && !$closeTrigger)
-                        <button @click="open = false" class="text-primary-100">
+                        <button @click="open = false" class="text-base">
                             <x-ri-close-fill class="size-6" />
                         </button>
                     @elseif ($closable && $closeTrigger)

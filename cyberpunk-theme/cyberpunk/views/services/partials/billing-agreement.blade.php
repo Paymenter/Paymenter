@@ -25,7 +25,7 @@
 <x-modal :title="__('services.select_billing_agreement')" open="{{ $showBillingAgreement }}">
     <x-slot name="closeTrigger">
         <div class="flex gap-4">
-            <button wire:click="$set('showBillingAgreement', false)" @click="open = false" class="text-primary-100">
+            <button wire:click="$set('showBillingAgreement', false)" @click="open = false" class="text-base">
                 <x-ri-close-fill class="size-6" />
             </button>
         </div>

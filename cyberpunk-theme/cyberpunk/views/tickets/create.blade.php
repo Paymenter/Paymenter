@@ -31,12 +31,12 @@
 
             <div class="mt-4">
                 <form wire:submit.prevent="create" wire:ignore>
-                    <label for="editor" class="block text-sm font-medium text-primary-100">
+                    <label for="editor" class="block text-sm font-medium text-base">
                         {{ __('ticket.reply') }}
                     </label>
                     <textarea id="editor" placeholder="Initial message"></textarea>
                     
-                    <label for="attachments" class="block text-sm font-medium text-primary-100 mt-2">
+                    <label for="attachments" class="block text-sm font-medium text-base mt-2">
                         {{ __('ticket.attachments') }}
                     </label>
                     <div x-data="{
@@ -66,7 +66,7 @@
                             <div class="text-center">
                                 <template x-if="selectedFiles.length === 0">
                                     <div>
-                                        <div class="flex text-sm text-primary-100">
+                                        <div class="flex text-sm text-base">
                                             <label for="attachments"
                                                 class="relative cursor-pointer rounded-md font-semibold text-primary hover:text-primary/80">
                                                 <span>

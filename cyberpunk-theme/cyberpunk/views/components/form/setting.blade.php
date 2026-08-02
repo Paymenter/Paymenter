@@ -27,12 +27,12 @@
     @endswitch
     @isset($setting->description)
         @isset($setting->link)
-            <a href="{{ $setting->link }}" class="text-xs text-primary-500 hover:underline hover:text-secondary group">
+            <a href="{{ $setting->link }}" class="text-xs text-base/60 hover:underline hover:text-secondary group">
                 {{ $setting->description }}
                 <x-ri-arrow-right-long-line class="ml-1 size-3 inline-block -rotate-45 group-hover:rotate-0 transition" />
             </a>
         @else
-            <p class="text-xs text-primary-500">{{ $setting->description }}</p>
+            <p class="text-xs text-base/60">{{ $setting->description }}</p>
         @endisset
     @endisset
 </div>

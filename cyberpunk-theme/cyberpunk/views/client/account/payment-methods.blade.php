@@ -5,7 +5,7 @@
         <x-modal :title="__('account.payment_methods')" open="true">
             <x-slot name="closeTrigger">
                 <div class="flex gap-4">
-                    <button wire:click="$set('setupModalVisible', false)" class="text-primary-100">
+                    <button wire:click="$set('setupModalVisible', false)" class="text-base">
                         <x-ri-close-fill class="size-6" />
                     </button>
                 </div>
@@ -34,7 +34,7 @@
                 <x-slot name="closeTrigger">
                     <div class="flex gap-4">
                         <button wire:confirm="Are you sure?" wire:click="cancelSetup" wire:loading.attr="disabled"
-                            wire:target="cancelSetup" class="text-primary-100">
+                            wire:target="cancelSetup" class="text-base">
                             <x-ri-close-fill class="size-6" />
                         </button>
                     </div>

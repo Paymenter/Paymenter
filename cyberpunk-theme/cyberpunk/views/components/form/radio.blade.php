@@ -10,7 +10,7 @@
 ])
 <fieldset class="flex flex-col w-full {{ $divClass ?? '' }}" name="{{ $name }}">
     @if ($label)
-    <label for="{{ $name }}" class="mb-1 text-sm text-primary-100">
+    <label for="{{ $name }}" class="mb-1 text-sm text-base">
         {{ $label }}
         @if ($required && !$hideRequiredIndicator)
         <span class="text-red-500">*</span>
@@ -19,7 +19,7 @@
     @endif
 
     <div
-        class="block px-2.5 py-2.5 w-full text-sm text-primary-100 bg-background-secondary border-2 border-neutral rounded-md outline-none focus:outline-none focus:border-secondary transition-all duration-300 ease-in-out">
+        class="block px-2.5 py-2.5 w-full text-sm text-base bg-background-secondary border-2 border-neutral rounded-md outline-none focus:outline-none focus:border-secondary transition-all duration-300 ease-in-out">
         @if (count($options) == 0 && $slot)
         {{ $slot }}
         @else

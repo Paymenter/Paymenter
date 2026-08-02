@@ -5,6 +5,7 @@ namespace Paymenter\Extensions\Others\CyberpunkTheme\Livewire;
 use App\Livewire\Component;
 use App\Models\Product;
 use Illuminate\Support\Facades\Auth;
+use Paymenter\Extensions\Others\CyberpunkTheme\Support\InteractsWithCommunity;
 use Paymenter\Extensions\Others\CyberpunkTheme\Models\Comment;
 use Paymenter\Extensions\Others\CyberpunkTheme\Models\Like;
 use Paymenter\Extensions\Others\CyberpunkTheme\Support\Config;
@@ -15,6 +16,8 @@ use Paymenter\Extensions\Others\CyberpunkTheme\Support\Reviews;
  */
 class ProductReviews extends Component
 {
+    use InteractsWithCommunity;
+
     public int $productId;
 
     public string $body = '';
@@ -66,9 +69,7 @@ class ProductReviews extends Component
 
     public function toggleLike(): void
     {
-        if (!Auth::check()) {
-            $this->notify(__('Debes iniciar sesión para dar like.'), 'error');
-
+        if (!$this->requireLogin('comentar') || !$this->requireTables()) {
             return;
         }
 
@@ -92,9 +93,7 @@ class ProductReviews extends Component
 
     public function comment(): void
     {
-        if (!Auth::check()) {
-            $this->notify(__('Debes iniciar sesión para comentar.'), 'error');
-
+        if (!$this->requireLogin('comentar') || !$this->requireTables()) {
             return;
         }
 
@@ -122,9 +121,7 @@ class ProductReviews extends Component
 
     public function reply(int $commentId): void
     {
-        if (!Auth::check()) {
-            $this->notify(__('Debes iniciar sesión para responder.'), 'error');
-
+        if (!$this->requireLogin('comentar') || !$this->requireTables()) {
             return;
         }
 
@@ -157,9 +154,7 @@ class ProductReviews extends Component
 
     public function toggleCommentLike(int $commentId): void
     {
-        if (!Auth::check()) {
-            $this->notify(__('Debes iniciar sesión para dar like.'), 'error');
-
+        if (!$this->requireLogin('comentar') || !$this->requireTables()) {
             return;
         }
 

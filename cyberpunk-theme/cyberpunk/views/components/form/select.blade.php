@@ -10,7 +10,7 @@
 ])
 <fieldset class="flex flex-col w-full {{ $divClass ?? '' }}">
     @if ($label)
-    <label for="{{ $name }}" class="mb-1 text-sm text-primary-100">
+    <label for="{{ $name }}" class="mb-1 text-sm text-base">
         {{ $label }}
         @if ($required && !$hideRequiredIndicator)
         <span class="text-red-500">*</span>
@@ -18,7 +18,7 @@
     </label>
     @endif
 
-    <select id="{{ $id ?? $name }}" {{ $multiple ? 'multiple' : '' }} {{ $attributes->except(['options', 'id', 'name', 'multiple'])->merge(['class' => 'block px-2.5 py-2.5 w-full text-sm text-primary-100 cyber-card cyber-clip
+    <select id="{{ $id ?? $name }}" {{ $multiple ? 'multiple' : '' }} {{ $attributes->except(['options', 'id', 'name', 'multiple'])->merge(['class' => 'block px-2.5 py-2.5 w-full text-sm text-base bg-background-secondary
         rounded-md outline-none focus:outline-none focus:border-secondary transition-all duration-300 ease-in-out form-select disabled:bg-background-secondary/50 disabled:cursor-not-allowed']) }} name="{{ $name }}{{ $multiple ? '[]' : '' }}">
         @if (count($options) == 0 && $slot)
         {{ $slot }}

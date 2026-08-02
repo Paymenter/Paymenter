@@ -19,7 +19,7 @@ class Visits
             $today = now()->toDateString();
 
             // increment() cita la columna según el motor de base de datos.
-            $affected = Visit::where('day', $today)->increment('count');
+            $affected = Visit::whereDate('day', $today)->increment('count');
 
             if ($affected === 0) {
                 Visit::create(['day' => $today, 'count' => 1]);
@@ -41,7 +41,7 @@ class Visits
         return Cache::remember('cyberpunk.visits', now()->addMinute(), function () {
             try {
                 return [
-                    'today' => (int) Visit::where('day', now()->toDateString())->value('count'),
+                    'today' => (int) Visit::whereDate('day', now()->toDateString())->value('count'),
                     'total' => (int) Visit::sum('count'),
                 ];
             } catch (\Throwable $e) {

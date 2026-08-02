@@ -659,3 +659,358 @@
 ::-webkit-scrollbar-corner {
     background: transparent;
 }
+
+/*
+|--------------------------------------------------------------------------
+| Animaciones de fondo (lluvia, truenos, estrellas, nubes, planetas...)
+|--------------------------------------------------------------------------
+| Se activan por separado para el modo claro y el oscuro desde
+| Admin → Extensions → Cyberpunk Theme → Apariencia.
+| Todo es CSS puro (sólo transform/opacity) para que no penalice el
+| rendimiento y no dependa de imágenes externas.
+*/
+
+.cyber-anim {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    overflow: hidden;
+    z-index: 0;
+}
+
+/* Cada capa sólo se ve en su modo */
+body:not(.dark) .cyber-anim[data-mode="dark"] {
+    display: none;
+}
+
+body.dark .cyber-anim[data-mode="light"] {
+    display: none;
+}
+
+/* ------------------------------------------------------------- Lluvia */
+.cyber-anim-rain::before,
+.cyber-anim-rain::after {
+    content: "";
+    position: absolute;
+    inset: -50% 0;
+    background-image: repeating-linear-gradient(
+        105deg,
+        transparent 0 6px,
+        hsl(var(--color-accent) / 0.28) 6px 7px,
+        transparent 7px 22px
+    );
+    animation: cyber-rain 0.75s linear infinite;
+}
+
+.cyber-anim-rain::after {
+    opacity: 0.5;
+    background-image: repeating-linear-gradient(
+        100deg,
+        transparent 0 11px,
+        hsl(var(--color-primary) / 0.22) 11px 12px,
+        transparent 12px 34px
+    );
+    animation-duration: 1.25s;
+}
+
+@keyframes cyber-rain {
+    from {
+        transform: translate3d(0, -25%, 0);
+    }
+    to {
+        transform: translate3d(-12%, 25%, 0);
+    }
+}
+
+/* ------------------------------------------------------------ Truenos */
+.cyber-anim-storm::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(
+        ellipse at 60% 0%,
+        hsl(var(--color-accent) / 0.55),
+        transparent 60%
+    );
+    opacity: 0;
+    animation: cyber-thunder 9s linear infinite;
+}
+
+.cyber-anim-storm::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: hsl(0 0% 100% / 0.75);
+    opacity: 0;
+    animation: cyber-thunder-flash 9s linear infinite;
+}
+
+@keyframes cyber-thunder {
+    0%,
+    72%,
+    100% {
+        opacity: 0;
+    }
+    74% {
+        opacity: 0.9;
+    }
+    76% {
+        opacity: 0.15;
+    }
+    78% {
+        opacity: 0.75;
+    }
+    82% {
+        opacity: 0;
+    }
+}
+
+@keyframes cyber-thunder-flash {
+    0%,
+    73%,
+    100% {
+        opacity: 0;
+    }
+    74% {
+        opacity: 0.35;
+    }
+    75% {
+        opacity: 0;
+    }
+    78.5% {
+        opacity: 0.25;
+    }
+    80% {
+        opacity: 0;
+    }
+}
+
+/* ---------------------------------------------------------- Estrellas */
+.cyber-anim-stars::before,
+.cyber-anim-stars::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image:
+        radial-gradient(1.4px 1.4px at 12% 18%, hsl(var(--color-base) / 0.85), transparent),
+        radial-gradient(1.2px 1.2px at 28% 62%, hsl(var(--color-base) / 0.6), transparent),
+        radial-gradient(1.6px 1.6px at 44% 28%, hsl(var(--color-accent) / 0.9), transparent),
+        radial-gradient(1.1px 1.1px at 61% 74%, hsl(var(--color-base) / 0.7), transparent),
+        radial-gradient(1.5px 1.5px at 73% 12%, hsl(var(--color-primary) / 0.85), transparent),
+        radial-gradient(1.2px 1.2px at 86% 52%, hsl(var(--color-base) / 0.65), transparent),
+        radial-gradient(1.3px 1.3px at 94% 84%, hsl(var(--color-secondary) / 0.8), transparent),
+        radial-gradient(1.1px 1.1px at 6% 88%, hsl(var(--color-base) / 0.5), transparent);
+    background-size: 100% 100%;
+    animation: cyber-twinkle 4.5s ease-in-out infinite;
+}
+
+.cyber-anim-stars::after {
+    transform: scale(1.7) rotate(18deg);
+    opacity: 0.55;
+    animation-delay: -2.2s;
+    animation-duration: 6.5s;
+}
+
+@keyframes cyber-twinkle {
+    0%,
+    100% {
+        opacity: 0.75;
+    }
+    50% {
+        opacity: 0.25;
+    }
+}
+
+/* --------------------------------------------------- Estrellas fugaces */
+.cyber-anim-shooting .cyber-shooting-star {
+    position: absolute;
+    top: var(--sy, 10%);
+    left: var(--sx, 8%);
+    width: 160px;
+    height: 2px;
+    border-radius: 999px;
+    background: linear-gradient(
+        90deg,
+        hsl(var(--color-base) / 0.95),
+        hsl(var(--color-accent) / 0.55),
+        transparent
+    );
+    filter: drop-shadow(0 0 6px hsl(var(--color-accent) / 0.85));
+    opacity: 0;
+    transform: rotate(28deg) translate3d(0, 0, 0);
+    animation: cyber-shoot var(--sd, 7s) linear infinite;
+    animation-delay: var(--sdelay, 0s);
+}
+
+@keyframes cyber-shoot {
+    0% {
+        opacity: 0;
+        transform: rotate(28deg) translate3d(-10vw, -10vh, 0) scaleX(0.2);
+    }
+    6% {
+        opacity: 1;
+    }
+    26% {
+        opacity: 1;
+        transform: rotate(28deg) translate3d(75vw, 55vh, 0) scaleX(1);
+    }
+    34%,
+    100% {
+        opacity: 0;
+        transform: rotate(28deg) translate3d(95vw, 70vh, 0) scaleX(0.4);
+    }
+}
+
+/* -------------------------------------------------------------- Nubes */
+.cyber-anim-clouds .cyber-cloud {
+    position: absolute;
+    top: var(--cy, 15%);
+    left: -30%;
+    width: var(--cw, 320px);
+    height: var(--ch, 110px);
+    border-radius: 999px;
+    background: radial-gradient(
+        ellipse at 50% 60%,
+        hsl(var(--color-base) / 0.16),
+        transparent 70%
+    );
+    filter: blur(14px);
+    animation: cyber-drift var(--cd, 60s) linear infinite;
+    animation-delay: var(--cdelay, 0s);
+}
+
+body:not(.dark) .cyber-anim-clouds .cyber-cloud {
+    background: radial-gradient(
+        ellipse at 50% 60%,
+        hsl(var(--color-primary) / 0.13),
+        transparent 70%
+    );
+}
+
+@keyframes cyber-drift {
+    from {
+        transform: translate3d(0, 0, 0);
+    }
+    to {
+        transform: translate3d(165vw, -4vh, 0);
+    }
+}
+
+/* ----------------------------------------------------------- Planetas */
+.cyber-anim-planets .cyber-planet {
+    position: absolute;
+    top: var(--py, 20%);
+    left: var(--px, 75%);
+    width: var(--ps, 120px);
+    height: var(--ps, 120px);
+    border-radius: 50%;
+    background:
+        radial-gradient(circle at 32% 30%, hsl(var(--color-accent) / 0.85), transparent 55%),
+        radial-gradient(circle at 70% 72%, hsl(var(--color-primary) / 0.7), transparent 60%),
+        radial-gradient(circle at 50% 50%, hsl(var(--color-secondary) / 0.35), hsl(var(--color-background) / 0.9) 72%);
+    box-shadow:
+        inset -14px -10px 30px hsl(0 0% 0% / 0.55),
+        0 0 40px -8px hsl(var(--color-primary) / 0.5);
+    opacity: 0.5;
+    animation: cyber-orbit var(--pd, 40s) ease-in-out infinite alternate;
+    animation-delay: var(--pdelay, 0s);
+}
+
+.cyber-anim-planets .cyber-planet::after {
+    content: "";
+    position: absolute;
+    inset: -22% -42%;
+    border-radius: 50%;
+    border: 2px solid hsl(var(--color-accent) / 0.35);
+    transform: rotate(-22deg) scaleY(0.28);
+}
+
+@keyframes cyber-orbit {
+    from {
+        transform: translate3d(0, 0, 0) rotate(0deg);
+    }
+    to {
+        transform: translate3d(-9vw, 7vh, 0) rotate(14deg);
+    }
+}
+
+/* --------------------------------------------------------------- Nieve */
+.cyber-anim-snow::before,
+.cyber-anim-snow::after {
+    content: "";
+    position: absolute;
+    inset: -50% 0;
+    background-image:
+        radial-gradient(2.5px 2.5px at 10% 10%, hsl(var(--color-base) / 0.75), transparent),
+        radial-gradient(2px 2px at 35% 45%, hsl(var(--color-base) / 0.6), transparent),
+        radial-gradient(2.5px 2.5px at 62% 22%, hsl(var(--color-base) / 0.7), transparent),
+        radial-gradient(2px 2px at 82% 68%, hsl(var(--color-base) / 0.55), transparent);
+    background-size: 240px 240px;
+    animation: cyber-snow 14s linear infinite;
+}
+
+.cyber-anim-snow::after {
+    background-size: 170px 170px;
+    opacity: 0.6;
+    animation-duration: 22s;
+    animation-direction: reverse;
+}
+
+@keyframes cyber-snow {
+    from {
+        transform: translate3d(0, -20%, 0);
+    }
+    to {
+        transform: translate3d(6%, 20%, 0);
+    }
+}
+
+/* ------------------------------------------------- Lluvia digital (matrix) */
+.cyber-anim-matrix::before {
+    content: "";
+    position: absolute;
+    inset: -50% 0;
+    background-image: repeating-linear-gradient(
+        180deg,
+        hsl(var(--color-accent) / 0.22) 0 12px,
+        transparent 12px 26px
+    );
+    background-size: 26px 100%;
+    mask-image: repeating-linear-gradient(
+        90deg,
+        #000 0 2px,
+        transparent 2px 26px
+    );
+    animation: cyber-matrix 3.2s linear infinite;
+}
+
+@keyframes cyber-matrix {
+    from {
+        transform: translate3d(0, -30%, 0);
+    }
+    to {
+        transform: translate3d(0, 30%, 0);
+    }
+}
+
+/* --------------------------------------------------------- Aurora suave */
+.cyber-anim-aurora::before {
+    content: "";
+    position: absolute;
+    inset: -30%;
+    background:
+        radial-gradient(40% 30% at 20% 25%, hsl(var(--color-primary) / 0.28), transparent 70%),
+        radial-gradient(35% 28% at 72% 18%, hsl(var(--color-secondary) / 0.24), transparent 70%),
+        radial-gradient(45% 32% at 50% 78%, hsl(var(--color-accent) / 0.2), transparent 70%);
+    filter: blur(40px);
+    animation: cyber-aurora 26s ease-in-out infinite alternate;
+}
+
+@keyframes cyber-aurora {
+    from {
+        transform: translate3d(-4%, -2%, 0) scale(1);
+    }
+    to {
+        transform: translate3d(5%, 4%, 0) scale(1.15);
+    }
+}

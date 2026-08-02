@@ -15,18 +15,37 @@ use Illuminate\Support\Facades\File;
  */
 class Installer
 {
+    /** Versión del paquete. Si cambia, se rehacen los valores de fábrica. */
+    public const VERSION = '1.1.0';
+
     /**
      * Copia el tema, los assets compilados y crea los ajustes por defecto.
      */
     public static function install(bool $overwriteSettings = true, bool $activate = true): array
     {
+        // Si el paquete instalado es más nuevo que lo guardado en la base de
+        // datos, refrescamos los valores de fábrica (colores, marketing,
+        // animaciones) para que una reinstalación traiga de verdad lo nuevo.
+        if (!$overwriteSettings && self::storedVersion() !== self::VERSION) {
+            $overwriteSettings = true;
+        }
+
         $report = [
             'theme' => false,
             'assets' => false,
             'settings' => false,
             'activated' => false,
+            'tables' => [],
             'errors' => [],
         ];
+
+        // Lo primero: asegurar las tablas. Si una instalación anterior quedó
+        // a medias, aquí se crean las que falten.
+        try {
+            $report['tables'] = Database::ensureTables();
+        } catch (\Throwable $e) {
+            $report['errors'][] = 'Base de datos: ' . $e->getMessage();
+        }
 
         try {
             $report['theme'] = self::copyTheme();
@@ -61,9 +80,32 @@ class Installer
             }
         }
 
+        try {
+            Setting::updateOrCreate(
+                ['key' => Config::PREFIX . 'version', 'settingable_type' => null, 'settingable_id' => null],
+                ['value' => self::VERSION, 'type' => 'string', 'encrypted' => false]
+            );
+        } catch (\Throwable $e) {
+            // No es crítico.
+        }
+
         Config::flush();
 
         return $report;
+    }
+
+    /**
+     * Versión de los ajustes guardados en la base de datos.
+     */
+    public static function storedVersion(): ?string
+    {
+        try {
+            return Setting::where('settingable_type', null)
+                ->where('key', Config::PREFIX . 'version')
+                ->value('value');
+        } catch (\Throwable $e) {
+            return null;
+        }
     }
 
     /**

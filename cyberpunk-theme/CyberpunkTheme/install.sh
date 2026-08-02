@@ -27,6 +27,77 @@ die()  { echo -e "${RED}ERROR:${NC} $1" >&2; exit 1; }
 
 SRC="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
+# ---------------------------------------------------------- Permisos
+# Detecta el usuario del servidor web y aplica TODOS los permisos que
+# necesitan el tema, la extensión y las subidas de los usuarios.
+detectar_webuser() {
+    local u
+    for u in www-data nginx apache http paymenter; do
+        if id -u "$u" >/dev/null 2>&1; then echo "$u"; return; fi
+    done
+    # cPanel / hosting compartido: el dueño de la carpeta
+    stat -c '%U' "$1" 2>/dev/null || echo ""
+}
+
+aplicar_permisos() {
+    local ROOT="$1"
+    local WEBUSER
+    WEBUSER="$(detectar_webuser "$ROOT")"
+
+    if [ -z "$WEBUSER" ]; then
+        warn "No detecté el usuario del servidor web; revisa los permisos a mano."
+        return
+    fi
+
+    local GRP
+    GRP="$(id -gn "$WEBUSER" 2>/dev/null || echo "$WEBUSER")"
+
+    say "Aplicando permisos para $WEBUSER:$GRP ..."
+
+    for d in \
+        "$ROOT/themes/cyberpunk" \
+        "$ROOT/public/cyberpunk" \
+        "$ROOT/extensions/Others/CyberpunkTheme" \
+        "$ROOT/storage" \
+        "$ROOT/bootstrap/cache" \
+        "$ROOT/public/storage"; do
+        [ -e "$d" ] && chown -R "$WEBUSER:$GRP" "$d" 2>/dev/null || true
+    done
+
+    # Carpetas donde la web escribe (avatares, fotos de la comunidad,
+    # banners, subidas temporales de Livewire y de extensiones)
+    for d in \
+        "$ROOT/storage/app/public/cyberpunk" \
+        "$ROOT/storage/app/public/cyberpunk/avatars" \
+        "$ROOT/storage/app/public/cyberpunk/community" \
+        "$ROOT/storage/app/public/cyberpunk/banner" \
+        "$ROOT/storage/app/public/cyberpunk/backgrounds" \
+        "$ROOT/storage/app/livewire-tmp" \
+        "$ROOT/storage/app/extensions/uploaded"; do
+        mkdir -p "$d" 2>/dev/null || true
+        chown -R "$WEBUSER:$GRP" "$d" 2>/dev/null || true
+        chmod -R 775 "$d" 2>/dev/null || true
+    done
+
+    # Lectura para el tema y los assets; escritura para storage y caché
+    find "$ROOT/themes/cyberpunk" "$ROOT/public/cyberpunk" -type d -exec chmod 755 {} \; 2>/dev/null || true
+    find "$ROOT/themes/cyberpunk" "$ROOT/public/cyberpunk" -type f -exec chmod 644 {} \; 2>/dev/null || true
+    [ -d "$ROOT/extensions/Others/CyberpunkTheme" ] && {
+        find "$ROOT/extensions/Others/CyberpunkTheme" -type d -exec chmod 755 {} \; 2>/dev/null || true
+        find "$ROOT/extensions/Others/CyberpunkTheme" -type f -exec chmod 644 {} \; 2>/dev/null || true
+        chmod +x "$ROOT/extensions/Others/CyberpunkTheme/install.sh" 2>/dev/null || true
+    }
+    chmod -R 775 "$ROOT/storage" "$ROOT/bootstrap/cache" 2>/dev/null || true
+
+    # Enlace público de storage (necesario para ver avatares e imágenes)
+    if [ ! -e "$ROOT/public/storage" ]; then
+        (cd "$ROOT" && php artisan storage:link >/dev/null 2>&1) || true
+    fi
+
+    ok "Permisos aplicados."
+}
+
+
 # ------------------------------------------------ 1. Localizar Paymenter
 ROOT="${1:-}"
 
@@ -89,22 +160,7 @@ if [ -d "$SRC/assets" ]; then
 fi
 
 # ---------------------------------------------------------- 4. Permisos
-WEBUSER=""
-for u in www-data nginx apache paymenter; do
-    if id -u "$u" >/dev/null 2>&1; then WEBUSER="$u"; break; fi
-done
-
-if [ -n "$WEBUSER" ]; then
-    say "Ajustando permisos ($WEBUSER) ..."
-    chown -R "$WEBUSER:$WEBUSER" "$TARGET" 2>/dev/null || warn "No pude cambiar el propietario (¿necesitas sudo?)."
-    ok "Permisos ajustados."
-else
-    warn "No detecté el usuario del servidor web; revisa los permisos a mano."
-fi
-
-find "$TARGET" -type d -exec chmod 755 {} \; 2>/dev/null || true
-find "$TARGET" -type f -exec chmod 644 {} \; 2>/dev/null || true
-chmod +x "$TARGET/install.sh" 2>/dev/null || true
+aplicar_permisos "$ROOT"
 
 # ------------------------------------ 5. Registrar, migrar y activar
 cd "$ROOT"

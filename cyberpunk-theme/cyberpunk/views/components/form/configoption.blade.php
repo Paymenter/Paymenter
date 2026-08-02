@@ -38,7 +38,7 @@
                 }
             }" class="flex flex-col gap-1 relative">
                 <label for="{{ $name }}"
-                    class="mb-1 text-sm text-primary-100">
+                    class="mb-1 text-sm text-base">
                     {{ $config->label ?? $config->name }}
                 </label>
                 <div class="relative flex items-center" :style="`--progress:${progressOption};--segments-width:${segmentsWidthOption}`" wire:ignore>
@@ -103,12 +103,12 @@
     @endswitch
     @isset($config->description)
         @isset($config->link)
-            <a href="{{ $config->link }}" class="text-xs text-primary-500 hover:underline hover:text-secondary group">
+            <a href="{{ $config->link }}" class="text-xs text-base/60 hover:underline hover:text-secondary group">
                 {{ $config->description }}
                 <x-ri-arrow-right-long-line class="ml-1 size-3 inline-block -rotate-45 group-hover:rotate-0 transition" />
             </a>
         @else
-            <p class="text-xs text-primary-500">{{ $config->description }}</p>
+            <p class="text-xs text-base/60">{{ $config->description }}</p>
         @endisset
     @endisset
 </div>

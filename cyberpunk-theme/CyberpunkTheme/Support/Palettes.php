@@ -10,8 +10,32 @@ class Palettes
     public static function all(): array
     {
         return [
+            'azul-rosa' => [
+                'label' => 'Azul y Rosa (por defecto)',
+                'preview' => ['#2563EB', '#F43FA5', '#38BDF8', '#0A1024'],
+                'colors' => [
+                    'primary' => 'hsl(217, 91%, 50%)',
+                    'secondary' => 'hsl(330, 90%, 55%)',
+                    'accent' => 'hsl(199, 92%, 48%)',
+                    'neutral' => 'hsl(214, 32%, 85%)',
+                    'base' => 'hsl(222, 44%, 12%)',
+                    'muted' => 'hsl(215, 16%, 42%)',
+                    'inverted' => 'hsl(0, 0%, 100%)',
+                    'background' => 'hsl(0, 0%, 100%)',
+                    'background-secondary' => 'hsl(214, 45%, 97%)',
+                    'dark-primary' => 'hsl(217, 91%, 60%)',
+                    'dark-secondary' => 'hsl(330, 100%, 62%)',
+                    'dark-accent' => 'hsl(199, 95%, 60%)',
+                    'dark-neutral' => 'hsl(217, 33%, 24%)',
+                    'dark-base' => 'hsl(0, 0%, 100%)',
+                    'dark-muted' => 'hsl(215, 22%, 72%)',
+                    'dark-inverted' => 'hsl(0, 0%, 100%)',
+                    'dark-background' => 'hsl(222, 47%, 6%)',
+                    'dark-background-secondary' => 'hsl(222, 40%, 10%)',
+                ],
+            ],
             'neon-rose' => [
-                'label' => 'Neón Rosa (por defecto)',
+                'label' => 'Neón Rosa',
                 'preview' => ['#FF0080', '#FF1A33', '#D633FF', '#0A0A0A'],
                 'colors' => [
                     'primary' => 'hsl(330, 100%, 50%)',

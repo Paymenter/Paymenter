@@ -7,7 +7,7 @@
             @foreach (Auth::user()->credits as $credit)
             <div class="flex flex-col bg-background-secondary w-fit rounded-lg px-5 p-3 items-center gap-1">
                 <h5 class="text-lg font-bold">{{ $credit->currency->code }}</h5>
-                <p class="text-primary-100">{{ $credit->formattedAmount }}</p>
+                <p class="text-base">{{ $credit->formattedAmount }}</p>
             </div>
             @endforeach
         </div>

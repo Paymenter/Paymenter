@@ -5,6 +5,7 @@ namespace Paymenter\Extensions\Others\CyberpunkTheme\Livewire;
 use App\Livewire\Component;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Auth;
+use Paymenter\Extensions\Others\CyberpunkTheme\Support\InteractsWithCommunity;
 use Livewire\Attributes\Url;
 use Livewire\WithFileUploads;
 use Livewire\WithPagination;
@@ -20,7 +21,7 @@ use Paymenter\Extensions\Others\CyberpunkTheme\Support\Config;
  */
 class Community extends Component
 {
-    use WithFileUploads, WithPagination;
+    use InteractsWithCommunity, WithFileUploads, WithPagination;
 
     public string $title = '';
 
@@ -131,9 +132,7 @@ class Community extends Component
     // ------------------------------------------------------------------
     public function publish(): void
     {
-        if (!Auth::check()) {
-            $this->notify(__('Debes iniciar sesión para publicar.'), 'error');
-
+        if (!$this->requireLogin('participar') || !$this->requireTables()) {
             return;
         }
 
@@ -170,9 +169,7 @@ class Community extends Component
 
     public function toggleLike(int $postId): void
     {
-        if (!Auth::check()) {
-            $this->notify(__('Debes iniciar sesión para dar like.'), 'error');
-
+        if (!$this->requireLogin('participar') || !$this->requireTables()) {
             return;
         }
 
@@ -201,9 +198,7 @@ class Community extends Component
 
     public function toggleCommentLike(int $commentId): void
     {
-        if (!Auth::check()) {
-            $this->notify(__('Debes iniciar sesión para dar like.'), 'error');
-
+        if (!$this->requireLogin('participar') || !$this->requireTables()) {
             return;
         }
 
@@ -241,9 +236,7 @@ class Community extends Component
 
     public function comment(int $postId): void
     {
-        if (!Auth::check()) {
-            $this->notify(__('Debes iniciar sesión para comentar.'), 'error');
-
+        if (!$this->requireLogin('participar') || !$this->requireTables()) {
             return;
         }
 
@@ -276,9 +269,7 @@ class Community extends Component
 
     public function reply(int $commentId): void
     {
-        if (!Auth::check()) {
-            $this->notify(__('Debes iniciar sesión para responder.'), 'error');
-
+        if (!$this->requireLogin('participar') || !$this->requireTables()) {
             return;
         }
 

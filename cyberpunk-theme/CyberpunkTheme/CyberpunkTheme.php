@@ -19,8 +19,8 @@ use Paymenter\Extensions\Others\CyberpunkTheme\Support\Installer;
 
 #[ExtensionMeta(
     name: 'Cyberpunk Theme',
-    description: 'Tema Cyberpunk totalmente personalizable para Paymenter: banner con marketing rotativo, comunidad de usuarios, reseñas en productos, avatares, contadores y paletas de colores.',
-    version: '1.0.0',
+    description: 'Tema Cyberpunk totalmente personalizable para Paymenter: banner con marketing rotativo, animaciones de fondo, comunidad de usuarios, reseñas en productos, avatares, contadores y paletas de colores.',
+    version: '1.1.0',
     author: 'Sky Ultra Plus',
     url: 'https://skyultraplus.com',
     icon: 'ri-cpu-line',
@@ -72,6 +72,10 @@ class CyberpunkTheme extends Extension
      */
     public function installed()
     {
+        // Creamos las tablas directamente (no dependemos de que el runner de
+        // migraciones haya podido completarlas en instalaciones anteriores).
+        Support\Database::ensureTables();
+
         ExtensionHelper::runMigrations('extensions/Others/CyberpunkTheme/database/migrations');
 
         // No sobreescribimos ajustes existentes: installed() puede llamarse
@@ -81,6 +85,8 @@ class CyberpunkTheme extends Extension
 
     public function upgraded($oldVersion = null)
     {
+        Support\Database::ensureTables();
+
         ExtensionHelper::runMigrations('extensions/Others/CyberpunkTheme/database/migrations');
 
         Installer::install(overwriteSettings: false);

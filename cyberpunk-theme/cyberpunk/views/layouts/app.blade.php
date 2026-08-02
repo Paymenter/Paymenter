@@ -79,6 +79,8 @@ $cyberHasAssets = file_exists(public_path('hot'))
     <div class="cyber-noise-layer" aria-hidden="true"></div>
     @endif
 
+    <x-cyber.animations />
+
     @unless($cyberHasAssets)
     <div style="position:fixed;inset:0 0 auto 0;z-index:9999;background:#7f1d1d;color:#fff;padding:14px 18px;font:14px/1.5 system-ui,sans-serif">
         <strong>Faltan los estilos del tema Cyberpunk.</strong>

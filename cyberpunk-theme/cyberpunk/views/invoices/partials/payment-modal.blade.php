@@ -2,7 +2,7 @@
     <x-slot name="closeTrigger">
         <div class="flex gap-4">
             {{ __('invoices.amount_due', ['amount' => $invoice->formattedRemaining]) }}
-            <button wire:confirm="Are you sure?" wire:click="exitPay" @click="open = false" class="text-primary-100">
+            <button wire:confirm="Are you sure?" wire:click="exitPay" @click="open = false" class="text-base">
                 <x-ri-close-fill class="size-6" />
             </button>
         </div>

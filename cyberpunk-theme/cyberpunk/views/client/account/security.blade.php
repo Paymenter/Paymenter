@@ -8,7 +8,7 @@
             @foreach (Auth::user()->sessions as $session)
             <div class="flex flex-row items-center justify-between py-2 border-b border-base/50">
                 <div>
-                    <p class="text-sm text-primary-100">{{ $session->ip_address }} -
+                    <p class="text-sm text-base">{{ $session->ip_address }} -
                         {{ $session->last_activity->diffForHumans() }}</p>
                     <p class="text-sm text-primary-400">{{ $session->formatted_device }}</p>
                 </div>
@@ -49,7 +49,7 @@
             <!-- Two factor authentication -->
             <h5 class="text-lg font-bold pb-3">{{ __('account.two_factor_authentication') }}</h5>
             @if ($twoFactorEnabled)
-            <p class="text-sm text-primary-100">{{ __('account.two_factor_authentication_enabled') }}</p>
+            <p class="text-sm text-base">{{ __('account.two_factor_authentication_enabled') }}</p>
             <x-button.primary class="w-full mt-4" x-on:click="$store.confirmation.confirm({
                                 title: '{{ __('account.two_factor_authentication_disable') }}',
                                 message: '{{ __('account.two_factor_authentication_disable_description') }}',
@@ -60,13 +60,13 @@
                 {{ __('account.two_factor_authentication_disable') }}
             </x-button.primary>
             @else
-            <p class="text-sm text-primary-100">{{ __('account.two_factor_authentication_description') }}</p>
+            <p class="text-sm text-base">{{ __('account.two_factor_authentication_description') }}</p>
             <x-button.primary wire:click="enableTwoFactor" class="w-full mt-4">
                 {{ __('account.two_factor_authentication_enable') }}
             </x-button.primary>
             @if ($showEnableTwoFactor)
             <x-modal :title="__('account.two_factor_authentication_enable')" open="true">
-                <p class="text-primary-100">{{ __('account.two_factor_authentication_enable_description') }}</p>
+                <p class="text-base">{{ __('account.two_factor_authentication_enable_description') }}</p>
                 <div class="flex flex-col items-center mt-4">
                     <img src="{{ $twoFactorData['image'] }}" alt="QR code" class="w-64 h-64" />
                     <p class="text-primary-400 mt-2 text-sm text-center">
@@ -82,7 +82,7 @@
                     </x-button.primary>
                 </form>
                 <x-slot name="closeTrigger">
-                    <button @click="document.location.reload()" class="text-primary-100">
+                    <button @click="document.location.reload()" class="text-base">
                         <x-ri-close-fill class="size-6" />
                     </button>
                 </x-slot>

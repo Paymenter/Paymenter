@@ -99,27 +99,27 @@ class Defaults
             'social_x' => '',
             'social_github' => '',
 
-            // Colores (claro)
-            'primary' => 'hsl(330, 100%, 50%)',
-            'secondary' => 'hsl(352, 96%, 52%)',
-            'accent' => 'hsl(288, 96%, 60%)',
-            'neutral' => 'hsl(330, 40%, 86%)',
-            'base' => 'hsl(330, 20%, 8%)',
-            'muted' => 'hsl(330, 10%, 45%)',
+            // Colores (claro) — paleta por defecto: azul + rosa sobre blanco
+            'primary' => 'hsl(217, 91%, 50%)',
+            'secondary' => 'hsl(330, 90%, 55%)',
+            'accent' => 'hsl(199, 92%, 48%)',
+            'neutral' => 'hsl(214, 32%, 85%)',
+            'base' => 'hsl(222, 44%, 12%)',
+            'muted' => 'hsl(215, 16%, 42%)',
             'inverted' => 'hsl(0, 0%, 100%)',
-            'background' => 'hsl(330, 40%, 99%)',
-            'background-secondary' => 'hsl(330, 45%, 96%)',
+            'background' => 'hsl(0, 0%, 100%)',
+            'background-secondary' => 'hsl(214, 45%, 97%)',
 
-            // Colores (oscuro)
-            'dark-primary' => 'hsl(330, 100%, 55%)',
-            'dark-secondary' => 'hsl(352, 100%, 55%)',
-            'dark-accent' => 'hsl(288, 100%, 65%)',
-            'dark-neutral' => 'hsl(330, 45%, 20%)',
+            // Colores (oscuro) — azul + rosa sobre azul noche
+            'dark-primary' => 'hsl(217, 91%, 60%)',
+            'dark-secondary' => 'hsl(330, 100%, 62%)',
+            'dark-accent' => 'hsl(199, 95%, 60%)',
+            'dark-neutral' => 'hsl(217, 33%, 24%)',
             'dark-base' => 'hsl(0, 0%, 100%)',
-            'dark-muted' => 'hsl(330, 20%, 68%)',
+            'dark-muted' => 'hsl(215, 22%, 72%)',
             'dark-inverted' => 'hsl(0, 0%, 100%)',
-            'dark-background' => 'hsl(0, 0%, 4%)',
-            'dark-background-secondary' => 'hsl(330, 30%, 8%)',
+            'dark-background' => 'hsl(222, 47%, 6%)',
+            'dark-background-secondary' => 'hsl(222, 40%, 10%)',
 
             // Listas
             'banner_slides' => self::marketing('banner_slides'),
@@ -128,6 +128,10 @@ class Defaults
             'features' => self::marketing('features'),
             'custom_pages' => [],
             'quick_links' => [],
+
+            // Animaciones de fondo (se pueden combinar varias por modo)
+            'anim_light' => ['clouds'],
+            'anim_dark' => ['stars', 'shooting'],
         ];
     }
 }

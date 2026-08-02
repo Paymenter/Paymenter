@@ -5,6 +5,7 @@ namespace Paymenter\Extensions\Others\CyberpunkTheme\Admin\Pages;
 use Filament\Actions\Action;
 use Filament\Actions\Concerns\InteractsWithActions;
 use Filament\Actions\Contracts\HasActions;
+use Filament\Forms\Components\CheckboxList;
 use Filament\Forms\Components\ColorPicker;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Repeater;
@@ -17,6 +18,7 @@ use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
 use Filament\Notifications\Notification;
 use Filament\Pages\Page;
+use Filament\Schemas\Components\Actions;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Components\Tabs;
 use Filament\Schemas\Components\Tabs\Tab;
@@ -25,6 +27,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use Spatie\Color\Factory as ColorFactory;
 use Paymenter\Extensions\Others\CyberpunkTheme\Support\Config;
+use Paymenter\Extensions\Others\CyberpunkTheme\Support\Database;
 use Paymenter\Extensions\Others\CyberpunkTheme\Support\Defaults;
 use Paymenter\Extensions\Others\CyberpunkTheme\Support\Installer;
 use Paymenter\Extensions\Others\CyberpunkTheme\Support\Palettes;
@@ -136,29 +139,33 @@ class CyberpunkThemePage extends Page implements HasActions, HasForms
             ->icon('ri-palette-line')
             ->schema([
                 Section::make('Paletas de colores')
-                    ->description('Aplica una paleta creada por el sistema con un clic, o define los colores a mano más abajo.')
+                    ->description('Un clic aplica y guarda la paleta al instante. Debajo puedes ajustar cualquier color a mano.')
                     ->schema([
-                        Select::make('palette_choice')
-                            ->label('Paleta')
-                            ->options(Palettes::options())
-                            ->live()
-                            ->afterStateUpdated(function ($state, $set) {
-                                if (!$state) {
-                                    return;
-                                }
+                        Actions::make(
+                            collect(Palettes::all())->map(
+                                fn (array $palette, string $key) => Action::make('palette_' . str_replace('-', '_', $key))
+                                    ->label($palette['label'])
+                                    ->icon('ri-palette-line')
+                                    ->color('gray')
+                                    ->action(fn () => $this->applyPalette($key))
+                            )->values()->all()
+                        ),
+                    ]),
 
-                                foreach (Palettes::colors($state) as $key => $value) {
-                                    $set($key, $value);
-                                }
-
-                                Notification::make()
-                                    ->title('Paleta cargada')
-                                    ->body('Pulsa "Guardar cambios" para aplicarla en la web.')
-                                    ->success()
-                                    ->send();
-                            })
-                            ->dehydrated(false)
-                            ->helperText('Al elegir una paleta se rellenan todos los colores de abajo.'),
+                Section::make('Animaciones de fondo')
+                    ->description('Se pueden combinar varias a la vez, y cada modo puede llevar las suyas.')
+                    ->columns(2)
+                    ->schema([
+                        CheckboxList::make('anim_dark')
+                            ->label('Modo oscuro')
+                            ->options($this->animationOptions())
+                            ->columns(1)
+                            ->bulkToggleable(),
+                        CheckboxList::make('anim_light')
+                            ->label('Modo claro')
+                            ->options($this->animationOptions())
+                            ->columns(1)
+                            ->bulkToggleable(),
                     ]),
 
                 Section::make('Colores — modo oscuro')
@@ -223,6 +230,61 @@ class CyberpunkThemePage extends Page implements HasActions, HasForms
                             ->helperText('100 = fondo sólido, 0 = imagen totalmente visible.'),
                     ]),
             ]);
+    }
+
+    /**
+     * Opciones de animaciones disponibles (las define el tema).
+     *
+     * @return array<string, string>
+     */
+    protected function animationOptions(): array
+    {
+        Defaults::loadThemeHelpers();
+
+        if (function_exists('cyber_animations')) {
+            return cyber_animations();
+        }
+
+        return [
+            'stars' => 'Estrellas',
+            'shooting' => 'Estrellas fugaces',
+            'planets' => 'Planetas',
+            'clouds' => 'Nubes',
+            'rain' => 'Lluvia',
+            'storm' => 'Truenos',
+            'snow' => 'Nieve',
+            'matrix' => 'Lluvia digital',
+            'aurora' => 'Aurora',
+        ];
+    }
+
+    /**
+     * Aplica una paleta: rellena el formulario y la guarda al momento,
+     * para que el cambio se vea en la web sin pulsar nada más.
+     */
+    public function applyPalette(string $key): void
+    {
+        $this->authorizeUpdate();
+
+        $colors = Palettes::colors($key);
+
+        if (count($colors) === 0) {
+            Notification::make()->title('Paleta desconocida')->danger()->send();
+
+            return;
+        }
+
+        // Actualizamos el estado del formulario (los selectores de color
+        // se refrescan solos) y guardamos sólo las claves de color.
+        $this->data = array_merge($this->data ?? [], $colors);
+
+        Config::save($colors);
+
+        Notification::make()
+            ->title('Paleta aplicada')
+            ->body(Palettes::all()[$key]['label'] . ' — ya está activa en la web.')
+            ->success()
+            ->send();
     }
 
     /**
@@ -565,6 +627,37 @@ class CyberpunkThemePage extends Page implements HasActions, HasForms
                     }
 
                     Notification::make()->title('Archivos del tema reinstalados')->success()->send();
+                }),
+
+            Action::make('repairDatabase')
+                ->label('Reparar base de datos')
+                ->icon('ri-database-2-line')
+                ->color('warning')
+                ->requiresConfirmation()
+                ->modalDescription('Crea las tablas de la comunidad que falten. No borra nada de lo que ya exista.')
+                ->action(function () {
+                    $this->authorizeUpdate();
+
+                    try {
+                        $created = Database::ensureTables();
+                    } catch (\Throwable $e) {
+                        Notification::make()
+                            ->title('No se pudieron crear las tablas')
+                            ->body($e->getMessage())
+                            ->danger()
+                            ->persistent()
+                            ->send();
+
+                        return;
+                    }
+
+                    Notification::make()
+                        ->title(count($created) > 0 ? 'Base de datos reparada' : 'Todo estaba correcto')
+                        ->body(count($created) > 0
+                            ? 'Tablas creadas: ' . implode(', ', $created)
+                            : 'Las tablas de la comunidad ya existían.')
+                        ->success()
+                        ->send();
                 }),
 
             Action::make('resetVisits')

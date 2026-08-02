@@ -3,7 +3,7 @@
         @foreach (\App\Classes\Navigation::getLinks() as $nav)
         @if (!empty($nav['children']))
         <div x-data="{ activeAccordion: {{ $nav['active'] ? 'true' : 'false' }} }"
-            class="relative w-full mx-auto overflow-hidden text-sm font-normal divide-y divide-gray-200">
+            class="relative w-full mx-auto overflow-hidden text-sm font-normal divide-y divide-neutral">
             <div class="cursor-pointer">
                 <button @click="activeAccordion = !activeAccordion"
                     class="flex items-center justify-between w-full p-3 text-sm font-semibold whitespace-nowrap rounded-lg hover:bg-primary/5">
@@ -54,7 +54,7 @@
         @foreach (\App\Classes\Navigation::getDashboardLinks() as $nav)
         @if (!empty($nav['children']))
         <div x-data="{ activeAccordion: {{ $nav['active'] ? 'true' : 'false' }} }"
-            class="relative w-full mx-auto overflow-hidden text-sm font-normal divide-y divide-gray-200">
+            class="relative w-full mx-auto overflow-hidden text-sm font-normal divide-y divide-neutral">
             <div class="cursor-pointer">
                 <button @click="activeAccordion = !activeAccordion"
                     class="flex items-center justify-between w-full p-3 text-sm font-semibold whitespace-nowrap rounded-lg hover:bg-primary/5">

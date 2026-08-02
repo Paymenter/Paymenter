@@ -150,6 +150,47 @@ if (!function_exists('cyber_socials')) {
     }
 }
 
+if (!function_exists('cyber_animations')) {
+    /**
+     * Catálogo de animaciones de fondo disponibles.
+     *
+     * @return array<string, string>
+     */
+    function cyber_animations(): array
+    {
+        return [
+            'stars' => 'Estrellas (cielo estrellado)',
+            'shooting' => 'Estrellas fugaces',
+            'planets' => 'Planetas flotando',
+            'clouds' => 'Nubes en movimiento',
+            'rain' => 'Lluvia',
+            'storm' => 'Truenos y relámpagos',
+            'snow' => 'Nieve',
+            'matrix' => 'Lluvia digital (matrix)',
+            'aurora' => 'Aurora de colores',
+        ];
+    }
+}
+
+if (!function_exists('cyber_anims')) {
+    /**
+     * Animaciones activas para un modo ('light' u 'dark').
+     * Se pueden combinar varias entre sí.
+     *
+     * @return array<int, string>
+     */
+    function cyber_anims(string $mode): array
+    {
+        $default = $mode === 'dark' ? ['stars', 'shooting'] : ['clouds'];
+
+        $value = cyber_list('anim_' . $mode, $default);
+
+        $valid = array_keys(cyber_animations());
+
+        return array_values(array_filter($value, fn ($a) => is_string($a) && in_array($a, $valid, true)));
+    }
+}
+
 if (!function_exists('cyber_words')) {
     /**
      * Frases de marketing en movimiento, como lista plana de textos.
@@ -189,23 +230,39 @@ if (!function_exists('cyber_defaults')) {
             'banner_slides' => [
                 [
                     'title' => 'Sky Ultra Plus',
-                    'subtitle' => 'Hosting de alto rendimiento para tus proyectos: webs, bots y aplicaciones siempre online.',
+                    'subtitle' => 'Hosting de alto rendimiento para tus webs, bots y aplicaciones. Activación instantánea, discos NVMe y soporte 24/7 en español.',
                     'button_label' => 'Ver planes',
                     'button_url' => '',
                     'image' => '',
                     'enabled' => true,
                 ],
                 [
-                    'title' => 'Bots listos para instalar',
-                    'subtitle' => 'PreBots de WhatsApp, Discord y Telegram configurados en minutos. Sin complicaciones.',
-                    'button_label' => 'Quiero mi bot',
+                    'title' => 'Tu web online en minutos',
+                    'subtitle' => 'Alojamiento web con SSL gratis, panel sencillo y copias de seguridad. Ideal para tu negocio, tu tienda o tu portafolio.',
+                    'button_label' => 'Quiero mi web',
                     'button_url' => '',
                     'image' => '',
                     'enabled' => true,
                 ],
                 [
-                    'title' => 'Despliega en segundos',
-                    'subtitle' => 'Servidores Python, JavaScript y Node.js con panel completo, NVMe y soporte 24/7.',
+                    'title' => 'Bots que nunca se duermen',
+                    'subtitle' => 'Servidores para bots de WhatsApp, Discord y Telegram con reinicio automático, consola en vivo y sesión estable 24/7.',
+                    'button_label' => 'Alojar mi bot',
+                    'button_url' => '',
+                    'image' => '',
+                    'enabled' => true,
+                ],
+                [
+                    'title' => 'PreBots listos para usar',
+                    'subtitle' => 'Bots de WhatsApp, Discord y Telegram ya configurados. Los instalamos por ti: tú solo los enciendes y empiezas.',
+                    'button_label' => 'Ver PreBots',
+                    'button_url' => '',
+                    'image' => '',
+                    'enabled' => true,
+                ],
+                [
+                    'title' => 'Python y JavaScript sin límites',
+                    'subtitle' => 'Despliega tus scripts, APIs y aplicaciones Node.js con recursos dedicados, dominio propio y protección Anti-DDoS incluida.',
                     'button_label' => 'Empezar ahora',
                     'button_url' => '',
                     'image' => '',
@@ -214,78 +271,82 @@ if (!function_exists('cyber_defaults')) {
             ],
             'marketing_words' => [
                 'Servidores para páginas web',
-                'Servidores Python',
-                'Servidores JavaScript',
-                'Servidores para bots de WhatsApp',
-                'Servidores para bots de Discord',
-                'Servidores para bots de Telegram',
+                'Servidores Python 24/7',
+                'Servidores JavaScript y Node.js',
+                'Bots de WhatsApp siempre online',
+                'Bots de Discord sin caídas',
+                'Bots de Telegram al instante',
                 'PreBots listos para instalar',
+                'Activación instantánea',
+                'Discos NVMe ultra rápidos',
+                'Protección Anti-DDoS incluida',
                 'Soporte 24/7 en español',
-                'Discos NVMe · Anti-DDoS',
+                'Precios pensados para crecer',
             ],
             'marketing_cards' => [
                 [
                     'title' => 'Hosting web',
-                    'description' => 'Monta tu página web con certificado SSL, dominio y panel fácil de usar.',
+                    'description' => 'Monta tu página o tienda online con SSL gratis, dominio propio y un panel fácil de usar. Copias de seguridad automáticas.',
                     'icon' => 'ri-global-fill',
                     'url' => '',
                     'enabled' => true,
                 ],
                 [
                     'title' => 'Servidores Python',
-                    'description' => 'Ejecuta tus scripts y APIs en Python 24/7 con recursos dedicados.',
+                    'description' => 'Ejecuta tus scripts, APIs y bots en Python las 24 horas, con recursos dedicados y consola en tiempo real.',
                     'icon' => 'ri-code-box-fill',
                     'url' => '',
                     'enabled' => true,
                 ],
                 [
                     'title' => 'Servidores JavaScript',
-                    'description' => 'Node.js listo para tus apps, APIs y proyectos en tiempo real.',
+                    'description' => 'Node.js listo para tus apps, APIs y proyectos en tiempo real. Despliega desde Git y escala cuando lo necesites.',
                     'icon' => 'ri-javascript-fill',
                     'url' => '',
                     'enabled' => true,
                 ],
                 [
                     'title' => 'Bots de WhatsApp',
-                    'description' => 'Aloja tu bot de WhatsApp con sesión estable y reinicios automáticos.',
+                    'description' => 'Aloja tu bot de WhatsApp con sesión estable, reinicios automáticos y almacenamiento persistente.',
                     'icon' => 'ri-whatsapp-fill',
                     'url' => '',
                     'enabled' => true,
                 ],
                 [
                     'title' => 'Bots de Discord',
-                    'description' => 'Tu bot de Discord siempre online, con logs y consola en vivo.',
+                    'description' => 'Tu bot de Discord siempre online, con logs, consola en vivo y actualizaciones sin tiempo de inactividad.',
                     'icon' => 'ri-discord-fill',
                     'url' => '',
                     'enabled' => true,
                 ],
                 [
                     'title' => 'Bots de Telegram',
-                    'description' => 'Despliega bots de Telegram en segundos y escala cuando lo necesites.',
+                    'description' => 'Despliega bots de Telegram en segundos, con webhooks listos y recursos que crecen contigo.',
                     'icon' => 'ri-telegram-fill',
                     'url' => '',
                     'enabled' => true,
                 ],
                 [
                     'title' => 'PreBots instalados',
-                    'description' => 'Bots ya configurados de WhatsApp, Discord y Telegram listos para usar.',
+                    'description' => 'Bots ya configurados de WhatsApp, Discord y Telegram. Nosotros los instalamos, tú solo los usas.',
                     'icon' => 'ri-robot-2-fill',
                     'url' => '',
                     'enabled' => true,
                 ],
                 [
                     'title' => 'Soporte 24/7',
-                    'description' => 'Equipo en español disponible todos los días por tickets y WhatsApp.',
+                    'description' => 'Equipo en español disponible todos los días por tickets y WhatsApp. Te ayudamos a montarlo todo.',
                     'icon' => 'ri-customer-service-2-fill',
                     'url' => '',
                     'enabled' => true,
                 ],
             ],
             'features' => [
-                ['title' => 'Activación instantánea', 'description' => 'Tu servicio se crea automáticamente al pagar.', 'icon' => 'ri-flashlight-fill'],
+                ['title' => 'Activación instantánea', 'description' => 'Tu servicio se crea solo en cuanto se confirma el pago.', 'icon' => 'ri-flashlight-fill'],
                 ['title' => 'Discos NVMe', 'description' => 'Almacenamiento ultra rápido para cargas exigentes.', 'icon' => 'ri-hard-drive-3-fill'],
                 ['title' => 'Protección Anti-DDoS', 'description' => 'Mitigación activa incluida en todos los planes.', 'icon' => 'ri-shield-flash-fill'],
                 ['title' => 'Panel completo', 'description' => 'Consola, archivos, backups y estadísticas en vivo.', 'icon' => 'ri-dashboard-3-fill'],
+                ['title' => 'Soporte en español', 'description' => 'Atención real por ticket y WhatsApp todos los días.', 'icon' => 'ri-customer-service-2-fill'],
             ],
         ];
 
@@ -732,37 +793,37 @@ return [
             'name' => 'primary',
             'label' => 'Primario - Color de marca (Claro)',
             'type' => 'color',
-            'default' => 'hsl(330, 100%, 50%)',
+            'default' => 'hsl(217, 91%, 50%)',
         ],
         [
             'name' => 'secondary',
             'label' => 'Secundario - Color de marca (Claro)',
             'type' => 'color',
-            'default' => 'hsl(352, 96%, 52%)',
+            'default' => 'hsl(330, 90%, 55%)',
         ],
         [
             'name' => 'accent',
             'label' => 'Acento - Neón (Claro)',
             'type' => 'color',
-            'default' => 'hsl(288, 96%, 60%)',
+            'default' => 'hsl(199, 92%, 48%)',
         ],
         [
             'name' => 'neutral',
             'label' => 'Bordes y acentos (Claro)',
             'type' => 'color',
-            'default' => 'hsl(330, 40%, 86%)',
+            'default' => 'hsl(214, 32%, 85%)',
         ],
         [
             'name' => 'base',
             'label' => 'Base - Color de texto (Claro)',
             'type' => 'color',
-            'default' => 'hsl(330, 20%, 8%)',
+            'default' => 'hsl(222, 44%, 12%)',
         ],
         [
             'name' => 'muted',
             'label' => 'Apagado - Color de texto (Claro)',
             'type' => 'color',
-            'default' => 'hsl(330, 10%, 45%)',
+            'default' => 'hsl(215, 16%, 42%)',
         ],
         [
             'name' => 'inverted',
@@ -774,13 +835,13 @@ return [
             'name' => 'background',
             'label' => 'Fondo (Claro)',
             'type' => 'color',
-            'default' => 'hsl(330, 40%, 99%)',
+            'default' => 'hsl(0, 0%, 100%)',
         ],
         [
             'name' => 'background-secondary',
             'label' => 'Fondo secundario (Claro)',
             'type' => 'color',
-            'default' => 'hsl(330, 45%, 96%)',
+            'default' => 'hsl(214, 45%, 97%)',
         ],
 
         /*
@@ -792,25 +853,25 @@ return [
             'name' => 'dark-primary',
             'label' => 'Primario - Color de marca (Oscuro)',
             'type' => 'color',
-            'default' => 'hsl(330, 100%, 55%)',
+            'default' => 'hsl(217, 91%, 60%)',
         ],
         [
             'name' => 'dark-secondary',
             'label' => 'Secundario - Color de marca (Oscuro)',
             'type' => 'color',
-            'default' => 'hsl(352, 100%, 55%)',
+            'default' => 'hsl(330, 100%, 62%)',
         ],
         [
             'name' => 'dark-accent',
             'label' => 'Acento - Neón (Oscuro)',
             'type' => 'color',
-            'default' => 'hsl(288, 100%, 65%)',
+            'default' => 'hsl(199, 95%, 60%)',
         ],
         [
             'name' => 'dark-neutral',
             'label' => 'Bordes y acentos (Oscuro)',
             'type' => 'color',
-            'default' => 'hsl(330, 45%, 20%)',
+            'default' => 'hsl(217, 33%, 24%)',
         ],
         [
             'name' => 'dark-base',
@@ -822,7 +883,7 @@ return [
             'name' => 'dark-muted',
             'label' => 'Apagado - Color de texto (Oscuro)',
             'type' => 'color',
-            'default' => 'hsl(330, 20%, 68%)',
+            'default' => 'hsl(215, 22%, 72%)',
         ],
         [
             'name' => 'dark-inverted',
@@ -834,13 +895,13 @@ return [
             'name' => 'dark-background',
             'label' => 'Fondo (Oscuro)',
             'type' => 'color',
-            'default' => 'hsl(0, 0%, 4%)',
+            'default' => 'hsl(222, 47%, 6%)',
         ],
         [
             'name' => 'dark-background-secondary',
             'label' => 'Fondo secundario (Oscuro)',
             'type' => 'color',
-            'default' => 'hsl(330, 30%, 8%)',
+            'default' => 'hsl(222, 40%, 10%)',
         ],
     ],
 ];

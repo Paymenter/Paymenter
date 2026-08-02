@@ -46,13 +46,13 @@
                 <!-- Reply Form -->
                 <div class="mt-4">
                     <form wire:submit.prevent="save">
-                        <label for="editor" class="block text-sm font-medium text-primary-100">
+                        <label for="editor" class="block text-sm font-medium text-base">
                             {{ __('ticket.reply') }}
                         </label>
                         <div wire:ignore>
                             <textarea id="editor"></textarea>
                         </div>
-                        <label for="attachments" class="block text-sm font-medium text-primary-100 mt-2">
+                        <label for="attachments" class="block text-sm font-medium text-base mt-2">
                             {{ __('ticket.attachments') }}
                         </label>
                         <div x-data="{
@@ -88,7 +88,7 @@
                                 @drop.prevent="handleDrop($event)" :class="{'bg-background-secondary/50': drop}">
                                     <!-- Upload Progress Bar -->
                                 <div x-show="uploading" class="w-full text-center">
-                                    <div class="mb-2 text-sm font-medium text-primary-100">
+                                    <div class="mb-2 text-sm font-medium text-base">
                                         {{ __('ticket.uploading_files') }}... (<span x-text="progress"></span>%)
                                     </div>
                                     <div class="w-full bg-primary-600 rounded-lg h-3 mb-4">
@@ -97,7 +97,7 @@
                                 </div>
                                 <template x-if="selectedFiles.length === 0 && !uploading">
                                     <div class="text-center">
-                                        <div class="flex text-sm text-primary-100">
+                                        <div class="flex text-sm text-base">
                                             <label for="attachments"
                                                 class="relative cursor-pointer rounded-md font-semibold text-primary hover:text-primary/80">
                                                 <span>

@@ -9,9 +9,9 @@
             x-transition:leave-start="opacity-100 scale-100" x-transition:leave-end="opacity-0 scale-90">
             <div class="flex justify-between items-center">
 
-                <h2 class="text-2xl font-semibold text-primary-100" x-text="$store.confirmation.title"></h2>
+                <h2 class="text-2xl font-semibold text-base" x-text="$store.confirmation.title"></h2>
                 <button @click="!$store.confirmation.loading && $store.confirmation.close()" 
-                        class="text-primary-100"
+                        class="text-base"
                         :class="{ 'opacity-50 cursor-not-allowed': $store.confirmation.loading }">
                     <x-ri-close-fill class="size-6" />
                 </button>

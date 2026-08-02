@@ -6,6 +6,7 @@ use App\Livewire\Component;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\Validate;
 use Livewire\WithFileUploads;
+use Paymenter\Extensions\Others\CyberpunkTheme\Support\InteractsWithCommunity;
 use Paymenter\Extensions\Others\CyberpunkTheme\Support\Avatars;
 
 /**
@@ -13,7 +14,7 @@ use Paymenter\Extensions\Others\CyberpunkTheme\Support\Avatars;
  */
 class Avatar extends Component
 {
-    use WithFileUploads;
+    use InteractsWithCommunity, WithFileUploads;
 
     #[Validate('nullable|image|mimes:jpg,jpeg,png,gif,webp|max:4096')]
     public $photo;
@@ -27,7 +28,7 @@ class Avatar extends Component
 
     public function save(): void
     {
-        if (!Auth::check()) {
+        if (!$this->requireLogin('cambiar tu avatar') || !$this->requireTables()) {
             return;
         }
 
@@ -39,23 +40,33 @@ class Avatar extends Component
             return;
         }
 
-        $path = $this->photo->store('cyberpunk/avatars', 'public');
+        $this->runSafely(function () {
+            $path = $this->photo->store('cyberpunk/avatars', 'public');
 
-        Avatars::store(Auth::user(), $path);
+            if (!$path) {
+                $this->notify(__('No se pudo guardar la imagen. Revisa los permisos de storage/app/public.'), 'error');
 
-        $this->reset('photo');
+                return;
+            }
 
-        $this->notify(__('Avatar actualizado.'));
+            Avatars::store(Auth::user(), $path);
+
+            $this->reset('photo');
+
+            $this->notify(__('Avatar actualizado.'));
+        }, 'No se pudo actualizar el avatar.');
     }
 
     public function remove(): void
     {
-        if (!Auth::check()) {
+        if (!$this->requireLogin('cambiar tu avatar') || !$this->requireTables()) {
             return;
         }
 
-        Avatars::remove(Auth::user());
+        $this->runSafely(function () {
+            Avatars::remove(Auth::user());
 
-        $this->notify(__('Avatar restablecido.'));
+            $this->notify(__('Avatar restablecido.'));
+        }, 'No se pudo restablecer el avatar.');
     }
 }

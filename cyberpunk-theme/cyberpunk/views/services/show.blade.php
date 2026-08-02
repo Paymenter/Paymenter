@@ -97,7 +97,7 @@
                         <x-slot name="closeTrigger">
                             <div class="flex gap-4">
                                 <button wire:click="$set('showCancel', false)" @click="open = false"
-                                    class="text-primary-100">
+                                    class="text-base">
                                     <x-ri-close-fill class="size-6" />
                                 </button>
                             </div>
