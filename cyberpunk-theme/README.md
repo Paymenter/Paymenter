@@ -6,9 +6,16 @@ Dos paquetes separados. **Ninguno modifica el núcleo de Paymenter ni el tema `d
 |---|---|---|---|
 | `cyberpunk-tema.zip` | **El tema** (obligatorio) + assets ya compilados + `instalar.sh` | `themes/cyberpunk` y `public/cyberpunk` | 362 KB |
 | `cyberpunk-extension.zip` | **La extensión** (opcional): panel de personalización, comunidad, reseñas, avatares, visitas | `extensions/Others/CyberpunkTheme` | 58 KB |
+| `cyberpunk-todo-en-uno.zip` | **Extensión + tema dentro**: al instalarla copia el tema sola | todo lo anterior de una vez | 414 KB |
 
 El tema funciona por sí solo; la extensión añade el panel de administración y las
 funciones sociales encima.
+
+**¿Cuál usar?** Si el subidor del panel te funciona, sube directamente
+`cyberpunk-todo-en-uno.zip`: al instalarlo copia el tema a `themes/cyberpunk`, los
+assets a `public/cyberpunk` y lo deja activo. Para eso necesita que el usuario del
+servidor web pueda escribir en `themes/` y `public/`. Si no, usa los dos paquetes
+separados por terminal.
 
 ## Instalación rápida
 

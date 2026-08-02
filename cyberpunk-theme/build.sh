@@ -37,15 +37,26 @@ cp -r CyberpunkTheme build-tmp/ext/CyberpunkTheme
 cp LEEME.md build-tmp/ext/CyberpunkTheme/
 chmod +x build-tmp/ext/CyberpunkTheme/install.sh
 
+# ------------------------------------ extensión TODO EN UNO (con el tema dentro)
+mkdir -p build-tmp/full
+cp -r CyberpunkTheme build-tmp/full/CyberpunkTheme
+cp LEEME.md build-tmp/full/CyberpunkTheme/
+chmod +x build-tmp/full/CyberpunkTheme/install.sh
+cp -r cyberpunk build-tmp/full/CyberpunkTheme/theme
+mkdir -p build-tmp/full/CyberpunkTheme/assets
+[ -d public ] && cp -r public/. build-tmp/full/CyberpunkTheme/assets/
+
 # ------------------------------------------------------------- zips
-rm -f cyberpunk-tema.zip cyberpunk-extension.zip
-(cd build-tmp     && zip -rq ../cyberpunk-tema.zip      cyberpunk-tema  -x "*.DS_Store" "*__MACOSX*")
-(cd build-tmp/ext && zip -rq ../../cyberpunk-extension.zip CyberpunkTheme -x "*.DS_Store" "*__MACOSX*")
+rm -f cyberpunk-tema.zip cyberpunk-extension.zip cyberpunk-todo-en-uno.zip
+(cd build-tmp      && zip -rq ../cyberpunk-tema.zip           cyberpunk-tema -x "*.DS_Store" "*__MACOSX*")
+(cd build-tmp/ext  && zip -rq ../../cyberpunk-extension.zip   CyberpunkTheme -x "*.DS_Store" "*__MACOSX*")
+(cd build-tmp/full && zip -rq ../../cyberpunk-todo-en-uno.zip CyberpunkTheme -x "*.DS_Store" "*__MACOSX*")
 
 rm -rf build-tmp
 
 echo
-ls -lh cyberpunk-tema.zip cyberpunk-extension.zip
+ls -lh cyberpunk-tema.zip cyberpunk-extension.zip cyberpunk-todo-en-uno.zip
 echo
-unzip -t cyberpunk-tema.zip      | tail -1
-unzip -t cyberpunk-extension.zip | tail -1
+unzip -t cyberpunk-tema.zip       | tail -1
+unzip -t cyberpunk-extension.zip  | tail -1
+unzip -t cyberpunk-todo-en-uno.zip | tail -1

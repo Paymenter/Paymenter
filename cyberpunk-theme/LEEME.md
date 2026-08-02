@@ -1,14 +1,47 @@
 # Tema Cyberpunk para Paymenter — Sky Ultra Plus
 
-Dos paquetes independientes:
+Paquetes disponibles:
 
 | Paquete | Qué instala | Dónde |
 |---|---|---|
 | `cyberpunk-tema.zip` | **El tema** (obligatorio) | `themes/cyberpunk` + `public/cyberpunk` |
 | `cyberpunk-extension.zip` | **La extensión** (opcional) | `extensions/Others/CyberpunkTheme` |
+| `cyberpunk-todo-en-uno.zip` | **Extensión + tema dentro**: instala las dos cosas de una vez | todo lo anterior |
 
 El **tema funciona solo**. La **extensión** añade el panel de personalización,
 la comunidad, las reseñas en los planes, los avatares y el contador de visitas.
+
+## ¿La extensión puede instalar el tema por mí?
+
+**Sí, pero sólo el paquete `cyberpunk-todo-en-uno.zip`**, que lleva el tema dentro.
+`cyberpunk-extension.zip` es la extensión pelada y **no** trae el tema.
+
+Con el todo-en-uno, al instalar la extensión se copia el tema a `themes/cyberpunk`,
+los assets a `public/cyberpunk` y se activa el tema automáticamente.
+
+Requisito: el usuario del servidor web tiene que poder escribir en `themes/` y en
+`public/`. Compruébalo así:
+
+```bash
+cd /var/www/paymenter
+sudo -u www-data test -w themes  && echo "themes: OK" || echo "themes: SIN PERMISO"
+sudo -u www-data test -w public  && echo "public: OK" || echo "public: SIN PERMISO"
+```
+
+Si sale «SIN PERMISO», dale permiso sólo a esas dos carpetas:
+
+```bash
+chown www-data:www-data themes public
+chmod 775 themes public
+```
+
+O simplemente instala el tema por terminal con `cyberpunk-tema.zip` (más abajo);
+el resultado es idéntico.
+
+Si la extensión no pudo copiar el tema, te lo dirá en
+**Admin → Extensions → Cyberpunk Theme**: verás el aviso «El tema Cyberpunk todavía
+no está activo» o «Faltan los assets compilados», y el botón **Reinstalar archivos**
+vuelve a intentarlo.
 
 ---
 
