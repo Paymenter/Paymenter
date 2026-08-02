@@ -1,86 +1,124 @@
 #!/usr/bin/env bash
 #
-# Instalador del tema Cyberpunk para Paymenter (Sky Ultra Plus)
-# --------------------------------------------------------------
-# Uso:
-#   1. Copia la carpeta CyberpunkTheme a  <paymenter>/extensions/Others/
-#   2. cd <paymenter>/extensions/Others/CyberpunkTheme
-#   3. bash install.sh
+# Instalador de la EXTENSIÓN Cyberpunk Theme para Paymenter (Sky Ultra Plus)
+# =========================================================================
 #
-# El script:
-#   - copia el tema a themes/cyberpunk
-#   - copia los assets ya compilados a public/cyberpunk
-#   - registra e instala la extensión (migraciones incluidas)
-#   - activa el tema
-#   - limpia cachés
+# La extensión añade al tema:
+#   - panel de personalización (Admin → Extensions → Cyberpunk Theme)
+#   - comunidad (publicaciones con fotos/vídeos, likes, comentarios)
+#   - likes y comentarios en los planes, con etiqueta "Más popular"
+#   - avatares personalizados y contador de visitas
 #
-# Si prefieres no usar la terminal: sube el ZIP desde
-# Admin → Extensions → Available Extensions → Upload Extension.
+# REQUISITO: instala antes el tema (paquete cyberpunk-tema.zip).
+#
+# USO
+#   bash install.sh /ruta/a/paymenter
+#
+#   Si no pasas la ruta, el script intenta detectarla solo.
 
 set -euo pipefail
 
 RED=$'\033[0;31m'; GREEN=$'\033[0;32m'; YELLOW=$'\033[1;33m'; CYAN=$'\033[0;36m'; NC=$'\033[0m'
 
 say()  { echo -e "${CYAN}==>${NC} $1"; }
-ok()   { echo -e "${GREEN} ok${NC} $1"; }
-warn() { echo -e "${YELLOW} !!${NC} $1"; }
+ok()   { echo -e "${GREEN} ok ${NC}$1"; }
+warn() { echo -e "${YELLOW} !! ${NC}$1"; }
 die()  { echo -e "${RED}ERROR:${NC} $1" >&2; exit 1; }
 
-EXT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+SRC="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
-# Buscamos la raíz de Paymenter subiendo directorios hasta encontrar artisan
-ROOT="$EXT_DIR"
-for _ in 1 2 3 4 5 6; do
-    ROOT="$(dirname "$ROOT")"
-    if [ -f "$ROOT/artisan" ] && [ -d "$ROOT/themes" ]; then
-        break
-    fi
-done
+# ------------------------------------------------ 1. Localizar Paymenter
+ROOT="${1:-}"
 
-[ -f "$ROOT/artisan" ] || die "No se encontró la instalación de Paymenter (falta artisan). Copia esta carpeta dentro de extensions/Others/ e inténtalo de nuevo."
-
-say "Paymenter detectado en: $ROOT"
-
-PHP_BIN="${PHP_BIN:-php}"
-command -v "$PHP_BIN" >/dev/null 2>&1 || die "No se encontró PHP en el sistema."
-
-# ---------------------------------------------------------------- 1. Tema
-say "Copiando el tema a themes/cyberpunk ..."
-mkdir -p "$ROOT/themes/cyberpunk"
-cp -r "$EXT_DIR/theme/." "$ROOT/themes/cyberpunk/"
-ok "Tema copiado."
-
-# ------------------------------------------------------------- 2. Assets
-if [ -d "$EXT_DIR/assets" ]; then
-    say "Copiando los assets compilados a public/cyberpunk ..."
-    mkdir -p "$ROOT/public/cyberpunk"
-    cp -r "$EXT_DIR/assets/." "$ROOT/public/cyberpunk/"
-    ok "Assets copiados (no hace falta compilar nada)."
-else
-    warn "No hay assets precompilados. Ejecuta 'npm run build cyberpunk' en $ROOT"
+if [ -z "$ROOT" ]; then
+    # ¿Ya estamos dentro de extensions/Others/CyberpunkTheme?
+    CANDIDATE="$SRC"
+    for _ in 1 2 3 4; do
+        CANDIDATE="$(dirname "$CANDIDATE")"
+        if [ -f "$CANDIDATE/artisan" ] && [ -d "$CANDIDATE/themes" ]; then
+            ROOT="$CANDIDATE"
+            break
+        fi
+    done
 fi
 
-# --------------------------------------------------- 3. Extensión en su sitio
+if [ -z "$ROOT" ]; then
+    for candidate in /var/www/paymenter /var/www/html/paymenter /var/www/html /home/paymenter /opt/paymenter; do
+        if [ -f "$candidate/artisan" ] && [ -d "$candidate/themes" ]; then
+            ROOT="$(cd "$candidate" && pwd)"
+            break
+        fi
+    done
+fi
+
+[ -n "$ROOT" ] || die "No encontré Paymenter. Ejecuta: bash install.sh /ruta/a/paymenter"
+[ -f "$ROOT/artisan" ] || die "En '$ROOT' no hay un artisan. Esa no es la carpeta de Paymenter."
+
+say "Paymenter encontrado en: $ROOT"
+
+if [ ! -d "$ROOT/themes/cyberpunk" ]; then
+    warn "No existe themes/cyberpunk. Instala primero el tema (cyberpunk-tema.zip)."
+    warn "La extensión se instalará igual, pero el tema no se podrá activar."
+fi
+
+# --------------------------------------------- 2. Copiar la extensión
 TARGET="$ROOT/extensions/Others/CyberpunkTheme"
-if [ "$EXT_DIR" != "$TARGET" ]; then
+
+if [ "$SRC" != "$TARGET" ]; then
     say "Copiando la extensión a extensions/Others/CyberpunkTheme ..."
     mkdir -p "$TARGET"
-    cp -r "$EXT_DIR/." "$TARGET/"
+    cp -r "$SRC/." "$TARGET/"
     ok "Extensión copiada."
+else
+    ok "La extensión ya está en su sitio."
 fi
 
-# ------------------------------------------------------------ 4. Composer
-if [ ! -d "$ROOT/vendor" ]; then
-    warn "No existe la carpeta vendor/. Ejecuta 'composer install --no-dev' antes de continuar."
+# ----------------------------- 3. Tema y assets incluidos (si los trae)
+if [ -d "$SRC/theme" ]; then
+    say "Este paquete también trae el tema; copiándolo a themes/cyberpunk ..."
+    mkdir -p "$ROOT/themes/cyberpunk"
+    cp -r "$SRC/theme/." "$ROOT/themes/cyberpunk/"
+    ok "Tema copiado."
 fi
 
-# ------------------------------------------- 5. Registro + migraciones + tema
-say "Registrando la extensión y ejecutando migraciones ..."
+if [ -d "$SRC/assets" ]; then
+    say "Copiando assets compilados a public/cyberpunk ..."
+    mkdir -p "$ROOT/public/cyberpunk"
+    cp -r "$SRC/assets/." "$ROOT/public/cyberpunk/"
+    ok "Assets copiados."
+fi
+
+# ---------------------------------------------------------- 4. Permisos
+WEBUSER=""
+for u in www-data nginx apache paymenter; do
+    if id -u "$u" >/dev/null 2>&1; then WEBUSER="$u"; break; fi
+done
+
+if [ -n "$WEBUSER" ]; then
+    say "Ajustando permisos ($WEBUSER) ..."
+    chown -R "$WEBUSER:$WEBUSER" "$TARGET" 2>/dev/null || warn "No pude cambiar el propietario (¿necesitas sudo?)."
+    ok "Permisos ajustados."
+else
+    warn "No detecté el usuario del servidor web; revisa los permisos a mano."
+fi
+
+find "$TARGET" -type d -exec chmod 755 {} \; 2>/dev/null || true
+find "$TARGET" -type f -exec chmod 644 {} \; 2>/dev/null || true
+chmod +x "$TARGET/install.sh" 2>/dev/null || true
+
+# ------------------------------------ 5. Registrar, migrar y activar
 cd "$ROOT"
+PHP_BIN="${PHP_BIN:-php}"
+
+command -v "$PHP_BIN" >/dev/null 2>&1 || die "No encontré PHP. Instala la extensión desde Admin → Extensions."
+
+[ -d "$ROOT/vendor" ] || warn "No existe vendor/. Ejecuta 'composer install --no-dev' antes de continuar."
+
+say "Registrando la extensión y ejecutando migraciones ..."
 
 "$PHP_BIN" artisan tinker --execute '
-use App\Models\Extension;
 use App\Helpers\ExtensionHelper;
+use App\Models\Extension;
 
 $extension = Extension::firstOrCreate(
     ["extension" => "CyberpunkTheme", "type" => "other"],
@@ -93,32 +131,28 @@ if (! $extension->enabled) {
 
 ExtensionHelper::call($extension, "installed", mayFail: true);
 
-echo "Extension lista\n";
-' || warn "No se pudo registrar automáticamente. Actívala desde Admin → Extensions."
+echo "extension registrada y activada\n";
+' || warn "No se pudo registrar sola. Hazlo en Admin → Extensions → Ready to Install."
 
-# --------------------------------------------------------------- 6. Cachés
 say "Limpiando cachés ..."
 "$PHP_BIN" artisan optimize:clear >/dev/null 2>&1 || true
-"$PHP_BIN" artisan view:clear >/dev/null 2>&1 || true
-"$PHP_BIN" artisan cache:clear >/dev/null 2>&1 || true
+"$PHP_BIN" artisan view:clear     >/dev/null 2>&1 || true
+"$PHP_BIN" artisan cache:clear    >/dev/null 2>&1 || true
 ok "Cachés limpias."
 
-# --------------------------------------------------------------- 7. Permisos
-if id -u www-data >/dev/null 2>&1; then
-    say "Ajustando permisos ..."
-    chown -R www-data:www-data "$ROOT/themes/cyberpunk" "$ROOT/public/cyberpunk" "$TARGET" 2>/dev/null || true
-    ok "Permisos ajustados."
-fi
-
 echo
-echo -e "${GREEN}=============================================${NC}"
-echo -e "${GREEN} Tema Cyberpunk instalado correctamente${NC}"
-echo -e "${GREEN}=============================================${NC}"
+echo -e "${GREEN}==================================================${NC}"
+echo -e "${GREEN}  Extensión Cyberpunk Theme instalada${NC}"
+echo -e "${GREEN}==================================================${NC}"
 echo
-echo " Siguiente paso:"
-echo "   Admin → Extensions → Cyberpunk Theme"
-echo "   Ahí puedes personalizar banner, marketing, colores,"
-echo "   páginas nuevas, comunidad y redes sociales."
+echo "  Ruta: $TARGET"
 echo
-echo " Si el tema no aparece activo, pulsa 'Activar tema' en esa página."
+echo "  Ahora entra en:"
+echo "    Admin → Extensions → Cyberpunk Theme"
+echo
+echo "  Ahí configuras banner, marketing, colores, páginas nuevas,"
+echo "  comunidad y redes sociales."
+echo
+echo "  Si no aparece, ve a Admin → Extensions → Extensions y"
+echo "  comprueba que 'CyberpunkTheme' está en Enabled."
 echo

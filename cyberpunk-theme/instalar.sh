@@ -3,18 +3,16 @@
 # Instalador del TEMA Cyberpunk para Paymenter (Sky Ultra Plus)
 # =============================================================
 #
-# Este script instala el tema por la vía oficial de Paymenter:
+# Instala el tema por la vía oficial de Paymenter:
 #   themes/cyberpunk  +  public/cyberpunk  +  Settings → Theme
 #
 # USO
-#   1. Sube este ZIP a tu servidor y descomprímelo donde sea.
-#   2. cd a la carpeta que se creó.
-#   3. bash instalar.sh /ruta/a/paymenter
+#   bash instalar.sh /ruta/a/paymenter
 #
-#      Si no pasas la ruta, el script intenta detectarla solo.
+#   Si no pasas la ruta, el script intenta detectarla solo.
 #
-# La extensión (panel de personalización + comunidad) es OPCIONAL y se
-# instala aparte; ver LEEME.md.
+# La extensión (panel de personalización + comunidad) va aparte:
+# paquete cyberpunk-extension.zip
 
 set -euo pipefail
 
@@ -62,18 +60,10 @@ if [ -d "$SRC/public" ]; then
     cp -r "$SRC/public/." "$ROOT/public/cyberpunk/"
     ok "Assets copiados. No hace falta ejecutar npm."
 else
-    warn "No hay assets precompilados; tendrás que ejecutar: npm run build cyberpunk"
+    warn "No hay assets precompilados; ejecuta: npm run build cyberpunk"
 fi
 
-# -------------------------------------- 4. Extensión opcional (si viene)
-if [ -d "$SRC/CyberpunkTheme" ]; then
-    say "Copiando la extensión a extensions/Others/CyberpunkTheme ..."
-    mkdir -p "$ROOT/extensions/Others/CyberpunkTheme"
-    cp -r "$SRC/CyberpunkTheme/." "$ROOT/extensions/Others/CyberpunkTheme/"
-    ok "Extensión copiada (actívala en Admin → Extensions)."
-fi
-
-# ---------------------------------------------------------- 5. Permisos
+# ---------------------------------------------------------- 4. Permisos
 say "Ajustando permisos ..."
 WEBUSER=""
 for u in www-data nginx apache paymenter; do
@@ -81,12 +71,8 @@ for u in www-data nginx apache paymenter; do
 done
 
 if [ -n "$WEBUSER" ]; then
-    chown -R "$WEBUSER:$WEBUSER" \
-        "$ROOT/themes/cyberpunk" \
-        "$ROOT/public/cyberpunk" \
+    chown -R "$WEBUSER:$WEBUSER" "$ROOT/themes/cyberpunk" "$ROOT/public/cyberpunk" \
         2>/dev/null || warn "No pude cambiar el propietario (¿necesitas sudo?)."
-    [ -d "$ROOT/extensions/Others/CyberpunkTheme" ] && \
-        chown -R "$WEBUSER:$WEBUSER" "$ROOT/extensions/Others/CyberpunkTheme" 2>/dev/null || true
     ok "Propietario: $WEBUSER"
 else
     warn "No detecté el usuario del servidor web; revisa los permisos a mano."
@@ -95,7 +81,7 @@ fi
 find "$ROOT/themes/cyberpunk" "$ROOT/public/cyberpunk" -type d -exec chmod 755 {} \; 2>/dev/null || true
 find "$ROOT/themes/cyberpunk" "$ROOT/public/cyberpunk" -type f -exec chmod 644 {} \; 2>/dev/null || true
 
-# ------------------------------------------------ 6. Activar y limpiar
+# ------------------------------------------------ 5. Activar y limpiar
 cd "$ROOT"
 PHP_BIN="${PHP_BIN:-php}"
 
@@ -109,7 +95,7 @@ if command -v "$PHP_BIN" >/dev/null 2>&1; then
         );
         echo "tema activado\n";
     ' 2>/dev/null && ok "Tema Cyberpunk activado." \
-      || warn "No pude activarlo solo. Hazlo en Admin → Settings → Theme → Cyberpunk."
+      || warn "No pude activarlo solo. Hazlo en Admin → Settings → Theme → cyberpunk."
 
     "$PHP_BIN" artisan optimize:clear >/dev/null 2>&1 || true
     "$PHP_BIN" artisan view:clear    >/dev/null 2>&1 || true
@@ -124,14 +110,12 @@ echo -e "${GREEN}==================================================${NC}"
 echo -e "${GREEN}  Tema Cyberpunk instalado${NC}"
 echo -e "${GREEN}==================================================${NC}"
 echo
-echo "  Tema      : $ROOT/themes/cyberpunk"
-echo "  Assets    : $ROOT/public/cyberpunk"
-[ -d "$ROOT/extensions/Others/CyberpunkTheme" ] && \
-echo "  Extensión : $ROOT/extensions/Others/CyberpunkTheme"
+echo "  Tema   : $ROOT/themes/cyberpunk"
+echo "  Assets : $ROOT/public/cyberpunk"
 echo
-echo "  Comprueba: Admin → Settings → Theme  (debe poner 'cyberpunk')"
+echo "  Comprueba en: Admin → Settings → Theme  (debe poner 'cyberpunk')"
 echo
-echo "  Para el panel de personalización, banner, comunidad y redes:"
-echo "  Admin → Extensions → instala y activa 'Cyberpunk Theme',"
-echo "  luego entra en Admin → Extensions → Cyberpunk Theme."
+echo "  Siguiente paso (opcional pero recomendado):"
+echo "  instala cyberpunk-extension.zip para tener el panel de"
+echo "  personalización, la comunidad, las reseñas y los avatares."
 echo

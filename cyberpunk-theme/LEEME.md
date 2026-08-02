@@ -1,94 +1,201 @@
 # Tema Cyberpunk para Paymenter — Sky Ultra Plus
 
-## Lo primero: cómo se instalan los temas en Paymenter
+Dos paquetes independientes:
 
-**Paymenter NO tiene subida de temas desde el panel de administración.** Lo comprobé
-en el código de tu propio repositorio:
+| Paquete | Qué instala | Dónde |
+|---|---|---|
+| `cyberpunk-tema.zip` | **El tema** (obligatorio) | `themes/cyberpunk` + `public/cyberpunk` |
+| `cyberpunk-extension.zip` | **La extensión** (opcional) | `extensions/Others/CyberpunkTheme` |
 
-- El único subidor de ZIP del panel es `app/Admin/Pages/Extension.php`, y sólo acepta
-  **extensiones** (clases que heredan de `Extension`, `Gateway` o `Server`).
-  Las mueve a `extensions/`, nunca a `themes/`.
+El **tema funciona solo**. La **extensión** añade el panel de personalización,
+la comunidad, las reseñas en los planes, los avatares y el contador de visitas.
+
+---
+
+## Por qué el tema no se sube desde el panel
+
+Paymenter **no tiene subidor de temas**. Verificado en el código:
+
+- `app/Admin/Pages/Extension.php` → `UploadExtensionService` es el único subidor de
+  ZIP del panel y sólo acepta **extensiones**; las mueve a `extensions/`, nunca a
+  `themes/`.
 - Los temas se leen del disco: `app/Classes/Settings.php` los lista con
-  `glob(base_path('themes/*'))`, y se eligen en **Admin → Settings → Theme**.
-- El comando oficial para crear temas (`php artisan app:theme:create`) sólo copia
-  carpetas dentro de `themes/`.
+  `glob(base_path('themes/*'))` y se eligen en **Admin → Settings → Theme**.
 
-Por eso un tema **siempre** se instala copiando archivos a `themes/<nombre>/`, tal y
-como dice la documentación de Paymenter. No existe un botón "subir tema".
-
-Este paquete respeta eso: el tema acaba en `themes/cyberpunk`.
+Por eso los temas se instalan **copiando archivos**, como dice la documentación
+oficial. Eso es justo lo que hace este paquete.
 
 ---
 
-## Contenido del ZIP
+# 1) Instalar el TEMA
 
-```
-cyberpunk/          →  copiar a  themes/cyberpunk        (el tema)
-public/             →  copiar a  public/cyberpunk        (CSS y JS ya compilados)
-CyberpunkTheme/     →  copiar a  extensions/Others/      (extensión OPCIONAL)
-instalar.sh         →  lo hace todo automáticamente
-LEEME.md            →  este archivo
-```
-
----
-
-## Opción A — Automática (recomendada)
-
-Sube el ZIP a tu servidor por SFTP y ejecuta:
+## Automático
 
 ```bash
-unzip cyberpunk-theme.zip
-cd cyberpunk-theme
-bash instalar.sh /ruta/a/paymenter
+cd /tmp
+unzip cyberpunk-tema.zip
+cd cyberpunk-tema
+bash instalar.sh /var/www/paymenter        # ← pon TU ruta de Paymenter
 ```
 
-Ejemplo con la ruta típica:
+El script copia el tema y los assets, ajusta permisos, activa el tema y limpia
+las cachés. **No necesita Node ni npm.**
+
+## Manual
 
 ```bash
-bash instalar.sh /var/www/paymenter
-```
+PAYMENTER=/var/www/paymenter               # ← pon TU ruta
 
-El script copia el tema, copia los assets compilados, ajusta permisos,
-activa el tema y limpia las cachés. **No necesita Node ni npm.**
+cd /tmp
+unzip cyberpunk-tema.zip
 
----
+# el tema
+mkdir -p "$PAYMENTER/themes/cyberpunk"
+cp -r cyberpunk-tema/cyberpunk/.  "$PAYMENTER/themes/cyberpunk/"
 
-## Opción B — Manual (copiar y pegar)
+# los estilos y scripts ya compilados
+mkdir -p "$PAYMENTER/public/cyberpunk"
+cp -r cyberpunk-tema/public/.     "$PAYMENTER/public/cyberpunk/"
 
-```bash
-cd /var/www/paymenter          # ← tu ruta de Paymenter
+# permisos (cambia www-data por tu usuario web si es otro)
+chown -R www-data:www-data "$PAYMENTER/themes/cyberpunk" "$PAYMENTER/public/cyberpunk"
+find "$PAYMENTER/themes/cyberpunk" "$PAYMENTER/public/cyberpunk" -type d -exec chmod 755 {} \;
+find "$PAYMENTER/themes/cyberpunk" "$PAYMENTER/public/cyberpunk" -type f -exec chmod 644 {} \;
 
-# 1) el tema
-mkdir -p themes/cyberpunk
-cp -r /ruta/al/zip/cyberpunk/.  themes/cyberpunk/
-
-# 2) los estilos ya compilados
-mkdir -p public/cyberpunk
-cp -r /ruta/al/zip/public/.     public/cyberpunk/
-
-# 3) la extensión (opcional: panel de personalización y comunidad)
-mkdir -p extensions/Others/CyberpunkTheme
-cp -r /ruta/al/zip/CyberpunkTheme/.  extensions/Others/CyberpunkTheme/
-
-# 4) permisos
-chown -R www-data:www-data themes/cyberpunk public/cyberpunk extensions/Others/CyberpunkTheme
-find themes/cyberpunk public/cyberpunk -type d -exec chmod 755 {} \;
-find themes/cyberpunk public/cyberpunk -type f -exec chmod 644 {} \;
-
-# 5) limpiar cachés
+# limpiar cachés
+cd "$PAYMENTER"
 php artisan optimize:clear
 ```
 
-Después entra en **Admin → Settings → Theme** y elige **cyberpunk**. Guarda.
-
-> Si tu usuario del servidor web no es `www-data`, cámbialo (en cPanel suele ser tu
-> usuario de hosting; en algunos VPS es `nginx` o `apache`).
+Después: **Admin → Settings → Theme** → elige **cyberpunk** → Guardar.
 
 ---
 
-## Opción C — Recompilar los estilos tú mismo (no hace falta)
+# 2) Instalar la EXTENSIÓN (opcional)
 
-Los assets ya vienen compilados en `public/`. Si aun así quieres recompilarlos:
+## Automático
+
+```bash
+cd /tmp
+unzip cyberpunk-extension.zip
+cd CyberpunkTheme
+bash install.sh /var/www/paymenter         # ← pon TU ruta
+```
+
+Copia la extensión, la registra, ejecuta las migraciones, la deja activada y
+limpia las cachés.
+
+## Manual
+
+```bash
+PAYMENTER=/var/www/paymenter               # ← pon TU ruta
+
+cd /tmp
+unzip cyberpunk-extension.zip
+
+mkdir -p "$PAYMENTER/extensions/Others/CyberpunkTheme"
+cp -r CyberpunkTheme/.  "$PAYMENTER/extensions/Others/CyberpunkTheme/"
+
+chown -R www-data:www-data "$PAYMENTER/extensions/Others/CyberpunkTheme"
+find "$PAYMENTER/extensions/Others/CyberpunkTheme" -type d -exec chmod 755 {} \;
+find "$PAYMENTER/extensions/Others/CyberpunkTheme" -type f -exec chmod 644 {} \;
+
+cd "$PAYMENTER"
+php artisan optimize:clear
+```
+
+Después, en el panel: **Admin → Extensions → Available Extensions →
+pestaña "Ready to Install"** → busca *Cyberpunk Theme* → **Install** →
+activa **Enabled** y guarda.
+
+> La extensión **sí** se puede subir por **Admin → Extensions → Upload Extension**
+> con el ZIP `cyberpunk-extension.zip`, porque es una extensión de verdad.
+
+---
+
+# 3) Dónde se configura todo
+
+**Admin → Extensions → Cyberpunk Theme**
+
+| Pestaña | Qué controla |
+|---|---|
+| General | Qué bloques se ven en el inicio, opciones de tienda, textos |
+| Apariencia | 8 paletas de colores, colores manuales, efectos neón/scanlines/glitch, tipografía, imagen de fondo |
+| Banner | Diapositivas (imagen, título, texto, botón) y frases de marketing en movimiento |
+| Marketing | Tarjetas de servicios, ventajas y accesos rápidos |
+| Páginas | Páginas nuevas con tu HTML, con enlace en la barra de navegación |
+| Comunidad | Nombre, URL, descripción, límite de archivos, avatares |
+| Redes sociales | Facebook, Discord, Instagram, canal y grupo de WhatsApp, Telegram, YouTube, TikTok, X, GitHub |
+
+Botones de arriba: **Guardar cambios**, **Activar tema**, **Reinstalar archivos**,
+**Reiniciar visitas** y **Restablecer todo** (vuelve a la configuración de fábrica).
+
+Moderación: **Admin → Extensions → Comunidad · Publicaciones** y
+**Comunidad · Comentarios**.
+
+Sin la extensión, los ajustes básicos del tema (colores, textos, efectos, redes)
+están en **Admin → Settings → Theme**.
+
+---
+
+# 4) Comprobar que funciona
+
+```bash
+cd /var/www/paymenter
+
+# el tema está en su sitio
+ls themes/cyberpunk/theme.php
+ls public/cyberpunk/manifest.json
+
+# el tema está activo
+php artisan tinker --execute 'echo config("settings.theme");'   # debe imprimir: cyberpunk
+```
+
+Si la web sale sin estilos, es que falta `public/cyberpunk/` — vuelve a copiarlo
+o compílalo con `npm run build cyberpunk`.
+
+---
+
+# 5) Problemas frecuentes
+
+**La web sale en blanco o sin estilos**
+```bash
+cd /var/www/paymenter
+php artisan optimize:clear
+php artisan view:clear
+ls public/cyberpunk/manifest.json     # tiene que existir
+```
+
+**Error 500 después de instalar**
+```bash
+tail -50 storage/logs/laravel.log
+```
+
+**No aparece "cyberpunk" en Settings → Theme**
+La carpeta `themes/cyberpunk` no existe o el servidor web no puede leerla:
+```bash
+ls -la themes/
+chown -R www-data:www-data themes/cyberpunk
+```
+
+**"Error durante la subida" al subir la extensión por el panel**
+Es un problema de PHP en tu servidor, no del ZIP: falla la validación `uploaded`
+de Laravel porque PHP no puede escribir su archivo temporal.
+```bash
+php -i | grep -E "upload_tmp_dir|open_basedir|file_uploads|upload_max_filesize|post_max_size"
+mkdir -p storage/app/livewire-tmp storage/app/extensions/uploaded
+chown -R www-data:www-data storage bootstrap/cache
+chmod -R 775 storage bootstrap/cache
+tail -50 storage/logs/laravel.log
+```
+En Nginx añade dentro del bloque `server`: `client_max_body_size 20M;`
+De todas formas, con `install.sh` no necesitas el subidor.
+
+---
+
+# 6) Recompilar los estilos (no hace falta)
+
+Los assets vienen compilados. Si cambias las vistas del tema:
 
 ```bash
 cd /var/www/paymenter
@@ -98,65 +205,20 @@ npm run build cyberpunk
 
 ---
 
-## La extensión (panel de personalización + comunidad)
-
-El **tema funciona solo**: colores, banner, marketing, contadores, stock,
-avisos de facturas por servidor... todo eso se configura en
-**Admin → Settings → Theme**.
-
-La **extensión** añade encima:
-
-- Página **Admin → Extensions → Cyberpunk Theme** con todo en pestañas
-  (banner con varias diapositivas, tarjetas de marketing, páginas propias con HTML,
-  paletas de colores, redes sociales, restablecer de fábrica...).
-- **Comunidad**: publicaciones con fotos y vídeos, likes, comentarios y respuestas,
-  con moderación desde el panel.
-- **Likes y comentarios en los planes**, con etiqueta "Más popular".
-- **Avatares personalizados** subidos por los usuarios.
-- **Contador de visitas**.
-
-### Instalar la extensión
-
-Ya está copiada si usaste `instalar.sh`. Sólo falta registrarla:
-
-**Admin → Extensions → Available Extensions → pestaña "Ready to Install"** →
-busca *Cyberpunk Theme* → **Install** → activa **Enabled** y guarda.
-
-Si prefieres el subidor de ZIP del panel, usa el archivo aparte
-`CyberpunkTheme.zip` (ese sí es una extensión y el subidor lo acepta).
-
----
-
-## Si el subidor del panel te da "Error durante la subida"
-
-Ese error es del subidor de archivos de Paymenter (Livewire), no del ZIP.
-El mensaje `... no se ha podido subir` es la validación `uploaded` de Laravel,
-que falla cuando **PHP** no puede guardar el archivo temporal. Revisa:
+# 7) Desinstalar
 
 ```bash
-# 1) ¿PHP puede escribir su carpeta temporal?
-php -i | grep -E "upload_tmp_dir|open_basedir|file_uploads|upload_max_filesize|post_max_size"
-
-# 2) carpetas que Livewire necesita
 cd /var/www/paymenter
-mkdir -p storage/app/livewire-tmp storage/app/extensions/uploaded
-chown -R www-data:www-data storage bootstrap/cache
-chmod -R 775 storage bootstrap/cache
 
-# 3) el error real
-tail -50 storage/logs/laravel.log
+# 1. volver al tema por defecto (o hazlo en Admin → Settings → Theme)
+php artisan tinker --execute '\App\Models\Setting::where("key","theme")->update(["value"=>"default"]);'
+
+# 2. borrar el tema
+rm -rf themes/cyberpunk public/cyberpunk
+
+# 3. la extensión: desinstálala primero desde Admin → Extensions
+#    (así borra sus tablas), y luego:
+rm -rf extensions/Others/CyberpunkTheme
+
+php artisan optimize:clear
 ```
-
-Si usas Nginx, añade dentro del bloque `server`: `client_max_body_size 20M;`
-
-De todas formas **no necesitas el subidor**: con `instalar.sh` (Opción A) o
-copiando las carpetas (Opción B) el tema queda instalado igual.
-
----
-
-## Desinstalar
-
-1. **Admin → Settings → Theme** → vuelve a `default`.
-2. `rm -rf themes/cyberpunk public/cyberpunk`
-3. Desinstala la extensión desde **Admin → Extensions** (borra sus tablas)
-   y luego `rm -rf extensions/Others/CyberpunkTheme`.

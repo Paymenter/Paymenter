@@ -1,62 +1,69 @@
 # Cyberpunk Theme para Paymenter — Sky Ultra Plus
 
-Dos paquetes, según cómo lo quieras instalar. **Ninguno modifica el núcleo de
-Paymenter ni el tema `default`.**
+Dos paquetes separados. **Ninguno modifica el núcleo de Paymenter ni el tema `default`.**
 
-| Archivo | Qué es | Dónde se instala |
-|---|---|---|
-| `cyberpunk-theme.zip` | **El tema** (vía oficial de Paymenter) + assets compilados + la extensión + `instalar.sh` | `themes/cyberpunk`, `public/cyberpunk` y, opcional, `extensions/Others/` |
-| `CyberpunkTheme.zip` | **Sólo la extensión** (lleva el tema dentro y lo copia sola) | Subidor de ZIP del panel: Admin → Extensions → Upload Extension |
+| Archivo | Qué es | Se instala en | Tamaño |
+|---|---|---|---|
+| `cyberpunk-tema.zip` | **El tema** (obligatorio) + assets ya compilados + `instalar.sh` | `themes/cyberpunk` y `public/cyberpunk` | 362 KB |
+| `cyberpunk-extension.zip` | **La extensión** (opcional): panel de personalización, comunidad, reseñas, avatares, visitas | `extensions/Others/CyberpunkTheme` | 58 KB |
 
-## Importante: Paymenter no sube temas desde el panel
+El tema funciona por sí solo; la extensión añade el panel de administración y las
+funciones sociales encima.
 
-Verificado en el código de este mismo repositorio:
-
-- `app/Admin/Pages/Extension.php` → `UploadExtensionService` es el **único** subidor
-  de ZIP del panel, y sólo acepta clases que heredan de `Extension`, `Gateway` o
-  `Server`; las mueve a `extensions/`, nunca a `themes/`.
-- Los temas se descubren en disco: `app/Classes/Settings.php` los lista con
-  `glob(base_path('themes/*'))` y se seleccionan en **Admin → Settings → Theme**.
-- `php artisan app:theme:create` sólo copia carpetas dentro de `themes/`.
-
-Por eso un tema se instala **copiando archivos a `themes/<nombre>/`**, como indica la
-documentación oficial. `cyberpunk-theme.zip` hace exactamente eso.
-
-`CyberpunkTheme.zip` existe sólo como atajo: es una extensión de verdad (por eso el
-subidor la acepta) que, al instalarse, copia el tema a `themes/cyberpunk` por ti.
-
-## Instalación recomendada
+## Instalación rápida
 
 ```bash
-unzip cyberpunk-theme.zip
-cd cyberpunk-theme
-bash instalar.sh /ruta/a/paymenter
+# 1) el tema
+unzip cyberpunk-tema.zip && cd cyberpunk-tema
+bash instalar.sh /var/www/paymenter
+
+# 2) la extensión (opcional)
+cd .. && unzip cyberpunk-extension.zip && cd CyberpunkTheme
+bash install.sh /var/www/paymenter
 ```
 
-Instrucciones completas, instalación manual y solución de problemas del subidor:
-[`LEEME.md`](LEEME.md).
+Instrucciones completas, instalación manual, comprobaciones y solución de
+problemas: **[`LEEME.md`](LEEME.md)**.
 
-Documentación del tema y de todas sus opciones:
+Documentación de todas las funciones del tema:
 [`CyberpunkTheme/README.md`](CyberpunkTheme/README.md).
+
+## Paymenter no sube temas desde el panel
+
+Verificado en el código de este repositorio:
+
+- `app/Admin/Pages/Extension.php` → `UploadExtensionService` es el **único** subidor
+  de ZIP del panel y sólo acepta clases que heredan de `Extension`, `Gateway` o
+  `Server`; las mueve a `extensions/`, nunca a `themes/`.
+- Los temas se descubren en disco: `app/Classes/Settings.php` los lista con
+  `glob(base_path('themes/*'))` y se eligen en **Admin → Settings → Theme**.
+- `php artisan app:theme:create` sólo copia carpetas dentro de `themes/`.
+
+Por eso el tema se instala copiando archivos (`cyberpunk-tema.zip`), como indica la
+documentación oficial. La extensión sí es compatible con el subidor del panel.
+
+## Fuentes en este repositorio
+
+```
+cyberpunk-theme/
+├── cyberpunk/              ← el tema        (va a themes/cyberpunk)
+├── public/                 ← CSS y JS compilados (va a public/cyberpunk)
+├── CyberpunkTheme/         ← la extensión   (va a extensions/Others/)
+├── instalar.sh             ← instalador del tema
+├── build.sh                ← regenera los dos ZIP
+├── LEEME.md                ← manual de instalación
+├── cyberpunk-tema.zip
+└── cyberpunk-extension.zip
+```
 
 ## Regenerar los ZIP tras un cambio
 
 ```bash
-# desde la raíz de Paymenter
+# si tocaste vistas o CSS del tema, recompila primero (desde la raíz de Paymenter):
+cp -r cyberpunk-theme/cyberpunk themes/cyberpunk
 npm run build cyberpunk
+cp -r public/cyberpunk/. cyberpunk-theme/public/
 
-cd cyberpunk-theme
-rm -rf CyberpunkTheme/theme CyberpunkTheme/assets
-cp -r ../themes/cyberpunk      CyberpunkTheme/theme
-cp -r ../public/cyberpunk      CyberpunkTheme/assets
-zip -rq CyberpunkTheme.zip CyberpunkTheme
-
-mkdir -p build-tmp/cyberpunk-theme
-cp -r ../themes/cyberpunk build-tmp/cyberpunk-theme/cyberpunk
-mkdir -p build-tmp/cyberpunk-theme/public
-cp -r ../public/cyberpunk/. build-tmp/cyberpunk-theme/public/
-cp -r CyberpunkTheme build-tmp/cyberpunk-theme/CyberpunkTheme
-cp instalar.sh LEEME.md build-tmp/cyberpunk-theme/
-(cd build-tmp && zip -rq ../cyberpunk-theme.zip cyberpunk-theme)
-rm -rf build-tmp
+# y regenera los paquetes:
+bash cyberpunk-theme/build.sh
 ```
