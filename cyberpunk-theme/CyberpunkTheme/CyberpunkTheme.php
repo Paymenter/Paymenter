@@ -9,6 +9,11 @@ use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\View;
 use Livewire\Livewire;
 use Paymenter\Extensions\Others\CyberpunkTheme\Http\Middleware\CountVisit;
+use Paymenter\Extensions\Others\CyberpunkTheme\Livewire\Avatar as AvatarComponent;
+use Paymenter\Extensions\Others\CyberpunkTheme\Livewire\Community as CommunityComponent;
+use Paymenter\Extensions\Others\CyberpunkTheme\Livewire\CommunityPreview as CommunityPreviewComponent;
+use Paymenter\Extensions\Others\CyberpunkTheme\Livewire\CustomPage as CustomPageComponent;
+use Paymenter\Extensions\Others\CyberpunkTheme\Livewire\ProductReviews as ProductReviewsComponent;
 use Paymenter\Extensions\Others\CyberpunkTheme\Support\Config;
 use Paymenter\Extensions\Others\CyberpunkTheme\Support\Installer;
 
@@ -96,11 +101,14 @@ class CyberpunkTheme extends Extension
 
         require __DIR__ . '/routes/web.php';
 
-        Livewire::component('cyberpunk.community', Livewire\Community::class);
-        Livewire::component('cyberpunk.community-preview', Livewire\CommunityPreview::class);
-        Livewire::component('cyberpunk.product-reviews', Livewire\ProductReviews::class);
-        Livewire::component('cyberpunk.avatar', Livewire\Avatar::class);
-        Livewire::component('cyberpunk.custom-page', Livewire\CustomPage::class);
+        // Ojo: hay que usar los nombres completos con alias. Escribir
+        // Livewire\Community::class aquí resolvería a Livewire\Livewire\Community,
+        // porque "Livewire" ya está importado como Livewire\Livewire.
+        Livewire::component('cyberpunk.community', CommunityComponent::class);
+        Livewire::component('cyberpunk.community-preview', CommunityPreviewComponent::class);
+        Livewire::component('cyberpunk.product-reviews', ProductReviewsComponent::class);
+        Livewire::component('cyberpunk.avatar', AvatarComponent::class);
+        Livewire::component('cyberpunk.custom-page', CustomPageComponent::class);
 
         if (Config::bool('count_visits', true)) {
             ExtensionHelper::registerMiddleware(CountVisit::class);

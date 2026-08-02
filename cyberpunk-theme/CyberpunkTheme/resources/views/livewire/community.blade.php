@@ -33,6 +33,15 @@ $canModerate = auth()->check() && auth()->user()->role_id !== null;
         </div>
     </div>
 
+    @if(!empty($error))
+    <div class="cyber-card cyber-clip p-5 mt-6 border-warning/50">
+        <div class="flex items-start gap-3">
+            <x-ri-error-warning-fill class="size-5 text-warning shrink-0" />
+            <p class="text-sm text-base/75">{{ $error }}</p>
+        </div>
+    </div>
+    @endif
+
     {{-- Crear publicación --}}
     @auth
     <div class="cyber-card cyber-clip p-6 mt-6">

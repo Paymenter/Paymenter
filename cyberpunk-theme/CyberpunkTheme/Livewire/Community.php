@@ -3,6 +3,7 @@
 namespace Paymenter\Extensions\Others\CyberpunkTheme\Livewire;
 
 use App\Livewire\Component;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\Url;
 use Livewire\WithFileUploads;
@@ -60,35 +61,50 @@ class Community extends Component
 
     public function render()
     {
-        $query = Post::with(['user', 'media'])
-            ->where('approved', true);
-
-        $query = match ($this->sort) {
-            'liked' => $query->orderByDesc('likes_count')->orderByDesc('created_at'),
-            'commented' => $query->orderByDesc('comments_count')->orderByDesc('created_at'),
-            default => $query->orderByDesc('pinned')->orderByDesc('created_at'),
-        };
-
-        $posts = $query->paginate(10);
-
+        $posts = new LengthAwarePaginator([], 0, 10);
         $comments = [];
-        foreach ($posts as $post) {
-            if (in_array($post->id, $this->openComments, true)) {
-                $comments[$post->id] = Comment::with(['user', 'replies.user'])
-                    ->where('commentable_type', Post::class)
-                    ->where('commentable_id', $post->id)
-                    ->whereNull('parent_id')
-                    ->where('approved', true)
-                    ->orderByDesc('created_at')
-                    ->get();
+        $likedPosts = [];
+        $likedComments = [];
+        $error = null;
+
+        try {
+            $query = Post::with(['user', 'media'])
+                ->where('approved', true);
+
+            $query = match ($this->sort) {
+                'liked' => $query->orderByDesc('likes_count')->orderByDesc('created_at'),
+                'commented' => $query->orderByDesc('comments_count')->orderByDesc('created_at'),
+                default => $query->orderByDesc('pinned')->orderByDesc('created_at'),
+            };
+
+            $posts = $query->paginate(10);
+
+            foreach ($posts as $post) {
+                if (in_array($post->id, $this->openComments, true)) {
+                    $comments[$post->id] = Comment::with(['user', 'replies.user'])
+                        ->where('commentable_type', Post::class)
+                        ->where('commentable_id', $post->id)
+                        ->whereNull('parent_id')
+                        ->where('approved', true)
+                        ->orderByDesc('created_at')
+                        ->get();
+                }
             }
+
+            $likedPosts = $this->likedIds(Post::class);
+            $likedComments = $this->likedIds(Comment::class);
+        } catch (\Throwable $e) {
+            // Normalmente: las migraciones de la extensión no se han ejecutado.
+            report($e);
+            $error = 'La comunidad todavía no está lista. Un administrador debe ejecutar las migraciones de la extensión (Admin → Extensions → Cyberpunk Theme → Reinstalar archivos).';
         }
 
         return view('cyberpunk::livewire.community', [
             'posts' => $posts,
             'commentsByPost' => $comments,
-            'likedPosts' => $this->likedIds(Post::class),
-            'likedComments' => $this->likedIds(Comment::class),
+            'likedPosts' => $likedPosts,
+            'likedComments' => $likedComments,
+            'error' => $error,
         ])->layoutData([
             'title' => Config::theme('community_name', 'Comunidad'),
         ]);
