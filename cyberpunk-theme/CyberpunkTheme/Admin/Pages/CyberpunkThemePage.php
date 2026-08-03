@@ -128,6 +128,37 @@ class CyberpunkThemePage extends Page implements HasActions, HasForms
                             ->helperText('En modo "completas" se ve toda la imagen (por ejemplo 1080x720) y el texto lleva un degradado detrás para que se lea bien.'),
                     ]),
 
+                Section::make('Contadores')
+                    ->description('El tiempo activo y las visitas se guardan en la base de datos: no se reinician al reiniciar el servidor ni al actualizar el tema.')
+                    ->columns(2)
+                    ->schema([
+                        TextInput::make('uptime_start')
+                            ->label('Contar el tiempo activo desde')
+                            ->placeholder('2024-05-17')
+                            ->helperText('Fecha de apertura de tu hosting. Se rellenó sola al instalar; cámbiala sólo si quieres otra. Formato AAAA-MM-DD.')
+                            ->rule(function () {
+                                return function (string $attribute, $value, \Closure $fail) {
+                                    if (trim((string) $value) === '') {
+                                        return;
+                                    }
+
+                                    try {
+                                        \Illuminate\Support\Carbon::parse($value);
+                                    } catch (\Throwable $e) {
+                                        $fail('No entiendo esa fecha. Usa el formato AAAA-MM-DD.');
+                                    }
+                                };
+                            }),
+                        \Filament\Forms\Components\Placeholder::make('visitas_actuales')
+                            ->label('Visitas contadas hasta ahora')
+                            ->content(function (): string {
+                                $v = Visits::summary();
+
+                                return 'Hoy: ' . number_format($v['today']) . ' · Total: ' . number_format($v['total'])
+                                    . ' — el total se guarda aparte y sólo lo pone a cero el botón «Reiniciar visitas».';
+                            }),
+                    ]),
+
                 Section::make('Textos')
                     ->columns(2)
                     ->schema([

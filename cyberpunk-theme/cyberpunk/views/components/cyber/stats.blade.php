@@ -67,7 +67,7 @@ $showVisits = cyber_bool('visitors_enabled', true) && ($visits['available'] ?? f
                 </div>
                 <div>
                     <p class="text-sm font-semibold uppercase tracking-widest text-base/60">Visitas</p>
-                    <p class="text-xs text-base/45">Contadas desde que el tema está activo</p>
+                    <p class="text-xs text-base/45">Guardadas en la base de datos: no se reinician</p>
                 </div>
             </div>
             <div class="grid grid-cols-2 gap-2 font-mono">

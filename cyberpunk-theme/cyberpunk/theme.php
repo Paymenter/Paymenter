@@ -375,8 +375,11 @@ if (!function_exists('cyber_marketing')) {
 
 if (!function_exists('cyber_popular_category')) {
     /**
-     * Categoría con más "me gusta" + comentarios entre sus productos.
-     * Devuelve el id de la categoría o null.
+     * Categoría mejor valorada según las estrellas de sus productos.
+     *
+     * Se usa una media ponderada (bayesiana) para que una categoría con una
+     * sola reseña de 5 estrellas no adelante a otra con veinte de 4,8.
+     * Devuelve el id de la categoría o null si nadie ha valorado nada.
      */
     function cyber_popular_category(): ?int
     {
@@ -392,25 +395,52 @@ if (!function_exists('cyber_popular_category')) {
                     return null;
                 }
 
-                $scores = [];
-                $products = \App\Models\Product::whereIn('id', array_keys($stats))
+                // Sumamos las reseñas de cada categoría a partir de sus productos.
+                $categorias = \App\Models\Product::whereIn('id', array_keys($stats))
                     ->pluck('category_id', 'id');
 
+                $acumulado = [];
+
                 foreach ($stats as $productId => $row) {
-                    $categoryId = $products[$productId] ?? null;
+                    $categoryId = $categorias[$productId] ?? null;
+
                     if (!$categoryId) {
                         continue;
                     }
-                    $scores[$categoryId] = ($scores[$categoryId] ?? 0) + ($row['likes'] * 2) + $row['comments'];
+
+                    $n = (int) ($row['count'] ?? 0);
+
+                    if ($n === 0) {
+                        continue;
+                    }
+
+                    $acumulado[$categoryId]['reseñas'] = ($acumulado[$categoryId]['reseñas'] ?? 0) + $n;
+                    $acumulado[$categoryId]['suma'] = ($acumulado[$categoryId]['suma'] ?? 0)
+                        + ($n * (float) ($row['average'] ?? 0));
                 }
 
-                if (count($scores) === 0) {
+                if (count($acumulado) === 0) {
                     return null;
                 }
 
-                arsort($scores);
+                $totalReseñas = array_sum(array_column($acumulado, 'reseñas'));
+                $totalSuma = array_sum(array_column($acumulado, 'suma'));
+                $mediaGlobal = $totalReseñas > 0 ? $totalSuma / $totalReseñas : 0.0;
 
-                return (int) array_key_first($scores);
+                // Mínimo de reseñas para que la media de una categoría pese.
+                $minimo = 3;
+                $puntuadas = [];
+
+                foreach ($acumulado as $categoryId => $row) {
+                    $media = $row['suma'] / $row['reseñas'];
+
+                    $puntuadas[$categoryId] = (($row['reseñas'] * $media) + ($minimo * $mediaGlobal))
+                        / ($row['reseñas'] + $minimo);
+                }
+
+                arsort($puntuadas);
+
+                return (int) array_key_first($puntuadas);
             } catch (\Throwable $e) {
                 return null;
             }
@@ -526,6 +556,50 @@ if (!function_exists('cyber_linkify')) {
     }
 }
 
+if (!function_exists('cyber_uptime_start')) {
+    /**
+     * Momento (timestamp) desde el que se cuenta el tiempo activo.
+     *
+     * El valor se fija UNA vez y se guarda en los ajustes, así que la cuenta
+     * nunca se reinicia aunque después se borren facturas, pedidos o usuarios.
+     * El administrador puede poner la fecha real de apertura en el panel.
+     */
+    function cyber_uptime_start(): ?int
+    {
+        // 1) Fecha puesta a mano (o fijada en la primera instalación).
+        $guardada = trim((string) cyber_cfg('uptime_start', ''));
+
+        if ($guardada !== '') {
+            try {
+                return \Illuminate\Support\Carbon::parse($guardada)->timestamp;
+            } catch (\Throwable $e) {
+                // Fecha inválida: seguimos con el cálculo automático.
+            }
+        }
+
+        // 2) Si no hay nada guardado, la deducimos del dato más antiguo.
+        return cyber_uptime_guess();
+    }
+}
+
+if (!function_exists('cyber_uptime_guess')) {
+    /**
+     * Deduce la fecha de arranque del registro más antiguo de la tienda.
+     */
+    function cyber_uptime_guess(): ?int
+    {
+        try {
+            $oldest = \App\Models\Invoice::orderBy('created_at')->value('created_at')
+                ?? \App\Models\Order::orderBy('created_at')->value('created_at')
+                ?? \App\Models\User::orderBy('created_at')->value('created_at');
+
+            return $oldest ? \Illuminate\Support\Carbon::parse($oldest)->timestamp : null;
+        } catch (\Throwable $e) {
+            return null;
+        }
+    }
+}
+
 if (!function_exists('cyber_stats')) {
     /**
      * Estadísticas mostradas en el inicio. Se cachean 5 minutos.
@@ -549,11 +623,7 @@ if (!function_exists('cyber_stats')) {
                 $stats['products'] = \App\Models\Product::where('hidden', false)->count();
                 $stats['orders'] = \App\Models\Invoice::count();
 
-                $oldest = \App\Models\Invoice::orderBy('created_at')->value('created_at')
-                    ?? \App\Models\Order::orderBy('created_at')->value('created_at')
-                    ?? \App\Models\User::orderBy('created_at')->value('created_at');
-
-                $stats['uptime_start'] = $oldest ? \Illuminate\Support\Carbon::parse($oldest)->timestamp : null;
+                $stats['uptime_start'] = cyber_uptime_start();
             } catch (\Throwable $e) {
                 // Base de datos no disponible todavía (instalación): devolvemos ceros.
             }
@@ -883,6 +953,13 @@ return [
             'type' => 'checkbox',
             'default' => true,
             'database_type' => 'boolean',
+        ],
+        [
+            'name' => 'uptime_start',
+            'label' => 'Contar el tiempo activo desde',
+            'type' => 'text',
+            'default' => '',
+            'description' => 'Fecha de apertura del hosting (AAAA-MM-DD). Se fija sola en la instalación y ya no cambia.',
         ],
         [
             'name' => 'visitors_enabled',

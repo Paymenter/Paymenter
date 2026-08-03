@@ -186,9 +186,19 @@ class Config
     {
         Setting::where('settingable_type', null)
             ->where('key', 'like', self::PREFIX . '%')
+            // El contador de visitas y la fecha de arranque no son "diseño":
+            // sólo se reinician con sus propios botones, nunca al restablecer
+            // la configuración.
+            ->whereNotIn('key', [
+                self::PREFIX . Visits::TOTAL_KEY,
+                self::PREFIX . 'uptime_start',
+            ])
             ->delete();
 
-        self::save(Defaults::settings());
+        $defaults = Defaults::settings();
+        unset($defaults[Visits::TOTAL_KEY], $defaults['uptime_start']);
+
+        self::save($defaults);
     }
 
     /**

@@ -76,6 +76,9 @@ class Defaults
             'marketing_subtitle' => 'Infraestructura preparada para tus webs, bots y aplicaciones. Elige tu plan y despliega en minutos.',
             'stats_enabled' => true,
             'uptime_enabled' => true,
+            // Se rellena sola al instalar y no se toca nunca más, para que la
+            // cuenta del tiempo activo no se reinicie.
+            'uptime_start' => '',
             'visitors_enabled' => true,
             'quick_links_enabled' => true,
             'socials_enabled' => true,

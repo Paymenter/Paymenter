@@ -16,7 +16,7 @@ use Illuminate\Support\Facades\File;
 class Installer
 {
     /** Versión del paquete (se guarda en la base de datos para saber qué hay instalado). */
-    public const VERSION = '1.4.0';
+    public const VERSION = '1.4.1';
 
     /**
      * Copia el tema, los assets compilados y crea los ajustes por defecto.
@@ -60,6 +60,7 @@ class Installer
         try {
             self::seedSettings($overwriteSettings);
             self::refreshStaleTexts();
+            self::pinUptimeStart();
             $report['settings'] = true;
         } catch (\Throwable $e) {
             $report['errors'][] = 'Ajustes: ' . $e->getMessage();
@@ -207,6 +208,34 @@ class Installer
                 Config::save([$key => $defaults[$key]]);
             }
         }
+    }
+
+    /**
+     * Fija de una vez la fecha desde la que se cuenta el tiempo activo.
+     *
+     * Si no se guardara, el contador se calcularía en cada visita a partir de
+     * la factura o el usuario más antiguo, y bastaría con borrar ese registro
+     * para que la cuenta se reiniciara. Guardándola, la cuenta ya no se pierde.
+     */
+    public static function pinUptimeStart(): void
+    {
+        $actual = Setting::where('settingable_type', null)
+            ->where('key', Config::PREFIX . 'uptime_start')
+            ->value('value');
+
+        if (trim((string) $actual) !== '') {
+            return;
+        }
+
+        Defaults::loadThemeHelpers();
+
+        $timestamp = function_exists('cyber_uptime_guess') ? cyber_uptime_guess() : null;
+
+        $fecha = $timestamp
+            ? \Illuminate\Support\Carbon::createFromTimestamp($timestamp)->toDateTimeString()
+            : now()->toDateTimeString();
+
+        Config::save(['uptime_start' => $fecha]);
     }
 
     /**

@@ -53,7 +53,7 @@
             @endphp
             <div class="cyber-card cyber-card-hover cyber-clip flex flex-col overflow-hidden relative {{ $allSoldOut ? 'cyber-strike' : '' }} {{ $isPopularCategory ? 'cyber-popular-card' : '' }}">
                 @if($isPopularCategory)
-                <x-cyber.popular-badge label="LA MÁS POPULAR" />
+                <x-cyber.popular-badge label="LA MEJOR VALORADA" />
                 @endif
                 @if ($category->image)
                 <x-cyber.picture :src="Storage::url($category->image)" :alt="$category->name"

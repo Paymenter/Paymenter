@@ -4,15 +4,15 @@ Paquetes disponibles (elige según lo que admita tu servidor):
 
 | Paquete | Qué instala | Dónde | Tamaño |
 |---|---|---|---|
-| `cyberpunk-extension.zip` | La extensión sola | `extensions/Others/CyberpunkTheme` | 87 KB |
-| `cyberpunk-extension-con-tema.zip` | Extensión + tema (sin estilos) | `extensions/…` + `themes/cyberpunk` | 236 KB |
+| `cyberpunk-extension.zip` | La extensión sola | `extensions/Others/CyberpunkTheme` | 89 KB |
+| `cyberpunk-extension-con-tema.zip` | Extensión + tema (sin estilos) | `extensions/…` + `themes/cyberpunk` | 239 KB |
 | `cyberpunk-assets.zip` | Sólo los estilos compilados | `public/cyberpunk` | 227 KB |
-| `cyberpunk-tema.zip` | El tema completo + estilos | `themes/cyberpunk` + `public/cyberpunk` | 384 KB |
-| `cyberpunk-todo-en-uno.zip` | Todo de una vez | las tres carpetas | 462 KB |
+| `cyberpunk-tema.zip` | El tema completo + estilos | `themes/cyberpunk` + `public/cyberpunk` | 385 KB |
+| `cyberpunk-todo-en-uno.zip` | Todo de una vez | las tres carpetas | 465 KB |
 
 ## Si el subidor del panel rechaza los archivos grandes
 
-Si `cyberpunk-extension.zip` (87 KB) sube pero `cyberpunk-todo-en-uno.zip` (462 KB)
+Si `cyberpunk-extension.zip` (89 KB) sube pero `cyberpunk-todo-en-uno.zip` (465 KB)
 no, tu servidor tiene un límite de subida bajo. Compruébalo:
 
 ```bash
@@ -26,7 +26,7 @@ PHP-FPM y Nginx.
 
 Mientras tanto, la combinación que funciona con límites bajos es:
 
-1. Sube por el panel `cyberpunk-extension-con-tema.zip` (236 KB) → instala la
+1. Sube por el panel `cyberpunk-extension-con-tema.zip` (239 KB) → instala la
    extensión **y** el tema.
 2. Copia por FTP el contenido de `cyberpunk-assets.zip` a `public/cyberpunk/`.
 
@@ -199,6 +199,11 @@ Botones de arriba: **Guardar cambios**, **Activar tema**, **Reinstalar archivos*
     tamaño, con un degradado detrás del texto para que se lea bien. Pensado para
     imágenes tipo 1080x720.
   - *Recortadas* — todas a la misma altura, como una miniatura.
+- **Contadores** (General): el **tiempo activo** cuenta desde la fecha que
+  pongas ahí (se rellena sola al instalar con la fecha del registro más antiguo
+  de tu tienda). Las **visitas** se guardan en la base de datos y no se
+  reinician al reiniciar el servidor, al limpiar la caché ni al actualizar el
+  tema; sólo las pone a cero el botón *Reiniciar visitas*.
 - **Posición del marketing** (Marketing): coloca a la izquierda, en el centro o a
   la derecha el banner, los títulos de sección y las tarjetas.
 - **Selector de iconos**: en las tarjetas, ventajas, accesos rápidos y páginas el

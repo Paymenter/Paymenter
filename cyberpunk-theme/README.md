@@ -4,14 +4,34 @@ Dos paquetes separados. **Ninguno modifica el núcleo de Paymenter ni el tema `d
 
 | Archivo | Qué es | Se instala en | Tamaño |
 |---|---|---|---|
-| `cyberpunk-extension.zip` | **La extensión sola** | `extensions/Others/CyberpunkTheme` | 87 KB |
-| `cyberpunk-extension-con-tema.zip` | **Extensión + tema**, sin los estilos compilados | `extensions/…` y `themes/cyberpunk` | 236 KB |
+| `cyberpunk-extension.zip` | **La extensión sola** | `extensions/Others/CyberpunkTheme` | 89 KB |
+| `cyberpunk-extension-con-tema.zip` | **Extensión + tema**, sin los estilos compilados | `extensions/…` y `themes/cyberpunk` | 239 KB |
 | `cyberpunk-assets.zip` | **Sólo los estilos compilados** (CSS y JS) | `public/cyberpunk` | 227 KB |
-| `cyberpunk-tema.zip` | **El tema completo** + estilos + `instalar.sh` | `themes/cyberpunk` y `public/cyberpunk` | 384 KB |
-| `cyberpunk-todo-en-uno.zip` | **Todo**: extensión + tema + estilos | las tres carpetas de una vez | 462 KB |
+| `cyberpunk-tema.zip` | **El tema completo** + estilos + `instalar.sh` | `themes/cyberpunk` y `public/cyberpunk` | 385 KB |
+| `cyberpunk-todo-en-uno.zip` | **Todo**: extensión + tema + estilos | las tres carpetas de una vez | 465 KB |
 
 El tema funciona por sí solo; la extensión añade el panel de administración y las
 funciones sociales encima.
+
+## Novedades de la 1.4.1
+
+- **Vuelve la insignia de categoría**, ahora como «La mejor valorada» y
+  calculada con las estrellas de sus productos. Había desaparecido porque el
+  cálculo seguía leyendo los «me gusta», que dejaron de existir en la 1.4.0:
+  en producción eso lanzaba una excepción y el resultado acababa siendo
+  «ninguna categoría».
+- **Las visitas ya no se pierden.** El total se guarda aparte, en la tabla de
+  ajustes, además del detalle por días. Aunque se vacíe la tabla de días, se
+  limpie la caché, se reinicie el servidor o se reinstale la extensión, el
+  total nunca baja. Sólo lo pone a cero el botón **Reiniciar visitas**.
+- Para no contar dos veces al mismo visitante, además de la sesión se usa una
+  cookie: si el servidor se reinicia y se pierden las sesiones, el conteo del
+  día sigue siendo correcto.
+- **El tiempo activo ya no se reinicia.** La fecha de arranque se fija una vez
+  y se guarda; antes se recalculaba a partir de la factura o el usuario más
+  antiguo, así que borrar ese registro movía el contador. Se puede poner la
+  fecha real de apertura en *General → Contadores*.
+- «Restablecer todo» ya no toca el contador de visitas ni la fecha de arranque.
 
 ## Novedades de la 1.4.0
 
@@ -83,9 +103,9 @@ funciones sociales encima.
 
 - **Por terminal (siempre funciona):** `cyberpunk-tema.zip` + `cyberpunk-extension.zip`.
 - **Todo desde el panel:** `cyberpunk-todo-en-uno.zip` (necesita que el subidor
-  admita 462 KB y que el usuario web pueda escribir en `themes/` y `public/`).
+  admita 465 KB y que el usuario web pueda escribir en `themes/` y `public/`).
 - **Si el subidor rechaza archivos grandes:** sube `cyberpunk-extension-con-tema.zip`
-  (236 KB) por el panel y copia `cyberpunk-assets.zip` a `public/cyberpunk/` por FTP.
+  (239 KB) por el panel y copia `cyberpunk-assets.zip` a `public/cyberpunk/` por FTP.
 
 Los ZIP se generan con `bash build.sh` a partir de las fuentes de esta carpeta.
 
