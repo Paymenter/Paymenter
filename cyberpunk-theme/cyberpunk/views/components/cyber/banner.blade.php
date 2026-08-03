@@ -57,13 +57,19 @@ try {
     @endforeach
 
     {{-- Contenido del slide --}}
+    {{-- Todas las diapositivas se apilan en la misma celda de la rejilla, así
+         que todas comparten exactamente el mismo ancho y la alineación
+         (izquierda / centro / derecha) se aplica igual a todas. --}}
     <div class="relative container py-16 md:py-24 min-h-[440px] flex flex-col justify-center">
+        <div class="grid flex-grow">
         @foreach($slides as $index => $slide)
         <div x-show="slide === {{ $index }}" x-cloak
             x-transition:enter="transition ease-out duration-700 delay-100"
             x-transition:enter-start="opacity-0 translate-y-4"
             x-transition:enter-end="opacity-100 translate-y-0"
-            class="max-w-3xl {{ $align['wrapper'] }} {{ $align['text'] }} {{ $index === 0 ? '' : 'absolute' }}">
+            class="col-start-1 row-start-1 w-full self-center flex flex-col {{ $align['col'] }}">
+
+            <div class="w-full max-w-3xl {{ $align['wrapper'] }} {{ $align['text'] }} flex flex-col {{ $align['col'] }}">
 
             <span class="cyber-chip animate-cyber-flicker">
                 <x-ri-flashlight-fill class="size-3.5" />
@@ -75,7 +81,7 @@ try {
             </h1>
 
             @if(!empty($slide['subtitle']))
-            <p class="mt-5 text-lg md:text-xl text-base/75 max-w-2xl">{{ $slide['subtitle'] }}</p>
+            <p class="mt-5 text-lg md:text-xl text-base/75 max-w-2xl {{ $align['wrapper'] }}">{{ $slide['subtitle'] }}</p>
             @endif
 
             @if($words->count() > 0)
@@ -121,8 +127,10 @@ try {
                 @endif
                 @endauth
             </div>
+            </div>
         </div>
         @endforeach
+        </div>
 
         {{-- Indicadores --}}
         @if(count($slides) > 1)

@@ -4,7 +4,7 @@
     <x-cyber.banner />
     @endif
 
-    @if(cyber_bool('marketing_enabled', true))
+    @if(cyber_bool('marquee_enabled', false))
     <x-cyber.marquee />
     @endif
 
@@ -40,7 +40,7 @@
             subtitle="Elige la categoría que necesitas y revisa la disponibilidad en tiempo real."
             icon="ri-server-fill" />
 
-        <div class="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5 mt-8">
+        <div class="grid gap-5 mt-8 {{ cyber_cols(count($categories)) }}">
             @forelse ($categories as $category)
             @php
                 $isPopularCategory = $popularCategoryId !== null && (int) $category->id === $popularCategoryId;
@@ -56,11 +56,8 @@
                 <x-cyber.popular-badge label="LA MÁS POPULAR" />
                 @endif
                 @if ($category->image)
-                <div class="relative {{ cyber_bool('small_images', false) ? 'h-24' : 'h-40' }} overflow-hidden">
-                    <img src="{{ Storage::url($category->image) }}" alt="{{ $category->name }}"
-                        class="w-full h-full object-cover object-center">
-                    <div class="absolute inset-0 bg-gradient-to-t from-background-secondary via-transparent to-transparent"></div>
-                </div>
+                <x-cyber.picture :src="Storage::url($category->image)" :alt="$category->name"
+                    :height="cyber_bool('small_images', false) ? 'h-24' : 'h-40'" max="max-h-[26rem]" />
                 @endif
 
                 <div class="p-5 flex flex-col flex-grow">

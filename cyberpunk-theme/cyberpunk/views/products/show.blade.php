@@ -10,9 +10,9 @@ $isPopular = in_array($product->id, $popular, true);
         <div class="absolute inset-0 cyber-gradient opacity-[0.06] pointer-events-none"></div>
         <div class="relative flex flex-col @if ($product->image) md:grid grid-cols-2 gap-10 @endif">
             @if ($product->image)
-            <div class="relative rounded-xl overflow-hidden border border-neutral">
+            <div class="relative rounded-xl overflow-hidden border border-neutral bg-background/40 self-start w-full">
                 <img src="{{ Storage::url($product->image) }}" alt="{{ $product->name }}"
-                    class="w-full h-96 object-contain object-center bg-background/40">
+                    class="block w-full {{ cyber_image_mode() === 'cover' ? 'h-96 object-cover' : 'h-auto max-h-[36rem] object-contain' }} object-center">
             </div>
             @endif
 

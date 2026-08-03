@@ -4,22 +4,44 @@ Dos paquetes separados. **Ninguno modifica el núcleo de Paymenter ni el tema `d
 
 | Archivo | Qué es | Se instala en | Tamaño |
 |---|---|---|---|
-| `cyberpunk-extension.zip` | **La extensión sola** | `extensions/Others/CyberpunkTheme` | 58 KB |
-| `cyberpunk-extension-con-tema.zip` | **Extensión + tema**, sin los estilos compilados | `extensions/…` y `themes/cyberpunk` | 190 KB |
-| `cyberpunk-assets.zip` | **Sólo los estilos compilados** (CSS y JS) | `public/cyberpunk` | 223 KB |
-| `cyberpunk-tema.zip` | **El tema completo** + estilos + `instalar.sh` | `themes/cyberpunk` y `public/cyberpunk` | 361 KB |
-| `cyberpunk-todo-en-uno.zip` | **Todo**: extensión + tema + estilos | las tres carpetas de una vez | 413 KB |
+| `cyberpunk-extension.zip` | **La extensión sola** | `extensions/Others/CyberpunkTheme` | 78 KB |
+| `cyberpunk-extension-con-tema.zip` | **Extensión + tema**, sin los estilos compilados | `extensions/…` y `themes/cyberpunk` | 218 KB |
+| `cyberpunk-assets.zip` | **Sólo los estilos compilados** (CSS y JS) | `public/cyberpunk` | 226 KB |
+| `cyberpunk-tema.zip` | **El tema completo** + estilos + `instalar.sh` | `themes/cyberpunk` y `public/cyberpunk` | 374 KB |
+| `cyberpunk-todo-en-uno.zip` | **Todo**: extensión + tema + estilos | las tres carpetas de una vez | 445 KB |
 
 El tema funciona por sí solo; la extensión añade el panel de administración y las
 funciones sociales encima.
+
+## Novedades de la 1.3.0
+
+- **Marketing centrado de verdad.** La posición (izquierda / centro / derecha) se
+  aplica a **todas** las diapositivas del banner, a los títulos de sección
+  («¿Qué puedes montar con nosotros?», «Nuestros servicios», «Accesos rápidos»)
+  y a las tarjetas. Las secciones con pocas tarjetas ya no quedan descolgadas.
+- **Login y registro:** el lateral rota la diapositiva entera (imagen, título,
+  texto e indicadores), no sólo el fondo.
+- **Imágenes completas.** Nueva opción *Imágenes de categorías y productos*:
+  las imágenes (por ejemplo 1080x720) se ven enteras, la caja se adapta a su
+  proporción y el texto lleva un degradado detrás para que se lea siempre.
+- **Comunidad estilo Facebook.** Una sola foto o vídeo se ve completo, sin
+  recortes, con un fondo difuminado si es vertical; los vídeos se reproducen
+  ahí mismo. Varios archivos van en rejilla.
+- **Enlaces pinchables** en las publicaciones, comentarios, respuestas y reseñas.
+- **Apartado de reseñas rediseñado**: resumen de me gusta y opiniones, buscador,
+  orden por más valorados/comentados, miniaturas uniformes y panel de reseñas
+  con la ficha del plan.
+- **Selector visual de iconos** en el panel: se ven dibujados y se buscan por
+  nombre entre todos los iconos disponibles.
+- **Cinta de frases en movimiento desactivable** (viene desactivada).
 
 **¿Cuál usar?**
 
 - **Por terminal (siempre funciona):** `cyberpunk-tema.zip` + `cyberpunk-extension.zip`.
 - **Todo desde el panel:** `cyberpunk-todo-en-uno.zip` (necesita que el subidor
-  admita 413 KB y que el usuario web pueda escribir en `themes/` y `public/`).
+  admita 445 KB y que el usuario web pueda escribir en `themes/` y `public/`).
 - **Si el subidor rechaza archivos grandes:** sube `cyberpunk-extension-con-tema.zip`
-  (190 KB) por el panel y copia `cyberpunk-assets.zip` a `public/cyberpunk/` por FTP.
+  (218 KB) por el panel y copia `cyberpunk-assets.zip` a `public/cyberpunk/` por FTP.
 
 Los ZIP se generan con `bash build.sh` a partir de las fuentes de esta carpeta.
 

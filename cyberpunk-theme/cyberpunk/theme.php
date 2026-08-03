@@ -422,15 +422,107 @@ if (!function_exists('cyber_align')) {
     /**
      * Clases de alineación del marketing (izquierda, centro o derecha).
      *
-     * @return array{wrapper:string,text:string,items:string}
+     * - wrapper: para bloques con ancho máximo (los centra o los pega a un lado)
+     * - text   : alineación del texto
+     * - items  : para contenedores flex en fila
+     * - col    : para contenedores flex en columna
+     * - grid   : para rejillas con pocas tarjetas
+     *
+     * @return array{key:string,wrapper:string,text:string,items:string,col:string,grid:string}
      */
     function cyber_align(): array
     {
         return match (cyber_cfg('marketing_align', 'left')) {
-            'center' => ['wrapper' => 'mx-auto', 'text' => 'text-center', 'items' => 'items-center justify-center'],
-            'right' => ['wrapper' => 'ml-auto', 'text' => 'text-right', 'items' => 'items-end justify-end'],
-            default => ['wrapper' => '', 'text' => 'text-left', 'items' => 'items-start justify-start'],
+            'center' => [
+                'key' => 'center',
+                'wrapper' => 'mx-auto',
+                'text' => 'text-center',
+                'items' => 'items-center justify-center',
+                'col' => 'items-center',
+                'grid' => 'justify-items-center',
+            ],
+            'right' => [
+                'key' => 'right',
+                'wrapper' => 'ml-auto',
+                'text' => 'text-right',
+                'items' => 'items-center justify-end',
+                'col' => 'items-end',
+                'grid' => 'justify-items-end',
+            ],
+            default => [
+                'key' => 'left',
+                'wrapper' => '',
+                'text' => 'text-left',
+                'items' => 'items-center justify-start',
+                'col' => 'items-start',
+                'grid' => 'justify-items-stretch',
+            ],
         };
+    }
+}
+
+if (!function_exists('cyber_cols')) {
+    /**
+     * Clases de una rejilla que se adapta al número de tarjetas: con pocas
+     * tarjetas no se reparten en 4 columnas estrechas y, si el marketing está
+     * centrado, el bloque entero queda centrado.
+     */
+    function cyber_cols(int $count, int $max = 4): string
+    {
+        $align = cyber_align();
+
+        $columns = max(1, min($count, $max));
+
+        $grid = match ($columns) {
+            1 => 'grid-cols-1 max-w-md',
+            2 => 'grid-cols-1 sm:grid-cols-2 max-w-3xl',
+            3 => 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 max-w-5xl',
+            default => 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-4',
+        };
+
+        return trim($grid . ' ' . $align['wrapper']);
+    }
+}
+
+if (!function_exists('cyber_image_mode')) {
+    /**
+     * Cómo se muestran las imágenes de categorías y productos:
+     *
+     * - full  : la imagen se ve completa y la caja se adapta a su tamaño
+     * - cover : la imagen se recorta a una altura fija (diseño compacto)
+     */
+    function cyber_image_mode(): string
+    {
+        return cyber_cfg('image_mode', 'full') === 'cover' ? 'cover' : 'full';
+    }
+}
+
+if (!function_exists('cyber_linkify')) {
+    /**
+     * Escapa el texto de un usuario y convierte los enlaces en enlaces
+     * pinchables. Devuelve HTML listo para imprimir con {!! !!}.
+     */
+    function cyber_linkify(?string $text): string
+    {
+        $escaped = e((string) $text);
+
+        $html = preg_replace_callback(
+            '~(?<![\w@/])((?:https?://|www\.)[^\s<]+)~i',
+            function (array $match): string {
+                // Quitamos la puntuación final para no tragarnos el punto de la frase.
+                $url = rtrim($match[1], '.,;:!?)]}\'"');
+                $trail = substr($match[1], strlen($url));
+
+                $href = preg_match('~^https?://~i', $url) ? $url : 'https://' . $url;
+                $label = mb_strlen($url) > 60 ? mb_substr($url, 0, 57) . '…' : $url;
+
+                return '<a href="' . $href . '" target="_blank" rel="noopener noreferrer nofollow"'
+                    . ' class="cyber-link">' . $label . '</a>' . $trail;
+            },
+            $escaped
+        );
+
+        return $html ?? $escaped;
     }
 }
 
@@ -637,7 +729,17 @@ return [
             'type' => 'checkbox',
             'default' => false,
             'database_type' => 'boolean',
-            'description' => 'Mostrar imágenes pequeñas en el listado de productos',
+            'description' => 'Mostrar imágenes pequeñas en el listado de productos (sólo en modo recortado)',
+        ],
+        [
+            'name' => 'image_mode',
+            'label' => 'Imágenes de categorías y productos',
+            'type' => 'select',
+            'options' => [
+                'full' => 'Completas (se adaptan al tamaño de la imagen)',
+                'cover' => 'Recortadas a una altura fija',
+            ],
+            'default' => 'full',
         ],
         [
             'name' => 'show_category_description',
@@ -759,6 +861,14 @@ return [
             'type' => 'checkbox',
             'default' => true,
             'database_type' => 'boolean',
+        ],
+        [
+            'name' => 'marquee_enabled',
+            'label' => 'Mostrar la cinta de frases en movimiento',
+            'type' => 'checkbox',
+            'default' => false,
+            'database_type' => 'boolean',
+            'description' => 'La tira que va pasando frases bajo el banner. Desactivada por defecto.',
         ],
         [
             'name' => 'stats_enabled',

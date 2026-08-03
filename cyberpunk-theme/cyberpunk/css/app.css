@@ -38,7 +38,7 @@
 @source inline("{absolute,relative,fixed,sticky,inset-0,top-0,bottom-0,left-0,right-0}");
 @source inline("overflow-{auto,hidden,visible}");
 @source inline("shadow-{sm,md,lg,xl,none}");
-@source inline("max-w-{sm,md,lg,xl,2xl,3xl,4xl,full,fit}");
+@source inline("max-w-{sm,md,lg,xl,2xl,3xl,4xl,5xl,6xl,7xl,full,fit}");
 @source inline("size-{3,3.5,4,5,6,7,8,9,10,11,12,14,16,20,24,28,32}");
 @source inline("{w,h}-{7,9,11,14,28,36,40,44,52,56,72,80,96}");
 @source inline("{min-h,max-h}-{0,20,32,40,48,56,64,80,96}");
@@ -49,6 +49,21 @@
 @source inline("{ps,pe,ms,me,pl,pr,ml,mr}-{1,2,3,4,5,6,8,10,12}");
 @source inline("{border-s,border-e,border-l,border-r}-{2,4}");
 @source inline("{rounded-full,rounded-2xl,rounded-3xl,shrink-0,truncate,whitespace-pre-line,break-words}");
+@source inline("{col,row}-start-{1,2}");
+@source inline("self-{start,end,center,stretch,auto}");
+@source inline("justify-items-{start,end,center,stretch}");
+@source inline("{mx,my}-{auto,0}");
+@source inline("text-{left,center,right}");
+@source inline("max-h-[{22,24,26,30,32,34,36,40}rem]");
+@source inline("bg-black");
+@source inline("scroll-mt-{16,24}");
+@source inline("blur-{sm,md,lg,xl,2xl,3xl}");
+@source inline("scale-{100,105,110}");
+@source inline("max-h-[{70,80,85,90}vh]");
+@source inline("{-,}translate-{x,y}-1/2");
+@source inline("{left,right,top,bottom}-{2,3,3.5,4}");
+@source inline("min-w-[110px]");
+@source inline("pointer-events-none");
 
 @theme {
     /* Tipografía por defecto: pila del sistema (se puede cambiar desde el admin) */
@@ -557,12 +572,73 @@
     background: hsl(var(--color-background));
 }
 
-/* Reproductores / media de la comunidad */
+/* Reproductores / media de la comunidad (rejilla: recorte cuadrado) */
+.cyber-media,
+.cyber-media > a {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
 .cyber-media img,
 .cyber-media video {
     width: 100%;
     height: 100%;
     object-fit: cover;
+}
+
+/* Media a tamaño completo, estilo Facebook: la foto o el vídeo se ven
+   enteros, sin recortes, y la caja se adapta a su proporción. */
+.cyber-media-full {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    background: hsl(var(--color-background) / 0.7);
+}
+
+.cyber-media-full > a {
+    display: block;
+    max-width: 100%;
+}
+
+/* Copia difuminada detrás: rellena los lados de las fotos verticales
+   en vez de dejar dos franjas vacías. */
+.cyber-media-bg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: blur(28px);
+    transform: scale(1.15);
+    opacity: 0.35;
+    pointer-events: none;
+}
+
+.cyber-media-item {
+    position: relative;
+    display: block;
+    width: auto;
+    height: auto;
+    max-width: 100%;
+    max-height: 42rem;
+    margin-inline: auto;
+}
+
+/* Enlaces dentro del texto que escriben los usuarios */
+.cyber-link {
+    color: hsl(var(--color-primary));
+    font-weight: 600;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    word-break: break-word;
+    overflow-wrap: anywhere;
+}
+
+.cyber-link:hover {
+    color: hsl(var(--color-accent));
 }
 
 /* Barra de progreso de stock */

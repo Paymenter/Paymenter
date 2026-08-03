@@ -4,15 +4,15 @@ Paquetes disponibles (elige según lo que admita tu servidor):
 
 | Paquete | Qué instala | Dónde | Tamaño |
 |---|---|---|---|
-| `cyberpunk-extension.zip` | La extensión sola | `extensions/Others/CyberpunkTheme` | 58 KB |
-| `cyberpunk-extension-con-tema.zip` | Extensión + tema (sin estilos) | `extensions/…` + `themes/cyberpunk` | 190 KB |
-| `cyberpunk-assets.zip` | Sólo los estilos compilados | `public/cyberpunk` | 223 KB |
-| `cyberpunk-tema.zip` | El tema completo + estilos | `themes/cyberpunk` + `public/cyberpunk` | 361 KB |
-| `cyberpunk-todo-en-uno.zip` | Todo de una vez | las tres carpetas | 413 KB |
+| `cyberpunk-extension.zip` | La extensión sola | `extensions/Others/CyberpunkTheme` | 78 KB |
+| `cyberpunk-extension-con-tema.zip` | Extensión + tema (sin estilos) | `extensions/…` + `themes/cyberpunk` | 218 KB |
+| `cyberpunk-assets.zip` | Sólo los estilos compilados | `public/cyberpunk` | 226 KB |
+| `cyberpunk-tema.zip` | El tema completo + estilos | `themes/cyberpunk` + `public/cyberpunk` | 374 KB |
+| `cyberpunk-todo-en-uno.zip` | Todo de una vez | las tres carpetas | 445 KB |
 
 ## Si el subidor del panel rechaza los archivos grandes
 
-Si `cyberpunk-extension.zip` (58 KB) sube pero `cyberpunk-todo-en-uno.zip` (413 KB)
+Si `cyberpunk-extension.zip` (78 KB) sube pero `cyberpunk-todo-en-uno.zip` (445 KB)
 no, tu servidor tiene un límite de subida bajo. Compruébalo:
 
 ```bash
@@ -26,7 +26,7 @@ PHP-FPM y Nginx.
 
 Mientras tanto, la combinación que funciona con límites bajos es:
 
-1. Sube por el panel `cyberpunk-extension-con-tema.zip` (190 KB) → instala la
+1. Sube por el panel `cyberpunk-extension-con-tema.zip` (218 KB) → instala la
    extensión **y** el tema.
 2. Copia por FTP el contenido de `cyberpunk-assets.zip` a `public/cyberpunk/`.
 
@@ -178,16 +178,32 @@ activa **Enabled** y guarda.
 
 | Pestaña | Qué controla |
 |---|---|
-| General | Qué bloques se ven en el inicio, opciones de tienda, textos |
-| Apariencia | 8 paletas de colores, colores manuales, efectos neón/scanlines/glitch, tipografía, imagen de fondo |
+| General | Qué bloques se ven en el inicio, cinta de frases, cómo se ven las imágenes, opciones de tienda, textos |
+| Apariencia | 8 paletas de colores, colores manuales, animaciones de fondo por modo, efectos neón/scanlines/glitch, tipografía, imagen de fondo |
 | Banner | Diapositivas (imagen, título, texto, botón) y frases de marketing en movimiento |
-| Marketing | Tarjetas de servicios, ventajas y accesos rápidos |
+| Marketing | Posición (izquierda/centro/derecha), tarjetas de servicios, ventajas y accesos rápidos, con **selector visual de iconos** |
 | Páginas | Páginas nuevas con tu HTML, con enlace en la barra de navegación |
-| Comunidad | Nombre, URL, descripción, límite de archivos, avatares |
+| Comunidad | Nombre, URL, descripción, límite de archivos, avatares y el apartado de reseñas |
 | Redes sociales | Facebook, Discord, Instagram, canal y grupo de WhatsApp, Telegram, YouTube, TikTok, X, GitHub |
 
 Botones de arriba: **Guardar cambios**, **Activar tema**, **Reinstalar archivos**,
-**Reiniciar visitas** y **Restablecer todo** (vuelve a la configuración de fábrica).
+**Reparar base de datos**, **Reiniciar visitas** y **Restablecer todo**
+(vuelve a la configuración de fábrica).
+
+### Ajustes que quizá busques
+
+- **Cinta de frases en movimiento** (General): la tira que va pasando frases bajo
+  el banner. Viene **desactivada**; actívala si la quieres.
+- **Imágenes de categorías y productos** (General):
+  - *Completas* (por defecto) — se ve toda la imagen y la caja se adapta a su
+    tamaño, con un degradado detrás del texto para que se lea bien. Pensado para
+    imágenes tipo 1080x720.
+  - *Recortadas* — todas a la misma altura, como una miniatura.
+- **Posición del marketing** (Marketing): coloca a la izquierda, en el centro o a
+  la derecha el banner, los títulos de sección y las tarjetas.
+- **Selector de iconos**: en las tarjetas, ventajas, accesos rápidos y páginas el
+  icono se elige de una lista donde se ve dibujado. Escribe en inglés para buscar
+  entre todos los iconos disponibles (`server`, `cloud`, `robot`, `whatsapp`...).
 
 Moderación: **Admin → Extensions → Comunidad · Publicaciones** y
 **Comunidad · Comentarios**.

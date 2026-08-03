@@ -10,17 +10,23 @@ $popular = cyber_ext() && cyber_bool('reviews_enabled', true)
 
 <div class="container mt-10 pb-10">
     {{-- Cabecera de categoría --}}
-    <div class="cyber-card cyber-clip relative overflow-hidden">
+    {{-- La imagen se ve completa (se adapta a su proporción) y el texto va
+         encima, sobre un degradado, para que siempre se lea bien. --}}
+    <div class="cyber-card cyber-clip relative overflow-hidden grid">
         @if($category->image)
-        {{-- Imagen de la categoría, igual que en los productos --}}
-        <div class="relative h-48 md:h-64 w-full overflow-hidden">
-            <img src="{{ Storage::url($category->image) }}" alt="{{ $category->name }}"
-                class="w-full h-full object-cover object-center">
-            <div class="absolute inset-0 bg-gradient-to-t from-background-secondary via-background-secondary/60 to-transparent"></div>
-        </div>
+        @php $full = cyber_image_mode() !== 'cover'; @endphp
+        @if($full)
+        {{-- Copia desenfocada de fondo para las imágenes muy altas --}}
+        <img src="{{ Storage::url($category->image) }}" alt="" aria-hidden="true"
+            class="col-start-1 row-start-1 self-stretch w-full h-full object-cover scale-110 blur-2xl opacity-40">
+        @endif
+        <img src="{{ Storage::url($category->image) }}" alt="{{ $category->name }}"
+            class="col-start-1 row-start-1 self-start block w-full object-center
+            {{ $full ? 'h-auto max-h-[85vh] object-contain' : 'h-48 md:h-64 object-cover' }}">
+        <div class="col-start-1 row-start-1 self-stretch pointer-events-none bg-gradient-to-t from-background-secondary via-background-secondary/60 to-background-secondary/10"></div>
         @endif
 
-        <div class="p-6 md:p-8 relative">
+        <div class="col-start-1 row-start-1 self-end p-6 md:p-8 relative">
         <div class="absolute inset-0 cyber-gradient opacity-[0.07] pointer-events-none"></div>
         <div class="relative flex flex-col lg:flex-row lg:items-end justify-between gap-6">
             <div>
@@ -89,11 +95,8 @@ $popular = cyber_ext() && cyber_bool('reviews_enabled', true)
                 @foreach ($childCategories as $childCategory)
                 <div class="cyber-card cyber-card-hover cyber-clip flex flex-col overflow-hidden">
                     @if ($childCategory->image)
-                    <div class="relative {{ cyber_bool('small_images', false) ? 'h-24' : 'h-36' }} overflow-hidden">
-                        <img src="{{ Storage::url($childCategory->image) }}" alt="{{ $childCategory->name }}"
-                            class="w-full h-full object-cover object-center">
-                        <div class="absolute inset-0 bg-gradient-to-t from-background-secondary to-transparent"></div>
-                    </div>
+                    <x-cyber.picture :src="Storage::url($childCategory->image)" :alt="$childCategory->name"
+                        :height="cyber_bool('small_images', false) ? 'h-24' : 'h-36'" max="max-h-[22rem]" />
                     @endif
                     <div class="p-4 flex flex-col flex-grow">
                         <h2 class="text-lg font-bold">{{ $childCategory->name }}</h2>
@@ -127,11 +130,8 @@ $popular = cyber_ext() && cyber_bool('reviews_enabled', true)
                     @endif
 
                     @if ($product->image)
-                    <div class="relative {{ cyber_bool('small_images', false) ? 'h-24' : 'h-40' }} overflow-hidden">
-                        <img src="{{ Storage::url($product->image) }}" alt="{{ $product->name }}"
-                            class="w-full h-full object-cover object-center">
-                        <div class="absolute inset-0 bg-gradient-to-t from-background-secondary to-transparent"></div>
-                    </div>
+                    <x-cyber.picture :src="Storage::url($product->image)" :alt="$product->name"
+                        :height="cyber_bool('small_images', false) ? 'h-24' : 'h-40'" max="max-h-[24rem]" />
                     @endif
 
                     <div class="p-4 flex flex-col flex-grow">

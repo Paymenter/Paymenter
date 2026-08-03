@@ -33,6 +33,10 @@ class Reviews extends Component
     #[Url(except: '', as: 'q')]
     public string $search = '';
 
+    /** Orden del listado: valorados | comentados | nombre */
+    #[Url(except: 'valorados', as: 'orden')]
+    public string $sort = 'valorados';
+
     public string $body = '';
 
     public ?int $replyingTo = null;
@@ -68,6 +72,14 @@ class Reviews extends Component
 
             $stats = ReviewsHelper::allStats();
             $popular = ReviewsHelper::popularProductIds();
+
+            // Ordenamos en memoria: las estadísticas viven en las tablas de la
+            // extensión y así no dependemos de un join contra el core.
+            $products = match ($this->sort) {
+                'comentados' => $products->sortByDesc(fn ($p) => $stats[$p->id]['comments'] ?? 0)->values(),
+                'nombre' => $products,
+                default => $products->sortByDesc(fn ($p) => $stats[$p->id]['likes'] ?? 0)->values(),
+            };
 
             if (Auth::check()) {
                 $liked = Like::where('user_id', Auth::id())

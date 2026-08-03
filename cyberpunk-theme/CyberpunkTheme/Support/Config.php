@@ -44,6 +44,7 @@ class Config
         'effect_noise',
         'banner_enabled',
         'marketing_enabled',
+        'marquee_enabled',
         'stats_enabled',
         'uptime_enabled',
         'visitors_enabled',

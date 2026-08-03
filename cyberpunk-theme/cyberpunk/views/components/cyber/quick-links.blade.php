@@ -9,7 +9,7 @@ $links = cyber_quick_links();
         subtitle="Entra directo a la tienda o a la sección que necesites."
         icon="ri-flashlight-fill" />
 
-    <div class="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 mt-8">
+    <div class="grid gap-4 mt-8 {{ cyber_cols(count($links)) }}">
         @foreach($links as $link)
         <a href="{{ $link['url'] }}"
             @if(!empty($link['target'])) target="{{ $link['target'] }}" rel="noopener noreferrer" @endif

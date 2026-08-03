@@ -2,6 +2,7 @@
 use Paymenter\Extensions\Others\CyberpunkTheme\Support\Avatars;
 use Paymenter\Extensions\Others\CyberpunkTheme\Support\Config;
 use Paymenter\Extensions\Others\CyberpunkTheme\Support\PostCategories;
+use Paymenter\Extensions\Others\CyberpunkTheme\Support\Text;
 
 $avatarOf = fn ($user) => $user ? (Avatars::url($user) ?? $user->avatar) : 'https://www.gravatar.com/avatar/?d=mp';
 $communityName = Config::theme('community_name', 'Comunidad');
@@ -186,19 +187,29 @@ $canModerate = auth()->check() && auth()->user()->role_id !== null;
                     <h2 class="mt-2 text-lg font-bold">{{ $post->title }}</h2>
                     @endif
 
-                    <p class="mt-1.5 whitespace-pre-line text-base/80 leading-relaxed break-words">{{ $post->content }}</p>
+                    <p class="mt-1.5 whitespace-pre-line text-base/80 leading-relaxed break-words">{!! Text::linkify($post->content) !!}</p>
 
                     @if($post->media->count() > 0)
-                    <div class="mt-3 grid gap-2 {{ $post->media->count() === 1 ? 'grid-cols-1' : 'grid-cols-2' }}">
+                    @php $single = $post->media->count() === 1; @endphp
+                    {{-- Estilo Facebook: un solo archivo se ve completo (la caja se
+                         adapta a la imagen o al vídeo); varios van en rejilla. --}}
+                    <div class="mt-3 grid gap-2 max-w-2xl {{ $single ? 'grid-cols-1' : 'grid-cols-2' }}">
                         @foreach($post->media as $item)
-                        <div class="cyber-media rounded-xl overflow-hidden border border-neutral bg-background/40 {{ $post->media->count() === 1 ? 'max-h-96' : 'aspect-video' }}">
+                        <div class="rounded-xl overflow-hidden border border-neutral
+                            {{ $single ? 'cyber-media-full' : 'cyber-media aspect-square bg-background/40' }}">
                             @if($item->isVideo())
-                            <video controls preload="metadata" class="w-full h-full">
+                            <video controls playsinline preload="metadata"
+                                class="bg-black {{ $single ? 'cyber-media-item' : '' }}">
                                 <source src="{{ $item->url }}">
+                                Tu navegador no puede reproducir este vídeo.
                             </video>
                             @else
-                            <a href="{{ $item->url }}" target="_blank" rel="noopener noreferrer">
-                                <img src="{{ $item->url }}" alt="" loading="lazy" class="w-full h-full object-cover">
+                            @if($single)
+                            <img src="{{ $item->url }}" alt="" aria-hidden="true" class="cyber-media-bg">
+                            @endif
+                            <a href="{{ $item->url }}" target="_blank" rel="noopener noreferrer" class="block">
+                                <img src="{{ $item->url }}" alt="" loading="lazy"
+                                    class="{{ $single ? 'cyber-media-item' : '' }}">
                             </a>
                             @endif
                         </div>
@@ -256,7 +267,7 @@ $canModerate = auth()->check() && auth()->user()->role_id !== null;
                                         @endif
                                     </div>
 
-                                    <p class="mt-1 text-sm text-base/80 whitespace-pre-line break-words">{{ $comment->content }}</p>
+                                    <p class="mt-1 text-sm text-base/80 whitespace-pre-line break-words">{!! Text::linkify($comment->content) !!}</p>
 
                                     <div class="mt-2 flex items-center gap-3 text-xs">
                                         <button wire:click="toggleCommentLike({{ $comment->id }})"
@@ -319,7 +330,7 @@ $canModerate = auth()->check() && auth()->user()->role_id !== null;
                                                     </button>
                                                     @endif
                                                 </div>
-                                                <p class="mt-1 text-sm text-base/75 whitespace-pre-line break-words">{{ $reply->content }}</p>
+                                                <p class="mt-1 text-sm text-base/75 whitespace-pre-line break-words">{!! Text::linkify($reply->content) !!}</p>
                                             </div>
                                         </div>
                                         @endif

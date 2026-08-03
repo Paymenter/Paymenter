@@ -46,11 +46,38 @@ $socials = cyber_socials();
             <x-ri-shield-flash-fill class="size-3.5" />
             {{ config('app.name') }}
         </div>
-        <h2 class="mt-5 text-4xl font-black leading-tight cyber-neon-text">
-            <span class="cyber-glitch" data-text="{{ $slides[0]['title'] ?? config('app.name') }}">{{ $slides[0]['title'] ?? config('app.name') }}</span>
-        </h2>
-        @if(!empty($slides[0]['subtitle']))
-        <p class="mt-4 text-base/70 max-w-md">{{ $slides[0]['subtitle'] }}</p>
+
+        {{-- Cada diapositiva cambia también el texto, no sólo el fondo. --}}
+        <div class="grid mt-5">
+            @forelse($slides as $index => $slide)
+            <div x-show="slide === {{ $index }}" x-cloak
+                x-transition:enter="transition ease-out duration-700 delay-100"
+                x-transition:enter-start="opacity-0 translate-y-3"
+                x-transition:enter-end="opacity-100 translate-y-0"
+                class="col-start-1 row-start-1 self-start">
+                <h2 class="text-4xl font-black leading-tight cyber-neon-text">
+                    <span class="cyber-glitch" data-text="{{ $slide['title'] ?? config('app.name') }}">{{ $slide['title'] ?? config('app.name') }}</span>
+                </h2>
+                @if(!empty($slide['subtitle']))
+                <p class="mt-4 text-base/70 max-w-md">{{ $slide['subtitle'] }}</p>
+                @endif
+            </div>
+            @empty
+            <h2 class="text-4xl font-black leading-tight cyber-neon-text">
+                <span class="cyber-glitch" data-text="{{ config('app.name') }}">{{ config('app.name') }}</span>
+            </h2>
+            @endforelse
+        </div>
+
+        @if(count($slides) > 1)
+        <div class="mt-6 flex gap-2">
+            @foreach($slides as $index => $slide)
+            <button type="button" @click="slide = {{ $index }}"
+                class="h-1.5 rounded-full transition-all duration-300 cursor-pointer"
+                :class="slide === {{ $index }} ? 'w-8 bg-primary' : 'w-3 bg-neutral hover:bg-primary/50'"
+                aria-label="Diapositiva {{ $index + 1 }}"></button>
+            @endforeach
+        </div>
         @endif
     </div>
 

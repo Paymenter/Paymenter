@@ -29,6 +29,7 @@ use Spatie\Color\Factory as ColorFactory;
 use Paymenter\Extensions\Others\CyberpunkTheme\Support\Config;
 use Paymenter\Extensions\Others\CyberpunkTheme\Support\Database;
 use Paymenter\Extensions\Others\CyberpunkTheme\Support\Defaults;
+use Paymenter\Extensions\Others\CyberpunkTheme\Support\Icons;
 use Paymenter\Extensions\Others\CyberpunkTheme\Support\Installer;
 use Paymenter\Extensions\Others\CyberpunkTheme\Support\Palettes;
 use Paymenter\Extensions\Others\CyberpunkTheme\Support\Visits;
@@ -93,6 +94,9 @@ class CyberpunkThemePage extends Page implements HasActions, HasForms
                     ->schema([
                         Toggle::make('banner_enabled')->label('Banner principal'),
                         Toggle::make('marketing_enabled')->label('Bloques de marketing'),
+                        Toggle::make('marquee_enabled')
+                            ->label('Cinta de frases en movimiento')
+                            ->helperText('La tira que va pasando frases bajo el banner.'),
                         Toggle::make('stats_enabled')->label('Estadísticas'),
                         Toggle::make('uptime_enabled')->label('Contador de tiempo activo'),
                         Toggle::make('visitors_enabled')->label('Contador de visitas'),
@@ -108,8 +112,18 @@ class CyberpunkThemePage extends Page implements HasActions, HasForms
                         Toggle::make('direct_checkout')
                             ->label('Checkout directo')
                             ->helperText('Saltar la página del producto.'),
-                        Toggle::make('small_images')->label('Imágenes pequeñas'),
+                        Toggle::make('small_images')
+                            ->label('Imágenes pequeñas')
+                            ->helperText('Sólo se aplica al modo recortado.'),
                         Toggle::make('show_category_description')->label('Descripción de categorías'),
+                        Select::make('image_mode')
+                            ->label('Imágenes de categorías y productos')
+                            ->options([
+                                'full' => 'Completas — se adaptan al tamaño de la imagen',
+                                'cover' => 'Recortadas a una altura fija',
+                            ])
+                            ->columnSpan(2)
+                            ->helperText('En modo "completas" se ve toda la imagen (por ejemplo 1080x720) y el texto lleva un degradado detrás para que se lea bien.'),
                     ]),
 
                 Section::make('Textos')
@@ -288,6 +302,27 @@ class CyberpunkThemePage extends Page implements HasActions, HasForms
     }
 
     /**
+     * Selector visual de iconos: se ven dibujados y se pueden buscar por
+     * nombre entre todos los iconos que trae Paymenter (Remix Icon).
+     */
+    protected function iconField(string $name = 'icon', string $default = 'ri-server-fill'): Select
+    {
+        return Select::make($name)
+            ->label('Icono')
+            ->default($default)
+            ->native(false)
+            ->searchable()
+            ->allowHtml()
+            ->searchPrompt('Escribe para buscar: servidor, bot, nube, whatsapp...')
+            ->searchingMessage('Buscando iconos...')
+            ->noSearchResultsMessage('Ningún icono coincide con esa búsqueda.')
+            ->options(fn () => Icons::options())
+            ->getSearchResultsUsing(fn (string $search) => Icons::options($search))
+            ->getOptionLabelUsing(fn ($value) => Icons::label($value))
+            ->helperText('Elige uno de la lista o busca por nombre en inglés (server, cloud, robot, whatsapp...).');
+    }
+
+    /**
      * Selector de color que siempre guarda el valor en formato hsl(),
      * que es el que usan las variables CSS del tema.
      */
@@ -345,7 +380,7 @@ class CyberpunkThemePage extends Page implements HasActions, HasForms
                     ->description('Cada diapositiva puede tener su propia imagen, título, texto y botón.')
                     ->schema([
                         Repeater::make('banner_slides')
-                            ->label('')
+                            ->hiddenLabel()
                             ->columns(2)
                             ->reorderable()
                             ->collapsible()
@@ -370,10 +405,10 @@ class CyberpunkThemePage extends Page implements HasActions, HasForms
                     ]),
 
                 Section::make('Palabras de marketing en movimiento')
-                    ->description('Se muestran rotando en el banner y en la cinta deslizante.')
+                    ->description('Se muestran rotando dentro del banner. La cinta deslizante que las repite es opcional y se activa en la pestaña General.')
                     ->schema([
                         Repeater::make('marketing_words')
-                            ->label('')
+                            ->hiddenLabel()
                             ->simple(
                                 TextInput::make('text')->label('Frase')->required()->maxLength(120)
                             )
@@ -407,7 +442,7 @@ class CyberpunkThemePage extends Page implements HasActions, HasForms
                     ->description('Se muestran ANTES de los productos, en la página de inicio.')
                     ->schema([
                         Repeater::make('marketing_cards')
-                            ->label('')
+                            ->hiddenLabel()
                             ->columns(2)
                             ->reorderable()
                             ->collapsible()
@@ -415,10 +450,7 @@ class CyberpunkThemePage extends Page implements HasActions, HasForms
                             ->addActionLabel('Añadir tarjeta')
                             ->schema([
                                 Toggle::make('enabled')->label('Activa')->default(true),
-                                TextInput::make('icon')
-                                    ->label('Icono')
-                                    ->default('ri-server-fill')
-                                    ->helperText('Iconos Remix, por ejemplo: ri-server-fill, ri-whatsapp-fill'),
+                                $this->iconField('icon', 'ri-server-fill'),
                                 TextInput::make('title')->label('Título')->required()->maxLength(80),
                                 TextInput::make('url')->label('Enlace (opcional)'),
                                 Textarea::make('description')->label('Descripción')->rows(2)->columnSpanFull()->maxLength(255),
@@ -429,14 +461,14 @@ class CyberpunkThemePage extends Page implements HasActions, HasForms
                     ->description('Fila de ventajas cortas debajo de las tarjetas.')
                     ->schema([
                         Repeater::make('features')
-                            ->label('')
+                            ->hiddenLabel()
                             ->columns(3)
                             ->reorderable()
                             ->collapsible()
                             ->itemLabel(fn (array $state): ?string => $state['title'] ?? 'Ventaja')
                             ->addActionLabel('Añadir ventaja')
                             ->schema([
-                                TextInput::make('icon')->label('Icono')->default('ri-check-double-fill'),
+                                $this->iconField('icon', 'ri-check-double-fill'),
                                 TextInput::make('title')->label('Título')->required()->maxLength(80),
                                 TextInput::make('description')->label('Descripción')->maxLength(150),
                             ]),
@@ -446,7 +478,7 @@ class CyberpunkThemePage extends Page implements HasActions, HasForms
                     ->description('Si lo dejas vacío, el sistema detecta y enlaza automáticamente las categorías de la tienda.')
                     ->schema([
                         Repeater::make('quick_links')
-                            ->label('')
+                            ->hiddenLabel()
                             ->columns(2)
                             ->reorderable()
                             ->collapsible()
@@ -454,7 +486,7 @@ class CyberpunkThemePage extends Page implements HasActions, HasForms
                             ->addActionLabel('Añadir acceso rápido')
                             ->schema([
                                 Toggle::make('enabled')->label('Activo')->default(true),
-                                TextInput::make('icon')->label('Icono')->default('ri-flashlight-fill'),
+                                $this->iconField('icon', 'ri-flashlight-fill'),
                                 TextInput::make('label')->label('Nombre')->required()->maxLength(80),
                                 TextInput::make('url')->label('URL')->required(),
                                 TextInput::make('description')->label('Descripción')->maxLength(120),
@@ -475,7 +507,7 @@ class CyberpunkThemePage extends Page implements HasActions, HasForms
                     ->description('Crea páginas nuevas con tu propio HTML. Aparecerán en la barra de navegación y estarán disponibles en /p/tu-slug')
                     ->schema([
                         Repeater::make('custom_pages')
-                            ->label('')
+                            ->hiddenLabel()
                             ->columns(2)
                             ->reorderable()
                             ->collapsible()
@@ -501,7 +533,7 @@ class CyberpunkThemePage extends Page implements HasActions, HasForms
                                 Toggle::make('enabled')->label('Publicada')->default(true),
                                 Toggle::make('in_navigation')->label('Mostrar en la barra de navegación')->default(true),
                                 Toggle::make('show_title')->label('Mostrar el título en la página')->default(true),
-                                TextInput::make('icon')->label('Icono')->default('ri-file-text'),
+                                $this->iconField('icon', 'ri-file-text-fill'),
                                 TextInput::make('sort')->label('Orden')->numeric()->default(0),
                                 TextInput::make('description')->label('Descripción corta')->maxLength(200),
                                 RichEditor::make('content')

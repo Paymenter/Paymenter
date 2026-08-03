@@ -51,6 +51,7 @@ class Defaults
             // General
             'direct_checkout' => false,
             'small_images' => false,
+            'image_mode' => 'full',
             'show_category_description' => true,
             'logo_display' => 'logo-and-name',
             'home_page_text' => '',
@@ -70,6 +71,7 @@ class Defaults
             'banner_enabled' => true,
             'banner_interval' => 6000,
             'marketing_enabled' => true,
+            'marquee_enabled' => false,
             'marketing_title' => '¿Qué puedes montar con nosotros?',
             'marketing_subtitle' => 'Infraestructura preparada para tus webs, bots y aplicaciones. Elige tu plan y despliega en minutos.',
             'stats_enabled' => true,

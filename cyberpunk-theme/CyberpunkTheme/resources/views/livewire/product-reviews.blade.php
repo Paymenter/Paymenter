@@ -69,7 +69,7 @@ $canModerate = auth()->check() && auth()->user()->role_id !== null;
                 @endif
             </div>
 
-            <p class="mt-2 text-sm text-base/80 whitespace-pre-line">{{ $comment->content }}</p>
+            <p class="mt-2 text-sm text-base/80 whitespace-pre-line break-words">{!! \Paymenter\Extensions\Others\CyberpunkTheme\Support\Text::linkify($comment->content) !!}</p>
 
             <div class="mt-3 flex items-center gap-4 text-xs">
                 <button wire:click="toggleCommentLike({{ $comment->id }})"
@@ -113,7 +113,7 @@ $canModerate = auth()->check() && auth()->user()->role_id !== null;
                         </button>
                         @endif
                     </div>
-                    <p class="mt-1.5 text-sm text-base/75 whitespace-pre-line">{{ $reply->content }}</p>
+                    <p class="mt-1.5 text-sm text-base/75 whitespace-pre-line break-words">{!! \Paymenter\Extensions\Others\CyberpunkTheme\Support\Text::linkify($reply->content) !!}</p>
                 </div>
                 @endif
                 @endforeach

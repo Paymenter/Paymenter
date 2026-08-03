@@ -16,7 +16,7 @@ use Illuminate\Support\Facades\File;
 class Installer
 {
     /** Versión del paquete (se guarda en la base de datos para saber qué hay instalado). */
-    public const VERSION = '1.2.0';
+    public const VERSION = '1.3.0';
 
     /**
      * Copia el tema, los assets compilados y crea los ajustes por defecto.
