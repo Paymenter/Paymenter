@@ -574,7 +574,8 @@ class CyberpunkThemePage extends Page implements HasActions, HasForms
                             ->label('Máximo de archivos por publicación')
                             ->numeric()
                             ->minValue(1)
-                            ->maxValue(10),
+                            ->maxValue(10)
+                            ->helperText($this->uploadLimitsHint()),
                     ]),
 
                 Section::make('Apartado de reseñas')
@@ -600,6 +601,22 @@ class CyberpunkThemePage extends Page implements HasActions, HasForms
                             ->maxLength(255),
                     ]),
             ]);
+    }
+
+    /**
+     * Los archivos se suben de uno en uno, así que lo que manda de verdad es
+     * upload_max_filesize. Se lo enseñamos al administrador para que sepa
+     * cuánto puede pesar cada foto o vídeo sin adivinar.
+     */
+    protected function uploadLimitsHint(): string
+    {
+        $upload = ini_get('upload_max_filesize') ?: '?';
+        $post = ini_get('post_max_size') ?: '?';
+
+        return "Cada archivo se sube por separado, así que el peso máximo real de cada foto o vídeo "
+            . "lo marca tu servidor: upload_max_filesize = {$upload} (post_max_size = {$post}). "
+            . 'Para permitir vídeos grandes, sube esos valores en el php.ini y, si usas Nginx, '
+            . 'client_max_body_size.';
     }
 
     protected function socialsTab(): Tab

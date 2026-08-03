@@ -4,14 +4,36 @@ Dos paquetes separados. **Ninguno modifica el núcleo de Paymenter ni el tema `d
 
 | Archivo | Qué es | Se instala en | Tamaño |
 |---|---|---|---|
-| `cyberpunk-extension.zip` | **La extensión sola** | `extensions/Others/CyberpunkTheme` | 78 KB |
-| `cyberpunk-extension-con-tema.zip` | **Extensión + tema**, sin los estilos compilados | `extensions/…` y `themes/cyberpunk` | 218 KB |
+| `cyberpunk-extension.zip` | **La extensión sola** | `extensions/Others/CyberpunkTheme` | 82 KB |
+| `cyberpunk-extension-con-tema.zip` | **Extensión + tema**, sin los estilos compilados | `extensions/…` y `themes/cyberpunk` | 222 KB |
 | `cyberpunk-assets.zip` | **Sólo los estilos compilados** (CSS y JS) | `public/cyberpunk` | 226 KB |
-| `cyberpunk-tema.zip` | **El tema completo** + estilos + `instalar.sh` | `themes/cyberpunk` y `public/cyberpunk` | 374 KB |
-| `cyberpunk-todo-en-uno.zip` | **Todo**: extensión + tema + estilos | las tres carpetas de una vez | 445 KB |
+| `cyberpunk-tema.zip` | **El tema completo** + estilos + `instalar.sh` | `themes/cyberpunk` y `public/cyberpunk` | 375 KB |
+| `cyberpunk-todo-en-uno.zip` | **Todo**: extensión + tema + estilos | las tres carpetas de una vez | 448 KB |
 
 El tema funciona por sí solo; la extensión añade el panel de administración y las
 funciones sociales encima.
+
+## Novedades de la 1.3.1
+
+- **Actualizar ya no borra nada.** Desinstalar la extensión (lo que hace el
+  panel al actualizar) ya **no** hace rollback de las migraciones, así que las
+  publicaciones, comentarios, me gusta, avatares y contadores sobreviven a
+  cualquier actualización. Los ajustes tampoco se tocan: sólo se añaden las
+  claves nuevas.
+- **Subida de varias fotos y vídeos arreglada.** Los archivos se mandaban todos
+  en la misma petición, así que en servidores con `post_max_size` bajo se caía
+  la petición entera y no subía casi nada. Ahora **cada archivo va en su propia
+  petición**: se pueden adjuntar los 4 (o los que configures, hasta 10),
+  mezclando fotos y vídeos.
+  Verificado con `post_max_size = 8M` y 6 fotos de 1,6 MB: antes subían 0,
+  ahora suben las 6.
+- El formulario muestra el **límite real del servidor** («hasta 2 MB cada
+  uno»), una **barra de progreso**, el contador «3 de 4 archivos» y un botón
+  **✕ para quitar** cualquier archivo antes de publicar.
+- Si un archivo no cabe, se avisa **por su nombre** y con la causa, en vez de
+  fallar en silencio.
+- La pestaña Comunidad del panel enseña los valores de `upload_max_filesize` y
+  `post_max_size` detectados en el servidor.
 
 ## Novedades de la 1.3.0
 
@@ -39,9 +61,9 @@ funciones sociales encima.
 
 - **Por terminal (siempre funciona):** `cyberpunk-tema.zip` + `cyberpunk-extension.zip`.
 - **Todo desde el panel:** `cyberpunk-todo-en-uno.zip` (necesita que el subidor
-  admita 445 KB y que el usuario web pueda escribir en `themes/` y `public/`).
+  admita 448 KB y que el usuario web pueda escribir en `themes/` y `public/`).
 - **Si el subidor rechaza archivos grandes:** sube `cyberpunk-extension-con-tema.zip`
-  (218 KB) por el panel y copia `cyberpunk-assets.zip` a `public/cyberpunk/` por FTP.
+  (222 KB) por el panel y copia `cyberpunk-assets.zip` a `public/cyberpunk/` por FTP.
 
 Los ZIP se generan con `bash build.sh` a partir de las fuentes de esta carpeta.
 

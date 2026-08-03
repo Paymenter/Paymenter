@@ -104,32 +104,121 @@ $canModerate = auth()->check() && auth()->user()->role_id !== null;
                     class="w-full rounded-lg border border-neutral bg-background/60 text-base px-4 py-3 text-sm focus:border-primary focus:ring-0"></textarea>
                 @error('content') <p class="text-error text-xs mt-1">{{ $message }}</p> @enderror
 
-                <div class="mt-3 flex flex-wrap items-center gap-3">
-                    <label class="inline-flex items-center gap-2 text-sm font-semibold text-primary cursor-pointer hover:opacity-80">
-                        <x-ri-image-add-fill class="size-5" />
-                        Añadir fotos o vídeos
-                        <input type="file" wire:model="media" multiple accept="image/*,video/mp4,video/webm,video/quicktime" class="hidden">
-                    </label>
-                    <span class="text-xs text-base/45">Máx. {{ Config::theme('community_media_limit', 4) }} archivos · 20 MB c/u</span>
-                    <span wire:loading wire:target="media" class="text-xs text-primary font-semibold">Subiendo archivos...</span>
-                </div>
-                @error('media.*') <p class="text-error text-xs mt-1">{{ $message }}</p> @enderror
-                @error('media') <p class="text-error text-xs mt-1">{{ $message }}</p> @enderror
+                {{-- Fotos y vídeos.
 
-                @if(count($media) > 0)
-                <div class="mt-3 flex flex-wrap gap-2">
-                    @foreach($media as $file)
-                    <div class="size-20 rounded-lg overflow-hidden border border-primary/40 bg-background/60 flex items-center justify-center">
-                        @if(str_starts_with($file->getMimeType() ?? '', 'image'))
-                        <img src="{{ $file->temporaryUrl() }}" class="w-full h-full object-cover" alt="">
-                        @else
-                        <x-ri-film-fill class="size-8 text-primary" />
-                        @endif
+                     Cada archivo se sube en su PROPIA petición, de uno en uno.
+                     Si se mandaran todos juntos, un límite bajo de
+                     post_max_size o max_file_uploads en el servidor tiraría la
+                     petición entera y sólo acabaría subiendo uno. --}}
+                <div class="mt-3"
+                    x-data="{
+                        limite: {{ $mediaLimit }},
+                        subidos: {{ count($media) }},
+                        subiendo: false,
+                        progreso: 0,
+                        pendientes: 0,
+                        aviso: '',
+                        async elegir(event) {
+                            let archivos = Array.from(event.target.files || []);
+                            event.target.value = '';
+                            if (archivos.length === 0) return;
+
+                            const libres = this.limite - this.subidos;
+                            this.aviso = '';
+
+                            if (libres <= 0) {
+                                this.aviso = 'Ya has añadido el máximo de ' + this.limite + ' archivos.';
+                                return;
+                            }
+
+                            if (archivos.length > libres) {
+                                this.aviso = 'Sólo caben ' + libres + ' archivo(s) más, se añadirán los primeros.';
+                                archivos = archivos.slice(0, libres);
+                            }
+
+                            this.subiendo = true;
+                            this.pendientes = archivos.length;
+
+                            for (const archivo of archivos) {
+                                this.progreso = 0;
+                                await new Promise((listo) => {
+                                    $wire.upload('media', archivo,
+                                        () => { this.subidos++; this.pendientes--; listo(); },
+                                        () => {
+                                            this.pendientes--;
+                                            this.aviso = 'No se pudo subir «' + archivo.name + '». Suele ser el límite de subida del servidor: sube upload_max_filesize y post_max_size en el php.ini.';
+                                            listo();
+                                        },
+                                        (evento) => { this.progreso = evento.detail.progress; },
+                                        () => { this.pendientes--; listo(); }
+                                    );
+                                });
+                            }
+
+                            this.subiendo = false;
+                            this.progreso = 0;
+                        }
+                    }"
+                    x-on:cyber-media-count.window="subidos = $event.detail.total ?? subidos">
+
+                    <div class="flex flex-wrap items-center gap-3">
+                        <label class="inline-flex items-center gap-2 rounded-lg border border-primary/40 bg-primary/10 px-3 py-2 text-sm font-semibold text-primary cursor-pointer hover:bg-primary/20 transition"
+                            :class="subiendo ? 'opacity-50 pointer-events-none' : ''">
+                            <x-ri-image-add-fill class="size-5" />
+                            Añadir fotos o vídeos
+                            <input type="file" multiple
+                                accept="image/*,video/mp4,video/webm,video/quicktime,video/x-matroska"
+                                x-on:change="elegir($event)"
+                                class="hidden">
+                        </label>
+
+                        <span class="text-xs text-base/45">
+                            <span x-text="subidos"></span> de <span x-text="limite"></span> archivos ·
+                            hasta {{ $mediaMaxMb }} MB cada uno · fotos y vídeos
+                        </span>
+
+                        <span x-show="subiendo" x-cloak class="text-xs text-primary font-semibold">
+                            Subiendo… <span x-text="progreso"></span>%
+                            <span x-show="pendientes > 1">(quedan <span x-text="pendientes"></span>)</span>
+                        </span>
                     </div>
-                    @endforeach
-                    <span class="self-center text-xs text-success font-semibold">{{ count($media) }} listo(s) para publicar</span>
+
+                    <div x-show="subiendo" x-cloak class="mt-2 cyber-meter max-w-xs">
+                        <span :style="'width: ' + progreso + '%'"></span>
+                    </div>
+
+                    <p x-show="aviso" x-cloak x-text="aviso" class="mt-2 text-xs text-warning"></p>
+
+                    @error('media.*') <p class="text-error text-xs mt-1">{{ $message }}</p> @enderror
+                    @error('media') <p class="text-error text-xs mt-1">{{ $message }}</p> @enderror
+
+                    @if(count($media) > 0)
+                    <div class="mt-3 flex flex-wrap gap-2">
+                        @foreach($media as $file)
+                        @php
+                            $esImagen = str_starts_with((string) $file->getMimeType(), 'image');
+                        @endphp
+                        <div data-media-preview wire:key="media-{{ $file->getFilename() }}"
+                            class="relative size-20 rounded-lg overflow-hidden border border-primary/40 bg-background/60 flex items-center justify-center group">
+                            @if($esImagen)
+                            <img src="{{ $file->temporaryUrl() }}" class="w-full h-full object-cover" alt="">
+                            @else
+                            <x-ri-film-fill class="size-8 text-primary" />
+                            @endif
+
+                            <button type="button" title="Quitar"
+                                wire:click="removeMedia('{{ $file->getFilename() }}')"
+                                class="absolute top-0.5 right-0.5 rounded-full bg-background/85 border border-neutral p-0.5 text-base/60 hover:text-error hover:border-error/50 transition cursor-pointer">
+                                <x-ri-close-fill class="size-3.5" />
+                            </button>
+                        </div>
+                        @endforeach
+                        <span class="self-center text-xs text-success font-semibold">
+                            {{ count($media) }} listo(s) para publicar
+                        </span>
+                    </div>
+                    @endif
                 </div>
-                @endif
 
                 <div class="mt-4 flex justify-end">
                     <x-button.primary wire:click="publish" wire:loading.attr="disabled" wire:target="publish" class="!w-fit">

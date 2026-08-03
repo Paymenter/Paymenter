@@ -4,15 +4,15 @@ Paquetes disponibles (elige según lo que admita tu servidor):
 
 | Paquete | Qué instala | Dónde | Tamaño |
 |---|---|---|---|
-| `cyberpunk-extension.zip` | La extensión sola | `extensions/Others/CyberpunkTheme` | 78 KB |
-| `cyberpunk-extension-con-tema.zip` | Extensión + tema (sin estilos) | `extensions/…` + `themes/cyberpunk` | 218 KB |
+| `cyberpunk-extension.zip` | La extensión sola | `extensions/Others/CyberpunkTheme` | 82 KB |
+| `cyberpunk-extension-con-tema.zip` | Extensión + tema (sin estilos) | `extensions/…` + `themes/cyberpunk` | 222 KB |
 | `cyberpunk-assets.zip` | Sólo los estilos compilados | `public/cyberpunk` | 226 KB |
-| `cyberpunk-tema.zip` | El tema completo + estilos | `themes/cyberpunk` + `public/cyberpunk` | 374 KB |
-| `cyberpunk-todo-en-uno.zip` | Todo de una vez | las tres carpetas | 445 KB |
+| `cyberpunk-tema.zip` | El tema completo + estilos | `themes/cyberpunk` + `public/cyberpunk` | 375 KB |
+| `cyberpunk-todo-en-uno.zip` | Todo de una vez | las tres carpetas | 448 KB |
 
 ## Si el subidor del panel rechaza los archivos grandes
 
-Si `cyberpunk-extension.zip` (78 KB) sube pero `cyberpunk-todo-en-uno.zip` (445 KB)
+Si `cyberpunk-extension.zip` (82 KB) sube pero `cyberpunk-todo-en-uno.zip` (448 KB)
 no, tu servidor tiene un límite de subida bajo. Compruébalo:
 
 ```bash
@@ -26,7 +26,7 @@ PHP-FPM y Nginx.
 
 Mientras tanto, la combinación que funciona con límites bajos es:
 
-1. Sube por el panel `cyberpunk-extension-con-tema.zip` (218 KB) → instala la
+1. Sube por el panel `cyberpunk-extension-con-tema.zip` (222 KB) → instala la
    extensión **y** el tema.
 2. Copia por FTP el contenido de `cyberpunk-assets.zip` a `public/cyberpunk/`.
 
@@ -266,6 +266,30 @@ tail -50 storage/logs/laravel.log
 En Nginx añade dentro del bloque `server`: `client_max_body_size 20M;`
 De todas formas, con `install.sh` no necesitas el subidor.
 
+**En la comunidad no me deja subir varias fotos, o los vídeos fallan**
+
+El tema sube los archivos **de uno en uno**, así que el problema no es el
+número de archivos sino lo que pesa **cada uno**. Mira tus límites:
+
+```bash
+php -i | grep -E "upload_max_filesize|post_max_size|max_file_uploads"
+```
+
+El formulario te dice el máximo real («hasta 2 MB cada uno»), y si un archivo
+no cabe te avisa por su nombre en vez de fallar en silencio. Para permitir
+fotos y vídeos grandes, sube estos valores en tu `php.ini`:
+
+```ini
+upload_max_filesize = 32M
+post_max_size = 40M
+max_file_uploads = 20
+```
+
+Y en Nginx, dentro del bloque `server`: `client_max_body_size 40M;`
+Después reinicia PHP-FPM y Nginx. El máximo que acepta el tema por archivo son
+20 MB; el número de archivos por publicación se cambia en
+**Admin → Extensions → Cyberpunk Theme → Comunidad**.
+
 ---
 
 # 6) Recompilar los estilos (no hace falta)
@@ -280,7 +304,42 @@ npm run build cyberpunk
 
 ---
 
-# 7) Desinstalar
+# 7) Actualizar a una versión nueva
+
+**No se pierde nada.** Ni la configuración, ni las publicaciones de la
+comunidad, ni los comentarios, los me gusta, los avatares o los contadores.
+
+Sólo hay que instalar encima, igual que la primera vez:
+
+```bash
+cd /tmp
+unzip -o cyberpunk-tema.zip && cd cyberpunk-tema
+bash instalar.sh /var/www/paymenter
+
+cd /tmp && unzip -o cyberpunk-extension.zip && cd CyberpunkTheme
+bash install.sh /var/www/paymenter
+```
+
+Por qué no se borra nada:
+
+- Los archivos se copian **encima** de los que ya hay; nunca se borra la carpeta
+  del tema ni la de la extensión.
+- Los ajustes sólo se **añaden**: una versión nueva crea las claves que le
+  falten y respeta todo lo que ya tengas configurado.
+- Desinstalar la extensión **ya no borra sus tablas**, así que actualizar
+  desde el panel (desinstalar la vieja → instalar la nueva) conserva la
+  comunidad entera.
+
+Lo único que borra de verdad es el botón **Restablecer todo** del panel, y
+avisa antes. Aun así, ese botón tampoco toca las publicaciones.
+
+Si actualizas desde el panel con el ZIP, entra después en
+**Admin → Extensions → Cyberpunk Theme** y pulsa **Reinstalar archivos** para
+copiar el tema y los estilos nuevos.
+
+---
+
+# 8) Desinstalar
 
 ```bash
 cd /var/www/paymenter
@@ -291,9 +350,12 @@ php artisan tinker --execute '\App\Models\Setting::where("key","theme")->update(
 # 2. borrar el tema
 rm -rf themes/cyberpunk public/cyberpunk
 
-# 3. la extensión: desinstálala primero desde Admin → Extensions
-#    (así borra sus tablas), y luego:
+# 3. la extensión: desinstálala desde Admin → Extensions y luego:
 rm -rf extensions/Others/CyberpunkTheme
 
 php artisan optimize:clear
 ```
+
+> Desinstalar **no borra** las publicaciones de la comunidad: se quedan en las
+> tablas `ext_cyberpunk_*` por si vuelves a instalarla. Si de verdad quieres
+> eliminarlas, hay que borrar esas tablas a mano en la base de datos.

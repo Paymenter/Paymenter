@@ -60,13 +60,120 @@ class Community extends Component
             'content' => 'required|string|min:3|max:2000',
             'category' => 'nullable|string|max:32',
             'media' => 'nullable|array|max:' . $this->mediaLimit(),
-            'media.*' => 'file|mimes:jpg,jpeg,png,gif,webp,mp4,webm,mov|max:20480',
+            'media.*' => 'file|mimes:jpg,jpeg,png,gif,webp,mp4,webm,mov,mkv|max:' . ($this->mediaMaxMb() * 1024),
         ];
     }
 
-    protected function mediaLimit(): int
+    public function mediaLimit(): int
     {
         return max(1, (int) Config::theme('community_media_limit', 4));
+    }
+
+    /**
+     * Tamaño máximo real por archivo, en MB.
+     *
+     * No sirve de nada prometer 20 MB si el servidor sólo acepta 2: usamos
+     * el menor entre lo que queremos y lo que PHP permite de verdad.
+     */
+    public function mediaMaxMb(): int
+    {
+        $limites = array_filter([
+            self::iniMb('upload_max_filesize'),
+            self::iniMb('post_max_size'),
+        ]);
+
+        $servidor = count($limites) > 0 ? min($limites) : 20;
+
+        return max(1, min(20, $servidor));
+    }
+
+    private static function iniMb(string $key): ?int
+    {
+        $raw = trim((string) ini_get($key));
+
+        if ($raw === '' || $raw === '-1' || $raw === '0') {
+            return null;
+        }
+
+        $unidad = strtolower(substr($raw, -1));
+        $valor = (float) $raw;
+
+        $bytes = match ($unidad) {
+            'g' => $valor * 1024 * 1024 * 1024,
+            'm' => $valor * 1024 * 1024,
+            'k' => $valor * 1024,
+            default => $valor,
+        };
+
+        return (int) floor($bytes / 1024 / 1024);
+    }
+
+    /**
+     * Se ejecuta cada vez que llega un archivo nuevo: valida sólo ése y
+     * respeta el máximo, para que el usuario vea el fallo al momento.
+     */
+    public function updatedMedia(): void
+    {
+        $this->media = array_values(array_filter(
+            $this->media,
+            fn ($file) => $file instanceof \Illuminate\Http\UploadedFile
+        ));
+
+        // Nunca más archivos de los permitidos.
+        if (count($this->media) > $this->mediaLimit()) {
+            foreach (array_slice($this->media, $this->mediaLimit()) as $sobrante) {
+                $this->deleteTemporary($sobrante);
+            }
+
+            $this->media = array_slice($this->media, 0, $this->mediaLimit());
+
+            $this->notify(
+                __('Sólo se pueden adjuntar :n archivos por publicación.', ['n' => $this->mediaLimit()]),
+                'error'
+            );
+        }
+
+        $this->announceMediaCount();
+
+        $this->validateOnly('media.*');
+    }
+
+    /**
+     * Le dice al formulario cuántos archivos hay ahora mismo, para que el
+     * contador "x de 4" no se desincronice al quitar o publicar.
+     */
+    private function announceMediaCount(): void
+    {
+        $this->dispatch('cyber-media-count', total: count($this->media));
+    }
+
+    /**
+     * Quitar un archivo de la lista antes de publicar.
+     */
+    public function removeMedia(string $filename): void
+    {
+        $this->media = array_values(array_filter($this->media, function ($file) use ($filename) {
+            if (method_exists($file, 'getFilename') && $file->getFilename() === $filename) {
+                $this->deleteTemporary($file);
+
+                return false;
+            }
+
+            return true;
+        }));
+
+        $this->announceMediaCount();
+    }
+
+    private function deleteTemporary($file): void
+    {
+        try {
+            if (method_exists($file, 'delete')) {
+                $file->delete();
+            }
+        } catch (\Throwable $e) {
+            // Da igual: el limpiador de Livewire lo borra pasado un día.
+        }
     }
 
     public function render()
@@ -121,6 +228,8 @@ class Community extends Component
             'error' => $error,
             'categories' => PostCategories::all(),
             'counts' => $this->categoryCounts(),
+            'mediaLimit' => $this->mediaLimit(),
+            'mediaMaxMb' => $this->mediaMaxMb(),
         ])->layoutData([
             'title' => Config::theme('community_name', 'Comunidad'),
         ]);
@@ -219,9 +328,12 @@ class Community extends Component
         $this->reset(['title', 'content', 'media', 'category']);
         $this->resetPage();
 
+        // El contador de archivos del formulario vuelve a cero.
+        $this->announceMediaCount();
+
         if ($fallos > 0) {
             $this->notify(
-                __('La publicación se creó, pero :n archivo(s) no se pudieron subir. Revisa los permisos de storage/app/public.', ['n' => $fallos]),
+                __('La publicación se creó, pero :n archivo(s) no se pudieron guardar. Revisa los permisos de storage/app/public.', ['n' => $fallos]),
                 'error'
             );
 

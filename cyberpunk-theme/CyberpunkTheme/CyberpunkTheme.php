@@ -21,7 +21,7 @@ use Paymenter\Extensions\Others\CyberpunkTheme\Support\Installer;
 #[ExtensionMeta(
     name: 'Cyberpunk Theme',
     description: 'Tema Cyberpunk totalmente personalizable para Paymenter: banner con marketing rotativo, animaciones de fondo, comunidad de usuarios, reseñas en productos, avatares, contadores y paletas de colores.',
-    version: '1.3.0',
+    version: '1.3.1',
     author: 'Sky Ultra Plus',
     url: 'https://skyultraplus.com',
     icon: 'ri-cpu-line',
@@ -93,9 +93,21 @@ class CyberpunkTheme extends Extension
         Installer::install(overwriteSettings: false);
     }
 
+    /**
+     * Al desinstalar NO se borra nada.
+     *
+     * Actualizar la extensión pasa por desinstalar la versión vieja e
+     * instalar la nueva, así que si aquí se hiciera rollback de las
+     * migraciones se perderían las publicaciones, los comentarios, los likes,
+     * los avatares y los contadores en cada actualización.
+     *
+     * Los datos se quedan en su sitio y la instalación siguiente los reutiliza.
+     * Para borrarlos de verdad hay que hacerlo a mano en la base de datos
+     * (tablas ext_cyberpunk_*).
+     */
     public function uninstalled()
     {
-        ExtensionHelper::rollbackMigrations('extensions/Others/CyberpunkTheme/database/migrations');
+        // Intencionadamente vacío: no se borra ninguna tabla ni ningún ajuste.
     }
 
     public function boot()
