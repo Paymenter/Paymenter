@@ -109,6 +109,11 @@
         </div>
     </section>
 
+    {{-- Reseñas destacadas: después de los planes y antes de la comunidad --}}
+    @if(cyber_ext() && cyber_bool('featured_reviews_enabled', true) && cyber_bool('reviews_enabled', true))
+    <x-cyber.featured-reviews />
+    @endif
+
     {{-- Comunidad --}}
     @if(cyber_ext() && cyber_bool('community_enabled', true))
     <livewire:cyberpunk.community-preview />

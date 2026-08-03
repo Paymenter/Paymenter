@@ -32,7 +32,9 @@ use Paymenter\Extensions\Others\CyberpunkTheme\Support\Defaults;
 use Paymenter\Extensions\Others\CyberpunkTheme\Support\Icons;
 use Paymenter\Extensions\Others\CyberpunkTheme\Support\Installer;
 use Paymenter\Extensions\Others\CyberpunkTheme\Support\Palettes;
+use Paymenter\Extensions\Others\CyberpunkTheme\Support\Reviews as ReviewsHelper;
 use Paymenter\Extensions\Others\CyberpunkTheme\Support\Visits;
+use Paymenter\Extensions\Others\CyberpunkTheme\Models\Comment;
 
 /**
  * Página de personalización completa del tema Cyberpunk.
@@ -579,7 +581,7 @@ class CyberpunkThemePage extends Page implements HasActions, HasForms
                     ]),
 
                 Section::make('Apartado de reseñas')
-                    ->description('Una página propia con todos los planes, donde los clientes dan me gusta, opinan y se responden entre ellos. Aparece en la barra de navegación junto a la comunidad.')
+                    ->description('Una página propia donde los clientes puntúan con estrellas y cuentan su experiencia. Tiene dos partes: las reseñas de cada plan y la opinión sobre el servicio en general. Para poner estrellas hay que escribir una reseña.')
                     ->columns(2)
                     ->schema([
                         Toggle::make('reviews_page_enabled')
@@ -600,7 +602,121 @@ class CyberpunkThemePage extends Page implements HasActions, HasForms
                             ->columnSpanFull()
                             ->maxLength(255),
                     ]),
+
+                Section::make('Opinión sobre el servicio en general')
+                    ->description('La segunda pestaña del apartado de reseñas: lo que opinan los clientes del hosting en conjunto, no de un plan concreto.')
+                    ->columns(2)
+                    ->schema([
+                        TextInput::make('general_reviews_name')
+                            ->label('Nombre de esta pestaña')
+                            ->maxLength(60)
+                            ->helperText('Por ejemplo: El servicio en general, Nuestro hosting, La experiencia...'),
+                        Textarea::make('general_reviews_description')
+                            ->label('Descripción')
+                            ->rows(2)
+                            ->maxLength(255),
+                    ]),
+
+                Section::make('Reseñas destacadas en el inicio')
+                    ->description('Se muestran en la página principal justo después de los planes y antes de la comunidad. Puedes elegir a mano las mejores reseñas, tanto de un plan como de la opinión general.')
+                    ->columns(2)
+                    ->schema([
+                        Toggle::make('featured_reviews_enabled')
+                            ->label('Mostrar reseñas destacadas en el inicio')
+                            ->columnSpanFull(),
+                        TextInput::make('featured_reviews_title')
+                            ->label('Título de la sección')
+                            ->maxLength(120),
+                        TextInput::make('featured_reviews_subtitle')
+                            ->label('Subtítulo')
+                            ->maxLength(200),
+                        TextInput::make('featured_reviews_limit')
+                            ->label('Cuántas mostrar')
+                            ->numeric()
+                            ->minValue(1)
+                            ->maxValue(12),
+                        Select::make('featured_reviews_mode')
+                            ->label('Qué reseñas mostrar')
+                            ->options([
+                                'mixed' => 'Las que yo elija y, si faltan, las mejores',
+                                'manual' => 'Sólo las que yo elija',
+                            ]),
+                        Actions::make([
+                            Action::make('chooseFeaturedReviews')
+                                ->label('Elegir las reseñas destacadas')
+                                ->icon('ri-award-fill')
+                                ->color('primary')
+                                ->modalHeading('Elegir las reseñas del inicio')
+                                ->modalDescription('Marca las reseñas que quieres enseñar en la página principal. Se listan las mejor valoradas primero.')
+                                ->modalSubmitActionLabel('Guardar selección')
+                                ->fillForm(fn (): array => [
+                                    'ids' => Comment::reviews()->where('featured', true)->pluck('id')->all(),
+                                ])
+                                ->schema([
+                                    CheckboxList::make('ids')
+                                        ->hiddenLabel()
+                                        ->options(fn (): array => $this->featuredReviewOptions())
+                                        ->columns(1)
+                                        ->bulkToggleable()
+                                        ->searchable()
+                                        ->noSearchResultsMessage('Ninguna reseña coincide.'),
+                                ])
+                                ->action(function (array $data) {
+                                    $this->authorizeUpdate();
+
+                                    $ids = array_map('intval', $data['ids'] ?? []);
+
+                                    Comment::query()->where('featured', true)->update(['featured' => false]);
+
+                                    if (count($ids) > 0) {
+                                        Comment::whereIn('id', $ids)->update(['featured' => true]);
+                                    }
+
+                                    ReviewsHelper::flush();
+
+                                    Notification::make()
+                                        ->title(count($ids) > 0
+                                            ? count($ids) . ' reseña(s) destacadas'
+                                            : 'Ya no hay reseñas destacadas')
+                                        ->body(count($ids) > 0
+                                            ? 'Ya se ven en la página de inicio.'
+                                            : 'En modo "las que yo elija" la sección desaparecerá del inicio.')
+                                        ->success()
+                                        ->send();
+                                }),
+                        ])->columnSpanFull(),
+                    ]),
             ]);
+    }
+
+    /**
+     * Reseñas disponibles para destacar, las mejor valoradas primero.
+     *
+     * @return array<int, string>
+     */
+    protected function featuredReviewOptions(int $limit = 60): array
+    {
+        try {
+            return Comment::reviews()
+                ->with('user')
+                ->orderByDesc('featured')
+                ->orderByDesc('rating')
+                ->orderByDesc('created_at')
+                ->take($limit)
+                ->get()
+                ->mapWithKeys(function (Comment $review) {
+                    $estrellas = str_repeat('★', (int) $review->rating)
+                        . str_repeat('☆', 5 - (int) $review->rating);
+
+                    $autor = $review->user?->name ?? 'Usuario';
+                    $texto = Str::limit(preg_replace('/\s+/', ' ', (string) $review->content), 90);
+
+                    return [$review->id => "{$estrellas}  {$autor} · {$review->targetLabel()} — {$texto}"];
+                })
+                ->all();
+        } catch (\Throwable $e) {
+            return [];
+        }
     }
 
     /**

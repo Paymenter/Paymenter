@@ -20,8 +20,20 @@ $isPopular = in_array($product->id, $popular, true);
                 <div class="flex flex-wrap items-center gap-2 mb-4">
                     @if($isPopular)
                     <span class="cyber-popular inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-black uppercase tracking-wider text-white">
-                        <x-ri-fire-fill class="size-4" /> Más popular
+                        <x-ri-star-smile-fill class="size-4" /> Mejor valorado
                     </span>
+                    @endif
+                    @php
+                        $valoracion = $reviewsOn
+                            ? \Paymenter\Extensions\Others\CyberpunkTheme\Support\Reviews::stats($product->id)
+                            : null;
+                    @endphp
+                    @if($valoracion && $valoracion['count'] > 0)
+                    <a href="#opiniones" class="inline-flex items-center gap-1.5 rounded-lg border border-neutral bg-background/50 px-3 py-1.5 text-xs hover:border-primary/50 transition">
+                        <x-cyber.stars :value="$valoracion['average']" size="size-3.5" />
+                        <span class="font-bold">{{ number_format($valoracion['average'], 1, ',', '.') }}</span>
+                        <span class="text-base/50">({{ $valoracion['count'] }})</span>
+                    </a>
                     @endif
                     @if ($product->stock === null)
                     <span class="cyber-chip !border-success/45 !bg-success/12 !text-success">
@@ -76,7 +88,7 @@ $isPopular = in_array($product->id, $popular, true);
     </div>
 
     @if($reviewsOn)
-    <div class="mt-8">
+    <div class="mt-8 scroll-mt-24" id="opiniones">
         <livewire:cyberpunk.product-reviews :product-id="$product->id" />
     </div>
     @endif

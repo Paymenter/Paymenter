@@ -20,8 +20,8 @@ use Paymenter\Extensions\Others\CyberpunkTheme\Support\Installer;
 
 #[ExtensionMeta(
     name: 'Cyberpunk Theme',
-    description: 'Tema Cyberpunk totalmente personalizable para Paymenter: banner con marketing rotativo, animaciones de fondo, comunidad de usuarios, reseñas en productos, avatares, contadores y paletas de colores.',
-    version: '1.3.1',
+    description: 'Tema Cyberpunk totalmente personalizable para Paymenter: banner con marketing rotativo, animaciones de fondo, comunidad de usuarios, reseñas con estrellas de los planes y del servicio, avatares, contadores y paletas de colores.',
+    version: '1.4.0',
     author: 'Sky Ultra Plus',
     url: 'https://skyultraplus.com',
     icon: 'ri-cpu-line',
@@ -49,7 +49,7 @@ class CyberpunkTheme extends Extension
                 'label' => 'Activar reseñas en productos',
                 'type' => 'checkbox',
                 'default' => true,
-                'description' => 'Los clientes pueden dar like y comentar en los planes.',
+                'description' => 'Los clientes puntúan con estrellas y escriben su reseña.',
             ],
             [
                 'name' => 'count_visits',

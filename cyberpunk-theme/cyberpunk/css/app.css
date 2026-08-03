@@ -64,6 +64,11 @@
 @source inline("{left,right,top,bottom}-{2,3,3.5,4}");
 @source inline("min-w-[110px]");
 @source inline("pointer-events-none");
+@source inline("tabular-nums");
+@source inline("{w,h}-{5,6,8,10}");
+@source inline("text-{4xl,5xl,6xl}");
+@source inline("hover:scale-{105,110}");
+@source inline("{leading-none,leading-snug,leading-relaxed}");
 
 @theme {
     /* Tipografía por defecto: pila del sistema (se puede cambiar desde el admin) */
@@ -625,6 +630,49 @@
     max-width: 100%;
     max-height: 42rem;
     margin-inline: auto;
+}
+
+/* Estrellas de las reseñas */
+.cyber-star-on {
+    color: #fbbf24;
+    filter: drop-shadow(0 0 4px rgb(251 191 36 / 0.45));
+}
+
+.cyber-stars {
+    line-height: 1;
+}
+
+/* Tarjeta de reseña destacada en el inicio */
+.cyber-review-card {
+    position: relative;
+    border: 1px solid hsl(var(--color-neutral));
+    background: hsl(var(--color-background-secondary) / 0.65);
+    border-radius: 1rem;
+    overflow: hidden;
+}
+
+.cyber-review-card::before {
+    content: "";
+    position: absolute;
+    inset: 0 auto 0 0;
+    width: 3px;
+    background-image: linear-gradient(
+        180deg,
+        hsl(var(--color-primary)),
+        hsl(var(--color-secondary))
+    );
+}
+
+.cyber-review-quote {
+    position: absolute;
+    top: 0.75rem;
+    inset-inline-end: 1rem;
+    font-size: 3.5rem;
+    line-height: 1;
+    font-weight: 900;
+    color: hsl(var(--color-primary) / 0.12);
+    pointer-events: none;
+    user-select: none;
 }
 
 /* Enlaces dentro del texto que escriben los usuarios */

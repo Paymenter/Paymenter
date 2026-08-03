@@ -126,7 +126,7 @@ $popular = cyber_ext() && cyber_bool('reviews_enabled', true)
                 @endphp
                 <div class="cyber-card cyber-card-hover cyber-clip flex flex-col overflow-hidden relative {{ $isSoldOut ? 'cyber-strike' : '' }} {{ $isPopular ? 'cyber-popular-card' : '' }}">
                     @if($isPopular)
-                    <x-cyber.popular-badge />
+                    <x-cyber.popular-badge label="MEJOR VALORADO" />
                     @endif
 
                     @if ($product->image)
@@ -153,12 +153,11 @@ $popular = cyber_ext() && cyber_bool('reviews_enabled', true)
                             </span>
                             @endif
 
-                            @if($stats)
-                            <span class="inline-flex items-center gap-1 text-base/55">
-                                <x-ri-heart-3-fill class="size-3.5 text-primary" /> {{ $stats['likes'] }}
-                            </span>
-                            <span class="inline-flex items-center gap-1 text-base/55">
-                                <x-ri-chat-3-fill class="size-3.5 text-accent" /> {{ $stats['comments'] }}
+                            @if($stats && ($stats['count'] ?? 0) > 0)
+                            <span class="inline-flex items-center gap-1.5">
+                                <x-cyber.stars :value="$stats['average']" size="size-3.5" />
+                                <span class="font-bold text-base/75">{{ number_format($stats['average'], 1, ',', '.') }}</span>
+                                <span class="text-base/45">({{ $stats['count'] }})</span>
                             </span>
                             @endif
                         </div>

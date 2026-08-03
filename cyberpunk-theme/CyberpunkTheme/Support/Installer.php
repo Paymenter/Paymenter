@@ -16,7 +16,7 @@ use Illuminate\Support\Facades\File;
 class Installer
 {
     /** Versión del paquete (se guarda en la base de datos para saber qué hay instalado). */
-    public const VERSION = '1.3.1';
+    public const VERSION = '1.4.0';
 
     /**
      * Copia el tema, los assets compilados y crea los ajustes por defecto.
@@ -59,6 +59,7 @@ class Installer
 
         try {
             self::seedSettings($overwriteSettings);
+            self::refreshStaleTexts();
             $report['settings'] = true;
         } catch (\Throwable $e) {
             $report['errors'][] = 'Ajustes: ' . $e->getMessage();
@@ -175,6 +176,36 @@ class Installer
 
         if (count($missing) > 0) {
             Config::save($missing);
+        }
+    }
+
+    /**
+     * Textos por defecto de versiones anteriores que ya no describen lo que
+     * hace el tema (por ejemplo, hablaban de "me gusta" cuando las reseñas
+     * pasaron a ser por estrellas).
+     *
+     * Sólo se actualizan si el administrador NO los ha tocado: si el valor
+     * guardado es exactamente el texto viejo de fábrica, se cambia por el
+     * nuevo. Cualquier texto personalizado se respeta.
+     */
+    private const STALE_TEXTS = [
+        'reviews_description' => [
+            'Da tu opinión sobre cualquier plan, dale me gusta y responde a lo que dicen otros clientes.',
+        ],
+    ];
+
+    public static function refreshStaleTexts(): void
+    {
+        $defaults = Defaults::settings();
+
+        foreach (self::STALE_TEXTS as $key => $viejos) {
+            $actual = Setting::where('settingable_type', null)
+                ->where('key', Config::PREFIX . $key)
+                ->value('value');
+
+            if ($actual !== null && in_array($actual, $viejos, true) && isset($defaults[$key])) {
+                Config::save([$key => $defaults[$key]]);
+            }
         }
     }
 

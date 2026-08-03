@@ -89,10 +89,31 @@ class Database
                 $table->unsignedInteger('likes_count')->default(0);
                 $table->timestamps();
 
+                // Reseñas: estrellas (1-5) y destacada en el inicio.
+                $table->unsignedTinyInteger('rating')->nullable();
+                $table->boolean('featured')->default(false);
+
                 $table->index(['commentable_type', 'commentable_id'], 'cyberpunk_comments_target_idx');
                 $table->index('parent_id', 'cyberpunk_comments_parent_idx');
+                $table->index(['featured', 'rating'], 'cyberpunk_comments_featured_idx');
             });
             $created[] = 'ext_cyberpunk_comments';
+        }
+
+        // Instalaciones anteriores no tenían las estrellas.
+        if (Schema::hasTable('ext_cyberpunk_comments') && !Schema::hasColumn('ext_cyberpunk_comments', 'rating')) {
+            Schema::table('ext_cyberpunk_comments', function (Blueprint $table) {
+                $table->unsignedTinyInteger('rating')->nullable();
+            });
+            $created[] = 'ext_cyberpunk_comments.rating';
+        }
+
+        if (Schema::hasTable('ext_cyberpunk_comments') && !Schema::hasColumn('ext_cyberpunk_comments', 'featured')) {
+            Schema::table('ext_cyberpunk_comments', function (Blueprint $table) {
+                $table->boolean('featured')->default(false);
+                $table->index(['featured', 'rating'], 'cyberpunk_comments_featured_idx');
+            });
+            $created[] = 'ext_cyberpunk_comments.featured';
         }
 
         if (!Schema::hasTable('ext_cyberpunk_likes')) {

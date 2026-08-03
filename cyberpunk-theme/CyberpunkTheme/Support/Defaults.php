@@ -93,7 +93,18 @@ class Defaults
             'reviews_page_enabled' => true,
             'reviews_name' => 'Reseñas',
             'reviews_slug' => 'resenas',
-            'reviews_description' => 'Da tu opinión sobre cualquier plan, dale me gusta y responde a lo que dicen otros clientes.',
+            'reviews_description' => 'Puntúa con estrellas y cuenta tu experiencia. Para dejar una valoración hay que escribir una reseña.',
+
+            // Reseñas del servicio en general (no de un plan concreto)
+            'general_reviews_name' => 'El servicio en general',
+            'general_reviews_description' => 'Qué opinan los clientes del servicio en conjunto: soporte, velocidad, estabilidad y trato.',
+
+            // Reseñas destacadas en el inicio
+            'featured_reviews_enabled' => true,
+            'featured_reviews_title' => 'Lo que dicen nuestros clientes',
+            'featured_reviews_subtitle' => 'Opiniones reales de gente que ya tiene sus servicios con nosotros.',
+            'featured_reviews_limit' => 3,
+            'featured_reviews_mode' => 'mixed',
 
             // Posición del marketing
             'marketing_align' => 'left',

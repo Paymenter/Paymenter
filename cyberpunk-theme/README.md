@@ -4,14 +4,36 @@ Dos paquetes separados. **Ninguno modifica el núcleo de Paymenter ni el tema `d
 
 | Archivo | Qué es | Se instala en | Tamaño |
 |---|---|---|---|
-| `cyberpunk-extension.zip` | **La extensión sola** | `extensions/Others/CyberpunkTheme` | 82 KB |
-| `cyberpunk-extension-con-tema.zip` | **Extensión + tema**, sin los estilos compilados | `extensions/…` y `themes/cyberpunk` | 222 KB |
-| `cyberpunk-assets.zip` | **Sólo los estilos compilados** (CSS y JS) | `public/cyberpunk` | 226 KB |
-| `cyberpunk-tema.zip` | **El tema completo** + estilos + `instalar.sh` | `themes/cyberpunk` y `public/cyberpunk` | 375 KB |
-| `cyberpunk-todo-en-uno.zip` | **Todo**: extensión + tema + estilos | las tres carpetas de una vez | 448 KB |
+| `cyberpunk-extension.zip` | **La extensión sola** | `extensions/Others/CyberpunkTheme` | 87 KB |
+| `cyberpunk-extension-con-tema.zip` | **Extensión + tema**, sin los estilos compilados | `extensions/…` y `themes/cyberpunk` | 236 KB |
+| `cyberpunk-assets.zip` | **Sólo los estilos compilados** (CSS y JS) | `public/cyberpunk` | 227 KB |
+| `cyberpunk-tema.zip` | **El tema completo** + estilos + `instalar.sh` | `themes/cyberpunk` y `public/cyberpunk` | 384 KB |
+| `cyberpunk-todo-en-uno.zip` | **Todo**: extensión + tema + estilos | las tres carpetas de una vez | 462 KB |
 
 El tema funciona por sí solo; la extensión añade el panel de administración y las
 funciones sociales encima.
+
+## Novedades de la 1.4.0
+
+- **Reseñas por estrellas.** El «me gusta» de los planes pasa a ser una
+  valoración de 1 a 5 estrellas, con nota media, reparto de estrellas y la
+  puntuación de cada cliente junto a su comentario.
+- **Sin reseña no hay estrellas.** Para puntuar hay que escribir: el botón de
+  publicar sólo se activa con estrellas **y** texto, y se ve en todo momento
+  qué falta. Cada cliente deja una reseña por plan, y puede actualizarla.
+- **Dos apartados de reseñas**: las de cada plan y la opinión sobre el
+  **servicio en general** (soporte, velocidad, estabilidad). El nombre y la
+  descripción de la segunda se cambian desde el panel.
+- **Reseñas destacadas en el inicio.** Desde *Cyberpunk Theme → Comunidad →
+  Reseñas destacadas* eliges a mano las mejores (de un plan o del servicio) y
+  se muestran en la página principal **después de los planes y justo antes de
+  la comunidad**, con la nota media del hosting.
+- El moderador de comentarios enseña las estrellas, permite **destacar o
+  quitar** una reseña con un clic y filtrar por destacadas o por origen
+  (comunidad / plan / servicio).
+- La insignia de los planes pasa a ser **«Mejor valorado»**, calculada con una
+  media ponderada para que un plan con una sola reseña de 5 no adelante a otro
+  con veinte reseñas de 4,8.
 
 ## Novedades de la 1.3.1
 
@@ -61,9 +83,9 @@ funciones sociales encima.
 
 - **Por terminal (siempre funciona):** `cyberpunk-tema.zip` + `cyberpunk-extension.zip`.
 - **Todo desde el panel:** `cyberpunk-todo-en-uno.zip` (necesita que el subidor
-  admita 448 KB y que el usuario web pueda escribir en `themes/` y `public/`).
+  admita 462 KB y que el usuario web pueda escribir en `themes/` y `public/`).
 - **Si el subidor rechaza archivos grandes:** sube `cyberpunk-extension-con-tema.zip`
-  (222 KB) por el panel y copia `cyberpunk-assets.zip` a `public/cyberpunk/` por FTP.
+  (236 KB) por el panel y copia `cyberpunk-assets.zip` a `public/cyberpunk/` por FTP.
 
 Los ZIP se generan con `bash build.sh` a partir de las fuentes de esta carpeta.
 

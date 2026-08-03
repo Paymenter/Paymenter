@@ -4,15 +4,15 @@ Paquetes disponibles (elige según lo que admita tu servidor):
 
 | Paquete | Qué instala | Dónde | Tamaño |
 |---|---|---|---|
-| `cyberpunk-extension.zip` | La extensión sola | `extensions/Others/CyberpunkTheme` | 82 KB |
-| `cyberpunk-extension-con-tema.zip` | Extensión + tema (sin estilos) | `extensions/…` + `themes/cyberpunk` | 222 KB |
-| `cyberpunk-assets.zip` | Sólo los estilos compilados | `public/cyberpunk` | 226 KB |
-| `cyberpunk-tema.zip` | El tema completo + estilos | `themes/cyberpunk` + `public/cyberpunk` | 375 KB |
-| `cyberpunk-todo-en-uno.zip` | Todo de una vez | las tres carpetas | 448 KB |
+| `cyberpunk-extension.zip` | La extensión sola | `extensions/Others/CyberpunkTheme` | 87 KB |
+| `cyberpunk-extension-con-tema.zip` | Extensión + tema (sin estilos) | `extensions/…` + `themes/cyberpunk` | 236 KB |
+| `cyberpunk-assets.zip` | Sólo los estilos compilados | `public/cyberpunk` | 227 KB |
+| `cyberpunk-tema.zip` | El tema completo + estilos | `themes/cyberpunk` + `public/cyberpunk` | 384 KB |
+| `cyberpunk-todo-en-uno.zip` | Todo de una vez | las tres carpetas | 462 KB |
 
 ## Si el subidor del panel rechaza los archivos grandes
 
-Si `cyberpunk-extension.zip` (82 KB) sube pero `cyberpunk-todo-en-uno.zip` (448 KB)
+Si `cyberpunk-extension.zip` (87 KB) sube pero `cyberpunk-todo-en-uno.zip` (462 KB)
 no, tu servidor tiene un límite de subida bajo. Compruébalo:
 
 ```bash
@@ -26,7 +26,7 @@ PHP-FPM y Nginx.
 
 Mientras tanto, la combinación que funciona con límites bajos es:
 
-1. Sube por el panel `cyberpunk-extension-con-tema.zip` (222 KB) → instala la
+1. Sube por el panel `cyberpunk-extension-con-tema.zip` (236 KB) → instala la
    extensión **y** el tema.
 2. Copia por FTP el contenido de `cyberpunk-assets.zip` a `public/cyberpunk/`.
 
@@ -183,7 +183,7 @@ activa **Enabled** y guarda.
 | Banner | Diapositivas (imagen, título, texto, botón) y frases de marketing en movimiento |
 | Marketing | Posición (izquierda/centro/derecha), tarjetas de servicios, ventajas y accesos rápidos, con **selector visual de iconos** |
 | Páginas | Páginas nuevas con tu HTML, con enlace en la barra de navegación |
-| Comunidad | Nombre, URL, descripción, límite de archivos, avatares y el apartado de reseñas |
+| Comunidad | Nombre, URL, descripción, límite de archivos, avatares, el apartado de reseñas y las **reseñas destacadas del inicio** |
 | Redes sociales | Facebook, Discord, Instagram, canal y grupo de WhatsApp, Telegram, YouTube, TikTok, X, GitHub |
 
 Botones de arriba: **Guardar cambios**, **Activar tema**, **Reinstalar archivos**,
@@ -204,6 +204,37 @@ Botones de arriba: **Guardar cambios**, **Activar tema**, **Reinstalar archivos*
 - **Selector de iconos**: en las tarjetas, ventajas, accesos rápidos y páginas el
   icono se elige de una lista donde se ve dibujado. Escribe en inglés para buscar
   entre todos los iconos disponibles (`server`, `cloud`, `robot`, `whatsapp`...).
+
+## Reseñas con estrellas
+
+Los clientes puntúan de 1 a 5 estrellas. **Para poner estrellas hay que escribir
+una reseña**: el botón de publicar no se activa hasta que hay puntuación y
+texto. Cada cliente deja una reseña por plan (puede editarla cuando quiera) y
+otra sobre el servicio en general.
+
+El apartado de reseñas tiene dos pestañas:
+
+1. **Reseñas de los planes** — cada plan con su nota media y sus opiniones.
+2. **El servicio en general** — la opinión sobre el hosting en conjunto. El
+   nombre de esta pestaña se cambia en *Comunidad → Opinión sobre el servicio*.
+
+### Elegir las reseñas que salen en el inicio
+
+En **Cyberpunk Theme → Comunidad → Reseñas destacadas en el inicio**:
+
+1. Activa *Mostrar reseñas destacadas en el inicio*.
+2. Pon el título, el subtítulo y cuántas quieres enseñar.
+3. Pulsa **Elegir las reseñas destacadas** y marca las que quieras. Se listan
+   las mejor valoradas primero, con las estrellas, el autor y a qué plan (o al
+   servicio) se refieren.
+
+La sección aparece en la página principal **después de los planes y justo antes
+de la comunidad**. Si eliges *«Las que yo elija y, si faltan, las mejores»*, el
+hueco que quede se rellena solo con las reseñas de 4 y 5 estrellas.
+
+También puedes destacar una reseña sobre la marcha desde
+**Admin → Extensions → Comunidad · Comentarios**, con el botón
+*Destacar en el inicio*.
 
 Moderación: **Admin → Extensions → Comunidad · Publicaciones** y
 **Comunidad · Comentarios**.

@@ -54,6 +54,7 @@ class Config
         'reviews_enabled',
         'reviews_page_enabled',
         'avatar_uploads_enabled',
+        'featured_reviews_enabled',
     ];
 
     /** Claves numéricas */
@@ -61,6 +62,7 @@ class Config
         'banner_interval',
         'background_overlay',
         'community_media_limit',
+        'featured_reviews_limit',
     ];
 
     /**
@@ -225,6 +227,7 @@ class Config
         \Illuminate\Support\Facades\Cache::forget('cyberpunk.quick_links.auto');
         \Illuminate\Support\Facades\Cache::forget('cyberpunk.reviews.popular');
         \Illuminate\Support\Facades\Cache::forget('cyberpunk.reviews.stats');
+        \Illuminate\Support\Facades\Cache::forget('cyberpunk.reviews.general');
         \Illuminate\Support\Facades\Cache::forget('cyberpunk.visits');
     }
 }

@@ -14,15 +14,24 @@ use Paymenter\Extensions\Others\CyberpunkTheme\Support\InteractsWithCommunity;
 use Paymenter\Extensions\Others\CyberpunkTheme\Support\Reviews as ReviewsHelper;
 
 /**
- * Apartado público de reseñas: todos los productos en un sitio, para que
- * cualquier usuario pueda dar like, opinar y responder a otras opiniones
- * sin tener que entrar producto por producto.
+ * Apartado público de reseñas con estrellas.
+ *
+ * Dos secciones:
+ *  - "planes"  → cada plan con su nota media y sus reseñas
+ *  - "general" → la opinión sobre el hosting en conjunto
+ *
+ * Para dejar una reseña hay que poner estrellas Y escribir: sin texto no se
+ * guarda la puntuación, igual que en cualquier sitio de reseñas serio.
  */
 class Reviews extends Component
 {
     use InteractsWithCommunity;
 
-    /** Producto abierto ahora mismo */
+    /** Apartado activo: planes | general */
+    #[Url(except: 'planes', as: 'ver')]
+    public string $section = 'planes';
+
+    /** Plan abierto ahora mismo */
     #[Url(except: 0, as: 'producto')]
     public int $openProduct = 0;
 
@@ -37,28 +46,68 @@ class Reviews extends Component
     #[Url(except: 'valorados', as: 'orden')]
     public string $sort = 'valorados';
 
+    /** Formulario de reseña */
+    public int $rating = 0;
+
     public string $body = '';
+
+    /** Formulario de la reseña general */
+    public int $generalRating = 0;
+
+    public string $generalBody = '';
 
     public ?int $replyingTo = null;
 
     public array $replyBody = [];
+
+    public function mount(): void
+    {
+        $this->section = $this->section === 'general' ? 'general' : 'planes';
+
+        $this->loadOwnReviews();
+    }
+
+    /**
+     * Si el usuario ya dejó su reseña, el formulario aparece relleno para
+     * que pueda cambiarla en vez de duplicarla.
+     */
+    private function loadOwnReviews(): void
+    {
+        if (!Auth::check()) {
+            return;
+        }
+
+        $general = ReviewsHelper::userReview(Auth::id(), Comment::GENERAL, 0);
+
+        if ($general) {
+            $this->generalRating = (int) $general->rating;
+            $this->generalBody = (string) $general->content;
+        }
+
+        if ($this->openProduct > 0) {
+            $propia = ReviewsHelper::userReview(Auth::id(), Product::class, $this->openProduct);
+
+            $this->rating = $propia ? (int) $propia->rating : 0;
+            $this->body = $propia ? (string) $propia->content : '';
+        }
+    }
 
     public function render()
     {
         $products = collect();
         $categories = collect();
         $stats = [];
-        $liked = [];
         $comments = collect();
+        $generalReviews = collect();
         $popular = [];
+        $likedComments = [];
 
         try {
             $categories = Category::whereHas('products', fn ($q) => $q->where('hidden', false))
                 ->orderBy('sort')
                 ->get();
 
-            $query = Product::with('category')
-                ->where('hidden', false);
+            $query = Product::with('category')->where('hidden', false);
 
             if ($this->categoryFilter !== '') {
                 $query->where('category_id', (int) $this->categoryFilter);
@@ -73,31 +122,23 @@ class Reviews extends Component
             $stats = ReviewsHelper::allStats();
             $popular = ReviewsHelper::popularProductIds();
 
-            // Ordenamos en memoria: las estadísticas viven en las tablas de la
-            // extensión y así no dependemos de un join contra el core.
             $products = match ($this->sort) {
-                'comentados' => $products->sortByDesc(fn ($p) => $stats[$p->id]['comments'] ?? 0)->values(),
+                'comentados' => $products->sortByDesc(fn ($p) => $stats[$p->id]['count'] ?? 0)->values(),
                 'nombre' => $products,
-                default => $products->sortByDesc(fn ($p) => $stats[$p->id]['likes'] ?? 0)->values(),
+                default => $products
+                    ->sortByDesc(fn ($p) => [$stats[$p->id]['average'] ?? 0, $stats[$p->id]['count'] ?? 0])
+                    ->values(),
             };
 
-            if (Auth::check()) {
-                $liked = Like::where('user_id', Auth::id())
-                    ->where('likeable_type', Product::class)
-                    ->pluck('likeable_id')
-                    ->map(fn ($id) => (int) $id)
-                    ->all();
+            if ($this->openProduct > 0) {
+                $comments = $this->reviewsFor(Product::class, $this->openProduct);
             }
 
-            if ($this->openProduct > 0) {
-                $comments = Comment::with(['user', 'replies.user'])
-                    ->where('commentable_type', Product::class)
-                    ->where('commentable_id', $this->openProduct)
-                    ->whereNull('parent_id')
-                    ->where('approved', true)
-                    ->orderByDesc('created_at')
-                    ->get();
+            if ($this->section === 'general') {
+                $generalReviews = $this->reviewsFor(Comment::GENERAL, 0);
             }
+
+            $likedComments = $this->likedCommentIds();
         } catch (\Throwable $e) {
             report($e);
         }
@@ -106,79 +147,134 @@ class Reviews extends Component
             'products' => $products,
             'categories' => $categories,
             'stats' => $stats,
-            'likedProducts' => $liked,
             'comments' => $comments,
+            'generalReviews' => $generalReviews,
+            'generalStats' => ReviewsHelper::generalStats(),
             'popular' => $popular,
+            'likedComments' => $likedComments,
             'openedProduct' => $this->openProduct > 0 ? $products->firstWhere('id', $this->openProduct) : null,
+            'generalName' => Config::theme('general_reviews_name', 'El servicio en general'),
         ])->layoutData([
             'title' => Config::theme('reviews_name', 'Reseñas'),
         ]);
     }
 
-    // ------------------------------------------------------------------
-    public function open(int $productId): void
+    /**
+     * Reseñas de un destino, las mejor valoradas y más recientes primero.
+     */
+    private function reviewsFor(string $type, int $id)
     {
-        $this->openProduct = $this->openProduct === $productId ? 0 : $productId;
-        $this->body = '';
+        return Comment::with(['user', 'replies.user'])
+            ->reviews()
+            ->where('commentable_type', $type)
+            ->where('commentable_id', $id)
+            ->orderByDesc('created_at')
+            ->get();
+    }
+
+    private function likedCommentIds(): array
+    {
+        if (!Auth::check()) {
+            return [];
+        }
+
+        try {
+            return Like::where('user_id', Auth::id())
+                ->where('likeable_type', Comment::class)
+                ->pluck('likeable_id')
+                ->map(fn ($id) => (int) $id)
+                ->all();
+        } catch (\Throwable $e) {
+            return [];
+        }
+    }
+
+    // ------------------------------------------------------------------
+    public function setSection(string $section): void
+    {
+        $this->section = $section === 'general' ? 'general' : 'planes';
         $this->replyingTo = null;
     }
 
-    public function toggleLike(int $productId): void
+    public function open(int $productId): void
     {
-        if (!$this->requireLogin('valorar un producto') || !$this->requireTables()) {
-            return;
-        }
+        $this->openProduct = $this->openProduct === $productId ? 0 : $productId;
+        $this->rating = 0;
+        $this->body = '';
+        $this->replyingTo = null;
 
-        $this->runSafely(function () use ($productId) {
-            $like = Like::where('user_id', Auth::id())
-                ->where('likeable_type', Product::class)
-                ->where('likeable_id', $productId)
-                ->first();
-
-            if ($like) {
-                $like->delete();
-            } else {
-                Like::create([
-                    'user_id' => Auth::id(),
-                    'likeable_type' => Product::class,
-                    'likeable_id' => $productId,
-                ]);
-            }
-
-            ReviewsHelper::flush();
-        }, 'No se pudo registrar tu "me gusta".');
+        $this->loadOwnReviews();
     }
 
-    public function comment(int $productId): void
+    /**
+     * Guarda (o actualiza) la reseña de un plan.
+     */
+    public function publishReview(int $productId): void
+    {
+        $this->saveReview(Product::class, $productId, $this->rating, $this->body);
+    }
+
+    /**
+     * Guarda (o actualiza) la reseña sobre el servicio en general.
+     */
+    public function publishGeneralReview(): void
+    {
+        $this->saveReview(Comment::GENERAL, 0, $this->generalRating, $this->generalBody);
+    }
+
+    /**
+     * Lógica común: sin estrellas o sin texto, no hay reseña.
+     */
+    private function saveReview(string $type, int $id, int $rating, string $body): void
     {
         if (!$this->requireLogin('dejar una reseña') || !$this->requireTables()) {
             return;
         }
 
-        $body = trim($this->body);
+        $body = trim($body);
 
-        if (mb_strlen($body) < 3) {
-            $this->notify(__('Escribe una reseña un poco más larga.'), 'error');
+        if ($rating < 1 || $rating > 5) {
+            $this->notify(__('Elige cuántas estrellas le das.'), 'error');
 
             return;
         }
 
-        $this->runSafely(function () use ($productId, $body) {
-            Comment::create([
-                'user_id' => Auth::id(),
-                'commentable_type' => Product::class,
-                'commentable_id' => $productId,
+        if (mb_strlen($body) < 10) {
+            $this->notify(__('Cuenta un poco tu experiencia (mínimo 10 caracteres) para poder guardar tu puntuación.'), 'error');
+
+            return;
+        }
+
+        $this->runSafely(function () use ($type, $id, $rating, $body) {
+            $existente = ReviewsHelper::userReview(Auth::id(), $type, $id);
+
+            $datos = [
+                'rating' => $rating,
                 'content' => mb_substr($body, 0, 1500),
                 'approved' => Config::bool('auto_moderate', true),
-            ]);
+            ];
 
-            $this->body = '';
+            if ($existente) {
+                $existente->update($datos);
+                $mensaje = __('Tu reseña se ha actualizado.');
+            } else {
+                Comment::create($datos + [
+                    'user_id' => Auth::id(),
+                    'commentable_type' => $type,
+                    'commentable_id' => $id,
+                ]);
+                $mensaje = __('¡Gracias por tu reseña!');
+            }
+
             ReviewsHelper::flush();
 
-            $this->notify(__('¡Gracias por tu reseña!'));
-        }, 'No se pudo publicar la reseña.');
+            $this->notify($mensaje);
+        }, 'No se pudo guardar la reseña.');
     }
 
+    /**
+     * Respuesta a una reseña (sin estrellas).
+     */
     public function reply(int $commentId): void
     {
         if (!$this->requireLogin('responder') || !$this->requireTables()) {
@@ -200,7 +296,7 @@ class Reviews extends Component
 
             Comment::create([
                 'user_id' => Auth::id(),
-                'commentable_type' => Product::class,
+                'commentable_type' => $parent->commentable_type,
                 'commentable_id' => $parent->commentable_id,
                 'parent_id' => $parent->id,
                 'content' => mb_substr($body, 0, 1500),
@@ -214,9 +310,12 @@ class Reviews extends Component
         }, 'No se pudo publicar la respuesta.');
     }
 
+    /**
+     * "Me ha resultado útil" sobre una reseña de otro usuario.
+     */
     public function toggleCommentLike(int $commentId): void
     {
-        if (!$this->requireLogin('valorar un comentario') || !$this->requireTables()) {
+        if (!$this->requireLogin('marcar una reseña como útil') || !$this->requireTables()) {
             return;
         }
 
@@ -266,9 +365,23 @@ class Reviews extends Component
                 return;
             }
 
+            $propia = $comment->user_id === $user->id;
+            $tipo = $comment->commentable_type;
+
             $comment->delete();
 
             ReviewsHelper::flush();
+
+            // Si borró la suya, el formulario vuelve a quedar vacío.
+            if ($propia) {
+                if ($tipo === Comment::GENERAL) {
+                    $this->generalRating = 0;
+                    $this->generalBody = '';
+                } else {
+                    $this->rating = 0;
+                    $this->body = '';
+                }
+            }
         });
     }
 }
