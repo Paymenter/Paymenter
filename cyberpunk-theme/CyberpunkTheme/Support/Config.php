@@ -51,6 +51,7 @@ class Config
         'socials_enabled',
         'community_enabled',
         'reviews_enabled',
+        'reviews_page_enabled',
         'avatar_uploads_enabled',
     ];
 
@@ -196,6 +197,16 @@ class Config
         $slug = Str::slug($slug);
 
         return $slug !== '' ? $slug : 'comunidad';
+    }
+
+    /**
+     * Slug del apartado de reseñas.
+     */
+    public static function reviewsSlug(): string
+    {
+        $slug = Str::slug((string) self::theme('reviews_slug', 'resenas'));
+
+        return $slug !== '' ? $slug : 'resenas';
     }
 
     /**

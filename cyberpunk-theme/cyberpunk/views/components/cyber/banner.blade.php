@@ -2,6 +2,7 @@
 $slides = cyber_marketing('banner_slides');
 $words = collect(cyber_words());
 $interval = max(1500, (int) cyber_cfg('banner_interval', 6000));
+$align = cyber_align();
 $shopUrl = null;
 try {
     $firstCategory = \App\Models\Category::whereNull('parent_id')
@@ -62,7 +63,7 @@ try {
             x-transition:enter="transition ease-out duration-700 delay-100"
             x-transition:enter-start="opacity-0 translate-y-4"
             x-transition:enter-end="opacity-100 translate-y-0"
-            class="max-w-3xl {{ $index === 0 ? '' : 'absolute' }}">
+            class="max-w-3xl {{ $align['wrapper'] }} {{ $align['text'] }} {{ $index === 0 ? '' : 'absolute' }}">
 
             <span class="cyber-chip animate-cyber-flicker">
                 <x-ri-flashlight-fill class="size-3.5" />
@@ -78,7 +79,7 @@ try {
             @endif
 
             @if($words->count() > 0)
-            <div class="mt-6 flex items-center gap-3 text-lg md:text-2xl font-bold">
+            <div class="mt-6 flex flex-wrap items-center gap-3 text-lg md:text-2xl font-bold {{ $align['items'] }}">
                 <x-ri-terminal-box-fill class="size-6 text-primary shrink-0" />
                 <span class="text-base/60 hidden sm:inline">&gt;</span>
                 <template x-for="(w, i) in words" :key="i">
@@ -93,7 +94,7 @@ try {
             </div>
             @endif
 
-            <div class="mt-9 flex flex-wrap gap-3">
+            <div class="mt-9 flex flex-wrap gap-3 {{ $align['items'] }}">
                 @php
                     $btnUrl = $slide['button_url'] ?? '';
                     $btnUrl = $btnUrl !== '' ? $btnUrl : ($shopUrl ?? route('home'));
@@ -125,7 +126,7 @@ try {
 
         {{-- Indicadores --}}
         @if(count($slides) > 1)
-        <div class="flex gap-2 mt-10">
+        <div class="flex gap-2 mt-10 {{ $align['items'] }}">
             @foreach($slides as $index => $slide)
             <button type="button" @click="slide = {{ $index }}"
                 class="h-1.5 rounded-full transition-all duration-300 cursor-pointer"

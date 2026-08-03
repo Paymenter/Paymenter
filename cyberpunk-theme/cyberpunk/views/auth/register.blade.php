@@ -5,7 +5,7 @@
         <form class="cyber-card cyber-clip cyber-neon flex flex-col gap-2 px-6 sm:px-12 py-12 w-full justify-center"
             wire:submit.prevent="submit" id="register">
             <div class="flex flex-col items-center mb-10">
-                
+                <x-logo class="h-14 mb-2" />
                 <h1 class="text-3xl font-black text-center mt-6 cyber-neon-text">
                     <span class="cyber-glitch" data-text="{{ __('auth.sign_up_title') }}">{{ __('auth.sign_up_title') }}</span>
                 </h1>

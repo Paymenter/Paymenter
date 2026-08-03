@@ -1,8 +1,12 @@
-@props(['title' => '', 'subtitle' => null, 'icon' => null, 'action' => null, 'actionUrl' => null])
+@props(['title' => '', 'subtitle' => null, 'icon' => null, 'action' => null, 'actionUrl' => null, 'align' => null])
 
-<div class="flex flex-col md:flex-row md:items-end justify-between gap-4">
+@php
+$a = $align ?? cyber_align();
+@endphp
+
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-4 {{ $a['text'] }}">
     <div>
-        <div class="flex items-center gap-3">
+        <div class="flex items-center gap-3 {{ $a['items'] }}">
             @if($icon)
             <div class="p-2 rounded-lg bg-primary/10 border border-primary/25">
                 <x-dynamic-component :component="$icon" class="size-5 text-primary" />
@@ -13,7 +17,7 @@
             </h2>
         </div>
         @if($subtitle)
-        <p class="mt-3 text-base/65 max-w-2xl">{{ $subtitle }}</p>
+        <p class="mt-3 text-base/65 max-w-2xl {{ $a['wrapper'] }}">{{ $subtitle }}</p>
         @endif
     </div>
     @if($action && $actionUrl)

@@ -373,6 +373,67 @@ if (!function_exists('cyber_marketing')) {
     }
 }
 
+if (!function_exists('cyber_popular_category')) {
+    /**
+     * Categoría con más "me gusta" + comentarios entre sus productos.
+     * Devuelve el id de la categoría o null.
+     */
+    function cyber_popular_category(): ?int
+    {
+        if (!cyber_ext() || !cyber_bool('reviews_enabled', true)) {
+            return null;
+        }
+
+        return \Illuminate\Support\Facades\Cache::remember('cyberpunk.popular_category', now()->addMinutes(5), function () {
+            try {
+                $stats = \Paymenter\Extensions\Others\CyberpunkTheme\Support\Reviews::allStats();
+
+                if (count($stats) === 0) {
+                    return null;
+                }
+
+                $scores = [];
+                $products = \App\Models\Product::whereIn('id', array_keys($stats))
+                    ->pluck('category_id', 'id');
+
+                foreach ($stats as $productId => $row) {
+                    $categoryId = $products[$productId] ?? null;
+                    if (!$categoryId) {
+                        continue;
+                    }
+                    $scores[$categoryId] = ($scores[$categoryId] ?? 0) + ($row['likes'] * 2) + $row['comments'];
+                }
+
+                if (count($scores) === 0) {
+                    return null;
+                }
+
+                arsort($scores);
+
+                return (int) array_key_first($scores);
+            } catch (\Throwable $e) {
+                return null;
+            }
+        });
+    }
+}
+
+if (!function_exists('cyber_align')) {
+    /**
+     * Clases de alineación del marketing (izquierda, centro o derecha).
+     *
+     * @return array{wrapper:string,text:string,items:string}
+     */
+    function cyber_align(): array
+    {
+        return match (cyber_cfg('marketing_align', 'left')) {
+            'center' => ['wrapper' => 'mx-auto', 'text' => 'text-center', 'items' => 'items-center justify-center'],
+            'right' => ['wrapper' => 'ml-auto', 'text' => 'text-right', 'items' => 'items-end justify-end'],
+            default => ['wrapper' => '', 'text' => 'text-left', 'items' => 'items-start justify-start'],
+        };
+    }
+}
+
 if (!function_exists('cyber_stats')) {
     /**
      * Estadísticas mostradas en el inicio. Se cachean 5 minutos.
@@ -740,6 +801,36 @@ return [
         | Comunidad y reseñas
         |----------------------------------------------------------------
         */
+        [
+            'name' => 'marketing_align',
+            'label' => 'Posición del marketing',
+            'type' => 'select',
+            'options' => [
+                'left' => 'A la izquierda',
+                'center' => 'En el centro',
+                'right' => 'A la derecha',
+            ],
+            'default' => 'left',
+        ],
+        [
+            'name' => 'reviews_page_enabled',
+            'label' => 'Activar el apartado de reseñas',
+            'type' => 'checkbox',
+            'default' => true,
+            'database_type' => 'boolean',
+        ],
+        [
+            'name' => 'reviews_name',
+            'label' => 'Nombre del apartado de reseñas',
+            'type' => 'text',
+            'default' => 'Reseñas',
+        ],
+        [
+            'name' => 'reviews_slug',
+            'label' => 'URL del apartado de reseñas',
+            'type' => 'text',
+            'default' => 'resenas',
+        ],
         [
             'name' => 'community_enabled',
             'label' => 'Activar comunidad',

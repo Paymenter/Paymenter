@@ -6,7 +6,7 @@ $isPopular = in_array($product->id, $popular, true);
 @endphp
 
 <div class="container mt-10 pb-10">
-    <div class="cyber-card cyber-clip p-6 md:p-8 relative overflow-hidden">
+    <div class="cyber-card cyber-clip p-6 md:p-8 relative overflow-hidden {{ $isPopular ? 'cyber-popular-card' : '' }}">
         <div class="absolute inset-0 cyber-gradient opacity-[0.06] pointer-events-none"></div>
         <div class="relative flex flex-col @if ($product->image) md:grid grid-cols-2 gap-10 @endif">
             @if ($product->image)
@@ -19,8 +19,8 @@ $isPopular = in_array($product->id, $popular, true);
             <div class="flex flex-col">
                 <div class="flex flex-wrap items-center gap-2 mb-4">
                     @if($isPopular)
-                    <span class="cyber-chip !bg-accent/20 !border-accent/50 !text-accent">
-                        <x-ri-fire-fill class="size-3.5" /> Más popular
+                    <span class="cyber-popular inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-black uppercase tracking-wider text-white">
+                        <x-ri-fire-fill class="size-4" /> Más popular
                     </span>
                     @endif
                     @if ($product->stock === null)

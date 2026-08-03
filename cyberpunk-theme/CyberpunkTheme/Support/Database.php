@@ -47,9 +47,20 @@ class Database
                 $table->unsignedInteger('comments_count')->default(0);
                 $table->timestamps();
 
+                $table->string('category', 32)->default('general');
                 $table->index(['approved', 'pinned'], 'cyberpunk_posts_state_idx');
+                $table->index('category', 'cyberpunk_posts_category_idx');
             });
             $created[] = 'ext_cyberpunk_posts';
+        }
+
+        // Instalaciones anteriores no tenían la columna de categoría.
+        if (Schema::hasTable('ext_cyberpunk_posts') && !Schema::hasColumn('ext_cyberpunk_posts', 'category')) {
+            Schema::table('ext_cyberpunk_posts', function (Blueprint $table) {
+                $table->string('category', 32)->default('general');
+                $table->index('category', 'cyberpunk_posts_category_idx');
+            });
+            $created[] = 'ext_cyberpunk_posts.category';
         }
 
         if (!Schema::hasTable('ext_cyberpunk_post_media')) {

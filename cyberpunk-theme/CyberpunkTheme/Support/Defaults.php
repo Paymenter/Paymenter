@@ -82,10 +82,19 @@ class Defaults
             'community_enabled' => true,
             'community_name' => 'Comunidad',
             'community_slug' => 'comunidad',
-            'community_description' => 'Comparte tu experiencia con el hosting: fotos, vídeos y opiniones.',
+            'community_description' => 'Pide ayuda, comparte soluciones, enseña tus logros y propón ideas nuevas. Aquí nos ayudamos entre todos.',
             'community_media_limit' => 4,
             'reviews_enabled' => true,
             'avatar_uploads_enabled' => true,
+
+            // Apartado público de reseñas
+            'reviews_page_enabled' => true,
+            'reviews_name' => 'Reseñas',
+            'reviews_slug' => 'resenas',
+            'reviews_description' => 'Da tu opinión sobre cualquier plan, dale me gusta y responde a lo que dicen otros clientes.',
+
+            // Posición del marketing
+            'marketing_align' => 'left',
 
             // Redes sociales
             'social_facebook' => '',

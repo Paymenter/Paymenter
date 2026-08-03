@@ -20,6 +20,14 @@ HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 cd "$HERE"
 
 [ -d cyberpunk ]      || { echo "Falta la carpeta cyberpunk/ (el tema)"; exit 1; }
+
+# Tailwind escanea extensions/ al compilar el tema: si la extensión no está
+# en su sitio, las clases que sólo usan sus vistas (avatares, comentarios...)
+# no acaban en el CSS y los elementos salen sin estilo.
+ROOT="$(cd "$HERE/.." && pwd)"
+if [ -f "$ROOT/artisan" ] && [ ! -d "$ROOT/extensions/Others/CyberpunkTheme" ]; then
+    echo "AVISO: copia CyberpunkTheme a extensions/Others/ antes de 'npm run build cyberpunk'"
+fi
 [ -d CyberpunkTheme ] || { echo "Falta la carpeta CyberpunkTheme/ (la extensión)"; exit 1; }
 
 rm -rf build-tmp

@@ -2,6 +2,7 @@
 $cards = cyber_marketing('marketing_cards');
 $features = cyber_marketing('features');
 $title = cyber_cfg('marketing_title', '¿Qué puedes montar con nosotros?');
+$align = cyber_align();
 $subtitle = cyber_cfg('marketing_subtitle', 'Infraestructura preparada para tus webs, bots y aplicaciones. Elige tu plan y despliega en minutos.');
 @endphp
 

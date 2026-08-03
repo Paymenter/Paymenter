@@ -14,6 +14,7 @@ use Paymenter\Extensions\Others\CyberpunkTheme\Livewire\Community as CommunityCo
 use Paymenter\Extensions\Others\CyberpunkTheme\Livewire\CommunityPreview as CommunityPreviewComponent;
 use Paymenter\Extensions\Others\CyberpunkTheme\Livewire\CustomPage as CustomPageComponent;
 use Paymenter\Extensions\Others\CyberpunkTheme\Livewire\ProductReviews as ProductReviewsComponent;
+use Paymenter\Extensions\Others\CyberpunkTheme\Livewire\Reviews as ReviewsComponent;
 use Paymenter\Extensions\Others\CyberpunkTheme\Support\Config;
 use Paymenter\Extensions\Others\CyberpunkTheme\Support\Installer;
 
@@ -115,6 +116,7 @@ class CyberpunkTheme extends Extension
         Livewire::component('cyberpunk.product-reviews', ProductReviewsComponent::class);
         Livewire::component('cyberpunk.avatar', AvatarComponent::class);
         Livewire::component('cyberpunk.custom-page', CustomPageComponent::class);
+        Livewire::component('cyberpunk.reviews', ReviewsComponent::class);
 
         if (Config::bool('count_visits', true)) {
             ExtensionHelper::registerMiddleware(CountVisit::class);
@@ -144,6 +146,15 @@ class CyberpunkTheme extends Extension
                 ];
             }
 
+            if (Config::themeBool('reviews_page_enabled', true)) {
+                $links[] = [
+                    'name' => Config::theme('reviews_name', 'Reseñas'),
+                    'url' => url('/' . Config::reviewsSlug()),
+                    'icon' => 'ri-star-smile',
+                    'priority' => 36,
+                ];
+            }
+
             return $links;
         });
 
@@ -159,6 +170,12 @@ class CyberpunkTheme extends Extension
                     'url' => url('/' . Config::communitySlug()),
                     'icon' => 'ri-chat-smile-2',
                     'priority' => 45,
+                ],
+                [
+                    'name' => Config::theme('reviews_name', 'Reseñas'),
+                    'url' => url('/' . Config::reviewsSlug()),
+                    'icon' => 'ri-star-smile',
+                    'priority' => 46,
                 ],
             ];
         });

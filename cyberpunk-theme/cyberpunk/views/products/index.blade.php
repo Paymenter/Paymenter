@@ -121,13 +121,9 @@ $popular = cyber_ext() && cyber_bool('reviews_enabled', true)
                         ? \Paymenter\Extensions\Others\CyberpunkTheme\Support\Reviews::stats($product->id)
                         : null;
                 @endphp
-                <div class="cyber-card cyber-card-hover cyber-clip flex flex-col overflow-hidden relative {{ $isSoldOut ? 'cyber-strike' : '' }}">
+                <div class="cyber-card cyber-card-hover cyber-clip flex flex-col overflow-hidden relative {{ $isSoldOut ? 'cyber-strike' : '' }} {{ $isPopular ? 'cyber-popular-card' : '' }}">
                     @if($isPopular)
-                    <div class="absolute top-3 right-3 z-10">
-                        <span class="cyber-chip !bg-accent/20 !border-accent/50 !text-accent animate-cyber-flicker">
-                            <x-ri-fire-fill class="size-3.5" /> Más popular
-                        </span>
-                    </div>
+                    <x-cyber.popular-badge />
                     @endif
 
                     @if ($product->image)

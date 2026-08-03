@@ -1,3 +1,4 @@
+@php $popularCategoryId = cyber_popular_category(); @endphp
 <div>
     @if(cyber_bool('banner_enabled', true))
     <x-cyber.banner />
@@ -42,6 +43,7 @@
         <div class="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5 mt-8">
             @forelse ($categories as $category)
             @php
+                $isPopularCategory = $popularCategoryId !== null && (int) $category->id === $popularCategoryId;
                 $visibleProducts = $category->products->where('hidden', false);
                 $totalProducts = $visibleProducts->count();
                 $limited = $visibleProducts->whereNotNull('stock');
@@ -49,7 +51,10 @@
                 $soldOut = $visibleProducts->filter(fn ($p) => $p->stock !== null && $p->stock <= 0)->count();
                 $allSoldOut = $totalProducts > 0 && $soldOut === $totalProducts;
             @endphp
-            <div class="cyber-card cyber-card-hover cyber-clip flex flex-col overflow-hidden {{ $allSoldOut ? 'cyber-strike' : '' }}">
+            <div class="cyber-card cyber-card-hover cyber-clip flex flex-col overflow-hidden relative {{ $allSoldOut ? 'cyber-strike' : '' }} {{ $isPopularCategory ? 'cyber-popular-card' : '' }}">
+                @if($isPopularCategory)
+                <x-cyber.popular-badge label="LA MÁS POPULAR" />
+                @endif
                 @if ($category->image)
                 <div class="relative {{ cyber_bool('small_images', false) ? 'h-24' : 'h-40' }} overflow-hidden">
                     <img src="{{ Storage::url($category->image) }}" alt="{{ $category->name }}"

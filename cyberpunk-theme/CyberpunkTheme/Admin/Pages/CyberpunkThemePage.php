@@ -388,11 +388,19 @@ class CyberpunkThemePage extends Page implements HasActions, HasForms
         return Tab::make('Marketing')
             ->icon('ri-megaphone-line')
             ->schema([
-                Section::make('Encabezado de la sección')
-                    ->columns(2)
+                Section::make('Encabezado y posición')
+                    ->columns(3)
                     ->schema([
                         TextInput::make('marketing_title')->label('Título')->maxLength(150),
                         TextInput::make('marketing_subtitle')->label('Subtítulo')->maxLength(255),
+                        Select::make('marketing_align')
+                            ->label('Posición del marketing')
+                            ->options([
+                                'left' => 'A la izquierda',
+                                'center' => 'En el centro',
+                                'right' => 'A la derecha',
+                            ])
+                            ->helperText('Afecta al banner y a los títulos de las secciones.'),
                     ]),
 
                 Section::make('Tarjetas de servicios')
@@ -534,8 +542,30 @@ class CyberpunkThemePage extends Page implements HasActions, HasForms
                             ->label('Máximo de archivos por publicación')
                             ->numeric()
                             ->minValue(1)
-                            ->maxValue(10)
-                            ->helperText('Las reseñas de los planes se activan en la pestaña General. El plan con más likes y comentarios recibe la etiqueta "Más popular".'),
+                            ->maxValue(10),
+                    ]),
+
+                Section::make('Apartado de reseñas')
+                    ->description('Una página propia con todos los planes, donde los clientes dan me gusta, opinan y se responden entre ellos. Aparece en la barra de navegación junto a la comunidad.')
+                    ->columns(2)
+                    ->schema([
+                        Toggle::make('reviews_page_enabled')
+                            ->label('Activar el apartado de reseñas')
+                            ->columnSpanFull(),
+                        TextInput::make('reviews_name')
+                            ->label('Nombre del apartado')
+                            ->maxLength(60)
+                            ->helperText('Por ejemplo: Reseñas, Opiniones, Valoraciones...'),
+                        TextInput::make('reviews_slug')
+                            ->label('URL del apartado')
+                            ->prefix(url('/') . '/')
+                            ->rule('regex:/^[A-Za-z0-9_-]+$/')
+                            ->maxLength(60),
+                        Textarea::make('reviews_description')
+                            ->label('Descripción')
+                            ->rows(2)
+                            ->columnSpanFull()
+                            ->maxLength(255),
                     ]),
             ]);
     }
@@ -714,6 +744,10 @@ class CyberpunkThemePage extends Page implements HasActions, HasForms
         // El slug de la comunidad siempre limpio
         if (isset($data['community_slug'])) {
             $data['community_slug'] = Str::slug((string) $data['community_slug']) ?: 'comunidad';
+        }
+
+        if (isset($data['reviews_slug'])) {
+            $data['reviews_slug'] = Str::slug((string) $data['reviews_slug']) ?: 'resenas';
         }
 
         Config::save($data);

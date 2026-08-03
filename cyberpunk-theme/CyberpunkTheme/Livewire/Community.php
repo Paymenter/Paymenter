@@ -14,6 +14,7 @@ use Paymenter\Extensions\Others\CyberpunkTheme\Models\Like;
 use Paymenter\Extensions\Others\CyberpunkTheme\Models\Post;
 use Paymenter\Extensions\Others\CyberpunkTheme\Models\PostMedia;
 use Paymenter\Extensions\Others\CyberpunkTheme\Support\Config;
+use Paymenter\Extensions\Others\CyberpunkTheme\Support\PostCategories;
 
 /**
  * Muro de la comunidad: publicaciones con imágenes y vídeos, likes,
@@ -30,8 +31,15 @@ class Community extends Component
     /** @var array<int, \Livewire\Features\SupportFileUploads\TemporaryUploadedFile> */
     public array $media = [];
 
+    /** Categoría de la publicación nueva */
+    public string $category = 'general';
+
     #[Url(except: 'recent', as: 'orden')]
     public string $sort = 'recent';
+
+    /** Filtro por categoría del listado ('' = todas) */
+    #[Url(except: '', as: 'cat')]
+    public string $filter = '';
 
     /** Comentario nuevo por publicación: [postId => texto] */
     public array $commentBody = [];
@@ -50,6 +58,7 @@ class Community extends Component
         return [
             'title' => 'nullable|string|max:120',
             'content' => 'required|string|min:3|max:2000',
+            'category' => 'nullable|string|max:32',
             'media' => 'nullable|array|max:' . $this->mediaLimit(),
             'media.*' => 'file|mimes:jpg,jpeg,png,gif,webp,mp4,webm,mov|max:20480',
         ];
@@ -71,6 +80,10 @@ class Community extends Component
         try {
             $query = Post::with(['user', 'media'])
                 ->where('approved', true);
+
+            if ($this->filter !== '' && PostCategories::exists($this->filter)) {
+                $query->where('category', $this->filter);
+            }
 
             $query = match ($this->sort) {
                 'liked' => $query->orderByDesc('likes_count')->orderByDesc('created_at'),
@@ -106,9 +119,36 @@ class Community extends Component
             'likedPosts' => $likedPosts,
             'likedComments' => $likedComments,
             'error' => $error,
+            'categories' => PostCategories::all(),
+            'counts' => $this->categoryCounts(),
         ])->layoutData([
             'title' => Config::theme('community_name', 'Comunidad'),
         ]);
+    }
+
+    /**
+     * Nº de publicaciones por categoría (para los filtros).
+     *
+     * @return array<string, int>
+     */
+    private function categoryCounts(): array
+    {
+        try {
+            return Post::where('approved', true)
+                ->selectRaw('category, COUNT(*) as total')
+                ->groupBy('category')
+                ->pluck('total', 'category')
+                ->map(fn ($n) => (int) $n)
+                ->all();
+        } catch (\Throwable $e) {
+            return [];
+        }
+    }
+
+    public function setFilter(string $category): void
+    {
+        $this->filter = ($this->filter === $category) ? '' : $category;
+        $this->resetPage();
     }
 
     private function likedIds(string $type): array
@@ -142,28 +182,54 @@ class Community extends Component
             'user_id' => Auth::id(),
             'title' => $this->title ?: null,
             'content' => $this->content,
+            'category' => PostCategories::normalize($this->category),
             'approved' => Config::bool('auto_moderate', true),
         ]);
 
+        $subidas = 0;
+        $fallos = 0;
+
         foreach (array_slice($this->media, 0, $this->mediaLimit()) as $index => $file) {
-            $extension = strtolower($file->getClientOriginalExtension());
-            $isVideo = in_array($extension, ['mp4', 'webm', 'mov'], true);
+            try {
+                $extension = strtolower((string) $file->getClientOriginalExtension());
+                $isVideo = in_array($extension, ['mp4', 'webm', 'mov'], true);
 
-            $path = $file->store('cyberpunk/community', 'public');
+                $path = $file->store('cyberpunk/community', 'public');
 
-            PostMedia::create([
-                'post_id' => $post->id,
-                'type' => $isVideo ? 'video' : 'image',
-                'path' => $path,
-                'sort' => $index,
-            ]);
+                if (!$path) {
+                    $fallos++;
+
+                    continue;
+                }
+
+                PostMedia::create([
+                    'post_id' => $post->id,
+                    'type' => $isVideo ? 'video' : 'image',
+                    'path' => $path,
+                    'sort' => $index,
+                ]);
+
+                $subidas++;
+            } catch (\Throwable $e) {
+                report($e);
+                $fallos++;
+            }
         }
 
-        $this->reset(['title', 'content', 'media']);
+        $this->reset(['title', 'content', 'media', 'category']);
         $this->resetPage();
 
+        if ($fallos > 0) {
+            $this->notify(
+                __('La publicación se creó, pero :n archivo(s) no se pudieron subir. Revisa los permisos de storage/app/public.', ['n' => $fallos]),
+                'error'
+            );
+
+            return;
+        }
+
         $this->notify($post->approved
-            ? __('¡Publicado! Gracias por compartir tu experiencia.')
+            ? __('¡Publicado! Gracias por compartir.')
             : __('Tu publicación quedó pendiente de aprobación.'));
     }
 

@@ -39,7 +39,16 @@
 @source inline("overflow-{auto,hidden,visible}");
 @source inline("shadow-{sm,md,lg,xl,none}");
 @source inline("max-w-{sm,md,lg,xl,2xl,3xl,4xl,full,fit}");
-@source inline("size-{4,5,6,8,10,12,16,20,24}");
+@source inline("size-{3,3.5,4,5,6,7,8,9,10,11,12,14,16,20,24,28,32}");
+@source inline("{w,h}-{7,9,11,14,28,36,40,44,52,56,72,80,96}");
+@source inline("{min-h,max-h}-{0,20,32,40,48,56,64,80,96}");
+@source inline("line-clamp-{1,2,3,4,none}");
+@source inline("aspect-{square,video,auto}");
+@source inline("object-{cover,contain,center,top}");
+@source inline("{grid-cols,gap}-{1,2,3,4,5,6}");
+@source inline("{ps,pe,ms,me,pl,pr,ml,mr}-{1,2,3,4,5,6,8,10,12}");
+@source inline("{border-s,border-e,border-l,border-r}-{2,4}");
+@source inline("{rounded-full,rounded-2xl,rounded-3xl,shrink-0,truncate,whitespace-pre-line,break-words}");
 
 @theme {
     /* Tipografía por defecto: pila del sistema (se puede cambiar desde el admin) */
@@ -1013,4 +1022,51 @@ body:not(.dark) .cyber-anim-clouds .cyber-cloud {
     to {
         transform: translate3d(5%, 4%, 0) scale(1.15);
     }
+}
+
+/*
+|--------------------------------------------------------------------------
+| Etiqueta "Más popular"
+|--------------------------------------------------------------------------
+| Tiene que verse desde lejos: degradado de marca, brillo y un destello
+| que recorre la cinta.
+*/
+.cyber-popular {
+    position: relative;
+    overflow: hidden;
+    background-image: linear-gradient(
+        110deg,
+        hsl(var(--color-secondary)),
+        hsl(var(--color-primary)) 55%,
+        hsl(var(--color-accent))
+    );
+    box-shadow:
+        0 0 0 1px hsl(0 0% 100% / 0.25) inset,
+        0 6px 22px -6px hsl(var(--color-secondary) / 0.9);
+    text-shadow: 0 1px 2px hsl(0 0% 0% / 0.45);
+}
+
+.cyber-popular::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: -60%;
+    width: 40%;
+    background: linear-gradient(
+        90deg,
+        transparent,
+        hsl(0 0% 100% / 0.55),
+        transparent
+    );
+    transform: skewX(-20deg);
+    animation: cyber-sweep 3s ease-in-out infinite;
+}
+
+/* Marco luminoso para la tarjeta destacada */
+.cyber-popular-card {
+    border-color: hsl(var(--color-secondary) / 0.75) !important;
+    box-shadow:
+        0 0 0 1px hsl(var(--color-secondary) / 0.35),
+        0 12px 44px -14px hsl(var(--color-secondary) / 0.8);
 }
