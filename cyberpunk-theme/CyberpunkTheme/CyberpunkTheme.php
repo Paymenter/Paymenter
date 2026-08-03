@@ -21,7 +21,7 @@ use Paymenter\Extensions\Others\CyberpunkTheme\Support\Installer;
 #[ExtensionMeta(
     name: 'Cyberpunk Theme',
     description: 'Tema Cyberpunk totalmente personalizable para Paymenter: banner con marketing rotativo, animaciones de fondo, comunidad de usuarios, reseñas en productos, avatares, contadores y paletas de colores.',
-    version: '1.1.0',
+    version: '1.2.0',
     author: 'Sky Ultra Plus',
     url: 'https://skyultraplus.com',
     icon: 'ri-cpu-line',

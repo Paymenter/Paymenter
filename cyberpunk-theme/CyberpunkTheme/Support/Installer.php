@@ -15,20 +15,18 @@ use Illuminate\Support\Facades\File;
  */
 class Installer
 {
-    /** Versión del paquete. Si cambia, se rehacen los valores de fábrica. */
-    public const VERSION = '1.1.0';
+    /** Versión del paquete (se guarda en la base de datos para saber qué hay instalado). */
+    public const VERSION = '1.2.0';
 
     /**
      * Copia el tema, los assets compilados y crea los ajustes por defecto.
      */
     public static function install(bool $overwriteSettings = true, bool $activate = true): array
     {
-        // Si el paquete instalado es más nuevo que lo guardado en la base de
-        // datos, refrescamos los valores de fábrica (colores, marketing,
-        // animaciones) para que una reinstalación traiga de verdad lo nuevo.
-        if (!$overwriteSettings && self::storedVersion() !== self::VERSION) {
-            $overwriteSettings = true;
-        }
+        // Al reinstalar NO tocamos lo que el administrador ya haya configurado:
+        // seedSettings() sólo crea las claves que falten, así que una versión
+        // nueva añade sus ajustes nuevos sin borrar banner, colores ni redes.
+        // Para volver a fábrica está el botón "Restablecer todo" del panel.
 
         $report = [
             'theme' => false,
