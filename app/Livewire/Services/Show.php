@@ -2,11 +2,15 @@
 
 namespace App\Livewire\Services;
 
+use App\Enums\InvoiceTransactionStatus;
 use App\Helpers\ExtensionHelper;
 use App\Livewire\Component;
+use App\Models\Invoice;
 use App\Models\Service;
+use App\Models\ServiceUpgrade;
 use Exception;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\Locked;
 use Livewire\Attributes\Url;
 
@@ -60,6 +64,73 @@ class Show extends Component
             $this->currentView = $this->currentView ?? ($this->views[0]['name'] ?? null);
         }
         $this->label = $this->service->label;
+    }
+
+    public function cancelUpgrade()
+    {
+        $this->authorize('view', $this->service);
+
+        $result = DB::transaction(function () {
+            $pendingUpgrade = $this->service->upgrade()
+                ->where('status', ServiceUpgrade::STATUS_PENDING)
+                ->first();
+
+            if (!$pendingUpgrade) {
+                return 'not_found';
+            }
+
+            $invoice = null;
+            if ($pendingUpgrade->invoice_id) {
+                $invoice = Invoice::where('id', $pendingUpgrade->invoice_id)
+                    ->lockForUpdate()
+                    ->first();
+
+                if ($invoice && $invoice->status === Invoice::STATUS_PAID) {
+                    return 'invoice_not_pending';
+                }
+
+                if ($invoice && $invoice->status === Invoice::STATUS_PENDING) {
+                    $hasSucceededTransaction = $invoice->transactions()
+                        ->where('status', InvoiceTransactionStatus::Succeeded)
+                        ->lockForUpdate()
+                        ->exists();
+                    if ($hasSucceededTransaction) {
+                        return 'invoice_not_pending';
+                    }
+                }
+            }
+
+            $lockedUpgrade = ServiceUpgrade::where('id', $pendingUpgrade->id)
+                ->where('status', ServiceUpgrade::STATUS_PENDING)
+                ->lockForUpdate()
+                ->first();
+
+            if (!$lockedUpgrade) {
+                return 'upgrade_gone';
+            }
+
+            $lockedUpgrade->status = ServiceUpgrade::STATUS_CANCELLED;
+            $lockedUpgrade->save();
+
+            if ($invoice && $invoice->status === Invoice::STATUS_PENDING) {
+                $invoice->status = Invoice::STATUS_CANCELLED;
+                $invoice->save();
+            }
+
+            return 'ok';
+        });
+
+        if ($result !== 'ok') {
+            $message = match ($result) {
+                'invoice_not_pending' => __('services.cancel_upgrade_failed'),
+                default => __('services.cancel_upgrade_not_found'),
+            };
+            $this->notify($message, 'error');
+
+            return;
+        }
+
+        $this->notify(__('services.upgrade_cancelled'), 'success');
     }
 
     public function updatedShowBillingAgreement()
