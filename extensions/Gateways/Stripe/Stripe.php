@@ -177,11 +177,47 @@ class Stripe extends Gateway
         ])->asForm()->$method('https://api.stripe.com/v1' . $url, $data)->throw()->object();
     }
 
+    /**
+     * Currencies that Stripe expects in the major unit (no minor unit / "zero-decimal").
+     * For these the amount must NOT be multiplied by 100.
+     *
+     * @see https://docs.stripe.com/currencies#zero-decimal
+     */
+    private const ZERO_DECIMAL_CURRENCIES = [
+        'BIF', 'CLP', 'DJF', 'GNF', 'JPY', 'KMF', 'KRW', 'MGA',
+        'PYG', 'RWF', 'UGX', 'VND', 'VUV', 'XAF', 'XOF', 'XPF',
+    ];
+
+    /**
+     * The factor between a human-readable amount and the smallest unit Stripe expects.
+     * 1 for zero-decimal currencies (e.g. JPY), 100 for everything else.
+     */
+    private function currencyFactor($currency): int
+    {
+        return in_array(strtoupper((string) $currency), self::ZERO_DECIMAL_CURRENCIES, true) ? 1 : 100;
+    }
+
+    /**
+     * Convert a human-readable amount into the smallest unit Stripe expects.
+     */
+    private function toStripeAmount($amount, $currency): int
+    {
+        return (int) round($amount * $this->currencyFactor($currency));
+    }
+
+    /**
+     * Convert a Stripe smallest-unit amount back into a human-readable amount.
+     */
+    private function fromStripeAmount($amount, $currency): float
+    {
+        return $amount / $this->currencyFactor($currency);
+    }
+
     public function pay($invoice, $total)
     {
         $intentData = [
             'description' => __('invoices.payment_for_invoice', ['number' => $invoice->number ?? $invoice->id]),
-            'amount' => $total * 100,
+            'amount' => $this->toStripeAmount($total, $invoice->currency_code),
             'currency' => $invoice->currency_code,
             'automatic_payment_methods' => ['enabled' => 'true'],
             'metadata' => ['invoice_id' => $invoice->id],
@@ -218,7 +254,7 @@ class Stripe extends Gateway
                 if (!isset($paymentIntent->metadata->invoice_id)) {
                     break;
                 }
-                ExtensionHelper::addProcessingPayment($paymentIntent->metadata->invoice_id, 'Stripe', $paymentIntent->amount / 100, null, $paymentIntent->id);
+                ExtensionHelper::addProcessingPayment($paymentIntent->metadata->invoice_id, 'Stripe', $this->fromStripeAmount($paymentIntent->amount, $paymentIntent->currency), null, $paymentIntent->id);
                 break;
                 // Normal payment
             case 'payment_intent.succeeded':
@@ -226,14 +262,14 @@ class Stripe extends Gateway
                 if (!isset($paymentIntent->metadata->invoice_id)) {
                     break;
                 }
-                ExtensionHelper::addPayment($paymentIntent->metadata->invoice_id, 'Stripe', $paymentIntent->amount / 100, null, $paymentIntent->id);
+                ExtensionHelper::addPayment($paymentIntent->metadata->invoice_id, 'Stripe', $this->fromStripeAmount($paymentIntent->amount, $paymentIntent->currency), null, $paymentIntent->id);
                 break;
             case 'payment_intent.payment_failed':
                 $paymentIntent = $event->data->object; // contains a StripePaymentIntent
                 if (!isset($paymentIntent->metadata->invoice_id)) {
                     break;
                 }
-                ExtensionHelper::addFailedPayment($paymentIntent->metadata->invoice_id, 'Stripe', $paymentIntent->amount / 100, null, $paymentIntent->id);
+                ExtensionHelper::addFailedPayment($paymentIntent->metadata->invoice_id, 'Stripe', $this->fromStripeAmount($paymentIntent->amount, $paymentIntent->currency), null, $paymentIntent->id);
                 break;
             case 'charge.updated':
                 $charge = $event->data->object; // contains a StripeCharge
@@ -245,7 +281,8 @@ class Stripe extends Gateway
                 $fee = 0;
                 if ($charge->balance_transaction) {
                     $balanceTransaction = $this->request('get', '/balance_transactions/' . $charge->balance_transaction);
-                    $fee = $balanceTransaction->fee / 100;
+                    // Fees are charged in the balance transaction's own currency
+                    $fee = $this->fromStripeAmount($balanceTransaction->fee, $balanceTransaction->currency);
                 }
                 ExtensionHelper::addPaymentFee($charge->payment_intent, $fee);
 
@@ -302,7 +339,7 @@ class Stripe extends Gateway
                         break;
                     }
 
-                    ExtensionHelper::addPayment($invoiceModel->id, 'Stripe', $invoice->amount_paid / 100, null, $paymentIntent->payment->payment_intent);
+                    ExtensionHelper::addPayment($invoiceModel->id, 'Stripe', $this->fromStripeAmount($invoice->amount_paid, $invoice->currency), null, $paymentIntent->payment->payment_intent);
                 }
                 break;
             default:
@@ -359,7 +396,7 @@ class Stripe extends Gateway
                             'price_data' => [
                                 'currency' => $invoice->currency_code,
                                 'product' => $stripeProduct->id,
-                                'unit_amount' => $item->price * 100,
+                                'unit_amount' => $this->toStripeAmount($item->price, $invoice->currency_code),
                                 'recurring' => [
                                     'interval' => $service->plan->billing_unit,
                                     'interval_count' => $service->plan->billing_period,
@@ -381,7 +418,7 @@ class Stripe extends Gateway
                         'price_data' => [
                             'currency' => $invoice->currency_code,
                             'product' => $stripeProduct->id,
-                            'unit_amount' => ($service->price * $service->quantity) * 100,
+                            'unit_amount' => $this->toStripeAmount($service->price * $service->quantity, $invoice->currency_code),
                             'recurring' => [
                                 'interval' => $service->plan->billing_unit,
                                 'interval_count' => $service->plan->billing_period,
@@ -445,7 +482,7 @@ class Stripe extends Gateway
                 $key = count($phases) - 1;
                 $phases[$key]['items'][0]->price_data = [
                     'currency' => $service->currency->code,
-                    'unit_amount' => $service->price * 100,
+                    'unit_amount' => $this->toStripeAmount($service->price, $service->currency->code),
                     'product' => $stripeProduct->id,
                     'recurring' => [
                         'interval' => $service->plan->billing_unit,
@@ -469,7 +506,7 @@ class Stripe extends Gateway
                 $this->request('post', '/subscription_items/' . $item->id, [
                     'price_data' => [
                         'currency' => $service->currency->code,
-                        'unit_amount' => $service->price * 100,
+                        'unit_amount' => $this->toStripeAmount($service->price, $service->currency->code),
                         'product' => $item->price->product,
                         'recurring' => [
                             'interval' => $service->plan->billing_unit,
@@ -500,7 +537,7 @@ class Stripe extends Gateway
                 $this->request('post', '/subscription_items/' . $item->id, [
                     'price_data' => [
                         'currency' => $service->currency->code,
-                        'unit_amount' => $service->price * 100,
+                        'unit_amount' => $this->toStripeAmount($service->price, $service->currency->code),
                         'product' => $item->price->product,
                         'recurring' => [
                             'interval' => $service->plan->billing_unit,
@@ -760,7 +797,7 @@ class Stripe extends Gateway
         // Create payment intent
         try {
             $intent = $this->request('post', '/payment_intents', [
-                'amount' => $amount * 100,
+                'amount' => $this->toStripeAmount($amount, $invoice->currency_code),
                 'currency' => $invoice->currency_code,
                 'customer' => $customer->id,
                 'payment_method' => $billingAgreement->external_reference,
