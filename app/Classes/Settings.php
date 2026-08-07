@@ -735,12 +735,12 @@ class Settings
         try {
             $vapid = VAPID::createVapidKeys();
             Setting::updateOrCreate(
-                ['key' => 'vapid_public_key', 'encrypted' => true],
-                ['value' => $vapid['publicKey']]
+                ['key' => 'vapid_public_key'],
+                ['value' => $vapid['publicKey'], 'encrypted' => true]
             );
             Setting::updateOrCreate(
-                ['key' => 'vapid_private_key', 'encrypted' => true],
-                ['value' => $vapid['privateKey']]
+                ['key' => 'vapid_private_key'],
+                ['value' => $vapid['privateKey'], 'encrypted' => true]
             );
 
             return true;
