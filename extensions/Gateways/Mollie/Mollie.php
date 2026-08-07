@@ -44,6 +44,7 @@ class Mollie extends Gateway
                 'name' => 'api_key',
                 'label' => 'API Key',
                 'type' => 'text',
+		'encrypted' => true,
                 'required' => true,
             ],
         ];
