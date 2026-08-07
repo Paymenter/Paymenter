@@ -15,6 +15,25 @@ use Livewire\Attributes\Url;
 
 class Checkout extends Component
 {
+    public function boot()
+    {
+        \App\Models\ConfigOption::setProductContext($this->product);
+        $this->filterConfigOptions();
+    }
+
+    protected function filterConfigOptions()
+    {
+        if ($this->product instanceof \App\Models\Product && $this->product->relationLoaded('configOptions')) {
+            $filtered = $this->product->configOptions->filter(function ($option) {
+                if (in_array($option->type, ['select', 'radio', 'slider', 'checkbox'])) {
+                    return $option->children->isNotEmpty();
+                }
+                return true;
+            });
+            $this->product->setRelation('configOptions', $filtered);
+        }
+    }
+
     public $product;
 
     public Category $category;
@@ -42,6 +61,9 @@ class Checkout extends Component
     public function mount($product)
     {
         $this->product = $this->category->products()->where('slug', $product)->firstOrFail();
+        \App\Models\ConfigOption::setProductContext($this->product);
+        $this->product->load(['configOptions.children']);
+        $this->filterConfigOptions();
         if ($this->product->stock === 0 || !$this->product->price()->available) {
             return $this->redirect(route('products.show', ['category' => $this->category, 'product' => $this->product]), true);
         }
@@ -72,7 +94,7 @@ class Checkout extends Component
                     return [$option->id => isset($this->configOptions[$option->id]) && in_array($this->configOptions[$option->id], [true, 'true'], true) ? true : false];
                 }
 
-                return [$option->id => $this->configOptions[$option->id] ?? $option->children->first()->id];
+                return [$option->id => $this->configOptions[$option->id] ?? $option->children->first()?->id];
             })->toArray();
             foreach ($this->getCheckoutConfig() as $config) {
                 if (in_array($config['type'], ['select', 'radio'])) {
@@ -243,7 +265,7 @@ class Checkout extends Component
                     'option_name' => $option->name,
                     'option_type' => $option->type,
                     'option_env_variable' => $option->env_variable,
-                    'value' => isset($this->configOptions[$option->id]) && in_array($this->configOptions[$option->id], [true, 'true'], true) ? $option->children->first()->id : null,
+                    'value' => isset($this->configOptions[$option->id]) && in_array($this->configOptions[$option->id], [true, 'true'], true) ? $option->children->first()?->id : null,
                     'value_name' => isset($this->configOptions[$option->id]) && in_array($this->configOptions[$option->id], [true, 'true'], true) ? 'Yes' : 'No',
                 ];
             }

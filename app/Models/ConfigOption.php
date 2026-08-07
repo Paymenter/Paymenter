@@ -31,12 +31,46 @@ class ConfigOption extends Model implements Auditable
         return $this->belongsTo(ConfigOption::class, 'parent_id');
     }
 
+    public static ?\App\Models\Product $currentProductContext = null;
+
+    public static function setProductContext($product)
+    {
+        if ($product instanceof \App\Models\Product) {
+            self::$currentProductContext = $product;
+        } elseif (is_numeric($product)) {
+            self::$currentProductContext = \App\Models\Product::find($product);
+        } elseif (is_string($product)) {
+            self::$currentProductContext = \App\Models\Product::where('slug', $product)->first();
+        } else {
+            self::$currentProductContext = null;
+        }
+    }
+
     /**
      * Get the options that belong to the parent. (children or options)
      */
     public function children()
     {
-        return $this->hasMany(ConfigOption::class, 'parent_id')->orderBy('sort');
+        $query = $this->hasMany(ConfigOption::class, 'parent_id')->orderBy('sort');
+
+        if (self::$currentProductContext) {
+            $productId = self::$currentProductContext->id;
+
+            $query->where(function ($q) use ($productId) {
+                $q->whereNotExists(function ($sub) {
+                    $sub->select(\Illuminate\Support\Facades\DB::raw(1))
+                        ->from('config_option_products')
+                        ->whereColumn('config_option_products.config_option_id', 'config_options.id');
+                })->orWhereExists(function ($sub) use ($productId) {
+                    $sub->select(\Illuminate\Support\Facades\DB::raw(1))
+                        ->from('config_option_products')
+                        ->whereColumn('config_option_products.config_option_id', 'config_options.id')
+                        ->where('config_option_products.product_id', $productId);
+                });
+            });
+        }
+
+        return $query;
     }
 
     /**
