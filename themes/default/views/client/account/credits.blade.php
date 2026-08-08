@@ -3,16 +3,47 @@
     <div class="px-2">
         <h4 class="text-2xl font-bold pb-3">{{ __('account.credits') }}</h4>
         @if (Auth::user()->credits->count() > 0)
-        <div class="flex flex-wrap gap-4">
-            @foreach (Auth::user()->credits as $credit)
-            <div class="flex flex-col bg-background-secondary w-fit rounded-lg px-5 p-3 items-center gap-1">
-                <h5 class="text-lg font-bold">{{ $credit->currency->code }}</h5>
-                <p class="text-primary-100">{{ $credit->formattedAmount }}</p>
+        <div class="mt-4 grid gap-4 md:grid-cols-3 mb-8">
+            <div class="flex flex-col gap-1 bg-background-secondary p-4 rounded-lg">
+                <span class="text-xl font-semibold">{{ __('account.credits') }}</span>
+                <span class="text-gray-500">{{ __('account.current_balance') }}</span>
+                <span class="text-2xl font-semibold mt-1">
+                    <ul>
+                        @foreach (Auth::user()->credits as $credit)
+                        <li>{{ $credit->formattedAmount }} {{ $credit->currency->code }}</li>
+                        @endforeach
+                    </ul>
+                </span>
             </div>
-            @endforeach
+            <div class="flex flex-col gap-1 bg-background-secondary p-4 rounded-lg">
+                <span class="text-xl font-semibold">{{ __('account.total_added') }}</span>
+                <span class="text-gray-500">{{ __('account.total_added_description') }}</span>
+                <span class="text-2xl font-semibold mt-1 text-gray-500">
+                    <ul>
+                        @forelse ($totalAdded as $currencyCode => $amount)
+                        <li>{{ number_format($amount, 2) }} {{ $currencyCode }}</li>
+                        @empty
+                        <li>-</li>
+                        @endforelse
+                    </ul>
+                </span>
+            </div>
+            <div class="flex flex-col gap-1 bg-background-secondary p-4 rounded-lg">
+                <span class="text-xl font-semibold">{{ __('account.total_spent') }}</span>
+                <span class="text-gray-500">{{ __('account.total_spent_description') }}</span>
+                <span class="text-2xl font-semibold mt-1 text-gray-500">
+                    <ul>
+                        @forelse ($totalSpent as $currencyCode => $amount)
+                        <li>{{ number_format($amount, 2) }} {{ $currencyCode }}</li>
+                        @empty
+                        <li>-</li>
+                        @endforelse
+                    </ul>
+                </span>
+            </div>
         </div>
         @else
-        <p>{{ __('account.no_credit') }}</p>
+        <p class="mb-8">{{ __('account.no_credit') }}</p>
         @endif
 
         <h4 class="text-xl font-bold pb-3">{{ __('account.add_credit') }}</h4>
