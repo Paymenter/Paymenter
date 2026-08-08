@@ -100,7 +100,7 @@ class Show extends Component
         }
 
         if ($this->selectedMethod === 'credit') {
-            if (!config('settings.credits_enabled')) {
+            if (!config('settings.credits_payments_enabled')) {
                 return $this->notify(__('Paying with credits is currently disabled.'), 'error');
             }
 

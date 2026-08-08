@@ -76,7 +76,7 @@
                                 <span class="text-sm text-base break-words">{{ auth()->user()->name }}</span>
                                 <span class="text-sm text-base break-words">{{ auth()->user()->email }}</span>
                             </div>
-                            @if(config('settings.credits_enabled') && auth()->user()->credits->count() > 0)
+                            @if((config('settings.credits_enabled') || config('settings.credits_payments_enabled')) && auth()->user()->credits->count() > 0)
                             <x-navigation.link :href="route('account.credits')" class="justify-between">
                                 <span>
                                     {{ __('account.credits') }}
@@ -216,7 +216,7 @@
                                                 <span class="text-sm text-base/70">{{ auth()->user()->email }}</span>
                                             </div>
                                         </div>
-                                        @if(config('settings.credits_enabled') && auth()->user()->credits->count() > 0)
+                                        @if((config('settings.credits_enabled') || config('settings.credits_payments_enabled')) && auth()->user()->credits->count() > 0)
                                         <x-navigation.link :href="route('account.credits')" class="justify-between p-0! mt-4">
                                             <span class="flex items-center gap-2">
                                                 <x-ri-coin-line class="size-4" />
