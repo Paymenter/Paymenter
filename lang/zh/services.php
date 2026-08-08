@@ -57,6 +57,7 @@ return [
     'price_one_time' => '單次費用 :price',
     'renews_in' => '續訂剩餘時間：',
     'renews_on' => '續訂於',
+    'expires_at' => '到期於',
     'auto_pay' => '自動支付方式：',
     'auto_pay_not_configured' => '未設定',
 

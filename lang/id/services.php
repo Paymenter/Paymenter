@@ -57,6 +57,7 @@ return [
     'price_one_time' => ':price sekali',
     'renews_in' => 'Diperpanjang dalam',
     'renews_on' => 'Diperpanjang dalam',
+    'expires_at' => 'Berakhir pada',
     'auto_pay' => 'Pembayaran otomatis menggunakan',
     'auto_pay_not_configured' => 'Belum dikonfigurasi',
 

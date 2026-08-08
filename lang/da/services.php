@@ -57,6 +57,7 @@ return [
     'price_one_time' => ':pris en gang',
     'renews_in' => 'Fornys om',
     'renews_on' => 'Fornyer den',
+    'expires_at' => 'Udløber den',
     'auto_pay' => 'Automatisk betaling med',
     'auto_pay_not_configured' => 'Ikke konfigureret',
 

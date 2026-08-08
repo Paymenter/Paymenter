@@ -57,6 +57,7 @@ return [
     'price_one_time' => ':price one time',
     'renews_in' => 'Renews in',
     'renews_on' => 'Megújul ekkor:',
+    'expires_at' => 'Lejár ekkor:',
     'auto_pay' => 'Automatikus fizetés a következővel:',
     'auto_pay_not_configured' => 'Nincs konfigurálva',
 

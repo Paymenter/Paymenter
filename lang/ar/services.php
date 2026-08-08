@@ -57,6 +57,7 @@ return [
     'price_one_time' => ':price مرة واحدة',
     'renews_in' => 'Renews in',
     'renews_on' => 'Renews on',
+    'expires_at' => 'تنتهي في',
     'auto_pay' => 'دفع تلقائي بإستخدام',
     'auto_pay_not_configured' => 'لم يتم الإعداد',
 

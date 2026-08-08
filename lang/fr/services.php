@@ -57,6 +57,7 @@ return [
     'price_one_time' => 'Paiement unique de :price',
     'renews_in' => 'Renouvellement dans',
     'renews_on' => 'Renouvelé le',
+    'expires_at' => 'Expire le',
     'auto_pay' => 'Renouvellement automatique en utilisant',
     'auto_pay_not_configured' => '(non configuré)',
 

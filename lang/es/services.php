@@ -57,6 +57,7 @@ return [
     'price_one_time' => ':price una sola vez',
     'renews_in' => 'Renueva en',
     'renews_on' => 'Se renueva él',
+    'expires_at' => 'Expira el',
     'auto_pay' => 'Auto pago usando',
     'auto_pay_not_configured' => 'No configurado',
 

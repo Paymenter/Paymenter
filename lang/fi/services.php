@@ -57,6 +57,7 @@ return [
     'price_one_time' => ':price kerran',
     'renews_in' => 'Uusiutuu',
     'renews_on' => 'Uusiutuu',
+    'expires_at' => 'Vanhenee',
     'auto_pay' => 'Automaattimaksut käyttäen',
     'auto_pay_not_configured' => 'Ei määritelty',
 

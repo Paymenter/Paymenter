@@ -57,6 +57,7 @@ return [
     'price_one_time' => ':price en gång',
     'renews_in' => 'Förnyas om',
     'renews_on' => 'Förnyas den',
+    'expires_at' => 'Går ut den',
     'auto_pay' => 'Automatisk betalning med',
     'auto_pay_not_configured' => 'Inte konfigurerad',
 

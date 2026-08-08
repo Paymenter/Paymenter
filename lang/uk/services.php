@@ -57,6 +57,7 @@ return [
     'price_one_time' => ':price один раз',
     'renews_in' => 'Поновлення через',
     'renews_on' => 'Продовжується до',
+    'expires_at' => 'Закінчується',
     'auto_pay' => 'Автоматична оплата за допомогою',
     'auto_pay_not_configured' => 'Не налаштовано',
 

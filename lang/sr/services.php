@@ -57,6 +57,7 @@ return [
     'price_one_time' => ':price jednokratno',
     'renews_in' => 'Obnavlja se za',
     'renews_on' => 'Obnavlja se dana',
+    'expires_at' => 'Ističe dana',
     'auto_pay' => 'Automatsko plaćanje putem',
     'auto_pay_not_configured' => 'Nije konfigurisano',
 
