@@ -8,8 +8,8 @@ use App\Jobs\Server\SuspendJob;
 use App\Jobs\Server\TerminateJob;
 use App\Models\CronStat;
 use App\Models\DebugLog;
+use App\Models\EmailLog;
 use App\Models\Invoice;
-use App\Models\Notification;
 use App\Models\Service;
 use App\Models\ServiceUpgrade;
 use App\Models\Setting;
@@ -213,9 +213,9 @@ class CronJob extends Command
             });
 
             $this->runCronJob('email_logs_deleted', function ($number = 0) {
-                $number = Notification::where('created_at', '<', now()->subDays((int) config('settings.cronjob_delete_email_logs', 90)))->count();
+                $number = EmailLog::where('created_at', '<', now()->subDays((int) config('settings.cronjob_delete_email_logs', 90)))->count();
                 // Delete email logs older then x
-                Notification::where('created_at', '<', now()->subDays((int) config('settings.cronjob_delete_email_logs', 90)))->delete();
+                EmailLog::where('created_at', '<', now()->subDays((int) config('settings.cronjob_delete_email_logs', 90)))->delete();
 
                 return $number;
             });
