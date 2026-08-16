@@ -126,6 +126,11 @@ class Cart extends Component
             }
             // Lock the orderproducts
             foreach ($cart->items as $item) {
+                // An item without a price row in the cart's currency would otherwise check out free.
+                if (!$item->price->available) {
+                    throw new DisplayException(__('product.not_available', ['product' => $item->product->name]));
+                }
+
                 // Make sure we have the latest product data and lock it
                 $product = Product::where('id', $item->product->id)->lockForUpdate()->first();
 
