@@ -5,6 +5,7 @@ namespace App\Observers;
 use App\Events\Invoice as InvoiceEvent;
 use App\Models\Invoice;
 use App\Services\Invoice\ProcessPaidInvoiceService;
+use Illuminate\Support\Facades\DB;
 
 class InvoiceObserver
 {
