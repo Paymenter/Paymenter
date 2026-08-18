@@ -20,6 +20,7 @@ return [
 
     'in_stock' => 'Na stanju',
     'out_of_stock' => 'Proizvod :product nije na stanju',
+    'not_available' => ':product is not available in your currency',
     'user_limit' => 'Dostigli ste limit za :product',
     'payment_method' => 'Način plaćanja',
     'use_credits' => 'Iskoristi kredite',
