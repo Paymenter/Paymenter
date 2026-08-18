@@ -20,6 +20,7 @@ return [
 
     'in_stock' => 'Em estoque',
     'out_of_stock' => 'Produto :product está fora de estoque',
+    'not_available' => ':product is not available in your currency',
     'user_limit' => 'Você atingiu o limite de :product',
     'payment_method' => 'Método de pagamento',
     'use_credits' => 'Usar créditos',
