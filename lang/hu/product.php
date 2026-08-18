@@ -20,6 +20,7 @@ return [
 
     'in_stock' => 'Elérhető',
     'out_of_stock' => 'A(z) :product nincs készleten',
+    'not_available' => ':product is not available in your currency',
     'user_limit' => 'Már elérted a(z) :product maximális mennyiségét',
     'payment_method' => 'Fizetési mód',
     'use_credits' => 'Kredit használata',
