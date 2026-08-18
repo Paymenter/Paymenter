@@ -46,8 +46,8 @@ class InvoiceObserver
     {
         if ($invoice->isDirty('status') && $invoice->status == 'paid') {
             DB::afterCommit(function () use ($invoice) {
-            app(ProcessPaidInvoiceService::class)->handle($invoice);
-            event(new InvoiceEvent\Paid($invoice));
+                app(ProcessPaidInvoiceService::class)->handle($invoice);
+                event(new InvoiceEvent\Paid($invoice));
             });
         }
         event(new InvoiceEvent\Updated($invoice));
