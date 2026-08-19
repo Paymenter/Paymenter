@@ -225,9 +225,18 @@ class Service extends Model implements Auditable
 
         $this->configs->each(function ($config) use (&$price) {
             $configValue = $config->configValue;
-            if ($configValue) {
-                $price += $configValue->price(null, $this->plan->billing_period, $this->plan->billing_unit, $this->currency_code)->price;
+            if (!$configValue) {
+                return;
             }
+
+            // A number option is charged per unit the customer ordered
+            if ($config->configOption?->type === 'number') {
+                $price += $config->configOption->priceForQuantity($config->value, $this->plan->billing_period, $this->plan->billing_unit, $this->currency_code)->price;
+
+                return;
+            }
+
+            $price += $configValue->price(null, $this->plan->billing_period, $this->plan->billing_unit, $this->currency_code)->price;
         });
 
         // Add coupon discount if applicable
