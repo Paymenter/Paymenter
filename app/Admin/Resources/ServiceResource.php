@@ -14,6 +14,7 @@ use App\Helpers\ExtensionHelper;
 use App\Models\Currency;
 use App\Models\Product;
 use App\Models\Service;
+use App\Support\ServiceAdminAuthorization;
 use Filament\Actions\Action;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
@@ -137,7 +138,10 @@ class ServiceResource extends Resource
                     ->minValue(0)
                     ->hintAction(
                         Action::make('Recalculate Price')
+                            ->visible(fn (Component $component) => $component->getRecord() instanceof Service
+                                && ServiceAdminAuthorization::canUpdate(auth()->user(), $component->getRecord()))
                             ->action(function (Component $component, Service $service) {
+                                ServiceAdminAuthorization::authorizeUpdate(auth()->user(), $service);
                                 if ($service) {
                                     Notification::make('Price Recalculated')
                                         ->title('The price has been successfully recalculated')
@@ -163,7 +167,10 @@ class ServiceResource extends Resource
                     ->hintAction(
                         Action::make('Cancel Subscription ID')
                             ->action(function (Component $component) {
-                                if (ExtensionHelper::cancelSubscription($component->getRecord())) {
+                                $record = $component->getRecord();
+                                abort_unless($record instanceof Service, 403);
+                                ServiceAdminAuthorization::authorizeUpdate(auth()->user(), $record);
+                                if (ExtensionHelper::cancelSubscription($record)) {
                                     Notification::make('Subscription Cancelled')
                                         ->title('The subscription has been successfully cancelled')
                                         ->success()
@@ -175,11 +182,13 @@ class ServiceResource extends Resource
                                         ->send();
                                 }
                                 // Update the record to remove the subscription ID
-                                $component->getRecord()->update(['subscription_id' => null]);
+                                $record->update(['subscription_id' => null]);
                             })
                             ->requiresConfirmation()
                             ->label('Cancel Subscription')
-                            ->hidden(fn (Component $component) => !$component->getRecord()?->subscription_id),
+                            ->hidden(fn (Component $component) => !$component->getRecord()?->subscription_id
+                                || !($component->getRecord() instanceof Service)
+                                || !ServiceAdminAuthorization::canUpdate(auth()->user(), $component->getRecord())),
                     ),
             ]);
     }
@@ -259,7 +268,8 @@ class ServiceResource extends Resource
                     ->orderBy('id', 'desc');
             })
             ->recordActions([
-                EditAction::make(),
+                EditAction::make()
+                    ->authorize(fn (Service $record): bool => auth()->user()?->can('view', $record) ?? false),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
