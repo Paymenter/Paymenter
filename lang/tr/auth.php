@@ -43,13 +43,13 @@ return [
     'reset_password' => 'Şifreyi sıfırla',
 
     'verify_2fa' => 'Doğrula (2FA)',
-    'verify' => 'Verify',
+    'verify' => 'Doğrula',
 
     'verification' => [
-        'notice' => 'Verify your email address',
-        'sent' => 'A new verification link has been sent to your email address.',
-        'check_your_email' => 'Before proceeding, please check your email for a verification link.',
-        'not_received' => 'If you did not receive the email you can request another verification email.',
-        'request_another' => 'Resend verification email',
+        'notice' => 'E-posta adresinizi doğrulayın',
+        'sent' => 'E-posta adresinize yeni bir doğrulama bağlantısı gönderildi.',
+        'check_your_email' => 'Devam etmeden önce lütfen doğrulama bağlantısı için e-posta kutunuzu kontrol edin.',
+        'not_received' => 'Doğrulama e-postasını almadıysanız yeniden gönderilmesini talep edebilirsiniz.',
+        'request_another' => 'Doğrulama e-postasını yeniden gönder',
     ],
 ];
