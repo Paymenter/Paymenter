@@ -37,13 +37,15 @@ class ProcessPaidInvoiceService
                 $user = $invoice->user;
                 $credit = $user->credits()->where('currency_code', $invoice->currency_code)->first();
 
+                $maxCredit = config('settings.credits_maximum_credit');
+
                 if ($credit) {
-                    $credit->amount += $item->price;
+                    $credit->amount = min($credit->amount + $item->price, $maxCredit);
                     $credit->save();
                 } else {
                     $user->credits()->create([
                         'currency_code' => $invoice->currency_code,
-                        'amount' => $item->price,
+                        'amount' => min($item->price, $maxCredit),
                     ]);
                 }
             }
