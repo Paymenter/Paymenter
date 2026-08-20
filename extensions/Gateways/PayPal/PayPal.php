@@ -178,6 +178,7 @@ class PayPal extends Gateway
                 'name' => 'client_secret',
                 'label' => 'Client Secret',
                 'type' => 'text',
+                'encrypted' => true,
                 'description' => 'Find your API keys at https://developer.paypal.com/developer/applications',
                 'required' => true,
             ],

@@ -44,18 +44,24 @@ trait HasPlans
             'currency' => null,
         ];
 
+        // Plan lookups must filter by the same currency the price is resolved in.
+        $currency = $currency ?? session('currency', config('settings.default_currency'));
+
         // Check for free plan
-        if ($this->availablePlans()->where('type', 'free')->isNotEmpty()) {
+        if ($this->availablePlans($currency)->where('type', 'free')->isNotEmpty()) {
             return new Price(free: true, dontShowUnavailablePrice: $this->dontShowUnavailablePrice ?? false);
         }
 
         // If plan_id is not provided, and billing_period is provided, get the first plan with the billing period and time interval
         if (!$plan_id && $billing_period && $billing_unit) {
-            $plan = $this->availablePlans()->where('billing_period', $billing_period)->where('billing_unit', $billing_unit)->first();
+            $plan = $this->availablePlans($currency)->where('billing_period', $billing_period)->where('billing_unit', $billing_unit)->first();
             $plan_id = $plan->id ?? null;
-        }
 
-        $currency = $currency ?? session('currency', config('settings.default_currency'));
+            // The loop below is period-agnostic and would substitute another billing period's price.
+            if (!$plan_id) {
+                return new Price($priceAndCurrency, dontShowUnavailablePrice: $this->dontShowUnavailablePrice ?? false);
+            }
+        }
 
         foreach ($this->availablePlans(currency: $currency)->when($plan_id, function ($query) use ($plan_id) {
             return $query->where('id', $plan_id);

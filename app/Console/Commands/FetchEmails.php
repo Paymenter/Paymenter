@@ -55,13 +55,19 @@ class FetchEmails extends Command
                     continue;
                 }
 
-                $body = EmailReplyParser::parseReply($email->text());
+                $rawBody = $email->text();
+                if (empty($rawBody) && $email->html()) {
+                    // If the email has no text body, but has an HTML body, we can strip the HTML tags to get the text
+                    $rawBody = strip_tags($email->html());
+                    $rawBody = html_entity_decode($rawBody, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+                }
+                $body = EmailReplyParser::parseReply($rawBody ?? '');
 
                 // Check headers to see if this email is a reply
                 $replyTo = $email->inReplyTo();
                 if (!$replyTo || count($replyTo) === 0) {
                     // Create email log but don't process
-                    $this->failedEmailLog($email);
+                    $this->failedEmailLog($email, $body);
 
                     continue;
                 }
@@ -69,7 +75,7 @@ class FetchEmails extends Command
                 // Validate if in reply to another ticket (<ticket message id>@hostname)
 
                 if (!preg_match('/^(\d+)@/', $replyTo[0], $matches)) {
-                    $this->failedEmailLog($email);
+                    $this->failedEmailLog($email, $body);
 
                     continue;
                 }
@@ -78,7 +84,7 @@ class FetchEmails extends Command
                 // Check if the ticket exists
                 $ticketMessage = TicketMessage::find($ticketMessageId);
                 if (!$ticketMessage) {
-                    $this->failedEmailLog($email);
+                    $this->failedEmailLog($email, $body);
 
                     continue;
                 }
@@ -87,7 +93,7 @@ class FetchEmails extends Command
 
                 // Check if from email matches ticket's email
                 if ($email->from()->email() !== $ticket->user->email) {
-                    $this->failedEmailLog($email);
+                    $this->failedEmailLog($email, $body);
 
                     continue;
                 }
@@ -98,7 +104,7 @@ class FetchEmails extends Command
                     'subject' => $email->subject(),
                     'from' => $email->from()->email(),
                     'to' => $email->to()[0]->email(),
-                    'body' => $email->text(),
+                    'body' => $body,
                     'status' => 'processed',
                 ]);
 
@@ -136,14 +142,14 @@ class FetchEmails extends Command
         }
     }
 
-    private function failedEmailLog($email): TicketMailLog
+    private function failedEmailLog($email, $body): TicketMailLog
     {
         return TicketMailLog::create([
             'message_id' => $email->messageId(),
             'subject' => $email->subject(),
             'from' => $email->from()->email(),
             'to' => $email->to()[0]->email(),
-            'body' => $email->text(),
+            'body' => $body,
             'status' => 'unprocessed',
         ]);
     }
