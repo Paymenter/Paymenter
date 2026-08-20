@@ -41,16 +41,18 @@ class ServiceUpgradeService
             // Update service configurations - remove old configs and add new ones
             $newConfigOptionIds = $serviceUpgrade->configs->pluck('config_option_id')->toArray();
 
-            // Delete configs that are no longer applicable
+            // Delete configs that are no longer applicable, except number options, which are kept
+            // because a non-upgradable one is never part of an upgrade and would otherwise be lost
             $service->configs()
                 ->whereNotIn('config_option_id', $newConfigOptionIds)
+                ->whereHas('configOption', fn ($query) => $query->where('type', '!=', 'number'))
                 ->delete();
 
             // Update or create new configs
             foreach ($serviceUpgrade->configs as $config) {
                 $service->configs()->updateOrCreate(
                     ['config_option_id' => $config->config_option_id],
-                    ['config_value_id' => $config->config_value_id]
+                    ['config_value_id' => $config->config_value_id, 'value' => $config->value]
                 );
             }
 

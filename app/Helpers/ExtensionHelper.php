@@ -554,6 +554,12 @@ class ExtensionHelper
             $properties[$property->key] = $property->value;
         }
         foreach ($service->configs as $config) {
+            // A number option passes the amount the customer entered, not the name of the option holding its unit price
+            if ($config->configOption->type === 'number') {
+                $properties[$config->configOption->env_variable ?: $config->configOption->name] = $config->value;
+
+                continue;
+            }
             $properties[$config->configOption->env_variable] = $config->configValue->env_variable ?? $config->configValue->name;
         }
 

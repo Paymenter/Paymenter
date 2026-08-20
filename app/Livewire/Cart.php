@@ -203,6 +203,22 @@ class Cart extends Component
                         if (!isset($configOption->value)) {
                             continue;
                         }
+
+                        // A number option that is priced per unit is stored as a config so renewals keep charging for it
+                        $option = $configOption->option_type === 'number'
+                            ? $item->product->configOptions->firstWhere('id', $configOption->option_id)
+                            : null;
+
+                        if ($option?->hasUnitPricing()) {
+                            $service->configs()->create([
+                                'config_option_id' => $option->id,
+                                'config_value_id' => $option->children->first()->id,
+                                'value' => $configOption->value,
+                            ]);
+
+                            continue;
+                        }
+
                         $service->properties()->updateOrCreate([
                             'key' => $configOption->option_env_variable ? $configOption->option_env_variable : $configOption->option_name,
                         ], [

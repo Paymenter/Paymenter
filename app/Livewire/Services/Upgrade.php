@@ -4,6 +4,7 @@ namespace App\Livewire\Services;
 
 use App\Exceptions\DisplayException;
 use App\Livewire\Component;
+use App\Models\ConfigOption;
 use App\Models\Invoice;
 use App\Models\Product;
 use App\Models\Service;
@@ -48,6 +49,33 @@ class Upgrade extends Component
         }
     }
 
+    /**
+     * Build an unsaved config for the upgrade, so the price can be quoted before anything is stored.
+     */
+    private function makeUpgradeConfig(ConfigOption $option, $value): ?ServiceConfig
+    {
+        if ($option->type === 'number') {
+            if (!is_numeric($value)) {
+                return null;
+            }
+
+            $config = new ServiceConfig([
+                'config_option_id' => $option->id,
+                'config_value_id' => $option->children->first()->id,
+                'value' => $value,
+            ]);
+        } elseif ($option->children->contains('id', $value)) {
+            $config = new ServiceConfig([
+                'config_option_id' => $option->id,
+                'config_value_id' => $value,
+            ]);
+        } else {
+            return null;
+        }
+
+        return $config->setRelation('configOption', $option);
+    }
+
     #[Computed]
     public function totalToday()
     {
@@ -62,14 +90,13 @@ class Upgrade extends Component
         // Add config options to the temporary upgrade (without saving)
         foreach ($this->configOptions as $optionId => $value) {
             $option = $this->upgradeProduct->upgradableConfigOptions->where('id', $optionId)->first();
-            if (!$option || !$option->children->contains('id', $value)) {
+            if (!$option) {
                 continue;
             }
 
-            $configs->push(new ServiceConfig([
-                'config_option_id' => $optionId,
-                'config_value_id' => $value,
-            ]));
+            if ($config = $this->makeUpgradeConfig($option, $value)) {
+                $configs->push($config);
+            }
         }
 
         $upgrade->setRelation('configs', $configs);
@@ -91,16 +118,34 @@ class Upgrade extends Component
 
     public function nextStep()
     {
-        $currentConfigOptions = $this->service->configs->pluck('config_value_id', 'config_option_id')->toArray();
+        $currentConfigOptions = $this->currentConfigOptions();
         $this->configOptions = $this->upgradeProduct->upgradableConfigOptions->mapWithKeys(function ($option) use ($currentConfigOptions) {
+            // A number option is driven by the amount the customer ordered, not by which child was picked
+            $default = $option->type === 'number' ? $option->min : $option->children->first()->id;
+
             return [
                 $option->id => $currentConfigOptions[$option->id]
                     ?? $this->configOptions[$option->id]
-                    ?? $option->children->first()->id,
+                    ?? $default,
             ];
         })->toArray();
 
         $this->step++;
+    }
+
+    /**
+     * What the service is on today, in the same shape as $configOptions so the two can be compared.
+     */
+    private function currentConfigOptions(): array
+    {
+        return $this->service->configs
+            ->filter(fn ($config) => $this->upgradeProduct->upgradableConfigOptions->contains('id', $config->config_option_id))
+            ->mapWithKeys(fn ($config) => [
+                $config->config_option_id => $config->configOption?->type === 'number'
+                    ? $config->value
+                    : $config->config_value_id,
+            ])
+            ->toArray();
     }
 
     public function rules()
@@ -121,7 +166,9 @@ class Upgrade extends Component
 
         ];
         foreach ($this->upgradeProduct->upgradableConfigOptions as $option) {
-            if (in_array($option->type, ['text', 'number'])) {
+            if ($option->type === 'number') {
+                $rules["configOptions.{$option->id}"] = $option->numberValidationRules();
+            } elseif ($option->type === 'text') {
                 $rules["configOptions.{$option->id}"] = ['required'];
             } elseif ($option->type === 'checkbox') {
             } else {
@@ -163,10 +210,7 @@ class Upgrade extends Component
                 ->first();
 
             // The old config options must be in upgradableConfigOptions
-            $serviceConfigOptions = $service->configs->pluck('config_value_id', 'config_option_id')->toArray();
-            $configOptions = collect($serviceConfigOptions)->filter(function ($value, $key) use ($serviceConfigOptions) {
-                return isset($serviceConfigOptions[$key]) && $this->upgradeProduct->upgradableConfigOptions->contains('id', $key);
-            })->toArray();
+            $configOptions = $this->currentConfigOptions();
 
             // If the product did not change and the config options are the same, present the user with a message
             if ($this->upgradeProduct->id === $service->product_id && $this->configOptions == $configOptions) {
@@ -189,10 +233,11 @@ class Upgrade extends Component
                     if (!isset($this->configOptions[$option->id])) {
                         continue;
                     }
-                    $upgrade->configs()->create([
-                        'config_option_id' => $option->id,
-                        'config_value_id' => $this->configOptions[$option->id],
-                    ]);
+                    $config = $this->makeUpgradeConfig($option, $this->configOptions[$option->id]);
+                    if (!$config) {
+                        continue;
+                    }
+                    $upgrade->configs()->create($config->only(['config_option_id', 'config_value_id', 'value']));
                 }
             }
             $price = $upgrade->calculatePrice();

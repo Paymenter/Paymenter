@@ -77,9 +77,17 @@ class ServiceUpgrade extends Model implements Auditable
         $total = $this->calculateProratedAmount($this->service->product, $this->product)->price;
 
         foreach ($this->configs as $config) {
+            $oldConfig = $this->service->configs->where('config_option_id', $config->config_option_id)->first();
+
+            // A number option keeps pointing at the same child; what changes is how many units were ordered
+            if ($config->configOption?->type === 'number') {
+                $total += $this->calculateProratedQuantityAmount($oldConfig, $config)->price;
+
+                continue;
+            }
+
             if ($configValue = $config->configValue) {
-                $oldPrice = $this->service->configs->where('config_option_id', $config->config_option_id)->first();
-                $total += $this->calculateProratedAmount($oldPrice?->configValue, $configValue)->price;
+                $total += $this->calculateProratedAmount($oldConfig?->configValue, $configValue)->price;
             }
         }
 
@@ -89,6 +97,37 @@ class ServiceUpgrade extends Model implements Auditable
         }
 
         return $this->makePrice($total);
+    }
+
+    /**
+     * A number option is charged per unit, so an upgrade bills the difference in units over the remaining days.
+     * The base price sits in both amounts and cancels out, unless the option is only now being added.
+     */
+    protected function calculateProratedQuantityAmount(?ServiceConfig $oldConfig, ServiceConfig $newConfig): Price
+    {
+        $option = $newConfig->configOption;
+
+        if (!$option) {
+            return $this->makePrice();
+        }
+
+        $plan = $this->service->plan;
+
+        $newPrice = $option->priceForQuantity($newConfig->value, $plan->billing_period, $plan->billing_unit, $this->service->currency_code)->price;
+        $oldPrice = $oldConfig
+            ? $option->priceForQuantity($oldConfig->value, $plan->billing_period, $plan->billing_unit, $this->service->currency_code)->price
+            : 0;
+
+        $difference = $newPrice - $oldPrice;
+
+        if ($difference == 0 || !$this->service->expires_at) {
+            return $this->makePrice($difference);
+        }
+
+        $billingPeriodDays = $this->getBillingPeriodDays();
+        $remainingDays = $this->getRemainingDays();
+
+        return $this->makePrice($billingPeriodDays > 0 ? ($difference / $billingPeriodDays) * $remainingDays : $difference);
     }
 
     protected function resolveOldItemPrice($oldItem): float

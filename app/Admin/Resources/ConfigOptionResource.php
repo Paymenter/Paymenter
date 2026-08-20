@@ -68,9 +68,29 @@ class ConfigOptionResource extends Resource
                             Checkbox::make('hidden')
                                 ->label('Hidden'),
                             Checkbox::make('upgradable')
-                                ->visible(fn (Get $get): bool => in_array($get('type'), ['select', 'radio', 'slider']))
+                                ->visible(fn (Get $get): bool => in_array($get('type'), ['select', 'radio', 'slider', 'number']))
                                 ->label('Upgradable')
-                                ->helperText('If enabled, this configuration option can be upgraded in the future.'),
+                                ->helperText('If enabled, this configuration option can be upgraded in the future. A number option needs a price per unit to be upgradable.'),
+                            TextInput::make('min')
+                                ->label('Minimum')
+                                ->visible(fn (Get $get): bool => $get('type') === 'number')
+                                ->numeric()
+                                ->helperText('The lowest amount a customer may enter.'),
+                            TextInput::make('max')
+                                ->label('Maximum')
+                                ->visible(fn (Get $get): bool => $get('type') === 'number')
+                                ->numeric()
+                                ->helperText('The highest amount a customer may enter.'),
+                            TextInput::make('step')
+                                ->label('Increment')
+                                ->visible(fn (Get $get): bool => $get('type') === 'number')
+                                ->numeric()
+                                ->minValue(0)
+                                ->helperText('Customers can only enter amounts in steps of this size, counted from the minimum.'),
+                            Checkbox::make('show_as_slider')
+                                ->label('Show as slider')
+                                ->visible(fn (Get $get): bool => $get('type') === 'number')
+                                ->helperText('Show a slider running from the minimum to the maximum instead of a plain input. Needs both a minimum and a maximum.'),
                             Select::make('products')
                                 ->label('Products')
                                 ->relationship('products', 'name')
@@ -79,12 +99,23 @@ class ConfigOptionResource extends Resource
                                 ->placeholder('Select the products that this configuration option belongs to'),
                         ]),
                         Tab::make('Options')
-                            ->visible(fn (Get $get): bool => in_array($get('type'), ['select', 'radio', 'slider', 'checkbox']))
+                            ->visible(fn (Get $get): bool => in_array($get('type'), ['select', 'radio', 'slider', 'checkbox', 'number']))
                             ->schema([
+                                ProductResource::plan()
+                                    ->visible(fn (Get $get): bool => $get('type') === 'number')
+                                    ->columnSpanFull()
+                                    ->label('Base Price')
+                                    ->helperText('Optional starting cost, charged on top of the price per unit.')
+                                    ->addActionLabel('Add base price')
+                                    ->reorderable(false)
+                                    ->deleteAction(null)
+                                    ->defaultItems(0)
+                                    ->minItems(0)
+                                    ->maxItems(1),
                                 Repeater::make('Options')
                                     ->relationship('children')
-                                    ->label('Options')
-                                    ->addActionLabel('Add Option')
+                                    ->label(fn (Get $get): string => $get('type') === 'number' ? 'Price per unit' : 'Options')
+                                    ->addActionLabel(fn (Get $get): string => $get('type') === 'number' ? 'Add price per unit' : 'Add Option')
                                     ->columnSpanFull()
                                     ->itemLabel(fn (array $state) => $state['name'])
                                     ->collapsible()
@@ -93,15 +124,16 @@ class ConfigOptionResource extends Resource
                                     ->reorderable()
                                     ->orderColumn('sort')
                                     ->columns(2)
-                                    // When the type is checkbox only allow 1 child
+                                    // When the type is checkbox or number only allow 1 child
                                     ->maxItems(function (Get $get): ?int {
                                         if (in_array($get('type'), ['select', 'radio', 'slider'])) {
                                             return null; // unlimited children
                                         }
 
-                                        return 1; // checkbox
+                                        return 1; // checkbox and number
                                     })
-                                    ->minItems(1)
+                                    // A number option is only priced per unit when a price is added, so it stays optional
+                                    ->minItems(fn (Get $get): int => $get('type') === 'number' ? 0 : 1)
                                     ->schema([
                                         TextInput::make('name')
                                             ->label('Name')
@@ -111,7 +143,9 @@ class ConfigOptionResource extends Resource
                                             ->placeholder('Enter the name of the configuration option'),
                                         TextInput::make('env_variable')
                                             ->label('Environment Variable')
-                                            ->required()
+                                            // A number option passes the entered amount to the server, not the name of this child
+                                            ->visible(fn (Get $get): bool => $get('../../type') !== 'number')
+                                            ->required(fn (Get $get): bool => $get('../../type') !== 'number')
                                             ->maxLength(255)
                                             ->placeholder('Enter the environment variable name'),
                                         // if the type is select, radio or checkbox then allow unlimited children (otherwise only allow 1)

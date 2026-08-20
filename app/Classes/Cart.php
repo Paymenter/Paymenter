@@ -20,7 +20,7 @@ class Cart
             return new \App\Models\Cart;
         }
 
-        return $cart->load('items.plan', 'items.product', 'items.product.configOptions.children.plans.prices');
+        return $cart->load('items.plan', 'items.product', 'items.product.configOptions.plans.prices', 'items.product.configOptions.children.plans.prices');
     }
 
     public static function get()
@@ -78,7 +78,7 @@ class Cart
             'checkout_config' => $checkoutConfig,
             'quantity' => $quantity,
         ]);
-        $cart->load('items.plan', 'items.product', 'items.product.configOptions.children.plans.prices');
+        $cart->load('items.plan', 'items.product', 'items.product.configOptions.plans.prices', 'items.product.configOptions.children.plans.prices');
 
         if ($cart->coupon_id) {
             // Reapply coupon to the cart
@@ -138,7 +138,7 @@ class Cart
         if ($item) {
             $item->delete(); // We also want to trigger Eloquent events
         }
-        $cart->load('items.plan', 'items.product', 'items.product.configOptions.children.plans.prices');
+        $cart->load('items.plan', 'items.product', 'items.product.configOptions.plans.prices', 'items.product.configOptions.children.plans.prices');
     }
 
     public static function updateQuantity($index, $quantity)
