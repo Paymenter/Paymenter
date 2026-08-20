@@ -20,6 +20,7 @@ return [
 
     'in_stock' => '有現貨',
     'out_of_stock' => '產品 :product 已售罄',
+    'not_available' => ':product is not available in your currency',
     'user_limit' => '您已達到 :product 的購買上限',
     'payment_method' => '付款方式',
     'use_credits' => '使用點數',

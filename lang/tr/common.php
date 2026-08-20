@@ -4,11 +4,11 @@ return [
     '' => '',
 
     'button' => [
-        'view' => 'View',
-        'view_all' => 'View All',
+        'view' => 'Görüntüle',
+        'view_all' => 'Tümünü Görüntüle',
     ],
-    'confirm' => 'Confirm',
-    'cancel' => 'Cancel',
+    'confirm' => 'Onayla',
+    'cancel' => 'İptal',
     'select' => [
         'placeholder' => 'Please select :name',
     ],
