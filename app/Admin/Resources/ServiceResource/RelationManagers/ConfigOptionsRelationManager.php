@@ -2,7 +2,9 @@
 
 namespace App\Admin\Resources\ServiceResource\RelationManagers;
 
+use App\Models\Service;
 use App\Models\ServiceConfig;
+use App\Support\ServiceAdminAuthorization;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\EditAction;
 use Filament\Forms\Components\Select;
@@ -11,6 +13,7 @@ use Filament\Schemas\Schema;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 
 class ConfigOptionsRelationManager extends RelationManager
 {
@@ -46,8 +49,31 @@ class ConfigOptionsRelationManager extends RelationManager
             ])
             ->headerActions([])
             ->recordActions([
-                EditAction::make(),
-                DeleteAction::make(),
+                EditAction::make()
+                    ->authorize(fn (): bool => $this->canWriteOwner()),
+                DeleteAction::make()
+                    ->authorize(fn (): bool => $this->canWriteOwner()),
             ]);
+    }
+
+    public function isReadOnly(): bool
+    {
+        return !$this->canWriteOwner();
+    }
+
+    protected function canWriteOwner(): bool
+    {
+        $owner = $this->getOwnerRecord();
+        $user = auth()->user();
+
+        if (!$owner instanceof Model || !$user) {
+            return false;
+        }
+
+        if ($owner instanceof Service) {
+            return ServiceAdminAuthorization::canUpdate($user, $owner);
+        }
+
+        return $user->can('update', $owner);
     }
 }

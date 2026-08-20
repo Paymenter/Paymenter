@@ -20,7 +20,10 @@ class ServicePolicy extends BasePolicy
      */
     public function view(User $user, Service $service): bool
     {
-        return $this->adminPermission($user, 'admin.services.view') || $service->user_id === $user->id;
+        return $this->adminPermission($user, 'admin.services.view')
+            || $this->adminPermission($user, 'admin.services.viewAny')
+            || $this->adminPermission($user, 'admin.services.update')
+            || $service->user_id === $user->id;
     }
 
     /**
