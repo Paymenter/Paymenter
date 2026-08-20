@@ -5,7 +5,7 @@ return [
     'product' => 'Product',
     'price' => 'Price',
     'status' => 'Status',
-    'name' => 'Name',
+    'name' => 'İsim',
     'actions' => 'Actions',
     'view' => 'View',
 
@@ -58,9 +58,9 @@ return [
     'renews_in' => 'Renews in',
     'renews_on' => 'Renews on',
     'auto_pay' => 'Auto paying using',
-    'auto_pay_not_configured' => 'Not configured',
+    'auto_pay_not_configured' => 'Yapılandırılmamış',
 
-    'no_services' => 'No services found',
+    'no_services' => 'Hizmet bulunamadı',
     'update_billing_agreement' => 'Update Billing Agreement',
     'clear_billing_agreement' => 'Clear Billing Agreement',
     'select_billing_agreement' => 'Select Billing Agreement',
