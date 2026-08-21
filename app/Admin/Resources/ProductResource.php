@@ -20,6 +20,7 @@ use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Toggle;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
@@ -223,6 +224,10 @@ class ProductResource extends Resource
                     })
                     ->placeholder('Select the type of the price')
                     ->default('free'),
+
+                Toggle::make('auto_renew')
+                    ->label('Automatic Renew')
+                    ->default(true),
 
                 TextInput::make('billing_period')
                     ->required()

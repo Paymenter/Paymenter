@@ -19,6 +19,7 @@ class Plan extends Model implements Auditable
         'billing_period',
         'billing_unit',
         'sort',
+        'auto_renew',
     ];
 
     protected $casts = [
@@ -53,11 +54,6 @@ class Plan extends Model implements Auditable
         }
         $currency = $currency ?? session('currency', config('settings.default_currency'));
         $price = $this->prices->where('currency_code', $currency)->first();
-
-        // No price row in this currency: return unavailable instead of dereferencing null.
-        if (!$price) {
-            return new PriceClass((object) ['price' => null, 'setup_fee' => null, 'currency' => null]);
-        }
 
         return new PriceClass((object) [
             'price' => $price,
