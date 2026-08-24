@@ -91,4 +91,5 @@
             @endif
         </div>
     </div>
+    {!! hook('pages.security') !!}
 </div>
