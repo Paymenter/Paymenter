@@ -20,11 +20,11 @@ return [
 
     'in_stock' => 'På lager',
     'out_of_stock' => 'Produktet :product er ikke på lager',
-    'not_available' => ':product is not available in your currency',
+    'not_available' => ':product er ikke tilgjengelig i den valgte valutaen',
     'user_limit' => 'Du har nådd grensen for :product',
     'payment_method' => 'Betalingsmetode',
     'use_credits' => 'Bruk kreditt',
-    'tos' => 'Jeg samtykker til',
-    'tos_link' => 'Vilkår for bruk ',
+    'tos' => 'Jeg samtykker til ',
+    'tos_link' => 'Vilkår for bruk',
     'tos_required' => 'Du må godta vilkårene for bruk',
 ];
