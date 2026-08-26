@@ -22,7 +22,7 @@
         </nav>
     </div>
     @if ($activeTab === 'marketplace')
-        <div class="">
+        <div class="max-w-[1040px]">
             <div class="flex flex-col gap-4">
                 <div class="relative">
                     <div class="absolute inset-y-0 flex items-center pointer-events-none start-0 ps-3"><x-ri-search-line class="w-5 h-5 text-gray-400" /></div>
@@ -52,7 +52,7 @@
                     </div>
                 @else
                     <div>
-                        <div class="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
+                        <div class="flex flex-wrap gap-6 items-center">
                             @foreach ($this->extensions as $extension)
                                 <x-extension-card :extension="$extension" :key="$extension['name']" />
                             @endforeach

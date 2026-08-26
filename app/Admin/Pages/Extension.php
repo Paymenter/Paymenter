@@ -14,6 +14,7 @@ use Filament\Actions\Contracts\HasActions;
 use Filament\Forms\Components\FileUpload;
 use Filament\Notifications\Notification;
 use Filament\Pages\Page;
+use Filament\Support\Enums\Width;
 use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Concerns\InteractsWithTable;
@@ -38,6 +39,11 @@ class Extension extends Page implements HasActions, HasTable
     protected static string|\BackedEnum|null $navigationIcon = 'ri-download-2-line';
 
     protected static string|\BackedEnum|null $activeNavigationIcon = 'ri-download-2-fill';
+
+    public function getMaxContentWidth(): Width
+    {
+        return Width::MaxContent;
+    }
 
     // Label for the navigation item
     protected static ?string $navigationLabel = 'Available Extensions';

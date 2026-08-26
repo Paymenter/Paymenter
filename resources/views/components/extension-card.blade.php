@@ -7,10 +7,10 @@
 @endphp
 
 <a href="{{ $extension['url'] }}" target="_blank" rel="noopener noreferrer"
-    class="flex flex-col overflow-hidden transition-all duration-300 bg-white border border-gray-300 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700 hover:shadow-lg hover:border-primary-500 dark:hover:border-primary-500">
+    class="flex flex-col w-[328px] h-[380px] overflow-hidden transition-all duration-300 bg-white border border-gray-300 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700 hover:shadow-lg hover:border-primary-500 dark:hover:border-primary-500">
     
-    <div class="relative h-48 bg-gray-200 dark:bg-gray-700">
-        <img src="{{ $extension['image_url'] }}" alt="{{ $extension['name'] }}" class="object-cover w-full h-full">
+    <div class="relative h-[164px] bg-gray-200 dark:bg-gray-700">
+        <img src="{{ $extension['image_url'] }}" alt="{{ $extension['name'] }}" class="w-[328px] h-[164px]">
         <span class="absolute px-2 py-1 text-xs font-semibold text-white capitalize rounded-full top-2 right-2 bg-primary-600">
             {{ $extension['type'] }}
         </span>
