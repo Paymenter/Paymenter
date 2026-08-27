@@ -13,6 +13,7 @@ class ServiceResource extends JsonApiResource
         'status',
         'currency_code',
         'expires_at',
+        'suspend_hold_until',
         'updated_at',
         'created_at',
     ];
