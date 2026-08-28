@@ -2,6 +2,7 @@
 
 namespace Paymenter\Extensions\Others\Affiliates;
 
+use App\Attributes\ExtensionMeta;
 use App\Classes\Extension\Extension;
 use App\Events\Invoice\Paid as InvoicePaid;
 use App\Events\Order\Created as OrderCreated;
@@ -20,6 +21,12 @@ use Paymenter\Extensions\Others\Affiliates\Livewire\Affiliates\Affiliate as Affi
 use Paymenter\Extensions\Others\Affiliates\Middleware\AffiliatesMiddleware;
 use Paymenter\Extensions\Others\Affiliates\Models\Affiliate;
 
+#[ExtensionMeta(
+    name: 'Affiliates',
+    description: 'Affiliates extension',
+    version: 'builtin',
+    author: 'Paymenter',
+)]
 class Affiliates extends Extension
 {
     public function __construct(public $config = []) {}
