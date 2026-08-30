@@ -6,6 +6,7 @@ use App\Classes\Settings;
 use App\Models\Setting;
 use Exception;
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Lang;
@@ -60,6 +61,14 @@ class SettingsProvider extends ServiceProvider
 
             $themeName = config('settings.theme', 'default');
             Theme::set($themeName, 'default');
+
+            // Register the active theme's view path with Blade's anonymous
+            // component resolver so <x-foo> can find files at any depth
+            // inside themes/<active>/views (e.g. <x-layouts.auth>).
+            $themeViewPath = base_path("themes/{$themeName}/views");
+            if (is_dir($themeViewPath)) {
+                Blade::anonymousComponentPath($themeViewPath);
+            }
 
             $themeLangPath = base_path("themes/{$themeName}/lang");
             if (is_dir($themeLangPath)) {
