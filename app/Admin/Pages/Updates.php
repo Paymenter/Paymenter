@@ -5,6 +5,7 @@ namespace App\Admin\Pages;
 use App\Console\Commands\CheckForUpdates;
 use App\Console\Commands\Upgrade;
 use App\Helpers\ExtensionHelper;
+use App\Models\Extension;
 use Filament\Actions\Action;
 use Filament\Actions\Concerns\InteractsWithActions;
 use Filament\Actions\Contracts\HasActions;
@@ -16,6 +17,7 @@ use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Concerns\InteractsWithTable;
 use Filament\Tables\Contracts\HasTable;
+use Filament\Tables\Filters\Filter;
 use Filament\Tables\Table;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Cache;
@@ -81,7 +83,8 @@ class Updates extends Page implements HasActions, HasForms, HasTable
     public function table(Table $table): Table
     {
         return $table
-            ->records(fn () => collect($this->getInstalledAddons()))
+            ->records(fn () => collect($this->getInstalledAddons())
+                ->when($this->tableFilters['used']['isActive'] ?? true, fn ($addons) => $addons->where('is_used', true)))
             ->heading('Installed Addons & Extensions')
             ->description('List of all installed addons, gateways, and server integrations with their version numbers and update status.')
             ->columns([
@@ -139,6 +142,11 @@ class Updates extends Page implements HasActions, HasForms, HasTable
                         default => 'heroicon-m-minus-circle',
                     }),
             ])
+            ->filters([
+                Filter::make('used')
+                    ->label('Used integrations only')
+                    ->default(),
+            ])
             ->actions([
                 Action::make('visit_website')
                     ->label('Visit Website')
@@ -152,6 +160,9 @@ class Updates extends Page implements HasActions, HasForms, HasTable
     public function getInstalledAddons(): array
     {
         $available = ExtensionHelper::getAvailableExtensions();
+        $usedExtensions = Extension::query()
+            ->get(['type', 'extension'])
+            ->mapWithKeys(fn (Extension $extension) => [strtolower($extension->type . '_' . $extension->extension) => true]);
 
         $extensionIds = collect($available)
             ->map(fn ($extension) => $extension['meta']?->extensionId)
@@ -165,7 +176,7 @@ class Updates extends Page implements HasActions, HasForms, HasTable
             ->filter(fn ($update) => isset($update['resource_id']))
             ->keyBy(fn ($update) => (string) $update['resource_id']);
 
-        return collect($available)->map(function ($ext) use ($updatesByResourceId) {
+        return collect($available)->map(function ($ext) use ($updatesByResourceId, $usedExtensions) {
             $meta = $ext['meta'] ?? null;
             $name = $meta?->name ?? $ext['name'];
             $rawVersion = $meta?->version ?? null;
@@ -204,6 +215,7 @@ class Updates extends Page implements HasActions, HasForms, HasTable
                 'extension_name' => $ext['name'],
                 'type' => ucfirst($ext['type']),
                 'raw_type' => $ext['type'],
+                'is_used' => $usedExtensions->has(strtolower($ext['type'] . '_' . $ext['name'])),
                 'icon' => $meta?->icon ?? null,
                 'author' => $meta?->author,
                 'description' => $meta?->description ?? '',
