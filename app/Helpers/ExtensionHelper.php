@@ -4,7 +4,9 @@ namespace App\Helpers;
 
 use App\Attributes\ExtensionMeta;
 use App\Classes\FilamentInput;
+use App\Enums\AdjustmentNoteType;
 use App\Enums\InvoiceTransactionStatus;
+use App\Models\AdjustmentNote;
 use App\Models\BillingAgreement;
 use App\Models\Extension;
 use App\Models\Gateway;
@@ -540,6 +542,84 @@ class ExtensionHelper
         }
 
         return false;
+    }
+
+    /**
+     * Refund a transaction via the payment gateway.
+     *
+     * @throws \InvalidArgumentException If amount is invalid.
+     * @throws \RuntimeException If the gateway does not support refunds or the refund fails.
+     */
+    public static function refund(InvoiceTransaction $transaction, float $amount): bool
+    {
+        if ($amount <= 0) {
+            throw new \InvalidArgumentException('Refund amount must be greater than 0.');
+        }
+
+        $refundable = $transaction->amount - $transaction->refunded_amount;
+        if ($amount > $refundable) {
+            throw new \InvalidArgumentException(
+                "Refund amount ({$amount}) exceeds refundable amount ({$refundable}) for this transaction."
+            );
+        }
+
+        $gateway = $transaction->gateway;
+
+        if (!$gateway || !self::hasFunction($gateway, 'supportsRefunds') || !self::hasFunction($gateway, 'refund')) {
+            throw new \RuntimeException('Gateway does not support refunds for transaction #' . $transaction->id);
+        }
+
+        $gatewayInstance = self::getExtension('gateway', $gateway->extension, $gateway->settings);
+
+        if (!$gatewayInstance->supportsRefunds()) {
+            throw new \RuntimeException('Gateway does not support refunds for transaction #' . $transaction->id);
+        }
+
+        $success = $gatewayInstance->refund($transaction, $amount);
+
+        if (!$success) {
+            throw new \RuntimeException('Gateway refund failed for transaction #' . $transaction->id);
+        }
+
+        return self::recordRefund($transaction, $amount);
+    }
+
+    /**
+     * Refund a transaction locally without processing through the payment gateway.
+     *
+     * @throws \InvalidArgumentException If amount is invalid.
+     */
+    public static function refundLocally(InvoiceTransaction $transaction, float $amount): void
+    {
+        if ($amount <= 0) {
+            throw new \InvalidArgumentException('Refund amount must be greater than 0.');
+        }
+
+        $refundable = $transaction->amount - $transaction->refunded_amount;
+        if ($amount > $refundable) {
+            throw new \InvalidArgumentException(
+                "Refund amount ({$amount}) exceeds refundable amount ({$refundable}) for this transaction."
+            );
+        }
+
+        self::recordRefund($transaction, $amount);
+    }
+
+    /**
+     * Record a refund by updating the transaction and creating an adjustment note.
+     */
+    private static function recordRefund(InvoiceTransaction $transaction, float $amount): bool
+    {
+        $transaction->refunded_amount = $transaction->refunded_amount + $amount;
+        $transaction->save();
+
+        $transaction->invoice->adjustmentNotes()->create([
+            'type' => AdjustmentNoteType::Credit->value,
+            'amount' => -1 * abs($amount),
+            'description' => 'Refund for transaction #' . $transaction->id . ' (' . ($transaction->transaction_id ?? 'manual') . ')',
+        ]);
+
+        return true;
     }
 
     /* SERVER RELATED FUNCTIONS */

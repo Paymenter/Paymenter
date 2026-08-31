@@ -5,6 +5,7 @@ namespace App\Observers;
 use App\Events\Invoice as InvoiceEvent;
 use App\Models\Invoice;
 use App\Services\Invoice\ProcessPaidInvoiceService;
+use App\Classes\Settings;
 use Illuminate\Support\Facades\DB;
 
 class InvoiceObserver
@@ -23,6 +24,10 @@ class InvoiceObserver
     public function created(Invoice $invoice): void
     {
         event(new InvoiceEvent\Created($invoice));
+
+        if ($invoice->status === Invoice::STATUS_DRAFT) {
+            return;
+        }
 
         $sendEmail = $invoice->send_create_email;
 
@@ -44,6 +49,21 @@ class InvoiceObserver
      */
     public function updated(Invoice $invoice): void
     {
+        if ($invoice->status === Invoice::STATUS_CANCELLED) {
+            $invoice->createCancellationCreditNote($invoice->cancellation_reason);
+        }
+
+        if ($invoice->getOriginal('status') === Invoice::STATUS_DRAFT && $invoice->status === Invoice::STATUS_PENDING) {
+            $this->createSnapshot($invoice);
+            event(new InvoiceEvent\Created($invoice));
+
+            $sendEmail = $invoice->send_create_email;
+
+            dispatch(function () use ($invoice, $sendEmail) {
+                event(new InvoiceEvent\Finalized($invoice, $sendEmail));
+            })->afterResponse();
+        }
+
         if ($invoice->isDirty('status') && $invoice->status == 'paid') {
             DB::afterCommit(function () use ($invoice) {
                 app(ProcessPaidInvoiceService::class)->handle($invoice);
@@ -59,5 +79,29 @@ class InvoiceObserver
     public function deleted(Invoice $invoice): void
     {
         event(new InvoiceEvent\Deleted($invoice));
+    }
+
+    /**
+     * Create a snapshot of the invoice's user data at the time of finalization.
+     */
+    private function createSnapshot(Invoice $invoice): void
+    {
+        if (!config('settings.invoice_snapshot', true) || $invoice->snapshot) {
+            return;
+        }
+
+        $snapshotData = [
+            'name' => $invoice->user->name,
+            'properties' => $invoice->user_properties,
+            'bill_to' => config('settings.bill_to_text', config('settings.company_name')),
+        ];
+
+        if ($tax = Settings::tax($invoice->user)) {
+            $snapshotData['tax_name'] = $tax->name;
+            $snapshotData['tax_rate'] = $tax->rate;
+            $snapshotData['tax_country'] = $tax->country;
+        }
+
+        $invoice->snapshot()->create($snapshotData);
     }
 }
