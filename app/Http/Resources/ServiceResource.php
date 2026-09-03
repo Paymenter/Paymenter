@@ -16,6 +16,7 @@ class ServiceResource extends JsonApiResource
         'suspend_hold_until',
         'updated_at',
         'created_at',
+        'label',
     ];
 
     public $relationships = [
