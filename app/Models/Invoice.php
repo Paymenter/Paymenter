@@ -40,7 +40,7 @@ class Invoice extends Model implements Auditable
     public function total(): Attribute
     {
         return Attribute::make(
-            get: fn () => $this->items->sum(fn ($item) => $item->price * $item->quantity)
+            get: fn () => $this->items->sum(fn ($item) => $this->moneyToCents($item->price) * $item->quantity) / 100.0
         );
     }
 
@@ -72,8 +72,13 @@ class Invoice extends Model implements Auditable
     public function remaining(): Attribute
     {
         return Attribute::make(
-            get: fn () => $this->total - $this->transactions->where('status', InvoiceTransactionStatus::Succeeded)->sum('amount')
+            get: fn () => ($this->moneyToCents($this->total) - $this->transactions->where('status', InvoiceTransactionStatus::Succeeded)->sum(fn ($transaction) => $this->moneyToCents($transaction->amount))) / 100.0
         );
+    }
+
+    private function moneyToCents($amount): int
+    {
+        return (int) round((float) $amount * 100);
     }
 
     /**
