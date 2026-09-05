@@ -15,10 +15,10 @@ return [
     'files_max' => 'Files up to 10MB',
     'selected_files' => 'Selected Files',
     'uploading_files' => 'Uploading files',
-    'close_ticket' => 'Close Ticket',
-    'close_ticket_confirmation' => 'Are you sure you want to close this ticket? This action cannot be undone.',
-    'close_ticket_success' => 'Ticket closed successfully.',
-    'close_ticket_already_closed' => 'This ticket is already closed.',
+    'close_ticket' => 'Destek Talebini Kapat',
+    'close_ticket_confirmation' => 'Bu destek talebini kapatmak istediğinizden emin misiniz? Bu işlem geri alınamaz.',
+    'close_ticket_success' => 'Destek talebi başarıyla kapatıldı.',
+    'close_ticket_already_closed' => 'Bu destek talebi zaten kapatılmış.',
 
     'create_ticket' => 'Create Ticket',
     'select_department' => 'Select Department',
@@ -32,5 +32,5 @@ return [
     'service' => 'Service',
     'select_service' => 'Select Service',
     'create' => 'Create',
-    'no_tickets' => 'No tickets found',
+    'no_tickets' => 'Destek talebi bulunamadı',
 ];
