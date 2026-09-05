@@ -6,6 +6,7 @@ use App\Models\ServiceConfig;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\EditAction;
 use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TextInput;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Schemas\Schema;
 use Filament\Tables\Columns\TextColumn;
@@ -30,6 +31,12 @@ class ConfigOptionsRelationManager extends RelationManager
                     ->live()
                     ->preload()
                     ->required(),
+                TextInput::make('value')
+                    ->label('Amount')
+                    ->numeric()
+                    ->required()
+                    // Number options are priced per entered unit, so the amount decides the price
+                    ->visible(fn (?ServiceConfig $record): bool => $record?->configOption?->type === 'number'),
             ]);
     }
 
@@ -40,6 +47,9 @@ class ConfigOptionsRelationManager extends RelationManager
             ->columns([
                 TextColumn::make('configOption.name'),
                 TextColumn::make('configValue.name'),
+                TextColumn::make('value')
+                    ->label('Amount')
+                    ->placeholder('-'),
             ])
             ->filters([
                 //

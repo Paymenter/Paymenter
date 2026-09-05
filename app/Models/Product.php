@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Traits\HasPlans;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -76,6 +77,12 @@ class Product extends Model implements Auditable
      */
     public function upgradableConfigOptions(): HasManyThrough
     {
-        return $this->hasManyThrough(ConfigOption::class, ConfigOptionProduct::class, 'product_id', 'id', 'id', 'config_option_id')->where('config_options.hidden', false)->where('config_options.upgradable', true)->orderBy('config_options.sort', 'asc')->orderBy('config_options.id', 'desc');
+        return $this->hasManyThrough(ConfigOption::class, ConfigOptionProduct::class, 'product_id', 'id', 'id', 'config_option_id')
+            ->where('config_options.hidden', false)
+            ->where('config_options.upgradable', true)
+            // A number option has nothing to bill for until a price per unit is attached to it
+            ->where(fn (Builder $query) => $query->where('config_options.type', '!=', 'number')->orWhereHas('children'))
+            ->orderBy('config_options.sort', 'asc')
+            ->orderBy('config_options.id', 'desc');
     }
 }

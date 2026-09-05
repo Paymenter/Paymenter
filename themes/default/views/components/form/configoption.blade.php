@@ -76,11 +76,96 @@
             </div>
         @break
 
+        @case('number')
+            @php
+                $unitPrice = isset($config->children) && isset($plan)
+                    ? $config->children->first()?->price(billing_period: $plan->billing_period, billing_unit: $plan->billing_unit)
+                    : null;
+                $numberLabel = __($config->label ?? $config->name);
+                if (($showPriceTag ?? false) && $unitPrice?->available) {
+                    $numberLabel .= ' - ' . $unitPrice->formatted->price . ' ' . __('product.per_unit');
+                }
+                $numberMin = $config->min ?? null;
+                $numberMax = $config->max ?? null;
+                // A slider has to know where to start and stop, so it falls back to a plain input without a range
+                $asSlider = ($config->show_as_slider ?? false) && $numberMin !== null && $numberMax !== null;
+            @endphp
+            @if ($asSlider)
+                @php $sliderStep = ($config->step ?? null) ?: 1; @endphp
+                <div x-data="{
+                    value: @js((float) ($numberMin)),
+                    min: @js((float) $numberMin),
+                    max: @js((float) $numberMax),
+                    step: @js((float) $sliderStep),
+                    backendValue: $wire.entangle('{{ $name }}').live,
+
+                    init() {
+                        const initialValue = this.$wire.get('{{ $name }}');
+                        if (initialValue !== null && initialValue !== '') {
+                            this.value = Number(initialValue);
+                        }
+                        $watch('value', Alpine.debounce(() => this.backendValue = this.value, 300));
+                    },
+
+                    get progress() {
+                        if (this.max <= this.min) {
+                            return '100%';
+                        }
+                        const ratio = (this.value - this.min) / (this.max - this.min);
+
+                        return `${Math.min(100, Math.max(0, ratio * 100))}%`;
+                    },
+                }" class="flex flex-col gap-1">
+                    <label for="{{ $name }}" class="mb-1 text-sm text-primary-100">
+                        {{ $numberLabel }}
+                        @if ($config->required ?? false)
+                            <span class="text-red-500">*</span>
+                        @endif
+                    </label>
+                    <div class="flex flex-row items-center gap-3" wire:ignore>
+                        <div class="relative flex items-center grow" :style="`--progress:${progress}`">
+                            <div class="
+                                absolute left-2.5 right-2.5 h-1.5 bg-background-secondary rounded-full overflow-hidden
+                                before:absolute before:inset-0 before:bg-primary
+                                before:[mask-image:_linear-gradient(to_right,theme(colors.white),theme(colors.white)_var(--progress),transparent_var(--progress))]
+                                [&[x-cloak]]:hidden" aria-hidden="true" x-cloak></div>
+                            <input class="
+                                relative appearance-none cursor-pointer w-full bg-transparent focus:outline-none
+                                [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:h-5 [&::-webkit-slider-thumb]:w-5
+                                [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-white [&::-webkit-slider-thumb]:shadow-none
+                                [&::-webkit-slider-thumb]:focus:ring-0 [&::-moz-range-thumb]:h-5 [&::-moz-range-thumb]:w-5
+                                [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:bg-base [&::-moz-range-thumb]:border-none
+                                [&::-moz-range-thumb]:shadow-none [&::-moz-range-thumb]:focus:ring-0
+                            " type="range" min="{{ $numberMin + 0 }}" max="{{ $numberMax + 0 }}" step="{{ $sliderStep + 0 }}"
+                                x-model.number="value" aria-label="{{ $config->label ?? $config->name }}" name="{{ $name }}"
+                                id="{{ $name }}" />
+                        </div>
+                        {{-- The slider alone cannot hit an exact amount over a long range, so the number stays editable --}}
+                        <input type="number"
+                            class="block w-28 shrink-0 text-sm text-base bg-background-secondary border border-neutral rounded-md shadow-sm focus:outline-none transition-all duration-300 ease-in-out px-2.5 py-2.5"
+                            min="{{ $numberMin + 0 }}" max="{{ $numberMax + 0 }}" step="{{ $sliderStep + 0 }}"
+                            x-model.number="value" aria-label="{{ $config->label ?? $config->name }}" />
+                    </div>
+                    <div class="flex justify-between text-xs text-primary-500 px-2.5">
+                        <span>{{ $numberMin + 0 }}</span>
+                        <span>{{ $numberMax + 0 }}</span>
+                    </div>
+                    @error($name)
+                        <p class="text-red-500 text-xs">{{ $message }}</p>
+                    @enderror
+                </div>
+            @else
+                <x-form.input name="{{ $name }}" type="number" :label="$numberLabel"
+                    :required="$config->required ?? false" wire:model.live.debounce.500ms="{{ $name }}"
+                    :placeholder="$config->placeholder ?? ($config->default ?? '')" :min="$numberMin"
+                    :max="$numberMax" :step="$config->step ?? 'any'" />
+            @endif
+        @break
+
         @case('text')
         @case('password')
 
         @case('email')
-        @case('number')
 
         @case('color')
         @case('file')
