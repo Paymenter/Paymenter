@@ -7,7 +7,7 @@
     ->first();
     $itemHasCredit = $invoice->items()->where('reference_type', App\Models\Credit::class)->exists();
     @endphp
-    @if($credit && !$itemHasCredit)
+    @if(config('settings.credits_payments_enabled') && $credit && !$itemHasCredit)
     <div class="mb-6">
         <h3 class="text-lg font-semibold mb-2">{{ __('invoices.pay_with_credits') }}</h3>
         <div wire:click="$set('selectedMethod', 'credit')"
