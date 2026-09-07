@@ -156,8 +156,7 @@
                 <td>
                     {{ $item->description }}
                     
-                    {{-- Holt das Label direkt über die polymorphe Service-/Reference-Relation --}}
-                    @if($item->reference && !empty($item->reference->label))
+                    @if($item->reference && !empty($item->reference->label) && $item->reference->label !== $item->description)
                         <br><small style="color: #666; font-size: 0.9em;">{{ $item->reference->label }}</small>
                     @endif
                 </td>
