@@ -153,7 +153,14 @@
         <tbody>
             @foreach($invoice->items as $item)
             <tr>
-                <td>{{ $item->description }}</td>
+                <td>
+                    {{ $item->description }}
+                    
+                    {{-- Holt das Label direkt über die polymorphe Service-/Reference-Relation --}}
+                    @if($item->reference && !empty($item->reference->label))
+                        <br><small style="color: #666; font-size: 0.9em;">{{ $item->reference->label }}</small>
+                    @endif
+                </td>
                 <td>{{ $item->quantity }}</td>
                 <td>{{ $item->formattedPrice }}</td>
                 <td>{{ $item->formattedTotal }}</td>
