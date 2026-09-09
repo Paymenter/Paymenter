@@ -156,7 +156,7 @@
                 <td>
                     {{ $item->description }}
                     
-                    @if($item->reference && !empty($item->reference->label) && $item->reference->label !== $item->description)
+                    @if($item->reference && $item->reference->label)
                         <br><small style="color: #666; font-size: 0.9em;">{{ $item->reference->label }}</small>
                     @endif
                 </td>
