@@ -13,6 +13,7 @@ class ServiceConfig extends Model implements Auditable
         'service_id',
         'config_option_id',
         'config_value_id',
+        'value',
     ];
 
     /**

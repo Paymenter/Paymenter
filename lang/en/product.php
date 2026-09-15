@@ -17,6 +17,7 @@ return [
     'apply' => 'Apply',
     'price' => 'Price',
     'setup_fee' => 'Setup fee',
+    'per_unit' => 'per unit',
 
     'in_stock' => 'In stock',
     'out_of_stock' => 'Product :product is out of stock',

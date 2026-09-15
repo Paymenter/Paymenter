@@ -65,7 +65,10 @@ class Checkout extends Component
 
             // Prepare the config options
             $this->configOptions = $this->product->configOptions->mapWithKeys(function ($option) {
-                if (in_array($option->type, ['text', 'number'])) {
+                if ($option->type === 'number') {
+                    return [$option->id => $this->configOptions[$option->id] ?? $option->min];
+                }
+                if ($option->type === 'text') {
                     return [$option->id => $this->configOptions[$option->id] ?? null];
                 }
                 if ($option->type === 'checkbox') {
@@ -102,6 +105,16 @@ class Checkout extends Component
             if ($option->type === 'checkbox' && (isset($this->configOptions[$option->id]) && $this->configOptions[$option->id])) {
                 $total += $option->children->first()?->price(billing_period: $this->plan->billing_period, billing_unit: $this->plan->billing_unit)->price;
                 $setup_fee += $option->children->first()?->price(billing_period: $this->plan->billing_period, billing_unit: $this->plan->billing_unit)->setup_fee;
+
+                return;
+            }
+            // A number option is charged per entered unit as soon as a price is attached to it
+            if ($option->type === 'number') {
+                if ($option->hasUnitPricing()) {
+                    $optionPrice = $option->priceForQuantity($this->configOptions[$option->id] ?? 0, $this->plan->billing_period, $this->plan->billing_unit);
+                    $total += $optionPrice->price;
+                    $setup_fee += $optionPrice->setup_fee;
+                }
 
                 return;
             }
@@ -154,7 +167,9 @@ class Checkout extends Component
             ],
         ];
         foreach ($this->product->configOptions as $option) {
-            if (in_array($option->type, ['text', 'number'])) {
+            if ($option->type === 'number') {
+                $rules["configOptions.{$option->id}"] = $option->numberValidationRules();
+            } elseif ($option->type === 'text') {
                 $rules["configOptions.{$option->id}"] = ['required'];
             } elseif ($option->type === 'checkbox') {
                 // No validation needed for checkbox

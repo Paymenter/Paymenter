@@ -68,6 +68,18 @@ class CartItem extends Model
                         return;
                     }
 
+                    // A number option is charged per entered unit as soon as a price is attached to it
+                    if ($option->type === 'number') {
+                        if ($option->hasUnitPricing()) {
+                            $optionPrice = $option->priceForQuantity($selected->value ?? 0, $this->plan->billing_period, $this->plan->billing_unit, $currency);
+                            $unavailable = $unavailable || !$optionPrice->available;
+                            $total += $optionPrice->price;
+                            $setup_fee += $optionPrice->setup_fee;
+                        }
+
+                        return;
+                    }
+
                     // Skip text, number and checkbox types as they have no price
                     if (in_array($option->type, ['text', 'number', 'checkbox'])) {
                         $total += 0;
