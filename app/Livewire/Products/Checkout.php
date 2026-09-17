@@ -63,17 +63,6 @@ class Checkout extends Component
             $this->plan = $this->plan_id ? $this->product->plans->findOrFail($this->plan_id) : $this->product->plans->first();
             $this->plan_id = $this->plan->id;
 
-            // Prepare the config options
-            $this->configOptions = $this->product->configOptions->mapWithKeys(function ($option) {
-                if (in_array($option->type, ['text', 'number'])) {
-                    return [$option->id => $this->configOptions[$option->id] ?? null];
-                }
-                if ($option->type === 'checkbox') {
-                    return [$option->id => isset($this->configOptions[$option->id]) && in_array($this->configOptions[$option->id], [true, 'true'], true) ? true : false];
-                }
-
-                return [$option->id => $this->configOptions[$option->id] ?? $option->children->first()->id];
-            })->toArray();
             foreach ($this->getCheckoutConfig() as $config) {
                 if (in_array($config['type'], ['select', 'radio'])) {
                     $this->checkoutConfig[$config['name']] = $this->checkoutConfig[$config['name']] ?? $config['default'] ?? array_key_first($config['options']);
@@ -82,6 +71,22 @@ class Checkout extends Component
                 }
             }
         }
+
+        // Prepare the config options. Also done for an item that is already in the cart, because the
+        // product may have gained, lost or changed options since it was added.
+        $this->configOptions = $this->product->configOptions->mapWithKeys(function ($option) {
+            if (in_array($option->type, ['text', 'number'])) {
+                return [$option->id => $this->configOptions[$option->id] ?? null];
+            }
+            if ($option->type === 'checkbox') {
+                return [$option->id => isset($this->configOptions[$option->id]) && in_array($this->configOptions[$option->id], [true, 'true'], true) ? true : false];
+            }
+
+            $value = $this->configOptions[$option->id] ?? null;
+
+            return [$option->id => $option->children->contains('id', $value) ? $value : $option->children->first()->id];
+        })->toArray();
+
         // Update the pricing
         $this->updatePricing();
 
