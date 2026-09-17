@@ -566,8 +566,8 @@ class ImportFromWhmcs extends Command
                         3 => 'combined',
                         default => 'disabled',
                     },
-                    'created_at' => $record['created_at'],
-                    'updated_at' => $record['updated_at'],
+                    'created_at' => $this->validateDate($record['created_at']) ?? now(),
+                    'updated_at' => $this->validateDate($record['updated_at']) ?? now(),
                 ];
 
                 // Upgrades

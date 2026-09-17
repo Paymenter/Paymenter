@@ -5,7 +5,7 @@
         <p class="text-sm text-gray-950 dark:text-white">This service is cancelled. Reason: <span class="font-medium">{{$record->cancellation->reason }}</span></p>
         @else
         <p class="text-sm text-gray-950 dark:text-white">This service is pending cancellation{{ $record->expires_at ? ' on ' .
-            $record->expires_at->format('d-m-Y') : '' }}. Reason: <span class="font-medium">{{
+            $record->expires_at->translatedFormat('M j, Y') : '' }}. Reason: <span class="font-medium">{{
                 $record->cancellation->reason }}</span>
         </p>
         @endif

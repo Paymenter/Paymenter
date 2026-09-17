@@ -45,7 +45,7 @@ class InvoiceItem extends Model implements Auditable
 
     public function total()
     {
-        return $this->price * $this->quantity;
+        return round((float) $this->price * $this->quantity, 2);
     }
 
     public function formattedTotal(): Attribute

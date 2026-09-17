@@ -170,12 +170,17 @@ class CronJob extends Command
 
             $this->runCronJob('services_suspended', function ($number = 0) {
                 // Suspend orders if due date is overdue for x days
-                Service::where('status', 'active')->where('expires_at', '<', now()->subDays((int) config('settings.cronjob_order_suspend', 2)))->get()->each(function ($service) use (&$number) {
-                    SuspendJob::dispatch($service);
+                Service::where('status', 'active')
+                    ->where('expires_at', '<', now()->subDays((int) config('settings.cronjob_order_suspend', 2)))
+                    ->where(function ($query) {
+                        $query->whereNull('suspend_hold_until')->orWhere('suspend_hold_until', '<', now());
+                    })
+                    ->get()->each(function ($service) use (&$number) {
+                        SuspendJob::dispatch($service);
 
-                    $service->update(['status' => 'suspended']);
-                    $number++;
-                });
+                        $service->update(['status' => 'suspended']);
+                        $number++;
+                    });
 
                 return $number;
             });

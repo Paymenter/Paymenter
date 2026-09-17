@@ -2,12 +2,21 @@
 
 namespace Paymenter\Extensions\Servers\DirectAdmin;
 
+use App\Attributes\ExtensionMeta;
 use App\Classes\Extension\Server;
 use App\Models\Service;
 use App\Rules\Domain;
 use Exception;
 use Illuminate\Support\Facades\Http;
 
+#[ExtensionMeta(
+    name: 'DirectAdmin',
+    description: 'DirectAdmin server extension',
+    version: 'builtin',
+    author: 'Paymenter',
+    url: 'https://paymenter.org/docs/extensions/directadmin',
+    icon: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTExIiBoZWlnaHQ9IjExMSIgdmlld2JveD0iMCAwIDExMSAxMTEiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgY2xhc3M9ImhvdmVyOnNjYWxlLTEyMCBmbGV4IGl0ZW1zLWNlbnRlciBqdXN0aWZ5LWNlbnRlciBzaXplLTE4IHJvdW5kZWQteGwgcC00IGJnLVsjMjIyNzJFXSByaW5nLTYgcmluZy1bIzIyMjcyRV0vNDAiPjxwYXRoIGQ9Ik0xNS44MzQ0IDQwLjE3MUwzMS41NDQzIDU1Ljg4MDlMMTUuODM0NCA3MS41OTA4TDI5Ljk3MzMgODUuNzI5N0w2MS4zOTMxIDU0LjMwOTlMMzEuNTQ0MyAyNC40NjExTDE1LjgzNDQgNDAuMTcxWiIgZmlsbD0iIzMxQjdFOSI+PC9wYXRoPjxwYXRoIGQ9Ik01OS44MjI2IDUyLjczODRMMjguNDAyOCA4NC4xNTgyTDMxLjU0NDggODcuMzAwMkw2Mi45NjQ2IDU1Ljg4MDRMNTkuODIyNiA1Mi43Mzg0WiIgZmlsbD0iIzA2ODJCNCI+PC9wYXRoPjxwYXRoIGQ9Ik0zOS4zOTkyIDE2LjYwNjFMNzguNjc0IDU1Ljg4MDlMMzkuMzk5MiA5NS4xNTU2TDUzLjUzODEgMTA5LjI5NEwxMDguNTIzIDU0LjMwOTlMNTUuMTA5MSAwLjg5NjIzNkwzOS4zOTkyIDE2LjYwNjFaIiBmaWxsPSIjMzFCN0U5Ij48L3BhdGg+PHBhdGggZD0iTTEwNi45NTEgNTIuNzM4TDUxLjk2NjggMTA3LjcyM0w1NS4xMDg4IDExMC44NjVMMTEwLjA5MyA1NS44OEwxMDYuOTUxIDUyLjczOFoiIGZpbGw9IiMwNjgyQjQiPjwvcGF0aD48L3N2Zz4=',
+)]
 class DirectAdmin extends Server
 {
     private function request($endpoint, $method = 'get', $data = [], $parse = false)

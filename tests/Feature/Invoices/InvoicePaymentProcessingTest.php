@@ -52,6 +52,44 @@ class InvoicePaymentProcessingTest extends TestCase
         $this->assertEquals(70.00, $invoice->fresh()->remaining);
     }
 
+    public function test_invoice_totals_are_calculated_without_floating_point_errors()
+    {
+        $invoice = $this->createInvoiceWithItem(0.10);
+        $invoice->items()->create([
+            'description' => 'Second Test Item',
+            'quantity' => 2,
+            'price' => 0.10,
+        ]);
+
+        $invoice->refresh();
+
+        $this->assertSame(0.30, $invoice->total);
+
+        $invoice->transactions()->create([
+            'amount' => 0.10,
+            'status' => InvoiceTransactionStatus::Succeeded,
+        ]);
+
+        $this->assertSame(0.20, $invoice->fresh()->remaining);
+    }
+
+    public function test_decimal_invoice_is_marked_paid_when_the_full_amount_is_paid()
+    {
+        $invoice = $this->createInvoiceWithItem(179.99);
+        $invoice->items()->create([
+            'description' => 'Second Test Item',
+            'quantity' => 1,
+            'price' => 69.99,
+        ]);
+
+        ExtensionHelper::addPayment($invoice->id, 'TestGateway', 249.98);
+
+        $invoice->refresh();
+
+        $this->assertSame('paid', $invoice->status);
+        $this->assertSame(0.0, $invoice->remaining);
+    }
+
     public function test_successful_payment_marks_invoice_as_paid()
     {
         $invoice = $this->createInvoiceWithItem(100.00);

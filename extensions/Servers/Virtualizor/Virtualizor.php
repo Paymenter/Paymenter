@@ -2,6 +2,7 @@
 
 namespace Paymenter\Extensions\Servers\Virtualizor;
 
+use App\Attributes\ExtensionMeta;
 use App\Classes\Extension\Server;
 use App\Models\Product;
 use App\Models\Service;
@@ -10,6 +11,14 @@ use Exception;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
 
+#[ExtensionMeta(
+    name: 'Virtualizor',
+    description: 'Virtualizor server extension',
+    version: 'builtin',
+    author: 'Paymenter',
+    url: 'https://paymenter.org/docs/extensions/virtualizor',
+    icon: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjciIGhlaWdodD0iODAiIHZpZXdib3g9IjAgMCA2NyA4MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiBjbGFzcz0iaG92ZXI6c2NhbGUtMTIwIGZsZXggaXRlbXMtY2VudGVyIGp1c3RpZnktY2VudGVyIHNpemUtMTggcm91bmRlZC14bCBwLTQgYmctd2hpdGUgcmluZy02IHJpbmctd2hpdGUvMjAiPjxwYXRoIGQ9Ik0wIDE5TDYxIDgwSDBWMTlaIiBmaWxsPSJ1cmwoI3BhaW50MF9saW5lYXJfOTAzXzM4MDApIj48L3BhdGg+PHBhdGggZD0iTTY3IDYxTDYgMEg2N1Y2MVoiIGZpbGw9InVybCgjcGFpbnQxX2xpbmVhcl85MDNfMzgwMCkiPjwvcGF0aD48ZGVmcz48bGluZWFyR3JhZGllbnQgaWQ9InBhaW50MF9saW5lYXJfOTAzXzM4MDAiIHgxPSIzMSIgeTE9IjUwIiB4Mj0iMCIgeTI9IjgwIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHN0b3Agc3RvcC1jb2xvcj0iIzUzNjY4RSI+PC9zdG9wPjxzdG9wIG9mZnNldD0iMSIgc3RvcC1jb2xvcj0iIzJEMzg0RSI+PC9zdG9wPjwvbGluZWFyR3JhZGllbnQ+PGxpbmVhckdyYWRpZW50IGlkPSJwYWludDFfbGluZWFyXzkwM18zODAwIiB4MT0iNjciIHkxPSItNS40ODM2M2UtMDYiIHgyPSIzNyIgeTI9IjMxIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHN0b3Agc3RvcC1jb2xvcj0iI0ZGOUIwMCI+PC9zdG9wPjxzdG9wIG9mZnNldD0iMSIgc3RvcC1jb2xvcj0iI0Y3N0MwMiI+PC9zdG9wPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjwvc3ZnPg==',
+)]
 class Virtualizor extends Server
 {
     private function request($act, $method = 'get', $data = [], $clientApi = false): array
