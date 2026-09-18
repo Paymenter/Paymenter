@@ -20,6 +20,7 @@ return [
 
     'in_stock' => 'Tersedia',
     'out_of_stock' => ':product tidak tersedia',
+    'not_available' => ':product is not available in your currency',
     'user_limit' => 'Anda telah mencapai batas untuk :produk',
     'payment_method' => 'Metode pembayaran',
     'use_credits' => 'Gunakan Kredit',

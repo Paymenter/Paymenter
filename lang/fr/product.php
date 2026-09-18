@@ -20,6 +20,7 @@ return [
 
     'in_stock' => 'En stock',
     'out_of_stock' => 'Le produit :product est en rupture de stock.',
+    'not_available' => ':product is not available in your currency',
     'user_limit' => 'Vous avez atteint la limite de :product',
     'payment_method' => 'Mode de paiement',
     'use_credits' => 'Utiliser le crédit',

@@ -10,6 +10,6 @@ return [
     'confirm' => 'Confirmar',
     'cancel' => 'Cancelar',
     'select' => [
-        'placeholder' => 'Please select :name',
+        'placeholder' => 'Por favor, selecione :name',
     ],
 ];
