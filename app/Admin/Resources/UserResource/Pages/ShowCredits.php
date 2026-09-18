@@ -66,7 +66,7 @@ class ShowCredits extends ManageRelatedRecords
             ->columns([
                 TextColumn::make('currency.code'),
                 TextColumn::make('formattedAmount')->label('Formatted Amount'),
-                TextInputColumn::make('amount')->label('Amount'),
+                TextInputColumn::make('amount')->label('Amount')->rules(['numeric', 'min:0']),
             ])
             ->filters([])
             ->headerActions([

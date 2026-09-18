@@ -144,7 +144,7 @@ class Navigation
                                 'name' => __('account.credits'),
                                 'url' => route('account.credits'),
                                 'params' => [],
-                                'condition' => config('settings.credits_enabled'),
+                                'condition' => config('settings.credits_enabled') || config('settings.credits_payments_enabled'),
                                 'priority' => 30,
                             ],
                             [

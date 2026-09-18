@@ -51,6 +51,11 @@ return [
     'no_credit' => 'You have no credits.',
     'add_credit' => 'Add credit',
     'credit_deposit' => 'Credit deposit (:currency)',
+    'current_balance' => 'Current balance',
+    'total_added' => 'Total added',
+    'total_added_description' => 'Total credits added to your account',
+    'total_spent' => 'Total spent',
+    'total_spent_description' => 'Total credits spent on invoices',
 
     'payment_methods' => 'Payment Methods',
     'recent_transactions' => 'Recent Transactions',

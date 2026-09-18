@@ -209,13 +209,15 @@ class Upgrade extends Component
 
                 $user = User::where('id', Auth::id())->lockForUpdate()->first();
                 $credit = $user->credits()->where('currency_code', $price->currency->code)->first();
+                $maxCredit = config('settings.credits_maximum_credit');
 
                 if ($credit) {
-                    $credit->increment('amount', abs($price->price));
+                    $credit->amount = min($credit->amount + abs($price->price), $maxCredit);
+                    $credit->save();
                 } else {
                     $user->credits()->create([
                         'currency_code' => $price->currency->code,
-                        'amount' => abs($price->price),
+                        'amount' => min(abs($price->price), $maxCredit),
                     ]);
                 }
 

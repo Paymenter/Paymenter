@@ -9,6 +9,8 @@ use App\Livewire\Component;
 use App\Models\Credit;
 use App\Models\Gateway;
 use App\Models\Invoice;
+use App\Models\InvoiceItem;
+use App\Models\InvoiceTransaction;
 use Exception;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -29,6 +31,12 @@ class Credits extends Component
 
     public $gateway;
 
+    #[Locked]
+    public $totalAdded = [];
+
+    #[Locked]
+    public $totalSpent = [];
+
     public function mount()
     {
         $this->amount = config('settings.credits_minimum_deposit');
@@ -37,6 +45,25 @@ class Credits extends Component
         if (count($this->gateways) > 0 && !array_search($this->gateway, array_column($this->gateways, 'id')) !== false) {
             $this->gateway = $this->gateways[0]->id;
         }
+
+        $this->totalAdded = InvoiceItem::query()
+            ->join('invoices', 'invoice_items.invoice_id', '=', 'invoices.id')
+            ->where('invoices.user_id', Auth::id())
+            ->where('invoices.status', 'paid')
+            ->where('invoice_items.reference_type', Credit::class)
+            ->selectRaw('invoices.currency_code, sum(invoice_items.price * invoice_items.quantity) as total')
+            ->groupBy('invoices.currency_code')
+            ->pluck('total', 'currency_code')
+            ->toArray();
+
+        $this->totalSpent = InvoiceTransaction::query()
+            ->join('invoices', 'invoice_transactions.invoice_id', '=', 'invoices.id')
+            ->where('invoices.user_id', Auth::id())
+            ->where('invoice_transactions.is_credit_transaction', true)
+            ->selectRaw('invoices.currency_code, sum(invoice_transactions.amount) as total')
+            ->groupBy('invoices.currency_code')
+            ->pluck('total', 'currency_code')
+            ->toArray();
     }
 
     public function updated($variable)

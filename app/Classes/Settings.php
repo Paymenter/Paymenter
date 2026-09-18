@@ -490,11 +490,20 @@ class Settings
             ],
             'credits' => [
                 [
-                    'name' => 'credits_enabled',
-                    'label' => 'Credits Enabled',
+                    'name' => 'credits_payments_enabled',
+                    'label' => 'Credits enabled',
                     'type' => 'checkbox',
                     'database_type' => 'boolean',
                     'default' => false,
+                    'description' => 'Allow customers to pay with credits at checkout. Disabling this does not disable existing balances from being visible, but prevents them from being spent.',
+                ],
+                [
+                    'name' => 'credits_enabled',
+                    'label' => 'Credits topup enabled',
+                    'type' => 'checkbox',
+                    'database_type' => 'boolean',
+                    'default' => false,
+                    'description' => 'Allow customers to add (top up) credits to their account. Disabling this does not prevent existing balances from being spent.',
                 ],
                 [
                     'name' => 'credits_minimum_deposit',
