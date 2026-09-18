@@ -7,6 +7,7 @@ use App\Admin\Resources\ServiceResource;
 use App\Helpers\ExtensionHelper;
 use App\Helpers\NotificationHelper;
 use App\Models\Service;
+use App\Support\ServiceAdminAuthorization;
 use Exception;
 use Filament\Actions\Action;
 use Filament\Actions\DeleteAction;
@@ -14,15 +15,66 @@ use Filament\Forms\Components\Checkbox;
 use Filament\Forms\Components\Select;
 use Filament\Notifications\Notification;
 use Filament\Resources\Pages\EditRecord;
+use Filament\Schemas\Components\Component;
+use Filament\Schemas\Schema;
+use Illuminate\Database\Eloquent\Model;
 
 class EditService extends EditRecord
 {
     protected static string $resource = ServiceResource::class;
 
+    /**
+     * Staff with View Services (view/viewAny) may open this URL. Writes still
+     * require Update Services — Filament's default EditRecord gate is update-only.
+     */
+    protected function authorizeAccess(): void
+    {
+        abort_unless(ServiceAdminAuthorization::canView(auth()->user(), $this->getRecord()), 403);
+    }
+
+    public function form(Schema $schema): Schema
+    {
+        return parent::form($schema)
+            ->disabled(!$this->canUpdateRecord());
+    }
+
+    protected function getFormActions(): array
+    {
+        if (!$this->canUpdateRecord()) {
+            return [
+                $this->getCancelFormAction(),
+            ];
+        }
+
+        return parent::getFormActions();
+    }
+
+    public function save(bool $shouldRedirect = true, bool $shouldSendSavedNotification = true): void
+    {
+        $this->authorizeServiceWrite();
+
+        parent::save($shouldRedirect, $shouldSendSavedNotification);
+    }
+
+    public function saveFormComponentOnly(Component $component): void
+    {
+        $this->authorizeServiceWrite();
+
+        parent::saveFormComponentOnly($component);
+    }
+
+    protected function handleRecordUpdate(Model $record, array $data): Model
+    {
+        $this->authorizeServiceWrite();
+
+        return parent::handleRecordUpdate($record, $data);
+    }
+
     protected function getHeaderActions(): array
     {
         return [
             DeleteAction::make()
+                ->visible(fn () => $this->canUpdateRecord())
                 ->form(function (DeleteAction $action) {
                     $status = !in_array($this->record->status, [Service::STATUS_PENDING, Service::STATUS_CANCELLED]) && $this->record->product->server_id !== null;
                     if (!$status) {
@@ -36,6 +88,9 @@ class EditService extends EditRecord
                     ];
                 })
                 ->action(function (array $data, Service $record): void {
+                    $this->authorizeServiceWrite();
+                    abort_unless(auth()->user()?->can('delete', $record), 403);
+
                     try {
                         if (($data['deleteExtensionServer'] ?? false)) {
                             ExtensionHelper::terminateServer($record);
@@ -53,6 +108,7 @@ class EditService extends EditRecord
                 }),
             Action::make('changeStatus')
                 ->label('Trigger Extension Action')
+                ->visible(fn () => $this->canUpdateRecord())
                 ->schema([
                     Select::make('action')
                         ->label('Action')
@@ -68,6 +124,8 @@ class EditService extends EditRecord
                         ->default(false),
                 ])
                 ->action(function (array $data, Service $record, Action $action): void {
+                    $this->authorizeServiceWrite();
+
                     try {
                         switch ($data['action']) {
                             case 'create':
@@ -129,5 +187,15 @@ class EditService extends EditRecord
         return [
             ServiceResource\Widgets\CancellationOverview::class,
         ];
+    }
+
+    protected function canUpdateRecord(): bool
+    {
+        return ServiceAdminAuthorization::canUpdate(auth()->user(), $this->getRecord());
+    }
+
+    protected function authorizeServiceWrite(): void
+    {
+        ServiceAdminAuthorization::authorizeUpdate(auth()->user(), $this->getRecord());
     }
 }
