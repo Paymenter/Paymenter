@@ -18,7 +18,7 @@ class EditInvoice extends EditRecord
     {
         parent::mount($record);
 
-        if (config('settings.immutable_invoices_enabled', false)) {
+        if (config('settings.immutable_invoices_enabled', false) && $this->record->status !== Invoice::STATUS_DRAFT) {
             redirect(InvoiceResource::getUrl('view', ['record' => $record]));
         }
     }
