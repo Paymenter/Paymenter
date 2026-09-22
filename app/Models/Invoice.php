@@ -51,15 +51,23 @@ class Invoice extends Model implements Auditable
     public function total(): Attribute
     {
         return Attribute::make(
-            get: fn () => $this->items->sum(fn ($item) => $item->price * $item->quantity)
-                + $this->adjustmentNotes
-                    ->where('status', AdjustmentNoteStatus::Active->value)
-                    ->where('type', AdjustmentNoteType::Debit->value)
-                    ->sum('amount')
-                + $this->adjustmentNotes
-                    ->where('status', AdjustmentNoteStatus::Active->value)
-                    ->where('type', AdjustmentNoteType::Credit->value)
-                    ->sum('amount')
+            get: fn () => (
+                $this->items->sum(
+                    fn ($item) => $this->moneyToCents($item->price) * $item->quantity
+                )
+                + $this->moneyToCents(
+                    $this->adjustmentNotes
+                        ->where('status', AdjustmentNoteStatus::Active->value)
+                        ->where('type', AdjustmentNoteType::Debit->value)
+                        ->sum('amount')
+                )
+                + $this->moneyToCents(
+                    $this->adjustmentNotes
+                        ->where('status', AdjustmentNoteStatus::Active->value)
+                        ->where('type', AdjustmentNoteType::Credit->value)
+                        ->sum('amount')
+                )
+            ) / 100.0
         );
     }
 
@@ -114,10 +122,21 @@ class Invoice extends Model implements Auditable
     public function remaining(): Attribute
     {
         return Attribute::make(
-            get: fn () => $this->total - $this->transactions->where('status', InvoiceTransactionStatus::Succeeded)->sum(function ($txn) {
-                return $txn->amount - $txn->refunded_amount;
-            })
+            get: fn () => (
+                $this->moneyToCents($this->total)
+                - $this->transactions
+                    ->where('status', InvoiceTransactionStatus::Succeeded)
+                    ->sum(fn ($transaction) =>
+                        $this->moneyToCents($transaction->amount)
+                        - $this->moneyToCents($transaction->refunded_amount)
+                    )
+            ) / 100.0
         );
+    }
+
+    private function moneyToCents($amount): int
+    {
+        return (int) round((float) $amount * 100);
     }
 
     /**

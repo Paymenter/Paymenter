@@ -7,6 +7,7 @@ use App\Admin\Resources\OrderResource;
 use App\Admin\Resources\ServiceResource;
 use App\Admin\Resources\TicketResource;
 use App\Admin\Resources\UserResource;
+use App\Attributes\ExtensionMeta;
 use App\Classes\Extension\Extension;
 use App\Events\Invoice;
 use App\Events\Invoice\Paid;
@@ -22,6 +23,12 @@ use Exception;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Http;
 
+#[ExtensionMeta(
+    name: 'Discord Notifications',
+    description: 'Send notifications to Discord for various events.',
+    version: 'builtin',
+    author: 'Paymenter',
+)]
 class DiscordNotifications extends Extension
 {
     private const events = [

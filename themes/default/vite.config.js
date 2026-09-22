@@ -7,9 +7,9 @@ export default defineConfig({
     plugins: [
         laravel({
             input: [
-                path.resolve(__dirname, 'js/app.js'),
-                path.resolve(__dirname, 'js/easymde-entry.js'),
-                path.resolve(__dirname, 'css/app.css'),
+                path.resolve(import.meta.dirname, 'js/app.js'),
+                path.resolve(import.meta.dirname, 'js/easymde-entry.js'),
+                path.resolve(import.meta.dirname, 'css/app.css'),
                 'resources/css/filament/admin/theme.css',
             ],
             buildDirectory: 'default/',

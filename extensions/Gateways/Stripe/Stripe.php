@@ -29,7 +29,7 @@ use Str;
 #[ExtensionMeta(
     name: 'Stripe Gateway',
     description: 'Accept payments via Stripe.',
-    version: '1.0.1',
+    version: 'builtin',
     author: 'Paymenter',
     url: 'https://paymenter.org/docs/extensions/stripe',
     icon: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj48cmVjdCB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgZmlsbD0iIzUzM0FGRCIvPjxwYXRoIGQ9Ik0xMjAgMzkyTDM5MiAzMzRWMTEyTDEyMCAxNz hWMzk yWiIgZmlsbD0iI2ZmZiIvPjwvc3ZnPg=='

@@ -142,7 +142,7 @@
             </td>
         </tr>
     </table>
-    <p>{{ !$invoice->number && config('settings.invoice_proforma', false) ? __('invoices.proforma_invoice_date') : __('invoices.invoice_date') }}: <strong>{{ $invoice->created_at->format('d/m/Y') }}</strong></p>
+    <p>{{ !$invoice->number && config('settings.invoice_proforma', false) ? __('invoices.proforma_invoice_date') : __('invoices.invoice_date') }}: <strong>{{ $invoice->created_at->translatedFormat('d M Y') }}</strong></p>
     @if($invoice->number)
     <p>{{ __('invoices.invoice_no') }}: <strong>{{ $invoice->number }}</strong></p>
     @endif
@@ -159,7 +159,13 @@
         <tbody>
             @foreach($invoice->items as $item)
             <tr>
-                <td>{{ $item->description }}</td>
+                <td>
+                    {{ $item->description }}
+                    
+                    @if($item->reference && $item->reference->label)
+                        <br><small style="color: #666; font-size: 0.9em;">{{ $item->reference->label }}</small>
+                    @endif
+                </td>
                 <td>{{ $item->quantity }}</td>
                 <td>{{ $item->formattedPrice }}</td>
                 <td>{{ $item->formattedTotal }}</td>
@@ -274,7 +280,7 @@
             @foreach($invoice->transactions->where('status', \App\Enums\InvoiceTransactionStatus::Succeeded) as $transaction)
             <tr>
                 <td>{{ $transaction->transaction_id }}</td>
-                <td>{{ $transaction->created_at->format('d/m/Y') }}</td>
+                <td>{{ $transaction->created_at->translatedFormat('d M Y') }}</td>
                 <td>{{ $transaction->formattedAmount }}</td>
                 <td>
                     @if($transaction->refunded_amount > 0)

@@ -20,7 +20,7 @@
         <x-form.select wire:model="service" label="{{ __('ticket.service') }}" name="service">
             <option value="">{{ __('ticket.select_service') }}</option>
             @foreach ($services as $product)
-                <option value="{{ $product->id }}">{{ $product->product->name }} ({{ ucfirst($product->status) }})
+                <option value="{{ $product->id }}">{{ $product->product->name }} ({{ $product->label }}) ({{ ucfirst($product->status) }})
                     @if ($product->expires_at)
                         - {{ $product->expires_at->format('Y-m-d') }}
                     @endif

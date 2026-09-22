@@ -108,6 +108,10 @@
                                 @else
                                 {{ $item->description }}
                                 @endif
+
+                                @if($item->reference && $item->reference->label)
+                                    <br><small style="color: #666; font-size: 0.9em;">{{ $item->reference->label }}</small>
+                                @endif
                             </td>
                             <td class="p-4 font-normal whitespace-nowrap text-base">{{ $item->formattedPrice }}
                             </td>
