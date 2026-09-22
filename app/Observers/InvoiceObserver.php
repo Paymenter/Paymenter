@@ -91,7 +91,7 @@ class InvoiceObserver
         }
 
         $snapshotData = [
-            'name' => $invoice->user->name,
+            'name' => $invoice->user?->name,
             'properties' => $invoice->user_properties,
             'bill_to' => config('settings.bill_to_text', config('settings.company_name')),
         ];

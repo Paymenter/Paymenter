@@ -42,6 +42,11 @@ return new class extends Migration
                 ->nullable(false)
                 ->change();
 
+            $table->foreign('user_id')
+                 ->references('id')
+                 ->on('users')
+                 ->cascadeOnDelete();
+
             $table->dropColumn('cancellation_reason');
 
             $table->string('status')->default('pending')->change();

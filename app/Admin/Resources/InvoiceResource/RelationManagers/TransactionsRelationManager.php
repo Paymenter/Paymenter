@@ -144,7 +144,8 @@ class TransactionsRelationManager extends RelationManager
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
-                    DeleteBulkAction::make(),
+                    DeleteBulkAction::make()
+                        ->visible(fn(): bool => $this->canModifyTransactions()),
                 ]),
             ]);
     }

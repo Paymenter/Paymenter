@@ -16,7 +16,7 @@ return new class extends Migration
             $table->foreignId('invoice_id')->constrained()->cascadeOnDelete();
             $table->string('type');
             $table->string('number')->nullable()->unique();
-            $table->decimal('amount', 16, 2);
+            $table->decimal('amount', 17, 2);
             $table->text('description')->nullable();
             $table->string('status')->default('active');
             $table->timestamps();

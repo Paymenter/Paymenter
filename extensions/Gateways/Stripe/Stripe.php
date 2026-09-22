@@ -834,7 +834,7 @@ class Stripe extends Gateway
 
         $refundData = [
             'payment_intent' => $paymentIntentId,
-            'amount' => (int) ($amount * 100),
+            'amount' => (int) round($amount * 100),
         ];
 
         $this->request('post', '/refunds', $refundData);

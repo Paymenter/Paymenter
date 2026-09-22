@@ -213,9 +213,7 @@ class InvoiceResource extends Resource
             TransactionsRelationManager::class,
         ];
 
-        if (config('settings.immutable_invoices_enabled', false)) {
-            $relations[] = AdjustmentNotesRelationManager::class;
-        }
+        $relations[] = AdjustmentNotesRelationManager::class;
 
         return $relations;
     }

@@ -183,7 +183,7 @@
                 <td class="amount">{{ $invoice->formattedTotal->formatted->tax }}</td>
             </tr>
             @php
-                $adjustmentsTotal = $invoice->adjustmentNotes->sum('amount');
+                $adjustmentsTotal = $invoice->adjustmentNotes->filter(fn ($note) => $note->status === \App\Enums\AdjustmentNoteStatus::Active)->sum('amount');
                 $adjustmentsPrice = new \App\Classes\Price(['price' => $adjustmentsTotal, 'currency' => $invoice->currency]);
             @endphp
             @if($adjustmentsTotal != 0)
@@ -200,7 +200,7 @@
         @else
         <table class="totals-table">
             @php
-                $adjustmentsTotal = $invoice->adjustmentNotes->sum('amount');
+                $adjustmentsTotal = $invoice->adjustmentNotes->filter(fn ($note) => $note->status === \App\Enums\AdjustmentNoteStatus::Active)->sum('amount');
                 $adjustmentsPrice = new \App\Classes\Price(['price' => $adjustmentsTotal, 'currency' => $invoice->currency]);
             @endphp
             @if($adjustmentsTotal != 0)

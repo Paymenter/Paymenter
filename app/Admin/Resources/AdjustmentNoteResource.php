@@ -42,7 +42,7 @@ class AdjustmentNoteResource extends Resource
                 Select::make('invoice_id')
                     ->label('Invoice')
                     ->relationship('invoice', modifyQueryUsing: fn(Builder $query) => $query->with('user')->orderByDesc('id'))
-                    ->getOptionLabelFromRecordUsing(fn(Model $record) => ($record->number ? "#$record->number" : $record->id) . " ({$record->user->email})")
+                    ->getOptionLabelFromRecordUsing(fn(Model $record) => ($record->number ? "#$record->number" : $record->id) . ' (' . ($record->user?->email ?? __('invoices.deleted_user')) . ')')
                     ->required()
                     ->searchable()
                     ->preload()
