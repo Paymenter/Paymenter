@@ -80,7 +80,7 @@ class InvoiceResource extends Resource
                         'draft' => 'Draft',
                         'cancelled' => 'Cancelled'
                     ])
-                    ->default('pending')
+                    ->default(fn (): string => config('settings.immutable_invoices_enabled', false) ? Invoice::STATUS_DRAFT : Invoice::STATUS_PENDING)
                     ->placeholder('Select the status of the invoice'),
                 Select::make('currency_code')
                     ->label('Currency')

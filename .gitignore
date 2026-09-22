@@ -9,6 +9,8 @@
 .env.backup
 .env.production
 .phpunit.result.cache
+/.clinerules
+.env.local
 database/database.sqlite
 Homestead.json
 Homestead.yaml

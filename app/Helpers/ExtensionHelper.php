@@ -556,13 +556,6 @@ class ExtensionHelper
             throw new \InvalidArgumentException('Refund amount must be greater than 0.');
         }
 
-        $refundable = $transaction->amount - $transaction->refunded_amount;
-        if ($amount > $refundable) {
-            throw new \InvalidArgumentException(
-                "Refund amount ({$amount}) exceeds refundable amount ({$refundable}) for this transaction."
-            );
-        }
-
         $gateway = $transaction->gateway;
 
         if (!$gateway || !self::hasFunction($gateway, 'supportsRefunds') || !self::hasFunction($gateway, 'refund')) {
@@ -575,13 +568,24 @@ class ExtensionHelper
             throw new \RuntimeException('Gateway does not support refunds for transaction #' . $transaction->id);
         }
 
-        $success = $gatewayInstance->refund($transaction, $amount);
+        return DB::transaction(function () use ($transaction, $gatewayInstance, $amount) {
+            $transaction = InvoiceTransaction::whereKey($transaction->id)->lockForUpdate()->firstOrFail();
 
-        if (!$success) {
-            throw new \RuntimeException('Gateway refund failed for transaction #' . $transaction->id);
-        }
+            $refundable = $transaction->amount - $transaction->refunded_amount;
+            if ($amount > $refundable) {
+                throw new \InvalidArgumentException(
+                    "Refund amount ({$amount}) exceeds refundable amount ({$refundable}) for this transaction."
+                );
+            }
 
-        return self::recordRefund($transaction, $amount);
+            $success = $gatewayInstance->refund($transaction, $amount);
+
+            if (!$success) {
+                throw new \RuntimeException('Gateway refund failed for transaction #' . $transaction->id);
+            }
+
+            return self::recordRefund($transaction, $amount);
+        });
     }
 
     /**
@@ -595,14 +599,18 @@ class ExtensionHelper
             throw new \InvalidArgumentException('Refund amount must be greater than 0.');
         }
 
-        $refundable = $transaction->amount - $transaction->refunded_amount;
-        if ($amount > $refundable) {
-            throw new \InvalidArgumentException(
-                "Refund amount ({$amount}) exceeds refundable amount ({$refundable}) for this transaction."
-            );
-        }
+        DB::transaction(function () use ($transaction, $amount) {
+            $transaction = InvoiceTransaction::whereKey($transaction->id)->lockForUpdate()->firstOrFail();
 
-        self::recordRefund($transaction, $amount);
+            $refundable = $transaction->amount - $transaction->refunded_amount;
+            if ($amount > $refundable) {
+                throw new \InvalidArgumentException(
+                    "Refund amount ({$amount}) exceeds refundable amount ({$refundable}) for this transaction."
+                );
+            }
+
+            self::recordRefund($transaction, $amount);
+        });
     }
 
     /**
@@ -610,8 +618,7 @@ class ExtensionHelper
      */
     private static function recordRefund(InvoiceTransaction $transaction, float $amount): bool
     {
-        $transaction->refunded_amount = $transaction->refunded_amount + $amount;
-        $transaction->save();
+        $transaction->increment('refunded_amount', $amount);
 
         $transaction->invoice->adjustmentNotes()->create([
             'type' => AdjustmentNoteType::Credit->value,
