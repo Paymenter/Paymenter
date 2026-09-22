@@ -164,7 +164,7 @@ class Cart extends Component
                     'user_id' => $user->id,
                     'due_at' => now()->addDays(7),
                     'currency_code' => $cart->currency_code,
-                    'status' => config('settings.immutable_invoices_enabled', false) ? Invoice::STATUS_DRAFT : Invoice::STATUS_PENDING,
+                    'status' => Invoice::STATUS_PENDING,
                 ]);
                 $invoice->save();
             }

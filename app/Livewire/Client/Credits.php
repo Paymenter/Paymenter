@@ -88,7 +88,7 @@ class Credits extends Component
                 'user_id' => Auth::id(),
                 'currency_code' => $this->currency,
                 'due_at' => now(),
-                'status' => config('settings.immutable_invoices_enabled', false) ? Invoice::STATUS_DRAFT : Invoice::STATUS_PENDING,
+                'status' => Invoice::STATUS_PENDING,
             ]);
 
             $invoice->items()->create([
