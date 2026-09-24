@@ -5,6 +5,8 @@ namespace App\Models;
 use App\Classes\PDF;
 use App\Classes\Price;
 use App\Classes\Settings;
+use App\Enums\AdjustmentNoteStatus;
+use App\Enums\AdjustmentNoteType;
 use App\Enums\InvoiceTransactionStatus;
 use App\Models\Traits\HasProperties;
 use App\Observers\InvoiceObserver;
@@ -18,13 +20,15 @@ class Invoice extends Model implements Auditable
 {
     use HasFactory, HasProperties, Traits\Auditable;
 
+    public const STATUS_DRAFT = 'draft';
+
     public const STATUS_PENDING = 'pending';
 
     public const STATUS_PAID = 'paid';
 
     public const STATUS_CANCELLED = 'cancelled';
 
-    protected $fillable = ['number', 'user_id', 'currency_code', 'due_at', 'status'];
+    protected $fillable = ['number', 'user_id', 'currency_code', 'due_at', 'status', 'cancellation_reason'];
 
     protected $casts = [
         'due_at' => 'date',
@@ -32,6 +36,13 @@ class Invoice extends Model implements Auditable
 
     public bool $send_create_email = true;
 
+    public function createCancellationCreditNote($description = null): void {
+        $this->adjustmentNotes()->create([
+            'type' => AdjustmentNoteType::Credit->value,
+            'amount' => -1 * abs($this->total),
+            'description' => $description ?? 'Automatic credit note generated after overdue invoice cancellation.',
+        ]);
+    }
     /**
      * Total of the invoice.
      *
@@ -40,7 +51,23 @@ class Invoice extends Model implements Auditable
     public function total(): Attribute
     {
         return Attribute::make(
-            get: fn () => $this->items->sum(fn ($item) => $this->moneyToCents($item->price) * $item->quantity) / 100.0
+            get: fn () => (
+                $this->items->sum(
+                    fn ($item) => $this->moneyToCents($item->price) * $item->quantity
+                )
+                + $this->moneyToCents(
+                    $this->adjustmentNotes
+                        ->where('status', AdjustmentNoteStatus::Active->value)
+                        ->where('type', AdjustmentNoteType::Debit->value)
+                        ->sum('amount')
+                )
+                + $this->moneyToCents(
+                    $this->adjustmentNotes
+                        ->where('status', AdjustmentNoteStatus::Active->value)
+                        ->where('type', AdjustmentNoteType::Credit->value)
+                        ->sum('amount')
+                )
+            ) / 100.0
         );
     }
 
@@ -57,6 +84,29 @@ class Invoice extends Model implements Auditable
     }
 
     /**
+     * Current balance of the invoice, accounting for total + debit notes - credit notes - succeeded transactions (net of refunds).
+     */
+    public function currentBalance(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => $this->total
+                - $this->transactions->where('status', InvoiceTransactionStatus::Succeeded)->sum(function ($txn) {
+                    return $txn->amount - $txn->refunded_amount;
+                })
+        );
+    }
+
+    /**
+     * Formatted current balance of the invoice.
+     */
+    public function formattedCurrentBalance(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => new Price(['price' => $this->currentBalance, 'currency' => $this->currency, 'tax' => $this->tax])
+        );
+    }
+
+    /**
      * Formatted remaining amount of the invoice.
      */
     public function formattedRemaining(): Attribute
@@ -67,12 +117,20 @@ class Invoice extends Model implements Auditable
     }
 
     /**
-     * Remaining amount of the invoice.
+     * Remaining amount of the invoice, net of refunded amounts.
      */
     public function remaining(): Attribute
     {
         return Attribute::make(
-            get: fn () => ($this->moneyToCents($this->total) - $this->transactions->where('status', InvoiceTransactionStatus::Succeeded)->sum(fn ($transaction) => $this->moneyToCents($transaction->amount))) / 100.0
+            get: fn () => (
+                $this->moneyToCents($this->total)
+                - $this->transactions
+                    ->where('status', InvoiceTransactionStatus::Succeeded)
+                    ->sum(fn ($transaction) =>
+                        $this->moneyToCents($transaction->amount)
+                        - $this->moneyToCents($transaction->refunded_amount)
+                    )
+            ) / 100.0
         );
     }
 
@@ -96,7 +154,6 @@ class Invoice extends Model implements Auditable
                 ])
             );
         }
-
         return Attribute::make(
             get: fn () => Settings::tax($this->user)
         );
@@ -111,9 +168,9 @@ class Invoice extends Model implements Auditable
         }
 
         return Attribute::make(
-            get: fn () => $this->user->properties()->with('parent_property')->whereHas('parent_property', function ($query) {
+            get: fn () => $this->user?->properties()->with('parent_property')->whereHas('parent_property', function ($query) {
                 $query->where('show_on_invoice', true);
-            })->pluck('value', 'key')->toArray()
+            })->pluck('value', 'key')->toArray() ?? []
         );
     }
 
@@ -126,7 +183,7 @@ class Invoice extends Model implements Auditable
         }
 
         return Attribute::make(
-            get: fn () => $this->user->name
+            get: fn () => $this->user?->name ?? __('invoices.deleted_user')
         );
     }
 
@@ -161,6 +218,11 @@ class Invoice extends Model implements Auditable
     public function transactions()
     {
         return $this->hasMany(InvoiceTransaction::class);
+    }
+
+    public function adjustmentNotes()
+    {
+        return $this->hasMany(AdjustmentNote::class);
     }
 
     public function snapshot()

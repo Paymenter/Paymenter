@@ -6,6 +6,7 @@ use App\Attributes\ExtensionMeta;
 use App\Classes\Extension\Gateway;
 use App\Helpers\ExtensionHelper;
 use App\Models\Invoice;
+use App\Models\InvoiceTransaction;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
@@ -91,5 +92,30 @@ class Mollie extends Gateway
         if ($payment['status'] == 'paid') {
             ExtensionHelper::addPayment($payment['metadata']['invoice_id'], 'Mollie', $payment['amount']['value'], transactionId: $payment['id']);
         }
+    }
+
+    public function supportsRefunds(): bool
+    {
+        return true;
+    }
+
+    public function refund(InvoiceTransaction $transaction, $amount): bool
+    {
+        $paymentId = $transaction->transaction_id;
+
+        if (!$paymentId) {
+            throw new \Exception('Transaction has no Mollie payment ID.');
+        }
+
+        $data = [
+            'amount' => [
+                'currency' => $transaction->invoice->currency_code,
+                'value' => number_format($amount, 2, '.', ''),
+            ],
+        ];
+
+        $this->request('/v2/payments/' . $paymentId . '/refunds', 'post', $data);
+
+        return true;
     }
 }

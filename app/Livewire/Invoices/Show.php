@@ -44,7 +44,7 @@ class Show extends Component
         }
 
         // Load relations
-        $this->invoice->load('transactions', 'transactions.gateway', 'transactions.invoice');
+        $this->invoice->load('transactions', 'transactions.gateway', 'transactions.invoice', 'adjustmentNotes');
 
         if ($this->showPayModal && $this->invoice->status !== 'pending') {
             $this->showPayModal = false;

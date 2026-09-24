@@ -126,6 +126,13 @@ return [
                 'delete' => 'Delete Tax Rates',
                 'deleteAny' => 'Bulk Delete Tax Rates',
             ],
+            'adjustment_notes' => [
+                'create' => 'Create Adjustment Notes',
+                'update' => 'Update Adjustment Notes',
+                'viewAny' => 'View Adjustment Notes',
+                'delete' => 'Delete Adjustment Notes',
+                'deleteAny' => 'Bulk Delete Adjustment Notes',
+            ],
             'gateways' => [
                 'create' => 'Create Gateways',
                 'update' => 'Update Gateways',

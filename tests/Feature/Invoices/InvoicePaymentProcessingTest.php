@@ -17,7 +17,7 @@ class InvoicePaymentProcessingTest extends TestCase
     private function createInvoiceWithItem($total = 100.00)
     {
         $user = User::factory()->create();
-        $invoice = Invoice::factory()->create(['user_id' => $user->id]);
+        $invoice = Invoice::factory()->create(['user_id' => $user->id, 'status' => 'pending']);
 
         $invoice->items()->create([
             'description' => 'Test Item',
@@ -28,11 +28,20 @@ class InvoicePaymentProcessingTest extends TestCase
         return $invoice->fresh();
     }
 
-    public function test_invoice_starts_with_pending_status()
+    public function test_invoice_starts_with_draft_status()
     {
-        $invoice = $this->createInvoiceWithItem();
+        $user = User::factory()->create();
+        $invoice = Invoice::factory()->create(['user_id' => $user->id]);
 
-        $this->assertEquals('pending', $invoice->status);
+        $invoice->items()->create([
+            'description' => 'Test Item',
+            'quantity' => 1,
+            'price' => 100.00,
+        ]);
+
+        $invoice = $invoice->fresh();
+
+        $this->assertEquals('draft', $invoice->status);
         $this->assertGreaterThan(0, $invoice->total);
     }
 

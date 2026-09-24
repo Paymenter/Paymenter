@@ -33,9 +33,9 @@ class ShowInvoices extends ManageRelatedRecords
                 TextColumn::make('status')
                     ->label('Status')
                     // Make first letter uppercase
-                    ->formatStateUsing(fn (string $state): string => ucfirst($state))
+                    ->formatStateUsing(fn(string $state): string => ucfirst($state))
                     ->badge()
-                    ->color(fn (string $state): string => match ($state) {
+                    ->color(fn(string $state): string => match ($state) {
                         'paid' => 'success',
                         'pending' => 'warning',
                         default => 'danger',
@@ -51,7 +51,7 @@ class ShowInvoices extends ManageRelatedRecords
                     ]),
             ])
             ->recordActions([
-                ViewAction::make()->url(fn ($record) => InvoiceResource::getUrl('edit', ['record' => $record])),
+                ViewAction::make()->url(fn($record) => InvoiceResource::getUrl(config('settings.immutable_invoices_enabled', false) ? 'view' : 'edit', ['record' => $record])),
             ]);
     }
 }

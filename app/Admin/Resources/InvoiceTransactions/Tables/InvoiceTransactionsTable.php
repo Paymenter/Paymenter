@@ -18,7 +18,7 @@ class InvoiceTransactionsTable
         return $table
             ->columns([
                 TextColumn::make('invoice_id')
-                    ->url(fn (InvoiceTransaction $record): string => InvoiceResource::getUrl('edit', ['record' => $record->invoice_id]))
+                    ->url(fn(InvoiceTransaction $record): string => InvoiceResource::getUrl(config('settings.immutable_invoices_enabled', false) ? 'view' : 'edit', ['record' => $record->invoice_id]))
                     ->numeric()
                     ->sortable(),
                 TextColumn::make('gateway.name')
@@ -34,13 +34,13 @@ class InvoiceTransactionsTable
                 TextColumn::make('status')
                     ->sortable()
                     ->badge()
-                    ->color(fn (InvoiceTransaction $record) => match ($record->status) {
+                    ->color(fn(InvoiceTransaction $record) => match ($record->status) {
                         InvoiceTransactionStatus::Succeeded => 'success',
                         InvoiceTransactionStatus::Processing => 'warning',
                         InvoiceTransactionStatus::Failed => 'danger',
                         default => null,
                     })
-                    ->formatStateUsing(fn (InvoiceTransactionStatus $state): string => ucfirst($state->value))
+                    ->formatStateUsing(fn(InvoiceTransactionStatus $state): string => ucfirst($state->value))
                     ->label('Status'),
                 TextColumn::make('created_at')
                     ->dateTime()

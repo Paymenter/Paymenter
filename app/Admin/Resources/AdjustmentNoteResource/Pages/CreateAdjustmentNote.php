@@ -1,0 +1,16 @@
+<?php
+
+namespace App\Admin\Resources\AdjustmentNoteResource\Pages;
+
+use App\Admin\Resources\AdjustmentNoteResource;
+use Filament\Resources\Pages\CreateRecord;
+
+class CreateAdjustmentNote extends CreateRecord
+{
+    protected static string $resource = AdjustmentNoteResource::class;
+
+    protected function getRedirectUrl(): string
+    {
+        return $this->getResource()::getUrl('index');
+    }
+}
