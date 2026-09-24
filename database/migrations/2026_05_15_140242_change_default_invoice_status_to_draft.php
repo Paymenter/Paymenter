@@ -17,7 +17,7 @@ return new class extends Migration
 
             $table->string('cancellation_reason')->nullable()->default(null)->after('status');
 
-            $table->dropForeign('invoices_user_id_foreign');
+            $table->dropForeign(['user_id']);
 
             $table->foreignIdFor(User::class)
                 ->nullable()
@@ -43,9 +43,9 @@ return new class extends Migration
                 ->change();
 
             $table->foreign('user_id')
-                 ->references('id')
-                 ->on('users')
-                 ->cascadeOnDelete();
+                ->references('id')
+                ->on('users')
+                ->cascadeOnDelete();
 
             $table->dropColumn('cancellation_reason');
 
