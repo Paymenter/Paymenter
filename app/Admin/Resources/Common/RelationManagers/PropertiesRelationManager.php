@@ -3,6 +3,8 @@
 namespace App\Admin\Resources\Common\RelationManagers;
 
 use App\Models\CustomProperty;
+use App\Models\Service;
+use App\Support\ServiceAdminAuthorization;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\CreateAction;
 use Filament\Actions\DeleteAction;
@@ -15,6 +17,7 @@ use Filament\Schemas\Schema;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\TextInputColumn;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Model;
 
 class PropertiesRelationManager extends RelationManager
 {
@@ -35,6 +38,11 @@ class PropertiesRelationManager extends RelationManager
             ]);
     }
 
+    public function isReadOnly(): bool
+    {
+        return !$this->canWriteOwner();
+    }
+
     public function table(Table $table): Table
     {
         return $table
@@ -43,22 +51,50 @@ class PropertiesRelationManager extends RelationManager
                 TextColumn::make('name'),
                 TextColumn::make('parent_property.name'),
                 TextColumn::make('key'),
-                TextInputColumn::make('value'),
+                $this->isReadOnly()
+                    ? TextColumn::make('value')
+                    : TextInputColumn::make('value')
+                        ->updateStateUsing(function (Model $record, mixed $state): mixed {
+                            abort_unless($this->canWriteOwner(), 403);
+                            $record->update(['value' => $state]);
+
+                            return $state;
+                        }),
             ])
             ->filters([
                 //
             ])
             ->headerActions([
-                CreateAction::make(),
+                CreateAction::make()
+                    ->authorize(fn (): bool => $this->canWriteOwner()),
             ])
             ->recordActions([
-                EditAction::make(),
-                DeleteAction::make(),
+                EditAction::make()
+                    ->authorize(fn (): bool => $this->canWriteOwner()),
+                DeleteAction::make()
+                    ->authorize(fn (): bool => $this->canWriteOwner()),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
-                    DeleteBulkAction::make(),
+                    DeleteBulkAction::make()
+                        ->authorize(fn (): bool => $this->canWriteOwner()),
                 ]),
             ]);
+    }
+
+    protected function canWriteOwner(): bool
+    {
+        $owner = $this->getOwnerRecord();
+        $user = auth()->user();
+
+        if (!$owner instanceof Model || !$user) {
+            return false;
+        }
+
+        if ($owner instanceof Service) {
+            return ServiceAdminAuthorization::canUpdate($user, $owner);
+        }
+
+        return $user->can('update', $owner);
     }
 }
