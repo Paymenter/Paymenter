@@ -14,7 +14,7 @@ class ServiceObserver
     {
         if (blank($service->getRawOriginal('label'))) {
             $service->forceFill([
-                'label' => $service->product->name . ' #' . $service->id,
+                'label' => $service->baseLabel,
             ])->saveQuietly();
         }
         
