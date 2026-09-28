@@ -12,6 +12,12 @@ class ServiceObserver
      */
     public function created(Service $service): void
     {
+        if (blank($service->getRawOriginal('label'))) {
+            $service->forceFill([
+                'label' => $service->product->name . ' #' . $service->id,
+            ])->saveQuietly();
+        }
+        
         event(new ServiceEvent\Created($service));
     }
 
