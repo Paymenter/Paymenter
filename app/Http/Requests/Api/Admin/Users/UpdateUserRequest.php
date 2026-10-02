@@ -8,6 +8,12 @@ class UpdateUserRequest extends AdminApiRequest
 {
     protected $permission = 'users.update';
 
+    public function authorize(): bool
+    {
+        return parent::authorize()
+            && (!$this->exists('role_id') || $this->hasApiPermission('admin.roles.update'));
+    }
+
     public function rules(): array
     {
         return [

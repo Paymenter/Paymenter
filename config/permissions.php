@@ -251,6 +251,7 @@ return [
             ],
             'roles' => [
                 'view' => 'View Roles',
+                'update' => 'Update Roles',
             ],
         ],
     ],
