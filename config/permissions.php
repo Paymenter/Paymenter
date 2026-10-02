@@ -16,6 +16,15 @@ return [
                 'delete' => 'Delete Users',
                 'impersonate' => 'Impersonate Users',
             ],
+            'credits' => [
+                'create' => 'Create Credits',
+                'update' => 'Update Credits',
+                'viewAny' => 'View Credits',
+                'delete' => 'Delete Credits',
+            ],
+            'billing_agreements' => [
+                'viewAny' => 'View Billing Agreements',
+            ],
             'invoices' => [
                 'create' => 'Create Invoices',
                 'update' => 'Update Invoices',
