@@ -23,6 +23,9 @@ class CategoryObserver
         }
 
         $category->full_slug = $full_slug;
+
+        // Place new categories at the end of their level instead of in front of it
+        $category->sort ??= (int) Category::where('parent_id', $category->parent_id)->max('sort') + 1;
     }
 
     /**
