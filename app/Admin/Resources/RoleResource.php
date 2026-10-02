@@ -77,7 +77,7 @@ class RoleResource extends Resource
 
     public static function canEdit(Model $record): bool
     {
-        return $record->id !== 1;
+        return $record->id !== 1 && parent::canEdit($record);
     }
 
     public static function getPages(): array
