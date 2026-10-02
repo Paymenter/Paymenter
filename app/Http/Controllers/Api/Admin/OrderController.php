@@ -49,7 +49,7 @@ class OrderController extends ApiController
         $order = Order::create($request->validated());
 
         // Return the created order as a JSON response
-        return new OrderResource($order);
+        return new OrderResource($this->loadAllowedIncludes($order, self::INCLUDES));
     }
 
     /**
@@ -74,7 +74,7 @@ class OrderController extends ApiController
         $order->update($request->validated());
 
         // Return the updated order as a JSON response
-        return new OrderResource($order);
+        return new OrderResource($this->loadAllowedIncludes($order, self::INCLUDES));
     }
 
     /**
