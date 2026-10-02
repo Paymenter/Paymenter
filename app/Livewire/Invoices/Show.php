@@ -6,6 +6,7 @@ use App\Classes\PDF;
 use App\Enums\InvoiceTransactionStatus;
 use App\Helpers\ExtensionHelper;
 use App\Livewire\Component;
+use App\Models\Credit;
 use App\Models\Gateway;
 use App\Models\Invoice;
 use App\Models\Service;
@@ -100,6 +101,10 @@ class Show extends Component
         }
 
         if ($this->selectedMethod === 'credit') {
+            if ($this->invoice->items->contains(fn ($item) => $item->reference_type === Credit::class)) {
+                return $this->notify(__('This invoice cannot be paid with credits.'), 'error');
+            }
+
             return $this->payWithCredit();
         }
 
