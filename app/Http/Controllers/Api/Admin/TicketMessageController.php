@@ -49,7 +49,7 @@ class TicketMessageController extends ApiController
         $ticketMessage = TicketMessage::create($request->validated());
 
         // Return the created ticketMessage as a JSON response
-        return new TicketMessageResource($ticketMessage);
+        return new TicketMessageResource($this->loadAllowedIncludes($ticketMessage, self::INCLUDES));
     }
 
     /**
