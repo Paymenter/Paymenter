@@ -18,8 +18,6 @@ use Spatie\QueryBuilder\QueryBuilder;
 class InvoiceItemController extends ApiController
 {
     protected const INCLUDES = [
-        'gateway',
-        'reference',
         'invoice',
     ];
 
@@ -50,7 +48,7 @@ class InvoiceItemController extends ApiController
         $invoiceItem = InvoiceItem::create($request->validated());
 
         // Return the created invoice as a JSON response
-        return new InvoiceItemResource($invoiceItem);
+        return new InvoiceItemResource($this->loadAllowedIncludes($invoiceItem, self::INCLUDES));
     }
 
     /**
@@ -75,7 +73,7 @@ class InvoiceItemController extends ApiController
         $invoiceItem->update($request->validated());
 
         // Return the updated invoice item as a JSON response
-        return new InvoiceItemResource($invoiceItem);
+        return new InvoiceItemResource($this->loadAllowedIncludes($invoiceItem, self::INCLUDES));
     }
 
     /**

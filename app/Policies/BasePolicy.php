@@ -3,12 +3,16 @@
 namespace App\Policies;
 
 use App\Models\User;
+use Filament\Facades\Filament;
 
 class BasePolicy
 {
-    protected function adminPermission(User $user, $permission): bool
+    protected function adminPermission(User $user, string $permission, bool $orCondition = false): bool
     {
-        // Only do this if the request starts with /admin
-        return (request()->is('admin/*') || request()->routeIs('paymenter.livewire.update')) && $user->hasPermission($permission);
+        $isAdminRequest = Filament::getCurrentPanel()?->getId() === 'admin';
+
+        return $isAdminRequest
+            ? $user->hasPermission($permission)
+            : $orCondition;
     }
 }

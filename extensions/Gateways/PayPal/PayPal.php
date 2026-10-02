@@ -260,22 +260,42 @@ class PayPal extends Gateway
         return view('gateways.paypal::pay', ['invoice' => $invoice, 'total' => $total, 'order' => $order ?? null, 'clientId' => $this->config('client_id')]);
     }
 
-    public function capture(Request $request)
+    public function capture(Invoice $invoice, string $orderID)
     {
-        if (!$request->has('orderID')) {
+        // Validate the order ID format
+        if (!preg_match('/^[A-Z0-9-]+$/', $orderID)) {
             abort(400);
         }
-        $orderID = $request->input('orderID');
         $url = $this->config('test_mode') ? 'https://api-m.sandbox.paypal.com' : 'https://api-m.paypal.com';
+
         // First check if the order is already captured
         $order = $this->request('get', $url . '/v2/checkout/orders/' . $orderID);
+
+        // Verify if the invoice id matches the one from the order
+        if (!isset($order->purchase_units[0]->invoice_id) || $order->purchase_units[0]->invoice_id != $invoice->id) {
+            abort(400, 'PayPal order is not associated with an invoice');
+        }
+
         if ($order->status === 'COMPLETED') {
             return $order;
+        }
+
+        if ($order->status !== 'APPROVED') {
+            abort(400, 'PayPal order is not approved for capture');
+        }
+
+        // Verify currency matches the invoice
+        if ($order->purchase_units[0]->amount->currency_code !== $invoice->currency_code) {
+            abort(400, 'PayPal order currency does not match invoice currency');
         }
 
         $response = $this->request('post', $url . '/v2/checkout/orders/' . $orderID . '/capture', [
             'intent' => 'CAPTURE',
         ]);
+
+        if (($response->status ?? null) !== 'COMPLETED' || !isset($response->purchase_units[0]->payments->captures[0])) {
+            abort(400, 'Failed to capture PayPal order');
+        }
 
         ExtensionHelper::addPayment($order->purchase_units[0]->invoice_id, 'PayPal', $response->purchase_units[0]->payments->captures[0]->amount->value, $response->purchase_units[0]->payments->captures[0]->seller_receivable_breakdown->paypal_fee->value, $response->purchase_units[0]->payments->captures[0]->id);
 
@@ -330,8 +350,13 @@ class PayPal extends Gateway
         } elseif ($body['event_type'] === 'PAYMENT.CAPTURE.COMPLETED' && isset($body['resource']['supplementary_data']['related_ids']['order_id'])) {
             $orderID = $body['resource']['supplementary_data']['related_ids']['order_id'];
             $order = $this->request('get', ($this->config('test_mode') ? 'https://api-m.sandbox.paypal.com' : 'https://api-m.paypal.com') . '/v2/checkout/orders/' . $orderID);
+
             if (isset($order->purchase_units[0]->invoice_id)) {
-                ExtensionHelper::addPayment($order->purchase_units[0]->invoice_id, 'PayPal', $order->purchase_units[0]->payments->captures[0]->amount->value, $order->purchase_units[0]->payments->captures[0]->seller_receivable_breakdown->paypal_fee->value, $body['resource']['id']);
+                // Verify that the currency is the same as the invoice
+                $invoice = Invoice::find($order->purchase_units[0]->invoice_id);
+                if ($invoice && $invoice->currency_code === $order->purchase_units[0]->payments->captures[0]->amount->currency_code) {
+                    ExtensionHelper::addPayment($order->purchase_units[0]->invoice_id, 'PayPal', $order->purchase_units[0]->payments->captures[0]->amount->value, $order->purchase_units[0]->payments->captures[0]->seller_receivable_breakdown->paypal_fee->value, $body['resource']['id']);
+                }
             }
         }
 

@@ -20,7 +20,7 @@ class InvoicePolicy extends BasePolicy
      */
     public function view(User $user, Invoice $invoice): bool
     {
-        return $this->adminPermission($user, 'admin.invoices.view') || $invoice->user_id === $user->id;
+        return $this->adminPermission($user, 'admin.invoices.view', $invoice->user_id === $user->id);
     }
 
     /**
@@ -40,7 +40,7 @@ class InvoicePolicy extends BasePolicy
             return $this->adminPermission($user, 'admin.invoices.update');
         }
 
-        $canEdit = $this->adminPermission($user, 'admin.invoices.update') || $invoice->user_id === $user->id;
+        $canEdit = $this->adminPermission($user, 'admin.invoices.update', $invoice->user_id === $user->id);
 
         if (!config('settings.immutable_invoices_enabled', false)) {
             return $canEdit;
@@ -56,13 +56,13 @@ class InvoicePolicy extends BasePolicy
     /**
      * Determine whether the user can delete the model.
      */
-    public function delete(User $user, Invoice $model): bool
+    public function delete(User $user, Invoice $invoice): bool
     {
         return $user->hasPermission('admin.invoices.delete');
     }
 
     /**
-     * Determine whether the user can delete the model.
+     * Determine whether the user can delete any models.
      */
     public function deleteAny(User $user): bool
     {
