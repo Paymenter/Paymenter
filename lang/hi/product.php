@@ -20,6 +20,7 @@ return [
 
     'in_stock' => 'स्टॉक में उपलब्ध',
     'out_of_stock' => 'उत्पाद :product स्टॉक से बाहर है',
+    'not_available' => ':product is not available in your currency',
     'user_limit' => 'आपने :product की सीमा तक पहुंच प्राप्त कर ली है',
     'payment_method' => 'भुगतान विधि',
     'use_credits' => 'क्रेडिट का उपयोग करें',

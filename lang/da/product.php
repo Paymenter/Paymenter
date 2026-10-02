@@ -20,6 +20,7 @@ return [
 
     'in_stock' => 'På lager',
     'out_of_stock' => 'Produkt :produkt er ikke på lager',
+    'not_available' => ':product is not available in your currency',
     'user_limit' => 'Du har nået grænsen på :produkt',
     'payment_method' => 'Betalingsmetode',
     'use_credits' => 'Brug kredit',

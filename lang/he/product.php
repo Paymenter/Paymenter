@@ -20,6 +20,7 @@ return [
 
     'in_stock' => 'זמין במלאי',
     'out_of_stock' => 'המוצר :product אינו במלאי',
+    'not_available' => ':product is not available in your currency',
     'user_limit' => 'לא ניתן לרכוש עוד יחידות של :product',
     'payment_method' => 'אמצעי תשלום',
     'use_credits' => 'שימוש בנקודות',

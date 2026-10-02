@@ -48,13 +48,13 @@ return [
     'apply_credit' => 'Aplicar Crédito ( :amount )',
     'no_invoices' => 'Nenhuma fatura encontrada.',
     'paid_with_credits' => 'Pagar com Créditos',
-    'available_credits' => 'Available Credits: :amount',
-    'account_credits' => 'Account Credits',
+    'available_credits' => 'Créditos disponíveis: :amount',
+    'account_credits' => 'Créditos da Conta',
     'one_time_payment' => 'Pagamento Único',
     'use_for_recurring' => 'Usar para Pagamentos Recorrentes',
     'pay_now' => 'Pagar Agora',
     'apply_credits_and_continue' => 'Aplicar Créditos e Continuar',
-    'apply_credits_and_pay' => 'Apply Credits and Pay',
-    'amount_due' => 'Amount Due: :amount',
+    'apply_credits_and_pay' => 'Aplicar Créditos e Pagar',
+    'amount_due' => 'Valor Devido: :amount',
 
 ];
