@@ -267,12 +267,17 @@ class CronJob extends Command
             return;
         }
         $user = $invoice->user;
-        $credits = $user->credits()->where('currency_code', $invoice->currency_code)->first();
-        if ($invoice->remaining > 0 && $credits && $credits->amount >= $invoice->remaining) {
-            $credits->amount -= $invoice->remaining;
+        $credits = $user->credits()
+            ->where('currency_code', $invoice->currency_code)
+            ->lockForUpdate()
+            ->first();
+        $remaining = $invoice->fresh()->remaining;
+
+        if ($remaining > 0 && $credits && $credits->amount >= $remaining) {
+            $credits->amount -= $remaining;
             $credits->save();
 
-            ExtensionHelper::addPayment($invoice->id, null, amount: $invoice->remaining, isCreditTransaction: true);
+            ExtensionHelper::addPayment($invoice->id, null, amount: $remaining, isCreditTransaction: true);
         }
     }
 
