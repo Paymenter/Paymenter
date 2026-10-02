@@ -28,10 +28,11 @@
                     async onApprove(data, actions) {
                         try {
                             const response = await fetch(
-                                `{{ route('extensions.gateways.paypal.capture') }}?orderID=${data.orderID}`, {
+                                `{{ route('extensions.gateways.paypal.capture', ['invoice' => $invoice, 'orderID' => $order->id]) }}`, {
                                     method: "POST",
                                     headers: {
                                         "Content-Type": "application/json",
+                                        "X-CSRF-TOKEN": "{{ csrf_token() }}"
                                     },
                                 });
 
