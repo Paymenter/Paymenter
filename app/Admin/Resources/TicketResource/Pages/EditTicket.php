@@ -150,7 +150,21 @@ class EditTicket extends EditRecord
                     ->label('Service')
                     ->url(fn ($record) => $record->service ? ServiceResource::getUrl('edit', ['record' => $record->service]) : null)
                     ->placeholder('No service')
-                    ->formatStateUsing(fn ($record) => "{$record->service->product->name} - " . ucfirst($record->service->status)),
+                    ->formatStateUsing(function ($record) {
+                        if (! $record->service) {
+                            return 'No service';
+                        }
+                        
+                        $label = "{$record->service->product->name}";
+                        
+                        if ($record->service->label) {
+                            $label .= " ({$record->service->label})";
+                        }
+                        
+                        $label .= " (" . ucfirst($record->service->status) . ")";
+
+                        return $label;
+                    }),
 
                 Actions::make([
                     Action::make('Edit')
@@ -191,7 +205,17 @@ class EditTicket extends EditRecord
                                         ->relationship('service', 'id', function (Builder $query, Get $get) {
                                             $query->where('user_id', $get('user_id'));
                                         })
-                                        ->getOptionLabelFromRecordUsing(fn ($record) => "{$record->product->name} - " . ucfirst($record->status))
+                                        ->getOptionLabelFromRecordUsing(function ($record) {
+                                            $label = "{$record->product->name}";
+                                            
+                                            if ($record->label) {
+                                                $label .= " ({$record->label})";
+                                            }
+                                            
+                                            $label .= " (" . ucfirst($record->status) . ")";
+
+                                            return $label;
+                                        })
                                         ->disabled(fn (Get $get) => !$get('user_id')),
                                 ]);
                         })
