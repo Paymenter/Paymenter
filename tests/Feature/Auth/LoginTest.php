@@ -3,6 +3,7 @@
 namespace Tests\Feature\Auth;
 
 use App\Livewire\Auth\Login;
+use App\Models\NotificationTemplate;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Hash;
@@ -54,6 +55,35 @@ class LoginTest extends TestCase
             ->assertRedirect(route('dashboard'));
 
         $this->assertAuthenticated();
+    }
+
+    /**
+     * Test if a login from a new ip sends the in-app alert to a user who opted in
+     */
+    public function test_can_login_with_in_app_new_login_alert_enabled()
+    {
+        $user = User::factory()->create([
+            'email' => 'tests@paymenter.org',
+            'password' => Hash::make('password'),
+        ]);
+
+        $user->notificationsPreferences()->create([
+            'notification_template_id' => NotificationTemplate::where('key', 'new_login_detected')->value('id'),
+            'mail_enabled' => true,
+            'in_app_enabled' => true,
+        ]);
+
+        Livewire::test(Login::class)
+            ->set('email', 'tests@paymenter.org')
+            ->set('password', 'password')
+            ->call('submit')
+            ->assertHasNoErrors()
+            ->assertRedirect(route('dashboard'));
+
+        $this->assertDatabaseHas('notifications', [
+            'user_id' => $user->id,
+            'url' => route('account.security'),
+        ]);
     }
 
     /**

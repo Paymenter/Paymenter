@@ -30,7 +30,7 @@ class EmailTemplateSeeder extends Seeder
             'mail_enabled' => 'force',
             'in_app_enabled' => 'choice_off',
             'edit_preference_message' => 'Alert me about new login attempts',
-            'in_app_url' => '{{ route("profile.security") }}',
+            'in_app_url' => '{{ route("account.security") }}',
         ],
         'new_invoice_created' => [
             'subject' => 'New invoice created',
