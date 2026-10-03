@@ -19,6 +19,7 @@ class InvoiceTransaction extends Model implements Auditable
         'invoice_id',
         'gateway_id',
         'amount',
+        'refunded_amount',
         'fee',
         'transaction_id',
         'status',
@@ -27,6 +28,7 @@ class InvoiceTransaction extends Model implements Auditable
 
     protected $casts = [
         'amount' => 'decimal:2',
+        'refunded_amount' => 'decimal:2',
         'fee' => 'decimal:2',
         'status' => InvoiceTransactionStatus::class,
     ];
@@ -42,12 +44,22 @@ class InvoiceTransaction extends Model implements Auditable
     }
 
     /**
+     * Amount that is still refundable for this transaction.
+     */
+    public function refundableAmount(): Attribute
+    {
+        return Attribute::make(
+            get: fn() => $this->amount - $this->refunded_amount
+        );
+    }
+
+    /**
      * Formatted remaining amount of the invoice.
      */
     public function formattedFee(): Attribute
     {
         return Attribute::make(
-            get: fn () => new Price(['price' => $this->fee, 'currency' => $this->invoice->currency])
+            get: fn() => new Price(['price' => $this->fee, 'currency' => $this->invoice->currency])
         );
     }
 
@@ -57,7 +69,27 @@ class InvoiceTransaction extends Model implements Auditable
     public function formattedAmount(): Attribute
     {
         return Attribute::make(
-            get: fn () => new Price(['price' => $this->amount, 'currency' => $this->invoice->currency])
+            get: fn() => new Price(['price' => $this->amount, 'currency' => $this->invoice->currency])
+        );
+    }
+
+    /**
+     * Formatted refunded amount of the invoice.
+     */
+    public function formattedRefundedAmount(): Attribute
+    {
+        return Attribute::make(
+            get: fn() => new Price(['price' => $this->refunded_amount, 'currency' => $this->invoice->currency])
+        );
+    }
+
+    /**
+     * Formatted refundable amount of the invoice.
+     */
+    public function formattedRefundableAmount(): Attribute
+    {
+        return Attribute::make(
+            get: fn() => new Price(['price' => $this->refundable_amount, 'currency' => $this->invoice->currency])
         );
     }
 }

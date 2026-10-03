@@ -88,6 +88,7 @@ class Credits extends Component
                 'user_id' => Auth::id(),
                 'currency_code' => $this->currency,
                 'due_at' => now(),
+                'status' => Invoice::STATUS_PENDING,
             ]);
 
             $invoice->items()->create([
