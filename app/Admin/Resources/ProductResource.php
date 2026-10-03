@@ -34,6 +34,7 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Str;
 use Livewire\Component;
@@ -322,7 +323,12 @@ class ProductResource extends Resource
                 return $query
                     ->orderBy('sort', 'asc');
             })
-            ->defaultGroup('category.name');
+            ->defaultGroup('category.name')
+            // The sort of a product is scoped to its category, so the records may only be dragged
+            // once the list has been narrowed down to a single one. The reorder action of the page
+            // is what selects that category.
+            ->reorderable('sort', fn (Component $livewire): bool => Auth::user()->hasPermission('admin.products.update')
+                && filled($livewire->tableFilters['category']['value'] ?? null));
     }
 
     public static function getPages(): array
