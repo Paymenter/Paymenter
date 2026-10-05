@@ -3,6 +3,8 @@
 namespace Paymenter\Extensions\Others\Affiliates\Listeners;
 
 use App\Events\User\Created;
+use Filament\Facades\Filament;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cookie;
 use Paymenter\Extensions\Others\Affiliates\Models\Affiliate;
 
@@ -21,6 +23,10 @@ class IncreamentAffiliateSignups
      */
     public function handle(Created $event): void
     {
+        if (Filament::getCurrentPanel()?->getId() === 'admin' || Auth::check()) {
+            return;
+        }
+
         $referral_code = Cookie::get('referred_by');
 
         /** @var Affiliate */
