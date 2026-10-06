@@ -48,6 +48,7 @@ class AdjustmentNoteResource extends Resource
                     ->required()
                     ->searchable()
                     ->preload()
+                    ->disabledOn('edit')
                     ->placeholder('Select an invoice'),
                 TextInput::make('number')
                     ->label('Number')
