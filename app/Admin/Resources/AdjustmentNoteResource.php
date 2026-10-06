@@ -26,7 +26,9 @@ use Illuminate\Database\Eloquent\Model;
 class AdjustmentNoteResource extends Resource
 {
     protected static ?string $model = AdjustmentNote::class;
+
     protected static ?string $cluster = InvoiceCluster::class;
+
     protected static string|\BackedEnum|null $navigationIcon = 'ri-scales-line';
 
     protected static string|\BackedEnum|null $activeNavigationIcon = 'ri-scales-fill';
@@ -41,8 +43,8 @@ class AdjustmentNoteResource extends Resource
             ->components([
                 Select::make('invoice_id')
                     ->label('Invoice')
-                    ->relationship('invoice', modifyQueryUsing: fn(Builder $query) => $query->with('user')->orderByDesc('id'))
-                    ->getOptionLabelFromRecordUsing(fn(Model $record) => ($record->number ? "#$record->number" : $record->id) . ' (' . ($record->user?->email ?? __('invoices.deleted_user')) . ')')
+                    ->relationship('invoice', modifyQueryUsing: fn (Builder $query) => $query->with('user')->orderByDesc('id'))
+                    ->getOptionLabelFromRecordUsing(fn (Model $record) => ($record->number ? "#$record->number" : $record->id) . ' (' . ($record->user?->email ?? __('invoices.deleted_user')) . ')')
                     ->required()
                     ->searchable()
                     ->preload()
@@ -98,11 +100,11 @@ class AdjustmentNoteResource extends Resource
                 TextColumn::make('type')
                     ->label('Type')
                     ->badge()
-                    ->color(fn(string $state): string => match ($state) {
+                    ->color(fn (string $state): string => match ($state) {
                         'credit' => 'success',
                         'debit' => 'danger',
                     })
-                    ->formatStateUsing(fn(string $state): string => ucfirst($state))
+                    ->formatStateUsing(fn (string $state): string => ucfirst($state))
                     ->sortable(),
                 TextColumn::make('formattedAmount')
                     ->label('Amount')
@@ -110,11 +112,11 @@ class AdjustmentNoteResource extends Resource
                 TextColumn::make('status')
                     ->label('Status')
                     ->badge()
-                    ->color(fn($state): string => match ($state instanceof AdjustmentNoteStatus ? $state->value : $state) {
+                    ->color(fn ($state): string => match ($state instanceof AdjustmentNoteStatus ? $state->value : $state) {
                         AdjustmentNoteStatus::Active->value => 'success',
                         AdjustmentNoteStatus::Voided->value => 'danger',
                     })
-                    ->formatStateUsing(fn($state): string => $state instanceof AdjustmentNoteStatus ? $state->value : ucfirst($state))
+                    ->formatStateUsing(fn ($state): string => $state instanceof AdjustmentNoteStatus ? $state->value : ucfirst($state))
                     ->sortable(),
                 TextColumn::make('description')
                     ->label('Description')
@@ -137,8 +139,6 @@ class AdjustmentNoteResource extends Resource
                 ]),
             ]);
     }
-
-
 
     public static function shouldRegisterNavigation(): bool
     {

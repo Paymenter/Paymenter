@@ -829,7 +829,7 @@ class Stripe extends Gateway
         $paymentIntentId = $transaction->transaction_id;
 
         if (!$paymentIntentId) {
-            throw new \Exception('Transaction has no Stripe payment intent ID.');
+            throw new Exception('Transaction has no Stripe payment intent ID.');
         }
 
         $refundData = [

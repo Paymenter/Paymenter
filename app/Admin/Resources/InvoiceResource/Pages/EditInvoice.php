@@ -14,7 +14,7 @@ class EditInvoice extends EditRecord
 {
     protected static string $resource = InvoiceResource::class;
 
-    public function mount(int | string $record): void
+    public function mount(int|string $record): void
     {
         parent::mount($record);
 
@@ -31,7 +31,7 @@ class EditInvoice extends EditRecord
                 ->action(function (Invoice $record) {
                     $this->changeInvoiceStatusToPending($record);
                 })
-                ->visible(fn(Invoice $record): bool => $record->status === Invoice::STATUS_DRAFT)
+                ->visible(fn (Invoice $record): bool => $record->status === Invoice::STATUS_DRAFT)
                 ->requiresConfirmation()
                 ->color('success')
                 ->icon('heroicon-o-check-circle')

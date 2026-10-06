@@ -6,8 +6,8 @@ use App\Events\AdjustmentNote\Creating as AdjustmentNoteCreating;
 use App\Events\Invoice\Creating;
 use App\Events\Invoice\Updating;
 use App\Models\AdjustmentNote;
-use App\Models\Setting;
 use App\Models\Invoice;
+use App\Models\Setting;
 use Illuminate\Support\Facades\DB;
 
 class InvoiceNumberListener

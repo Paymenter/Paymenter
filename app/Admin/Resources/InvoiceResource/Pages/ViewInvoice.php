@@ -6,23 +6,23 @@ use App\Admin\Resources\InvoiceResource;
 use App\Admin\Resources\InvoiceResource\RelationManagers\AdjustmentNotesRelationManager;
 use App\Admin\Resources\InvoiceResource\RelationManagers\TransactionsRelationManager;
 use App\Admin\Resources\ServiceResource;
+use App\Classes\PDF;
 use App\Models\Invoice;
 use App\Models\Service;
 use App\Models\ServiceUpgrade;
 use Filament\Actions\Action;
 use Filament\Forms\Components\TextInput;
-use Filament\Resources\Pages\ViewRecord;
-use App\Classes\PDF;
-use Filament\Schemas\Components\Section;
-use Filament\Infolists\Components\TextEntry;
 use Filament\Infolists\Components\RepeatableEntry;
+use Filament\Infolists\Components\TextEntry;
+use Filament\Resources\Pages\ViewRecord;
+use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 
 class ViewInvoice extends ViewRecord
 {
     protected static string $resource = InvoiceResource::class;
 
-    public function mount(int | string $record): void
+    public function mount(int|string $record): void
     {
         parent::mount($record);
 
@@ -44,13 +44,13 @@ class ViewInvoice extends ViewRecord
                         TextEntry::make('status')
                             ->label('Status')
                             ->badge()
-                            ->color(fn(string $state): string => match ($state) {
+                            ->color(fn (string $state): string => match ($state) {
                                 'paid' => 'success',
                                 'pending' => 'warning',
                                 'draft' => 'gray',
                                 default => 'danger',
                             })
-                            ->formatStateUsing(fn(string $state): string => ucfirst($state)),
+                            ->formatStateUsing(fn (string $state): string => ucfirst($state)),
                         TextEntry::make('currency.code')
                             ->label('Currency'),
                         TextEntry::make('created_at')
@@ -72,13 +72,13 @@ class ViewInvoice extends ViewRecord
                             ->schema([
                                 TextEntry::make('description')
                                     ->label('Description')
-                                    ->url(fn($record) => in_array($record->reference_type, [Service::class, ServiceUpgrade::class])
+                                    ->url(fn ($record) => in_array($record->reference_type, [Service::class, ServiceUpgrade::class])
                                         ? ServiceResource::getUrl('edit', ['record' => $record->reference_type == Service::class ? $record->reference_id : $record->reference->service_id])
                                         : null)
-                                    ->color(fn($record) => in_array($record->reference_type, [Service::class, ServiceUpgrade::class]) ? 'primary' : null),
+                                    ->color(fn ($record) => in_array($record->reference_type, [Service::class, ServiceUpgrade::class]) ? 'primary' : null),
                                 TextEntry::make('price')
                                     ->label('Price')
-                                    ->money(fn($record) => $record->invoice->currency_code ?? 'USD'),
+                                    ->money(fn ($record) => $record->invoice->currency_code ?? 'USD'),
                                 TextEntry::make('quantity')
                                     ->label('Quantity'),
                             ])
@@ -106,7 +106,7 @@ class ViewInvoice extends ViewRecord
                         'cancellation_reason' => $data['cancellation_reason'],
                     ]);
                 })
-                ->visible(fn(Invoice $invoice): bool => $invoice->status !== Invoice::STATUS_CANCELLED),
+                ->visible(fn (Invoice $invoice): bool => $invoice->status !== Invoice::STATUS_CANCELLED),
             Action::make('pdf')
                 ->label('Download PDF')
                 ->action(function (Invoice $invoice) {
@@ -121,7 +121,7 @@ class ViewInvoice extends ViewRecord
     {
         return [
             TransactionsRelationManager::class,
-            AdjustmentNotesRelationManager::class
+            AdjustmentNotesRelationManager::class,
         ];
     }
 }

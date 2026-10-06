@@ -78,7 +78,7 @@ class InvoiceResource extends Resource
                         'paid' => 'Paid',
                         'pending' => 'Pending',
                         'draft' => 'Draft',
-                        'cancelled' => 'Cancelled'
+                        'cancelled' => 'Cancelled',
                     ])
                     ->default(fn (): string => config('settings.immutable_invoices_enabled', false) ? Invoice::STATUS_DRAFT : Invoice::STATUS_PENDING)
                     ->placeholder('Select the status of the invoice'),
@@ -100,8 +100,8 @@ class InvoiceResource extends Resource
                         TextInput::make('price')
                             ->label('Price')
                             // Grab invoice currency
-                            ->prefix(fn(Get $get): ?string => Currency::where('code', $get('../../currency_code'))->first()?->prefix)
-                            ->suffix(fn(Get $get): ?string => Currency::where('code', $get('../../currency_code'))->first()?->suffix)
+                            ->prefix(fn (Get $get): ?string => Currency::where('code', $get('../../currency_code'))->first()?->prefix)
+                            ->suffix(fn (Get $get): ?string => Currency::where('code', $get('../../currency_code'))->first()?->suffix)
                             ->required()
                             ->numeric()
                             ->mask(RawJs::make(
@@ -124,7 +124,7 @@ class InvoiceResource extends Resource
                                         return ServiceResource::getUrl('edit', ['record' => $get('reference_id')]);
                                     })
                                     ->label('View Service')
-                                    ->hidden(fn(Get $get): bool => !in_array($get('reference_type'), [Service::class, ServiceUpgrade::class]))
+                                    ->hidden(fn (Get $get): bool => !in_array($get('reference_type'), [Service::class, ServiceUpgrade::class]))
                             )
                             ->placeholder('Enter the description of the product'),
                         Hidden::make('reference_type'),
@@ -147,13 +147,13 @@ class InvoiceResource extends Resource
                     ->sortable(),
                 TextColumn::make('user.name')
                     ->label('User')
-                    ->searchable(true, fn(Builder $query, string $search) => $query->whereHas('user', fn(Builder $query) => $query->where('first_name', 'like', "%$search%")->orWhere('last_name', 'like', "%$search%"))),
+                    ->searchable(true, fn (Builder $query, string $search) => $query->whereHas('user', fn (Builder $query) => $query->where('first_name', 'like', "%$search%")->orWhere('last_name', 'like', "%$search%"))),
                 TextColumn::make('status')
                     ->label('Status')
                     // Make first letter uppercase
-                    ->formatStateUsing(fn(string $state): string => ucfirst($state))
+                    ->formatStateUsing(fn (string $state): string => ucfirst($state))
                     ->badge()
-                    ->color(fn(string $state): string => match ($state) {
+                    ->color(fn (string $state): string => match ($state) {
                         'paid' => 'success',
                         'pending' => 'warning',
                         default => 'danger',
@@ -185,7 +185,7 @@ class InvoiceResource extends Resource
             ])
             ->recordActions([
                 ViewAction::make()
-                    ->visible(fn(): bool => config('settings.immutable_invoices_enabled', false)),
+                    ->visible(fn (): bool => config('settings.immutable_invoices_enabled', false)),
                 EditAction::make(),
                 Action::make('cancel')
                     ->label('Cancel')
@@ -203,7 +203,7 @@ class InvoiceResource extends Resource
                             'cancellation_reason' => $data['cancellation_reason'],
                         ]);
                     })
-                    ->visible(fn(Invoice $record): bool => auth()->user()->can('update', Invoice::class) && !in_array($record->status, [Invoice::STATUS_CANCELLED, Invoice::STATUS_PAID])),
+                    ->visible(fn (Invoice $record): bool => auth()->user()->can('update', Invoice::class) && !in_array($record->status, [Invoice::STATUS_CANCELLED, Invoice::STATUS_PAID])),
             ]);
     }
 

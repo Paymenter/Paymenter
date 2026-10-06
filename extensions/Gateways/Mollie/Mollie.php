@@ -104,7 +104,7 @@ class Mollie extends Gateway
         $paymentId = $transaction->transaction_id;
 
         if (!$paymentId) {
-            throw new \Exception('Transaction has no Mollie payment ID.');
+            throw new Exception('Transaction has no Mollie payment ID.');
         }
 
         $data = [

@@ -143,13 +143,13 @@ class Settings
                     'name' => 'captcha_site_key',
                     'label' => 'Captcha Site Key',
                     'type' => 'text',
-                    'required' => fn(Get $get) => $get('captcha') && $get('captcha') !== 'disabled',
+                    'required' => fn (Get $get) => $get('captcha') && $get('captcha') !== 'disabled',
                 ],
                 [
                     'name' => 'captcha_secret',
                     'label' => 'Captcha Secret',
                     'type' => 'text',
-                    'required' => fn(Get $get) => $get('captcha') && $get('captcha') !== 'disabled',
+                    'required' => fn (Get $get) => $get('captcha') && $get('captcha') !== 'disabled',
                 ],
 
                 [
@@ -287,7 +287,7 @@ class Settings
                     'name' => 'mail_host',
                     'label' => 'Mail Host',
                     'type' => 'text',
-                    'required' => fn(Get $get) => !$get('mail_disable'),
+                    'required' => fn (Get $get) => !$get('mail_disable'),
                     'override' => 'mail.mailers.smtp.host',
                     'action' => SendTestEmailAction::class,
                 ],
@@ -295,21 +295,21 @@ class Settings
                     'name' => 'mail_port',
                     'label' => 'Mail Port',
                     'type' => 'text',
-                    'required' => fn(Get $get) => !$get('mail_disable'),
+                    'required' => fn (Get $get) => !$get('mail_disable'),
                     'override' => 'mail.mailers.smtp.port',
                 ],
                 [
                     'name' => 'mail_username',
                     'label' => 'Mail Username',
                     'type' => 'text',
-                    'required' => fn(Get $get) => !$get('mail_disable'),
+                    'required' => fn (Get $get) => !$get('mail_disable'),
                     'override' => 'mail.mailers.smtp.username',
                 ],
                 [
                     'name' => 'mail_password',
                     'label' => 'Mail Password',
                     'type' => 'password',
-                    'required' => fn(Get $get) => !$get('mail_disable'),
+                    'required' => fn (Get $get) => !$get('mail_disable'),
                     'encrypted' => true,
                     'override' => 'mail.mailers.smtp.password',
                 ],
@@ -330,14 +330,14 @@ class Settings
                     'name' => 'mail_from_address',
                     'label' => 'Mail From Address',
                     'type' => 'email',
-                    'required' => fn(Get $get) => !$get('mail_disable'),
+                    'required' => fn (Get $get) => !$get('mail_disable'),
                     'override' => 'mail.from.address',
                 ],
                 [
                     'name' => 'mail_from_name',
                     'label' => 'Mail From Name',
                     'type' => 'text',
-                    'required' => fn(Get $get) => !$get('mail_disable'),
+                    'required' => fn (Get $get) => !$get('mail_disable'),
                     'override' => 'mail.from.name',
                 ],
 
@@ -346,7 +346,7 @@ class Settings
                     'name' => 'mail_header',
                     'label' => 'Header',
                     'type' => 'markdown',
-                    'required' => fn(Get $get) => !$get('mail_disable'),
+                    'required' => fn (Get $get) => !$get('mail_disable'),
                     'default' => '',
                     'disable_toolbar' => true,
                 ],
@@ -354,7 +354,7 @@ class Settings
                     'name' => 'mail_footer',
                     'label' => 'Footer',
                     'type' => 'markdown',
-                    'required' => fn(Get $get) => !$get('mail_disable'),
+                    'required' => fn (Get $get) => !$get('mail_disable'),
                     'default' => '',
                     'disable_toolbar' => true,
                 ],
@@ -362,7 +362,7 @@ class Settings
                     'name' => 'mail_css',
                     'label' => 'Mail CSS',
                     'type' => 'markdown',
-                    'required' => fn(Get $get) => !$get('mail_disable'),
+                    'required' => fn (Get $get) => !$get('mail_disable'),
                     'default' => '',
                     'disable_toolbar' => true,
                 ],
@@ -404,26 +404,26 @@ class Settings
                     'name' => 'ticket_mail_host',
                     'label' => 'Email Host',
                     'type' => 'text',
-                    'required' => fn(Get $get) => $get('ticket_mail_piping'),
+                    'required' => fn (Get $get) => $get('ticket_mail_piping'),
                 ],
                 [
                     'name' => 'ticket_mail_port',
                     'label' => 'Email Port',
                     'type' => 'number',
-                    'required' => fn(Get $get) => $get('ticket_mail_piping'),
+                    'required' => fn (Get $get) => $get('ticket_mail_piping'),
                     'default' => 993,
                 ],
                 [
                     'name' => 'ticket_mail_email',
                     'label' => 'Email Address',
                     'type' => 'email',
-                    'required' => fn(Get $get) => $get('ticket_mail_piping'),
+                    'required' => fn (Get $get) => $get('ticket_mail_piping'),
                 ],
                 [
                     'name' => 'ticket_mail_password',
                     'label' => 'Email Password',
                     'type' => 'password',
-                    'required' => fn(Get $get) => $get('ticket_mail_piping'),
+                    'required' => fn (Get $get) => $get('ticket_mail_piping'),
                     'encrypted' => true,
                 ],
             ],
@@ -716,7 +716,7 @@ class Settings
     private static function getAvailableLanguages(): array
     {
         return once(
-            fn() => glob(base_path('lang/*'), GLOB_ONLYDIR)
+            fn () => glob(base_path('lang/*'), GLOB_ONLYDIR)
                 ? array_map('basename', glob(base_path('lang/*'), GLOB_ONLYDIR))
                 : ['en']
         );
@@ -738,6 +738,7 @@ class Settings
             $taxRate = TaxRate::whereIn('country', [$country, 'all'])
                 ->orderByRaw('country = ? desc', [$country])
                 ->first();
+
             return $taxRate ?: 0;
         });
     }

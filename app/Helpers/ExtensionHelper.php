@@ -6,7 +6,6 @@ use App\Attributes\ExtensionMeta;
 use App\Classes\FilamentInput;
 use App\Enums\AdjustmentNoteType;
 use App\Enums\InvoiceTransactionStatus;
-use App\Models\AdjustmentNote;
 use App\Models\BillingAgreement;
 use App\Models\Extension;
 use App\Models\Gateway;

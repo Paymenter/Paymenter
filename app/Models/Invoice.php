@@ -36,13 +36,15 @@ class Invoice extends Model implements Auditable
 
     public bool $send_create_email = true;
 
-    public function createCancellationCreditNote($description = null): void {
+    public function createCancellationCreditNote($description = null): void
+    {
         $this->adjustmentNotes()->create([
             'type' => AdjustmentNoteType::Credit->value,
             'amount' => -1 * abs($this->total),
             'description' => $description ?? 'Automatic credit note generated after overdue invoice cancellation.',
         ]);
     }
+
     /**
      * Total of the invoice.
      *
@@ -126,8 +128,7 @@ class Invoice extends Model implements Auditable
                 $this->moneyToCents($this->total)
                 - $this->transactions
                     ->where('status', InvoiceTransactionStatus::Succeeded)
-                    ->sum(fn ($transaction) =>
-                        $this->moneyToCents($transaction->amount)
+                    ->sum(fn ($transaction) => $this->moneyToCents($transaction->amount)
                         - $this->moneyToCents($transaction->refunded_amount)
                     )
             ) / 100.0
@@ -154,6 +155,7 @@ class Invoice extends Model implements Auditable
                 ])
             );
         }
+
         return Attribute::make(
             get: fn () => Settings::tax($this->user)
         );

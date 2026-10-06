@@ -413,7 +413,7 @@ class PayPal extends Gateway
         $captureId = $transaction->transaction_id;
 
         if (!$captureId) {
-            throw new \Exception('Transaction has no PayPal capture ID.');
+            throw new Exception('Transaction has no PayPal capture ID.');
         }
 
         $url = $this->config('test_mode') ? 'https://api-m.sandbox.paypal.com' : 'https://api-m.paypal.com';
