@@ -1,6 +1,15 @@
 <div class="container mt-14 space-y-4">
     <x-navigation.breadcrumb />
 
+    <div class="flex justify-end">
+        <select wire:model.live="status" class="bg-background-secondary border border-neutral rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-secondary/50" >
+            <option value="">All</option>
+            <option value="pending">Pending</option>
+            <option value="paid">Paid</option>
+            <option value="cancelled">Cancelled</option>
+        </select>
+    </div>
+
     @forelse ($invoices as $invoice)
     <a href="{{ route('invoices.show', $invoice) }}" wire:navigate>
         <div class="bg-background-secondary hover:bg-background-secondary/80 border border-neutral p-4 rounded-lg mb-4">
