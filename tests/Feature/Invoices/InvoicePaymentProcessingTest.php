@@ -45,6 +45,19 @@ class InvoicePaymentProcessingTest extends TestCase
         $this->assertGreaterThan(0, $invoice->total);
     }
 
+    public function test_pending_invoice_is_snapshotted_when_created()
+    {
+        config(['settings.invoice_snapshot' => true]);
+
+        $user = User::factory()->create();
+        $invoice = Invoice::factory()->create([
+            'user_id' => $user->id,
+            'status' => Invoice::STATUS_PENDING,
+        ]);
+
+        $this->assertSame($user->name, $invoice->fresh()->snapshot->name);
+    }
+
     public function test_invoice_calculates_remaining_amount_correctly()
     {
         $invoice = $this->createInvoiceWithItem(100.00);

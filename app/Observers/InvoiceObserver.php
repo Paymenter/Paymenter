@@ -2,10 +2,10 @@
 
 namespace App\Observers;
 
+use App\Classes\Settings;
 use App\Events\Invoice as InvoiceEvent;
 use App\Models\Invoice;
 use App\Services\Invoice\ProcessPaidInvoiceService;
-use App\Classes\Settings;
 use Illuminate\Support\Facades\DB;
 
 class InvoiceObserver
@@ -23,6 +23,10 @@ class InvoiceObserver
      */
     public function created(Invoice $invoice): void
     {
+        if ($invoice->status !== Invoice::STATUS_DRAFT) {
+            $this->createSnapshot($invoice);
+        }
+
         event(new InvoiceEvent\Created($invoice));
 
         if ($invoice->status === Invoice::STATUS_DRAFT) {
@@ -49,7 +53,7 @@ class InvoiceObserver
      */
     public function updated(Invoice $invoice): void
     {
-        if ($invoice->status === Invoice::STATUS_CANCELLED) {
+        if ($invoice->status === Invoice::STATUS_CANCELLED && $invoice->getOriginal('status') !== Invoice::STATUS_CANCELLED) {
             $invoice->createCancellationCreditNote($invoice->cancellation_reason);
         }
 
