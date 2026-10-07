@@ -264,7 +264,11 @@
     </table>
     @endif
 
-    @if($invoice->transactions->where('status', \App\Enums\InvoiceTransactionStatus::Succeeded)->count() > 0)
+    @php
+        $successfulTransactions = $invoice->transactions->where('status', \App\Enums\InvoiceTransactionStatus::Succeeded);
+        $hasRefunds = $successfulTransactions->contains(fn ($transaction) => $transaction->refunded_amount > 0);
+    @endphp
+    @if($successfulTransactions->isNotEmpty())
     <div class="section-title">{{ __('invoices.transactions') }}</div>
     <table style="margin-top: 10px;" class="invoice-items">
         <thead>
@@ -272,16 +276,19 @@
                 <th>{{ __('invoices.transaction_id') }}</th>
                 <th>{{ __('invoices.payment_date') }}</th>
                 <th>{{ __('invoices.amount') }}</th>
+                @if($hasRefunds)
                 <th>{{ __('invoices.refunded_amount') }}</th>
+                @endif
                 <th>{{ __('invoices.payment_method') }}</th>
             </tr>
         </thead>
         <tbody>
-            @foreach($invoice->transactions->where('status', \App\Enums\InvoiceTransactionStatus::Succeeded) as $transaction)
+            @foreach($successfulTransactions as $transaction)
             <tr>
                 <td>{{ $transaction->transaction_id }}</td>
                 <td>{{ $transaction->created_at->translatedFormat('d M Y') }}</td>
                 <td>{{ $transaction->formattedAmount }}</td>
+                @if($hasRefunds)
                 <td>
                     @if($transaction->refunded_amount > 0)
                     {{ $transaction->formattedRefundedAmount }}
@@ -289,6 +296,7 @@
                     -
                     @endif
                 </td>
+                @endif
                 <td>{{ $transaction->gateway ? $transaction->gateway->name : '' }}</td>
             </tr>
             @endforeach

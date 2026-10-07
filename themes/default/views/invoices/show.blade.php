@@ -162,6 +162,9 @@
             </div>
 
             @if ($invoice->transactions->isNotEmpty())
+            @php
+                $hasRefunds = $invoice->transactions->contains(fn ($transaction) => $transaction->refunded_amount > 0);
+            @endphp
             <div class="mt-12">
                 <h2 class="text-2xl font-bold">{{ __('invoices.transactions') }}</h2>
                 <div class="mt-4 overflow-x-auto">
@@ -181,9 +184,11 @@
                                 <th scope="col" class="p-4 text-xs font-semibold tracking-wider text-left uppercase">
                                     {{ __('invoices.amount') }}
                                 </th>
+                                @if($hasRefunds)
                                 <th scope="col" class="p-4 text-xs font-semibold tracking-wider text-left uppercase">
                                     {{ __('invoices.refunded_amount') }}
                                 </th>
+                                @endif
                                 <th scope="col"
                                     class="p-4 text-xs font-semibold tracking-wider text-left uppercase rounded-r-lg">
                                     {{ __('invoices.status') }}
@@ -207,6 +212,7 @@
                                 </td>
                                 <td class="p-4 font-normal whitespace-nowrap">{{ $transaction->formattedAmount }}
                                 </td>
+                                @if($hasRefunds)
                                 <td class="p-4 font-normal whitespace-nowrap">
                                     @if($transaction->refunded_amount > 0)
                                     {{ $transaction->formattedRefundedAmount }}
@@ -214,6 +220,7 @@
                                     -
                                     @endif
                                 </td>
+                                @endif
                                 <td class="p-4 font-normal whitespace-nowrap">
                                     @if($transaction->status == \App\Enums\InvoiceTransactionStatus::Succeeded)
                                     <span class="text-green-600 font-semibold">{{
