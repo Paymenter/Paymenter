@@ -34,9 +34,19 @@ class InvoicePolicy extends BasePolicy
     /**
      * Determine whether the user can update the model.
      */
-    public function update(User $user, Invoice $invoice): bool
+    public function update(User $user, ?Invoice $invoice = null): bool
     {
-        return $this->adminPermission($user, 'admin.invoices.update', $invoice->user_id === $user->id);
+        if ($invoice === null) {
+            return $this->adminPermission($user, 'admin.invoices.update');
+        }
+
+        $canEdit = $this->adminPermission($user, 'admin.invoices.update', $invoice->user_id === $user->id);
+
+        if (!config('settings.immutable_invoices_enabled', false)) {
+            return $canEdit;
+        }
+
+        return $canEdit && $invoice->status === Invoice::STATUS_DRAFT;
     }
 
     /**
@@ -54,4 +64,5 @@ class InvoicePolicy extends BasePolicy
     {
         return $user->hasPermission('admin.invoices.deleteAny');
     }
+
 }

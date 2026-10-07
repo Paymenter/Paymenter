@@ -20,7 +20,7 @@ class CreateInvoiceRequest extends AdminApiRequest
             /**
              * @default pending
              */
-            'status' => 'required|string|in:pending,paid,cancelled', // Status can be one of these values
+            'status' => 'required|string|in:draft,pending,paid,cancelled', // Status can be one of these values
         ];
     }
 

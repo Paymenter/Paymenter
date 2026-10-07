@@ -589,12 +589,53 @@ class Settings
                     'description' => 'Proforma invoices will not be assigned an official invoice number until payment is received and will be marked as "Proforma".',
                 ],
                 [
+                    'name' => 'immutable_invoices_enabled',
+                    'label' => 'Immutable Invoices',
+                    'type' => 'checkbox',
+                    'database_type' => 'boolean',
+                    'default' => false,
+                    'description' => 'When enabled, invoices can only be edited while in draft status. Once published, they become read-only. Disable this to allow editing invoices at any status.',
+                ],
+                [
+                    'name' => 'notes_client_visible',
+                    'label' => 'Show Adjustment Notes to Clients',
+                    'type' => 'checkbox',
+                    'database_type' => 'boolean',
+                    'default' => false,
+                    'description' => 'Show the adjustments section (credit/debit notes) to clients on the invoice page. When disabled, only admin-only notes are visible in the admin panel.',
+                ],
+                [
                     'name' => 'invoice_snapshot',
                     'label' => 'Invoice Snapshot',
                     'type' => 'checkbox',
                     'database_type' => 'boolean',
                     'default' => true,
                     'description' => 'Save a snapshot of important data (name, address, etc.) on the invoice when it is paid. This ensures that if someone changes their details later, old invoices will still have the correct information.',
+                ],
+                [
+                    'name' => 'credit_note_number',
+                    'label' => 'Credit/Debit Note Number',
+                    'type' => 'number',
+                    'default' => 1,
+                    'required' => false,
+                    'description' => 'The next credit/debit note number to use. This will be incremented automatically.',
+                ],
+                [
+                    'name' => 'credit_note_number_padding',
+                    'label' => 'Credit/Debit Note Number Padding',
+                    'type' => 'number',
+                    'default' => 1,
+                    'required' => false,
+                    'description' => 'Number of digits to use for credit/debit note numbers. Example: 0001, 0002, etc.',
+                ],
+                [
+                    'name' => 'credit_note_number_format',
+                    'label' => 'Credit/Debit Note Number Format',
+                    'type' => 'text',
+                    'default' => 'CN-{number}',
+                    'required' => false,
+                    'description' => 'Format to use for credit/debit note numbers. Use {number} to insert the zero padded number and use {year}, {month} and {day} placeholders to insert the current date. Example: CN-{year}-{month}-{day}-{number} or CN-{year}{number}. It must at least contain {number}.',
+                    'validation' => 'regex:/{number}/',
                 ],
             ],
             'other' => [
@@ -659,8 +700,8 @@ class Settings
     {
         return once(
             fn () => glob(base_path('lang/*'), GLOB_ONLYDIR)
-            ? array_map('basename', glob(base_path('lang/*'), GLOB_ONLYDIR))
-            : ['en']
+                ? array_map('basename', glob(base_path('lang/*'), GLOB_ONLYDIR))
+                : ['en']
         );
     }
 

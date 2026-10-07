@@ -7,15 +7,16 @@ use App\Admin\Components\UserComponent;
 use App\Admin\Resources\InvoiceResource\Pages\CreateInvoice;
 use App\Admin\Resources\InvoiceResource\Pages\EditInvoice;
 use App\Admin\Resources\InvoiceResource\Pages\ListInvoices;
+use App\Admin\Resources\InvoiceResource\Pages\ViewInvoice;
+use App\Admin\Resources\InvoiceResource\RelationManagers\AdjustmentNotesRelationManager;
 use App\Admin\Resources\InvoiceResource\RelationManagers\TransactionsRelationManager;
 use App\Models\Currency;
 use App\Models\Invoice;
 use App\Models\Service;
 use App\Models\ServiceUpgrade;
 use Filament\Actions\Action;
-use Filament\Actions\BulkActionGroup;
-use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
+use Filament\Actions\ViewAction;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Repeater;
@@ -76,9 +77,10 @@ class InvoiceResource extends Resource
                     ->options([
                         'paid' => 'Paid',
                         'pending' => 'Pending',
+                        'draft' => 'Draft',
                         'cancelled' => 'Cancelled',
                     ])
-                    ->default('pending')
+                    ->default(fn (): string => config('settings.immutable_invoices_enabled', false) ? Invoice::STATUS_DRAFT : Invoice::STATUS_PENDING)
                     ->placeholder('Select the status of the invoice'),
                 Select::make('currency_code')
                     ->label('Currency')
@@ -165,7 +167,7 @@ class InvoiceResource extends Resource
                     ->sortable(),
                 TextColumn::make('formattedTotal')
                     ->label('Total'),
-                TextColumn::make('formattedRemaining')
+                TextColumn::make('formattedCurrentBalance')
                     ->label('Remaining'),
             ])
             ->defaultSort(function (Builder $query): Builder {
@@ -182,20 +184,38 @@ class InvoiceResource extends Resource
                     ]),
             ])
             ->recordActions([
+                ViewAction::make()
+                    ->visible(fn (): bool => config('settings.immutable_invoices_enabled', false)),
                 EditAction::make(),
-            ])
-            ->toolbarActions([
-                BulkActionGroup::make([
-                    DeleteBulkAction::make(),
-                ]),
+                Action::make('cancel')
+                    ->label('Cancel')
+                    ->icon('heroicon-o-x-circle')
+                    ->color('danger')
+                    ->requiresConfirmation()
+                    ->form([
+                        TextInput::make('cancellation_reason')
+                            ->label('Cancellation Reason')
+                            ->required(),
+                    ])
+                    ->action(function (Invoice $record, array $data) {
+                        $record->update([
+                            'status' => Invoice::STATUS_CANCELLED,
+                            'cancellation_reason' => $data['cancellation_reason'],
+                        ]);
+                    })
+                    ->visible(fn (Invoice $record): bool => auth()->user()->can('update', Invoice::class) && !in_array($record->status, [Invoice::STATUS_CANCELLED, Invoice::STATUS_PAID])),
             ]);
     }
 
     public static function getRelations(): array
     {
-        return [
+        $relations = [
             TransactionsRelationManager::class,
         ];
+
+        $relations[] = AdjustmentNotesRelationManager::class;
+
+        return $relations;
     }
 
     public static function getPages(): array
@@ -204,6 +224,7 @@ class InvoiceResource extends Resource
             'index' => ListInvoices::route('/'),
             'create' => CreateInvoice::route('/create'),
             // Always use id for invoice route binding in admin
+            'view' => ViewInvoice::route('/{record:id}'),
             'edit' => EditInvoice::route('/{record:id}/edit'),
         ];
     }
