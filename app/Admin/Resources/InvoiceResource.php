@@ -28,6 +28,7 @@ use Filament\Schemas\Schema;
 use Filament\Support\RawJs;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
+use Filament\Tables\Filters\Filter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 
@@ -145,7 +146,11 @@ class InvoiceResource extends Resource
                     ->sortable(),
                 TextColumn::make('user.name')
                     ->label('User')
-                    ->searchable(true, fn (Builder $query, string $search) => $query->whereHas('user', fn (Builder $query) => $query->where('first_name', 'like', "%$search%")->orWhere('last_name', 'like', "%$search%"))),
+                    ->searchable(query: fn (Builder $query, string $search): Builder => $query->whereHas('user', fn (Builder $query) => $query
+                        ->where('first_name', 'like', "%{$search}%")
+                        ->orWhere('last_name', 'like', "%{$search}%")
+                        ->orWhere('email', 'like', "%{$search}%")
+                        ->orWhereRaw("CONCAT(first_name, ' ', last_name) like ?", ["%{$search}%"]))),
                 TextColumn::make('status')
                     ->label('Status')
                     // Make first letter uppercase
@@ -180,6 +185,35 @@ class InvoiceResource extends Resource
                         'pending' => 'Pending',
                         'cancelled' => 'Cancelled',
                     ]),
+                SelectFilter::make('user')
+                    ->label('Customer')
+                    ->relationship('user', 'id')
+                    ->getOptionLabelFromRecordUsing(fn ($record) => $record->name . ' (' . $record->email . ')')
+                    ->searchable()
+                    ->preload(),
+                Filter::make('overdue')
+                    ->label('Overdue')
+                    ->query(fn (Builder $query): Builder => $query
+                        ->where('status', Invoice::STATUS_PENDING)
+                        ->whereDate('due_at', '<', now()->toDateString())),
+                Filter::make('due_at')
+                    ->label('Due date')
+                    ->form([
+                        DatePicker::make('due_from')->label('Due date from'),
+                        DatePicker::make('due_until')->label('Due date until'),
+                    ])
+                    ->query(fn (Builder $query, array $data): Builder => $query
+                        ->when($data['due_from'] ?? null, fn (Builder $query, $date): Builder => $query->whereDate('due_at', '>=', $date))
+                        ->when($data['due_until'] ?? null, fn (Builder $query, $date): Builder => $query->whereDate('due_at', '<=', $date))),
+                Filter::make('issued_at')
+                    ->label('Issued At')
+                    ->form([
+                        DatePicker::make('issued_from')->label('Issued At from'),
+                        DatePicker::make('issued_until')->label('Issued At until'),
+                    ])
+                    ->query(fn (Builder $query, array $data): Builder => $query
+                        ->when($data['issued_from'] ?? null, fn (Builder $query, $date): Builder => $query->whereDate('created_at', '>=', $date))
+                        ->when($data['issued_until'] ?? null, fn (Builder $query, $date): Builder => $query->whereDate('created_at', '<=', $date))),
             ])
             ->recordActions([
                 EditAction::make(),
