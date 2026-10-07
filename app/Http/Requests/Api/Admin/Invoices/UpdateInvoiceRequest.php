@@ -21,19 +21,7 @@ class UpdateInvoiceRequest extends AdminApiRequest
             return true;
         }
 
-        if ($this->invoiceCreatedBeforeImmutableUpdate($invoice)) {
-            return true;
-        }
-
         return $invoice->status === Invoice::STATUS_DRAFT;
-    }
-
-    private function invoiceCreatedBeforeImmutableUpdate(Invoice $invoice): bool
-    {
-        $lockBeforeEnabled = config('settings.immutable_invoices_lock_before', false);
-        $lockDate = config('settings.immutable_invoices_lock_date');
-
-        return $lockBeforeEnabled && $lockDate && $invoice->created_at->isBefore($lockDate);
     }
 
     public function rules(): array

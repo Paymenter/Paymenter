@@ -597,23 +597,6 @@ class Settings
                     'description' => 'When enabled, invoices can only be edited while in draft status. Once published, they become read-only. Disable this to allow editing invoices at any status.',
                 ],
                 [
-                    'name' => 'immutable_invoices_lock_before',
-                    'label' => 'Lock Invoices Created Before Upgrade',
-                    'type' => 'checkbox',
-                    'database_type' => 'boolean',
-                    'default' => false,
-                    'description' => 'When enabled, invoices created before the upgrade date remain fully editable regardless of status. Disable to apply draft-only immutability to all invoices.',
-                ],
-                [
-                    'name' => 'immutable_invoices_lock_date',
-                    'label' => 'Upgrade Lock Date',
-                    'type' => 'text',
-                    'database_type' => 'date',
-                    'default' => null,
-                    'disabled' => true,
-                    'description' => 'Invoices created before this date remain editable regardless of status (when the lock toggle above is enabled). Set automatically during upgrade.',
-                ],
-                [
                     'name' => 'notes_client_visible',
                     'label' => 'Show Adjustment Notes to Clients',
                     'type' => 'checkbox',

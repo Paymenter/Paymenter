@@ -46,10 +46,6 @@ class InvoicePolicy extends BasePolicy
             return $canEdit;
         }
 
-        if ($this->invoiceCreatedBeforeImmutableUpdate($invoice)) {
-            return $canEdit;
-        }
-
         return $canEdit && $invoice->status === Invoice::STATUS_DRAFT;
     }
 
@@ -69,11 +65,4 @@ class InvoicePolicy extends BasePolicy
         return $user->hasPermission('admin.invoices.deleteAny');
     }
 
-    public function invoiceCreatedBeforeImmutableUpdate(Invoice $invoice)
-    {
-        $lockBeforeEnabled = config('settings.immutable_invoices_lock_before', false);
-        $lockDate = config('settings.immutable_invoices_lock_date');
-
-        return $lockBeforeEnabled && $lockDate && $invoice->created_at->isBefore($lockDate);
-    }
 }
