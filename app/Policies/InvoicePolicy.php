@@ -64,5 +64,4 @@ class InvoicePolicy extends BasePolicy
     {
         return $user->hasPermission('admin.invoices.deleteAny');
     }
-
 }
