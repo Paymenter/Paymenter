@@ -44,6 +44,11 @@ return [
 
     'verify_2fa' => '2FA verifizieren',
     'verify' => 'Überprüfen',
+    'sign_in_with_passkey' => 'Mit einem Passkey anmelden',
+    'passkey_signing_in' => 'Warte auf deinen Passkey …',
+    'confirm_password_title' => 'Passwort bestätigen',
+    'confirm_password_description' => 'Bestätige dein Passwort, bevor du Passkeys verwaltest.',
+    'confirm_password' => 'Passwort bestätigen',
 
     'verification' => [
         'notice' => 'Bestätige deine E-Mail-Adresse',
