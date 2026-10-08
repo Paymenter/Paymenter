@@ -6,7 +6,7 @@
         <h1 class="text-2xl text-center mt-6">{{ __('auth.sign_in_title') }} </h1>
     </div>
     <x-form.input name="email" type="email" :label="__('general.input.email')"
-        :placeholder="__('general.input.email_placeholder')" wire:model="email" hideRequiredIndicator required autocomplete="email" />
+        :placeholder="__('general.input.email_placeholder')" wire:model="email" hideRequiredIndicator required autocomplete="email webauthn" />
     <x-form.input name="password" type="password" :label="__('general.input.password')"
         :placeholder="__('general.input.password_placeholder')" required hideRequiredIndicator wire:model="password" autocomplete="current-password" />
     <div class="flex flex-row">
@@ -20,6 +20,14 @@
     <x-captcha :form="'login'" />
 
     <x-button.primary class="w-full" type="submit">{{ __('auth.sign_in') }}</x-button.primary>
+
+    <div x-data="passkeyLogin" x-cloak x-show="supported" class="mt-3">
+        <x-button.primary class="w-full" type="button" x-on:click="signIn" x-bind:disabled="loading">
+            <span x-show="!loading">{{ __('auth.sign_in_with_passkey') }}</span>
+            <span x-show="loading">{{ __('auth.passkey_signing_in') }}</span>
+        </x-button.primary>
+        <p x-show="error" x-text="error" role="alert" class="mt-2 text-sm text-red-400"></p>
+    </div>
 
     {!! hook('auth.login') !!}
 
