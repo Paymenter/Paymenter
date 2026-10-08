@@ -75,7 +75,7 @@
                 <form wire:submit.prevent="enableTwoFactor">
                     <x-form.input divClass="mt-8" name="two_factor_code" type="text"
                         :label="__('account.input.two_factor_code')"
-                        :placeholder="__('account.input.two_factor_code_placeholder')" wire:model="twoFactorCode"
+                        :placeholder="__('account.input.two_factor_code_placeholder')" wire:model="twoFactorCode" inputmode="numeric" pattern="[0-9]*" autocomplete="one-time-code"
                         required />
                     <x-button.primary class="w-full mt-4" type="submit">
                         {{ __('account.two_factor_authentication_enable') }}
