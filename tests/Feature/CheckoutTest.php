@@ -72,28 +72,6 @@ class CheckoutTest extends TestCase
         ]);
     }
 
-    public function test_checkout_page_does_not_redirect_if_one_plan_when_editing_cart_item(): void
-    {
-        $this->get(route('products.checkout', [
-            $this->product->product->category->slug,
-            $this->product->product->slug,
-        ]))->assertRedirect(route('cart'));
-
-        $cart = Cart::where('currency_code', 'USD')->firstOrFail();
-        $item = $cart->items()->firstOrFail();
-
-        Once::flush();
-
-        $response = $this->withCookie('cart', $cart->ulid)->get(route('products.checkout', [
-            $this->product->product->category->slug,
-            $this->product->product->slug,
-            'edit' => $item->id,
-        ]));
-
-        $response->assertStatus(200);
-        $response->assertSee($this->product->product->name);
-    }
-
     public function test_checkout_page_with_multiple_plans(): void
     {
         // Add plan

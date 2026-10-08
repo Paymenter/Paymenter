@@ -92,7 +92,7 @@ class Checkout extends Component
 
         // As there is only one plan, config options and checkout config, we can directly call the checkout method to avoid confusion
         // This is only done when the user is not editing the cart item
-        if ($this->product->plans->count() === 1 && empty($this->configOptions) && empty($this->checkoutConfig) && !$this->cartProductKey) {
+        if ($this->product->plans->count() === 1 && empty($this->configOptions) && empty($this->checkoutConfig)) {
             $this->checkout();
         }
     }

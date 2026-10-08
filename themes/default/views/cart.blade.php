@@ -40,12 +40,14 @@
                             </x-button.secondary>
                         </div>
                         @endif
+                        @if ($item->product->plans->count() > 1 || $item->product->configOptions->isNotEmpty() || !empty($item->checkout_config))
                         <a href="{{ route('products.checkout', [$item->product->category, $item->product, 'edit' => $item->id]) }}"
                             wire:navigate>
                             <x-button.primary class="h-fit w-fit">
                                 {{ __('product.edit') }}
                             </x-button.primary>
                         </a>
+                        @endif
                         <x-button.danger wire:click="removeProduct({{ $item->id }})" class="h-fit !w-fit">
                             <x-loading target="removeProduct({{ $item->id }})" />
                             <div wire:loading.remove wire:target="removeProduct({{ $item->id }})">
