@@ -2,6 +2,59 @@
     <x-navigation.breadcrumb />
     <div class="px-2 flex flex-col gap-4">
 
+        <!-- Passkeys -->
+        <div class="bg-background-secondary rounded-lg p-4" x-data="passkeyManager">
+            <h5 class="text-lg font-bold pb-2">{{ __('account.passkeys') }}</h5>
+            <p class="text-sm text-primary-300 mb-3">{{ __('account.passkeys_description') }}</p>
+
+            <div x-show="supported" class="flex flex-col sm:flex-row gap-3">
+                <x-form.input name="passkey_name" type="text" :label="__('account.passkey_name')"
+                    :placeholder="__('account.passkey_name_placeholder')" x-model="name" maxlength="255" />
+                <x-button.primary type="button" class="sm:mt-6" x-on:click="register"
+                    x-bind:disabled="loading || !name.trim()">
+                    {{ __('account.add_passkey') }}
+                </x-button.primary>
+            </div>
+            <p x-cloak x-show="!supported" class="text-sm text-primary-400">
+                {{ __('account.passkeys_unsupported') }}
+            </p>
+
+            <p x-show="error" x-text="error" role="alert" class="mt-2 text-sm text-red-400"></p>
+            <p class="text-xs text-primary-400 mt-2">
+                {{ __('account.passkey_confirmation_required') }}
+                <a href="{{ route('password.confirm') }}" wire:navigate class="text-secondary hover:underline">
+                    {{ __('account.confirm_password') }}
+                </a>
+            </p>
+
+            <div class="mt-4">
+                @forelse ($passkeys as $passkey)
+                <div class="flex flex-row items-center justify-between gap-3 py-3 border-b border-base/50">
+                    <div>
+                        <p class="text-sm font-medium text-primary-100">{{ $passkey->name }}</p>
+                        <p class="text-xs text-primary-400">
+                            {{ __('account.passkey_added', ['date' => $passkey->created_at->diffForHumans()]) }}
+                            @if ($passkey->last_used_at)
+                            · {{ __('account.passkey_last_used', ['date' => $passkey->last_used_at->diffForHumans()]) }}
+                            @endif
+                        </p>
+                    </div>
+                    <x-button.primary type="button" class="text-sm !w-fit" x-on:click="$store.confirmation.confirm({
+                        title: @js(__('account.remove_passkey')),
+                        message: @js(__('account.remove_passkey_confirm', ['name' => $passkey->name])),
+                        confirmText: @js(__('account.confirm')),
+                        cancelText: @js(__('account.cancel')),
+                        callback: () => remove(@js($passkey->id))
+                    })" x-bind:disabled="loading">
+                        {{ __('account.remove_passkey') }}
+                    </x-button.primary>
+                </div>
+                @empty
+                <p class="text-sm text-primary-400 py-2">{{ __('account.no_passkeys') }}</p>
+                @endforelse
+            </div>
+        </div>
+
         <!-- Sessions -->
         <div class="bg-background-secondary rounded-lg p-4">
             <h5 class="text-lg font-bold pb-3">{{ __('account.sessions') }}</h5>
