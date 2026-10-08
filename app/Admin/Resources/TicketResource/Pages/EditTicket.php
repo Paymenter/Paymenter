@@ -150,7 +150,7 @@ class EditTicket extends EditRecord
                     ->label('Service')
                     ->url(fn ($record) => $record->service ? ServiceResource::getUrl('edit', ['record' => $record->service]) : null)
                     ->placeholder('No service')
-                    ->formatStateUsing(fn ($record) => "{$record->service->product->name} - " . ucfirst($record->service->status)),
+                    ->formatStateUsing(fn ($record) => $this->formatServiceOptionLabel($record->service)),
 
                 Actions::make([
                     Action::make('Edit')
@@ -191,7 +191,7 @@ class EditTicket extends EditRecord
                                         ->relationship('service', 'id', function (Builder $query, Get $get) {
                                             $query->where('user_id', $get('user_id'));
                                         })
-                                        ->getOptionLabelFromRecordUsing(fn ($record) => "{$record->product->name} - " . ucfirst($record->status))
+                                        ->getOptionLabelFromRecordUsing(fn ($record) => $this->formatServiceOptionLabel($record))
                                         ->disabled(fn (Get $get) => !$get('user_id')),
                                 ]);
                         })
@@ -227,6 +227,11 @@ class EditTicket extends EditRecord
                     ]),
                 ])->columnSpan(['default' => 'full', 'md' => 1]),
             ]);
+    }
+
+    private function formatServiceOptionLabel($record): string
+    {
+        return "{$record->product->name} #{$record->id} - " . ucfirst($record->status) . ($record->label == $record->baseLabel ? '' : " ({$record->label})");
     }
 
     public function deleteMessage(TicketMessage $message): void
