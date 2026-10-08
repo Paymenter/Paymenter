@@ -29,7 +29,7 @@ class PasskeyLoginResponse implements PasskeyLoginResponseContract
                 'expires' => now()->addMinutes(5),
             ]);
 
-            $redirect = route('2fa');
+            $redirect = route('dashboard');
         } else {
             Auth::logout();
             $this->loginAction->execute($user, $remember);
