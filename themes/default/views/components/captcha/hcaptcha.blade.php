@@ -4,14 +4,20 @@
 <script>
     function captchaOnload() {
         // On livewire validation error reset captcha
-        Livewire.hook('request', ({
-            succeed,
-            fail
-        }) => {
-            succeed(() => {
-                hcaptcha.reset();
-            });
-        })
+        // Only register once, as the hook persists across wire:navigate page visits
+        if (!window.captchaResetHookRegistered) {
+            window.captchaResetHookRegistered = true;
+            Livewire.hook('request', ({
+                succeed,
+                fail
+            }) => {
+                succeed(() => {
+                    if (document.getElementById('h-captcha')) {
+                        hcaptcha.reset();
+                    }
+                });
+            })
+        }
 
         hcaptcha.render('h-captcha', {
             sitekey: '{{ config('settings.captcha_site_key') }}',
