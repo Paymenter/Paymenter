@@ -16,6 +16,7 @@ use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Forms\Components\Hidden;
+use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
@@ -27,6 +28,8 @@ use Filament\Schemas\Components\Utilities\Set;
 use Filament\Schemas\Schema;
 use Filament\Support\RawJs;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\Filter;
+use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 
@@ -158,7 +161,11 @@ class OrderResource extends Resource
                     ->sortable(),
                 TextColumn::make('user.name')
                     ->label('User')
-                    ->searchable(query: fn (Builder $query, $search) => $query->whereHas('user', fn (Builder $query) => $query->where('first_name', 'like', "%$search%")->orWhere('last_name', 'like', "%$search%"))),
+                    ->searchable(query: fn (Builder $query, string $search): Builder => $query->whereHas('user', fn (Builder $query) => $query
+                        ->where('first_name', 'like', "%{$search}%")
+                        ->orWhere('last_name', 'like', "%{$search}%")
+                        ->orWhere('email', 'like', "%{$search}%")
+                        ->orWhereRaw("CONCAT(first_name, ' ', last_name) like ?", ["%{$search}%"]))),
                 TextColumn::make('currency.code')
                     ->label('Currency')
                     ->searchable()
@@ -175,7 +182,24 @@ class OrderResource extends Resource
                     ->orderBy('id', 'desc');
             })
             ->filters([
-                //
+                SelectFilter::make('user')
+                    ->label('Customer')
+                    ->relationship('user', 'id')
+                    ->getOptionLabelFromRecordUsing(fn ($record) => $record->name . ' (' . $record->email . ')')
+                    ->searchable()
+                    ->preload(),
+                SelectFilter::make('currency_code')
+                    ->label('Currency')
+                    ->options(fn () => Currency::query()->orderBy('code')->pluck('code', 'code')),
+                Filter::make('created_at')
+                    ->label('Order date')
+                    ->form([
+                        DatePicker::make('created_from')->label('From'),
+                        DatePicker::make('created_until')->label('Until'),
+                    ])
+                    ->query(fn (Builder $query, array $data): Builder => $query
+                        ->when($data['created_from'] ?? null, fn (Builder $query, $date): Builder => $query->whereDate('created_at', '>=', $date))
+                        ->when($data['created_until'] ?? null, fn (Builder $query, $date): Builder => $query->whereDate('created_at', '<=', $date))),
             ])
             ->recordActions([
                 EditAction::make(),
