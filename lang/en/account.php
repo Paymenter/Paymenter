@@ -8,6 +8,20 @@ return [
 
     'change_password' => 'Change password',
 
+    'passkeys' => 'Passkeys',
+    'passkeys_description' => 'Use a fingerprint, face recognition, security key, or your device PIN to sign in.',
+    'passkeys_unsupported' => 'This browser cannot add passkeys. You can still review and remove existing ones.',
+    'passkey_name' => 'Passkey name',
+    'passkey_name_placeholder' => 'For example, My laptop',
+    'add_passkey' => 'Add passkey',
+    'no_passkeys' => 'You have not added any passkeys yet.',
+    'passkey_added' => 'Added :date',
+    'passkey_last_used' => 'Last used :date',
+    'remove_passkey' => 'Remove',
+    'remove_passkey_confirm' => 'Remove the passkey “:name” from your account?',
+    'passkey_confirmation_required' => 'You may need to confirm your password before adding or removing passkeys.',
+    'confirm_password' => 'Confirm password',
+
     'two_factor_authentication' => 'Two-factor authentication',
     'two_factor_authentication_description' => 'Add an extra layer of security to your account by enabling two-factor authentication.',
     'two_factor_authentication_enabled' => 'Two-factor authentication is enabled for your account.',

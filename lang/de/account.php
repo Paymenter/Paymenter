@@ -8,6 +8,20 @@ return [
 
     'change_password' => 'Passwort ändern',
 
+    'passkeys' => 'Passkeys',
+    'passkeys_description' => 'Melde dich mit Fingerabdruck, Gesichtserkennung, Sicherheitsschlüssel oder Geräte-PIN an.',
+    'passkeys_unsupported' => 'Dieser Browser kann keine Passkeys hinzufügen. Vorhandene Passkeys kannst du weiterhin ansehen und entfernen.',
+    'passkey_name' => 'Name des Passkeys',
+    'passkey_name_placeholder' => 'Zum Beispiel: Mein Laptop',
+    'add_passkey' => 'Passkey hinzufügen',
+    'no_passkeys' => 'Du hast noch keine Passkeys hinzugefügt.',
+    'passkey_added' => 'Hinzugefügt :date',
+    'passkey_last_used' => 'Zuletzt verwendet :date',
+    'remove_passkey' => 'Entfernen',
+    'remove_passkey_confirm' => 'Den Passkey „:name“ aus deinem Konto entfernen?',
+    'passkey_confirmation_required' => 'Vor dem Hinzufügen oder Entfernen kann eine Passwortbestätigung erforderlich sein.',
+    'confirm_password' => 'Passwort bestätigen',
+
     'two_factor_authentication' => 'Zwei-Faktor-Authentifizierung',
     'two_factor_authentication_description' => 'Sichere dein Konto, indem du Zwei-Faktor-Authentifizierung aktivierst.',
     'two_factor_authentication_enabled' => 'Zwei-Faktor-Authentifizierung wurde deinem Account hinzugefügt.',
