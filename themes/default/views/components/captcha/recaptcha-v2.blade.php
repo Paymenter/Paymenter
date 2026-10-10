@@ -4,12 +4,20 @@
 <script>
     function captchaOnload() {
         // On livewire validation error reset captcha
-        Livewire.hook('request', ({
-            succeed,
-            fail
-        }) => {
-            succeed(() => grecaptcha.reset());
-        })
+        // Only register once, as the hook persists across wire:navigate page visits
+        if (!window.captchaResetHookRegistered) {
+            window.captchaResetHookRegistered = true;
+            Livewire.hook('request', ({
+                succeed,
+                fail
+            }) => {
+                succeed(() => {
+                    if (document.getElementById('g-recaptcha')) {
+                        grecaptcha.reset();
+                    }
+                });
+            })
+        }
 
         grecaptcha.render('g-recaptcha', {
             sitekey: '{{ config('settings.captcha_site_key') }}',
