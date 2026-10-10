@@ -30,7 +30,7 @@ jobs:
         run: |
           composer config repositories.scramble-pro '{"type": "composer", "url": "https://satis.dedoc.co"}'
           composer config http-basic.satis.dedoc.co ${{ secrets.SCRAMBLE_USERNAME }} ${{ secrets.SCRAMBLE_KEY }}
-          composer require dedoc/scramble-pro:^0.7.4 --dev
+          composer require dedoc/scramble-pro --dev
 
       - name: Checkout documentation repository
         uses: actions/checkout@v4
