@@ -1,8 +1,8 @@
 <?php
 
 return [
-    'ticket_details' => 'Saksdetaljer',
-    'tickets' => 'Saker',
+    'ticket_details' => 'Detaljer om henvendelsen',
+    'tickets' => 'Henvendelse',
     'subject' => 'Emne',
     'status' => 'Status',
     'priority' => 'Prioritet',
@@ -15,8 +15,8 @@ return [
     'files_max' => 'Filer opptil 10MB',
     'selected_files' => 'Valgte filer',
     'uploading_files' => 'Laster opp filer',
-    'close_ticket' => 'Avslutt sak',
-    'close_ticket_confirmation' => 'Er du sikker på at du vil lukke denne saken? Denne handlingen kan ikke angres.',
+    'close_ticket' => 'Avslutt henvendelse',
+    'close_ticket_confirmation' => 'Er du sikker på at du vil avslutte denne kundeservice henvendelsen? Denne handlingen kan ikke angres.',
     'close_ticket_success' => 'Sak ble lukket.',
     'close_ticket_already_closed' => 'Denne saken er allerede lukket.',
 
