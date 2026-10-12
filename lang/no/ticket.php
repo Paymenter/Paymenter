@@ -2,13 +2,13 @@
 
 return [
     'ticket_details' => 'Detaljer om henvendelsen',
-    'tickets' => 'Henvendelse',
+    'tickets' => 'Kundeservice',
     'subject' => 'Emne',
     'status' => 'Status',
     'priority' => 'Prioritet',
     'department' => 'Avdeling',
     'created_at' => 'Opprettet',
-    'reply' => 'Svar',
+    'reply' => 'Melding',
     'attachments' => 'Vedlegg',
     'upload_attachments' => 'Last opp vedlegg',
     'or_drag_and_drop' => 'eller dra og slipp',
@@ -16,11 +16,11 @@ return [
     'selected_files' => 'Valgte filer',
     'uploading_files' => 'Laster opp filer',
     'close_ticket' => 'Avslutt henvendelse',
-    'close_ticket_confirmation' => 'Er du sikker på at du vil avslutte denne kundeservice henvendelsen? Denne handlingen kan ikke angres.',
-    'close_ticket_success' => 'Sak ble lukket.',
-    'close_ticket_already_closed' => 'Denne saken er allerede lukket.',
+    'close_ticket_confirmation' => 'Er du sikker på at du vil avslutte denne henvendelsen til kundeservice? Denne handlingen kan ikke angres.',
+    'close_ticket_success' => 'Henvendelsen ble avsluttet.',
+    'close_ticket_already_closed' => 'Denne henvendelsen er allerede avsluttet.',
 
-    'create_ticket' => 'Opprett sak',
+    'create_ticket' => 'Ta kontakt med kundeservice',
     'select_department' => 'Velg avdeling',
     'select_priority' => 'Velg prioritet',
     'low' => 'Lav',
@@ -32,5 +32,5 @@ return [
     'service' => 'Tjeneste',
     'select_service' => 'Velg tjeneste',
     'create' => 'Opprett',
-    'no_tickets' => 'Ingen saker funnet',
+    'no_tickets' => 'Ingen kundeservice henvendelser funnet',
 ];
