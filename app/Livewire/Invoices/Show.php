@@ -55,7 +55,8 @@ class Show extends Component
     #[Computed]
     public function gateways()
     {
-        return ExtensionHelper::getCheckoutGateways($this->invoice->total, $this->invoice->currency_code, 'invoice', $this->invoice->items);
+        // pay() charges the remaining balance, which is less than the total once part of the invoice is paid (e.g. with credit)
+        return ExtensionHelper::getCheckoutGateways($this->invoice->remaining, $this->invoice->currency_code, 'invoice', $this->invoice->items);
     }
 
     #[Computed]
