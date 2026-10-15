@@ -4,6 +4,8 @@ namespace Tests\Feature;
 
 use App\Jobs\Server\SuspendJob;
 use App\Jobs\Server\TerminateJob;
+use App\Models\Coupon;
+use App\Models\Invoice;
 use App\Models\Service;
 use App\Models\Ticket;
 use App\Models\TicketMessage;
@@ -392,5 +394,79 @@ class CronjobTest extends TestCase
             'id' => $product->product->id,
             'stock' => 1,
         ]);
+    }
+
+    public function test_recurring_coupon_stops_discounting_after_its_cycles(): void
+    {
+        $service = $this->createServiceWithRecurringCoupon(cycles: 3, paidInvoices: 3);
+
+        $this->artisan('app:cron-job')
+            ->assertExitCode(0);
+
+        $this->assertEquals(10.00, $service->fresh()->price);
+        $this->assertDatabaseHas('invoices', ['user_id' => $service->user_id, 'status' => 'pending']);
+        $this->assertDatabaseHas('invoice_items', [
+            'reference_type' => Service::class,
+            'reference_id' => $service->id,
+            'price' => 10.00,
+        ]);
+    }
+
+    public function test_recurring_coupon_keeps_discounting_within_its_cycles(): void
+    {
+        $service = $this->createServiceWithRecurringCoupon(cycles: 3, paidInvoices: 2);
+
+        $this->artisan('app:cron-job')
+            ->assertExitCode(0);
+
+        $this->assertEquals(5.00, $service->fresh()->price);
+        $this->assertDatabaseMissing('invoice_items', [
+            'reference_type' => Service::class,
+            'reference_id' => $service->id,
+            'price' => 10.00,
+        ]);
+    }
+
+    private function createServiceWithRecurringCoupon(int $cycles, int $paidInvoices): Service
+    {
+        config(['settings.cronjob_invoice' => 7]);
+
+        $user = User::factory()->create();
+        $product = $this->createProduct();
+
+        $coupon = Coupon::create([
+            'code' => 'HALFOFF',
+            'type' => 'percentage',
+            'value' => 50,
+            'recurring' => $cycles,
+        ]);
+
+        $service = Service::factory()->create([
+            'user_id' => $user->id,
+            'plan_id' => $product->plan->id,
+            'product_id' => $product->product->id,
+            'coupon_id' => $coupon->id,
+            'status' => 'active',
+            'expires_at' => now()->addDays(2),
+            'currency_code' => 'USD',
+            'price' => 5.00,
+        ]);
+
+        for ($i = 0; $i < $paidInvoices; $i++) {
+            $invoice = Invoice::factory()->create([
+                'user_id' => $user->id,
+                'status' => 'paid',
+                'currency_code' => 'USD',
+            ]);
+            $invoice->items()->create([
+                'reference_id' => $service->id,
+                'reference_type' => Service::class,
+                'description' => 'Service',
+                'quantity' => 1,
+                'price' => 5.00,
+            ]);
+        }
+
+        return $service;
     }
 }
