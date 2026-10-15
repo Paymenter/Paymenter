@@ -46,6 +46,7 @@ return [
         'two_factor_disabled' => 'Two-factor authentication has been disabled.',
         'two_factor_code_incorrect' => 'The code is incorrect.',
         'session_logged_out' => 'Session has been logged out.',
+        'unauthorized' => 'This action is not allowed.',
     ],
 
     'no_credit' => 'You have no credits.',
