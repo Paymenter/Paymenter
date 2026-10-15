@@ -2,7 +2,9 @@
     {{ __('services.cancel_are_you_sure') }}
 
     <x-form.select name="type" label="{{ __('services.cancel_type') }}" required wire:model="type">
+        @if ($service->expires_at)
         <option value="end_of_period">{{ __('services.cancel_end_of_period') }}</option>
+        @endif
         <option value="immediate">{{ __('services.cancel_immediate') }}</option>
     </x-form.select>
 
