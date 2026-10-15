@@ -33,6 +33,12 @@ return [
     'upgrade_choose_product' => 'Choose a product to upgrade to',
     'upgrade_choose_config' => 'Choose the configuration for the upgrade',
     'next_step' => 'Next Step',
+    'not_upgradable' => 'This service is not upgradable.',
+    'upgrade_invalid' => 'Invalid upgrade.',
+    'upgrade_unchanged' => 'You have not changed anything. Please select a different product or change the configuration options.',
+    'upgrade_completed' => 'The upgrade has been completed.',
+    'upgrade_completed_credited' => 'The upgrade has been completed. We\'ve added the remaining amount to your account balance.',
+    'upgrade_added_to_cart' => 'The upgrade has been added to your cart. Please complete the payment to proceed.',
 
     'upgrade_pending' => 'You cannot upgrade whilst there is already an upgrade / downgrade invoice open',
 
@@ -61,6 +67,8 @@ return [
     'auto_pay_not_configured' => 'Not configured',
 
     'no_services' => 'No services found',
+    'label_updated' => 'Service label updated successfully',
+    'view_load_failed' => 'Got an error while trying to load the view',
     'update_billing_agreement' => 'Update Billing Agreement',
     'clear_billing_agreement' => 'Clear Billing Agreement',
     'select_billing_agreement' => 'Select Billing Agreement',
