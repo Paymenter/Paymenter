@@ -11,4 +11,8 @@ return [
         'tickets_closed' => 'Tickets closed',
         'email_logs_deleted' => 'Email logs deleted',
     ],
+
+    'permissions' => [
+        'no_longer_available' => ':permission (no longer available)',
+    ],
 ];
