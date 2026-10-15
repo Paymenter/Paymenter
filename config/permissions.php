@@ -100,6 +100,8 @@ return [
             ],
             'audits' => [
                 'viewAny' => 'View Audits',
+                'delete' => 'Delete Audits',
+                'deleteAny' => 'Bulk Delete Audits',
             ],
             'cron_stats' => [
                 'view' => 'View Cron Stats',
