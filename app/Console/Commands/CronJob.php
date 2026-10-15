@@ -217,14 +217,6 @@ class CronJob extends Command
                 return $number;
             });
 
-            $this->runCronJob('email_logs_deleted', function ($number = 0) {
-                $number = EmailLog::where('created_at', '<', now()->subDays((int) config('settings.cronjob_delete_email_logs', 90)))->count();
-                // Delete email logs older then x
-                EmailLog::where('created_at', '<', now()->subDays((int) config('settings.cronjob_delete_email_logs', 90)))->delete();
-
-                return $number;
-            });
-
         } catch (Exception $e) {
             DB::rollBack();
 
@@ -238,6 +230,8 @@ class CronJob extends Command
         }
 
         DB::commit();
+
+        $this->pruneEmailLogs();
 
         Setting::updateOrCreate(
             ['key' => 'last_cron_run', 'settingable_type' => CronStat::class],
@@ -278,6 +272,33 @@ class CronJob extends Command
             $credits->save();
 
             ExtensionHelper::addPayment($invoice->id, null, amount: $remaining, isCreditTransaction: true);
+        }
+    }
+
+    /**
+     * Runs outside the cron transaction: queue workers update email logs while the cron runs,
+     * and a single unindexed DELETE locking the whole table could then fail and roll back the billing run.
+     */
+    private function pruneEmailLogs(): void
+    {
+        try {
+            $this->runCronJob('email_logs_deleted', function ($number = 0) {
+                $cutoff = now()->subDays((int) config('settings.cronjob_delete_email_logs', 90));
+
+                // Delete by id in batches, so only the old rows are locked
+                do {
+                    $ids = EmailLog::where('created_at', '<', $cutoff)->orderBy('id')->limit(1000)->pluck('id');
+
+                    if ($ids->isNotEmpty()) {
+                        $number += EmailLog::whereIn('id', $ids)->delete();
+                    }
+                } while ($ids->count() === 1000);
+
+                return $number;
+            });
+        } catch (Exception $e) {
+            report($e);
+            $this->error('Failed to delete old email logs: ' . $e->getMessage());
         }
     }
 
