@@ -38,6 +38,11 @@ return [
     'oauth' => [
         'unverified_discord_account' => 'Your Discord account is not verified.',
         'account_not_registered' => 'You are not registered on this site.',
+        'unverified_google_account' => 'Your Google account email is not verified.',
+        'no_email' => 'Your account has no verified email address to sign in with.',
+        'cancelled' => 'Sign-in was cancelled.',
+        'expired' => 'That sign-in attempt has expired. Please try again.',
+        'failed' => 'Sign-in could not be completed. Please try again.',
     ],
 
     'reset_password' => 'Reset password',
