@@ -58,7 +58,7 @@ class CartItem extends Model
 
                     // If checkbox and selected, add price of first child (only one)
                     if ($option->type === 'checkbox' && $selected?->value) {
-                        $childPrice = $option->children->first()?->price(billing_period: $this->plan->billing_period, billing_unit: $this->plan->billing_unit, currency: $currency);
+                        $childPrice = $this->childPrice($option->children->first(), $currency);
                         if ($childPrice) {
                             $unavailable = $unavailable || !$childPrice->available;
                             $total += $childPrice->price;
@@ -79,7 +79,7 @@ class CartItem extends Model
                         return;
                     }
 
-                    $childPrice = $option->children->where('id', $selected?->value)->first()?->price(billing_period: $this->plan->billing_period, billing_unit: $this->plan->billing_unit, currency: $currency);
+                    $childPrice = $this->childPrice($option->children->where('id', $selected?->value)->first(), $currency);
                     if ($childPrice) {
                         $unavailable = $unavailable || !$childPrice->available;
                         $total += $childPrice->price;
@@ -118,5 +118,18 @@ class CartItem extends Model
                 return $price;
             }
         );
+    }
+
+    /**
+     * Price of a selected config option value for this item's billing period, or null when it is free.
+     * A value without any plans costs nothing; one priced only for other periods or currencies is unavailable.
+     */
+    private function childPrice(?ConfigOption $child, ?string $currency): ?Price
+    {
+        if (!$child || $child->plans->isEmpty()) {
+            return null;
+        }
+
+        return $child->price(billing_period: $this->plan->billing_period, billing_unit: $this->plan->billing_unit, currency: $currency);
     }
 }
