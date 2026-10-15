@@ -26,7 +26,7 @@ class Request extends Component
         $rateLimitKey = 'password-reset:' . request()->ip();
 
         if (RateLimiter::tooManyAttempts($rateLimitKey, 3)) {
-            $this->addError('email', 'Too many password reset attempts. Please try again later.');
+            $this->addError('email', __('passwords.throttled'));
 
             return;
         }
@@ -43,7 +43,7 @@ class Request extends Component
             ], false))]);
         }
 
-        $this->notify('If the email address is associated with an account, you will receive an email with instructions on how to reset your password.', 'success');
+        $this->notify(__('passwords.sent_if_exists'), 'success');
     }
 
     public function render()
