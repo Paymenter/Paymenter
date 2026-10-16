@@ -28,6 +28,9 @@ class CreateGateway extends CreateRecord
             return $record;
         }
 
+        // Same storage rules as the edit page: secrets declared with 'encrypted' => true are never stored in plain text
+        $options = collect(ExtensionHelper::getConfig($record->type, $record->extension))->keyBy('name');
+
         foreach ($data['settings'] as $key => $value) {
             if (is_null($value)) {
                 continue;
@@ -35,7 +38,9 @@ class CreateGateway extends CreateRecord
             $record->settings()->updateOrCreate([
                 'key' => $key,
             ], [
-                'value' => $value,
+                'type' => $options[$key]['database_type'] ?? 'string',
+                'value' => is_array($value) ? json_encode($value) : $value,
+                'encrypted' => $options[$key]['encrypted'] ?? false,
             ]);
         }
 
