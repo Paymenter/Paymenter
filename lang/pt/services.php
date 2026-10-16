@@ -20,6 +20,7 @@ return [
     'cancel_end_of_period' => 'Cancelar no fim do período de faturamento',
     'cancel_immediate_warning' => 'Ao clicar no botão abaixo, o serviço será cancelado imediatamente e você não poderá mais usá-lo.',
     'cancellation_requested' => 'Cancelamento solicitado',
+    'not_cancellable' => 'This service cannot be cancelled',
 
     'current_plan' => 'Plano atual',
     'new_plan' => 'Novo plano',
