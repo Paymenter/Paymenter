@@ -4,9 +4,9 @@ namespace App\Admin\Resources\ServerResource\Pages;
 
 use App\Admin\Resources\ServerResource;
 use App\Helpers\ExtensionHelper;
-use Arr;
 use Filament\Resources\Pages\CreateRecord;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Arr;
 
 class CreateServer extends CreateRecord
 {
@@ -24,23 +24,17 @@ class CreateServer extends CreateRecord
         $data['enabled'] = true;
         $record = static::getModel()::create(Arr::except($data, ['settings']));
 
-        if (!isset($data['settings'])) {
-            return $record;
-        }
+        $config = ExtensionHelper::getConfig($record->type, $record->extension);
 
-        // Same storage rules as the edit page: secrets declared with 'encrypted' => true are never stored in plain text
-        $options = collect(ExtensionHelper::getConfig($record->type, $record->extension))->keyBy('name');
-
-        foreach ($data['settings'] as $key => $value) {
-            if (is_null($value)) {
-                continue;
-            }
+        foreach ($config as $option) {
             $record->settings()->updateOrCreate([
-                'key' => $key,
+                'key' => $option['name'],
+                'settingable_id' => $record->id,
+                'settingable_type' => $record->getMorphClass(),
             ], [
-                'type' => $options[$key]['database_type'] ?? 'string',
-                'value' => is_array($value) ? json_encode($value) : $value,
-                'encrypted' => $options[$key]['encrypted'] ?? false,
+                'type' => $option['database_type'] ?? 'string',
+                'value' => isset($data['settings'][$option['name']]) ? (is_array($data['settings'][$option['name']]) ? json_encode($data['settings'][$option['name']]) : $data['settings'][$option['name']]) : null,
+                'encrypted' => $option['encrypted'] ?? false,
             ]);
         }
 
