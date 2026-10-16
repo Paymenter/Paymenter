@@ -6,6 +6,7 @@ return [
     'sent' => 'Enviamos o link de redefinição de senha para seu e-mail.',
     'throttled' => 'Por favor, aguarde antes de tentar novamente.',
     'token' => 'O token de redefinição de senha é inválido.',
-    'user' => 'Não foi encontrado nenhum usuário com este endereço de e-mail.',
+    'user' => "Não foi encontrado nenhum usuário com este endereço de e-mail.",
+    'sent_if_exists' => 'If the email address is associated with an account, you will receive an email with instructions on how to reset your password.',
 
 ];
