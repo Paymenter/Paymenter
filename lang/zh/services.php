@@ -20,6 +20,7 @@ return [
     'cancel_end_of_period' => '在計費週期結束時取消',
     'cancel_immediate_warning' => '當您按下下方的按鈕後，服務將立即取消，您將無法再使用。',
     'cancellation_requested' => '已請求取消',
+    'not_cancellable' => 'This service cannot be cancelled',
 
     'current_plan' => '目前方案',
     'new_plan' => '新方案',
