@@ -20,6 +20,7 @@ return [
     'cancel_end_of_period' => 'Скасувати наприкінці платіжного періоду',
     'cancel_immediate_warning' => 'Коли ви натиснете кнопку нижче, послуга буде скасована негайно, і ви не зможете її більше використовувати.',
     'cancellation_requested' => 'Запит на скасування надіслано',
+    'not_cancellable' => 'This service cannot be cancelled',
 
     'current_plan' => 'Поточний план',
     'new_plan' => 'Новий план',
