@@ -46,6 +46,7 @@ return [
         'two_factor_disabled' => 'İki faktörlü kimlik doğrulama devre dışı bırakıldı.',
         'two_factor_code_incorrect' => 'Kod hatalı.',
         'session_logged_out' => 'Oturumdan çıkış yapıldı.',
+        'unauthorized' => 'This action is not allowed.',
     ],
 
     'no_credit' => 'Hiç krediniz yok.',
