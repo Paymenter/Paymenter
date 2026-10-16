@@ -46,6 +46,7 @@ return [
         'two_factor_disabled' => 'L\'autenticazione a due fattori è stata disabilitata.',
         'two_factor_code_incorrect' => 'Il codice non è corretto ',
         'session_logged_out' => 'Sessione disconnessa.',
+        'unauthorized' => 'This action is not allowed.',
     ],
 
     'no_credit' => 'Non hai crediti.',
