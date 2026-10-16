@@ -40,6 +40,10 @@ class Show extends Component
 
     public function mount()
     {
+        if ($this->showCancel && !$this->service->cancellable) {
+            $this->showCancel = false;
+        }
+
         // Only fetch the actions if the service is active
         if ($this->service->status == Service::STATUS_ACTIVE) {
             $actions = [];
@@ -115,7 +119,7 @@ class Show extends Component
     public function updatedShowCancel($value)
     {
         if (!$this->service->cancellable) {
-            $this->notify('This service cannot be cancelled', 'error');
+            $this->notify(__('services.not_cancellable'), 'error');
             $this->showCancel = false;
 
             return;
