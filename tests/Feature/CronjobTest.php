@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\Jobs\Server\SuspendJob;
 use App\Jobs\Server\TerminateJob;
+use App\Models\EmailLog;
 use App\Models\Service;
 use App\Models\Ticket;
 use App\Models\TicketMessage;
@@ -392,5 +393,34 @@ class CronjobTest extends TestCase
             'id' => $product->product->id,
             'stock' => 1,
         ]);
+    }
+
+    public function test_old_email_logs_are_deleted(): void
+    {
+        config(['settings.cronjob_delete_email_logs' => 90]);
+
+        // More than one batch, so the loop has to come back for the rest
+        collect(range(1, 1001))->map(fn ($i) => [
+            'subject' => "Old {$i}",
+            'body' => 'Body',
+            'to' => 'old@example.com',
+            'status' => 'sent',
+            'created_at' => now()->subDays(91),
+            'updated_at' => now()->subDays(91),
+        ])->chunk(500)->each(fn ($rows) => EmailLog::insert($rows->values()->all()));
+
+        $recent = EmailLog::create([
+            'subject' => 'Recent',
+            'body' => 'Body',
+            'to' => 'new@example.com',
+            'status' => 'sent',
+        ]);
+
+        $this->artisan('app:cron-job')
+            ->assertExitCode(0);
+
+        $this->assertSame(1, EmailLog::count());
+        $this->assertDatabaseHas('email_logs', ['id' => $recent->id]);
+        $this->assertDatabaseHas('cron_stats', ['key' => 'email_logs_deleted', 'value' => 1001]);
     }
 }
