@@ -20,6 +20,7 @@ return [
     'cancel_end_of_period' => 'Annuller ved slutningen af faktureringsperioden',
     'cancel_immediate_warning' => 'Når du trykker på knappen nedenfor, vil tjenesten blive annulleret med det samme, og du vil ikke længere være i stand til at bruge den.',
     'cancellation_requested' => 'Annullering anmodet',
+    'not_cancellable' => 'This service cannot be cancelled',
 
     'current_plan' => 'Nuværende abonnement',
     'new_plan' => 'Nyt abonnement',
