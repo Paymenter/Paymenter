@@ -5,6 +5,7 @@ namespace App\Admin\Resources;
 use App\Admin\Resources\RoleResource\Pages\CreateRole;
 use App\Admin\Resources\RoleResource\Pages\EditRole;
 use App\Admin\Resources\RoleResource\Pages\ListRoles;
+use App\Helpers\PermissionOptions;
 use App\Models\Role;
 use Filament\Actions\EditAction;
 use Filament\Forms\Components\CheckboxList;
@@ -42,7 +43,10 @@ class RoleResource extends Resource
                 // Split permission UI into core and extension
                 CheckboxList::make('permissions')
                     ->label(false)
-                    ->options(array_merge(Arr::dot(config('permissions.role')), $extensionPermissions))
+                    ->options(fn (?Role $record): array => PermissionOptions::withStored(
+                        array_merge(Arr::dot(config('permissions.role')), $extensionPermissions),
+                        $record?->permissions,
+                    ))
                     ->columns(4)
                     ->bulkToggleable()
                     ->searchable()
