@@ -7,6 +7,8 @@ use App\Classes\Extension\Server;
 use App\Models\Service;
 use App\Rules\Domain;
 use Exception;
+use Illuminate\Contracts\Encryption\DecryptException;
+use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Http;
 
 #[ExtensionMeta(
@@ -201,11 +203,12 @@ class DirectAdmin extends Server
             'value' => $username,
         ]);
 
+        // Stored encrypted: it is only needed to create SSO links (see accountPassword())
         $service->properties()->updateOrCreate([
             'key' => 'directadmin_password',
         ], [
             'name' => 'DirectAdmin password',
-            'value' => $password,
+            'value' => Crypt::encryptString($password),
         ]);
 
         return [
@@ -297,6 +300,23 @@ class DirectAdmin extends Server
         return true;
     }
 
+    /**
+     * Account password from the service properties. Values stored before encryption
+     * (or typed by an admin in the properties table) are plain text and used as is.
+     */
+    public static function accountPassword(?string $value): ?string
+    {
+        if ($value === null || $value === '') {
+            return $value;
+        }
+
+        try {
+            return Crypt::decryptString($value);
+        } catch (DecryptException) {
+            return $value;
+        }
+    }
+
     public function getActions(Service $service, $settings, $properties): array
     {
         if (!isset($properties['directadmin_username'], $properties['directadmin_password'])) {
@@ -318,7 +338,7 @@ class DirectAdmin extends Server
             return '';
         }
 
-        $response = Http::withBasicAuth($properties['directadmin_username'], $properties['directadmin_password'])
+        $response = Http::withBasicAuth($properties['directadmin_username'], self::accountPassword($properties['directadmin_password']))
             ->post(rtrim($this->config('host'), '/') . '/CMD_API_LOGIN_KEYS', [
                 'action' => 'create',
                 'type' => 'one_time_url',
