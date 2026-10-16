@@ -46,6 +46,7 @@ return [
         'two_factor_disabled' => 'Zwei-Faktor-Authentifizierung wurde deaktiviert.',
         'two_factor_code_incorrect' => 'Der Code war falsch.',
         'session_logged_out' => 'Sitzung wurde abgemeldet.',
+        'unauthorized' => 'This action is not allowed.',
     ],
 
     'no_credit' => 'Du hast kein Guthaben.',
