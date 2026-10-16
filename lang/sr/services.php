@@ -20,6 +20,7 @@ return [
     'cancel_end_of_period' => 'Otkaži na kraju obračunskog perioda',
     'cancel_immediate_warning' => 'Kada pritisnete dugme ispod, usluga će odmah biti otkazana i više je nećete moći koristiti.',
     'cancellation_requested' => 'Zahtev za otkazivanje je poslat',
+    'not_cancellable' => 'This service cannot be cancelled',
 
     'current_plan' => 'Trenutni paket',
     'new_plan' => 'Novi paket',
