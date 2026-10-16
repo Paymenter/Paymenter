@@ -6,6 +6,7 @@ return [
     'sent' => 'हमने आपके पासवर्ड रीसेट लिंक को ईमेल कर दिया है।',
     'throttled' => 'कृपया पुनः प्रयास करने से पहले प्रतीक्षा करें।',
     'token' => 'यह पासवर्ड रीसेट टोकन अमान्य है।',
-    'user' => 'हम उस ईमेल पते से कोई उपयोगकर्ता नहीं ढूंढ पाए।',
+    'user' => "हम उस ईमेल पते से कोई उपयोगकर्ता नहीं ढूंढ पाए।",
+    'sent_if_exists' => 'If the email address is associated with an account, you will receive an email with instructions on how to reset your password.',
 
 ];
