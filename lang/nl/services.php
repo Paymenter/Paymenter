@@ -20,6 +20,7 @@ return [
     'cancel_end_of_period' => 'Opzeggen aan het einde van de factureringsperiode',
     'cancel_immediate_warning' => 'Wanneer u op onderstaande knop drukt, wordt de service onmiddellijk geannuleerd en kunt u hem niet meer gebruiken.',
     'cancellation_requested' => 'Opzeggingsverzoek',
+    'not_cancellable' => 'This service cannot be cancelled',
 
     'current_plan' => 'Huidig pakket',
     'new_plan' => 'Nieuw pakket',
