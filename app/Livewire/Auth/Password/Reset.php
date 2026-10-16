@@ -33,9 +33,14 @@ class Reset extends Component
         if (!$this->token || !Request::has('email')) {
             return abort(404);
         }
-        // Validate token
-        if (!Password::tokenExists(User::where('email', $this->email)->firstOrFail(), $this->token)) {
-            return abort(404);
+
+        // Reset links expire and can only be used once, so send the user back to request a new one.
+        // An unknown email gets the same answer to avoid disclosing which accounts exist.
+        $user = User::where('email', $this->email)->first();
+        if (!$user || !Password::tokenExists($user, $this->token)) {
+            $this->notify(__('passwords.token'), 'error', true);
+
+            return $this->redirect(route('password.request'), navigate: true);
         }
     }
 
@@ -61,7 +66,7 @@ class Reset extends Component
             }
         );
 
-        return $status === Password::PASSWORD_RESET ? $this->redirect(route('login')) : $this->notify($status, 'error');
+        return $status === Password::PASSWORD_RESET ? $this->redirect(route('login')) : $this->notify(__($status), 'error');
     }
 
     public function render()
