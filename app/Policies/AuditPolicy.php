@@ -12,14 +12,14 @@ class AuditPolicy
      */
     public function viewAny(User $user): bool
     {
-        return $user->hasPermission('admin.audit.viewAny');
+        return $user->hasPermission('admin.audits.viewAny');
     }
 
     /**
      * Determine whether the user can view the model.
      */
-    public function view(User $user, Audit $role): bool
+    public function view(User $user, Audit $audit): bool
     {
-        return $user->hasPermission('admin.audit.viewAny');
+        return $user->hasPermission('admin.audits.viewAny');
     }
 }
