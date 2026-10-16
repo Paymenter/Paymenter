@@ -46,6 +46,7 @@ return [
         'two_factor_disabled' => 'Wyłączono uwierzytelnianie dwuetapowe.',
         'two_factor_code_incorrect' => 'Ten kod jest nieprawidłowy.',
         'session_logged_out' => 'Sesja została wylogowana.',
+        'unauthorized' => 'This action is not allowed.',
     ],
 
     'no_credit' => 'Nie masz żadnych kredytów.',
