@@ -20,6 +20,7 @@ return [
     'cancel_end_of_period' => 'Faturalandırma döneminin sonunda iptal et',
     'cancel_immediate_warning' => 'Aşağıdaki butona bastığınızda hizmet hemen iptal edilecek ve artık kullanamayacaksınız.',
     'cancellation_requested' => 'İptal talep edildi',
+    'not_cancellable' => 'This service cannot be cancelled',
 
     'current_plan' => 'Mevcut Paket',
     'new_plan' => 'Yeni Paket',
