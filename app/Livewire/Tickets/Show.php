@@ -34,7 +34,7 @@ class Show extends Component
 
         $rateLimitKey = 'ticket-message:' . $this->ticket->id . ':' . Auth::id();
         if (RateLimiter::tooManyAttempts($rateLimitKey, 3)) {
-            $this->notify('Too many message attempts. Please try again in 10 seconds.', 'error');
+            $this->notify(__('ticket.reply_rate_limited', ['seconds' => 10]), 'error');
 
             return;
         }
@@ -59,7 +59,7 @@ class Show extends Component
             ]);
         }
 
-        $this->notify('Message sent successfully');
+        $this->notify(__('ticket.message_sent'));
 
         $this->message = '';
         $this->attachments = [];

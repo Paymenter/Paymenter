@@ -25,7 +25,7 @@ class Widget extends Component
         return view('services.widget', [
             'services' => $query->paginate(config('settings.pagination')),
         ])->layoutData([
-            'title' => 'Services',
+            'title' => __('services.services'),
         ]);
     }
 }

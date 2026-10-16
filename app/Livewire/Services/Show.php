@@ -93,7 +93,7 @@ class Show extends Component
         $this->service->save();
 
         $this->editLabel = false;
-        $this->notify('Service label updated successfully', 'success');
+        $this->notify(__('services.label_updated'), 'success');
     }
 
     public function changeView($view)
@@ -148,14 +148,14 @@ class Show extends Component
                 $view = ExtensionHelper::getView($this->service, $currentViewObj);
             } catch (Exception $e) {
                 if ($previousView !== $this->views[0]['name'] ?? null) {
-                    $this->notify('Got an error while trying to load the view', 'error');
+                    $this->notify(__('services.view_load_failed'), 'error');
                 }
                 $this->currentView = $this->views[0]['name'] ?? null;
             }
         }
 
         return view('services.show', ['extensionView' => $view])->layoutData([
-            'title' => 'Services',
+            'title' => __('services.services'),
             'sidebar' => true,
         ]);
     }

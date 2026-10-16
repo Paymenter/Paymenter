@@ -93,7 +93,7 @@ class PaymentMethods extends Component
             'billingAgreements' => Auth::user()->billingAgreements()->latest()->get(),
         ])->layoutData([
             'sidebar' => true,
-            'title' => 'Payment Methods',
+            'title' => __('account.payment_methods'),
         ]);
     }
 }
