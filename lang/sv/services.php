@@ -20,6 +20,7 @@ return [
     'cancel_end_of_period' => 'Avbryt i slutet av faktureringsperioden',
     'cancel_immediate_warning' => 'När du trycker på knappen nedan kommer tjänsten att avbrytas omedelbart och du kommer inte att kunna använda den längre.',
     'cancellation_requested' => 'Annullering begärd',
+    'not_cancellable' => 'This service cannot be cancelled',
 
     'current_plan' => 'Nuvarande Plan',
     'new_plan' => 'Ny Plan',
