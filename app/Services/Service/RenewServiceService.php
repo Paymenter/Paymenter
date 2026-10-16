@@ -18,7 +18,8 @@ class RenewServiceService
         if ($service->product->server) {
             if ($service->status == Service::STATUS_SUSPENDED) {
                 UnsuspendJob::dispatch($service);
-            } elseif ($service->status == Service::STATUS_PENDING) {
+            } elseif (in_array($service->status, [Service::STATUS_PENDING, Service::STATUS_CANCELLED])) {
+                // A cancelled service has no server: it was never created or it was terminated
                 CreateJob::dispatch($service);
             }
         }
