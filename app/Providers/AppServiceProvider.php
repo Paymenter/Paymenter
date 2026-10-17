@@ -28,6 +28,7 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Str;
 use Laravel\Passport\Passport;
+use Laravel\Passkeys\Contracts\PasskeyLoginResponse as PasskeyLoginResponseContract;
 use League\CommonMark\Extension\Table\TableExtension;
 use Livewire\Livewire;
 use SocialiteProviders\Discord\Provider;
@@ -42,6 +43,7 @@ class AppServiceProvider extends ServiceProvider
     {
         // Service provider for settings
         $this->app->register(SettingsProvider::class);
+        $this->app->singleton(PasskeyLoginResponseContract::class, \App\Auth\PasskeyLoginResponse::class);
 
         UrlGenerator::macro('alternateHasCorrectSignature', function (Request $request, $absolute = true, Closure|array $ignoreQuery = []) {
             // ensure the base path is applied to absolute url
