@@ -20,13 +20,6 @@
             </p>
 
             <p x-show="error" x-text="error" role="alert" class="mt-2 text-sm text-red-400"></p>
-            <p class="text-xs text-primary-400 mt-2">
-                {{ __('account.passkey_confirmation_required') }}
-                <a href="{{ route('password.confirm') }}" wire:navigate class="text-secondary hover:underline">
-                    {{ __('account.confirm_password') }}
-                </a>
-            </p>
-
             <div class="mt-4">
                 @forelse ($passkeys as $passkey)
                 <div class="flex flex-row items-center justify-between gap-3 py-3 border-b border-base/50">
