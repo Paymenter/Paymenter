@@ -58,10 +58,10 @@ class CronJob extends Command
 
                     // Calculate if we should edit the price because of the coupon
                     if ($service->coupon) {
-                        // Calculate what iteration of the coupon we are in
-                        $iteration = $service->invoices()->count() + 1;
-                        if ($iteration == $service->coupon->recurring) {
-                            // Calculate the price
+                        // A coupon recurring N times covers the first N invoices, so recalculate once N are paid,
+                        // which is when calculatePrice() stops applying the discount
+                        $cycles = (int) $service->coupon->recurring;
+                        if ($cycles > 1 && $service->invoices()->where('status', 'paid')->count() === $cycles) {
                             $service->price = $service->calculatePrice();
                             $service->save();
                         }
