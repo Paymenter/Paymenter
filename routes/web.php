@@ -29,7 +29,6 @@ Route::group(['middleware' => ['web', 'guest']], function () {
     Route::get('/password/reset/{token}', Auth\Password\Reset::class)->name('password.reset');
 
     Route::get('/oauth/{provider}', [SocialLoginController::class, 'redirect'])->name('oauth.redirect');
-    Route::get('/oauth/{provider}/callback', [SocialLoginController::class, 'handle'])->name('oauth.handle');
 });
 
 Route::group(['middleware' => ['web', 'auth', MustVerfiyEmail::class]], function () {
@@ -53,6 +52,7 @@ Route::group(['middleware' => ['web', 'auth']], function () {
     Route::get('/account/credits', Client\Credits::class)->name('account.credits');
     Route::get('/account/payment-methods', Client\PaymentMethods::class)->name('account.payment-methods');
     Route::get('/account/notifications', Client\Notifications::class)->name('account.notifications');
+    Route::get('/account/connections/{provider}', [SocialLoginController::class, 'connect'])->name('oauth.connect');
 
     Route::get('/email/verify', Auth\VerifyEmail::class)->name('verification.notice');
     Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $request) {
@@ -62,6 +62,10 @@ Route::group(['middleware' => ['web', 'auth']], function () {
     })->middleware(['signed'])->name('verification.verify');
     Route::get('/tickets/attachments/{attachment:uuid}', [TicketAttachmentController::class, 'download'])->name('tickets.attachments.show')->middleware('can:view,attachment');
 });
+
+// This callback must be available to both guests signing in and authenticated
+// users returning from a "connect account" flow.
+Route::get('/oauth/{provider}/callback', [SocialLoginController::class, 'handle'])->name('oauth.handle');
 
 Route::get('cart', Cart::class)->name('cart')->middleware('checkout');
 
