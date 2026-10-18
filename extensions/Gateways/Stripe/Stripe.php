@@ -773,7 +773,7 @@ class Stripe extends Gateway
                 $error = $e->response->object()->error;
                 // If error is invalid_request_error and message contains "The provided currency" we can show the message
                 if ($error->type === 'invalid_request_error' && Str::contains($error->message, 'The currency provided')) {
-                    throw new DisplayException('Cannot charge the billing agreement because the card does not support the invoice currency (' . $invoice->currency_code . '). Please use another payment method.');
+                    throw new DisplayException(__('Cannot charge the billing agreement because the card does not support the invoice currency (:currency). Please use another payment method.', ['currency' => $invoice->currency_code]));
                 }
             }
             throw new DisplayException('Could not process payment');
