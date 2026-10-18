@@ -5,6 +5,7 @@ namespace App\Livewire\Tickets;
 use App\Attributes\DisabledIf;
 use App\Livewire\Component;
 use App\Models\Ticket;
+use App\Models\TicketMessageAttachment;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
@@ -38,7 +39,7 @@ class Create extends Component
             'subject' => 'required|string',
             'message' => 'required|string',
             'priority' => 'required|in:low,medium,high',
-            'attachments.*' => 'file|max:10240',
+            'attachments.*' => TicketMessageAttachment::validationRules(),
         ]);
 
         $rateLimitKey = 'create-ticket:' . Auth::id();
