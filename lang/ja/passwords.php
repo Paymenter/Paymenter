@@ -2,11 +2,11 @@
 
 return [
 
-    'reset' => 'Your password has been reset.',
-    'sent' => 'We have emailed your password reset link.',
-    'throttled' => 'Please wait before retrying.',
-    'token' => 'This password reset token is invalid.',
-    'user' => "We can't find a user with that email address.",
-    'sent_if_exists' => 'If the email address is associated with an account, you will receive an email with instructions on how to reset your password.',
+    'reset' => 'パスワードをリセットしました。',
+    'sent' => 'パスワードリセット用のリンクをメールで送信しました。',
+    'throttled' => 'しばらく待ってから再度お試しください。',
+    'token' => 'このパスワードリセット用トークンは無効です。',
+    'user' => "このメールアドレスに一致するユーザーが見つかりません。",
+    'sent_if_exists' => '入力されたメールアドレスがアカウントに登録されている場合は、パスワードのリセット方法を記載したメールが届きます。',
 
 ];
