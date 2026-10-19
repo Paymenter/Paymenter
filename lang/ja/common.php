@@ -4,12 +4,12 @@ return [
     '' => '',
 
     'button' => [
-        'view' => 'View',
-        'view_all' => 'View All',
+        'view' => '表示',
+        'view_all' => 'すべて表示',
     ],
-    'confirm' => 'Confirm',
-    'cancel' => 'Cancel',
+    'confirm' => '確定',
+    'cancel' => 'キャンセル',
     'select' => [
-        'placeholder' => 'Please select :name',
+        'placeholder' => ':nameを選択してください',
     ],
 ];
