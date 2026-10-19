@@ -3,12 +3,12 @@
 return [
 
     'cronjob' => [
-        'invoices_created' => 'Invoices created',
-        'orders_cancelled' => 'Orders cancelled',
-        'upgrade_invoices_updated' => 'Upgrade invoices updated',
-        'services_suspended' => 'Services suspended',
-        'services_terminated' => 'Services terminated',
-        'tickets_closed' => 'Tickets closed',
-        'email_logs_deleted' => 'Email logs deleted',
+        'invoices_created' => '作成された請求書',
+        'orders_cancelled' => 'キャンセルされた注文',
+        'upgrade_invoices_updated' => '更新されたアップグレード請求書',
+        'services_suspended' => '一時停止されたサービス',
+        'services_terminated' => '終了されたサービス',
+        'tickets_closed' => 'クローズされたチケット',
+        'email_logs_deleted' => '削除されたメールログ',
     ],
 ];
