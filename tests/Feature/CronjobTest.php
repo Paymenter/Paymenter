@@ -9,6 +9,7 @@ use App\Models\Ticket;
 use App\Models\TicketMessage;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Queue;
 use Tests\TestCase;
 
@@ -392,5 +393,65 @@ class CronjobTest extends TestCase
             'id' => $product->product->id,
             'stock' => 1,
         ]);
+    }
+
+    public function test_all_overdue_services_are_terminated_when_there_are_more_than_one_chunk(): void
+    {
+        config(['settings.cronjob_order_terminate' => 14]);
+
+        $product = $this->createProduct(['stock' => null]);
+        $user = User::factory()->create();
+
+        // More rows than each()'s default chunk size of 1000
+        collect(range(1, 1001))->map(fn () => [
+            'user_id' => $user->id,
+            'product_id' => $product->product->id,
+            'plan_id' => $product->plan->id,
+            'status' => 'suspended',
+            'expires_at' => now()->subDays(15),
+            'currency_code' => 'USD',
+            'price' => 10.00,
+            'created_at' => now(),
+            'updated_at' => now(),
+        ])->chunk(500)->each(fn ($rows) => DB::table('services')->insert($rows->values()->all()));
+
+        Queue::fake();
+
+        $this->artisan('app:cron-job')
+            ->assertExitCode(0);
+
+        $this->assertSame(0, Service::where('status', 'suspended')->count());
+        $this->assertSame(1001, Service::where('status', Service::STATUS_CANCELLED)->count());
+        Queue::assertPushed(TerminateJob::class, 1001);
+    }
+
+    public function test_all_inactive_tickets_are_closed_when_there_are_more_than_one_chunk(): void
+    {
+        config(['settings.cronjob_close_ticket' => 7]);
+
+        $user = User::factory()->create();
+
+        collect(range(1, 1001))->map(fn ($i) => [
+            'subject' => "Ticket {$i}",
+            'status' => 'replied',
+            'priority' => 'low',
+            'user_id' => $user->id,
+            'created_at' => now()->subDays(8),
+            'updated_at' => now()->subDays(8),
+        ])->chunk(500)->each(fn ($rows) => DB::table('tickets')->insert($rows->values()->all()));
+
+        Ticket::pluck('id')->map(fn ($id) => [
+            'ticket_id' => $id,
+            'user_id' => $user->id,
+            'message' => 'This is a test message.',
+            'created_at' => now()->subDays(8),
+            'updated_at' => now()->subDays(8),
+        ])->chunk(500)->each(fn ($rows) => DB::table('ticket_messages')->insert($rows->values()->all()));
+
+        $this->artisan('app:cron-job')
+            ->assertExitCode(0);
+
+        $this->assertSame(0, Ticket::where('status', 'replied')->count());
+        $this->assertSame(1001, Ticket::where('status', 'closed')->count());
     }
 }
