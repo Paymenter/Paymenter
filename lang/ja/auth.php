@@ -13,43 +13,43 @@ return [
     |
     */
 
-    'failed' => 'These credentials do not match our records.',
-    'password' => 'The provided password is incorrect.',
-    'throttle' => 'Too many login attempts. Please try again in :seconds seconds.',
+    'failed' => 'メールアドレスまたはパスワードが正しくありません。',
+    'password' => '入力されたパスワードが正しくありません。',
+    'throttle' => 'ログイン試行回数が上限を超えました。:seconds秒後にもう一度お試しください。',
 
-    'sign_in' => 'Sign in',
-    'sign_in_title' => 'Sign in to your account',
-    'or_sign_in_with' => 'Or sign in with',
-    'forgot_password' => 'Forgot your password?',
-    'dont_have_account' => 'Don\'t have an account?',
-    'already_have_account' => 'Already have an account?',
+    'sign_in' => 'ログイン',
+    'sign_in_title' => 'アカウントにログイン',
+    'or_sign_in_with' => 'または次の方法でログイン',
+    'forgot_password' => 'パスワードをお忘れですか？',
+    'dont_have_account' => 'アカウントをお持ちでないですか？',
+    'already_have_account' => 'すでにアカウントをお持ちですか？',
 
-    'sign_up' => 'Sign up',
-    'sign_up_title' => 'Create your account',
+    'sign_up' => '新規登録',
+    'sign_up_title' => 'アカウントを作成',
 
-    'logout' => 'Logout',
+    'logout' => 'ログアウト',
 
     'input' => [
-        'email' => 'Email',
-        'email_label' => 'Email Address',
-        'password' => 'Password',
+        'email' => 'メールアドレス',
+        'email_label' => 'メールアドレス',
+        'password' => 'パスワード',
     ],
 
     'oauth' => [
-        'unverified_discord_account' => 'Your Discord account is not verified.',
-        'account_not_registered' => 'You are not registered on this site.',
+        'unverified_discord_account' => 'お使いのDiscordアカウントは認証されていません。',
+        'account_not_registered' => 'このアカウントはこのサイトに登録されていません。',
     ],
 
-    'reset_password' => 'Reset password',
+    'reset_password' => 'パスワードをリセット',
 
-    'verify_2fa' => 'Verify 2FA',
-    'verify' => 'Verify',
+    'verify_2fa' => '二要素認証コードの確認',
+    'verify' => '確認',
 
     'verification' => [
-        'notice' => 'Verify your email address',
-        'sent' => 'A new verification link has been sent to your email address.',
-        'check_your_email' => 'Before proceeding, please check your email for a verification link.',
-        'not_received' => 'If you did not receive the email you can request another verification email.',
-        'request_another' => 'Resend verification email',
+        'notice' => 'メールアドレスを確認してください',
+        'sent' => '新しい確認用リンクをメールアドレス宛てに送信しました。',
+        'check_your_email' => '続行する前に、確認用リンクが記載されたメールをご確認ください。',
+        'not_received' => 'メールが届いていない場合は、確認メールを再送信できます。',
+        'request_another' => '確認メールを再送信',
     ],
 ];
