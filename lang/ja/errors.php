@@ -2,12 +2,12 @@
 
 return [
     '404' => [
-        'title' => 'Page Not Found',
-        'message' => 'Sorry, the page you are looking for could not be found.',
-        'return_home' => 'Back to Home',
+        'title' => 'ページが見つかりません',
+        'message' => '申し訳ありません。お探しのページは見つかりませんでした。',
+        'return_home' => 'ホームに戻る',
     ],
     '500' => [
-        'title' => 'Server Error',
-        'message' => 'Whoops, something went wrong on our end. Please try again later.',
+        'title' => 'サーバーエラー',
+        'message' => '申し訳ありません。サーバー側で問題が発生しました。しばらくしてから再度お試しください。',
     ],
 ];
