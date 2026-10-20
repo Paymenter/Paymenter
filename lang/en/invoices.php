@@ -71,5 +71,6 @@ return [
     'refund_failed' => 'Refund failed.',
     'refund_via_gateway' => 'Refund via Payment Gateway',
     'deleted_user' => 'Deleted User',
+    'charge_in_progress' => 'A payment for this invoice is already being processed. Please wait a few minutes before trying again.',
 
 ];
