@@ -118,13 +118,46 @@ class Virtfusion extends Server
         $response = Http::withHeaders([
             'Authorization' => 'Bearer ' . $this->config('apikey'),
             'Accept' => 'application/json',
-        ])->$method($req_url, $data);
+        ])
+            ->connectTimeout(5)
+            // Reads run while pages render; writes such as creating a server can take longer
+            ->timeout($method === 'get' ? 15 : 30)
+            ->$method($req_url, $data);
 
         if (!$response->successful()) {
-            throw new Exception('An error occurred, got status code ' . $response->status() . ' on ' . $req_url);
+            $message = 'An error occurred, got status code ' . $response->status() . ' on ' . $req_url;
+
+            if (is_array($response->json()) && $detail = $this->errorDetail($response->json())) {
+                $message .= ': ' . $detail;
+            }
+
+            throw new Exception($message, $response->status());
         }
 
         return $response->json() ?? [];
+    }
+
+    /**
+     * Get the reason VirtFusion gave in an error response
+     */
+    private function errorDetail(array $json): ?string
+    {
+        $message = $json['msg'] ?? $json['message'] ?? null;
+        if (is_string($message) && trim($message) !== '') {
+            return trim($message);
+        }
+
+        // Validation errors: {"errors": {"field": ["reason"]}}
+        $errors = [];
+        foreach ((array) ($json['errors'] ?? []) as $field => $messages) {
+            foreach ((array) $messages as $error) {
+                if (is_string($error)) {
+                    $errors[] = is_string($field) ? $field . ': ' . $error : $error;
+                }
+            }
+        }
+
+        return $errors ? implode('; ', $errors) : null;
     }
 
     /**
@@ -135,6 +168,12 @@ class Virtfusion extends Server
         try {
             $response = $this->request('/users/' . $service->user->id . '/byExtRelation');
         } catch (Exception $e) {
+            // Only a 4xx means there is no such user. On a 5xx or a timeout the user probably exists,
+            // and creating it again would fail with an unrelated error.
+            if ($e->getCode() < 400 || $e->getCode() >= 500) {
+                throw $e;
+            }
+
             try {
                 $response = $this->request('/users', 'post', [
                     'email' => $service->user->email,
@@ -142,11 +181,15 @@ class Virtfusion extends Server
                     'extRelationId' => $service->user->id,
                 ]);
             } catch (Exception $e) {
-                throw new Exception('Failed to create user, this is probably due to a wrong extRelationId');
+                throw new Exception('Failed to create user: ' . $e->getMessage(), $e->getCode(), $e);
             }
         }
 
-        return $response['data']['id'] ?? '';
+        if (empty($response['data']['id'])) {
+            throw new Exception('VirtFusion did not return a user id for user ' . $service->user->id);
+        }
+
+        return (string) $response['data']['id'];
     }
 
     /**
