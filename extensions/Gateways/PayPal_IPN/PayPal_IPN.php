@@ -83,6 +83,14 @@ class PayPal_IPN extends Gateway
      */
     public function notify(Request $request)
     {
+        // Validate owner and status before posting the message back to PayPal, which every request would otherwise trigger
+        if (strtolower((string) $request->receiver_email) !== strtolower((string) $this->config('email'))) {
+            return;
+        }
+        if ($request->payment_status !== 'Completed') {
+            return;
+        }
+
         // Send the request to PayPal
         $response = Http::asForm()->post($this->config('test_mode') ? 'https://ipnpb.sandbox.paypal.com/cgi-bin/webscr' : 'https://ipnpb.paypal.com/cgi-bin/webscr', [
             'cmd' => '_notify-validate',
@@ -90,13 +98,6 @@ class PayPal_IPN extends Gateway
 
         // Check if the response is verified
         if ($response->body() == 'VERIFIED') {
-            // Validate owner and amount
-            if (strtolower($request->receiver_email) !== strtolower($this->config('email'))) {
-                return;
-            }
-            if ($request->payment_status !== 'Completed') {
-                return;
-            }
             // Validate currency and amount
             $invoice = Invoice::find($request->item_number);
             if (!$invoice || $request->mc_currency !== $invoice->currency_code) {
