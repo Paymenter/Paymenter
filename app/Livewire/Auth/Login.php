@@ -4,6 +4,7 @@ namespace App\Livewire\Auth;
 
 use App\Livewire\Component;
 use App\Models\User;
+use App\Support\ClientIp;
 use App\Traits\Captchable;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\RateLimiter;
@@ -29,15 +30,15 @@ class Login extends Component
 
         $emailKey = strtolower($this->email);
 
-        if (RateLimiter::tooManyAttempts('login:' . $emailKey . ':' . request()->ip(), 5)) {
+        if (RateLimiter::tooManyAttempts('login:' . $emailKey . ':' . ClientIp::key(), 5)) {
             $this->addError('email', __('auth.throttle', [
-                'seconds' => RateLimiter::availableIn('login:' . $emailKey . ':' . request()->ip()),
+                'seconds' => RateLimiter::availableIn('login:' . $emailKey . ':' . ClientIp::key()),
             ]));
 
             return;
         }
 
-        RateLimiter::increment('login:' . $emailKey . ':' . request()->ip());
+        RateLimiter::increment('login:' . $emailKey . ':' . ClientIp::key());
 
         // Manually validate credentials instead of Auth::attempt
         $user = User::where('email', $this->email)->first();
@@ -59,7 +60,7 @@ class Login extends Component
             return $this->redirect(route('2fa'), true);
         }
 
-        RateLimiter::clear('login:' . $emailKey . ':' . request()->ip());
+        RateLimiter::clear('login:' . $emailKey . ':' . ClientIp::key());
 
         $loginAction->execute($user, $this->remember);
 

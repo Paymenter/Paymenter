@@ -8,6 +8,7 @@ use App\Http\Middleware\LockSession;
 use App\Http\Middleware\ProxyMiddleware;
 use App\Http\Middleware\ResolveUserSession;
 use App\Http\Middleware\SetLocale;
+use App\Http\Middleware\ThrottleRequests;
 use App\Models\DebugLog;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
@@ -28,6 +29,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'scope' => CheckTokenForAnyScope::class,
             'api.admin' => AdminApi::class,
             'checkout' => CheckoutParameterMiddleware::class,
+            'throttle' => ThrottleRequests::class,
         ]);
         $middleware->web([
             ResolveUserSession::class,

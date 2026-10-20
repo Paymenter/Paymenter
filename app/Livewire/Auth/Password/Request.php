@@ -5,6 +5,7 @@ namespace App\Livewire\Auth\Password;
 use App\Helpers\NotificationHelper;
 use App\Livewire\Component;
 use App\Models\User;
+use App\Support\ClientIp;
 use App\Traits\Captchable;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\RateLimiter;
@@ -23,7 +24,7 @@ class Request extends Component
             'email' => 'required|email',
         ]);
 
-        $rateLimitKey = 'password-reset:' . request()->ip();
+        $rateLimitKey = 'password-reset:' . ClientIp::key();
 
         if (RateLimiter::tooManyAttempts($rateLimitKey, 3)) {
             $this->addError('email', __('passwords.throttled'));
