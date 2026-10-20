@@ -809,6 +809,12 @@ class Stripe extends Gateway
             return false;
         }
 
+        // Same 5 minute tolerance as Stripe's own libraries, so a captured event cannot be replayed later.
+        // Stripe signs every retry again, so late retries still pass.
+        if (!ctype_digit((string) $timestamp) || abs(time() - (int) $timestamp) > 300) {
+            return false;
+        }
+
         // Create the signed payload string
         $signed_payload = $timestamp . '.' . $payload;
 
