@@ -42,6 +42,7 @@ return [
     'notifications' => [
         'password_changed' => 'Password has been changed.',
         'password_incorrect' => 'The current password is incorrect.',
+        'email_change_throttled' => 'You have changed your email address too often. Please try again in :seconds seconds.',
         'two_factor_enabled' => 'Two-factor authentication has been enabled.',
         'two_factor_disabled' => 'Two-factor authentication has been disabled.',
         'two_factor_code_incorrect' => 'The code is incorrect.',

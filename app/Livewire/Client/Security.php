@@ -5,7 +5,9 @@ namespace App\Livewire\Client;
 use App\Livewire\Component;
 use App\Models\UserSession;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Facades\Session;
 use Livewire\Attributes\Locked;
 use RobThree\Auth\Providers\Qr\EndroidQrCodeProvider;
@@ -29,6 +31,8 @@ class Security extends Component
 
     public string $twoFactorCode = '';
 
+    public string $disableTwoFactorCode = '';
+
     public function mount()
     {
         $this->twoFactorEnabled = Auth::user()->tfa_secret ? true : false;
@@ -46,9 +50,21 @@ class Security extends Component
     {
         $this->validate();
 
+        $rateLimitKey = 'password-confirm:' . Auth::id();
+
+        if (RateLimiter::tooManyAttempts($rateLimitKey, 5)) {
+            return $this->notify(__('auth.throttle', [
+                'seconds' => RateLimiter::availableIn($rateLimitKey),
+            ]), 'error');
+        }
+
         if (!Hash::check($this->current_password, Auth::user()->password)) {
+            RateLimiter::hit($rateLimitKey, 900);
+
             return $this->notify(__('account.notifications.password_incorrect'), 'error');
         }
+
+        RateLimiter::clear($rateLimitKey);
 
         Auth::user()->update([
             'password' => Hash::make($this->password),
@@ -99,7 +115,33 @@ class Security extends Component
 
     public function disableTwoFactor()
     {
-        Auth::user()->update([
+        $this->validate([
+            'disableTwoFactorCode' => 'required|string',
+        ]);
+
+        $user = Auth::user();
+        $rateLimitKey = '2fa-disable:' . $user->id;
+
+        if (RateLimiter::tooManyAttempts($rateLimitKey, 5)) {
+            return $this->addError('disableTwoFactorCode', __('auth.throttle', [
+                'seconds' => RateLimiter::availableIn($rateLimitKey),
+            ]));
+        }
+
+        $tfa = new TwoFactorAuth(new EndroidQrCodeProvider, config('app.name'));
+        $usedKey = 'tfa_used_code_' . $user->id . '_' . $this->disableTwoFactorCode;
+
+        if (!$user->tfa_secret || Cache::has($usedKey) || !$tfa->verifyCode($user->tfa_secret, $this->disableTwoFactorCode)) {
+            RateLimiter::hit($rateLimitKey, 900);
+
+            return $this->addError('disableTwoFactorCode', __('account.notifications.two_factor_code_incorrect'));
+        }
+
+        Cache::put($usedKey, true, 60);
+        RateLimiter::clear($rateLimitKey);
+        $this->reset('disableTwoFactorCode');
+
+        $user->update([
             'tfa_secret' => null,
         ]);
 
