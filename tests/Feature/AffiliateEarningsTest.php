@@ -10,6 +10,7 @@ use App\Models\Service;
 use App\Models\User;
 use Filament\Facades\Filament;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
+use Illuminate\Support\Facades\DB;
 use Livewire\Livewire;
 use Paymenter\Extensions\Others\Affiliates\Admin\Resources\AffiliateResource\Pages\EditAffiliate;
 use Paymenter\Extensions\Others\Affiliates\Admin\Resources\AffiliateResource\RelationManagers\AffiliatesRelationManager;
@@ -78,6 +79,28 @@ class AffiliateEarningsTest extends TestCase
         $this->assertSame(['US Dollar' => 5.0], $second->earnings);
         $this->assertSame([], $unpaid->earnings);
         $this->assertSame(['US Dollar' => 15.0], $this->affiliate->earnings);
+    }
+
+    public function test_earnings_queries_do_not_grow_with_orders(): void
+    {
+        $this->referOrder(100);
+        $queriesForOneOrder = $this->countEarningsQueries();
+
+        $this->referOrder(50);
+        $this->referOrder(20);
+        $this->assertLessThanOrEqual($queriesForOneOrder, $this->countEarningsQueries());
+    }
+
+    private function countEarningsQueries(): int
+    {
+        $affiliate = Affiliate::find($this->affiliate->id);
+
+        DB::flushQueryLog();
+        DB::enableQueryLog();
+        $affiliate->earnings;
+        DB::disableQueryLog();
+
+        return count(DB::getQueryLog());
     }
 
     public function test_order_list_shows_each_orders_earnings(): void
