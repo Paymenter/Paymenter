@@ -8,10 +8,13 @@ use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
+use Livewire\Attributes\Locked;
 use Paymenter\Extensions\Others\Affiliates\Models\Affiliate as AffiliateModel;
 
 class Affiliate extends Component
 {
+    // Set by the admin; signup() trusts it to decide whether the customer may pick their own code.
+    #[Locked]
     public string $signup_type = 'custom';
 
     public ?AffiliateModel $affiliate;
@@ -21,7 +24,7 @@ class Affiliate extends Component
     public function mount()
     {
         $this->affiliate = Auth::user()->affiliate;
-        $this->signup_type = ExtensionHelper::getExtension('other', 'Affiliates')->config('type');
+        $this->signup_type = ExtensionHelper::getExtension('other', 'Affiliates')->config('type') ?? 'random';
     }
 
     public function render()
