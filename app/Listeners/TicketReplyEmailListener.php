@@ -2,6 +2,7 @@
 
 namespace App\Listeners;
 
+use App\Support\TicketMailId;
 use Illuminate\Mail\Events\MessageSending;
 
 class TicketReplyEmailListener
@@ -25,9 +26,9 @@ class TicketReplyEmailListener
             // Check if we ever sent a reply to this ticket
             // Second last, because last is the current message
             $previousReply = $ticket->messages()->where('user_id', '!=', $ticket->user_id)->orderBy('id', 'desc')->skip(1)->first();
-            $message->getHeaders()->addHeader('Message-ID', $ticketMessage->id . '@' . $host);
+            $message->getHeaders()->addHeader('Message-ID', TicketMailId::localPart($ticketMessage->id) . '@' . $host);
             if ($previousReply) {
-                $message->getHeaders()->addHeader('In-Reply-To', $previousReply->id . '@' . $host);
+                $message->getHeaders()->addHeader('In-Reply-To', TicketMailId::localPart($previousReply->id) . '@' . $host);
             }
             $message->getHeaders()->addHeader('References', $ticket->id . '@' . $host);
 
