@@ -64,6 +64,11 @@ The requirements for Paymenter are the following:
 - Webserver (Apache or Nginx)
 - Database (MariaDB)
 
+## One-Click Deploy
+
+<a href="https://repocloud.io/details/Paymenter/"><img src="https://d16t0pc4846x52.cloudfront.net/deploylobe.svg" alt="Deploy on RepoCloud" height="42"></a>
+<a href="https://railway.com/deploy/paymenter"><img src="https://railway.com/button.svg" alt="Deploy on Railway" height="42"></a>
+
 ## What is Paymenter?
 
 Paymenter is an open-source billing platform tailored for hosting companies. It simplifies the management of hosting services, providing a seamless experience for both providers and customers. Built on modern web technologies, Paymenter offers a flexible and robust solution for your hosting business needs.
