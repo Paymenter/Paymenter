@@ -31,7 +31,18 @@ class Request extends Component
             return;
         }
 
+        // Password::createToken() skips the broker's own per-user throttle, so apply
+        // it per address here, whether or not the address has an account.
+        $emailKey = 'password-reset-email:' . sha1(strtolower($this->email));
+
+        if (RateLimiter::tooManyAttempts($emailKey, 1)) {
+            $this->addError('email', __('passwords.throttled'));
+
+            return;
+        }
+
         RateLimiter::hit($rateLimitKey, 60);
+        RateLimiter::hit($emailKey, config('auth.passwords.users.throttle', 60));
 
         // Find the user
         $user = User::where('email', $this->email)->first();
