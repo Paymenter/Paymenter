@@ -360,7 +360,10 @@ class DiscordNotifications extends Extension
             ],
             [
                 'name' => 'User',
-                'value' => '[User ' . $invoice->user->name . '](' . UserResource::getUrl('edit', ['record' => $invoice->user_id]) . ')',
+                // Invoices are kept when their user is deleted
+                'value' => $invoice->user
+                    ? '[User ' . $invoice->user->name . '](' . UserResource::getUrl('edit', ['record' => $invoice->user_id]) . ')'
+                    : __('invoices.deleted_user'),
                 'inline' => true,
             ],
             [
