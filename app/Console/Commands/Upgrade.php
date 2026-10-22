@@ -85,7 +85,7 @@ class Upgrade extends Command
         $this->line('$upgrader> curl -sSL "https://raw.githubusercontent.com/paymenter/paymenter/master/update.sh" | bash -s -- --user=' . $user . ' --group=' . $group . ' --url=' . $this->getUrl());
         $process = Process::fromShellCommandline('curl -sSL "https://raw.githubusercontent.com/paymenter/paymenter/master/update.sh" | bash -s -- --user=' . $user . ' --group=' . $group . ' --url=' . $this->getUrl(), null, null, null, 1200);
         $process->run(function ($type, $buffer) {
-            $this->line($buffer);
+            $this->{$type === Process::ERR ? 'error' : 'line'}($buffer);
         });
 
         $this->info('Upgrade process completed successfully!');
