@@ -148,8 +148,9 @@ class Settings
                 [
                     'name' => 'captcha_secret',
                     'label' => 'Captcha Secret',
-                    'type' => 'text',
+                    'type' => 'password',
                     'required' => fn (Get $get) => $get('captcha') && $get('captcha') !== 'disabled',
+                    'encrypted' => true,
                 ],
 
                 [
@@ -201,8 +202,9 @@ class Settings
                 [
                     'name' => 'oauth_google_client_secret',
                     'label' => 'Google Client Secret',
-                    'type' => 'text',
+                    'type' => 'password',
                     'required' => false,
+                    'encrypted' => true,
                 ],
                 [
                     'name' => 'oauth_github',
@@ -222,8 +224,9 @@ class Settings
                 [
                     'name' => 'oauth_github_client_secret',
                     'label' => 'Github Client Secret',
-                    'type' => 'text',
+                    'type' => 'password',
                     'required' => false,
+                    'encrypted' => true,
                 ],
                 [
                     'name' => 'oauth_discord',
@@ -243,8 +246,9 @@ class Settings
                 [
                     'name' => 'oauth_discord_client_secret',
                     'label' => 'Discord Client Secret',
-                    'type' => 'text',
+                    'type' => 'password',
                     'required' => false,
+                    'encrypted' => true,
                 ],
             ],
             'tax' => [

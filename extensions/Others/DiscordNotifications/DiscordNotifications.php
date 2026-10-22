@@ -60,6 +60,7 @@ class DiscordNotifications extends Extension
                 'type' => 'text',
                 'label' => 'Webhook URL',
                 'required' => true,
+                'encrypted' => true,
             ],
             [
                 'name' => 'ping_type',
