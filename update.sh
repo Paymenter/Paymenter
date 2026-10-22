@@ -113,7 +113,7 @@ RUN() {
 RUN php artisan down
 
 # Download the latest release from GitHub.
-RUN curl -L -o paymenter.tar.gz "$URL"
+RUN curl -sSL -o paymenter.tar.gz "$URL"
 
 # Delete app folder
 RUN rm -rf app bootstrap/cache/*.php
