@@ -6,6 +6,7 @@ use App\Attributes\ExtensionMeta;
 use App\Classes\FilamentInput;
 use App\Enums\AdjustmentNoteType;
 use App\Enums\InvoiceTransactionStatus;
+use App\Exceptions\DisplayException;
 use App\Models\BillingAgreement;
 use App\Models\Extension;
 use App\Models\Gateway;
@@ -28,6 +29,7 @@ use Illuminate\Support\Facades\Log;
 use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
 use OwenIt\Auditing\Events\AuditCustom;
 use ReflectionClass;
+use Throwable;
 
 class ExtensionHelper
 {
@@ -404,7 +406,27 @@ class ExtensionHelper
 
     public static function charge(Gateway $gateway, Invoice $invoice, BillingAgreement $billingAgreement): bool
     {
-        return self::getExtension('gateway', $gateway->extension, $gateway->settings)->charge($invoice, $invoice->remaining, $billingAgreement);
+        // The invoice stays pending until the gateway's webhook arrives, so a second charge in that window
+        // (double click, another tab) would take the money twice. Only a failed charge releases the lock early.
+        $lock = 'invoice-charge:' . $invoice->id;
+
+        if ($invoice->transactions()->where('status', InvoiceTransactionStatus::Processing)->exists() || !Cache::add($lock, true, 600)) {
+            throw new DisplayException(__('invoices.charge_in_progress'));
+        }
+
+        try {
+            $charged = self::getExtension('gateway', $gateway->extension, $gateway->settings)->charge($invoice, $invoice->remaining, $billingAgreement);
+        } catch (Throwable $e) {
+            Cache::forget($lock);
+
+            throw $e;
+        }
+
+        if ($charged !== true) {
+            Cache::forget($lock);
+        }
+
+        return $charged;
     }
 
     public static function getBillingAgreementGateways()
