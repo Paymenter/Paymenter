@@ -22,6 +22,10 @@ trait HasNotifications
      */
     public function notify($message, $type = 'success', $redirect = false)
     {
+        if (is_string($message)) {
+            $message = __($message);
+        }
+
         if ($redirect) {
             // Set notification in session before redirect
             Session::put('notification', [

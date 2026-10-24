@@ -105,7 +105,7 @@ class Cart
         $existingItem = $key ? $cart->items()->where('id', $key)->exists() : false;
 
         if (!$existingItem && $cart->items()->count() >= self::DEFAULT_MAX_ITEMS) {
-            throw new DisplayException('Your cart cannot contain more than ' . self::DEFAULT_MAX_ITEMS . ' items.');
+            throw new DisplayException(__('Your cart cannot contain more than :max items.', ['max' => self::DEFAULT_MAX_ITEMS]));
         }
     }
 

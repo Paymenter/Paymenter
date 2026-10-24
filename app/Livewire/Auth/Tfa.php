@@ -38,7 +38,7 @@ class Tfa extends Component
         }
 
         if (RateLimiter::tooManyAttempts('2fa:' . $session['user_id'], 5)) {
-            $this->addError('code', 'Too many attempts.');
+            $this->addError('code', __('Too many attempts.'));
 
             return;
         }
@@ -53,12 +53,12 @@ class Tfa extends Component
 
         $tfa = new TwoFactorAuth(new EndroidQrCodeProvider, config('app.name'));
         if (!$tfa->verifyCode($user->tfa_secret, $this->code)) {
-            return $this->addError('code', 'Invalid code.');
+            return $this->addError('code', __('Invalid code.'));
         }
 
         // Check if code has been used before, preventing replay attacks
         if (Cache::has('tfa_used_code_' . $user->id . '_' . $this->code)) {
-            return $this->addError('code', 'Invalid code.');
+            return $this->addError('code', __('Invalid code.'));
         }
         // Mark code as used for 60 seconds just in case
         Cache::put('tfa_used_code_' . $user->id . '_' . $this->code, true, 60);
