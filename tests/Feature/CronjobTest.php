@@ -2,8 +2,10 @@
 
 namespace Tests\Feature;
 
+use App\Helpers\ExtensionHelper;
 use App\Jobs\Server\SuspendJob;
 use App\Jobs\Server\TerminateJob;
+use App\Models\Invoice;
 use App\Models\Service;
 use App\Models\Ticket;
 use App\Models\TicketMessage;
@@ -158,6 +160,52 @@ class CronjobTest extends TestCase
             'id' => $service->id,
             'status' => 'cancelled',
         ]);
+    }
+
+    public function test_services_with_a_processing_payment_are_not_cancelled(): void
+    {
+        config(['settings.cronjob_order_cancel' => 7]);
+
+        $product = $this->createProduct();
+        $user = User::factory()->create();
+
+        $service = Service::factory()->create([
+            'user_id' => $user->id,
+            'plan_id' => $product->plan->id,
+            'product_id' => $product->product->id,
+            'status' => 'pending',
+            'currency_code' => 'USD',
+            'price' => 10.00,
+            'created_at' => now()->subDays(8),
+        ]);
+        $invoice = Invoice::factory()->create([
+            'user_id' => $user->id,
+            'status' => 'pending',
+            'currency_code' => 'USD',
+        ]);
+        $invoice->items()->create([
+            'reference_type' => Service::class,
+            'reference_id' => $service->id,
+            'price' => 10.00,
+            'quantity' => 1,
+            'description' => 'Server',
+        ]);
+
+        ExtensionHelper::addProcessingPayment($invoice->id, 'Stripe', 10.00, null, 'pi_test');
+
+        $this->artisan('app:cron-job')
+            ->assertExitCode(0);
+
+        $this->assertEquals('pending', $service->fresh()->status);
+        $this->assertEquals('pending', $invoice->fresh()->status);
+
+        ExtensionHelper::addFailedPayment($invoice->id, 'Stripe', 10.00, null, 'pi_test');
+
+        $this->artisan('app:cron-job')
+            ->assertExitCode(0);
+
+        $this->assertEquals('cancelled', $service->fresh()->status);
+        $this->assertEquals('cancelled', $invoice->fresh()->status);
     }
 
     public function test_services_are_suspended_if_due_date_has_passed(): void

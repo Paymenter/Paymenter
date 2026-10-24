@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Enums\InvoiceTransactionStatus;
 use App\Helpers\ExtensionHelper;
 use App\Helpers\NotificationHelper;
 use App\Jobs\Server\SuspendJob;
@@ -122,9 +123,11 @@ class CronJob extends Command
             });
 
             $this->runCronJob('orders_cancelled', function ($number = 0) {
-                // Cancel services if first invoice is not paid after x days
+                // Cancel services if first invoice is not paid after x days and no payment is still processing
                 Service::where('status', 'pending')->whereDoesntHave('invoices', function ($query) {
                     $query->where('status', 'paid');
+                })->whereDoesntHave('invoices.transactions', function ($query) {
+                    $query->where('status', InvoiceTransactionStatus::Processing);
                 })->where('created_at', '<', now()->subDays((int) config('settings.cronjob_order_cancel', 7)))->get()->each(function ($service) use (&$number) {
                     $service->invoices()->where('status', 'pending')->update(['status' => 'cancelled']);
 
