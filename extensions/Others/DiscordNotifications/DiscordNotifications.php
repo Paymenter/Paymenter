@@ -19,9 +19,10 @@ use App\Events\TicketMessage;
 use App\Events\User;
 use App\Events\User\Created;
 use App\Models\Order;
-use Exception;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Http;
+use Throwable;
 
 #[ExtensionMeta(
     name: 'Discord Notifications',
@@ -110,13 +111,11 @@ class DiscordNotifications extends Extension
                 Event::listen(
                     self::events[$eventType],
                     function ($event) use ($eventType) {
+                        // Never rethrown: these events fire inside checkouts, gateway callbacks and the cron's transaction
                         try {
                             $this->sendNotification($event, $eventType);
-                        } catch (Exception $e) {
-                            // Log the error
-                            if (config('settings.debug', false)) {
-                                throw $e;
-                            }
+                        } catch (Throwable $e) {
+                            report($e);
                         }
                     }
                 );
@@ -254,8 +253,15 @@ class DiscordNotifications extends Extension
             $message['content'] = ($pingType === 'user') ? "<@{$pingId}>" : "<@&{$pingId}>";
         }
 
-        // Send the notification to Discord
-        Http::post($webhookUrl, $message)->json();
+        // Built now, while the event describes the change; sent once it is committed, so the request is not
+        // made while the transaction holds its locks and nothing is posted for a change that is rolled back
+        DB::afterCommit(function () use ($webhookUrl, $message) {
+            try {
+                Http::post($webhookUrl, $message);
+            } catch (Throwable $e) {
+                report($e);
+            }
+        });
     }
 
     private function userCreated(\App\Models\User $user)
