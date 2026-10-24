@@ -175,7 +175,7 @@ class AppServiceProvider extends ServiceProvider
 
             try {
                 $mailable = unserialize($payload['data']['command'])->mailable;
-            } catch (Exception $e) {
+            } catch (\Throwable  $e) {
                 return;
             }
 
