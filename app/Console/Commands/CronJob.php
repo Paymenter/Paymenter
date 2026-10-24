@@ -142,15 +142,17 @@ class CronJob extends Command
 
             $this->runCronJob('upgrade_invoices_updated', function ($number = 0) {
                 // Update pending upgrade invoices
-                ServiceUpgrade::where('status', 'pending')->get()->each(function ($upgrade) use (&$number) {
-                    if ($upgrade->service->expires_at < now()) {
-                        $upgrade->update(['status' => 'cancelled']);
-                        // Somehow people manage to have an upgrade without an invoice
-                        if ($upgrade->invoice) {
-                            $upgrade->invoice->update(['status' => 'cancelled']);
-                        }
+                $cancelBefore = now()->subDays((int) config('settings.cronjob_upgrade_cancel', 7));
 
-                        $number++;
+                ServiceUpgrade::where('status', ServiceUpgrade::STATUS_PENDING)->get()->each(function ($upgrade) use (&$number, $cancelBefore) {
+                    // A pending upgrade blocks any further upgrade, so don't leave an unpaid one open forever
+                    // Somehow people manage to have an upgrade without an invoice, which can never be paid
+                    $unpaid = $upgrade->invoice?->status !== Invoice::STATUS_PAID;
+
+                    if ($upgrade->service->expires_at < now() || ($unpaid && $upgrade->created_at < $cancelBefore)) {
+                        if ($upgrade->cancel()) {
+                            $number++;
+                        }
 
                         return;
                     }
