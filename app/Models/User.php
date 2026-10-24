@@ -17,13 +17,15 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Passport\Contracts\OAuthenticatable;
 use Laravel\Passport\HasApiTokens;
+use Laravel\Passkeys\Contracts\PasskeyUser;
+use Laravel\Passkeys\PasskeyAuthenticatable;
 use OwenIt\Auditing\Contracts\Auditable;
 
 #[SchemaName('UserModel')]
 #[ObservedBy([UserObserver::class])]
-class User extends Authenticatable implements Auditable, FilamentUser, HasAvatar, OAuthenticatable
+class User extends Authenticatable implements Auditable, FilamentUser, HasAvatar, OAuthenticatable, PasskeyUser
 {
-    use HasApiTokens, HasFactory, HasProperties, Notifiable, Traits\Auditable;
+    use HasApiTokens, HasFactory, HasProperties, Notifiable, PasskeyAuthenticatable, Traits\Auditable;
 
     /**
      * The attributes that are mass assignable.

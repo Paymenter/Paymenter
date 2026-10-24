@@ -121,9 +121,16 @@ class Security extends Component
         $this->notify(__('account.notifications.session_logged_out'));
     }
 
+    public function refreshPasskeys(): void
+    {
+        // Re-render the current user's passkeys after a browser-side update.
+    }
+
     public function render()
     {
-        return view('client.account.security')->layoutData([
+        return view('client.account.security', [
+            'passkeys' => Auth::user()->passkeys()->latest()->get(['id', 'name', 'last_used_at', 'created_at']),
+        ])->layoutData([
             'sidebar' => true,
             'title' => 'Security',
         ]);

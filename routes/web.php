@@ -50,7 +50,8 @@ Route::group(['middleware' => ['web', 'auth', MustVerfiyEmail::class]], function
 
 Route::group(['middleware' => ['web', 'auth']], function () {
     Route::get('/account', Client\Account::class)->name('account');
-    Route::get('/account/security', Client\Security::class)->name('account.security');
+    Route::get('/account/security', Client\Security::class)->middleware('password.confirm')->name('account.security');
+    Route::get('/password/confirm', Auth\ConfirmPassword::class)->name('password.confirm');
     Route::get('/account/credits', Client\Credits::class)->name('account.credits');
     Route::get('/account/payment-methods', Client\PaymentMethods::class)->name('account.payment-methods');
     Route::get('/account/notifications', Client\Notifications::class)->name('account.notifications');
