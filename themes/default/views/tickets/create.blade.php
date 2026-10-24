@@ -104,6 +104,11 @@
                         {{ __('ticket.create') }}
                     </x-button.primary>
                 </form>
+                @foreach (['message', 'attachments', 'attachments.*'] as $field)
+                    @error($field)
+                    <p class="text-sm text-red-500 mt-1 clear-both">{{ $message }}</p>
+                    @enderror
+                @endforeach
                 <x-easymde-editor />
             </div>
         </div>
