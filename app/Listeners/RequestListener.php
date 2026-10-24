@@ -14,7 +14,11 @@ use Symfony\Component\HttpFoundation\File\File;
 // Part of this code is from the Laravel Telescope package
 class RequestListener
 {
-    private const hiddenParamaters = ['authorization', 'password', 'password_confirmation'];
+    private const hiddenParamaters = [
+        'authorization', 'password', 'password_confirmation',
+        // Credentials used by server/gateway APIs (e.g. DirectAdmin passwd, LogicBoxes api-key)
+        'passwd', 'passwd2', 'pass', 'api-key', 'api_key', 'apikey', 'key', 'secret', 'client_secret', 'token', 'access_token',
+    ];
 
     /**
      * Handle the event.
@@ -45,7 +49,7 @@ class RequestListener
             'type' => 'http',
             'context' => $this->encodeContext([
                 'method' => $event->request->method(),
-                'url' => $event->request->url(),
+                'url' => $this->url($event->request->url()),
                 'headers' => $this->headers($event->request->headers()),
                 'payload' => $this->payload($this->input($event->request)),
                 'response' => 'Connection Failed',
@@ -64,7 +68,7 @@ class RequestListener
             'type' => 'http',
             'context' => $this->encodeContext([
                 'method' => $event->request->method(),
-                'url' => $event->request->url(),
+                'url' => $this->url($event->request->url()),
                 'headers' => $this->headers($event->request->headers()),
                 'payload' => $this->payload($this->input($event->request)),
                 'response_status' => $event->response->status(),
@@ -185,6 +189,26 @@ class RequestListener
      * @param  array  $hidden
      * @return mixed
      */
+    /**
+     * Hide credentials sent in the query string (some APIs only accept them there)
+     */
+    protected function url(string $url): string
+    {
+        $query = parse_url($url, PHP_URL_QUERY);
+        if (!$query) {
+            return $url;
+        }
+
+        $hidden = array_map('strtolower', self::hiddenParamaters);
+        $parts = array_map(function ($pair) use ($hidden) {
+            [$name] = explode('=', $pair, 2);
+
+            return in_array(strtolower(urldecode(preg_replace('/\[\d*\]$/', '', $name))), $hidden, true) ? $name . '=********' : $pair;
+        }, explode('&', $query));
+
+        return str_replace('?' . $query, '?' . implode('&', $parts), $url);
+    }
+
     protected function hideParameters($data, $hidden)
     {
         foreach ($hidden as $parameter) {
