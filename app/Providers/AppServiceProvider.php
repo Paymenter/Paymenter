@@ -18,6 +18,7 @@ use Exception;
 use Illuminate\Auth\Access\Response;
 use Illuminate\Foundation\Exceptions\Handler;
 use Illuminate\Http\Request;
+use Illuminate\Mail\SendQueuedMailable;
 use Illuminate\Queue\Events\JobFailed;
 use Illuminate\Queue\Events\JobProcessed;
 use Illuminate\Routing\UrlGenerator;
@@ -163,26 +164,40 @@ class AppServiceProvider extends ServiceProvider
             // Fail silently
         }
 
-        Queue::after(function (JobProcessed $event) {
-            if ($event->job->resolveName() === 'App\Mail\Mail') {
-                $payload = json_decode($event->job->getRawBody());
-                $data = unserialize($payload->data->command);
-                EmailLog::where('id', $data->mailable->email_log_id)->update([
-                    'sent_at' => now(),
-                    'status' => 'sent',
-                ]);
+        // resolveName() returns the mailable's class for queued mail, so match the job wrapper instead
+        // and update the log of any mailable that carries an email_log_id (Mail, SystemMail, ...)
+        $updateEmailLog = function ($job, array $attributes) {
+            $payload = $job->payload();
+
+            if (($payload['data']['commandName'] ?? null) !== SendQueuedMailable::class) {
+                return;
             }
+
+            try {
+                $mailable = unserialize($payload['data']['command'])->mailable;
+            } catch (\Throwable  $e) {
+                return;
+            }
+
+            if (empty($mailable->email_log_id)) {
+                return;
+            }
+
+            EmailLog::where('id', $mailable->email_log_id)->update($attributes);
+        };
+
+        Queue::after(function (JobProcessed $event) use ($updateEmailLog) {
+            $updateEmailLog($event->job, [
+                'sent_at' => now(),
+                'status' => 'sent',
+            ]);
         });
-        Queue::failing(function (JobFailed $event) {
-            if ($event->job->resolveName() === 'App\Mail\Mail') {
-                $payload = json_decode($event->job->getRawBody());
-                $data = unserialize($payload->data->command);
-                EmailLog::where('id', $data->mailable->email_log_id)->update([
-                    'status' => 'failed',
-                    'error' => $event->exception->getMessage(),
-                    'job_uuid' => $event->job->uuid(),
-                ]);
-            }
+        Queue::failing(function (JobFailed $event) use ($updateEmailLog) {
+            $updateEmailLog($event->job, [
+                'status' => 'failed',
+                'error' => $event->exception->getMessage(),
+                'job_uuid' => $event->job->uuid(),
+            ]);
         });
 
         Str::macro('markdown', function ($markdown) {
