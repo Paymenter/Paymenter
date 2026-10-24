@@ -20,7 +20,7 @@ class Home extends Component
                 ->with(['products.plans.prices'])
                 ->orderBy('sort')
                 ->get(),
-            'title' => 'Home',
+            'title' => __('navigation.home'),
         ]);
     }
 }
