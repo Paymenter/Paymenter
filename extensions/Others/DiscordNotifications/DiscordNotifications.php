@@ -20,6 +20,7 @@ use App\Events\User;
 use App\Events\User\Created;
 use App\Models\Order;
 use Exception;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Http;
 
@@ -135,27 +136,58 @@ class DiscordNotifications extends Extension
             'inline' => true,
         ];
         foreach ($event->{$model}->getChanges() as $field => $value) {
-            if (!in_array($field, ['created_at', 'updated_at', 'password', 'remember_token'])) {
-                if (!is_string($value)) {
-                    $value = json_encode($value);
-                }
-                // Replace _ with space and capitalize the first letter
-                $changedFields[] = [
-                    'name' => ucfirst(str_replace('_', ' ', $field)),
-                    'value' => $event->{$model}->getOriginal($field) . ' -> ' . $value,
-                    'inline' => true,
-                ];
+            if (in_array($field, ['created_at', 'updated_at', 'remember_token'])) {
+                continue;
             }
-            if ($field === 'password') {
+            // Replace _ with space and capitalize the first letter
+            $name = ucfirst(str_replace('_', ' ', $field));
+
+            // getOriginal() applies casts, so an encrypted column such as tfa_secret would be posted decrypted
+            if ($this->isMasked($event->{$model}, $field)) {
                 $changedFields[] = [
-                    'name' => 'Password',
+                    'name' => $name,
                     'value' => '********',
                     'inline' => true,
                 ];
+
+                continue;
             }
+
+            if (!is_string($value)) {
+                $value = json_encode($value);
+            }
+            $changedFields[] = [
+                'name' => $name,
+                'value' => $this->fieldValue($event->{$model}->getOriginal($field) . ' -> ' . $value),
+                'inline' => true,
+            ];
         }
 
-        return $changedFields;
+        // Discord rejects an embed with more than 25 fields
+        return array_slice($changedFields, 0, 25);
+    }
+
+    /**
+     * Whether a changed attribute's values must stay out of the notification: hidden from
+     * serialization (password, tfa_secret, ...), or stored hashed or encrypted.
+     */
+    private function isMasked(Model $record, string $field): bool
+    {
+        if (in_array($field, $record->getHidden(), true)) {
+            return true;
+        }
+
+        $cast = $record->getCasts()[$field] ?? null;
+
+        return is_string($cast) && ($cast === 'hashed' || str_starts_with($cast, 'encrypted'));
+    }
+
+    /**
+     * Cut a field value to Discord's 1024 character limit without splitting a multibyte character.
+     */
+    private function fieldValue(string $value): string
+    {
+        return mb_strlen($value) > 1024 ? mb_substr($value, 0, 1021) . '...' : $value;
     }
 
     private function createdEvent($event, $model, $fields = [])
@@ -180,7 +212,7 @@ class DiscordNotifications extends Extension
             // Replace _ with space and capitalize the first letter
             $efields[] = [
                 'name' => $name,
-                'value' => strlen((string) $value) > 1024 ? substr((string) $value, 0, 1021) . '...' : (string) $value,
+                'value' => $this->fieldValue((string) $value),
                 'inline' => true,
             ];
         }
