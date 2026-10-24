@@ -221,4 +221,12 @@ class User extends Authenticatable implements Auditable, FilamentUser, HasAvatar
     {
         return $this->hasMany(UserAuthenticationLog::class);
     }
+
+    /**
+     * Get the external accounts that can sign in as this user.
+     */
+    public function socialAccounts()
+    {
+        return $this->hasMany(SocialAccount::class);
+    }
 }
