@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use App\Models\TicketMailLog;
 use App\Models\TicketMessage;
+use App\Support\TicketMailId;
 use DirectoryTree\ImapEngine\Mailbox;
 use EmailReplyParser\EmailReplyParser;
 use Illuminate\Console\Command;
@@ -27,6 +28,11 @@ class FetchEmails extends Command
      */
     protected $description = 'Import ticket emails using IMAP';
 
+    // Same limits as attachments uploaded through the ticket page
+    private const MAX_ATTACHMENTS = 10;
+
+    private const MAX_ATTACHMENT_SIZE = 10240 * 1024;
+
     /**
      * Execute the console command.
      */
@@ -40,12 +46,12 @@ class FetchEmails extends Command
         Config::set('audit.console', true);
 
         try {
-            $mailbox = new Mailbox([
+            $mailbox = app(Mailbox::class, ['config' => [
                 'port' => config('settings.ticket_mail_port'),
                 'username' => config('settings.ticket_mail_email'),
                 'password' => config('settings.ticket_mail_password'),
                 'host' => config('settings.ticket_mail_host'),
-            ]);
+            ]]);
 
             // Fetch emails from the mailbox
             $emails = $mailbox->inbox();
@@ -72,15 +78,14 @@ class FetchEmails extends Command
                     continue;
                 }
 
-                // Validate if in reply to another ticket (<ticket message id>@hostname)
-
-                if (!preg_match('/^(\d+)@/', $replyTo[0], $matches)) {
+                // The From header can be forged, so the reply must quote a Message-ID we sent, token included
+                $ticketMessageId = TicketMailId::parse($replyTo[0]);
+                if ($ticketMessageId === null) {
                     $this->failedEmailLog($email, $body);
 
                     continue;
                 }
 
-                $ticketMessageId = $matches[1];
                 // Check if the ticket exists
                 $ticketMessage = TicketMessage::find($ticketMessageId);
                 if (!$ticketMessage) {
@@ -116,7 +121,11 @@ class FetchEmails extends Command
                 ]);
 
                 // Foreach attachment
-                foreach ($email->attachments() as $attachment) {
+                foreach (array_slice($email->attachments(), 0, self::MAX_ATTACHMENTS) as $attachment) {
+                    if (strlen($attachment->contents()) > self::MAX_ATTACHMENT_SIZE) {
+                        continue;
+                    }
+
                     $extension = pathinfo($attachment->filename(), PATHINFO_EXTENSION);
                     // Randomize filename
                     $newName = Str::ulid() . '.' . $extension;
