@@ -3,6 +3,7 @@
 namespace App\Admin\Resources;
 
 use App\Admin\Resources\ApiResource\Pages\ManageApis;
+use App\Helpers\PermissionOptions;
 use App\Models\ApiKey;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteAction;
@@ -50,7 +51,10 @@ class ApiResource extends Resource
                     ->label('Active Status'),
 
                 CheckboxList::make('permissions')
-                    ->options(array_merge(Arr::dot(config('permissions.api')), $extensionApiPermissions))
+                    ->options(fn (?ApiKey $record): array => PermissionOptions::withStored(
+                        array_merge(Arr::dot(config('permissions.api')), $extensionApiPermissions),
+                        $record?->permissions,
+                    ))
                     ->columns(4)
                     ->bulkToggleable()
                     ->searchable()
