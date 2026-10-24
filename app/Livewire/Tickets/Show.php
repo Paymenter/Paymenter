@@ -5,13 +5,13 @@ namespace App\Livewire\Tickets;
 use App\Attributes\DisabledIf;
 use App\Livewire\Component;
 use App\Models\Ticket;
+use App\Models\TicketMessageAttachment;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Str;
 use Livewire\Attributes\Locked;
 use Livewire\Attributes\Rule;
-use Livewire\Attributes\Validate;
 use Livewire\Features\SupportFileUploads\WithFileUploads;
 
 #[DisabledIf('tickets_disabled')]
@@ -22,11 +22,17 @@ class Show extends Component
     #[Locked]
     public Ticket $ticket;
 
-    #[Validate(['attachments.*' => 'file|max:10240'])]
     public array $attachments = [];
 
     #[Rule('required', 'string')]
     public string $message;
+
+    protected function rules(): array
+    {
+        return [
+            'attachments.*' => TicketMessageAttachment::validationRules(),
+        ];
+    }
 
     public function save()
     {

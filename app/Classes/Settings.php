@@ -7,6 +7,7 @@ use App\Admin\Actions\SendTestEmailAction;
 use App\Models\Currency;
 use App\Models\Setting;
 use App\Models\TaxRate;
+use App\Models\TicketMessageAttachment;
 use App\Models\User;
 use App\Rules\Cidr;
 use DateTimeZone;
@@ -394,6 +395,14 @@ class Settings
                     'type' => 'checkbox',
                     'database_type' => 'boolean',
                     'default' => false,
+                ],
+                [
+                    'name' => 'ticket_attachment_extensions',
+                    'label' => 'Allowed attachment file types',
+                    'type' => 'tags',
+                    'default' => TicketMessageAttachment::DEFAULT_EXTENSIONS,
+                    'database_type' => 'array',
+                    'description' => 'File extensions clients can attach to tickets, also used for attachments received by email piping. The content of the file must match its extension. Leave empty to allow any file type.',
                 ],
                 // Email piping
                 [

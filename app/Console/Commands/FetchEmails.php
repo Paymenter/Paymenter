@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use App\Models\TicketMailLog;
 use App\Models\TicketMessage;
+use App\Models\TicketMessageAttachment;
 use DirectoryTree\ImapEngine\Mailbox;
 use EmailReplyParser\EmailReplyParser;
 use Illuminate\Console\Command;
@@ -117,6 +118,11 @@ class FetchEmails extends Command
 
                 // Foreach attachment
                 foreach ($email->attachments() as $attachment) {
+                    // Same file types and size as attachments uploaded by clients
+                    if (!TicketMessageAttachment::isAllowed($attachment->filename(), strlen($attachment->contents()))) {
+                        continue;
+                    }
+
                     $extension = pathinfo($attachment->filename(), PATHINFO_EXTENSION);
                     // Randomize filename
                     $newName = Str::ulid() . '.' . $extension;
