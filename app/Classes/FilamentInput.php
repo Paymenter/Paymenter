@@ -240,7 +240,7 @@ class FilamentInput
                             try {
                                 ColorFactory::fromString(trim($value));
                             } catch (Exception $e) {
-                                $fail('The :attribute must be a valid color.');
+                                $fail(__('The :attribute must be a valid color.'));
                             }
                         };
                     })
