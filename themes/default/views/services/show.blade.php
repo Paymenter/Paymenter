@@ -65,7 +65,10 @@
                     @endforeach
                 </div>
             </div>
-            @if($service->cancellable || $service->upgradable || count($buttons) > 0)
+            @php
+            $pendingUpgrade = $service->pendingUpgrade();
+            @endphp
+            @if($service->cancellable || $service->upgradable || $pendingUpgrade || count($buttons) > 0)
             <div>
                 <h4 class="text-lg font-semibold">{{ __('services.actions') }}:</h4>
                 <div class="mt-2 flex flex-row gap-2 flex-wrap">
@@ -76,11 +79,19 @@
                         </x-button.primary>
                     </a>
                     @endif
-                    @if($service->upgrade()->where('status', 'pending')->exists())
-                    <x-button.primary class="h-fit !w-fit"
-                        @click="Alpine.store('notifications').addNotification([{message: '{{ __('services.upgrade_pending') }}', type: 'error'}])">
-                        <span>{{ __('services.upgrade') }}</span>
-                    </x-button.primary>
+                    @if($pendingUpgrade)
+                    @if($pendingUpgrade->invoice?->status === 'pending')
+                    <a href="{{ route('invoices.show', $pendingUpgrade->invoice) }}">
+                        <x-button.primary class="h-fit !w-fit">
+                            <span>{{ __('services.upgrade_pay') }}</span>
+                        </x-button.primary>
+                    </a>
+                    @endif
+                    <x-button.danger class="h-fit !w-fit" wire:click="cancelUpgrade"
+                        wire:confirm="{{ __('services.upgrade_cancel_confirm') }}">
+                        <span wire:loading.remove wire:target="cancelUpgrade">{{ __('services.upgrade_cancel') }}</span>
+                        <x-loading target="cancelUpgrade" />
+                    </x-button.danger>
                     @endif
                     @if($service->cancellable)
                     <x-button.danger class="h-fit !w-fit" wire:click="$set('showCancel', true)">
