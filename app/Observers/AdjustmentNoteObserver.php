@@ -14,4 +14,20 @@ class AdjustmentNoteObserver
     {
         event(new AdjustmentNoteEvent\Creating($adjustmentNote));
     }
+
+    /**
+     * Handle the AdjustmentNote "created" event.
+     */
+    public function created(AdjustmentNote $adjustmentNote): void
+    {
+        event(new AdjustmentNoteEvent\Created($adjustmentNote));
+    }
+
+    /**
+     * Handle the AdjustmentNote "updated" event.
+     */
+    public function updated(AdjustmentNote $adjustmentNote): void
+    {
+        event(new AdjustmentNoteEvent\Updated($adjustmentNote));
+    }
 }

@@ -106,7 +106,7 @@ class ViewInvoice extends ViewRecord
                         'cancellation_reason' => $data['cancellation_reason'],
                     ]);
                 })
-                ->visible(fn (Invoice $invoice): bool => $invoice->status !== Invoice::STATUS_CANCELLED),
+                ->visible(fn (Invoice $invoice): bool => !in_array($invoice->status, [Invoice::STATUS_CANCELLED, Invoice::STATUS_PAID])),
             Action::make('pdf')
                 ->label('Download PDF')
                 ->action(function (Invoice $invoice) {

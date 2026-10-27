@@ -126,7 +126,9 @@ class CronJob extends Command
                 Service::where('status', 'pending')->whereDoesntHave('invoices', function ($query) {
                     $query->where('status', 'paid');
                 })->where('created_at', '<', now()->subDays((int) config('settings.cronjob_order_cancel', 7)))->get()->each(function ($service) use (&$number) {
-                    $service->invoices()->where('status', 'pending')->update(['status' => 'cancelled']);
+                    $service->invoices()->where('status', 'pending')->get()->each(function ($invoice) {
+                        $invoice->update(['status' => 'cancelled']);
+                    });
 
                     $service->update(['status' => 'cancelled']);
 
@@ -158,9 +160,10 @@ class CronJob extends Command
                         return;
                     }
 
-                    $upgrade->invoice->items()->update([
-                        'price' => $upgrade->calculatePrice()->price,
-                    ]);
+                    $price = $upgrade->calculatePrice()->price;
+                    $upgrade->invoice->items()->get()->each(function ($item) use ($price) {
+                        $item->update(['price' => $price]);
+                    });
 
                     $number++;
                 });
@@ -193,7 +196,9 @@ class CronJob extends Command
 
                     $service->update(['status' => 'cancelled']);
                     // Cancel outstanding invoices
-                    $service->invoices()->where('status', 'pending')->update(['status' => 'cancelled']);
+                    $service->invoices()->where('status', 'pending')->get()->each(function ($invoice) {
+                        $invoice->update(['status' => 'cancelled']);
+                    });
 
                     if ($service->product->stock !== null) {
                         $service->product->increment('stock', $service->quantity);

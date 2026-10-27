@@ -2,11 +2,14 @@
 
 namespace App\Http\Requests\Api\Admin\InvoiceItems;
 
-use App\Http\Requests\Api\Admin\AdminApiRequest;
-
-class UpdateInvoiceItemRequest extends AdminApiRequest
+class UpdateInvoiceItemRequest extends InvoiceItemRequest
 {
     protected $permission = 'invoice_items.update';
+
+    public function authorize(): bool
+    {
+        return $this->authorizeInvoiceItem();
+    }
 
     public function rules(): array
     {
