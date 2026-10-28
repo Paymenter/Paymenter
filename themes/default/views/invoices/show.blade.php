@@ -262,6 +262,9 @@
                                     {{ __('invoices.type') }}
                                 </th>
                                 <th scope="col" class="p-4 text-xs font-semibold tracking-wider text-left uppercase">
+                                    {{ __('invoices.status') }}
+                                </th>
+                                <th scope="col" class="p-4 text-xs font-semibold tracking-wider text-left uppercase">
                                     {{ __('invoices.description') }}
                                 </th>
                                 <th scope="col"
@@ -282,6 +285,11 @@
                                     @elseif($note->type === \App\Enums\AdjustmentNoteType::Debit->value)
                                     <span class="text-red-600 font-semibold">{{ __('invoices.debit_note') }}</span>
                                     @endif
+                                </td>
+                                <td class="p-4 font-normal whitespace-nowrap">
+                                    <span class="{{ $note->status === \App\Enums\AdjustmentNoteStatus::Voided ? 'text-red-600 line-through' : 'text-green-600' }}">
+                                        {{ ucfirst($note->status instanceof \App\Enums\AdjustmentNoteStatus ? $note->status->value : $note->status) }}
+                                    </span>
                                 </td>
                                 <td class="p-4 font-normal whitespace-nowrap">
                                     {{ $note->description }}
