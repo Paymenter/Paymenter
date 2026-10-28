@@ -12,6 +12,11 @@
             <x-form.input name="email" type="email" :label="__('general.input.email')"
                 :placeholder="__('general.input.email_placeholder')" required wire:model="email" dirty />
 
+            <div class="md:col-span-2" x-show="$wire.email !== @js(Auth::user()->email)" x-cloak>
+                <x-form.input name="current_password" type="password" :label="__('account.input.current_password')"
+                    :placeholder="__('account.input.current_password_placeholder')" wire:model="current_password" autocomplete="current-password" />
+            </div>
+
             <x-form.properties :custom_properties="$custom_properties" :properties="$properties" dirty />
         </div>
 
