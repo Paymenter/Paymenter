@@ -23,7 +23,19 @@ class CancellationCreatedListener implements ShouldQueue
                 'status' => 'cancelled',
             ]);
 
-            $event->cancellation->service->invoices()->where('status', 'pending')->update(['status' => 'cancelled']);
+            $service = $event->cancellation->service;
+            $service->invoices()->where('status', 'pending')->get()->each(function ($invoice) use ($service) {
+                $items = $invoice->items()->where('reference_type', Service::class)->where('reference_id', $service->id)->get();
+                // Keep invoices with other items; only remove this service's lines
+                if ($invoice->items()->count() > $items->count()) {
+                    $items->each->delete();
+                    if ($invoice->refresh()->remaining <= 0) {
+                        $invoice->update(['status' => 'paid']);
+                    }
+                } else {
+                    $invoice->newQuery()->whereKey($invoice->id)->update(['status' => 'cancelled']);
+                }
+            });
 
             if ($event->cancellation->service->product->stock) {
                 $event->cancellation->service->product->increment('stock', $event->cancellation->service->quantity);
