@@ -21,6 +21,34 @@ class PushEndpointTest extends TestCase
         }
     }
 
+    public function test_valid_push_keys(): void
+    {
+        $this->assertTrue(PushEndpoint::hasValidKeys(self::keys()));
+        $this->assertTrue(PushEndpoint::hasValidKeys(['p256dh' => self::base64Url(65) . '=', 'auth' => self::base64Url(16) . '==']));
+    }
+
+    public function test_invalid_push_keys(): void
+    {
+        $this->assertFalse(PushEndpoint::hasValidKeys(null));
+        $this->assertFalse(PushEndpoint::hasValidKeys([]));
+        $this->assertFalse(PushEndpoint::hasValidKeys(['p256dh' => self::keys()['p256dh']]));
+        $this->assertFalse(PushEndpoint::hasValidKeys(['auth' => self::keys()['auth']]));
+        $this->assertFalse(PushEndpoint::hasValidKeys(['p256dh' => ['array'], 'auth' => self::keys()['auth']]));
+        $this->assertFalse(PushEndpoint::hasValidKeys(['p256dh' => self::base64Url(64), 'auth' => self::keys()['auth']]));
+        $this->assertFalse(PushEndpoint::hasValidKeys(['p256dh' => self::keys()['p256dh'], 'auth' => self::base64Url(32)]));
+        $this->assertFalse(PushEndpoint::hasValidKeys(['p256dh' => self::keys()['p256dh'], 'auth' => 'not base64url!!!!!!!!!']));
+    }
+
+    private static function keys(): array
+    {
+        return ['p256dh' => self::base64Url(65), 'auth' => self::base64Url(16)];
+    }
+
+    private static function base64Url(int $bytes): string
+    {
+        return rtrim(strtr(base64_encode(random_bytes($bytes)), '+/', '-_'), '=');
+    }
+
     public static function allowedEndpoints(): array
     {
         return [

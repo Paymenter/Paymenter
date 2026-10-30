@@ -15,6 +15,8 @@ use Minishlink\WebPush\WebPush;
 
 class Notifications extends Component
 {
+    private const MAX_PUSH_SUBSCRIPTIONS = 10;
+
     public $preferences = [];
 
     public function mount()
@@ -62,6 +64,12 @@ class Notifications extends Component
             ]);
         }
 
+        if (!PushEndpoint::hasValidKeys($subscription['keys'] ?? null)) {
+            throw ValidationException::withMessages([
+                'subscription' => __('account.push_subscription_invalid'),
+            ]);
+        }
+
         $pushSubscription = Auth::user()->pushSubscriptions()
             ->updateOrCreate([
                 'endpoint' => $subscription['endpoint'],
@@ -69,6 +77,16 @@ class Notifications extends Component
                 'p256dh_key' => $subscription['keys']['p256dh'],
                 'auth_key' => $subscription['keys']['auth'],
             ]);
+
+        // Browsers rotate endpoints and nothing else removes a subscription until a push fails, so keep the newest
+        $stale = Auth::user()->pushSubscriptions()
+            ->whereKeyNot($pushSubscription->id)
+            ->orderByDesc('id')
+            ->pluck('id')
+            ->slice(self::MAX_PUSH_SUBSCRIPTIONS - 1);
+        if ($stale->isNotEmpty()) {
+            Auth::user()->pushSubscriptions()->whereKey($stale)->delete();
+        }
 
         $this->notify('Push subscription saved successfully.', 'success');
 
