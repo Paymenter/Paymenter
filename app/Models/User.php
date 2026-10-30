@@ -6,6 +6,7 @@ namespace App\Models;
 
 use App\Models\Traits\HasProperties;
 use App\Observers\UserObserver;
+use App\Redactors\FullRedactor;
 use Dedoc\Scramble\Attributes\SchemaName;
 use Filament\Models\Contracts\FilamentUser;
 use Filament\Models\Contracts\HasAvatar;
@@ -49,6 +50,16 @@ class User extends Authenticatable implements Auditable, FilamentUser, HasAvatar
         'password',
         'remember_token',
         'tfa_secret',
+    ];
+
+    /**
+     * The attributes that are audited as changed, with their value redacted.
+     *
+     * @var array<string, class-string>
+     */
+    protected $attributeModifiers = [
+        'password' => FullRedactor::class,
+        'tfa_secret' => FullRedactor::class,
     ];
 
     /**
