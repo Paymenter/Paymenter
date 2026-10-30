@@ -8,6 +8,16 @@ return [
 
     'change_password' => 'Change password',
 
+    'connected_accounts' => 'Connected accounts',
+    'connected_accounts_description' => 'Connect an external account to sign in more easily, or disconnect an account you no longer use.',
+    'connected_since' => 'Connected since :date',
+    'not_connected' => 'Not connected',
+    'not_available' => 'Not available',
+    'connect' => 'Connect',
+    'disconnect' => 'Disconnect',
+    'disconnect_account_title' => 'Disconnect :provider',
+    'disconnect_account_description' => 'Enter your current password to stop using this account to sign in.',
+
     'two_factor_authentication' => 'Two-factor authentication',
     'two_factor_authentication_description' => 'Add an extra layer of security to your account by enabling two-factor authentication.',
     'two_factor_authentication_enabled' => 'Two-factor authentication is enabled for your account.',
@@ -46,7 +56,11 @@ return [
         'two_factor_disabled' => 'Two-factor authentication has been disabled.',
         'two_factor_code_incorrect' => 'The code is incorrect.',
         'session_logged_out' => 'Session has been logged out.',
-        'unauthorized' => 'This action is not allowed.',
+        'social_account_connected' => 'Account has been connected.',
+        'social_account_disconnected' => 'Account has been disconnected.',
+        'social_account_not_connected' => 'This account is no longer connected.',
+        'social_account_in_use' => 'This external account is already connected to another user.',
+        'social_account_already_connected' => 'You already have an account connected for this provider.',
     ],
 
     'no_credit' => 'You have no credits.',
