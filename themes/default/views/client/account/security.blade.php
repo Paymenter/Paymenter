@@ -26,7 +26,7 @@
         <!-- Change password -->
         <div class="bg-background-secondary rounded-lg p-4">
             <h5 class="text-lg font-bold pb-3">{{ __('account.change_password') }}</h5>
-            <form wire:submit="changePassword">
+            <form method="POST" wire:submit="changePassword">
                 <div class="grid grid-cols-2 gap-4">
                     <x-form.input divClass="col-span-2" name="current_password" type="password"
                         :label="__('account.input.current_password')"
@@ -72,7 +72,7 @@
                     <p class="text-primary-400 mt-2 text-sm text-center">
                         {{ __('account.two_factor_authentication_secret') }}<br />{{ $twoFactorData['secret'] }}</p>
                 </div>
-                <form wire:submit.prevent="enableTwoFactor">
+                <form method="POST" wire:submit.prevent="enableTwoFactor">
                     <x-form.input divClass="mt-8" name="two_factor_code" type="text"
                         :label="__('account.input.two_factor_code')"
                         :placeholder="__('account.input.two_factor_code_placeholder')" wire:model="twoFactorCode" inputmode="numeric" pattern="[0-9]*" autocomplete="one-time-code"

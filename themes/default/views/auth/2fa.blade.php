@@ -8,7 +8,7 @@
             <p class="mb-6 text-base text-base/60">
                 {{ __('account.input.two_factor_code') }}
             </p>
-            <form
+            <form method="POST"
                 x-on:submit.prevent="submit"
                 x-data="{
                     isNumber(value) { return value.match(/^[0-9]$/g); },
