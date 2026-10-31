@@ -1,5 +1,6 @@
 import { Livewire, Alpine } from '../../../vendor/livewire/livewire/dist/livewire.esm';
 import anchor from '@alpinejs/anchor'
+import { Passkeys } from '@laravel/passkeys'
 
 document.addEventListener('livewire:init', () => {
     Livewire.hook('request', ({ fail }) => {
@@ -98,6 +99,82 @@ Alpine.store('confirmation', {
 })
 
 Alpine.plugin(anchor)
+
+Alpine.data('passkeyLogin', () => ({
+    supported: false,
+    loading: false,
+    error: '',
+    init () {
+        this.supported = Passkeys.isSupported()
+    },
+    async signIn () {
+        if (this.loading) return
+
+        this.loading = true
+        this.error = ''
+
+        try {
+            const remember = document.querySelector('#login [name="remember"]')?.checked ?? false
+            const response = await Passkeys.verify({ remember })
+            if (response?.redirect) window.location.assign(response.redirect)
+        } catch (error) {
+            this.error = error.message || 'Passkey sign-in failed.'
+            this.loading = false
+        }
+    }
+}))
+
+Alpine.data('passkeyManager', () => ({
+    supported: false,
+    name: '',
+    loading: false,
+    error: '',
+    init () {
+        this.supported = Passkeys.isSupported()
+    },
+    async register () {
+        const name = this.name.trim()
+        if (!name || this.loading) return
+
+        this.loading = true
+        this.error = ''
+
+        try {
+            await Passkeys.register({ name })
+            this.name = ''
+            await this.$wire.refreshPasskeys()
+        } catch (error) {
+            this.error = error.message || 'Passkey registration failed.'
+        } finally {
+            this.loading = false
+        }
+    },
+    async remove (id) {
+        if (this.loading) return
+
+        this.loading = true
+        this.error = ''
+
+        try {
+            const csrf = document.querySelector('meta[name="csrf-token"]')?.content
+            const response = await fetch(`/user/passkeys/${encodeURIComponent(id)}`, {
+                method: 'DELETE',
+                headers: { Accept: 'application/json', 'X-CSRF-TOKEN': csrf },
+                credentials: 'same-origin'
+            })
+            if (!response.ok) {
+                const body = await response.json().catch(() => ({}))
+                throw new Error(body.message || 'Could not remove passkey.')
+            }
+
+            await this.$wire.refreshPasskeys()
+        } catch (error) {
+            this.error = error.message || 'Could not remove passkey.'
+        } finally {
+            this.loading = false
+        }
+    }
+}))
 
 if ('serviceWorker' in navigator) {
     navigator.serviceWorker
