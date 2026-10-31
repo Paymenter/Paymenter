@@ -34,7 +34,7 @@ class LocaleSwitch extends Component
             'currentCurrency' => 'required|exists:currencies,code',
         ]);
         if (Cart::items()->count() > 0) {
-            $this->notify('You cannot change the currency while there are items in the cart.', 'error');
+            $this->notify(__('common.currency_locked_by_cart'), 'error');
             $this->currentCurrency = session('currency', config('settings.default_currency'));
 
             return;
@@ -52,7 +52,7 @@ class LocaleSwitch extends Component
     public function updatedCurrentLocale($locale)
     {
         if (!in_array($locale, config('settings.allowed_languages', []))) {
-            $this->notify('The selected language is not available.', 'error');
+            $this->notify(__('common.language_unavailable'), 'error');
 
             return;
         }

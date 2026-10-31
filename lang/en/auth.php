@@ -16,6 +16,7 @@ return [
     'failed' => 'These credentials do not match our records.',
     'password' => 'The provided password is incorrect.',
     'throttle' => 'Too many login attempts. Please try again in :seconds seconds.',
+    'too_many_attempts' => 'Too many attempts.',
 
     'sign_in' => 'Sign in',
     'sign_in_title' => 'Sign in to your account',
@@ -51,5 +52,6 @@ return [
         'check_your_email' => 'Before proceeding, please check your email for a verification link.',
         'not_received' => 'If you did not receive the email you can request another verification email.',
         'request_another' => 'Resend verification email',
+        'too_many_attempts' => 'Too many attempts. Try again later.',
     ],
 ];

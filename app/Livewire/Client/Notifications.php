@@ -45,7 +45,7 @@ class Notifications extends Component
             );
         }
 
-        $this->notify('Notification preferences updated successfully.', 'success');
+        $this->notify(__('account.notifications.preferences_updated'), 'success');
     }
 
     public function storePushSubscription($subscription)
@@ -70,14 +70,14 @@ class Notifications extends Component
                 'auth_key' => $subscription['keys']['auth'],
             ]);
 
-        $this->notify('Push subscription saved successfully.', 'success');
+        $this->notify(__('account.notifications.push_subscribed'), 'success');
 
         try {
             $this->sendTestNotification($pushSubscription);
-            $this->notify('Test push notification sent successfully. Please check your device.', 'success');
+            $this->notify(__('account.notifications.push_test_sent'), 'success');
         } catch (\Exception $e) {
             // Failed to send notification
-            $this->notify('Failed to send test push notification: ' . $e->getMessage(), 'error');
+            $this->notify(__('account.notifications.push_test_failed', ['error' => $e->getMessage()]), 'error');
         }
     }
 
@@ -95,8 +95,8 @@ class Notifications extends Component
         $result = $webPush->sendOneNotification(
             $pushSubscription->subscription(),
             json_encode([
-                'title' => 'Push Notifications Enabled!',
-                'body' => 'You will now receive push notifications from ' . config('app.name'),
+                'title' => __('account.notifications.push_enabled_title'),
+                'body' => __('account.notifications.push_enabled_body', ['app' => config('app.name')]),
                 'icon' => Storage::url(config('settings.logo')),
                 'badge' => Storage::url(config('settings.logo')),
                 'show_in_app' => false,
@@ -154,7 +154,7 @@ class Notifications extends Component
     {
         return view('client.account.notifications')->layoutData([
             'sidebar' => true,
-            'title' => 'Notifications',
+            'title' => __('navigation.notifications'),
         ]);
     }
 }

@@ -41,6 +41,15 @@ return [
 
     'notifications' => [
         'password_changed' => 'Password has been changed.',
+        'account_updated' => 'Account updated successfully.',
+        'credits_maximum' => 'You cannot exceed the maximum credits allowed.',
+        'credits_unpaid_invoice' => 'You have an unpaid invoice for credits. Please pay the invoice before adding more credits.',
+        'preferences_updated' => 'Notification preferences updated successfully.',
+        'push_subscribed' => 'Push subscription saved successfully.',
+        'push_test_sent' => 'Test push notification sent successfully. Please check your device.',
+        'push_test_failed' => 'Failed to send test push notification: :error',
+        'push_enabled_title' => 'Push Notifications Enabled!',
+        'push_enabled_body' => 'You will now receive push notifications from :app',
         'password_incorrect' => 'The current password is incorrect.',
         'two_factor_enabled' => 'Two-factor authentication has been enabled.',
         'two_factor_disabled' => 'Two-factor authentication has been disabled.',

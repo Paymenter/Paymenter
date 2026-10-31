@@ -55,7 +55,7 @@ class Cart extends Component
     public function applyCoupon()
     {
         if ($this->coupon && ClassesCart::get()->coupon_id) {
-            return $this->notify('Coupon code already applied', 'error');
+            return $this->notify(__('product.coupon_already_applied'), 'error');
         }
 
         try {
@@ -68,18 +68,18 @@ class Cart extends Component
         }
         $this->coupon = $cart->coupon;
         $this->updateTotal();
-        $this->notify('Coupon code applied successfully', 'success');
+        $this->notify(__('product.coupon_applied'), 'success');
     }
 
     public function removeCoupon()
     {
         if (!$this->coupon || !ClassesCart::get()->coupon_id) {
-            return $this->notify('No coupon code applied', 'error');
+            return $this->notify(__('product.coupon_none'), 'error');
         }
         ClassesCart::removeCoupon();
         $this->coupon = null;
         $this->updateTotal();
-        $this->notify('Coupon code removed successfully', 'success');
+        $this->notify(__('product.coupon_removed'), 'success');
     }
 
     public function removeProduct($index)
@@ -98,7 +98,7 @@ class Cart extends Component
     public function checkout()
     {
         if (ClassesCart::items()->count() === 0) {
-            return $this->notify('Your cart is empty', 'error');
+            return $this->notify(__('product.empty_cart'), 'error');
         }
         if (!Auth::check()) {
             return redirect()->guest('login');
@@ -122,7 +122,7 @@ class Cart extends Component
                 $this->coupon = null;
                 $this->updateTotal();
 
-                return $this->notify('This coupon can no longer be used', 'error');
+                return $this->notify(__('product.coupon_no_longer_valid'), 'error');
             }
             // Lock the orderproducts
             foreach ($cart->items as $item) {
@@ -269,7 +269,7 @@ class Cart extends Component
                 return $this->notify($e->getMessage(), 'error');
             } else {
                 report($e);
-                $this->notify('An error occurred while processing your order. Please try again later.');
+                $this->notify(__('common.order_failed'));
             }
         }
     }

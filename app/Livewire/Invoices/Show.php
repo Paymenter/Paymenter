@@ -93,7 +93,7 @@ class Show extends Component
     public function processPayment()
     {
         if ($this->invoice->status !== 'pending') {
-            return $this->notify(__('This invoice cannot be paid.'), 'error');
+            return $this->notify(__('invoices.cannot_be_paid'), 'error');
         }
 
         if (is_null($this->selectedMethod)) {
@@ -102,7 +102,7 @@ class Show extends Component
 
         if ($this->selectedMethod === 'credit') {
             if ($this->invoice->items->contains(fn ($item) => $item->reference_type === Credit::class)) {
-                return $this->notify(__('This invoice cannot be paid with credits.'), 'error');
+                return $this->notify(__('invoices.cannot_be_paid_with_credits'), 'error');
             }
 
             return $this->payWithCredit();
@@ -124,7 +124,7 @@ class Show extends Component
             }
 
             if ($invoiceItems->count() > 0) {
-                $this->notify('Default payment method has been updated for recurring services.', 'success');
+                $this->notify(__('invoices.default_method_updated'), 'success');
             }
         }
 
@@ -134,7 +134,7 @@ class Show extends Component
     private function payWithMethod($methodId)
     {
         if (!in_array($methodId, array_column($this->gateways, 'id'))) {
-            return $this->notify(__('Invalid payment method.'), 'error');
+            return $this->notify(__('invoices.invalid_payment_method'), 'error');
         }
 
         $this->pay = ExtensionHelper::pay(Gateway::where('id', $methodId)->first(), $this->invoice);
@@ -162,7 +162,7 @@ class Show extends Component
                     $credit->save();
 
                     $this->invoice = $this->invoice->fresh();
-                    $this->notify(__('Part of the invoice has been paid with credits. Please pay the remaining amount'));
+                    $this->notify(__('invoices.partially_paid_with_credits'));
                 }
             }
         });
@@ -172,21 +172,21 @@ class Show extends Component
     {
         $agreement = Auth::user()->billingAgreements()->where('ulid', $agreementUlid)->with('gateway')->first();
         if (!$agreement) {
-            return $this->notify(__('Invalid payment method.'), 'error');
+            return $this->notify(__('invoices.invalid_payment_method'), 'error');
         }
 
         if (!in_array($agreement->gateway->id, array_column($this->paymentMethods, 'id'))) {
-            return $this->notify(__('This payment method cannot be used for this invoice.'), 'error');
+            return $this->notify(__('invoices.payment_method_not_allowed'), 'error');
         }
 
         $success = ExtensionHelper::charge($agreement->gateway, $this->invoice, $agreement);
 
         if ($success === true) {
-            $this->notify(__('Successfully charged the saved payment method.'), 'success');
+            $this->notify(__('invoices.saved_method_charged'), 'success');
 
             return $this->redirect(route('invoices.show', $this->invoice) . '?checkPayment', true);
         } else {
-            return $this->notify(__('Could not process payment. Please try again or use a different payment method.'), 'error');
+            return $this->notify(__('invoices.charge_failed'), 'error');
         }
     }
 
@@ -211,7 +211,7 @@ class Show extends Component
                 ->exists();
 
             if ($failedSinceLastCheck) {
-                $this->notify(__('Payment failed. Please try again or use a different payment method.'), 'error');
+                $this->notify(__('invoices.payment_failed'), 'error');
                 $this->checkPayment = false;
                 $this->lastChecked = null;
 
@@ -224,7 +224,7 @@ class Show extends Component
 
         // Check if invoice is paid
         if ($this->invoice->status === 'paid') {
-            $this->notify(__('The invoice has been paid.'), 'success');
+            $this->notify(__('invoices.paid_notice'), 'success');
             $this->checkPayment = false;
             $this->lastChecked = null;
         }

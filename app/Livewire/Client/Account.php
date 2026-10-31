@@ -59,14 +59,14 @@ class Account extends ComponentWithProperties
             $this->updateProperties($user, $validatedData['properties']);
         }
 
-        $this->notify(__('Account updated successfully.'));
+        $this->notify(__('account.notifications.account_updated'));
     }
 
     public function render()
     {
         return view('client.account.index')->layoutData([
             'sidebar' => true,
-            'title' => 'Account',
+            'title' => __('account.account'),
         ]);
     }
 }

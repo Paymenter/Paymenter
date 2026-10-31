@@ -34,7 +34,7 @@ class CurrencySwitch extends Component
             'currentCurrency' => 'required|exists:currencies,code',
         ]);
         if (Cart::items()->count() > 0) {
-            $this->notify('You cannot change the currency while there are items in the cart.', 'error');
+            $this->notify(__('common.currency_locked_by_cart'), 'error');
             $this->currentCurrency = session('currency', config('settings.default_currency'));
 
             return;

@@ -19,8 +19,11 @@ return [
     'close_ticket_confirmation' => 'Are you sure you want to close this ticket? This action cannot be undone.',
     'close_ticket_success' => 'Ticket closed successfully.',
     'close_ticket_already_closed' => 'This ticket is already closed.',
+    'message_sent' => 'Message sent successfully',
+    'reply_rate_limited' => 'Too many message attempts. Please try again in :seconds seconds.',
 
     'create_ticket' => 'Create Ticket',
+    'create_rate_limited' => 'Too many ticket creation attempts. Please try again in :seconds seconds.',
     'select_department' => 'Select Department',
     'select_priority' => 'Select Priority',
     'low' => 'Low',

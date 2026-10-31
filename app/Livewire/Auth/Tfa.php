@@ -38,7 +38,7 @@ class Tfa extends Component
         }
 
         if (RateLimiter::tooManyAttempts('2fa:' . $session['user_id'], 5)) {
-            $this->addError('code', 'Too many attempts.');
+            $this->addError('code', __('auth.too_many_attempts'));
 
             return;
         }
