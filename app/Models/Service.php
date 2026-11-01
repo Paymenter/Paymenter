@@ -114,7 +114,7 @@ class Service extends Model implements Auditable
             );
         }
         $date = $this->expires_at ?? now();
-        $endDate = $date->copy()->{'add' . ucfirst($this->plan->billing_unit) . 's'}($this->plan->billing_period);
+        $endDate = $date->copy()->addUnit($this->plan->billing_unit, $this->plan->billing_period, false);
 
         return Attribute::make(
             get: fn () => $this->product->name . ' (' . $date->format('M d, Y') . ' - ' . $endDate->format('M d, Y') . ')'
@@ -136,7 +136,7 @@ class Service extends Model implements Auditable
             $date = $this->expires_at;
         }
 
-        return $date->{'add' . ucfirst($this->plan->billing_unit) . 's'}($this->plan->billing_period);
+        return $date->addUnit($this->plan->billing_unit, $this->plan->billing_period, false);
     }
 
     /**
