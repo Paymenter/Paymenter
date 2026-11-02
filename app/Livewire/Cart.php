@@ -30,6 +30,8 @@ class Cart extends Component
 
     public $tos;
 
+    public $cancellationPolicy;
+
     public function mount()
     {
         if (ClassesCart::get()->coupon_id) {
@@ -108,6 +110,9 @@ class Cart extends Component
         }
         if (config('settings.tos') && !$this->tos) {
             return $this->notify('You must accept the terms of service', 'error');
+        }
+        if (config('settings.cancellation_policy') && !$this->cancellationPolicy) {
+            return $this->notify('You must accept the Cancellation Policy'), 'error');
         }
 
         // Start database transaction
