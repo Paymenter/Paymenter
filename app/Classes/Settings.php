@@ -121,6 +121,13 @@ class Settings
                     'type' => 'text',
                     'required' => false,
                 ],
+                [
+                    'name' => 'cancellation_policy',
+                    'label' => 'Cancellation Policy',
+                    'description' => 'URL to your cancellation policy. Leave blank to disable.',
+                    'type' => 'text',
+                    'required' => false,
+                ],
             ],
 
             // Security (captcha, rate limiting, etc.)
