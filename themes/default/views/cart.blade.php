@@ -105,6 +105,15 @@
                     </x-form.checkbox>
                     @endif
 
+                    @if(config('settings.cancellation_policy'))
+                    <x-form.checkbox wire:model="cancellationPolicy" name="cancellation_policy">
+                        {{ __('product.cancellation_policy') }}
+                        <a href="{{ config('settings.cancellation_policy') }}" target="_blank" class="text-primary hover:text-primary/80">
+                            {{ __('product.cancellation_policy_link') }}
+                        </a>
+                    </x-form.checkbox>
+                    @endif
+                    
                     <div class="flex flex-row justify-end gap-2">
                         <x-button.primary wire:click="checkout" class="h-fit" wire:loading.attr="disabled">
                             <x-loading target="checkout" />
