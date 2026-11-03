@@ -5,10 +5,13 @@ namespace Tests\Feature\Invoices;
 use App\Enums\AdjustmentNoteType;
 use App\Enums\InvoiceTransactionStatus;
 use App\Helpers\ExtensionHelper;
+use App\Helpers\NotificationHelper;
+use App\Mail\Mail as InvoiceMail;
 use App\Models\Invoice;
 use App\Models\Service;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Mail;
 use Tests\TestCase;
 
 class InvoicePaymentProcessingTest extends TestCase
@@ -27,6 +30,18 @@ class InvoicePaymentProcessingTest extends TestCase
         ]);
 
         return $invoice->fresh();
+    }
+
+    public function test_invoice_email_is_queued_when_the_service_no_longer_exists(): void
+    {
+        $invoice = $this->createInvoiceWithItem();
+        $invoice->items()->first()->update(['reference_type' => Service::class, 'reference_id' => 0]);
+        config(['settings.mail_disable' => false]);
+        Mail::fake();
+
+        NotificationHelper::invoicePaidNotification($invoice->user, $invoice->fresh());
+
+        Mail::assertQueued(InvoiceMail::class, fn (InvoiceMail $mail) => $mail->hasTo($invoice->user->email) && $mail->data['has_subscription'] === false);
     }
 
     public function test_invoice_starts_with_draft_status()
