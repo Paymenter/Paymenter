@@ -255,6 +255,11 @@ class Service extends Model implements Auditable
         return $this->hasMany(ServiceUpgrade::class);
     }
 
+    public function pendingUpgrade(): ?ServiceUpgrade
+    {
+        return $this->upgrade()->where('status', ServiceUpgrade::STATUS_PENDING)->latest('id')->first();
+    }
+
     public function billingAgreement()
     {
         return $this->belongsTo(BillingAgreement::class, 'billing_agreement_id');
