@@ -73,7 +73,7 @@ class Announcements extends Extension
         Gate::policy(Announcement::class, Policies\AnnouncementPolicy::class);
 
         Event::listen('navigation', function () {
-            if (Announcement::where('is_active', true)->where('published_at', '<=', now())->count() == 0) {
+            if (!Announcement::where('is_active', true)->where('published_at', '<=', now())->exists()) {
                 return;
             }
 
@@ -109,6 +109,7 @@ class Announcements extends Extension
                     'announcements' => Announcement::where('is_active', true)
                         ->where('published_at', '<=', now())
                         ->orderBy('published_at', 'desc')
+                        ->limit(5)
                         ->get(),
                 ]),
             ];
