@@ -6,6 +6,7 @@ use App\Helpers\ExtensionHelper;
 use App\Livewire\Component;
 use App\Models\Currency;
 use App\Models\Gateway;
+use App\Services\BillingAgreement\RemoveBillingAgreementService;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\Url;
@@ -70,15 +71,9 @@ class PaymentMethods extends Component
             return $this->notify('Billing agreement not found', 'error');
         }
 
-        // Call the gateway to cancel the billing agreement if supported
-        $succeeded = ExtensionHelper::cancelBillingAgreement($billingAgreement);
+        (new RemoveBillingAgreementService)->handle($billingAgreement);
 
-        if ($succeeded) {
-            $this->notify('Payment method removed successfully', 'success');
-            $billingAgreement->delete();
-        } else {
-            $this->notify('Failed to remove payment method', 'error');
-        }
+        $this->notify('Payment method removed successfully', 'success');
     }
 
     public function cancelSetup()
