@@ -55,6 +55,10 @@ class Cart extends Component
     public function applyCoupon()
     {
         if ($this->coupon && ClassesCart::get()->coupon_id) {
+            // Applied in another tab: show that coupon instead of keeping the typed code, which the view would read as a model
+            $this->coupon = ClassesCart::get()->coupon;
+            $this->updateTotal();
+
             return $this->notify('Coupon code already applied', 'error');
         }
 
@@ -124,6 +128,10 @@ class Cart extends Component
 
                 return $this->notify('This coupon can no longer be used', 'error');
             }
+
+            // The rendered total may be stale (the cart can change in another tab), and it decides whether an invoice is created
+            $this->updateTotal();
+
             // Lock the orderproducts
             foreach ($cart->items as $item) {
                 // An item without a price row in the cart's currency would otherwise check out free.
