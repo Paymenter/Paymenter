@@ -72,7 +72,10 @@ class ExtensionHelper
         }
 
         if (!is_array($config)) {
-            $config = self::settingsToArray($config);
+            // Built from the settings rows themselves, so empty means none are saved
+            $instance = new $extension(self::settingsToArray($config));
+
+            return $instance instanceof \App\Classes\Extension\Extension ? $instance->withLoadedConfig() : $instance;
         }
 
         return new $extension($config);
@@ -224,14 +227,30 @@ class ExtensionHelper
         return array_filter($extensions, fn ($extension) => !in_array($extension['name'], $installedExtensions));
     }
 
+    /**
+     * Extensions to boot on every request, with their settings: the enabled ones, plus every gateway and server.
+     * Gateways and servers save their settings under their own morph class, so they are loaded through those models.
+     */
+    public static function bootable(): Collection
+    {
+        return Extension::with('settings')->where('enabled', true)->whereNotIn('type', ['gateway', 'server'])->get()
+            ->concat(Gateway::with('settings')->get())
+            ->concat(Server::with('settings')->get())
+            ->sortBy('id')
+            ->unique('extension')
+            ->values();
+    }
+
     public static function call($extension, $function, $args = [], $mayFail = false)
     {
         try {
-            if (!self::hasFunction($extension, $function)) {
+            $instance = self::getExtension($extension->type, $extension->extension, $extension->settings);
+
+            if (!method_exists($instance, $function)) {
                 throw new Exception('Function not found');
             }
 
-            return self::getExtension($extension->type, $extension->extension, $extension->settings)->$function(...$args);
+            return $instance->$function(...$args);
         } catch (Exception $e) {
             // If mayFail is true, just report the exception instead of throwing it
             if (!$mayFail) {

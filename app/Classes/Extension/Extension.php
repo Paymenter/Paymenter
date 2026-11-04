@@ -13,7 +13,20 @@ use App\Models\Server;
  */
 class Extension
 {
+    private bool $configLoaded = false;
+
     public function __construct(public $config = []) {}
+
+    /**
+     * Mark $config as complete, so an empty array means no settings are saved
+     * and config() does not query for them.
+     */
+    public function withLoadedConfig(): static
+    {
+        $this->configLoaded = true;
+
+        return $this;
+    }
 
     /**
      * Get a configuration value
@@ -23,7 +36,8 @@ class Extension
      */
     public function config($key)
     {
-        if (empty($this->config)) {
+        if (empty($this->config) && !$this->configLoaded) {
+            $this->configLoaded = true;
             // Check from which type its being called
             $type = debug_backtrace()[1]['class'];
             $type = str_replace('Paymenter\Extensions\\', '', $type);
