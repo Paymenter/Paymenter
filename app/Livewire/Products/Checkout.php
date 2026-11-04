@@ -101,27 +101,40 @@ class Checkout extends Component
     {
         $total = $this->plan->price()->price;
         $setup_fee = $this->plan->price()->setup_fee;
+        $unavailable = false;
 
-        $this->product->configOptions->each(function ($option) use (&$total, &$setup_fee) {
+        // Same rule as CartItem: a value without plans is free, one without a plan for this period is unavailable.
+        $add = function ($child) use (&$total, &$setup_fee, &$unavailable) {
+            if (!$child || $child->plans->isEmpty()) {
+                return;
+            }
+            $price = $child->price(billing_period: $this->plan->billing_period, billing_unit: $this->plan->billing_unit);
+            $unavailable = $unavailable || !$price->available;
+            $total += $price->price;
+            $setup_fee += $price->setup_fee;
+        };
+
+        $this->product->configOptions->each(function ($option) use ($add) {
             // Check if checkbox is set, if so, add price if checked
             if ($option->type === 'checkbox' && (isset($this->configOptions[$option->id]) && $this->configOptions[$option->id])) {
-                $total += $option->children->first()?->price(billing_period: $this->plan->billing_period, billing_unit: $this->plan->billing_unit)->price;
-                $setup_fee += $option->children->first()?->price(billing_period: $this->plan->billing_period, billing_unit: $this->plan->billing_unit)->setup_fee;
+                $add($option->children->first());
 
                 return;
             }
             // Skip text, number and checkbox types as they have no price
             if (in_array($option->type, ['text', 'number', 'checkbox'])) {
-                $total += 0;
-                $setup_fee += 0;
-
                 return;
             }
 
             // Add price of selected option
-            $total += $option->children->where('id', $this->configOptions[$option->id])->first()?->price(billing_period: $this->plan->billing_period, billing_unit: $this->plan->billing_unit)->price;
-            $setup_fee += $option->children->where('id', $this->configOptions[$option->id])->first()?->price(billing_period: $this->plan->billing_period, billing_unit: $this->plan->billing_unit)->setup_fee;
+            $add($option->children->where('id', $this->configOptions[$option->id])->first());
         });
+
+        if ($unavailable) {
+            $this->total = new Price((object) ['price' => null, 'setup_fee' => null, 'currency' => null]);
+
+            return;
+        }
 
         $this->total = new Price([
             'price' => $total,
